@@ -1,0 +1,13 @@
+.next/
+node_modules/
+out/
+dist/
+coverage/
+.env*
+.DS_Store
+.next/
+*.patch
+*.zip
+*.gz
+payload/
+supabase/

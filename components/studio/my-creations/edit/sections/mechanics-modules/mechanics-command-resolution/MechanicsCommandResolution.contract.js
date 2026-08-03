@@ -1,0 +1,31 @@
+export const MECHANICS_COMMAND_RESOLUTION_LOOM_CONTRACT = Object.freeze({
+  id: "crestfall.loom.mechanics-command-resolution.v1",
+  storagePath: "instanceData.commands[].resolution",
+  canonicalVersion: "mechanics_command_resolution_v6",
+  modes: Object.freeze([
+    "NO_ROLL_DETERMINISTIC",
+    "THRESHOLD_DIE",
+    "OPPOSED_DIE",
+  ]),
+  ownedDomains: Object.freeze([
+    "resolution mode",
+    "actor die and roll policy",
+    "target number",
+    "actor fixed modifiers",
+    "actor authoritative modifier sources",
+    "opposition die and tie policy",
+    "opposition fixed modifiers",
+    "opposition authoritative modifier sources",
+    "natural critical and fumble rules",
+    "degree-of-success margin bands",
+    "safe reference configuration replacement",
+  ]),
+  preservedBoundaries: Object.freeze([
+    "command identity and invocation",
+    "requirements",
+    "attempt and base effects",
+    "outcome branches",
+    "domain actions",
+    "advanced composition",
+  ]),
+});

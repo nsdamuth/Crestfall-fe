@@ -1,0 +1,45 @@
+export const characterReviewStepFixture = Object.freeze({
+  name: "Alina Vale",
+  species: "Human",
+  short_concept: "Wayfinder",
+  outward_personality: "Warm, observant, and quietly stubborn",
+  mbti_type: "INFJ",
+  western_zodiac_sign: "SCORPIO",
+  east_asian_zodiac_sign: "DRAGON",
+  kibbe_identity: "SOFT_DRAMATIC",
+  body_type: "CURVY",
+  rendering_style: "ANIME",
+  rendering_preset: "Painterly Fantasy",
+  character_color_palette_id: "AUTUMN_EMBER",
+  visibility: "PRIVATE",
+  content_rating: "SFW",
+  age: "27",
+  greeting: "You found the old road after all.",
+  scenario: "A rain-darkened crossroads beyond the city wall.",
+  relationship_to_player: "A cautious new ally.",
+  backstory: "She maps roads that disappear from ordinary charts.",
+  appearance_notes: "Weathered travel coat and a brass compass.",
+  personality_notes: "Patient until someone threatens her companions.",
+  extra_runtime_notes: "Treat unknown roads as a source of curiosity.",
+  creator_directives: {
+    portrayal: "Keep her practical, perceptive, and grounded.",
+  },
+});
+
+export const characterReviewStepFixtureStates = Object.freeze({
+  collapsed: { advancedOpen: false, age: "27" },
+  advanced: { advancedOpen: true, age: "27" },
+  minimumAge: { advancedOpen: false, age: "17" },
+  sparse: {
+    advancedOpen: true,
+    age: "",
+    overrides: {
+      name: "",
+      species: "",
+      short_concept: "",
+      kibbe_identity: "",
+      rendering_style: "",
+      rendering_preset: "",
+    },
+  },
+});

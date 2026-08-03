@@ -1,0 +1,56 @@
+export const gamesHubRawGamesFixture = Object.freeze([
+  {
+    id: "game-continue",
+    templateId: "template-continue",
+    title: "The Brasswhisker Chronicle",
+    subtitle: "Aethelgard Mystery",
+    description: "Continue an active investigation inside Kessa's workshop.",
+    canonRelationship: "CANON_COMPATIBLE",
+    contentRating: "SFW",
+    scenario: "The Ticking Charm",
+    narrator: "Dark Fairytale Narrator",
+    cast: ["Kessa Cindervell", "Static"],
+    href: "/studio/story-rooms/room-continue",
+    lastActive: "2026-08-01T20:00:00.000Z",
+    messages: 42,
+    featured: true,
+  },
+  {
+    id: "game-official",
+    templateId: "template-official",
+    title: "Crestfall: First Signal",
+    subtitle: "Official Chronicle",
+    description: "An official canon opening centered on a citywide signal anomaly.",
+    canonRelationship: "OFFICIAL_CANON",
+    contentRating: "SFW",
+    scenario: "First Signal",
+    narrator: "Crestfall Engine",
+    cast: ["Flexible Cast"],
+    playState: "NEW",
+    lastActive: "2026-07-31T20:00:00.000Z",
+    messages: 0,
+    featured: true,
+  },
+  {
+    id: "game-community",
+    templateId: "template-community",
+    title: "Old Crescent Sandbox",
+    subtitle: "Community Room",
+    description: "A flexible community sandbox in Aethelgard's trade district.",
+    canonRelationship: "COMMUNITY_SANDBOX",
+    contentRating: "SFW",
+    scenario: "Open Market",
+    narrator: "Community Narrator",
+    cast: ["Flexible Cast"],
+    playState: "NEW",
+    messages: 0,
+  },
+]);
+
+export const gamesHubEmptyFixture = Object.freeze({ games: [], status: "loaded" });
+export const gamesHubLoadingFixture = Object.freeze({ games: [], status: "loading" });
+export const gamesHubErrorFixture = Object.freeze({
+  games: [],
+  status: "error",
+  loadError: "Games could not be loaded.",
+});

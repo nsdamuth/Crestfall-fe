@@ -1,0 +1,56 @@
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { getAuthenticatedUser } from "@/lib/server/auth/getAuthenticatedUser";
+import { publishOwnedLoreValidatedRevision } from "@/lib/server/services/creations/lorePublicationService";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function apiError(message, status = 500, code = "LORE_PUBLICATION_FAILED") {
+  return NextResponse.json(
+    { data: null, error: { code, message, details: null } },
+    { status }
+  );
+}
+
+async function getParams(params) {
+  const resolved = await params;
+  return {
+    creationId: resolved?.id || "",
+    submissionId: resolved?.submissionId || "",
+  };
+}
+
+export async function POST(_request, { params }) {
+  const { creationId, submissionId } = await getParams(params);
+  const supabase = await createClient();
+  const { user, error: userError } = await getAuthenticatedUser(supabase);
+
+  if (userError || !user) return apiError("Unauthorized", 401, "UNAUTHORIZED");
+  if (!creationId || !submissionId) {
+    return apiError(
+      "Lore Asset and validation submission ids are required.",
+      400,
+      "LORE_PUBLICATION_IDS_REQUIRED"
+    );
+  }
+
+  try {
+    const payload = await publishOwnedLoreValidatedRevision({
+      userId: user.id,
+      creationId,
+      submissionId,
+    });
+    return NextResponse.json(payload);
+  } catch (error) {
+    if (error?.payload && Number.isInteger(error.status)) {
+      return NextResponse.json(error.payload, { status: error.status });
+    }
+
+    return apiError(
+      error?.message || "Validated Lore revision could not be published.",
+      500,
+      error?.code || "LORE_PUBLICATION_FAILED"
+    );
+  }
+}
