@@ -1,11 +1,9 @@
 @import "tailwindcss";
+@import "./theme.css";
+@import "./token-bridge.css";
 
 :root {
   --background: #050504;
-  --foreground: #e8dec8;
-  --muted: #a99a80;
-  --muted-gold: #b9904a;
-  --border: rgba(185, 144, 74, 0.28);
   --panel: rgba(16, 14, 12, 0.82);
   --panel-strong: rgba(25, 21, 17, 0.94);
   --blood: #4b1018;

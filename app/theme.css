@@ -1,0 +1,499 @@
+/* ============================================================
+   CRESTFALL DESIGN TOKENS
+   Locked 26 July 2026. Source of truth for both surfaces.
+
+   Rule of 4 governs spacing, radius, sizing and line height.
+   Font sizes follow a 1.2 ratio. Border widths are exempt.
+   ============================================================ */
+
+:root {
+
+  /* --- SURFACE RAMP -----------------------------------------
+     Canvas is the deepest value. Artwork always sits here.
+     Surfaces warm as they elevate. Chroma is capped at 10 so
+     no surface ever competes with character art.            */
+
+  --canvas:        #090805;   /* page background, behind all art */
+  /* Canvas deepened by ruling, 2 Aug 2026: #0b0a08 (L* 2.76) to
+     #090805 (L* 2.19, b* 1.23 · the closest 8-bit seat to the
+     warmth formula, where the old value ran under-warm at .85).
+     Every ink and gold pairing gains contrast; the opening step
+     to surface-1 widens to 3.85, sharpening figure-ground.     */
+  /* Four even steps of about 3.31 points of L* above the canvas,
+     surface-4 landing at 16.0. Set from Brian's tuner
+     review, 29 Jul 2026. They used to sit 1.3 to 2 points
+     apart, which is why a modal, its tiles and the page behind
+     read as one cloudy mass. 3.31 is still well clear of the
+     threshold of visible difference, which the old opening step
+     of 1.27 was not. b* rises with L* so the ramp gains warmth
+     as it gains lightness rather than drifting grey, and a*
+     is held near 0.10 so it does not go muddy brown. Residual
+     step jitter is 8-bit rounding, not the construction.    */
+
+  --surface-1:     #16130f;   /* quiet sections, inset wells     */
+  --surface-2:     #1d1a15;   /* cards, list rows                */
+  --surface-3:     #24211a;   /* topbar, sidebar, sticky chrome  */
+  --surface-4:     #2c271e;   /* modals, menus, popovers         */
+
+  /* --- INK -------------------------------------------------- */
+
+  --ink:           #ece7dc;   /* primary text                    */
+  --ink-dim:       #a9a294;   /* secondary text, metadata        */
+  --ink-faint:     #8d8674;   /* tertiary, disabled, timestamps  */
+
+  /* --- GOLD -------------------------------------------------
+     Split by job. Ember is interactive, antique is ornament.
+     Bright is used at low alpha for lines, never as fill.    */
+
+  --gold-action:   #e0ab5e;   /* buttons, links, active states   */
+  --gold-ornament: #C9A86A;   /* eyebrows, rules, decorative     */
+  --gold-bright:   #f2d194;   /* focus, hover lift, hairlines    */
+  --gold-deep:     #9a7434;   /* pressed, borders on light theme */
+
+  /* Text sitting on a gold fill. Gold-filled buttons and
+     avatars only. Never use it as a surface. It does not serve
+     canon tags: R11 returned every tag to a translucent bed
+     with a border, so no tag carries a gold fill.            */
+
+  --tag-fill-ink:  #1c1408;
+
+  /* --- LINES ------------------------------------------------
+     Bright gold at low alpha, never antique. At these
+     opacities antique reads as a brown smudge; bright reads
+     as a fine gold line.                                     */
+
+  --line-whisper:  rgba(242, 209, 148, .03);  /* card edges      */
+  --line:          rgba(242, 209, 148, .10);  /* art frame       */
+  /* Down from .22, not up, 29 Jul 2026. Contrast is relative:
+     against the darker surface ramp the same alpha reads louder,
+     so the borders needed quieting. --line stays at .10.     */
+  --line-strong:   rgba(242, 209, 148, .20);  /* dividers, active*/
+
+  /* --- FILLS AND SCRIMS -------------------------------------
+     Fills are backgrounds, lines are borders, scrims sit over
+     artwork. Fills share the line base so a fill and its border
+     never disagree. Scrims are identical in both themes because
+     the artwork underneath does not change with the theme.   */
+
+  --fill-whisper:  rgba(242, 209, 148, .06);
+  --fill:          rgba(242, 209, 148, .12);
+  --fill-strong:   rgba(242, 209, 148, .20);
+
+  --scrim:         rgba(0, 0, 0, .40);
+  --scrim-strong:  rgba(0, 0, 0, .70);
+
+  /* --- OVER-ART INK -----------------------------------------
+     Sprint 3. Artwork and the scrims over it do not flip with
+     the theme, so text sitting on art cannot use the flipping
+     ink family: on light theme --ink goes dark and vanishes
+     into the scrim. These three are constants — declared once,
+     never overridden by the light block — and are the only
+     colours allowed for text over artwork.                   */
+
+  --art-ink:       #ece7dc;   /* titles on art                   */
+  --art-ink-dim:   #b3aa99;   /* metadata on art                 */
+  --art-gold:      #C9A86A;   /* eyebrows, kickers on art        */
+
+  /* --- TAG BEDS ---------------------------------------------
+     Item 1.4, 29 Jul 2026. Two recipes, no more.
+
+       Over artwork:  --tag-bed-art, 1px --line, --ink text
+       On canvas:     --tag-bed-canvas, --gold-bright text,
+                      no border
+
+     Recipes are keyed to background, never to category. A tag
+     over character art needs a scrim to survive a bright frame.
+     A tag on a surface does not. Category is carried by the
+     tag's own text label and by the card surface, never by tag
+     colour: the label already reads "Canon" in words, so colour
+     would be redundant encoding, and colour-only meaning fails
+     accessibility.
+
+     The recipes are deliberately asymmetric on two points.
+
+     No border on canvas. --fill is .12 and --line is .10 on the
+     same rgb base, so a line-family border on a fill-family bed
+     measures about 1.05:1 and does not render at all. That is
+     the collision that retired --tint-* on 29 Jul, and stacking
+     the two families here would reintroduce it. Recipe 1 keeps
+     its border because there it sits on a black scrim, not on a
+     gold bed, where it does real work.
+
+     Text is --gold-bright, not --gold-ornament. Measured on the
+     location-parent-picker bed: bright 11.42:1, ornament 7.41:1,
+     and the grey it replaces 8.06:1. Ornament would have made
+     tags harder to read than they already are. Bright is text
+     here, not fill, so the "never as fill" note on --gold-bright
+     still holds.
+
+     Only the beds are tokens. Border and text are named in the
+     recipes above and are unambiguous at the call site, so
+     aliasing them would repeat the duplication 1.3 and 1.9
+     deleted.
+
+     Both beds are var() indirections, so they follow their
+     referents across themes with no light-theme redeclaration.
+     --tag-bed-canvas flips with --fill. --tag-bed-art holds
+     steady with --scrim-strong, which does not flip because the
+     artwork underneath does not flip either.                 */
+
+  --tag-bed-art:    var(--scrim-strong);
+  --tag-bed-canvas: var(--fill);
+
+  /* --- ELEVATION --------------------------------------------
+     Item 1.9, 29 Jul 2026. Two cases, two devices. In-flow
+     surfaces separate by border, which is R5 and governs cards.
+     Floating surfaces separate by scrim plus shadow, which R5
+     does not govern. The --lift-* family is retired: those were
+     the clipping card shadows and cards now use a border.
+
+     Exactly two floating tokens, modal and popover. No gold in
+     either. Gold at large radius over a near-black canvas bands
+     visibly at 8-bit, and lowering the alpha makes it fainter
+     rather than smoother, so it is not a tunable defect.     */
+
+  --shadow-modal:   0 10px 28px rgba(0, 0, 0, .62), 0 2px 6px rgba(0, 0, 0, .44);
+  --shadow-popover: 0 4px 12px rgba(0, 0, 0, .52), 0 1px 3px rgba(0, 0, 0, .38);
+
+  /* Inset top-edge highlight for elevated surfaces. Light comes
+     from above, so only the top edge catches it.             */
+
+  --edge-top:       inset 0 1px 0 rgba(255, 240, 210, .02);
+
+  /* --- ATMOSPHERE -------------------------------------------
+     Applied as an absolutely positioned layer over canvas.
+     Never baked into a surface colour.                       */
+
+  --atm-hearth:    radial-gradient(760px 380px at 50% -12%, rgba(224,171,94,.16), transparent 66%);
+  --atm-vault:     radial-gradient(120% 100% at 50% 50%, transparent 34%, rgba(0,0,0,.62) 100%),
+                   radial-gradient(500px 300px at 50% 100%, rgba(201,168,106,.10), transparent 70%);
+  --atm-veil:      linear-gradient(180deg, rgba(201,168,106,.07), transparent 42%, rgba(0,0,0,.45));
+
+  /* The starfield. Lifted out of proof/home.html on 26 Jul
+     2026, value unchanged.                                  */
+
+  --atm-constellation:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(242,209,148,.55), transparent),
+    radial-gradient(1.5px 1.5px at 78% 12%, rgba(242,209,148,.45), transparent),
+    radial-gradient(1px 1px at 32% 62%, rgba(242,209,148,.40), transparent),
+    radial-gradient(1.5px 1.5px at 88% 58%, rgba(242,209,148,.35), transparent),
+    radial-gradient(1px 1px at 55% 30%, rgba(242,209,148,.30), transparent),
+    radial-gradient(1.5px 1.5px at 22% 82%, rgba(242,209,148,.35), transparent),
+    radial-gradient(1px 1px at 68% 78%, rgba(242,209,148,.28), transparent),
+    radial-gradient(1px 1px at 45% 8%, rgba(242,209,148,.30), transparent);
+
+  /* --- TYPE FAMILIES ----------------------------------------
+     Item 1.6, 31 Jul 2026. This file is the only declaring
+     authority for the semantic names. layout.js loads the
+     faces under loader-private variables (--next-cinzel,
+     --next-cormorant, --next-inter) and declares nothing
+     semantic, so source order can never again decide which
+     font wins. In the app the var() resolves to the optimized
+     next/font face; in the proof drafts, which never run
+     layout.js, it falls through to the same face from Google.
+
+     Cinzel is retired to the logo. Cormorant is the display.
+     Inter leads the UI stack; the Alegreya Sans lead is
+     deleted per the 0.3 typography ruling.                  */
+
+  --font-logo:     var(--next-cinzel, Cinzel), "Cormorant Garamond",
+                   Georgia, serif;
+  --font-display:  var(--next-cormorant, "Cormorant Garamond"),
+                   "EB Garamond", Garamond, "Palatino Linotype",
+                   Palatino, Georgia, serif;
+  --font-sans:     var(--next-inter, Inter), system-ui, -apple-system,
+                   "Segoe UI", Roboto, sans-serif;
+  --font-mono:     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* --- TYPE SCALE ------------------------------------------
+     Ratio 1.2 from a 16px base, expressed in rem so browser
+     font settings are honoured. Every paired line height is
+     a multiple of 4, so all text lands on the baseline grid
+     without forcing glyph sizes onto the grid.
+
+     size      px    leading  use
+     ------------------------------------------------------- */
+
+  --text-label:    0.6875rem;  /*  11 / 16  eyebrows, tags, meta   */
+  --text-ui:       0.8125rem;  /*  13 / 20  buttons, labels, chips */
+  --text-body:     1rem;       /*  16 / 24  paragraphs, prose      */
+  --text-lead:     1.1875rem;  /*  19 / 28  intros, card titles    */
+  --text-subhead:  1.4375rem;  /*  23 / 32  section subheads       */
+  --text-heading:  1.75rem;    /*  28 / 36  section headings       */
+  --text-title:    2.0625rem;  /*  33 / 40  page titles            */
+  --text-display:  2.5rem;     /*  40 / 48  hero, smallest step    */
+
+  --lh-label:      1rem;       /* 16 */
+  --lh-ui:         1.25rem;    /* 20 */
+  --lh-body:       1.5rem;     /* 24 */
+  --lh-lead:       1.75rem;    /* 28 */
+  --lh-subhead:    2rem;       /* 32 */
+  --lh-heading:    2.25rem;    /* 36 */
+  --lh-title:      2.5rem;     /* 40 */
+  --lh-display:    3rem;       /* 48 */
+
+  /* Fluid display sizes live outside the scale. Use only for
+     hero type, never inside product UI.                       */
+  --text-hero:     clamp(2.5rem, 7vw, 4.5rem);
+  --lh-hero:       1.04;
+
+  /* --- WEIGHTS ---------------------------------------------
+     Never 800 or 900. Emphasis comes from size and colour.  */
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-bold:    700;
+
+  /* --- TRACKING -------------------------------------------- */
+
+  --track-label:   .18em;   /* uppercase eyebrows only */
+  --track-tight:   -.01em;  /* display sizes 28px and above */
+  --track-normal:  0;
+
+  /* --- SPACING, strict multiples of 4 ----------------------- */
+
+  --space-1:  0.25rem;   /*  4 */
+  --space-2:  0.5rem;    /*  8 */
+  --space-3:  0.75rem;   /* 12 */
+  --space-4:  1rem;      /* 16 */
+  --space-5:  1.25rem;   /* 20 */
+  --space-6:  1.5rem;    /* 24 */
+  --space-8:  2rem;      /* 32 */
+  --space-10: 2.5rem;    /* 40 */
+  --space-12: 3rem;      /* 48 */
+  --space-16: 4rem;      /* 64 */
+  --space-20: 5rem;      /* 80 */
+
+  /* --- RADIUS, strict multiples of 4 ------------------------ */
+
+  --radius-xs:  4px;    /* tags, inline pills            */
+  --radius-sm:  8px;    /* inputs, chips, art frames     */
+  --radius-md:  12px;   /* buttons, cards                */
+  --radius-lg:  20px;   /* panels, modals, sheets        */
+  --radius-full: 999px; /* avatars, pill buttons         */
+
+  /* --- SIZING, strict multiples of 4 ------------------------
+     44 is the accessibility floor for touch and is the
+     default control height on every surface.               */
+
+  --control-sm:  2rem;      /* 32, desktop-only dense chrome */
+  --control-md:  2.75rem;   /* 44, default, touch safe       */
+  --control-lg:  3rem;      /* 48, primary CTAs              */
+  --icon-sm:     1rem;      /* 16 */
+  --icon-md:     1.25rem;   /* 20 */
+  --icon-lg:     1.5rem;    /* 24 */
+  --container:   75rem;     /* 1200 */
+  --measure:     68ch;      /* max prose width */
+
+  /* --- MOTION ---------------------------------------------- */
+
+  --ease:        cubic-bezier(.22, .8, .3, 1);
+  --dur-fast:    120ms;
+  --dur-base:    200ms;
+  --dur-slow:    320ms;
+  --dur-ambient: 26s;
+
+  /* --- FOCUS -----------------------------------------------
+     Two pixels, always visible, never removed.
+
+     Item 1.12, 31 Jul 2026. This is the only focus token. It
+     won over --focus-width, which was 1px, and over
+     --glow-focus, which was this ring plus a gold bloom. Both
+     are deleted. Two pixels is the accessible width, so the
+     other two were the ones that had to move.
+
+     The inner 2px of --canvas is a gap ring. It is what lets a
+     control keep its own gold border on focus without the two
+     golds fusing into one thick edge.                       */
+
+  /* Softened Sprint 3: the outer ring drops from --gold-bright
+     to --gold-ornament. The 2px width and the canvas gap ring
+     stay — visibility is untouched, only the double-gold blaze
+     comes down. Ornament flips dark on light theme, so the
+     ring stays visible on parchment with no extra token.     */
+  --focus-ring:   0 0 0 2px var(--canvas), 0 0 0 4px var(--gold-ornament);
+}
+
+/* ============================================================
+   v2 ADDITIONS, restoring the atmospheric layer
+   Added 26 Jul 2026 after the v6/v8 review. The first pass
+   tokenised structure correctly and stripped the things that
+   made Crestfall feel expensive. These bring them back as
+   system tokens rather than one-off CSS.
+
+   Relocated above [data-theme="light"] on 29 Jul 2026. It used
+   to sit below, at equal specificity, so nothing declared here
+   could be themed.
+   ============================================================ */
+
+:root {
+
+  /* --- SIGNATURE GRADIENTS ---------------------------------
+     The blanket "no gradients" rule was wrong. Purple-to-cyan
+     is AI slop. A warm gold gradient is Crestfall's signature.
+     These are sanctioned. Nothing outside this list is.     */
+
+  --grad-gold:       linear-gradient(140deg, var(--gold-bright), var(--gold-action));
+  --grad-gold-deep:  linear-gradient(180deg, var(--gold-action), var(--gold-deep));
+  --grad-track:      linear-gradient(90deg, var(--gold-action), var(--gold-bright));
+  --grad-sheen:      linear-gradient(105deg, transparent 42%, rgba(255,232,180,.10) 50%, transparent 58%);
+  /* Dropped one step, from --fill to --fill-whisper, 29 Jul
+     2026. A 12 percent gold wash across a whole panel made the
+     panel and the gold on it read as the same material. Large
+     surfaces get opaque steps. Translucent gold is for small
+     areas and accents. The far stop goes to transparent rather
+     than repeating --fill-whisper, which would flatten the
+     gradient into a single wash.                            */
+  --grad-panel:      linear-gradient(160deg, var(--fill-whisper), transparent);
+  --grad-nav-active: linear-gradient(90deg, var(--fill), transparent 88%);
+  --grad-rule:       linear-gradient(90deg, var(--gold-ornament), transparent);
+  --grad-rule-soft:  linear-gradient(90deg, var(--line-strong), transparent);
+
+  /* Categorical surfaces. Near-black with a hue bias, never a
+     saturated fill. This is how v7 already solved it, and it
+     is why it never conflicted with the warm palette.       */
+  --cat-canon:       linear-gradient(160deg, #101017, #1c1410);
+  --cat-compatible:  linear-gradient(160deg, #0d1016, #101c2a);
+  --cat-sandbox:     linear-gradient(160deg, #0d1410, #12241a);
+
+  /* --- AMBIENT GLOW ----------------------------------------
+     A drop shadow is a dark object behind an element. A glow
+     is warm light bleeding out of it. They are not the same
+     and the review was right that the substitution cheapened
+     everything. Large glows must be applied to a ::before
+     layer at inset:-40px, never as box-shadow on a clipped
+     container, or the bounding box cuts them off.          */
+
+  /* R10, item 1.11. Every gold alpha here is its previous value
+     times 0.8, 29 Jul 2026. --glow-panel is not reduced, it is
+     deleted under item 1.9: it was depth work wearing a glow
+     name, and --shadow-modal replaces it.                    */
+
+  --glow-ambient:  0 0 80px -20px rgba(224,171,94,.30);
+  /* Tightened Sprint 3. The 20px + 44px pair was exactly the
+     large-radius gold band the 1.9 ruling warns about: it
+     banded at 8-bit and clipped at card edges. One small warm
+     bloom, negative spread so it hugs the element.           */
+  --glow-hover:    0 0 10px -2px rgba(224,171,94,.30);
+
+  /* --glow-focus is deleted under item 1.12, 31 Jul 2026. It was
+     --focus-ring plus an 18px gold bloom, so it was a third
+     declaration of a ring that already exists. Focus is one
+     token now, --focus-ring, at one width.                   */
+
+  /* --- SHAPE -----------------------------------------------
+     Item 1.3, 29 Jul 2026. Controls resolve to 12 via
+     --radius-md. --radius-pill and --radius-input are deleted:
+     both duplicated --radius-full and both contradicted the
+     ruling. Icon buttons stay circular on --radius-full. The
+     container scale 4 / 8 / 12 / 20 is unchanged.
+
+     --focus-width is deleted under item 1.12, 31 Jul 2026. It
+     said 1px while --focus-ring said 2px, and it was never a
+     shape value anyway: its only consumer set a border width
+     on inputs, which is a component property.               */
+
+  /* --- FOOTER ----------------------------------------------
+     Deliberate exception to the neutral ramp. The review read
+     the neutral dark as olive, so red bias is increased.    */
+
+  --surface-footer: #1a120b;
+
+  /* --- MOTION ---------------------------------------------- */
+
+  --ease-hover:    cubic-bezier(.25,.46,.45,.94);
+  --dur-hover:     300ms;
+  --anim-galaxy:   120s;
+  --anim-twinkle:  9s;
+}
+
+/* ============================================================
+   APP LIGHT THEME
+   Webapp only. The marketing site has no light mode.
+   ============================================================ */
+
+[data-theme="light"] {
+
+  /* Rebuilt as parchment, Sprint 3. The old block held canvas
+     at the locked L* 95, which left the ramp under 5 points of
+     headroom and surfaces that topped out at pure white — the
+     "grey" Brian saw when the unfinished theme leaked. 1.8
+     already sanctioned dropping canvas to roughly L* 92; this
+     takes it, so the page reads as warm paper and the ramp gets
+     real steps. Surfaces ascend toward light the way dark's
+     descend toward black, warmth held throughout so nothing
+     drifts toward grey or hospital white.                    */
+
+  --canvas:        #ebe3d0;   /* warm paper, ~L* 90.5           */
+
+  --surface-1:     #f0e9d8;   /* quiet sections, inset wells    */
+  --surface-2:     #f4eee0;   /* cards, list rows               */
+  --surface-3:     #f8f3e7;   /* topbar, sidebar, sticky chrome */
+  --surface-4:     #fcf8ee;   /* modals, menus, popovers        */
+
+  /* Ink goes warm near-black, not cool grey. */
+  --ink:           #2a2418;
+  --ink-dim:       #5a5243;
+  --ink-faint:     #7c7259;
+
+  /* Gold inverts its job: on paper the working golds are the
+     dark ones. "Bright" stays the highest-contrast gold text,
+     which on parchment means the darkest.                    */
+  --gold-action:   #7a5717;
+  --gold-ornament: #8a6524;
+  --gold-bright:   #6b4d15;
+  --gold-deep:     #4a3812;
+
+  /* Gold fills are dark on parchment, so the text on them is paper. */
+  --tag-fill-ink:  #f7f2e4;
+
+  --line-whisper:  rgba(96, 74, 34, .07);
+  --line:          rgba(96, 74, 34, .17);
+  --line-strong:   rgba(96, 74, 34, .36);
+
+  /* Fills flip to the light line base. Scrims do not flip and
+     are deliberately absent from this block — anything over
+     artwork uses the --art-* constants instead.              */
+
+  --fill-whisper:  rgba(96, 74, 34, .05);
+  --fill:          rgba(96, 74, 34, .10);
+  --fill-strong:   rgba(96, 74, 34, .16);
+
+  /* Floating layers warm to the paper's brown, never cool grey. */
+
+  --shadow-modal:   0 10px 28px rgba(72, 58, 30, .20), 0 2px 6px rgba(72, 58, 30, .14);
+  --shadow-popover: 0 4px 12px rgba(72, 58, 30, .16), 0 1px 3px rgba(72, 58, 30, .12);
+
+  --edge-top:       inset 0 1px 0 rgba(255, 255, 255, .60);
+
+  /* Hover glow flips to the dark working gold; alpha matched
+     to the dark theme's softened value.                      */
+  --glow-hover:    0 0 10px -2px rgba(122, 87, 23, .30);
+
+  --atm-hearth:    radial-gradient(760px 380px at 50% -12%, rgba(138,101,36,.12), transparent 66%);
+  --atm-vault:     radial-gradient(120% 100% at 50% 50%, transparent 40%, rgba(72,58,30,.10) 100%);
+  --atm-veil:      linear-gradient(180deg, rgba(138,101,36,.06), transparent 45%);
+}
+
+/* --- TYPE ASSIGNMENT CORRECTIONS ----------------------------
+   Every "slightly larger" note in the review is satisfied by
+   moving each element up one existing step. The scale does not
+   change. The assignments do. This is why a ratio scale is
+   worth having: it absorbs taste feedback without a rewrite.
+
+     eyebrow          label 11  ->  ui 13
+     CTA text         ui 13     ->  body 16
+     feature body     ui 13     ->  body 16
+     footer links     ui 13     ->  body 16
+     card title       lead 19   ->  subhead 23
+     section heading  heading 28 -> title 33
+     hero display     unchanged, already fluid
+   ---------------------------------------------------------- */
+
+:root {
+  --text-eyebrow:  var(--text-ui);
+  --lh-eyebrow:    var(--lh-ui);
+  --track-eyebrow: .16em;
+  --text-cta:      var(--text-body);
+  --lh-cta:        var(--lh-body);
+}

@@ -1,9 +1,10 @@
-import { Cinzel, Cormorant_Garamond, Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({
+const cormorantDisplay = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -77,7 +78,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${cinzel.variable} ${cormorant.variable} ${inter.variable}`}
+        className={`${cormorantDisplay.variable} ${cormorant.variable} ${inter.variable}`}
       >
         {children}
       </body>

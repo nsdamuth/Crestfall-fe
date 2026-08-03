@@ -1,0 +1,23 @@
+/* ============================================================
+   TOKEN BRIDGE — temporary
+   Aliases the four legacy variable names that Crestfall-fe's
+   portable Views actually reference (per
+   design-system/reports/TOKEN-BRIDGE-PROPOSAL.md, Task 2 and
+   Task 3) to their design system equivalents in theme.css.
+
+   Scope is deliberately narrow: only the four variables consumed
+   by *.view.jsx files are aliased here. Hardcoded hex colors
+   found in the same survey are logged in that report for later
+   per-package restyle passes, not touched by this bridge.
+
+   Delete one alias at a time as each consuming package migrates
+   to speak design tokens directly, and delete this file entirely
+   once none remain.
+   ============================================================ */
+
+:root {
+  --muted-gold: var(--gold-ornament);
+  --muted: var(--ink-dim);
+  --foreground: var(--ink);
+  --border: var(--line-strong);
+}
