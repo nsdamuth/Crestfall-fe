@@ -1,0 +1,35 @@
+---
+title: The Ironmere Tribes
+slug: /factions/aethelgard/ironmere-tribes
+eyebrow: Mountain-Barbarian Peoples
+assetBase: /assets/factions/ironmere-tribes
+profileImage: 
+texture: paper-clean
+cardText: A network of mountain tribes who choose separation from city life, value shared burden, and preserve knowledge through oral tradition, books, scouts, and shamans.
+subtitle: Mountain peoples who reject dependence on city power, not from ignorance, but from philosophy, discipline, and survival memory.
+breadcrumbs:
+  - label: Factions
+    href: /factions
+
+content:
+  - type: stat-block
+    title: Faction Details
+    items:
+      - label: Region
+        value: Aethelgard mountain territories
+      - label: Known For
+        value: Tribal law, shared burden, scouts, shamans
+      - label: Disposition
+        value: Wary of outsiders, fiercely loyal within the tribe
+
+  - type: two-column
+    columns:
+      - title: Overview
+        body: The Ironmere Tribes are often mistaken by outsiders as primitive or isolated by necessity. This is wrong. Their separation is chosen, maintained, and defended as a matter of cultural survival.
+      - title: Philosophy
+        body: They regard city life and heavy magical dependency as sources of corruption, weakness, and social rot. Books, engineering, memory, and practical knowledge are valued, but status-display and dependency are not.
+
+  - type: callout
+    title: Archivist Note
+    body: Do not confuse separation with ignorance. The tribes often understand city life better than city-dwellers understand them.
+---

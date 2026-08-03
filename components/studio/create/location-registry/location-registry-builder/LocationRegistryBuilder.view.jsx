@@ -1,0 +1,1690 @@
+"use client";
+
+import {
+  BookOpen,
+  CloudSun,
+  Compass,
+  MapPin,
+  Network,
+  Plus,
+  Route,
+  Save,
+  Settings2,
+  Trash2,
+  Users,
+  X,
+} from "lucide-react";
+import CreationPickerPanelView from "@/components/studio/creations/pickers/creation-picker-panel/CreationPickerPanel.view";
+
+const TAB_ICON_BY_KEY = Object.freeze({
+  overview: BookOpen,
+  entries: MapPin,
+  connections: Route,
+  presence: Users,
+  weather: CloudSun,
+  runtime: Settings2,
+});
+
+function findLocationName(entries = [], entryId = "") {
+  return entries.find((entry) => entry.id === entryId)?.name || "Unknown Location";
+}
+
+function findWeatherScopeName(scopes = [], scopeId = "") {
+  return scopes.find((scope) => scope.id === scopeId)?.name || "Unknown Weather Scope";
+}
+
+function findPresencePersonName(binding) {
+  return binding?.person?.displayName || "Unknown Person";
+}
+
+function formatRegistryOption(value) {
+  return String(value || "")
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+export default function LocationRegistryBuilderView({
+  contractVersion = "location-registry-builder.view.v1",
+  mode = "create",
+  currentTab = "overview",
+  hideTabs = false,
+  tabs = [],
+  registry,
+  saveStatus = "idle",
+  saveMessage = "",
+  entryDraft = null,
+  connectionDraft = null,
+  presenceBindingDraft = null,
+  weatherScopeDraft = null,
+  locationOptions = [],
+  locationLoadError = "",
+  npcEntryOptions = [],
+  npcEntryLoadError = "",
+  optionSets = {},
+  onSelectTab = () => {},
+  onUpdateField = () => {},
+  onUpdatePromptGuidance = () => {},
+  onUpdateRuntimeGuidance = () => {},
+  onSave = () => {},
+  onOpenNewEntry = () => {},
+  onOpenEditEntry = () => {},
+  onCloseEntry = () => {},
+  onUpdateEntryField = () => {},
+  onUpdateEntryListText = () => {},
+  onSetEntryKind = () => {},
+  onApplyLocation = () => {},
+  onSaveEntry = () => {},
+  onDeleteEntry = () => {},
+  onOpenNewConnection = () => {},
+  onOpenEditConnection = () => {},
+  onCloseConnection = () => {},
+  onUpdateConnectionField = () => {},
+  onSaveConnection = () => {},
+  onDeleteConnection = () => {},
+  onOpenNewPresenceBinding = () => {},
+  onOpenEditPresenceBinding = () => {},
+  onClosePresenceBinding = () => {},
+  onUpdatePresenceBindingField = () => {},
+  onUpdatePresenceConditionListText = () => {},
+  onApplyNpcEntry = () => {},
+  onSavePresenceBinding = () => {},
+  onDeletePresenceBinding = () => {},
+  onOpenNewWeatherScope = () => {},
+  onOpenEditWeatherScope = () => {},
+  onCloseWeatherScope = () => {},
+  onUpdateWeatherScopeField = () => {},
+  onSaveWeatherScope = () => {},
+  onDeleteWeatherScope = () => {},
+} = {}) {
+  return (
+    <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
+      <div className="space-y-5">
+        {hideTabs ? null : (
+          <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+            <div className="flex flex-wrap gap-2">
+              {tabs.map((tab) => {
+                const Icon = TAB_ICON_BY_KEY[tab.iconKey] || BookOpen;
+                const active = currentTab === tab.id;
+
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => onSelectTab(tab.id)}
+                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                      active
+                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                        : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                    }`}
+                  >
+                    <Icon size={14} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+          {currentTab === "overview" ? (
+            <OverviewTab
+              registry={registry}
+              onUpdateField={onUpdateField}
+              onUpdatePromptGuidance={onUpdatePromptGuidance}
+            />
+          ) : null}
+
+          {currentTab === "entries" ? (
+          <EntriesTab
+            entries={registry.entries}
+            presenceBindings={registry.presenceBindings}
+            weatherScopes={registry.weatherScopes}
+            locationLoadError={locationLoadError}
+            onAdd={onOpenNewEntry}
+            onEdit={onOpenEditEntry}
+            onDelete={onDeleteEntry}
+          />
+          ) : null}
+
+          {currentTab === "connections" ? (
+            <ConnectionsTab
+              entries={registry.entries}
+              connections={registry.connections}
+              onAdd={onOpenNewConnection}
+              onEdit={onOpenEditConnection}
+              onDelete={onDeleteConnection}
+            />
+          ) : null}
+
+          {currentTab === "presence" ? (
+            <PresenceTab
+              entries={registry.entries}
+              bindings={registry.presenceBindings}
+              npcEntryLoadError={npcEntryLoadError}
+              onAdd={onOpenNewPresenceBinding}
+              onEdit={onOpenEditPresenceBinding}
+              onDelete={onDeletePresenceBinding}
+            />
+          ) : null}
+
+          {currentTab === "weather" ? (
+            <WeatherTab
+              weatherScopes={registry.weatherScopes}
+              onAdd={onOpenNewWeatherScope}
+              onEdit={onOpenEditWeatherScope}
+              onDelete={onDeleteWeatherScope}
+            />
+          ) : null}
+
+          {currentTab === "runtime" ? (
+            <RuntimeTab
+              registry={registry}
+              onUpdateRuntimeGuidance={onUpdateRuntimeGuidance}
+            />
+          ) : null}
+        </div>
+      </div>
+
+      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          Registry Summary
+        </p>
+
+        <h2 className="mt-2 font-display text-3xl">{registry.title}</h2>
+
+        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          {registry.description || "No description has been added yet."}
+        </p>
+
+        <div className="mt-5 grid gap-3">
+          <SummaryPill label="Scope" value={registry.scope || "Unset"} />
+          <SummaryPill label="Locations" value={registry.entries.length} />
+          <SummaryPill
+            label="Connections"
+            value={registry.connections.length}
+          />
+          <SummaryPill
+            label="People & Presence"
+            value={registry.presenceBindings.length}
+          />
+          <SummaryPill
+            label="Weather Scopes"
+            value={registry.weatherScopes.length}
+          />
+          <SummaryPill
+            label="Mutation"
+            value={
+              registry.middlewareHints?.allowRuntimeMutation
+                ? "Runtime overlay allowed"
+                : "Locked"
+            }
+          />
+        </div>
+
+        {mode === "edit" ? (
+          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+            Use the page Save button to persist changes.
+          </p>
+        ) : (
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={saveStatus === "saving"}
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <Save size={15} />
+            {saveStatus === "saving" ? "Saving..." : "Save Registry"}
+          </button>
+        )}
+
+        {saveMessage ? (
+          <p
+            className={`mt-3 text-sm ${
+              saveStatus === "error" ? "text-red-200" : "text-emerald-200"
+            }`}
+          >
+            {saveMessage}
+          </p>
+        ) : null}
+
+        <p className="mt-4 text-xs leading-5 text-[var(--muted)]">
+          Location Registries are reusable authored graphs. Runtime chat
+          instances may later hydrate temporary basic locations, but those should
+          not be written back into this registry unless explicitly promoted.
+        </p>
+      </aside>
+
+      {entryDraft ? (
+        <LocationEntryModal
+          draft={entryDraft}
+          entries={registry.entries}
+          weatherScopes={registry.weatherScopes}
+          presenceBindings={registry.presenceBindings}
+          locationOptions={locationOptions}
+          linkedCreationIds={registry.entries
+            .filter((entry) => entry.kind === "CREATION_REF" && entry.creationId)
+            .map((entry) => entry.creationId)}
+          onClose={onCloseEntry}
+          onChange={onUpdateEntryField}
+          onListTextChange={onUpdateEntryListText}
+          optionSets={optionSets}
+          onSetKind={onSetEntryKind}
+          onApplyLocation={onApplyLocation}
+          onSave={onSaveEntry}
+        />
+              ) : null}
+
+      {connectionDraft ? (
+        <LocationConnectionModal
+          draft={connectionDraft}
+          entries={registry.entries}
+          optionSets={optionSets}
+          onClose={onCloseConnection}
+          onChange={onUpdateConnectionField}
+          onSave={onSaveConnection}
+        />
+      ) : null}
+
+      {presenceBindingDraft ? (
+        <PresenceBindingModal
+          draft={presenceBindingDraft}
+          entries={registry.entries}
+          bindings={registry.presenceBindings}
+          npcEntryOptions={npcEntryOptions}
+          npcEntryLoadError={npcEntryLoadError}
+          onClose={onClosePresenceBinding}
+          onChange={onUpdatePresenceBindingField}
+          onConditionListTextChange={onUpdatePresenceConditionListText}
+          optionSets={optionSets}
+          onApplyNpcEntry={onApplyNpcEntry}
+          onSave={onSavePresenceBinding}
+        />
+      ) : null}
+
+      {weatherScopeDraft ? (
+        <WeatherScopeModal
+          draft={weatherScopeDraft}
+          onClose={onCloseWeatherScope}
+          onChange={onUpdateWeatherScopeField}
+          onSave={onSaveWeatherScope}
+        />
+      ) : null}
+    </section>
+  );
+}
+
+function OverviewTab({ registry, onUpdateField, onUpdatePromptGuidance }) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="Registry Overview"
+        body="Define the registry’s purpose and scope. This becomes the reusable place-continuity spine for attached rooms."
+      />
+
+      <TextInput
+        label="Registry Title"
+        value={registry.title}
+        onChange={(value) => onUpdateField("title", value)}
+        placeholder="Name this location registry..."
+      />
+
+      <TextInput
+        label="Scope"
+        value={registry.scope}
+        onChange={(value) => onUpdateField("scope", value)}
+        placeholder="World, city, district, story room, campaign..."
+      />
+
+      <TextArea
+        label="Description"
+        value={registry.description}
+        onChange={(value) => onUpdateField("description", value)}
+        rows={4}
+      />
+
+      <TextArea
+        label="Runtime Summary"
+        value={registry.promptGuidance?.summary || ""}
+        onChange={(value) => onUpdatePromptGuidance("summary", value)}
+        rows={4}
+        placeholder="Compact summary for middleware and prompt context."
+      />
+
+      <TextArea
+        label="Usage Notes"
+        value={registry.promptGuidance?.usageNotes || ""}
+        onChange={(value) => onUpdatePromptGuidance("usageNotes", value)}
+        rows={4}
+        placeholder="How should attached rooms use this registry?"
+      />
+    </div>
+  );
+}
+
+function EntriesTab({
+  entries,
+  presenceBindings,
+  weatherScopes,
+  locationLoadError,
+  onAdd,
+  onEdit,
+  onDelete,
+}) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="Locations"
+        body="Add tracked places. Sub-locations are locations with parent locations, so neighborhoods, buildings, rooms, streets, and landmarks can all share one graph."
+      />
+
+      <button
+        type="button"
+        onClick={onAdd}
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+      >
+        <Plus size={14} />
+        Add Location
+      </button>
+      {locationLoadError ? (
+        <p className="text-sm text-red-200">{locationLoadError}</p>
+      ) : null}
+      <div className="grid gap-4">
+        {entries.length ? (
+          entries.map((entry) => (
+            <article
+              key={entry.id}
+              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                    {entry.kind === "CREATION_REF" ? "Linked Location" : "Basic Location"} ·{" "}
+                    {entry.category || "Location"} · {entry.locationScale}
+                  </p>
+                  <h3 className="mt-2 font-display text-3xl">
+                    {entry.name || "Untitled Location"}
+                  </h3>
+                </div>
+
+                <div className="flex gap-2">
+                  <SmallAction onClick={() => onEdit(entry)}>Edit</SmallAction>
+                  <SmallDangerAction onClick={() => onDelete(entry.id)} />
+                </div>
+              </div>
+
+              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+                {entry.parentLocationId ? (
+                  <p>Parent: {findLocationName(entries, entry.parentLocationId)}</p>
+                ) : null}
+
+                {entry.weatherScopeId ? (
+                  <p>
+                    Weather Scope:{" "}
+                    {findWeatherScopeName(weatherScopes, entry.weatherScopeId)}
+                  </p>
+                ) : null}
+
+                {entry.region ? <p>Region: {entry.region}</p> : null}
+                {entry.mood ? <p>Mood: {entry.mood}</p> : null}
+                {presenceBindings.filter(
+                  (binding) => binding.locationEntryId === entry.id
+                ).length ? (
+                  <p>
+                    Structured People: {presenceBindings.filter(
+                      (binding) => binding.locationEntryId === entry.id
+                    ).length}
+                  </p>
+                ) : null}
+
+                <p>
+                  {entry.summary ||
+                    entry.publicDescription ||
+                    entry.placeFunction ||
+                    "No location summary yet."}
+                </p>
+              </div>
+            </article>
+          ))
+        ) : (
+          <EmptyPanel message="No locations yet. Add a tracked location, building, room, street, district, or landmark to begin." />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ConnectionsTab({
+  entries,
+  connections,
+  onAdd,
+  onEdit,
+  onDelete,
+}) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="Connections"
+        body="Define how Locations relate, how substantial their separation is, and which travel methods can use the route. Qualitative distance drives travel narration; physical distance remains optional descriptive context."
+      />
+
+      <button
+        type="button"
+        onClick={onAdd}
+        disabled={entries.length < 2}
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <Plus size={14} />
+        Add Connection
+      </button>
+
+      {entries.length < 2 ? (
+        <p className="text-sm text-[var(--muted)]">
+          Add at least two locations before creating connections.
+        </p>
+      ) : null}
+
+      <div className="grid gap-4">
+        {connections.length ? (
+          connections.map((connection) => (
+            <article
+              key={connection.id}
+              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                    {connection.relation} · {connection.defaultRouteType || connection.routeType}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl">
+                    {findLocationName(entries, connection.fromLocationId)} →{" "}
+                    {findLocationName(entries, connection.toLocationId)}
+                  </h3>
+                </div>
+
+                <div className="flex gap-2">
+                  <SmallAction onClick={() => onEdit(connection)}>
+                    Edit
+                  </SmallAction>
+                  <SmallDangerAction onClick={() => onDelete(connection.id)} />
+                </div>
+              </div>
+
+              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+                <p>
+                  Distance Estimate: {connection.distanceModeDisplay || "Unknown / Unset"}
+                </p>
+
+                <p>
+                  Available Methods: {Array.isArray(connection.availableRouteTypes) &&
+                  connection.availableRouteTypes.length
+                    ? connection.availableRouteTypes
+                        .map(formatRegistryOption)
+                        .join(", ")
+                    : formatRegistryOption(
+                        connection.defaultRouteType ||
+                          connection.routeType ||
+                          "UNKNOWN"
+                      )}
+                </p>
+
+                {connection.distanceMeters ? (
+                  <p>
+                    Physical Distance: {connection.distanceMeters}m
+                    {" · informational only"}
+                  </p>
+                ) : null}
+
+                <p>
+                  Bidirectional: {connection.bidirectional ? "yes" : "no"}
+                </p>
+
+                <p>{connection.notes || "No connection notes yet."}</p>
+              </div>
+            </article>
+          ))
+        ) : (
+          <EmptyPanel message="No connections yet." />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PresenceTab({
+  entries,
+  bindings,
+  npcEntryLoadError,
+  onAdd,
+  onEdit,
+  onDelete,
+}) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="People & Presence"
+        body="Connect Locations to NPC Registry entries. These bindings define ownership, employment, residence, common visits, and future deterministic arrival opportunities without duplicating Character identity."
+      />
+
+      <button
+        type="button"
+        onClick={onAdd}
+        disabled={!entries.length}
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <Plus size={14} />
+        Add Presence Binding
+      </button>
+
+      {!entries.length ? (
+        <p className="text-sm text-[var(--muted)]">
+          Add at least one Location before assigning people.
+        </p>
+      ) : null}
+
+      {npcEntryLoadError ? (
+        <p className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          {npcEntryLoadError}
+        </p>
+      ) : null}
+
+      <div className="grid gap-4">
+        {bindings.length ? (
+          bindings.map((binding) => (
+            <article
+              key={binding.id}
+              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                    {formatRegistryOption(binding.relationshipRole)} · {formatRegistryOption(binding.frequency)}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl">
+                    {findPresencePersonName(binding)}
+                  </h3>
+                  <p className="mt-1 text-sm text-[var(--muted)]">
+                    {findLocationName(entries, binding.locationEntryId)}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <SmallAction onClick={() => onEdit(binding)}>Edit</SmallAction>
+                  <SmallDangerAction onClick={() => onDelete(binding.id)} />
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <PresenceBadge>
+                  {binding.automaticPresence ? "Automatic Enabled" : "Manual Only"}
+                </PresenceBadge>
+                {(binding.opportunityTriggers || []).map((trigger) => (
+                  <PresenceBadge key={trigger}>
+                    {formatRegistryOption(trigger)}
+                  </PresenceBadge>
+                ))}
+              </div>
+
+              <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--muted)]">
+                <p>
+                  NPC Registry: {binding.person.registryTitle || "Linked Registry"}
+                </p>
+                <p>
+                  Cooldown: {binding.cooldownTurns} turns · Minimum absence: {binding.minimumAbsentTurns} turns
+                </p>
+                {binding.guidance ? <p>{binding.guidance}</p> : null}
+              </div>
+            </article>
+          ))
+        ) : (
+          <EmptyPanel message="No structured people or presence rules yet." />
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+        Existing Common Occupants and Ownership Notes remain preserved as legacy descriptive data. New runtime work should prefer these structured bindings.
+      </div>
+    </div>
+  );
+}
+
+function PresenceBadge({ children }) {
+  return (
+    <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+      {children}
+    </span>
+  );
+}
+
+function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="Weather Scopes"
+        body="Weather scopes let parent locations control shared conditions. A neighborhood, city, or wilderness region can define weather inherited by child locations."
+      />
+
+      <button
+        type="button"
+        onClick={onAdd}
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+      >
+        <Plus size={14} />
+        Add Weather Scope
+      </button>
+
+      <div className="grid gap-4">
+        {weatherScopes.length ? (
+          weatherScopes.map((scope) => (
+            <article
+              key={scope.id}
+              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                    {scope.scopeType || "Weather Scope"}
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl">
+                    {scope.name || "Untitled Weather Scope"}
+                  </h3>
+                </div>
+
+                <div className="flex gap-2">
+                  <SmallAction onClick={() => onEdit(scope)}>Edit</SmallAction>
+                  <SmallDangerAction onClick={() => onDelete(scope.id)} />
+                </div>
+              </div>
+
+              <p className="mt-3 leading-7 text-[var(--muted)]">
+                {scope.defaultWeatherBehavior || scope.notes || "No notes yet."}
+              </p>
+            </article>
+          ))
+        ) : (
+          <EmptyPanel message="No weather scopes yet." />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RuntimeTab({ registry, onUpdateRuntimeGuidance }) {
+  return (
+    <div className="grid gap-5">
+      <SectionHeader
+        title="Runtime Rules"
+        body="These fields describe future middleware behavior. The saved registry remains reusable; hydrated chat-instance state can later hold active location and ad-hoc basic locations."
+      />
+
+      <TextArea
+        label="Movement Resolver Notes"
+        value={registry.runtimeGuidance?.movementResolverNotes || ""}
+        onChange={(value) =>
+          onUpdateRuntimeGuidance("movementResolverNotes", value)
+        }
+        rows={5}
+        placeholder="Notes for later movement resolver behavior."
+      />
+
+      <TextArea
+        label="Ad-Hoc Location Policy"
+        value={registry.runtimeGuidance?.adHocLocationPolicy || ""}
+        onChange={(value) =>
+          onUpdateRuntimeGuidance("adHocLocationPolicy", value)
+        }
+        rows={5}
+      />
+
+      <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          Middleware Intent
+        </p>
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
+          {(registry.middlewareHints?.intendedUse || []).map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+function LocationEntryModal({
+  draft,
+  entries,
+  weatherScopes,
+  presenceBindings = [],
+  locationOptions = [],
+  linkedCreationIds = [],
+  onClose,
+  onChange,
+  onListTextChange,
+  optionSets = {},
+  onSetKind,
+  onApplyLocation,
+  onSave,
+}) {
+  const parentOptions = entries
+    .filter((entry) => entry.id !== draft.id)
+    .map((entry) => ({
+      value: entry.id,
+      label: entry.name || "Untitled Location",
+    }));
+
+  const weatherOptions = weatherScopes.map((scope) => ({
+    value: scope.id,
+    label: scope.name || "Untitled Weather Scope",
+  }));
+  const disabledIds = linkedCreationIds.filter((id) => id !== draft.creationId);
+  const selectedIds = draft.creationId ? [draft.creationId] : [];
+  const locationPresenceBindings = presenceBindings.filter(
+    (binding) => binding.locationEntryId === draft.id
+  );
+  const ownerCount = locationPresenceBindings.filter(
+    (binding) => binding.relationshipRole === "OWNER"
+  ).length;
+
+  return (
+    <ModalShell title="Location Entry" onClose={onClose}>
+      <div className="grid gap-5">
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="md:col-span-2">
+            <div className="mb-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => onSetKind("AD_HOC")}
+                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+                  draft.kind === "AD_HOC"
+                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    : "border-white/10 text-[var(--muted)]"
+                }`}
+              >
+                Basic / Ad-Hoc Location
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSetKind("CREATION_REF")}
+                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+                  draft.kind === "CREATION_REF"
+                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    : "border-white/10 text-[var(--muted)]"
+                }`}
+              >
+                Link Existing Location
+              </button>
+            </div>
+
+            <ModalActions
+              onClose={onClose}
+              onSave={onSave}
+              saveLabel="Save Location"
+              placement="top"
+            />
+
+            {draft.kind === "CREATION_REF" ? (
+              <CreationPickerPanelView
+                items={locationOptions}
+                selectedIds={selectedIds}
+                disabledIds={disabledIds}
+                searchPlaceholder="Search location assets..."
+                emptyMessage="No location assets found yet."
+                onSelect={onApplyLocation}
+              />
+            ) : (
+              <TextInput
+                label="Name"
+                value={draft.name}
+                onChange={(value) => onChange("name", value)}
+              />
+            )}
+          </div>
+
+          <SelectInput
+            label="Category"
+            value={draft.category}
+            options={optionSets.locationCategoryOptions || []}
+            onChange={(value) => onChange("category", value)}
+          />
+
+          <SelectInput
+            label="Location Scale"
+            value={draft.locationScale}
+            options={optionSets.locationScaleOptions || []}
+            onChange={(value) => onChange("locationScale", value)}
+          />
+
+          <SelectInput
+            label="Space Type"
+            value={draft.spaceType}
+            options={optionSets.spaceTypeOptions || []}
+            onChange={(value) => onChange("spaceType", value)}
+          />
+
+          <SelectInput
+            label="Parent Location"
+            value={draft.parentLocationId}
+            options={parentOptions}
+            includeBlank
+            blankLabel="No parent"
+            onChange={(value) => onChange("parentLocationId", value)}
+          />
+
+          <SelectInput
+            label="Weather Scope"
+            value={draft.weatherScopeId}
+            options={weatherOptions}
+            includeBlank
+            blankLabel="Use own / inherited weather"
+            onChange={(value) => onChange("weatherScopeId", value)}
+          />
+
+          <TextInput
+            label="Region / Area Label"
+            value={draft.region}
+            onChange={(value) => onChange("region", value)}
+          />
+
+          <TextInput
+            label="Mood"
+            value={draft.mood}
+            onChange={(value) => onChange("mood", value)}
+          />
+        </div>
+
+        <TextArea
+          label="Aliases"
+          value={draft.aliasesText || ""}
+          onChange={(value) => onListTextChange("aliases", value)}
+          rows={3}
+          placeholder="One alias per line."
+        />
+
+        <TextArea
+          label="Summary"
+          value={draft.summary}
+          onChange={(value) => onChange("summary", value)}
+          rows={4}
+        />
+
+        <TextArea
+          label="Public Description"
+          value={draft.publicDescription}
+          onChange={(value) => onChange("publicDescription", value)}
+          rows={4}
+        />
+
+        <TextArea
+          label="Hidden Notes"
+          value={draft.hiddenNotes}
+          onChange={(value) => onChange("hiddenNotes", value)}
+          rows={4}
+        />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <TextArea
+            label="Atmosphere"
+            value={draft.atmosphere}
+            onChange={(value) => onChange("atmosphere", value)}
+            rows={4}
+          />
+
+          <TextArea
+            label="Sensory Notes"
+            value={draft.sensoryNotes}
+            onChange={(value) => onChange("sensoryNotes", value)}
+            rows={4}
+          />
+
+          <TextArea
+            label="Place Function"
+            value={draft.placeFunction}
+            onChange={(value) => onChange("placeFunction", value)}
+            rows={4}
+          />
+
+          <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              People & Presence
+            </p>
+            <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+              <p>Structured people: {locationPresenceBindings.length}</p>
+              <p>Owners: {ownerCount}</p>
+              <p>
+                Manage owners, occupants, visitors, frequency, and automatic
+                arrival guidance from the People & Presence tab.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <TextArea
+          label="Themes"
+          value={draft.themesText || ""}
+          onChange={(value) => onListTextChange("themes", value)}
+          rows={3}
+        />
+
+        <TextArea
+          label="Scene Affordances"
+          value={draft.sceneAffordancesText || ""}
+          onChange={(value) => onListTextChange("sceneAffordances", value)}
+          rows={3}
+          placeholder="Investigation, chase, social scene, ambush..."
+        />
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <TextArea
+            label="Access Rules"
+            value={draft.accessRules}
+            onChange={(value) => onChange("accessRules", value)}
+            rows={4}
+          />
+
+          <TextArea
+            label="Knowledge Rules"
+            value={draft.knowledgeRules}
+            onChange={(value) => onChange("knowledgeRules", value)}
+            rows={4}
+          />
+
+          <TextArea
+            label="Rules Notes"
+            value={draft.rulesNotes}
+            onChange={(value) => onChange("rulesNotes", value)}
+            rows={4}
+          />
+        </div>
+
+        <TextArea
+          label="Prompt Guidance"
+          value={draft.promptGuidance}
+          onChange={(value) => onChange("promptGuidance", value)}
+          rows={4}
+        />
+
+        <ModalActions
+          onClose={onClose}
+          onSave={onSave}
+          saveLabel="Save Location"
+        />
+      </div>
+    </ModalShell>
+  );
+}
+
+function LocationConnectionModal({
+  draft,
+  entries,
+  optionSets = {},
+  onClose,
+  onChange,
+  onSave,
+}) {
+  const locationOptions = entries.map((entry) => ({
+    value: entry.id,
+    label: entry.name || "Untitled Location",
+  }));
+
+  const availableRouteTypes = Array.isArray(draft.availableRouteTypes)
+    ? draft.availableRouteTypes
+    : draft.routeType
+      ? [draft.routeType]
+      : [];
+
+  const defaultRouteType =
+    draft.defaultRouteType || draft.routeType || "UNKNOWN";
+
+  const defaultRouteOptions = (optionSets.routeTypeOptions || [])
+    .filter(
+      (routeType) =>
+        availableRouteTypes.includes(routeType) ||
+        routeType === defaultRouteType
+    )
+    .map((routeType) => ({
+      value: routeType,
+      label: formatRegistryOption(routeType),
+    }));
+
+  const distanceDescription = draft.distanceDescription || "";
+
+  const relationDistanceSuggestion =
+    draft.relationDistanceSuggestion || "UNKNOWN";
+
+  const defaultTravelTierText = draft.defaultTravelTierText || "";
+
+  return (
+    <ModalShell title="Connection Rule" onClose={onClose}>
+      <div className="grid gap-5">
+        <div className="grid gap-4 md:grid-cols-2">
+          <SelectInput
+            label="From Location"
+            value={draft.fromLocationId}
+            options={locationOptions}
+            includeBlank
+            blankLabel="Select source"
+            onChange={(value) => onChange("fromLocationId", value)}
+          />
+
+          <SelectInput
+            label="To Location"
+            value={draft.toLocationId}
+            options={locationOptions}
+            includeBlank
+            blankLabel="Select target"
+            onChange={(value) => onChange("toLocationId", value)}
+          />
+
+          <SelectInput
+            label="Relationship"
+            value={draft.relation}
+            options={optionSets.connectionRelationOptions || []}
+            onChange={(value) => onChange("relation", value)}
+          />
+
+          <SelectInput
+            label="Distance Estimate"
+            value={draft.distanceMode}
+            options={optionSets.distanceModeOptions || []}
+            onChange={(value) => onChange("distanceMode", value)}
+          />
+        </div>
+
+        <RouteTypeMultiSelect
+          label="Available Travel Methods"
+          values={availableRouteTypes}
+          options={(optionSets.routeTypeOptions || []).filter(
+            (routeType) => routeType !== "UNKNOWN"
+          )}
+          onChange={(value) => onChange("availableRouteTypes", value)}
+        />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <SelectInput
+            label="Default Travel Method"
+            value={defaultRouteType}
+            options={defaultRouteOptions}
+            includeBlank={!defaultRouteOptions.length}
+            blankLabel="Select an available method"
+            onChange={(value) => onChange("defaultRouteType", value)}
+          />
+
+          <TextInput
+            label="Optional Physical Distance (Meters)"
+            value={draft.distanceMeters}
+            onChange={(value) => onChange("distanceMeters", value)}
+            placeholder="For maps, tactical context, or narration"
+          />
+
+          <CheckboxInput
+            label="Bidirectional"
+            checked={draft.bidirectional}
+            onChange={(value) => onChange("bidirectional", value)}
+          />
+        </div>
+
+        <div className="grid gap-3 rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p>
+            <span className="text-[var(--muted-gold)]">Travel authority:</span>{" "}
+            the qualitative Distance Estimate and runtime-selected travel
+            capability drive travel narration. Physical meters are descriptive
+            only.
+          </p>
+
+          <p>
+            <span className="text-[var(--muted-gold)]">Relationship suggestion:</span>{" "}
+            {draft.relationDistanceSuggestionLabel || formatRegistryOption(relationDistanceSuggestion)}
+          </p>
+
+          {distanceDescription ? (
+            <p>
+              <span className="text-[var(--muted-gold)]">Selected distance:</span>{" "}
+              {distanceDescription}
+            </p>
+          ) : null}
+
+          {defaultTravelTierText ? (
+            <p>
+              <span className="text-[var(--muted-gold)]">Default method fallback:</span>{" "}
+              {defaultTravelTierText} A runtime character, vehicle, spell, portal,
+              or other travel asset may supply a different effective tier.
+            </p>
+          ) : null}
+        </div>
+
+        <TextArea
+          label="Access Rules"
+          value={draft.accessRules}
+          onChange={(value) => onChange("accessRules", value)}
+          rows={4}
+        />
+
+        <TextArea
+          label="Route Notes"
+          value={draft.notes}
+          onChange={(value) => onChange("notes", value)}
+          rows={4}
+        />
+
+        <ModalActions
+          onClose={onClose}
+          onSave={onSave}
+          saveLabel="Save Connection"
+        />
+      </div>
+    </ModalShell>
+  );
+}
+
+function PresenceBindingModal({
+  draft,
+  entries,
+  bindings,
+  npcEntryOptions,
+  npcEntryLoadError,
+  onClose,
+  onChange,
+  onConditionListTextChange,
+  optionSets = {},
+  onApplyNpcEntry,
+  onSave,
+}) {
+  const locationOptions = entries.map((entry) => ({
+    value: entry.id,
+    label: entry.name || "Untitled Location",
+  }));
+  const selectedPersonId =
+    draft.person?.registryCreationId && draft.person?.registryEntryId
+      ? `${draft.person.registryCreationId}:${draft.person.registryEntryId}`
+      : "";
+  const disabledPersonIds = bindings
+    .filter(
+      (binding) =>
+        binding.id !== draft.id &&
+        binding.locationEntryId === draft.locationEntryId
+    )
+    .map(
+      (binding) =>
+        `${binding.person.registryCreationId}:${binding.person.registryEntryId}`
+    );
+
+  return (
+    <ModalShell title="People & Presence Binding" onClose={onClose}>
+      <div className="grid gap-5">
+        <div className="grid gap-4 md:grid-cols-2">
+          <SelectInput
+            label="Location"
+            value={draft.locationEntryId}
+            options={locationOptions}
+            includeBlank
+            blankLabel="Select Location"
+            onChange={(value) => onChange("locationEntryId", value)}
+          />
+
+          <SelectInput
+            label="Relationship to Location"
+            value={draft.relationshipRole}
+            options={optionSets.presenceRelationshipRoleOptions || []}
+            onChange={(value) => onChange("relationshipRole", value)}
+          />
+
+          <SelectInput
+            label="Presence Frequency"
+            value={draft.frequency}
+            options={optionSets.presenceFrequencyOptions || []}
+            onChange={(value) => onChange("frequency", value)}
+          />
+
+          <CheckboxInput
+            label="Automatic Presence Enabled"
+            checked={draft.automaticPresence}
+            onChange={(value) => onChange("automaticPresence", value)}
+          />
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            NPC Registry Person
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            Select a linked Character or custom NPC entry from one of your NPC Registries. Location Registries store only the stable reference and presence rule.
+          </p>
+
+          {npcEntryLoadError ? (
+            <p className="mt-3 text-sm text-red-200">{npcEntryLoadError}</p>
+          ) : null}
+
+          <div className="mt-4">
+            <CreationPickerPanelView
+              items={npcEntryOptions}
+              selectedIds={selectedPersonId ? [selectedPersonId] : []}
+              disabledIds={disabledPersonIds}
+              searchPlaceholder="Search NPC Registry entries..."
+              emptyMessage="No usable NPC Registry entries were found."
+              gridClassName="max-h-[38vh] sm:grid-cols-2 lg:grid-cols-3"
+              onSelect={onApplyNpcEntry}
+            />
+          </div>
+        </div>
+
+        {draft.person?.displayName ? (
+          <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Selected Person</p>
+            <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              {draft.person.registryTitle || "NPC Registry"} · {formatRegistryOption(draft.person.entryKind || "NPC")}
+            </p>
+          </div>
+        ) : null}
+
+        <OptionMultiSelect
+          label="Eligible Arrival Opportunities"
+          description="These are opportunities, not guarantees. Frequency, cooldown, conditions, and later narrative-driver evidence determine whether an automatic arrival may occur."
+          values={draft.opportunityTriggers}
+          options={optionSets.presenceOpportunityTriggerOptions || []}
+          onChange={(value) => onChange("opportunityTriggers", value)}
+        />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <TextInput
+            label="Cooldown Turns"
+            value={draft.cooldownTurns}
+            onChange={(value) => onChange("cooldownTurns", value)}
+            placeholder="6"
+          />
+          <TextInput
+            label="Minimum Absent Turns"
+            value={draft.minimumAbsentTurns}
+            onChange={(value) => onChange("minimumAbsentTurns", value)}
+            placeholder="2"
+          />
+        </div>
+
+        <TextArea
+          label="Presence / Arrival Guidance"
+          value={draft.guidance}
+          onChange={(value) => onChange("guidance", value)}
+          rows={4}
+          placeholder="Usually behind the counter during business hours; may arrive from the neighboring workshop when technical help is needed."
+        />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <TextArea
+            label="Allowed Dayparts"
+            value={draft.conditionDaypartsText || ""}
+            onChange={(value) => onConditionListTextChange("dayparts", value)}
+            rows={3}
+            placeholder="MORNING\nAFTERNOON"
+          />
+          <TextArea
+            label="Required Scene Tags"
+            value={draft.conditionRequiredSceneTagsText || ""}
+            onChange={(value) => onConditionListTextChange("requiredSceneTags", value)}
+            rows={3}
+            placeholder="technical_problem\nbusiness_hours"
+          />
+          <TextArea
+            label="Excluded Scene Tags"
+            value={draft.conditionExcludedSceneTagsText || ""}
+            onChange={(value) => onConditionListTextChange("excludedSceneTags", value)}
+            rows={3}
+          />
+          <TextArea
+            label="Required Runtime Flags"
+            value={draft.conditionRequiredFlagsText || ""}
+            onChange={(value) => onConditionListTextChange("requiredFlags", value)}
+            rows={3}
+          />
+        </div>
+
+        <ModalActions
+          onClose={onClose}
+          onSave={onSave}
+          saveLabel="Save Presence Binding"
+        />
+      </div>
+    </ModalShell>
+  );
+}
+
+function WeatherScopeModal({ draft, onClose, onChange, onSave }) {
+  return (
+    <ModalShell title="Weather Scope" onClose={onClose}>
+      <div className="grid gap-5">
+        <TextInput
+          label="Name"
+          value={draft.name}
+          onChange={(value) => onChange("name", value)}
+        />
+
+        <TextInput
+          label="Scope Type"
+          value={draft.scopeType}
+          onChange={(value) => onChange("scopeType", value)}
+        />
+
+        <TextArea
+          label="Default Weather Behavior"
+          value={draft.defaultWeatherBehavior}
+          onChange={(value) => onChange("defaultWeatherBehavior", value)}
+          rows={4}
+        />
+
+        <TextArea
+          label="Notes"
+          value={draft.notes}
+          onChange={(value) => onChange("notes", value)}
+          rows={4}
+        />
+
+        <ModalActions
+          onClose={onClose}
+          onSave={onSave}
+          saveLabel="Save Weather Scope"
+        />
+      </div>
+    </ModalShell>
+  );
+}
+
+function ModalShell({ title, children, onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
+      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/30 bg-black shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              Location Registry
+            </p>
+            <h2 className="mt-2 font-display text-4xl">{title}</h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            aria-label="Close modal"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="max-h-[calc(92vh-105px)] overflow-y-auto p-5">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ModalActions({
+  onClose,
+  onSave,
+  saveLabel,
+  placement = "bottom",
+}) {
+  const positionClassName =
+    placement === "top"
+      ? "border-b border-white/10 pb-5"
+      : "border-t border-white/10 pt-5";
+
+  return (
+    <div className={`flex flex-wrap justify-end gap-3 ${positionClassName}`}>
+      <button
+        type="button"
+        onClick={onClose}
+        className="rounded-xl border border-white/10 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        onClick={onSave}
+        className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+      >
+        {saveLabel}
+      </button>
+    </div>
+  );
+}
+
+function SectionHeader({ title, body }) {
+  return (
+    <div>
+      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+        <Compass size={14} />
+        Location Registry
+      </p>
+      <h2 className="mt-2 font-display text-4xl">{title}</h2>
+      <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">{body}</p>
+    </div>
+  );
+}
+
+function TextInput({ label, value, onChange, placeholder = "" }) {
+  return (
+    <label className="block">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        {label}
+      </span>
+      <input
+        value={value ?? ""}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      />
+    </label>
+  );
+}
+
+function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
+  return (
+    <label className="block">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        {label}
+      </span>
+      <textarea
+        value={value || ""}
+        onChange={(event) => onChange(event.target.value)}
+        rows={rows}
+        placeholder={placeholder}
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      />
+    </label>
+  );
+}
+
+function SelectInput({
+  label,
+  value,
+  options = [],
+  onChange,
+  includeBlank = false,
+  blankLabel = "None",
+}) {
+  const normalizedOptions = options.map((option) =>
+    typeof option === "string"
+      ? {
+          value: option,
+          label: option.replaceAll("_", " "),
+        }
+      : option
+  );
+
+  return (
+    <label className="block">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        {label}
+      </span>
+      <select
+        value={value || ""}
+        onChange={(event) => onChange(event.target.value)}
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+      >
+        {includeBlank ? <option value="">{blankLabel}</option> : null}
+        {normalizedOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function OptionMultiSelect({
+  label,
+  description = "",
+  values = [],
+  options = [],
+  onChange,
+}) {
+  const selected = new Set(Array.isArray(values) ? values : []);
+
+  function toggleOption(option) {
+    const nextValues = selected.has(option)
+      ? [...selected].filter((value) => value !== option)
+      : [...selected, option];
+
+    onChange(nextValues);
+  }
+
+  return (
+    <fieldset className="rounded-2xl border border-white/10 bg-black/25 p-4">
+      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        {label}
+      </legend>
+      {description ? (
+        <p className="mb-4 text-sm leading-6 text-[var(--muted)]">
+          {description}
+        </p>
+      ) : null}
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {options.map((option) => (
+          <label
+            key={option}
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+          >
+            <input
+              type="checkbox"
+              checked={selected.has(option)}
+              onChange={() => toggleOption(option)}
+            />
+            <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+              {formatRegistryOption(option)}
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function RouteTypeMultiSelect({
+  label,
+  values = [],
+  options = [],
+  onChange,
+}) {
+  const selected = new Set(Array.isArray(values) ? values : []);
+
+  function toggleRouteType(routeType) {
+    const nextValues = selected.has(routeType)
+      ? [...selected].filter((value) => value !== routeType)
+      : [...selected, routeType];
+
+    onChange(nextValues);
+  }
+
+  return (
+    <fieldset className="rounded-2xl border border-white/10 bg-black/25 p-4">
+      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        {label}
+      </legend>
+
+      <p className="mb-4 text-sm leading-6 text-[var(--muted)]">
+        Select every travel method this connection supports. The default method
+        is used only when runtime context does not identify another valid method.
+      </p>
+
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {options.map((routeType) => (
+          <label
+            key={routeType}
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+          >
+            <input
+              type="checkbox"
+              checked={selected.has(routeType)}
+              onChange={() => toggleRouteType(routeType)}
+            />
+            <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+              {formatRegistryOption(routeType)}
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function CheckboxInput({ label, checked, onChange }) {
+  return (
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+      <input
+        type="checkbox"
+        checked={Boolean(checked)}
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <span className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        {label}
+      </span>
+    </label>
+  );
+}
+
+function EmptyPanel({ message }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+      <p className="text-sm leading-6 text-[var(--muted)]">{message}</p>
+    </div>
+  );
+}
+
+function SmallAction({ children, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+    >
+      {children}
+    </button>
+  );
+}
+
+function SmallDangerAction({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-lg border border-white/10 px-3 py-2 text-red-200 transition hover:border-red-300/35"
+      aria-label="Delete"
+    >
+      <Trash2 size={14} />
+    </button>
+  );
+}
+
+function SummaryPill({ label, value }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        {label}
+      </p>
+      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+    </div>
+  );
+}

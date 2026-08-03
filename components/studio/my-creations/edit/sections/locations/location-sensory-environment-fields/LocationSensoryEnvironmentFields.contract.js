@@ -1,0 +1,60 @@
+export const LOCATION_SENSORY_ENVIRONMENT_FIELDS_VIEW_CONTRACT_VERSION =
+  "locationSensoryEnvironmentFields.view.v1";
+
+export const LOCATION_SENSORY_ENVIRONMENT_FIELDS_VIEW_CONTRACT = Object.freeze({
+  feature: "LocationSensoryEnvironmentFields",
+  version: LOCATION_SENSORY_ENVIRONMENT_FIELDS_VIEW_CONTRACT_VERSION,
+  boundary:
+    "Portable View receives display-ready sensory values, scent-note rows, and semantic callbacks only.",
+  viewInputs: Object.freeze([
+    "guidanceText",
+    "scaleMin",
+    "scaleMax",
+    "visionLightLevelValue",
+    "visionObstructionLevelValue",
+    "visionGlareLevelValue",
+    "hearingAmbientNoiseLevelValue",
+    "hearingObstructionLevelValue",
+    "hearingEchoLevelValue",
+    "scentMaskingLevelValue",
+    "scentDispersalLevelValue",
+    "scentNotes",
+  ]),
+  semanticCallbacks: Object.freeze([
+    "onChangeVisionLightLevel",
+    "onChangeVisionObstructionLevel",
+    "onChangeVisionGlareLevel",
+    "onChangeHearingAmbientNoiseLevel",
+    "onChangeHearingObstructionLevel",
+    "onChangeHearingEchoLevel",
+    "onChangeScentMaskingLevel",
+    "onChangeScentDispersalLevel",
+    "onChangeScentNoteLabel",
+    "onChangeScentNoteStrength",
+    "onChangeScentTagDraft",
+    "onAddScentTags",
+    "onRemoveScentTag",
+    "onAddScentNote",
+    "onRemoveScentNote",
+  ]),
+  storageFields: Object.freeze([
+    "sensoryProfile.environment.VISION",
+    "sensoryProfile.environment.HEARING",
+    "sensoryProfile.environment.SCENT",
+  ]),
+  legacyReadFields: Object.freeze([
+    "environment.vision",
+    "environment.hearing",
+    "environment.scent",
+    "scent note name",
+  ]),
+  applicationOwned: Object.freeze([
+    "sensory profile hydration",
+    "scale clamping and blank-value inheritance semantics",
+    "legacy lowercase sense normalization",
+    "scent tag parsing and deduplication",
+    "nested profile mutation",
+    "Creation save orchestration",
+    "persistence",
+  ]),
+});

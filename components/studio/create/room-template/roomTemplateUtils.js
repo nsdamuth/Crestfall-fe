@@ -1,0 +1,259 @@
+import { getDefaultCreationImageForType } from "@/lib/shared/creations/creationMedia";
+
+function normalizeCreationType(type) {
+  return String(type || "").trim().toUpperCase();
+}
+function getPickerImageUrl(item) {
+  if (!item) return getDefaultCreationImageForType("ROOM_TEMPLATE");
+
+  if (item.imageUrl) return item.imageUrl;
+  if (item.image_url) return item.image_url;
+  if (item.avatarUrl) return item.avatarUrl;
+  if (item.avatar_url) return item.avatar_url;
+
+  const normalizedType = normalizeCreationType(item.type);
+
+  if (normalizedType === "PLAYER" || normalizedType === "USER") {
+    return getDefaultCreationImageForType("PLAYER_CHARACTER");
+  }
+
+  return getDefaultCreationImageForType(normalizedType);
+}
+function getReferenceImageUrl(creation) {
+  const featuredMedia = creation.featuredMedia || creation.featured_media || [];
+  const firstMedia = Array.isArray(featuredMedia) ? featuredMedia[0] : null;
+
+  return (
+    creation.imageUrl ||
+    creation.image_url ||
+    firstMedia?.imageUrl ||
+    firstMedia?.image_url ||
+    firstMedia?.url ||
+    null
+  );
+}
+
+function toRoomReferenceOption(creation) {
+  const type = normalizeCreationType(creation.type);
+
+  if (!creation.id || !type) return null;
+
+  return {
+    id: creation.id,
+    type,
+    title: creation.title || "Untitled Creation",
+    subtitle: creation.subtitle || creation.description || "",
+    contentRating: creation.contentRating || creation.content_rating || "SFW",
+    imageUrl: getReferenceImageUrl(creation),
+    data: creation.data || {},
+  };
+}
+
+function filterReferenceOptions(options, allowedTypes = []) {
+  const allowed = new Set(allowedTypes.map(normalizeCreationType));
+
+  return options.filter((option) => allowed.has(normalizeCreationType(option.type)));
+}
+
+function normalizeReferenceArray(value) {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter((item) => item?.id);
+}
+
+function findOptionById(options, reference) {
+  if (!reference?.id) return null;
+
+  return options.find((option) => option.id === reference.id) || null;
+}
+
+function addUniqueReferences(current, nextItems) {
+  const seenIds = new Set(current.map((item) => item.id));
+  const additions = [];
+
+  nextItems.forEach((item) => {
+    if (!item?.id || seenIds.has(item.id)) return;
+
+    seenIds.add(item.id);
+    additions.push(item);
+  });
+
+  return [...current, ...additions];
+}
+
+function getScenarioRecommendationData(scenario, referenceOptions) {
+  const data = scenario?.data || {};
+
+  const requiredCharacters = normalizeReferenceArray(data.required_characters)
+    .map((reference) => findOptionById(referenceOptions, reference) || reference)
+    .filter(Boolean);
+
+  const optionalCharacters = normalizeReferenceArray(data.optional_characters)
+    .map((reference) => findOptionById(referenceOptions, reference) || reference)
+    .filter(Boolean);
+
+  const suggestedLocation =
+    findOptionById(referenceOptions, data.suggested_location) ||
+    data.suggested_location ||
+    null;
+
+  const suggestedNarrator =
+    findOptionById(referenceOptions, data.suggested_narrator) ||
+    data.suggested_narrator ||
+    null;
+
+  const recommendedIds = new Set([
+    ...requiredCharacters.map((item) => item.id),
+    ...optionalCharacters.map((item) => item.id),
+    suggestedLocation?.id,
+    suggestedNarrator?.id,
+  ].filter(Boolean));
+
+  return {
+    requiredCharacters,
+    optionalCharacters,
+    suggestedLocation,
+    suggestedNarrator,
+    recommendedIds,
+    hasAny:
+      requiredCharacters.length > 0 ||
+      optionalCharacters.length > 0 ||
+      Boolean(suggestedLocation) ||
+      Boolean(suggestedNarrator),
+  };
+}
+function parseTags(value) {
+  if (!value) return [];
+
+  return String(value)
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function normalizeReference(reference) {
+  if (!reference || typeof reference !== "object") return null;
+
+  return {
+    id: reference.id,
+    type: reference.type,
+    title: reference.title,
+    subtitle: reference.subtitle || "",
+    contentRating: reference.contentRating || reference.content_rating || "SFW",
+    imageUrl: reference.imageUrl || reference.image_url || reference.url || null,
+  };
+}
+
+function normalizeOpeningMessages(messages) {
+  if (!Array.isArray(messages)) return [];
+
+  return messages
+    .map((message, index) => ({
+      id: message.id || `message-${index + 1}`,
+      speaker: String(message.speaker || "Narrator").trim(),
+      body: String(message.body || "").trim(),
+    }))
+    .filter((message) => message.body);
+}
+
+function buildRoomTemplateDescription(form) {
+  return (
+    form.public_description?.trim() ||
+    form.title?.trim() ||
+    "A reusable Crestfall Story."
+  );
+}
+function normalizeInvitedPlayers(players) {
+  if (!Array.isArray(players)) return [];
+
+  return players
+    .map((player) => ({
+      id: player.id,
+      username: player.username,
+      avatarUrl: player.avatarUrl || null,
+    }))
+    .filter((player) => player.id && player.username);
+}
+function buildRoomTemplateCreationPayload({
+  form,
+  selectedCharacters,
+  selectedScenario,
+  selectedNarrator,
+  selectedLocation,
+  openingMessages,
+  displayMediaSlot,
+  invitedPlayers,
+}) {
+  const title = form.title?.trim() || "Untitled Story";
+  const tags = parseTags(form.tags);
+
+  return {
+    type: "ROOM_TEMPLATE",
+    title,
+    description: buildRoomTemplateDescription(form),
+    visibility: form.visibility || "PRIVATE",
+    content_rating: form.content_rating || "SFW",
+    data: {
+      ...form,
+      title,
+      tags,
+
+      selected_scenario: normalizeReference(selectedScenario),
+      selected_characters: normalizeReferenceArray(selectedCharacters),
+      selected_narrator: normalizeReference(selectedNarrator),
+      selected_location: normalizeReference(selectedLocation),
+
+      opening_messages: normalizeOpeningMessages(openingMessages),
+      active_display_media_slot: displayMediaSlot,
+      display_media_slots: [],
+
+      builder: "ROOM_TEMPLATE_BUILDER",
+      builder_version: "1.0",
+      creation_kind: "ROOM_TEMPLATE",
+
+      scenario_id: selectedScenario?.id || form.scenario_id || "",
+      narrator_id: selectedNarrator?.id || form.narrator_id || "",
+      location_id: selectedLocation?.id || form.location_id || "",
+
+      playable_directly: true,
+      chat_enabled: false,
+      image_gen_ingredient: false,
+      turn_based: Boolean(form.turn_based) || invitedPlayers.length > 0,
+      turn_mode:
+        Boolean(form.turn_based) || invitedPlayers.length > 0
+          ? "TURN_BASED"
+          : "FREEFORM",
+
+      multiplayer_enabled: invitedPlayers.length > 0,
+      invited_players: normalizeInvitedPlayers(invitedPlayers),
+      invite_status: invitedPlayers.length > 0 ? "DRAFT_PENDING_INVITES" : "NONE",
+    },
+  };
+}
+function extractCreationFromApiResponse(payload) {
+  return payload?.creation || payload?.data?.creation || null;
+}
+
+function getApiErrorMessage(payload, fallback) {
+  return payload?.error?.message || payload?.message || payload?.error || fallback;
+}
+
+export {
+    normalizeCreationType,
+    getPickerImageUrl,
+    getReferenceImageUrl,
+    toRoomReferenceOption,
+    filterReferenceOptions,
+    normalizeReferenceArray,
+    findOptionById,
+    addUniqueReferences,
+    getScenarioRecommendationData,
+    parseTags,
+    normalizeReference,
+    normalizeOpeningMessages,
+    buildRoomTemplateDescription,
+    normalizeInvitedPlayers,
+    buildRoomTemplateCreationPayload,
+    extractCreationFromApiResponse,
+    getApiErrorMessage,
+}

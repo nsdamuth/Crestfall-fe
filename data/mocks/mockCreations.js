@@ -1,0 +1,86 @@
+const mockCreations = [
+  {
+    id: "draft-character",
+    title: "Unnamed Character",
+    type: "CHARACTER",
+    visibility: "PRIVATE",
+    status: "DRAFT",
+    canonStatus: "NONE",
+    updatedAt: "Just now",
+    description:
+      "A private draft character created from the new Crestfall character builder.",
+    imageUrl: "/characters/lilith/card.jpg",
+    contentRating: "MATURE",
+    stats: {
+      likes: 64,
+      messages: 2200,
+      images: 12,
+      videos: 0,
+    },
+    tags: ["Dark Fantasy", "Villain", "Canon Candidate"],
+    editHref: "/studio/my-creations/draft-character/edit",
+  },
+  {
+    id: "placeholder-pc",
+    title: "Player Character Slot",
+    type: "PLAYER_CHARACTER",
+    visibility: "PRIVATE",
+    status: "DRAFT",
+    canonStatus: "NONE",
+    updatedAt: "Coming soon",
+    description:
+      "Player characters will be optional public/private identities for story rooms.",
+    imageUrl: "/characters/lilith/card.jpg",
+    contentRating: "MATURE",
+    stats: {
+      likes: 64,
+      messages: 2200,
+      images: 12,
+      videos: 0,
+    },
+    tags: ["Player Character", "Room Ready", "Image Ready"],
+    editHref: "/studio/my-creations/placeholder-pc/edit",
+  },
+  {
+    id: "placeholder-scenario",
+    title: "Scenario Blueprint",
+    type: "SCENARIO",
+    visibility: "PRIVATE",
+    status: "DRAFT",
+    canonStatus: "NONE",
+    updatedAt: "Coming soon",
+    description:
+      "Scenarios will define reusable openings, premises, encounters, and group-capable setups.",
+    imageUrl: "/characters/lilith/card.jpg",
+    contentRating: "MATURE",
+    stats: {
+      likes: 64,
+      messages: 2200,
+      images: 12,
+      videos: 0,
+    },
+    tags: ["Draft", "Sandbox", "Room Ready"],
+    editHref: "/studio/my-creations/placeholder-scenario/edit",
+  },{
+  id: "badass-biker-template",
+  title: "Badass Biker Template",
+  type: "TEMPLATE",
+  visibility: "PRIVATE",
+  status: "DRAFT",
+  canonStatus: "NONE",
+  updatedAt: "Just now",
+  description:
+    "Reusable biker archetype template for character creation.",
+  imageUrl: "/characters/lilith/card.jpg",
+  contentRating: "SFW",
+  stats: {
+    likes: 0,
+    messages: 0,
+    images: 0,
+    videos: 0,
+  },
+  tags: ["Template", "Modern", "Biker"],
+  editHref: "/studio/my-creations/badass-biker-template/edit",
+}
+];
+export default mockCreations;

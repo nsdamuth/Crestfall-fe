@@ -1,0 +1,39 @@
+function resolveIdentityDisplayValue(
+  selectedValue,
+  customValue,
+  emptyFallback,
+  customFallback
+) {
+  const selected = String(selectedValue || "").trim();
+
+  if (selected === "CUSTOM") {
+    return String(customValue || "").trim() || customFallback;
+  }
+
+  return selected || emptyFallback;
+}
+
+export function useCharacterPreviewViewModel({ form = {} } = {}) {
+  const name = form?.name || "";
+
+  return {
+    displayInitial: String(name || "C").slice(0, 1).toUpperCase(),
+    characterName: name || "Unnamed Character",
+    characterSubtitle:
+      form?.title || form?.short_concept || "Private Draft",
+    speciesLabel: resolveIdentityDisplayValue(
+      form?.species,
+      form?.custom_species,
+      "Species not chosen yet.",
+      "Custom species not entered yet."
+    ),
+    genderPresentationLabel: resolveIdentityDisplayValue(
+      form?.gender_presentation,
+      form?.custom_gender_presentation,
+      "Gender presentation not chosen yet.",
+      "Custom gender presentation not entered yet."
+    ),
+    clothingStyleLabel:
+      form?.clothing_style || "Clothing style not chosen yet.",
+  };
+}

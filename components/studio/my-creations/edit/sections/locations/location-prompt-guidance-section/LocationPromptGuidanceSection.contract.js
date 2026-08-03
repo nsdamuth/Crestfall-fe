@@ -1,0 +1,63 @@
+export const LOCATION_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION =
+  "locationPromptGuidanceSection.view.v1";
+
+export const LOCATION_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT = Object.freeze({
+  feature: "LocationPromptGuidanceSection",
+  version: LOCATION_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION,
+  boundary:
+    "Portable View receives display-ready prompt strings, limits, copy, and semantic change callbacks only.",
+  viewInputs: Object.freeze([
+    "sectionEyebrow",
+    "sectionTitle",
+    "sectionDescription",
+    "promptGuidanceLabel",
+    "promptGuidanceValue",
+    "promptGuidancePlaceholder",
+    "imagePromptLabel",
+    "imagePromptValue",
+    "imagePromptPlaceholder",
+    "imagePromptMaxLength",
+    "negativePromptLabel",
+    "negativePromptValue",
+    "negativePromptPlaceholder",
+    "negativePromptMaxLength",
+    "usageNotesLabel",
+    "usageNotesValue",
+    "usageNotesPlaceholder",
+    "compatibilityNotesLabel",
+    "compatibilityNotesValue",
+    "compatibilityNotesPlaceholder",
+    "registryNotesLabel",
+    "registryNotesValue",
+    "registryNotesPlaceholder",
+  ]),
+  semanticCallbacks: Object.freeze([
+    "onChangePromptGuidance",
+    "onChangeImagePrompt",
+    "onChangeNegativePrompt",
+    "onChangeUsageNotes",
+    "onChangeCompatibilityNotes",
+    "onChangeRegistryNotes",
+  ]),
+  storageFields: Object.freeze([
+    "prompt_guidance",
+    "image_prompt",
+    "negative_prompt",
+    "usage_notes",
+    "compatibility_notes",
+    "registry_notes",
+  ]),
+  legacyReadFields: Object.freeze(["prompt"]),
+  limits: Object.freeze({
+    imagePrompt: 2000,
+    negativePrompt: 2000,
+  }),
+  applicationOwned: Object.freeze([
+    "Creation Edit form hydration",
+    "legacy prompt fallback resolution",
+    "prompt-length enforcement",
+    "JSONB storage-key mapping",
+    "save orchestration",
+    "persistence",
+  ]),
+});

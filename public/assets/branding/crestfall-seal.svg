@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <title>Crestfall Chronicles Seal</title>
+
+  <g fill="none" stroke="#e8dec8" stroke-width="10">
+    <circle cx="256" cy="256" r="210"></circle>
+    <circle cx="256" cy="256" r="184" stroke-width="3" opacity="0.75"></circle>
+  </g>
+
+  <text x="256" y="248" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="138" fill="#e8dec8" letter-spacing="-10">
+    C
+  </text>
+
+  <text x="256" y="316" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="138" fill="#e8dec8" letter-spacing="-10">
+    F
+  </text>
+
+  <g stroke="#e8dec8" stroke-width="3" opacity="0.85">
+    <line x1="150" y1="256" x2="210" y2="256"></line>
+    <line x1="302" y1="256" x2="362" y2="256"></line>
+  </g>
+</svg>

@@ -1,0 +1,535 @@
+"use client";
+
+import {
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Image as ImageIcon,
+  RefreshCw,
+  ShieldCheck,
+  Star,
+  Trash2,
+} from "lucide-react";
+
+export default function CreationImageLibraryPageView({
+  title = "Image Library",
+  backHref = "/studio/my-creations",
+  loadStatus = "idle",
+  loadMessage = "",
+  isLoading = false,
+  reactionMessage = "",
+  deleteMessage = "",
+  featuredSlotCards = [],
+  visibleImages = [],
+  hiddenImages = [],
+  hasImages = false,
+  noMatchingImages = false,
+  visibleSummary = "Showing 0 of 0 / 0 hidden",
+  eligibilityFilter = "all",
+  eligibilityFilterOptions = [],
+  sortMode = "newest",
+  sortOptions = [],
+  hasMoreVisibleImages = false,
+  lightboxProps = null,
+  eagerImageCount = 4,
+  onRefresh,
+  onSetEligibilityFilter,
+  onSetSortMode,
+  onLoadMoreVisibleImages,
+  onOpenPreview,
+  onToggleLike,
+  onToggleBookmark,
+  onAssignFeaturedSlot,
+  onHideImage,
+  onShowImage,
+  onDeleteImage,
+  BackLinkComponent,
+  renderQuickActions,
+  renderLightbox,
+}) {
+  const BackLink = BackLinkComponent;
+
+  return (
+    <section className="mt-8 pb-24">
+      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              Character Library
+            </p>
+            <h2 className="mt-2 font-display text-4xl">{title}</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              Images here are associated with this creation. Featured slots must
+              come from this library. The Primary slot becomes the default visual
+              identity reference later.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={onRefresh}
+              disabled={isLoading}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <RefreshCw size={14} />
+              Refresh
+            </button>
+
+            {BackLink ? (
+              <BackLink
+                href={backHref}
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              >
+                <ArrowLeft size={14} />
+                Back to Editor
+              </BackLink>
+            ) : null}
+          </div>
+        </div>
+
+        {loadStatus === "error" ? (
+          <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {loadMessage || "Image library could not be loaded."}
+          </p>
+        ) : null}
+
+        {reactionMessage ? (
+          <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {reactionMessage}
+          </p>
+        ) : null}
+
+        {deleteMessage ? (
+          <p className="mt-4 rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-4 py-3 text-sm text-[var(--muted-gold)]">
+            {deleteMessage}
+          </p>
+        ) : null}
+      </div>
+
+      <section className="mt-6 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+        <div className="flex items-center gap-3">
+          <Star size={18} className="text-[var(--muted-gold)]" />
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              Featured Images
+            </p>
+            <h3 className="mt-1 font-display text-3xl">Primary Slots</h3>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {featuredSlotCards.map((slot) => (
+            <FeaturedSlotCard
+              key={slot.slotKey}
+              slot={slot}
+              onOpenPreview={onOpenPreview}
+              onToggleLike={onToggleLike}
+              onToggleBookmark={onToggleBookmark}
+              renderQuickActions={renderQuickActions}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              Visible Library
+            </p>
+            <h3 className="mt-1 font-display text-3xl">Character Images</h3>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              These images are available to the character library. Only eligible
+              visible images can be assigned to the featured slots.
+            </p>
+          </div>
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+            {visibleSummary}
+          </p>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          {eligibilityFilterOptions.map((option) => {
+            const active = eligibilityFilter === option.value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => onSetEligibilityFilter?.(option.value)}
+                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                  active
+                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                }`}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+
+          <select
+            value={sortMode}
+            onChange={(event) => onSetSortMode?.(event.target.value)}
+            className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] outline-none transition hover:border-[var(--muted-gold)]/35"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {isLoading ? (
+          <p className="mt-6 text-sm text-[var(--muted)]">Loading images...</p>
+        ) : null}
+
+        {!isLoading && !hasImages ? <EmptyLibraryState /> : null}
+
+        {!isLoading && noMatchingImages ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <ImageIcon size={28} className="mx-auto text-[var(--muted-gold)]" />
+            <p className="mt-4 font-display text-3xl">No matching images</p>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+              Try changing the filter or sort selection.
+            </p>
+          </div>
+        ) : null}
+
+        {visibleImages.length ? (
+          <div className="mt-6 columns-1 gap-4 sm:columns-2 lg:columns-3 2xl:columns-4">
+            {visibleImages.map((image, index) => (
+              <LibraryImageCard
+                key={image.id}
+                image={image}
+                priority={index < eagerImageCount}
+                onToggleLike={onToggleLike}
+                onToggleBookmark={onToggleBookmark}
+                onOpenPreview={onOpenPreview}
+                onAssignFeaturedSlot={onAssignFeaturedSlot}
+                onHideImage={onHideImage}
+                onDeleteImage={onDeleteImage}
+                renderQuickActions={renderQuickActions}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {hasMoreVisibleImages ? (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={onLoadMoreVisibleImages}
+              className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            >
+              Load More
+            </button>
+          </div>
+        ) : null}
+      </section>
+
+      {hiddenImages.length ? (
+        <section className="mt-6 rounded-2xl border border-white/10 bg-black/35 p-5">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              Hidden
+            </p>
+            <h3 className="mt-1 font-display text-3xl">
+              Hidden From Character Library
+            </h3>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              Hidden images remain available to their image owner in Image
+              Studio, but are not shown in this character library.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {hiddenImages.map((image) => (
+              <HiddenImageCard
+                key={image.id}
+                image={image}
+                onToggleLike={onToggleLike}
+                onToggleBookmark={onToggleBookmark}
+                onOpenPreview={onOpenPreview}
+                onShowImage={onShowImage}
+                onDeleteImage={onDeleteImage}
+                renderQuickActions={renderQuickActions}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {lightboxProps && renderLightbox ? renderLightbox(lightboxProps) : null}
+    </section>
+  );
+}
+
+function FeaturedSlotCard({
+  slot,
+  onOpenPreview,
+  onToggleLike,
+  onToggleBookmark,
+  renderQuickActions,
+}) {
+  const image = slot.image;
+  return (
+    <article className="rounded-2xl border border-white/10 bg-black/30 p-3">
+      <div className="aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-black/40">
+        {image?.thumbnailUrl ? (
+          <div className="group relative h-full w-full">
+            <button
+              type="button"
+              onClick={() => onOpenPreview?.(image.id)}
+              className="h-full w-full text-left"
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={slot.label}
+                loading={slot.isPrimary ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={slot.isPrimary ? "high" : "low"}
+                className="h-full w-full object-cover"
+              />
+            </button>
+            {renderQuickActions?.({
+              liked: image.liked,
+              bookmarked: image.bookmarked,
+              onToggleLike: () => onToggleLike?.(image.id),
+              onToggleBookmark: () => onToggleBookmark?.(image.id),
+              onExpand: () => onOpenPreview?.(image.id),
+            })}
+          </div>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center p-4 text-center">
+            <div>
+              <ImageIcon size={24} className="mx-auto text-[var(--muted-gold)]" />
+              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+                No image selected
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+      <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        {slot.label}
+      </p>
+      {slot.isPrimary ? (
+        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+          Default identity reference image.
+        </p>
+      ) : null}
+    </article>
+  );
+}
+
+function LibraryImageCard({
+  image,
+  priority,
+  onToggleLike,
+  onToggleBookmark,
+  onOpenPreview,
+  onAssignFeaturedSlot,
+  onHideImage,
+  onDeleteImage,
+  renderQuickActions,
+}) {
+  return (
+    <article className="mb-4 inline-block w-full break-inside-avoid rounded-2xl border border-white/10 bg-black/30 p-3 align-top">
+      <ImagePreview
+        image={image}
+        priority={priority}
+        alt="Character library image"
+        onOpen={() => onOpenPreview?.(image.id)}
+        renderQuickActions={renderQuickActions}
+        quickActionProps={{
+          liked: image.liked,
+          bookmarked: image.bookmarked,
+          onToggleLike: () => onToggleLike?.(image.id),
+          onToggleBookmark: () => onToggleBookmark?.(image.id),
+          onExpand: () => onOpenPreview?.(image.id),
+        }}
+      />
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <StatusPill label={image.moderationStatus} />
+        <StatusPill label={image.contentRating} muted />
+      </div>
+
+      {!image.canUseAsFeatured ? (
+        <p className="mt-3 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs leading-5 text-red-200">
+          This image cannot be used as a featured image until it is cleared or
+          approved.
+        </p>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {image.slotActions.map((action) => (
+            <button
+              key={action.slotKey}
+              type="button"
+              disabled={action.busy || action.disabled}
+              onClick={() =>
+                onAssignFeaturedSlot?.(action.slotKey, image.id)
+              }
+              className={`rounded-xl border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                action.active
+                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                  : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              }`}
+            >
+              {action.busy
+                ? "Saving..."
+                : action.active
+                  ? "Selected"
+                  : action.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => onHideImage?.(image.id)}
+        disabled={!image.id || image.hideBusy}
+        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-red-500/30 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <EyeOff size={13} />
+        {image.hideBusy ? "Hiding..." : "Hide"}
+      </button>
+
+      <DeleteButton image={image} onDeleteImage={onDeleteImage} />
+    </article>
+  );
+}
+
+function HiddenImageCard({
+  image,
+  onToggleLike,
+  onToggleBookmark,
+  onOpenPreview,
+  onShowImage,
+  onDeleteImage,
+  renderQuickActions,
+}) {
+  return (
+    <article className="rounded-2xl border border-white/10 bg-black/25 p-3 opacity-80">
+      <ImagePreview
+        image={image}
+        grayscale
+        alt="Hidden character library image"
+        onOpen={() => onOpenPreview?.(image.id)}
+        renderQuickActions={renderQuickActions}
+        quickActionProps={{
+          liked: image.liked,
+          bookmarked: image.bookmarked,
+          onToggleLike: () => onToggleLike?.(image.id),
+          onToggleBookmark: () => onToggleBookmark?.(image.id),
+          onExpand: () => onOpenPreview?.(image.id),
+        }}
+      />
+
+      <button
+        type="button"
+        onClick={() => onShowImage?.(image.id)}
+        disabled={!image.id || image.showBusy}
+        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <Eye size={13} />
+        {image.showBusy ? "Restoring..." : "Show"}
+      </button>
+
+      <DeleteButton image={image} onDeleteImage={onDeleteImage} />
+    </article>
+  );
+}
+
+function ImagePreview({
+  image,
+  priority = false,
+  grayscale = false,
+  alt,
+  onOpen,
+  renderQuickActions,
+  quickActionProps,
+}) {
+  const imageUrl = grayscale ? image.displayUrl : image.thumbnailUrl;
+
+  return (
+    <div
+      style={{ aspectRatio: image.aspectRatio }}
+      className={`group relative w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 text-left ${
+        imageUrl
+          ? "transition hover:border-[var(--muted-gold)]/35"
+          : "cursor-default"
+      }`}
+    >
+      {imageUrl ? (
+        <>
+          <button type="button" onClick={onOpen} className="h-full w-full text-left">
+            <img
+              src={imageUrl}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={priority ? "high" : "low"}
+              className={`h-full w-full object-cover ${grayscale ? "grayscale" : ""}`}
+            />
+          </button>
+          {renderQuickActions?.(quickActionProps)}
+        </>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center p-4 text-center">
+          <div>
+            <ImageIcon size={24} className="mx-auto text-[var(--muted-gold)]" />
+            <p className="mt-3 break-all text-xs leading-5 text-[var(--muted)]">
+              {image.label}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DeleteButton({ image, onDeleteImage }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onDeleteImage?.(image.id)}
+      disabled={!image.id || image.deleting}
+      className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      <Trash2 size={13} />
+      {image.deleting ? "Deleting..." : "Delete Image"}
+    </button>
+  );
+}
+
+function StatusPill({ label, muted = false }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[10px] uppercase tracking-[0.12em] ${
+        muted
+          ? "border-white/10 text-[var(--muted)]"
+          : "border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+      }`}
+    >
+      <ShieldCheck size={11} />
+      {label}
+    </span>
+  );
+}
+
+function EmptyLibraryState() {
+  return (
+    <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+      <ImageIcon size={28} className="mx-auto text-[var(--muted-gold)]" />
+      <p className="mt-4 font-display text-3xl">No images yet</p>
+      <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+        Generated images associated with this creation will appear here once
+        Image Studio produces them.
+      </p>
+    </div>
+  );
+}
