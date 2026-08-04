@@ -145,7 +145,12 @@ export default function CrestfallOptionModalView({
                     }`}
                   >
                     {option?.icon ? (
-                      <span className="mr-2">{option.icon}</span>
+                      <svg
+                        className="mr-2 inline-block h-[var(--icon-sm)] w-[var(--icon-sm)] align-[-3px]"
+                        aria-hidden="true"
+                      >
+                        <use href={`/assets/icons/icons-v7.svg#${option.icon}`} />
+                      </svg>
                     ) : null}
                     {option?.label || "Untitled Option"}
                   </button>
