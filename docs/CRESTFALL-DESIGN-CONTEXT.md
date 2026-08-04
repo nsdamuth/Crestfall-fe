@@ -48,11 +48,11 @@ fourth "info" color; informational copy reads through the neutral ink
 scale like any other text.
 
 Every value in the system is a token defined once and reused, not a
-literal color or size repeated at each call site. RESTYLE-RULES.md is
+literal color or size repeated at each call site. docs/RESTYLE-RULES.md is
 the canonical source for what each token is and where it applies.
 
 Three banner treatments exist, and only these three (ruled 4 Aug
-2026, RESTYLE-RULES.md): (a) a bottom promo banner, full width at page
+2026, docs/RESTYLE-RULES.md): (a) a bottom promo banner, full width at page
 end, with a uniform screen and copy/CTA centered; (b) a banner card,
 in-flow, with copy/CTA bottom-left and a fade from the left; (c) a top
 banner at the page head, with text/CTA bottom-left and a fade from the
@@ -150,5 +150,5 @@ rendered card.
 
 How work gets done, branch and commit rules, what may be edited,
 verification, escalation, is AGENTS.md's job, not this document's.
-This file and RESTYLE-RULES.md cover the product and the design
+This file and docs/RESTYLE-RULES.md cover the product and the design
 language; AGENTS.md covers craft.
