@@ -60,27 +60,31 @@ bottom. There is no fourth treatment and no per-instance settings —
 fade direction and copy position are fixed by which of the three a
 given banner is.
 
-Corners come in two sizes only (ruled 4 Aug 2026, amended 4 Aug 2026),
-sorted by role, not by size: standard, for every control (buttons,
-inputs, chips, swatches) and every surface that sits in a grid
-alongside siblings (cards, tiles, rows), and also for anything nested
-inside a large-radius panel; large, for every surface that floats
-above the page (modals, pickers, sheets, drawers, popovers) and every
-in-flow surface that spans the full content width (the bottom promo
-banner/endcap, empty states, the bulk bar). Nothing else.
+Corners come in two tiers only (ruled 4 Aug 2026, final; supersedes
+the earlier amendment and closes Open question 2). Tier is decided by
+where a surface sits, not by how big it is.
 
-OPEN QUESTION, not yet ruled: whether the continue card / in-flow
-banner card takes the standard or large tier. RESTYLE-RULES.md's
-Corners amendment currently states both at once (Open question 2) —
-Brian rules which before batch two converts `.continuecard` or any
-package built the same way. Shape carries meaning on top of the
-corners rule regardless of how that question resolves:
-fully rounded (a pill) is reserved for tags and icon buttons only —
-every clickable button, everywhere, at every density, is a
+LARGE: every surface that spans the full content width (hero, bottom
+promo banner or endcap, empty states, the bulk bar) and every surface
+that floats above the page (modals, pickers, sheets, drawers,
+popovers).
+
+STANDARD: every surface that sits in a grid alongside siblings (cards,
+tiles, rows), including the Studio and Images pair, the continue card,
+and the in-flow banner card; every control (buttons, inputs, chips,
+swatches); and anything nested inside a large-radius panel.
+
+PILL: tags and icon buttons only.
+
+This reproduces the approved draft exactly. Nothing on the current
+home page changes.
+
+Shape law, unchanged: fully rounded is reserved for tags and icon
+buttons. Every clickable button, everywhere, at every density, is a
 soft-cornered rectangle, never a pill. That includes Follow and View
 profile on the creators page, which read as pills today and need to
-change. The rule of thumb: shape alone should tell the eye "this is a
-label" from "this is a button you can press."
+change. Shape alone should tell the eye a label from a button you can
+press.
 
 Destructive actions (delete, remove, discard) never get a different
 size or shape from an ordinary button — same height, same corners,
@@ -134,14 +138,13 @@ assigned task.
 Batch one (the first 20 packages, chosen by which had the most design
 rule families to apply) is converted and pushed to
 `design/global-sweep`. A full audit of all 299 packages against every
-ruling to date is complete and recorded in `docs/BATCH-TWO-SCOPE.md` —
-that audit, not a shorter earlier list, is batch two's scope. The
-modal/large-panel corner-radius ambiguity is resolved (see the amended
-Corners ruling in RESTYLE-RULES.md, Open question 1). Two things are
-waiting on Brian before batch two converts anything: Open question 2
-(does the continue card / in-flow banner card take standard or large
-radius — the amendment currently asserts both), and general sign-off
-on the newly ruled law itself.
+ruling to date is complete and recorded in `docs/BATCH-TWO-SCOPE.md`;
+that audit, not a shorter earlier list, is batch two's scope. Both
+corner questions are closed and general sign-off on the ruled law is
+given. Nothing in the design language is waiting on Brian. One item
+remains open before batch two converts: the lighter wash value for
+artwork under a tag bed is provisional until Brian rules it from a
+rendered card.
 
 ## Process lives separately
 

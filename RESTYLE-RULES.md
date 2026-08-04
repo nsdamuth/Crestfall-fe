@@ -463,47 +463,48 @@ these are rulings to convert against in batch two, not edits made now.
 Closes the three items logged under **Open gaps** above, and corrects
 **Banner composition** under Rulings — today.
 
-## Corners: two tiers only
+## Corners: final ruling
 
-**AMENDED 4 Aug 2026 — resolves Open question 1 below.** Sorted by
-role, not by size:
+Corners come in two tiers only (ruled 4 Aug 2026, final; supersedes
+the earlier amendment and closes Open question 2). Tier is decided by
+where a surface sits, not by how big it is.
 
-| Tier | Value | Token | Applies to |
-|---|---|---|---|
-| Standard | 12px | `--radius-md` | every control (buttons, inputs, chips, swatches) **and** every surface that sits in a grid alongside siblings (cards, tiles, rows, the in-flow banner card) **and** every element nested inside a large-radius panel |
-| Large | 20px | `--radius-lg` | every surface that floats above the page (modals, pickers, sheets, drawers, popovers) **and** every in-flow surface that spans the full content width (the bottom promo banner/endcap, the continue card, empty states, the bulk bar) |
+LARGE: every surface that spans the full content width (hero, bottom
+promo banner or endcap, empty states, the bulk bar) and every surface
+that floats above the page (modals, pickers, sheets, drawers,
+popovers).
 
-The prior phrasing — "large panels only" and "modals, sheets, large
-containers" — is retired wherever it appeared in this document; it
-implied a size rule, and the correct rule sorts by role instead. A
-surface floating above the page is always large-radius regardless of
-its footprint; a surface sitting in a grid alongside siblings is
-always standard-radius regardless of its footprint, including when
-that surface is nested one level inside a large-radius panel.
+STANDARD: every surface that sits in a grid alongside siblings (cards,
+tiles, rows), including the Studio and Images pair, the continue card,
+and the in-flow banner card; every control (buttons, inputs, chips,
+swatches); and anything nested inside a large-radius panel.
+
+PILL: tags and icon buttons only.
+
+This reproduces the approved draft exactly. Nothing on the current
+home page changes.
+
+| Tier | Value | Token |
+|---|---|---|
+| Large | 20px | `--radius-lg` |
+| Standard | 12px | `--radius-md` |
+| Pill | full | `--radius-full` |
 
 The 16px off-scale value (`rounded-2xl`, seen in `StoryRoomCastPanel`,
 `LocationBuilder`, `GamesHub`, and elsewhere per `docs/HARVEST-GAPS.md`
 §5) is retired. It resolves **down** to `--radius-md` (12px) — an
 off-scale panel was never meant to read as large, it drifted there ad
-hoc. This still holds under the amended rule: an off-scale surface
-that is not itself a floating panel or a full-width in-flow surface
-resolves down regardless of prior size-based intuition.
-
-The three banner treatments (see Banner taxonomy below) split across
-both tiers, not into one bucket: the bottom promo banner is large (it
-spans the full content width, in-flow), the in-flow banner card is
-standard (it sits in a grid alongside siblings), and the top banner
-follows its host surface (it has no independent radius of its own —
-whatever page-head container it lives in sets the corner).
+hoc, unless the surface itself qualifies as large under the rule above
+(floats above the page, or spans the full content width).
 
 Small nested art thumbnails keep the tight radius: `--radius-sm` (8px),
-unchanged from the draft (`.cf-art`, `.crtworks a`, `.crtworks .phw`) —
+unchanged from the draft (`.cf-art`, `.crtworks a`, `.crtworks .phw`);
 this is the one standing exception, for small art nested inside a
-larger standard- or large-radius card, not a third general tier.
+larger standard- or large-radius card, not a fourth general tier.
 
-No new token minted — `--radius-sm`/`--radius-md`/`--radius-lg` already
-exist in `app/theme.css`. This ruling is a consolidation of usage, not
-a new value.
+No new token minted; `--radius-sm`/`--radius-md`/`--radius-lg`/`--radius-full`
+already exist in `app/theme.css`. This ruling is a consolidation of
+usage, not a new value.
 
 ## Shape law: fully rounded belongs to labels, not actions
 
@@ -682,20 +683,3 @@ before batch two converts the affected packages.
    container." Nested content inside a large-radius panel (e.g. a card
    nested in a modal) drops back to standard — the large tier does not
    inherit downward.
-
-2. **The continue card / banner card: large or standard?** The amended
-   Corners ruling above contains two statements about the same surface
-   that disagree. The Large-tier table row lists "the continue card"
-   as a full-width in-flow surface (large, `--radius-lg`), consistent
-   with the pre-existing Hub layouts table (`.continuecard`,
-   `--radius-lg`, unchanged since the original draft harvest) — two
-   independent sources agree it is large. But the paragraph
-   immediately below the table states "the in-flow banner card is
-   standard (it sits in a grid alongside siblings)," and Banner
-   taxonomy's own naming ties "banner card" directly to "a continue
-   card" (treatment (b): "in-flow, mid-page (e.g. a continue card)").
-   If "banner card" and "continue card" name the same surface, this
-   ruling assigns it both tiers at once. Not resolved here — Brian
-   rules which tier the continue card / banner card actually takes
-   before batch two converts `.continuecard` or any package built the
-   same way.
