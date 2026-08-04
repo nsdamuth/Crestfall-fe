@@ -120,7 +120,7 @@ export default function StoryRoomsHubView({
 
               {/* SKIPPED: the Manage/Delete Selected destructive red below is
                   left as raw Tailwind red, not --status-danger. Ruling 2 in
-                  RESTYLE-RULES.md states the danger button treatment is
+                  docs/RESTYLE-RULES.md states the danger button treatment is
                   "not applied anywhere in this pass" for any package's
                   buttons; only geometry (height/padding/radius/type) is
                   brought into conformance here, not the color. */}
@@ -287,7 +287,7 @@ function MobileStoryRoomsDrawer({
       </button>
 
       {/* SKIPPED: no phone-specific filter-panel shape exists in
-          RESTYLE-RULES.md ("Filter panels" OPEN item) — this drawer's own
+          docs/RESTYLE-RULES.md ("Filter panels" OPEN item) — this drawer's own
           rounded-2xl/border/bg chrome is left untouched; only legacy
           bridge variable names were substituted for real tokens. */}
       {open ? (
