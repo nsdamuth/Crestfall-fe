@@ -20,15 +20,15 @@ export default function CharacterTemplateModalView({
   onChooseTemplate = null,
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
+      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
-            <h2 className="mt-2 font-display text-4xl">{modalTitle}</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)] tabular-nums">{modalTitle}</h2>
+            <p className="mt-[var(--space-2)] max-w-[44rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               {modalDescription}
             </p>
           </div>
@@ -36,7 +36,7 @@ export default function CharacterTemplateModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close template picker"
           >
             <X size={18} />
@@ -50,10 +50,10 @@ export default function CharacterTemplateModalView({
                 key={tab?.id || tab?.label}
                 type="button"
                 onClick={() => onChooseTab?.(tab?.id || "")}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                className={`inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                   activeTabId === tab?.id
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                 }`}
               >
                 {tab?.label || "Template group"}
@@ -61,13 +61,13 @@ export default function CharacterTemplateModalView({
             ))}
           </div>
 
-          <div className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+          <div className="mt-4 flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
               onChange={(event) => onChangeSearchQuery?.(event.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </div>
 
@@ -76,26 +76,26 @@ export default function CharacterTemplateModalView({
               {templates.map((template) => (
                 <article
                   key={template?.id || template?.title}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5"
+                  className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
                 >
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {template?.sourceLabel || "Template"} ·{" "}
                     {template?.categoryLabel || "Uncategorized"}
                   </p>
 
-                  <h3 className="mt-2 font-display text-3xl">
+                  <h3 className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-medium tabular-nums">
                     {template?.title || "Untitled Template"}
                   </h3>
 
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                     {template?.description || ""}
                   </p>
 
-                  <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-3">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+                    <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                       {template?.prefillLabel || "Prefills"}
                     </p>
-                    <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                    <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                       {template?.prefillSummary || ""}
                     </p>
                   </div>
@@ -103,7 +103,7 @@ export default function CharacterTemplateModalView({
                   <button
                     type="button"
                     onClick={() => onChooseTemplate?.(template?.id || "")}
-                    className="mt-4 w-full rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                    className="mt-[var(--space-4)] flex h-[var(--control-md)] w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
                   >
                     {template?.actionLabel || "Apply Template"}
                   </button>
@@ -111,13 +111,13 @@ export default function CharacterTemplateModalView({
               ))}
             </div>
           ) : (
-            <div className="mt-5 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <div className="mt-[var(--space-5)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] p-[var(--space-8)] text-center">
               <Sparkles
-                className="mx-auto text-[var(--muted-gold)]"
+                className="mx-auto text-[var(--gold-ornament)]"
                 size={28}
               />
-              <p className="mt-4 font-display text-3xl">{emptyStateTitle}</p>
-              <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-[var(--space-4)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] tabular-nums">{emptyStateTitle}</p>
+              <p className="mx-auto mt-[var(--space-3)] max-w-2xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                 {emptyStateDescription}
               </p>
             </div>
