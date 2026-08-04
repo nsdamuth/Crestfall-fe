@@ -5,7 +5,7 @@ import { policies } from "@/data/policies";
 export default function PolicyIndex() {
   return (
     <section className="mt-10 space-y-8">
-      <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
+      <div className="rounded-[var(--radius-md)] border border-amber-300/20 bg-amber-300/10 p-5">
         <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-amber-200">
           <ShieldCheck size={15} />
           Draft Legal Placeholder
@@ -23,7 +23,7 @@ export default function PolicyIndex() {
           <Link
             key={policy.slug}
             href={`/terms/${policy.slug}`}
-            className="group rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
+            className="group rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
           >
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
               <FileText size={14} />

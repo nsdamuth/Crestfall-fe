@@ -6,13 +6,13 @@ export default function PolicyPage({ policy }) {
     <article className="mt-12 space-y-8">
       <Link
         href="/terms"
-        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
       >
         <ArrowLeft size={14} />
         Terms & Policies
       </Link>
 
-      <header className="rounded-3xl border border-[var(--muted-gold)]/20 bg-black/40 p-6 md:p-8">
+      <header className="rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/20 bg-black/40 p-6 md:p-8">
         <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted-gold)]">
           {policy.category}
         </p>
@@ -26,7 +26,7 @@ export default function PolicyPage({ policy }) {
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
-          <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
+          <div className="rounded-[var(--radius-md)] border border-amber-300/20 bg-amber-300/10 p-4">
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-amber-200">
               <AlertTriangle size={15} />
               Draft Placeholder
@@ -49,7 +49,7 @@ export default function PolicyPage({ policy }) {
         {policy.sections.map((section) => (
           <section
             key={section.heading}
-            className="rounded-2xl border border-white/10 bg-black/30 p-5 md:p-6"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 md:p-6"
           >
             <h2 className="font-display text-3xl text-[var(--foreground)]">
               {section.heading}
@@ -62,7 +62,7 @@ export default function PolicyPage({ policy }) {
         ))}
       </div>
 
-      <footer className="rounded-2xl border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--muted)]">
+      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--muted)]">
         Future versions of this page should include effective date, last updated
         date, contact method, jurisdiction-specific notices where applicable,
         and any required legal language after review.
