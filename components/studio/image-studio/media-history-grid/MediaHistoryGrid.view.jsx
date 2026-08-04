@@ -147,23 +147,23 @@ export default function MediaHistoryGridView({
   return (
     <div className="space-y-4">
       {reactionMessage ? (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <div className="rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {reactionMessage}
         </div>
       ) : null}
 
       {deleteMessage ? (
-        <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-4 py-3 text-sm text-[var(--muted-gold)]">
+        <div className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
           {deleteMessage}
         </div>
       ) : null}
 
-      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--muted-gold)]/15 pb-4">
+      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Image Library
           </p>
-          <p className="mt-1 text-xs text-[var(--muted)]">{summaryText}</p>
+          <p className="mt-1 text-xs text-[var(--ink-dim)]">{summaryText}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -172,10 +172,10 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onToggleSelectionMode}
               disabled={isBulkDeleting}
-              className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-60 ${
+              className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] transition disabled:cursor-not-allowed disabled:opacity-60 ${
                 selectionMode
-                  ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/20 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted-gold)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
+                  : "border-dashed border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
               }`}
             >
               {selectionMode ? <X size={14} /> : <CheckSquare2 size={14} />}
@@ -198,7 +198,7 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleMobileGrid}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:hidden"
+            className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] md:hidden"
           >
             <Grid2X2 size={14} />
             {compactMobileGrid ? "Large" : "Grid"}
@@ -207,7 +207,7 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleFilters}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] md:hidden"
+            className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--gold-action)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-bright)] transition hover:text-[var(--gold-bright)] md:hidden"
           >
             {filtersOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             Filters
@@ -230,22 +230,22 @@ export default function MediaHistoryGridView({
       </section>
 
       {selectionMode ? (
-        <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--muted-gold)]/30 bg-black/95 px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
+        <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {selectedCount} selected
             </p>
-            <p className="mt-1 text-xs text-[var(--muted)]">
+            <p className="mt-1 text-xs text-[var(--ink-dim)]">
               Tap images to add or remove them from this deletion batch.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-[var(--space-2)]">
             <button
               type="button"
               onClick={onToggleSelectAllVisible}
               disabled={isBulkDeleting || !hasVisibleSelectableMedia}
-              className="rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {allVisibleSelectableItemsSelected
                 ? "Clear Visible"
@@ -256,7 +256,7 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onClearSelection}
               disabled={isBulkDeleting || !selectedCount}
-              className="rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               Clear
             </button>
@@ -265,7 +265,7 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onBulkDeleteSelected}
               disabled={isBulkDeleting || !selectedCount}
-              className="inline-flex items-center gap-2 rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)] transition hover:bg-[var(--status-danger-border)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isBulkDeleting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -281,24 +281,24 @@ export default function MediaHistoryGridView({
       ) : null}
 
       {historyStatus === "loading" ? (
-        <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-6 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-6 text-sm text-[var(--ink-dim)]">
           Loading image library...
         </div>
       ) : null}
 
       {historyError ? (
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <div className="rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {historyError}
         </div>
       ) : null}
 
       {historyStatus !== "loading" && !mediaItems.length ? (
         <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-10 text-center">
-          <ImageIcon className="mx-auto text-[var(--muted-gold)]" size={30} />
-          <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={30} />
+          <p className="mt-4 text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             No generated media yet
           </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-[var(--ink-dim)]">
             Select a character and generate an image to start your library.
           </p>
         </div>
@@ -346,7 +346,7 @@ export default function MediaHistoryGridView({
             type="button"
             onClick={onLoadMoreHistory}
             disabled={isLoadingMoreHistory}
-            className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[var(--text-cta)] font-bold leading-[var(--lh-cta)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isLoadingMoreHistory ? "Loading..." : "Load More"}
           </button>
@@ -386,15 +386,15 @@ function MediaHistoryCard({
       ref={cardRef}
       aria-busy={isPending}
       style={{ gridRowEnd: `span ${gridSpan}` }}
-      className={`group relative overflow-hidden rounded-2xl bg-black/35 text-left transition ${
+      className={`group relative overflow-hidden rounded-[var(--radius-md)] bg-black/35 text-left transition ${
         item.selected
-          ? "border border-[var(--muted-gold)] ring-2 ring-[var(--muted-gold)]/35"
-          : "border border-white/10"
+          ? "border border-[var(--gold-action)] ring-2 ring-[var(--gold-action)]/35"
+          : "border border-[var(--line)]"
       } ${
         selectionMode && item.selectable
-          ? "cursor-pointer hover:-translate-y-1 hover:border-[var(--muted-gold)]/55"
+          ? "cursor-pointer hover:-translate-y-[2px] hover:border-[var(--gold-action)]/55 hover:shadow-[var(--glow-hover)]"
           : canOpen
-            ? "hover:-translate-y-1 hover:border-[var(--muted-gold)]/35"
+            ? "hover:-translate-y-[2px] hover:border-[var(--gold-action)]/35 hover:shadow-[var(--glow-hover)]"
             : "cursor-default"
       }`}
     >
@@ -446,7 +446,7 @@ function MediaHistoryCard({
         <span
           className={`pointer-events-none absolute left-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full border shadow-lg backdrop-blur-md ${
             item.selected
-              ? "border-[var(--muted-gold)] bg-[var(--muted-gold)] text-black"
+              ? "border-[var(--gold-action)] bg-[var(--gold-action)] text-[var(--tag-fill-ink)]"
               : "border-white/30 bg-black/70 text-transparent"
           }`}
           aria-hidden="true"
@@ -471,21 +471,21 @@ function MediaPreviewContent({
 
   if (item.status === "pending") {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/85 to-[var(--muted-gold)]/10">
+      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/85 to-[var(--gold-ornament)]/10">
         <div className="px-5 text-center">
           <Loader2
-            className="mx-auto animate-spin text-[var(--muted-gold)]"
+            className="mx-auto animate-spin text-[var(--gold-ornament)]"
             size={iconSize}
           />
           <p
-            className={`mt-4 uppercase tracking-[0.2em] text-[var(--muted-gold)] ${
+            className={`mt-4 font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${
               compact ? "text-[10px]" : "text-xs"
             }`}
           >
             Generating
           </p>
           <p
-            className={`mt-2 text-[var(--muted)] ${
+            className={`mt-2 text-[var(--ink-dim)] ${
               compact ? "text-xs leading-4" : "text-sm leading-6"
             }`}
           >
@@ -498,18 +498,21 @@ function MediaPreviewContent({
 
   if (item.status === "error") {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-red-950/20 to-black">
+      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-[var(--status-danger-bed)] to-black">
         <div className="px-5 text-center">
-          <AlertTriangle className="mx-auto text-red-200" size={iconSize} />
+          <AlertTriangle
+            className="mx-auto text-[var(--status-danger)]"
+            size={iconSize}
+          />
           <p
-            className={`mt-4 uppercase tracking-[0.2em] text-red-200 ${
+            className={`mt-4 font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--status-danger)] ${
               compact ? "text-[10px]" : "text-xs"
             }`}
           >
             Failed
           </p>
           <p
-            className={`mt-2 text-[var(--muted)] ${
+            className={`mt-2 text-[var(--ink-dim)] ${
               compact ? "text-xs leading-4" : "text-sm leading-6"
             }`}
           >
@@ -536,18 +539,18 @@ function MediaPreviewContent({
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
       <div className="text-center">
-        <Icon className="mx-auto text-[var(--muted-gold)]" size={iconSize} />
+        <Icon className="mx-auto text-[var(--gold-ornament)]" size={iconSize} />
         <p
-          className={`mt-4 uppercase tracking-[0.2em] text-[var(--muted-gold)] ${
+          className={`mt-4 font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${
             compact ? "text-[10px]" : "text-xs"
           }`}
         >
           {item.type}
         </p>
         <p
-          className={`mt-2 px-4 text-[var(--muted)] ${
+          className={`mt-2 px-4 text-[var(--ink-dim)] ${
             compact ? "text-xs leading-4" : "text-sm"
           }`}
         >
