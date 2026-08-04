@@ -101,7 +101,7 @@ export default function LocationRegistryBuilderView({
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
       <div className="space-y-5">
         {hideTabs ? null : (
-          <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+          <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
             <div className="flex flex-wrap gap-2">
               {tabs.map((tab) => {
                 const Icon = TAB_ICON_BY_KEY[tab.iconKey] || BookOpen;
@@ -114,8 +114,8 @@ export default function LocationRegistryBuilderView({
                     onClick={() => onSelectTab(tab.id)}
                     className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
-                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                     }`}
                   >
                     <Icon size={14} />
@@ -127,7 +127,7 @@ export default function LocationRegistryBuilderView({
           </div>
         )}
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {currentTab === "overview" ? (
             <OverviewTab
               registry={registry}
@@ -187,14 +187,14 @@ export default function LocationRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
 
         <h2 className="mt-2 font-display text-3xl">{registry.title}</h2>
 
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           {registry.description || "No description has been added yet."}
         </p>
 
@@ -224,7 +224,7 @@ export default function LocationRegistryBuilderView({
         </div>
 
         {mode === "edit" ? (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Use the page Save button to persist changes.
           </p>
         ) : (
@@ -232,7 +232,7 @@ export default function LocationRegistryBuilderView({
             type="button"
             onClick={onSave}
             disabled={saveStatus === "saving"}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex h-[var(--control-md)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Save size={15} />
             {saveStatus === "saving" ? "Saving..." : "Save Registry"}
@@ -249,7 +249,7 @@ export default function LocationRegistryBuilderView({
           </p>
         ) : null}
 
-        <p className="mt-4 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-4 text-xs leading-5 text-[var(--ink-dim)]">
           Location Registries are reusable authored graphs. Runtime chat
           instances may later hydrate temporary basic locations, but those should
           not be written back into this registry unless explicitly promoted.
@@ -382,7 +382,7 @@ function EntriesTab({
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
       >
         <Plus size={14} />
         Add Location
@@ -399,7 +399,7 @@ function EntriesTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {entry.kind === "CREATION_REF" ? "Linked Location" : "Basic Location"} ·{" "}
                     {entry.category || "Location"} · {entry.locationScale}
                   </p>
@@ -414,7 +414,7 @@ function EntriesTab({
                 </div>
               </div>
 
-              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {entry.parentLocationId ? (
                   <p>Parent: {findLocationName(entries, entry.parentLocationId)}</p>
                 ) : null}
@@ -473,14 +473,14 @@ function ConnectionsTab({
         type="button"
         onClick={onAdd}
         disabled={entries.length < 2}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
         Add Connection
       </button>
 
       {entries.length < 2 ? (
-        <p className="text-sm text-[var(--muted)]">
+        <p className="text-sm text-[var(--ink-dim)]">
           Add at least two locations before creating connections.
         </p>
       ) : null}
@@ -494,7 +494,7 @@ function ConnectionsTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {connection.relation} · {connection.defaultRouteType || connection.routeType}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -511,7 +511,7 @@ function ConnectionsTab({
                 </div>
               </div>
 
-              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+              <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--ink-dim)]">
                 <p>
                   Distance Estimate: {connection.distanceModeDisplay || "Unknown / Unset"}
                 </p>
@@ -571,14 +571,14 @@ function PresenceTab({
         type="button"
         onClick={onAdd}
         disabled={!entries.length}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
         Add Presence Binding
       </button>
 
       {!entries.length ? (
-        <p className="text-sm text-[var(--muted)]">
+        <p className="text-sm text-[var(--ink-dim)]">
           Add at least one Location before assigning people.
         </p>
       ) : null}
@@ -598,13 +598,13 @@ function PresenceTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {formatRegistryOption(binding.relationshipRole)} · {formatRegistryOption(binding.frequency)}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
                     {findPresencePersonName(binding)}
                   </h3>
-                  <p className="mt-1 text-sm text-[var(--muted)]">
+                  <p className="mt-1 text-sm text-[var(--ink-dim)]">
                     {findLocationName(entries, binding.locationEntryId)}
                   </p>
                 </div>
@@ -626,7 +626,7 @@ function PresenceTab({
                 ))}
               </div>
 
-              <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--muted)]">
+              <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--ink-dim)]">
                 <p>
                   NPC Registry: {binding.person.registryTitle || "Linked Registry"}
                 </p>
@@ -642,7 +642,7 @@ function PresenceTab({
         )}
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-sm leading-6 text-[var(--ink-dim)]">
         Existing Common Occupants and Ownership Notes remain preserved as legacy descriptive data. New runtime work should prefer these structured bindings.
       </div>
     </div>
@@ -651,7 +651,7 @@ function PresenceTab({
 
 function PresenceBadge({ children }) {
   return (
-    <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+    <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase [font-weight:var(--weight-medium)] text-[var(--gold-bright)]">
       {children}
     </span>
   );
@@ -668,7 +668,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
       >
         <Plus size={14} />
         Add Weather Scope
@@ -683,7 +683,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {scope.scopeType || "Weather Scope"}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -697,7 +697,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--muted)]">
+              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
                 {scope.defaultWeatherBehavior || scope.notes || "No notes yet."}
               </p>
             </article>
@@ -737,11 +737,11 @@ function RuntimeTab({ registry, onUpdateRuntimeGuidance }) {
         rows={5}
       />
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+        <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           Middleware Intent
         </p>
-        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--ink-dim)]">
           {(registry.middlewareHints?.intendedUse || []).map((item) => (
             <li key={item}>{item}</li>
           ))}
@@ -796,8 +796,8 @@ function LocationEntryModal({
                 onClick={() => onSetKind("AD_HOC")}
                 className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   draft.kind === "AD_HOC"
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 text-[var(--ink-dim)]"
                 }`}
               >
                 Basic / Ad-Hoc Location
@@ -808,8 +808,8 @@ function LocationEntryModal({
                 onClick={() => onSetKind("CREATION_REF")}
                 className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   draft.kind === "CREATION_REF"
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 text-[var(--ink-dim)]"
                 }`}
               >
                 Link Existing Location
@@ -944,11 +944,11 @@ function LocationEntryModal({
             rows={4}
           />
 
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               People & Presence
             </p>
-            <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--muted)]">
+            <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--ink-dim)]">
               <p>Structured people: {locationPresenceBindings.length}</p>
               <p>Owners: {ownerCount}</p>
               <p>
@@ -1124,29 +1124,29 @@ function LocationConnectionModal({
           />
         </div>
 
-        <div className="grid gap-3 rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="grid gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-sm leading-6 text-[var(--ink-dim)]">
           <p>
-            <span className="text-[var(--muted-gold)]">Travel authority:</span>{" "}
+            <span className="text-[var(--gold-ornament)]">Travel authority:</span>{" "}
             the qualitative Distance Estimate and runtime-selected travel
             capability drive travel narration. Physical meters are descriptive
             only.
           </p>
 
           <p>
-            <span className="text-[var(--muted-gold)]">Relationship suggestion:</span>{" "}
+            <span className="text-[var(--gold-ornament)]">Relationship suggestion:</span>{" "}
             {draft.relationDistanceSuggestionLabel || formatRegistryOption(relationDistanceSuggestion)}
           </p>
 
           {distanceDescription ? (
             <p>
-              <span className="text-[var(--muted-gold)]">Selected distance:</span>{" "}
+              <span className="text-[var(--gold-ornament)]">Selected distance:</span>{" "}
               {distanceDescription}
             </p>
           ) : null}
 
           {defaultTravelTierText ? (
             <p>
-              <span className="text-[var(--muted-gold)]">Default method fallback:</span>{" "}
+              <span className="text-[var(--gold-ornament)]">Default method fallback:</span>{" "}
               {defaultTravelTierText} A runtime character, vehicle, spell, portal,
               or other travel asset may supply a different effective tier.
             </p>
@@ -1243,11 +1243,11 @@ function PresenceBindingModal({
           />
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             NPC Registry Person
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Select a linked Character or custom NPC entry from one of your NPC Registries. Location Registries store only the stable reference and presence rule.
           </p>
 
@@ -1269,10 +1269,10 @@ function PresenceBindingModal({
         </div>
 
         {draft.person?.displayName ? (
-          <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Selected Person</p>
+          <div className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Selected Person</p>
             <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
               {draft.person.registryTitle || "NPC Registry"} · {formatRegistryOption(draft.person.entryKind || "NPC")}
             </p>
           </div>
@@ -1390,11 +1390,11 @@ function WeatherScopeModal({ draft, onClose, onChange, onSave }) {
 
 function ModalShell({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/30 bg-black shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[2px]">
+      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Location Registry
             </p>
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
@@ -1403,14 +1403,14 @@ function ModalShell({ title, children, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             <X size={18} />
           </button>
         </div>
 
-        <div className="max-h-[calc(92vh-105px)] overflow-y-auto p-5">
+        <div className="max-h-[calc(92vh-105px)] overflow-y-auto p-[var(--space-5)]">
           {children}
         </div>
       </div>
@@ -1426,15 +1426,15 @@ function ModalActions({
 }) {
   const positionClassName =
     placement === "top"
-      ? "border-b border-white/10 pb-5"
-      : "border-t border-white/10 pt-5";
+      ? "border-b border-[var(--line-whisper)] pb-[var(--space-5)]"
+      : "border-t border-[var(--line-whisper)] pt-[var(--space-5)]";
 
   return (
-    <div className={`flex flex-wrap justify-end gap-3 ${positionClassName}`}>
+    <div className={`flex flex-wrap justify-end gap-[var(--space-3)] ${positionClassName}`}>
       <button
         type="button"
         onClick={onClose}
-        className="rounded-xl border border-white/10 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+        className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
       >
         Cancel
       </button>
@@ -1442,7 +1442,7 @@ function ModalActions({
       <button
         type="button"
         onClick={onSave}
-        className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
       >
         {saveLabel}
       </button>
@@ -1453,12 +1453,12 @@ function ModalActions({
 function SectionHeader({ title, body }) {
   return (
     <div>
-      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         <Compass size={14} />
         Location Registry
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
-      <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">{body}</p>
     </div>
   );
 }
@@ -1466,14 +1466,14 @@ function SectionHeader({ title, body }) {
 function TextInput({ label, value, onChange, placeholder = "" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -1482,7 +1482,7 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
 function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -1490,7 +1490,7 @@ function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
         onChange={(event) => onChange(event.target.value)}
         rows={rows}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -1515,13 +1515,13 @@ function SelectInput({
 
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <select
         value={value || ""}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
       >
         {includeBlank ? <option value="">{blankLabel}</option> : null}
         {normalizedOptions.map((option) => (
@@ -1552,12 +1552,12 @@ function OptionMultiSelect({
   }
 
   return (
-    <fieldset className="rounded-2xl border border-white/10 bg-black/25 p-4">
-      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+    <fieldset className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </legend>
       {description ? (
-        <p className="mb-4 text-sm leading-6 text-[var(--muted)]">
+        <p className="mb-4 text-sm leading-6 text-[var(--ink-dim)]">
           {description}
         </p>
       ) : null}
@@ -1572,7 +1572,7 @@ function OptionMultiSelect({
               checked={selected.has(option)}
               onChange={() => toggleOption(option)}
             />
-            <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(option)}
             </span>
           </label>
@@ -1599,12 +1599,12 @@ function RouteTypeMultiSelect({
   }
 
   return (
-    <fieldset className="rounded-2xl border border-white/10 bg-black/25 p-4">
-      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+    <fieldset className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <legend className="px-2 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </legend>
 
-      <p className="mb-4 text-sm leading-6 text-[var(--muted)]">
+      <p className="mb-4 text-sm leading-6 text-[var(--ink-dim)]">
         Select every travel method this connection supports. The default method
         is used only when runtime context does not identify another valid method.
       </p>
@@ -1620,7 +1620,7 @@ function RouteTypeMultiSelect({
               checked={selected.has(routeType)}
               onChange={() => toggleRouteType(routeType)}
             />
-            <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(routeType)}
             </span>
           </label>
@@ -1638,7 +1638,7 @@ function CheckboxInput({ label, checked, onChange }) {
         checked={Boolean(checked)}
         onChange={(event) => onChange(event.target.checked)}
       />
-      <span className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
         {label}
       </span>
     </label>
@@ -1648,7 +1648,7 @@ function CheckboxInput({ label, checked, onChange }) {
 function EmptyPanel({ message }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-      <p className="text-sm leading-6 text-[var(--muted)]">{message}</p>
+      <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
 }
@@ -1658,7 +1658,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
     >
       {children}
     </button>
@@ -1681,10 +1681,10 @@ function SmallDangerAction({ onClick }) {
 function SummaryPill({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase [font-weight:var(--weight-medium)] text-[var(--gold-bright)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
