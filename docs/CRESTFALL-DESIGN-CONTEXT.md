@@ -3,7 +3,7 @@
 ## What Crestfall is
 
 Crestfall is a storytelling and character-creation platform by Anthology
-Interactive. This repository, Crestfall-fe, is its front end — an
+Interactive. This repository, Crestfall-fe, is its front end, an
 independent repo from the Crestfall services API and from the original
 Crestfall FE.
 
@@ -33,7 +33,7 @@ restyle does not touch it.
 
 Two type families carry the whole system. Body and UI copy is set in
 Inter (the sans token). Titles, page heads, and display moments are set
-in Cormorant Garamond (the display token) — reserved for that role, not
+in Cormorant Garamond (the display token), reserved for that role, not
 used for body copy.
 
 The accent color is gold, expressed through several tokens depending on
@@ -41,9 +41,9 @@ role (ornament, bright, action) rather than one flat value, so gold can
 sit correctly on canvas, on artwork, or as an interactive accent without
 losing contrast.
 
-Three status colors exist for state only — success (warm sage), warning
-(burnt amber), and danger (brick red) — never for decoration, charts, or
-hover effects, and every use ships with a word beside it. There is no
+Three status colors exist for state only: success (warm sage), warning
+(burnt amber), and danger (brick red). They are never for decoration,
+charts, or hover effects, and every use ships with a word beside it. There is no
 fourth "info" color; informational copy reads through the neutral ink
 scale like any other text.
 
@@ -56,8 +56,8 @@ Three banner treatments exist, and only these three (ruled 4 Aug
 end, with a uniform screen and copy/CTA centered; (b) a banner card,
 in-flow, with copy/CTA bottom-left and a fade from the left; (c) a top
 banner at the page head, with text/CTA bottom-left and a fade from the
-bottom. There is no fourth treatment and no per-instance settings —
-fade direction and copy position are fixed by which of the three a
+bottom. There is no fourth treatment and no per-instance settings.
+Fade direction and copy position are fixed by which of the three a
 given banner is.
 
 Corners come in two tiers only (ruled 4 Aug 2026, final; supersedes
@@ -87,12 +87,12 @@ change. Shape alone should tell the eye a label from a button you can
 press.
 
 Destructive actions (delete, remove, discard) never get a different
-size or shape from an ordinary button — same height, same corners,
+size or shape from an ordinary button. Same height, same corners,
 same padding, never wider, never a lone button stranded on its own at
 the bottom of a screen. An in-page delete trigger is quiet: no fill,
 just the danger-red word next to a plain icon. Filled danger-red
-appears in exactly one place — the confirming button inside a "are you
-sure" step — and that is the only filled red anywhere in the app.
+appears in exactly one place, the confirming button inside a "are you
+sure" step, and that is the only filled red anywhere in the app.
 Every destructive action ships with a word next to it; an icon alone
 is never enough.
 
@@ -101,23 +101,23 @@ is never enough.
 Most converted UI packages follow one shape, with responsibilities kept
 deliberately separate:
 
-- **Binding Shell** (e.g. `StudioTopBar.jsx`) — owns Crestfall-specific
+- **Binding Shell** (e.g. `StudioTopBar.jsx`): owns Crestfall-specific
   integration: Next.js navigation, application state, host adapters,
   route behavior, ViewModel wiring.
-- **ViewModel** (e.g. `useStudioTopBarViewModel.js`) — normalizes input
+- **ViewModel** (e.g. `useStudioTopBarViewModel.js`): normalizes input
   and prepares props for the View.
-- **Portable View** (e.g. `StudioTopBar.view.jsx`) — owns presentation
+- **Portable View** (e.g. `StudioTopBar.view.jsx`): owns presentation
   only. A View does not touch database access, Supabase product data,
   services-api calls, persistence, router behavior, or business rules
   that belong to Crestfall services. It receives data and callbacks
   through props.
-- **Contract** — documents the expected shape of props and behavior.
-- **Fixtures** — provide local, deterministic states for previews and
+- **Contract**: documents the expected shape of props and behavior.
+- **Fixtures**: provide local, deterministic states for previews and
   isolated testing, without depending on live APIs.
 
 ## The quality floor
 
-A View is presentation-only and stays that way — no direct product-data
+A View is presentation-only and stays that way, no direct product-data
 access, no bypassing the frontend API and services-api boundaries, no
 business logic pulled into page components.
 
@@ -127,7 +127,7 @@ when the prop surface changes, the contract is updated with it; when a
 new visible state is needed, a fixture is added for it.
 
 Every change is checked by the agent on a rendered page, not assumed
-from a file read — at 390 width and then at 1440 width (768 is retired
+from a file read, at 390 width and then at 1440 width (768 is retired
 from review). A production build should finish with exit code 0. The
 repository may carry inherited lint findings; a task does not rewrite
 unrelated areas just to make lint pass unless lint cleanup is the
@@ -148,7 +148,7 @@ rendered card.
 
 ## Process lives separately
 
-How work gets done — branch and commit rules, what may be edited,
-verification, escalation — is AGENTS.md's job, not this document's.
+How work gets done, branch and commit rules, what may be edited,
+verification, escalation, is AGENTS.md's job, not this document's.
 This file and RESTYLE-RULES.md cover the product and the design
 language; AGENTS.md covers craft.
