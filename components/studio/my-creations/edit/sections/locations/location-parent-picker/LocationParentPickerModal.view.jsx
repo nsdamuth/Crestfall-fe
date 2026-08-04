@@ -19,15 +19,15 @@ export default function LocationParentPickerModalView({
   const showEmptyState = !isLoading && !errorMessage && items.length === 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--line-whisper)] py-3 px-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               {description}
             </p>
           </div>
@@ -35,7 +35,7 @@ export default function LocationParentPickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -43,32 +43,32 @@ export default function LocationParentPickerModalView({
         </div>
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+          <label className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3">
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
               onChange={(event) =>
                 onSearchQueryChange?.(event.target.value)
               }
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 text-sm text-[var(--ink-dim)]">
               {loadingMessage}
             </p>
           ) : null}
 
           {errorMessage ? (
-            <p className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+            <p className="mt-5 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-3 text-sm text-[var(--status-danger)]">
               {errorMessage}
             </p>
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-2)] p-3 text-sm text-[var(--ink-dim)]">
               {emptyMessage}
             </p>
           ) : null}
@@ -81,10 +81,10 @@ export default function LocationParentPickerModalView({
                   type="button"
                   onClick={() => onChooseLocation?.(item?.id)}
                   aria-pressed={Boolean(item?.isSelected)}
-                  className={`overflow-hidden rounded-2xl border bg-black/35 text-left transition hover:border-[var(--muted-gold)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     item?.isSelected
-                      ? "border-[var(--muted-gold)]/60"
-                      : "border-white/10"
+                      ? "border-[var(--gold-ornament)]/60"
+                      : "border-[var(--line)]"
                   }`}
                 >
                   <div
@@ -101,7 +101,7 @@ export default function LocationParentPickerModalView({
                       {item?.title || "Untitled Location"}
                     </p>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                       {item?.subtitle || "Location"}
                     </p>
 
@@ -109,7 +109,7 @@ export default function LocationParentPickerModalView({
                       {(item?.badges || []).map((badge, badgeIndex) => (
                         <span
                           key={`${item?.id || index}-badge-${badgeIndex}`}
-                          className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+                          className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]"
                         >
                           {badge}
                         </span>
@@ -117,7 +117,7 @@ export default function LocationParentPickerModalView({
                     </div>
 
                     {item?.referenceText ? (
-                      <p className="mt-3 break-all text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                      <p className="mt-3 break-all text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]">
                         {item.referenceText}
                       </p>
                     ) : null}
