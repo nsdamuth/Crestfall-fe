@@ -18,7 +18,7 @@ export default function ViewModeToggleView({
         {label}
       </span>
 
-      <div className="inline-flex rounded-full border border-white/10 bg-black/30 p-1">
+      <div className="inline-flex rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-1">
         {VIEW_MODE_OPTIONS.map((option) => {
           const Icon = option.icon;
           const active = value === option.id;
@@ -28,7 +28,7 @@ export default function ViewModeToggleView({
               key={option.id}
               type="button"
               onClick={() => onChange?.(option.id)}
-              className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
+              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
                 active
                   ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                   : "text-[var(--muted)] hover:text-[var(--foreground)]"
