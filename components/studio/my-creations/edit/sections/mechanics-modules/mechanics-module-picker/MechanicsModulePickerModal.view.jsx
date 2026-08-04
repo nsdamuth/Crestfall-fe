@@ -8,61 +8,61 @@ function MechanicsModuleCard({ item, onChooseModule }) {
     <button
       type="button"
       onClick={() => onChooseModule?.(item?.id)}
-      className="group rounded-2xl border border-white/10 bg-black/35 p-5 text-left transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10"
+      className="group rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-left transition hover:border-[var(--gold-ornament)]/55 hover:bg-[var(--gold-ornament)]/10"
     >
       <div className="flex items-start gap-3">
-        <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+        <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           <Activity size={20} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {item?.sourceLabel || "Mechanics Module"}
           </p>
 
-          <h3 className="mt-2 font-display text-2xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">
             {item?.title || "Untitled Mechanics Module"}
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
             {item?.description || "Reusable runtime mechanics module."}
           </p>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-2 text-xs leading-5 text-[var(--muted)]">
+      <div className="mt-4 grid gap-2 text-xs leading-5 text-[var(--ink-dim)]">
         <p>
           Module ID:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {item?.moduleId || "core.trackers.v1"}
           </span>
         </p>
 
         <p>
           Trackers:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {Number.isFinite(item?.trackerCount) ? item.trackerCount : 0}
           </span>
           {" · "}
           Guards:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {Number.isFinite(item?.guardCount) ? item.guardCount : 0}
           </span>
           {" · "}
           Commands:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {Number.isFinite(item?.commandCount) ? item.commandCount : 0}
           </span>
         </p>
 
         <p>
           Status:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {item?.status || "DRAFT"}
           </span>
           {" · "}
           Visibility:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {item?.visibility || "PRIVATE"}
           </span>
         </p>
@@ -73,7 +73,7 @@ function MechanicsModuleCard({ item, onChooseModule }) {
           {item.tags.slice(0, 6).map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[0.65rem] uppercase tracking-[0.15em] text-[var(--muted)]"
+              className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]"
             >
               {tag}
             </span>
@@ -131,17 +131,17 @@ export default function MechanicsModulePickerModalView({
   }, [activeSource, query]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <div className="max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-black shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
+      <div className="max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
 
-            <h2 className="mt-2 font-display text-4xl">{title}</h2>
+            <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]">{title}</h2>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-[var(--space-2)] max-w-[44rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               {description}
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function MechanicsModulePickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 bg-black/40 p-3 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/40 hover:text-[var(--foreground)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/40 hover:text-[var(--ink)]"
             title="Close"
             aria-label="Close mechanics module picker"
           >
@@ -170,10 +170,10 @@ export default function MechanicsModulePickerModalView({
                     setActiveSourceId(source?.id || "");
                     setQuery("");
                   }}
-                  className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                  className={`inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                     active
-                      ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                      : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                   }`}
                 >
                   {source?.label || "Modules"}
@@ -182,26 +182,26 @@ export default function MechanicsModulePickerModalView({
             })}
           </div>
 
-          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </label>
         </div>
 
         <div className="max-h-[54vh] overflow-y-auto p-6">
           {loadStatus === "loading" ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
+            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--ink-dim)]">
               Loading mechanics modules...
             </div>
           ) : null}
 
           {loadStatus === "error" ? (
-            <div className="rounded-xl border border-red-300/20 bg-red-500/10 p-5 text-sm text-red-100">
+            <div className="rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-5 text-sm text-[var(--status-danger)]">
               {loadMessage || "Mechanics modules could not be loaded."}
             </div>
           ) : null}
@@ -219,7 +219,7 @@ export default function MechanicsModulePickerModalView({
           ) : null}
 
           {loadStatus === "loaded" && !visibleItems.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
+            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
               {activeSource?.emptyMessage ||
                 "No available mechanics modules found for this tab."}
             </div>
