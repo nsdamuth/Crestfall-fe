@@ -682,3 +682,20 @@ before batch two converts the affected packages.
    container." Nested content inside a large-radius panel (e.g. a card
    nested in a modal) drops back to standard — the large tier does not
    inherit downward.
+
+2. **The continue card / banner card: large or standard?** The amended
+   Corners ruling above contains two statements about the same surface
+   that disagree. The Large-tier table row lists "the continue card"
+   as a full-width in-flow surface (large, `--radius-lg`), consistent
+   with the pre-existing Hub layouts table (`.continuecard`,
+   `--radius-lg`, unchanged since the original draft harvest) — two
+   independent sources agree it is large. But the paragraph
+   immediately below the table states "the in-flow banner card is
+   standard (it sits in a grid alongside siblings)," and Banner
+   taxonomy's own naming ties "banner card" directly to "a continue
+   card" (treatment (b): "in-flow, mid-page (e.g. a continue card)").
+   If "banner card" and "continue card" name the same surface, this
+   ruling assigns it both tiers at once. Not resolved here — Brian
+   rules which tier the continue card / banner card actually takes
+   before batch two converts `.continuecard` or any package built the
+   same way.
