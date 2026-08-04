@@ -13,11 +13,11 @@ export default function DefaultPlayerCharacterPickerModalView({
     !isLoading && !errorMessage && playerCharacters.length === 0;
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <section className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
+      <section className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] py-[var(--space-3)] px-[var(--space-4)]">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-[var(--text-ui)] leading-[var(--lh-ui)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Account Default
             </p>
 
@@ -25,7 +25,7 @@ export default function DefaultPlayerCharacterPickerModalView({
               Choose Default Player Character
             </h2>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               This is your preferred player identity for new story rooms. Public
               Player Characters remain vanity/showcase objects to everyone else;
               only the owner can use them as a playable identity.
@@ -35,7 +35,7 @@ export default function DefaultPlayerCharacterPickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="inline-flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close"
           >
             <X size={18} />
@@ -44,31 +44,31 @@ export default function DefaultPlayerCharacterPickerModalView({
 
         <div className="max-h-[72vh] overflow-y-auto p-5">
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
               onChange={(event) =>
                 onSearchQueryChange?.(event.target.value)
               }
               placeholder="Search your player characters..."
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
               Loading player characters...
             </p>
           ) : null}
 
           {errorMessage ? (
-            <p className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+            <p className="mt-5 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-4 text-sm text-[var(--status-danger)]">
               {errorMessage}
             </p>
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
               No Player Character creations found.
             </p>
           ) : null}
@@ -82,10 +82,10 @@ export default function DefaultPlayerCharacterPickerModalView({
                   onClick={() =>
                     onChoosePlayerCharacter?.(playerCharacter?.id)
                   }
-                  className={`overflow-hidden rounded-2xl border bg-black/35 text-left transition hover:border-[var(--muted-gold)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     playerCharacter?.isSelected
-                      ? "border-[var(--muted-gold)]/60"
-                      : "border-white/10"
+                      ? "border-[var(--gold-ornament)]/60"
+                      : "border-[var(--line)]"
                   }`}
                 >
                   <div
@@ -105,17 +105,17 @@ export default function DefaultPlayerCharacterPickerModalView({
                       {playerCharacter?.title || "Untitled PC"}
                     </p>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                       {playerCharacter?.description || "No description."}
                     </p>
 
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center gap-1 rounded-full bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-0 text-[var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]">
                         <UserRound size={11} />
                         Player Character
                       </span>
 
-                      <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-0 text-[var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]">
                         {playerCharacter?.isSelected
                           ? "Current Default"
                           : "Selectable"}
