@@ -60,6 +60,27 @@ bottom. There is no fourth treatment and no per-instance settings —
 fade direction and copy position are fixed by which of the three a
 given banner is.
 
+Corners come in two sizes only (ruled 4 Aug 2026): standard, for every
+control and every content surface — cards, tiles, rows, buttons,
+inputs; and large, reserved for big floating panels — modals, sheets,
+big containers. Nothing else. Shape carries meaning on top of that:
+fully rounded (a pill) is reserved for tags and icon buttons only —
+every clickable button, everywhere, at every density, is a
+soft-cornered rectangle, never a pill. That includes Follow and View
+profile on the creators page, which read as pills today and need to
+change. The rule of thumb: shape alone should tell the eye "this is a
+label" from "this is a button you can press."
+
+Destructive actions (delete, remove, discard) never get a different
+size or shape from an ordinary button — same height, same corners,
+same padding, never wider, never a lone button stranded on its own at
+the bottom of a screen. An in-page delete trigger is quiet: no fill,
+just the danger-red word next to a plain icon. Filled danger-red
+appears in exactly one place — the confirming button inside a "are you
+sure" step — and that is the only filled red anywhere in the app.
+Every destructive action ships with a word next to it; an icon alone
+is never enough.
+
 ## The LOOM file shape
 
 Most converted UI packages follow one shape, with responsibilities kept
@@ -91,7 +112,28 @@ when the prop surface changes, the contract is updated with it; when a
 new visible state is needed, a fixture is added for it.
 
 Every change is checked by the agent on a rendered page, not assumed
-from a file read — at 390 width and then at 1440 width. A production
-build should finish with exit code 0. The repository may carry inherited
-lint findings; a task does not rewrite unrelated areas just to make lint
-pass unless lint cleanup is the assigned task.
+from a file read — at 390 width and then at 1440 width (768 is retired
+from review). A production build should finish with exit code 0. The
+repository may carry inherited lint findings; a task does not rewrite
+unrelated areas just to make lint pass unless lint cleanup is the
+assigned task.
+
+## Where the sweep stands
+
+Batch one (the first 20 packages, chosen by which had the most design
+rule families to apply) is converted and pushed to
+`design/global-sweep`. A full audit of all 299 packages against every
+ruling to date is complete and recorded in `docs/BATCH-TWO-SCOPE.md` —
+that audit, not a shorter earlier list, is batch two's scope. Two
+things are waiting on Brian before batch two converts anything: an
+open question about which of the two corner sizes a modal-like panel
+should resolve to when it could read as either (recorded in
+RESTYLE-RULES.md under "Open questions"), and general sign-off on the
+newly ruled law itself.
+
+## Process lives separately
+
+How work gets done — branch and commit rules, what may be edited,
+verification, escalation — is AGENTS.md's job, not this document's.
+This file and RESTYLE-RULES.md cover the product and the design
+language; AGENTS.md covers craft.
