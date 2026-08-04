@@ -265,3 +265,95 @@ Source: canonical recipe `proof.css` `.eyebrow`/`.eyebrow--ruled` (188–205, sa
 | Eyebrow, inside modal body copy (`.cmbody .eyebrow`) | spacing only | `margin-bottom: var(--space-1)`, no color change — modal surfaces aren't artwork, so the default `--gold-ornament` stands | `--space-1` |
 
 **OPEN:** none — the rule and its one exception (artwork vs. non-artwork background) are consistent everywhere the eyebrow appears.
+
+---
+
+# Phase A addendum — eight rulings from review
+
+These close eight items the extension above left under **OPEN**. Each is a ruling made for this repo, not always a literal draft trace — where a ruling extends past what the draft shows, that's called out. Nothing below is applied to any package yet.
+
+## Ruling 1 — Modal chrome: one unified frame
+
+Source basis: `picker.css` `.pkveil`/`.picker` (10–22) and `shell.css` `.sheetveil`/`.sheet` (174–182) already share one identical frame — the divergence was only `.cmodal` (`modal.css` 15–38), which used a different fill and never docked to the bottom edge on phone. This ruling extends the `.picker`/`.sheet` frame to `.cmodal` too, so every floating surface (creator panel, picker, sheet) becomes one frame with different contents inside.
+
+| Element | Property | Value | Token |
+|---|---|---|---|
+| Scrim (all three) | fill | `background: var(--scrim-strong)`, `backdrop-filter: blur(2px)` — already identical across `.cmveil`/`.pkveil`/`.sheetveil`, unchanged | `--scrim-strong` |
+| Frame, phone width | dock | fixed to the bottom edge: `left: 0; right: 0; bottom: 0` | — |
+| Frame, phone width | shape | `border-radius: var(--radius-lg) var(--radius-lg) 0 0` (top corners only) | `--radius-lg` |
+| Frame, phone width | border | `1px solid var(--line)`, `border-bottom: 0` | `--line` |
+| Frame, ≥700px | shape | centers: `top/left: 50%`, `translate(-50%,-50%)`, full `border-radius: var(--radius-lg)` on all corners, border restored on all four edges | `--radius-lg`, `--line` |
+| Frame | fill | `background: var(--surface-4)` — this is the one change from `.cmodal`'s old recipe (a `--surface-2`/`--canvas` color-mix plus a `--fill-whisper` wash); it now matches `.picker`/`.sheet` exactly | `--surface-4` |
+| Frame | shadow | `box-shadow: var(--shadow-modal)` | `--shadow-modal` |
+| Close control | position | top-right of the header, `margin-left: auto` — already consistent across all three | — |
+| Close control | shape | circular `--iconbtn`: `var(--control-md)`, `radius-full`, `--surface-2` fill, `1px solid var(--line-whisper)` border | `--control-md`, `--radius-full`, `--surface-2`, `--line-whisper` |
+| Close behavior | interaction | X, scrim click, and Escape all close in place; work is kept, never a navigation | — |
+| Scroll lock | behavior | each layer locks independently (`body.cm-locked` / `.pk-locked` / `.pv-locked`, one class per layer) so closing an inner picker over an open modal can't unlock the modal's own hold — keep the per-layer classes, don't collapse them into one | — |
+| Contents | — | unchanged — the stepper, search field, tile grid, form fields, etc. inside each surface stay exactly what they were; only the frame around them unifies | — |
+
+**Width/height stay per-surface**, not unified — the modal's near-square `min(46rem, …)` sizing and the picker's narrower `min(42rem, …)` sizing serve different content and aren't part of what this ruling asks to unify.
+
+## Ruling 2 — Danger button: new destructive variant (token proposed, not applied)
+
+Geometry is identical to the standard `.btn` documented above — same height, padding, radius, gap, type scale. Only the fill and text color change.
+
+| Element | Property | Value | Token |
+|---|---|---|---|
+| Danger button | geometry | identical to `.btn` — height `--control-md`, padding `0 var(--space-6)`, radius `--radius-md`, `--font-sans`, `--text-cta`/`--lh-cta`, weight `--weight-bold` | (see Buttons) |
+| Danger button | fill | **proposed new token** `--red-action` | `--red-action` |
+| Danger button | text color | `--ink` (light text — see contrast note) | `--ink` |
+| Danger button, hover | | `box-shadow: var(--glow-hover)` — reuse the existing hover glow token, no new red glow | `--glow-hover` |
+
+**Proposed token:** `--red-action: #b8503c;` — a muted brick/ember red, warm-leaning to sit next to the gold family instead of reading as a generic UI red. Checked against every red already in this app (`#ef4444`/`#dc2626` Tailwind reds used ad hoc in `components/studio/my-creations/**`) and against every hex already in `app/theme.css` — this value is new, copied from nothing existing. At this lightness it needs light text (`--ink`), not the dark `--tag-fill-ink` the gold primary button uses (gold is bright enough for dark text; this red isn't). Name follows the existing gold family's `--gold-action`/`--gold-ornament`/`--gold-bright`/`--gold-deep` convention — only the `-action` (interactive) member is proposed here since that's the only one a destructive button needs; a full ornament/bright/deep red family isn't proposed because nothing in scope needs one yet.
+
+**Not applied anywhere.** No package in this sweep uses it.
+
+## Ruling 3 — Badges: Canon stays special, status badges go neutral
+
+Source basis: `library.css` `.tag--canon,.lcard .tag--canon{color:var(--gold-bright)}` (217–221) — the *second* selector in that rule is the real point: over artwork, the base art recipe already recolors every tag to plain `--ink` (Recipe 1), and Canon is the one modifier that overrides back to `--gold-bright` so it keeps its gold read even on a photo. That's what "the only special one" means in the draft — Canon is the sole badge with an art-context override at all. This ruling extends that same two-recipe system with a second, deliberately quiet modifier for Private/Internal/Public, rather than inventing new shapes.
+
+| Element | Property | Value | Token |
+|---|---|---|---|
+| Canon badge (`.tag--canon`) | unchanged | gold text everywhere, including the art-context override that beats Recipe 1's plain ink | `--gold-bright` |
+| Status badge (new modifier, e.g. `.tag--status`, covers Private/Internal/Public alike) | shape | same `.tag` pill base — no shape change | (see Badges) |
+| Status badge, on canvas | text color | `--ink-dim` (replaces the base recipe's `--gold-bright` — this is the one override the modifier makes) | `--ink-dim` |
+| Status badge, on artwork | text color | no override needed — Recipe 1's default `--ink` is already neutral, so the art context needs nothing extra (unlike Canon, which needs the extra rule to stay gold) | `--ink` (inherited) |
+| Status label text | — | Private / Internal / Public are distinguished by their word, never by color — same "no color-only meaning" principle the draft already applies to every other tag category | — |
+
+## Ruling 4 — Stat rows: literal values rounded to the token scale
+
+Source basis: `proof.css` `.st` (415–421), documented above as off-scale.
+
+| Literal value | Rounds to | Token | Why |
+|---|---|---|---|
+| `gap: 3px` | `4px` | `--space-1` | nearest step on the 4px spacing scale; there is no 3px step to preserve |
+| icon `12px × 12px` | `16px × 16px` | `--icon-sm` | smallest step on the icon scale (16/20/24); there is no smaller icon token |
+
+Everything else in `.st` (inline-flex layout, `.85` icon opacity, tabular-nums, the fixed plays/hearts/saves/followers order) is unchanged from the family table above.
+
+## Ruling 5 — Credits: the existing per-render cost line is the recipe (no chip invented)
+
+Source: `image-studio.html` — CSS at lines 112–125 (`.tipdot`, `.wallet`, `.wallet .costline`, `.wallet p`, `.wallet b`), markup at line 242. This is a different recipe from the sidebar `.coins` balance widget documented earlier — that one is the persistent nav-rail balance; this one is the per-action cost readout that sits under a primary generate/create button.
+
+| Element | Property | Value | Token |
+|---|---|---|---|
+| Wallet row (`.wallet`) | layout | flex, `justify-content: space-between`, `align-items: baseline`, `gap: var(--space-3)` | `--space-3` |
+| Wallet row | placement | `margin-top: var(--space-4)`, `border-top: 1px solid var(--line-whisper)`, `padding-top: var(--space-3)` — sits directly below the primary button | `--space-4`, `--line-whisper`, `--space-3` |
+| Cost line label (`.wallet p`, small-caps "Coins") | text | `--text-label`/`--lh-label`, `--track-label`, uppercase, `--ink-faint` | `--text-label`, `--track-label`, `--ink-faint` |
+| Cost line (`.wallet .costline`) | position | `margin-right: auto` — sits at the left, balance sits at the right | — |
+| Info icon (`.tipdot`) | shape | inline, `cursor: help`, `color: var(--gold-ornament)`, `font-size: var(--text-label)`, no fixed height (`min-height: auto`) | `--gold-ornament`, `--text-label` |
+| Info icon | tooltip | uses the same `[data-tip]::after` tooltip mechanism as the rest of the app, anchored right (`left: auto; right: 0`) so it doesn't clip against the panel's right edge | — |
+| Balance (`.wallet b`) | text | `--font-display`, `--text-lead`, `--gold-bright`, weight `--weight-medium`, tabular-nums, right-aligned (default flex end since `.costline` takes the margin-right:auto seat) | `--font-display`, `--text-lead`, `--gold-bright`, `--weight-medium` |
+| Related, inside the button itself | | the CTA's own label can carry a cost suffix (e.g. "Generate · 5 coins"), styled `.btn .cost { font-weight: var(--weight-medium); opacity: .75 }` — a button-copy detail, not part of the wallet recipe, kept separate | `--weight-medium` |
+
+## Ruling 6 — Share controls: icon plus the word "Share", never icon-only
+
+Extends the Share controls family above (which already found the one styled instance is `.btn.btn--ghost.btn--sm` with a Share icon *and* the word "Share"). This ruling makes that a hard requirement rather than an incidental fact: every share control, at every density (including any "compact" mode), must render the Share2 icon **and** the label text "Share" together. No icon-only share affordance, on any surface, at any width.
+
+## Ruling 7 — Filter panels on phone: dock to the bottom edge
+
+Reuses Ruling 1 exactly. At phone width, a filter panel that needs to expand past the sticky chip bar (the `.cbmenu` dropdown, or any phone-only filter surface) docks to the bottom edge using the same unified frame as modal chrome: `border-radius: var(--radius-lg) var(--radius-lg) 0 0`, `border: 1px solid var(--line)` with no bottom border, `background: var(--surface-4)`, `box-shadow: var(--shadow-modal)`, scrim `--scrim-strong` + `blur(2px)`. This is not a new recipe — it's Ruling 1's frame applied to a new surface type. The sticky top bar (`.cbar`/`.filters`) itself is unchanged; only its overflow menu adopts the docked shape on phone.
+
+## Ruling 8 — Hub layouts: library pages only, layout frozen, home page out of scope
+
+Confirms and narrows the Hub layouts family above. `library.css`'s six-page library template (adventures, sessions, arcs, my-vault, community, the-cast, plus the browse/community/creators hubs built on the same skeleton) is in scope for this sweep: colors and type update to the token system, but the skeleton order (page head → action row → banner → filter bar → grid → endcap → ladder) and its grid breakpoints do not change. `studio-home.html`'s dashboard shape (`.hero`, `.craftdoors`, `.shelf`/`.poster`, `.vista`, `.ladder--steps`) is explicitly **out of scope** for this sweep — it is a different template and isn't touched by this ruling.
