@@ -43,7 +43,7 @@ export default function NpcEntryModalView({
                 key={option?.id || option?.label}
                 type="button"
                 onClick={() => onChooseMode?.(option?.id || "")}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   active
                     ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                     : "border-white/10 text-[var(--muted)]"
@@ -81,7 +81,7 @@ export default function NpcEntryModalView({
         )}
 
         {!isLinkedCharacterMode && actorMechanicsProfileAttachmentContent ? (
-          <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-4">
             {actorMechanicsProfileAttachmentContent}
           </div>
         ) : null}
