@@ -63,15 +63,18 @@ given banner is.
 Corners come in two sizes only (ruled 4 Aug 2026, amended 4 Aug 2026),
 sorted by role, not by size: standard, for every control (buttons,
 inputs, chips, swatches) and every surface that sits in a grid
-alongside siblings (cards, tiles, rows, the in-flow banner card), and
-also for anything nested inside a large-radius panel; large, for every
-surface that floats above the page (modals, pickers, sheets, drawers,
-popovers) and every in-flow surface that spans the full content width
-(the bottom promo banner/endcap, the continue card, empty states, the
-bulk bar). The three banner treatments split across both tiers: the
-bottom promo banner is large, the in-flow banner card is standard, and
-the top banner follows whatever page-head surface hosts it. Nothing
-else. Shape carries meaning on top of that:
+alongside siblings (cards, tiles, rows), and also for anything nested
+inside a large-radius panel; large, for every surface that floats
+above the page (modals, pickers, sheets, drawers, popovers) and every
+in-flow surface that spans the full content width (the bottom promo
+banner/endcap, empty states, the bulk bar). Nothing else.
+
+OPEN QUESTION, not yet ruled: whether the continue card / in-flow
+banner card takes the standard or large tier. RESTYLE-RULES.md's
+Corners amendment currently states both at once (Open question 2) —
+Brian rules which before batch two converts `.continuecard` or any
+package built the same way. Shape carries meaning on top of the
+corners rule regardless of how that question resolves:
 fully rounded (a pill) is reserved for tags and icon buttons only —
 every clickable button, everywhere, at every density, is a
 soft-cornered rectangle, never a pill. That includes Follow and View
@@ -134,9 +137,11 @@ rule families to apply) is converted and pushed to
 ruling to date is complete and recorded in `docs/BATCH-TWO-SCOPE.md` —
 that audit, not a shorter earlier list, is batch two's scope. The
 modal/large-panel corner-radius ambiguity is resolved (see the amended
-Corners ruling in RESTYLE-RULES.md); what's waiting on Brian before
-batch two converts anything is general sign-off on the newly ruled law
-itself.
+Corners ruling in RESTYLE-RULES.md, Open question 1). Two things are
+waiting on Brian before batch two converts anything: Open question 2
+(does the continue card / in-flow banner card take standard or large
+radius — the amendment currently asserts both), and general sign-off
+on the newly ruled law itself.
 
 ## Process lives separately
 
