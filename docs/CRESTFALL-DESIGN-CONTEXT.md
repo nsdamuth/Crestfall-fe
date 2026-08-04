@@ -60,10 +60,18 @@ bottom. There is no fourth treatment and no per-instance settings —
 fade direction and copy position are fixed by which of the three a
 given banner is.
 
-Corners come in two sizes only (ruled 4 Aug 2026): standard, for every
-control and every content surface — cards, tiles, rows, buttons,
-inputs; and large, reserved for big floating panels — modals, sheets,
-big containers. Nothing else. Shape carries meaning on top of that:
+Corners come in two sizes only (ruled 4 Aug 2026, amended 4 Aug 2026),
+sorted by role, not by size: standard, for every control (buttons,
+inputs, chips, swatches) and every surface that sits in a grid
+alongside siblings (cards, tiles, rows, the in-flow banner card), and
+also for anything nested inside a large-radius panel; large, for every
+surface that floats above the page (modals, pickers, sheets, drawers,
+popovers) and every in-flow surface that spans the full content width
+(the bottom promo banner/endcap, the continue card, empty states, the
+bulk bar). The three banner treatments split across both tiers: the
+bottom promo banner is large, the in-flow banner card is standard, and
+the top banner follows whatever page-head surface hosts it. Nothing
+else. Shape carries meaning on top of that:
 fully rounded (a pill) is reserved for tags and icon buttons only —
 every clickable button, everywhere, at every density, is a
 soft-cornered rectangle, never a pill. That includes Follow and View
@@ -124,12 +132,11 @@ Batch one (the first 20 packages, chosen by which had the most design
 rule families to apply) is converted and pushed to
 `design/global-sweep`. A full audit of all 299 packages against every
 ruling to date is complete and recorded in `docs/BATCH-TWO-SCOPE.md` —
-that audit, not a shorter earlier list, is batch two's scope. Two
-things are waiting on Brian before batch two converts anything: an
-open question about which of the two corner sizes a modal-like panel
-should resolve to when it could read as either (recorded in
-RESTYLE-RULES.md under "Open questions"), and general sign-off on the
-newly ruled law itself.
+that audit, not a shorter earlier list, is batch two's scope. The
+modal/large-panel corner-radius ambiguity is resolved (see the amended
+Corners ruling in RESTYLE-RULES.md); what's waiting on Brian before
+batch two converts anything is general sign-off on the newly ruled law
+itself.
 
 ## Process lives separately
 

@@ -465,18 +465,36 @@ Closes the three items logged under **Open gaps** above, and corrects
 
 ## Corners: two tiers only
 
-Two tiers, no third:
+**AMENDED 4 Aug 2026 — resolves Open question 1 below.** Sorted by
+role, not by size:
 
 | Tier | Value | Token | Applies to |
 |---|---|---|---|
-| Standard | 12px | `--radius-md` | every control (buttons, inputs, chips) **and** every content surface (cards, tiles, rows) |
-| Large | 20px | `--radius-lg` | large panels only — modals, sheets, large containers |
+| Standard | 12px | `--radius-md` | every control (buttons, inputs, chips, swatches) **and** every surface that sits in a grid alongside siblings (cards, tiles, rows, the in-flow banner card) **and** every element nested inside a large-radius panel |
+| Large | 20px | `--radius-lg` | every surface that floats above the page (modals, pickers, sheets, drawers, popovers) **and** every in-flow surface that spans the full content width (the bottom promo banner/endcap, the continue card, empty states, the bulk bar) |
+
+The prior phrasing — "large panels only" and "modals, sheets, large
+containers" — is retired wherever it appeared in this document; it
+implied a size rule, and the correct rule sorts by role instead. A
+surface floating above the page is always large-radius regardless of
+its footprint; a surface sitting in a grid alongside siblings is
+always standard-radius regardless of its footprint, including when
+that surface is nested one level inside a large-radius panel.
 
 The 16px off-scale value (`rounded-2xl`, seen in `StoryRoomCastPanel`,
 `LocationBuilder`, `GamesHub`, and elsewhere per `docs/HARVEST-GAPS.md`
-§5) is retired. It resolves **down** to `--radius-md` (12px), not up to
-`--radius-lg` — an off-scale panel was never meant to read as large, it
-drifted there ad hoc.
+§5) is retired. It resolves **down** to `--radius-md` (12px) — an
+off-scale panel was never meant to read as large, it drifted there ad
+hoc. This still holds under the amended rule: an off-scale surface
+that is not itself a floating panel or a full-width in-flow surface
+resolves down regardless of prior size-based intuition.
+
+The three banner treatments (see Banner taxonomy below) split across
+both tiers, not into one bucket: the bottom promo banner is large (it
+spans the full content width, in-flow), the in-flow banner card is
+standard (it sits in a grid alongside siblings), and the top banner
+follows its host surface (it has no independent radius of its own —
+whatever page-head container it lives in sets the corner).
 
 Small nested art thumbnails keep the tight radius: `--radius-sm` (8px),
 unchanged from the draft (`.cf-art`, `.crtworks a`, `.crtworks .phw`) —
@@ -648,21 +666,19 @@ audit and are kept for history only.
 Numbered per AGENTS.md §7 — flagged, not guessed at. Brian rules these
 before batch two converts the affected packages.
 
-1. **Modal/sheet radius when the surface also reads as a large
-   container.** The Corners ruling resolves off-scale 16px DOWN to
-   `--radius-md` (12px) as the general case, with `--radius-lg` (20px)
-   reserved for "large panels only — modals, sheets, large containers."
-   Two independent audit passes over the same file
-   (`components/studio/room-templates/room-template-picker`,
-   `RoomTemplatePickerModal.view.jsx:30`) reached opposite readings of
-   which bucket a modal picker falls into — one resolved it down to
-   `--radius-md` per the general retirement rule, the other resolved it
-   up to `--radius-lg` because it is a modal. The same ambiguity
-   recurs at `story-room-cast-panel`'s sidebar `<aside>`
-   (`StoryRoomCastPanel.view.jsx:47`, logged in `docs/BATCH-TWO-SCOPE.md`
-   as ambiguous between the two tiers) and other modal/sheet/large
-   `<aside>` surfaces throughout `docs/BATCH-TWO-SCOPE.md`. RESTYLE-RULES.md
-   as written does not say which property of a surface — "it's a
-   modal" vs. "it's not one of the six named modal/sheet/large-panel
-   examples" — controls the tier when a 16px surface could plausibly
-   read as either. Not resolved here.
+1. **RESOLVED 4 Aug 2026 — Modal/sheet radius when the surface also
+   reads as a large container.** See the amended Corners ruling above.
+   The controlling property is role, not size or "is it named in the
+   six examples": any surface that floats above the page (modals,
+   pickers, sheets, drawers, popovers) is large-radius, full stop,
+   regardless of footprint. `RoomTemplatePickerModal.view.jsx:30` is a
+   floating modal picker — large-radius. `StoryRoomCastPanel.view.jsx:47`'s
+   sidebar `<aside>` is floating panel chrome (a docked/overlay
+   surface, not a grid sibling) — large-radius. Any other
+   modal/sheet/large `<aside>` surface logged in
+   `docs/BATCH-TWO-SCOPE.md` as ambiguous resolves the same way: floats
+   above the page → large; sits in a grid alongside siblings → standard,
+   even if it is visually large or was previously read as a "big
+   container." Nested content inside a large-radius panel (e.g. a card
+   nested in a modal) drops back to standard — the large tier does not
+   inherit downward.
