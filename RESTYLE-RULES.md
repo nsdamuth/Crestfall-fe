@@ -642,3 +642,27 @@ audit and are kept for history only.
   (bridge-var colors were swapped on their eyebrow/title text, but the
   full page-head type-scale table was never applied) — brought to full
   page-head conformance.
+
+## Open questions
+
+Numbered per AGENTS.md §7 — flagged, not guessed at. Brian rules these
+before batch two converts the affected packages.
+
+1. **Modal/sheet radius when the surface also reads as a large
+   container.** The Corners ruling resolves off-scale 16px DOWN to
+   `--radius-md` (12px) as the general case, with `--radius-lg` (20px)
+   reserved for "large panels only — modals, sheets, large containers."
+   Two independent audit passes over the same file
+   (`components/studio/room-templates/room-template-picker`,
+   `RoomTemplatePickerModal.view.jsx:30`) reached opposite readings of
+   which bucket a modal picker falls into — one resolved it down to
+   `--radius-md` per the general retirement rule, the other resolved it
+   up to `--radius-lg` because it is a modal. The same ambiguity
+   recurs at `story-room-cast-panel`'s sidebar `<aside>`
+   (`StoryRoomCastPanel.view.jsx:47`, logged in `docs/BATCH-TWO-SCOPE.md`
+   as ambiguous between the two tiers) and other modal/sheet/large
+   `<aside>` surfaces throughout `docs/BATCH-TWO-SCOPE.md`. RESTYLE-RULES.md
+   as written does not say which property of a surface — "it's a
+   modal" vs. "it's not one of the six named modal/sheet/large-panel
+   examples" — controls the tier when a 16px surface could plausibly
+   read as either. Not resolved here.
