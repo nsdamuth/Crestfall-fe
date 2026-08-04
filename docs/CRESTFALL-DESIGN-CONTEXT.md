@@ -9,24 +9,25 @@ Crestfall FE.
 
 ## The product model
 
-**Assets.** Everything a creator builds is a creation asset: Character,
-Player Character, Location, Outfit, Wardrobe, Pose, Scenario, Narrator,
-Image Preset, Character Template, and the registry types (NPC, Location,
-Faction, Organization, Event, Quest, Item). These are cataloged as the
-Studio's creation-asset list and are what "Create" in the Studio means.
+Assets are characters, player characters, locations, outfits, scenarios,
+and lore. Everything starts private.
 
-**Story.** Story is its own creation asset — a Room Template, the
-chat-capable session shape a creator builds and others play inside.
-Storylines connect Stories together.
+A Story is the named playable bucket that gathers assets into something
+you can play.
 
-**Adventure.** Adventure is a Scenario framing — one of the categories a
-Scenario can carry, alongside genres like Fantasy or Mystery. A Scenario
-supplies the premise a Story runs on.
+An Adventure is the published state of a Story: public, playable,
+remixable. There is no separate Adventure builder.
 
-**The four visibility states.** Every creation carries one of four
-visibility states: Private, Unlisted, Internal, and Public. Creations
-start Private by default and can later be shared, published, or
-submitted for canon review.
+Visibility is one four-state enum everywhere: Private, Internal, Public,
+Canon.
+
+The words Arc and Codex are retired and never appear in copy.
+
+KNOWN NAMING GAP: this repo's current code does not yet match the ruled
+model. The playable bucket is named Room Template, and Adventure exists
+as a Scenario category value rather than a published state. Renaming
+these is Nick's, not the design side's, and is owed before launch. The
+restyle does not touch it.
 
 ## Typography and design language
 
