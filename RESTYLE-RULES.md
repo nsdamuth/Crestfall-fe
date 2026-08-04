@@ -297,14 +297,16 @@ Source basis: `picker.css` `.pkveil`/`.picker` (10–22) and `shell.css` `.sheet
 
 Geometry is identical to the standard `.btn` documented above — same height, padding, radius, gap, type scale. Only the fill and text color change.
 
+**Superseded 3 Aug 2026:** this ruling originally proposed a standalone `--red-action: #b8503c` token. When the status color set was minted (below), the danger button was folded into it — `--status-danger` is now the one and only red in the system, covering both the destructive button and the danger status state. `--red-action` never shipped to any token file and is retired; nothing referenced it.
+
 | Element | Property | Value | Token |
 |---|---|---|---|
 | Danger button | geometry | identical to `.btn` — height `--control-md`, padding `0 var(--space-6)`, radius `--radius-md`, `--font-sans`, `--text-cta`/`--lh-cta`, weight `--weight-bold` | (see Buttons) |
-| Danger button | fill | **proposed new token** `--red-action` | `--red-action` |
-| Danger button | text color | `--ink` (light text — see contrast note) | `--ink` |
+| Danger button | fill | `--status-danger` | `--status-danger` |
+| Danger button | text color | `--ink` (light text — `--status-danger` is a mid-value red, it doesn't hold dark text the way bright gold does) | `--ink` |
 | Danger button, hover | | `box-shadow: var(--glow-hover)` — reuse the existing hover glow token, no new red glow | `--glow-hover` |
 
-**Proposed token:** `--red-action: #b8503c;` — a muted brick/ember red, warm-leaning to sit next to the gold family instead of reading as a generic UI red. Checked against every red already in this app (`#ef4444`/`#dc2626` Tailwind reds used ad hoc in `components/studio/my-creations/**`) and against every hex already in `app/theme.css` — this value is new, copied from nothing existing. At this lightness it needs light text (`--ink`), not the dark `--tag-fill-ink` the gold primary button uses (gold is bright enough for dark text; this red isn't). Name follows the existing gold family's `--gold-action`/`--gold-ornament`/`--gold-bright`/`--gold-deep` convention — only the `-action` (interactive) member is proposed here since that's the only one a destructive button needs; a full ornament/bright/deep red family isn't proposed because nothing in scope needs one yet.
+Still **not applied anywhere** — no package in this repo uses it yet.
 
 **Not applied anywhere.** No package in this sweep uses it.
 
@@ -357,3 +359,35 @@ Reuses Ruling 1 exactly. At phone width, a filter panel that needs to expand pas
 ## Ruling 8 — Hub layouts: library pages only, layout frozen, home page out of scope
 
 Confirms and narrows the Hub layouts family above. `library.css`'s six-page library template (adventures, sessions, arcs, my-vault, community, the-cast, plus the browse/community/creators hubs built on the same skeleton) is in scope for this sweep: colors and type update to the token system, but the skeleton order (page head → action row → banner → filter bar → grid → endcap → ladder) and its grid breakpoints do not change. `studio-home.html`'s dashboard shape (`.hero`, `.craftdoors`, `.shelf`/`.poster`, `.vista`, `.ladder--steps`) is explicitly **out of scope** for this sweep — it is a different template and isn't touched by this ruling.
+
+---
+
+# Status color tokens (3 Aug 2026)
+
+Three tokens, minted fresh for this repo — not copied or approximated from any color already in the fe app (checked against every hex in `app/theme.css` and against the ad hoc Tailwind reds/ambers/emeralds/skys already scattered through `components/studio/**`). Declared in `app/theme.css`, in the token file itself alongside every other design-system color — **not** in `app/token-bridge.css`. The bridge is temporary scaffolding for the legacy `--muted`/`--muted-gold`/`--foreground` names; these are new, real tokens and have no legacy name to bridge from.
+
+| Token | Value | Role |
+|---|---|---|
+| `--status-success` | `#7D9B6A` (warm sage) | success state |
+| `--status-warning` | `#C97B35` (burnt amber) | warning state |
+| `--status-danger` | `#C2634D` (brick red) | danger state — also the danger button fill (Ruling 2) |
+| `--status-success-bed` / `-border` | `rgba(125, 155, 106, .14)` / `rgba(125, 155, 106, .40)` | quiet chip bed / border |
+| `--status-warning-bed` / `-border` | `rgba(201, 123, 53, .14)` / `rgba(201, 123, 53, .40)` | quiet chip bed / border |
+| `--status-danger-bed` / `-border` | `rgba(194, 99, 77, .14)` / `rgba(194, 99, 77, .40)` | quiet chip bed / border |
+
+Each bed/border pair is composed from its own base color at low opacity, following the same pattern as `--fill`/`--line-strong` (a translucent wash plus a more-opaque edge on the same hue) — not a new pattern, the same one the gold family already uses.
+
+**No info color, deliberately.** This is a rule, not a gap: there are exactly three status states. Neutral and informational UI reads through the existing `--ink`/`--ink-dim`/`--ink-faint` family, the same as every other non-status line of text in the system. A fourth "info blue" was considered and rejected — informational copy is not a status, it doesn't need a color to prove it.
+
+**Usage law** (verbatim, applies to all three tokens):
+
+- State only. Never decoration, charts, card accents, or hover effects.
+- Every use ships with a word beside it. Color alone never carries meaning.
+- Warning is reserved. It sits close to the gold accent, so it is used only where no other signal works.
+- `--status-danger` is the same token as the danger button variant. One red, not two.
+
+Defined here only — **applied nowhere in this pass.** No package in this repo consumes any of the six tokens above yet.
+
+## Ruling 9 — Icon tiles: all or nothing within a group
+
+An option-tile group (the choice-tile grid in `crestfall-option-modal` and anything built the same way) either gives every option in the group an icon, or gives none of them one. If the icon sprite has no matching symbol for even one option in a group, no option in that group gets an icon — never a mixed grid of some tiles with an icon and some without. This is why the Fantasy group (Adventurer/Artificer/Bard/Scholar) reads inconsistently today: Artificer and Scholar have sprite matches, Adventurer and Bard don't, and per this ruling the group should render with no icons at all rather than two-out-of-four. Flagged here for correction in a future pass — not fixed in this document.
