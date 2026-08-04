@@ -43,18 +43,18 @@ function IssueList({ title, issues = [], tone = "error" }) {
   const className =
     tone === "warning"
       ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
-      : "border-red-300/20 bg-red-500/10 text-red-100";
+      : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]";
 
   return (
-    <section className={`rounded-xl border p-4 ${className}`}>
-      <p className="text-xs uppercase tracking-[0.18em]">{title}</p>
+    <section className={`rounded-[var(--radius-md)] border p-[var(--space-4)] ${className}`}>
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)]">{title}</p>
       <div className="mt-3 grid gap-2">
         {issues.map((issue, index) => (
           <div
             key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)]"
           >
-            <code className="break-all text-[11px] text-[var(--muted-gold)]">
+            <code className="break-all text-[length:var(--text-label)] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
             </code>
             <p className="mt-1 text-xs leading-5">
@@ -79,20 +79,20 @@ function CountGrid({ title, counts }) {
   ];
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+      <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {title}
       </p>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5 xl:grid-cols-2">
         {rows.map(([label, value]) => (
           <div
             key={label}
-            className="rounded-lg border border-white/10 bg-black/30 px-3 py-2"
+            className="rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)]"
           >
-            <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {label}
             </p>
-            <p className="mt-1 text-lg text-[var(--foreground)]">{value ?? 0}</p>
+            <p className="mt-1 text-lg text-[var(--ink)]">{value ?? 0}</p>
           </div>
         ))}
       </div>
@@ -123,7 +123,7 @@ function PresetFolder({
   const FolderIcon = expanded ? FolderOpen : Folder;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-white/10 bg-black/20">
+    <section className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]">
       <button
         type="button"
         onClick={() => setExpanded((current) => !current)}
@@ -133,25 +133,25 @@ function PresetFolder({
         <span className="flex min-w-0 items-center gap-3">
           <FolderIcon
             size={16}
-            className="shrink-0 text-[var(--muted-gold)]"
+            className="shrink-0 text-[var(--gold-ornament)]"
           />
           <span className="min-w-0">
-            <span className="block truncate text-sm text-[var(--foreground)]">
+            <span className="block truncate text-sm text-[var(--ink)]">
               {folder.label}
             </span>
-            <span className="mt-0.5 block truncate text-[10px] text-[var(--muted)]">
+            <span className="mt-0.5 block truncate text-[10px] text-[var(--ink-dim)]">
               {folder.description}
             </span>
           </span>
         </span>
 
         <span className="flex shrink-0 items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--muted)]">
+          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
             {folder.cards.length}
           </span>
           <ChevronDown
             size={15}
-            className={`text-[var(--muted-gold)] transition-transform ${
+            className={`text-[var(--gold-ornament)] transition-transform ${
               expanded ? "rotate-180" : ""
             }`}
           />
@@ -168,18 +168,18 @@ function PresetFolder({
                 key={preset.id}
                 type="button"
                 onClick={() => onChoosePreset?.(preset.id)}
-                className={`rounded-lg border px-3 py-2.5 text-left transition ${
+                className={`rounded-[var(--radius-sm)] border px-3 py-2.5 text-left transition ${
                   selected
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/10"
-                    : "border-white/10 bg-black/25 hover:border-[var(--muted-gold)]/30"
+                    ? "border-[var(--gold-action)] bg-[var(--surface-1)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)]"
                 } ${preset.available ? "" : "opacity-70"}`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-sm text-[var(--foreground)]">
+                    <p className="truncate text-sm text-[var(--ink)]">
                       {preset.label}
                     </p>
-                    <p className="mt-1 truncate text-[10px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+                    <p className="mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       {preset.eyebrow}
                     </p>
                   </div>
@@ -187,7 +187,7 @@ function PresetFolder({
                     {preset.validationLabel ? (
                       <Beaker
                         size={12}
-                        className="mt-0.5 text-emerald-100/80"
+                        className="mt-0.5 text-[var(--status-success)]"
                         aria-label={preset.validationLabel}
                       />
                     ) : null}
@@ -200,7 +200,7 @@ function PresetFolder({
                   </span>
                 </div>
 
-                <p className="mt-1.5 truncate text-[11px] text-[var(--muted)]">
+                <p className="mt-1.5 truncate text-[length:var(--text-label)] text-[var(--ink-dim)]">
                   {preset.available
                     ? preset.summary
                     : preset.unavailableReason || preset.summary}
@@ -237,14 +237,14 @@ function PresetLibraryModalFrame({ children, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/80 p-2 sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[var(--scrim-strong)] p-2 backdrop-blur-[2px] sm:p-4"
       role="presentation"
     >
       <section
         role="dialog"
         aria-modal="true"
         aria-labelledby="mechanics-preset-library-title"
-        className="grid min-h-0 w-[min(96vw,72rem)] overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
+        className="grid min-h-0 w-[min(96vw,72rem)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]"
         style={{
           height: "min(88dvh, 48rem)",
           maxHeight: "calc(100dvh - 1rem)",
@@ -330,16 +330,19 @@ export default function MechanicsPresetApplicationModalView({
 
   return (
     <PresetLibraryModalFrame onClose={onClose}>
-      <div className="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 p-4">
+      <div className="flex shrink-0 items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             <LibraryBig size={15} />
             Loom Preset Workflow
           </p>
-          <h2 id="mechanics-preset-library-title" className="mt-2 font-display text-3xl">
+          <h2
+            id="mechanics-preset-library-title"
+            className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]"
+          >
             {title}
           </h2>
-          <p className="mt-2 max-w-3xl text-xs leading-5 text-[var(--muted)] sm:text-sm sm:leading-6">
+          <p className="mt-[var(--space-2)] max-w-3xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -347,7 +350,7 @@ export default function MechanicsPresetApplicationModalView({
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="flex h-[var(--control-md)] w-[var(--control-md)] flex-shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
           aria-label="Close Mechanics Preset Library"
         >
           <X size={18} />
@@ -367,21 +370,21 @@ export default function MechanicsPresetApplicationModalView({
         <div className="grid min-w-0 gap-4 p-4 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
           <aside className="min-w-0">
             <label className="block">
-              <span className="block text-xs text-[var(--foreground)]">
+              <span className="block text-xs text-[var(--ink)]">
                 Search presets
               </span>
-              <span className="mt-1 flex min-w-0 items-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 transition focus-within:border-[var(--muted-gold)]/50">
+              <span className="mt-1 flex min-h-[var(--control-md)] min-w-0 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] transition focus-within:border-[var(--gold-action)]">
                 <Search
                   size={15}
                   aria-hidden="true"
-                  className="shrink-0 text-[var(--muted)]"
+                  className="shrink-0 text-[var(--ink-dim)]"
                 />
                 <input
                   type="search"
                   value={query}
                   onChange={(event) => onChangeQuery?.(event.target.value)}
                   placeholder="Search presets..."
-                  className="min-w-0 flex-1 !border-0 !bg-transparent !p-0 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:!border-0 focus:!outline-none focus:!ring-0"
+                  className="min-w-0 flex-1 !border-0 !bg-transparent !p-0 text-[length:var(--text-ui)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:!border-0 focus:!outline-none focus:!ring-0"
                   style={{
                     minWidth: 0,
                     margin: 0,
@@ -402,10 +405,10 @@ export default function MechanicsPresetApplicationModalView({
                   key={option.id}
                   type="button"
                   onClick={() => onChooseScope?.(option.id)}
-                  className={`rounded-full border px-2.5 py-1.5 text-[9px] uppercase tracking-[0.13em] transition ${
+                  className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                     active
-                      ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
+                      ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                      : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                   }`}
                 >
                   {option.label}
@@ -427,7 +430,7 @@ export default function MechanicsPresetApplicationModalView({
             ))}
 
             {!presetFolders.length ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+              <p className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
                 No presets match the current filter.
               </p>
             ) : null}
@@ -438,14 +441,14 @@ export default function MechanicsPresetApplicationModalView({
           {selectedPreset ? (
             <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
               <section className="min-w-0 space-y-4">
-                <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
+                  <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {selectedPreset.eyebrow}
                   </p>
                   <h3 className="mt-2 font-display text-3xl">
                     {selectedPreset.label}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
                     {selectedPreset.description}
                   </p>
 
@@ -453,7 +456,7 @@ export default function MechanicsPresetApplicationModalView({
                     {selectedPreset.badges.map((badge) => (
                       <span
                         key={badge}
-                        className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+                        className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]"
                       >
                         {badge}
                       </span>
@@ -461,21 +464,21 @@ export default function MechanicsPresetApplicationModalView({
                   </div>
 
                   {selectedPreset.liveValidation ? (
-                    <div className="mt-4 rounded-xl border border-emerald-300/15 bg-emerald-500/[0.045] p-4">
+                    <div className="mt-4 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-emerald-100">
+                          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--status-success)]">
                             <Beaker size={14} />
                             {selectedPreset.liveValidation.statusLabel}
                           </p>
                           {selectedPreset.liveValidation.runtimeImplementationId ? (
-                            <code className="mt-2 block break-all text-[11px] text-[var(--muted)]">
+                            <code className="mt-2 block break-all text-[11px] text-[var(--ink-dim)]">
                               {selectedPreset.liveValidation.runtimeImplementationId}
                             </code>
                           ) : null}
                         </div>
                         {selectedPreset.liveValidation.expectedOutcome ? (
-                          <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                          <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                             Expected {selectedPreset.liveValidation.expectedOutcome.replaceAll("_", " ")}
                           </span>
                         ) : null}
@@ -483,16 +486,16 @@ export default function MechanicsPresetApplicationModalView({
 
                       {selectedPreset.liveValidation.testCommand ? (
                         <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
-                          <p className="text-[9px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+                          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                             Reference Test Command
                           </p>
-                          <code className="mt-1 block break-all text-xs text-[var(--foreground)]">
+                          <code className="mt-1 block break-all text-xs text-[var(--ink)]">
                             {selectedPreset.liveValidation.testCommand}
                           </code>
                         </div>
                       ) : null}
 
-                      <p className="mt-3 text-[11px] leading-5 text-[var(--muted)]">
+                      <p className="mt-3 text-[11px] leading-5 text-[var(--ink-dim)]">
                         Applying this preset stages a bounded live-validation guide in the Mechanics builder. The normal page Save action still controls persistence.
                       </p>
                     </div>
@@ -501,13 +504,13 @@ export default function MechanicsPresetApplicationModalView({
 
                 {requiresCommandTarget ? (
                   <label className="block rounded-xl border border-white/10 bg-black/25 p-4">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <span className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       Target Command
                     </span>
                     <select
                       value={selectedCommandId}
                       onChange={(event) => onChooseCommand?.(event.target.value)}
-                      className="mt-3 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                      className="mt-3 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
                     >
                       <option value="">Select a command</option>
                       {commandTargets.map((command) => (
@@ -520,7 +523,7 @@ export default function MechanicsPresetApplicationModalView({
                 ) : null}
 
                 <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     Application Mode
                   </p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -529,8 +532,8 @@ export default function MechanicsPresetApplicationModalView({
                         key={option.id}
                         className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 ${
                           option.id === selectedApplyMode
-                            ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                            : "border-white/10 bg-black/30"
+                            ? "border-[var(--gold-action)] bg-[var(--surface-1)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                            : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
                         }`}
                       >
                         <input
@@ -539,13 +542,13 @@ export default function MechanicsPresetApplicationModalView({
                           value={option.id}
                           checked={option.id === selectedApplyMode}
                           onChange={() => onChooseApplyMode?.(option.id)}
-                          className="mt-0.5 h-4 w-4 accent-[var(--muted-gold)]"
+                          className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
                         />
                         <span>
-                          <span className="block text-xs uppercase tracking-[0.14em] text-[var(--foreground)]">
+                          <span className="block text-xs uppercase tracking-[0.14em] text-[var(--ink)]">
                             {option.label}
                           </span>
-                          <span className="mt-1 block text-[11px] leading-5 text-[var(--muted)]">
+                          <span className="mt-1 block text-[11px] leading-5 text-[var(--ink-dim)]">
                             {option.id === "MERGE_MODULE"
                               ? "Append the preset module only when IDs and invocations do not conflict."
                               : option.id === "MERGE_COMMAND"
@@ -571,13 +574,13 @@ export default function MechanicsPresetApplicationModalView({
                       onChange={(event) =>
                         onToggleReplacementConfirmation?.(event.target.checked)
                       }
-                      className="mt-0.5 h-4 w-4 accent-[var(--muted-gold)]"
+                      className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
                     />
                     <span>
                       <span className="block text-xs uppercase tracking-[0.16em]">
                         Confirm Replacement Boundary
                       </span>
-                      <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+                      <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
                         I understand that this mode replaces the selected command or the complete authored Mechanics Module data.
                       </span>
                     </span>
@@ -587,25 +590,25 @@ export default function MechanicsPresetApplicationModalView({
 
               <aside className="grid content-start gap-4">
                 <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                  <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     <ShieldCheck size={14} />
                     Atomic Compliance
                   </p>
-                  <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                     Presets are applied to a copy, checked through the Mechanics JSON compliance validator, and only then replace the open builder state.
                   </p>
                 </section>
 
                 {selectedPreset.replacementPaths.length ? (
                   <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       Declared Boundary
                     </p>
                     <div className="mt-3 grid gap-2">
                       {selectedPreset.replacementPaths.map((path) => (
                         <code
                           key={path}
-                          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[11px] text-[var(--foreground)]"
+                          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[11px] text-[var(--ink)]"
                         >
                           {path}
                         </code>
@@ -625,12 +628,12 @@ export default function MechanicsPresetApplicationModalView({
                 />
 
                 {preview?.valid && !errors.length ? (
-                  <section className="rounded-xl border border-emerald-300/15 bg-emerald-500/5 p-4 text-emerald-100">
+                  <section className="rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4 text-[var(--status-success)]">
                     <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
                       <Check size={14} />
                       Preview Valid
                     </p>
-                    <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                    <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                       The proposed result passed structural compliance checks.
                     </p>
                   </section>
@@ -638,7 +641,7 @@ export default function MechanicsPresetApplicationModalView({
 
                 {statusMessage ? (
                   <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                    <p className="text-xs leading-5 text-[var(--muted)]">
+                    <p className="text-xs leading-5 text-[var(--ink-dim)]">
                       {statusMessage}
                     </p>
                   </section>
@@ -650,10 +653,10 @@ export default function MechanicsPresetApplicationModalView({
               <div>
                 <AlertTriangle
                   size={24}
-                  className="mx-auto text-[var(--muted-gold)]"
+                  className="mx-auto text-[var(--gold-ornament)]"
                 />
                 <h3 className="mt-3 font-display text-3xl">Choose a Preset</h3>
-                <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--ink-dim)]">
                   Open a preset folder, then select a preset to inspect its boundary, target, application mode, and compliance preview.
                 </p>
               </div>
@@ -664,14 +667,14 @@ export default function MechanicsPresetApplicationModalView({
       </div>
 
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-white/10 p-4">
-        <p className="text-xs leading-5 text-[var(--muted)]">
+        <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the current builder only. Use the normal page Save action to persist the result.
         </p>
         <div className="flex flex-wrap justify-end gap-3">
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 px-4 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
           >
             Cancel
           </button>
@@ -679,7 +682,7 @@ export default function MechanicsPresetApplicationModalView({
             type="button"
             onClick={() => onApplyPreset?.()}
             disabled={!canApply}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-45"
           >
             <Check size={14} />
             Apply Preset
