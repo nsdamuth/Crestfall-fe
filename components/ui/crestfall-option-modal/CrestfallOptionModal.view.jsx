@@ -55,7 +55,7 @@ export default function CrestfallOptionModalView({
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] md:items-center md:p-4">
           <div className="w-full max-w-4xl rounded-t-[var(--radius-lg)] border border-b-0 border-[var(--line)] bg-[var(--surface-4)] p-5 shadow-[var(--shadow-modal)] md:rounded-[var(--radius-lg)] md:border-b">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)]">
+              <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] tabular-nums">
                 {title}
               </h2>
 

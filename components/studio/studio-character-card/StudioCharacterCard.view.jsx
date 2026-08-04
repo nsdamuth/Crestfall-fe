@@ -31,7 +31,7 @@ export default function StudioCharacterCardView({
           Canon Official
         </p>
 
-        <h2 className="mt-2 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-medium">
+        <h2 className="mt-2 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-medium tabular-nums">
           {title}
         </h2>
 

@@ -302,7 +302,7 @@ export default function CommunityHubView({
               )
             ) : (
               <div className="rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] p-[var(--space-8)] text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
-                <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
+                <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] tabular-nums">
                   No public creations yet
                 </p>
                 <p className="mx-auto mt-3 max-w-2xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
@@ -361,7 +361,7 @@ export default function CommunityHubView({
             )
           ) : (
             <div className="mt-[var(--space-5)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] p-[var(--space-8)] text-center">
-              <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
+              <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] tabular-nums">
                 No public creators yet
               </p>
               <p className="mx-auto mt-3 max-w-2xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">

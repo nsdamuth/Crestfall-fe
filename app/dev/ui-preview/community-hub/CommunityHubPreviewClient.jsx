@@ -85,7 +85,7 @@ function PreviewCreationCard({ creation, liked, bookmarked, priority }) {
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         {creation.type}
       </p>
-      <h3 className="mt-2 font-display text-2xl">{creation.title}</h3>
+      <h3 className="mt-2 font-display text-2xl tabular-nums">{creation.title}</h3>
       <p className="mt-2 line-clamp-3 text-sm text-[var(--muted)]">
         {creation.description}
       </p>
@@ -101,7 +101,7 @@ function PreviewCreationCard({ creation, liked, bookmarked, priority }) {
 function PreviewCreatorCard({ creator, liked, bookmarked, followed }) {
   return (
     <article className="rounded-2xl border border-white/10 bg-black/35 p-5">
-      <h3 className="font-display text-2xl">{creator.displayName}</h3>
+      <h3 className="font-display text-2xl tabular-nums">{creator.displayName}</h3>
       <p className="mt-1 text-sm text-[var(--muted-gold)]">{creator.handle}</p>
       <p className="mt-3 text-sm text-[var(--muted)]">{creator.tagline}</p>
       <p className="mt-3 text-xs text-[var(--muted)]">
