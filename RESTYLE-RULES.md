@@ -413,6 +413,11 @@ info color; any sky-blue info state is removed, not converted.
 
 ## Banner composition
 
+**SUPERSEDED 4 Aug 2026** — see **Rulings — 4 Aug 2026 → Banner
+taxonomy**. The open settings matrix below (veil style, copy anchor,
+veil strength) is retired in favor of three named treatments; kept
+here for history only.
+
 The uniform veil law covers bottom banners and endcaps only. Heroes and
 doors carry composition freedom through two settings: veil style
 (uniform, fade from bottom, left, right, top, or none) and copy anchor
@@ -445,3 +450,189 @@ Review widths are 390 and 1440. 768 is retired from review.
 Off-scale radii (16px `rounded-2xl`) have no token. Opacity washes
 (`bg-black/45`) have no token. Destructive button geometry is undefined.
 These need minting before the next batch and are Brian's to rule.
+
+**RESOLVED 4 Aug 2026** — all three closed below, under **Rulings — 4
+Aug 2026**. See Corners, Wash, and Destructive.
+
+---
+
+# Rulings — 4 Aug 2026
+
+Law pass only. Nothing below is applied to any package in this pass —
+these are rulings to convert against in batch two, not edits made now.
+Closes the three items logged under **Open gaps** above, and corrects
+**Banner composition** under Rulings — today.
+
+## Corners: two tiers only
+
+Two tiers, no third:
+
+| Tier | Value | Token | Applies to |
+|---|---|---|---|
+| Standard | 12px | `--radius-md` | every control (buttons, inputs, chips) **and** every content surface (cards, tiles, rows) |
+| Large | 20px | `--radius-lg` | large panels only — modals, sheets, large containers |
+
+The 16px off-scale value (`rounded-2xl`, seen in `StoryRoomCastPanel`,
+`LocationBuilder`, `GamesHub`, and elsewhere per `docs/HARVEST-GAPS.md`
+§5) is retired. It resolves **down** to `--radius-md` (12px), not up to
+`--radius-lg` — an off-scale panel was never meant to read as large, it
+drifted there ad hoc.
+
+Small nested art thumbnails keep the tight radius: `--radius-sm` (8px),
+unchanged from the draft (`.cf-art`, `.crtworks a`, `.crtworks .phw`) —
+this is the one standing exception, for small art nested inside a
+larger standard- or large-radius card, not a third general tier.
+
+No new token minted — `--radius-sm`/`--radius-md`/`--radius-lg` already
+exist in `app/theme.css`. This ruling is a consolidation of usage, not
+a new value.
+
+## Shape law: fully rounded belongs to labels, not actions
+
+`--radius-full` (pill) is reserved for **tags and icon buttons only**.
+Every button in the app — every clickable action, regardless of
+surface or density — is a soft-cornered rectangle at `--radius-md`
+(the Corners standard tier above), with no exception carved out for
+any surface. This explicitly includes **Follow** and **View profile**
+on the creators page, which currently read as pills and must move to
+the standard button rectangle.
+
+This is the load-bearing distinction: shape alone tells the eye
+"label" (pill, `--radius-full`, non-interactive-reading, e.g. a tag or
+badge) from "action" (rectangle, `--radius-md`, a button). A button
+that borrows a tag's pill shape reads as a label and undersells that
+it does something. No package is touched by this ruling yet — it is
+recorded so batch two knows which shape is correct before converting
+any pill-shaped button it finds.
+
+## Wash: lighter tier where a tag carries its own bed (PROVISIONAL)
+
+Full covers (bottom promo banners, hero, endcap-style payoff banners)
+keep the heavy screen at `.70` — `--scrim-strong` / `--veil-screen`,
+unchanged from `docs/HARVEST-GAPS.md` §2.
+
+Where a tag sitting over the same artwork already carries its own dark
+bed (`--tag-bed-art`, also `.70`), the wash on the artwork underneath
+that tag comes **down** — the bed already does the legibility work, so
+stacking two full-strength washes on top of each other is redundant.
+
+The lighter tier is `--scrim`, already defined in `app/theme.css` at
+`rgba(0, 0, 0, .40)` (currently used once, in the draft's `home.html`
+`.castcard::after` caption fade) — no new token name is needed, this
+existing token is now assigned the role.
+
+**PROVISIONAL: the exact value is not settled.** `.40` is the
+placeholder pending Brian's eye on a real render; it may move. What is
+settled and not provisional: which token plays this role (`--scrim`),
+and the rule that governs when it applies (under a tag's own bed, not
+elsewhere). Tag beds themselves are unaffected and stay `.70` — this
+ruling only touches the wash on the artwork *underneath* a tag that
+already has its own bed, never the bed itself.
+
+## Blur: one strength, panels only
+
+One blur strength in the whole system: `blur(2px)`, paired with the
+`.70` screen (`--scrim-strong`). Applies **only** to floating panels —
+modals, sheets, pickers (`.cmveil`/`.pkveil`/`.railveil`/`.sheetveil`,
+per `docs/HARVEST-GAPS.md` §3). Never on tile art, never on banners,
+never on tag beds — none of those blur at all.
+
+Panels never stack (Ruling 1's per-layer scroll lock already prevents
+two floating panels being open at once in a way that would composite
+their scrims), so blurred layers never stack either — there is no
+"two blurs deep" case to define.
+
+Token minted, not yet applied: **`--blur-panel: 2px`** — proposed here
+per the same pattern as Ruling 2's danger button (named in this
+document first, added to `app/theme.css` in a later, separate commit).
+Not added to `app/theme.css` in this pass; not consumed by any package.
+
+Note for clarity, not a change: the sticky filter bar's `blur(12px)`
+(`--canvas`-tinted translucency, not a black scrim) and `.tag--meta`'s
+`blur(4px)` are different mechanisms entirely and are untouched by
+this one-strength law, which governs floating-panel scrims only.
+
+## Destructive: new law, no precedent in the draft
+
+The draft has no destructive control at all (`docs/HARVEST-GAPS.md`
+§4: two `Delete` buttons, both plain `.btn--ghost`, no red anywhere,
+no confirm step). This ruling has no trace to cite — it is written
+from first principles for this app, superseding Ruling 2's plan where
+the two disagree.
+
+**Geometry is always ordinary.** Same height, radius, and padding as
+any other button of the same size (`--control-md`/`--control-sm`,
+`--radius-md`, the same padding scale). A destructive control never
+gets its own shape, never a wider hit area than its neighbors, and is
+never isolated alone on a footer edge away from its siblings.
+
+**Two distinct treatments, not one:**
+
+| Where | Fill | Text | Notes |
+|---|---|---|---|
+| In-page delete trigger (row action, list item, card action) | none — quiet, same as `.btn--ghost` | `--status-danger` ("brick lettering") | Ordinary ghost button geometry; only the label color signals danger |
+| Confirming button, inside a confirm step | `--status-danger` | `--ink` | The **only** filled red anywhere in the app |
+
+**Filled brick appears in exactly one place**: the confirming button
+inside a confirm step. An in-page trigger that opens that confirm step
+is never itself filled — it is quiet, text-colored `--status-danger`
+on the ordinary button shape. This narrows Ruling 2 above, which
+proposed a filled variant for the trigger itself; that plan is
+superseded by this two-step split.
+
+**Every destructive control ships with the word beside it** — same
+"no color-only meaning" principle the draft already applies to every
+tag and status badge. A trash icon alone, in any color, is never
+sufficient.
+
+No new token minted — both treatments reuse `--status-danger` (already
+defined) and `--ink` (already defined). Not applied to any package in
+this pass; `docs/HARVEST-GAPS.md` §5's "missing destructive-button
+geometry" occurrences (`SmallDangerAction` in
+`LocationRegistryBuilder`, `MediaHistoryGrid`'s Delete Selected chip,
+and the raw-red manage-mode states in `StoryRoomsHub`) are the
+converting-against list for batch two, per the scope note below.
+
+## Banner taxonomy (corrects "Banner composition")
+
+The single-treatment ruling under **Rulings — today → Banner
+composition** — which deferred veil style, copy anchor, and veil
+strength defaults to an unrun "banner lab" — is corrected and closed
+by this taxonomy. Three treatments, not a settings matrix:
+
+| Treatment | Where | Veil | Copy/CTA position |
+|---|---|---|---|
+| (a) Bottom promo banner | full width, at page end (e.g. an endcap) | uniform screen (`.70`, `--scrim-strong`) | centered, both axes |
+| (b) Banner card | in-flow, mid-page (e.g. a continue card) | fade from the **left** | bottom-left |
+| (c) Top banner | page head (e.g. a hero) | fade from the **bottom** | bottom-left |
+
+This replaces the prior "veil style: uniform / fade from bottom, left,
+right, top, or none" plus "copy anchor: nine-box grid" plus "veil
+strength: three steps" open matrix — that matrix is retired. Only
+these three named treatments exist; nothing else is a valid banner
+shape. Fade direction and copy position are fixed per treatment, not
+independently configurable per instance.
+
+## Creator card
+
+New ruling, not from the draft — the creator card as currently built
+does not match this. Two changes, both applying at every width:
+
+- Both actions (Follow, View profile) move **below** the image strip —
+  neither sits inside or overlapping the artwork.
+- The header becomes a single non-wrapping line: avatar, handle,
+  stats, in that order, never wrapping to a second line at any width.
+
+## Batch two scope
+
+Folded into batch two, not run as a separate pass:
+
+- The 21 skip-list occurrences recorded in `docs/HARVEST-GAPS.md` §5
+  (5 off-scale-radius, 8 opacity-wash, 8 missing-destructive-geometry,
+  across 7 files) — converted against the Corners and Destructive
+  rulings above.
+- The two packages that under-applied the page-head family in batch
+  one — `location-parent-picker` and `room-template-package-picker`
+  (bridge-var colors were swapped on their eyebrow/title text, but the
+  full page-head type-scale table was never applied) — brought to full
+  page-head conformance.

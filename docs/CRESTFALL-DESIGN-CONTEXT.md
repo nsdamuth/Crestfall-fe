@@ -51,6 +51,15 @@ Every value in the system is a token defined once and reused, not a
 literal color or size repeated at each call site. RESTYLE-RULES.md is
 the canonical source for what each token is and where it applies.
 
+Three banner treatments exist, and only these three (ruled 4 Aug
+2026, RESTYLE-RULES.md): (a) a bottom promo banner, full width at page
+end, with a uniform screen and copy/CTA centered; (b) a banner card,
+in-flow, with copy/CTA bottom-left and a fade from the left; (c) a top
+banner at the page head, with text/CTA bottom-left and a fade from the
+bottom. There is no fourth treatment and no per-instance settings —
+fade direction and copy position are fixed by which of the three a
+given banner is.
+
 ## The LOOM file shape
 
 Most converted UI packages follow one shape, with responsibilities kept
