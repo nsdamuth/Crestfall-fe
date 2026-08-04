@@ -53,7 +53,7 @@ export default function CreationStudioView({
 
 function ModeSelector({ mode, onModeChange }) {
   return (
-    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/90 p-2 shadow-2xl backdrop-blur-xl">
+    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/90 p-2 shadow-2xl backdrop-blur-xl">
       <div className="grid gap-2 md:grid-cols-3">
         {CREATION_STUDIO_MODE_OPTIONS.map((option) => {
           const active = option.id === mode;
@@ -66,11 +66,11 @@ function ModeSelector({ mode, onModeChange }) {
               aria-pressed={active}
               className={`rounded-xl border px-4 py-3 text-left transition ${
                 active
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-transparent bg-black/20 text-[var(--muted)] hover:border-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-transparent bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
               }`}
             >
-              <span className="block text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <span className="block text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 {option.label}
               </span>
               <span className="mt-1 block text-xs leading-5">
@@ -103,7 +103,7 @@ function QuickStartView({ assets, onModeChange }) {
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.GUIDED)}
-          className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
         >
           Build a Complete Story →
         </button>
@@ -111,7 +111,7 @@ function QuickStartView({ assets, onModeChange }) {
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
         >
           View Every Tool →
         </button>
@@ -146,7 +146,7 @@ function GuidedBuildView({
       />
 
       <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.16em]">
-        <span className="rounded-full border border-[var(--muted-gold)]/25 bg-black/35 px-3 py-2 text-[var(--muted-gold)]">
+        <span className="rounded-full border border-[var(--gold-ornament)]/25 bg-black/35 px-3 py-2 text-[var(--gold-ornament)]">
           {isLoading
             ? "Loading progress"
             : progress.coreComplete
@@ -157,7 +157,7 @@ function GuidedBuildView({
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="rounded-full border border-white/10 px-3 py-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          className="rounded-full border border-white/10 px-3 py-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
         >
           View all tools
         </button>
@@ -222,23 +222,23 @@ function GuidedBuildView({
 
 function CorePathCompleteBanner({ LinkComponent }) {
   return (
-    <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/5 p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-[var(--space-5)]">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Core Story Foundation Complete
           </p>
-          <h3 className="mt-2 font-display text-2xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">
             Your First Story Foundation Is Ready
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Continue through the guided chapters below. Crestfall will keep recommending the next useful tool until every major Creation Studio system has a foundation.
           </p>
         </div>
 
         <LinkComponent
           href="/studio/my-creations"
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
         >
           Open My Creations →
         </LinkComponent>
@@ -251,33 +251,33 @@ function RecommendedNextPanel({ step, asset, LinkComponent }) {
   if (!step || !asset) return null;
 
   return (
-    <article className="mt-6 rounded-2xl border border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/12 p-6 shadow-[0_0_40px_rgba(184,134,11,0.08)]">
+    <article className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/12 p-[var(--space-6)] shadow-[0_0_40px_rgba(184,134,11,0.08)]">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-[var(--muted-gold)]/35 bg-black/25 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/35 bg-black/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
               Recommended Next
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
               {step.chapterTitle} · Milestone {step.number}
             </span>
           </div>
 
-          <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+          <p className="mt-4 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             {step.eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
             {step.title}
           </h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">{step.why}</p>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted-gold)]/85">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">{step.why}</p>
+          <p className="mt-3 text-sm leading-6 text-[var(--gold-ornament)]/85">
             What this prepares: {step.next}
           </p>
         </div>
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--muted-gold)]/45 bg-black/25 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-black/45 hover:text-[var(--foreground)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/45 bg-black/25 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/45 hover:text-[var(--ink)]"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -306,43 +306,43 @@ function GuidedChapter({
     <details
       open={open}
       onToggle={(event) => setOpen(event.currentTarget.open)}
-      className={`group rounded-2xl border p-5 ${
+      className={`group rounded-[var(--radius-md)] border p-[var(--space-5)] ${
         chapter.current
-          ? "border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10"
-          : "border-[var(--muted-gold)]/20 bg-black/20"
+          ? "border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10"
+          : "border-[var(--gold-ornament)]/20 bg-black/20"
       }`}
     >
       <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+              <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 {chapter.eyebrow}
               </p>
               {chapter.complete ? (
-                <span className="rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                   Complete
                 </span>
               ) : chapter.current ? (
-                <span className="rounded-full border border-[var(--muted-gold)]/30 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/30 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                   Current Chapter
                 </span>
               ) : null}
             </div>
 
-            <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+            <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
               {chapter.title}
             </h3>
-            <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--ink-dim)]">
               {chapter.description}
             </p>
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
-            <span className="rounded-full border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
               {chapter.completedStepCount} of {chapter.totalStepCount}
             </span>
-            <span className="rounded-full border border-[var(--muted-gold)]/25 px-3 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+            <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
               <span className="group-open:hidden">Open</span>
               <span className="hidden group-open:inline">Close</span>
             </span>
@@ -387,9 +387,9 @@ function GuidedChapterStep({
 
   return (
     <article
-      className={`rounded-xl border p-4 ${
+      className={`rounded-[var(--radius-md)] border p-[var(--space-4)] ${
         step.complete
-          ? "border-[var(--muted-gold)]/20 bg-black/20"
+          ? "border-[var(--gold-ornament)]/20 bg-black/20"
           : "border-white/10 bg-black/20"
       }`}
     >
@@ -398,22 +398,22 @@ function GuidedChapterStep({
           <span
             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xs ${
               step.complete
-                ? "border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
-                : "border-white/10 text-[var(--muted)]"
+                ? "border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
+                : "border-white/10 text-[var(--ink-dim)]"
             }`}
           >
             {step.complete ? "✓" : step.number}
           </span>
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
               Milestone {step.number}
               {step.complete ? ` complete · ${step.count} created` : " · Available"}
             </p>
-            <h4 className="mt-1 font-display text-xl text-[var(--foreground)]">
+            <h4 className="mt-1 font-display text-xl text-[var(--ink)]">
               {step.title}
             </h4>
             {!step.complete ? (
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
                 {step.why}
               </p>
             ) : null}
@@ -422,7 +422,7 @@ function GuidedChapterStep({
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
         >
           {step.complete
             ? step.id === "SECOND_STORY"
@@ -446,17 +446,17 @@ function GuidedStep({
 
   if (step.complete) {
     return (
-      <article className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-4 md:p-5">
+      <article className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-[var(--space-4)] md:p-[var(--space-5)]">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-sm text-[var(--muted-gold)]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-sm text-[var(--gold-ornament)]">
               ✓
             </span>
             <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
                 Step {step.number} complete · {step.count} created
               </p>
-              <h3 className="mt-1 font-display text-2xl text-[var(--foreground)]">
+              <h3 className="mt-1 font-display text-2xl text-[var(--ink)]">
                 {step.title}
               </h3>
             </div>
@@ -464,7 +464,7 @@ function GuidedStep({
 
           <LinkComponent
             href={asset.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+            className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
           >
             Create Another →
           </LinkComponent>
@@ -477,38 +477,38 @@ function GuidedStep({
 
   return (
     <article
-      className={`rounded-2xl border p-5 md:p-6 ${
+      className={`rounded-[var(--radius-md)] border p-[var(--space-5)] md:p-[var(--space-6)] ${
         step.current
-          ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-          : "border-[var(--muted-gold)]/20 bg-black/30"
+          ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+          : "border-[var(--gold-ornament)]/20 bg-black/30"
       }`}
     >
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-[var(--muted-gold)]/25 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
               Step {step.number}
             </span>
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
               {statusLabel}
             </span>
           </div>
 
-          <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+          <p className="mt-4 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             {step.eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
             {step.title}
           </h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">{step.why}</p>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted-gold)]/85">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">{step.why}</p>
+          <p className="mt-3 text-sm leading-6 text-[var(--gold-ornament)]/85">
             Why this comes next: {step.next}
           </p>
         </div>
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -516,7 +516,7 @@ function GuidedStep({
 
       {optionalAssets.length ? (
         <div className="mt-5 border-t border-white/10 pt-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--ink-dim)]">
             Optional enhancements
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -530,7 +530,7 @@ function GuidedStep({
                 <LinkComponent
                   key={optionalAsset.title}
                   href={optionalAsset.href}
-                  className="rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                  className="rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 >
                   {optionalAsset.title}
                   {count > 0 ? ` · ${count} created` : ""}
@@ -565,27 +565,27 @@ function getCreationTypeForAsset(title) {
 
 function ToolkitFoundationCompletePanel({ onModeChange, LinkComponent }) {
   return (
-    <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/12 p-6">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/12 p-[var(--space-6)]">
+      <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         Guided Foundation Complete
       </p>
-      <h3 className="mt-3 font-display text-3xl text-[var(--foreground)]">
+      <h3 className="mt-3 font-display text-3xl text-[var(--ink)]">
         Your Crestfall Toolkit Foundation Is Ready
       </h3>
-      <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">
+      <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">
         You have created a foundation in every major Creation Studio tool, including two Stories for connected continuity. Continue deepening the systems that best serve your world, cast, and play style.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
         <LinkComponent
           href="/studio/my-creations"
-          className="rounded-xl border border-[var(--muted-gold)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-black/55 hover:text-[var(--foreground)]"
+          className="rounded-xl border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/55 hover:text-[var(--ink)]"
         >
           Open My Creations →
         </LinkComponent>
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
         >
           Open Full Studio →
         </button>
@@ -619,13 +619,13 @@ function FullStudioView({ sections }) {
 function SectionIntro({ eyebrow, title, description }) {
   return (
     <header>
-      <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted-gold)]">
+      <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
-      <h2 className="mt-3 font-display text-4xl text-[var(--foreground)]">
+      <h2 className="mt-3 font-display text-4xl text-[var(--ink)]">
         {title}
       </h2>
-      <p className="mt-3 max-w-4xl leading-7 text-[var(--muted)]">
+      <p className="mt-3 max-w-4xl leading-7 text-[var(--ink-dim)]">
         {description}
       </p>
     </header>
@@ -642,23 +642,23 @@ function CreationSection({
   return (
     <details
       open={defaultOpen}
-      className="group rounded-2xl border border-[var(--muted-gold)]/15 bg-black/20 p-5"
+      className="group rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/20 p-[var(--space-5)]"
     >
       <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
-            <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+            <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
               {title}
             </h3>
-            <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--ink-dim)]">
               {description}
             </p>
           </div>
 
-          <span className="mt-1 rounded-full border border-[var(--muted-gold)]/25 px-3 py-1 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <span className="mt-1 inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
             <span className="group-open:hidden">Open</span>
             <span className="hidden group-open:inline">Close</span>
           </span>
