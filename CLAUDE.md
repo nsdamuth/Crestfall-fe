@@ -80,3 +80,42 @@ Load only when the task calls for it, not by default:
 - `@docs/ROADMAP.md`: status checks, updated in the same commit as the
   work.
 - `@docs/contracts/`: feature work against backend contracts.
+
+## 7. Parallelism law
+
+PARALLELISM LAW (ruled 4 Aug 2026, supersedes edits-serial)
+
+Roles. Fable 5 plans and rules at strategy gates only, never executes.
+Opus plans sprints, writes briefs, and runs synthesis phases.
+Sonnet executes edits. Haiku runs bulk mechanical reads and
+single-rule checks inside workflows.
+
+Fan out by default. Any task that is a list of more than twenty like
+items runs as a dynamic workflow, not a serial pass. Read-only fan-out
+for audits, harvests, screenshots, and verification is always allowed,
+unlimited, on the cheapest model that can do the job.
+
+Parallel edits are permitted when and only when each unit is one package
+in its own worktree landing as one commit. One item, one commit survives
+unchanged. Anything that cannot be isolated that way stays serial.
+
+No agent grades its own work. Every editing workflow ships a verification
+phase run by different agents than the ones that edited.
+
+Every fan-out pilots on its first ten units and stops for a rendered check
+before the remainder runs.
+
+Renders are deliverables. Screenshots are handed back, never deleted.
+
+Automatic orchestration mode stays off. Workflows are triggered
+deliberately, per task.
+
+Budget. Plan capacity is a resource to spend, not to preserve. Burn is
+authorized to reach the Nick handoff. The only spend limit is a run that
+cannot be verified or undone.
+
+Escalation. A workflow that meets a rule it cannot apply mechanically
+stops that unit and reports it. It never guesses.
+
+Generated audit artifacts are exempt from the em dash law and are
+deleted at end of life.
