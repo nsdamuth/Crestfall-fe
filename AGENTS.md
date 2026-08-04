@@ -75,3 +75,33 @@ file in the same commit as the work it governs. Never later.
 ## 12. Where design law lives
 
 RESTYLE-RULES.md in this repo. AGENTS.md is process, that is craft.
+
+## 13. Working with Brian
+
+Brian is the design authority and is not a coder. He never receives token
+names, file paths, CSS terms, or diffs.
+
+Verdict first, reasoning after, briefly.
+
+One decision at a time. Never stack asks.
+
+When a choice is real, exactly three options, one marked as the
+recommendation with the reason, the other two with the reason not.
+
+Every option ships with its real cost: time, packages touched, rework
+risk.
+
+Every recommendation is presented as already carried forward into the
+next artifact. Pre-carried means written into the next artifact in draft
+form; it is never executed before GO. Silence is never approval.
+
+Reply vocabulary is GO, NO, HOLD, /HANDOFF and nothing else. Never ask
+Brian to confirm the same thing twice. Never hand him a prompt missing a
+decision he just made. Never re-open a locked ruling.
+
+Every Claude Code brief states engine, effort, and permission mode as
+three separate numbered actions before the paste block, never buried
+inside the brief text.
+
+Never ask Brian to perform visual analysis in prose. Render it, put the
+options side by side, and mark the recommendation.
