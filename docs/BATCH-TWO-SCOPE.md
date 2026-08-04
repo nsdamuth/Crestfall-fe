@@ -833,7 +833,7 @@ Packages with zero findings across all 7 categories are omitted. A handful of fu
 
 ## components/studio/room-templates/room-template-picker
 
-- 3: RoomTemplatePickerModal.view.jsx:30 — `rounded-2xl` (16px) modal panel; per retirement rule resolves to `--radius-md` (not up to `--radius-lg`) — note: a separate audit pass classified this same file as a modal/large-panel resolving UP to `--radius-lg`; both readings are recorded here as the ambiguity is genuine and unresolved by RESTYLE-RULES.md as written
+- 3: RoomTemplatePickerModal.view.jsx:30 — `rounded-2xl` (16px) modal panel; **RESOLVED** by the amended Corners ruling (RESTYLE-RULES.md, Open question 1) — this is a floating modal, so it resolves UP to `--radius-lg` (20px) regardless of footprint, not down to `--radius-md`. The two conflicting audit-pass readings previously recorded here are superseded by that resolution.
 
 ## components/studio/room-templates/room-template-summary
 
@@ -859,7 +859,7 @@ Packages with zero findings across all 7 categories are omitted. A handful of fu
 
 ## components/studio/story-rooms/story-room-cast-panel
 
-- 3: StoryRoomCastPanel.view.jsx:47 — `rounded-2xl` (16px) `<aside>` panel, off-scale; ambiguous between `--radius-md` (content surface) and `--radius-lg` (large container/sidebar panel)
+- 3: StoryRoomCastPanel.view.jsx:47 — `rounded-2xl` (16px) `<aside>` panel, off-scale; **RESOLVED** by the amended Corners ruling (RESTYLE-RULES.md, Open question 1) — this sidebar is floating panel chrome (a docked/overlay surface, not a grid sibling), so it resolves to `--radius-lg` (20px).
 - 3: StoryRoomCastPanel.view.jsx:66 — `rounded-2xl` (16px) featured-image frame, resolves to `--radius-md` (not a small nested thumbnail, doesn't qualify for the 8px exception)
 - 4: StoryRoomCastPanel.view.jsx:75 — `bg-gradient-to-t from-black via-black/55 to-transparent` overlay on featured speaker image; no tag/badge sits on it, only text
 - 6: StoryRoomCastPanel.view.jsx:184-196 — "Delete Story" button is filled solid `bg-[var(--status-danger)]`/`text-[var(--ink)]`, differing in shape treatment (solid fill vs. bordered/ghost) from every sibling action button of the same size; confirm step exists via `window.confirm(STORY_ROOM_DELETE_CONFIRMATION)` wired in useStoryRoomChatShellViewModel.js `handleDeleteRoom`, invoked from StoryRoomChatShell.jsx
