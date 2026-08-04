@@ -39,10 +39,10 @@ function Counter({ value = 0, limit = 0 }) {
     <span
       className={
         overLimit
-          ? "text-red-200"
+          ? "text-[var(--status-danger)]"
           : nearLimit
             ? "text-amber-200"
-            : "text-[var(--muted)]"
+            : "text-[var(--ink-dim)]"
       }
     >
       {Number(value).toLocaleString()} / {Number(limit).toLocaleString()}
@@ -63,7 +63,7 @@ function IssueList({ issues = [] }) {
             className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-xs leading-5 ${
               warning
                 ? "border-amber-300/25 bg-amber-300/10 text-amber-100"
-                : "border-red-300/25 bg-red-300/10 text-red-100"
+                : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]"
             }`}
           >
             <AlertTriangle size={14} className="mt-0.5 shrink-0" />
@@ -78,11 +78,11 @@ function IssueList({ issues = [] }) {
 function FieldLabel({ children, detail = "" }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-2">
-      <label className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <label className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {children}
       </label>
       {detail ? (
-        <span className="text-[11px] text-[var(--muted)]">{detail}</span>
+        <span className="text-[11px] text-[var(--ink-dim)]">{detail}</span>
       ) : null}
     </div>
   );
@@ -95,7 +95,7 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
@@ -106,7 +106,7 @@ function SelectInput({ value, onChange, children, disabled = false }) {
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--canvas)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     >
       {children}
     </select>
@@ -120,12 +120,12 @@ function CheckboxRow({ checked, onChange, label, description }) {
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange?.(event.target.checked)}
-        className="mt-1 h-4 w-4 accent-[var(--muted-gold)]"
+        className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>
-        <span className="block text-sm text-[var(--foreground)]">{label}</span>
+        <span className="block text-sm text-[var(--ink)]">{label}</span>
         {description ? (
-          <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+          <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </span>
         ) : null}
@@ -136,13 +136,13 @@ function CheckboxRow({ checked, onChange, label, description }) {
 
 function StatCard({ label, value, detail = "" }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--ink)]">{value}</p>
       {detail ? (
-        <p className="mt-1 text-[11px] leading-4 text-[var(--muted)]">{detail}</p>
+        <p className="mt-1 text-[11px] leading-4 text-[var(--ink-dim)]">{detail}</p>
       ) : null}
     </div>
   );
@@ -222,10 +222,10 @@ export default function ActorMechanicsProfileEditorView({
   const beyondScale = capabilityMode === "BEYOND_SCALE";
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <UserRoundCog size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">
               Actor Mechanics Profile · Actor State
@@ -235,7 +235,7 @@ export default function ActorMechanicsProfileEditorView({
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             Actor Mechanics Profile
           </h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
             Compose reusable mechanics definitions for one actor while keeping
             every mutable stat, balance, unlock, cooldown, and inventory state
             isolated to that actor.
@@ -246,7 +246,7 @@ export default function ActorMechanicsProfileEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           >
             <Braces size={15} />
             JSON Editor
@@ -259,8 +259,8 @@ export default function ActorMechanicsProfileEditorView({
             onClick={() => onSetEnabled?.(!enabled)}
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
-                ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
+                ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -291,7 +291,7 @@ export default function ActorMechanicsProfileEditorView({
         />
       </div>
 
-      <div className="mt-5 rounded-xl border border-emerald-300/20 bg-emerald-300/5 px-4 py-3 text-sm text-emerald-100">
+      <div className="mt-5 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] px-4 py-3 text-sm text-[var(--status-success)]">
         <div className="flex items-start gap-3">
           <ShieldCheck size={17} className="mt-0.5 shrink-0" />
           <p className="leading-6">
@@ -308,14 +308,14 @@ export default function ActorMechanicsProfileEditorView({
         </div>
       ) : null}
 
-      <div className="mt-7 rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
+      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
         <div className="flex items-start gap-3">
-          <RefreshCcw size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+          <RefreshCcw size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Profile Preset
             </p>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Applying a preset replaces the current domain-binding structure.
               Actor identity is preserved when compatible or externally locked.
             </p>
@@ -335,7 +335,7 @@ export default function ActorMechanicsProfileEditorView({
               ))}
             </SelectInput>
             {selectedPreset ? (
-              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 {selectedPreset.summary}
               </p>
             ) : null}
@@ -344,7 +344,7 @@ export default function ActorMechanicsProfileEditorView({
           <button
             type="button"
             onClick={() => onApplyPreset?.()}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/15"
+            className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           >
             <Sparkles size={15} />
             Apply Preset
@@ -370,7 +370,7 @@ export default function ActorMechanicsProfileEditorView({
           <FieldLabel detail={`Current preset: ${humanize(presetId)}`}>
             Structural Origin
           </FieldLabel>
-          <div className="mt-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--foreground)]">
+          <div className="mt-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-sm text-[var(--ink)]">
             {safePresetOptions.find((preset) => preset.presetId === presetId)
               ?.title || humanize(presetId)}
           </div>
@@ -388,22 +388,22 @@ export default function ActorMechanicsProfileEditorView({
           onChange={(event) => onUpdateIdentity?.("summary", event.target.value)}
           rows={4}
           placeholder="Explain what this actor's actor mechanics profile contains and when it should be used..."
-          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </div>
 
       <div className="mt-8 border-t border-white/10 pt-7">
         <div className="flex items-start gap-3">
           {ownerLocked ? (
-            <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+            <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           ) : (
-            <UserRoundCog size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+            <UserRoundCog size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           )}
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Actor Owner
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               An unbound template can be reused. A bound actor profile requires
               one Player Character, Character, or important NPC Registry entry.
               {ownerLocked ? " This owner is supplied by the parent feature." : ""}
@@ -474,12 +474,12 @@ export default function ActorMechanicsProfileEditorView({
 
       <div className="mt-8 border-t border-white/10 pt-7">
         <div className="flex items-start gap-3">
-          <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+          <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Fixed State Policy
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               These safeguards are contract-owned and are not creator-overridable.
             </p>
           </div>
@@ -504,12 +504,12 @@ export default function ActorMechanicsProfileEditorView({
 
       <div className="mt-8 border-t border-white/10 pt-7">
         <div className="flex items-start gap-3">
-          <CircleGauge size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+          <CircleGauge size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Capability Policy
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               Standard actors use ordinary mechanics. Beyond Scale actors require
               narrative-only resolution or an explicitly restricted working mode.
             </p>
@@ -598,23 +598,23 @@ export default function ActorMechanicsProfileEditorView({
             }
             rows={4}
             placeholder="Explain capability restrictions and the boundary between ordinary mechanics and narrative-only resolution..."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
         </div>
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-7">
         <div>
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <Boxes size={17} />
             <p className="text-xs uppercase tracking-[0.2em]">Domain Bindings</p>
           </div>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Bind shared definitions by domain. Activation controls when the
             router may hydrate the binding; it does not execute mechanics here.
           </p>
           {enabledDomains.length ? (
-            <p className="mt-2 text-xs text-[var(--muted)]">
+            <p className="mt-2 text-xs text-[var(--ink-dim)]">
               Enabled domains: {enabledDomains.map(humanize).join(", ")}
             </p>
           ) : null}
@@ -624,7 +624,7 @@ export default function ActorMechanicsProfileEditorView({
           type="button"
           onClick={() => onAddBinding?.()}
           disabled={bindingCount >= bindingLimit}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/15 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus size={15} />
           Add Binding
@@ -665,21 +665,21 @@ export default function ActorMechanicsProfileEditorView({
             return (
               <article
                 key={`${binding.id}-${binding.order}-${index}`}
-                className="overflow-hidden rounded-xl border border-white/10 bg-black/25"
+                className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]"
               >
                 <div className="flex items-start gap-2 px-3 py-3 sm:px-4">
                   <button
                     type="button"
                     onClick={() => onToggleBinding?.(binding.id)}
                     aria-label={`${binding.expanded ? "Collapse" : "Expand"} ${binding.domainLabel}`}
-                    className="mt-0.5 rounded-lg p-2 text-[var(--muted)] transition hover:bg-white/5 hover:text-[var(--foreground)]"
+                    className="mt-0.5 rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)]"
                   >
                     <ToggleIcon size={16} />
                   </button>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                         {binding.domainLabel}
                       </span>
                       {binding.required ? (
@@ -687,14 +687,14 @@ export default function ActorMechanicsProfileEditorView({
                           Required
                         </span>
                       ) : null}
-                      <span className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-white/10 bg-black/30 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                         {humanize(binding.activationMode)}
                       </span>
                     </div>
-                    <p className="mt-2 truncate text-sm text-[var(--foreground)]">
+                    <p className="mt-2 truncate text-sm text-[var(--ink)]">
                       {binding.title || binding.id || "Untitled binding"}
                     </p>
-                    <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                    <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                       {binding.domainDescription}
                     </p>
                   </div>
@@ -708,8 +708,8 @@ export default function ActorMechanicsProfileEditorView({
                     }
                     className={`rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition ${
                       binding.enabled
-                        ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-100"
-                        : "border-white/10 bg-black/25 text-[var(--muted)]"
+                        ? "border-[var(--status-success-border)] bg-[var(--status-success-bed)] text-[var(--status-success)]"
+                        : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
                     }`}
                   >
                     {binding.enabled ? "Enabled" : "Disabled"}
@@ -721,7 +721,7 @@ export default function ActorMechanicsProfileEditorView({
                       onClick={() => onMoveBinding?.(binding.id, "UP")}
                       disabled={index === 0}
                       aria-label={`Move ${binding.domainLabel} up`}
-                      className="rounded-lg p-2 text-[var(--muted)] transition hover:bg-white/5 hover:text-[var(--foreground)] disabled:opacity-30"
+                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-30"
                     >
                       <ArrowUp size={15} />
                     </button>
@@ -730,7 +730,7 @@ export default function ActorMechanicsProfileEditorView({
                       onClick={() => onMoveBinding?.(binding.id, "DOWN")}
                       disabled={index === safeBindings.length - 1}
                       aria-label={`Move ${binding.domainLabel} down`}
-                      className="rounded-lg p-2 text-[var(--muted)] transition hover:bg-white/5 hover:text-[var(--foreground)] disabled:opacity-30"
+                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-30"
                     >
                       <ArrowDown size={15} />
                     </button>
@@ -738,7 +738,7 @@ export default function ActorMechanicsProfileEditorView({
                       type="button"
                       onClick={() => onRemoveBinding?.(binding.id)}
                       aria-label={`Remove ${binding.domainLabel}`}
-                      className="rounded-lg p-2 text-red-200/75 transition hover:bg-red-300/10 hover:text-red-100"
+                      className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -862,20 +862,20 @@ export default function ActorMechanicsProfileEditorView({
                         }
                         rows={3}
                         placeholder="Explain actor-specific restrictions or how shared definitions should be interpreted..."
-                        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                       />
                     </div>
 
-                    <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+                    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+                          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                             <Link2 size={15} />
                             <p className="text-xs uppercase tracking-[0.18em]">
                               Reusable Definitions
                             </p>
                           </div>
-                          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                             {managedDefinition?.description ||
                               "References identify shared definitions. Mutable values remain isolated to the bound actor."}
                           </p>
@@ -892,7 +892,7 @@ export default function ActorMechanicsProfileEditorView({
                             !managedDefinition &&
                             binding.references.length >= referenceLimitPerBinding
                           }
-                          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--foreground)] transition hover:border-[var(--muted-gold)]/30 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink)] transition hover:border-[var(--gold-ornament)]/30 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <Plus size={13} />
                           {managedDefinition
@@ -910,18 +910,18 @@ export default function ActorMechanicsProfileEditorView({
                             reference.referenceType === "CREATION" ? (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-xl border border-[var(--muted-gold)]/20 bg-black/25 p-4"
+                                className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-[var(--space-3)]"
                               >
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                   <div className="min-w-0">
-                                    <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                                    <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                                       {managedDefinition.label}
                                     </p>
-                                    <p className="mt-2 truncate text-sm text-[var(--foreground)]">
+                                    <p className="mt-2 truncate text-sm text-[var(--ink)]">
                                       {reference.title ||
                                         managedDefinition.fallbackTitle}
                                     </p>
-                                    <p className="mt-1 text-xs text-[var(--muted)]">
+                                    <p className="mt-1 text-xs text-[var(--ink-dim)]">
                                       {reference.version ||
                                         managedDefinition.fallbackVersion}
                                     </p>
@@ -938,7 +938,7 @@ export default function ActorMechanicsProfileEditorView({
                                       reference.title ||
                                       managedDefinition.fallbackTitle
                                     }`}
-                                    className="rounded-lg p-2 text-red-200/75 transition hover:bg-red-300/10 hover:text-red-100"
+                                    className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
                                   >
                                     <Trash2 size={14} />
                                   </button>
@@ -951,10 +951,10 @@ export default function ActorMechanicsProfileEditorView({
                                 ) : null}
 
                                 <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
-                                  <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--muted)]">
+                                  <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
                                     Creation Reference
                                   </p>
-                                  <p className="mt-1 break-all font-mono text-[11px] text-[var(--foreground)]/75">
+                                  <p className="mt-1 break-all font-mono text-[11px] text-[var(--ink)]/75">
                                     {reference.sourceId}
                                   </p>
                                 </div>
@@ -962,10 +962,10 @@ export default function ActorMechanicsProfileEditorView({
                             ) : (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-xl border border-white/10 bg-black/25 p-4"
+                                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
                               >
                                 <div className="flex items-center justify-between gap-3">
-                                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+                                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
                                     Reference {reference.index + 1}
                                   </p>
                                   <button
@@ -979,7 +979,7 @@ export default function ActorMechanicsProfileEditorView({
                                     aria-label={`Remove reference ${
                                       reference.index + 1
                                     }`}
-                                    className="rounded-lg p-2 text-red-200/75 transition hover:bg-red-300/10 hover:text-red-100"
+                                    className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
                                   >
                                     <Trash2 size={14} />
                                   </button>
@@ -1069,7 +1069,7 @@ export default function ActorMechanicsProfileEditorView({
                           )}
                         </div>
                       ) : (
-                        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-center text-xs leading-5 text-[var(--muted)]">
+                        <div className="mt-4 rounded-xl border border-dashed border-white/10 px-4 py-6 text-center text-xs leading-5 text-[var(--ink-dim)]">
                           {binding.definitionReferenceMode ===
                           "STATS_POOLS_PROFILE"
                             ? "No Stats & Pools Profile selected. Choose an owned profile to provide the reusable stat and pool definitions for this binding."
@@ -1083,7 +1083,7 @@ export default function ActorMechanicsProfileEditorView({
                         type="button"
                         onClick={() => onMoveBinding?.(binding.id, "UP")}
                         disabled={index === 0}
-                        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                        className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                       >
                         <ArrowUp size={15} />
                       </button>
@@ -1091,14 +1091,14 @@ export default function ActorMechanicsProfileEditorView({
                         type="button"
                         onClick={() => onMoveBinding?.(binding.id, "DOWN")}
                         disabled={index === safeBindings.length - 1}
-                        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                        className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                       >
                         <ArrowDown size={15} />
                       </button>
                       <button
                         type="button"
                         onClick={() => onRemoveBinding?.(binding.id)}
-                        className="rounded-lg border border-red-300/20 p-2 text-red-100"
+                        className="rounded-lg border border-[var(--status-danger-border)] p-2 text-[var(--status-danger)]"
                       >
                         <Trash2 size={15} />
                       </button>
@@ -1111,11 +1111,11 @@ export default function ActorMechanicsProfileEditorView({
         </div>
       ) : (
         <div className="mt-5 rounded-xl border border-dashed border-white/10 px-5 py-10 text-center">
-          <Boxes size={24} className="mx-auto text-[var(--muted-gold)]" />
-          <p className="mt-3 text-sm text-[var(--foreground)]">
+          <Boxes size={24} className="mx-auto text-[var(--gold-ornament)]" />
+          <p className="mt-3 text-sm text-[var(--ink)]">
             No mechanics bindings yet
           </p>
-          <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--muted)]">
+          <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--ink-dim)]">
             Apply a preset or add a domain binding. This editor only composes the
             profile contract; it does not create definitions or activate runtime
             mechanics.
