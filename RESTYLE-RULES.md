@@ -391,3 +391,57 @@ Defined here only — **applied nowhere in this pass.** No package in this repo 
 ## Ruling 9 — Icon tiles: all or nothing within a group
 
 An option-tile group (the choice-tile grid in `crestfall-option-modal` and anything built the same way) either gives every option in the group an icon, or gives none of them one. If the icon sprite has no matching symbol for even one option in a group, no option in that group gets an icon — never a mixed grid of some tiles with an icon and some without. This is why the Fantasy group (Adventurer/Artificer/Bard/Scholar) reads inconsistently today: Artificer and Scholar have sprite matches, Adventurer and Bard don't, and per this ruling the group should render with no icons at all rather than two-out-of-four. Flagged here for correction in a future pass — not fixed in this document.
+
+---
+
+# Rulings — today
+
+## Symbols, ruled by job
+
+Symbols are ruled by job. Functional marks (check, cross, chevron)
+belong in the icon sprite so they take token color at a controlled
+weight and render identically on every platform. Decorative flourishes
+stay typographic glyphs, inside display type only. No bare glyph ever
+carries meaning.
+
+## Status colors: now applied, not merely defined
+
+Status colors are now APPLIED, not merely defined. This supersedes the
+earlier "defined not applied" note. Raw red, emerald, amber, rose, sky
+and pink for state are replaced by the three minted tokens. There is no
+info color; any sky-blue info state is removed, not converted.
+
+## Banner composition
+
+The uniform veil law covers bottom banners and endcaps only. Heroes and
+doors carry composition freedom through two settings: veil style
+(uniform, fade from bottom, left, right, top, or none) and copy anchor
+(the nine-box grid). A third setting, veil strength, has three steps.
+Defaults per surface are pending a banner lab in the draft repo and are
+NOT to be guessed.
+
+## Sweep scope
+
+In scope: player-facing surfaces and the standard builders. Deferred,
+each owed a design before go-live and recorded as a named gap, never
+silently skipped: JSON and code editor modals, data tables, progression
+and mechanics registries, the `components/blocks` sourcebook prose
+family, carousels, masonry grids, and the donate and pink accent family.
+Chat surfaces are excluded from the mechanical sweep entirely and get a
+dedicated sitting.
+
+## Themes
+
+Token conversion serves both themes at once and is never skipped.
+Light-mode tuning and light-mode review are deferred until dark mode is
+signed off.
+
+## Review widths
+
+Review widths are 390 and 1440. 768 is retired from review.
+
+## Open gaps — recorded not solved, blocking nothing
+
+Off-scale radii (16px `rounded-2xl`) have no token. Opacity washes
+(`bg-black/45`) have no token. Destructive button geometry is undefined.
+These need minting before the next batch and are Brian's to rule.
