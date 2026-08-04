@@ -8,17 +8,17 @@ export default function StudioPageHeaderView({
     <header className="flex flex-col gap-6 border-b border-[var(--muted-gold)]/15 pb-8 lg:flex-row lg:items-center lg:justify-between">
       <div>
         {eyebrow ? (
-          <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted-gold)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {eyebrow}
           </p>
         ) : null}
 
-        <h1 className="mt-4 font-display text-5xl tracking-[0.04em]">
+        <h1 className="mt-[var(--space-2)] mb-[var(--space-2)] font-[family-name:var(--font-display)] text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]">
           {title}
         </h1>
 
         {description ? (
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-[var(--muted)]">
+          <p className="max-w-[44rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {description}
           </p>
         ) : null}
