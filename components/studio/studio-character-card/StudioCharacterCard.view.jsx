@@ -48,7 +48,7 @@ export default function StudioCharacterCardView({
         <div className="mt-5 grid grid-cols-2 gap-2">
           <LinkComponent
             href={detailsHref}
-            className="flex h-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-center text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+            className="flex h-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-center text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
           >
             Details
           </LinkComponent>
