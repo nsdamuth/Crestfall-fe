@@ -2,9 +2,9 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
 const cormorantDisplay = Cormorant_Garamond({
-  variable: "--font-display",
+  variable: "--next-cormorant",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -14,7 +14,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 const inter = Inter({
-  variable: "--font-sans",
+  variable: "--next-inter",
   subsets: ["latin"],
 });
 
