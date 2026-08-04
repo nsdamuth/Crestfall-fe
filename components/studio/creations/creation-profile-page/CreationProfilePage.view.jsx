@@ -57,7 +57,7 @@ export default function CreationProfilePageView({
 
   return (
     <section className="pb-12">
-      <header className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <header className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-start">
           <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-4xl text-[var(--muted-gold)]">
             {creation.imageUrl ? (
@@ -186,7 +186,7 @@ export default function CreationProfilePageView({
 
 
         {!visibleMedia.length ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <ImageIcon size={30} className="mx-auto text-[var(--muted-gold)]" />
             <p className="mt-4 font-display text-3xl">No public media yet</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
@@ -232,7 +232,7 @@ function FilterButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+      className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
         active
           ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
           : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
@@ -246,7 +246,7 @@ function FilterButton({ active, onClick, children }) {
 function MediaTile({ item, actionsSlot, onOpen }) {
   if (!item.imageUrl) {
     return (
-      <article className="aspect-square overflow-hidden rounded-2xl border border-white/10 bg-black/35 text-left">
+      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
           <div className="text-center">
             {item.type === "VIDEO" ? (
@@ -265,7 +265,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
   }
 
   return (
-    <article className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35">
+    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35">
       <button
         type="button"
         onClick={onOpen}
