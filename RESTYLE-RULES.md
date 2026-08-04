@@ -625,7 +625,13 @@ does not match this. Two changes, both applying at every width:
 
 ## Batch two scope
 
-Folded into batch two, not run as a separate pass:
+**SUPERSEDED 4 Aug 2026** by a full audit of all 299 packages against
+this section's rulings, recorded in `docs/BATCH-TWO-SCOPE.md`: ~640
+findings across 123 packages, sorted by package, covering Corners,
+Shape law, Wash, Blur, Destructive, and Banner taxonomy. That file is
+batch two's scope going forward, not the narrower list below, which it
+folds in and exceeds. The two items below were the seed for that
+audit and are kept for history only.
 
 - The 21 skip-list occurrences recorded in `docs/HARVEST-GAPS.md` §5
   (5 off-scale-radius, 8 opacity-wash, 8 missing-destructive-geometry,
