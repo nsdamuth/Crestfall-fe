@@ -149,6 +149,6 @@ rendered card.
 ## Process lives separately
 
 How work gets done, branch and commit rules, what may be edited,
-verification, escalation, is AGENTS.md's job, not this document's.
+verification, escalation, is CLAUDE.md's job, not this document's.
 This file and docs/RESTYLE-RULES.md cover the product and the design
-language; AGENTS.md covers craft.
+language; CLAUDE.md covers craft.

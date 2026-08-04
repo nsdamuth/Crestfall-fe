@@ -1,6 +1,6 @@
 # Project instructions, Crestfall strategy chat
 
-Operating instructions for the claude.ai strategy chat on this project. AGENTS.md carries the same protocol for the Claude Code lane. The two are kept in sync.
+Operating instructions for the claude.ai strategy chat on this project. CLAUDE.md carries the same protocol for the Claude Code lane. The two are kept in sync.
 
 ## Brian is the design authority, and not a coder
 Plain language only. Never token names, file paths, CSS terms, or diffs. Describe what changes visually and what it means, never how it is implemented.
