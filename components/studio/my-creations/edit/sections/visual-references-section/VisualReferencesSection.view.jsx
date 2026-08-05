@@ -2,7 +2,7 @@ import { Image as ImageIcon, RefreshCw, X } from "lucide-react";
 
 function ReferenceCard({ card = {} }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/30 p-4">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -18,7 +18,7 @@ function ReferenceCard({ card = {} }) {
           <button
             type="button"
             onClick={() => card.onClear?.()}
-            className="rounded-xl border border-red-500/25 bg-red-500/10 p-3 text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+            className="rounded-xl border border-white/10 bg-black/25 p-3 text-[var(--status-danger)] transition hover:border-white/20 hover:bg-black/35"
             aria-label={card.clearLabel}
           >
             <X size={16} />
