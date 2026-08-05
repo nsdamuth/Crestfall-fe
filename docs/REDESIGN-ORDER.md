@@ -4,7 +4,7 @@ Ranked furthest from the draft's pattern first. Written from the saved renders i
 docs/review-artifacts/ (390 and 1440), not from file reads. Draft pattern reference:
 docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
-71 real pages, component preview gallery excluded.
+61 real pages, component preview gallery excluded. Chronicles and lore surfaces (10 pages) permanently excluded per scope ruling.
 
 ---
 
@@ -29,107 +29,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Mobile capture is not the app at all (a raw Next.js runtime-error toast with square corners and system red), sharing none of the corner, banner, or badge laws; this route needs a re-render, its distance cannot be judged from the app's own design language here.
 
-## 3. `/factions/aethelgard/ironmere-tribes` - distance 9/10
-
-**Purpose:** Present the full lore record for a single faction so players can read its detailed background and jump to related records.
-
-**Structural blocks (top to bottom):**
-
-- site nav header (reusable) - SiteHeader
-- floating back button (reusable) - FloatingBackButton, fixed left-mid position, standard-radius
-- page head on full-bleed background (reusable) - SiteShell, same non-standard banner treatment as the index page
-- breadcrumb trail (reusable) - Breadcrumbs component, but styled with raw hardcoded hex colors (#7b5525, #a88957, #17120d) instead of design tokens
-- sourcebook article body (flourish divider, centered eyebrow/title/subtitle, lore content blocks) (reusable) - DetailPage + LoreBlockRenderer, bespoke 'sourcebook page' texture/decoration not part of either draft template
-- related records grid (reusable) - RelatedRecords component, raw hex colors and zero corner-radius on its link cards
-
-**Distance from draft:** Breadcrumbs and Related Records ship raw hardcoded hex colors instead of tokens and unrounded cards, and the whole page is a bespoke 'sourcebook article' template that matches neither the draft's library skeleton nor its dashboard template.
-
-## 4. `/intro` - distance 9/10
-
-**Purpose:** Present the campaign's introductory lore article so new players/readers get oriented before entering the archive.
-
-**Structural blocks (top to bottom):**
-
-- site nav header (reusable) - SiteHeader
-- floating back button (reusable) - FloatingBackButton
-- page head on full-bleed background (reusable) - SiteShell, non-standard banner treatment
-- breadcrumb trail (reusable) - Breadcrumbs, raw hardcoded hex colors
-- sourcebook article body (reusable) - DetailPage + LoreBlockRenderer, same bespoke article texture as other detail pages
-- related records grid (reusable) - RelatedRecords, raw hex colors, zero corner-radius cards
-
-**Distance from draft:** Same DetailPage composition as the faction/location detail pages: raw hardcoded hex colors in Breadcrumbs and Related Records instead of tokens, unrounded related-record cards, and a bespoke sourcebook-article shell that matches neither draft template.
-
-## 5. `/locations/crestfall/sun-hee-domain` - distance 9/10
-
-**Purpose:** Present the full lore record for a single location so players can read its detailed background and jump to related records.
-
-**Structural blocks (top to bottom):**
-
-- site nav header (reusable) - SiteHeader
-- floating back button (reusable) - FloatingBackButton
-- page head on full-bleed background (reusable) - SiteShell
-- breadcrumb trail (reusable) - Breadcrumbs, raw hardcoded hex colors
-- sourcebook article body (reusable) - DetailPage + LoreBlockRenderer, bespoke article texture/decoration
-- related records grid (reusable) - RelatedRecords, raw hex colors, zero corner-radius cards
-
-**Distance from draft:** Identical DetailPage composition to the faction/intro detail pages: raw hardcoded hex colors instead of tokens in Breadcrumbs and Related Records, unrounded related-record cards, and a bespoke sourcebook-article shell outside either draft template.
-
-## 6. `/lore/alderbrook/alderbrook-becomes-a-township` - distance 9/10
-
-**Purpose:** Present a single lore codex entry's full narrative content (an in-world historical record) to a reader.
-
-**Structural blocks (top to bottom):**
-
-- SiteShell outer page head (reusable) - same shared shell as /lore, duplicates eyebrow/title above the article
-- sourcebook article header (breadcrumbs, flourish, eyebrow, title, subtitle) (inline) - components/DetailPage.jsx builds a second, nested eyebrow/title block inside "sourcebook-page" styling, not the shared page-head pattern
-- LoreBlockRenderer body content (reusable) - components/LoreBlockRenderer.jsx, dedicated shared renderer for lore content blocks
-- RelatedRecords footer (reusable) - components/RelatedRecords.jsx
-- FloatingBackButton (reusable) - components/FloatingBackButton.jsx
-
-**Distance from draft:** Render actually loaded (login gate shown, since detail routes require auth) confirming an unstyled auth wall rather than page content; code shows a doubled page-head (SiteShell's header plus DetailPage's own centered sourcebook header) which directly conflicts with the single page-head recipe, plus legacy "sourcebook-" class names that predate the token system entirely.
-
-## 7. `/factions` - distance 8/10
-
-**Purpose:** Let players browse and filter the roster of factions, orders, and powers active in the Crestfall world.
-
-**Structural blocks (top to bottom):**
-
-- site nav header (reusable) - SiteHeader, used across ~10 routes
-- full-bleed atmospheric background + page head (eyebrow/title/lede) (reusable) - SiteShell, used across 9 routes, but wraps head in a full-page cover image + strong scrim, a fourth banner treatment outside the draft's three
-- filter bar: search input, realm select, scrollable tag-pill rail (reusable) - FilterableIndex/FilterableIndexView, shared by ~7 index routes; not sticky
-- card grid (LoreCard tiles) (reusable) - LoreCard has zero corner-radius class, square corners on a grid sibling
-- Return Home footer link (reusable) - SiteShell footer button, class name sourcebook-button
-
-**Distance from draft:** Grid cards (LoreCard) and tag-filter pills ship with no rounded corners at all, violating both the standard-radius grid law and the pill law for tags, and the page head sits inside a full-bleed background-image/scrim treatment that is a fourth banner pattern outside the draft's three.
-
-## 8. `/locations` - distance 8/10
-
-**Purpose:** Let players browse and filter the roster of locations recorded across Crestfall.
-
-**Structural blocks (top to bottom):**
-
-- site nav header (reusable) - SiteHeader
-- full-bleed atmospheric background + page head (reusable) - SiteShell, non-standard banner treatment
-- filter bar: search, realm/faction/theme selects, tag-pill rail (reusable) - FilterableIndex, shared with /factions and other index routes; not sticky
-- card grid (LoreCard tiles) (reusable) - LoreCard, zero corner-radius
-- Return Home footer link (reusable) - SiteShell footer button
-
-**Distance from draft:** Same shared FilterableIndex/LoreCard composition as /factions: square-cornered grid cards and standard-radius (not pill) tag filters, plus a full-page background-image head treatment outside the draft's three banner types.
-
-## 9. `/lore` - distance 8/10
-
-**Purpose:** Serve as the entry index into Crestfall's lore codex, letting a reader browse historical/cosmological arcs as a timeline.
-
-**Structural blocks (top to bottom):**
-
-- SiteShell page head (eyebrow/title/lede) (reusable) - components/SiteShell.jsx, shared across lore, stories, chronicle, characters, factions, locations, terms
-- background cover image + scrim (reusable) - built into SiteShell, not this page specifically
-- LoreArcAccordion content list (reusable) - components/LoreArcAccordion.jsx, dedicated shared component
-- Return Home footer link (reusable) - part of SiteShell, styled as "sourcebook-button"
-
-**Distance from draft:** Render artifact for this key was corrupted/mismatched (showed an unrelated dev-preview page), so judged from code: this is the legacy SiteShell/sourcebook template shared across many old pages, entirely different skeleton from the six-page library/BROWSE pattern (no action row, no sticky filter bar, no content grid, no payoff endcap banner), and its eyebrow lacks the ruled mark called for in the draft page-head recipe.
-
-## 10. `/stories` - distance 8/10
+## 3. `/stories` - distance 8/10
 
 **Purpose:** Serve as the entry index into Crestfall's inserted-fiction archive of recovered narrative fragments, letters, and vignettes.
 
@@ -141,7 +41,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Mobile render for this key came back solid black (failed capture) and desktop render showed the login gate, so judged from code: the page is functionally empty (stories array is hardcoded to []) and its "Coming Soon" block is a bespoke fourth banner treatment (in-flow, centered, no fade/image) that matches none of the draft's three permitted banner types.
 
-## 11. `/studio/story-rooms` - distance 8/10
+## 4. `/studio/story-rooms` - distance 8/10
 
 **Purpose:** Per app/studio/story-rooms/page.js, this should be the library page for continuing active rooms and starting new sessions from templates via StudioPageHeader + StoryRoomsHub, but the saved render instead shows an unrelated dev fixture-preview harness ("Crestfall Option Modal" preview states).
 
@@ -154,7 +54,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The captured render does not reflect app/studio/story-rooms/page.js at all (a dev-only fixture harness was captured instead of StudioPageHeader + StoryRoomsHub), so it fails the library-template skeleton wholesale; this route needs a re-capture before it can be judged against the draft pattern on its actual merits.
 
-## 12. `/studio` - distance 7/10
+## 5. `/studio` - distance 7/10
 
 **Purpose:** The Studio home dashboard, letting a player either jump into official/community play or open the creator tools to build characters, rooms, and images.
 
@@ -167,27 +67,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Skips the page-head recipe (no eyebrow-with-ruled-mark plus Cormorant title plus tight lede via StudioPageHeader) and the hero/craft-doors/shelf-rows dashboard skeleton entirely, replacing both with bespoke stacked panels of ad hoc card grids.
 
-## 13. `/characters/crestfall/crash-santosa` - distance 6/10
-
-**Purpose:** Show a single character's detail profile within the archive (content gated behind sign-in at capture time).
-
-**Structural blocks (top to bottom):**
-
-- sign-in gate card (Continue with Google, email magic link, close X) (reusable) - app/login/page.js, shared across every gated route in this batch
-
-**Distance from draft:** Only the auth gate rendered so the real detail page composition is unverifiable, and the gate itself violates the floating-chrome law: it behaves like a dismissible overlay (has a close X, floats centered over blank background) but is built with standard --radius-md instead of the required large radius for anything that floats above the page.
-
-## 14. `/chronicle/arc-1/chapter-1` - distance 6/10
-
-**Purpose:** Present a single chronicle chapter's narrative content (content gated behind sign-in at capture time).
-
-**Structural blocks (top to bottom):**
-
-- sign-in gate card (Continue with Google, email magic link, close X) (reusable) - identical app/login/page.js gate as the character detail route
-
-**Distance from draft:** Real chapter content is unverifiable behind the auth gate, and the gate reuses the same floating-chrome violation: a dismissible-looking overlay built at standard --radius-md rather than the large radius the draft mandates for floating surfaces.
-
-## 15. `/studio/create` - distance 6/10
+## 6. `/studio/create` - distance 6/10
 
 **Purpose:** Gives creators an entry point to start a new creation, either via a handful of quick-start types, a guided multi-step build path toward a full story foundation, or the complete unsorted toolkit of every creation type.
 
@@ -203,7 +83,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Several real clickable controls (View all tools, optional-asset links) are built as full pills, breaking the shape law that only non-interactive labels may be pill-shaped, and the whole page is a bespoke mode-selector/guided-journey composition that matches neither the library skeleton nor the dashboard template.
 
-## 16. `/studio/create/room-template` - distance 6/10
+## 7. `/studio/create/room-template` - distance 6/10
 
 **Purpose:** Let a Studio creator assemble characters, scenario, narrator, opening messages, and room settings into one reusable playable room setup.
 
@@ -214,7 +94,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** the visible surface is the /login panel, styled as a closeable overlay (has an X) yet built with --radius-md (STANDARD) instead of the --radius-lg the draft's floating-chrome law requires for anything that floats above the page; the actual room-template composition is unverifiable from this render.
 
-## 17. `/studio/create/rules-codex` - distance 6/10
+## 8. `/studio/create/rules-codex` - distance 6/10
 
 **Purpose:** Let a Studio creator author scoped interpretive guidance that explains verified mechanics without overriding deterministic state, guards, registries, safety, or player agency.
 
@@ -225,7 +105,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** same login-panel radius violation as its sibling pages (--radius-md on a closeable overlay instead of --radius-lg), and the real page body cannot be judged from this render evidence.
 
-## 18. `/studio/create/scenario` - distance 6/10
+## 9. `/studio/create/scenario` - distance 6/10
 
 **Purpose:** Let a Studio creator build a reusable story setup from a structured story circle plus optional runtime guidance.
 
@@ -236,7 +116,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** identical login-panel radius violation as the rest of the batch; underlying scenario-builder composition is unverifiable from render evidence.
 
-## 19. `/studio/create/stats-pools-profile` - distance 6/10
+## 10. `/studio/create/stats-pools-profile` - distance 6/10
 
 **Purpose:** Let a Studio creator define reusable Stats, HP, Stamina, Mana, modifiers, and conditions later attached through an Actor Mechanics Profile.
 
@@ -247,7 +127,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** identical login-panel radius violation as the rest of the batch; underlying stats-pools composition is unverifiable from render evidence.
 
-## 20. `/studio/create/storyline` - distance 6/10
+## 11. `/studio/create/storyline` - distance 6/10
 
 **Purpose:** Let a Studio creator link Stories and Scenarios into an authored continuity path where completed nodes return to open-world chat until the next trigger fires.
 
@@ -258,7 +138,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** identical login-panel radius violation as the rest of the batch; underlying storyline-builder composition is unverifiable from render evidence.
 
-## 21. `/terms/terms-of-service` - distance 6/10
+## 12. `/terms/terms-of-service` - distance 6/10
 
 **Purpose:** Display a single legal/policy document (terms of service) with its section text for players to read.
 
@@ -276,7 +156,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The page stacks two separate eyebrow-title page heads (SiteShell's own plus PolicyPage's nested category/title/summary block), directly violating the single tight page-head recipe, and the amber draft-placeholder box is a fourth, unsanctioned banner treatment built from raw literal colors instead of the three approved banner patterns and design tokens.
 
-## 22. `/studio/image-studio` - distance 5/10
+## 13. `/studio/image-studio` - distance 5/10
 
 **Purpose:** Give a creator a workbench for generating and managing AI character/scene artwork.
 
@@ -288,7 +168,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head in source skips the draft's eyebrow-title-lede recipe entirely, shipping only a bare eyebrow line with no Cormorant Garamond display title, the largest structural gap of this batch.
 
-## 23. `/terms` - distance 5/10
+## 14. `/terms` - distance 5/10
 
 **Purpose:** An index of Crestfall's draft legal, privacy, safety, and platform-trust policy placeholders, linking out to individual policy pages.
 
@@ -303,7 +183,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The full-page watermark background and scrim sit behind the entire page rather than as one of the three sanctioned banner treatments, and the placeholder notice uses hardcoded amber-300 literal colors instead of the status-warning token the badge/status law requires.
 
-## 24. `/login` - distance 4/10
+## 15. `/login` - distance 4/10
 
 **Purpose:** Let a visitor authenticate into Crestfall Studio via Google OAuth or an emailed magic link.
 
@@ -316,7 +196,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Render artifact for this key was corrupted/mismatched (showed an unrelated dev-preview page), so judged from code: card uses --radius-md consistently and CSS tokens correctly, but the page-head is missing the eyebrow's ruled mark and the lede is not tightly grouped with title (Google button intervenes before the descriptive sentence).
 
-## 25. `/studio/account/preferences` - distance 4/10
+## 16. `/studio/account/preferences` - distance 4/10
 
 **Purpose:** A placeholder settings page collecting future default-behavior toggles for filter panels, browse view, Image Studio, creator workflow, and discovery.
 
@@ -329,7 +209,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Breaks shape law on its option buttons: PreferenceCard renders disabled choice buttons as clickable-styled rectangles with `rounded-xl` (an un-tokenized radius outside the two-tier --radius-md/--radius-lg system) instead of the standard control radius used everywhere else on the sibling stub pages.
 
-## 26. `/studio/create/actor-mechanics-profile` - distance 4/10
+## 17. `/studio/create/actor-mechanics-profile` - distance 4/10
 
 **Purpose:** Lets a studio creator compose a reusable actor-mechanics profile package for Player Characters, Characters, and NPCs.
 
@@ -342,7 +222,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The floating auth card (a modal-class surface) is built with --radius-md (STANDARD) instead of the LARGE radius the floating-chrome law requires, and on the mobile render it sits centered with dead space below rather than docking to the bottom edge as the law specifies.
 
-## 27. `/studio/create/character` - distance 4/10
+## 18. `/studio/create/character` - distance 4/10
 
 **Purpose:** Lets a studio creator build a new character record from scratch through a guided creator flow.
 
@@ -354,7 +234,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same floating auth-card violation as the rest of the batch: STANDARD radius on a modal-class surface and no bottom-dock on mobile, both required by the floating-chrome law.
 
-## 28. `/studio/create/character-template` - distance 4/10
+## 19. `/studio/create/character-template` - distance 4/10
 
 **Purpose:** Lets a studio creator define a reusable character template that can prefill fields during later character creation.
 
@@ -367,7 +247,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Judged on the trustworthy mobile capture only: same STANDARD-radius, non-docked floating auth card violation shared by this whole batch.
 
-## 29. `/studio/create/event-registry` - distance 4/10
+## 20. `/studio/create/event-registry` - distance 4/10
 
 **Purpose:** Lets a studio creator build a reusable event ledger for incidents, scandals, holidays, conflicts, and world history.
 
@@ -380,7 +260,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same batch-wide floating auth-card violation: STANDARD radius instead of LARGE on a modal-class surface, and no bottom-dock treatment on the phone render.
 
-## 30. `/studio/create/faction-registry` - distance 4/10
+## 21. `/studio/create/faction-registry` - distance 4/10
 
 **Purpose:** Lets a studio creator build a reusable faction-continuity spine covering alliances, rivalries, territory, and influence.
 
@@ -393,7 +273,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same batch-wide floating auth-card violation: STANDARD radius instead of LARGE on a modal-class surface, and no bottom-dock treatment on the phone render.
 
-## 31. `/studio/create/item-registry` - distance 4/10
+## 22. `/studio/create/item-registry` - distance 4/10
 
 **Purpose:** Lets a creator define a reusable item-continuity record (inventory objects, wardrobe, equipment, quest props) that stays consistent across generations.
 
@@ -405,7 +285,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Captured render shows an unrelated dev/ui-preview fixture page (a capture mismatch, not this route's real content) rather than the authenticated builder, so the actual form composition can't be visually verified against banner/badge/shape law; code confirms the shared page-head recipe is used but the builder itself is a bespoke component, not the shared AssetBuilderShell.
 
-## 32. `/studio/create/location-registry` - distance 4/10
+## 23. `/studio/create/location-registry` - distance 4/10
 
 **Purpose:** Lets a creator build a reusable location-continuity spine describing story rooms, narrators, districts, and place relationships.
 
@@ -417,7 +297,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Desktop render only reached the sign-in gate and mobile render shows a mismatched dev-preview fixture, so the actual registry-builder composition (attachments section etc.) is unverified against banner and shape law from renders alone.
 
-## 33. `/studio/create/organization-registry` - distance 4/10
+## 24. `/studio/create/organization-registry` - distance 4/10
 
 **Purpose:** Lets a creator build a reusable organization spine (companies, factions, institutions) with entries, relationships, rules, and prompt guidance for later attachment to story rooms.
 
@@ -433,7 +313,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Composition and page-head recipe match the draft pattern, but nearly every surface (tabs, inputs, panels, linked-creation cards) uses raw literal colors and rounded-xl/rounded-lg arbitrary values instead of the --surface/--line/--radius-md tokens the sibling npc-registry and mechanics-module builders already use, the clearest token-drift gap in this batch.
 
-## 34. `/studio/create/progression-profile` - distance 4/10
+## 25. `/studio/create/progression-profile` - distance 4/10
 
 **Purpose:** Lets a creator define reusable cumulative-experience thresholds and level tiers to attach later to an Actor Mechanics Profile.
 
@@ -446,7 +326,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The JSON editor is a floating panel (modal) but ships with STANDARD 12px radius instead of the LARGE radius the corner law reserves for anything that floats above the page, and its scrim (via shared ModalShell) carries no blur(2px).
 
-## 35. `/studio/feedback` - distance 4/10
+## 26. `/studio/feedback` - distance 4/10
 
 **Purpose:** Give creators a hub to follow the Crestfall roadmap, report bugs, submit suggestions, and reach the community Discord while formal feedback tooling is built.
 
@@ -459,7 +339,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Visible render is only the shared modal, but the underlying source shows CTA buttons styled with a raw rounded-xl class instead of the standard --radius-md token, a token-law gap the render can't surface.
 
-## 36. `/studio/games` - distance 4/10
+## 27. `/studio/games` - distance 4/10
 
 **Purpose:** Let a creator start official Crestfall game experiences, resume active sessions, or browse curated playable rooms.
 
@@ -471,7 +351,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Source duplicates the page-head recipe by hand for mobile instead of letting the shared StudioPageHeader component handle both breakpoints, splitting one canonical pattern into two implementations.
 
-## 37. `/studio/my-creations/example-id/image-library` - distance 4/10
+## 28. `/studio/my-creations/example-id/image-library` - distance 4/10
 
 **Purpose:** Let a creator manage the pool of generated images tied to one creation, assigning featured slots and hiding or deleting unwanted images.
 
@@ -486,7 +366,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head bypasses the shared StudioPageHeader recipe entirely, and the destructive delete flow confirms via a native browser window.confirm() instead of the draft's unified floating-chrome confirm step.
 
-## 38. `/studio/storylines` - distance 4/10
+## 29. `/studio/storylines` - distance 4/10
 
 **Purpose:** Lets a creator link their existing Stories and Scenarios into an ordered continuing storyline with defined transition triggers.
 
@@ -500,7 +380,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Missing the sticky filter bar, banner card, and endcap that define the six-page library skeleton, and the empty state uses standard --radius-md instead of the large radius the draft reserves for empty states.
 
-## 39. `/studio/account` - distance 3/10
+## 30. `/studio/account` - distance 3/10
 
 **Purpose:** The account hub, giving a signed-in creator a profile summary and links out to subscription, preferences, appearance, notifications, privacy, and safety settings.
 
@@ -515,7 +395,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page-head recipe and componentized sub-panels are correctly reused, but this settings-hub layout has no equivalent in the six-page library skeleton or the dashboard template, so its composition is judged on its own merits rather than matched to a named target pattern.
 
-## 40. `/studio/create/image-preset` - distance 3/10
+## 31. `/studio/create/image-preset` - distance 3/10
 
 **Purpose:** Lets a creator build a reusable AI image-generation preset (style/medium, prompt stack, identity, rendering notes) that other studio assets can draw on.
 
@@ -527,7 +407,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Actual authenticated builder content could not be captured (render fell through to the auth sign-in gate at both widths), but the sign-in floating panel itself is compliant (large radius, standard-radius buttons, no pills) and code shows the page head follows the eyebrow/title/lede recipe via a shared component.
 
-## 41. `/studio/create/location` - distance 3/10
+## 32. `/studio/create/location` - distance 3/10
 
 **Purpose:** Lets a creator build a reusable location asset (rooms, districts, sublocations) for use across scenarios and lore.
 
@@ -539,7 +419,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Desktop render only reached the sign-in gate (compliant floating-chrome radius and rectangular buttons) and mobile render shows a mismatched dev-preview fixture rather than the real page, so the builder body is unverified visually; code shows the compliant shared page-head recipe is in place.
 
-## 42. `/studio/create/lore` - distance 3/10
+## 33. `/studio/create/lore` - distance 3/10
 
 **Purpose:** Lets a creator author a structured, shareable lore sourcebook page with chapters, character references, and selected images.
 
@@ -551,7 +431,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Both renders reached only the sign-in gate, which is compliant with floating-chrome law (large radius panel, standard-radius rectangular buttons, no pill actions), and the underlying page code confirms the shared eyebrow/title/lede page-head recipe is used, but the lore builder body itself is unverified.
 
-## 43. `/studio/create/wardrobe` - distance 3/10
+## 34. `/studio/create/wardrobe` - distance 3/10
 
 **Purpose:** Let a signed-in creator build a reusable wardrobe of outfit presets to use as a character's default clothing source in chat and image generation.
 
@@ -564,7 +444,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Only the shared sign-in modal rendered; on mobile it floats centered with margin on all sides instead of docking to the bottom edge as the floating-chrome law requires.
 
-## 44. `/studio/creations/example-id` - distance 3/10
+## 35. `/studio/creations/example-id` - distance 3/10
 
 **Purpose:** Show a public creation's profile (character or lore item) as a shareable detail page for browsing and engagement.
 
@@ -575,7 +455,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same shared modal renders; mobile placement again floats free instead of docking to the bottom edge per the floating-chrome law.
 
-## 45. `/studio/story-rooms/example-id` - distance 3/10
+## 36. `/studio/story-rooms/example-id` - distance 3/10
 
 **Purpose:** The live story-room chat workspace where a player converses inside an active scenario alongside cast and world-state context panels.
 
@@ -592,7 +472,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Panel-reveal toggle uses large-tier rounded-2xl on an inline sticky control rather than the standard radius the corner law reserves for controls, and the composer help dialog is a bespoke floating frame rather than the shared modal chrome, though radius tokens and page-head structure are otherwise close to target.
 
-## 46. `/studio/templates/characters` - distance 3/10
+## 37. `/studio/templates/characters` - distance 3/10
 
 **Purpose:** Lets a creator browse built-in and creator-made character templates to reuse when building a new character.
 
@@ -605,7 +485,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Cards and controls correctly use --radius-md/standard-rectangle geometry (never pill), but the page has no filter bar or endcap banner from the library skeleton and the create-template CTA uses a literal rounded-xl rather than the radius token.
 
-## 47. `/studio/account/appearance` - distance 2/10
+## 38. `/studio/account/appearance` - distance 2/10
 
 **Purpose:** A placeholder settings page reserving space for future theme, density, card-display, and motion preference controls.
 
@@ -617,7 +497,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Fully built from the shared AccountStubPage/StudioPageHeader components with standard-radius cards, but as a stub settings page it has no banner, filter bar, or grid-of-clickables to test against the library skeleton, so most of the draft's pattern surface is simply absent rather than violated.
 
-## 48. `/studio/account/notifications` - distance 2/10
+## 39. `/studio/account/notifications` - distance 2/10
 
 **Purpose:** A placeholder settings page reserving space for future email, room-activity, creator-alert, and moderation notification controls.
 
@@ -629,7 +509,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same shared AccountStubPage composition as the other stub settings pages, correct page-head recipe and standard-radius cards; distance is only nonzero because the stub has no banner or content-grid payoff to compare against the target's richer library skeleton.
 
-## 49. `/studio/account/privacy` - distance 2/10
+## 40. `/studio/account/privacy` - distance 2/10
 
 **Purpose:** Lets a creator manage profile visibility, public activity exposure, discoverability, and blocked-user settings for their account (currently a stub of forthcoming controls).
 
@@ -643,7 +523,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page-head recipe and card-grid radius are correct, but the return-link is built on a literal rounded-xl class instead of the shared radius token, and the page is an inert placeholder stub with no live controls yet.
 
-## 50. `/studio/account/safety` - distance 2/10
+## 41. `/studio/account/safety` - distance 2/10
 
 **Purpose:** Lets a creator manage content-rating comfort settings, discovery filters, and future moderation/report tools for their account (currently a stub of forthcoming controls).
 
@@ -657,7 +537,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same shared AccountStubPage composition as privacy/subscription: correct page-head and card radius, only flaw is the literal rounded-xl on the return link instead of the standard-radius token.
 
-## 51. `/studio/account/subscription` - distance 2/10
+## 42. `/studio/account/subscription` - distance 2/10
 
 **Purpose:** Lets a creator view plan tier, billing/renewal, premium feature access, and purchase history for their account (currently a stub of forthcoming controls).
 
@@ -671,7 +551,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same shared AccountStubPage composition as its siblings: page-head and card radius are correct, only flaw is the literal rounded-xl on the return link instead of the standard-radius token.
 
-## 52. `/studio/community` - distance 2/10
+## 43. `/studio/community` - distance 2/10
 
 **Purpose:** Lets creators browse and search public creations and public creator profiles across Crestfall, with tag/type/rating filters and a creations-vs-creators mode toggle.
 
@@ -687,7 +567,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** This is close to a textbook instance of the six-page library skeleton (head -> filter bar -> grid), with correct radius tiers throughout; the only deviation is the hand-picked red error banner that bypasses the status-danger token.
 
-## 53. `/studio/create/mechanics-module` - distance 2/10
+## 44. `/studio/create/mechanics-module` - distance 2/10
 
 **Purpose:** Lets a creator build a reusable mechanics module (meters, counters, flags, stages, triggers, effects, guards) that can be attached to characters or rooms.
 
@@ -700,7 +580,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Uses the shared page-head recipe and a token-driven radius-md builder shell throughout; only gap is this is a create/editor template (not the library/browse or dashboard skeleton) so it sits outside those two named templates by category, not by violation.
 
-## 54. `/studio/create/narrator` - distance 2/10
+## 45. `/studio/create/narrator` - distance 2/10
 
 **Purpose:** Lets a creator author a reusable narrator voice/persona to attach to story rooms, scenarios, and roleplay sessions.
 
@@ -712,7 +592,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same shared page-head and tab/panel scaffold as the other create pages, token-driven radius-md throughout; deviation is only that it's an editor template rather than the library or dashboard skeleton.
 
-## 55. `/studio/create/npc-registry` - distance 2/10
+## 46. `/studio/create/npc-registry` - distance 2/10
 
 **Purpose:** Lets a creator build a reusable NPC relationship, alias, faction, and knowledge continuity registry that story rooms attach.
 
@@ -727,7 +607,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Follows the page-head recipe and destructive-control law closely (quiet ghost delete with visible word); minor gap is raw rounded-xl/black/35/white-10 literals on text inputs instead of surface/radius tokens used elsewhere on the same page.
 
-## 56. `/studio/create/outfit` - distance 2/10
+## 47. `/studio/create/outfit` - distance 2/10
 
 **Purpose:** Lets a creator define a reusable outfit asset (name, tags, source images) that can later be attached to characters or generation prompts.
 
@@ -739,7 +619,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head and builder shell both use --radius-md consistently on grid-sibling cards/controls with no pill-shaped buttons, closely tracking the draft's corner and shape law; only render evidence available is the auth gate, so composition judged from a well-token-disciplined shared component.
 
-## 57. `/studio/create/player-character` - distance 2/10
+## 48. `/studio/create/player-character` - distance 2/10
 
 **Purpose:** Lets a user build a player-identity profile (name, description, portrait) to bring into stories, rooms, and future image generation.
 
@@ -751,7 +631,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head recipe intact and all panels/controls use --radius-md/rounded-xl consistently with no pill misuse, but the builder itself is a one-off inline component rather than the reusable asset-builder shell used elsewhere.
 
-## 58. `/studio/create/pose` - distance 2/10
+## 49. `/studio/create/pose` - distance 2/10
 
 **Purpose:** Lets a creator define a reusable pose asset (reference images, tags) for later attachment to character generation.
 
@@ -763,7 +643,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Identical shared shell to outfit; same tight token discipline on corners and no pill-shaped interactive controls, only the config differs.
 
-## 59. `/studio/create/quest-registry` - distance 2/10
+## 50. `/studio/create/quest-registry` - distance 2/10
 
 **Purpose:** Lets a creator assemble a reusable quest spine (hooks, tasks, leads, requirements, branches, rewards) for later attachment to stories.
 
@@ -777,7 +657,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Floating picker modal correctly takes the LARGE radius and destructive delete control is properly quiet-ghost-with-word, the only gap being the missing blur(2px) on the scrim shared by all modals in the app.
 
-## 60. `/studio/my-creations` - distance 2/10
+## 51. `/studio/my-creations` - distance 2/10
 
 **Purpose:** Let a creator browse, filter, and manage all of their own drafts, private, and shared creations from one library hub.
 
@@ -792,7 +672,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head and card grid match the target closely; only gap is action-row and load-more buttons using hardcoded rounded-xl instead of the --radius-md token, a minor corner-law slip.
 
-## 61. `/studio/my-creations/example-id/edit` - distance 2/10
+## 52. `/studio/my-creations/example-id/edit` - distance 2/10
 
 **Purpose:** Give a creator a single editing workspace to revise a creation's media, sections, and metadata before publishing.
 
@@ -806,7 +686,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head and card corners follow the token system correctly; the one deviation is the Set-Default-PC button using rounded-xl instead of the --radius-md token.
 
-## 62. `/studio/official-characters` - distance 2/10
+## 53. `/studio/official-characters` - distance 2/10
 
 **Purpose:** Let players browse and search Crestfall's official canon character roster to find characters usable in canon-aware play and story rooms.
 
@@ -819,7 +699,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Page head and card grid are fully shared components matching the target closely; the only deviation is the pill-shaped search input, which breaks from the app's standard --radius-md input styling.
 
-## 63. `/studio/play` - distance 2/10
+## 54. `/studio/play` - distance 2/10
 
 **Purpose:** Entry point that should route a visitor into active gameplay, but the render captured is the shared sign-in gate blocking unauthenticated access.
 
@@ -830,7 +710,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** The gate itself already carries the page-head recipe (gold eyebrow, Cormorant title) and standard-radius controls correctly, but the modal card uses --radius-lg on a floating panel that is centered rather than docked to the bottom edge on the mobile render, a minor floating-chrome law deviation.
 
-## 64. `/studio/profile/crestfallen` - distance 2/10
+## 55. `/studio/profile/crestfallen` - distance 2/10
 
 **Purpose:** Should show a public/own creator profile page (bio, banner, stats) for the user 'crestfallen', but the auth gate renders instead of the profile content.
 
@@ -840,7 +720,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Only the shared gate is visible so the actual profile/creator-card composition cannot be judged here; the gate itself is on-pattern except its floating panel does not dock to the bottom edge on phone width as the unified floating-chrome law requires.
 
-## 65. `/studio/profile/crestfallen/connections` - distance 2/10
+## 56. `/studio/profile/crestfallen/connections` - distance 2/10
 
 **Purpose:** Should list a creator's followers/following connections, but again only the shared sign-in gate rendered for this unauthenticated capture.
 
@@ -850,7 +730,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Same as the other gated captures: the actual connections-list composition (likely a card grid) is unverifiable from this render, and the only flaw visible on the gate itself is the non-bottom-docked panel at phone width.
 
-## 66. `/studio/submit-canon` - distance 2/10
+## 57. `/studio/submit-canon` - distance 2/10
 
 **Purpose:** A placeholder landing page describing the future curated review process for submitting standout characters, rooms, events, or storylines to canon.
 
@@ -861,7 +741,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Correct page-head recipe and consistent --radius-md tokens throughout; only gap is that as a stub page it has no content grid or banner treatment to compare against the library skeleton at all.
 
-## 67. `/` - distance 1/10
+## 58. `/` - distance 1/10
 
 **Purpose:** Site entry hero introducing the Crestfall lore archive and routing visitors into the archive, chronicle, or studio.
 
@@ -873,7 +753,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Hero follows the eyebrow -> display-font title -> lede recipe closely with standard-radius CTA buttons; only minor deviation is the desktop CTA row being page-specific rather than a named shared hero component.
 
-## 68. `/characters` - distance 1/10
+## 59. `/characters` - distance 1/10
 
 **Purpose:** Browse and filter the full character roster of the Crestfall archive.
 
@@ -888,21 +768,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Matches the library/browse skeleton (page head -> filter bar -> card grid) closely with correct pill-vs-standard radius usage throughout.
 
-## 69. `/chronicle` - distance 1/10
-
-**Purpose:** Browse the living chronicle, i.e. the ongoing story record filterable by realm and faction, with an endcap for unreleased content.
-
-**Structural blocks (top to bottom):**
-
-- top nav / crest wordmark (reusable)
-- page head (eyebrow + display title + lede) (reusable)
-- search + filter bar (search, realm/faction dropdowns, clear) (reusable) - same shape as /characters filter bar
-- tag scroller (ALL) (reusable)
-- empty-state / coming-soon endcap banner (reusable) - large-radius bordered panel, matches endcap treatment for full-width empty states
-
-**Distance from draft:** Full library skeleton present and correctly composed, with the empty-state endcap using the large radius the draft reserves for full-width banners.
-
-## 70. `/studio/my-creations/example-id/preview` - distance 1/10
+## 60. `/studio/my-creations/example-id/preview` - distance 1/10
 
 **Purpose:** Show a Lore creation's owner a read-only preview of their saved draft exactly as the published document renderer will present it, before it goes live.
 
@@ -914,7 +780,7 @@ docs/RESTYLE-RULES.md and docs/CRESTFALL-DESIGN-CONTEXT.md.
 
 **Distance from draft:** Composition is almost entirely the shared LoreDocumentRenderer with a thin bespoke top bar; the only note is the owner-only badge being pill-shaped, which is correct since it is a non-interactive label, not a control.
 
-## 71. `/studio/create/mechanics-loadout` - distance 0/10
+## 61. `/studio/create/mechanics-loadout` - distance 0/10
 
 **Purpose:** Legacy URL that exists only to redirect creators to the current actor-mechanics-profile builder.
 
