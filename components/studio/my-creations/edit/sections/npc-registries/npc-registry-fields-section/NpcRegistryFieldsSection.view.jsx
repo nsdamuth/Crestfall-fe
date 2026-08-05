@@ -91,7 +91,7 @@ export default function NpcRegistryFieldsSectionView({
           </PrimaryAction>
 
           {helperMessage ? (
-            <p className="text-sm text-[var(--muted)]">{helperMessage}</p>
+            <p className="text-sm text-[var(--ink-dim)]">{helperMessage}</p>
           ) : null}
 
           {cards.length ? (
@@ -114,7 +114,7 @@ function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
     <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
           <h3 className="mt-2 font-display text-3xl">{title}</h3>
@@ -126,9 +126,9 @@ function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
         </div>
       </div>
 
-      <p className="mt-3 leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 leading-7 text-[var(--ink-dim)]">{body}</p>
       {meta ? (
-        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           {meta}
         </p>
       ) : null}
@@ -142,7 +142,7 @@ function PrimaryAction({ children, onClick, disabled = false }) {
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Plus size={14} />
       {children}
@@ -155,7 +155,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
     >
       {children}
     </button>
@@ -179,7 +179,7 @@ function SmallDangerAction({ onClick }) {
 function EmptyPanel({ message }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-      <p className="text-sm leading-6 text-[var(--muted)]">{message}</p>
+      <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
 }
