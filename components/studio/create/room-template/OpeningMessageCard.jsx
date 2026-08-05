@@ -22,7 +22,7 @@ export default function OpeningMessageCard({
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Opening Message {index + 1}
         </p>
 
@@ -30,7 +30,7 @@ export default function OpeningMessageCard({
           type="button"
           onClick={() => onRemove(message.id)}
           disabled={index === 0}
-          className="rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-35"
+          className="rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-35"
         >
           Remove
         </button>
