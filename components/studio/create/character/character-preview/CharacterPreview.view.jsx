@@ -7,8 +7,8 @@ export default function CharacterPreviewView({
   clothingStyleLabel = "Clothing style not chosen yet.",
 } = {}) {
   return (
-    <aside className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--muted-gold)]/10">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--muted-gold)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
             <p className="font-display text-5xl text-[var(--muted-gold)]">
