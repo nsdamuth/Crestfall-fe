@@ -54,10 +54,10 @@ export default function CharacterTemplateBuilderView({
         onReset={onReset}
       />
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Template Builder
             </p>
 
@@ -65,7 +65,7 @@ export default function CharacterTemplateBuilderView({
               {templateTitle || "New Character Template"}
             </h2>
 
-            <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">
+            <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">
               Build a guided preset for new character drafts. Templates copy
               optional defaults into a new character and do not stay linked.
             </p>
@@ -77,10 +77,10 @@ export default function CharacterTemplateBuilderView({
         <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Draft Progress
               </p>
-              <p className="mt-1 text-sm text-[var(--muted)]">
+              <p className="mt-1 text-sm text-[var(--ink-dim)]">
                 {completion}% complete — {filledFieldCount} default fields filled.
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function CharacterTemplateBuilderView({
               type="button"
               onClick={() => onSave?.()}
               disabled={saveDisabled}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Save size={14} />
               {saveStatus === "saving" ? "Saving..." : "Save Template"}
@@ -107,10 +107,10 @@ export default function CharacterTemplateBuilderView({
                   onClick={() => onSelectStep?.(step.id)}
                   className={`rounded-xl border p-3 text-left transition ${
                     step.active
-                      ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                      ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                       : step.visited
-                        ? "border-[var(--muted-gold)]/25 bg-black/35 text-[var(--muted-gold)]"
-                        : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/25"
+                        ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
+                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                   }`}
                 >
                   <Icon size={16} />
@@ -140,7 +140,7 @@ export default function CharacterTemplateBuilderView({
             type="button"
             onClick={() => onBack?.()}
             disabled={activeIndex === 0}
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             Back
           </button>
@@ -150,7 +150,7 @@ export default function CharacterTemplateBuilderView({
               type="button"
               onClick={() => onSave?.()}
               disabled={saveDisabled}
-              className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {saveStatus === "saving" ? "Saving..." : "Save Template"}
             </button>
@@ -158,7 +158,7 @@ export default function CharacterTemplateBuilderView({
             <button
               type="button"
               onClick={() => onNext?.()}
-              className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+              className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
             >
               Next
             </button>
@@ -179,14 +179,14 @@ function CharacterTemplateSummary({
   onReset,
 }) {
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6 xl:sticky xl:top-24">
-      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--muted-gold)]/10">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6 xl:sticky xl:top-24">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--gold-ornament)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
-            <p className="font-display text-5xl text-[var(--muted-gold)]">
+            <p className="font-display text-5xl text-[var(--gold-ornament)]">
               {templateInitial}
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
               Template Draft
             </p>
           </div>
@@ -197,11 +197,11 @@ function CharacterTemplateSummary({
         {templateTitle || "Untitled Template"}
       </h2>
 
-      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {templateCategory || "Reusable Blueprint"}
       </p>
 
-      <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
+      <p className="mt-4 text-sm leading-6 text-[var(--ink-dim)]">
         {templateDescription ||
           "Character templates can only be applied while creating a new character. They copy defaults into the draft and do not stay linked."}
       </p>
@@ -215,7 +215,7 @@ function CharacterTemplateSummary({
       <button
         type="button"
         onClick={() => onReset?.()}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
+        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
       >
         <RotateCcw size={14} />
         Clear Template Draft
@@ -227,10 +227,10 @@ function CharacterTemplateSummary({
 function SummaryItem({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
