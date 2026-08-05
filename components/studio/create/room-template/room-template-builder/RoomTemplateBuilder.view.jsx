@@ -61,7 +61,7 @@ export default function RoomTemplateBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Story Builder
         </p>
@@ -76,7 +76,7 @@ export default function RoomTemplateBuilderView({
           rules into a reusable playable setup.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             Draft Progress
           </p>
@@ -222,7 +222,7 @@ export default function RoomTemplateBuilderView({
             <button
               type="button"
               onClick={() => onToggleTurnBased?.()}
-              className={`rounded-2xl border p-5 text-left transition ${
+              className={`rounded-[var(--radius-md)] border p-5 text-left transition ${
                 effectiveTurnBased
                   ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                   : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
@@ -289,7 +289,7 @@ export default function RoomTemplateBuilderView({
           body="Later this will select images from the internal media library. No external uploads."
         >
           <div className="grid gap-5 lg:grid-cols-[0.45fr_1fr]">
-            <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+            <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
               <div className="flex h-full w-full items-center justify-center">
                 <div className="text-center">
                   <ImageIcon
@@ -381,7 +381,7 @@ export default function RoomTemplateBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck
                 className="mt-1 text-[var(--muted-gold)]"
