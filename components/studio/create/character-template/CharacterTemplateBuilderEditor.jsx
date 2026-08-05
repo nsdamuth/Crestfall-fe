@@ -320,10 +320,10 @@ function BehaviorDefaultsStep({ form, updateField }) {
         />
 
         <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Optional Personality Frameworks
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             These optional defaults provide soft narrative flavor when the
             composer needs more characterization. Explicit personality choices
             and creator guidance always take priority.
@@ -430,7 +430,7 @@ function ReviewTemplateStep({
       </div>
 
       <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Filled Sections
         </p>
 
@@ -458,13 +458,13 @@ function ReviewTemplateStep({
 function StepPanel({ eyebrow, title, body, children }) {
   return (
     <section>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
 
       <h3 className="mt-2 font-display text-4xl">{title}</h3>
 
-      <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">{body}</p>
 
       <div className="mt-6">{children}</div>
     </section>
@@ -474,10 +474,10 @@ function StepPanel({ eyebrow, title, body, children }) {
 function SummaryItem({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
@@ -485,14 +485,14 @@ function SummaryItem({ label, value }) {
 function Field({ label, value, placeholder, onChange }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -501,10 +501,10 @@ function Field({ label, value, placeholder, onChange }) {
 function SectionStatus({ label, active }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-3">
-      <p className="text-sm text-[var(--foreground)]">{label}</p>
+      <p className="text-sm text-[var(--ink)]">{label}</p>
       <p
         className={`mt-1 text-xs ${
-          active ? "text-emerald-200" : "text-[var(--muted)]"
+          active ? "text-emerald-200" : "text-[var(--ink-dim)]"
         }`}
       >
         {active ? "Has defaults" : "No defaults set"}
@@ -522,7 +522,7 @@ function TextAreaField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -530,7 +530,7 @@ function TextAreaField({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
