@@ -9,7 +9,7 @@ export default function CreateTypeCardView({
   LinkComponent = "a",
 }) {
   const content = (
-    <article className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-black/50 p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/60">
+    <article className="group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/50 p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/60">
       {image ? (
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 grayscale transition duration-500 group-hover:opacity-55 group-hover:grayscale-0"
