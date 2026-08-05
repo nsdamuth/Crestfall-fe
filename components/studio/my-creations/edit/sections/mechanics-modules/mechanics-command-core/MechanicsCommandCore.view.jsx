@@ -293,10 +293,12 @@ export function MechanicsCommandArgumentsView({ model }) {
             <button
               type="button"
               onClick={() => model.removeArgument(argumentIndex)}
-              className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+              className="inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
               title="Remove argument"
+              aria-label="Remove argument"
             >
               <Trash2 size={13} />
+              <span className="text-xs">Remove</span>
             </button>
           </div>
 
