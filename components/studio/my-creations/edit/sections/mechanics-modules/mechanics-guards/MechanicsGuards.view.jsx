@@ -62,10 +62,11 @@ function GuardConditionCard({
         <button
           type="button"
           onClick={removeCondition}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove condition"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -176,10 +177,11 @@ function GuardCard({
         <button
           type="button"
           onClick={() => removeGuard(guardIndex)}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove guard"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
