@@ -22,7 +22,7 @@ export default function MechanicsPresetValidationPanelView({
   onDismiss = null,
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-500/[0.045]">
+    <section className="overflow-hidden rounded-[var(--radius-md)] border border-emerald-300/20 bg-emerald-500/[0.045]">
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 p-5">
         <div className="min-w-0">
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-emerald-100">
