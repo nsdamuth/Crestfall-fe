@@ -36,7 +36,7 @@ function ScaleField({
 
 function SenseCard({ icon, eyebrow, title, body, children }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex items-start gap-3">
         <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
           {icon}
@@ -112,7 +112,7 @@ function ScentTagEditor({
               <button
                 type="button"
                 onClick={() => onRemoveTag?.(noteIndex, tag)}
-                className="text-[var(--muted)] transition hover:text-red-200"
+                className="text-[var(--muted)] transition hover:text-[var(--status-danger)]"
                 aria-label={`Remove ${tag} tag`}
               >
                 <X size={13} />
@@ -317,7 +317,7 @@ export default function LocationSensoryEnvironmentFieldsView({
                   <button
                     type="button"
                     onClick={() => onRemoveScentNote?.(note.loomRowIndex)}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
                     aria-label={`Remove scent note ${note.loomRowIndex + 1}`}
                   >
                     <Trash2 size={15} />
