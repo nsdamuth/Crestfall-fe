@@ -6,7 +6,7 @@ export default function StoryRoomMobileToolbar({
   onOpenState,
 }) {
   return (
-    <div className="mb-3 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:hidden">
+    <div className="mb-3 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:hidden">
       <div>
         <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Story
