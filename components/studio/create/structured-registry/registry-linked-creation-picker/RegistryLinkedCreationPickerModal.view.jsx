@@ -16,16 +16,16 @@ export default function RegistryLinkedCreationPickerModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Registry Links
             </p>
 
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
 
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               {body}
             </p>
           </div>
@@ -33,7 +33,7 @@ export default function RegistryLinkedCreationPickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -42,19 +42,19 @@ export default function RegistryLinkedCreationPickerModalView({
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
               onChange={(event) =>
                 onSearchQueryChange?.(event.target.value)
               }
               placeholder="Search creations..."
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
               Loading creations...
             </p>
           ) : null}
@@ -66,7 +66,7 @@ export default function RegistryLinkedCreationPickerModalView({
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
               No matching creations found.
             </p>
           ) : null}
@@ -79,9 +79,9 @@ export default function RegistryLinkedCreationPickerModalView({
                   type="button"
                   onClick={() => onChooseCreation?.(creation?.id)}
                   aria-pressed={Boolean(creation?.isSelected)}
-                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--muted-gold)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     creation?.isSelected
-                      ? "border-[var(--muted-gold)]/60"
+                      ? "border-[var(--gold-ornament)]/60"
                       : "border-white/10"
                   }`}
                 >
@@ -101,17 +101,17 @@ export default function RegistryLinkedCreationPickerModalView({
                       {creation?.title || "Untitled Creation"}
                     </p>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                       {creation?.subtitle || "Creation"}
                     </p>
 
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                      <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                         {creation?.typeLabel || "Creation"}
                       </span>
 
                       {creation?.isSelected ? (
-                        <span className="rounded-full border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+                        <span className="rounded-full border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
                           Linked
                         </span>
                       ) : null}
