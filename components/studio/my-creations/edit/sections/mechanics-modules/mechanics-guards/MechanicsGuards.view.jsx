@@ -62,7 +62,7 @@ function GuardConditionCard({
         <button
           type="button"
           onClick={removeCondition}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove condition"
         >
           <Trash2 size={13} />
@@ -145,7 +145,7 @@ function GuardCard({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/25">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -176,7 +176,7 @@ function GuardCard({
         <button
           type="button"
           onClick={() => removeGuard(guardIndex)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove guard"
         >
           <Trash2 size={13} />
@@ -378,7 +378,7 @@ export default function MechanicsGuardsView({
   removeCondition,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
