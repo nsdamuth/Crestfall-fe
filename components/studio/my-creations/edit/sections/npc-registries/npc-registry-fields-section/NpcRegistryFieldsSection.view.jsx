@@ -167,10 +167,11 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-lg border border-white/10 px-3 py-2 text-red-200 transition hover:border-red-300/35"
+      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
       aria-label="Delete"
     >
       <Trash2 size={14} />
+      Delete
     </button>
   );
 }
