@@ -334,10 +334,11 @@ function ColumnBlockCard({
                 block.id
               )
             }
-            className="rounded-md border border-white/10 p-1.5 text-[var(--status-danger)]"
+            className="inline-flex items-center gap-1 rounded-md border border-white/10 px-1.5 py-1.5 text-[var(--status-danger)]"
             aria-label="Remove column block"
           >
             <Trash2 size={12} />
+            <span className="text-[10px]">Remove</span>
           </button>
         </div>
       </div>
@@ -755,10 +756,11 @@ function BlockFields({
                       item.id
                     )
                   }
-                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
                   aria-label="Remove reference row"
                 >
                   <Trash2 size={13} />
+                  <span className="text-xs">Remove</span>
                 </button>
               </div>
             </div>
@@ -1499,9 +1501,11 @@ export default function LoreEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveChapter?.(chapter.id)}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                  aria-label="Remove chapter"
+                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
                 >
                   <Trash2 size={14} />
+                  <span className="text-xs">Remove</span>
                 </button>
               </div>
 
@@ -1733,9 +1737,11 @@ export default function LoreEditorView({
                               onClick={() =>
                                 onRemoveSection?.(chapter.id, section.id)
                               }
-                              className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                              aria-label="Remove section"
+                              className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
                             >
                               <Trash2 size={13} />
+                              <span className="text-xs">Remove</span>
                             </button>
                           </div>
 
@@ -1971,9 +1977,11 @@ export default function LoreEditorView({
                                               block.id
                                             )
                                           }
-                                          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                                          aria-label="Remove block"
+                                          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
                                         >
                                           <Trash2 size={13} />
+                                          <span className="text-xs">Remove</span>
                                         </button>
                                       </div>
                                     </div>
