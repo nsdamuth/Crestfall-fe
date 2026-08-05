@@ -88,7 +88,7 @@ function MechanicsCommandCard({
   const itemNumberArgumentOptions = getMechanicsEffectNumericArgumentOptions(invocation);
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <MechanicsCommandIdentitySection
         command={safeCommand}
         commandIndex={commandIndex}

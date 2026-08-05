@@ -48,7 +48,7 @@ export function MechanicsRuntimeFoldSection({
     <section
       id={id}
       data-mechanics-runtime-section={id}
-      className="scroll-mt-28 overflow-hidden rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20"
+      className="scroll-mt-28 overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20"
     >
       <button
         type="button"
@@ -110,7 +110,7 @@ export function MechanicsFoldableItemShell({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/25">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -140,7 +140,7 @@ export function MechanicsFoldableItemShell({
           <button
             type="button"
             onClick={() => onRemove?.()}
-            className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+            className="rounded-xl border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
             title={removeTitle || `Remove ${title}`}
           >
             <Trash2 size={13} />
@@ -167,7 +167,7 @@ export function MechanicsCommandsAssemblyView({
   renderCommand = null,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -380,7 +380,7 @@ export default function MechanicsModuleAssemblyView({
         {guardsContent}
       </MechanicsRuntimeFoldSection>
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Save Shape</p>
         <p className="mt-3">
           Saves into <span className="text-[var(--foreground)]">creation.data.instanceData</span>.
