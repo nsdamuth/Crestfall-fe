@@ -206,7 +206,7 @@ function EntriesSection({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
         {activeEntry ? (
           <ItemEntryEditor
             entry={activeEntry}
@@ -215,7 +215,7 @@ function EntriesSection({
             placementOptions={placementOptions}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <Box size={28} className="mx-auto text-[var(--muted-gold)]" />
             <p className="mt-4 text-sm text-[var(--muted)]">
               Select an object entry or add a new one.
@@ -237,7 +237,7 @@ function AssociationsSection({
         entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-2xl border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
           >
             <p className="font-display text-2xl">{entry.nameDisplay}</p>
 
@@ -287,7 +287,7 @@ function TrackingSection({
         entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-2xl border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
           >
             <p className="font-display text-2xl">{entry.nameDisplay}</p>
 
@@ -413,7 +413,7 @@ function PromptSection({
       {entries.map((entry) => (
         <div
           key={entry.id}
-          className="rounded-2xl border border-white/10 bg-black/30 p-4"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
         >
           <p className="font-display text-2xl">{entry.nameDisplay}</p>
 
@@ -453,7 +453,7 @@ function ReviewSection({
 }) {
   return (
     <div className="mt-6 grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-      <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
         <Database size={24} className="text-[var(--muted-gold)]" />
         <dl className="mt-4 space-y-3 text-sm">
           <div>
@@ -473,7 +473,7 @@ function ReviewSection({
         </dl>
       </div>
 
-      <pre className="max-h-[520px] overflow-auto rounded-2xl border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {reviewPayloadText}
       </pre>
     </div>
@@ -577,7 +577,7 @@ function ItemEntryEditor({
       <button
         type="button"
         onClick={() => entry.onDelete?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:bg-white/5"
       >
         <Trash2 size={14} />
         Delete Entry
