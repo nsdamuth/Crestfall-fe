@@ -5,7 +5,7 @@ export default function ProfileBannerView({
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 ${
+      className={`overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 ${
         compact ? "h-24" : "h-44"
       }`}
     >
