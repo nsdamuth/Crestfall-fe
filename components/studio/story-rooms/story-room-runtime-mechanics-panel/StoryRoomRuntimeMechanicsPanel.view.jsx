@@ -61,7 +61,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                 type="button"
                 onClick={() => onRemove?.()}
                 disabled={saving}
-                className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)] disabled:opacity-60"
+                className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--status-danger)] outline-none transition focus:border-[var(--muted-gold)] disabled:opacity-60"
                 title="Remove room mechanics module"
               >
                 <Trash2 size={14} />
