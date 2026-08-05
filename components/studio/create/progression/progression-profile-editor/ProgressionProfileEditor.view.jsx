@@ -223,7 +223,7 @@ export default function ProgressionProfileEditorView({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
             <Activity size={18} />
@@ -283,7 +283,7 @@ export default function ProgressionProfileEditorView({
         </label>
       </section>
 
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -486,7 +486,7 @@ export default function ProgressionProfileEditorView({
                     <button
                       type="button"
                       onClick={() => onRemoveOverride?.(index)}
-                      className="rounded-lg border border-rose-300/20 p-2 text-rose-200 hover:bg-rose-300/10"
+                      className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
                       aria-label={`Remove override ${index + 1}`}
                     >
                       <Trash2 size={15} />
@@ -623,7 +623,7 @@ export default function ProgressionProfileEditorView({
         )}
       </section>
 
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -654,7 +654,7 @@ export default function ProgressionProfileEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveTier?.(index)}
-                  className="rounded-lg border border-rose-300/20 p-2 text-rose-200 hover:bg-rose-300/10"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
                   aria-label={`Remove ${tier.title || tier.id}`}
                 >
                   <Trash2 size={15} />
