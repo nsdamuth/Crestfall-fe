@@ -483,7 +483,7 @@ function ItemEntryEditor({
       <button
         type="button"
         onClick={() => onDelete?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 hover:bg-white/5"
+        className="inline-flex h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-white/10 bg-transparent px-[var(--space-6)] text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
       >
         <Trash2 size={14} />
         Delete Entry
