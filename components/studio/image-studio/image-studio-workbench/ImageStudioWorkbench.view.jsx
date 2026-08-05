@@ -59,7 +59,7 @@ export default function ImageStudioWorkbenchView({
               type="button"
               onClick={onQuickGenerate}
               disabled={!canGenerateImage}
-              className={`inline-flex items-center gap-2 rounded-xl border px-3 py-3 text-[10px] uppercase tracking-[0.14em] transition ${
+              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-3 text-[10px] uppercase tracking-[0.14em] transition ${
                 canGenerateImage
                   ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 text-[var(--foreground)] hover:bg-[var(--muted-gold)]/25"
                   : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] opacity-60"
@@ -97,7 +97,7 @@ export default function ImageStudioWorkbenchView({
                   </p>
                 </div>
 
-                <span className="rounded-xl border border-white/10 p-2 text-[var(--muted)]">
+                <span className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--muted)]">
                   <ChevronDown size={18} />
                 </span>
               </button>
