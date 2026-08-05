@@ -25,7 +25,7 @@ export default function SaveIngredientPresetModalView({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <div className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -45,7 +45,7 @@ export default function SaveIngredientPresetModalView({
             type="button"
             onClick={() => onClose?.()}
             disabled={isSaving}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Close save preset modal"
           >
             <X size={18} />
