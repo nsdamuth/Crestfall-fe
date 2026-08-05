@@ -87,7 +87,7 @@ function ModifierList({
                 <button
                   type="button"
                   onClick={() => onRemove(side, modifierIndex)}
-                  className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
                   title="Remove fixed modifier"
                 >
                   <Trash2 size={13} />
@@ -165,7 +165,7 @@ function ModifierSourceCard({
         <button
           type="button"
           onClick={() => onRemove(side, sourceIndex)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove authoritative modifier source"
         >
           <Trash2 size={13} />
