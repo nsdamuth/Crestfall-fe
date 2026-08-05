@@ -39,7 +39,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
         </button>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/30 p-5">
+      <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/30 p-5">
         <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-4">
           <BookOpen
             size={18}
@@ -81,7 +81,7 @@ function RulesCodexAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         {attachment?.imageUrl ? (
           <div
@@ -108,7 +108,7 @@ function RulesCodexAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="rounded-full border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--status-danger)]"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached Rules Codex"
           }
