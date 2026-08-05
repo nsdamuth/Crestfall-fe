@@ -19,7 +19,7 @@ import {
 
 function PreviewViewModeToggle({ value = "grid", onChange, label = "View" }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 p-1">
+    <div className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-1">
       <span className="px-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
         {label}
       </span>
@@ -97,7 +97,7 @@ export default function GamesHubView({
               community sandbox play.
             </p>
 
-            <div className="mt-6 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+            <div className="mt-6 flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
               <Search size={16} className="text-[var(--gold-ornament)]" />
               <input
                 value={query}
@@ -143,7 +143,7 @@ export default function GamesHubView({
                     type="button"
                     onClick={() => onGameAction?.(game)}
                     disabled={startingGameId === game.id}
-                    className="block w-full rounded-xl border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
+                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
                   >
                     <p className="font-display text-2xl">{game.title}</p>
                     <p className="mt-1 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -274,7 +274,7 @@ function MobileGamesDrawer({
 
       {open ? (
         <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-black/45 p-4">
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}
@@ -299,7 +299,7 @@ function MobileGamesDrawer({
           </div>
 
           {continueGames.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Continue
               </p>
@@ -310,7 +310,7 @@ function MobileGamesDrawer({
                     key={game.id}
                     type="button"
                     onClick={() => onGameAction?.(game)}
-                    className="block w-full rounded-xl border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/35"
+                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/35"
                   >
                     <p className="truncate font-display text-xl">
                       {game.title}
@@ -325,7 +325,7 @@ function MobileGamesDrawer({
           ) : null}
 
           {featuredGames.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Featured Starts
               </p>
@@ -337,7 +337,7 @@ function MobileGamesDrawer({
                   type="button"
                   onClick={() => onGameAction?.(game)}
                   disabled={startingGameId === game.id}
-                  className="block w-full rounded-xl border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
+                  className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
                 >
                     <p className="truncate font-display text-xl">
                       {game.title}
