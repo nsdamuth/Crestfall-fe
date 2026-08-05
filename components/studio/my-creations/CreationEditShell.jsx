@@ -30,7 +30,7 @@ export default function CreationEditShell({ creationId, creation }) {
       backAction={
         <Link
           href="/studio/my-creations"
-          className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           ← My Creations
         </Link>
