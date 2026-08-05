@@ -9,7 +9,7 @@ export default function CreateTypeCardView({
   LinkComponent = "a",
 }) {
   const content = (
-    <article className="group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/50 p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/60">
+    <article className="group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/50 p-6 transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/60">
       {image ? (
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 grayscale transition duration-500 group-hover:opacity-55 group-hover:grayscale-0"
@@ -22,19 +22,19 @@ export default function CreateTypeCardView({
       <div className="relative z-10 flex h-full flex-col justify-between">
         <div>
           {eyebrow ? (
-            <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.28em] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
           ) : null}
 
-          <h2 className="mt-4 font-display text-3xl text-[var(--foreground)]">
+          <h2 className="mt-4 font-display text-3xl text-[var(--ink)]">
             {title}
           </h2>
 
-          <p className="mt-4 leading-7 text-[var(--muted)]">{description}</p>
+          <p className="mt-4 leading-7 text-[var(--ink-dim)]">{description}</p>
         </div>
 
-        <p className="mt-8 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="mt-8 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {disabled ? "Coming Soon" : "Begin Creation →"}
         </p>
       </div>
