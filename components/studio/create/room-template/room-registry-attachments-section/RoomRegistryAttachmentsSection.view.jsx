@@ -33,7 +33,7 @@ export default function RoomRegistryAttachmentsSectionView({
           return (
             <div
               key={group?.id || group?.label}
-              className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/30 p-5"
+              className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/30 p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -93,7 +93,7 @@ function RegistryAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         {attachment?.imageUrl ? (
           <div
@@ -120,7 +120,7 @@ function RegistryAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--status-danger)]"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached registry"
           }
