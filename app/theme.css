@@ -105,6 +105,11 @@
   --scrim:         rgba(0, 0, 0, .40);
   --scrim-strong:  rgba(0, 0, 0, .70);
 
+  /* Blur: one strength in the whole system, floating panels only
+     (modals, sheets, pickers), paired with --scrim-strong. Never on
+     tile art, banners, or tag beds. Ruled 4 Aug 2026. */
+  --blur-panel:    2px;
+
   /* --- OVER-ART INK -----------------------------------------
      Sprint 3. Artwork and the scrims over it do not flip with
      the theme, so text sitting on art cannot use the flipping
