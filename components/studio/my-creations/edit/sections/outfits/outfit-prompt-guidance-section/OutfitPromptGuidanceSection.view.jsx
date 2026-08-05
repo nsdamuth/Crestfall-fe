@@ -60,7 +60,7 @@ export default function OutfitPromptGuidanceSectionView({
                 key={option.value}
                 type="button"
                 onClick={() => onClothingModeChange?.(option.value)}
-                className={`rounded-2xl border p-4 text-left transition ${
+                className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                   option.active
                     ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                     : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
@@ -95,7 +95,7 @@ export default function OutfitPromptGuidanceSectionView({
               rows={4}
             />
 
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
                 {advancedSectionsTitle}
               </p>
