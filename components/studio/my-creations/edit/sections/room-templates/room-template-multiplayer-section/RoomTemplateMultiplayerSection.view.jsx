@@ -121,7 +121,7 @@ export default function RoomTemplateMultiplayerSectionView({
                   <button
                     type="button"
                     onClick={() => onRemoveInvitedPlayer?.(player.id)}
-                    className="rounded-lg border border-white/10 p-1 text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
+                    className="rounded-[var(--radius-md)] border border-white/10 p-1 text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
                     aria-label={player.removeAriaLabel}
                   >
                     <X size={14} />
