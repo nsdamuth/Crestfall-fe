@@ -287,7 +287,7 @@ export default function MediaHistoryGridView({
       ) : null}
 
       {historyError ? (
-        <div className="rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {historyError}
         </div>
       ) : null}
