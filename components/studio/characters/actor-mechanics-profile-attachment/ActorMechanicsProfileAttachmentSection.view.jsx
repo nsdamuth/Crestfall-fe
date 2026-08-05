@@ -125,7 +125,7 @@ function ActorMechanicsProfileAttachmentCard({
           type="button"
           onClick={() => onRemove?.()}
           disabled={disabled}
-          className="rounded-lg border border-[var(--line)] p-2 text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-[var(--radius-md)] border border-[var(--line)] p-2 text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={
             attachment.removeAriaLabel ||
             "Remove attached Actor Mechanics Profile"
