@@ -317,10 +317,11 @@ export default function LocationSensoryEnvironmentFieldsView({
                   <button
                     type="button"
                     onClick={() => onRemoveScentNote?.(note.loomRowIndex)}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
+                    className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
                     aria-label={`Remove scent note ${note.loomRowIndex + 1}`}
                   >
                     <Trash2 size={15} />
+                    Remove
                   </button>
                 </div>
               ))
