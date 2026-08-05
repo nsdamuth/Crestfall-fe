@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function SiteHeader({ home = false }) {
   return (
-    <header className="relative z-20 grid w-full grid-cols-[minmax(260px,auto)_1fr] items-center gap-8 px-6 py-8 sm:px-10 lg:px-16">
+    <header className="relative z-20 grid w-full grid-cols-[minmax(260px,auto)_1fr] items-center gap-[var(--space-8)] px-[var(--space-6)] py-[var(--space-8)] sm:px-[var(--space-10)] lg:px-[var(--space-16)]">
       <Link href="/" className="flex items-center gap-4 transition hover:opacity-90">
         <img
           src="/assets/branding/crestfall-seal.svg"

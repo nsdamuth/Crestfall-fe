@@ -2,7 +2,7 @@ import Link from "next/link";
 
 function PublicHomeFooter() {
   return (
-    <footer className="border-t border-[var(--gold-ornament)]/20 px-6 py-10">
+    <footer className="border-t border-[var(--gold-ornament)]/20 px-[var(--space-6)] py-[var(--space-10)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">

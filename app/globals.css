@@ -1,9 +1,10 @@
 @import "tailwindcss";
 @import "./theme.css";
 @import "./token-bridge.css";
+@import "./design-system.css";
 
 :root {
-  --background: #050504;
+  --background: var(--canvas);
   --panel: rgba(16, 14, 12, 0.82);
   --panel-strong: rgba(25, 21, 17, 0.94);
   --blood: #4b1018;

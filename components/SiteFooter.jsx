@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--line-strong)] bg-[rgba(5,5,4,0.92)] px-6 py-10 text-[var(--ink-dim)] sm:px-10 lg:px-16">
+    <footer className="border-t border-[var(--line-strong)] bg-[rgba(5,5,4,0.92)] px-[var(--space-6)] py-[var(--space-10)] text-[var(--ink-dim)] sm:px-[var(--space-10)] lg:px-[var(--space-16)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-display text-xs uppercase tracking-[0.45em] text-[var(--gold-ornament)]">

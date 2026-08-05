@@ -1,0 +1,175 @@
+/* ============================================================
+   DESIGN SYSTEM STYLESHEET
+
+   Selector-based rules that pair with the variables-only
+   app/theme.css. Anything here needing a class or element
+   selector lives here, never inside a component file. Every
+   value below resolves through a token already defined in
+   app/theme.css; no raw hex, no new literal outside a named
+   token block.
+
+   Lifted verbatim from the approved proof draft at
+   ~/dev/crestfall-main/Crestfall/design-system/proof/, per the
+   phase 2 skin brief, step 3. Class names are prefixed cf- so
+   they read as design-system definitions rather than page-local
+   markup, matching this repo's existing cf-card/cf-art
+   convention in the same file family.
+
+   These are reusable effect definitions only. Wiring them into
+   any specific component (cards, modals, dropdowns) is Phase 3
+   scope; this file defines the recipe, it does not adopt it.
+   ============================================================ */
+
+/* --- SHEEN --------------------------------------------------
+   Source: library.css, the card-face hover corner CTA (lines
+   356-367). A diagonal sweep of --grad-sheen across an element,
+   triggered on hover/focus-visible of an ancestor that opts in.
+   Generalized here from :is(.lcard,.shot,.lentry) .corner::after
+   to a reusable .cf-sheen target so Phase 3 can attach it to any
+   card-face affordance without duplicating the recipe.        */
+
+.cf-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.cf-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--grad-sheen);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.cf-sheen:is(:hover, :focus-visible)::after {
+  opacity: 1;
+  animation: cf-cornersheen 0.9s var(--ease) 1;
+}
+@keyframes cf-cornersheen {
+  from { background-position: 120% 0; }
+  to { background-position: -30% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-sheen:is(:hover, :focus-visible)::after { animation: none; }
+}
+
+/* --- GALAXY ---------------------------------------------------
+   Source: proof.css, the galaxy layer (lines 247-254). Two
+   stacked layers so the animated one never forces a repaint of
+   the static atmosphere above it; the second, static layer is
+   whatever sits behind .cf-galaxy in a given canvas, unchanged
+   here. Absolutely positioned, z-index -2, pointer-events none,
+   so it never intercepts input on the canvas it sits inside.  */
+
+.cf-galaxy {
+  position: absolute;
+  inset: -10%;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--atm-constellation);
+  animation:
+    cf-galaxy-drift var(--anim-galaxy) linear infinite,
+    cf-galaxy-twinkle var(--anim-twinkle) ease-in-out infinite alternate;
+}
+@keyframes cf-galaxy-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-4%, -3%, 0); }
+}
+@keyframes cf-galaxy-twinkle {
+  from { opacity: 0.45; }
+  to { opacity: 0.95; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-galaxy { animation: none; }
+}
+
+/* --- GLOW -------------------------------------------------
+   Source: proof.css G7 rule (lines 273-286): every pressable
+   surface answers hover with --glow-hover, timed with
+   --dur-hover and --ease-hover. .cf-glow-hover is the reusable
+   hook; .btn/.btn--ghost in the draft declare their own
+   transition beside their own rules for cascade reasons that do
+   not apply here, so this file carries the one shared version.
+   Under reduced motion the glow still appears on hover; only
+   the transition into it is dropped, matching the draft.     */
+
+.cf-glow-hover {
+  transition: box-shadow var(--dur-hover) var(--ease-hover);
+}
+.cf-glow-hover:hover {
+  box-shadow: var(--glow-hover);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-glow-hover { transition: none; }
+}
+
+/* --- MODAL TREATMENT ----------------------------------------
+   Source: docs/RESTYLE-RULES.md, Modal chrome + Ruling 1 (the
+   unified frame), itself traced to modal.css .cmodal, picker.css
+   .picker, and shell.css .sheet. One frame, three floating-chrome
+   contents. Docks to the bottom edge on phone, centers at
+   700px and above. This is the reusable definition; adopting it
+   inside any specific modal/picker/sheet component is Phase 3.
+
+   .cf-modal-veil is the scrim every floating surface shares.
+   .cf-modal-frame is the frame itself, content goes inside
+   unchanged. .cf-modal-close is the shared circular close
+   control shape.                                              */
+
+.cf-modal-veil {
+  background: var(--scrim-strong);
+  backdrop-filter: blur(var(--blur-panel));
+}
+
+.cf-modal-frame {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface-4);
+  box-shadow: var(--shadow-modal);
+}
+@media (min-width: 700px) {
+  .cf-modal-frame {
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+.cf-modal-close {
+  width: var(--control-md);
+  height: var(--control-md);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--line-whisper);
+  margin-left: auto;
+}
+
+/* --- DROPDOWN TREATMENT ---------------------------------------
+   Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
+   to library.css lines 300-336. The reusable menu box and row
+   recipe; wiring it into any specific dropdown trigger is Phase
+   3. Menu rows go inside .cf-dropdown unchanged (button markup,
+   idle/hover/selected states are a control concern, not a shell
+   concern, and stay with the control that adopts this frame). */
+
+.cf-dropdown {
+  background: var(--surface-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-popover);
+  padding: var(--space-2);
+  min-width: 13rem;
+  max-height: 19rem;
+  overflow-y: auto;
+}
