@@ -47,7 +47,7 @@ export default function MediaLightboxView({
   if (!activeMedia) return null;
 
   return (
-    <div className="fixed inset-0 z-[90] flex bg-black/95 backdrop-blur-md">
+    <div className="fixed inset-0 z-[90] flex bg-black/70 backdrop-blur-[var(--blur-panel)]">
       <aside className="hidden w-20 shrink-0 overflow-y-auto border-r border-white/10 bg-black/80 p-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:block">
         <button
           type="button"
@@ -158,7 +158,7 @@ export default function MediaLightboxView({
           </div>
 
           <aside className="border-t border-white/10 bg-black/75 p-4 lg:border-l lg:border-t-0">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
                 Actions
               </p>
@@ -203,7 +203,7 @@ export default function MediaLightboxView({
                   <button
                     type="button"
                     onClick={onDelete}
-                    className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:border-red-400/45 hover:bg-red-500/15 hover:text-red-100"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:bg-white/5"
                   >
                     <Trash2 size={14} />
                     Delete Image
@@ -338,8 +338,8 @@ function DetailsDialog({
   onClose,
 }) {
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-zinc-950 p-5 shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[var(--blur-panel)]">
+      <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-white/10 bg-zinc-950 p-5 shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -361,14 +361,14 @@ function DetailsDialog({
         </div>
 
         {status === "loading" ? (
-          <div className="mt-5 rounded-2xl border border-white/10 bg-black/35 p-5 text-sm text-[var(--muted)]">
+          <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 text-sm text-[var(--muted)]">
             <Loader2 className="mr-2 inline animate-spin" size={16} />
             Loading image details...
           </div>
         ) : null}
 
         {status === "error" ? (
-          <p className="mt-5 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          <p className="mt-5 rounded-[var(--radius-md)] border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
             {message || "Image details could not be loaded."}
           </p>
         ) : null}
@@ -385,13 +385,13 @@ function DetailsDialog({
                 {privateRows.length ? (
                   <DetailRows rows={privateRows} />
                 ) : (
-                  <p className="rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+                  <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
                     No prompt/settings metadata was found for this image.
                   </p>
                 )}
               </div>
             ) : (
-              <p className="rounded-2xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+              <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
                 Prompt and generation settings are visible only to the image
                 creator or the owner of the linked creation.
               </p>
@@ -409,7 +409,7 @@ function DetailRows({ rows = [] }) {
       {rows.map((row) => (
         <div
           key={`${row.label}:${row.value}`}
-          className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-white/[0.04] px-4 py-3"
         >
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted)]">
             {row.label}
@@ -438,8 +438,8 @@ function ReportDialog({
   const isSubmitting = status === "loading";
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section className="w-full max-w-xl rounded-2xl border border-white/10 bg-zinc-950 p-5 shadow-2xl">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[var(--blur-panel)]">
+      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-white/10 bg-zinc-950 p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-red-200">
