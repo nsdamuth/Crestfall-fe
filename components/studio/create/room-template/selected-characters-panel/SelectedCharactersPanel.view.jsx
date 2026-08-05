@@ -14,10 +14,10 @@ export default function SelectedCharactersPanelView({
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Characters
           </p>
-          <p className="mt-1 text-sm text-[var(--muted)]">
+          <p className="mt-1 text-sm text-[var(--ink-dim)]">
             Select one or more characters for this Story.
           </p>
         </div>
@@ -25,7 +25,7 @@ export default function SelectedCharactersPanelView({
         <button
           type="button"
           onClick={() => onOpenCharacterPicker?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Character
@@ -39,15 +39,15 @@ export default function SelectedCharactersPanelView({
               key={character.id}
               className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 font-display text-xl text-[var(--muted-gold)]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
                 {character.initial || "?"}
               </div>
 
               <div>
-                <p className="text-sm text-[var(--foreground)]">
+                <p className="text-sm text-[var(--ink)]">
                   {character.title || "Untitled Character"}
                 </p>
-                <p className="text-xs text-[var(--muted)]">
+                <p className="text-xs text-[var(--ink-dim)]">
                   {character.subtitle || ""}
                 </p>
               </div>
@@ -64,7 +64,7 @@ export default function SelectedCharactersPanelView({
             </div>
           ))
         ) : (
-          <p className="text-sm text-[var(--muted)]">No characters selected.</p>
+          <p className="text-sm text-[var(--ink-dim)]">No characters selected.</p>
         )}
       </div>
     </div>
