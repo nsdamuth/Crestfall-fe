@@ -125,13 +125,14 @@ function ActorMechanicsProfileAttachmentCard({
           type="button"
           onClick={() => onRemove?.()}
           disabled={disabled}
-          className="rounded-[var(--radius-md)] border border-[var(--line)] p-2 text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line)] px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={
             attachment.removeAriaLabel ||
             "Remove attached Actor Mechanics Profile"
           }
         >
           <X size={14} />
+          Remove
         </button>
       </div>
 
