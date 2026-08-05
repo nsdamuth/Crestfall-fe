@@ -215,7 +215,7 @@ function CharacterTemplateSummary({
       <button
         type="button"
         onClick={() => onReset?.()}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-100"
+        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
       >
         <RotateCcw size={14} />
         Clear Template Draft
