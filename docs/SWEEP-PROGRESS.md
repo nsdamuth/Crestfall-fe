@@ -38,9 +38,35 @@ introduced anywhere in this phase (pre-existing em dashes in unrelated
 UI copy/comments in a few touched files were left alone, per "no
 adjacent tidying"). Worktrees pruned.
 
-Next: Phase B, verification convergence pass, different agents than the
-ones that edited, re-checking every converted package (batch one
-included) against its assigned rule families.
+## Phase B status
+
+Loop 1 complete: 179 packages verified (workflow `wf_708b04c1-0f9`), 165
+PASS, 14 FLAG. Of the 14: 13 were real mechanical misses (missed finding
+instance, wrong/untokenized geometry, missing icon+word label, wrong
+scrim token) and fixed with one `fix:` commit each. 1
+(`components/studio/story-rooms`) was a verifier misattribution: it
+found issues in `story-room-chat-shell/StoryRoomChatShell.view.jsx`, a
+file that belongs to the separately held-out `story-room-chat-shell`
+package (one of the original 14 flagged, not touched this run), not to
+the `components/studio/story-rooms` package actually being checked.
+The real finding for `components/studio/story-rooms`
+(`StoryRoomMobileToolbar.jsx:9`) was already correctly converted.
+`story-room-chat-shell` itself remains untouched, as it should be.
+
+`components/studio/community/creator-card` was the one genuine structural
+fix: the original conversion only did Corners/Wash and skipped the
+Creator card ruling and Banner taxonomy findings (moving actions below
+the artwork, single non-wrapping avatar/handle/stats line, isolating the
+artwork into a proper top-banner strip). Rewritten to match; production
+build verified after.
+
+Production build verified exit 0 after all 13 fix commits. Re-verify
+loop 2 running now (`wf_5d04d781-9ab`) over the 13 fixed packages, read
+only, different agents again. If anything still fails there, loop 3 is
+the max before that package is frozen and flagged instead of retried
+further, per the parallelism law.
+
+Next after Phase B closes: Phase C, judged render pass of the whole app.
 
 ## Completed
 
