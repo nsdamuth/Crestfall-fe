@@ -22,7 +22,7 @@ export default function OpeningMessageCardView({
           type="button"
           onClick={() => onRemoveMessage?.()}
           disabled={!canRemove}
-          className="rounded-[var(--radius-md)] border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-35"
+          className="rounded-[var(--radius-md)] border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-35"
         >
           Remove
         </button>
