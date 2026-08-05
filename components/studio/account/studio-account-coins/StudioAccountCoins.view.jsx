@@ -10,7 +10,7 @@ export default function StudioAccountCoinsView({
 }) {
   return (
     <>
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -59,8 +59,8 @@ export default function StudioAccountCoinsView({
       </div>
 
       {purchaseInfoOpen ? (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <section className="w-full max-w-sm rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[2px]">
+          <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -72,7 +72,7 @@ export default function StudioAccountCoinsView({
               <button
                 type="button"
                 onClick={() => onClosePurchaseInfo?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
                 aria-label="Close"
               >
                 <X size={16} />
