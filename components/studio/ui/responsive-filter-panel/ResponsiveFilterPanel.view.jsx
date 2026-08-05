@@ -12,16 +12,16 @@ export default function ResponsiveFilterPanelView({
   onToggleDesktopFilters = null,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
 
           {body ? (
             <p
-              className={`mt-2 max-w-3xl leading-7 text-[var(--muted)] ${
+              className={`mt-2 max-w-3xl leading-7 text-[var(--ink-dim)] ${
                 showMobileBody ? "block" : "hidden md:block"
               }`}
             >
@@ -36,7 +36,7 @@ export default function ResponsiveFilterPanelView({
           <button
             type="button"
             onClick={() => onToggleMobileFilters?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:hidden"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:hidden"
           >
             <SlidersHorizontal size={14} />
             {mobileOpen ? "Hide Filters" : "Show Filters"}
@@ -45,7 +45,7 @@ export default function ResponsiveFilterPanelView({
           <button
             type="button"
             onClick={() => onToggleDesktopFilters?.()}
-            className="hidden items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:inline-flex"
+            className="hidden items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:inline-flex"
           >
             <SlidersHorizontal size={14} />
             {desktopOpen ? "Hide Filters" : "Show Filters"}
