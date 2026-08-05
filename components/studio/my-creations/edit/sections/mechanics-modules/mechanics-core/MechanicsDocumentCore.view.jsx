@@ -2,7 +2,7 @@
 
 function JsonPanel({ label, value }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
         {label}
       </p>
@@ -25,7 +25,7 @@ export default function MechanicsDocumentCoreView({
 }) {
   return (
     <section className="grid gap-6">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-6">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Mechanics {phase}
         </p>
@@ -59,7 +59,7 @@ export default function MechanicsDocumentCoreView({
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.3fr_0.7fr]">
-        <aside className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
             M0 compatibility fixtures
           </p>
@@ -87,7 +87,7 @@ export default function MechanicsDocumentCoreView({
         </aside>
 
         <div className="grid gap-5">
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
