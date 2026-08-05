@@ -3,10 +3,10 @@ import { Bell, Coins, ShoppingBag, X } from "lucide-react";
 function UtilityModal({ title = "", body = "", onClose = null }) {
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
-      <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+      <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Crestfall
             </p>
             <h2 className="mt-2 font-display text-3xl">{title}</h2>
@@ -15,19 +15,19 @@ function UtilityModal({ title = "", body = "", onClose = null }) {
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close"
           >
             <X size={16} />
           </button>
         </div>
 
-        <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{body}</p>
+        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
 
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="mt-5 w-full rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="mt-5 w-full rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           Got it
         </button>
@@ -72,7 +72,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-2.5 py-2 text-[10px] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-2.5 py-2 text-[10px] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           aria-label={`Coins: ${balanceLabel}`}
         >
           <Coins size={15} />
@@ -82,7 +82,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenNotificationsInfo?.()}
-          className="rounded-lg p-2 text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+          className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           aria-label="Notifications"
         >
           <Bell size={18} />
@@ -101,7 +101,7 @@ export default function StudioEconomyWidgetView({
             type="button"
             onClick={() => onOpenBuyInfo?.()}
             title={`Coins: ${balanceLabel}`}
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           >
             <Coins size={16} />
           </button>
@@ -110,7 +110,7 @@ export default function StudioEconomyWidgetView({
             type="button"
             onClick={() => onOpenNotificationsInfo?.()}
             title="Notifications"
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           >
             <Bell size={16} />
           </button>
@@ -123,24 +123,24 @@ export default function StudioEconomyWidgetView({
 
   return (
     <>
-      <section className="rounded-xl border border-[var(--muted-gold)]/15 bg-black/40 p-3">
+      <section className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Coins
             </p>
-            <p className="mt-1 text-sm text-[var(--foreground)]">
+            <p className="mt-1 text-sm text-[var(--ink)]">
               {balanceLabel}
             </p>
           </div>
 
-          <Coins className="text-[var(--muted-gold)]" size={18} />
+          <Coins className="text-[var(--gold-ornament)]" size={18} />
         </div>
 
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <ShoppingBag size={14} />
           Buy Coins
@@ -149,7 +149,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenNotificationsInfo?.()}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           <Bell size={14} />
           Notifications
