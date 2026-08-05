@@ -14,7 +14,7 @@ export default function OpeningMessageCardView({
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {messageLabel}
         </p>
 
