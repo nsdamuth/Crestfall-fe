@@ -3,7 +3,7 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 function TextAreaField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -11,7 +11,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -20,10 +20,10 @@ function TextAreaField({ label, value, onChange, placeholder }) {
 function SummaryItem({ label, value }) {
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
@@ -44,11 +44,11 @@ export default function CharacterReviewStepView({
   return (
     <div>
       <div>
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Character Builder
         </p>
         <h2 className="mt-2 font-display text-4xl">Review</h2>
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           Finalize publishing settings and optionally add advanced creator
           guidance for deeper AI control.
         </p>
@@ -66,7 +66,7 @@ export default function CharacterReviewStepView({
         ))}
 
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Age
           </span>
 
@@ -78,10 +78,10 @@ export default function CharacterReviewStepView({
             onChange={(event) => onAgeChange?.(event.target.value)}
             onBlur={() => onNormalizeAge?.()}
             placeholder="18+"
-            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
 
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Adult characters only. Used for narration and lore context, not
             visual aging.
           </p>
@@ -95,14 +95,14 @@ export default function CharacterReviewStepView({
           className="flex w-full items-center justify-between px-5 py-4 text-left"
         >
           <div>
-            <p className="text-sm font-medium text-[var(--foreground)]">
+            <p className="text-sm font-medium text-[var(--ink)]">
               Advanced Creator Guidance
             </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
               Optional advanced fields for creators who want deeper AI control.
             </p>
           </div>
-          <span className="text-[var(--muted-gold)]">
+          <span className="text-[var(--gold-ornament)]">
             {advancedOpen ? "−" : "+"}
           </span>
         </button>
@@ -127,8 +127,8 @@ export default function CharacterReviewStepView({
         ) : null}
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Draft Summary
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
