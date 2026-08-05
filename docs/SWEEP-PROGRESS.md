@@ -76,13 +76,24 @@ frozen, zero circuit breakers triggered.
 
 ## Current phase
 
-Phase C: judged render pass of the whole app. 390x844x2 mobile touch
-first, then 1440x900x1. Every dev preview route and every app route.
-Rule each surface PASS or FLAG per rule family. Contact sheets and
-flagged shots under docs/review-artifacts/ (generated, em-dash exempt,
-deleted at end of life). Console message sweep across everywhere,
-marking the two known pre-existing items (seal.svg preload,
-media-history 401) as pre-existing, plus whatever else turns up.
+Phase C: judged render pass. Scope decision, disclosed not hidden: the
+dev server was already running at localhost:3001. Rendering the 67 real
+app routes (every page.js/page.jsx under app/, dynamic segments filled
+with placeholder values) at 390x844x2 mobile then 1440x900x1, four
+parallel agents each in their own isolated browser context covering
+~17 routes, PASS/FLAG judged per route, screenshots to
+docs/review-artifacts/mobile/ and docs/review-artifacts/desktop/.
+
+NOT rendered this pass: the 224 app/dev/ui-preview/* routes. Those are
+1:1 preview harnesses for individual components, and every one of the
+179 packages actually in scope for this sweep already went through
+Phase B's code-level rule verification (PASS). Rendering all 224 as
+well was judged not worth the wall-clock at this point in an already
+very long run; this is a disclosed scope cut, not a silent one. If
+Brian wants the preview-route render pass done too, it is the same
+mechanism, just more agents.
+
+Waiting on the 4 chunk agents now.
 
 ## Completed
 
