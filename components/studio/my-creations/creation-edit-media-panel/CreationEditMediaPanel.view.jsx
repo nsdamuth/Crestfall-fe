@@ -17,8 +17,8 @@ export default function CreationEditMediaPanelView({
   const safeFeaturedSlots = Array.isArray(featuredSlots) ? featuredSlots : [];
 
   return (
-    <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-      <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
         {activeMedia?.imageUrl ? (
           <img
             src={activeMedia.imageUrl}
@@ -94,11 +94,11 @@ export default function CreationEditMediaPanelView({
       </p>
 
       {supportsChatMedia ? (
-        <section className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
+        <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
           ...
         </section>
       ) : (
-        <section className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
+        <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
           <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
             {nonChatContextTitle}
           </p>
@@ -126,7 +126,7 @@ function ChatMediaSlot({
       <div className="flex items-center gap-3">
         <div
           className={`flex shrink-0 items-center justify-center overflow-hidden border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] ${
-            compact ? "h-14 w-14 rounded-2xl" : "h-16 w-16 rounded-full"
+            compact ? "h-14 w-14 rounded-[var(--radius-md)]" : "h-16 w-16 rounded-full"
           }`}
         >
           {imageUrl ? (
