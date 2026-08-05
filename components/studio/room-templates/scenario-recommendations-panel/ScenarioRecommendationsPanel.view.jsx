@@ -18,16 +18,16 @@ export default function ScenarioRecommendationsPanelView({
   onSkipRecommendations = null,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 p-5">
+    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Scenario Recommendations
           </p>
           <h3 className="mt-2 font-display text-3xl">
             Apply suggested room ingredients?
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             This scenario includes script-level recommendations. You can apply
             them to this room package, review them one by one, or skip them.
           </p>
@@ -37,7 +37,7 @@ export default function ScenarioRecommendationsPanelView({
           <button
             type="button"
             onClick={() => onApplyAll?.()}
-            className="rounded-xl border border-[var(--muted-gold)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/15 hover:text-[var(--foreground)]"
+            className="rounded-xl border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
           >
             Apply All
           </button>
@@ -45,7 +45,7 @@ export default function ScenarioRecommendationsPanelView({
           <button
             type="button"
             onClick={() => onSkipRecommendations?.()}
-            className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           >
             Skip
           </button>
@@ -100,11 +100,11 @@ function RecommendationGroup({
 }) {
   return (
     <div className="min-w-0 rounded-xl border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {title}
       </p>
 
-      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+      <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
         {itemTitles.length ? itemTitles.join(", ") : "No recommendations."}
       </p>
 
@@ -112,7 +112,7 @@ function RecommendationGroup({
         <button
           type="button"
           onClick={() => onApply?.()}
-          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           Apply
         </button>
@@ -129,11 +129,11 @@ function RecommendationSingle({
 }) {
   return (
     <div className="min-w-0 rounded-xl border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {title}
       </p>
 
-      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+      <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
         {itemTitle || "No recommendation."}
       </p>
 
@@ -141,7 +141,7 @@ function RecommendationSingle({
         <button
           type="button"
           onClick={() => onApply?.()}
-          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           Use
         </button>
