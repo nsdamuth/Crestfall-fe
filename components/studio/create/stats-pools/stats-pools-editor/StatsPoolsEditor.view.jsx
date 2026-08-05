@@ -236,10 +236,11 @@ function DefinitionHeader({
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
+          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
           aria-label="Remove definition"
         >
           <Trash2 size={15} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
     </div>
@@ -419,10 +420,11 @@ function FormulaEditor({
                   type="button"
                   onClick={() => onRemoveOperand?.(kind, definitionId, index)}
                   disabled={disabled || operands.length <= 2}
-                  className="mt-7 self-start rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
+                  className="mt-7 inline-flex items-center gap-1 self-start rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
                   aria-label="Remove formula operand"
                 >
                   <Minus size={15} />
+                  <span className="text-xs">Remove</span>
                 </button>
               </div>
             </div>
