@@ -18,7 +18,7 @@ export default function StorylineFieldsSectionView({
       />
 
       {editorSlot || (
-        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-8 text-center text-sm leading-6 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-8 text-center text-sm leading-6 text-[var(--ink-dim)]">
           Storyline editor content is provided by the application shell.
         </div>
       )}
@@ -29,12 +29,12 @@ export default function StorylineFieldsSectionView({
 function SectionHeader({ eyebrow, title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
       {body ? (
-        <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">
+        <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
