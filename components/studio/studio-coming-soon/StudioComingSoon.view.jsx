@@ -27,7 +27,7 @@ export default function StudioComingSoonView({
           {safeItems.map((item, index) => (
             <div
               key={`${String(item)}-${index}`}
-              className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]"
             >
               {item}
             </div>
