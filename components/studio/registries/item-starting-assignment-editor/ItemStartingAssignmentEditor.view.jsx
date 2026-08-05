@@ -191,7 +191,7 @@ export default function ItemStartingAssignmentEditorView({
                         <button
                           type="button"
                           onClick={() => onDeletePlacementStep?.(step.id)}
-                          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+                          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-[var(--status-danger)]"
                           aria-label="Delete placement level"
                         >
                           <Trash2 size={14} />
