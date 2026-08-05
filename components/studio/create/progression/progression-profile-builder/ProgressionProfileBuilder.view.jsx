@@ -6,7 +6,7 @@ import ProgressionProfileEditorView from "@/components/studio/create/progression
 
 function FieldLabel({ children }) {
   return (
-    <label className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+    <label className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
       {children}
     </label>
   );
@@ -18,7 +18,7 @@ function TextInput({ value, onChange, placeholder }) {
       value={value}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -28,7 +28,7 @@ function SelectInput({ value, options, onChange }) {
     <select
       value={value}
       onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
@@ -57,8 +57,8 @@ export default function ProgressionProfileBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+      <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <Activity size={18} />
           <p className="text-xs uppercase tracking-[0.22em]">
             Progression Profile
@@ -68,7 +68,7 @@ export default function ProgressionProfileBuilderView({
         <h2 className="mt-3 font-display text-4xl">
           {title.trim() || "Untitled Progression Profile"}
         </h2>
-        <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
           Define reusable cumulative-experience thresholds and level tiers.
           Actor experience, current level, and point balances remain isolated to
           actor-owned runtime state.
@@ -86,13 +86,13 @@ export default function ProgressionProfileBuilderView({
 
         <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
           <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
             </p>
             <p className="mt-2 text-lg">{errorCount}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Warnings
             </p>
             <p className="mt-2 text-lg">{warningCount}</p>
@@ -117,7 +117,7 @@ export default function ProgressionProfileBuilderView({
                 onUpdateIdentity?.("description", event.target.value)
               }
               placeholder="Describe where this progression curve is intended to be used."
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </div>
           <div>
@@ -142,7 +142,7 @@ export default function ProgressionProfileBuilderView({
           type="button"
           disabled={saveDisabled}
           onClick={() => onSave?.()}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Save size={15} />
           {saveStatus === "saving" ? "Saving..." : "Save Draft"}
