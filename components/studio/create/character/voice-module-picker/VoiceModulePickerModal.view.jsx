@@ -72,7 +72,7 @@ export default function VoiceModulePickerModalView({
             role="dialog"
             aria-modal="true"
             aria-label={modalAriaLabel}
-            className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl"
+            className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
