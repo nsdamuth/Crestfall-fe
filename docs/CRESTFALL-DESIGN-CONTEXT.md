@@ -9,25 +9,8 @@ Crestfall FE.
 
 ## The product model
 
-Assets are characters, player characters, locations, outfits, scenarios,
-and lore. Everything starts private.
-
-A Story is the named playable bucket that gathers assets into something
-you can play.
-
-An Adventure is the published state of a Story: public, playable,
-remixable. There is no separate Adventure builder.
-
-Visibility is one four-state enum everywhere: Private, Internal, Public,
-Canon.
-
-The words Arc and Codex are retired and never appear in copy.
-
-KNOWN NAMING GAP: this repo's current code does not yet match the ruled
-model. The playable bucket is named Room Template, and Adventure exists
-as a Scenario category value rather than a published state. Renaming
-these is Nick's, not the design side's, and is owed before launch. The
-restyle does not touch it.
+Canonical product truth lives in docs/CRESTFALL-PRODUCT-MODEL.md, ruled
+4 Aug 2026. This document does not restate it.
 
 ## Typography and design language
 
