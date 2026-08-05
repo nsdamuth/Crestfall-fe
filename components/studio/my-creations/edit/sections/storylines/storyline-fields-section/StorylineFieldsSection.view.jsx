@@ -18,7 +18,7 @@ export default function StorylineFieldsSectionView({
       />
 
       {editorSlot || (
-        <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 p-8 text-center text-sm leading-6 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-8 text-center text-sm leading-6 text-[var(--muted)]">
           Storyline editor content is provided by the application shell.
         </div>
       )}
