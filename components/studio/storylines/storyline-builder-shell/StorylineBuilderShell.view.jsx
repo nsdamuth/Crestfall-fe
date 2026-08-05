@@ -34,7 +34,7 @@ export default function StorylineBuilderShellView({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
           {eyebrow}
         </p>
@@ -139,11 +139,11 @@ export default function StorylineBuilderShellView({
       </aside>
 
       <div className="space-y-6">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
           {nodeEditorSlot}
         </div>
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
           {openWorldSettingsSlot}
         </div>
       </div>
