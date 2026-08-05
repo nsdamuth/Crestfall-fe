@@ -42,7 +42,7 @@ export default function ScenarioMiddlewareSectionView({
               type="button"
               aria-pressed={module.isEnabled}
               onClick={() => module.onToggle?.()}
-              className={`rounded-2xl border p-4 text-left transition ${
+              className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                 module.isEnabled
                   ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                   : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
