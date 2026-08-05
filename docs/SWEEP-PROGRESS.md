@@ -61,10 +61,17 @@ artwork into a proper top-banner strip). Rewritten to match; production
 build verified after.
 
 Production build verified exit 0 after all 13 fix commits. Re-verify
-loop 2 running now (`wf_5d04d781-9ab`) over the 13 fixed packages, read
-only, different agents again. If anything still fails there, loop 3 is
-the max before that package is frozen and flagged instead of retried
-further, per the parallelism law.
+loop 2 (`wf_5d04d781-9ab`) came back 12/13 PASS. The one FLAG
+(story-room-npc-participant-manager) was real: the unload button's text
+went to --status-danger but its gold-tinted fill/border were left in
+place, which the Destructive ruling's quiet-ghost geometry does not
+allow. Fixed (loop 2 fix commit), build verified, single-package
+re-verify agent launched to close the loop (this is loop 2 of the
+3-loop cap for this package).
+
+Once that comes back PASS, Phase B is fully closed: 179/179 packages
+verified PASS (165 clean on loop 1, 13 fixed and passed on loop 2, 1
+fixed twice and pending its loop-2 re-check).
 
 Next after Phase B closes: Phase C, judged render pass of the whole app.
 
