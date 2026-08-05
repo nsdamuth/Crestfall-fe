@@ -90,7 +90,7 @@ export default function ItemRegistryBuilderView({
             {openDraftHref ? (
               <a
                 href={openDraftHref}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
               >
                 <CheckCircle2 size={14} />
                 Open Draft
@@ -115,7 +115,7 @@ export default function ItemRegistryBuilderView({
 
         {saveMessage ? (
           <p
-            className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
+            className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
               saveStatus === "error"
                 ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]"
                 : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
@@ -239,7 +239,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -248,7 +248,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -322,7 +322,7 @@ function EntriesTab({
         <button
           type="button"
           onClick={() => onAddEntry?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Entry
@@ -335,7 +335,7 @@ function EntriesTab({
                 key={entry.id}
                 type="button"
                 onClick={() => onSelectEntry?.(entry.id)}
-                className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   activeEntryId === entry.id
                     ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
                     : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
@@ -350,7 +350,7 @@ function EntriesTab({
               </button>
             ))
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet. Add an object to begin.
             </p>
           )}
@@ -642,7 +642,7 @@ function TrackingTab({
                 </Field>
               </div>
 
-              <label className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+              <label className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3">
                 <input
                   type="checkbox"
                   checked={entry.doNotHallucinateAvailability !== false}
@@ -800,7 +800,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
 
 function EmptyEntriesMessage({ text }) {
   return (
-    <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+    <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
       {text}
     </p>
   );
