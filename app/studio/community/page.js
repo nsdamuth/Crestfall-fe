@@ -16,7 +16,7 @@ export default async function CommunityPage() {
       </StudioPageHeader>
 
       {loadError ? (
-        <div className="mt-8 rounded-2xl border border-red-400/25 bg-red-400/10 p-5 text-sm leading-6 text-red-100">
+        <div className="mt-8 rounded-[var(--radius-md)] border border-red-400/25 bg-red-400/10 p-5 text-sm leading-6 text-red-100">
           Community creations could not be loaded: {loadError}
         </div>
       ) : null}
