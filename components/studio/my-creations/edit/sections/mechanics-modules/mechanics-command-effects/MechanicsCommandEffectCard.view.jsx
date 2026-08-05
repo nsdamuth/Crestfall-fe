@@ -329,7 +329,7 @@ export default function MechanicsCommandEffectCardView({
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
           {eyebrow} {effectIndex + 1}
         </p>
-        <button type="button" onClick={removeEffect} className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20" title="Remove effect">
+        <button type="button" onClick={removeEffect} className="rounded-xl border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5" title="Remove effect">
           <Trash2 size={13} />
         </button>
       </div>
