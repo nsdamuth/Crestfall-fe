@@ -49,7 +49,7 @@ export default function CreationOverviewSectionView({
           type="button"
           disabled={previewDisabled}
           onClick={() => onPreview?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
         >
           <Eye size={14} />
           {previewButtonLabel}
