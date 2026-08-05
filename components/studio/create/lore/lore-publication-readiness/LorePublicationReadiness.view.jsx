@@ -120,7 +120,7 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
 
   return (
     <div
-      className={`rounded-2xl border p-5 ${
+      className={`rounded-[var(--radius-md)] border p-5 ${
         isError
           ? "border-red-300/20 bg-red-300/5"
           : "border-amber-300/20 bg-amber-300/5"
@@ -234,7 +234,7 @@ function SecurityValidationPanel({
     : [];
 
   return (
-    <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/25 bg-black/25 p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -280,7 +280,7 @@ function SecurityValidationPanel({
       ) : null}
 
       {latestValidation ? (
-        <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
@@ -420,7 +420,7 @@ function PublicReleasePanel({
   const revisionNumber = Number(activePublication?.revisionNumber || 0);
 
   return (
-    <div className="mt-6 rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.04] p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-emerald-300/20 bg-emerald-300/[0.04] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-emerald-200">
@@ -571,7 +571,7 @@ export default function LorePublicationReadinessView({
         body="Review the saved Lore draft, submit it to the security-validation queue, and publish only an immutable revision that has passed validation."
       />
 
-      <div className="mt-7 rounded-2xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5 p-5">
+      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5 p-5">
         <div className="flex items-start gap-3">
           <LockKeyhole size={22} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
           <div>
@@ -628,7 +628,7 @@ export default function LorePublicationReadinessView({
       {engineUsePanel}
 
       <div className="mt-8 grid gap-5 xl:grid-cols-[1fr_0.42fr]">
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -663,7 +663,7 @@ export default function LorePublicationReadinessView({
           </div>
         </div>
 
-        <aside className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <Info size={20} className="text-[var(--muted-gold)]" />
           <h3 className="mt-3 font-display text-3xl">Owner verification</h3>
           <p className="mt-3 leading-7 text-[var(--muted)]">
