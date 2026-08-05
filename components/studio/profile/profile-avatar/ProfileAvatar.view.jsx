@@ -14,7 +14,7 @@ export default function ProfileAvatarView({
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-[var(--muted-gold)] ${sizeClass}`}
+      className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-[var(--gold-ornament)] ${sizeClass}`}
     >
       {avatarUrl ? (
         <img
