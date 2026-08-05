@@ -88,7 +88,7 @@ export default function CharacterReviewStepView({
         </label>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-white/10 bg-black/25">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-white/10 bg-black/25">
         <button
           type="button"
           onClick={() => onToggleAdvanced?.()}
@@ -127,7 +127,7 @@ export default function CharacterReviewStepView({
         ) : null}
       </div>
 
-      <div className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Draft Summary
         </p>
