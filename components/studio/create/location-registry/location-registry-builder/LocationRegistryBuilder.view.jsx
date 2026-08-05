@@ -1670,10 +1670,11 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
+      className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
       aria-label="Delete"
     >
       <Trash2 size={14} />
+      <span className="text-xs">Delete</span>
     </button>
   );
 }
