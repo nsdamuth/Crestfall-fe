@@ -154,3 +154,22 @@
   border: 1px solid var(--line-whisper);
   margin-left: auto;
 }
+
+/* --- DROPDOWN TREATMENT ---------------------------------------
+   Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
+   to library.css lines 300-336. The reusable menu box and row
+   recipe; wiring it into any specific dropdown trigger is Phase
+   3. Menu rows go inside .cf-dropdown unchanged (button markup,
+   idle/hover/selected states are a control concern, not a shell
+   concern, and stay with the control that adopts this frame). */
+
+.cf-dropdown {
+  background: var(--surface-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-popover);
+  padding: var(--space-2);
+  min-width: 13rem;
+  max-height: 19rem;
+  overflow-y: auto;
+}
