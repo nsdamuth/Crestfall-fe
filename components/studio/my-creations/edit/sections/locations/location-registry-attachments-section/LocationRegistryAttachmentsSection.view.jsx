@@ -102,10 +102,11 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
           aria-label="Remove attached registry"
         >
           <X size={14} />
+          Remove
         </button>
       </div>
 
