@@ -26,7 +26,7 @@ function normalizeNumber(value, fallback = 0) {
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
@@ -34,7 +34,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -46,7 +46,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
 
   return (
     <>
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
+      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
         <span>Apply Mechanics State To</span>
         <select
           value={binding.mode}
@@ -63,7 +63,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
               }),
             });
           }}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
         >
           <option value="FIXED">Command / Module Scope</option>
           <option value="ARGUMENT" disabled={!safeOptions.length}>
@@ -74,7 +74,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
 
       {binding.mode === "ARGUMENT" ? (
         safeOptions.length ? (
-          <label className="grid gap-2 text-sm text-[var(--muted)]">
+          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
             <span>Resolved Argument</span>
             <select
               value={binding.argumentName}
@@ -87,7 +87,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
                   }),
                 })
               }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
             >
               <option value="">Select an argument</option>
               {safeOptions.map((argument) => (
@@ -103,7 +103,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
           </p>
         )
       ) : (
-        <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
           Uses the command’s normal Mechanics scope. Choose a resolved argument to keep separate state for the targeted Character, Item, or Location.
         </p>
       )}
@@ -133,7 +133,7 @@ function EffectValueFields({
 
   if (effect.type === "FLAG_CLEAR") {
     return (
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         FLAG_CLEAR does not need a value. It clears the target flag.
       </div>
     );
@@ -141,12 +141,12 @@ function EffectValueFields({
 
   if (effect.type === "FLAG_SET") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
+      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
         <span>Value</span>
         <select
           value={effect.value === false ? "false" : "true"}
           onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
         >
           <option value="true">true</option>
           <option value="false">false</option>
@@ -225,7 +225,7 @@ function EffectValueFields({
   return (
     <div className="grid gap-4 rounded-xl border border-white/10 bg-black/20 p-4 md:col-span-2">
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Numeric Value Source</span>
           <select
             value={valueBinding.mode}
@@ -239,7 +239,7 @@ function EffectValueFields({
                     : "",
               });
             }}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {MECHANICS_EFFECT_VALUE_BINDING_MODES.map((mode) => (
               <option
@@ -256,14 +256,14 @@ function EffectValueFields({
         {valueBinding.mode === "FIXED" ? (
           fixedValueField()
         ) : (
-          <label className="grid gap-2 text-sm text-[var(--muted)]">
+          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
             <span>NUMBER Argument</span>
             <select
               value={valueBinding.argumentName}
               onChange={(event) =>
                 patchValueBinding({ argumentName: event.target.value })
               }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
             >
               <option value="">Select a NUMBER argument</option>
               {options.map((argument) => (
@@ -287,20 +287,20 @@ function EffectValueFields({
             <TextField label="Multiplier" type="number" value={String(valueBinding.multiplier)} onChange={(value) => patchValueBinding({ multiplier: normalizeNumber(value, 1) })} placeholder="1" />
             <TextField label="Divisor" type="number" value={String(valueBinding.divisor)} onChange={(value) => patchValueBinding({ divisor: normalizeNumber(value, 1) || 1 })} placeholder="1" />
             <TextField label="Offset" type="number" value={String(valueBinding.offset)} onChange={(value) => patchValueBinding({ offset: normalizeNumber(value, 0) })} placeholder="0" />
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Rounding</span>
-              <select value={valueBinding.rounding} onChange={(event) => patchValueBinding({ rounding: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]">
+              <select value={valueBinding.rounding} onChange={(event) => patchValueBinding({ rounding: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
                 {MECHANICS_EFFECT_VALUE_BINDING_ROUNDING.map((rounding) => <option key={rounding} value={rounding}>{rounding}</option>)}
               </select>
             </label>
             <TextField label="Minimum Bound Value" type="number" value={valueBinding.minValue ?? ""} onChange={(value) => patchValueBinding({ minValue: value === "" ? null : normalizeNumber(value, 0) })} placeholder="Optional" />
             <TextField label="Maximum Bound Value" type="number" value={valueBinding.maxValue ?? ""} onChange={(value) => patchValueBinding({ maxValue: value === "" ? null : normalizeNumber(value, 0) })} placeholder="Optional" />
-            <label className="grid gap-2 text-sm text-[var(--muted)] md:col-span-3">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-3">
               <span>Missing Argument Policy</span>
-              <select value={valueBinding.missingPolicy} onChange={(event) => patchValueBinding({ missingPolicy: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]">
+              <select value={valueBinding.missingPolicy} onChange={(event) => patchValueBinding({ missingPolicy: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
                 {MECHANICS_EFFECT_VALUE_BINDING_MISSING_POLICIES.map((policy) => <option key={policy} value={policy}>{policy}</option>)}
               </select>
-              <span className="text-[11px] leading-5 text-[var(--muted)]">
+              <span className="text-[11px] leading-5 text-[var(--ink-dim)]">
                 REJECT blocks the command before rolling. IGNORE keeps the authored fixed value as a fallback.
               </span>
             </label>
@@ -326,7 +326,7 @@ export default function MechanicsCommandEffectCardView({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {eyebrow} {effectIndex + 1}
         </p>
         <button type="button" onClick={removeEffect} className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5" title="Remove effect">
@@ -337,9 +337,9 @@ export default function MechanicsCommandEffectCardView({
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <TextField label="Effect ID" value={safeEffect.id} onChange={(value) => patchEffect({ id: normalizeMechanicsEffectIdentifier(value, `effect_${effectIndex + 1}`) })} placeholder="set_player_settled" />
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Effect Type</span>
-          <select value={safeEffect.type} onChange={(event) => patchEffect(normalizeMechanicsCommandEffect({ ...safeEffect, type: event.target.value }, event.target.value))} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]">
+          <select value={safeEffect.type} onChange={(event) => patchEffect(normalizeMechanicsCommandEffect({ ...safeEffect, type: event.target.value }, event.target.value))} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
             {MECHANICS_COMMAND_EFFECT_TYPES.map((effectType) => <option key={effectType} value={effectType}>{effectType}</option>)}
           </select>
         </label>
@@ -347,8 +347,8 @@ export default function MechanicsCommandEffectCardView({
         <EffectTargetBindingFields effect={safeEffect} argumentOptions={argumentOptions} onPatch={patchEffect} />
         <EffectValueFields effect={safeEffect} numericArgumentOptions={numericArgumentOptions} onPatch={patchEffect} ProgressionProfileFieldsComponent={ProgressionProfileFieldsComponent} />
         <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Effect Reason</span>
-          <textarea value={safeEffect.reason} onChange={(event) => patchEffect({ reason: event.target.value })} rows={2} placeholder="Describe why this Mechanics effect occurs." className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50" />
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Effect Reason</span>
+          <textarea value={safeEffect.reason} onChange={(event) => patchEffect({ reason: event.target.value })} rows={2} placeholder="Describe why this Mechanics effect occurs." className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50" />
         </label>
       </div>
     </div>
