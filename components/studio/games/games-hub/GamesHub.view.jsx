@@ -28,7 +28,7 @@ function PreviewViewModeToggle({ value = "grid", onChange, label = "View" }) {
           key={mode}
           type="button"
           onClick={() => onChange?.(mode)}
-          className={`rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.14em] ${
+          className={`rounded-[var(--radius-md)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] ${
             value === mode
               ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
               : "text-[var(--ink-dim)]"
@@ -82,7 +82,7 @@ export default function GamesHubView({
 
       <div className="hidden md:block">
         <div className="grid gap-5 xl:grid-cols-[1fr_0.7fr]">
-          <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Start Playing
             </p>
@@ -128,7 +128,7 @@ export default function GamesHubView({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Continue
             </p>
@@ -176,19 +176,19 @@ export default function GamesHubView({
       </div>
 
       {loadError ? (
-        <div className="mt-4 rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-5 text-sm leading-6 text-[var(--status-danger)] md:mt-6">
+        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-5 text-sm leading-6 text-[var(--status-danger)] md:mt-6">
           {loadError}
         </div>
       ) : null}
 
       {playError ? (
-        <div className="mt-4 rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-5 text-sm leading-6 text-[var(--status-danger)] md:mt-6">
+        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-5 text-sm leading-6 text-[var(--status-danger)] md:mt-6">
           {playError}
         </div>
       ) : null}
 
       {loading ? (
-        <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-8 text-center md:mt-6">
+        <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-8 text-center md:mt-6">
           <Sparkles className="mx-auto text-[var(--gold-ornament)]" size={28} />
           <p className="mt-4 font-display text-3xl">Loading Games</p>
           <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
@@ -248,7 +248,7 @@ function MobileGamesDrawer({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-3 rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/45 px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 px-4 py-3 text-left"
       >
         <span className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
@@ -273,7 +273,7 @@ function MobileGamesDrawer({
       </button>
 
       {open ? (
-        <div className="mt-3 space-y-4 rounded-2xl border border-white/10 bg-black/45 p-4">
+        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-black/45 p-4">
           <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
@@ -358,7 +358,7 @@ function MobileGamesDrawer({
 
 function GameList({ games, onPlay, startingGameId }) {
   return (
-    <div className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-black/30 md:mt-6">
+    <div className="mt-3 overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/30 md:mt-6">
       {games.map((game, index) => (
         <GameListRow
           key={game.id}
@@ -423,7 +423,7 @@ function GameListRow({ game, isLast, onPlay, starting }) {
           type="button"
           onClick={() => onPlay?.(game)}
           disabled={starting}
-          className="inline-flex h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] rounded-full border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+          className="inline-flex h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
         >
           <Play size={14} />
           <span className="hidden text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] sm:inline">
@@ -531,7 +531,7 @@ function FeaturedRail({ games, onPlay, startingGameId }) {
   if (!games.length) return null;
 
   return (
-    <section className="mt-6 rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -663,7 +663,7 @@ function PillButton({ active, onClick, children }) {
 
 function EmptyGamesState() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center xl:col-span-2">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center xl:col-span-2">
       <Gamepad2 className="mx-auto text-[var(--gold-ornament)]" size={32} />
 
       <p className="mt-4 font-display text-3xl">No games found</p>
