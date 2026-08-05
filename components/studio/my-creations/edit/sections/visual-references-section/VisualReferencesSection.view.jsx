@@ -5,11 +5,11 @@ function ReferenceCard({ card = {} }) {
     <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {card.eyebrow}
           </p>
           <h4 className="mt-2 font-display text-2xl">{card.label}</h4>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             {card.description}
           </p>
         </div>
@@ -39,9 +39,9 @@ function ReferenceCard({ card = {} }) {
             <div>
               <ImageIcon
                 size={30}
-                className="mx-auto text-[var(--muted-gold)]"
+                className="mx-auto text-[var(--gold-ornament)]"
               />
-              <p className="mt-3 text-sm text-[var(--muted)]">
+              <p className="mt-3 text-sm text-[var(--ink-dim)]">
                 {card.emptyMessage}
               </p>
             </div>
@@ -50,9 +50,9 @@ function ReferenceCard({ card = {} }) {
       </div>
 
       {card.imageOutputId ? (
-        <p className="mt-3 break-all text-xs text-[var(--muted)]">
+        <p className="mt-3 break-all text-xs text-[var(--ink-dim)]">
           Image output ID:{" "}
-          <span className="text-[var(--foreground)]">
+          <span className="text-[var(--ink)]">
             {card.imageOutputId}
           </span>
         </p>
@@ -61,7 +61,7 @@ function ReferenceCard({ card = {} }) {
       <button
         type="button"
         onClick={() => card.onChoose?.()}
-        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
       >
         <ImageIcon size={14} />
         {card.chooseLabel}
@@ -85,11 +85,11 @@ export default function VisualReferencesSectionView({
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {sectionEyebrow}
           </p>
           <h3 className="mt-2 font-display text-3xl">{sectionTitle}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             {sectionDescription}
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function VisualReferencesSectionView({
         <button
           type="button"
           onClick={() => onRefresh?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           <RefreshCw size={14} />
           {refreshLabel}
