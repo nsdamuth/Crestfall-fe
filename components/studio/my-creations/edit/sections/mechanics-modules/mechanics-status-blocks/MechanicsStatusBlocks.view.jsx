@@ -11,14 +11,14 @@ import {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -30,7 +30,7 @@ function SmallActionButton({ children, onClick, disabled = false }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -70,21 +70,21 @@ function StatusBlockCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Status Block
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">
+              <h4 className="truncate text-xl text-[var(--ink)]">
                 {block.label || block.id || `Status Block ${blockIndex + 1}`}
               </h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {block.summary}
               </p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -128,14 +128,14 @@ function StatusBlockCard({
               placeholder="main_footer"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Placement</span>
               <select
                 value={block.placement}
                 onChange={(event) =>
                   patchBlock(blockIndex, { placement: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_STATUS_BLOCK_PLACEMENTS.map((placement) => (
                   <option key={placement} value={placement}>
@@ -145,14 +145,14 @@ function StatusBlockCard({
               </select>
             </label>
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Visibility</span>
               <select
                 value={block.visibility}
                 onChange={(event) =>
                   patchBlock(blockIndex, { visibility: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_STATUS_BLOCK_VISIBILITIES.map((visibility) => (
                   <option key={visibility} value={visibility}>
@@ -162,14 +162,14 @@ function StatusBlockCard({
               </select>
             </label>
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
               <input
                 type="checkbox"
                 checked={block.required}
                 onChange={(event) =>
                   patchBlock(blockIndex, { required: event.target.checked })
                 }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Required
             </label>
@@ -177,7 +177,7 @@ function StatusBlockCard({
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 Rendered Lines
               </p>
               <SmallActionButton onClick={submitLine} disabled={!lineDraft.trim()}>
@@ -196,7 +196,7 @@ function StatusBlockCard({
                 }
               }}
               placeholder="[❤️ Affection: {{trackers.affection.value}}/100]"
-              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
 
             {block.lines.length ? (
@@ -212,7 +212,7 @@ function StatusBlockCard({
                         patchLine(blockIndex, lineIndex, event.target.value)
                       }
                       rows={2}
-                      className="min-w-0 flex-1 resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-xs leading-6 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                      className="min-w-0 flex-1 resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                     />
                     <button
                       type="button"
@@ -227,7 +227,7 @@ function StatusBlockCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
                 No rendered lines yet. Add at least one line for this status block.
               </p>
             )}
@@ -249,14 +249,14 @@ export default function MechanicsStatusBlocksView({
   removeLine,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">Status Blocks</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic footer/status lines. These save into
             instanceData.statusBlocks and are appended by services-api, not the
             LLM.
@@ -285,7 +285,7 @@ export default function MechanicsStatusBlocksView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
           No status blocks defined yet. Add a footer such as relationship_footer.
         </div>
       )}
