@@ -38,7 +38,7 @@ export default function StorylineNodeListEditorView({
 } = {}) {
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/25 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
             {headerEyebrow}
@@ -68,7 +68,7 @@ export default function StorylineNodeListEditorView({
       ) : null}
 
       {!nodes.length ? (
-        <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm leading-6 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm leading-6 text-[var(--muted)]">
           {emptyStateMessage}
         </div>
       ) : null}
@@ -76,7 +76,7 @@ export default function StorylineNodeListEditorView({
       {nodes.map((node) => (
         <article
           key={node.id}
-          className="rounded-2xl border border-white/10 bg-black/30 p-5"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5"
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-4">
@@ -118,7 +118,7 @@ export default function StorylineNodeListEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveNode?.(node.index)}
-                  className="rounded-lg border border-red-400/20 p-2 text-red-200"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                   aria-label="Remove node"
                 >
                   <Trash2 size={16} />
@@ -176,7 +176,7 @@ export default function StorylineNodeListEditorView({
               </div>
 
               {node.needsTriggers ? (
-                <div className="mt-5 rounded-2xl border border-[var(--muted-gold)]/15 bg-black/25 p-4">
+                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/25 p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
                       <GitBranch
@@ -274,7 +274,7 @@ export default function StorylineNodeListEditorView({
                           onClick={() =>
                             onRemoveTrigger?.(node.index, trigger.index)
                           }
-                          className="rounded-lg border border-red-400/20 p-2 text-red-200"
+                          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                           aria-label="Remove trigger"
                         >
                           <Trash2 size={15} />
