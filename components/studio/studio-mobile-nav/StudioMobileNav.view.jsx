@@ -71,7 +71,7 @@ export default function StudioMobileNavView({
 }) {
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-[var(--muted-gold)]/15 bg-black/90 px-4 backdrop-blur-md lg:hidden">
+      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-[var(--muted-gold)]/15 bg-black/90 px-4 lg:hidden">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -108,7 +108,7 @@ export default function StudioMobileNavView({
             type="button"
             aria-label={closeOverlayAriaLabel}
             onClick={onCloseMenu}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
           />
 
           <aside className="relative z-[61] flex h-full w-72 flex-col border-r border-[var(--muted-gold)]/20 bg-black px-5 py-6 shadow-2xl">
@@ -204,7 +204,7 @@ export default function StudioMobileNavView({
         </div>
       ) : null}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 border-t border-[var(--muted-gold)]/15 bg-black/90 px-2 py-2 backdrop-blur-md lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 border-t border-[var(--muted-gold)]/15 bg-black/90 px-2 py-2 lg:hidden">
         {bottomLinks.map((link) => {
           const Icon = resolveIcon(link.iconKey);
 
