@@ -163,7 +163,7 @@ function DesktopComposer({
   return (
     <div className="hidden border-t border-white/10 bg-black/35 p-4 xl:block">
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <p className="mr-1 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="mr-1 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Next Speaker
         </p>
 
@@ -178,7 +178,7 @@ function DesktopComposer({
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_190px]">
         <div>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Message
             </span>
 
@@ -195,7 +195,7 @@ function DesktopComposer({
               disabled={textareaDisabled}
               placeholder={placeholder}
               rows={2}
-              className="mt-2 max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+              className="mt-2 max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
               onChangeDraft={onChangeDraft}
               onUpdateSuggestionQueries={onUpdateSuggestionQueries}
               onMoveMentionHighlight={onMoveMentionHighlight}
@@ -218,7 +218,7 @@ function DesktopComposer({
             <button
               type="button"
               disabled
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
               title="Later this will generate an image of the current scene."
             >
               <ImageIcon size={14} />
@@ -228,7 +228,7 @@ function DesktopComposer({
             <button
               type="button"
               disabled
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
               title="Later this can use the last active speaker, room state, and visible scene context."
             >
               <Wand2 size={14} />
@@ -250,7 +250,7 @@ function DesktopComposer({
             type="button"
             onClick={() => onSend?.()}
             disabled={sendDisabled}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-5 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-5 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitIsContinuation ? <Sparkles size={15} /> : <Send size={15} />}
             {isSending ? submitPendingLabel : submitLabel}
@@ -322,7 +322,7 @@ function MobileComposer({
         />
       ) : null}
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
         <div className="mb-2 flex gap-2 overflow-x-auto pb-1">
           <SpeakerButtons
             options={nextSpeakerOptions}
@@ -344,7 +344,7 @@ function MobileComposer({
           disabled={textareaDisabled}
           placeholder={placeholder}
           rows={1}
-          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           onChangeDraft={onChangeDraft}
           onUpdateSuggestionQueries={onUpdateSuggestionQueries}
           onMoveMentionHighlight={onMoveMentionHighlight}
@@ -379,8 +379,8 @@ function MobileComposer({
               onClick={() => setToolsOpen((current) => !current)}
               className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
                 toolsOpen
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/35 text-[var(--muted)]"
+                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
               }`}
               title="Open tools"
               aria-label="Open tools"
@@ -393,7 +393,7 @@ function MobileComposer({
             type="button"
             onClick={() => onSend?.()}
             disabled={sendDisabled}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/20 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/30 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/20 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/30 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
             title={isSending ? submitPendingLabel : submitLabel}
             aria-label={isSending ? submitPendingLabel : submitLabel}
           >
@@ -582,8 +582,8 @@ function ParticipantMentionTextarea({
       />
 
       {commandSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--muted-gold)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
+          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Composer commands
           </p>
 
@@ -595,21 +595,21 @@ function ParticipantMentionTextarea({
               onClick={() => restoreCursor(onSelectCommand?.(command.name))}
               className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedCommandIndex
-                  ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "text-[var(--muted)] hover:bg-white/5 hover:text-[var(--foreground)]"
+                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
               }`}
             >
               <span className="min-w-0">
-                <span className="block font-mono text-sm text-[var(--muted-gold)]">
+                <span className="block font-mono text-sm text-[var(--gold-ornament)]">
                   {command.usage}
                 </span>
-                <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+                <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
                   {command.description}
                 </span>
               </span>
 
               {command.aliases?.length ? (
-                <span className="shrink-0 pt-0.5 font-mono text-[10px] text-[var(--muted)]">
+                <span className="shrink-0 pt-0.5 font-mono text-[10px] text-[var(--ink-dim)]">
                   {command.aliases.map((alias) => `/${alias}`).join(", ")}
                 </span>
               ) : null}
@@ -619,8 +619,8 @@ function ParticipantMentionTextarea({
       ) : null}
 
       {locationSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-72 overflow-y-auto rounded-xl border border-[var(--muted-gold)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-72 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
+          <p className="flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             <MapPin size={12} />
             Registered locations
           </p>
@@ -635,15 +635,15 @@ function ParticipantMentionTextarea({
               }
               className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedLocationIndex
-                  ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "text-[var(--muted)] hover:bg-white/5 hover:text-[var(--foreground)]"
+                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
               }`}
             >
               <span className="min-w-0">
-                <span className="block truncate text-sm text-[var(--foreground)]">
+                <span className="block truncate text-sm text-[var(--ink)]">
                   #{option.label}
                 </span>
-                <span className="mt-1 block truncate text-[10px] uppercase tracking-[0.13em] text-[var(--muted)]">
+                <span className="mt-1 block truncate text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
                   {[
                     option.isCurrent ? "Current" : null,
                     option.locationScale || null,
@@ -655,7 +655,7 @@ function ParticipantMentionTextarea({
               </span>
 
               {option.aliases?.length ? (
-                <span className="max-w-[40%] shrink-0 truncate pt-0.5 text-[10px] text-[var(--muted)]">
+                <span className="max-w-[40%] shrink-0 truncate pt-0.5 text-[10px] text-[var(--ink-dim)]">
                   {option.aliases.join(", ")}
                 </span>
               ) : null}
@@ -665,8 +665,8 @@ function ParticipantMentionTextarea({
       ) : null}
 
       {mentionSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--muted-gold)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
+          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Target active character
           </p>
 
@@ -678,8 +678,8 @@ function ParticipantMentionTextarea({
               onClick={() => restoreCursor(onSelectMention?.(option.id))}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedMentionIndex
-                  ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "text-[var(--muted)] hover:bg-white/5 hover:text-[var(--foreground)]"
+                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
               }`}
             >
               {option.avatarUrl ? (
@@ -689,16 +689,16 @@ function ParticipantMentionTextarea({
                   className="h-8 w-8 rounded-full border border-white/10 object-cover"
                 />
               ) : (
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/40 text-xs text-[var(--muted-gold)]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/40 text-xs text-[var(--gold-ornament)]">
                   {String(option.label || "?").charAt(0).toUpperCase()}
                 </span>
               )}
 
               <span className="min-w-0">
-                <span className="block truncate text-sm text-[var(--foreground)]">
+                <span className="block truncate text-sm text-[var(--ink)]">
                   {option.label}
                 </span>
-                <span className="block text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                <span className="block text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                   {option.mentionAlias}
                 </span>
               </span>
@@ -735,10 +735,10 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
           desktop && !isParticipant ? "tracking-[0.14em]" : "tracking-[0.12em]"
         } ${
           active
-            ? "border-[var(--muted-gold)]/70 bg-[var(--muted-gold)]/20 text-[var(--foreground)] ring-2 ring-[var(--muted-gold)]/20"
+            ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
             : desktop
-              ? "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/45 hover:text-[var(--foreground)]"
-              : "border-white/10 bg-black/35 text-[var(--muted)]"
+              ? "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/45 hover:text-[var(--ink)]"
+              : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
         }`}
       >
         {isParticipant ? (
@@ -749,7 +749,7 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
               className="h-full w-full object-cover"
             />
           ) : (
-            <span className="flex h-full w-full items-center justify-center bg-black/40 text-sm font-semibold text-[var(--muted-gold)]">
+            <span className="flex h-full w-full items-center justify-center bg-black/40 text-sm font-semibold text-[var(--gold-ornament)]">
               {String(option.label || "?").charAt(0).toUpperCase()}
             </span>
           )
@@ -776,16 +776,16 @@ function MobileToolsDrawer({
   onClose,
 }) {
   return (
-    <div className="mb-3 overflow-visible rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706]/95 p-4 shadow-2xl backdrop-blur-[var(--blur-panel)]">
+    <div className="mb-3 overflow-visible rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706]/95 p-4 shadow-2xl backdrop-blur-[var(--blur-panel)]">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Room Tools
         </p>
 
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)]"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)]"
           aria-label="Close tools"
         >
           <X size={15} />
@@ -802,7 +802,7 @@ function MobileToolsDrawer({
         />
 
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Next Speaker
           </p>
 
@@ -819,7 +819,7 @@ function MobileToolsDrawer({
           <button
             type="button"
             onClick={() => onOpenCast?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
           >
             <Users size={14} />
             Cast / Room
@@ -828,7 +828,7 @@ function MobileToolsDrawer({
           <button
             type="button"
             onClick={() => onOpenState?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
           >
             <Eye size={14} />
             State
@@ -849,7 +849,7 @@ function DisabledToolButton({ icon: Icon, label }) {
     <button
       type="button"
       disabled
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] opacity-60"
     >
       <Icon size={14} />
       {label}
