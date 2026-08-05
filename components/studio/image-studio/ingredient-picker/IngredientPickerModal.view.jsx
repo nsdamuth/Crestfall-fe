@@ -42,7 +42,7 @@ export default function IngredientPickerModalView({
   return (
     <ModalShell
       onClose={onClose}
-      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
+      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
     >
       <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
         <div>
