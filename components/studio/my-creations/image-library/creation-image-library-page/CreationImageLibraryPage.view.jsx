@@ -188,7 +188,7 @@ export default function CreationImageLibraryPageView({
         {!isLoading && !hasImages ? <EmptyLibraryState /> : null}
 
         {!isLoading && noMatchingImages ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No matching images</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
@@ -521,7 +521,7 @@ function StatusPill({ label, muted = false }) {
 
 function EmptyLibraryState() {
   return (
-    <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
       <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
       <p className="mt-4 font-display text-3xl">No images yet</p>
       <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
