@@ -8,7 +8,7 @@ function PolicySelect({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <select
@@ -36,7 +36,7 @@ function GuidanceField({
 }) {
   return (
     <label className={`block ${className}`.trim()}>
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -124,14 +124,14 @@ export default function StoryNarrativeRuntimeSectionView({
             <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     {phase.phaseEyebrow}
                   </p>
                   <h3 className="mt-1 font-display text-3xl">
                     {phase.phaseTitle}
                   </h3>
                 </div>
-                <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                <span className="text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                   <span className="group-open:hidden">{openLabel}</span>
                   <span className="hidden group-open:inline">{closeLabel}</span>
                 </span>
