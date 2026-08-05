@@ -95,7 +95,7 @@ export default function CharacterIdentitySectionView({
         />
 
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {ageLabel}
           </span>
 
@@ -107,11 +107,11 @@ export default function CharacterIdentitySectionView({
             onChange={(event) => onChangeAge?.(event.target.value)}
             onBlur={(event) => onCommitAge?.(event.target.value)}
             placeholder={agePlaceholder}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
 
           {ageHelpText ? (
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               {ageHelpText}
             </p>
           ) : null}
