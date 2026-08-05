@@ -71,7 +71,7 @@ function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title={`Remove ${bucket.singularLabel.toLowerCase()}`}
         >
           <Trash2 size={13} />
@@ -154,7 +154,7 @@ export default function MechanicsDefaultsView({
   removeEntry,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
