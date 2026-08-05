@@ -498,7 +498,7 @@ function DeleteButton({ image, onDeleteImage }) {
       type="button"
       onClick={() => onDeleteImage?.(image.id)}
       disabled={!image.id || image.deleting}
-      className="mt-2 inline-flex h-[var(--control-sm)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--status-danger)] transition hover:border-[var(--status-danger)] hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="mt-2 inline-flex h-[var(--control-sm)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--status-danger)] transition hover:border-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-45"
     >
       <Trash2 size={13} />
       {image.deleting ? "Deleting..." : "Delete Image"}
