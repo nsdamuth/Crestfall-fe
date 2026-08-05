@@ -218,7 +218,7 @@ export default function LoreDocumentRendererView({
       {showContents ? (
         <nav
           id={CONTENTS_ANCHOR_ID}
-          className="mx-auto max-w-5xl scroll-mt-24 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5"
+          className="mx-auto max-w-5xl scroll-mt-24 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5"
         >
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
             <BookOpenText size={17} />
@@ -347,7 +347,7 @@ export default function LoreDocumentRendererView({
       ))}
 
       {!chapters.length ? (
-        <div className="mx-auto max-w-5xl rounded-2xl border border-dashed border-[var(--muted-gold)]/30 bg-black/30 p-10 text-center text-sm text-[var(--muted)]">
+        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--muted-gold)]/30 bg-black/30 p-10 text-center text-sm text-[var(--muted)]">
           Add a chapter to begin the Lore publication.
         </div>
       ) : null}
