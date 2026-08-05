@@ -90,3 +90,29 @@ introduced by it, and not touched:
 
 None of these three are anything this sweep was asked to fix, and none
 of them were caused by it. Flagging them here so they don't get lost.
+
+## Update, overnight closing pass, 4-5 Aug 2026
+
+Bug 1 above, the two empty-page routes, is still broken. Confirmed
+zero-byte, not touched.
+
+Absorption gap check, read-only: the presentation shells for the Story
+transcript work are already ahead of schedule. `StoryRoomStatePanel`,
+`StoryRoomMessage`, `StoryRoomTranscript` and their ViewModels,
+including `useStoryRoomChat`, already exist in this repo (that hook is
+one directory level different from the path in your absorption doc:
+it's under `components/studio/story-rooms/hooks/`, not a top-level
+`hooks/` folder). What's still entirely missing is every summary,
+export, and share API proxy route, and the public share page at
+`app/share/chat/[token]/route.js`. That's the real remaining scope for
+the absorption sprint.
+
+Postgraphile check, read-only: the container is up on port 5678 and
+`services-api` is already calling it for several domains (community,
+creations, profile, engagement, games, chat, image-generation, media),
+not mocks. This front end already has `CRESTFALL_API_INTERNAL_URL`
+pointed at services-api and at least one route
+(`/api/community/creations`) confirmed live end to end this session.
+If the plan is "read live data instead of fixtures," the fast first
+step is a grep for which FE API routes still return local mocks,
+since several already don't.
