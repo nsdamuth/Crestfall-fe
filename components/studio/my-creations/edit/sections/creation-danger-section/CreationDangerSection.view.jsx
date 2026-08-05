@@ -39,7 +39,7 @@ export default function CreationDangerSectionView({
       />
 
       {showCanonNotice ? (
-        <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             {canonNoticeEyebrow}
           </p>
@@ -50,7 +50,7 @@ export default function CreationDangerSectionView({
       ) : null}
 
       <div className="mt-6 grid gap-4 xl:grid-cols-2">
-        <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-5">
+        <div className="rounded-[var(--radius-md)] border border-red-500/25 bg-red-500/10 p-5">
           <div className="flex items-start gap-4">
             <Archive className="mt-1 text-red-200" size={22} />
 
@@ -67,7 +67,7 @@ export default function CreationDangerSectionView({
                 type="button"
                 disabled={archiveDisabled}
                 onClick={() => onArchive?.()}
-                className="mt-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-red-200 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--status-danger)] transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {archiveButtonLabel}
               </button>
@@ -85,7 +85,7 @@ export default function CreationDangerSectionView({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-red-500/35 bg-red-950/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-red-500/35 bg-red-950/25 p-5">
           <div className="flex items-start gap-4">
             <Trash2 className="mt-1 text-red-200" size={22} />
 
@@ -108,7 +108,7 @@ export default function CreationDangerSectionView({
                 type="button"
                 disabled={deleteDisabled}
                 onClick={() => onDelete?.()}
-                className="mt-5 rounded-xl border border-red-400/40 bg-red-500/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-red-100 transition hover:bg-red-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--status-danger)] transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {deleteButtonLabel}
               </button>
