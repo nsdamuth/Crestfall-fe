@@ -42,7 +42,7 @@ export default function IngredientPickerModalView({
   return (
     <ModalShell
       onClose={onClose}
-      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
+      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
     >
       <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
         <div>
@@ -65,7 +65,7 @@ export default function IngredientPickerModalView({
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+          className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
           aria-label="Close picker"
         >
           <X size={18} />
@@ -99,7 +99,7 @@ export default function IngredientPickerModalView({
                   <button
                     type="button"
                     onClick={() => onUseCustom?.()}
-                    className="rounded-2xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 p-4 text-left transition hover:border-[var(--muted-gold)]/60 hover:bg-[var(--muted-gold)]/15"
+                    className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 p-4 text-left transition hover:border-[var(--muted-gold)]/60 hover:bg-[var(--muted-gold)]/15"
                   >
                     <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
                       <BookOpen size={14} />
@@ -119,7 +119,7 @@ export default function IngredientPickerModalView({
                   <button
                     type="button"
                     onClick={() => onCreatePreset?.()}
-                    className="rounded-2xl border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--muted-gold)]/35 hover:bg-[var(--muted-gold)]/10"
+                    className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--muted-gold)]/35 hover:bg-[var(--muted-gold)]/10"
                   >
                     <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
                       <Plus size={14} />
