@@ -190,7 +190,7 @@ export default function StudioAccountProfileView({
                   <button
                     type="button"
                     onClick={onClearDefaultPlayerCharacter}
-                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+                    className="rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
                   >
                     Clear
                   </button>
