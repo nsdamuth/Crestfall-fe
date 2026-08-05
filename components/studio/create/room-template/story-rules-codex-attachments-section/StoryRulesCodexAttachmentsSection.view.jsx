@@ -108,12 +108,13 @@ function RulesCodexAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-full border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--status-danger)]"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached Rules Codex"
           }
         >
           <X size={14} />
+          Remove
         </button>
       </div>
 
