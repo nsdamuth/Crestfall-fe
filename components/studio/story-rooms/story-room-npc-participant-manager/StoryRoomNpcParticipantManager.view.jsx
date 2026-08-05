@@ -78,6 +78,7 @@ export default function StoryRoomNpcParticipantManagerView({
 function NpcSection({ section, onActivateNpc }) {
   const entries = Array.isArray(section?.entries) ? section.entries : [];
   const ActionIcon = ACTION_ICONS[section?.actionIconKey] || UserPlus;
+  const isUnloadAction = section?.actionIconKey === "unload";
 
   return (
     <section>
@@ -127,7 +128,11 @@ function NpcSection({ section, onActivateNpc }) {
                 type="button"
                 onClick={() => onActivateNpc?.(entry.actionId)}
                 disabled={entry.disabled}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-45"
+                className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-45 ${
+                  isUnloadAction
+                    ? "text-[var(--status-danger)]"
+                    : "text-[var(--muted-gold)]"
+                }`}
                 title={entry.actionTitle || entry.actionLabel}
               >
                 <ActionIcon size={13} />
