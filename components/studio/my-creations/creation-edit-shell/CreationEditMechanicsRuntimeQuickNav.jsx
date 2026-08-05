@@ -146,7 +146,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
   return (
     <nav
       aria-label="Runtime Fields quick links"
-      className="relative z-20 rounded-2xl border border-[var(--muted-gold)]/20 bg-black p-4 xl:sticky xl:top-6"
+      className="relative z-20 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black p-4 xl:sticky xl:top-6"
     >
       <div className="flex items-center gap-3">
         <List
