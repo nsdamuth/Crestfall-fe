@@ -322,7 +322,7 @@ function MobileComposer({
         />
       ) : null}
 
-      <div className="rounded-2xl border border-[var(--muted-gold)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
         <div className="mb-2 flex gap-2 overflow-x-auto pb-1">
           <SpeakerButtons
             options={nextSpeakerOptions}
@@ -730,7 +730,7 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
         className={`${
           isParticipant
             ? "relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full"
-            : "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5"
+            : "inline-flex shrink-0 items-center gap-1.5 rounded-[var(--radius-md)] px-3 py-1.5"
         } border text-[10px] uppercase transition ${
           desktop && !isParticipant ? "tracking-[0.14em]" : "tracking-[0.12em]"
         } ${
@@ -776,7 +776,7 @@ function MobileToolsDrawer({
   onClose,
 }) {
   return (
-    <div className="mb-3 overflow-visible rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706]/95 p-4 shadow-2xl backdrop-blur">
+    <div className="mb-3 overflow-visible rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706]/95 p-4 shadow-2xl backdrop-blur-[var(--blur-panel)]">
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Room Tools
