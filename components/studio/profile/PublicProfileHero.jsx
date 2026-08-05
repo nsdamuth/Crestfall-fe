@@ -25,23 +25,23 @@ export default function PublicProfileHero(props) {
       followersLinkSlot={
         <Link
           href={viewProps.followersHref}
-          className="text-left transition hover:text-[var(--foreground)]"
+          className="text-left transition hover:text-[var(--ink)]"
         >
-          <span className="font-display text-xl text-[var(--foreground)]">
+          <span className="font-display text-xl text-[var(--ink)]">
             {viewProps.followersCount}
           </span>{" "}
-          <span className="text-[var(--muted)]">Followers</span>
+          <span className="text-[var(--ink-dim)]">Followers</span>
         </Link>
       }
       followingLinkSlot={
         <Link
           href={viewProps.followingHref}
-          className="text-left transition hover:text-[var(--foreground)]"
+          className="text-left transition hover:text-[var(--ink)]"
         >
-          <span className="font-display text-xl text-[var(--foreground)]">
+          <span className="font-display text-xl text-[var(--ink)]">
             {viewProps.followingCount}
           </span>{" "}
-          <span className="text-[var(--muted)]">Following</span>
+          <span className="text-[var(--ink-dim)]">Following</span>
         </Link>
       }
       engagementActionsSlot={
