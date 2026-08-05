@@ -4,7 +4,7 @@ import { Plus, Trash2 } from "lucide-react";
 
 function FieldLabel({ children }) {
   return (
-    <span className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+    <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
       {children}
     </span>
   );
@@ -12,14 +12,14 @@ function FieldLabel({ children }) {
 
 function TextField({ label, value, onChange, type = "text", placeholder = "" }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <FieldLabel>{label}</FieldLabel>
       <input
         type={type}
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -27,12 +27,12 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
 
 function SelectField({ label, value, options = [], onChange }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <FieldLabel>{label}</FieldLabel>
       <select
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
       >
         {options.map((option) => {
           const item = typeof option === "string"
@@ -71,7 +71,7 @@ function SmallButton({ children, onClick, danger = false, title = "" }) {
       className={
         danger
           ? "inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
-          : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20"
+          : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
       }
     >
       {children}
@@ -90,7 +90,7 @@ function DerivedValueCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           Derived Value {index + 1}
         </p>
         <SmallButton danger onClick={onRemove} title="Remove derived value">
@@ -251,16 +251,16 @@ export default function MechanicsProgressionProfileFieldsView({
   removeDerivedValue = () => {},
 }) {
   return (
-    <div className="grid gap-5 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/5 p-5 md:col-span-2 xl:col-span-3">
+    <div className="grid gap-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-5 md:col-span-2 xl:col-span-3">
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           Optimized Progression Profile
         </p>
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Reconcile a source counter into a rank and optional derived counters
           without authoring one composition step per rank.
         </p>
-        <p className="mt-2 text-xs text-[var(--foreground)]">{summary.label}</p>
+        <p className="mt-2 text-xs text-[var(--ink)]">{summary.label}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -318,12 +318,12 @@ export default function MechanicsProgressionProfileFieldsView({
         />
       </div>
 
-      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--muted)]">
+      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--ink-dim)]">
         <input
           type="checkbox"
           checked={profile.allowRankDecrease === true}
           onChange={(event) => patchProfile({ allowRankDecrease: event.target.checked })}
-          className="h-4 w-4 accent-[var(--muted-gold)]"
+          className="h-4 w-4 accent-[var(--gold-ornament)]"
         />
         Allow reconciliation to reduce an existing rank
       </label>
@@ -393,7 +393,7 @@ export default function MechanicsProgressionProfileFieldsView({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <FieldLabel>Rank Overrides</FieldLabel>
-              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 Override a generated per-rank cost or cumulative threshold for selected ranks.
               </p>
             </div>
@@ -413,7 +413,7 @@ export default function MechanicsProgressionProfileFieldsView({
               />
             ))}
             {!profile.overrides.length ? (
-              <p className="text-xs text-[var(--muted)]">No rank overrides.</p>
+              <p className="text-xs text-[var(--ink-dim)]">No rank overrides.</p>
             ) : null}
           </div>
         </div>
@@ -423,7 +423,7 @@ export default function MechanicsProgressionProfileFieldsView({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <FieldLabel>Derived Counters</FieldLabel>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Recalculate proficiency, talent points, health, or other counters from the resulting rank.
             </p>
           </div>
@@ -445,7 +445,7 @@ export default function MechanicsProgressionProfileFieldsView({
             />
           ))}
           {!profile.derivedValues.length ? (
-            <p className="text-xs text-[var(--muted)]">No derived counters configured.</p>
+            <p className="text-xs text-[var(--ink-dim)]">No derived counters configured.</p>
           ) : null}
         </div>
       </div>
@@ -453,13 +453,13 @@ export default function MechanicsProgressionProfileFieldsView({
       <div className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
         <div className="border-b border-white/10 px-4 py-3">
           <FieldLabel>Generated Threshold Preview</FieldLabel>
-          <p className="mt-2 text-xs text-[var(--muted)]">
+          <p className="mt-2 text-xs text-[var(--ink-dim)]">
             {summary.transitionCount} transitions · maximum threshold {Math.round(summary.maximumThreshold).toLocaleString("en-US")}
           </p>
         </div>
         <div className="max-h-72 overflow-auto">
           <table className="w-full min-w-[34rem] text-left text-xs">
-            <thead className="sticky top-0 bg-[#0b0a09] text-[var(--muted-gold)]">
+            <thead className="sticky top-0 bg-[#0b0a09] text-[var(--gold-ornament)]">
               <tr>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Rank</th>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Cost to Reach</th>
@@ -473,8 +473,8 @@ export default function MechanicsProgressionProfileFieldsView({
             </thead>
             <tbody>
               {previewRows.map((row) => (
-                <tr key={row.rank} className="border-t border-white/5 text-[var(--muted)]">
-                  <td className="px-4 py-3 text-[var(--foreground)]">{row.rank}</td>
+                <tr key={row.rank} className="border-t border-white/5 text-[var(--ink-dim)]">
+                  <td className="px-4 py-3 text-[var(--ink)]">{row.rank}</td>
                   <td className="px-4 py-3">{Math.round(row.requirement).toLocaleString("en-US")}</td>
                   <td className="px-4 py-3">{Math.round(row.totalRequirement).toLocaleString("en-US")}</td>
                   {row.derivedValues.map((derivedValue) => (
