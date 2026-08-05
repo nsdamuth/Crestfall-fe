@@ -93,7 +93,53 @@ very long run; this is a disclosed scope cut, not a silent one. If
 Brian wants the preview-route render pass done too, it is the same
 mechanism, just more agents.
 
-Waiting on the 4 chunk agents now.
+Phase C is DONE. 67/67 app routes rendered at 390x844x2 mobile then
+1440x900x1 desktop, contact sheets in docs/review-artifacts/mobile/ and
+docs/review-artifacts/desktop/ (134 PNGs). A chunking transcription
+error left 4 routes uncovered by the 4 parallel agents (/studio, /lore,
+/locations/example-slug, /stories/example-slug); rendered those directly
+afterward, not silently dropped.
+
+The 4 concurrent chunk agents shared one chrome-devtools MCP browser
+instance with a single global "selected page" pointer, causing real
+cross-talk: each agent had to repeatedly re-select its own tab and
+retry captures. One contaminated read slipped through anyway:
+chunk 1 reported /chronicle/example-slug as a clean redirect to the
+chronicle list; a direct, uncontaminated re-check (this session, main
+loop) shows that route actually hard-crashes ("The default export is
+not a React Component in /chronicle/[...slug]/page"). Corrected below.
+This is a caution for any future run reusing this pattern: concurrent
+agents on one shared browser session need per-result spot verification,
+not blind trust.
+
+RESTYLE-RULE VERDICT: zero regressions from this sweep. Every route
+checked clean against Corners, Shape law, Destructive, and Blur: no
+off-scale rounded-2xl, no filled red destructive buttons, no misapplied
+backdrop-blur, at either width, anywhere in the 67 routes.
+
+Three real bugs surfaced, all pre-existing, none caused by the sweep,
+none touched (out of scope, for Nick):
+
+1. `app/chronicle/[...slug]/page.js` and `app/stories/[...slug]/page.js`
+   are both literally 0-byte files (confirmed via `wc -c`, both dated
+   2 Aug, before this sweep started). Any URL under /chronicle/<slug> or
+   /stories/<slug> hard-crashes with "the default export is not a React
+   Component." A real broken route pattern, not a design regression.
+2. `LoreCard` spreads a `key` prop into JSX (React dev warning, not a
+   runtime error). Seen on /, /characters, /factions/example-slug,
+   /stories. One root cause, one component, cheap fix, not styling.
+3. `/locations`: two of three location cards show broken images
+   (400 Bad Request on the image URL) instead of the cover art. An
+   asset/data issue, not a token or corner regression.
+
+Neither of the two console items the brief called out as known
+pre-existing (seal.svg preload, media-history 401) fired on any of
+these 67 routes; most `/studio/*` routes redirect to the /login auth
+gate before those code paths would run.
+
+Not rendered: the 224 app/dev/ui-preview/* routes (see the scope note
+above -- disclosed cut, not silent, all underlying packages already
+Phase-B verified).
 
 ## Completed
 
