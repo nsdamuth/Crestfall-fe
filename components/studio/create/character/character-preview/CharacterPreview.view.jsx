@@ -7,14 +7,14 @@ export default function CharacterPreviewView({
   clothingStyleLabel = "Clothing style not chosen yet.",
 } = {}) {
   return (
-    <aside className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--muted-gold)]/10">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--gold-ornament)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
-            <p className="font-display text-5xl text-[var(--muted-gold)]">
+            <p className="font-display text-5xl text-[var(--gold-ornament)]">
               {displayInitial}
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
               Preview Pending
             </p>
           </div>
@@ -23,11 +23,11 @@ export default function CharacterPreviewView({
 
       <h2 className="mt-6 font-display text-4xl">{characterName}</h2>
 
-      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {characterSubtitle}
       </p>
 
-      <div className="mt-5 space-y-2 text-sm leading-6 text-[var(--muted)]">
+      <div className="mt-5 space-y-2 text-sm leading-6 text-[var(--ink-dim)]">
         <p>{speciesLabel}</p>
         <p>{genderPresentationLabel}</p>
         <p>{clothingStyleLabel}</p>
