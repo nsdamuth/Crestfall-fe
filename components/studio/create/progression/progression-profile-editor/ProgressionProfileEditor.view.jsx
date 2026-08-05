@@ -486,10 +486,11 @@ export default function ProgressionProfileEditorView({
                     <button
                       type="button"
                       onClick={() => onRemoveOverride?.(index)}
-                      className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
+                      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
                       aria-label={`Remove override ${index + 1}`}
                     >
                       <Trash2 size={15} />
+                      Remove
                     </button>
                   </div>
                   <div className="mt-4 grid gap-4 md:grid-cols-3">
@@ -654,10 +655,11 @@ export default function ProgressionProfileEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveTier?.(index)}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
+                  className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
                   aria-label={`Remove ${tier.title || tier.id}`}
                 >
                   <Trash2 size={15} />
+                  Remove
                 </button>
               </div>
 
