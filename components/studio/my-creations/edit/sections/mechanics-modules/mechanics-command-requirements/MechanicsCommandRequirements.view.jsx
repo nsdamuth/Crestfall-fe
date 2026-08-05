@@ -19,7 +19,7 @@ import {
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
@@ -27,7 +27,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -49,12 +49,12 @@ function RequirementValueField({ requirement, onPatch }) {
 
   if (requirement.type === "PROGRESSION_AT_MAXIMUM_LEVEL") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
+      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
         <span>Expected Maximum-Level State</span>
         <select
           value={requirement.value === false ? "false" : "true"}
           onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
         >
           <option value="true">At maximum level</option>
           <option value="false">Not at maximum level</option>
@@ -65,12 +65,12 @@ function RequirementValueField({ requirement, onPatch }) {
 
   if (requirement.type === "FLAG") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
+      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
         <span>Expected Value</span>
         <select
           value={requirement.value === false ? "false" : "true"}
           onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
         >
           <option value="true">true</option>
           <option value="false">false</option>
@@ -128,7 +128,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Requirement {requirementIndex + 1}
         </p>
         <button
@@ -157,7 +157,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
           placeholder="mana_available"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Requirement Type</span>
           <select
             value={requirement.type}
@@ -185,7 +185,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
                   : undefined,
               });
             }}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {COMMAND_REQUIREMENT_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -217,12 +217,12 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         )}
 
         {targetRequirement || progressionRequirement ? null : (
-          <label className="grid gap-2 text-sm text-[var(--muted)]">
+          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
             <span>Operator</span>
             <select
               value={requirement.operator}
               onChange={(event) => onPatch({ operator: event.target.value })}
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
             >
               {COMMAND_REQUIREMENT_OPERATORS.map((operator) => (
                 <option key={operator} value={operator}>
@@ -237,7 +237,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
 
         {progressionRequirement ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Enforcement Policy</span>
               <select
                 value={requirement.enforcement}
@@ -248,7 +248,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
                     ),
                   })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {COMMAND_PROGRESSION_ENFORCEMENTS.map((enforcement) => (
                   <option key={enforcement} value={enforcement}>
@@ -257,7 +257,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
                 ))}
               </select>
             </label>
-            <p className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs leading-5 text-[var(--muted)] md:col-span-2">
+            <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
               {requirement.enforcement === "HARD_LOCK"
                 ? "HARD_LOCK blocks this recognized command before attempt effects, resolution, outcome effects, and domain actions when the deterministic Progression requirement is not met."
                 : "ADVISORY is the backward-compatible default. The deterministic Progression result is recorded, but command execution continues when the requirement is not met."}
@@ -266,7 +266,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         ) : null}
 
         <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Failure Message
           </span>
           <textarea
@@ -274,7 +274,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
             onChange={(event) => onPatch({ message: event.target.value })}
             rows={2}
             placeholder="Mana must be at least 5."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
         </label>
       </div>
@@ -292,17 +292,17 @@ export default function MechanicsCommandRequirementsView({
     <div className="rounded-xl border border-white/10 bg-black/20 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Requirements
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Ordinary Mechanics requirements must pass before Crestfall rolls or applies effects. Progression requirements may remain ADVISORY or explicitly use HARD_LOCK. Gameplay commands are also blocked while any active Mechanics HARD_LOCK guard is blocked.
           </p>
         </div>
         <button
           type="button"
           onClick={addRequirement}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Requirement
@@ -322,7 +322,7 @@ export default function MechanicsCommandRequirementsView({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
           No explicit requirements. The command may still be blocked by an active HARD_LOCK guard.
         </p>
       )}
