@@ -12,7 +12,7 @@ export default function DefaultClothingSelectorView({
 } = {}) {
   return (
     <div className="md:col-span-2">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Clothing Style
       </p>
 
@@ -29,13 +29,13 @@ export default function DefaultClothingSelectorView({
             />
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {selectedClothing?.typeLabel || "Clothing Source"}
               </p>
               <h4 className="mt-1 font-display text-3xl">
                 {selectedClothing?.title || "Selected Clothing Source"}
               </h4>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {selectedClothing?.description || "No description."}
               </p>
             </div>
@@ -51,7 +51,7 @@ export default function DefaultClothingSelectorView({
             </button>
           </div>
         ) : (
-          <p className="text-sm leading-6 text-[var(--muted)]">
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
             {emptyMessage}
           </p>
         )}
@@ -60,7 +60,7 @@ export default function DefaultClothingSelectorView({
           <button
             type="button"
             onClick={() => onOpenOutfitPicker?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Shirt size={14} />
             {outfitActionLabel}
@@ -69,7 +69,7 @@ export default function DefaultClothingSelectorView({
           <button
             type="button"
             onClick={() => onOpenWardrobePicker?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Shirt size={14} />
             {wardrobeActionLabel}
