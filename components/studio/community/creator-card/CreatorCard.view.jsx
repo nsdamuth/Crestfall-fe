@@ -1,6 +1,14 @@
 "use client";
 
-import { Crown, Heart, Sparkles, User, Users } from "lucide-react";
+import {
+  Crown,
+  Heart,
+  Sparkles,
+  User,
+  UserCheck,
+  UserPlus,
+  Users,
+} from "lucide-react";
 
 import CreatorEngagementActionsView from "@/components/studio/community/creator-engagement-actions/CreatorEngagementActions.view";
 
@@ -27,6 +35,8 @@ export default function CreatorCardView({
   LinkComponent = "a",
 }) {
   const safeStats = Array.isArray(stats) ? stats : [];
+  const followerStat = safeStats.find((stat) => stat?.id === "followers");
+  const mobileEngagementActions = { ...engagementActions, canFollow: false };
 
   return (
     <article className="w-full min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-white/10 transition hover:border-[var(--gold-ornament)]/30">
@@ -48,7 +58,26 @@ export default function CreatorCardView({
             {avatarInitial}
           </div>
 
-          <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
+          <div className="min-w-0 flex-1 sm:hidden">
+            <h2 className="truncate font-display text-2xl leading-none">
+              {creatorName}
+            </h2>
+
+            <div className="mt-1 flex min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
+              <span className="truncate text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                @{creatorHandle}
+              </span>
+
+              {followerStat ? (
+                <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-xs text-[var(--ink-dim)]">
+                  <Users size={12} />
+                  {followerStat.value}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="hidden min-w-0 flex-nowrap items-center gap-2 overflow-hidden sm:flex">
             <span className="truncate text-sm uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               @{creatorHandle}
             </span>
@@ -91,7 +120,7 @@ export default function CreatorCardView({
           ) : null}
         </div>
 
-        <h2 className="mt-3 break-words font-display text-3xl leading-none">
+        <h2 className="mt-3 hidden break-words font-display text-3xl leading-none sm:block">
           {creatorName}
         </h2>
 
@@ -101,14 +130,64 @@ export default function CreatorCardView({
           {description}
         </p>
 
-        <CreatorEngagementActionsView {...engagementActions} />
+        <div className="sm:hidden">
+          <CreatorEngagementActionsView {...mobileEngagementActions} />
 
-        <LinkComponent
-          href={profileHref}
-          className="mt-5 inline-flex w-fit rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
-        >
-          View Profile
-        </LinkComponent>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {engagementActions.canFollow ? (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  engagementActions.onToggleFollow?.();
+                }}
+                title={
+                  engagementActions.followed
+                    ? "Unfollow creator"
+                    : "Follow creator"
+                }
+                aria-label={
+                  engagementActions.followed
+                    ? "Unfollow creator"
+                    : "Follow creator"
+                }
+                className={`inline-flex min-h-[var(--control-md)] items-center justify-center gap-2 rounded-[var(--radius-md)] border px-4 text-xs uppercase tracking-[0.14em] transition ${
+                  engagementActions.followed
+                    ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
+                    : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                }`}
+              >
+                {engagementActions.followed ? (
+                  <UserCheck size={14} />
+                ) : (
+                  <UserPlus size={14} />
+                )}
+                {engagementActions.followed ? "Following" : "Follow"}
+              </button>
+            ) : null}
+
+            <LinkComponent
+              href={profileHref}
+              className={`inline-flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] ${
+                engagementActions.canFollow ? "" : "col-span-2"
+              }`}
+            >
+              View Profile
+            </LinkComponent>
+          </div>
+        </div>
+
+        <div className="hidden sm:block">
+          <CreatorEngagementActionsView {...engagementActions} />
+
+          <LinkComponent
+            href={profileHref}
+            className="mt-5 inline-flex w-fit rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          >
+            View Profile
+          </LinkComponent>
+        </div>
       </div>
     </article>
   );
