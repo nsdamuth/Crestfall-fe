@@ -24,14 +24,14 @@ export default function LocationRegistryAttachmentsSectionView({
         {groups.map((group) => (
           <div
             key={group.id}
-            className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/30 p-5"
+            className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/30 p-5"
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                   {group.label}
                 </p>
-                <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--muted)]">
+                <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
                   {group.body}
                 </p>
               </div>
@@ -39,7 +39,7 @@ export default function LocationRegistryAttachmentsSectionView({
               <button
                 type="button"
                 onClick={() => onOpenPicker?.(group.id)}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
               >
                 <Link2 size={14} />
                 {group.addLabel}
@@ -60,7 +60,7 @@ export default function LocationRegistryAttachmentsSectionView({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
                 {group.emptyLabel}
               </p>
             )}
@@ -85,7 +85,7 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
             }}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Registry
           </div>
         )}
@@ -94,7 +94,7 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
           <p className="truncate font-display text-xl">
             {link.title || "Attached Registry"}
           </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {link.type || "Registry"}
           </p>
         </div>
@@ -112,7 +112,7 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
 
       <div className="p-4">
         {link.description ? (
-          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {link.description}
           </p>
         ) : null}
@@ -122,7 +122,7 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
           value={link.notes || ""}
           onChange={(event) => onNotesChange?.(event.target.value)}
           placeholder="Optional attachment notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </div>
