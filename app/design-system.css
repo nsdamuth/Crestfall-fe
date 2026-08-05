@@ -104,3 +104,53 @@
 @media (prefers-reduced-motion: reduce) {
   .cf-glow-hover { transition: none; }
 }
+
+/* --- MODAL TREATMENT ----------------------------------------
+   Source: docs/RESTYLE-RULES.md, Modal chrome + Ruling 1 (the
+   unified frame), itself traced to modal.css .cmodal, picker.css
+   .picker, and shell.css .sheet. One frame, three floating-chrome
+   contents. Docks to the bottom edge on phone, centers at
+   700px and above. This is the reusable definition; adopting it
+   inside any specific modal/picker/sheet component is Phase 3.
+
+   .cf-modal-veil is the scrim every floating surface shares.
+   .cf-modal-frame is the frame itself, content goes inside
+   unchanged. .cf-modal-close is the shared circular close
+   control shape.                                              */
+
+.cf-modal-veil {
+  background: var(--scrim-strong);
+  backdrop-filter: blur(var(--blur-panel));
+}
+
+.cf-modal-frame {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface-4);
+  box-shadow: var(--shadow-modal);
+}
+@media (min-width: 700px) {
+  .cf-modal-frame {
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+.cf-modal-close {
+  width: var(--control-md);
+  height: var(--control-md);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--line-whisper);
+  margin-left: auto;
+}
