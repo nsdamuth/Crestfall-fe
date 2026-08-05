@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function SiteShell({ eyebrow, title, children }) {
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-20 text-[var(--foreground)] sm:px-10 lg:px-16">
+    <main className="relative min-h-screen overflow-hidden px-[var(--space-6)] py-[var(--space-20)] text-[var(--foreground)] sm:px-[var(--space-10)] lg:px-[var(--space-16)]">
       <div
         className="absolute inset-0 bg-cover bg-top bg-no-repeat opacity-30"
         style={{
