@@ -52,7 +52,7 @@ export default function MediaLightboxView({
         <button
           type="button"
           onClick={onClose}
-          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/60 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/40 hover:text-[var(--foreground)]"
+          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/60 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/40 hover:text-[var(--ink)]"
           aria-label="Close media viewer"
         >
           <X size={18} />
@@ -73,7 +73,7 @@ export default function MediaLightboxView({
       <main className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               {modeLabel}
             </p>
             <h2 className="mt-1 line-clamp-1 font-display text-3xl">
@@ -109,7 +109,7 @@ export default function MediaLightboxView({
               <a
                 href={activeMedia.imageUrl || "#"}
                 download
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/35 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/35 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 title="Download"
               >
                 <Download size={17} />
@@ -119,7 +119,7 @@ export default function MediaLightboxView({
             <button
               type="button"
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/35 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/35 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:hidden"
               aria-label="Close media viewer"
             >
               <X size={18} />
@@ -128,7 +128,7 @@ export default function MediaLightboxView({
         </div>
 
         {shareMessage ? (
-          <p className="border-b border-white/10 bg-[var(--muted-gold)]/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="border-b border-white/10 bg-[var(--gold-ornament)]/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             {shareMessage}
           </p>
         ) : null}
@@ -148,9 +148,9 @@ export default function MediaLightboxView({
               <div className="p-8 text-center">
                 <ImageIcon
                   size={48}
-                  className="mx-auto text-[var(--muted-gold)]"
+                  className="mx-auto text-[var(--gold-ornament)]"
                 />
-                <p className="mt-4 text-sm text-[var(--muted)]">
+                <p className="mt-4 text-sm text-[var(--ink-dim)]">
                   No preview available.
                 </p>
               </div>
@@ -159,7 +159,7 @@ export default function MediaLightboxView({
 
           <aside className="border-t border-white/10 bg-black/75 p-4 lg:border-l lg:border-t-0">
             <div className="rounded-[var(--radius-md)] border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Actions
               </p>
 
@@ -167,7 +167,7 @@ export default function MediaLightboxView({
                 {showStudioActions ? (
                   <LinkComponent
                     href={imageStudioHref}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
                   >
                     <Sparkles size={14} />
                     Generate Variant
@@ -212,7 +212,7 @@ export default function MediaLightboxView({
               </div>
 
               {!allowDownload ? (
-                <p className="mt-4 text-xs leading-5 text-[var(--muted)]">
+                <p className="mt-4 text-xs leading-5 text-[var(--ink-dim)]">
                   Public catalogue images can be liked, bookmarked, shared, or
                   used to start a new generation flow. Direct download is not
                   available here.
@@ -263,7 +263,7 @@ function ThumbnailButton({ item, active = false, onClick, mobile = false }) {
       } overflow-hidden rounded-lg border transition ${
         active
           ? "border-pink-400 bg-pink-400/15"
-          : "border-white/10 bg-black/45 hover:border-[var(--muted-gold)]/40"
+          : "border-white/10 bg-black/45 hover:border-[var(--gold-ornament)]/40"
       }`}
     >
       {item.thumbnailUrl ? (
@@ -276,7 +276,7 @@ function ThumbnailButton({ item, active = false, onClick, mobile = false }) {
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center">
-          <ImageIcon size={16} className="text-[var(--muted-gold)]" />
+          <ImageIcon size={16} className="text-[var(--gold-ornament)]" />
         </div>
       )}
     </button>
@@ -291,7 +291,7 @@ function IconActionButton({ active = false, label, onClick, children }) {
       className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
         active
           ? "border-pink-400/50 bg-pink-400/15 text-pink-300"
-          : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
       }`}
       title={label}
       aria-label={label}
@@ -309,7 +309,7 @@ function LightboxActionButton({ danger = false, onClick, children }) {
       className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.14em] transition ${
         danger
           ? "border-red-500/20 bg-red-500/5 text-red-200 hover:border-red-400/35 hover:bg-red-500/10"
-          : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
       }`}
     >
       {children}
@@ -322,7 +322,7 @@ function StubToolbarButton({ children }) {
     <button
       type="button"
       disabled
-      className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)] opacity-70"
+      className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] opacity-70"
     >
       {children}
     </button>
@@ -342,7 +342,7 @@ function DetailsDialog({
       <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-white/10 bg-zinc-950 p-5 shadow-2xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Image Details
             </p>
             <h3 className="mt-1 font-display text-3xl">
@@ -353,7 +353,7 @@ function DetailsDialog({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             aria-label="Close image details"
           >
             <X size={17} />
@@ -361,7 +361,7 @@ function DetailsDialog({
         </div>
 
         {status === "loading" ? (
-          <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 text-sm text-[var(--muted)]">
+          <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 text-sm text-[var(--ink-dim)]">
             <Loader2 className="mr-2 inline animate-spin" size={16} />
             Loading image details...
           </div>
@@ -379,19 +379,19 @@ function DetailsDialog({
 
             {canViewPrivate ? (
               <div>
-                <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                   Private generation data
                 </p>
                 {privateRows.length ? (
                   <DetailRows rows={privateRows} />
                 ) : (
-                  <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+                  <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
                     No prompt/settings metadata was found for this image.
                   </p>
                 )}
               </div>
             ) : (
-              <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+              <p className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
                 Prompt and generation settings are visible only to the image
                 creator or the owner of the linked creation.
               </p>
@@ -411,10 +411,10 @@ function DetailRows({ rows = [] }) {
           key={`${row.label}:${row.value}`}
           className="rounded-[var(--radius-md)] border border-white/10 bg-white/[0.04] px-4 py-3"
         >
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted)]">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
             {row.label}
           </p>
-          <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--foreground)]">
+          <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--ink)]">
             {row.value}
           </p>
         </div>
@@ -446,7 +446,7 @@ function ReportDialog({
               Report Image
             </p>
             <h3 className="mt-1 font-display text-3xl">{title || "Image"}</h3>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               This creates a moderation report record. It does not automatically
               hide or delete the image.
             </p>
@@ -455,7 +455,7 @@ function ReportDialog({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             aria-label="Close report dialog"
           >
             <X size={17} />
@@ -464,13 +464,13 @@ function ReportDialog({
 
         <form onSubmit={onSubmit} className="mt-5 space-y-4">
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Reason
             </span>
             <select
               value={reasonKey}
               onChange={(event) => onReasonKeyChange?.(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35"
             >
               {reasonOptions.map((reason) => (
                 <option key={reason.value} value={reason.value}>
@@ -481,7 +481,7 @@ function ReportDialog({
           </label>
 
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Optional note
             </span>
             <textarea
@@ -489,7 +489,7 @@ function ReportDialog({
               onChange={(event) => onReasonTextChange?.(event.target.value)}
               rows={4}
               maxLength={2000}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35"
               placeholder="Add context for review..."
             />
           </label>
@@ -498,7 +498,7 @@ function ReportDialog({
             <p
               className={`rounded-xl border px-4 py-3 text-sm ${
                 status === "success"
-                  ? "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+                  ? "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
                   : "border-red-500/30 bg-red-500/10 text-red-200"
               }`}
             >
@@ -511,7 +511,7 @@ function ReportDialog({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
               >
                 Close
               </button>
@@ -520,7 +520,7 @@ function ReportDialog({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  className="rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 >
                   Close
                 </button>
