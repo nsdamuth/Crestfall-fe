@@ -120,12 +120,13 @@ function RegistryAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+          className="inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-white/10 px-2 py-2 text-[var(--status-danger)] transition"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached registry"
           }
         >
           <X size={14} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
 
