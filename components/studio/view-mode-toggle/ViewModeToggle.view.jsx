@@ -14,7 +14,7 @@ export default function ViewModeToggleView({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="hidden text-xs uppercase tracking-[0.18em] text-[var(--muted)] sm:inline">
+      <span className="hidden text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] sm:inline">
         {label}
       </span>
 
@@ -30,8 +30,8 @@ export default function ViewModeToggleView({
               onClick={() => onChange?.(option.id)}
               className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
                 active
-                  ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
               }`}
             >
               <Icon className="h-4 w-4" />
