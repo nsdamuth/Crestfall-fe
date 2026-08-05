@@ -27,7 +27,7 @@ export default function ScenarioBuilderView({
   return (
     <>
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Scenario Builder
         </p>
@@ -42,7 +42,7 @@ export default function ScenarioBuilderView({
           settings.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             Draft Progress
           </p>
@@ -55,7 +55,7 @@ export default function ScenarioBuilderView({
           </p>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             Enabled Middleware
           </p>
@@ -201,7 +201,7 @@ export default function ScenarioBuilderView({
                   key={module.id}
                   type="button"
                   onClick={() => onToggleModule?.(module.id)}
-                  className={`rounded-2xl border p-4 text-left transition ${
+                  className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                     active
                       ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                       : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
@@ -305,7 +305,7 @@ export default function ScenarioBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-1 text-[var(--muted-gold)]" size={19} />
               <div>
@@ -330,7 +330,7 @@ export default function ScenarioBuilderView({
 
 function BuilderSection({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
         {eyebrow}
       </p>
@@ -346,7 +346,7 @@ function BuilderSection({ eyebrow, title, body, children }) {
 
 function StoryCircleCard({ step, value, onChange }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr]">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
