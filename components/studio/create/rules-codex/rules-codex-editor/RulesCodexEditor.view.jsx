@@ -392,9 +392,10 @@ export default function RulesCodexEditorView({
                       aria-label="Remove section"
                       title="Remove section"
                       onClick={() => onRemoveSection?.(section.id)}
-                      className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--status-danger)]"
+                      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
                     >
                       <Trash2 size={14} />
+                      Remove
                     </button>
                   </div>
                 </div>
