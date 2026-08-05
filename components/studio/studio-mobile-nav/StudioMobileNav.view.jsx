@@ -71,12 +71,12 @@ export default function StudioMobileNavView({
 }) {
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-[var(--muted-gold)]/15 bg-black/90 px-4 lg:hidden">
+      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-[var(--gold-ornament)]/15 bg-black/90 px-4 lg:hidden">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onOpenMenu}
-            className="rounded-lg p-2 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10"
+            className="rounded-lg p-2 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
             aria-label={openMenuAriaLabel}
           >
             <Menu size={21} />
@@ -94,7 +94,7 @@ export default function StudioMobileNavView({
           {headerEconomySlot}
           <InternalLinkComponent
             href={accountHref}
-            className="rounded-full border border-[var(--muted-gold)]/25 p-2 text-[var(--muted-gold)]"
+            className="rounded-full border border-[var(--gold-ornament)]/25 p-2 text-[var(--gold-ornament)]"
             aria-label={accountAriaLabel}
           >
             <CircleUser size={19} />
@@ -111,10 +111,10 @@ export default function StudioMobileNavView({
             className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
           />
 
-          <aside className="relative z-[61] flex h-full w-72 flex-col border-r border-[var(--muted-gold)]/20 bg-black px-5 py-6 shadow-2xl">
+          <aside className="relative z-[61] flex h-full w-72 flex-col border-r border-[var(--gold-ornament)]/20 bg-black px-5 py-6 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--muted-gold)]">
+                <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
                   {drawerEyebrow}
                 </p>
                 <h2 className="mt-1 font-display text-2xl tracking-[0.08em]">
@@ -125,7 +125,7 @@ export default function StudioMobileNavView({
               <button
                 type="button"
                 onClick={onCloseMenu}
-                className="rounded-lg border border-[var(--muted-gold)]/20 p-2 text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/10"
+                className="rounded-lg border border-[var(--gold-ornament)]/20 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/50 hover:bg-[var(--gold-ornament)]/10"
                 aria-label={closeMenuAriaLabel}
               >
                 <X size={18} />
@@ -165,7 +165,7 @@ export default function StudioMobileNavView({
                 <button
                   type="button"
                   onClick={onToggleSocial}
-                  className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+                  className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                 >
                   <span>{communityLinksLabel}</span>
                   {socialOpen ? (
@@ -189,13 +189,13 @@ export default function StudioMobileNavView({
               </section>
             </div>
 
-            <div className="mt-5 rounded-xl border border-[var(--muted-gold)]/15 bg-black/40 p-3 text-xs text-[var(--muted)]">
-              <p className="text-[var(--muted-gold)]">{signedInLabel}</p>
+            <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3 text-xs text-[var(--ink-dim)]">
+              <p className="text-[var(--gold-ornament)]">{signedInLabel}</p>
               <p className="mt-1 break-all">{signedInEmail}</p>
 
               <a
                 href={logoutHref}
-                className="mt-4 inline-block text-[var(--muted-gold)] transition hover:text-[var(--foreground)]"
+                className="mt-4 inline-block text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
               >
                 {logoutLabel}
               </a>
@@ -204,7 +204,7 @@ export default function StudioMobileNavView({
         </div>
       ) : null}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 border-t border-[var(--muted-gold)]/15 bg-black/90 px-2 py-2 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 border-t border-[var(--gold-ornament)]/15 bg-black/90 px-2 py-2 lg:hidden">
         {bottomLinks.map((link) => {
           const Icon = resolveIcon(link.iconKey);
 
@@ -216,8 +216,8 @@ export default function StudioMobileNavView({
                 flex flex-col items-center gap-1 rounded-lg px-1 py-1.5 text-[10px] transition
                 ${
                   link.isActive
-                    ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+                    ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                 }
               `}
             >
@@ -232,7 +232,7 @@ export default function StudioMobileNavView({
 }
 
 function MobileDivider() {
-  return <div className="my-4 border-t border-[var(--muted-gold)]/15" />;
+  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
 }
 
 function MobileDrawerInternalLink({
@@ -250,8 +250,8 @@ function MobileDrawerInternalLink({
         flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] transition
         ${
           link.isActive
-            ? "border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-            : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            ? "border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+            : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
         }
       `}
     >
@@ -270,7 +270,7 @@ function MobileDrawerExternalLink({ link, onNavigate = () => {} }) {
       target="_blank"
       rel="noreferrer"
       onClick={onNavigate}
-      className="flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+      className="flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
     >
       <Icon size={16} className="shrink-0" />
       <span>{link.label}</span>
