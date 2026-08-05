@@ -64,7 +64,7 @@ function ModeSelector({ mode, onModeChange }) {
               type="button"
               onClick={() => onModeChange(option.id)}
               aria-pressed={active}
-              className={`rounded-xl border px-4 py-3 text-left transition ${
+              className={`rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                 active
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                   : "border-transparent bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
@@ -238,7 +238,7 @@ function CorePathCompleteBanner({ LinkComponent }) {
 
         <LinkComponent
           href="/studio/my-creations"
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
         >
           Open My Creations →
         </LinkComponent>
@@ -277,7 +277,7 @@ function RecommendedNextPanel({ step, asset, LinkComponent }) {
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/45 bg-black/25 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/45 hover:text-[var(--ink)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/45 bg-black/25 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/45 hover:text-[var(--ink)]"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -422,7 +422,7 @@ function GuidedChapterStep({
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
         >
           {step.complete
             ? step.id === "SECOND_STORY"
@@ -464,7 +464,7 @@ function GuidedStep({
 
           <LinkComponent
             href={asset.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-xl border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+            className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
           >
             Create Another →
           </LinkComponent>
@@ -508,7 +508,7 @@ function GuidedStep({
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -578,7 +578,7 @@ function ToolkitFoundationCompletePanel({ onModeChange, LinkComponent }) {
       <div className="mt-5 flex flex-wrap gap-3">
         <LinkComponent
           href="/studio/my-creations"
-          className="rounded-xl border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/55 hover:text-[var(--ink)]"
+          className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/55 hover:text-[var(--ink)]"
         >
           Open My Creations →
         </LinkComponent>
