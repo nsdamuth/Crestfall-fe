@@ -10,8 +10,8 @@ export default function PublicProfileBadgesView({
 
   if (!safeBadges.length) {
     return (
-      <div className="mx-auto mt-5 w-full rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
+      <div className="mx-auto mt-5 w-full rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
           <Award size={22} />
         </div>
         <p className="mt-4 font-display text-3xl">{emptyTitle}</p>
@@ -27,11 +27,11 @@ export default function PublicProfileBadgesView({
       {safeBadges.map((badge, index) => (
         <article
           key={badge?.id || badge?.slug || `badge-${index}`}
-          className="rounded-2xl border border-white/10 bg-black/35 p-5 transition-colors hover:border-[var(--muted-gold)]/25"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 transition-colors hover:border-[var(--muted-gold)]/25"
         >
           <div className="flex items-start gap-4">
             {badge?.imageUrl ? (
-              <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/5 p-1 sm:h-28 sm:w-28">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/5 p-1 sm:h-28 sm:w-28">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={badge.imageUrl}
