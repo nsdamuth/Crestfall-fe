@@ -202,10 +202,10 @@ export default function CharacterTemplateFieldsSectionView({
           {internalPersonalityControl}
 
           <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Optional Personality Frameworks
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               These optional defaults provide soft narrative flavor when the
               composer needs more characterization. Explicit personality choices
               and creator guidance always take priority.
