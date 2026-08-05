@@ -73,7 +73,7 @@ export default function ActorMechanicsProfileBuilderView({
           stat, unlock, balance, cooldown, and inventory value owner-scoped.
         </p>
 
-        <div className="mt-5 rounded-xl border border-emerald-300/20 bg-emerald-300/5 p-4 text-sm text-emerald-100">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4 text-sm text-[var(--status-success)]">
           <div className="flex items-start gap-3">
             <ShieldCheck size={17} className="mt-0.5 shrink-0" />
             <p className="leading-6">
