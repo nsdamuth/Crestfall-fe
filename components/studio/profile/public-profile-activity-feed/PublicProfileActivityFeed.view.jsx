@@ -14,7 +14,7 @@ export default function PublicProfileActivityFeedView({
 
   if (!safeEvents.length) {
     return (
-      <div className="mx-auto mt-5 w-full max-w-5xl rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+      <div className="mx-auto mt-5 w-full max-w-5xl rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
         <p className="font-display text-3xl">{emptyTitle}</p>
         <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
           {emptyBody}
@@ -47,7 +47,7 @@ function CreationActivityRow({ event, LinkComponent }) {
   const title = event.title || "Untitled Creation";
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/35 p-4">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
       <div className="flex items-start gap-3">
         <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
           <Sparkles size={15} />
@@ -103,7 +103,7 @@ function CreationActivityRow({ event, LinkComponent }) {
 
 function DonationActivityRow({ event }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/35 p-4">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
       <div className="flex items-start gap-3">
         <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-pink-400/25 bg-pink-400/10 text-pink-200">
           <Gift size={15} />
