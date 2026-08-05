@@ -87,10 +87,11 @@ function ModifierList({
                 <button
                   type="button"
                   onClick={() => onRemove(side, modifierIndex)}
-                  className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
+                  className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
                   title="Remove fixed modifier"
                 >
                   <Trash2 size={13} />
+                  Remove
                 </button>
               </div>
 
@@ -165,10 +166,11 @@ function ModifierSourceCard({
         <button
           type="button"
           onClick={() => onRemove(side, sourceIndex)}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove authoritative modifier source"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
