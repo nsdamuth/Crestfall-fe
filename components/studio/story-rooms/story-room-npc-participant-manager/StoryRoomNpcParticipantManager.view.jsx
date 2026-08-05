@@ -35,15 +35,15 @@ export default function StoryRoomNpcParticipantManagerView({
       <button
         type="button"
         onClick={() => onTogglePanel?.()}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[var(--muted-gold)]/10"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[var(--gold-ornament)]/10"
         aria-expanded={isOpen}
       >
-        <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           <Users size={14} />
           {title}
         </span>
 
-        <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+        <span className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
           {summaryText}
           {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </span>
@@ -82,7 +82,7 @@ function NpcSection({ section, onActivateNpc }) {
 
   return (
     <section>
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {section?.title || "NPCs"}
       </p>
 
@@ -97,27 +97,27 @@ function NpcSection({ section, onActivateNpc }) {
                 <NpcAvatar entry={entry} />
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm text-[var(--foreground)]">
+                  <p className="truncate text-sm text-[var(--ink)]">
                     {entry.name}
                   </p>
-                  <p className="mt-1 truncate text-[10px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+                  <p className="mt-1 truncate text-[10px] uppercase tracking-[0.12em] text-[var(--gold-ornament)]">
                     {entry.title}
                   </p>
-                  <p className="mt-1 truncate text-xs text-[var(--muted)]">
+                  <p className="mt-1 truncate text-xs text-[var(--ink-dim)]">
                     {entry.registryTitle}
                   </p>
                   {entry.statusLabel ? (
-                    <p className="mt-2 inline-flex rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-2 py-1 text-[9px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+                    <p className="mt-2 inline-flex rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-2 py-1 text-[9px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
                       {entry.statusLabel}
                     </p>
                   ) : null}
                   {entry.statusDetail ? (
-                    <p className="mt-2 text-[11px] leading-4 text-[var(--muted)]">
+                    <p className="mt-2 text-[11px] leading-4 text-[var(--ink-dim)]">
                       {entry.statusDetail}
                     </p>
                   ) : null}
                   {entry.pendingReason ? (
-                    <p className="mt-2 line-clamp-3 text-[11px] leading-4 text-[var(--muted)]">
+                    <p className="mt-2 line-clamp-3 text-[11px] leading-4 text-[var(--ink-dim)]">
                       {entry.pendingReason}
                     </p>
                   ) : null}
@@ -131,7 +131,7 @@ function NpcSection({ section, onActivateNpc }) {
                 className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                   isUnloadAction
                     ? "border-white/10 bg-transparent text-[var(--status-danger)] hover:border-[var(--status-danger)]/40"
-                    : "border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] hover:bg-[var(--muted-gold)]/20"
+                    : "border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] hover:bg-[var(--gold-ornament)]/20"
                 }`}
                 title={entry.actionTitle || entry.actionLabel}
               >
@@ -141,7 +141,7 @@ function NpcSection({ section, onActivateNpc }) {
             </article>
           ))
         ) : (
-          <p className="rounded-lg border border-dashed border-white/10 px-3 py-3 text-xs leading-5 text-[var(--muted)]">
+          <p className="rounded-lg border border-dashed border-white/10 px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
             {section?.emptyMessage || "No NPCs are available."}
           </p>
         )}
@@ -152,7 +152,7 @@ function NpcSection({ section, onActivateNpc }) {
 
 function NpcAvatar({ entry }) {
   return (
-    <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10">
+    <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10">
       {entry.avatarUrl ? (
         <img
           src={entry.avatarUrl}
@@ -160,7 +160,7 @@ function NpcAvatar({ entry }) {
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center font-display text-lg text-[var(--muted-gold)]">
+        <div className="flex h-full w-full items-center justify-center font-display text-lg text-[var(--gold-ornament)]">
           {entry.fallbackInitial || "N"}
         </div>
       )}
@@ -170,7 +170,7 @@ function NpcAvatar({ entry }) {
 
 function Notice({ children }) {
   return (
-    <p className="mb-3 rounded-lg border border-dashed border-white/10 px-3 py-3 text-xs leading-5 text-[var(--muted)]">
+    <p className="mb-3 rounded-lg border border-dashed border-white/10 px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
       {children}
     </p>
   );
