@@ -68,10 +68,11 @@ export default function InvitedPlayersPanelView({
               <button
                 type="button"
                 onClick={() => onRemovePlayer?.(player.id)}
-                className="rounded-[var(--radius-md)] border border-white/10 p-1 text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+                className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:bg-white/5"
                 aria-label={`Remove ${player.username}`}
               >
                 <X size={14} />
+                Remove
               </button>
             </div>
           ))
