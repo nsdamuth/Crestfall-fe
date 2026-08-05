@@ -48,10 +48,11 @@ function SelectedClothingCard({
             <button
               type="button"
               onClick={() => onClearDefaultClothing?.()}
-              className="rounded-lg border border-red-500/25 bg-red-500/10 p-2 text-red-200 transition hover:border-red-400/40"
+              className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
               aria-label="Clear default clothing"
             >
               <X size={16} />
+              Clear
             </button>
           </div>
         ) : (
