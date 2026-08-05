@@ -21,14 +21,14 @@ export default function IdentityStep({ form, updateField, onOpenTemplates }) {
         body="Start with the simplest version of who this character is. You can skip anything and refine it later."
       />
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               <Sparkles size={14} />
               Character Templates
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               Start from a built-in, personal, or community template. Applying a
               template prefills fields, then you can edit everything normally.
             </p>
@@ -37,7 +37,7 @@ export default function IdentityStep({ form, updateField, onOpenTemplates }) {
           <button
             type="button"
             onClick={onOpenTemplates}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/15 hover:text-[var(--foreground)]"
+            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
           >
             Use Template
           </button>

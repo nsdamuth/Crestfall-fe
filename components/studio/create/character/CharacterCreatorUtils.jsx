@@ -1,11 +1,11 @@
 function SummaryItem({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
 
-      <p className="mt-2 text-sm text-[var(--foreground)]">
+      <p className="mt-2 text-sm text-[var(--ink)]">
         {value}
       </p>
     </div>
@@ -21,7 +21,7 @@ function PlaceholderStep({ step }) {
         body="This section is stubbed for now. The flow is being shaped before database persistence and AI generation are added."
       />
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm leading-7 text-[var(--muted)]">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm leading-7 text-[var(--ink-dim)]">
         Coming soon: optional fields, advanced controls, and draft persistence.
       </div>
     </div>
@@ -31,11 +31,11 @@ function PlaceholderStep({ step }) {
 function StepTitle({ title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         Character Builder
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
-      <p className="mt-3 leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 leading-7 text-[var(--ink-dim)]">{body}</p>
     </div>
   );
 }
@@ -43,13 +43,13 @@ function StepTitle({ title, body }) {
 function TextField({ label, value, onChange }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -58,7 +58,7 @@ function TextField({ label, value, onChange }) {
 function TextAreaField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -66,7 +66,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
