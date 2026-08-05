@@ -35,7 +35,7 @@ export default function CrestfallSelect({
   return (
     <div ref={rootRef} className="relative">
       {label ? (
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {label}
         </p>
       ) : null}
@@ -43,12 +43,12 @@ export default function CrestfallSelect({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="mt-2 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/50"
+        className="mt-2 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
       >
         <span>{selected?.label || "Select…"}</span>
         <ChevronDown
           size={16}
-          className={`text-[var(--muted-gold)] transition ${
+          className={`text-[var(--gold-ornament)] transition ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -56,7 +56,7 @@ export default function CrestfallSelect({
 
       {open ? (
         <div
-          className={`absolute left-0 z-50 w-full overflow-hidden rounded-xl border border-[var(--muted-gold)]/25 bg-black shadow-2xl ${menuPositionClass}`}
+          className={`absolute left-0 z-50 w-full overflow-hidden rounded-xl border border-[var(--gold-ornament)]/25 bg-black shadow-2xl ${menuPositionClass}`}
         >
           {options.map((option) => {
             const active = option.value === value;
@@ -71,8 +71,8 @@ export default function CrestfallSelect({
                 }}
                 className={`block w-full px-4 py-3 text-left text-sm transition ${
                   active
-                    ? "bg-[var(--muted-gold)]/20 text-[var(--foreground)]"
-                    : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+                    ? "bg-[var(--gold-ornament)]/20 text-[var(--ink)]"
+                    : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                 }`}
               >
                 {option.label}
@@ -83,7 +83,7 @@ export default function CrestfallSelect({
       ) : null}
 
       {description ? (
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           {description}
         </p>
       ) : null}
