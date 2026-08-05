@@ -118,10 +118,11 @@ export default function StorylineNodeListEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveNode?.(node.index)}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                  className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)]"
                   aria-label="Remove node"
                 >
                   <Trash2 size={16} />
+                  Remove
                 </button>
               </div>
             ) : null}
@@ -274,10 +275,11 @@ export default function StorylineNodeListEditorView({
                           onClick={() =>
                             onRemoveTrigger?.(node.index, trigger.index)
                           }
-                          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
+                          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)]"
                           aria-label="Remove trigger"
                         >
                           <Trash2 size={15} />
+                          Remove
                         </button>
                       </div>
                     ))}
