@@ -65,7 +65,7 @@ export default function CreationPublishingSectionView({
         />
       </div>
 
-      <div className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           {templateEyebrow}
         </p>
