@@ -7,17 +7,32 @@ Never ask Brian to restate the brief; this file is the resume point.
 
 ## Current phase
 
-Phase A.3, main fan-out: Workflow `wf_39d9729e-014` (task id `wa8ezmt5s`)
-launched, converting all 160 packages across sub-batches 2-19 (excluding
-the 14 flagged packages), one agent per package, isolated worktree, one
-commit each, structured output includes branch name + commit sha per
-package. Running in background. When it completes: merge each returned
-branch into `design/global-sweep` sequentially via `git cherry-pick
-<sha>` (not `git merge`, to keep exactly one commit per package), in
-package order, verifying `npm run build` after each merge; packages with
-status "stopped" or unresolvable cherry-pick conflicts get flagged, not
-force-merged. After all merges, re-run the production build once clean,
-then start Phase B.
+Phase A.3, main fan-out complete for 134/160 packages, retry running for
+the other 19. First workflow (`wf_39d9729e-014`, task `wa8ezmt5s`) covered
+160 packages across sub-batches 2-19: 134 converted, 7 legitimately
+no_change_needed (finding already matched the ruled resolution on disk,
+or was a logic-only confirm-step file with no geometry to convert), 19
+stopped because their worktree was created from a stale base commit
+(afa856a) that predates docs/BATCH-TWO-ORDER.md and docs/BATCH-TWO-SCOPE.md
+entirely, not a rule-ambiguity stop.
+
+All 134 converted packages were cherry-picked (not merged, to keep one
+commit per package) into `design/global-sweep`, in order. 132 applied
+clean; 2 conflicted against newer HEAD content (actor-mechanics-profile-editor,
+creation-image-library-page) because their worktree base predated some
+already-shipped token renames (`--muted-gold` -> `--gold-ornament`) and,
+in one case, an already-more-evolved Destructive-button implementation on
+HEAD. Both resolved by hand: kept HEAD's newer/already-correct content,
+applied only the radius-token fix from the incoming diff. Worktrees
+pruned. Production build verified exit 0 after this merge. No new em
+dashes introduced (pre-existing em dashes in unrelated UI copy/comments
+in a few touched files were left alone, per "no adjacent tidying").
+
+Second workflow (`wf_994b5ca6-1be`, task `wq0h03mh6`) launched for the 19
+stopped packages, same prompt, re-verified against the now-current
+`design/global-sweep` HEAD. Running in background. When it completes,
+merge the same way (cherry-pick, sequential, build-verify), then Phase
+A.3 is done and Phase B (verification convergence) starts.
 
 ## Completed
 
