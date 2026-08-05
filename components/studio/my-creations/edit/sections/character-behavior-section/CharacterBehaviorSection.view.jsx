@@ -41,7 +41,7 @@ export default function CharacterBehaviorSectionView({
         {outwardPersonalityControl}
         {internalPersonalityControl}
 
-        <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/25 p-4">
+        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             {personalityFrameworksEyebrow}
           </p>

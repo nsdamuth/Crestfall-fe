@@ -71,7 +71,7 @@ export function ActionPanel({
   disabled = true,
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <Sparkles className="text-[var(--muted-gold)]" size={20} />
       <h3 className="mt-3 font-display text-3xl">{title}</h3>
       <p className="mt-2 leading-7 text-[var(--muted)]">{body}</p>
@@ -79,7 +79,7 @@ export function ActionPanel({
         type="button"
         disabled={disabled}
         onClick={onClick}
-        className="mt-5 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-5 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {button}
       </button>
