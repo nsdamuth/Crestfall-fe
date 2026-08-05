@@ -18,10 +18,11 @@ function ReferenceCard({ card = {} }) {
           <button
             type="button"
             onClick={() => card.onClear?.()}
-            className="rounded-xl border border-white/10 bg-black/25 p-3 text-[var(--status-danger)] transition hover:border-white/20 hover:bg-black/35"
+            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-3 py-2 text-[var(--status-danger)] transition hover:bg-black/35"
             aria-label={card.clearLabel}
           >
             <X size={16} />
+            {card.clearLabel || "Clear"}
           </button>
         ) : null}
       </div>
