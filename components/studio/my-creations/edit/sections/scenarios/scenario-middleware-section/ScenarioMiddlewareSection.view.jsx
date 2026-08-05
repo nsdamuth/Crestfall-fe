@@ -44,8 +44,8 @@ export default function ScenarioMiddlewareSectionView({
               onClick={() => module.onToggle?.()}
               className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                 module.isEnabled
-                  ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <div className="flex items-start gap-3">
@@ -53,14 +53,14 @@ export default function ScenarioMiddlewareSectionView({
                   size={20}
                   className={
                     module.isEnabled
-                      ? "text-[var(--muted-gold)]"
-                      : "text-[var(--muted)]"
+                      ? "text-[var(--gold-ornament)]"
+                      : "text-[var(--ink-dim)]"
                   }
                 />
 
                 <div>
                   <p className="text-sm font-medium">{module.title}</p>
-                  <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                     {module.body}
                   </p>
                 </div>
