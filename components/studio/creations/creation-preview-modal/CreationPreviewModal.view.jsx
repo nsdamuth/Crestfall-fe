@@ -241,7 +241,7 @@ export default function CreationPreviewModalView({
 
       <div className="grid lg:max-h-[92vh] lg:grid-cols-[0.95fr_1.05fr] lg:overflow-hidden">
         <div className="border-b border-white/10 bg-black/35 p-5 lg:border-b-0 lg:border-r">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
             {isMoreSlide ? (
               <div
                 className="relative flex h-full w-full items-center justify-center overflow-hidden p-6"
@@ -253,7 +253,7 @@ export default function CreationPreviewModalView({
               >
                 <div className="absolute inset-0 bg-black/25" />
 
-                <div className="relative z-10 max-w-xs rounded-2xl border border-[var(--muted-gold)]/25 bg-black/65 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-md">
+                <div className="relative z-10 max-w-xs rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/65 p-6 text-center shadow-2xl shadow-black/40">
                   <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
                     Want to see more?
                   </p>
@@ -294,7 +294,7 @@ export default function CreationPreviewModalView({
                 <button
                   type="button"
                   onClick={onPreviousMedia}
-                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--foreground)] shadow-lg shadow-black/40 backdrop-blur transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/15"
+                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--foreground)] shadow-lg shadow-black/40 transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/15"
                   aria-label="Previous preview image"
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -303,13 +303,13 @@ export default function CreationPreviewModalView({
                 <button
                   type="button"
                   onClick={onNextMedia}
-                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--foreground)] shadow-lg shadow-black/40 backdrop-blur transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/15"
+                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--foreground)] shadow-lg shadow-black/40 transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/15"
                   aria-label="Next preview image"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
 
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 rounded-full border border-white/10 bg-black/55 px-3 py-2 backdrop-blur">
+                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 rounded-full border border-white/10 bg-black/55 px-3 py-2">
                   {mediaIndicators.map((indicator) => (
                     <button
                       key={indicator.id}
