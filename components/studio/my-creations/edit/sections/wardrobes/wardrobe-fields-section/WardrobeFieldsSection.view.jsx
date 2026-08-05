@@ -142,7 +142,7 @@ function EntriesSection({
         <button
           type="button"
           onClick={() => onAddEntry?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Entry
@@ -157,20 +157,20 @@ function EntriesSection({
                 onClick={() => entry.onSelect?.()}
                 className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                   entry.isActive
-                    ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                    ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
                 }`}
               >
                 <p className="line-clamp-1 font-display text-xl">
                   {entry.labelDisplay}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                   {entry.roleDisplay} · {entry.enabledDisplay}
                 </p>
               </button>
             ))
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
@@ -185,8 +185,8 @@ function EntriesSection({
           />
         ) : (
           <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <Shirt size={28} className="mx-auto text-[var(--muted-gold)]" />
-            <p className="mt-4 text-sm text-[var(--muted)]">
+            <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
+            <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
             </p>
           </div>
@@ -221,16 +221,16 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
 
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-2xl">{entry.outfitTitle}</p>
-                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                     {entry.outfitDescription}
                   </p>
-                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                     {entry.outfitCreationId}
                   </p>
                 </div>
               </div>
             ) : (
-              <p className="text-sm leading-6 text-[var(--muted)]">
+              <p className="text-sm leading-6 text-[var(--ink-dim)]">
                 No outfit selected yet.
               </p>
             )}
@@ -238,7 +238,7 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
             <button
               type="button"
               onClick={() => entry.onChooseOutfit?.()}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               <Shirt size={14} />
               {entry.outfitCreationId ? "Change Outfit" : "Select Outfit"}
@@ -296,7 +296,7 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
           }
           className="mt-1"
         />
-        <span className="text-sm leading-6 text-[var(--muted)]">
+        <span className="text-sm leading-6 text-[var(--ink-dim)]">
           This outfit entry is enabled for future default wardrobe selection.
         </span>
       </label>
@@ -349,7 +349,7 @@ function RulesSection({
           }
           className="mt-1"
         />
-        <span className="text-sm leading-6 text-[var(--muted)]">
+        <span className="text-sm leading-6 text-[var(--ink-dim)]">
           Allow random selection among matching enabled outfits later.
         </span>
       </label>
@@ -410,7 +410,7 @@ function RulesSection({
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -422,7 +422,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -431,7 +431,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -439,12 +439,12 @@ function TextArea(props) {
 function SectionHeader({ eyebrow, title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
       {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
