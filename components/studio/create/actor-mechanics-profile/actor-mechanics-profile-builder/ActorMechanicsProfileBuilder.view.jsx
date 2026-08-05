@@ -57,7 +57,7 @@ export default function ActorMechanicsProfileBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--muted-gold)]">
           <UserRoundCog size={18} />
           <p className="text-xs uppercase tracking-[0.22em]">
@@ -120,7 +120,7 @@ export default function ActorMechanicsProfileBuilderView({
       </aside>
 
       <div className="space-y-6">
-        <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 sm:p-6">
+        <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 sm:p-6">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             Asset Identity
           </p>
