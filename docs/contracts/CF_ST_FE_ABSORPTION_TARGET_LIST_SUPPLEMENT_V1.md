@@ -752,3 +752,20 @@ The frontend absorption is complete when:
 - temporary and persistent share flows pass browser regression;
 - focused diagnostics pass;
 - no API or persistence contract has changed.
+
+---
+
+# Design side status, 4 Aug 2026
+
+Rulings recorded here, design side only. Nothing above this section is
+changed by these rulings.
+
+- Absorption runs as its own sprint, following Nick's execution order
+  in section 8 above.
+- Behavior, contracts, share lifecycles, safety provenance, and
+  snapshot-only public reads are frozen. Presentation only is ours.
+- Public share page takes Option A from section 6.1: move intact
+  first, extract to a portable View later as a separate pass.
+- The recap is absorbed as built, an in-transcript System message.
+- System messages take the house System treatment, not blue. The
+  design system has no info color by ruling.
