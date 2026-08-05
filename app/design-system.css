@@ -84,3 +84,23 @@
 @media (prefers-reduced-motion: reduce) {
   .cf-galaxy { animation: none; }
 }
+
+/* --- GLOW -------------------------------------------------
+   Source: proof.css G7 rule (lines 273-286): every pressable
+   surface answers hover with --glow-hover, timed with
+   --dur-hover and --ease-hover. .cf-glow-hover is the reusable
+   hook; .btn/.btn--ghost in the draft declare their own
+   transition beside their own rules for cascade reasons that do
+   not apply here, so this file carries the one shared version.
+   Under reduced motion the glow still appears on hover; only
+   the transition into it is dropped, matching the draft.     */
+
+.cf-glow-hover {
+  transition: box-shadow var(--dur-hover) var(--ease-hover);
+}
+.cf-glow-hover:hover {
+  box-shadow: var(--glow-hover);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-glow-hover { transition: none; }
+}
