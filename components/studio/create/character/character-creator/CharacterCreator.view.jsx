@@ -36,7 +36,7 @@ export default function CharacterCreatorView({
     <>
       {headerContent}
 
-      <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -87,7 +87,7 @@ export default function CharacterCreatorView({
       <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         {previewContent}
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
           {editorContent}
 
           {saveMessage ? (
