@@ -222,7 +222,7 @@ export default function ActorMechanicsProfileEditorView({
   const beyondScale = capabilityMode === "BEYOND_SCALE";
 
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
