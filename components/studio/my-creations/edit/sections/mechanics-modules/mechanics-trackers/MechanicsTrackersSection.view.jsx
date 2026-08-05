@@ -15,7 +15,7 @@ function ActionButton({ children, onClick, variant = "gold", title }) {
   const className =
     variant === "danger"
       ? "inline-flex items-center justify-center gap-2 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:bg-red-500/20"
-      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]";
+      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]";
 
   return (
     <button type="button" onClick={onClick} title={title} className={className}>
@@ -26,14 +26,14 @@ function ActionButton({ children, onClick, variant = "gold", title }) {
 
 function TextField({ label, value, onChange, placeholder = "", type = "text" }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <span>{label}</span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
       />
     </label>
   );
@@ -63,17 +63,17 @@ function FoldableTracker({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Tracker / Meter
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">{title}</h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{summary}</p>
+              <h4 className="truncate text-xl text-[var(--ink)]">{title}</h4>
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{summary}</p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -100,7 +100,7 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Phase {phaseIndex + 1}
         </p>
         <button
@@ -174,7 +174,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Mutation Hint {hintIndex + 1}
         </p>
         <button
@@ -235,13 +235,13 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         }
       />
       <label className="mt-4 block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Reason</span>
+        <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Reason</span>
         <textarea
           value={safeHint.reason}
           onChange={(event) => onPatch({ reason: event.target.value })}
           rows={2}
           placeholder="The player accepted the redirect without pushing."
-          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </label>
     </div>
@@ -251,12 +251,12 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
 function HintList({ title, values, empty, draft, setDraft, add, placeholder, addLabel, remove }) {
   return (
     <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">{title}</p>
+      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {values.map((value, index) => (
           <span
             key={`${value}-${index}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--foreground)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{value}</span>
             <button
@@ -271,7 +271,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             </button>
           </span>
         ))}
-        {!values.length ? <span className="text-xs text-[var(--muted)]">{empty}</span> : null}
+        {!values.length ? <span className="text-xs text-[var(--ink-dim)]">{empty}</span> : null}
       </div>
       <div className="mt-4 flex flex-col gap-2 md:flex-row">
         <input
@@ -284,7 +284,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             }
           }}
           placeholder={placeholder}
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
         <ActionButton onClick={add}>
           <Plus size={14} />
@@ -315,14 +315,14 @@ function TrackerCard({ entry, handlers }) {
           }
           placeholder="Trust"
         />
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Kind</span>
           <select
             value={tracker.kind}
             onChange={(event) =>
               handlers.patchTracker(trackerIndex, { kind: event.target.value })
             }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             <option value="meter">meter</option>
           </select>
@@ -359,7 +359,7 @@ function TrackerCard({ entry, handlers }) {
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Phases</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
             <Plus size={14} /> Add Phase
           </ActionButton>
@@ -377,14 +377,14 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
             No phases yet. Phases give display labels like Guarded, Curious, or Bare.
           </p>
         )}
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Mutation Hints</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
             <Plus size={14} /> Add Hint
           </ActionButton>
@@ -406,7 +406,7 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
             No mutation hints yet. Hints let the router map detected events into meter changes.
           </p>
         )}
@@ -445,12 +445,12 @@ export default function MechanicsTrackersSectionView({
   };
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">Visual Builder</p>
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">Visual Builder</p>
           <h3 className="mt-2 font-display text-3xl">Trackers / Meters</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable meter fields, display phases, and mutation hints.
             These save into instanceData.trackers.
           </p>
@@ -475,9 +475,9 @@ export default function MechanicsTrackersSectionView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
-          No trackers defined yet. Add meters such as <span className="text-[var(--foreground)]">affection</span>,{" "}
-          <span className="text-[var(--foreground)]">trust</span>, or <span className="text-[var(--foreground)]">health</span>.
+        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
+          No trackers defined yet. Add meters such as <span className="text-[var(--ink)]">affection</span>,{" "}
+          <span className="text-[var(--ink)]">trust</span>, or <span className="text-[var(--ink)]">health</span>.
         </div>
       )}
     </section>
