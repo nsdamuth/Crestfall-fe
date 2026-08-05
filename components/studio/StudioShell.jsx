@@ -8,7 +8,7 @@ import { StudioAccountProvider } from "@/components/studio/StudioAccountProvider
 export default function StudioShell({ user, children }) {
   return (
     <StudioAccountProvider>
-      <main className="min-h-screen bg-black text-[var(--foreground)]">
+      <main className="min-h-screen bg-black text-[var(--ink)]">
         <div className="flex min-h-screen">
           <StudioSidebar user={user} />
 
