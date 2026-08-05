@@ -12,7 +12,7 @@ export default function SelectionCardView({
     <button
       type="button"
       onClick={() => onOpen?.()}
-      className="rounded-2xl border border-white/10 bg-black/25 p-5 text-left transition hover:border-[var(--muted-gold)]/35"
+      className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 text-left transition hover:border-[var(--muted-gold)]/35"
     >
       {Icon ? (
         <Icon className="text-[var(--muted-gold)]" size={20} />
