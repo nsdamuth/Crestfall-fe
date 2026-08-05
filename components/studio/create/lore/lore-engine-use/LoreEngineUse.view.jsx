@@ -190,7 +190,7 @@ export default function LoreEngineUseView({
   const isWorking = actionStatus === "WORKING";
 
   return (
-    <div className="mt-6 rounded-2xl border border-violet-300/20 bg-violet-300/[0.04] p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-violet-300/20 bg-violet-300/[0.04] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <p className="text-xs uppercase tracking-[0.2em] text-violet-200">
@@ -262,7 +262,7 @@ export default function LoreEngineUseView({
           </div>
 
           {latest ? (
-            <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+            <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
@@ -332,7 +332,7 @@ export default function LoreEngineUseView({
 
           {!isActive ? (
             <div className="mt-5 grid gap-5">
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">
                   <BookOpenCheck size={19} className="text-violet-200" />
                   <div>
@@ -408,7 +408,7 @@ export default function LoreEngineUseView({
                 ) : null}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">
                   <UserRound size={19} className="text-violet-200" />
                   <div>
@@ -463,7 +463,7 @@ export default function LoreEngineUseView({
                 )}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">
                   <MapPin size={19} className="text-violet-200" />
                   <div>
