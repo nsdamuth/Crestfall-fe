@@ -72,7 +72,7 @@ export default function VoiceModulePickerModalView({
             role="dialog"
             aria-modal="true"
             aria-label={modalAriaLabel}
-            className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl"
+            className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -85,7 +85,7 @@ export default function VoiceModulePickerModalView({
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
                 aria-label="Close"
               >
                 <X size={18} />
@@ -161,7 +161,7 @@ export default function VoiceModulePickerModalView({
                 type="button"
                 onClick={() => onClearAll?.()}
                 disabled={!canClear}
-                className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-400/30 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {clearActionLabel}
               </button>
