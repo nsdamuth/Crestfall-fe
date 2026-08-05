@@ -4,7 +4,7 @@ export default function CreationCreditsView({
   LinkComponent = "a",
 }) {
   return (
-    <section className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
+    <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
         Credits
       </p>
