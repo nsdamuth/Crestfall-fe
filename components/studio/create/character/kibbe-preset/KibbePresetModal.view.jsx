@@ -37,7 +37,7 @@ export default function KibbePresetModalView({
 
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+          <div className="max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -88,7 +88,7 @@ export default function KibbePresetModalView({
                 })}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-black/30 p-4 lg:sticky lg:top-4 lg:self-start">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 lg:sticky lg:top-4 lg:self-start">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
                   Suggested Crestfall Traits
                 </p>
