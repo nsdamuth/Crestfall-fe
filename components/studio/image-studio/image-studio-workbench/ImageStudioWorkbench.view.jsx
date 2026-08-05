@@ -44,10 +44,10 @@ export default function ImageStudioWorkbenchView({
                 onOpenMobileComposer?.();
               }
             }}
-            className="fixed bottom-20 left-4 right-4 z-40 flex cursor-pointer items-center justify-between rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-black/95 px-4 py-3 text-left shadow-2xl backdrop-blur-[var(--blur-panel)]"
+            className="fixed bottom-20 left-4 right-4 z-40 flex cursor-pointer items-center justify-between rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-black/95 px-4 py-3 text-left shadow-2xl backdrop-blur-[var(--blur-panel)]"
           >
             <div>
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Composer
               </p>
               <p className="mt-1 font-display text-2xl">
@@ -61,8 +61,8 @@ export default function ImageStudioWorkbenchView({
               disabled={!canGenerateImage}
               className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-3 text-[10px] uppercase tracking-[0.14em] transition ${
                 canGenerateImage
-                  ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 text-[var(--foreground)] hover:bg-[var(--muted-gold)]/25"
-                  : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] opacity-60"
+                  ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 text-[var(--ink)] hover:bg-[var(--gold-ornament)]/25"
+                  : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] opacity-60"
               }`}
               title="Generate image"
             >
@@ -81,15 +81,15 @@ export default function ImageStudioWorkbenchView({
               className="fixed inset-0 z-40 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
             />
 
-            <aside className="fixed inset-x-0 bottom-16 z-50 max-h-[82vh] rounded-t-[var(--radius-lg)] border-t border-[var(--muted-gold)]/25 bg-black/95 shadow-2xl backdrop-blur-[var(--blur-panel)]">
+            <aside className="fixed inset-x-0 bottom-16 z-50 max-h-[82vh] rounded-t-[var(--radius-lg)] border-t border-[var(--gold-ornament)]/25 bg-black/95 shadow-2xl backdrop-blur-[var(--blur-panel)]">
               <button
                 type="button"
                 onClick={onCloseMobileComposer}
                 className="flex w-full items-center justify-between border-b border-white/10 px-5 py-4 text-left"
               >
                 <div>
-                  <div className="mb-3 h-1.5 w-14 rounded-full bg-[var(--muted-gold)]/35" />
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                  <div className="mb-3 h-1.5 w-14 rounded-full bg-[var(--gold-ornament)]/35" />
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                     Composer
                   </p>
                   <p className="mt-1 font-display text-2xl">
@@ -97,7 +97,7 @@ export default function ImageStudioWorkbenchView({
                   </p>
                 </div>
 
-                <span className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--muted)]">
+                <span className="rounded-[var(--radius-md)] border border-white/10 p-2 text-[var(--ink-dim)]">
                   <ChevronDown size={18} />
                 </span>
               </button>
