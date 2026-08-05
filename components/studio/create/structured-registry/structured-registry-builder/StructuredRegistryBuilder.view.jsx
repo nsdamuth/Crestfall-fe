@@ -57,23 +57,23 @@ export default function StructuredRegistryBuilderView({
 }) {
   return (
     <section className="space-y-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               {config.eyebrow}
             </p>
             <h2 className="mt-2 font-display text-4xl">
               {config.builderTitle}
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               {config.description}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             {isEditMode ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+              <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Use the page Save button to persist changes.
               </p>
             ) : (
@@ -81,7 +81,7 @@ export default function StructuredRegistryBuilderView({
                 type="button"
                 onClick={onSave}
                 disabled={["saving", "saved"].includes(saveStatus)}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Save size={14} />
                 {saveStatus === "saving"
@@ -99,7 +99,7 @@ export default function StructuredRegistryBuilderView({
             className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
               saveStatus === "error"
                 ? "border-red-500/30 bg-red-500/10 text-red-200"
-                : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+                : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
             }`}
           >
             {saveMessage}
@@ -118,8 +118,8 @@ export default function StructuredRegistryBuilderView({
                   onClick={() => onSelectTab(tab.id)}
                   className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                     tab.active
-                      ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                   }`}
                 >
                   <Icon size={14} />
@@ -198,13 +198,13 @@ export default function StructuredRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
       {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
@@ -216,7 +216,7 @@ function Panel({ eyebrow, title, body, children }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -228,7 +228,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -237,7 +237,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -307,7 +307,7 @@ function EntriesTab({
         <button
           type="button"
           onClick={onAddEntry}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add {config.entryLabel}
@@ -325,21 +325,21 @@ function EntriesTab({
                   onClick={() => onSelectEntry(entry.id)}
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
-                      ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                      ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">
                     {entry.name || `Untitled ${config.entryLabel}`}
                   </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                     {entry.category}
                   </p>
                 </button>
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet.
             </p>
           )}
@@ -367,7 +367,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry(activeEntry.id)}
           />
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Select an entry or add a new one.
           </p>
         )}
@@ -498,7 +498,7 @@ function RelationshipsTab({
             />
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining relationships.
           </p>
         )}
@@ -564,10 +564,10 @@ function LinkedCreationGroup({
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {group.label}
           </p>
-          <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
             Link existing creations with visual selection cards.
           </p>
         </div>
@@ -575,7 +575,7 @@ function LinkedCreationGroup({
         <button
           type="button"
           onClick={() => onOpenLinkPicker(entry.id, group.id)}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Link2 size={14} />
           {group.addLabel || "Link Creation"}
@@ -603,7 +603,7 @@ function LinkedCreationGroup({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
           {group.emptyLabel || "No linked creations yet."}
         </p>
       )}
@@ -626,7 +626,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
           <p className="truncate font-display text-xl">
             {link.title || "Linked Creation"}
           </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {link.type || "Creation"}
           </p>
         </div>
@@ -644,7 +644,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
 
       <div className="p-4">
         {link.description ? (
-          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {link.description}
           </p>
         ) : null}
@@ -654,7 +654,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
           value={link.notes || ""}
           onChange={(event) => onNotesChange(event.target.value)}
           placeholder="Optional link notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </div>
@@ -731,7 +731,7 @@ function RulesTab({ config, entries, onUpdateEntry }) {
             </div>
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining rules.
           </p>
         )}
@@ -796,23 +796,23 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
           <dl className="space-y-3 text-sm">
             <div>
-              <dt className="text-[var(--muted)]">Registry</dt>
-              <dd className="text-[var(--foreground)]">{config.label}</dd>
+              <dt className="text-[var(--ink-dim)]">Registry</dt>
+              <dd className="text-[var(--ink)]">{config.label}</dd>
             </div>
             <div>
-              <dt className="text-[var(--muted)]">Entries</dt>
-              <dd className="text-[var(--foreground)]">{entryCount}</dd>
+              <dt className="text-[var(--ink-dim)]">Entries</dt>
+              <dd className="text-[var(--ink)]">{entryCount}</dd>
             </div>
             <div>
-              <dt className="text-[var(--muted)]">Future payload</dt>
-              <dd className="text-[var(--foreground)]">
+              <dt className="text-[var(--ink-dim)]">Future payload</dt>
+              <dd className="text-[var(--ink)]">
                 {config.futurePayload}
               </dd>
             </div>
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>
