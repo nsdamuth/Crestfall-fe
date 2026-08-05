@@ -34,7 +34,7 @@ export default function AccountStubPageView({
         {visibleCards.map((card, index) => (
           <section
             key={card?.id ?? `${card?.title ?? "account-card"}-${index}`}
-            className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5"
+            className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5"
           >
             {card?.eyebrow ? (
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
@@ -58,7 +58,7 @@ export default function AccountStubPageView({
       </div>
 
       {notice ? (
-        <div className="rounded-2xl border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
           {notice}
         </div>
       ) : null}
