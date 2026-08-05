@@ -894,21 +894,21 @@ export default function TrackersModuleConfigModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <div className="max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <div className="max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+            <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
               <Activity size={22} />
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
                 Location Runtime Module
               </p>
               <h2 className="mt-2 font-display text-4xl">
                 Configure Mechanics Fields, Effects & Guards
               </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
                 Create abstract mechanics fields, event-driven effects, and guard rules for {locationTitle || "this location"}.
               </p>
             </div>
@@ -917,7 +917,7 @@ export default function TrackersModuleConfigModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -926,7 +926,7 @@ export default function TrackersModuleConfigModal({
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
           {message ? (
-            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
               {message}
             </p>
           ) : null}
@@ -968,7 +968,7 @@ export default function TrackersModuleConfigModal({
                 />
               </div>
 
-              <div className="mt-4 grid gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--muted)] md:grid-cols-3">
+              <div className="mt-4 grid gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)] md:grid-cols-3">
                 <RuntimeStat label="Module ID" value={TRACKERS_MODULE_ID} />
                 <RuntimeStat label="Mechanics fields" value={form.trackers.length} />
                 <RuntimeStat label="Guards" value={form.guards.length} />
@@ -988,7 +988,7 @@ export default function TrackersModuleConfigModal({
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
                 >
                   <Trash2 size={15} />
                   Clear
@@ -1073,7 +1073,7 @@ export default function TrackersModuleConfigModal({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-[var(--muted)]">
+          <p className="text-xs leading-5 text-[var(--ink-dim)]">
             Module changes update the Location form. Save the Location to persist the runtime binding.
           </p>
 
@@ -1081,7 +1081,7 @@ export default function TrackersModuleConfigModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             >
               Close
             </button>
@@ -1123,14 +1123,14 @@ function TrackerCard({
   );
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25">
       <div className="flex flex-col gap-4 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Field #{trackerIndex + 1}
           </p>
           <h3 className="mt-1 font-display text-3xl">{tracker.label || tracker.id}</h3>
-          <p className="mt-1 text-xs text-[var(--muted)]">
+          <p className="mt-1 text-xs text-[var(--ink-dim)]">
             Meter · {tracker.kind} · {tracker.scope} · {tracker.min}–{tracker.max}
           </p>
         </div>
@@ -1138,7 +1138,7 @@ function TrackerCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
         >
           <Trash2 size={14} />
           Remove
@@ -1218,13 +1218,13 @@ function TrackerCard({
         </div>
 
         <div>
-          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             <span>Starting Value Preview</span>
             <span>{tracker.value}</span>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-[var(--muted-gold)]/80"
+              className="h-full rounded-full bg-[var(--gold-ornament)]/80"
               style={{ width: `${percent}%` }}
             />
           </div>
@@ -1538,14 +1538,14 @@ function GuardCard({
   onRemoveCondition,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25">
       <div className="flex flex-col gap-4 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Guard #{guardIndex + 1}
           </p>
           <h3 className="mt-1 font-display text-3xl">{guard.label || guard.id}</h3>
-          <p className="mt-1 text-xs text-[var(--muted)]">
+          <p className="mt-1 text-xs text-[var(--ink-dim)]">
             {guard.enforcement} · {guard.mode}
           </p>
         </div>
@@ -1553,7 +1553,7 @@ function GuardCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
         >
           <Trash2 size={14} />
           Remove
@@ -1722,7 +1722,7 @@ function ConditionRow({ condition, targetOptions, onUpdate, onRemove }) {
 
 function EditorPanel({ title, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
       <h3 className="font-display text-3xl">{title}</h3>
       <div className="mt-5">{children}</div>
     </section>
@@ -1733,7 +1733,7 @@ function Subsection({ icon, title, actionLabel, onAction, children, compact = fa
   return (
     <div className={compact ? "mt-4" : ""}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {icon}
           <span>{title}</span>
         </div>
@@ -1741,7 +1741,7 @@ function Subsection({ icon, title, actionLabel, onAction, children, compact = fa
         <button
           type="button"
           onClick={onAction}
-          className="inline-flex items-center gap-2 rounded-lg border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
         >
           <Plus size={12} />
           {actionLabel}
@@ -1756,14 +1756,14 @@ function Subsection({ icon, title, actionLabel, onAction, children, compact = fa
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -1783,17 +1783,17 @@ function NumberField({ label, value, onChange, placeholder }) {
 function TextAreaField({ label, value, onChange, rows = 5, helperText }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         rows={rows}
-        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
           {helperText}
         </span>
       ) : null}
@@ -1804,13 +1804,13 @@ function TextAreaField({ label, value, onChange, rows = 5, helperText }) {
 function SelectField({ label, value, options, onChange }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -1825,7 +1825,7 @@ function SelectField({ label, value, options, onChange }) {
 function ComboTextField({ label, value, options, onChange }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -1833,7 +1833,7 @@ function ComboTextField({ label, value, options, onChange }) {
         list={`${label.replace(/\s+/g, "-").toLowerCase()}-options`}
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
 
       <datalist id={`${label.replace(/\s+/g, "-").toLowerCase()}-options`}>
@@ -1849,12 +1849,12 @@ function ComboTextField({ label, value, options, onChange }) {
 
 function CheckboxField({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
       <input
         type="checkbox"
         checked={Boolean(checked)}
         onChange={(event) => onChange(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>{label}</span>
     </label>
@@ -1864,10 +1864,10 @@ function CheckboxField({ label, checked, onChange }) {
 function ReadOnlyField({ label, value }) {
   return (
     <div>
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value || "Not set"}
       </div>
     </div>
@@ -1879,7 +1879,7 @@ function IconButton({ onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-11 items-center justify-center rounded-xl border border-white/10 px-3 text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+      className="inline-flex h-11 items-center justify-center rounded-xl border border-white/10 px-3 text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
     >
       {children}
     </button>
@@ -1891,7 +1891,7 @@ function ActionButton({ onClick, icon, children }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+      className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
     >
       {icon}
       {children}
@@ -1902,15 +1902,15 @@ function ActionButton({ onClick, icon, children }) {
 function RuntimeStat({ label, value }) {
   return (
     <p>
-      {label}: <span className="text-[var(--foreground)]">{value}</span>
+      {label}: <span className="text-[var(--ink)]">{value}</span>
     </p>
   );
 }
 
 function EmptyState({ title, body }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
-      <p className="text-[var(--foreground)]">{title}</p>
+    <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--ink-dim)]">
+      <p className="text-[var(--ink)]">{title}</p>
       <p className="mt-2 leading-6">{body}</p>
     </div>
   );
