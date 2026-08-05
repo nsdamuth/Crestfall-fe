@@ -334,7 +334,7 @@ function ColumnBlockCard({
                 block.id
               )
             }
-            className="rounded-md border border-red-300/15 p-1.5 text-red-200"
+            className="rounded-md border border-white/10 p-1.5 text-[var(--status-danger)]"
             aria-label="Remove column block"
           >
             <Trash2 size={12} />
@@ -755,7 +755,7 @@ function BlockFields({
                       item.id
                     )
                   }
-                  className="rounded-lg border border-red-300/15 p-2 text-red-200"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                   aria-label="Remove reference row"
                 >
                   <Trash2 size={13} />
@@ -986,13 +986,13 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]"
       role="dialog"
       aria-modal="true"
       aria-label="Add content block"
     >
       <div
-        className="isolate max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/30 p-5 shadow-2xl"
+        className="isolate max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 p-5 shadow-2xl"
         style={{ backgroundColor: "#100d09" }}
       >
         <div className="flex items-start justify-between gap-4">
@@ -1095,7 +1095,7 @@ function ImagePickerModal({
       role="dialog"
       aria-modal="true"
     >
-      <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/30 bg-[#100d09] p-5 shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[#100d09] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -1124,7 +1124,7 @@ function ImagePickerModal({
                 key={character.id}
                 type="button"
                 onClick={() => onSelectCharacter?.(character.id)}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.15em] ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.15em] ${
                   picker.selectedCharacterId === character.id
                     ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-white"
                     : "border-white/10 text-[var(--muted)]"
@@ -1250,7 +1250,7 @@ export default function LoreEditorView({
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -1499,7 +1499,7 @@ export default function LoreEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveChapter?.(chapter.id)}
-                  className="rounded-lg border border-red-300/15 p-2 text-red-200"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -1733,7 +1733,7 @@ export default function LoreEditorView({
                               onClick={() =>
                                 onRemoveSection?.(chapter.id, section.id)
                               }
-                              className="rounded-lg border border-red-300/15 p-2 text-red-200"
+                              className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                             >
                               <Trash2 size={13} />
                             </button>
