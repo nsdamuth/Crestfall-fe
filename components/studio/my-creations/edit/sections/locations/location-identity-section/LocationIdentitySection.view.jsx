@@ -86,7 +86,7 @@ export default function LocationIdentitySectionView({
         />
 
         <div className="md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {parentLocationLabel}
           </span>
 
@@ -128,12 +128,12 @@ export default function LocationIdentitySectionView({
       </div>
 
       <div className="mt-8 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {inheritanceEyebrow}
         </p>
 
         {inheritanceDescription ? (
-          <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
             {inheritanceDescription}
           </p>
         ) : null}
@@ -161,14 +161,14 @@ function SelectField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
       <select
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
       >
         {options.map((option) => (
           <option key={option.value || "empty"} value={option.value}>
@@ -182,12 +182,12 @@ function SelectField({
 
 function CheckboxField({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
       <input
         type="checkbox"
         checked={Boolean(checked)}
         onChange={(event) => onChange?.(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>{label}</span>
     </label>
@@ -229,7 +229,7 @@ function SelectedParentLocation({
           ) : null}
         </div>
 
-        <p className="mt-2 break-all text-xs text-[var(--muted)]">
+        <p className="mt-2 break-all text-xs text-[var(--ink-dim)]">
           {parentLocation.id}
         </p>
       </div>
@@ -238,7 +238,7 @@ function SelectedParentLocation({
         <button
           type="button"
           onClick={() => onOpenParentPicker?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <MapPin size={14} />
           {changeParentLabel}
@@ -268,7 +268,7 @@ function EmptyParentLocation({
       <div>
         <p className="font-display text-2xl">{title}</p>
         {description ? (
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             {description}
           </p>
         ) : null}
@@ -277,7 +277,7 @@ function EmptyParentLocation({
       <button
         type="button"
         onClick={() => onOpenParentPicker?.()}
-        className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
       >
         <MapPin size={14} />
         {selectParentLabel}
@@ -288,7 +288,7 @@ function EmptyParentLocation({
 
 function MetadataBadge({ value }) {
   return (
-    <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+    <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
       {value}
     </span>
   );
