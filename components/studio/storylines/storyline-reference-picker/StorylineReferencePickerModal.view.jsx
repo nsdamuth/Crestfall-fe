@@ -18,7 +18,7 @@ export default function StorylineReferencePickerModalView({
 }) {
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center overflow-y-auto bg-black/80 p-2 backdrop-blur-sm sm:p-4"
+      className="fixed inset-0 flex items-center justify-center overflow-y-auto bg-[var(--scrim-strong)] p-2 backdrop-blur-[var(--blur-panel)] sm:p-4"
       style={{
         zIndex: 2147483647,
         isolation: "isolate",
@@ -27,7 +27,7 @@ export default function StorylineReferencePickerModalView({
       aria-modal="true"
       aria-labelledby={dialogTitleId}
     >
-      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
+      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
         <header className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -60,7 +60,7 @@ export default function StorylineReferencePickerModalView({
                 key={tab.id}
                 type="button"
                 onClick={() => onTabChange?.(tab.id)}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                   tab.isActive
                     ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                     : "border-white/10 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
@@ -93,7 +93,7 @@ export default function StorylineReferencePickerModalView({
                   type="button"
                   disabled={item.isSelected}
                   onClick={() => onSelectItem?.(item.id)}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--muted-gold)]/40 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--muted-gold)]/40 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   <div className="flex items-start gap-3">
                     <BookOpen
@@ -121,7 +121,7 @@ export default function StorylineReferencePickerModalView({
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-[var(--muted)]">
+            <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm text-[var(--muted)]">
               {emptyMessage}
             </div>
           )}
