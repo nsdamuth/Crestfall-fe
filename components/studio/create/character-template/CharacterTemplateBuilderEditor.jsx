@@ -319,7 +319,7 @@ function BehaviorDefaultsStep({ form, updateField }) {
           updateField={updateField}
         />
 
-        <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/25 p-4">
+        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             Optional Personality Frameworks
           </p>
@@ -429,7 +429,7 @@ function ReviewTemplateStep({
         <SummaryItem label="Defaults Filled" value={String(filledFieldCount)} />
       </div>
 
-      <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+      <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Filled Sections
         </p>
