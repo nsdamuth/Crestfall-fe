@@ -98,7 +98,7 @@ function MechanicsCommandCard({
         normalizeStateReadout={normalizeMechanicsCommandStateReadoutBuilder}
       />
 
-      <div className="mt-5 rounded-xl border border-[var(--muted-gold)]/20 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4">
         <MechanicsCommandInvocationSection
           command={safeCommand}
           commandIndex={commandIndex}
