@@ -112,10 +112,11 @@ function ScentTagEditor({
               <button
                 type="button"
                 onClick={() => onRemoveTag?.(noteIndex, tag)}
-                className="text-[var(--muted)] transition hover:text-[var(--status-danger)]"
+                className="inline-flex items-center gap-1 text-[var(--status-danger)] transition"
                 aria-label={`Remove ${tag} tag`}
               >
                 <X size={13} />
+                <span className="text-[10px]">Remove</span>
               </button>
             </span>
           ))}
