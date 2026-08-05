@@ -22,17 +22,17 @@ export default function StorylinesHubView({
 
   return (
     <div className="mt-8 space-y-6">
-      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/40 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="font-display text-3xl">{heading}</h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
 
         <InternalLinkComponent
           href={createHref}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
         >
           <Plus size={15} />
           {createLabel}
@@ -40,7 +40,7 @@ export default function StorylinesHubView({
       </div>
 
       {showLoading ? (
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm text-[var(--ink-dim)]">
           {loadingMessage}
         </div>
       ) : null}
@@ -53,9 +53,9 @@ export default function StorylinesHubView({
 
       {showEmpty ? (
         <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-10 text-center">
-          <BookOpen className="mx-auto text-[var(--muted-gold)]" size={26} />
+          <BookOpen className="mx-auto text-[var(--gold-ornament)]" size={26} />
           <h3 className="mt-4 font-display text-3xl">{emptyTitle}</h3>
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
             {emptyMessage}
           </p>
         </div>
@@ -67,16 +67,16 @@ export default function StorylinesHubView({
             <InternalLinkComponent
               key={card.id}
               href={card.href}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--muted-gold)]/35"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--gold-ornament)]/35"
             >
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {card.eyebrow}
               </p>
               <h3 className="mt-2 font-display text-3xl">{card.title}</h3>
-              <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--ink-dim)]">
                 {card.description}
               </p>
-              <p className="mt-4 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+              <p className="mt-4 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
                 {card.nodeCountLabel}
               </p>
             </InternalLinkComponent>
