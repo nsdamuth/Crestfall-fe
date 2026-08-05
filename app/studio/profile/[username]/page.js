@@ -60,7 +60,7 @@ export default async function PublicProfilePage({ params }) {
       />
 
       {loadError || engagementLoadError || donationEventsLoadError ? (
-        <div className="mt-8 rounded-2xl border border-red-400/25 bg-red-400/10 p-5 text-sm leading-6 text-red-100">
+        <div className="mt-8 rounded-[var(--radius-md)] border border-red-400/25 bg-red-400/10 p-5 text-sm leading-6 text-red-100">
           Public profile data could not be fully loaded:{" "}
           {loadError || engagementLoadError || donationEventsLoadError}
         </div>
