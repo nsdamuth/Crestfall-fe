@@ -148,7 +148,7 @@ export default function RulesCodexEditorView({
     : [];
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -392,7 +392,7 @@ export default function RulesCodexEditorView({
                       aria-label="Remove section"
                       title="Remove section"
                       onClick={() => onRemoveSection?.(section.id)}
-                      className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-100"
+                      className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--status-danger)]"
                     >
                       <Trash2 size={14} />
                     </button>
