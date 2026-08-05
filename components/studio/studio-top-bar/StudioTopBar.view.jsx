@@ -37,7 +37,7 @@ export default function StudioTopBarView({
           <button
             type="button"
             onClick={onOpenBuyCoins}
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
           >
             <ShoppingBag size={14} />
             {buyCoinsLabel}
@@ -83,8 +83,8 @@ function StudioUtilityModal({
   onClose = () => {},
 }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section className="w-full max-w-sm rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
+      <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
