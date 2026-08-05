@@ -21,7 +21,7 @@ export default function IdentityStep({ form, updateField, onOpenTemplates }) {
         body="Start with the simplest version of who this character is. You can skip anything and refine it later."
       />
 
-      <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">

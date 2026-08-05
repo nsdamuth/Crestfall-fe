@@ -21,7 +21,7 @@ function PlaceholderStep({ step }) {
         body="This section is stubbed for now. The flow is being shaped before database persistence and AI generation are added."
       />
 
-      <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-6 text-sm leading-7 text-[var(--muted)]">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm leading-7 text-[var(--muted)]">
         Coming soon: optional fields, advanced controls, and draft persistence.
       </div>
     </div>
