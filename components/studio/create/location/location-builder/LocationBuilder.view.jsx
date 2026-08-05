@@ -44,7 +44,7 @@ export default function LocationBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Location Builder
         </p>
@@ -382,7 +382,7 @@ export default function LocationBuilderView({
                   key={candidate.id}
                   type="button"
                   onClick={() => onSelectCover?.(candidate.id)}
-                  className={`aspect-[4/3] overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                  className={`aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                     active
                       ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
                       : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
@@ -448,7 +448,7 @@ export default function LocationBuilderView({
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
