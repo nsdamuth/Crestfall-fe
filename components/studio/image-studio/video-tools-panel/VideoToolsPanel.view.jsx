@@ -20,7 +20,7 @@ export default function VideoToolsPanelView({
 }) {
   return (
     <div className="mt-5 space-y-5">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 p-4">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 p-4">
         <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           <Film size={14} />
           Video Tools Preview
