@@ -25,13 +25,13 @@ export default function ScenarioStoryCircleSectionView({
           >
             <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr]">
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                   {step.label}
                 </p>
 
                 <h3 className="mt-2 font-display text-3xl">{step.title}</h3>
 
-                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
                   {step.helper}
                 </p>
               </div>
