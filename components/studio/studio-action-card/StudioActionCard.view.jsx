@@ -9,7 +9,7 @@ export default function StudioActionCardView({
   LinkComponent = "a",
 }) {
   const card = (
-    <article className="rounded-2xl border border-[var(--muted-gold)]/15 bg-black/35 p-6 transition hover:border-[var(--muted-gold)]/35">
+    <article className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/35 p-6 transition hover:border-[var(--muted-gold)]/35">
       {eyebrow && (
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           {eyebrow}
