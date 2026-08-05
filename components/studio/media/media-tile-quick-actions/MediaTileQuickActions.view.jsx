@@ -21,7 +21,7 @@ function QuickActionButton({
       className={`flex h-9 w-9 items-center justify-center rounded-[var(--radius-full)] border transition ${
         active
           ? "border-pink-400/50 bg-pink-400/20 text-pink-200"
-          : "border-white/10 bg-black/60 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          : "border-white/10 bg-black/60 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
       }`}
     >
       {children}
