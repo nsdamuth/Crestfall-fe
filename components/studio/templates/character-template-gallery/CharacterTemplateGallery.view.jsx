@@ -19,7 +19,7 @@ export default function CharacterTemplateGalleryView({
         {safeTemplates.map((template, index) => (
           <article
             key={template.id || `${template.title || "template"}-${index}`}
-            className="rounded-2xl border border-white/10 bg-black/35 p-5"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5"
           >
             {template.category ? (
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -47,7 +47,7 @@ export default function CharacterTemplateGalleryView({
         ))}
 
         {safeTemplates.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-black/35 p-8 text-center md:col-span-2">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-center md:col-span-2">
             <h2 className="font-display text-2xl">No templates available</h2>
             <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
               Built-in and creator-made character templates will appear here.
@@ -56,7 +56,7 @@ export default function CharacterTemplateGalleryView({
         ) : null}
       </div>
 
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         {sidebarEyebrow ? (
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
             {sidebarEyebrow}
