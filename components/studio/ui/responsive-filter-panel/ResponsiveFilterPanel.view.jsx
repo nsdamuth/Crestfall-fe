@@ -12,7 +12,7 @@ export default function ResponsiveFilterPanelView({
   onToggleDesktopFilters = null,
 }) {
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+    <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
