@@ -82,10 +82,11 @@ function FoldableTracker({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove tracker"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       {expanded ? <div className="border-t border-white/10 p-5">{children}</div> : null}
@@ -105,10 +106,11 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove phase"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -178,10 +180,11 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove mutation hint"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
