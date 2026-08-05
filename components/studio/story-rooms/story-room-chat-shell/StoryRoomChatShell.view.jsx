@@ -55,7 +55,7 @@ export default function StoryRoomChatShellView({
           )}
         </div>
 
-        <main className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45">
+        <main className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45">
           <StoryRoomHeader
             room={room}
             leftOpen={leftOpen}
@@ -142,16 +142,16 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="story-room-composer-help-title"
-        className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/35 bg-[#080706] p-5 shadow-2xl sm:p-6"
+        className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[var(--gold-ornament)]/35 bg-[#080706] p-5 shadow-2xl sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Story Room Composer
             </p>
             <h2
               id="story-room-composer-help-title"
-              className="mt-2 font-display text-2xl text-[var(--foreground)]"
+              className="mt-2 font-display text-2xl text-[var(--ink)]"
             >
               {showCommands ? "Available Commands" : "Quick Help"}
             </h2>
@@ -160,7 +160,7 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close composer help"
           >
             <X size={16} />
@@ -174,14 +174,14 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
                 key={command.name}
                 className="rounded-xl border border-white/10 bg-black/30 p-4"
               >
-                <p className="font-mono text-sm text-[var(--muted-gold)]">
+                <p className="font-mono text-sm text-[var(--gold-ornament)]">
                   {command.usage}
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                   {command.description}
                 </p>
                 {command.aliases?.length ? (
-                  <p className="mt-2 text-xs text-[var(--muted)]">
+                  <p className="mt-2 text-xs text-[var(--ink-dim)]">
                     Alias: {command.aliases.map((alias) => `/${alias}`).join(", ")}
                   </p>
                 ) : null}
@@ -212,11 +212,11 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
 function ComposerHelpItem({ icon: Icon, title, children }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-      <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+      <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
         <Icon size={16} />
         <p className="text-xs uppercase tracking-[0.14em]">{title}</p>
       </div>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{children}</p>
+      <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">{children}</p>
     </div>
   );
 }
@@ -232,7 +232,7 @@ function StoryRoomHeader({
     <div className="hidden shrink-0 border-b border-white/10 p-5 xl:block">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="min-w-0">
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             Story
           </p>
 
@@ -240,7 +240,7 @@ function StoryRoomHeader({
             {room?.title}
           </h1>
 
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-[var(--ink-dim)]">
             {room?.scenario} · {room?.roomMode}
           </p>
         </div>
@@ -252,8 +252,8 @@ function StoryRoomHeader({
               onClick={() => onToggleLeftPanel?.()}
               className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                 leftOpen
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {leftOpen ? (
@@ -269,8 +269,8 @@ function StoryRoomHeader({
               onClick={() => onToggleRightPanel?.()}
               className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                 rightOpen
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {rightOpen ? (
@@ -302,7 +302,7 @@ function PanelRevealButton({ side, label, onClick }) {
         onClick={onClick}
         title={label}
         aria-label={label}
-        className="flex h-12 w-11 items-center justify-center rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="flex h-12 w-11 items-center justify-center rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
       >
         <Icon size={16} />
       </button>
@@ -312,7 +312,7 @@ function PanelRevealButton({ side, label, onClick }) {
 
 function StatusPill({ children }) {
   return (
-    <span className="whitespace-nowrap rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+    <span className="whitespace-nowrap rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
       {children}
     </span>
   );
