@@ -11,7 +11,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
       />
     </label>
   );
@@ -19,7 +19,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
 
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
         {label}
       </p>
@@ -78,7 +78,7 @@ export default function CharacterReviewStepView({
             onChange={(event) => onAgeChange?.(event.target.value)}
             onBlur={() => onNormalizeAge?.()}
             placeholder="18+"
-            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
           />
 
           <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
