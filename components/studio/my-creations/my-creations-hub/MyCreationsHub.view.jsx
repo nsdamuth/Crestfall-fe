@@ -107,7 +107,7 @@ export default function MyCreationsHubView({
                 key={tab.id}
                 type="button"
                 onClick={() => onActiveTabChange?.(tab.id)}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                   active
                     ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                     : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
@@ -142,7 +142,7 @@ export default function MyCreationsHubView({
             />
           ))
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
             <p className="font-display text-3xl">No creations here yet</p>
             <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
               This section will populate once creation drafts are saved. Current
