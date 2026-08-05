@@ -7,9 +7,17 @@ Never ask Brian to restate the brief; this file is the resume point.
 
 ## Current phase
 
-Phase A.3, step 0: minting `--blur-panel` into `app/theme.css` (prerequisite
-for converting Blur-category findings; named-token-only, no new literal
-values, one commit).
+Phase A.3, main fan-out: Workflow `wf_39d9729e-014` (task id `wa8ezmt5s`)
+launched, converting all 160 packages across sub-batches 2-19 (excluding
+the 14 flagged packages), one agent per package, isolated worktree, one
+commit each, structured output includes branch name + commit sha per
+package. Running in background. When it completes: merge each returned
+branch into `design/global-sweep` sequentially via `git cherry-pick
+<sha>` (not `git merge`, to keep exactly one commit per package), in
+package order, verifying `npm run build` after each merge; packages with
+status "stopped" or unresolvable cherry-pick conflicts get flagged, not
+force-merged. After all merges, re-run the production build once clean,
+then start Phase B.
 
 ## Completed
 
@@ -29,13 +37,16 @@ values, one commit).
   this run started (pilot requirement satisfied per the brief's standing
   facts). Commits: 3e16bbd, bc81a0f, c840866, 7994adf, 46d9119, ddac236,
   1158aa8, 7690e83, 997546b, and one more for filterable-index.
+- Minted `--blur-panel: 2px` into `app/theme.css`, paired with
+  `--scrim-strong`, named token only. Commit 690780d.
+- Sub-batch 0 (9 app-shell packages): converted, one commit each. Commits
+  94346be, 6b46fd8, 2d7d1af, 1ac9c39, fd2af77, 14a976c, 91851e7, caef554,
+  de340e2. Production build verified exit 0 after this sub-batch.
 
 ## Remaining
 
-- Mint `--blur-panel: 2px` into `app/theme.css` (in progress).
-- Convert sub-batch 0 (9 app-shell packages from Phase A.1).
-- Convert sub-batches 2 through 19 from `docs/BATCH-TWO-ORDER.md`, excluding
-  the 14 flagged packages. One package, one worktree, one commit.
+- Merge the 160-package Workflow's results into `design/global-sweep`
+  (see Current phase above), package by package.
 - Phase B: verification convergence pass (different agents than editors),
   max 3 fix loops per package, circuit breaker at 4+ same-reason failures.
 - Phase C: judged render pass of the whole app, 390x844x2 then 1440x900x1,
