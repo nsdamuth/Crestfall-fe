@@ -70,7 +70,7 @@ export default function ItemRegistryBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -209,7 +209,7 @@ export default function ItemRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -375,7 +375,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry?.(activeEntry.id)}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <Box size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an object entry or add a new one.
@@ -483,7 +483,7 @@ function ItemEntryEditor({
       <button
         type="button"
         onClick={() => onDelete?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)] hover:bg-[var(--status-danger-border)]"
+        className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 hover:bg-white/5"
       >
         <Trash2 size={14} />
         Delete Entry
@@ -504,7 +504,7 @@ function AssociationsTab({ entries, onUpdateEntry }) {
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -566,7 +566,7 @@ function TrackingTab({
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -720,7 +720,7 @@ function PromptTab({
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-2xl border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
           >
             <p className="font-display text-2xl">
               {entry.name || "Untitled Object"}
@@ -768,7 +768,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
       body="This is the current structured registry payload that will be saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Summary
           </p>
@@ -790,7 +790,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-2xl border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>
