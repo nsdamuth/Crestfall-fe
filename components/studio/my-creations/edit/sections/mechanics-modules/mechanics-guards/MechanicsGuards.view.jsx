@@ -20,7 +20,7 @@ function valueToInput(value) {
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
@@ -28,7 +28,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -40,7 +40,7 @@ function SmallActionButton({ children, onClick, disabled = false }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -56,7 +56,7 @@ function GuardConditionCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Condition {conditionIndex + 1}
         </p>
         <button
@@ -71,14 +71,14 @@ function GuardConditionCard({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Condition Type</span>
           <select
             value={condition.conditionType}
             onChange={(event) =>
               patchCondition({ conditionType: event.target.value })
             }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {MECHANICS_GUARD_CONDITION_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -102,12 +102,12 @@ function GuardConditionCard({
           placeholder="value"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Operator</span>
           <select
             value={condition.operator}
             onChange={(event) => patchCondition({ operator: event.target.value })}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {MECHANICS_GUARD_OPERATORS.map((operator) => (
               <option key={operator} value={operator}>
@@ -154,21 +154,21 @@ function GuardCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Guard
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">
+              <h4 className="truncate text-xl text-[var(--ink)]">
                 {guard.label || guard.id || `Guard ${guardIndex + 1}`}
               </h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {guard.summary}
               </p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -206,14 +206,14 @@ function GuardCard({
               placeholder="Boundary Warning Lock"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Enforcement</span>
               <select
                 value={guard.enforcement}
                 onChange={(event) =>
                   patchGuard(guardIndex, { enforcement: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_GUARD_ENFORCEMENTS.map((enforcement) => (
                   <option key={enforcement} value={enforcement}>
@@ -223,14 +223,14 @@ function GuardCard({
               </select>
             </label>
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Condition Mode</span>
               <select
                 value={guard.mode}
                 onChange={(event) =>
                   patchGuard(guardIndex, { mode: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_GUARD_MODES.map((mode) => (
                   <option key={mode} value={mode}>
@@ -240,7 +240,7 @@ function GuardCard({
               </select>
             </label>
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Composer Visibility</span>
               <select
                 value={guard.composerVisibility}
@@ -249,7 +249,7 @@ function GuardCard({
                     composerVisibility: event.target.value,
                   })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_GUARD_COMPOSER_VISIBILITIES.map((visibility) => (
                   <option key={visibility} value={visibility}>
@@ -259,14 +259,14 @@ function GuardCard({
               </select>
             </label>
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Public Visibility</span>
               <select
                 value={guard.publicVisibility}
                 onChange={(event) =>
                   patchGuard(guardIndex, { publicVisibility: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {MECHANICS_GUARD_PUBLIC_VISIBILITIES.map((visibility) => (
                   <option key={visibility} value={visibility}>
@@ -279,7 +279,7 @@ function GuardCard({
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 Conditions
               </p>
               <SmallActionButton onClick={() => addCondition(guardIndex)}>
@@ -305,7 +305,7 @@ function GuardCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
                 No conditions yet. Add at least one condition for the guard to evaluate.
               </p>
             )}
@@ -313,7 +313,7 @@ function GuardCard({
 
           <div className="mt-5 grid gap-4">
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 On Fail Summary
               </span>
               <textarea
@@ -325,12 +325,12 @@ function GuardCard({
                 }
                 rows={2}
                 placeholder="The player has reached too many boundary warnings."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
               />
             </label>
 
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 On Fail Composer Guidance
               </span>
               <textarea
@@ -342,12 +342,12 @@ function GuardCard({
                 }
                 rows={3}
                 placeholder="Do not continue warm, intimate, trusting, or emotionally escalating content."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
               />
             </label>
 
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 On Pass Summary
               </span>
               <textarea
@@ -359,7 +359,7 @@ function GuardCard({
                 }
                 rows={2}
                 placeholder="Boundary warning count is below the lock threshold."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
               />
             </label>
           </div>
@@ -380,14 +380,14 @@ export default function MechanicsGuardsView({
   removeCondition,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">Guards</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic lock and guidance rules. Guards save into
             instanceData.guards and are evaluated by middleware before the
             composer response is finalized.
@@ -416,7 +416,7 @@ export default function MechanicsGuardsView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
           No guards defined yet. Add a hard lock, soft lock, or guidance rule.
         </div>
       )}
