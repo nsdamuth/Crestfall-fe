@@ -649,7 +649,7 @@ export default function MechanicsPresetApplicationModalView({
               </aside>
             </div>
           ) : (
-            <div className="flex min-h-[20rem] items-center justify-center rounded-2xl border border-dashed border-white/10 bg-black/15 p-8 text-center">
+            <div className="flex min-h-[20rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/15 p-8 text-center">
               <div>
                 <AlertTriangle
                   size={24}
