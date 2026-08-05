@@ -18,21 +18,21 @@ export default function StoryRoomRuntimeMechanicsPanelView({
   onChangePriority = null,
 }) {
   return (
-    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/30 p-4">
+    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-4">
       <div className="flex items-start gap-3">
-        <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+        <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           <Activity size={18} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
 
           <h3 className="mt-1 font-display text-2xl">{title}</h3>
 
           {description ? (
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               {description}
             </p>
           ) : null}
@@ -44,15 +44,15 @@ export default function StoryRoomRuntimeMechanicsPanelView({
           <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/25 p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   Attached
                 </p>
 
-                <p className="mt-1 text-sm text-[var(--foreground)]">
+                <p className="mt-1 text-sm text-[var(--ink)]">
                   {binding.title}
                 </p>
 
-                <p className="mt-1 break-all text-[11px] text-[var(--muted)]">
+                <p className="mt-1 break-all text-[11px] text-[var(--ink-dim)]">
                   {binding.creationId}
                 </p>
               </div>
@@ -61,7 +61,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                 type="button"
                 onClick={() => onRemove?.()}
                 disabled={saving}
-                className="flex w-full min-w-0 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/40 px-3 py-2 text-[var(--status-danger)] outline-none transition focus:border-[var(--muted-gold)] disabled:opacity-60"
+                className="flex w-full min-w-0 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/40 px-3 py-2 text-[var(--status-danger)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
                 title="Remove room mechanics module"
               >
                 <Trash2 size={14} />
@@ -70,7 +70,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
             </div>
 
             <div className="mt-3 grid gap-3">
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--muted)]">
+              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]">
                 <input
                   type="checkbox"
                   checked={binding.enabled}
@@ -78,12 +78,12 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                   onChange={(event) =>
                     onToggleEnabled?.(Boolean(event.target.checked))
                   }
-                  className="h-4 w-4 accent-[var(--muted-gold)] disabled:opacity-50"
+                  className="h-4 w-4 accent-[var(--gold-ornament)] disabled:opacity-50"
                 />
                 <span>Enabled</span>
               </label>
 
-              <label className="grid gap-2 text-xs text-[var(--muted)]">
+              <label className="grid gap-2 text-xs text-[var(--ink-dim)]">
                 <span>Mechanics Scope</span>
                 <select
                   value={binding.scopeMode}
@@ -91,7 +91,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                   onChange={(event) =>
                     onChangeScopeMode?.(event.target.value)
                   }
-                  className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)] disabled:opacity-60"
+                  className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
                 >
                   <option value="STORY_ROOM">
                     STORY_ROOM — root room mechanics
@@ -102,7 +102,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                 </select>
               </label>
 
-              <label className="grid gap-2 text-xs text-[var(--muted)]">
+              <label className="grid gap-2 text-xs text-[var(--ink-dim)]">
                 <span>Priority</span>
                 <input
                   type="number"
@@ -111,34 +111,34 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                   onChange={(event) =>
                     onChangePriority?.(event.target.value)
                   }
-                  className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)] disabled:opacity-60"
+                  className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
                 />
               </label>
             </div>
 
-            <div className="mt-3 min-w-0 break-words rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-[11px] leading-5 text-[var(--muted)]">
+            <div className="mt-3 min-w-0 break-words rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
               <p>
                 Module ID:{" "}
-                <span className="text-[var(--foreground)]">
+                <span className="text-[var(--ink)]">
                   {binding.moduleId}
                 </span>
               </p>
               <p>
                 Trigger:{" "}
-                <span className="text-[var(--foreground)]">
+                <span className="text-[var(--ink)]">
                   {binding.trigger}
                 </span>
               </p>
               <p>
                 Scope:{" "}
-                <span className="text-[var(--foreground)]">
+                <span className="text-[var(--ink)]">
                   {binding.scopeMode}
                 </span>
               </p>
             </div>
           </div>
         ) : (
-          <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-xs leading-5 text-[var(--muted)]">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
             No room-level Mechanics Module attached.
           </div>
         )}
@@ -147,14 +147,14 @@ export default function StoryRoomRuntimeMechanicsPanelView({
           type="button"
           onClick={() => onOpenPicker?.()}
           disabled={saving}
-          className="inline-flex w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-3 text-center text-[0.68rem] uppercase tracking-[0.12em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+          className="inline-flex w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-3 text-center text-[0.68rem] uppercase tracking-[0.12em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
         >
           <Plus size={14} />
           {attachActionLabel}
         </button>
 
         {saving ? (
-          <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-[var(--muted)]">
+          <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-[var(--ink-dim)]">
             {savingMessage}
           </p>
         ) : null}
