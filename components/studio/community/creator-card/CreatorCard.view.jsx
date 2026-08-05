@@ -29,13 +29,13 @@ export default function CreatorCardView({
   const safeStats = Array.isArray(stats) ? stats : [];
 
   return (
-    <article className="w-full min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-5 transition hover:border-[var(--muted-gold)]/30">
+    <article className="w-full min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-white/10 p-5 transition hover:border-[var(--muted-gold)]/30">
       <div
         className="flex min-w-0 flex-col gap-4 sm:flex-row"
         style={
           DEFAULT_PROFILE_BANNER
             ? {
-                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.86)), url(${DEFAULT_PROFILE_BANNER})`,
+                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15), var(--scrim)), url(${DEFAULT_PROFILE_BANNER})`,
                 backgroundPosition: "40% -20px",
                 backgroundSize: "auto 100%",
                 backgroundRepeat: "no-repeat",
@@ -50,14 +50,14 @@ export default function CreatorCardView({
         <div className="min-w-0 flex-1 overflow-hidden">
           <div className="flex flex-wrap items-center gap-2">
             {featured ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
                 <Sparkles size={11} />
                 Featured
               </span>
             ) : null}
 
             {canonContributor ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-200">
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-200">
                 <Crown size={11} />
                 Canon Contributor
               </span>
