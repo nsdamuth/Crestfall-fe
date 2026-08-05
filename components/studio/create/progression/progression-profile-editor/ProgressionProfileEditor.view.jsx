@@ -23,7 +23,7 @@ import ProgressionJsonEditorModal from "../progression-json-editor/ProgressionJs
 
 function Label({ children }) {
   return (
-    <label className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+    <label className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
       {children}
     </label>
   );
@@ -35,7 +35,7 @@ function TextInput({ value, onChange, placeholder = "" }) {
       value={value ?? ""}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -57,7 +57,7 @@ function NumberInput({
       value={value ?? ""}
       disabled={disabled}
       onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none disabled:cursor-not-allowed disabled:opacity-60 focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none disabled:cursor-not-allowed disabled:opacity-60 focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -67,7 +67,7 @@ function SelectInput({ value, onChange, options = [] }) {
     <select
       value={value || ""}
       onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
@@ -85,7 +85,7 @@ function TextArea({ value, onChange, rows = 4, placeholder = "" }) {
       value={value ?? ""}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -135,7 +135,7 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-white/10 bg-black/20">
       <table className="w-full min-w-[560px] table-fixed border-collapse text-sm">
-        <thead className="bg-white/[0.04] text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+        <thead className="bg-white/[0.04] text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           <tr>
             <th className="w-20 px-3 py-2 text-left font-medium">Level</th>
             <th className="w-36 px-3 py-2 text-right font-medium">
@@ -154,13 +154,13 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
                 <tr>
                   <td
                     colSpan={4}
-                    className="bg-white/[0.02] px-3 py-2 text-center text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]"
+                    className="bg-white/[0.02] px-3 py-2 text-center text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]"
                   >
                     {omittedCount.toLocaleString("en-US")} levels omitted
                   </td>
                 </tr>
               ) : null}
-              <tr className="text-[var(--foreground)]">
+              <tr className="text-[var(--ink)]">
                 <td className="px-3 py-2 font-semibold tabular-nums">
                   {row.level}
                 </td>
@@ -171,7 +171,7 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
                   {Math.round(row.cumulativeExperience).toLocaleString("en-US")}
                 </td>
                 <td className="px-3 py-2">
-                  <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                     {row.source}
                   </span>
                 </td>
@@ -223,9 +223,9 @@ export default function ProgressionProfileEditorView({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <Activity size={18} />
             <p className="text-xs uppercase tracking-[0.2em]">
               Progression Definition
@@ -235,7 +235,7 @@ export default function ProgressionProfileEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           >
             <Braces size={14} />
             JSON Editor
@@ -271,7 +271,7 @@ export default function ProgressionProfileEditorView({
           </div>
         </div>
 
-        <label className="mt-4 flex items-center gap-3 text-sm text-[var(--foreground)]">
+        <label className="mt-4 flex items-center gap-3 text-sm text-[var(--ink)]">
           <input
             type="checkbox"
             checked={profile.enabled !== false}
@@ -283,14 +283,14 @@ export default function ProgressionProfileEditorView({
         </label>
       </section>
 
-      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Progression Curve
             </p>
             <h3 className="mt-2 font-display text-3xl">Experience by Level</h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               Choose a compact algorithmic curve, add selected overrides, or
               author every cumulative XP threshold directly.
             </p>
@@ -311,7 +311,7 @@ export default function ProgressionProfileEditorView({
               onChange={onUpdateCurveMode}
               options={PROGRESSION_CURVE_MODE_OPTIONS}
             />
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               {selectedMode?.description}
             </p>
           </div>
@@ -346,7 +346,7 @@ export default function ProgressionProfileEditorView({
                 onUpdateCurveRange?.("maximumLevel", value)
               }
             />
-            <p className="mt-2 text-xs text-[var(--muted)]">
+            <p className="mt-2 text-xs text-[var(--ink-dim)]">
               Generated curves support up to 10,000 levels; explicit tables
               support up to 500 authored rows.
             </p>
@@ -355,7 +355,7 @@ export default function ProgressionProfileEditorView({
 
         {generatedMode ? (
           <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Algorithmic Settings
             </p>
             <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -457,17 +457,17 @@ export default function ProgressionProfileEditorView({
           <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   Level Overrides
                 </p>
-                <p className="mt-2 text-sm text-[var(--muted)]">
+                <p className="mt-2 text-sm text-[var(--ink-dim)]">
                   Override selected levels without storing the full generated table.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => onAddOverride?.()}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 px-4 py-2 text-sm text-[var(--muted-gold)] hover:bg-[var(--muted-gold)]/10"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 px-4 py-2 text-sm text-[var(--gold-ornament)] hover:bg-[var(--gold-ornament)]/10"
               >
                 <Plus size={16} /> Add override
               </button>
@@ -543,7 +543,7 @@ export default function ProgressionProfileEditorView({
                 </article>
               ))}
               {!overrides.length ? (
-                <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-[var(--muted)]">
+                <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-[var(--ink-dim)]">
                   No overrides. The generated curve applies to every level.
                 </p>
               ) : null}
@@ -553,7 +553,7 @@ export default function ProgressionProfileEditorView({
 
         {curve.mode === "EXPLICIT_TABLE" ? (
           <div className="mt-6 overflow-hidden rounded-xl border border-white/10">
-            <div className="grid grid-cols-[0.35fr_1fr] bg-white/[0.04] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+            <div className="grid grid-cols-[0.35fr_1fr] bg-white/[0.04] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               <span>Level</span>
               <span>Cumulative experience</span>
             </div>
@@ -584,10 +584,10 @@ export default function ProgressionProfileEditorView({
             <summary className="cursor-pointer list-none px-4 py-3 [&::-webkit-details-marker]:hidden">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Generated Threshold Preview
                   </p>
-                  <p className="mt-1 text-xs text-[var(--muted)]">
+                  <p className="mt-1 text-xs text-[var(--ink-dim)]">
                     {(metrics.thresholdCount || 0).toLocaleString("en-US")} levels
                     {previewRows.length
                       ? ` · ${previewRows.length.toLocaleString("en-US")} shown`
@@ -597,7 +597,7 @@ export default function ProgressionProfileEditorView({
                       : ""}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[var(--muted)]">
+                <div className="flex items-center gap-3 text-xs text-[var(--ink-dim)]">
                   <span className="tabular-nums">
                     Max {Math.round(metrics.maximumThreshold || 0).toLocaleString("en-US")} XP
                   </span>
@@ -610,7 +610,7 @@ export default function ProgressionProfileEditorView({
               </div>
             </summary>
             <div className="border-t border-white/10 p-3">
-              <p className="mb-3 text-xs leading-5 text-[var(--muted)]">
+              <p className="mb-3 text-xs leading-5 text-[var(--ink-dim)]">
                 The full table is calculated deterministically at runtime. Only
                 a bounded first-and-last-level preview is shown here, and generated
                 rows are not stored with the profile.
@@ -624,21 +624,21 @@ export default function ProgressionProfileEditorView({
         )}
       </section>
 
-      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Tier Definitions
             </p>
             <h3 className="mt-2 font-display text-3xl">Level Bands</h3>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               Optional non-overlapping labels for interpreting resolved levels.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onAddTier?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 px-4 py-2 text-sm text-[var(--muted-gold)] hover:bg-[var(--muted-gold)]/10"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 px-4 py-2 text-sm text-[var(--gold-ornament)] hover:bg-[var(--gold-ornament)]/10"
           >
             <Plus size={16} /> Add tier
           </button>
@@ -740,7 +740,7 @@ export default function ProgressionProfileEditorView({
           ))}
 
           {!tiers.length ? (
-            <p className="rounded-xl border border-dashed border-white/15 p-5 text-sm text-[var(--muted)]">
+            <p className="rounded-xl border border-dashed border-white/15 p-5 text-sm text-[var(--ink-dim)]">
               No tiers are defined. Level evaluation remains available without
               tier labels.
             </p>
@@ -750,25 +750,25 @@ export default function ProgressionProfileEditorView({
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Levels
           </p>
           <p className="mt-2 text-2xl">{metrics.thresholdCount || 0}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Stored rows
           </p>
           <p className="mt-2 text-2xl">{metrics.storedThresholdCount || 0}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Overrides
           </p>
           <p className="mt-2 text-2xl">{metrics.overrideCount || 0}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Tiers
           </p>
           <p className="mt-2 text-2xl">{metrics.tierCount || 0}</p>
