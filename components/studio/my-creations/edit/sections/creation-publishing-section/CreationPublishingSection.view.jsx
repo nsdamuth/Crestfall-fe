@@ -6,10 +6,10 @@ import {
 
 function getTemplateActionClassName(emphasis) {
   if (emphasis === "primary") {
-    return "rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] opacity-70";
+    return "rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] opacity-70";
   }
 
-  return "rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] opacity-60";
+  return "rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60";
 }
 
 export default function CreationPublishingSectionView({
@@ -65,14 +65,14 @@ export default function CreationPublishingSectionView({
         />
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {templateEyebrow}
         </p>
 
         <h3 className="mt-2 font-display text-3xl">{templateTitle}</h3>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           {templateDescription}
         </p>
 
