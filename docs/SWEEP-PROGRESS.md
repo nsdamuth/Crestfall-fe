@@ -16,9 +16,14 @@ values, one commit).
 - Phase A.1: scope verification. Scanned every surface outside
   `docs/BATCH-TWO-SCOPE.md` (app routes, layouts, globals.css, theme.css,
   token-bridge.css, not-found.js). Found 9 packages / 14 findings, appended
-  as sub-batch 0 in `docs/BATCH-TWO-ORDER.md`. Flagged `app/page.js` and
-  `.sourcebook-page` (legacy public-site theme, not the Studio token
-  system) as not mechanically applicable. Commit c2bebf6.
+  as sub-batch 0 in `docs/BATCH-TWO-ORDER.md`. Commit c2bebf6.
+- Standing ruling from Brian, 4 Aug 2026: the public marketing site and
+  old lore pages (`app/page.js`, `.sourcebook-page`/`.sourcebook-button`
+  in `app/globals.css`, every parchment-theme public route) are throwaway,
+  being rebuilt from scratch on a new content system. Permanently out of
+  scope, not flagged, not swept, not rendered or verified in Phase C, not
+  carried into the morning report. Recorded in `docs/BATCH-TWO-ORDER.md`
+  under "Out of scope by ruling, not flagged."
 - Phase A.2: QA gate ruled verbatim into CLAUDE.md section 8. Commit 799fbc8.
 - Sub-batch 1 (10 packages): already converted and Brian-approved before
   this run started (pilot requirement satisfied per the brief's standing
@@ -30,8 +35,7 @@ values, one commit).
 - Mint `--blur-panel: 2px` into `app/theme.css` (in progress).
 - Convert sub-batch 0 (9 app-shell packages from Phase A.1).
 - Convert sub-batches 2 through 19 from `docs/BATCH-TWO-ORDER.md`, excluding
-  the 15 flagged packages (14 original + `app/page.js`/`.sourcebook-page`
-  found in Phase A.1). One package, one worktree, one commit.
+  the 14 flagged packages. One package, one worktree, one commit.
 - Phase B: verification convergence pass (different agents than editors),
   max 3 fix loops per package, circuit breaker at 4+ same-reason failures.
 - Phase C: judged render pass of the whole app, 390x844x2 then 1440x900x1,

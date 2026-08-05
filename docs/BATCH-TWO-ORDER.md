@@ -303,9 +303,20 @@ Per the parallelism law's escalation rule, a workflow that meets a rule it canno
 - `components/studio/profile/public-profile-hero`: Line 809 describes layout/composition problem (stats block placement outside standard taxonomy anchor) with no stated token resolution.
 - `components/studio/story-rooms/story-room-chat-shell`: Line 871 presents two alternative resolutions without definitive choice; line 872 offers no stated resolution.
 
-- `app/page.js` (public homepage hero and archive-index veil, lines 39/79-83) and `app/globals.css`'s `.sourcebook-page`/`.sourcebook-button` rules: this is the pre-existing public "sourcebook" site theme (parchment page, serif type, `border-radius: 2px`), a visually distinct system from the dark Studio UI the Corners/Shape law/Wash/Blur rulings were written against. No `--radius`/`--scrim`/`--blur-panel` tokens are consumed here today. Whether this legacy site should be pulled onto the same token system, or is intentionally a separate skin, is a design-scope call, not a mechanical one.
+Total flagged: 14 of 193 packages (unchanged from the original audit; see "Out of scope by ruling" below for the one app-shell item this pass found and does not carry as an open question).
 
-Total flagged: 15 of 193 packages (14 from the original audit, plus the app-shell scope-verification pass above).
+---
+
+## Out of scope by ruling, not flagged
+
+`app/page.js` (public homepage), `app/globals.css`'s `.sourcebook-page`/
+`.sourcebook-button` rules, and every public marketing or lore-reading
+route on the parchment sourcebook theme: ruled permanently out of scope
+by Brian, 4 Aug 2026. That surface is throwaway, being rebuilt from
+scratch after the webapp handoff on a new content system. Not swept, not
+restyled, not flagged, not rendered or verified in Phase C, not carried
+into the morning report as an open decision. Everything inside the Studio
+webapp is unaffected and proceeds as briefed.
 
 ---
 
