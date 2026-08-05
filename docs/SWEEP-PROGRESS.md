@@ -69,11 +69,20 @@ allow. Fixed (loop 2 fix commit), build verified, single-package
 re-verify agent launched to close the loop (this is loop 2 of the
 3-loop cap for this package).
 
-Once that comes back PASS, Phase B is fully closed: 179/179 packages
-verified PASS (165 clean on loop 1, 13 fixed and passed on loop 2, 1
-fixed twice and pending its loop-2 re-check).
+Phase B is CLOSED. 179/179 packages verified PASS: 165 clean on loop 1,
+12 fixed once and passed loop 2, 1 (story-room-npc-participant-manager)
+fixed twice and passed its own single-package re-check. Zero packages
+frozen, zero circuit breakers triggered.
 
-Next after Phase B closes: Phase C, judged render pass of the whole app.
+## Current phase
+
+Phase C: judged render pass of the whole app. 390x844x2 mobile touch
+first, then 1440x900x1. Every dev preview route and every app route.
+Rule each surface PASS or FLAG per rule family. Contact sheets and
+flagged shots under docs/review-artifacts/ (generated, em-dash exempt,
+deleted at end of life). Console message sweep across everywhere,
+marking the two known pre-existing items (seal.svg preload,
+media-history 401) as pre-existing, plus whatever else turns up.
 
 ## Completed
 
