@@ -26,7 +26,7 @@ export default function OfficialCharactersGridView({
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-[var(--muted-gold)]/15 bg-black/35 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/35 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
             {searchEyebrow}
@@ -60,7 +60,7 @@ export default function OfficialCharactersGridView({
           )}
         />
       ) : (
-        <div className="rounded-2xl border border-white/10 bg-black/35 p-8 text-center">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-center">
           <h2 className="font-display text-2xl">{emptyTitle}</h2>
           <p className="mt-3 text-[var(--muted)]">{emptyMessage}</p>
         </div>
