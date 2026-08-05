@@ -37,7 +37,7 @@ export default function StudioAccountProfileView({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-sm text-[var(--muted)]">
+      <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-sm text-[var(--ink-dim)]">
         Loading profile…
       </div>
     );
@@ -54,22 +54,22 @@ export default function StudioAccountProfileView({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6"
+      className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-2xl text-[var(--muted-gold)]">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
             {profileInitial}
           </div>
 
           <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-sm uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Crestfall Creator
             </p>
 
             <h2 className="mt-1 font-display text-3xl">@{profileUsername}</h2>
 
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
               {userEmail || "No email loaded"}
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function StudioAccountProfileView({
           {publicProfileHref ? (
             <a
               href={publicProfileHref}
-              className="inline-flex rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               View Public Profile
             </a>
@@ -94,7 +94,7 @@ export default function StudioAccountProfileView({
           {hasPublicProfile ? (
             profileMediaContent
           ) : (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               Set a username to enable your public profile page and profile
               media controls.
             </div>
@@ -105,11 +105,11 @@ export default function StudioAccountProfileView({
 
         <section className="grid gap-5">
           <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Account Contact
             </p>
 
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               Your login email comes from Google/Supabase and is used for
               account authentication. Contact email is only for support, account
               problems, billing contact, bug reports, and important account
@@ -157,11 +157,11 @@ export default function StudioAccountProfileView({
             </div>
 
             <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Default Player Character
               </p>
 
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                 Your preferred player identity for new story rooms. Other users
                 may view public Player Characters, but only you can use your own
                 PCs as playable identities.
@@ -172,7 +172,7 @@ export default function StudioAccountProfileView({
                   playerCharacter={defaultPlayerCharacter}
                 />
               ) : (
-                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
                   No default Player Character selected.
                 </p>
               )}
@@ -181,7 +181,7 @@ export default function StudioAccountProfileView({
                 <button
                   type="button"
                   onClick={onOpenDefaultPlayerCharacterPicker}
-                  className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                  className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
                 >
                   Choose Default PC
                 </button>
@@ -202,7 +202,7 @@ export default function StudioAccountProfileView({
       </div>
 
       <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Public Profile Text
         </p>
 
@@ -261,7 +261,7 @@ function SaveButton({ isSaving }) {
     <button
       type="submit"
       disabled={isSaving}
-      className="inline-flex rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isSaving ? "Saving…" : "Save Profile"}
     </button>
@@ -277,17 +277,17 @@ function DefaultPlayerCharacterCard({ playerCharacter }) {
           style={{ backgroundImage: `url(${playerCharacter.imageUrl})` }}
         />
       ) : (
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 font-display text-2xl text-[var(--muted-gold)]">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
           {playerCharacter.title?.slice(0, 1).toUpperCase() || "P"}
         </div>
       )}
 
       <div className="min-w-0">
         <p className="font-display text-2xl">{playerCharacter.title}</p>
-        <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
           {playerCharacter.description || "No description."}
         </p>
-        <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
+        <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
           {playerCharacter.id}
         </p>
       </div>
@@ -314,10 +314,10 @@ function LabeledInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {note ? (
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">{note}</p>
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{note}</p>
       ) : null}
     </label>
   );
@@ -341,7 +341,7 @@ function LabeledTextarea({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -350,11 +350,11 @@ function LabeledTextarea({
 function FieldLabel({ label, count }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {label}
       </span>
       {count ? (
-        <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">
+        <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           {count}
         </span>
       ) : null}
@@ -365,14 +365,14 @@ function FieldLabel({ label, count }) {
 function ReadOnlyValue({ label, value, note }) {
   return (
     <div>
-      <span className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value}
       </div>
       {note ? (
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">{note}</p>
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{note}</p>
       ) : null}
     </div>
   );
@@ -381,10 +381,10 @@ function ReadOnlyValue({ label, value, note }) {
 function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <section className="w-full max-w-md rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+      <section className="w-full max-w-md rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Age Verification Required
             </p>
             <h2 className="mt-2 font-display text-3xl">
@@ -395,27 +395,27 @@ function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close"
           >
             <X size={16} />
           </button>
         </div>
 
-        <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
+        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">
           Mature and explicit content preferences are not active yet. Before
           anything above SFW is supported, Crestfall will require age
           verification and additional account controls.
         </p>
 
-        <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
           For now, your account will remain set to SFW Only.
         </p>
 
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="mt-5 w-full rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           OK
         </button>
