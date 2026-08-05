@@ -47,7 +47,7 @@ export default function AssetBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           {config.typeLabel} Builder
         </p>
@@ -126,7 +126,7 @@ export default function AssetBuilderView({
           ) : null}
 
           {isLocation ? (
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <div className="flex items-start gap-3">
                 <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
                   <CloudSun size={18} />
@@ -151,7 +151,7 @@ export default function AssetBuilderView({
               ) : null}
 
               {locationRegistryContent ? (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-4">
+                <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
                   {locationRegistryContent}
                 </div>
               ) : null}
@@ -233,7 +233,7 @@ export default function AssetBuilderView({
         </div>
       </aside>
 
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -259,7 +259,7 @@ export default function AssetBuilderView({
                 key={candidate.id}
                 type="button"
                 onClick={() => onSelectCover?.(candidate.id)}
-                className={`aspect-[4/5] overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                className={`aspect-[4/5] overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                   active
                     ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
                     : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
@@ -284,7 +284,7 @@ export default function AssetBuilderView({
           })}
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex items-start gap-3">
             <Tag className="mt-1 text-[var(--muted-gold)]" size={18} />
             <div>
@@ -312,7 +312,7 @@ function LocationParentPanel({
   onClearParentLocation,
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
         Parent Location
       </span>
@@ -358,7 +358,7 @@ function LocationParentPanel({
             <button
               type="button"
               onClick={() => onClearParentLocation?.()}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
             >
               <X size={14} />
               Clear
@@ -402,7 +402,7 @@ function RuntimeInheritancePanel({ inheritance = {}, onUpdateInheritance }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
         Runtime Inheritance
       </p>
