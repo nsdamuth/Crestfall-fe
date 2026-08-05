@@ -634,10 +634,11 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
+          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
           aria-label="Remove linked creation"
         >
           <X size={14} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
 
