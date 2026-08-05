@@ -39,23 +39,23 @@ function ReferenceSelectorField({
 }) {
   return (
     <div className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
       <button
         type="button"
         onClick={onOpen}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
       >
-        <span className="block text-sm text-[var(--foreground)]">
+        <span className="block text-sm text-[var(--ink)]">
           {selectedItems.length
             ? `${selectedItems.length} selected`
             : "Select creations..."}
         </span>
 
         {description ? (
-          <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+          <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </span>
         ) : null}
@@ -72,7 +72,7 @@ function ReferenceSelectorField({
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-3 text-xs leading-5 text-[var(--ink-dim)]">
           No references selected.
         </p>
       )}
@@ -83,7 +83,7 @@ function ReferenceSelectorField({
 function SelectedReferenceChip({ item, onRemove }) {
   return (
     <article className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
@@ -96,10 +96,10 @@ function SelectedReferenceChip({ item, onRemove }) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-1 font-display text-lg leading-none text-[var(--foreground)]">
+        <p className="line-clamp-1 font-display text-lg leading-none text-[var(--ink)]">
           {item.title}
         </p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           {item.typeLabel}
         </p>
       </div>
