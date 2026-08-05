@@ -36,13 +36,13 @@ export default function CharacterCreatorView({
     <>
       {headerContent}
 
-      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Draft Progress
             </p>
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
               {progress}% filled — optional fields can be completed later.
             </p>
           </div>
@@ -51,7 +51,7 @@ export default function CharacterCreatorView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saveStatus === "saving" ? "Saving..." : "Save Draft →"}
           </button>
@@ -68,10 +68,10 @@ export default function CharacterCreatorView({
                 onClick={() => onSelectStep?.(step.id)}
                 className={`rounded-xl border p-3 text-left transition ${
                   step.active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : step.visited
-                      ? "border-[var(--muted-gold)]/25 bg-black/35 text-[var(--muted-gold)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/25"
+                      ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                 }`}
               >
                 <Icon size={17} />
@@ -87,7 +87,7 @@ export default function CharacterCreatorView({
       <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         {previewContent}
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {editorContent}
 
           {saveMessage ? (
@@ -105,7 +105,7 @@ export default function CharacterCreatorView({
               type="button"
               onClick={() => onBack?.()}
               disabled={activeIndex === 0}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
             >
               Back
             </button>
@@ -115,7 +115,7 @@ export default function CharacterCreatorView({
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saveStatus === "saving" ? "Saving..." : "Finish Draft →"}
               </button>
@@ -123,7 +123,7 @@ export default function CharacterCreatorView({
               <button
                 type="button"
                 onClick={() => onNext?.()}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
               >
                 Next
               </button>
