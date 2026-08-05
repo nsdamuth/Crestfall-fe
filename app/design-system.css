@@ -1,0 +1,56 @@
+/* ============================================================
+   DESIGN SYSTEM STYLESHEET
+
+   Selector-based rules that pair with the variables-only
+   app/theme.css. Anything here needing a class or element
+   selector lives here, never inside a component file. Every
+   value below resolves through a token already defined in
+   app/theme.css; no raw hex, no new literal outside a named
+   token block.
+
+   Lifted verbatim from the approved proof draft at
+   ~/dev/crestfall-main/Crestfall/design-system/proof/, per the
+   phase 2 skin brief, step 3. Class names are prefixed cf- so
+   they read as design-system definitions rather than page-local
+   markup, matching this repo's existing cf-card/cf-art
+   convention in the same file family.
+
+   These are reusable effect definitions only. Wiring them into
+   any specific component (cards, modals, dropdowns) is Phase 3
+   scope; this file defines the recipe, it does not adopt it.
+   ============================================================ */
+
+/* --- SHEEN --------------------------------------------------
+   Source: library.css, the card-face hover corner CTA (lines
+   356-367). A diagonal sweep of --grad-sheen across an element,
+   triggered on hover/focus-visible of an ancestor that opts in.
+   Generalized here from :is(.lcard,.shot,.lentry) .corner::after
+   to a reusable .cf-sheen target so Phase 3 can attach it to any
+   card-face affordance without duplicating the recipe.        */
+
+.cf-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.cf-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--grad-sheen);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.cf-sheen:is(:hover, :focus-visible)::after {
+  opacity: 1;
+  animation: cf-cornersheen 0.9s var(--ease) 1;
+}
+@keyframes cf-cornersheen {
+  from { background-position: 120% 0; }
+  to { background-position: -30% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-sheen:is(:hover, :focus-visible)::after { animation: none; }
+}
