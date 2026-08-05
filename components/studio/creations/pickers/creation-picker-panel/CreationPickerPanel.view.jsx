@@ -76,7 +76,7 @@ export default function CreationPickerPanelView({
             );
           })
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
             <p className="text-sm leading-6 text-[var(--muted)]">
               {emptyMessage}
             </p>
