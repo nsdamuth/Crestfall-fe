@@ -27,12 +27,12 @@ export default function ProfileMediaManagerView({
 
   return (
     <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
 
       {description ? (
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
           {description}
         </p>
       ) : null}
@@ -46,9 +46,9 @@ export default function ProfileMediaManagerView({
           />
 
           <div className="min-w-0 flex-1">
-            <p className="text-sm text-[var(--foreground)]">{avatarTitle}</p>
+            <p className="text-sm text-[var(--ink)]">{avatarTitle}</p>
             {avatarDescription ? (
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {avatarDescription}
               </p>
             ) : null}
@@ -57,7 +57,7 @@ export default function ProfileMediaManagerView({
           <button
             type="button"
             disabled
-            className="rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+            className="rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
           >
             {avatarActionLabel}
           </button>
@@ -72,11 +72,11 @@ export default function ProfileMediaManagerView({
 
           <div className="mt-3 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm text-[var(--foreground)]">
+              <p className="text-sm text-[var(--ink)]">
                 {bannerSectionTitle}
               </p>
               {bannerDescription ? (
-                <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                   {bannerDescription}
                 </p>
               ) : null}
@@ -85,7 +85,7 @@ export default function ProfileMediaManagerView({
             <button
               type="button"
               disabled
-              className="shrink-0 rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+              className="shrink-0 rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
             >
               {bannerActionLabel}
             </button>
