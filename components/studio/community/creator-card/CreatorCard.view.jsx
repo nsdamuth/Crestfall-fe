@@ -29,7 +29,7 @@ export default function CreatorCardView({
   const safeStats = Array.isArray(stats) ? stats : [];
 
   return (
-    <article className="w-full min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-white/10 transition hover:border-[var(--muted-gold)]/30">
+    <article className="w-full min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-white/10 transition hover:border-[var(--gold-ornament)]/30">
       <div
         className="relative flex min-h-[6rem] items-end overflow-hidden bg-cover bg-center p-4"
         style={
@@ -44,16 +44,16 @@ export default function CreatorCardView({
         }
       >
         <div className="flex min-w-0 flex-nowrap items-center gap-3">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 font-display text-2xl text-[var(--muted-gold)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
             {avatarInitial}
           </div>
 
           <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
-            <span className="truncate text-sm uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="truncate text-sm uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               @{creatorHandle}
             </span>
 
-            <span className="flex shrink-0 flex-nowrap items-center gap-1 whitespace-nowrap text-xs text-[var(--muted)]">
+            <span className="flex shrink-0 flex-nowrap items-center gap-1 whitespace-nowrap text-xs text-[var(--ink-dim)]">
               {safeStats.map((stat) => {
                 const Icon = STAT_ICONS[stat?.id];
 
@@ -77,7 +77,7 @@ export default function CreatorCardView({
       <div className="p-5">
         <div className="flex flex-wrap items-center gap-2">
           {featured ? (
-            <span className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+            <span className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               <Sparkles size={11} />
               Featured
             </span>
@@ -95,9 +95,9 @@ export default function CreatorCardView({
           {creatorName}
         </h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">{tagline}</p>
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">{tagline}</p>
 
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
           {description}
         </p>
 
@@ -105,7 +105,7 @@ export default function CreatorCardView({
 
         <LinkComponent
           href={profileHref}
-          className="mt-5 inline-flex w-fit rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="mt-5 inline-flex w-fit rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           View Profile
         </LinkComponent>
