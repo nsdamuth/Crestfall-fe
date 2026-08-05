@@ -90,7 +90,7 @@ export default function LocationIdentitySectionView({
             {parentLocationLabel}
           </span>
 
-          <div className="mt-2 rounded-2xl border border-white/10 bg-black/25 p-4">
+          <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
             {hasParentLocation ? (
               <SelectedParentLocation
                 parentLocation={parentLocation}
@@ -127,7 +127,7 @@ export default function LocationIdentitySectionView({
         <ReadOnlyField label={creationTypeLabel} value={creationTypeValue} />
       </div>
 
-      <div className="mt-8 rounded-2xl border border-white/10 bg-black/25 p-5">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           {inheritanceEyebrow}
         </p>
