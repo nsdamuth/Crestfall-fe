@@ -19,7 +19,7 @@ export default function OutfitPickerModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -80,7 +80,7 @@ export default function OutfitPickerModalView({
                   type="button"
                   onClick={() => onChooseItem?.(item?.id)}
                   aria-pressed={Boolean(item?.isSelected)}
-                  className={`overflow-hidden rounded-2xl border bg-black/35 text-left transition hover:border-[var(--muted-gold)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--muted-gold)]/45 ${
                     item?.isSelected
                       ? "border-[var(--muted-gold)]/60"
                       : "border-white/10"
