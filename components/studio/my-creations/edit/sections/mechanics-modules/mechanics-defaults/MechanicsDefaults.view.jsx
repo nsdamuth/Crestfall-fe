@@ -71,10 +71,12 @@ function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title={`Remove ${bucket.singularLabel.toLowerCase()}`}
+          aria-label={`Remove ${bucket.singularLabel.toLowerCase()}`}
         >
           <Trash2 size={13} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
 
