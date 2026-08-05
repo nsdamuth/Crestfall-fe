@@ -80,6 +80,10 @@ Load only when the task calls for it, not by default:
 - `@docs/ROADMAP.md`: status checks, updated in the same commit as the
   work.
 - `@docs/contracts/`: feature work against backend contracts.
+- `@docs/APP-FUNCTION-MAP.csv`: before touching any page, the wiring
+  behind every control on it. The markdown rollup is the readable view.
+- `@docs/COMPONENT-CENSUS.csv`: before touching any component package,
+  its usage count, pages, and contract/fixture state.
 
 ## 7. Parallelism law
 
@@ -146,3 +150,37 @@ surface outside it.
 
 Every preview link handed to Brian is verified to load first. A link that
 404s is a failed report.
+
+## 9. Contract law
+
+Presentation may change. What a component reports may not. A View may
+change how a choice is presented, for example tabs becoming a dropdown,
+only while it continues to report the same selection to the same
+handler. If a redesign appears to require a contract, ViewModel or
+data-flow change, stop and escalate to Brian. Never decide it.
+
+docs/APP-FUNCTION-MAP.csv is the ledger of what every control reports
+and where it is wired. Check the control's row before restyling it;
+its operation_name must still be reachable after the change.
+
+## 10. Definition of done
+
+Every feature starts with a PRD and a signed contract using
+docs/contracts/CONTRACT-TEMPLATE.md, stored in the shared workspace so
+both the backend and frontend lanes read the same document. No package
+codes against an unsigned contract.
+
+Every feature closes by updating docs/APP-FUNCTION-MAP.csv and
+regenerating the markdown rollup. A feature that ships without that
+update is not done.
+
+## 11. Map refresh
+
+The function map is regenerated at the start of every sprint, not once.
+It is a living document, and its diff is how we detect what changed
+upstream.
+
+## 12. Visible change rule
+
+Every sprint ends with before and after renders at 390 and 1440. Work
+that changes nothing Brian can see does not close a sprint on its own.
