@@ -47,7 +47,7 @@ export default function CreationEditStickyActionBarView({
     : [];
 
   return (
-    <div className="sticky bottom-4 z-30 mt-8 rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-4)] shadow-[var(--shadow-popover)] backdrop-blur-[12px]">
+    <div className="sticky bottom-4 z-30 mt-8 rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-4)] shadow-[var(--shadow-popover)]">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
