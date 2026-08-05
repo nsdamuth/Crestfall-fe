@@ -27,7 +27,7 @@ export default function StorylineReferencePickerModalView({
       aria-modal="true"
       aria-labelledby={dialogTitleId}
     >
-      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
+      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
         <header className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
