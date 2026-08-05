@@ -146,10 +146,11 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
         title="Remove step"
       >
         <Trash2 size={14} />
+        Remove
       </button>
     </div>
   );
@@ -232,10 +233,11 @@ function ConditionCard({
         <button
           type="button"
           onClick={() => onRemoveCondition?.(stepId, condition.id)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove condition"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -566,10 +568,11 @@ function EffectCard({
         <button
           type="button"
           onClick={() => onRemoveEffect?.(stepId, effect.id)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove effect"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
