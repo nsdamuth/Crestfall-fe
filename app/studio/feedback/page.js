@@ -46,7 +46,7 @@ export default function StudioFeedbackPage() {
       />
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
             Development Hub
           </p>
@@ -68,7 +68,7 @@ export default function StudioFeedbackPage() {
               return (
                 <article
                   key={card.title}
-                  className="rounded-2xl border border-white/10 bg-black/25 p-5"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5"
                 >
                   <Icon className="text-[var(--muted-gold)]" size={20} />
 
@@ -89,7 +89,7 @@ export default function StudioFeedbackPage() {
           </div>
         </div>
 
-        <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6 xl:sticky xl:top-24">
+        <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6 xl:sticky xl:top-24">
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
             Community Link
           </p>
