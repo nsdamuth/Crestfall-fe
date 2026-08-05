@@ -146,19 +146,19 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
   return (
     <nav
       aria-label="Runtime Fields quick links"
-      className="relative z-20 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black p-4 xl:sticky xl:top-6"
+      className="relative z-20 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black p-4 xl:sticky xl:top-6"
     >
       <div className="flex items-center gap-3">
         <List
           size={16}
-          className="text-[var(--muted-gold)]"
+          className="text-[var(--gold-ornament)]"
         />
 
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Runtime Fields
           </p>
-          <p className="mt-1 text-xs text-[var(--muted)]">
+          <p className="mt-1 text-xs text-[var(--ink-dim)]">
             Jump to a section
           </p>
         </div>
@@ -176,14 +176,14 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
               onClick={() => navigate(link.id)}
               className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left text-xs transition ${
                 active
-                  ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10 text-[var(--foreground)]"
-                  : "border-transparent text-[var(--muted)] hover:border-white/10 hover:bg-white/[0.025] hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10 text-[var(--ink)]"
+                  : "border-transparent text-[var(--ink-dim)] hover:border-white/10 hover:bg-white/[0.025] hover:text-[var(--ink)]"
               }`}
             >
               <span>{link.label}</span>
 
               {count !== null ? (
-                <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--muted)]">
+                <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
                   {count}
                 </span>
               ) : null}
@@ -196,7 +196,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         <button
           type="button"
           onClick={() => setAllExpanded(false)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           <ChevronsUp size={13} />
           Collapse
@@ -205,7 +205,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         <button
           type="button"
           onClick={() => setAllExpanded(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
         >
           <ChevronsDown size={13} />
           Expand

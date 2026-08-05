@@ -558,7 +558,7 @@ export default function CreationEditSectionContent({
       {isLore && activeSection === "preview" ? (
         <div>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm leading-6 text-[var(--muted)]">
+            <p className="text-sm leading-6 text-[var(--ink-dim)]">
               The full owner preview uses the last saved draft. Save changes
               before opening it.
             </p>
@@ -569,7 +569,7 @@ export default function CreationEditSectionContent({
               )}/preview`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/55 hover:text-[var(--foreground)]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:text-[var(--ink)]"
             >
               <ExternalLink size={14} />
               Open full owner preview

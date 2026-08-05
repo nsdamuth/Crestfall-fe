@@ -28,18 +28,18 @@ export default function CreationEditShellView({
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
                   {isTemplate ? "Editing Template" : "Editing"}
                 </p>
                 <h2 className="mt-2 font-display text-4xl">
                   {title}
                 </h2>
-                <p className="mt-2 text-sm text-[var(--muted)]">
+                <p className="mt-2 text-sm text-[var(--ink-dim)]">
                   Creation ID:{" "}
-                  <span className="text-[var(--foreground)]">
+                  <span className="text-[var(--ink)]">
                     {creationId}
                   </span>
                 </p>
@@ -51,7 +51,7 @@ export default function CreationEditShellView({
                     type="button"
                     onClick={() => onSetDefaultPc?.()}
                     disabled={settingDefaultPc}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
                   >
                     <UserRound size={14} />
                     {settingDefaultPc ? "Setting..." : "Set Default PC"}
@@ -74,8 +74,8 @@ export default function CreationEditShellView({
                     onClick={() => onSelectSection?.(section.id)}
                     className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
-                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                     }`}
                   >
                     {Icon ? <Icon size={14} /> : null}
@@ -86,7 +86,7 @@ export default function CreationEditShellView({
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
             {sectionContent}
           </div>
         </div>
