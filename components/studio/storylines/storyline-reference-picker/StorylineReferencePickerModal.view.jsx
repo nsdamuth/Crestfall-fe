@@ -27,17 +27,17 @@ export default function StorylineReferencePickerModalView({
       aria-modal="true"
       aria-labelledby={dialogTitleId}
     >
-      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
+      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
         <header className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               {eyebrow}
             </p>
             <h2 id={dialogTitleId} className="mt-2 font-display text-3xl">
               {title}
             </h2>
             {description ? (
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {description}
               </p>
             ) : null}
@@ -46,7 +46,7 @@ export default function StorylineReferencePickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="rounded-xl border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             aria-label={closeLabel}
           >
             <X size={18} />
@@ -62,8 +62,8 @@ export default function StorylineReferencePickerModalView({
                 onClick={() => onTabChange?.(tab.id)}
                 className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                   tab.isActive
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
+                    ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
                 }`}
               >
                 {tab.label}
@@ -72,14 +72,14 @@ export default function StorylineReferencePickerModalView({
           </div>
 
           <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={17} className="text-[var(--muted-gold)]" />
+            <Search size={17} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
               onChange={(event) =>
                 onSearchQueryChange?.(event.target.value)
               }
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--muted)]/60"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--ink-dim)]/60"
             />
           </label>
         </div>
@@ -93,21 +93,21 @@ export default function StorylineReferencePickerModalView({
                   type="button"
                   disabled={item.isSelected}
                   onClick={() => onSelectItem?.(item.id)}
-                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--muted-gold)]/40 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--gold-ornament)]/40 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   <div className="flex items-start gap-3">
                     <BookOpen
                       size={19}
-                      className="mt-1 shrink-0 text-[var(--muted-gold)]"
+                      className="mt-1 shrink-0 text-[var(--gold-ornament)]"
                     />
                     <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                         {item.kindLabel}
                       </p>
                       <h3 className="mt-1 font-display text-2xl">
                         {item.title}
                       </h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted)]">
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--ink-dim)]">
                         {item.subtitle}
                       </p>
                       {item.isSelected ? (
@@ -121,7 +121,7 @@ export default function StorylineReferencePickerModalView({
               ))}
             </div>
           ) : (
-            <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm text-[var(--muted)]">
+            <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm text-[var(--ink-dim)]">
               {emptyMessage}
             </div>
           )}
