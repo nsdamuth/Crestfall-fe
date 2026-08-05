@@ -5,12 +5,12 @@ import LoreEditorView from "@/components/studio/create/lore/lore-editor/LoreEdit
 import LoreDocumentRendererView from "@/components/studio/create/lore/lore-document-renderer/LoreDocumentRenderer.view";
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       {children}
@@ -40,13 +40,13 @@ export default function LoreBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <BookOpenText size={18} />
           <p className="text-xs uppercase tracking-[0.22em]">Lore Asset</p>
         </div>
         <h2 className="mt-3 font-display text-4xl">{title.trim() || "Untitled Lore Asset"}</h2>
-        <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
           Build a structured sourcebook draft. Save it, submit the saved revision for
           security validation, and publish only an immutable snapshot that passes.
         </p>
@@ -62,19 +62,19 @@ export default function LoreBuilderView({
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">Errors</p><p className="mt-2 text-lg">{errorCount}</p></div>
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
+          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Errors</p><p className="mt-2 text-lg">{errorCount}</p></div>
+          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
         </div>
 
-        <button type="button" onClick={() => onSave?.()} disabled={saveDisabled} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50">
+        <button type="button" onClick={() => onSave?.()} disabled={saveDisabled} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50">
           <Save size={15} />{saveStatus === "saving" ? "Saving…" : "Save Draft"}
         </button>
         {saveMessage ? <p className={`mt-3 text-sm ${saveStatus === "error" ? "text-red-200" : "text-emerald-200"}`}>{saveMessage}</p> : null}
       </aside>
 
       <div className="space-y-6">
-        <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 sm:p-6">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">Publication Identity</p>
+        <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">Publication Identity</p>
           <h2 className="mt-2 font-display text-3xl">Name and draft access</h2>
           <div className="mt-5 grid gap-5">
             <Field label="Title"><input className={inputClass} value={title} onChange={(event) => onUpdateIdentity?.("title", event.target.value)} placeholder="Name this Lore Asset…" /></Field>
@@ -87,8 +87,8 @@ export default function LoreBuilderView({
         </section>
 
         <div className="flex gap-2 rounded-xl border border-white/10 bg-black/30 p-2">
-          <button type="button" onClick={() => onSetActiveMode?.("EDIT")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "EDIT" ? "bg-[var(--muted-gold)]/15 text-white" : "text-[var(--muted)]"}`}><Pencil size={14} /> Edit Document</button>
-          <button type="button" onClick={() => onSetActiveMode?.("PREVIEW")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "PREVIEW" ? "bg-[var(--muted-gold)]/15 text-white" : "text-[var(--muted)]"}`}><Eye size={14} /> Preview</button>
+          <button type="button" onClick={() => onSetActiveMode?.("EDIT")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "EDIT" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Pencil size={14} /> Edit Document</button>
+          <button type="button" onClick={() => onSetActiveMode?.("PREVIEW")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "PREVIEW" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Eye size={14} /> Preview</button>
         </div>
 
         {activeMode === "EDIT" ? <LoreEditorView {...editorViewProps} /> : <LoreDocumentRendererView
