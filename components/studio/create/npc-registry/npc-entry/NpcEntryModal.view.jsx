@@ -45,8 +45,8 @@ export default function NpcEntryModalView({
                 onClick={() => onChooseMode?.(option?.id || "")}
                 className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 text-[var(--ink-dim)]"
                 }`}
               >
                 {option?.label || "Entry Mode"}
@@ -67,7 +67,7 @@ export default function NpcEntryModalView({
             />
 
             {linkedCharacterMechanicsNote ? (
-              <p className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+              <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
                 {linkedCharacterMechanicsNote}
               </p>
             ) : null}
