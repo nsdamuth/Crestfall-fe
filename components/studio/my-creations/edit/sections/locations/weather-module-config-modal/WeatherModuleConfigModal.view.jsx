@@ -51,7 +51,7 @@ export default function WeatherModuleConfigModalView({
   if (isInitializing) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-6 text-sm text-[var(--muted)]">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] p-6 text-sm text-[var(--muted)]">
           {loadingMessage}
         </div>
       </div>
@@ -60,7 +60,7 @@ export default function WeatherModuleConfigModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <div className="max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div className="flex items-start gap-3">
             <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
