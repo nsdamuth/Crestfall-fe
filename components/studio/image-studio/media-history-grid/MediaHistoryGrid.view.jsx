@@ -147,13 +147,13 @@ export default function MediaHistoryGridView({
   return (
     <div className="space-y-4">
       {reactionMessage ? (
-        <div className="rounded-2xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {reactionMessage}
         </div>
       ) : null}
 
       {deleteMessage ? (
-        <div className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
           {deleteMessage}
         </div>
       ) : null}
@@ -230,7 +230,7 @@ export default function MediaHistoryGridView({
       </section>
 
       {selectionMode ? (
-        <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
+        <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
           <div>
             <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {selectedCount} selected
@@ -265,7 +265,7 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onBulkDeleteSelected}
               disabled={isBulkDeleting || !selectedCount}
-              className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)] transition hover:bg-[var(--status-danger-border)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)] transition hover:border-[var(--line)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isBulkDeleting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -281,7 +281,7 @@ export default function MediaHistoryGridView({
       ) : null}
 
       {historyStatus === "loading" ? (
-        <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-6 text-sm text-[var(--ink-dim)]">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-6 text-sm text-[var(--ink-dim)]">
           Loading image library...
         </div>
       ) : null}
@@ -293,7 +293,7 @@ export default function MediaHistoryGridView({
       ) : null}
 
       {historyStatus !== "loading" && !mediaItems.length ? (
-        <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-10 text-center">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-10 text-center">
           <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={30} />
           <p className="mt-4 text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             No generated media yet
@@ -447,7 +447,7 @@ function MediaHistoryCard({
           className={`pointer-events-none absolute left-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full border shadow-lg backdrop-blur-md ${
             item.selected
               ? "border-[var(--gold-action)] bg-[var(--gold-action)] text-[var(--tag-fill-ink)]"
-              : "border-white/30 bg-black/70 text-transparent"
+              : "border-[var(--line)] bg-[var(--tag-bed-art)] text-transparent"
           }`}
           aria-hidden="true"
         >
