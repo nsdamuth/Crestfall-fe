@@ -18,7 +18,7 @@ export default function StudioTopBarView({
 }) {
   return (
     <>
-      <header className="mb-8 hidden items-center justify-between gap-6 rounded-2xl border border-[var(--gold-ornament)]/15 bg-black/45 px-5 py-4 backdrop-blur-md lg:flex">
+      <header className="mb-[var(--space-8)] hidden items-center justify-between gap-[var(--space-6)] rounded-2xl border border-[var(--gold-ornament)]/15 bg-black/45 px-[var(--space-5)] py-[var(--space-4)] backdrop-blur-md lg:flex">
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.28em] text-[var(--gold-ornament)]">
             {eyebrow}
