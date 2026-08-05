@@ -119,3 +119,30 @@ stops that unit and reports it. It never guesses.
 
 Generated audit artifacts are exempt from the em dash law and are
 deleted at end of life.
+
+## 8. QA gate
+
+QA GATE (ruled 4 Aug 2026)
+
+A render is not a deliverable. A judgment is.
+
+Every verification agent renders the package, then rules it against every
+rule family assigned to it, returning PASS or FLAG with the specific rule
+named on any FLAG.
+
+A screenshot is never handed to Brian as a question. It is handed as
+evidence behind a ruling already made.
+
+Brian sees three things and nothing else: the count of packages passed,
+every flagged item with what is wrong and the recommended fix, and a
+contact sheet of passing renders for spot approval.
+
+An agent that cannot rule a package flags it. It never asks Brian to look
+and decide in its place.
+
+Scope is verified, never inherited. Before any sweep phase, confirm the
+scope document covers every surface the rules apply to, and report any
+surface outside it.
+
+Every preview link handed to Brian is verified to load first. A link that
+404s is a failed report.
