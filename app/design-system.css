@@ -54,3 +54,33 @@
 @media (prefers-reduced-motion: reduce) {
   .cf-sheen:is(:hover, :focus-visible)::after { animation: none; }
 }
+
+/* --- GALAXY ---------------------------------------------------
+   Source: proof.css, the galaxy layer (lines 247-254). Two
+   stacked layers so the animated one never forces a repaint of
+   the static atmosphere above it; the second, static layer is
+   whatever sits behind .cf-galaxy in a given canvas, unchanged
+   here. Absolutely positioned, z-index -2, pointer-events none,
+   so it never intercepts input on the canvas it sits inside.  */
+
+.cf-galaxy {
+  position: absolute;
+  inset: -10%;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--atm-constellation);
+  animation:
+    cf-galaxy-drift var(--anim-galaxy) linear infinite,
+    cf-galaxy-twinkle var(--anim-twinkle) ease-in-out infinite alternate;
+}
+@keyframes cf-galaxy-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-4%, -3%, 0); }
+}
+@keyframes cf-galaxy-twinkle {
+  from { opacity: 0.45; }
+  to { opacity: 0.95; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-galaxy { animation: none; }
+}
