@@ -14,7 +14,7 @@ function SelectedClothingCard({
 }) {
   return (
     <div className="md:col-span-2">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {clothingLabel}
       </p>
 
@@ -29,17 +29,17 @@ function SelectedClothingCard({
             />
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {selectedClothing.label}
               </p>
               <h4 className="mt-1 font-display text-3xl">
                 {selectedClothing.title || selectedClothingFallbackTitle}
               </h4>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {selectedClothing.description || noDescriptionLabel}
               </p>
               {selectedClothing.id ? (
-                <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                   {selectedClothing.id}
                 </p>
               ) : null}
@@ -56,7 +56,7 @@ function SelectedClothingCard({
             </button>
           </div>
         ) : (
-          <p className="text-sm leading-6 text-[var(--muted)]">
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
             {emptyClothingDescription}
           </p>
         )}
@@ -65,7 +65,7 @@ function SelectedClothingCard({
           <button
             type="button"
             onClick={() => onPickOutfit?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Shirt size={14} />
             {selectedClothing.outfitButtonLabel || "Select Outfit"}
@@ -74,7 +74,7 @@ function SelectedClothingCard({
           <button
             type="button"
             onClick={() => onPickWardrobe?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Shirt size={14} />
             {selectedClothing.wardrobeButtonLabel || "Select Wardrobe"}
