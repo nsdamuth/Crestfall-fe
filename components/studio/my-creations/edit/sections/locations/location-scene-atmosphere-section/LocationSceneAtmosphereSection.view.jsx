@@ -90,7 +90,7 @@ export default function LocationSceneAtmosphereSectionView({
 
       <div className="mt-6">
         {sensoryEnvironmentSlot || (
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
             {sensoryEnvironmentFallbackText}
           </div>
         )}
