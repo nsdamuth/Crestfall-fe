@@ -40,11 +40,11 @@ export default function StorylineNodeListEditorView({
     <div className="space-y-5">
       <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {headerEyebrow}
           </p>
           <h3 className="mt-2 font-display text-3xl">{nodeCountLabel}</h3>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             {headerDescription}
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function StorylineNodeListEditorView({
           <button
             type="button"
             onClick={() => onOpenReferencePicker?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Plus size={15} />
             {addReferenceLabel}
@@ -68,7 +68,7 @@ export default function StorylineNodeListEditorView({
       ) : null}
 
       {!nodes.length ? (
-        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm leading-6 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 p-8 text-center text-sm leading-6 text-[var(--ink-dim)]">
           {emptyStateMessage}
         </div>
       ) : null}
@@ -80,16 +80,16 @@ export default function StorylineNodeListEditorView({
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-xl text-[var(--muted-gold)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
                 {node.positionLabel}
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   {node.referenceTypeLabel}
                   {node.finalNodeLabel}
                 </p>
                 <h4 className="mt-1 font-display text-3xl">{node.title}</h4>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
                   {node.subtitle}
                 </p>
               </div>
@@ -101,7 +101,7 @@ export default function StorylineNodeListEditorView({
                   type="button"
                   disabled={node.isFirst}
                   onClick={() => onMoveNodeUp?.(node.index)}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-35"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-35"
                   aria-label="Move node up"
                 >
                   <ArrowUp size={16} />
@@ -110,7 +110,7 @@ export default function StorylineNodeListEditorView({
                   type="button"
                   disabled={node.isLast}
                   onClick={() => onMoveNodeDown?.(node.index)}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-35"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-35"
                   aria-label="Move node down"
                 >
                   <ArrowDown size={16} />
@@ -132,7 +132,7 @@ export default function StorylineNodeListEditorView({
             <>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <label className="block">
-                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Completion Guidance
                   </span>
                   <textarea
@@ -150,7 +150,7 @@ export default function StorylineNodeListEditorView({
                 </label>
 
                 <label className="block">
-                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Transition After Completion
                   </span>
                   <select
@@ -170,25 +170,25 @@ export default function StorylineNodeListEditorView({
                       </option>
                     ))}
                   </select>
-                  <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                     {node.transitionDescription}
                   </p>
                 </label>
               </div>
 
               {node.needsTriggers ? (
-                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/25 p-4">
+                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/25 p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
                       <GitBranch
                         size={18}
-                        className="mt-1 text-[var(--muted-gold)]"
+                        className="mt-1 text-[var(--gold-ornament)]"
                       />
                       <div>
-                        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                           Next-Node Triggers
                         </p>
-                        <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+                        <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
                           Triggers make the following node eligible. They do not
                           invent player consent or force the player onto the
                           path.
@@ -216,7 +216,7 @@ export default function StorylineNodeListEditorView({
                       <button
                         type="button"
                         onClick={() => onAddTrigger?.(node.index)}
-                        className="rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)]"
+                        className="rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]"
                       >
                         Add Trigger
                       </button>
@@ -285,7 +285,7 @@ export default function StorylineNodeListEditorView({
                     ))}
 
                     {!node.triggers.length ? (
-                      <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-[var(--muted)]">
+                      <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-[var(--ink-dim)]">
                         Add at least one trigger before treating this Storyline as
                         runtime-ready.
                       </p>
@@ -297,7 +297,7 @@ export default function StorylineNodeListEditorView({
               {node.showOpenWorldGuidance ? (
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <label className="block">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                       Open-World Guidance
                     </span>
                     <textarea
@@ -314,7 +314,7 @@ export default function StorylineNodeListEditorView({
                     />
                   </label>
                   <label className="block">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                       Consequence / Pressure Guidance
                     </span>
                     <textarea
