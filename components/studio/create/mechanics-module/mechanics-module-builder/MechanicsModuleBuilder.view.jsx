@@ -6,7 +6,7 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
         {eyebrow}
       </p>
@@ -51,7 +51,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
 
 function RuntimeFieldsFixtureFallback() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--muted)]">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--muted)]">
       The live Binding Shell supplies the Crestfall mechanics fields editor here.
       Fixture previews keep this application-owned editor disconnected from
       persistence and runtime state.
@@ -78,7 +78,7 @@ export default function MechanicsModuleBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.38fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Mechanics Module Builder
         </p>
@@ -92,7 +92,7 @@ export default function MechanicsModuleBuilderView({
           locations, characters, scenarios, or narrators.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
             Runtime Contract
           </p>
@@ -173,7 +173,7 @@ export default function MechanicsModuleBuilderView({
           eyebrow="Runtime Fields"
           title="Meters, Commands, Status Blocks, and Guards"
         >
-          <div className="mb-6 flex items-start gap-3 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <Activity className="mt-1 text-[var(--muted-gold)]" size={20} />
             <div>
               <p className="text-sm text-[var(--foreground)]">
