@@ -70,21 +70,21 @@ export default async function StudioPage() {
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
               href="/studio/games"
-              className="rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/15 px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-[var(--muted-gold)]/25"
+              className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/15 px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-[var(--muted-gold)]/25"
             >
               Browse Games
             </Link>
 
             <Link
               href="/studio/community"
-              className="rounded-xl border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="rounded-[var(--radius-md)] border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
             >
               Community Stories
             </Link>
 
             <Link
               href="/studio/create"
-              className="rounded-xl border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="rounded-[var(--radius-md)] border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
             >
               Create Something
             </Link>
@@ -94,12 +94,12 @@ export default async function StudioPage() {
         <input
           type="search"
           placeholder="Search games, rooms, characters..."
-          className="w-full rounded-full border border-[var(--muted-gold)]/20 bg-black/50 px-5 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)]/60 focus:border-[var(--muted-gold)]/60 lg:max-w-sm"
+          className="w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/50 px-5 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)]/60 focus:border-[var(--muted-gold)]/60 lg:max-w-sm"
         />
       </header>
 
       <section className="mt-10 grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-8 shadow-2xl">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-8 shadow-2xl">
           <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted-gold)]">
             Start Playing
           </p>
@@ -119,7 +119,7 @@ export default async function StudioPage() {
               <Link
                 key={card.id}
                 href={card.href}
-                className="rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
+                className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
               >
                 <h3 className="font-display text-2xl">{card.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
@@ -133,7 +133,7 @@ export default async function StudioPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-8">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-8">
           <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted-gold)]">
             Continue
           </p>
@@ -147,7 +147,7 @@ export default async function StudioPage() {
 
           <Link
             href="/studio/my-creations"
-            className="mt-8 inline-flex rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-5 py-3 text-sm uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="mt-8 inline-flex rounded-[var(--radius-md)] border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-5 py-3 text-sm uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
           >
             View My Stuff
           </Link>
@@ -155,7 +155,7 @@ export default async function StudioPage() {
       </section>
 
       <section className="mt-8">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-8">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/35 p-8">
           <p className="text-sm uppercase tracking-[0.3em] text-[var(--muted-gold)]">
             Create Your Own
           </p>
@@ -175,7 +175,7 @@ export default async function StudioPage() {
               <Link
                 key={card.id}
                 href={card.href}
-                className="rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
+                className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10"
               >
                 <h3 className="font-display text-2xl">{card.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
