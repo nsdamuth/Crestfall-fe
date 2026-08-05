@@ -50,7 +50,7 @@ export default function OutfitPromptGuidanceSectionView({
 
       <div className="mt-6 grid gap-5">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {clothingModeLabel}
           </p>
 
@@ -62,11 +62,11 @@ export default function OutfitPromptGuidanceSectionView({
                 onClick={() => onClothingModeChange?.(option.value)}
                 className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                   option.active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 }`}
               >
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   {option.label}
                 </p>
                 <p className="mt-2 text-sm leading-6">{option.description}</p>
@@ -96,10 +96,10 @@ export default function OutfitPromptGuidanceSectionView({
             />
 
             <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 {advancedSectionsTitle}
               </p>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {advancedSectionsDescription}
               </p>
             </div>
