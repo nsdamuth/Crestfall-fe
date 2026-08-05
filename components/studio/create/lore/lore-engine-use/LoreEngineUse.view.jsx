@@ -48,7 +48,7 @@ const STATUS_PRESENTATION = {
   },
   CANCELLED: {
     label: "Cancelled",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   },
   FAILED: {
     label: "Failed",
@@ -56,11 +56,11 @@ const STATUS_PRESENTATION = {
   },
   WITHDRAWN: {
     label: "Withdrawn",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   },
   SUPERSEDED: {
     label: "Superseded",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   },
 };
 
@@ -75,7 +75,7 @@ function EngineUseStatusBadge({ status }) {
   const normalized = String(status || "").trim().toUpperCase();
   const presentation = STATUS_PRESENTATION[normalized] || {
     label: normalized || "Not submitted",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   };
 
   return (
@@ -98,7 +98,7 @@ function ReferenceChoice({
     <div
       className={`rounded-xl border p-4 transition ${
         selected
-          ? "border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10"
+          ? "border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10"
           : "border-white/10 bg-black/20"
       }`}
     >
@@ -107,14 +107,14 @@ function ReferenceChoice({
           type="checkbox"
           checked={selected}
           onChange={onToggle}
-          className="mt-1 h-4 w-4 accent-[var(--muted-gold)]"
+          className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
         />
-        <Icon size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+        <Icon size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm text-[var(--foreground)]">
+          <span className="block truncate text-sm text-[var(--ink)]">
             {refItem.title}
           </span>
-          <span className="mt-1 block text-xs text-[var(--muted)]">
+          <span className="mt-1 block text-xs text-[var(--ink-dim)]">
             {selected ? "Included in this submission" : "Not included"}
           </span>
         </span>
@@ -129,7 +129,7 @@ function SubmissionHistory({ submissions }) {
 
   return (
     <div className="mt-5 border-t border-white/10 pt-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Recent engine-use submissions
       </p>
       <div className="mt-3 grid gap-2">
@@ -139,10 +139,10 @@ function SubmissionHistory({ submissions }) {
             className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
           >
             <div>
-              <p className="text-sm text-[var(--foreground)]">
+              <p className="text-sm text-[var(--ink)]">
                 Public revision {submission.sourceRevisionNumber || "—"}
               </p>
-              <p className="mt-1 text-xs text-[var(--muted)]">
+              <p className="mt-1 text-xs text-[var(--ink-dim)]">
                 Submitted {formatDate(submission.submittedAt || submission.createdAt)}
               </p>
             </div>
@@ -197,10 +197,10 @@ export default function LoreEngineUseView({
             Character use
           </p>
           <h3 className="mt-2 font-display text-3xl">Submit for Engine Use</h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">
             Choose which parts of the active public Lore revision may be prepared for approved Characters, and identify the Locations that should provide contextual relevance.
           </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-[var(--ink-dim)]">
             This is separate from publication. The editable draft and public page are not changed by this submission.
           </p>
         </div>
@@ -209,7 +209,7 @@ export default function LoreEngineUseView({
           type="button"
           onClick={refresh}
           disabled={loadStatus === "LOADING"}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-violet-300/35 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-violet-300/35 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
         >
           <RefreshCw
             size={13}
@@ -239,7 +239,7 @@ export default function LoreEngineUseView({
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Source revision
               </p>
-              <p className="mt-1 text-sm text-[var(--foreground)]">
+              <p className="mt-1 text-sm text-[var(--ink)]">
                 Public revision {source.revisionNumber || "—"}
               </p>
             </div>
@@ -247,7 +247,7 @@ export default function LoreEngineUseView({
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Characters
               </p>
-              <p className="mt-1 text-sm text-[var(--foreground)]">
+              <p className="mt-1 text-sm text-[var(--ink)]">
                 {characterRefs.length}
               </p>
             </div>
@@ -255,7 +255,7 @@ export default function LoreEngineUseView({
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Locations
               </p>
-              <p className="mt-1 text-sm text-[var(--foreground)]">
+              <p className="mt-1 text-sm text-[var(--ink)]">
                 {locationRefs.length}
               </p>
             </div>
@@ -265,10 +265,10 @@ export default function LoreEngineUseView({
             <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
                     Latest engine-use submission
                   </p>
-                  <p className="mt-2 text-sm text-[var(--foreground)]">
+                  <p className="mt-2 text-sm text-[var(--ink)]">
                     Public revision {latest.sourceRevisionNumber || "—"} · {formatDate(latest.submittedAt || latest.createdAt)}
                   </p>
                 </div>
@@ -339,7 +339,7 @@ export default function LoreEngineUseView({
                     <p className="text-xs uppercase tracking-[0.18em] text-violet-200">
                       Lore scope
                     </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">
+                    <p className="mt-1 text-sm text-[var(--ink-dim)]">
                       Choose the authored material included in this submission.
                     </p>
                   </div>
@@ -355,10 +355,10 @@ export default function LoreEngineUseView({
                         : "border-white/10 bg-black/20"
                     }`}
                   >
-                    <span className="block text-sm text-[var(--foreground)]">
+                    <span className="block text-sm text-[var(--ink)]">
                       Entire public revision
                     </span>
-                    <span className="mt-1 block text-xs text-[var(--muted)]">
+                    <span className="mt-1 block text-xs text-[var(--ink-dim)]">
                       Include every chapter and section.
                     </span>
                   </button>
@@ -372,10 +372,10 @@ export default function LoreEngineUseView({
                         : "border-white/10 bg-black/20"
                     }`}
                   >
-                    <span className="block text-sm text-[var(--foreground)]">
+                    <span className="block text-sm text-[var(--ink)]">
                       Selected sections
                     </span>
-                    <span className="mt-1 block text-xs text-[var(--muted)]">
+                    <span className="mt-1 block text-xs text-[var(--ink-dim)]">
                       Include only specific sections.
                     </span>
                   </button>
@@ -392,13 +392,13 @@ export default function LoreEngineUseView({
                           type="checkbox"
                           checked={selectedSectionIds.includes(section.id)}
                           onChange={() => toggleSection(section.id)}
-                          className="mt-1 h-4 w-4 accent-[var(--muted-gold)]"
+                          className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                         />
                         <span>
-                          <span className="block text-sm text-[var(--foreground)]">
+                          <span className="block text-sm text-[var(--ink)]">
                             {section.title}
                           </span>
-                          <span className="mt-1 block text-xs text-[var(--muted)]">
+                          <span className="mt-1 block text-xs text-[var(--ink-dim)]">
                             {section.chapterTitle}
                           </span>
                         </span>
@@ -415,7 +415,7 @@ export default function LoreEngineUseView({
                     <p className="text-xs uppercase tracking-[0.18em] text-violet-200">
                       Character knowledge
                     </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">
+                    <p className="mt-1 text-sm text-[var(--ink-dim)]">
                       Select at least one tagged Character and describe how they know the Lore.
                     </p>
                   </div>
@@ -433,7 +433,7 @@ export default function LoreEngineUseView({
                           selected={selected}
                           onToggle={() => toggleCharacter(refItem.id)}
                         >
-                          <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">
+                          <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                             Knowledge relationship
                             <select
                               value={knowledgeModes[refItem.id] || "SECONDHAND"}
@@ -443,7 +443,7 @@ export default function LoreEngineUseView({
                                   event.target.value
                                 )
                               }
-                              className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--foreground)]"
+                              className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
                             >
                               {knowledgeModeOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -457,7 +457,7 @@ export default function LoreEngineUseView({
                     })}
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-xl border border-dashed border-white/15 px-4 py-4 text-sm text-[var(--muted)]">
+                  <div className="mt-4 rounded-xl border border-dashed border-white/15 px-4 py-4 text-sm text-[var(--ink-dim)]">
                     Tag at least one Character in the Lore document before submitting it for engine use.
                   </div>
                 )}
@@ -470,7 +470,7 @@ export default function LoreEngineUseView({
                     <p className="text-xs uppercase tracking-[0.18em] text-violet-200">
                       Location relevance
                     </p>
-                    <p className="mt-1 text-sm text-[var(--muted)]">
+                    <p className="mt-1 text-sm text-[var(--ink-dim)]">
                       Optional Location associations can make this Lore relevant to matching story contexts. They do not grant knowledge to every Character at that Location.
                     </p>
                   </div>
@@ -489,7 +489,7 @@ export default function LoreEngineUseView({
                     ))}
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-xl border border-dashed border-white/15 px-4 py-4 text-sm text-[var(--muted)]">
+                  <div className="mt-4 rounded-xl border border-dashed border-white/15 px-4 py-4 text-sm text-[var(--ink-dim)]">
                     This public Lore revision has no tagged Locations.
                   </div>
                 )}
