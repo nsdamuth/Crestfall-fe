@@ -61,7 +61,7 @@ export default function MyCreationsHubView({
             <button
               type="button"
               onClick={onToggleMobileGridMode || undefined}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:hidden"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:hidden"
             >
               <Grid2X2 size={14} />
               {mobileGridToggleLabel}
@@ -69,7 +69,7 @@ export default function MyCreationsHubView({
 
             <InternalLinkComponent
               href={createHref}
-              className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               {createLabel}
             </InternalLinkComponent>
@@ -77,12 +77,12 @@ export default function MyCreationsHubView({
         }
       >
         <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-          <Search size={16} className="text-[var(--muted-gold)]" />
+          <Search size={16} className="text-[var(--gold-ornament)]" />
           <input
             value={query}
             onChange={(event) => onQueryChange?.(event.target.value)}
             placeholder={queryPlaceholder}
-            className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+            className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
           />
         </div>
 
@@ -109,8 +109,8 @@ export default function MyCreationsHubView({
                 onClick={() => onActiveTabChange?.(tab.id)}
                 className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                   active
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 }`}
               >
                 {tab.label}
@@ -144,14 +144,14 @@ export default function MyCreationsHubView({
         ) : (
           <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
             <p className="font-display text-3xl">No creations here yet</p>
-            <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
+            <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
               This section will populate once creation drafts are saved. Current
               tab:{" "}
-              <span className="text-[var(--muted-gold)]">{activeTab}</span>
+              <span className="text-[var(--gold-ornament)]">{activeTab}</span>
               {hasActiveTag ? (
                 <>
                   {" "}/ active tag:{" "}
-                  <span className="text-[var(--muted-gold)]">
+                  <span className="text-[var(--gold-ornament)]">
                     {activeTag}
                   </span>
                 </>
@@ -161,7 +161,7 @@ export default function MyCreationsHubView({
 
             <InternalLinkComponent
               href={createHref}
-              className="mt-6 inline-block rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="mt-6 inline-block rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               {emptyActionLabel}
             </InternalLinkComponent>
@@ -174,7 +174,7 @@ export default function MyCreationsHubView({
           <button
             type="button"
             onClick={onLoadMore || undefined}
-            className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             Load {nextLoadCount} More
           </button>
