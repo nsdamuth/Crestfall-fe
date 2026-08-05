@@ -107,7 +107,7 @@ function SelectedReferenceChip({ item, onRemove }) {
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-200"
+        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
         aria-label={`Remove ${item.title}`}
       >
         <X size={14} />
