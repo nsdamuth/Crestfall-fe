@@ -15,7 +15,7 @@ export default function ScenarioRecommendationsPanel({
   } = recommendations;
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 p-5">
+    <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">

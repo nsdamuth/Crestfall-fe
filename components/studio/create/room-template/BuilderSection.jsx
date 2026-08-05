@@ -1,6 +1,6 @@
 export default function BuilderSection({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
         {eyebrow}
       </p>

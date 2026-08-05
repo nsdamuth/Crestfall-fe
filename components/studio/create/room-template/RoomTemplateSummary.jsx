@@ -5,7 +5,7 @@ export default function RoomTemplateSummary({
   selectedLocation,
 }) {
   return (
-    <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
         Story Package
       </p>
