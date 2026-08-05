@@ -16,7 +16,7 @@ export default function DefaultClothingSelectorView({
         Clothing Style
       </p>
 
-      <div className="mt-2 rounded-2xl border border-white/10 bg-black/35 p-4">
+      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
         {selectedClothing ? (
           <div className="flex flex-wrap items-start gap-4">
             <div
