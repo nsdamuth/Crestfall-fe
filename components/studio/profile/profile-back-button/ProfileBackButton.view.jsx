@@ -11,7 +11,7 @@ export default function ProfileBackButtonView({
       type="button"
       onClick={() => onGoBack?.()}
       aria-label={ariaLabel}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-black/45 text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-black/45 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
     >
       <ArrowLeft size={18} />
     </button>
