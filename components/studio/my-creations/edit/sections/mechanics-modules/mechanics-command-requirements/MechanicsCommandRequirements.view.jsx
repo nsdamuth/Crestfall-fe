@@ -134,7 +134,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="rounded-xl border border-white/10 bg-transparent p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
           title="Remove requirement"
         >
           <Trash2 size={13} />
