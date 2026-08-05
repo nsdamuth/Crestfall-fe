@@ -236,7 +236,7 @@ function DefinitionHeader({
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="rounded-lg border border-red-300/15 p-2 text-red-200/75 transition hover:border-red-300/35 hover:text-red-100 disabled:opacity-30"
+          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
           aria-label="Remove definition"
         >
           <Trash2 size={15} />
@@ -419,7 +419,7 @@ function FormulaEditor({
                   type="button"
                   onClick={() => onRemoveOperand?.(kind, definitionId, index)}
                   disabled={disabled || operands.length <= 2}
-                  className="mt-7 self-start rounded-lg border border-red-300/15 p-2 text-red-200/75 transition hover:border-red-300/35 hover:text-red-100 disabled:opacity-30"
+                  className="mt-7 self-start rounded-lg border border-white/10 p-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
                   aria-label="Remove formula operand"
                 >
                   <Minus size={15} />
@@ -1339,7 +1339,7 @@ export default function StatsPoolsEditorView({
   };
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
