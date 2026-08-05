@@ -44,7 +44,7 @@ export default function StoryRoomCastPanelView({
   const safeDeleteAction = deleteAction || {};
 
   return (
-    <aside className="min-w-0 overflow-hidden self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+    <aside className="min-w-0 overflow-hidden self-start rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
       <div className="mb-4 flex items-center justify-between gap-3">
         <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {eyebrow}
@@ -63,7 +63,7 @@ export default function StoryRoomCastPanelView({
         ) : null}
       </div>
 
-      <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
+      <div className="aspect-[4/5] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
         {safeFeaturedMedia.imageUrl ? (
           <div className="relative h-full w-full">
             <img
@@ -186,7 +186,7 @@ export default function StoryRoomCastPanelView({
             type="button"
             onClick={() => onDeleteRoom?.()}
             disabled={safeDeleteAction.disabled}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[var(--status-danger)] px-6 text-base leading-6 font-bold text-[var(--ink)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line-strong)] px-6 text-base leading-6 font-bold text-[var(--status-danger)] transition hover:border-[var(--status-danger)] hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
           >
             <Trash2 size={14} />
             {safeDeleteAction.busy
