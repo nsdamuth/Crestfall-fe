@@ -63,14 +63,14 @@ export default function StudioSidebarView({
   return (
     <aside
       className={`
-        hidden shrink-0 border-r border-[var(--muted-gold)]/15 bg-black/80 px-3 py-5 transition-all duration-300 lg:block
+        hidden shrink-0 border-r border-[var(--gold-ornament)]/15 bg-black/80 px-3 py-5 transition-all duration-300 lg:block
         ${collapsed ? "w-16" : "w-56"}
       `}
     >
       <div className="flex items-center justify-between gap-2">
         {!collapsed ? (
           <InternalLinkComponent href={brandHref} className="block">
-            <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--muted-gold)]">
+            <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
               {brandEyebrow}
             </p>
 
@@ -83,7 +83,7 @@ export default function StudioSidebarView({
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="rounded-lg border border-[var(--muted-gold)]/20 p-2 text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/60 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+          className="rounded-lg border border-[var(--gold-ornament)]/20 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/60 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           aria-label={collapseAriaLabel}
         >
           {collapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
@@ -123,7 +123,7 @@ export default function StudioSidebarView({
           <button
             type="button"
             onClick={onToggleSocial}
-            className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           >
             <span>{communityLinksLabel}</span>
             {socialOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
@@ -146,13 +146,13 @@ export default function StudioSidebarView({
       )}
 
       {!collapsed ? (
-        <div className="mt-8 rounded-xl border border-[var(--muted-gold)]/15 bg-black/40 p-3 text-xs text-[var(--muted)]">
-          <p className="text-[var(--muted-gold)]">{signedInLabel}</p>
+        <div className="mt-8 rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3 text-xs text-[var(--ink-dim)]">
+          <p className="text-[var(--gold-ornament)]">{signedInLabel}</p>
           <p className="mt-1 break-all">{signedInEmail}</p>
 
           <a
             href={logoutHref}
-            className="mt-4 flex items-center gap-2 text-[var(--muted-gold)] transition hover:text-[var(--foreground)]"
+            className="mt-4 flex items-center gap-2 text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
           >
             <LogOut size={14} />
             {logoutLabel}
@@ -164,7 +164,7 @@ export default function StudioSidebarView({
 }
 
 function SidebarDivider() {
-  return <div className="my-4 border-t border-[var(--muted-gold)]/15" />;
+  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
 }
 
 function SidebarInternalLink({
@@ -182,10 +182,10 @@ function SidebarInternalLink({
         flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] transition
         ${
           link.variant === "return"
-            ? "border border-[var(--muted-gold)]/15 bg-black/35 text-[var(--muted-gold)] hover:border-[var(--muted-gold)]/40 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            ? "border border-[var(--gold-ornament)]/15 bg-black/35 text-[var(--gold-ornament)] hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
             : link.isActive
-              ? "border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-              : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+              ? "border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+              : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
         }
         ${collapsed ? "justify-center px-2" : ""}
       `}
@@ -207,8 +207,8 @@ function SidebarExternalLink({ link, collapsed = false }) {
       title={collapsed ? link.label : undefined}
       className={
         collapsed
-          ? "flex items-center justify-center rounded-lg px-2 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
-          : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+          ? "flex items-center justify-center rounded-lg px-2 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+          : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
       }
     >
       <Icon size={16} className="shrink-0" />
