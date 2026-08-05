@@ -178,7 +178,7 @@ export default function RuntimeMechanicsModulesSection({
         />
       ) : null}
 
-      <div className="mt-6 rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
@@ -274,7 +274,7 @@ export default function RuntimeMechanicsModulesSection({
                         onClick={() =>
                           removeMechanicsModuleBinding(moduleCreationId)
                         }
-                        className="rounded-xl border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+                        className="rounded-xl border border-white/10 p-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
                         title="Remove mechanics module"
                       >
                         <X size={14} />
