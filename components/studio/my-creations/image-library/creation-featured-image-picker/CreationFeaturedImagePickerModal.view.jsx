@@ -21,8 +21,8 @@ export default function CreationFeaturedImagePickerModalView({
   onChooseImage = null,
 }) {
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
+      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -89,7 +89,7 @@ export default function CreationFeaturedImagePickerModalView({
           ) : null}
 
           {!isLoading && !images.length ? (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
               <ImageIcon size={30} className="mx-auto text-[var(--muted-gold)]" />
               <p className="mt-4 font-display text-3xl">No eligible images</p>
               <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[var(--muted)]">
@@ -110,7 +110,7 @@ export default function CreationFeaturedImagePickerModalView({
                     type="button"
                     onClick={() => onChooseImage?.(image?.id)}
                     disabled={busy}
-                    className="group overflow-hidden rounded-2xl border border-white/10 bg-black/30 p-3 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="group overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <div className="aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-black/40">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
