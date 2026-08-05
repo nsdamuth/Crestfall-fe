@@ -81,7 +81,7 @@ export default function CreationCardView({
             </div>
           )}
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--scrim)] via-black/20 to-transparent" />
 
           <div
             className={`absolute left-3 right-3 top-3 ${
@@ -102,7 +102,7 @@ export default function CreationCardView({
                 onClick={(event) =>
                   stopPropagationAndInvoke(event, onToggleLike)
                 }
-                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 backdrop-blur transition hover:bg-[var(--muted-gold)]/25 ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 transition hover:bg-[var(--muted-gold)]/25 ${
                   liked ? "text-pink-300" : "text-[var(--foreground)]"
                 }`}
                 title={liked ? "Unlike" : "Like"}
@@ -118,7 +118,7 @@ export default function CreationCardView({
                 onClick={(event) =>
                   stopPropagationAndInvoke(event, onToggleBookmark)
                 }
-                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 backdrop-blur transition hover:bg-[var(--muted-gold)]/25 ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 transition hover:bg-[var(--muted-gold)]/25 ${
                   bookmarked ? "text-pink-300" : "text-[var(--foreground)]"
                 }`}
                 title={bookmarked ? "Remove bookmark" : "Bookmark"}
@@ -145,7 +145,7 @@ export default function CreationCardView({
                   )
                 }
                 disabled={isSettingDefaultPlayerCharacter}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] backdrop-blur transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-wait disabled:opacity-60"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-wait disabled:opacity-60"
                 title={
                   isSettingDefaultPlayerCharacter
                     ? "Setting default Player Character..."
@@ -164,7 +164,7 @@ export default function CreationCardView({
                   stopPropagationAndInvoke(event, onStartChat)
                 }
                 disabled={isStartingChat}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] backdrop-blur transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-wait disabled:opacity-60"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-wait disabled:opacity-60"
                 title={isStartingChat ? "Starting story..." : "Start chat"}
                 aria-label={isStartingChat ? "Starting story" : "Start chat"}
               >
@@ -175,7 +175,7 @@ export default function CreationCardView({
             <LinkComponent
               href={imageHref}
               onClick={(event) => event.stopPropagation()}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] backdrop-blur transition hover:bg-[var(--muted-gold)]/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25"
               title="Generate image"
             >
               <ImageIcon size={15} />
@@ -185,7 +185,7 @@ export default function CreationCardView({
               <LinkComponent
                 href={editHref}
                 onClick={(event) => event.stopPropagation()}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] backdrop-blur transition hover:bg-[var(--muted-gold)]/25"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25"
                 title="Edit"
               >
                 <PenLine size={15} />
@@ -254,13 +254,13 @@ export default function CreationCardView({
           </div>
 
           {errorMessage ? (
-            <div className="absolute inset-x-3 bottom-3 z-30 rounded-xl border border-red-500/35 bg-red-950/90 px-3 py-3 text-xs leading-5 text-red-100 shadow-xl shadow-black/50 backdrop-blur">
+            <div className="absolute inset-x-3 bottom-3 z-30 rounded-xl border border-red-500/35 bg-red-950/90 px-3 py-3 text-xs leading-5 text-red-100 shadow-xl shadow-black/50">
               {errorMessage}
             </div>
           ) : null}
 
           {statusMessage ? (
-            <div className="absolute inset-x-3 bottom-3 z-30 rounded-xl border border-emerald-500/35 bg-emerald-950/90 px-3 py-3 text-xs leading-5 text-emerald-100 shadow-xl shadow-black/50 backdrop-blur">
+            <div className="absolute inset-x-3 bottom-3 z-30 rounded-xl border border-emerald-500/35 bg-emerald-950/90 px-3 py-3 text-xs leading-5 text-emerald-100 shadow-xl shadow-black/50">
               {statusMessage}
             </div>
           ) : null}
