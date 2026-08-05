@@ -25,12 +25,12 @@ function toViewPalette(palette) {
       colors.whisper,
     ].filter(Boolean),
     previewColors: {
-      dialogue: colors.dialogue || "var(--foreground)",
-      narration: colors.narration || "var(--muted)",
-      emphasis: colors.emphasis || "var(--muted-gold)",
-      strong: colors.strong || "var(--foreground)",
-      whisper: colors.whisper || "var(--muted)",
-      speaker: colors.speaker || "var(--foreground)",
+      dialogue: colors.dialogue || "var(--ink)",
+      narration: colors.narration || "var(--ink-dim)",
+      emphasis: colors.emphasis || "var(--gold-ornament)",
+      strong: colors.strong || "var(--ink)",
+      whisper: colors.whisper || "var(--ink-dim)",
+      speaker: colors.speaker || "var(--ink)",
       border: colors.border || "transparent",
     },
   };

@@ -27,13 +27,13 @@ function PalettePreviewCard({ palette = {}, selected = false, onSelect = null })
       onClick={() => onSelect?.()}
       className={`relative rounded-[var(--radius-md)] border p-4 text-left transition hover:-translate-y-0.5 ${
         selected
-          ? "border-[var(--muted-gold)]/70 bg-[var(--muted-gold)]/10"
+          ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/10"
           : "border-white/10 bg-black/30 hover:border-white/25"
       }`}
       style={{ boxShadow: selected ? `0 0 0 1px ${colors.border}` : undefined }}
     >
       {selected ? (
-        <span className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--muted-gold)] text-black">
+        <span className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--gold-ornament)] text-black">
           <Check size={14} />
         </span>
       ) : null}
@@ -43,7 +43,7 @@ function PalettePreviewCard({ palette = {}, selected = false, onSelect = null })
       <p className="mt-3 pr-8 text-sm font-medium" style={{ color: colors.speaker }}>
         {palette?.label || "Untitled Palette"}
       </p>
-      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+      <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
         {palette?.description || ""}
       </p>
 
@@ -83,18 +83,18 @@ export default function CharacterColorPaletteModalView({
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left transition hover:border-[var(--muted-gold)]/40"
+        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left transition hover:border-[var(--gold-ornament)]/40"
       >
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           {triggerEyebrow}
         </span>
 
         <span className="mt-3 flex items-center justify-between gap-4">
           <span className="min-w-0">
-            <span className="block text-sm text-[var(--foreground)]">
+            <span className="block text-sm text-[var(--ink)]">
               {triggerPalette?.label || "Untitled Palette"}
             </span>
-            <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+            <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
               {triggerDescription}
             </span>
           </span>
@@ -116,17 +116,17 @@ export default function CharacterColorPaletteModalView({
             role="dialog"
             aria-modal="true"
             aria-label={modalAriaLabel}
-            className="max-h-[88vh] w-full max-w-6xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#090807] p-5 shadow-2xl sm:p-7"
+            className="max-h-[88vh] w-full max-w-6xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#090807] p-5 shadow-2xl sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+                <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
                   <Palette size={15} />
                   {modalEyebrow}
                 </p>
                 <h2 className="mt-2 font-display text-4xl">{modalTitle}</h2>
                 {modalDescription ? (
-                  <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
                     {modalDescription}
                   </p>
                 ) : null}
@@ -135,7 +135,7 @@ export default function CharacterColorPaletteModalView({
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                className="rounded-full border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="rounded-full border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
                 aria-label="Close palette selector"
               >
                 <X size={18} />
@@ -153,7 +153,7 @@ export default function CharacterColorPaletteModalView({
 
                   return (
                     <section key={family?.id || family?.label}>
-                      <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                         {family?.label || "Palette Family"}
                       </p>
                       <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -171,7 +171,7 @@ export default function CharacterColorPaletteModalView({
                 })}
               </div>
             ) : (
-              <div className="mt-7 rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-6 text-sm leading-6 text-[var(--muted)]">
+              <div className="mt-7 rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-6 text-sm leading-6 text-[var(--ink-dim)]">
                 No color palettes are available.
               </div>
             )}
