@@ -119,7 +119,7 @@ export default function StoryNarrativeRuntimeSectionView({
           <details
             key={phase.id}
             open={phase.initiallyOpen}
-            className="group rounded-2xl border border-white/10 bg-black/25 p-4"
+            className="group rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
           >
             <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
               <div className="flex items-center justify-between gap-4">
