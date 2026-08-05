@@ -36,8 +36,8 @@ export default function CreatorCardView({
           DEFAULT_PROFILE_BANNER
             ? {
                 backgroundImage: `linear-gradient(to top, var(--scrim-strong), transparent), url(${DEFAULT_PROFILE_BANNER})`,
-                backgroundPosition: "40% -20px",
-                backgroundSize: "auto 100%",
+                backgroundPosition: "center",
+                backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
               }
             : undefined
