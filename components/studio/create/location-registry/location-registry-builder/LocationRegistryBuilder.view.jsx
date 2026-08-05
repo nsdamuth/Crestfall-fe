@@ -101,7 +101,7 @@ export default function LocationRegistryBuilderView({
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
       <div className="space-y-5">
         {hideTabs ? null : (
-          <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
             <div className="flex flex-wrap gap-2">
               {tabs.map((tab) => {
                 const Icon = TAB_ICON_BY_KEY[tab.iconKey] || BookOpen;
@@ -112,7 +112,7 @@ export default function LocationRegistryBuilderView({
                     key={tab.id}
                     type="button"
                     onClick={() => onSelectTab(tab.id)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                    className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
                         ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                         : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
@@ -127,7 +127,7 @@ export default function LocationRegistryBuilderView({
           </div>
         )}
 
-        <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {currentTab === "overview" ? (
             <OverviewTab
               registry={registry}
@@ -187,7 +187,7 @@ export default function LocationRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
@@ -395,7 +395,7 @@ function EntriesTab({
           entries.map((entry) => (
             <article
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -490,7 +490,7 @@ function ConnectionsTab({
           connections.map((connection) => (
             <article
               key={connection.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -594,7 +594,7 @@ function PresenceTab({
           bindings.map((binding) => (
             <article
               key={binding.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -679,7 +679,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
           weatherScopes.map((scope) => (
             <article
               key={scope.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -794,7 +794,7 @@ function LocationEntryModal({
               <button
                 type="button"
                 onClick={() => onSetKind("AD_HOC")}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   draft.kind === "AD_HOC"
                     ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : "border-white/10 text-[var(--ink-dim)]"
@@ -806,7 +806,7 @@ function LocationEntryModal({
               <button
                 type="button"
                 onClick={() => onSetKind("CREATION_REF")}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+                className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                   draft.kind === "CREATION_REF"
                     ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : "border-white/10 text-[var(--ink-dim)]"
@@ -1269,7 +1269,7 @@ function PresenceBindingModal({
         </div>
 
         {draft.person?.displayName ? (
-          <div className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Selected Person</p>
             <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
             <p className="mt-1 text-sm text-[var(--ink-dim)]">
@@ -1647,7 +1647,7 @@ function CheckboxInput({ label, checked, onChange }) {
 
 function EmptyPanel({ message }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
       <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
@@ -1670,7 +1670,7 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg border border-white/10 px-3 py-2 text-red-200 transition hover:border-red-300/35"
+      className="rounded-lg border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger-border)]"
       aria-label="Delete"
     >
       <Trash2 size={14} />
