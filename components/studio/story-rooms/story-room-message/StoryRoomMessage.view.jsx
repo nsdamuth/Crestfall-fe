@@ -271,7 +271,7 @@ export default function StoryRoomMessageView({
 
   return (
     <article
-      className={`rounded-2xl border p-4 ${getArticleClassName(surfaceTone)}`}
+      className={`rounded-[var(--radius-md)] border p-4 ${getArticleClassName(surfaceTone)}`}
       style={
         hasSemanticPresentation
           ? { borderColor: resolvedPaletteColors.border }
