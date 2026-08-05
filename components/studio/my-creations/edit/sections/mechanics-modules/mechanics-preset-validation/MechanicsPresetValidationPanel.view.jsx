@@ -29,10 +29,10 @@ export default function MechanicsPresetValidationPanelView({
             <Beaker size={15} />
             {eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
             {title}
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function MechanicsPresetValidationPanelView({
         <button
           type="button"
           onClick={() => onDismiss?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--foreground)]"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-white/20 hover:text-[var(--ink)]"
           aria-label="Dismiss live validation guide"
         >
           <X size={17} />
@@ -54,14 +54,14 @@ export default function MechanicsPresetValidationPanelView({
               {statusLabel}
             </span>
             {expectedOutcomeLabel ? (
-              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Expected: {expectedOutcomeLabel}
               </span>
             ) : null}
             {domainLaneLabels.map((lane) => (
               <span
                 key={lane}
-                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
               >
                 {lane}
               </span>
@@ -72,31 +72,31 @@ export default function MechanicsPresetValidationPanelView({
             <div className="rounded-xl border border-white/10 bg-black/30 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Reference Test Command
                   </p>
-                  <code className="mt-2 block break-all text-sm text-[var(--foreground)]">
+                  <code className="mt-2 block break-all text-sm text-[var(--ink)]">
                     {testCommand}
                   </code>
                 </div>
                 <button
                   type="button"
                   onClick={() => onCopyTestCommand?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
                 >
                   <Clipboard size={13} />
                   Copy
                 </button>
               </div>
               {copyStatus ? (
-                <p className="mt-2 text-xs text-[var(--muted)]">{copyStatus}</p>
+                <p className="mt-2 text-xs text-[var(--ink-dim)]">{copyStatus}</p>
               ) : null}
             </div>
           ) : null}
 
           {steps.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 <Route size={14} />
                 Live Validation Steps
               </p>
@@ -104,9 +104,9 @@ export default function MechanicsPresetValidationPanelView({
                 {steps.map((step, index) => (
                   <li
                     key={`${index}-${step}`}
-                    className="flex gap-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--muted)]"
+                    className="flex gap-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]"
                   >
-                    <span className="shrink-0 text-[var(--muted-gold)]">
+                    <span className="shrink-0 text-[var(--gold-ornament)]">
                       {index + 1}.
                     </span>
                     <span>{step}</span>
@@ -120,7 +120,7 @@ export default function MechanicsPresetValidationPanelView({
         <aside className="grid content-start gap-4">
           {checks.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 <CheckCircle2 size={14} />
                 Expected Checks
               </p>
@@ -128,7 +128,7 @@ export default function MechanicsPresetValidationPanelView({
                 {checks.map((check, index) => (
                   <p
                     key={`${index}-${check}`}
-                    className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--muted)]"
+                    className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]"
                   >
                     {check}
                   </p>
@@ -140,7 +140,7 @@ export default function MechanicsPresetValidationPanelView({
           {notes.map((note, index) => (
             <p
               key={`${index}-${note}`}
-              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--muted)]"
+              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--ink-dim)]"
             >
               {note}
             </p>
