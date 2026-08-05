@@ -5,7 +5,7 @@ import { Plus, Trash2 } from "lucide-react";
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
@@ -13,7 +13,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -24,7 +24,7 @@ function SmallActionButton({ children, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
     >
       {children}
     </button>
@@ -34,14 +34,14 @@ function SmallActionButton({ children, onClick }) {
 function DefaultValueField({ bucketKey, entry, onPatch }) {
   if (bucketKey === "flags") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
+      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
         <span>Initial Value</span>
         <select
           value={entry.initial ? "true" : "false"}
           onChange={(event) =>
             onPatch({ initial: event.target.value === "true" })
           }
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
         >
           <option value="false">false</option>
           <option value="true">true</option>
@@ -65,7 +65,7 @@ function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
   return (
     <article className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {bucket.singularLabel} {entryIndex + 1}
         </p>
         <button
@@ -113,10 +113,10 @@ function DefaultsBucket({ bucket, entries, onAdd, onPatch, onRemove }) {
     <div className="rounded-xl border border-white/10 bg-black/20 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {bucket.title}
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Defaults initialize missing status tokens without overwriting live
             state once commands or router actions have written values.
           </p>
@@ -141,7 +141,7 @@ function DefaultsBucket({ bucket, entries, onAdd, onPatch, onRemove }) {
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
           No defaults defined yet.
         </p>
       )}
@@ -156,16 +156,16 @@ export default function MechanicsDefaultsView({
   removeEntry,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">
             Defaults: Flags, Counters, and Stages
           </h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define default runtime values used by status blocks before any
             command writes live state. Live room/session values still take
             precedence.
