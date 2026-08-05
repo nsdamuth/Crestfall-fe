@@ -141,6 +141,76 @@ Not rendered: the 224 app/dev/ui-preview/* routes (see the scope note
 above -- disclosed cut, not silent, all underlying packages already
 Phase-B verified).
 
+## Phase D: read-only audit of the 14 held-out packages
+
+Zero edits made. For each: what it needs in plain language, and whether
+it touches a contract or ViewModel. Precedent checked: `window.confirm`
+is already the pattern used for confirm-step behavior elsewhere in this
+codebase (`useCreationEditViewModel.js:356`, `useMediaLightboxViewModel.js`).
+That pattern changes a ViewModel hook's internal handler body, not the
+component's prop contract (the click-handler prop signature is
+unchanged), so most confirm-step items below are ViewModel-touching but
+NOT contract-touching, unless Brian wants a custom confirm dialog UI
+instead of the plain browser confirm, which would need new open/close
+state (could still be local View state, not necessarily a contract
+change, but is a bigger lift than `window.confirm`).
+
+1. **creation-studio** (CorePathCompleteBanner): needs a banner-treatment
+   pick, one of the three named taxonomy treatments. Presentation-only,
+   no contract or ViewModel change either way.
+2. **npc-registry-builder**: the delete action is icon-only with no
+   visible word; needs a label added beside the icon. Presentation-only.
+3. **wardrobe-builder**: one off-scale radius with no stated target tier
+   (needs a corners call); one confirm-step gap (see precedent above).
+   Presentation-only for the radius; ViewModel-touching, not
+   contract-touching, for the confirm step if `window.confirm` is used.
+4. **custom-ingredient-editor**: one off-tier icon-button radius with no
+   stated target tier. Presentation-only.
+5. **my-creations** (top-level package): a wash and a blur pairing, both
+   missing their stated target token. Presentation-only.
+6. **character-appearance-section**: whether a small nested art
+   thumbnail qualifies for the small-nested-art-thumbnail radius
+   exception, or should be a standard tier. Presentation-only.
+7. **location-registry-attachments-section**: one confirm-step gap.
+   Same as item 3's confirm-step note.
+8. **weather-module-config-modal**: one confirm-step gap on a "Remove"
+   action that currently clears all trackers/guards in one click. Same
+   confirm-step note; this one has real destructive-blast-radius stakes
+   (removes everything at once), worth flagging to Nick as higher
+   priority than the others.
+9. **mechanics-composition-builder**: three confirm-step gaps (remove
+   step/condition/effect). Same confirm-step note, times three.
+10. **mechanics-status-blocks**: geometry mismatches between button
+    variants with no stated target geometry. Needs a corners/control-size
+    call. Presentation-only.
+11. **mechanics-trackers**: same as mechanics-status-blocks, geometry
+    mismatches with no stated target. Presentation-only.
+12. **npc-registry-fields-section**: one confirm-step gap. Same
+    confirm-step note.
+13. **public-profile-hero**: the stats block sits outside the named
+    banner-taxonomy anchor points, a layout/composition call with no
+    stated target. Presentation-only, but is a real layout change
+    (moving a block), not a one-line token swap.
+14. **story-room-chat-shell**: two findings, one presents two candidate
+    resolutions without picking one, the other states no resolution at
+    all. Needs Brian's eye on the actual rendered component to pick.
+    Presentation-only either way.
+
+## Phase D, item 12: packages stopped for Nick, and why
+
+All 14 above stopped because the parallelism law's escalation rule
+("a workflow that meets a rule it cannot apply mechanically stops that
+unit and reports it, never guesses") applied: each carries at least one
+finding whose text does not state a mechanical target, or explicitly
+requires a design/UX decision (confirm-step interaction pattern, banner
+treatment choice, layout placement, radius-tier judgment call). No
+other packages stopped in this run: the 179 that were in scope for
+mechanical conversion all converted or verified clean; the two
+route-crash bugs and the LoreCard/locations-image issues found in
+Phase C are pre-existing and out of scope for this restyle sweep
+entirely, not something that "stopped" -- they were never part of the
+batch-two package list.
+
 ## Completed
 
 - Phase A.1: scope verification. Scanned every surface outside
