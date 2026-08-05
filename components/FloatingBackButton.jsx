@@ -12,11 +12,11 @@ export default function FloatingBackButton() {
       className="
         fixed left-4 top-1/2 z-40
         hidden -translate-y-1/2
-        rounded-full border border-[var(--muted-gold)]/30
+        rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30
         bg-black/70 px-4 py-3
         text-sm uppercase tracking-[0.18em]
         text-[var(--muted-gold)]
-        shadow-2xl backdrop-blur-md
+        shadow-2xl
         transition
         hover:border-[var(--muted-gold)]/70
         hover:bg-[var(--muted-gold)]/15

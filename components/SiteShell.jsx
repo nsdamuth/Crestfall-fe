@@ -11,7 +11,7 @@ export default function SiteShell({ eyebrow, title, children }) {
         }}
       />
 
-      <div className="absolute inset-0 bg-[rgba(5,5,4,0.78)]" />
+      <div className="absolute inset-0 bg-[var(--scrim-strong)]" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
         {eyebrow && (
