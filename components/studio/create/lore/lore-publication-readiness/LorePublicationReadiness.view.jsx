@@ -45,7 +45,7 @@ const STATUS_PRESENTATION = {
   },
   CANCELLED: {
     label: "Cancelled",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   },
 };
 
@@ -63,10 +63,10 @@ function formatDate(value) {
 function StatusPill({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-      <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
@@ -75,7 +75,7 @@ function ValidationStatusBadge({ status }) {
   const normalized = normalizeStatus(status);
   const presentation = STATUS_PRESENTATION[normalized] || {
     label: normalized || "Not submitted",
-    className: "border-white/15 bg-white/5 text-[var(--muted)]",
+    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
   };
 
   return (
@@ -93,21 +93,21 @@ function ReadinessCheck({ check }) {
     ? "text-emerald-300"
     : check.required
       ? "text-amber-200"
-      : "text-[var(--muted)]";
+      : "text-[var(--ink-dim)]";
 
   return (
     <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-4">
       <Icon size={18} className={`mt-0.5 shrink-0 ${iconClass}`} />
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm text-[var(--foreground)]">{check.label}</p>
+          <p className="text-sm text-[var(--ink)]">{check.label}</p>
           {!check.required ? (
-            <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.16em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
               Recommended
             </span>
           ) : null}
         </div>
-        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{check.detail}</p>
+        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{check.detail}</p>
       </div>
     </div>
   );
@@ -131,7 +131,7 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
           size={17}
           className={isError ? "text-red-200" : "text-amber-200"}
         />
-        <h3 className="text-sm uppercase tracking-[0.18em] text-[var(--foreground)]">
+        <h3 className="text-sm uppercase tracking-[0.18em] text-[var(--ink)]">
           {title}
         </h3>
       </div>
@@ -142,8 +142,8 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
             key={`${item.code}-${item.path}-${index}`}
             className="rounded-xl border border-white/10 bg-black/20 px-4 py-3"
           >
-            <p className="text-sm text-[var(--foreground)]">{item.message}</p>
-            <p className="mt-1 break-all font-mono text-[10px] text-[var(--muted)]">
+            <p className="text-sm text-[var(--ink)]">{item.message}</p>
+            <p className="mt-1 break-all font-mono text-[10px] text-[var(--ink-dim)]">
               {item.path}
             </p>
           </div>
@@ -151,7 +151,7 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
       </div>
 
       {hiddenCount ? (
-        <p className="mt-4 text-xs text-[var(--muted)]">
+        <p className="mt-4 text-xs text-[var(--ink-dim)]">
           {hiddenCount} additional issue{hiddenCount === 1 ? "" : "s"} not shown.
         </p>
       ) : null}
@@ -166,7 +166,7 @@ function ValidationProgress({ submission }) {
 
   return (
     <div className="mt-5">
-      <div className="flex items-center justify-between gap-3 text-xs text-[var(--muted)]">
+      <div className="flex items-center justify-between gap-3 text-xs text-[var(--ink-dim)]">
         <span>
           {completed} of {total} validation segments complete
         </span>
@@ -174,7 +174,7 @@ function ValidationProgress({ submission }) {
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-[var(--muted-gold)] transition-[width] duration-300"
+          className="h-full rounded-full bg-[var(--gold-ornament)] transition-[width] duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -187,7 +187,7 @@ function ValidationHistory({ submissions = [] }) {
 
   return (
     <div className="mt-6 border-t border-white/10 pt-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Recent submissions
       </p>
       <div className="mt-3 grid gap-2">
@@ -197,10 +197,10 @@ function ValidationHistory({ submissions = [] }) {
             className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
           >
             <div>
-              <p className="text-sm text-[var(--foreground)]">
+              <p className="text-sm text-[var(--ink)]">
                 {formatDate(submission.createdAt)}
               </p>
-              <p className="mt-1 text-xs text-[var(--muted)]">
+              <p className="mt-1 text-xs text-[var(--ink-dim)]">
                 {submission.completedChunks || 0} / {submission.totalChunks || 0} segments complete
               </p>
             </div>
@@ -234,17 +234,17 @@ function SecurityValidationPanel({
     : [];
 
   return (
-    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/25 p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Security validation
           </p>
           <h3 className="mt-2 font-display text-3xl">Submit the saved Lore revision</h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">
             Submission freezes the last saved Lore draft into an immutable validation snapshot. The validation queue may take time when the service is busy. You can cancel an active submission and submit the saved draft again after cancellation or failure.
           </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-[var(--ink-dim)]">
             Unsaved editor changes are not included. Passing validation does not publish the Lore Asset yet.
           </p>
         </div>
@@ -253,7 +253,7 @@ function SecurityValidationPanel({
           type="button"
           onClick={refreshValidation}
           disabled={validationLoadStatus === "LOADING"}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
         >
           <RefreshCw
             size={13}
@@ -283,10 +283,10 @@ function SecurityValidationPanel({
         <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
                 Latest validation
               </p>
-              <p className="mt-2 text-sm text-[var(--foreground)]">
+              <p className="mt-2 text-sm text-[var(--ink)]">
                 Submitted {formatDate(latestValidation.createdAt)}
               </p>
             </div>
@@ -340,15 +340,15 @@ function SecurityValidationPanel({
 
           {latestStatus === "CANCELLED" ? (
             <div className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-              <Clock3 size={18} className="mt-0.5 shrink-0 text-[var(--muted)]" />
-              <p className="text-sm text-[var(--muted)]">
+              <Clock3 size={18} className="mt-0.5 shrink-0 text-[var(--ink-dim)]" />
+              <p className="text-sm text-[var(--ink-dim)]">
                 This validation submission was cancelled. The saved Lore draft can be submitted again.
               </p>
             </div>
           ) : null}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--muted)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset has not been submitted for security validation.
         </div>
       )}
@@ -358,7 +358,7 @@ function SecurityValidationPanel({
           type="button"
           onClick={submitValidation}
           disabled={!canSubmitValidation}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-45"
         >
           {validationActionStatus === "WORKING" && !isValidationActive ? (
             <LoaderCircle size={14} className="animate-spin" />
@@ -428,7 +428,7 @@ function PublicReleasePanel({
             <p className="text-xs uppercase tracking-[0.2em]">Public release</p>
           </div>
           <h3 className="mt-2 font-display text-3xl">Publish a validated revision</h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">
             Public release uses the immutable snapshot that passed validation. Editing or saving the working Lore draft does not alter the currently published revision.
           </p>
         </div>
@@ -453,7 +453,7 @@ function PublicReleasePanel({
               <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
                 Active public revision
               </p>
-              <p className="mt-2 text-sm text-[var(--foreground)]">
+              <p className="mt-2 text-sm text-[var(--ink)]">
                 Revision {revisionNumber || "—"} · Published {formatDate(activePublication.publishedAt)}
               </p>
             </div>
@@ -463,20 +463,20 @@ function PublicReleasePanel({
           </div>
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--muted)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset does not have a public revision yet.
         </div>
       )}
 
       {publishableValidation ? (
         <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Ready to publish
           </p>
-          <p className="mt-2 text-sm text-[var(--foreground)]">
+          <p className="mt-2 text-sm text-[var(--ink)]">
             Validated {formatDate(publishableValidation.completedAt || publishableValidation.createdAt)}
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             The published page will use this validated snapshot, not any newer saved or unsaved draft changes.
           </p>
 
@@ -495,11 +495,11 @@ function PublicReleasePanel({
           </button>
         </div>
       ) : activePublication ? (
-        <p className="mt-5 text-sm text-[var(--muted)]">
+        <p className="mt-5 text-sm text-[var(--ink-dim)]">
           No newer validated revision is waiting to replace the active public revision.
         </p>
       ) : (
-        <p className="mt-5 text-sm text-[var(--muted)]">
+        <p className="mt-5 text-sm text-[var(--ink-dim)]">
           A Lore revision must pass security validation before it can be published.
         </p>
       )}
@@ -516,7 +516,7 @@ function PublicReleasePanel({
         </p>
       ) : null}
 
-      <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-6 text-[var(--muted)]">
+      <p className="mt-5 border-t border-white/10 pt-4 text-xs leading-6 text-[var(--ink-dim)]">
         Publishing does not make this Lore available for character use. That remains a separate voluntary workflow.
       </p>
     </div>
@@ -571,15 +571,15 @@ export default function LorePublicationReadinessView({
         body="Review the saved Lore draft, submit it to the security-validation queue, and publish only an immutable revision that has passed validation."
       />
 
-      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5 p-5">
+      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 p-5">
         <div className="flex items-start gap-3">
-          <LockKeyhole size={22} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+          <LockKeyhole size={22} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Validated release boundary
             </p>
             <h3 className="mt-2 font-display text-3xl">Draft and public revisions stay separate</h3>
-            <p className="mt-3 max-w-4xl leading-7 text-[var(--muted)]">
+            <p className="mt-3 max-w-4xl leading-7 text-[var(--ink-dim)]">
               Validation freezes the last saved revision and checks it without changing the editable Lore draft. Publishing activates only that passed snapshot. Later edits remain private until a newer revision is validated and explicitly published.
             </p>
           </div>
@@ -631,13 +631,13 @@ export default function LorePublicationReadinessView({
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 Authoring checklist
               </p>
               <h3 className="mt-2 font-display text-3xl">
                 {completedCheckCount} of {totalCheckCount} checks complete
               </h3>
-              <p className="mt-2 text-sm text-[var(--muted)]">
+              <p className="mt-2 text-sm text-[var(--ink-dim)]">
                 {completedRequiredCount} of {requiredCheckCount} required checks complete.
               </p>
             </div>
@@ -664,9 +664,9 @@ export default function LorePublicationReadinessView({
         </div>
 
         <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-          <Info size={20} className="text-[var(--muted-gold)]" />
+          <Info size={20} className="text-[var(--gold-ornament)]" />
           <h3 className="mt-3 font-display text-3xl">Owner verification</h3>
-          <p className="mt-3 leading-7 text-[var(--muted)]">
+          <p className="mt-3 leading-7 text-[var(--ink-dim)]">
             Review the last saved draft in the full reader before submitting it. Unsaved editor changes do not appear there and are not included in validation.
           </p>
 
@@ -675,14 +675,14 @@ export default function LorePublicationReadinessView({
               href={ownerPreviewHref}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/55 hover:text-[var(--foreground)]"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:text-[var(--ink)]"
             >
               <ExternalLink size={14} />
               Open full owner preview
             </LinkComponent>
           ) : null}
 
-          <div className="mt-6 border-t border-white/10 pt-5 text-xs leading-6 text-[var(--muted)]">
+          <div className="mt-6 border-t border-white/10 pt-5 text-xs leading-6 text-[var(--ink-dim)]">
             <p>Passing validation makes a frozen revision eligible for publication.</p>
             <p className="mt-2">Public release and character-use submission remain separate workflows.</p>
           </div>
