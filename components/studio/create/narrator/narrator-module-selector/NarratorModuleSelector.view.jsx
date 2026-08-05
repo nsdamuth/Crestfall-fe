@@ -19,7 +19,7 @@ export default function NarratorModuleSelectorView({
   return (
     <section className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       {sectionEyebrow ? (
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {sectionEyebrow}
         </p>
       ) : null}
@@ -29,14 +29,14 @@ export default function NarratorModuleSelectorView({
       ) : null}
 
       {sectionDescription ? (
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {sectionDescription}
         </p>
       ) : null}
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/35 p-5">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/35 p-5">
         {responseEyebrow ? (
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {responseEyebrow}
           </p>
         ) : null}
@@ -46,7 +46,7 @@ export default function NarratorModuleSelectorView({
         ) : null}
 
         {responseDescription ? (
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             {responseDescription}
           </p>
         ) : null}
@@ -57,12 +57,12 @@ export default function NarratorModuleSelectorView({
             : []
           ).map((group) => (
             <div key={group?.id || group?.label}>
-              <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-sm uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 {group?.label || "Response Option"}
               </p>
 
               {group?.description ? (
-                <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                   {group.description}
                 </p>
               ) : null}
@@ -81,8 +81,8 @@ export default function NarratorModuleSelectorView({
                       }
                       className={`rounded-xl border p-4 text-left transition ${
                         option?.active
-                          ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                          : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                          ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                       }`}
                     >
                       <p className="text-sm font-medium">
@@ -90,7 +90,7 @@ export default function NarratorModuleSelectorView({
                       </p>
 
                       {option?.body ? (
-                        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                           {option.body}
                         </p>
                       ) : null}
@@ -104,12 +104,12 @@ export default function NarratorModuleSelectorView({
 
         {showEnsembleLimit ? (
           <div className="mt-6 border-t border-white/10 pt-5">
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               {ensembleLimitLabel}
             </p>
 
             {ensembleLimitDescription ? (
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {ensembleLimitDescription}
               </p>
             ) : null}
@@ -127,8 +127,8 @@ export default function NarratorModuleSelectorView({
                   }
                   className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
                     option?.active
-                      ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                      : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                   }`}
                 >
                   {option?.title || "Limit"}
@@ -139,7 +139,7 @@ export default function NarratorModuleSelectorView({
         ) : null}
 
         {safeDefaultNote ? (
-          <p className="mt-5 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-5 text-xs leading-5 text-[var(--ink-dim)]">
             {safeDefaultNote}
           </p>
         ) : null}
@@ -150,11 +150,11 @@ export default function NarratorModuleSelectorView({
           <div key={group?.id || group?.label}>
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                <p className="text-sm uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                   {group?.label || "Module Group"}
                 </p>
                 {group?.description ? (
-                  <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                     {group.description}
                   </p>
                 ) : null}
@@ -170,15 +170,15 @@ export default function NarratorModuleSelectorView({
                     onClick={() => onSelectModule?.(group?.id, module?.id)}
                     className={`rounded-xl border p-4 text-left transition ${
                       module?.active
-                        ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                        : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                     }`}
                   >
                     <p className="text-sm font-medium">
                       {module?.title || "Module"}
                     </p>
                     {module?.body ? (
-                      <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                      <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                         {module.body}
                       </p>
                     ) : null}
