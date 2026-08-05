@@ -54,7 +54,7 @@ export default function StudioAccountProfileView({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6"
+      className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div className="flex items-center gap-4">
@@ -104,7 +104,7 @@ export default function StudioAccountProfileView({
         </section>
 
         <section className="grid gap-5">
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
               Account Contact
             </p>
@@ -156,7 +156,7 @@ export default function StudioAccountProfileView({
               />
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
                 Default Player Character
               </p>
@@ -190,7 +190,7 @@ export default function StudioAccountProfileView({
                   <button
                     type="button"
                     onClick={onClearDefaultPlayerCharacter}
-                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-400/35 hover:text-red-200"
+                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:text-[var(--status-danger)]"
                   >
                     Clear
                   </button>
@@ -201,7 +201,7 @@ export default function StudioAccountProfileView({
         </section>
       </div>
 
-      <section className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+      <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Public Profile Text
         </p>
@@ -380,8 +380,8 @@ function ReadOnlyValue({ label, value, note }) {
 
 function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section className="w-full max-w-md rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
+      <section className="w-full max-w-md rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -395,7 +395,7 @@ function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
             aria-label="Close"
           >
             <X size={16} />
