@@ -178,21 +178,21 @@ export default function RuntimeMechanicsModulesSection({
         />
       ) : null}
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+            <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
               <Link2 size={20} />
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Mechanics Modules
               </p>
               <h3 className="mt-2 font-display text-3xl">
                 Attached Runtime Mechanics
               </h3>
-              <p className="mt-2 text-sm leading-7 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
                 Attach Mechanics Module assets to {ownerLabel}. Choose whether
                 mechanics values are scoped to this asset or written as
                 story-room/root mechanics.
@@ -200,7 +200,7 @@ export default function RuntimeMechanicsModulesSection({
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-[var(--muted-gold)]">
+          <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-[var(--gold-ornament)]">
             <Activity size={18} />
           </div>
         </div>
@@ -210,30 +210,30 @@ export default function RuntimeMechanicsModulesSection({
             <button
               type="button"
               onClick={() => setMechanicsPickerOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               <Plus size={14} />
               Attach Mechanics Module
             </button>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--muted)]">
+          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
             <p>
               Scope behavior:{" "}
-              <span className="text-[var(--foreground)]">
+              <span className="text-[var(--ink)]">
                 BINDING_OWNER writes to this asset’s own mechanics scope.
                 STORY_ROOM writes root room mechanics.
               </span>
             </p>
             <p>
               Footer/status behavior:{" "}
-              <span className="text-[var(--foreground)]">
+              <span className="text-[var(--ink)]">
                 only one footer/status block wins by precedence.
               </span>
             </p>
             <p>
               Tracker behavior:{" "}
-              <span className="text-[var(--foreground)]">
+              <span className="text-[var(--ink)]">
                 scoped meters/flags/counters/stages can coexist.
               </span>
             </p>
@@ -255,16 +255,16 @@ export default function RuntimeMechanicsModulesSection({
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                           Mechanics Module
                         </p>
 
-                        <h4 className="mt-1 text-lg text-[var(--foreground)]">
+                        <h4 className="mt-1 text-lg text-[var(--ink)]">
                           {binding.moduleInstanceTitle ||
                             "Untitled Mechanics Module"}
                         </h4>
 
-                        <p className="mt-1 break-all text-xs text-[var(--muted)]">
+                        <p className="mt-1 break-all text-xs text-[var(--ink-dim)]">
                           {moduleCreationId}
                         </p>
                       </div>
@@ -282,7 +282,7 @@ export default function RuntimeMechanicsModulesSection({
                     </div>
 
                     <div className="mt-4 grid gap-3 md:grid-cols-2">
-                      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+                      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
                         <input
                           type="checkbox"
                           checked={binding.enabled !== false}
@@ -291,12 +291,12 @@ export default function RuntimeMechanicsModulesSection({
                               enabled: Boolean(event.target.checked),
                             })
                           }
-                          className="h-4 w-4 accent-[var(--muted-gold)]"
+                          className="h-4 w-4 accent-[var(--gold-ornament)]"
                         />
                         <span>Enabled</span>
                       </label>
 
-                      <label className="grid gap-2 text-sm text-[var(--muted)]">
+                      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                         <span>Priority</span>
                         <input
                           type="number"
@@ -314,11 +314,11 @@ export default function RuntimeMechanicsModulesSection({
                                 : 65,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                         />
                       </label>
 
-                      <label className="grid gap-2 text-sm text-[var(--muted)]">
+                      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                         <span>Inheritance Mode</span>
                         <select
                           value={binding.inheritanceMode || defaultInheritanceMode}
@@ -327,7 +327,7 @@ export default function RuntimeMechanicsModulesSection({
                               inheritanceMode: event.target.value,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                         >
                           <option value="LOCAL_ONLY">Local only</option>
                           <option value="INHERITABLE">Inheritable</option>
@@ -335,7 +335,7 @@ export default function RuntimeMechanicsModulesSection({
                         </select>
                       </label>
 
-                      <label className="grid gap-2 text-sm text-[var(--muted)]">
+                      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                         <span>Mechanics Scope</span>
                         <select
                           value={scopeMode}
@@ -344,7 +344,7 @@ export default function RuntimeMechanicsModulesSection({
                               mechanicsScopeMode: event.target.value,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                         >
                           <option value="BINDING_OWNER">
                             BINDING_OWNER — scoped to this asset
@@ -356,29 +356,29 @@ export default function RuntimeMechanicsModulesSection({
                       </label>
                     </div>
 
-                    <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--muted)]">
+                    <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
                       <p>
                         Module ID:{" "}
-                        <span className="text-[var(--foreground)]">
+                        <span className="text-[var(--ink)]">
                           {binding.moduleId || TRACKERS_MODULE_ID}
                         </span>
                       </p>
                       <p>
                         Role:{" "}
-                        <span className="text-[var(--foreground)]">
+                        <span className="text-[var(--ink)]">
                           {binding.role || MECHANICS_MODULE_ROLE}
                         </span>
                       </p>
                       <p>
                         Trigger:{" "}
-                        <span className="text-[var(--foreground)]">
+                        <span className="text-[var(--ink)]">
                           {binding.operationTriggers?.chatTurnDefault ||
                             "get_tracker_context"}
                         </span>
                       </p>
                       <p>
                         Scope:{" "}
-                        <span className="text-[var(--foreground)]">
+                        <span className="text-[var(--ink)]">
                           {scopeMode}
                         </span>
                       </p>
@@ -388,7 +388,7 @@ export default function RuntimeMechanicsModulesSection({
               })}
             </div>
           ) : (
-            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
               No Mechanics Modules attached yet.
             </div>
           )}
