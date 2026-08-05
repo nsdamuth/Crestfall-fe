@@ -43,7 +43,7 @@ function getSecurityPresentation(securityStatus = "INACTIVE") {
     INACTIVE: {
       label: "Inactive",
       detail: "Advanced Prompting is optional and currently has no runtime effect.",
-      className: "border-white/10 bg-black/25 text-[var(--muted)]",
+      className: "border-white/10 bg-black/25 text-[var(--ink-dim)]",
     },
   };
 
@@ -56,7 +56,7 @@ function Counter({ value = 0, limit = 0 }) {
   const nearLimit = safeLimit > 0 && safeValue >= safeLimit * 0.9;
 
   return (
-    <span className={nearLimit ? "text-amber-200" : "text-[var(--muted)]"}>
+    <span className={nearLimit ? "text-amber-200" : "text-[var(--ink-dim)]"}>
       {safeValue.toLocaleString()} / {safeLimit.toLocaleString()}
     </span>
   );
@@ -78,10 +78,10 @@ export default function AdvancedPromptingEditorView({
   const securityPresentation = getSecurityPresentation(securityStatus);
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <SlidersHorizontal size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">
               Advanced Prompting · Optional
@@ -89,7 +89,7 @@ export default function AdvancedPromptingEditorView({
           </div>
 
           <h3 className="mt-3 font-display text-3xl">Creator Directives</h3>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Add nuanced portrayal, conditional behavior, and anti-drift guidance
             only when the standard character fields and modules are not enough.
             Crestfall safety, verified state, modules, registries, meters, and
@@ -104,8 +104,8 @@ export default function AdvancedPromptingEditorView({
           onClick={() => onSetEnabled?.(!enabled)}
           className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
             enabled
-              ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-              : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
+              ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+              : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
           }`}
         >
           {enabled ? "Enabled" : "Enable Advanced Prompting"}
@@ -114,8 +114,8 @@ export default function AdvancedPromptingEditorView({
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs">
         <div className="flex items-center gap-2">
-          <ShieldCheck size={15} className="text-[var(--muted-gold)]" />
-          <span className="uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <ShieldCheck size={15} className="text-[var(--gold-ornament)]" />
+          <span className="uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Combined Budget
           </span>
         </div>
@@ -155,20 +155,20 @@ export default function AdvancedPromptingEditorView({
                   <div className="flex min-w-0 items-start gap-3">
                     <ToggleIcon
                       size={17}
-                      className="mt-0.5 shrink-0 text-[var(--muted-gold)]"
+                      className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
                     />
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="text-sm font-medium text-[var(--foreground)]">
+                        <p className="text-sm font-medium text-[var(--ink)]">
                           {section.label}
                         </p>
-                        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--muted)]">
+                        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
                           {section.activation === "ALWAYS"
                             ? "Broadly active"
                             : "Contextual"}
                         </span>
                       </div>
-                      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                      <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                         {section.description}
                       </p>
                     </div>
@@ -191,7 +191,7 @@ export default function AdvancedPromptingEditorView({
                       }
                       placeholder={section.placeholder}
                       rows={8}
-                      className="w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                      className="w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                     />
 
                     <div className="mt-3 flex items-center justify-between gap-3 text-xs">
@@ -218,7 +218,7 @@ export default function AdvancedPromptingEditorView({
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
           Standard character fields, modules, registries, and mechanics remain a
           complete character definition. Advanced Prompting adds nothing unless
           enabled.
