@@ -13,7 +13,7 @@ export default function MechanicsCompatibilityBaselineView({
 }) {
   return (
     <section className="grid gap-6">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-6">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">Mechanics M0</p>
         <h2 className="mt-2 font-display text-4xl">Compatibility Baseline</h2>
         <p className="mt-3 max-w-4xl text-sm leading-7 text-[var(--muted)]">
@@ -30,7 +30,7 @@ export default function MechanicsCompatibilityBaselineView({
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.34fr_0.66fr]">
-        <aside className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Frozen fixtures</p>
           <div className="mt-4 grid gap-2">
             {fixtures.map((fixture) => (
@@ -42,7 +42,7 @@ export default function MechanicsCompatibilityBaselineView({
           </div>
         </aside>
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Selected fixture</p>
@@ -59,11 +59,11 @@ export default function MechanicsCompatibilityBaselineView({
       </div>
 
       <div className="grid gap-5 xl:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">External repositories</p>
           <div className="mt-4 grid gap-3">{externalRepositories.map((repo) => <div key={repo.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--foreground)]">{repo.id}</p><p className="mt-1 font-mono text-xs text-[var(--muted)]">{repo.environmentVariable}</p><p className="mt-2 text-xs text-[var(--muted)]">{repo.statusWhenUnavailable}</p></div>)}</div>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Deferred cross-tier gates</p>
           <div className="mt-4 grid gap-3">{deferredDiagnostics.map((item) => <div key={item.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--foreground)]">{item.id}</p><p className="mt-2 text-xs text-[var(--muted)]">Requires: {item.requires.join(", ")}</p></div>)}</div>
         </div>
