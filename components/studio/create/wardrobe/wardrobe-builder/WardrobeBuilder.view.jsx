@@ -470,7 +470,7 @@ function WardrobeEntryEditor({
       <button
         type="button"
         onClick={onDelete}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:bg-white/5"
       >
         <Trash2 size={14} />
         Delete Entry
