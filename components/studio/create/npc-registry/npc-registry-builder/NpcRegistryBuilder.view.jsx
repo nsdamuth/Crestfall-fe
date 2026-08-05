@@ -564,10 +564,11 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
+      className="inline-flex h-[var(--control-sm)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
       aria-label="Delete"
     >
       <Trash2 size={14} />
+      Delete
     </button>
   );
 }
