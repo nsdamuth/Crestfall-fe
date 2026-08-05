@@ -738,9 +738,10 @@ export default function ActorMechanicsProfileEditorView({
                       type="button"
                       onClick={() => onRemoveBinding?.(binding.id)}
                       aria-label={`Remove ${binding.domainLabel}`}
-                      className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
+                      className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
                     >
                       <Trash2 size={15} />
+                      <span className="text-xs">Remove</span>
                     </button>
                   </div>
                 </div>
@@ -938,9 +939,10 @@ export default function ActorMechanicsProfileEditorView({
                                       reference.title ||
                                       managedDefinition.fallbackTitle
                                     }`}
-                                    className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
+                                    className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
                                   >
                                     <Trash2 size={14} />
+                                    <span className="text-xs">Remove</span>
                                   </button>
                                 </div>
 
@@ -979,9 +981,10 @@ export default function ActorMechanicsProfileEditorView({
                                     aria-label={`Remove reference ${
                                       reference.index + 1
                                     }`}
-                                    className="rounded-lg p-2 text-[var(--status-danger)]/75 transition hover:bg-[var(--status-danger-bed)] hover:text-[var(--status-danger)]"
+                                    className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
                                   >
                                     <Trash2 size={14} />
+                                    <span className="text-xs">Remove</span>
                                   </button>
                                 </div>
 
@@ -1098,9 +1101,11 @@ export default function ActorMechanicsProfileEditorView({
                       <button
                         type="button"
                         onClick={() => onRemoveBinding?.(binding.id)}
-                        className="rounded-lg border border-[var(--status-danger-border)] p-2 text-[var(--status-danger)]"
+                        aria-label={`Remove ${binding.domainLabel}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[var(--status-danger-border)] px-2 py-2 text-[var(--status-danger)]"
                       >
                         <Trash2 size={15} />
+                        <span className="text-xs">Remove</span>
                       </button>
                     </div>
                   </div>
