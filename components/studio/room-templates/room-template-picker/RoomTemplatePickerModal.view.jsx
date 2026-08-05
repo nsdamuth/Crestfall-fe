@@ -27,7 +27,7 @@ export default function RoomTemplatePickerModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
