@@ -46,12 +46,12 @@ export default function CreationPickerPanelView({
   return (
     <div>
       <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-        <Search size={16} className="text-[var(--muted-gold)]" />
+        <Search size={16} className="text-[var(--gold-ornament)]" />
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={searchPlaceholder}
-          className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+          className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
         />
       </div>
 
@@ -77,7 +77,7 @@ export default function CreationPickerPanelView({
           })
         ) : (
           <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
-            <p className="text-sm leading-6 text-[var(--muted)]">
+            <p className="text-sm leading-6 text-[var(--ink-dim)]">
               {emptyMessage}
             </p>
           </div>
@@ -97,11 +97,11 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
       onClick={() => onSelect?.(item)}
       className={`overflow-hidden rounded-xl border text-left transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
         selected
-          ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
-          : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
+          ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
+          : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
       }`}
     >
-      <div className="aspect-[4/3] bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+      <div className="aspect-[4/3] bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
         {item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -112,10 +112,10 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             <div className="text-center">
-              <p className="font-display text-3xl text-[var(--muted-gold)]">
+              <p className="font-display text-3xl text-[var(--gold-ornament)]">
                 {initial}
               </p>
-              <p className="mt-2 text-[9px] uppercase tracking-[0.16em] text-[var(--muted)]">
+              <p className="mt-2 text-[9px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                 {item.type}
               </p>
             </div>
@@ -124,41 +124,41 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
       </div>
 
       <div className="p-3">
-        <p className="line-clamp-2 font-display text-xl leading-none text-[var(--foreground)]">
+        <p className="line-clamp-2 font-display text-xl leading-none text-[var(--ink)]">
           {item.title}
         </p>
 
         {item.subtitle || item.description ? (
-          <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-[var(--muted)]">
+          <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-[var(--ink-dim)]">
             {item.subtitle || item.description}
           </p>
         ) : null}
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           {item.type ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {item.type}
             </span>
           ) : null}
 
           {item.contentRating ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {item.contentRating}
             </span>
           ) : null}
           {recommended ? (
-            <span className="rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+            <span className="rounded-full border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--gold-ornament)]">
               Recommended
             </span>
           ) : null}
           {selected ? (
-            <span className="rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+            <span className="rounded-full border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--gold-ornament)]">
               Selected
             </span>
           ) : null}
 
           {disabled ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               Already added
             </span>
           ) : null}
