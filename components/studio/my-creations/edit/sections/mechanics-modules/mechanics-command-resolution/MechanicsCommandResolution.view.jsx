@@ -18,7 +18,7 @@ function numberValue(value, fallback = 0) {
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
@@ -26,7 +26,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -39,7 +39,7 @@ function ActionButton({ children, onClick, disabled = false, title }) {
       title={title}
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -59,10 +59,10 @@ function ModifierList({
     <div className="rounded-xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {title}
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -81,7 +81,7 @@ function ModifierList({
               className="rounded-xl border border-white/10 bg-black/35 p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
                   Fixed Modifier {modifierIndex + 1}
                 </p>
                 <button
@@ -128,7 +128,7 @@ function ModifierList({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
           No fixed modifiers. The raw kept roll is used unless an authoritative source contributes a modifier.
         </p>
       )}
@@ -160,7 +160,7 @@ function ModifierSourceCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           Authoritative Source {sourceIndex + 1}
         </p>
         <button
@@ -188,14 +188,14 @@ function ModifierSourceCard({
           placeholder="Actor Skill"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Source Type</span>
           <select
             value={source.type}
             onChange={(event) =>
               onPatch(side, sourceIndex, { type: event.target.value })
             }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {sourceTypes.map((type) => (
               <option key={type} value={type}>
@@ -206,7 +206,7 @@ function ModifierSourceCard({
         </label>
 
         {targetSource ? (
-          <label className="grid gap-2 text-sm text-[var(--muted)]">
+          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
             <span>Resolved Argument</span>
             <select
               value={source.argumentName}
@@ -215,7 +215,7 @@ function ModifierSourceCard({
                   argumentName: event.target.value,
                 })
               }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
             >
               <option value="">Select an argument</option>
               {argumentOptions.map((argument) => (
@@ -229,14 +229,14 @@ function ModifierSourceCard({
 
         {mechanicsSource ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Mechanics Bucket</span>
               <select
                 value={source.bucket}
                 onChange={(event) =>
                   onPatch(side, sourceIndex, { bucket: event.target.value })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {buckets.map((bucket) => (
                   <option key={bucket} value={bucket}>
@@ -258,7 +258,7 @@ function ModifierSourceCard({
 
         {source.type === "MECHANICS_VALUE" ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Mechanics Scope</span>
               <select
                 value={source.scopeMode}
@@ -267,7 +267,7 @@ function ModifierSourceCard({
                     scopeMode: event.target.value,
                   })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {scopeModes.map((mode) => (
                   <option key={mode} value={mode}>
@@ -291,7 +291,7 @@ function ModifierSourceCard({
 
         {targetProperty ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Target Property</span>
               <select
                 value={source.property}
@@ -300,7 +300,7 @@ function ModifierSourceCard({
                     property: event.target.value,
                   })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {targetProperties.map((property) => (
                   <option key={property} value={property}>
@@ -312,7 +312,7 @@ function ModifierSourceCard({
 
             {booleanProperty ? (
               <>
-                <label className="grid gap-2 text-sm text-[var(--muted)]">
+                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                   <span>Expected Property Value</span>
                   <select
                     value={source.expected ? "true" : "false"}
@@ -321,7 +321,7 @@ function ModifierSourceCard({
                         expected: event.target.value === "true",
                       })
                     }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                   >
                     <option value="true">true</option>
                     <option value="false">false</option>
@@ -355,10 +355,10 @@ function ModifierSourceCard({
         ) : null}
 
         <div className="rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Numeric Transform
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Crestfall computes (raw × multiplier) ÷ divisor + offset, then rounds and clamps the result.
           </p>
 
@@ -396,7 +396,7 @@ function ModifierSourceCard({
               }
               placeholder="0"
             />
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
+            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
               <span>Rounding</span>
               <select
                 value={source.rounding}
@@ -405,7 +405,7 @@ function ModifierSourceCard({
                     rounding: event.target.value,
                   })
                 }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
               >
                 {roundingModes.map((rounding) => (
                   <option key={rounding} value={rounding}>
@@ -439,7 +439,7 @@ function ModifierSourceCard({
           </div>
         </div>
 
-        <label className="grid gap-2 text-sm text-[var(--muted)] md:col-span-2">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-2">
           <span>Missing Evidence Policy</span>
           <select
             value={source.missingPolicy}
@@ -448,7 +448,7 @@ function ModifierSourceCard({
                 missingPolicy: event.target.value,
               })
             }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {missingPolicies.map((policy) => (
               <option key={policy} value={policy}>
@@ -456,7 +456,7 @@ function ModifierSourceCard({
               </option>
             ))}
           </select>
-          <span className="text-[11px] leading-5 text-[var(--muted)]">
+          <span className="text-[11px] leading-5 text-[var(--ink-dim)]">
             IGNORE records unavailable evidence without a modifier. REJECT blocks the command before any roll.
           </span>
         </label>
@@ -486,10 +486,10 @@ function ModifierSourceList({
     <div className="rounded-xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {title}
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -522,7 +522,7 @@ function ModifierSourceList({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
           No authoritative sources. Add one to derive a bonus or penalty from Mechanics state or a resolved target.
         </p>
       )}
@@ -561,20 +561,20 @@ export default function MechanicsCommandResolutionView({
     <section className="rounded-xl border border-white/10 bg-black/20 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Resolution
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Configure server-authoritative automatic, threshold, advantage, disadvantage, opposed, degree-of-success, and modifier-source resolution.
           </p>
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <div className="mt-4 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Reference Configuration
         </p>
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Apply a safe starter configuration. This replaces only this command’s Resolution block; arguments, requirements, effects, outcomes, and domain actions remain unchanged.
         </p>
 
@@ -582,7 +582,7 @@ export default function MechanicsCommandResolutionView({
           <select
             value={referenceId}
             onChange={(event) => setReferenceId(event.target.value)}
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             <option value="">Select a reference configuration</option>
             {referenceConfigurations.map((reference) => (
@@ -599,12 +599,12 @@ export default function MechanicsCommandResolutionView({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
+        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
           <span>Resolution Mode</span>
           <select
             value={resolution.mode}
             onChange={(event) => patchResolution({ mode: event.target.value })}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             {resolutionModes.map((mode) => (
               <option key={mode} value={mode}>
@@ -614,7 +614,7 @@ export default function MechanicsCommandResolutionView({
           </select>
         </label>
 
-        <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+        <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
           {resolution.mode === "THRESHOLD_DIE"
             ? "Crestfall rolls the actor check on services-api and compares its final total to the target number."
             : resolution.mode === "OPPOSED_DIE"
@@ -626,7 +626,7 @@ export default function MechanicsCommandResolutionView({
       {isRolling ? (
         <div className="mt-4 grid gap-4">
           <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Actor Check
             </p>
 
@@ -660,14 +660,14 @@ export default function MechanicsCommandResolutionView({
                 placeholder="20"
               />
 
-              <label className="grid gap-2 text-sm text-[var(--muted)]">
+              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                 <span>Roll Policy</span>
                 <select
                   value={resolution.rollMode}
                   onChange={(event) =>
                     patchResolution({ rollMode: event.target.value })
                   }
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                 >
                   {rollModes.map((mode) => (
                     <option key={mode} value={mode}>
@@ -691,7 +691,7 @@ export default function MechanicsCommandResolutionView({
                 />
               ) : null}
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
                 <input
                   type="checkbox"
                   checked={resolution.criticalOnNaturalMax}
@@ -700,12 +700,12 @@ export default function MechanicsCommandResolutionView({
                       criticalOnNaturalMax: event.target.checked,
                     })
                   }
-                  className="h-4 w-4 accent-[var(--muted-gold)]"
+                  className="h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 Actor natural maximum is a Critical Success
               </label>
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
                 <input
                   type="checkbox"
                   checked={resolution.fumbleOnNaturalMin}
@@ -714,7 +714,7 @@ export default function MechanicsCommandResolutionView({
                       fumbleOnNaturalMin: event.target.checked,
                     })
                   }
-                  className="h-4 w-4 accent-[var(--muted-gold)]"
+                  className="h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 Actor natural minimum is a Fumble
               </label>
@@ -750,8 +750,8 @@ export default function MechanicsCommandResolutionView({
           />
 
           {resolution.mode === "OPPOSED_DIE" ? (
-            <div className="rounded-xl border border-[var(--muted-gold)]/20 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Opposition Check
               </p>
 
@@ -791,14 +791,14 @@ export default function MechanicsCommandResolutionView({
                   placeholder="20"
                 />
 
-                <label className="grid gap-2 text-sm text-[var(--muted)]">
+                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                   <span>Roll Policy</span>
                   <select
                     value={resolution.opposed?.rollMode || "NORMAL"}
                     onChange={(event) =>
                       patchOpposed({ rollMode: event.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                   >
                     {rollModes.map((mode) => (
                       <option key={mode} value={mode}>
@@ -808,7 +808,7 @@ export default function MechanicsCommandResolutionView({
                   </select>
                 </label>
 
-                <label className="grid gap-2 text-sm text-[var(--muted)]">
+                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                   <span>Tie Policy</span>
                   <select
                     value={
@@ -817,7 +817,7 @@ export default function MechanicsCommandResolutionView({
                     onChange={(event) =>
                       patchOpposed({ tiePolicy: event.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                   >
                     {tiePolicies.map((policy) => (
                       <option key={policy} value={policy}>
@@ -828,7 +828,7 @@ export default function MechanicsCommandResolutionView({
                 </label>
 
                 <div className="grid gap-3">
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
                     <input
                       type="checkbox"
                       checked={
@@ -839,11 +839,11 @@ export default function MechanicsCommandResolutionView({
                           criticalOnNaturalMax: event.target.checked,
                         })
                       }
-                      className="h-4 w-4 accent-[var(--muted-gold)]"
+                      className="h-4 w-4 accent-[var(--gold-ornament)]"
                     />
                     Opposition natural maximum is critical
                   </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
                     <input
                       type="checkbox"
                       checked={resolution.opposed?.fumbleOnNaturalMin !== false}
@@ -852,7 +852,7 @@ export default function MechanicsCommandResolutionView({
                           fumbleOnNaturalMin: event.target.checked,
                         })
                       }
-                      className="h-4 w-4 accent-[var(--muted-gold)]"
+                      className="h-4 w-4 accent-[var(--gold-ornament)]"
                     />
                     Opposition natural minimum is a fumble
                   </label>
@@ -892,7 +892,7 @@ export default function MechanicsCommandResolutionView({
           ) : null}
 
           <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <label className="flex items-center gap-3 text-sm text-[var(--muted)]">
+            <label className="flex items-center gap-3 text-sm text-[var(--ink-dim)]">
               <input
                 type="checkbox"
                 checked={resolution.degreeOfSuccess?.enabled === true}
@@ -904,7 +904,7 @@ export default function MechanicsCommandResolutionView({
                     },
                   })
                 }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Enable degree-of-success margin bands
             </label>
@@ -941,7 +941,7 @@ export default function MechanicsCommandResolutionView({
                   }
                   placeholder="-5"
                 />
-                <p className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--muted)] md:col-span-2">
+                <p className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
                   Natural critical/fumble rules and opposed tie policy retain precedence. Margin bands classify non-natural results after final modifiers are applied.
                 </p>
               </div>
