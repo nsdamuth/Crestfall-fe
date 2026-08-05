@@ -18,8 +18,8 @@ export default function CreationReferenceImagePickerModalView({
   onChooseImage = null,
 }) {
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
+      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -62,7 +62,7 @@ export default function CreationReferenceImagePickerModalView({
           ) : null}
 
           {isLoading ? (
-            <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-10 text-center">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-10 text-center">
               <Loader2
                 size={28}
                 className="mx-auto animate-spin text-[var(--muted-gold)]"
@@ -74,7 +74,7 @@ export default function CreationReferenceImagePickerModalView({
           ) : null}
 
           {!isLoading && !images.length ? (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
               <ImageIcon
                 size={30}
                 className="mx-auto text-[var(--muted-gold)]"
@@ -94,7 +94,7 @@ export default function CreationReferenceImagePickerModalView({
                   key={image?.id || image?.displayImageUrl || index}
                   type="button"
                   onClick={() => onChooseImage?.(image?.id)}
-                  className="group overflow-hidden rounded-2xl border border-white/10 bg-black/30 p-3 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35"
+                  className="group overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35"
                 >
                   <div className="aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-black/40">
                     {image?.displayImageUrl ? (
