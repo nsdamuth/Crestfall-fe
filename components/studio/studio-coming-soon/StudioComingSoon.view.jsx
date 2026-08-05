@@ -7,7 +7,7 @@ export default function StudioComingSoonView({
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
-    <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/15 bg-black/35 p-8">
+    <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/35 p-8">
       {eyebrow ? (
         <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted-gold)]">
           {eyebrow}
