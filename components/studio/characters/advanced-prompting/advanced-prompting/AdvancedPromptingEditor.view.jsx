@@ -78,7 +78,7 @@ export default function AdvancedPromptingEditorView({
   const securityPresentation = getSecurityPresentation(securityStatus);
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -204,7 +204,7 @@ export default function AdvancedPromptingEditorView({
                         <button
                           type="button"
                           onClick={() => onClearSection?.(section.id)}
-                          className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-100"
+                          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-[var(--muted)] transition hover:border-red-300/30 hover:text-[var(--status-danger)]"
                         >
                           <Eraser size={13} />
                           Clear Section
