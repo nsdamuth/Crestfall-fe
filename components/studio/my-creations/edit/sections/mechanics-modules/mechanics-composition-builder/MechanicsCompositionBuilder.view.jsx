@@ -16,14 +16,14 @@ import {
 
 function TextField({ label, value, onChange, type = "text", placeholder = "" }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <span>{label}</span>
       <input
         type={type}
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
       />
     </label>
   );
@@ -31,13 +31,13 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
 
 function SelectField({ label, value, options = [], onChange, disabled = false }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <span>{label}</span>
       <select
         value={value ?? ""}
         disabled={disabled}
         onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {options.map((option) => {
           const normalized =
@@ -69,13 +69,13 @@ function OutcomeChecks({ options, selected, onToggle }) {
       {options.map((outcome) => (
         <label
           key={outcome}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--muted)]"
+          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
         >
           <input
             type="checkbox"
             checked={selected.includes(outcome)}
             onChange={(event) => onToggle?.(outcome, event.target.checked)}
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           {outcome.replaceAll("_", " ")}
         </label>
@@ -87,7 +87,7 @@ function OutcomeChecks({ options, selected, onToggle }) {
 function DependencyChecks({ options, selected, onToggle }) {
   if (!options.length) {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         No earlier composition steps are available as dependencies.
       </p>
     );
@@ -98,20 +98,20 @@ function DependencyChecks({ options, selected, onToggle }) {
       {options.map((option) => (
         <label
           key={option.id}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--muted)]"
+          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
         >
           <input
             type="checkbox"
             checked={selected.includes(option.id)}
             onChange={(event) => onToggle?.(option.id, event.target.checked)}
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           <span className="min-w-0">
-            <span className="block truncate text-[var(--foreground)]">
+            <span className="block truncate text-[var(--ink)]">
               {option.label}
             </span>
             {option.group ? (
-              <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+              <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 {option.group}
               </span>
             ) : null}
@@ -129,7 +129,7 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
         type="button"
         disabled={!canMoveUp}
         onClick={onMoveUp}
-        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-30"
+        className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-30"
         title="Move step up"
       >
         <ArrowUp size={14} />
@@ -138,7 +138,7 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
         type="button"
         disabled={!canMoveDown}
         onClick={onMoveDown}
-        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-30"
+        className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-30"
         title="Move step down"
       >
         <ArrowDown size={14} />
@@ -159,7 +159,7 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
 function ConditionValueField({ condition, onPatch }) {
   if (["TRUTHY", "FALSY"].includes(condition.operator)) {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         {condition.operator} does not require a comparison value.
       </p>
     );
@@ -227,7 +227,7 @@ function ConditionCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           Condition
         </p>
         <button
@@ -363,7 +363,7 @@ function EffectValueField({
 
   if (effect.type === "FLAG_CLEAR") {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         FLAG_CLEAR needs no value.
       </p>
     );
@@ -562,7 +562,7 @@ function EffectCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           Mechanics Effect
         </p>
         <button
@@ -594,7 +594,7 @@ function EffectCard({
           }
         />
         {effect.type === "PROGRESSION_RECONCILE" ? (
-          <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+          <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
             Rank state is configured inside the progression profile below.
           </div>
         ) : (
@@ -697,10 +697,10 @@ function MechanicsStepCard({
     <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Mechanics Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--foreground)]">
+          <h5 className="mt-1 text-xl text-[var(--ink)]">
             {step.label || step.id}
           </h5>
         </div>
@@ -748,21 +748,21 @@ function MechanicsStepCard({
             onPatchMechanicsStep?.(step.id, { conditionMode: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
           <input
             type="checkbox"
             checked={step.enabled !== false}
             onChange={(event) =>
               onPatchMechanicsStep?.(step.id, { enabled: event.target.checked })
             }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Step enabled
         </label>
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Dependencies
         </p>
         <div className="mt-3">
@@ -778,7 +778,7 @@ function MechanicsStepCard({
 
       {step.phase === "OUTCOME" ? (
         <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Apply On Outcomes
           </p>
           <div className="mt-3">
@@ -796,17 +796,17 @@ function MechanicsStepCard({
       <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Step Conditions
             </p>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Conditions inspect authoritative Mechanics state when this step is reached. Later steps see earlier pending mutations.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onAddCondition?.(step.id)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
           >
             <Plus size={14} />
             Add Condition
@@ -829,7 +829,7 @@ function MechanicsStepCard({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--ink-dim)]">
             No conditions. This step is eligible whenever its phase, outcome routing, dependencies, and enabled state allow it.
           </p>
         )}
@@ -838,17 +838,17 @@ function MechanicsStepCard({
       <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Ordered Effects
             </p>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Effects execute in authored order against the pending Mechanics state produced by prior effects and steps.
             </p>
           </div>
           <button
             type="button"
             onClick={() => onAddEffect?.(step.id)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
           >
             <Plus size={14} />
             Add Effect
@@ -871,7 +871,7 @@ function MechanicsStepCard({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--ink-dim)]">
             No effects. An eligible empty step remains auditable but is treated as a failed application for continuation-policy purposes.
           </p>
         )}
@@ -1054,14 +1054,14 @@ function DomainStepCard({
     <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Domain Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--foreground)]">
+          <h5 className="mt-1 text-xl text-[var(--ink)]">
             {step.label || step.id}
           </h5>
           {step.lane ? (
-            <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">
+            <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
               {step.lane.replaceAll("_", " ")}
             </p>
           ) : null}
@@ -1096,21 +1096,21 @@ function DomainStepCard({
             onPatchDomainStep?.(step.id, { failurePolicy: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
           <input
             type="checkbox"
             checked={step.enabled !== false}
             onChange={(event) =>
               onPatchDomainStep?.(step.id, { enabled: event.target.checked })
             }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Step enabled
         </label>
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Dependencies
         </p>
         <div className="mt-3">
@@ -1134,7 +1134,7 @@ function DomainStepCard({
 
       {step.action.type !== "NONE" ? (
         <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Apply On Outcomes
           </p>
           <div className="mt-3">
@@ -1199,32 +1199,32 @@ export default function MechanicsCompositionBuilderView({
   );
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             <Workflow size={15} />
             Command Composition
           </p>
-          <h4 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+          <h4 className="mt-2 font-display text-3xl text-[var(--ink)]">
             {title}
           </h4>
           {description ? (
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               {description}
             </p>
           ) : null}
         </div>
 
-        <div className="grid min-w-[240px] grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+        <div className="grid min-w-[240px] grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--foreground)]">
+            <span className="block text-lg text-[var(--ink)]">
               {summary.enabledMechanicsStepCount ?? 0}
             </span>
             Mechanics Steps
           </div>
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--foreground)]">
+            <span className="block text-lg text-[var(--ink)]">
               {summary.enabledDomainStepCount ?? 0}
             </span>
             Domain Steps
@@ -1232,18 +1232,18 @@ export default function MechanicsCompositionBuilderView({
         </div>
       </div>
 
-      <div className="mt-5 rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Reference Composition
         </p>
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Applying a reference replaces only this command&apos;s composition block. Resolution, requirements, legacy effects, outcomes, arguments, and legacy Domain Adapter remain unchanged.
         </p>
         <div className="mt-4 flex flex-col gap-3 lg:flex-row">
           <select
             value={referenceId}
             onChange={(event) => onChooseReference?.(event.target.value)}
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
           >
             <option value="">Select a reference composition</option>
             {referenceOptions.map((reference) => (
@@ -1260,7 +1260,7 @@ export default function MechanicsCompositionBuilderView({
             type="button"
             disabled={!referenceId || selectedReference?.available === false}
             onClick={() => onApplyReference?.()}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Apply Reference
           </button>
@@ -1282,7 +1282,7 @@ export default function MechanicsCompositionBuilderView({
                     : "border-amber-300/15 bg-black/20 text-amber-100"
                 }`}
               >
-                <span className="font-mono text-[10px] text-[var(--muted)]">
+                <span className="font-mono text-[10px] text-[var(--ink-dim)]">
                   {message.path}
                 </span>
                 <span className="ml-2">{message.message}</span>
@@ -1295,11 +1295,11 @@ export default function MechanicsCompositionBuilderView({
       <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               <GitBranch size={14} />
               Ordered Mechanics Steps
             </p>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Legacy attempt effects execute first. Authored ATTEMPT steps follow, then selected legacy outcome effects, then authored OUTCOME steps.
             </p>
           </div>
@@ -1308,7 +1308,7 @@ export default function MechanicsCompositionBuilderView({
               type="button"
               disabled={!canAddMechanicsStep}
               onClick={() => onAddMechanicsStep?.("ATTEMPT")}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Plus size={14} />
               Attempt Step
@@ -1317,7 +1317,7 @@ export default function MechanicsCompositionBuilderView({
               type="button"
               disabled={!canAddMechanicsStep}
               onClick={() => onAddMechanicsStep?.("OUTCOME")}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Plus size={14} />
               Outcome Step
@@ -1355,7 +1355,7 @@ export default function MechanicsCompositionBuilderView({
             ))}
           </div>
         ) : (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
             No authored Mechanics steps. Existing attempt effects and outcome branches continue to work unchanged.
           </p>
         )}
@@ -1364,10 +1364,10 @@ export default function MechanicsCompositionBuilderView({
       <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Ordered Domain Steps
             </p>
-            <p className="mt-2 max-w-3xl text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-xs leading-5 text-[var(--ink-dim)]">
               Add at most three actions, with one action per Item, participant-condition, or Location runtime lane. A Location action must be last. These execute before the legacy Domain Adapter.
             </p>
           </div>
@@ -1375,7 +1375,7 @@ export default function MechanicsCompositionBuilderView({
             type="button"
             disabled={!canAddDomainStep}
             onClick={() => onAddDomainStep?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Plus size={14} />
             Add Domain Step
@@ -1400,13 +1400,13 @@ export default function MechanicsCompositionBuilderView({
             ))}
           </div>
         ) : (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
             No authored domain steps. The command may still use its existing single Domain Adapter.
           </p>
         )}
       </div>
 
-      <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+      <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         Cross-lane composition is explicitly non-transactional. A STOP policy prevents later steps but does not roll back earlier successful mutations.
       </p>
     </section>
