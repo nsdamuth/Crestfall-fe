@@ -71,7 +71,7 @@ export default function PlayerCharacterCreatorView({
 }) {
   return (
     <section className="mt-8">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -122,7 +122,7 @@ export default function PlayerCharacterCreatorView({
       <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         <PlayerCharacterPreview form={form} />
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
           {activeStep === "identity" ? (
             <IdentityStep
               form={form}
@@ -214,8 +214,8 @@ export default function PlayerCharacterCreatorView({
 
 function PlayerCharacterPreview({ form }) {
   return (
-    <aside className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/75 to-[var(--muted-gold)]/10">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/75 to-[var(--muted-gold)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
             <p className="font-display text-5xl text-[var(--muted-gold)]">
@@ -458,7 +458,7 @@ function ProfileStep({ form, onUpdateField }) {
           rows={4}
         />
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <p className="text-sm text-[var(--foreground)]">
             Player control boundary
           </p>
@@ -510,7 +510,7 @@ function ReviewStep({
         />
       </div>
 
-      <div className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
           Draft Summary
         </p>
