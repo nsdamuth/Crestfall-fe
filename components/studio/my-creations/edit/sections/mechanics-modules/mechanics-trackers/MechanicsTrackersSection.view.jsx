@@ -262,10 +262,12 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             <button
               type="button"
               onClick={() => remove(index)}
-              className="text-[var(--muted)] transition hover:text-red-200"
+              className="inline-flex items-center gap-1 text-[var(--status-danger)] transition"
               title={`Remove ${title.toLowerCase()}`}
+              aria-label={`Remove ${title.toLowerCase()}`}
             >
               <X size={12} />
+              <span className="text-[10px]">Remove</span>
             </button>
           </span>
         ))}
