@@ -177,14 +177,14 @@ function EntriesSection({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
         {activeEntry ? (
           <WardrobeEntryEditor
             entry={activeEntry}
             entryRoleOptions={entryRoleOptions}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <Shirt size={28} className="mx-auto text-[var(--muted-gold)]" />
             <p className="mt-4 text-sm text-[var(--muted)]">
               Select an outfit entry or add a new one.
@@ -304,7 +304,7 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
       <button
         type="button"
         onClick={() => entry.onDelete?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:bg-white/5"
       >
         <Trash2 size={14} />
         Delete Entry
