@@ -6,8 +6,8 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
@@ -19,14 +19,14 @@ function EditorCard({ eyebrow, title, children }) {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -35,7 +35,7 @@ function TextField({ label, value, onChange, placeholder }) {
 function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -43,7 +43,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -51,7 +51,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
 
 function RuntimeFieldsFixtureFallback() {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--muted)]">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--ink-dim)]">
       The live Binding Shell supplies the Crestfall mechanics fields editor here.
       Fixture previews keep this application-owned editor disconnected from
       persistence and runtime state.
@@ -78,8 +78,8 @@ export default function MechanicsModuleBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.38fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Mechanics Module Builder
         </p>
 
@@ -87,22 +87,22 @@ export default function MechanicsModuleBuilderView({
           {title || "Untitled Mechanics Module"}
         </h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           Create reusable runtime mechanics that can be attached to rooms,
           locations, characters, scenarios, or narrators.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Runtime Contract
           </p>
           <p className="mt-3">
             Module ID:{" "}
-            <span className="text-[var(--foreground)]">{moduleId}</span>
+            <span className="text-[var(--ink)]">{moduleId}</span>
           </p>
           <p>
             Contract:{" "}
-            <span className="text-[var(--foreground)]">
+            <span className="text-[var(--ink)]">
               {contractVersion}
             </span>
           </p>
@@ -116,7 +116,7 @@ export default function MechanicsModuleBuilderView({
           type="button"
           onClick={() => onSave?.()}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Save size={15} />
           {saveStatus === "saving" ? "Saving..." : "Save Draft"}
@@ -174,12 +174,12 @@ export default function MechanicsModuleBuilderView({
           title="Meters, Commands, Status Blocks, and Guards"
         >
           <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-            <Activity className="mt-1 text-[var(--muted-gold)]" size={20} />
+            <Activity className="mt-1 text-[var(--gold-ornament)]" size={20} />
             <div>
-              <p className="text-sm text-[var(--foreground)]">
+              <p className="text-sm text-[var(--ink)]">
                 Define the full reusable mechanics package before first save.
               </p>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                 {runtimeStorageNote}
               </p>
             </div>
