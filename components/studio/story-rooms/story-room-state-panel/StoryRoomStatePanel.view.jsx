@@ -34,9 +34,9 @@ export default function StoryRoomStatePanelView({
   const safeActions = Array.isArray(actions) ? actions : [];
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {eyebrow}
         </p>
 
@@ -44,7 +44,7 @@ export default function StoryRoomStatePanelView({
           <button
             type="button"
             onClick={() => onClosePanel?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             aria-label="Hide state panel"
             title="Hide state panel"
           >
@@ -71,7 +71,7 @@ export default function StoryRoomStatePanelView({
                 key={action.id}
                 type="button"
                 disabled={action.disabled !== false}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
               >
                 <ActionIcon size={14} />
                 {action.label}
@@ -90,7 +90,7 @@ function StateCard({ section }) {
 
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         <Icon size={14} />
         {section?.title || "State"}
       </p>
@@ -98,11 +98,11 @@ function StateCard({ section }) {
       <div className="mt-3 space-y-3">
         {rows.map((row) => (
           <div key={row.id}>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
               {row.label}
             </p>
 
-            <p className="mt-1 text-sm leading-5 text-[var(--foreground)]">
+            <p className="mt-1 text-sm leading-5 text-[var(--ink)]">
               {row.value}
             </p>
           </div>
