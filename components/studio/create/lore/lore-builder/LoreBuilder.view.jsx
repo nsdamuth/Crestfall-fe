@@ -40,7 +40,7 @@ export default function LoreBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--muted-gold)]">
           <BookOpenText size={18} />
           <p className="text-xs uppercase tracking-[0.22em]">Lore Asset</p>
@@ -73,7 +73,7 @@ export default function LoreBuilderView({
       </aside>
 
       <div className="space-y-6">
-        <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 sm:p-6">
+        <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 sm:p-6">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">Publication Identity</p>
           <h2 className="mt-2 font-display text-3xl">Name and draft access</h2>
           <div className="mt-5 grid gap-5">
