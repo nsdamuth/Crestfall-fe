@@ -46,7 +46,7 @@ export default function RoomTemplateOpeningSectionView({
           {openingMessages.map((message) => (
             <div
               key={message.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-5"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -57,7 +57,7 @@ export default function RoomTemplateOpeningSectionView({
                   type="button"
                   onClick={() => onRemoveOpeningMessage?.(message.id)}
                   disabled={!message.canRemove}
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="inline-flex h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-white/10 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   <X size={12} />
                   {removeMessageLabel}
