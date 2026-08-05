@@ -10,7 +10,7 @@ function ScaleField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -22,11 +22,11 @@ function ScaleField({
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder="Inherit"
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
 
       {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
           {helperText}
         </span>
       ) : null}
@@ -38,16 +38,16 @@ function SenseCard({ icon, eyebrow, title, body, children }) {
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex items-start gap-3">
-        <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+        <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           {icon}
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
           <h3 className="mt-1 font-display text-2xl">{title}</h3>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{body}</p>
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">{body}</p>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ function ScentTagEditor({
 }) {
   return (
     <div className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         Tags
       </span>
 
@@ -83,21 +83,21 @@ function ScentTagEditor({
             onAddTags?.(noteIndex);
           }}
           placeholder="e.g., industrial"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
 
         <button
           type="button"
           onClick={() => onAddTags?.(noteIndex)}
           disabled={!canAddTags}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Add scent tag"
         >
           <Plus size={15} />
         </button>
       </div>
 
-      <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+      <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
         Type a tag, then press Enter or the plus button. Commas are also accepted when pasting multiple tags.
       </span>
 
@@ -106,7 +106,7 @@ function ScentTagEditor({
           {tags.map((tag) => (
             <span
               key={tag.toLowerCase()}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-xs text-[var(--foreground)]"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-xs text-[var(--ink)]"
             >
               {tag}
               <button
@@ -168,7 +168,7 @@ export default function LocationSensoryEnvironmentFieldsView({
 } = {}) {
   return (
     <div>
-      <div className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+      <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
         {guidanceText}
       </div>
 
@@ -281,7 +281,7 @@ export default function LocationSensoryEnvironmentFieldsView({
                   className="grid gap-3 rounded-xl border border-white/10 bg-black/30 p-4 md:grid-cols-[1fr_150px_1fr_auto] md:items-end"
                 >
                   <label className="block">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                       Scent Note
                     </span>
                     <input
@@ -291,7 +291,7 @@ export default function LocationSensoryEnvironmentFieldsView({
                         onChangeScentNoteLabel?.(note.loomRowIndex, event.target.value)
                       }
                       placeholder="e.g., machine oil"
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                     />
                   </label>
 
@@ -327,7 +327,7 @@ export default function LocationSensoryEnvironmentFieldsView({
                 </div>
               ))
             ) : (
-              <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-5 text-sm leading-6 text-[var(--muted)]">
+              <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-5 text-sm leading-6 text-[var(--ink-dim)]">
                 {emptyScentNotesText}
               </div>
             )}
@@ -335,7 +335,7 @@ export default function LocationSensoryEnvironmentFieldsView({
             <button
               type="button"
               onClick={() => onAddScentNote?.()}
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               <Plus size={14} />
               {addScentNoteLabel}
