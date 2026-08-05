@@ -34,18 +34,18 @@ export default function StorylineBuilderShellView({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
           {eyebrow}
         </p>
         <h2 className="mt-2 font-display text-4xl">{displayTitle}</h2>
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           {description}
         </p>
 
         <div className="mt-5 space-y-4">
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               {titleLabel}
             </span>
             <input
@@ -56,7 +56,7 @@ export default function StorylineBuilderShellView({
           </label>
 
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               {descriptionLabel}
             </span>
             <textarea
@@ -69,7 +69,7 @@ export default function StorylineBuilderShellView({
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {visibilityLabel}
               </span>
               <select
@@ -86,7 +86,7 @@ export default function StorylineBuilderShellView({
             </label>
 
             <label className="block">
-              <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {contentRatingLabel}
               </span>
               <select
@@ -104,7 +104,7 @@ export default function StorylineBuilderShellView({
           </div>
 
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               {tagsLabel}
             </span>
             <textarea
@@ -121,7 +121,7 @@ export default function StorylineBuilderShellView({
           type="button"
           onClick={onSaveDraft}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
         >
           <Save size={15} />
           {saveButtonLabel}
@@ -139,11 +139,11 @@ export default function StorylineBuilderShellView({
       </aside>
 
       <div className="space-y-6">
-        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {nodeEditorSlot}
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {openWorldSettingsSlot}
         </div>
       </div>
