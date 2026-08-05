@@ -22,7 +22,7 @@ export default function CreationFeaturedImagePickerModalView({
 }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
