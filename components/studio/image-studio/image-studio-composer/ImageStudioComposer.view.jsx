@@ -46,7 +46,7 @@ export default function ImageStudioComposerView({
   const isVideoMode = mode === "VIDEO";
 
   return (
-    <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:sticky xl:top-24">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:sticky xl:top-24">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -158,7 +158,7 @@ export default function ImageStudioComposerView({
           </button>
 
           {imageOptionsOpen ? (
-            <div className="mt-3 grid gap-4 rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="mt-3 grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               {imageOptionFields.map((field) => (
                 <CrestfallSelect
                   key={field.id}
