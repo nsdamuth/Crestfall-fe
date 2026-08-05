@@ -4,7 +4,7 @@ import { SectionTitle } from "@/components/studio/my-creations/edit/sections/Sha
 
 function SlotFallback({ children }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
       {children}
     </div>
   );
@@ -68,7 +68,7 @@ export default function LocationRuntimeModulesSectionView({
           <SlotFallback>{runtimeMechanicsFallbackText}</SlotFallback>
         )}
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-3">
               <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
@@ -139,7 +139,7 @@ export default function LocationRuntimeModulesSectionView({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5">
+        <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5">
           <div className="flex items-start gap-3">
             <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
               <Clock size={20} />
