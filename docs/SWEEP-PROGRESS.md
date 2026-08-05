@@ -7,32 +7,40 @@ Never ask Brian to restate the brief; this file is the resume point.
 
 ## Current phase
 
-Phase A.3, main fan-out complete for 134/160 packages, retry running for
-the other 19. First workflow (`wf_39d9729e-014`, task `wa8ezmt5s`) covered
-160 packages across sub-batches 2-19: 134 converted, 7 legitimately
-no_change_needed (finding already matched the ruled resolution on disk,
-or was a logic-only confirm-step file with no geometry to convert), 19
-stopped because their worktree was created from a stale base commit
-(afa856a) that predates docs/BATCH-TWO-ORDER.md and docs/BATCH-TWO-SCOPE.md
-entirely, not a rule-ambiguity stop.
+Phase A.3 is DONE. All 160 packages across sub-batches 2-19 processed:
+153 converted with real edits, 7 legitimately no_change_needed (finding
+already matched the ruled resolution on disk, or was a logic-only
+confirm-step file with no geometry). Combined with sub-batch 0 (9) and
+the pre-existing sub-batch 1 (10), the sweep has touched every
+mechanically-convertible package.
 
-All 134 converted packages were cherry-picked (not merged, to keep one
-commit per package) into `design/global-sweep`, in order. 132 applied
-clean; 2 conflicted against newer HEAD content (actor-mechanics-profile-editor,
-creation-image-library-page) because their worktree base predated some
-already-shipped token renames (`--muted-gold` -> `--gold-ornament`) and,
-in one case, an already-more-evolved Destructive-button implementation on
-HEAD. Both resolved by hand: kept HEAD's newer/already-correct content,
-applied only the radius-token fix from the incoming diff. Worktrees
-pruned. Production build verified exit 0 after this merge. No new em
-dashes introduced (pre-existing em dashes in unrelated UI copy/comments
-in a few touched files were left alone, per "no adjacent tidying").
+History of how the 153 landed: a first workflow (`wf_39d9729e-014`)
+converted 134 via worktree isolation, cherry-picked one at a time into
+`design/global-sweep` (132 clean, 2 hand-resolved conflicts against
+newer HEAD content: actor-mechanics-profile-editor, creation-image-library-page,
+where HEAD already had newer token names or a more-evolved Destructive
+implementation than the worktree's stale base; kept HEAD's newer content,
+applied only the incoming radius-token fix). A retry workflow for the
+other 19 hit the SAME stale-worktree-base bug again (all 19 stuck at
+commit afa856a regardless of relaunch), so those 19 were converted by
+hand directly on `design/global-sweep`, one commit each, same rule
+lookups, same skip discipline for non-mechanical findings (confirm-step
+UX, unstated wash resolutions).
 
-Second workflow (`wf_994b5ca6-1be`, task `wq0h03mh6`) launched for the 19
-stopped packages, same prompt, re-verified against the now-current
-`design/global-sweep` HEAD. Running in background. When it completes,
-merge the same way (cherry-pick, sequential, build-verify), then Phase
-A.3 is done and Phase B (verification convergence) starts.
+KNOWN INFRA ISSUE for any future phase that reaches for isolation:'worktree'
+in this session: it appears to pin to a stale base commit rather than the
+current branch tip. Prefer direct edits on the main checkout for small
+batches; only retry worktree isolation for large batches if this is
+confirmed fixed.
+
+Production build verified exit 0 after both waves. No new em dashes
+introduced anywhere in this phase (pre-existing em dashes in unrelated
+UI copy/comments in a few touched files were left alone, per "no
+adjacent tidying"). Worktrees pruned.
+
+Next: Phase B, verification convergence pass, different agents than the
+ones that edited, re-checking every converted package (batch one
+included) against its assigned rule families.
 
 ## Completed
 
