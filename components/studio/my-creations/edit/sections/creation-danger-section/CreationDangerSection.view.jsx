@@ -39,11 +39,11 @@ export default function CreationDangerSectionView({
       />
 
       {showCanonNotice ? (
-        <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-5">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-5">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {canonNoticeEyebrow}
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             {canonNoticeBody}
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function CreationDangerSectionView({
               </p>
 
               {showDeleteRequirement ? (
-                <p className="mt-4 rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-4 rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
                   {deleteRequirementMessage}
                 </p>
               ) : null}
