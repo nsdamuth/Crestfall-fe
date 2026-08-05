@@ -21,7 +21,7 @@ export default function IngredientSlotView({
       <button
         type="button"
         onClick={() => onOpenSlot?.()}
-        className={`group flex aspect-square w-full flex-col items-center justify-center rounded-2xl border p-3 text-center transition hover:-translate-y-0.5 ${
+        className={`group flex aspect-square w-full flex-col items-center justify-center rounded-[var(--radius-md)] border p-3 text-center transition hover:-translate-y-0.5 ${
           isCustom
             ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
             : hasValue
