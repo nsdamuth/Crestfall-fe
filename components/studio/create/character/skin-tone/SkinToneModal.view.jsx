@@ -37,14 +37,14 @@ export default function SkinToneModalView({
 
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+          <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
             <div className="flex items-center justify-between gap-4">
               <h2 className="font-display text-3xl">{modalTitle}</h2>
 
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
                 aria-label="Close"
               >
                 <X size={18} />
