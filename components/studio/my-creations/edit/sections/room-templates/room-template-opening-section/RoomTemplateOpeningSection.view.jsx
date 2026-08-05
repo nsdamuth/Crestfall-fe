@@ -49,7 +49,7 @@ export default function RoomTemplateOpeningSectionView({
               className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                   {message.messageLabel}
                 </p>
 
@@ -89,7 +89,7 @@ export default function RoomTemplateOpeningSectionView({
           <button
             type="button"
             onClick={() => onAddOpeningMessage?.()}
-            className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           >
             <Plus size={14} />
             {addMessageLabel}
