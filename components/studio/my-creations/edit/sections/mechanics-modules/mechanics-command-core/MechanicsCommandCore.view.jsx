@@ -74,10 +74,11 @@ function TokenListField({
                       )
                     )
                   }
-                  className="text-[var(--muted)] transition hover:text-red-200"
+                  className="inline-flex items-center gap-1 text-[var(--status-danger)] transition hover:opacity-80"
                   title={`Remove ${value}`}
                 >
                   <X size={12} />
+                  Remove
                 </button>
               </span>
             ))}
@@ -485,10 +486,11 @@ export function MechanicsCommandTriggersView({ model }) {
             <button
               type="button"
               onClick={() => model.removeTrigger(triggerIndex)}
-              className="text-[var(--muted)] transition hover:text-red-200"
+              className="inline-flex items-center gap-1 text-[var(--status-danger)] transition hover:opacity-80"
               title="Remove trigger"
             >
               <X size={12} />
+              Remove
             </button>
           </span>
         ))}
