@@ -173,7 +173,7 @@ function EntriesSection({
         <button
           type="button"
           onClick={() => onAddEntry?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Entry
@@ -188,14 +188,14 @@ function EntriesSection({
                 onClick={() => entry.onSelect?.()}
                 className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                   entry.isActive
-                    ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                    ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
                 }`}
               >
                 <p className="line-clamp-1 font-display text-xl">
                   {entry.nameDisplay}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                   {entry.roleDisplay} · {entry.categoryDisplay}
                 </p>
               </button>
@@ -216,8 +216,8 @@ function EntriesSection({
           />
         ) : (
           <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <Box size={28} className="mx-auto text-[var(--muted-gold)]" />
-            <p className="mt-4 text-sm text-[var(--muted)]">
+            <Box size={28} className="mx-auto text-[var(--gold-ornament)]" />
+            <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an object entry or add a new one.
             </p>
           </div>
@@ -358,7 +358,7 @@ function TrackingSection({
                 }
                 className="mt-1"
               />
-              <span className="text-sm leading-6 text-[var(--muted)]">
+              <span className="text-sm leading-6 text-[var(--ink-dim)]">
                 Runtime systems should not assume this item is available unless
                 state, location, ownership, or story context allows it.
               </span>
@@ -454,26 +454,26 @@ function ReviewSection({
   return (
     <div className="mt-6 grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
       <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
-        <Database size={24} className="text-[var(--muted-gold)]" />
+        <Database size={24} className="text-[var(--gold-ornament)]" />
         <dl className="mt-4 space-y-3 text-sm">
           <div>
-            <dt className="text-[var(--muted)]">Entries</dt>
-            <dd className="text-[var(--foreground)]">
+            <dt className="text-[var(--ink-dim)]">Entries</dt>
+            <dd className="text-[var(--ink)]">
               {reviewEntryCountValue}
             </dd>
           </div>
           <div>
-            <dt className="text-[var(--muted)]">Scope</dt>
-            <dd className="text-[var(--foreground)]">{reviewScopeValue}</dd>
+            <dt className="text-[var(--ink-dim)]">Scope</dt>
+            <dd className="text-[var(--ink)]">{reviewScopeValue}</dd>
           </div>
           <div>
-            <dt className="text-[var(--muted)]">Future payload</dt>
-            <dd className="text-[var(--foreground)]">ITEM_REGISTRY</dd>
+            <dt className="text-[var(--ink-dim)]">Future payload</dt>
+            <dd className="text-[var(--ink)]">ITEM_REGISTRY</dd>
           </div>
         </dl>
       </div>
 
-      <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {reviewPayloadText}
       </pre>
     </div>
@@ -589,12 +589,12 @@ function ItemEntryEditor({
 function SectionHeader({ eyebrow, title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
       {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
@@ -605,7 +605,7 @@ function SectionHeader({ eyebrow, title, body }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -617,7 +617,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -626,14 +626,14 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
 
 function EmptyPanel({ message }) {
   return (
-    <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+    <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
       {message}
     </p>
   );
