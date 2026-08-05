@@ -63,14 +63,14 @@ export default function WardrobeBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Character Clothing
             </p>
             <h2 className="mt-2 font-display text-4xl">Wardrobe</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               Build a reusable wardrobe made from outfit presets. Later,
               characters can use a wardrobe as their default clothing source for
               chat continuity and image generation.
@@ -81,7 +81,7 @@ export default function WardrobeBuilderView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Save size={14} />
             {saveStatus === "saving"
@@ -97,7 +97,7 @@ export default function WardrobeBuilderView({
             className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
               saveStatus === "error"
                 ? "border-red-500/30 bg-red-500/10 text-red-200"
-                : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+                : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
             }`}
           >
             {saveMessage}
@@ -115,8 +115,8 @@ export default function WardrobeBuilderView({
                 onClick={() => onSelectTab?.(tab.id)}
                 className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                   tab.active
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 }`}
               >
                 <Icon size={14} />
@@ -172,13 +172,13 @@ export default function WardrobeBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
       {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
@@ -190,7 +190,7 @@ function Panel({ eyebrow, title, body, children }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -202,7 +202,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -211,7 +211,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -284,7 +284,7 @@ function EntriesTab({
         <button
           type="button"
           onClick={() => onAddEntry?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
         >
           <Plus size={14} />
           Add Entry
@@ -302,14 +302,14 @@ function EntriesTab({
                   onClick={() => onSelectEntry?.(entry.id)}
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
-                      ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                      ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">
                     {entry.label || "Untitled Outfit Entry"}
                   </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                     {formatOptionLabel(entry.role)} ·{" "}
                     {entry.enabled ? "Enabled" : "Disabled"}
                   </p>
@@ -317,7 +317,7 @@ function EntriesTab({
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
@@ -346,8 +346,8 @@ function EntriesTab({
           />
         ) : (
           <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <Shirt size={28} className="mx-auto text-[var(--muted-gold)]" />
-            <p className="mt-4 text-sm text-[var(--muted)]">
+            <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
+            <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
             </p>
           </div>
@@ -391,16 +391,16 @@ function WardrobeEntryEditor({
                   <p className="font-display text-2xl">
                     {entry.outfitTitle || "Selected Outfit"}
                   </p>
-                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                     {entry.outfitDescription || "No description."}
                   </p>
-                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                     {entry.outfitCreationId}
                   </p>
                 </div>
               </div>
             ) : (
-              <p className="text-sm leading-6 text-[var(--muted)]">
+              <p className="text-sm leading-6 text-[var(--ink-dim)]">
                 No outfit selected yet.
               </p>
             )}
@@ -408,7 +408,7 @@ function WardrobeEntryEditor({
             <button
               type="button"
               onClick={onChooseOutfit}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
             >
               <Shirt size={14} />
               {entry.outfitCreationId ? "Change Outfit" : "Select Outfit"}
@@ -462,7 +462,7 @@ function WardrobeEntryEditor({
           onChange={(event) => onChange?.({ enabled: event.target.checked })}
           className="mt-1"
         />
-        <span className="text-sm leading-6 text-[var(--muted)]">
+        <span className="text-sm leading-6 text-[var(--ink-dim)]">
           This outfit entry is enabled for future default wardrobe selection.
         </span>
       </label>
@@ -518,7 +518,7 @@ function RulesTab({
             }
             className="mt-1"
           />
-          <span className="text-sm leading-6 text-[var(--muted)]">
+          <span className="text-sm leading-6 text-[var(--ink-dim)]">
             Allow random selection among matching enabled outfits later.
           </span>
         </label>
