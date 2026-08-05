@@ -23,7 +23,7 @@ function Counter({ value = 0, limit = 0 }) {
   const nearLimit = safeLimit > 0 && safeValue >= safeLimit * 0.9;
 
   return (
-    <span className={nearLimit ? "text-amber-200" : "text-[var(--muted)]"}>
+    <span className={nearLimit ? "text-amber-200" : "text-[var(--ink-dim)]"}>
       {safeValue.toLocaleString()} / {safeLimit.toLocaleString()}
     </span>
   );
@@ -60,11 +60,11 @@ function IssueList({ issues = [] }) {
 function FieldLabel({ children, detail = "" }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-2">
-      <label className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <label className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {children}
       </label>
       {detail ? (
-        <span className="text-[11px] text-[var(--muted)]">{detail}</span>
+        <span className="text-[11px] text-[var(--ink-dim)]">{detail}</span>
       ) : null}
     </div>
   );
@@ -77,7 +77,7 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -91,7 +91,7 @@ function NumberInput({ value, onChange, min, max, step = 1 }) {
       max={max}
       step={step}
       onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -101,7 +101,7 @@ function SelectInput({ value, onChange, children }) {
     <select
       value={value}
       onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
     >
       {children}
     </select>
@@ -148,10 +148,10 @@ export default function RulesCodexEditorView({
     : [];
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">
               Rules Codex · Interpretation Layer
@@ -161,7 +161,7 @@ export default function RulesCodexEditorView({
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             Rules & Interpretation
           </h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
             Explain what verified mechanics mean and when world-specific rules
             apply. Codex guidance cannot mutate state, overrule guards, replace
             registries, or take control of a Player Character.
@@ -172,7 +172,7 @@ export default function RulesCodexEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           >
             <Braces size={15} />
             JSON Editor
@@ -185,8 +185,8 @@ export default function RulesCodexEditorView({
             onClick={() => onSetEnabled?.(!enabled)}
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
-                ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30"
+                ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Codex Enabled" : "Enable Codex"}
@@ -196,23 +196,23 @@ export default function RulesCodexEditorView({
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
         <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Authority
           </p>
-          <p className="mt-2 text-sm text-[var(--foreground)]">
+          <p className="mt-2 text-sm text-[var(--ink)]">
             Interpretation only
           </p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Sections
           </p>
-          <p className="mt-2 text-sm text-[var(--foreground)]">
+          <p className="mt-2 text-sm text-[var(--ink)]">
             {sectionCount.toLocaleString()} / {sectionLimit.toLocaleString()}
           </p>
         </div>
         <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Guidance budget
           </p>
           <p className="mt-2 text-sm">
@@ -252,15 +252,15 @@ export default function RulesCodexEditorView({
             onChange={(event) => onUpdateSummary?.(event.target.value)}
             placeholder="Describe what this Codex governs, where it applies, and what it helps the engine interpret..."
             rows={5}
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
         </div>
 
         <aside className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Selection Budget
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             These limits cap how much Codex guidance the context planner may
             select for one turn. They do not force sections to load.
           </p>
@@ -304,10 +304,10 @@ export default function RulesCodexEditorView({
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Rules Sections
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Keep each section focused so the router can retrieve only the rules
             needed for the current turn.
           </p>
@@ -317,7 +317,7 @@ export default function RulesCodexEditorView({
           type="button"
           onClick={() => onAddSection?.()}
           disabled={sectionCount >= sectionLimit}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/15 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/15 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus size={15} />
           Add Section
@@ -344,23 +344,23 @@ export default function RulesCodexEditorView({
                   >
                     <ToggleIcon
                       size={17}
-                      className="mt-1 shrink-0 text-[var(--muted-gold)]"
+                      className="mt-1 shrink-0 text-[var(--gold-ornament)]"
                     />
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate text-sm font-medium text-[var(--foreground)]">
+                        <p className="truncate text-sm font-medium text-[var(--ink)]">
                           {section.title || "Untitled rules section"}
                         </p>
-                        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--muted)]">
+                        <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
                           {section.activationMode.replaceAll("_", " ")}
                         </span>
                         {!section.enabled ? (
-                          <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--muted)]">
+                          <span className="rounded-full border border-white/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
                             Disabled
                           </span>
                         ) : null}
                       </div>
-                      <p className="mt-1 truncate text-xs text-[var(--muted)]">
+                      <p className="mt-1 truncate text-xs text-[var(--ink-dim)]">
                         {section.id || "Identifier required"}
                       </p>
                     </div>
@@ -373,7 +373,7 @@ export default function RulesCodexEditorView({
                       title="Move section up"
                       disabled={index === 0}
                       onClick={() => onMoveSection?.(section.id, "UP")}
-                      className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-30"
+                      className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-30"
                     >
                       <ArrowUp size={14} />
                     </button>
@@ -383,7 +383,7 @@ export default function RulesCodexEditorView({
                       title="Move section down"
                       disabled={index === safeSections.length - 1}
                       onClick={() => onMoveSection?.(section.id, "DOWN")}
-                      className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-30"
+                      className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-30"
                     >
                       <ArrowDown size={14} />
                     </button>
@@ -510,7 +510,7 @@ export default function RulesCodexEditorView({
                             className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm transition ${
                               section.enabled
                                 ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
-                                : "border-white/10 bg-black/35 text-[var(--muted)]"
+                                : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
                             }`}
                           >
                             {section.enabled ? "Enabled" : "Disabled"}
@@ -518,8 +518,8 @@ export default function RulesCodexEditorView({
                         </div>
                       </div>
 
-                      <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
-                        <span className="font-medium text-[var(--muted-gold)]">
+                      <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+                        <span className="font-medium text-[var(--gold-ornament)]">
                           Fixed authority:
                         </span>{" "}
                         {section.authorityLabel.replaceAll("_", " ")}. This
@@ -544,22 +544,22 @@ export default function RulesCodexEditorView({
                           }
                           placeholder="Explain what the verified values or outcome mean, when this rule applies, and how the result should be portrayed. Do not define hidden state changes here..."
                           rows={9}
-                          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                         />
                       </div>
 
                       {contextual ? (
-                        <div className="mt-6 rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 p-4">
+                        <div className="mt-6 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
                           <div className="flex items-start gap-3">
                             <CircleHelp
                               size={16}
-                              className="mt-0.5 shrink-0 text-[var(--muted-gold)]"
+                              className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
                             />
                             <div>
-                              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                                 Contextual Activation Signals
                               </p>
-                              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                                 Enter comma-separated routing identifiers. The
                                 context planner uses these signals to decide
                                 whether this section is relevant; it does not
@@ -587,7 +587,7 @@ export default function RulesCodexEditorView({
                                   autoCapitalize="characters"
                                   spellCheck={false}
                                 />
-                                <p className="mt-2 text-[11px] leading-5 text-[var(--muted)]">
+                                <p className="mt-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                                   {field.description}
                                 </p>
                               </div>
@@ -595,10 +595,10 @@ export default function RulesCodexEditorView({
                           </div>
 
                           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--muted)]">
+                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known domains: {knownDomains.join(", ")}
                             </div>
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--muted)]">
+                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known scopes: {knownScopeTypes.join(", ")}
                             </div>
                           </div>
@@ -610,7 +610,7 @@ export default function RulesCodexEditorView({
                           <button
                             type="button"
                             onClick={() => onClearSection?.(section.id)}
-                            className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-100"
+                            className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--ink-dim)] transition hover:border-red-300/30 hover:text-red-100"
                           >
                             <Eraser size={13} />
                             Clear Section
@@ -625,7 +625,7 @@ export default function RulesCodexEditorView({
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
           The authored Codex remains available for editing, but no section may be
           selected for runtime context while the Codex is disabled.
         </div>
@@ -643,19 +643,19 @@ export default function RulesCodexEditorView({
         <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-6 text-center">
           <BookOpenText
             size={28}
-            className="mx-auto text-[var(--muted-gold)]"
+            className="mx-auto text-[var(--gold-ornament)]"
           />
-          <p className="mt-3 text-sm text-[var(--foreground)]">
+          <p className="mt-3 text-sm text-[var(--ink)]">
             No rules sections yet
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Start with one focused interpretation rule rather than pasting an
             entire game manual into a single section.
           </p>
           <button
             type="button"
             onClick={() => onAddSection?.()}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em]"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em]"
           >
             <Plus size={15} />
             Add First Section
