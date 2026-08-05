@@ -25,7 +25,7 @@ function PalettePreviewCard({ palette = {}, selected = false, onSelect = null })
     <button
       type="button"
       onClick={() => onSelect?.()}
-      className={`relative rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 ${
+      className={`relative rounded-[var(--radius-md)] border p-4 text-left transition hover:-translate-y-0.5 ${
         selected
           ? "border-[var(--muted-gold)]/70 bg-[var(--muted-gold)]/10"
           : "border-white/10 bg-black/30 hover:border-white/25"
@@ -107,7 +107,7 @@ export default function CharacterColorPaletteModalView({
 
       {open ? (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) onClose?.();
           }}
@@ -116,7 +116,7 @@ export default function CharacterColorPaletteModalView({
             role="dialog"
             aria-modal="true"
             aria-label={modalAriaLabel}
-            className="max-h-[88vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-[var(--muted-gold)]/25 bg-[#090807] p-5 shadow-2xl sm:p-7"
+            className="max-h-[88vh] w-full max-w-6xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#090807] p-5 shadow-2xl sm:p-7"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -171,7 +171,7 @@ export default function CharacterColorPaletteModalView({
                 })}
               </div>
             ) : (
-              <div className="mt-7 rounded-2xl border border-white/10 bg-black/30 p-6 text-sm leading-6 text-[var(--muted)]">
+              <div className="mt-7 rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-6 text-sm leading-6 text-[var(--muted)]">
                 No color palettes are available.
               </div>
             )}
