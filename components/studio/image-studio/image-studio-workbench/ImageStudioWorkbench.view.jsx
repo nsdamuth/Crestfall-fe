@@ -44,7 +44,7 @@ export default function ImageStudioWorkbenchView({
                 onOpenMobileComposer?.();
               }
             }}
-            className="fixed bottom-20 left-4 right-4 z-40 flex cursor-pointer items-center justify-between rounded-2xl border border-[var(--muted-gold)]/30 bg-black/95 px-4 py-3 text-left shadow-2xl backdrop-blur-md"
+            className="fixed bottom-20 left-4 right-4 z-40 flex cursor-pointer items-center justify-between rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-black/95 px-4 py-3 text-left shadow-2xl backdrop-blur-[var(--blur-panel)]"
           >
             <div>
               <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
@@ -78,10 +78,10 @@ export default function ImageStudioWorkbenchView({
               type="button"
               aria-label="Close composer backdrop"
               onClick={onCloseMobileComposer}
-              className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
             />
 
-            <aside className="fixed inset-x-0 bottom-16 z-50 max-h-[82vh] rounded-t-3xl border-t border-[var(--muted-gold)]/25 bg-black/95 shadow-2xl backdrop-blur-md">
+            <aside className="fixed inset-x-0 bottom-16 z-50 max-h-[82vh] rounded-t-[var(--radius-lg)] border-t border-[var(--muted-gold)]/25 bg-black/95 shadow-2xl backdrop-blur-[var(--blur-panel)]">
               <button
                 type="button"
                 onClick={onCloseMobileComposer}
