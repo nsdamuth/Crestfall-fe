@@ -24,10 +24,10 @@ import {
 function Field({ label, children, detail = "" }) {
   return (
     <label className="block">
-      <span className="flex items-end justify-between gap-2 text-xs uppercase tracking-[0.17em] text-[var(--muted-gold)]">
+      <span className="flex items-end justify-between gap-2 text-xs uppercase tracking-[0.17em] text-[var(--gold-ornament)]">
         <span>{label}</span>
         {detail ? (
-          <span className="normal-case tracking-normal text-[var(--muted)]">
+          <span className="normal-case tracking-normal text-[var(--ink-dim)]">
             {detail}
           </span>
         ) : null}
@@ -38,7 +38,7 @@ function Field({ label, children, detail = "" }) {
 }
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function ReferenceSelector({
   ownedItems = [],
@@ -109,8 +109,8 @@ function ReferenceSelector({
             }}
             className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs uppercase tracking-[0.13em] transition ${
               source === "OWNED"
-                ? "bg-[var(--muted-gold)]/15 text-[var(--muted-gold)]"
-                : "text-[var(--muted)] hover:text-white"
+                ? "bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
+                : "text-[var(--ink-dim)] hover:text-white"
             }`}
           >
             <Icon size={13} /> Owned
@@ -123,14 +123,14 @@ function ReferenceSelector({
             }}
             className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs uppercase tracking-[0.13em] transition ${
               source === "LIKED"
-                ? "bg-[var(--muted-gold)]/15 text-[var(--muted-gold)]"
-                : "text-[var(--muted)] hover:text-white"
+                ? "bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
+                : "text-[var(--ink-dim)] hover:text-white"
             }`}
           >
             <Heart size={13} /> Liked
           </button>
         </div>
-        <p className="text-xs text-[var(--muted)]">
+        <p className="text-xs text-[var(--ink-dim)]">
           {selectedRefs.length} / {maxSelections} selected
         </p>
       </div>
@@ -140,7 +140,7 @@ function ReferenceSelector({
           {selectedRefs.map((item) => (
             <span
               key={item.id}
-              className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 py-1.5 pl-2 pr-2.5 text-xs text-[var(--foreground)]"
+              className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 py-1.5 pl-2 pr-2.5 text-xs text-[var(--ink)]"
             >
               <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/40">
                 {item.imageUrl ? (
@@ -151,14 +151,14 @@ function ReferenceSelector({
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <Icon size={11} className="text-[var(--muted-gold)]" />
+                  <Icon size={11} className="text-[var(--gold-ornament)]" />
                 )}
               </span>
               <span className="max-w-52 truncate">{item.title}</span>
               <button
                 type="button"
                 onClick={() => onToggle?.(item)}
-                className="rounded-full p-0.5 text-[var(--muted)] transition hover:bg-white/10 hover:text-white"
+                className="rounded-full p-0.5 text-[var(--ink-dim)] transition hover:bg-white/10 hover:text-white"
                 aria-label={`Remove ${item.title}`}
               >
                 <X size={12} />
@@ -172,7 +172,7 @@ function ReferenceSelector({
         <div className="relative">
           <Search
             size={15}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-dim)]"
           />
           <input
             className={`${inputClass} mt-0`}
@@ -200,7 +200,7 @@ function ReferenceSelector({
         {showResults ? (
           <div className="mt-2 max-h-80 w-full overflow-y-auto rounded-xl border border-white/10 bg-[#090806] p-2 shadow-2xl">
             {activeStatus === "loading" ? (
-              <p className="px-3 py-3 text-sm text-[var(--muted)]">
+              <p className="px-3 py-3 text-sm text-[var(--ink-dim)]">
                 Loading {source === "LIKED" ? "liked" : "owned"} {pluralLabel}…
               </p>
             ) : null}
@@ -208,7 +208,7 @@ function ReferenceSelector({
               <p className="px-3 py-3 text-sm text-red-200">{activeMessage}</p>
             ) : null}
             {activeStatus !== "loading" && !activeMessage && !filteredItems.length ? (
-              <p className="px-3 py-3 text-sm leading-6 text-[var(--muted)]">
+              <p className="px-3 py-3 text-sm leading-6 text-[var(--ink-dim)]">
                 {normalizedQuery
                   ? `No matching ${pluralLabel} found.`
                   : source === "LIKED"
@@ -233,14 +233,14 @@ function ReferenceSelector({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <Icon size={14} className="text-[var(--muted-gold)]" />
+                    <Icon size={14} className="text-[var(--gold-ornament)]" />
                   )}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-sm text-[var(--foreground)]">
+                  <span className="block truncate text-sm text-[var(--ink)]">
                     {item.title}
                   </span>
-                  <span className="mt-0.5 block text-[10px] uppercase tracking-[0.13em] text-[var(--muted)]">
+                  <span className="mt-0.5 block text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
                     Add {singularLabel}
                   </span>
                 </span>
@@ -251,7 +251,7 @@ function ReferenceSelector({
       </div>
 
       {atLimit ? (
-        <p className="mt-2 text-xs text-[var(--muted)]">
+        <p className="mt-2 text-xs text-[var(--ink-dim)]">
           Remove a selected {singularLabel} before adding another.
         </p>
       ) : null}
@@ -277,7 +277,7 @@ function ColumnBlockCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           {block.type === "image"
             ? "Character Image"
             : block.type === "inline-quote"
@@ -300,7 +300,7 @@ function ColumnBlockCard({
               )
             }
             disabled={blockIndex === 0}
-            className="rounded-md border border-white/10 p-1.5 text-[var(--muted)] disabled:opacity-30"
+            className="rounded-md border border-white/10 p-1.5 text-[var(--ink-dim)] disabled:opacity-30"
             aria-label="Move column block up"
           >
             <ArrowUp size={12} />
@@ -318,7 +318,7 @@ function ColumnBlockCard({
               )
             }
             disabled={blockIndex === blockCount - 1}
-            className="rounded-md border border-white/10 p-1.5 text-[var(--muted)] disabled:opacity-30"
+            className="rounded-md border border-white/10 p-1.5 text-[var(--ink-dim)] disabled:opacity-30"
             aria-label="Move column block down"
           >
             <ArrowDown size={12} />
@@ -394,7 +394,7 @@ function BlockFields({
 }) {
   if (block.type === "divider") {
     return (
-      <p className="text-sm text-[var(--muted)]">
+      <p className="text-sm text-[var(--ink-dim)]">
         A decorative sourcebook divider will appear here.
       </p>
     );
@@ -421,7 +421,7 @@ function BlockFields({
             }
           />
         </Field>
-        <div className="flex flex-wrap gap-4 text-sm text-[var(--muted)]">
+        <div className="flex flex-wrap gap-4 text-sm text-[var(--ink-dim)]">
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -724,7 +724,7 @@ function BlockFields({
                     )
                   }
                   disabled={itemIndex === 0}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                   aria-label="Move reference row up"
                 >
                   <ArrowUp size={13} />
@@ -741,7 +741,7 @@ function BlockFields({
                     )
                   }
                   disabled={itemIndex === block.items.length - 1}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                   aria-label="Move reference row down"
                 >
                   <ArrowDown size={13} />
@@ -771,7 +771,7 @@ function BlockFields({
           type="button"
           onClick={() => onAddStatItem?.(chapterId, sectionId, block.id)}
           disabled={(block.items || []).length >= (limits.maxStatItems || 32)}
-          className="inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-white disabled:opacity-40"
+          className="inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white disabled:opacity-40"
         >
           <Plus size={13} /> Add reference row
         </button>
@@ -782,7 +782,7 @@ function BlockFields({
   if (block.type === "two-column") {
     return (
       <div className="grid gap-4">
-        <p className="text-sm leading-6 text-[var(--muted)]">
+        <p className="text-sm leading-6 text-[var(--ink-dim)]">
           Columns stack on smaller screens. Each column supports body text,
           Character images, inline quotes, and dividers.
         </p>
@@ -790,13 +790,13 @@ function BlockFields({
           {(block.columns || []).map((column, columnIndex) => (
             <section
               key={column.id}
-              className="rounded-xl border border-[var(--muted-gold)]/20 bg-black/20 p-4"
+              className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   Column {columnIndex + 1}
                 </p>
-                <span className="text-xs text-[var(--muted)]">
+                <span className="text-xs text-[var(--ink-dim)]">
                   {column.blocks.length} / {limits.maxBlocksPerColumn || 64}
                 </span>
               </div>
@@ -818,7 +818,7 @@ function BlockFields({
                     disabled={
                       column.blocks.length >= (limits.maxBlocksPerColumn || 64)
                     }
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/30 px-2.5 py-2 text-[10px] uppercase tracking-[0.1em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-white disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/30 px-2.5 py-2 text-[10px] uppercase tracking-[0.1em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white disabled:opacity-40"
                   >
                     <Plus size={12} /> {option.label}
                   </button>
@@ -845,7 +845,7 @@ function BlockFields({
                   />
                 ))}
                 {!column.blocks.length ? (
-                  <p className="rounded-lg border border-dashed border-white/10 p-4 text-center text-xs text-[var(--muted)]">
+                  <p className="rounded-lg border border-dashed border-white/10 p-4 text-center text-xs text-[var(--ink-dim)]">
                     Add a block to this column.
                   </p>
                 ) : null}
@@ -888,7 +888,7 @@ function BlockFields({
         <button
           type="button"
           onClick={() => onOpenImagePicker?.(chapterId, sectionId, block.id)}
-          className="flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--muted-gold)]/35 bg-black/25 text-sm text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10"
+          className="flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--gold-ornament)]/35 bg-black/25 text-sm text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
         >
           {block.src ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -994,16 +994,16 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
       aria-label="Add content block"
     >
       <div
-        className="isolate max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 p-5 shadow-2xl"
+        className="isolate max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 p-5 shadow-2xl"
         style={{ backgroundColor: "#100d09" }}
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Lore Block Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Add content block</h3>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
               Choose the kind of content to append to this section. Each option includes
               a short description of how it appears in Preview and on the public page.
             </p>
@@ -1011,7 +1011,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] hover:text-white"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] hover:text-white"
             aria-label="Close block library"
           >
             <X size={18} />
@@ -1021,7 +1021,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
         <div className="relative mt-5">
           <Search
             size={15}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-dim)]"
           />
           <input
             className={`${inputClass} mt-0`}
@@ -1044,7 +1044,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
                     aria-hidden="true"
                   />
                 ) : null}
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                   {category}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -1055,13 +1055,13 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
                         key={option.value}
                         type="button"
                         onClick={() => onChooseBlock?.(option.value)}
-                        className="rounded-xl border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--muted-gold)]/45 hover:bg-[var(--muted-gold)]/5"
+                        className="rounded-xl border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--gold-ornament)]/45 hover:bg-[var(--gold-ornament)]/5"
                       >
-                        <span className="flex items-center gap-2 text-sm text-[var(--foreground)]">
-                          <Plus size={14} className="text-[var(--muted-gold)]" />
+                        <span className="flex items-center gap-2 text-sm text-[var(--ink)]">
+                          <Plus size={14} className="text-[var(--gold-ornament)]" />
                           {option.label}
                         </span>
-                        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+                        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
                           {option.description || "Add this block to the current section."}
                         </span>
                       </button>
@@ -1071,7 +1071,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
             ))}
           </div>
         ) : (
-          <div className="mt-6 rounded-xl border border-dashed border-white/10 p-6 text-center text-sm text-[var(--muted)]">
+          <div className="mt-6 rounded-xl border border-dashed border-white/10 p-6 text-center text-sm text-[var(--ink-dim)]">
             No block types match that search.
           </div>
         )}
@@ -1097,10 +1097,10 @@ function ImagePickerModal({
       role="dialog"
       aria-modal="true"
     >
-      <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--muted-gold)]/30 bg-[#100d09] p-5 shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[#100d09] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Character Image Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Select lore image</h3>
@@ -1108,7 +1108,7 @@ function ImagePickerModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] hover:text-white"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] hover:text-white"
           >
             <X size={18} />
           </button>
@@ -1128,8 +1128,8 @@ function ImagePickerModal({
                 onClick={() => onSelectCharacter?.(character.id)}
                 className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.15em] ${
                   picker.selectedCharacterId === character.id
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-white"
-                    : "border-white/10 text-[var(--muted)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-white"
+                    : "border-white/10 text-[var(--ink-dim)]"
                 }`}
               >
                 {character.title}
@@ -1139,11 +1139,11 @@ function ImagePickerModal({
         )}
 
         {status === "loading" ? (
-          <p className="mt-6 text-sm text-[var(--muted)]">Loading eligible images…</p>
+          <p className="mt-6 text-sm text-[var(--ink-dim)]">Loading eligible images…</p>
         ) : null}
         {message ? <p className="mt-6 text-sm text-red-200">{message}</p> : null}
         {status === "loaded" && !images.length ? (
-          <p className="mt-6 text-sm text-[var(--muted)]">
+          <p className="mt-6 text-sm text-[var(--ink-dim)]">
             No visible, approved images are available for this Character.
           </p>
         ) : null}
@@ -1153,7 +1153,7 @@ function ImagePickerModal({
               key={image.id}
               type="button"
               onClick={() => onChooseImage?.(image)}
-              className="overflow-hidden rounded-xl border border-white/10 bg-black/30 text-left transition hover:border-[var(--muted-gold)]/45"
+              className="overflow-hidden rounded-xl border border-white/10 bg-black/30 text-left transition hover:border-[var(--gold-ornament)]/45"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -1161,7 +1161,7 @@ function ImagePickerModal({
                 alt={image.title || "Character library image"}
                 className="aspect-[3/4] w-full object-cover"
               />
-              <p className="truncate px-3 py-2 text-xs text-[var(--muted)]">
+              <p className="truncate px-3 py-2 text-xs text-[var(--ink-dim)]">
                 {image.title || "Select image"}
               </p>
             </button>
@@ -1252,17 +1252,17 @@ export default function LoreEditorView({
   }
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">Lore Document</p>
           </div>
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             Chapters, sections & sourcebook blocks
           </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Character and Location tags are structured relationships for presentation
             and future release workflows. Character tags also control image eligibility;
             neither tag type grants engine knowledge by itself.
@@ -1279,7 +1279,7 @@ export default function LoreEditorView({
                 key={label}
                 className="rounded-xl border border-white/10 bg-black/25 px-3 py-3 sm:px-4"
               >
-                <p className="text-[var(--muted-gold)]">{label}</p>
+                <p className="text-[var(--gold-ornament)]">{label}</p>
                 <p className="mt-1 text-lg">{count}</p>
               </div>
             ))}
@@ -1288,7 +1288,7 @@ export default function LoreEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/15 hover:text-[var(--foreground)]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
           >
             <Braces size={14} />
             JSON Editor
@@ -1373,13 +1373,13 @@ export default function LoreEditorView({
 
       <div className="mt-7 border-t border-white/10" aria-hidden="true" />
       <div className="mt-6">
-        <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+        <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <Users size={17} />
           <p className="text-xs uppercase tracking-[0.2em]">
             Asset-level Character Tags
           </p>
         </div>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
           These Characters appear as related links. Owned tagged Characters also
           make their eligible image libraries available to every chapter and section.
         </p>
@@ -1399,13 +1399,13 @@ export default function LoreEditorView({
         />
 
         <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <MapPin size={16} />
             <p className="text-xs uppercase tracking-[0.18em]">
               Asset-level Location Tags
             </p>
           </div>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             These Locations are associated with the entire Lore Asset and appear as
             related links in the reader.
           </p>
@@ -1429,10 +1429,10 @@ export default function LoreEditorView({
       <div className="mt-8 border-t border-white/10" aria-hidden="true" />
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Chapters
           </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-[var(--ink-dim)]">
             Stable chapter and section IDs keep public deep links durable while titles
             change.
           </p>
@@ -1441,7 +1441,7 @@ export default function LoreEditorView({
           type="button"
           onClick={onAddChapter}
           disabled={chapterCount >= limits.maxChapters}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] transition hover:bg-[var(--muted-gold)]/15 disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
         >
           <Plus size={15} /> Add Chapter
         </button>
@@ -1469,13 +1469,13 @@ export default function LoreEditorView({
                 >
                   <ToggleIcon
                     size={18}
-                    className="shrink-0 text-[var(--muted-gold)]"
+                    className="shrink-0 text-[var(--gold-ornament)]"
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm text-white">
                       {chapter.title || "Untitled Chapter"}
                     </p>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                       {chapter.sections.length} sections · {chapterBlockCount} blocks ·{" "}
                       {chapter.characterRefs.length} Character tags ·{" "}
                       {chapter.locationRefs.length} Location tags
@@ -1486,7 +1486,7 @@ export default function LoreEditorView({
                   type="button"
                   onClick={() => onMoveChapter?.(chapter.id, -1)}
                   disabled={chapterIndex === 0}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                 >
                   <ArrowUp size={14} />
                 </button>
@@ -1494,7 +1494,7 @@ export default function LoreEditorView({
                   type="button"
                   onClick={() => onMoveChapter?.(chapter.id, 1)}
                   disabled={chapterIndex === document.chapters.length - 1}
-                  className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                  className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                 >
                   <ArrowDown size={14} />
                 </button>
@@ -1594,10 +1594,10 @@ export default function LoreEditorView({
                   </div>
 
                   <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                       Chapter-only Character Tags
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                       These tags apply to every section in this chapter unless a
                       section adds more specific Character tags. Owned tags can also
                       supply Character-library images.
@@ -1621,13 +1621,13 @@ export default function LoreEditorView({
                   </div>
 
                   <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-                    <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+                    <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                       <MapPin size={15} />
                       <p className="text-xs uppercase tracking-[0.18em]">
                         Chapter-only Location Tags
                       </p>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                       These Locations apply to this chapter. Sections can add more
                       specific Location relationships.
                     </p>
@@ -1655,10 +1655,10 @@ export default function LoreEditorView({
                   />
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                         Sections
                       </p>
-                      <p className="mt-2 text-sm text-[var(--muted)]">
+                      <p className="mt-2 text-sm text-[var(--ink-dim)]">
                         Sections are stable, addressable units for public links and
                         future certified engine retrieval.
                       </p>
@@ -1669,7 +1669,7 @@ export default function LoreEditorView({
                       disabled={
                         chapter.sections.length >= limits.maxSectionsPerChapter
                       }
-                      className="inline-flex items-center gap-2 rounded-lg border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/15 disabled:opacity-40"
+                      className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
                     >
                       <Plus size={13} /> Add Section
                     </button>
@@ -1685,7 +1685,7 @@ export default function LoreEditorView({
                       return (
                         <section
                           key={section.id}
-                          className="overflow-hidden rounded-xl border border-[var(--muted-gold)]/15 bg-black/30"
+                          className="overflow-hidden rounded-xl border border-[var(--gold-ornament)]/15 bg-black/30"
                         >
                           <div className="flex items-center gap-2 p-3 sm:p-4">
                             <button
@@ -1699,13 +1699,13 @@ export default function LoreEditorView({
                             >
                               <SectionToggleIcon
                                 size={16}
-                                className="shrink-0 text-[var(--muted-gold)]"
+                                className="shrink-0 text-[var(--gold-ornament)]"
                               />
                               <div className="min-w-0">
                                 <p className="truncate text-sm text-white">
                                   {section.title || `Section ${sectionIndex + 1}`}
                                 </p>
-                                <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                                <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                                   {section.blocks.length} blocks ·{" "}
                                   {section.characterRefs.length} Character tags ·{" "}
                                   {section.locationRefs.length} Location tags
@@ -1718,7 +1718,7 @@ export default function LoreEditorView({
                                 onMoveSection?.(chapter.id, section.id, -1)
                               }
                               disabled={sectionIndex === 0}
-                              className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                              className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                             >
                               <ArrowUp size={13} />
                             </button>
@@ -1728,7 +1728,7 @@ export default function LoreEditorView({
                                 onMoveSection?.(chapter.id, section.id, 1)
                               }
                               disabled={sectionIndex === chapter.sections.length - 1}
-                              className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                              className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                             >
                               <ArrowDown size={13} />
                             </button>
@@ -1836,10 +1836,10 @@ export default function LoreEditorView({
                               </div>
 
                               <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-                                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                                   Section-only Character Tags
                                 </p>
-                                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                                   These tags apply only to this section. Owned tags can
                                   also supply Character-library images here.
                                 </p>
@@ -1866,13 +1866,13 @@ export default function LoreEditorView({
                               </div>
 
                               <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-                                <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+                                <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                                   <MapPin size={15} />
                                   <p className="text-xs uppercase tracking-[0.18em]">
                                     Section-only Location Tags
                                   </p>
                                 </div>
-                                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                                   These Locations apply only to this section.
                                 </p>
                                 <ReferenceSelector
@@ -1899,10 +1899,10 @@ export default function LoreEditorView({
 
                               <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/20 p-4">
                                 <div>
-                                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                                     Section Content
                                   </p>
-                                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                                  <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                                     Add writing, media, layout, quotation, or reference blocks
                                     from the searchable block library.
                                   </p>
@@ -1910,7 +1910,7 @@ export default function LoreEditorView({
                                 <button
                                   type="button"
                                   onClick={() => openBlockPicker(chapter.id, section.id)}
-                                  className="inline-flex items-center gap-2 rounded-lg border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/15 hover:text-white"
+                                  className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-white"
                                 >
                                   <Plus size={14} /> Add content block
                                 </button>
@@ -1923,7 +1923,7 @@ export default function LoreEditorView({
                                     className="rounded-xl border border-white/10 bg-black/30 p-4"
                                   >
                                     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                                      <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+                                      <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                                         {block.type === "image" ? (
                                           <BookImage size={15} />
                                         ) : (
@@ -1947,7 +1947,7 @@ export default function LoreEditorView({
                                             )
                                           }
                                           disabled={blockIndex === 0}
-                                          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                                          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                                         >
                                           <ArrowUp size={13} />
                                         </button>
@@ -1964,7 +1964,7 @@ export default function LoreEditorView({
                                           disabled={
                                             blockIndex === section.blocks.length - 1
                                           }
-                                          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] disabled:opacity-30"
+                                          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] disabled:opacity-30"
                                         >
                                           <ArrowDown size={13} />
                                         </button>
@@ -2013,7 +2013,7 @@ export default function LoreEditorView({
                                   <button
                                     type="button"
                                     onClick={() => openBlockPicker(chapter.id, section.id)}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-white"
+                                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white"
                                   >
                                     <Plus size={13} /> Add another content block
                                   </button>
