@@ -57,7 +57,7 @@ export default function StructuredRegistryBuilderView({
 }) {
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -116,7 +116,7 @@ export default function StructuredRegistryBuilderView({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectTab(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                     tab.active
                       ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                       : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
@@ -198,7 +198,7 @@ export default function StructuredRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
         {eyebrow}
       </p>
@@ -461,7 +461,7 @@ function StructuredEntryEditor({
       <button
         type="button"
         onClick={onDelete}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 hover:bg-black/35"
       >
         <Trash2 size={14} />
         Delete Entry
@@ -516,7 +516,7 @@ function EntryRelationshipFields({
   onLinkedCreationNotesChange,
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
       <p className="font-display text-2xl">
         {entry.name || `Untitled ${config.entryLabel}`}
       </p>
@@ -561,7 +561,7 @@ function LinkedCreationGroup({
   const links = Array.isArray(entry?.[group.id]) ? entry[group.id] : [];
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
@@ -613,7 +613,7 @@ function LinkedCreationGroup({
 
 function LinkedCreationCard({ link, onRemove, onNotesChange }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         <div
           className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
@@ -634,7 +634,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
           aria-label="Remove linked creation"
         >
           <X size={14} />
@@ -672,7 +672,7 @@ function RulesTab({ config, entries, onUpdateEntry }) {
           entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || `Untitled ${config.entryLabel}`}
@@ -792,7 +792,7 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
       body="This is the current structured registry payload saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
           <dl className="space-y-3 text-sm">
             <div>
               <dt className="text-[var(--muted)]">Registry</dt>
@@ -811,7 +811,7 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-2xl border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>
