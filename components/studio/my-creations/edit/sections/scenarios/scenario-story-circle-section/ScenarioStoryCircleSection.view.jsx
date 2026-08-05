@@ -21,7 +21,7 @@ export default function ScenarioStoryCircleSectionView({
         {steps.map((step) => (
           <div
             key={step.id}
-            className="rounded-2xl border border-white/10 bg-black/25 p-5"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5"
           >
             <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr]">
               <div>
