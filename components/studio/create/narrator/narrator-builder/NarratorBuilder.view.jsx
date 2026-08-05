@@ -62,7 +62,7 @@ export default function NarratorBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Narrator Builder
         </p>
@@ -76,7 +76,7 @@ export default function NarratorBuilderView({
           inside rooms and scenarios.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <BookOpen className="text-[var(--muted-gold)]" size={28} />
 
           <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -129,7 +129,7 @@ export default function NarratorBuilderView({
         ) : null}
       </aside>
 
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Narrator Profile
         </p>
@@ -207,7 +207,7 @@ export default function NarratorBuilderView({
             />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex items-start gap-3">
               <Sparkles className="mt-1 text-[var(--muted-gold)]" size={18} />
               <div>
