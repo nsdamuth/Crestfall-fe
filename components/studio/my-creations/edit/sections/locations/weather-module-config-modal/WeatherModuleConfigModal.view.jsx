@@ -51,7 +51,7 @@ export default function WeatherModuleConfigModalView({
   if (isInitializing) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-        <div className="rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] p-6 text-sm text-[var(--muted)]">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-6 text-sm text-[var(--ink-dim)]">
           {loadingMessage}
         </div>
       </div>
@@ -60,19 +60,19 @@ export default function WeatherModuleConfigModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
+      <div className="max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+            <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
               <CloudSun size={22} />
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
                 {eyebrow}
               </p>
               <h2 className="mt-2 font-display text-4xl">{title}</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
                 {description}
               </p>
             </div>
@@ -81,7 +81,7 @@ export default function WeatherModuleConfigModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -90,7 +90,7 @@ export default function WeatherModuleConfigModalView({
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
           {message ? (
-            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
+            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
               {message}
             </p>
           ) : null}
@@ -162,7 +162,7 @@ export default function WeatherModuleConfigModalView({
                 <button
                   type="button"
                   onClick={() => onAddRecommendedCondition?.()}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
                 >
                   <Plus size={15} />
                   Add Recommended
@@ -171,13 +171,13 @@ export default function WeatherModuleConfigModalView({
                 <button
                   type="button"
                   onClick={() => onAddCustomCondition?.()}
-                  className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 >
                   Add Custom Draft
                 </button>
               </div>
 
-              <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-3 text-xs leading-5 text-[var(--ink-dim)]">
                 Recommended conditions are preferred. Custom weather can be refined
                 later with creator guidance.
               </p>
@@ -242,13 +242,13 @@ export default function WeatherModuleConfigModalView({
         </div>
 
         <div className="flex flex-col gap-3 border-t border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-[var(--muted)]">{footerNote}</p>
+          <p className="text-xs leading-5 text-[var(--ink-dim)]">{footerNote}</p>
 
           <div className="flex shrink-0 gap-3">
             <button
               type="button"
               onClick={() => onClose?.()}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
             >
               Close
             </button>
@@ -257,7 +257,7 @@ export default function WeatherModuleConfigModalView({
               type="button"
               onClick={() => onSave?.()}
               disabled={isSaving}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:opacity-50"
             >
               {isSaving ? (
                 <Loader2 size={15} className="animate-spin" />
@@ -279,7 +279,7 @@ function WeatherConditionCard({ condition }) {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="font-display text-3xl">{condition.label}</p>
-          <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+          <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
             {condition.summary}
           </p>
         </div>
@@ -289,7 +289,7 @@ function WeatherConditionCard({ condition }) {
             type="button"
             onClick={() => condition.onSetCurrent?.()}
             disabled={condition.isCurrent}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:opacity-50"
+            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:opacity-50"
           >
             {condition.isCurrent ? "Current" : "Set Current"}
           </button>
@@ -398,7 +398,7 @@ function WeatherConditionCard({ condition }) {
 
 function EditorPanel({ title, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
       <h3 className="font-display text-3xl">{title}</h3>
       <div className="mt-5">{children}</div>
     </section>
@@ -408,14 +408,14 @@ function EditorPanel({ title, children }) {
 function TextField({ label, value = "", onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -430,17 +430,17 @@ function TextAreaField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         rows={rows}
-        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
           {helperText}
         </span>
       ) : null}
@@ -451,13 +451,13 @@ function TextAreaField({
 function SelectField({ label, value = "", options = [], onChange }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <select
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -471,12 +471,12 @@ function SelectField({ label, value = "", options = [], onChange }) {
 
 function CheckboxField({ label, checked = false, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
       <input
         type="checkbox"
         checked={Boolean(checked)}
         onChange={(event) => onChange?.(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>{label}</span>
     </label>
@@ -486,10 +486,10 @@ function CheckboxField({ label, checked = false, onChange }) {
 function ReadOnlyField({ label, value }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value || "Not set"}
       </div>
     </label>
