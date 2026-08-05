@@ -84,7 +84,7 @@ export default function RulesCodexJsonEditorModalView({
     <ModalShell
       onClose={onClose}
       closeOnBackdrop={false}
-      panelClassName="max-h-[94vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
+      panelClassName="max-h-[94vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
     >
       <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
         <div>
