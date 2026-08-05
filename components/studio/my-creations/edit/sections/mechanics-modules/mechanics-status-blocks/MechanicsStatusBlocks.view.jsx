@@ -93,10 +93,11 @@ function StatusBlockCard({
         <button
           type="button"
           onClick={() => removeBlock(blockIndex)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
           title="Remove status block"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -216,10 +217,11 @@ function StatusBlockCard({
                     <button
                       type="button"
                       onClick={() => removeLine(blockIndex, lineIndex)}
-                      className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+                      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
                       title="Remove line"
                     >
                       <Trash2 size={13} />
+                      Remove
                     </button>
                   </div>
                 ))}
