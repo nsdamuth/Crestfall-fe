@@ -1971,7 +1971,7 @@ export default function LoreEditorView({
                                               block.id
                                             )
                                           }
-                                          className="rounded-lg border border-red-300/15 p-2 text-red-200"
+                                          className="rounded-lg border border-white/10 p-2 text-[var(--status-danger)]"
                                         >
                                           <Trash2 size={13} />
                                         </button>
