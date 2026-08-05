@@ -20,13 +20,13 @@ export default function VideoToolsPanelView({
 }) {
   return (
     <div className="mt-5 space-y-5">
-      <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 p-4">
-        <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 p-4">
+        <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           <Film size={14} />
           Video Tools Preview
         </p>
 
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           Video generation is stubbed as a future Studio mode. These controls
           are placeholders only and do not call an API yet.
         </p>
@@ -38,15 +38,15 @@ export default function VideoToolsPanelView({
             key={tool.id}
             className="rounded-xl border border-white/10 bg-black/25 p-4"
           >
-            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               {tool.eyebrow}
             </p>
 
-            <h3 className="mt-2 font-display text-2xl text-[var(--foreground)]">
+            <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">
               {tool.title}
             </h3>
 
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               {tool.body}
             </p>
           </article>
@@ -77,7 +77,7 @@ export default function VideoToolsPanelView({
       </div>
 
       <label className="block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           Video Direction
         </span>
         <textarea
@@ -85,21 +85,21 @@ export default function VideoToolsPanelView({
           onChange={(event) => onChangeDirection?.(event.target.value)}
           placeholder="Describe the short motion, scene beat, or recap moment..."
           rows={5}
-          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </label>
 
       <button
         type="button"
         disabled
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] opacity-75"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] opacity-75"
       >
         <Wand2 size={15} />
         Generate Video Soon
       </button>
 
-      <p className="flex items-start gap-2 text-xs leading-5 text-[var(--muted)]">
-        <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--muted-gold)]" />
+      <p className="flex items-start gap-2 text-xs leading-5 text-[var(--ink-dim)]">
+        <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold-ornament)]" />
         Future video assets will save into the same internal media library as
         images, with no external uploads.
       </p>
