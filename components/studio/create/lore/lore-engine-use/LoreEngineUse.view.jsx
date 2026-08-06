@@ -140,7 +140,7 @@ function SubmissionHistory({ submissions }) {
           >
             <div>
               <p className="text-sm text-[var(--ink)]">
-                Public revision {submission.sourceRevisionNumber || "—"}
+                Public revision {submission.sourceRevisionNumber || "·"}
               </p>
               <p className="mt-1 text-xs text-[var(--ink-dim)]">
                 Submitted {formatDate(submission.submittedAt || submission.createdAt)}
@@ -240,7 +240,7 @@ export default function LoreEngineUseView({
                 Source revision
               </p>
               <p className="mt-1 text-sm text-[var(--ink)]">
-                Public revision {source.revisionNumber || "—"}
+                Public revision {source.revisionNumber || "·"}
               </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
@@ -269,7 +269,7 @@ export default function LoreEngineUseView({
                     Latest engine-use submission
                   </p>
                   <p className="mt-2 text-sm text-[var(--ink)]">
-                    Public revision {latest.sourceRevisionNumber || "—"} · {formatDate(latest.submittedAt || latest.createdAt)}
+                    Public revision {latest.sourceRevisionNumber || "·"} · {formatDate(latest.submittedAt || latest.createdAt)}
                   </p>
                 </div>
                 <EngineUseStatusBadge status={latest.status} />

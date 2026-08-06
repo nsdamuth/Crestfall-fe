@@ -347,10 +347,10 @@ export default function RuntimeMechanicsModulesSection({
                           className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
                         >
                           <option value="BINDING_OWNER">
-                            BINDING_OWNER — scoped to this asset
+                            BINDING_OWNER · scoped to this asset
                           </option>
                           <option value="STORY_ROOM">
-                            STORY_ROOM — root room mechanics
+                            STORY_ROOM · root room mechanics
                           </option>
                         </select>
                       </label>

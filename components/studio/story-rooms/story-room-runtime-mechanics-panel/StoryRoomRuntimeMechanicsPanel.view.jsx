@@ -94,10 +94,10 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                   className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
                 >
                   <option value="STORY_ROOM">
-                    STORY_ROOM — root room mechanics
+                    STORY_ROOM · root room mechanics
                   </option>
                   <option value="BINDING_OWNER">
-                    BINDING_OWNER — scoped to binding owner
+                    BINDING_OWNER · scoped to binding owner
                   </option>
                 </select>
               </label>

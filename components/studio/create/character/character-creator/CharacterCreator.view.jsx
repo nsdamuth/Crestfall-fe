@@ -43,7 +43,7 @@ export default function CharacterCreatorView({
               Draft Progress
             </p>
             <p className="mt-1 text-sm text-[var(--ink-dim)]">
-              {progress}% filled — optional fields can be completed later.
+              {progress}% filled · optional fields can be completed later.
             </p>
           </div>
 

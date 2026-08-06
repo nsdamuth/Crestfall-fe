@@ -27,13 +27,13 @@ const RESPONSE_GROUPS = [
       {
         id: "SCENE_ONLY",
         value: "SCENE_ONLY",
-        title: "Scene Narration Only — Default",
+        title: "Scene Narration Only · Default",
         body: "Narrates environments, transitions, consequences, arrivals, and passive continuity.",
       },
       {
         id: "ENSEMBLE",
         value: "ENSEMBLE",
-        title: "Ensemble Narration — Opt In",
+        title: "Ensemble Narration · Opt In",
         body: "Allows the Narrator to portray a bounded number of active Scene Cast Characters.",
       },
     ],

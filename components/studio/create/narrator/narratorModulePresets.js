@@ -236,7 +236,7 @@ export const narratorResponseDirectionGroups = [
           "SCENE_ONLY",
 
         title:
-          "Scene Narration Only — Default",
+          "Scene Narration Only · Default",
 
         body:
           "Narrates environments, transitions, consequences, arrivals, and passive continuity. Named Characters retain their own dialogue and meaningful actions.",
@@ -246,7 +246,7 @@ export const narratorResponseDirectionGroups = [
           "ENSEMBLE",
 
         title:
-          "Ensemble Narration — Opt In",
+          "Ensemble Narration · Opt In",
 
         body:
           "Allows the Narrator to portray dialogue and meaningful actions for a bounded number of active Scene Cast Characters.",

@@ -81,7 +81,7 @@ export default function CharacterTemplateBuilderView({
                 Draft Progress
               </p>
               <p className="mt-1 text-sm text-[var(--ink-dim)]">
-                {completion}% complete — {filledFieldCount} default fields filled.
+                {completion}% complete · {filledFieldCount} default fields filled.
               </p>
             </div>
 

@@ -454,7 +454,7 @@ function PublicReleasePanel({
                 Active public revision
               </p>
               <p className="mt-2 text-sm text-[var(--ink)]">
-                Revision {revisionNumber || "—"} · Published {formatDate(activePublication.publishedAt)}
+                Revision {revisionNumber || "·"} · Published {formatDate(activePublication.publishedAt)}
               </p>
             </div>
             <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-emerald-100">

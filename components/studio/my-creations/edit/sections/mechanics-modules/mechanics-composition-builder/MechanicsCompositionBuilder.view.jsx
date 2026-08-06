@@ -53,7 +53,7 @@ function SelectField({ label, value, options = [], onChange, disabled = false })
             >
               {normalized.label}
               {normalized.disabled && normalized.reason
-                ? ` — ${normalized.reason}`
+                ? ` · ${normalized.reason}`
                 : ""}
             </option>
           );
@@ -1252,7 +1252,7 @@ export default function MechanicsCompositionBuilderView({
                 value={reference.id}
                 disabled={!reference.available}
               >
-                {reference.label} — {reference.available ? reference.description : reference.unavailableReason}
+                {reference.label} · {reference.available ? reference.description : reference.unavailableReason}
               </option>
             ))}
           </select>

@@ -78,7 +78,7 @@ export default function PlayerCharacterCreatorView({
               Player Character Draft
             </p>
             <p className="mt-1 text-sm text-[var(--ink-dim)]">
-              {progress}% filled — all fields can be refined later.
+              {progress}% filled · all fields can be refined later.
             </p>
           </div>
 

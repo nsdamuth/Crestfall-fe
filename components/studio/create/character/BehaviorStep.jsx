@@ -113,11 +113,11 @@ export default function BehaviorStep({ form, updateField }) {
           value={form.verbosity_level}
           onChange={(value) => updateField("verbosity_level", value)}
           options={[
-            { value: "1", label: "1 — Terse" },
-            { value: "2", label: "2 — Concise" },
-            { value: "3", label: "3 — Balanced" },
-            { value: "4", label: "4 — Expressive" },
-            { value: "5", label: "5 — Highly Verbose" },
+            { value: "1", label: "1 · Terse" },
+            { value: "2", label: "2 · Concise" },
+            { value: "3", label: "3 · Balanced" },
+            { value: "4", label: "4 · Expressive" },
+            { value: "5", label: "5 · Highly Verbose" },
           ]}
           description="Controls how talkative the character should be during scenes."
         />

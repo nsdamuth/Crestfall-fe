@@ -7,7 +7,7 @@ export default function InlineQuoteBlock({ text, attribution }) {
 
       {attribution && (
         <footer className="mt-3 font-display text-xs uppercase tracking-[0.25em] text-[#7b5525]">
-          — {attribution}
+          · {attribution}
         </footer>
       )}
     </blockquote>

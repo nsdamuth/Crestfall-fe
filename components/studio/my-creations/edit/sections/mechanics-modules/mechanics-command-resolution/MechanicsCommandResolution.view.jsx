@@ -587,7 +587,7 @@ export default function MechanicsCommandResolutionView({
             <option value="">Select a reference configuration</option>
             {referenceConfigurations.map((reference) => (
               <option key={reference.id} value={reference.id}>
-                {reference.label} — {reference.description}
+                {reference.label} · {reference.description}
               </option>
             ))}
           </select>

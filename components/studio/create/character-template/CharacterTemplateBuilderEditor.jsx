@@ -48,11 +48,11 @@ const genderPresentationOptions = [
 
 const verbosityOptions = [
   { value: "", label: "Not chosen" },
-  { value: "1", label: "1 — Terse" },
-  { value: "2", label: "2 — Concise" },
-  { value: "3", label: "3 — Balanced" },
-  { value: "4", label: "4 — Expressive" },
-  { value: "5", label: "5 — Highly Verbose" },
+  { value: "1", label: "1 · Terse" },
+  { value: "2", label: "2 · Concise" },
+  { value: "3", label: "3 · Balanced" },
+  { value: "4", label: "4 · Expressive" },
+  { value: "5", label: "5 · Highly Verbose" },
 ];
 
 export default function CharacterTemplateBuilderEditor({
