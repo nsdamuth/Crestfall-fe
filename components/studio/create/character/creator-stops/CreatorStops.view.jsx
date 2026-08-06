@@ -98,8 +98,10 @@ export default function CreatorStopsView({
           </div>
         ) : (
           <>
-        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[var(--line-whisper)]">
-          <div className="flex min-w-0 flex-1 items-center justify-center gap-0">
+        <div className="relative grid flex-none grid-cols-[var(--control-md)_1fr_var(--control-md)] items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[var(--line-whisper)]">
+          <span aria-hidden="true" />
+
+          <div className="flex min-w-0 items-center justify-center gap-0">
             {stopItems.map((stop, index) => {
               const Icon = STOP_ICONS[stop.iconKey] || User;
               const isFirst = index === 0;
@@ -150,7 +152,7 @@ export default function CreatorStopsView({
             type="button"
             onClick={() => onClose?.()}
             aria-label="Close character creator"
-            className="ml-auto flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center justify-self-end rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
           >
             <X size={18} />
           </button>
