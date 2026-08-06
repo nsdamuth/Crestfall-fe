@@ -31,10 +31,13 @@ export default function CreatorStopsView({
   saveDisabled = false,
   hasUnsavedChanges = false,
   confirmDiscardOpen = false,
+  isSaving = false,
+  saveError = null,
   onSelectStop = null,
   onBack = null,
   onNext = null,
   onSave = null,
+  onFinishAndSave = null,
   onClose = null,
   onKeepEditing = null,
   onConfirmDiscard = null,
@@ -207,7 +210,14 @@ export default function CreatorStopsView({
           )}
         </div>
 
-        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
+        <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
+          {isLastStop && saveError ? (
+            <p role="alert" className="text-sm leading-6 text-[var(--status-danger)]">
+              {saveError}
+            </p>
+          ) : null}
+
+          <div className="flex items-center gap-[var(--space-3)]">
           {secondaryPanel ? (
             <>
               <button
@@ -265,15 +275,23 @@ export default function CreatorStopsView({
 
               <button
                 type="button"
-                onClick={() => onNext?.()}
-                disabled={saveDisabled}
+                onClick={() =>
+                  isLastStop ? onFinishAndSave?.() : onNext?.()
+                }
+                disabled={saveDisabled || (isLastStop && isSaving)}
+                aria-busy={isLastStop ? isSaving : undefined}
                 className="cf-btn cf-btn--primary"
               >
-                {isLastStop ? "Finish and save" : "Next"}{" "}
+                {isLastStop
+                  ? isSaving
+                    ? "Saving..."
+                    : "Finish and save"
+                  : "Next"}{" "}
                 <span className="cf-btn__arrow">&rarr;</span>
               </button>
             </>
           )}
+          </div>
         </div>
           </>
         )}

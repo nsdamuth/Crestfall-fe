@@ -15,6 +15,8 @@ function buildFixture(activeStop, overrides = {}) {
     saveDisabled: false,
     hasUnsavedChanges: false,
     confirmDiscardOpen: false,
+    isSaving: false,
+    saveError: null,
     ...overrides,
   };
 }
@@ -25,6 +27,17 @@ export const creatorStopsMidFixture = buildFixture("face");
 
 export const creatorStopsLastFixture = buildFixture("payoff", {
   isLastStop: true,
+});
+
+export const creatorStopsSavingFixture = buildFixture("payoff", {
+  isLastStop: true,
+  isSaving: true,
+});
+
+export const creatorStopsSaveErrorFixture = buildFixture("payoff", {
+  isLastStop: true,
+  hasUnsavedChanges: true,
+  saveError: "The save did not go through. Your work is still here, try again.",
 });
 
 export const creatorStopsUnsavedFixture = buildFixture("seal", {

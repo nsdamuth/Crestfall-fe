@@ -81,6 +81,8 @@ export default function CharacterCreatorModal({ onClose }) {
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   // Which field currently owns the secondary panel takeover, or null.
   const [secondaryPanel, setSecondaryPanel] = useState(null);
 
@@ -128,6 +130,19 @@ export default function CharacterCreatorModal({ onClose }) {
 
   function handleSave() {
     setSavedSnapshot(formState);
+  }
+
+  async function handleFinishAndSave() {
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await Promise.resolve(formState).then(setSavedSnapshot);
+      setIsSaving(false);
+      onClose?.();
+    } catch (error) {
+      setIsSaving(false);
+      setSaveError("The save did not go through. Your work is still here, try again.");
+    }
   }
 
   const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
@@ -196,6 +211,8 @@ export default function CharacterCreatorModal({ onClose }) {
     isLastStop: activeStop === "payoff",
     hasUnsavedChanges,
     confirmDiscardOpen,
+    isSaving,
+    saveError,
     onSelectStop: setActiveStop,
     onBack: () =>
       setActiveStop((current) => {
@@ -210,6 +227,7 @@ export default function CharacterCreatorModal({ onClose }) {
         ];
       }),
     onSave: handleSave,
+    onFinishAndSave: handleFinishAndSave,
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
