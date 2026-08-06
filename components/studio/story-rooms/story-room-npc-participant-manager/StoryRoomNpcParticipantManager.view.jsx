@@ -128,10 +128,8 @@ function NpcSection({ section, onActivateNpc }) {
                 type="button"
                 onClick={() => onActivateNpc?.(entry.actionId)}
                 disabled={entry.disabled}
-                className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-45 ${
-                  isUnloadAction
-                    ? "border-white/10 bg-transparent text-[var(--status-danger)] hover:border-[var(--status-danger)]/40"
-                    : "border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] hover:bg-[var(--gold-ornament)]/20"
+                className={`cf-btn cf-btn--sm mt-3 w-full ${
+                  isUnloadAction ? "cf-btn--danger" : "cf-btn--secondary"
                 }`}
                 title={entry.actionTitle || entry.actionLabel}
               >

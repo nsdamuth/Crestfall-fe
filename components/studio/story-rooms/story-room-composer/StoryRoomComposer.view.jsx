@@ -218,21 +218,21 @@ function DesktopComposer({
             <button
               type="button"
               disabled
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
               title="Later this will generate an image of the current scene."
             >
               <ImageIcon size={14} />
-              Scene Image Soon
+              Scene image soon
             </button>
 
             <button
               type="button"
               disabled
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
               title="Later this can use the last active speaker, room state, and visible scene context."
             >
               <Wand2 size={14} />
-              Use Current Scene
+              Use current scene
             </button>
           </div>
         </div>
@@ -250,7 +250,7 @@ function DesktopComposer({
             type="button"
             onClick={() => onSend?.()}
             disabled={sendDisabled}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-5 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="cf-btn cf-btn--primary"
           >
             {submitIsContinuation ? <Sparkles size={15} /> : <Send size={15} />}
             {isSending ? submitPendingLabel : submitLabel}
@@ -819,23 +819,23 @@ function MobileToolsDrawer({
           <button
             type="button"
             onClick={() => onOpenCast?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <Users size={14} />
-            Cast / Room
+            Cast / room
           </button>
 
           <button
             type="button"
             onClick={() => onOpenState?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <Eye size={14} />
             State
           </button>
 
-          <DisabledToolButton icon={ImageIcon} label="Scene Image" />
-          <DisabledToolButton icon={Wand2} label="Current Scene" />
+          <DisabledToolButton icon={ImageIcon} label="Scene image" />
+          <DisabledToolButton icon={Wand2} label="Current scene" />
           <DisabledToolButton icon={Download} label="Export" />
           <DisabledToolButton icon={Share2} label="Share" />
         </div>
@@ -849,7 +849,7 @@ function DisabledToolButton({ icon: Icon, label }) {
     <button
       type="button"
       disabled
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] opacity-60"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       <Icon size={14} />
       {label}
