@@ -69,14 +69,25 @@ export default function StudioSidebarView({
     >
       <div className="flex items-center justify-between gap-2">
         {!collapsed ? (
-          <InternalLinkComponent href={brandHref} className="block">
-            <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
-              {brandEyebrow}
-            </p>
+          <InternalLinkComponent
+            href={brandHref}
+            className="flex items-center gap-[var(--space-2)]"
+          >
+            <img
+              src="/assets/branding/crestfall-seal.svg"
+              alt=""
+              className="h-10 w-10 shrink-0 object-contain"
+            />
 
-            <h1 className="mt-1 font-display text-xl tracking-[0.08em]">
-              {brandTitle}
-            </h1>
+            <span>
+              <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
+                {brandEyebrow}
+              </p>
+
+              <h1 className="mt-1 font-display text-xl tracking-[0.08em]">
+                {brandTitle}
+              </h1>
+            </span>
           </InternalLinkComponent>
         ) : null}
 
