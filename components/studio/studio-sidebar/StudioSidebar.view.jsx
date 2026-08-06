@@ -189,14 +189,15 @@ function SidebarInternalLink({
     <InternalLinkComponent
       href={link.href}
       title={collapsed ? link.label : undefined}
+      aria-current={
+        link.variant !== "return" && link.isActive ? "page" : undefined
+      }
       className={`
-        flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] transition
+        cf-nav-link flex items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-xs uppercase tracking-[0.16em]
         ${
           link.variant === "return"
-            ? "border border-[var(--gold-ornament)]/15 bg-black/35 text-[var(--gold-ornament)] hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-            : link.isActive
-              ? "border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-              : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+            ? "border-[var(--gold-ornament)]/15 bg-black/35 text-[var(--gold-ornament)] hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+            : "text-[var(--ink-dim)]"
         }
         ${collapsed ? "justify-center px-2" : ""}
       `}
@@ -218,8 +219,8 @@ function SidebarExternalLink({ link, collapsed = false }) {
       title={collapsed ? link.label : undefined}
       className={
         collapsed
-          ? "flex items-center justify-center rounded-lg px-2 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-          : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+          ? "cf-nav-link flex items-center justify-center rounded-lg px-2 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
+          : "cf-nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
       }
     >
       <Icon size={16} className="shrink-0" />

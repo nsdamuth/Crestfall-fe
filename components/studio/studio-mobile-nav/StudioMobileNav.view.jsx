@@ -212,14 +212,8 @@ export default function StudioMobileNavView({
             <InternalLinkComponent
               key={link.href}
               href={link.href}
-              className={`
-                flex flex-col items-center gap-1 rounded-lg px-1 py-1.5 text-[10px] transition
-                ${
-                  link.isActive
-                    ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                    : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-                }
-              `}
+              aria-current={link.isActive ? "page" : undefined}
+              className="cf-nav-link flex flex-col items-center gap-1 rounded-lg border border-transparent px-1 py-1.5 text-[10px] text-[var(--ink-dim)]"
             >
               <Icon size={18} />
               <span>{link.label}</span>
@@ -246,14 +240,8 @@ function MobileDrawerInternalLink({
     <InternalLinkComponent
       href={link.href}
       onClick={onNavigate}
-      className={`
-        flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] transition
-        ${
-          link.isActive
-            ? "border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-            : "text-[var(--ink-dim)] hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-        }
-      `}
+      aria-current={link.isActive ? "page" : undefined}
+      className="cf-nav-link flex items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
     >
       <Icon size={16} className="shrink-0" />
       <span>{link.label}</span>

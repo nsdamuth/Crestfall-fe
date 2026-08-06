@@ -195,6 +195,39 @@
   background-color: var(--gold-ornament);
 }
 
+/* --- NAV ITEM STATES --------------------------------------------
+   Item 3, phase 3 aesthetics. Hover, active, and pressed defined
+   once, shared by the studio sidebar rail and the phone bottom
+   dock/drawer, which previously each hardcoded their own copy of
+   the same three Tailwind strings inline. Focus-visible is not
+   redeclared here: the global rule above already covers every
+   nav link. Active is signalled through aria-current, matching
+   docs/RESTYLE-RULES.md's canonical [aria-current] selector, so
+   assistive tech gets the same signal sighted users do from the
+   strongest visual state.                                        */
+
+.cf-nav-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover),
+    border-color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-nav-link:hover {
+  background-color: var(--fill-whisper);
+  color: var(--ink);
+}
+
+.cf-nav-link:active {
+  background-color: var(--fill);
+}
+
+.cf-nav-link[aria-current="page"] {
+  border-color: var(--line-strong);
+  background-color: var(--fill);
+  color: var(--ink);
+}
+
 /* --- DROPDOWN TREATMENT ---------------------------------------
    Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
    to library.css lines 300-336. The reusable menu box and row
