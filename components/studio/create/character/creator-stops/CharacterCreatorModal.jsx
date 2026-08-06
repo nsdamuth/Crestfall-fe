@@ -72,8 +72,6 @@ export default function CharacterCreatorModal({ onClose }) {
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
   const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
   const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
-  const [renderingFoldOpen, setRenderingFoldOpen] = useState(false);
-  const [payoffAdvancedFoldOpen, setPayoffAdvancedFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -281,10 +279,6 @@ export default function CharacterCreatorModal({ onClose }) {
             onChangeCharacterColorPaletteId={updateField(
               "characterColorPaletteId"
             )}
-            renderingFoldOpen={renderingFoldOpen}
-            onToggleRenderingFold={() =>
-              setRenderingFoldOpen((current) => !current)
-            }
           />
         ) : activeStop === "payoff" ? (
           <PayoffStopView
@@ -300,10 +294,6 @@ export default function CharacterCreatorModal({ onClose }) {
             extraRuntimeNotes={formState.extraRuntimeNotes}
             onChangeCreatorDirectives={updateField("creatorDirectives")}
             onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
-            advancedFoldOpen={payoffAdvancedFoldOpen}
-            onToggleAdvancedFold={() =>
-              setPayoffAdvancedFoldOpen((current) => !current)
-            }
           />
         ) : null
       }

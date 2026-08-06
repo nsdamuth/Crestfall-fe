@@ -94,8 +94,6 @@ export default function CreatorStopsPreviewClient() {
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
   const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
   const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
-  const [renderingFoldOpen, setRenderingFoldOpen] = useState(false);
-  const [payoffAdvancedFoldOpen, setPayoffAdvancedFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -139,8 +137,6 @@ export default function CreatorStopsPreviewClient() {
     setTypingFoldOpen(false);
     setFineTuneFoldOpen(false);
     setHeartAdvancedFoldOpen(false);
-    setRenderingFoldOpen(false);
-    setPayoffAdvancedFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -396,10 +392,6 @@ export default function CreatorStopsPreviewClient() {
                 onChangeCharacterColorPaletteId={updateField(
                   "characterColorPaletteId"
                 )}
-                renderingFoldOpen={renderingFoldOpen}
-                onToggleRenderingFold={() =>
-                  setRenderingFoldOpen((current) => !current)
-                }
               />
             ) : activeStop === "payoff" ? (
               <PayoffStopView
@@ -415,10 +407,6 @@ export default function CreatorStopsPreviewClient() {
                 extraRuntimeNotes={formState.extraRuntimeNotes}
                 onChangeCreatorDirectives={updateField("creatorDirectives")}
                 onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
-                advancedFoldOpen={payoffAdvancedFoldOpen}
-                onToggleAdvancedFold={() =>
-                  setPayoffAdvancedFoldOpen((current) => !current)
-                }
               />
             ) : null
           }

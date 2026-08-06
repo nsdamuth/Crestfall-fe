@@ -44,6 +44,18 @@ export function Eyebrow({ children }) {
   );
 }
 
+// Two short controls side by side on desktop where the pair reads
+// cleanly, stacking at 390 where they'd be too narrow. A child that
+// needs to span the full row below the pair (a custom-value field, an
+// empty-state card) takes `sm:col-span-2` at its own call site.
+export function FieldPair({ children }) {
+  return (
+    <div className="grid grid-cols-1 gap-[var(--space-4)] sm:grid-cols-2 sm:items-start">
+      {children}
+    </div>
+  );
+}
+
 export function SwatchGrid({ options, value, onChange }) {
   return (
     <div className="grid grid-cols-3 gap-[var(--space-2)] sm:grid-cols-4 lg:grid-cols-6">

@@ -4,6 +4,7 @@ import {
   ChipRow,
   EmptyStateCard,
   Eyebrow,
+  FieldPair,
   Fold,
   InlineDropdown,
   MultiChipRow,
@@ -117,52 +118,54 @@ export default function SilhouetteStopView({
       </div>
 
       <div className="mt-6">
-        <SectionLabel>Clothing style</SectionLabel>
-        <input
-          type="text"
-          value={clothingStyle}
-          onChange={(event) => onChangeClothingStyle?.(event.target.value)}
-          placeholder="Describe their general clothing style"
-          className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
-        />
-      </div>
-
-      <div className="mt-6">
-        <InlineDropdown
-          label="Default clothing"
-          options={DEFAULT_CLOTHING_MODE_OPTIONS}
-          value={defaultClothingMode}
-          onChange={onChangeDefaultClothingMode}
-          placeholder="None"
-        />
-
-        {defaultClothingMode === "OUTFIT" ? (
-          <div className="mt-[var(--space-3)]">
-            <EmptyStateCard
-              message={
-                hasClothingSelection
-                  ? `Selected outfit: ${defaultOutfitTitle}`
-                  : "No outfit selected. The outfit browser is not built in this pass."
-              }
-              actions={[{ label: "Select outfit", onClick: onOpenOutfitPicker }]}
+        <FieldPair>
+          <div>
+            <SectionLabel>Clothing style</SectionLabel>
+            <input
+              type="text"
+              value={clothingStyle}
+              onChange={(event) => onChangeClothingStyle?.(event.target.value)}
+              placeholder="Describe their general clothing style"
+              className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
             />
           </div>
-        ) : null}
 
-        {defaultClothingMode === "WARDROBE" ? (
-          <div className="mt-[var(--space-3)]">
-            <EmptyStateCard
-              message={
-                hasClothingSelection
-                  ? `Selected wardrobe: ${defaultWardrobeTitle}`
-                  : "No wardrobe selected. The wardrobe browser is not built in this pass."
-              }
-              actions={[
-                { label: "Select wardrobe", onClick: onOpenWardrobePicker },
-              ]}
-            />
-          </div>
-        ) : null}
+          <InlineDropdown
+            label="Default clothing"
+            options={DEFAULT_CLOTHING_MODE_OPTIONS}
+            value={defaultClothingMode}
+            onChange={onChangeDefaultClothingMode}
+            placeholder="None"
+          />
+
+          {defaultClothingMode === "OUTFIT" ? (
+            <div className="sm:col-span-2">
+              <EmptyStateCard
+                message={
+                  hasClothingSelection
+                    ? `Selected outfit: ${defaultOutfitTitle}`
+                    : "No outfit selected. The outfit browser is not built in this pass."
+                }
+                actions={[{ label: "Select outfit", onClick: onOpenOutfitPicker }]}
+              />
+            </div>
+          ) : null}
+
+          {defaultClothingMode === "WARDROBE" ? (
+            <div className="sm:col-span-2">
+              <EmptyStateCard
+                message={
+                  hasClothingSelection
+                    ? `Selected wardrobe: ${defaultWardrobeTitle}`
+                    : "No wardrobe selected. The wardrobe browser is not built in this pass."
+                }
+                actions={[
+                  { label: "Select wardrobe", onClick: onOpenWardrobePicker },
+                ]}
+              />
+            </div>
+          ) : null}
+        </FieldPair>
       </div>
 
       <Fold

@@ -2,7 +2,7 @@
 
 import CharacterPreviewView from "../../character-preview/CharacterPreview.view";
 import { useCharacterPreviewViewModel } from "../../character-preview/useCharacterPreviewViewModel";
-import { Eyebrow, Fold, TextAreaField } from "../shared/Controls";
+import { Eyebrow, SectionLabel, TextAreaField } from "../shared/Controls";
 import { PAYOFF_NOTES_MAX_LENGTH } from "./PayoffStop.contract";
 
 export default function PayoffStopView({
@@ -18,8 +18,6 @@ export default function PayoffStopView({
   extraRuntimeNotes = "",
   onChangeCreatorDirectives = null,
   onChangeExtraRuntimeNotes = null,
-  advancedFoldOpen = false,
-  onToggleAdvancedFold = null,
 } = {}) {
   const previewProps = useCharacterPreviewViewModel({
     form: {
@@ -49,13 +47,9 @@ export default function PayoffStopView({
         <CharacterPreviewView {...previewProps} />
       </div>
 
-      <Fold
-        title="Advanced directives"
-        sub="Notes for the storyteller, not the character"
-        open={advancedFoldOpen}
-        onToggle={onToggleAdvancedFold}
-        filled={Boolean(creatorDirectives || extraRuntimeNotes)}
-      >
+      <div className="mt-6 space-y-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <SectionLabel>Advanced directives</SectionLabel>
+
         <TextAreaField
           label="Creator directives"
           value={creatorDirectives}
@@ -71,7 +65,7 @@ export default function PayoffStopView({
           placeholder="Anything else the story needs to know at runtime"
           maxLength={PAYOFF_NOTES_MAX_LENGTH}
         />
-      </Fold>
+      </div>
     </>
   );
 }

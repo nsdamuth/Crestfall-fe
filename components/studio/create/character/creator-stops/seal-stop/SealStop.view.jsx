@@ -1,7 +1,7 @@
 "use client";
 
 import CharacterColorPaletteModal from "../../CharacterColorPaletteModal";
-import { ChipRow, Eyebrow, Fold, SectionLabel } from "../shared/Controls";
+import { ChipRow, Eyebrow, FieldPair, SectionLabel } from "../shared/Controls";
 import {
   CONTENT_RATING_OPTIONS,
   normalizeAdultAge,
@@ -30,8 +30,6 @@ export default function SealStopView({
   onChangeContentRating = null,
   onChangeAge = null,
   onChangeCharacterColorPaletteId = null,
-  renderingFoldOpen = false,
-  onToggleRenderingFold = null,
 } = {}) {
   return (
     <>
@@ -44,25 +42,29 @@ export default function SealStopView({
       </p>
 
       <div className="mt-6">
-        <SectionLabel>Visibility</SectionLabel>
-        <ChipRow
-          options={VISIBILITY_LABELS}
-          value={labelFor(VISIBILITY_OPTIONS, visibility)}
-          onChange={(label) =>
-            onChangeVisibility?.(valueFor(VISIBILITY_OPTIONS, label))
-          }
-        />
-      </div>
+        <FieldPair>
+          <div>
+            <SectionLabel>Visibility</SectionLabel>
+            <ChipRow
+              options={VISIBILITY_LABELS}
+              value={labelFor(VISIBILITY_OPTIONS, visibility)}
+              onChange={(label) =>
+                onChangeVisibility?.(valueFor(VISIBILITY_OPTIONS, label))
+              }
+            />
+          </div>
 
-      <div className="mt-6">
-        <SectionLabel>Content rating</SectionLabel>
-        <ChipRow
-          options={CONTENT_RATING_LABELS}
-          value={labelFor(CONTENT_RATING_OPTIONS, contentRating)}
-          onChange={(label) =>
-            onChangeContentRating?.(valueFor(CONTENT_RATING_OPTIONS, label))
-          }
-        />
+          <div>
+            <SectionLabel>Content rating</SectionLabel>
+            <ChipRow
+              options={CONTENT_RATING_LABELS}
+              value={labelFor(CONTENT_RATING_OPTIONS, contentRating)}
+              onChange={(label) =>
+                onChangeContentRating?.(valueFor(CONTENT_RATING_OPTIONS, label))
+              }
+            />
+          </div>
+        </FieldPair>
       </div>
 
       <div className="mt-6 max-w-[10rem]">
@@ -82,21 +84,13 @@ export default function SealStopView({
         </p>
       </div>
 
-      <Fold
-        title="Presentation"
-        sub="Chat color palette"
-        open={renderingFoldOpen}
-        onToggle={onToggleRenderingFold}
-        filled={Boolean(characterColorPaletteId)}
-      >
-        <div>
-          <SectionLabel>Chat color when this character speaks</SectionLabel>
-          <CharacterColorPaletteModal
-            value={characterColorPaletteId}
-            onChange={onChangeCharacterColorPaletteId}
-          />
-        </div>
-      </Fold>
+      <div className="mt-6 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <SectionLabel>Chat color when this character speaks</SectionLabel>
+        <CharacterColorPaletteModal
+          value={characterColorPaletteId}
+          onChange={onChangeCharacterColorPaletteId}
+        />
+      </div>
     </>
   );
 }

@@ -3,6 +3,7 @@
 import {
   CustomValueField,
   Eyebrow,
+  FieldPair,
   Fold,
   InlineDropdown,
   SectionLabel,
@@ -185,25 +186,27 @@ export default function KindStopView({
       </div>
 
       <div className="mt-6">
-        <InlineDropdown
-          label="Gender presentation"
-          options={GENDER_PRESENTATION_OPTIONS}
-          value={genderPresentation}
-          onChange={onChangeGenderPresentation}
-        />
-        {genderPresentation === "CUSTOM" ? (
-          <CustomValueField
-            label="Custom Gender Presentation"
-            value={customGenderPresentation}
-            onChange={onChangeCustomGenderPresentation}
-            placeholder="Describe the character's gender presentation"
-            maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
-          />
-        ) : null}
-      </div>
+        <FieldPair>
+          <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
 
-      <div className="mt-6">
-        <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
+          <div>
+            <InlineDropdown
+              label="Gender presentation"
+              options={GENDER_PRESENTATION_OPTIONS}
+              value={genderPresentation}
+              onChange={onChangeGenderPresentation}
+            />
+            {genderPresentation === "CUSTOM" ? (
+              <CustomValueField
+                label="Custom Gender Presentation"
+                value={customGenderPresentation}
+                onChange={onChangeCustomGenderPresentation}
+                placeholder="Describe the character's gender presentation"
+                maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
+              />
+            ) : null}
+          </div>
+        </FieldPair>
       </div>
 
       <Fold

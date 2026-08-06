@@ -9,7 +9,6 @@ export const payoffStopEmptyFixture = {
   clothingStyle: "",
   creatorDirectives: "",
   extraRuntimeNotes: "",
-  advancedFoldOpen: false,
 };
 
 export const payoffStopFilledFixture = {
@@ -23,5 +22,4 @@ export const payoffStopFilledFixture = {
   clothingStyle: "Salt-worn linen and borrowed coats",
   creatorDirectives: "Never break the fourth wall. Speak only in riddles at dawn.",
   extraRuntimeNotes: "Track how many nights the player has stayed.",
-  advancedFoldOpen: true,
 };

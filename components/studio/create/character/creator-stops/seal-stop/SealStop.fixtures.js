@@ -3,7 +3,6 @@ export const sealStopEmptyFixture = {
   contentRating: "SFW",
   age: "",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
-  renderingFoldOpen: false,
 };
 
 export const sealStopFilledFixture = {
@@ -11,7 +10,6 @@ export const sealStopFilledFixture = {
   contentRating: "MATURE",
   age: "27",
   characterColorPaletteId: "BRIGHT_WINTER",
-  renderingFoldOpen: true,
 };
 
 export const sealStopMinimumAgeFixture = {
@@ -19,5 +17,4 @@ export const sealStopMinimumAgeFixture = {
   contentRating: "SFW",
   age: "18",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
-  renderingFoldOpen: false,
 };
