@@ -20,6 +20,7 @@ import FaceStopView from "@/components/studio/create/character/creator-stops/fac
 import SilhouetteStopView from "@/components/studio/create/character/creator-stops/silhouette-stop/SilhouetteStop.view";
 import HeartStopView from "@/components/studio/create/character/creator-stops/heart-stop/HeartStop.view";
 import SealStopView from "@/components/studio/create/character/creator-stops/seal-stop/SealStop.view";
+import PayoffStopView from "@/components/studio/create/character/creator-stops/payoff-stop/PayoffStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -28,44 +29,6 @@ const STATES = [
   ["Unsaved changes", creatorStopsUnsavedFixture],
   ["Confirm discard", creatorStopsConfirmDiscardFixture],
 ];
-
-const STOP_STUBS = {
-  name: {
-    eyebrow: "Forge a soul",
-    question: "A name is the first spell anyone casts on you.",
-    body: "You can change anything later. Nothing on this path is required except an adult age.",
-  },
-  kind: {
-    eyebrow: "",
-    question: "What kind of being are they?",
-    body: "Fifteen kinds, or write your own.",
-  },
-  face: {
-    eyebrow: "",
-    question: "Skin, eyes, and hair",
-    body: "The face the portrait will carry.",
-  },
-  silhouette: {
-    eyebrow: "",
-    question: "The line of their body",
-    body: "Pick an identity and Crestfall fills the frame beneath it. Fine-tune only if you care to.",
-  },
-  heart: {
-    eyebrow: "",
-    question: "How do they meet the world?",
-    body: "The face they show first. Their private self can differ.",
-  },
-  seal: {
-    eyebrow: "",
-    question: "Who may meet them?",
-    body: "Visibility, rating, rendering, and an adult age.",
-  },
-  payoff: {
-    eyebrow: "The soul, forged",
-    question: "Unnamed Character",
-    body: "A private draft character.",
-  },
-};
 
 const INITIAL_FORM_STATE = {
   name: "",
@@ -116,30 +79,9 @@ const INITIAL_FORM_STATE = {
   contentRating: "SFW",
   age: "",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
+  creatorDirectives: "",
+  extraRuntimeNotes: "",
 };
-
-function StopStub({ stopId }) {
-  const stub = STOP_STUBS[stopId] || STOP_STUBS.name;
-
-  return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-6">
-      {stub.eyebrow ? (
-        <p className="eyebrow eyebrow--ruled text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-          {stub.eyebrow}
-        </p>
-      ) : null}
-      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
-        {stub.question}
-      </h2>
-      <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-        {stub.body}
-      </p>
-      <p className="mt-6 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)]">
-        Stop body stubbed for the chrome commit.
-      </p>
-    </div>
-  );
-}
 
 export default function CreatorStopsPreviewClient() {
   const [selectedState, setSelectedState] = useState(0);
@@ -150,6 +92,7 @@ export default function CreatorStopsPreviewClient() {
   const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
   const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
   const [renderingFoldOpen, setRenderingFoldOpen] = useState(false);
+  const [payoffAdvancedFoldOpen, setPayoffAdvancedFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -188,6 +131,7 @@ export default function CreatorStopsPreviewClient() {
     setFineTuneFoldOpen(false);
     setHeartAdvancedFoldOpen(false);
     setRenderingFoldOpen(false);
+    setPayoffAdvancedFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -268,9 +212,8 @@ export default function CreatorStopsPreviewClient() {
         </div>
 
         <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)]">
-          Fixture-driven UI preview. The name and title stop is real; every
-          other stop body is still stubbed. Preview loaded, no character
-          form is connected.
+          Fixture-driven UI preview. All seven stops are real. Preview
+          loaded, no character form is connected.
         </p>
         {templateNote ? (
           <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
@@ -448,9 +391,26 @@ export default function CreatorStopsPreviewClient() {
                   setRenderingFoldOpen((current) => !current)
                 }
               />
-            ) : (
-              <StopStub stopId={activeStop} />
-            )
+            ) : activeStop === "payoff" ? (
+              <PayoffStopView
+                name={formState.name}
+                title={formState.title}
+                shortConcept={formState.shortConcept}
+                species={formState.species}
+                customSpecies={formState.customSpecies}
+                genderPresentation={formState.genderPresentation}
+                customGenderPresentation={formState.customGenderPresentation}
+                clothingStyle={formState.clothingStyle}
+                creatorDirectives={formState.creatorDirectives}
+                extraRuntimeNotes={formState.extraRuntimeNotes}
+                onChangeCreatorDirectives={updateField("creatorDirectives")}
+                onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
+                advancedFoldOpen={payoffAdvancedFoldOpen}
+                onToggleAdvancedFold={() =>
+                  setPayoffAdvancedFoldOpen((current) => !current)
+                }
+              />
+            ) : null
           }
         />
       ) : null}

@@ -1,0 +1,1 @@
+export const PAYOFF_NOTES_MAX_LENGTH = 800;

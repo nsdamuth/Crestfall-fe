@@ -169,6 +169,13 @@ rendering_style as a fifty-fifth field is left for a future ruling.
 
 ## The payoff (commit 9)
 
+The live preview reuses the app's own existing
+`character-preview/CharacterPreview.view.jsx` and its viewmodel rather
+than building a new one, since that pair is already presentation-only and
+already reads exactly the identity fields this stop needs to summarize
+(name, title, short_concept, species, gender_presentation, and their
+custom values, clothing_style).
+
 | Field | Exposed / collapsed | Control |
 |---|---|---|
 | (live preview, not a form field) | exposed, primary | rendered preview, only here |
