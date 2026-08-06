@@ -228,6 +228,109 @@
   color: var(--ink);
 }
 
+/* --- BUTTON SYSTEM ------------------------------------------------
+   Item 2, phase 3 aesthetics. docs/RESTYLE-RULES.md documented this
+   recipe (traced to proof.css .btn/.btn--ghost) but no shared
+   component or live CSS ever implemented it; every button in the
+   app hardcodes its own one-off Tailwind classes instead. This is
+   the first real implementation, applied globally through the
+   design system rather than per page, per the brief. Three tiers:
+   primary (filled), secondary (outlined), tertiary (text, arrow on
+   hover). Sentence case is the app default already (no
+   text-transform here to fight), uppercase stays reserved for
+   eyebrows/labels/tags. Soft-cornered rectangles only; --radius-full
+   stays reserved for tags and icon buttons, never a button. One
+   disabled rule, shared by every tier. Destructive is the in-page
+   ghost recipe with --status-danger text, per the Destructive
+   ruling; the filled confirm-step variant is not implemented here,
+   since no package in this pass consumes it.                       */
+
+.cf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-md);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-cta);
+  line-height: var(--lh-cta);
+  font-weight: var(--weight-bold);
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    box-shadow var(--dur-hover) var(--ease-hover),
+    border-color var(--dur-hover) var(--ease-hover),
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-btn--sm {
+  height: var(--control-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--text-label);
+  line-height: var(--lh-label);
+}
+
+.cf-btn--lg {
+  height: var(--control-lg);
+  padding: 0 var(--space-8);
+}
+
+.cf-btn--primary {
+  background-color: var(--gold-action);
+  background-image: var(--grad-gold);
+  color: var(--tag-fill-ink);
+}
+.cf-btn--primary:hover {
+  box-shadow: var(--glow-hover);
+}
+
+.cf-btn--secondary {
+  background-color: transparent;
+  border-color: var(--line-strong);
+  color: var(--gold-action);
+}
+.cf-btn--secondary:hover {
+  border-color: var(--gold-action);
+  box-shadow: var(--glow-hover);
+}
+
+.cf-btn--tertiary {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--gold-action);
+  font-weight: var(--weight-medium);
+}
+.cf-btn--tertiary .cf-btn__arrow {
+  display: inline-block;
+  transition: transform var(--dur-hover) var(--ease-hover);
+}
+.cf-btn--tertiary:hover .cf-btn__arrow {
+  transform: translateX(3px);
+}
+
+.cf-btn--danger {
+  background: none;
+  border-color: transparent;
+  color: var(--status-danger);
+}
+.cf-btn--danger:hover {
+  box-shadow: var(--glow-hover);
+}
+
+.cf-btn:disabled,
+.cf-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 /* --- DROPDOWN TREATMENT ---------------------------------------
    Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
    to library.css lines 300-336. The reusable menu box and row
