@@ -27,6 +27,28 @@ import {
   SILHOUETTE_NOTES_MAX_LENGTH,
 } from "./SilhouetteStop.contract";
 
+// Slugs mirror the tile art naming rule (lowercase, non-alphanumerics to
+// one hyphen). Review-pass staging path; see TileGrid's art fallback note.
+const KIBBE_IDENTITY_TILE_SLUGS = {
+  DRAMATIC: "dramatic",
+  SOFT_DRAMATIC: "soft-dramatic",
+  FLAMBOYANT_NATURAL: "flamboyant-natural",
+  SOFT_NATURAL: "soft-natural",
+  DRAMATIC_CLASSIC: "dramatic-classic",
+  SOFT_CLASSIC: "soft-classic",
+  FLAMBOYANT_GAMINE: "flamboyant-gamine",
+  SOFT_GAMINE: "soft-gamine",
+  THEATRICAL_ROMANTIC: "theatrical-romantic",
+  ROMANTIC: "romantic",
+};
+
+const KIBBE_IDENTITY_TILE_OPTIONS = KIBBE_IDENTITY_OPTIONS.map((option) => ({
+  ...option,
+  imageUrl: KIBBE_IDENTITY_TILE_SLUGS[option.value]
+    ? `/tmp-creator-tiles/tiles/kibbe/${KIBBE_IDENTITY_TILE_SLUGS[option.value]}.jpg`
+    : undefined,
+}));
+
 export default function SilhouetteStopView({
   kibbeIdentity = "",
   bodyType = "",
@@ -85,7 +107,7 @@ export default function SilhouetteStopView({
       <div className="mt-6">
         <SectionLabel>Body identity</SectionLabel>
         <TileGrid
-          options={KIBBE_IDENTITY_OPTIONS}
+          options={KIBBE_IDENTITY_TILE_OPTIONS}
           value={kibbeIdentity}
           onChange={onChangeKibbeIdentity}
         />

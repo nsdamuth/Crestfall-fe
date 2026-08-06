@@ -48,6 +48,11 @@ export function SwatchGrid({ options, value, onChange }) {
   );
 }
 
+// Art-less tiles fall back to the geometric circle mark, matching the
+// draft. Review-pass staging path; production art lands in a tracked
+// location in a later pass.
+const TILE_ART_FALLBACK = "/tmp-creator-tiles/logo-mark.svg";
+
 export function TileGrid({ options, value, onChange }) {
   return (
     <div className="grid grid-cols-2 gap-[var(--space-2)] sm:grid-cols-3">
@@ -55,34 +60,44 @@ export function TileGrid({ options, value, onChange }) {
         const active = option.value === value;
 
         return (
-          <button
+          <div
             key={option.value}
-            type="button"
-            aria-pressed={active}
-            onClick={() => onChange?.(option.value)}
-            className={`rounded-[var(--radius-md)] border p-[var(--space-2)] text-left transition ${
+            className={`relative rounded-[var(--radius-md)] border p-[var(--space-2)] transition ${
               active
                 ? "border-[var(--gold-action)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                 : "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)]"
             }`}
           >
-            {option.imageUrl ? (
+            <button
+              type="button"
+              aria-pressed={active}
+              onClick={() => onChange?.(option.value)}
+              className="block w-full text-left"
+            >
               <div
-                className="h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-cover bg-center"
-                style={{ backgroundImage: `url(${option.imageUrl})` }}
+                className={`h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-center bg-no-repeat ${
+                  option.imageUrl ? "bg-cover" : "bg-[var(--fill)]"
+                }`}
+                style={{
+                  backgroundImage: `url(${option.imageUrl || TILE_ART_FALLBACK})`,
+                  backgroundSize: option.imageUrl ? undefined : "34%",
+                }}
               />
-            ) : (
-              <div className="h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-[var(--fill)]" />
-            )}
-            <p className="mt-[var(--space-2)] text-xs text-[var(--ink)]">
-              {option.label}
-            </p>
-            {option.description ? (
-              <p className="mt-[var(--space-1)] text-[10px] leading-4 text-[var(--ink-faint)]">
-                {option.description}
+              <p className="mt-[var(--space-2)] pr-[var(--space-5)] text-xs text-[var(--ink)]">
+                {option.label}
               </p>
+            </button>
+
+            {option.description ? (
+              <span className="absolute right-[var(--space-2)] top-[var(--space-2)]">
+                <InfoTip
+                  label={`About ${option.label}`}
+                  text={option.description}
+                  flip
+                />
+              </span>
             ) : null}
-          </button>
+          </div>
         );
       })}
     </div>

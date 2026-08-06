@@ -5,6 +5,7 @@ import {
   Fold,
   InlineDropdown,
   SectionLabel,
+  TileGrid,
 } from "../shared/Controls";
 import {
   EAST_ASIAN_ZODIAC_OPTIONS,
@@ -16,6 +17,33 @@ import {
   SPECIES_OPTIONS,
   WESTERN_ZODIAC_OPTIONS,
 } from "./KindStop.contract";
+
+// Slugs mirror the tile art naming rule (lowercase, non-alphanumerics to
+// one hyphen). Review-pass staging path; see TileGrid's art fallback note.
+const SPECIES_TILE_SLUGS = {
+  HUMAN: "human",
+  BASTET: "bastet-catfolk",
+  KITSUNE: "kitsune",
+  LAMIA: "lamia-gorgon",
+  GENIE: "genie",
+  CONSTRUCT: "construct-robot",
+  DEMON: "demon",
+  ANGEL: "angel",
+  ELF: "elf",
+  ALIEN: "alien",
+  MERFOLK: "merfolk",
+  HARPY: "harpy",
+  VAMPIRE: "vampire",
+  WEREWOLF: "werewolf",
+  CUSTOM: "custom",
+};
+
+const SPECIES_TILE_OPTIONS = SPECIES_OPTIONS.map((option) => ({
+  ...option,
+  imageUrl: SPECIES_TILE_SLUGS[option.value]
+    ? `/tmp-creator-tiles/tiles/species/${SPECIES_TILE_SLUGS[option.value]}.jpg`
+    : undefined,
+}));
 
 function RoleArchetypeField({ value, onChange }) {
   const isCustomMode = value === "CUSTOM" || (value !== "" && !isKnownRoleArchetype(value));
@@ -85,9 +113,9 @@ export default function KindStopView({
       </p>
 
       <div className="mt-6">
-        <InlineDropdown
-          label="Species"
-          options={SPECIES_OPTIONS}
+        <SectionLabel>Species</SectionLabel>
+        <TileGrid
+          options={SPECIES_TILE_OPTIONS}
           value={species}
           onChange={onChangeSpecies}
         />
