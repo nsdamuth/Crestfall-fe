@@ -15,6 +15,7 @@ import {
   creatorStopsSavedMessageFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
+import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -91,6 +92,19 @@ export default function CreatorStopsPreviewClient() {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [templateNote, setTemplateNote] = useState("");
+
+  const [skinTone, setSkinTone] = useState("");
+  const [skinCustomValue, setSkinCustomValue] = useState("");
+  const [eyeColor, setEyeColor] = useState("");
+  const [eyeCustomValue, setEyeCustomValue] = useState("");
+  const [hairColor, setHairColor] = useState("");
+  const [hairCustomValue, setHairCustomValue] = useState("");
+  const [hairLength, setHairLength] = useState("");
+  const [hairTexture, setHairTexture] = useState("");
+  const [hairStyle, setHairStyle] = useState("");
+  const [ethnicAppearance, setEthnicAppearance] = useState("");
+  const [moreHairOpen, setMoreHairOpen] = useState(false);
+
   const fixture = STATES[selectedState][1];
 
   const previewProps = useMemo(() => {
@@ -174,6 +188,31 @@ export default function CreatorStopsPreviewClient() {
                   "Start-from-a-template takeover is not built in this commit."
                 )
               }
+            />
+          ) : activeStop === "face" ? (
+            <FaceStopView
+              skinTone={skinTone}
+              skinCustomValue={skinCustomValue}
+              eyeColor={eyeColor}
+              eyeCustomValue={eyeCustomValue}
+              hairColor={hairColor}
+              hairCustomValue={hairCustomValue}
+              hairLength={hairLength}
+              hairTexture={hairTexture}
+              hairStyle={hairStyle}
+              ethnicAppearance={ethnicAppearance}
+              moreHairOpen={moreHairOpen}
+              onChangeSkinTone={setSkinTone}
+              onChangeSkinCustomValue={setSkinCustomValue}
+              onChangeEyeColor={setEyeColor}
+              onChangeEyeCustomValue={setEyeCustomValue}
+              onChangeHairColor={setHairColor}
+              onChangeHairCustomValue={setHairCustomValue}
+              onChangeHairLength={setHairLength}
+              onChangeHairTexture={setHairTexture}
+              onChangeHairStyle={setHairStyle}
+              onChangeEthnicAppearance={setEthnicAppearance}
+              onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
             />
           ) : (
             <StopStub stopId={activeStop} />
