@@ -15,7 +15,7 @@ export default function SiteShell({ eyebrow, title, children }) {
 
       <div className="relative z-10 mx-auto max-w-5xl">
         {eyebrow && (
-          <p className="font-display text-xs uppercase tracking-[0.4em] text-[var(--muted-gold)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {eyebrow}
           </p>
         )}
