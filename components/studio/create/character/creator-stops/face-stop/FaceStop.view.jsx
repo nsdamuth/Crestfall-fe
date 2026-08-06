@@ -19,11 +19,18 @@ import {
   SKIN_OPTIONS,
 } from "./FaceStop.contract";
 
+// Every description here just restates its label ("Chinese" / "Use a
+// Chinese visual appearance."); the tooltip added no detail the label
+// didn't already carry, so it's dropped here rather than kept as noise.
+const ETHNIC_APPEARANCE_TILE_OPTIONS = ETHNIC_APPEARANCE_OPTIONS.map(
+  ({ description, ...option }) => option
+);
+
 function EthnicAppearanceDropdown({ value, onChange }) {
   return (
     <InlineDropdown
       label="Ethnic Appearance"
-      options={ETHNIC_APPEARANCE_OPTIONS}
+      options={ETHNIC_APPEARANCE_TILE_OPTIONS}
       value={value}
       onChange={onChange}
     />
