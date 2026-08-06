@@ -43,7 +43,7 @@ export default function NameStopView({
           onChange={(event) => onChangeName?.(event.target.value)}
           maxLength={NAME_STOP_LIMITS.name}
           placeholder="Lilith"
-          className="min-h-[3.5rem] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] font-display text-[var(--text-heading)] leading-[var(--lh-heading)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+          className="min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
         />
       </div>
 

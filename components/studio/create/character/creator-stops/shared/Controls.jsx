@@ -38,7 +38,7 @@ export function SwatchGrid({ options, value, onChange }) {
                 background: option.color || "var(--fill)",
               }}
             />
-            <p className="mt-[var(--space-2)] text-center text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+            <p className="mt-[var(--space-2)] break-words text-center text-[10px] uppercase leading-tight tracking-[0.12em] text-[var(--ink-dim)]">
               {option.label}
             </p>
           </button>
