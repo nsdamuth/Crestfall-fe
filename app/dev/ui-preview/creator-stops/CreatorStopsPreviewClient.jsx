@@ -19,6 +19,7 @@ import KindStopView from "@/components/studio/create/character/creator-stops/kin
 import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
 import SilhouetteStopView from "@/components/studio/create/character/creator-stops/silhouette-stop/SilhouetteStop.view";
 import HeartStopView from "@/components/studio/create/character/creator-stops/heart-stop/HeartStop.view";
+import SealStopView from "@/components/studio/create/character/creator-stops/seal-stop/SealStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -111,6 +112,10 @@ const INITIAL_FORM_STATE = {
   relationshipToPlayer: "",
   voiceModuleIds: [],
   personalityNotes: "",
+  visibility: "PRIVATE",
+  contentRating: "SFW",
+  age: "",
+  characterColorPaletteId: "CRESTFALL_DEFAULT",
 };
 
 function StopStub({ stopId }) {
@@ -144,6 +149,7 @@ export default function CreatorStopsPreviewClient() {
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
   const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
   const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
+  const [renderingFoldOpen, setRenderingFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -181,6 +187,7 @@ export default function CreatorStopsPreviewClient() {
     setTypingFoldOpen(false);
     setFineTuneFoldOpen(false);
     setHeartAdvancedFoldOpen(false);
+    setRenderingFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -422,6 +429,23 @@ export default function CreatorStopsPreviewClient() {
                 advancedFoldOpen={heartAdvancedFoldOpen}
                 onToggleAdvancedFold={() =>
                   setHeartAdvancedFoldOpen((current) => !current)
+                }
+              />
+            ) : activeStop === "seal" ? (
+              <SealStopView
+                visibility={formState.visibility}
+                contentRating={formState.contentRating}
+                age={formState.age}
+                characterColorPaletteId={formState.characterColorPaletteId}
+                onChangeVisibility={updateField("visibility")}
+                onChangeContentRating={updateField("contentRating")}
+                onChangeAge={updateField("age")}
+                onChangeCharacterColorPaletteId={updateField(
+                  "characterColorPaletteId"
+                )}
+                renderingFoldOpen={renderingFoldOpen}
+                onToggleRenderingFold={() =>
+                  setRenderingFoldOpen((current) => !current)
                 }
               />
             ) : (

@@ -145,12 +145,27 @@ key in constants/form.js's 53-field initialForm, so it falls outside the
 
 ## The seal (commit 8)
 
+Flag, not resolved by this table: the chrome commit's stub copy for this
+stop ("Visibility, rating, rendering, and an adult age") promises a
+rendering control. The literal match is `rendering_style` (anime / photoreal
+/ either), read by this same character flow's own review step, but it is
+not a key in constants/form.js's 53-field initialForm, so like
+movement_style it falls outside the 54 fields this build covers.
+`character_color_palette_id` was the other candidate, but its own modal's
+description states outright that it "does not affect image generation," it
+only recolors chat presentation, so it is not a rendering control either.
+It is still placed here, since visibility, rating, and presentation
+settings share a subject and no other stop fits it better, but this stop's
+own intro copy says "presentation" rather than "rendering" so it is not
+promising something none of the 54 fields deliver. Whether to add
+rendering_style as a fifty-fifth field is left for a future ruling.
+
 | Field | Exposed / collapsed | Control |
 |---|---|---|
 | visibility | exposed | chip row |
 | content_rating | exposed | chip row |
-| age | exposed | number field |
-| character_color_palette_id | collapsed, "Rendering" fold | swatch grid |
+| age | exposed | number field, floor of 18 |
+| character_color_palette_id | collapsed, "Presentation" fold | swatch grid |
 
 ## The payoff (commit 9)
 
