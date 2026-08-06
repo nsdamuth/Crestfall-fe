@@ -52,6 +52,7 @@ export default function CharacterCreatorPreviewClient() {
       onBack: () => {},
       onNext: () => {},
       onSave: () => {},
+      onClose: () => {},
     };
   }, [activeStep, fixture]);
 

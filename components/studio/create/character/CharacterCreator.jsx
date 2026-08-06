@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import StudioPageHeader from "@/components/studio/StudioPageHeader";
 import AppearanceStep from "@/components/studio/create/character/AppearanceStep";
 import BehaviorStep from "@/components/studio/create/character/BehaviorStep";
@@ -56,6 +58,7 @@ function renderCharacterEditor({
 }
 
 export default function CharacterCreator(props) {
+  const router = useRouter();
   const { viewProps, applicationContentProps } =
     useCharacterCreatorViewModel(props);
   const {
@@ -74,6 +77,7 @@ export default function CharacterCreator(props) {
     <>
       <CharacterCreatorView
         {...viewProps}
+        onClose={() => router.push("/studio/create")}
         headerContent={
           <StudioPageHeader
             eyebrow="Create"

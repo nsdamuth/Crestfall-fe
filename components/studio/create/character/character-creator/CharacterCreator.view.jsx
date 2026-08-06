@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Eye,
   MessageCircle,
+  X,
 } from "lucide-react";
 
 const STEP_ICONS = {
@@ -31,112 +32,161 @@ export default function CharacterCreatorView({
   onBack = null,
   onNext = null,
   onSave = null,
+  onClose = null,
 } = {}) {
   return (
-    <>
-      {headerContent}
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
+      <div
+        className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-[2px]"
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) {
+            onClose?.();
+          }
+        }}
+      />
 
-      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-              Draft Progress
-            </p>
-            <p className="mt-1 text-sm text-[var(--ink-dim)]">
-              {progress}% filled · optional fields can be completed later.
-            </p>
-          </div>
+      <div className="relative flex w-full max-h-[calc(100dvh-var(--space-3)*2)] max-w-none flex-col overflow-hidden rounded-t-[var(--radius-lg)] border border-[var(--line)] border-b-0 bg-[var(--surface-4)] shadow-[var(--shadow-modal)] sm:max-h-[min(44rem,calc(100dvh-var(--space-8)*2))] sm:max-w-[min(46rem,calc(100vw-var(--space-8)*2))] sm:rounded-[var(--radius-lg)] sm:border-b">
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--line-whisper)] px-4 pb-3 pt-4 sm:px-6">
+          <div className="min-w-0 flex-1">{headerContent}</div>
 
-          <button
-            type="button"
-            onClick={() => onSave?.()}
-            disabled={saveDisabled}
-            className="cf-btn cf-btn--tertiary"
-          >
-            {saveStatus === "saving" ? (
-              "Saving..."
-            ) : (
-              <>
-                Save draft <span className="cf-btn__arrow">→</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        <div className="mt-5 grid gap-2 sm:grid-cols-4 xl:grid-cols-5">
-          {stepItems.map((step) => {
-            const Icon = STEP_ICONS[step.iconKey] || BadgeInfo;
-
-            return (
-              <button
-                key={step.id}
-                type="button"
-                onClick={() => onSelectStep?.(step.id)}
-                className={`rounded-xl border p-3 text-left transition ${
-                  step.active
-                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                    : step.visited
-                      ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
-                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
-                }`}
-              >
-                <Icon size={17} />
-                <p className="mt-2 text-[10px] uppercase tracking-[0.16em]">
-                  {step.label}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        {previewContent}
-
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
-          {editorContent}
-
-          {saveMessage ? (
-            <p
-              className={`mt-4 text-sm ${
-                saveStatus === "error" ? "text-red-200" : "text-emerald-200"
-              }`}
-            >
-              {saveMessage}
-            </p>
-          ) : null}
-
-          <div className="mt-8 flex items-center justify-between gap-3">
+          {onClose ? (
             <button
               type="button"
-              onClick={() => onBack?.()}
-              disabled={activeIndex === 0}
-              className="cf-btn cf-btn--secondary"
+              onClick={() => onClose?.()}
+              aria-label="Close character creator"
+              className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             >
-              Back
+              <X size={18} />
             </button>
+          ) : null}
+        </div>
 
-            {activeStep === "review" ? (
+        <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-4 sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+                  Draft Progress
+                </p>
+                <p className="mt-1 text-sm text-[var(--ink-dim)]">
+                  {progress}% filled &middot; optional fields can be completed
+                  later.
+                </p>
+              </div>
+
               <button
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="cf-btn cf-btn--primary"
+                className="cf-btn cf-btn--tertiary"
               >
-                {saveStatus === "saving" ? "Saving..." : "Finish draft"}
+                {saveStatus === "saving" ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    Save draft <span className="cf-btn__arrow">&rarr;</span>
+                  </>
+                )}
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => onNext?.()}
-                className="cf-btn cf-btn--primary"
-              >
-                Next
-              </button>
-            )}
+            </div>
+          </div>
+
+          {previewContent ? (
+            <div className="mt-5">{previewContent}</div>
+          ) : null}
+
+          <div className="mt-5 space-y-2">
+            {stepItems.map((step) => {
+              const Icon = STEP_ICONS[step.iconKey] || BadgeInfo;
+              const isActive = step.id === activeStep;
+
+              return (
+                <div
+                  key={step.id}
+                  className={`overflow-hidden rounded-[var(--radius-md)] border transition ${
+                    isActive
+                      ? "border-[var(--gold-ornament)]/45 bg-black/30"
+                      : "border-white/10 bg-black/20"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => onSelectStep?.(step.id)}
+                    aria-expanded={isActive}
+                    className={`flex w-full items-center gap-3 px-4 py-3 text-left transition ${
+                      isActive
+                        ? "text-[var(--ink)]"
+                        : step.visited
+                          ? "text-[var(--gold-ornament)] hover:border-[var(--gold-ornament)]/25"
+                          : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    <Icon size={17} className="shrink-0" />
+                    <span className="flex-1 text-[10px] uppercase tracking-[0.16em]">
+                      {step.label}
+                    </span>
+                    {step.summary ? (
+                      <span className="max-w-[45%] truncate text-xs normal-case tracking-normal text-[var(--ink-dim)]">
+                        {step.summary}
+                      </span>
+                    ) : null}
+                  </button>
+
+                  {isActive ? (
+                    <div className="border-t border-[var(--line-whisper)] px-4 py-4">
+                      {editorContent}
+
+                      {saveMessage ? (
+                        <p
+                          className={`mt-4 text-sm ${
+                            saveStatus === "error"
+                              ? "text-red-200"
+                              : "text-emerald-200"
+                          }`}
+                        >
+                          {saveMessage}
+                        </p>
+                      ) : null}
+
+                      <div className="mt-6 flex items-center justify-between gap-3">
+                        <button
+                          type="button"
+                          onClick={() => onBack?.()}
+                          disabled={activeIndex === 0}
+                          className="cf-btn cf-btn--secondary"
+                        >
+                          Back
+                        </button>
+
+                        {activeStep === "review" ? (
+                          <button
+                            type="button"
+                            onClick={() => onSave?.()}
+                            disabled={saveDisabled}
+                            className="cf-btn cf-btn--primary"
+                          >
+                            {saveStatus === "saving"
+                              ? "Saving..."
+                              : "Finish draft"}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => onNext?.()}
+                            className="cf-btn cf-btn--primary"
+                          >
+                            Next
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
