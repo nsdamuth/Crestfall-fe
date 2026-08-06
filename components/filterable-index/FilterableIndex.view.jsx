@@ -66,7 +66,7 @@ export default function FilterableIndexView({
             <button
               type="button"
               onClick={onClearFilters}
-              className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(255,255,255,0.06)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)] hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
               Clear
             </button>

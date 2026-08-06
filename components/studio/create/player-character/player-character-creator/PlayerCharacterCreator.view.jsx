@@ -86,9 +86,9 @@ export default function PlayerCharacterCreatorView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary"
           >
-            {saveStatus === "saving" ? "Saving..." : "Save Draft →"}
+            {saveStatus === "saving" ? "Saving..." : "Save draft →"}
           </button>
         </div>
 
@@ -182,7 +182,7 @@ export default function PlayerCharacterCreatorView({
               type="button"
               onClick={() => onBack?.()}
               disabled={activeIndex === 0}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="cf-btn cf-btn--secondary"
             >
               Back
             </button>
@@ -192,15 +192,15 @@ export default function PlayerCharacterCreatorView({
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
-                {saveStatus === "saving" ? "Saving..." : "Finish Draft →"}
+                {saveStatus === "saving" ? "Saving..." : "Finish draft →"}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => onNext?.()}
-                className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--primary"
               >
                 Next
               </button>

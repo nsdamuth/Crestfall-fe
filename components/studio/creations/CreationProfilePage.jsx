@@ -60,7 +60,7 @@ function StandardCreationProfilePage(props) {
         creation ? (
           <Link
             href={creation.imageStudioHref}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Camera size={14} />
             Generate

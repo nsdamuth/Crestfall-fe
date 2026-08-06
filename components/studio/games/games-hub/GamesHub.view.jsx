@@ -423,7 +423,7 @@ function GameListRow({ game, isLast, onPlay, starting }) {
           type="button"
           onClick={() => onPlay?.(game)}
           disabled={starting}
-          className="inline-flex h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <Play size={14} />
           <span className="hidden text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] sm:inline">
@@ -511,7 +511,7 @@ function GameCard({ game, onPlay, starting }) {
               type="button"
               onClick={() => onPlay?.(game)}
               disabled={starting}
-              className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+              className="cf-btn cf-btn--primary"
             >
               <Play size={14} />
               {starting

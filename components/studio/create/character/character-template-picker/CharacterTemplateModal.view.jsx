@@ -103,9 +103,9 @@ export default function CharacterTemplateModalView({
                   <button
                     type="button"
                     onClick={() => onChooseTemplate?.(template?.id || "")}
-                    className="mt-[var(--space-4)] flex h-[var(--control-md)] w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+                    className="cf-btn cf-btn--primary mt-[var(--space-4)] w-full"
                   >
-                    {template?.actionLabel || "Apply Template"}
+                    {template?.actionLabel || "Apply template"}
                   </button>
                 </article>
               ))}

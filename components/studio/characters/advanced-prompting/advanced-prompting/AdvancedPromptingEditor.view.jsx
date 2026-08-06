@@ -204,10 +204,10 @@ export default function AdvancedPromptingEditorView({
                         <button
                           type="button"
                           onClick={() => onClearSection?.(section.id)}
-                          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+                          className="cf-btn cf-btn--danger"
                         >
                           <Eraser size={13} />
-                          Clear Section
+                          Clear section
                         </button>
                       ) : null}
                     </div>

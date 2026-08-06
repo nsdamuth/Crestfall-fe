@@ -66,8 +66,8 @@ export default function LoreBuilderView({
           <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
         </div>
 
-        <button type="button" onClick={() => onSave?.()} disabled={saveDisabled} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50">
-          <Save size={15} />{saveStatus === "saving" ? "Saving…" : "Save Draft"}
+        <button type="button" onClick={() => onSave?.()} disabled={saveDisabled} className="cf-btn cf-btn--primary mt-6 w-full">
+          <Save size={15} />{saveStatus === "saving" ? "Saving…" : "Save draft"}
         </button>
         {saveMessage ? <p className={`mt-3 text-sm ${saveStatus === "error" ? "text-red-200" : "text-emerald-200"}`}>{saveMessage}</p> : null}
       </aside>

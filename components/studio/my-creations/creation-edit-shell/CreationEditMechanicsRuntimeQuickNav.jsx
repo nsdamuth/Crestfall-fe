@@ -196,7 +196,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         <button
           type="button"
           onClick={() => setAllExpanded(false)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <ChevronsUp size={13} />
           Collapse
@@ -205,7 +205,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         <button
           type="button"
           onClick={() => setAllExpanded(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <ChevronsDown size={13} />
           Expand

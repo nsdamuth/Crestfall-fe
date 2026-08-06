@@ -10,7 +10,7 @@ export default function StorylineNodeListEditorView({
   headerEyebrow = "Narrative Sequence",
   headerDescription = "",
   nodeCountLabel = "0 Storyline Nodes",
-  addReferenceLabel = "Add Story or Scenario",
+  addReferenceLabel = "Add story or scenario",
   showStructureControls = true,
   showTransitionControls = true,
   loadError = "",
@@ -53,7 +53,7 @@ export default function StorylineNodeListEditorView({
           <button
             type="button"
             onClick={() => onOpenReferencePicker?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary"
           >
             <Plus size={15} />
             {addReferenceLabel}
@@ -118,7 +118,7 @@ export default function StorylineNodeListEditorView({
                 <button
                   type="button"
                   onClick={() => onRemoveNode?.(node.index)}
-                  className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)]"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                   aria-label="Remove node"
                 >
                   <Trash2 size={16} />
@@ -216,9 +216,9 @@ export default function StorylineNodeListEditorView({
                       <button
                         type="button"
                         onClick={() => onAddTrigger?.(node.index)}
-                        className="rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+                        className="cf-btn cf-btn--secondary cf-btn--sm"
                       >
-                        Add Trigger
+                        Add trigger
                       </button>
                     </div>
                   </div>
@@ -275,7 +275,7 @@ export default function StorylineNodeListEditorView({
                           onClick={() =>
                             onRemoveTrigger?.(node.index, trigger.index)
                           }
-                          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)]"
+                          className="cf-btn cf-btn--danger cf-btn--sm"
                           aria-label="Remove trigger"
                         >
                           <Trash2 size={15} />

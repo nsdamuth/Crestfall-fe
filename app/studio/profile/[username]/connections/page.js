@@ -35,9 +35,9 @@ export default async function PublicProfileConnectionsPage({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href={`/studio/profile/${encodeURIComponent(publicUsername)}`}
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary"
           >
-            ← Back to Profile
+            ← Back to profile
           </Link>
 
           <div className="flex rounded-xl border border-white/10 bg-black/30 p-1">
@@ -136,9 +136,9 @@ function ConnectionCard({ connection }) {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href={`/studio/profile/${encodeURIComponent(username)}`}
-              className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--primary"
             >
-              View Profile
+              View profile
             </Link>
 
             <ProfileFollowButton

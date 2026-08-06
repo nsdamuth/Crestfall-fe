@@ -68,11 +68,7 @@ function SmallButton({ children, onClick, danger = false, title = "" }) {
       type="button"
       onClick={onClick}
       title={title}
-      className={
-        danger
-          ? "inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
-          : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
-      }
+      className={`cf-btn cf-btn--sm ${danger ? "cf-btn--danger" : "cf-btn--secondary"}`}
     >
       {children}
     </button>
@@ -399,7 +395,7 @@ export default function MechanicsProgressionProfileFieldsView({
             </div>
             <SmallButton onClick={addOverride}>
               <Plus size={13} />
-              Add Override
+              Add override
             </SmallButton>
           </div>
           <div className="mt-4 grid gap-3">
@@ -429,7 +425,7 @@ export default function MechanicsProgressionProfileFieldsView({
           </div>
           <SmallButton onClick={addDerivedValue}>
             <Plus size={13} />
-            Add Derived Counter
+            Add derived counter
           </SmallButton>
         </div>
         <div className="mt-4 grid gap-3">

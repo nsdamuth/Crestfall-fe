@@ -51,10 +51,10 @@ export default function CreationEditShellView({
                     type="button"
                     onClick={() => onSetDefaultPc?.()}
                     disabled={settingDefaultPc}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+                    className="cf-btn cf-btn--secondary"
                   >
                     <UserRound size={14} />
-                    {settingDefaultPc ? "Setting..." : "Set Default PC"}
+                    {settingDefaultPc ? "Setting..." : "Set default PC"}
                   </button>
                 ) : null}
 

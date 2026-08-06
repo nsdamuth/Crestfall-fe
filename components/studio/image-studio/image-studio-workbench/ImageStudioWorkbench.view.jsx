@@ -59,11 +59,7 @@ export default function ImageStudioWorkbenchView({
               type="button"
               onClick={onQuickGenerate}
               disabled={!canGenerateImage}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-3 text-[10px] uppercase tracking-[0.14em] transition ${
-                canGenerateImage
-                  ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 text-[var(--ink)] hover:bg-[var(--gold-ornament)]/25"
-                  : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] opacity-60"
-              }`}
+              className="cf-btn cf-btn--primary cf-btn--sm"
               title="Generate image"
             >
               <Wand2 size={16} />

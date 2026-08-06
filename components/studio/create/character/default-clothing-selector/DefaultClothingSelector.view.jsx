@@ -4,8 +4,8 @@ export default function DefaultClothingSelectorView({
   selectedClothing = null,
   emptyMessage =
     "No default clothing selected. Choose one Outfit or one Wardrobe.",
-  outfitActionLabel = "Select Outfit",
-  wardrobeActionLabel = "Select Wardrobe",
+  outfitActionLabel = "Select outfit",
+  wardrobeActionLabel = "Select wardrobe",
   onOpenOutfitPicker = null,
   onOpenWardrobePicker = null,
   onClearDefaultClothing = null,
@@ -43,7 +43,7 @@ export default function DefaultClothingSelectorView({
             <button
               type="button"
               onClick={() => onClearDefaultClothing?.()}
-              className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+              className="cf-btn cf-btn--danger"
               aria-label="Clear default clothing"
             >
               <X size={16} />
@@ -60,7 +60,7 @@ export default function DefaultClothingSelectorView({
           <button
             type="button"
             onClick={() => onOpenOutfitPicker?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary"
           >
             <Shirt size={14} />
             {outfitActionLabel}
@@ -69,7 +69,7 @@ export default function DefaultClothingSelectorView({
           <button
             type="button"
             onClick={() => onOpenWardrobePicker?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Shirt size={14} />
             {wardrobeActionLabel}

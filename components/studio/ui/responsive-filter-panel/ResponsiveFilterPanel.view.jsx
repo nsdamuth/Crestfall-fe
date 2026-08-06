@@ -36,19 +36,19 @@ export default function ResponsiveFilterPanelView({
           <button
             type="button"
             onClick={() => onToggleMobileFilters?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:hidden"
+            className="cf-btn cf-btn--secondary md:hidden"
           >
             <SlidersHorizontal size={14} />
-            {mobileOpen ? "Hide Filters" : "Show Filters"}
+            {mobileOpen ? "Hide filters" : "Show filters"}
           </button>
 
           <button
             type="button"
             onClick={() => onToggleDesktopFilters?.()}
-            className="hidden items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:inline-flex"
+            className="hidden cf-btn cf-btn--secondary md:inline-flex"
           >
             <SlidersHorizontal size={14} />
-            {desktopOpen ? "Hide Filters" : "Show Filters"}
+            {desktopOpen ? "Hide filters" : "Show filters"}
           </button>
         </div>
       </div>

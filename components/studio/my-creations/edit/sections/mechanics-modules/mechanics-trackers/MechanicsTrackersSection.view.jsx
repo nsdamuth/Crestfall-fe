@@ -12,10 +12,7 @@ import {
 } from "./mechanicsTrackersNormalization.js";
 
 function ActionButton({ children, onClick, variant = "gold", title }) {
-  const className =
-    variant === "danger"
-      ? "inline-flex items-center justify-center gap-2 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:bg-red-500/20"
-      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]";
+  const className = `cf-btn cf-btn--sm ${variant === "danger" ? "cf-btn--danger" : "cf-btn--secondary"}`;
 
   return (
     <button type="button" onClick={onClick} title={title} className={className}>
@@ -82,7 +79,7 @@ function FoldableTracker({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove tracker"
         >
           <Trash2 size={13} />
@@ -106,7 +103,7 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove phase"
         >
           <Trash2 size={13} />
@@ -180,7 +177,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove mutation hint"
         >
           <Trash2 size={13} />
@@ -212,7 +209,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         setDraft={setEventTypeDraft}
         add={addEventType}
         placeholder="ACCEPTED_REDIRECT"
-        addLabel="Add Event"
+        addLabel="Add event"
         remove={(index) =>
           onPatch({
             eventTypes: safeHint.eventTypes.filter((_value, itemIndex) => itemIndex !== index),
@@ -227,7 +224,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         setDraft={setTriggerDraft}
         add={addTrigger}
         placeholder="accepts redirect"
-        addLabel="Add Trigger"
+        addLabel="Add trigger"
         remove={(index) =>
           onPatch({
             triggers: safeHint.triggers.filter((_value, itemIndex) => itemIndex !== index),
@@ -361,7 +358,7 @@ function TrackerCard({ entry, handlers }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
-            <Plus size={14} /> Add Phase
+            <Plus size={14} /> Add phase
           </ActionButton>
         </div>
         {tracker.phases.length ? (
@@ -386,7 +383,7 @@ function TrackerCard({ entry, handlers }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
-            <Plus size={14} /> Add Hint
+            <Plus size={14} /> Add hint
           </ActionButton>
         </div>
         {tracker.mutationHints.length ? (
@@ -456,7 +453,7 @@ export default function MechanicsTrackersSectionView({
           </p>
         </div>
         <ActionButton onClick={addTracker}>
-          <Plus size={14} /> Add Tracker
+          <Plus size={14} /> Add tracker
         </ActionButton>
       </div>
       {entries.length ? (

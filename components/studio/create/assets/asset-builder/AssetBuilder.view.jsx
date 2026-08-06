@@ -175,10 +175,10 @@ export default function AssetBuilderView({
           <button
             type="button"
             disabled
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] opacity-75"
+            className="cf-btn cf-btn--secondary w-full"
           >
             <Sparkles size={15} />
-            Generate Test Images Soon
+            Generate test images soon
           </button>
 
           <TextField
@@ -215,10 +215,10 @@ export default function AssetBuilderView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary w-full"
           >
             <Save size={15} />
-            {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+            {saveStatus === "saving" ? "Saving..." : "Save draft"}
           </button>
 
           {saveMessage ? (
@@ -349,16 +349,16 @@ function LocationParentPanel({
             <button
               type="button"
               onClick={() => onOpenParentPicker?.()}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
               <MapPin size={14} />
-              Change Parent
+              Change parent
             </button>
 
             <button
               type="button"
               onClick={() => onClearParentLocation?.()}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
+              className="cf-btn cf-btn--danger"
             >
               <X size={14} />
               Clear
@@ -375,10 +375,10 @@ function LocationParentPanel({
           <button
             type="button"
             onClick={() => onOpenParentPicker?.()}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary mt-4"
           >
             <MapPin size={14} />
-            Select Parent
+            Select parent
           </button>
         </div>
       )}

@@ -40,7 +40,7 @@ function SmallActionButton({ children, onClick, disabled = false }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--primary cf-btn--sm"
     >
       {children}
     </button>
@@ -62,7 +62,7 @@ function GuardConditionCard({
         <button
           type="button"
           onClick={removeCondition}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove condition"
         >
           <Trash2 size={13} />
@@ -177,7 +177,7 @@ function GuardCard({
         <button
           type="button"
           onClick={() => removeGuard(guardIndex)}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove guard"
         >
           <Trash2 size={13} />
@@ -284,7 +284,7 @@ function GuardCard({
               </p>
               <SmallActionButton onClick={() => addCondition(guardIndex)}>
                 <Plus size={14} />
-                Add Condition
+                Add condition
               </SmallActionButton>
             </div>
 
@@ -395,7 +395,7 @@ export default function MechanicsGuardsView({
         </div>
         <SmallActionButton onClick={addGuard}>
           <Plus size={14} />
-          Add Guard
+          Add guard
         </SmallActionButton>
       </div>
 

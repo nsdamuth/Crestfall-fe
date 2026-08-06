@@ -134,7 +134,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove requirement"
         >
           <Trash2 size={13} />
@@ -302,10 +302,10 @@ export default function MechanicsCommandRequirementsView({
         <button
           type="button"
           onClick={addRequirement}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary cf-btn--sm"
         >
           <Plus size={14} />
-          Add Requirement
+          Add requirement
         </button>
       </div>
 

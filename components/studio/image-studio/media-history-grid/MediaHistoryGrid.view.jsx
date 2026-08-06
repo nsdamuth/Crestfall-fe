@@ -172,11 +172,7 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onToggleSelectionMode}
               disabled={isBulkDeleting}
-              className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] transition disabled:cursor-not-allowed disabled:opacity-60 ${
-                selectionMode
-                  ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
-                  : "border-dashed border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-              }`}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
             >
               {selectionMode ? <X size={14} /> : <CheckSquare2 size={14} />}
               {selectionMode ? "Done" : "Select"}
@@ -198,7 +194,7 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleMobileGrid}
-            className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] md:hidden"
+            className="cf-btn cf-btn--secondary cf-btn--sm md:hidden"
           >
             <Grid2X2 size={14} />
             {compactMobileGrid ? "Large" : "Grid"}
@@ -207,7 +203,7 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleFilters}
-            className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--gold-action)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-bright)] transition hover:text-[var(--gold-bright)] md:hidden"
+            className="cf-btn cf-btn--secondary cf-btn--sm md:hidden"
           >
             {filtersOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             Filters
@@ -245,18 +241,18 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onToggleSelectAllVisible}
               disabled={isBulkDeleting || !hasVisibleSelectableMedia}
-              className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
             >
               {allVisibleSelectableItemsSelected
-                ? "Clear Visible"
-                : "Select All Visible"}
+                ? "Clear visible"
+                : "Select all visible"}
             </button>
 
             <button
               type="button"
               onClick={onClearSelection}
               disabled={isBulkDeleting || !selectedCount}
-              className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
             >
               Clear
             </button>
@@ -265,7 +261,7 @@ export default function MediaHistoryGridView({
               type="button"
               onClick={onBulkDeleteSelected}
               disabled={isBulkDeleting || !selectedCount}
-              className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)] transition hover:border-[var(--line)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--danger cf-btn--sm"
             >
               {isBulkDeleting ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -274,7 +270,7 @@ export default function MediaHistoryGridView({
               )}
               {isBulkDeleting
                 ? "Deleting..."
-                : `Delete Selected (${selectedCount})`}
+                : `Delete selected (${selectedCount})`}
             </button>
           </div>
         </section>
@@ -346,9 +342,9 @@ export default function MediaHistoryGridView({
             type="button"
             onClick={onLoadMoreHistory}
             disabled={isLoadingMoreHistory}
-            className="inline-flex h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[var(--text-cta)] font-bold leading-[var(--lh-cta)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
-            {isLoadingMoreHistory ? "Loading..." : "Load More"}
+            {isLoadingMoreHistory ? "Loading..." : "Load more"}
           </button>
         </div>
       ) : null}

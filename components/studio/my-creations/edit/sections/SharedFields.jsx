@@ -79,7 +79,7 @@ export function ActionPanel({
         type="button"
         disabled={disabled}
         onClick={onClick}
-        className="mt-5 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="cf-btn cf-btn--secondary mt-5"
       >
         {button}
       </button>

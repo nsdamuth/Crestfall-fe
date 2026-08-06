@@ -8,8 +8,8 @@ export default function MyCreationsHubView({
     "Creations start private by default. Publish, share, submit for review, or submit to canon later from the individual creation.",
   queryPlaceholder = "Search your creations...",
   createHref = "/studio/create",
-  createLabel = "Create New",
-  emptyActionLabel = "Start Creating",
+  createLabel = "Create new",
+  emptyActionLabel = "Start creating",
   tagFilterLabel = "Your Tags",
   allTagValue = "ALL",
   tabs = [],
@@ -61,7 +61,7 @@ export default function MyCreationsHubView({
             <button
               type="button"
               onClick={onToggleMobileGridMode || undefined}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] md:hidden"
+              className="cf-btn cf-btn--secondary md:hidden"
             >
               <Grid2X2 size={14} />
               {mobileGridToggleLabel}
@@ -69,7 +69,7 @@ export default function MyCreationsHubView({
 
             <InternalLinkComponent
               href={createHref}
-              className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--primary"
             >
               {createLabel}
             </InternalLinkComponent>
@@ -161,7 +161,7 @@ export default function MyCreationsHubView({
 
             <InternalLinkComponent
               href={createHref}
-              className="mt-6 inline-block rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--primary mt-6"
             >
               {emptyActionLabel}
             </InternalLinkComponent>
@@ -174,9 +174,9 @@ export default function MyCreationsHubView({
           <button
             type="button"
             onClick={onLoadMore || undefined}
-            className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
-            Load {nextLoadCount} More
+            Load {nextLoadCount} more
           </button>
         </div>
       ) : null}

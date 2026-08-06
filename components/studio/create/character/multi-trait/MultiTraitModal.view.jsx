@@ -78,7 +78,7 @@ export default function MultiTraitModalView({
                   <button
                     type="button"
                     onClick={() => onBackFromCustom?.()}
-                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
+                    className="cf-btn cf-btn--secondary"
                   >
                     Back
                   </button>
@@ -86,9 +86,9 @@ export default function MultiTraitModalView({
                   <button
                     type="button"
                     onClick={() => onAddCustomValue?.()}
-                    className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
+                    className="cf-btn cf-btn--primary"
                   >
-                    Add Custom
+                    Add custom
                   </button>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default function MultiTraitModalView({
                   <button
                     type="button"
                     onClick={() => onDone?.()}
-                    className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
+                    className="cf-btn cf-btn--primary"
                   >
                     Done
                   </button>

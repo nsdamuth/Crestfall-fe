@@ -37,9 +37,9 @@ export default function IdentityStep({ form, updateField, onOpenTemplates }) {
           <button
             type="button"
             onClick={onOpenTemplates}
-            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary"
           >
-            Use Template
+            Use template
           </button>
         </div>
       </div>

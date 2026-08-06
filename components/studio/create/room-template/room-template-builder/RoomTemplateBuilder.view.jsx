@@ -95,10 +95,10 @@ export default function RoomTemplateBuilderView({
           type="button"
           onClick={() => onSave?.()}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
@@ -274,10 +274,10 @@ export default function RoomTemplateBuilderView({
               <button
                 type="button"
                 onClick={() => onAddOpeningMessage?.()}
-                className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--secondary w-fit"
               >
                 <Plus size={14} />
-                Add Opening Message
+                Add opening message
               </button>
             </div>
           </div>
@@ -331,10 +331,10 @@ export default function RoomTemplateBuilderView({
               <button
                 type="button"
                 disabled
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+                className="cf-btn cf-btn--secondary mt-4 w-full"
               >
                 <ImageIcon size={14} />
-                Choose From Media Library Soon
+                Choose from media library soon
               </button>
             </div>
           </div>

@@ -26,8 +26,8 @@ export default function LocationIdentitySectionView({
   selectedParentFallbackTitle = "Selected Parent Location",
   noParentTitle = "No parent location selected",
   noParentDescription = "",
-  selectParentLabel = "Select Parent",
-  changeParentLabel = "Change Parent",
+  selectParentLabel = "Select parent",
+  changeParentLabel = "Change parent",
   clearParentLabel = "Clear",
   intendedUseLabel = "Intended Use",
   intendedUseValue = "",
@@ -238,7 +238,7 @@ function SelectedParentLocation({
         <button
           type="button"
           onClick={() => onOpenParentPicker?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
           <MapPin size={14} />
           {changeParentLabel}
@@ -247,7 +247,7 @@ function SelectedParentLocation({
         <button
           type="button"
           onClick={() => onClearParentLocation?.()}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger"
         >
           <X size={14} />
           {clearParentLabel}
@@ -277,7 +277,7 @@ function EmptyParentLocation({
       <button
         type="button"
         onClick={() => onOpenParentPicker?.()}
-        className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+        className="cf-btn cf-btn--primary shrink-0"
       >
         <MapPin size={14} />
         {selectParentLabel}

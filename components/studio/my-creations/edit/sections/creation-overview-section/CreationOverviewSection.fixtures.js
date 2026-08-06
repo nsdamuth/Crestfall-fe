@@ -27,7 +27,7 @@ export const creationOverviewSectionEmptyFixture = {
 export const creationOverviewSectionLongContentFixture = {
   ...sharedCopy,
   titleValue:
-    "Office of Irregular Phenomena — Restricted Cross-Case Convergence Archive",
+    "Office of Irregular Phenomena · Restricted Cross-Case Convergence Archive",
   descriptionValue:
     "A deliberately long public description used to verify wrapping, vertical rhythm, and responsive behavior while preserving the exact Overview field layout supplied by Creation Edit.",
 };

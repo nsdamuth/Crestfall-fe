@@ -19,7 +19,7 @@ export default function RoomTemplateOpeningSectionView({
   messagePlaceholder = "",
   openingMessages = [],
   removeMessageLabel = "Remove",
-  addMessageLabel = "Add Opening Message",
+  addMessageLabel = "Add opening message",
   onChangePublicOpeningContext = null,
   onChangeOpeningMessageSpeaker = null,
   onChangeOpeningMessageBody = null,
@@ -57,7 +57,7 @@ export default function RoomTemplateOpeningSectionView({
                   type="button"
                   onClick={() => onRemoveOpeningMessage?.(message.id)}
                   disabled={!message.canRemove}
-                  className="inline-flex h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-white/10 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition disabled:cursor-not-allowed disabled:opacity-35"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                 >
                   <X size={12} />
                   {removeMessageLabel}
@@ -89,7 +89,7 @@ export default function RoomTemplateOpeningSectionView({
           <button
             type="button"
             onClick={() => onAddOpeningMessage?.()}
-            className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary w-fit"
           >
             <Plus size={14} />
             {addMessageLabel}

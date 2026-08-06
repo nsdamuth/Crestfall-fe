@@ -30,7 +30,7 @@ export default function OpeningMessageCard({
           type="button"
           onClick={() => onRemove(message.id)}
           disabled={index === 0}
-          className="rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-35"
+          className="cf-btn cf-btn--danger cf-btn--sm"
         >
           Remove
         </button>

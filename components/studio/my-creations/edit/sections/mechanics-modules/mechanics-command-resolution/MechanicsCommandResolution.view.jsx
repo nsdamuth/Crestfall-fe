@@ -39,7 +39,7 @@ function ActionButton({ children, onClick, disabled = false, title }) {
       title={title}
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--primary cf-btn--sm"
     >
       {children}
     </button>
@@ -69,7 +69,7 @@ function ModifierList({
 
         <ActionButton onClick={() => onAdd(side)}>
           <Plus size={14} />
-          Add Fixed Modifier
+          Add fixed modifier
         </ActionButton>
       </div>
 
@@ -87,7 +87,7 @@ function ModifierList({
                 <button
                   type="button"
                   onClick={() => onRemove(side, modifierIndex)}
-                  className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                   title="Remove fixed modifier"
                 >
                   <Trash2 size={13} />
@@ -166,7 +166,7 @@ function ModifierSourceCard({
         <button
           type="button"
           onClick={() => onRemove(side, sourceIndex)}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove authoritative modifier source"
         >
           <Trash2 size={13} />
@@ -496,7 +496,7 @@ function ModifierSourceList({
 
         <ActionButton onClick={() => onAdd(side)}>
           <Plus size={14} />
-          Add Source
+          Add source
         </ActionButton>
       </div>
 
@@ -593,7 +593,7 @@ export default function MechanicsCommandResolutionView({
           </select>
 
           <ActionButton onClick={applyReference} disabled={!referenceId}>
-            Apply Reference
+            Apply reference
           </ActionButton>
         </div>
       </div>

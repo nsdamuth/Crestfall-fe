@@ -37,15 +37,15 @@ export default function ScenarioRecommendationsPanelView({
           <button
             type="button"
             onClick={() => onApplyAll?.()}
-            className="rounded-xl border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary"
           >
-            Apply All
+            Apply all
           </button>
 
           <button
             type="button"
             onClick={() => onSkipRecommendations?.()}
-            className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             Skip
           </button>
@@ -112,7 +112,7 @@ function RecommendationGroup({
         <button
           type="button"
           onClick={() => onApply?.()}
-          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-fit"
         >
           Apply
         </button>
@@ -141,7 +141,7 @@ function RecommendationSingle({
         <button
           type="button"
           onClick={() => onApply?.()}
-          className="mt-3 w-fit rounded-lg border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-fit"
         >
           Use
         </button>

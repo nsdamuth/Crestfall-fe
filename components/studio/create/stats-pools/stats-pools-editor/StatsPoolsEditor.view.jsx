@@ -236,7 +236,7 @@ function DefinitionHeader({
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label="Remove definition"
         >
           <Trash2 size={15} />
@@ -420,7 +420,7 @@ function FormulaEditor({
                   type="button"
                   onClick={() => onRemoveOperand?.(kind, definitionId, index)}
                   disabled={disabled || operands.length <= 2}
-                  className="mt-7 inline-flex items-center gap-1 self-start rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:bg-white/5 disabled:opacity-30"
+                  className="cf-btn cf-btn--danger cf-btn--sm mt-7 self-start"
                   aria-label="Remove formula operand"
                 >
                   <Minus size={15} />
@@ -436,10 +436,10 @@ function FormulaEditor({
         type="button"
         onClick={() => onAddOperand?.(kind, definitionId)}
         disabled={disabled}
-        className="mt-3 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs text-[var(--ink)] transition hover:border-[var(--gold-ornament)]/35 disabled:opacity-50"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3"
       >
         <Plus size={14} />
-        Add Operand
+        Add operand
       </button>
 
       <div className="mt-4">
@@ -1365,10 +1365,10 @@ export default function StatsPoolsEditorView({
             type="button"
             onClick={() => onOpenJsonEditor?.()}
             disabled={disabled}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:opacity-50"
+            className="cf-btn cf-btn--secondary"
           >
             <Braces size={15} />
-            JSON Editor
+            JSON editor
           </button>
 
           <button
@@ -1567,10 +1567,10 @@ export default function StatsPoolsEditorView({
               type="button"
               onClick={() => onAddDefinition?.("stat")}
               disabled={disabled || stats.length >= limits.maxStats}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
+              className="cf-btn cf-btn--primary"
             >
               <Plus size={15} />
-              Add Stat
+              Add stat
             </button>
           </div>
           <div className="mt-4 space-y-3">
@@ -1609,7 +1609,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Pool Definitions"
             body={`HP, Stamina, Mana, and custom actor resources. Limit: ${limits.maxPools || 0}.`}
-            actionLabel="Add Pool"
+            actionLabel="Add pool"
             onAction={() => onAddDefinition?.("pool")}
             disabled={disabled || pools.length >= limits.maxPools}
           />
@@ -1650,7 +1650,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Modifier Definitions"
             body={`Reusable changes applied by Conditions, abilities, equipment, or other systems. Limit: ${limits.maxModifierDefinitions || 0}.`}
-            actionLabel="Add Modifier"
+            actionLabel="Add modifier"
             onAction={() => onAddDefinition?.("modifier")}
             disabled={disabled || modifiers.length >= limits.maxModifierDefinitions}
           />
@@ -1691,7 +1691,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Condition Definitions"
             body={`Named actor states that activate one or more Modifiers. Limit: ${limits.maxConditionDefinitions || 0}.`}
-            actionLabel="Add Condition"
+            actionLabel="Add condition"
             onAction={() => onAddDefinition?.("condition")}
             disabled={disabled || conditions.length >= limits.maxConditionDefinitions}
           />
@@ -1745,7 +1745,7 @@ function PanelHeading({ title, body, actionLabel, onAction, disabled }) {
         type="button"
         onClick={onAction}
         disabled={disabled}
-        className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
+        className="cf-btn cf-btn--primary"
       >
         <Plus size={15} />
         {actionLabel}

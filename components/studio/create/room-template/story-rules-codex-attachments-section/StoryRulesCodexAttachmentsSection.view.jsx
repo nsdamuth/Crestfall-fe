@@ -5,7 +5,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
   title = "Rules Codex Attachments",
   body =
     "Attach Rules Codices that define how this Story interprets mechanics, thresholds, special cases, and world-specific rules.",
-  addLabel = "Attach Rules Codex",
+  addLabel = "Attach rules codex",
   emptyLabel = "No Rules Codices attached.",
   runtimeNote =
     "This relationship establishes Story scope only. Runtime section selection and prompt composition are activated separately.",
@@ -32,7 +32,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
         <button
           type="button"
           onClick={() => onOpenPicker?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary"
         >
           <Link2 size={14} />
           {addLabel}
@@ -108,7 +108,7 @@ function RulesCodexAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached Rules Codex"
           }

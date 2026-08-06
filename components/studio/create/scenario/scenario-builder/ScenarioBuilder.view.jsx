@@ -78,10 +78,10 @@ export default function ScenarioBuilderView({
           type="button"
           onClick={() => onSave?.()}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
@@ -487,7 +487,7 @@ function SelectedReferenceChip({ item, onRemove }) {
       <button
         type="button"
         onClick={onRemove}
-        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+        className="cf-btn cf-btn--danger cf-btn--sm"
         aria-label={`Remove ${item.title}`}
       >
         <X size={14} />

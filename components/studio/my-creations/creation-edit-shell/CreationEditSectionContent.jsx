@@ -569,7 +569,7 @@ export default function CreationEditSectionContent({
               )}/preview`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
               <ExternalLink size={14} />
               Open full owner preview

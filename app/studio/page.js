@@ -70,23 +70,23 @@ export default async function StudioPage() {
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
               href="/studio/games"
-              className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/15 px-5 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-[var(--muted-gold)]/25"
+              className="cf-btn cf-btn--primary"
             >
-              Browse Games
+              Browse games
             </Link>
 
             <Link
               href="/studio/community"
-              className="rounded-[var(--radius-md)] border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Community Stories
+              Community stories
             </Link>
 
             <Link
               href="/studio/create"
-              className="rounded-[var(--radius-md)] border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Create Something
+              Create something
             </Link>
           </div>
         </div>
@@ -147,9 +147,9 @@ export default async function StudioPage() {
 
           <Link
             href="/studio/my-creations"
-            className="mt-8 inline-flex rounded-[var(--radius-md)] border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-5 py-3 text-sm uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--primary mt-8"
           >
-            View My Stuff
+            View my stuff
           </Link>
         </div>
       </section>

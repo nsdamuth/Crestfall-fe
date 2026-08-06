@@ -48,7 +48,7 @@ export default function StudioCharacterCardView({
         <div className="mt-5 grid grid-cols-2 gap-2">
           <LinkComponent
             href={detailsHref}
-            className="flex h-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-center text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             Details
           </LinkComponent>
@@ -56,7 +56,7 @@ export default function StudioCharacterCardView({
           <button
             type="button"
             disabled
-            className="flex h-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--tag-fill-ink)] opacity-45"
+            className="cf-btn cf-btn--primary cf-btn--sm"
           >
             Start
           </button>

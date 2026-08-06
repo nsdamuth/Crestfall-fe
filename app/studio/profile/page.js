@@ -64,9 +64,9 @@ export default async function PublicProfilePage() {
           <button
             type="button"
             disabled
-            className="rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
-            Edit Soon
+            Edit soon
           </button>
         </div>
 

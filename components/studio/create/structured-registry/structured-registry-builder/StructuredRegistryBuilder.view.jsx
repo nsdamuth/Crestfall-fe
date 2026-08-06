@@ -81,14 +81,14 @@ export default function StructuredRegistryBuilderView({
                 type="button"
                 onClick={onSave}
                 disabled={["saving", "saved"].includes(saveStatus)}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
                 <Save size={14} />
                 {saveStatus === "saving"
                   ? "Saving..."
                   : saveStatus === "saved"
-                    ? "Opening Draft..."
-                    : "Save Draft"}
+                    ? "Opening draft..."
+                    : "Save draft"}
               </button>
             )}
           </div>
@@ -307,7 +307,7 @@ function EntriesTab({
         <button
           type="button"
           onClick={onAddEntry}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary"
         >
           <Plus size={14} />
           Add {config.entryLabel}
@@ -461,10 +461,10 @@ function StructuredEntryEditor({
       <button
         type="button"
         onClick={onDelete}
-        className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 hover:bg-black/35"
+        className="cf-btn cf-btn--danger"
       >
         <Trash2 size={14} />
-        Delete Entry
+        Delete entry
       </button>
     </div>
   );
@@ -575,10 +575,10 @@ function LinkedCreationGroup({
         <button
           type="button"
           onClick={() => onOpenLinkPicker(entry.id, group.id)}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary"
         >
           <Link2 size={14} />
-          {group.addLabel || "Link Creation"}
+          {group.addLabel || "Link creation"}
         </button>
       </div>
 
@@ -634,7 +634,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label="Remove linked creation"
         >
           <X size={14} />

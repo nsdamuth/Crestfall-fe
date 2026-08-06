@@ -334,7 +334,7 @@ function ColumnBlockCard({
                 block.id
               )
             }
-            className="inline-flex items-center gap-1 rounded-md border border-white/10 px-1.5 py-1.5 text-[var(--status-danger)]"
+            className="cf-btn cf-btn--danger cf-btn--sm"
             aria-label="Remove column block"
           >
             <Trash2 size={12} />
@@ -756,7 +756,7 @@ function BlockFields({
                       item.id
                     )
                   }
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                   aria-label="Remove reference row"
                 >
                   <Trash2 size={13} />
@@ -771,7 +771,7 @@ function BlockFields({
           type="button"
           onClick={() => onAddStatItem?.(chapterId, sectionId, block.id)}
           disabled={(block.items || []).length >= (limits.maxStatItems || 32)}
-          className="inline-flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white disabled:opacity-40"
+          className="cf-btn cf-btn--secondary cf-btn--sm w-fit"
         >
           <Plus size={13} /> Add reference row
         </button>
@@ -818,7 +818,7 @@ function BlockFields({
                     disabled={
                       column.blocks.length >= (limits.maxBlocksPerColumn || 64)
                     }
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/30 px-2.5 py-2 text-[10px] uppercase tracking-[0.1em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white disabled:opacity-40"
+                    className="cf-btn cf-btn--secondary cf-btn--sm"
                   >
                     <Plus size={12} /> {option.label}
                   </button>
@@ -1288,10 +1288,10 @@ export default function LoreEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:bg-[var(--gold-ornament)]/15 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Braces size={14} />
-            JSON Editor
+            JSON editor
           </button>
         </div>
       </div>
@@ -1441,9 +1441,9 @@ export default function LoreEditorView({
           type="button"
           onClick={onAddChapter}
           disabled={chapterCount >= limits.maxChapters}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
+          className="cf-btn cf-btn--primary"
         >
-          <Plus size={15} /> Add Chapter
+          <Plus size={15} /> Add chapter
         </button>
       </div>
 
@@ -1502,7 +1502,7 @@ export default function LoreEditorView({
                   type="button"
                   onClick={() => onRemoveChapter?.(chapter.id)}
                   aria-label="Remove chapter"
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                 >
                   <Trash2 size={14} />
                   <span className="text-xs">Remove</span>
@@ -1669,9 +1669,9 @@ export default function LoreEditorView({
                       disabled={
                         chapter.sections.length >= limits.maxSectionsPerChapter
                       }
-                      className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 disabled:opacity-40"
+                      className="cf-btn cf-btn--secondary cf-btn--sm"
                     >
-                      <Plus size={13} /> Add Section
+                      <Plus size={13} /> Add section
                     </button>
                   </div>
 
@@ -1738,7 +1738,7 @@ export default function LoreEditorView({
                                 onRemoveSection?.(chapter.id, section.id)
                               }
                               aria-label="Remove section"
-                              className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
+                              className="cf-btn cf-btn--danger cf-btn--sm"
                             >
                               <Trash2 size={13} />
                               <span className="text-xs">Remove</span>
@@ -1910,7 +1910,7 @@ export default function LoreEditorView({
                                 <button
                                   type="button"
                                   onClick={() => openBlockPicker(chapter.id, section.id)}
-                                  className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 hover:text-white"
+                                  className="cf-btn cf-btn--secondary cf-btn--sm"
                                 >
                                   <Plus size={14} /> Add content block
                                 </button>
@@ -1978,7 +1978,7 @@ export default function LoreEditorView({
                                             )
                                           }
                                           aria-label="Remove block"
-                                          className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-2 text-[var(--status-danger)]"
+                                          className="cf-btn cf-btn--danger cf-btn--sm"
                                         >
                                           <Trash2 size={13} />
                                           <span className="text-xs">Remove</span>
@@ -2013,7 +2013,7 @@ export default function LoreEditorView({
                                   <button
                                     type="button"
                                     onClick={() => openBlockPicker(chapter.id, section.id)}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-white"
+                                    className="cf-btn cf-btn--secondary cf-btn--sm"
                                   >
                                     <Plus size={13} /> Add another content block
                                   </button>

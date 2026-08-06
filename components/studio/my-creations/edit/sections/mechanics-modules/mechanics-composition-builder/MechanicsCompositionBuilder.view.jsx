@@ -146,7 +146,7 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
       <button
         type="button"
         onClick={onRemove}
-        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
+        className="cf-btn cf-btn--danger cf-btn--sm"
         title="Remove step"
       >
         <Trash2 size={14} />
@@ -233,7 +233,7 @@ function ConditionCard({
         <button
           type="button"
           onClick={() => onRemoveCondition?.(stepId, condition.id)}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove condition"
         >
           <Trash2 size={13} />
@@ -568,7 +568,7 @@ function EffectCard({
         <button
           type="button"
           onClick={() => onRemoveEffect?.(stepId, effect.id)}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove effect"
         >
           <Trash2 size={13} />
@@ -806,10 +806,10 @@ function MechanicsStepCard({
           <button
             type="button"
             onClick={() => onAddCondition?.(step.id)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
+            className="cf-btn cf-btn--primary cf-btn--sm"
           >
             <Plus size={14} />
-            Add Condition
+            Add condition
           </button>
         </div>
         {step.conditions.length ? (
@@ -848,10 +848,10 @@ function MechanicsStepCard({
           <button
             type="button"
             onClick={() => onAddEffect?.(step.id)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
+            className="cf-btn cf-btn--primary cf-btn--sm"
           >
             <Plus size={14} />
-            Add Effect
+            Add effect
           </button>
         </div>
         {step.effects.length ? (
@@ -1260,9 +1260,9 @@ export default function MechanicsCompositionBuilderView({
             type="button"
             disabled={!referenceId || selectedReference?.available === false}
             onClick={() => onApplyReference?.()}
-            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cf-btn cf-btn--primary"
           >
-            Apply Reference
+            Apply reference
           </button>
         </div>
       </div>
@@ -1308,19 +1308,19 @@ export default function MechanicsCompositionBuilderView({
               type="button"
               disabled={!canAddMechanicsStep}
               onClick={() => onAddMechanicsStep?.("ATTEMPT")}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
             >
               <Plus size={14} />
-              Attempt Step
+              Attempt step
             </button>
             <button
               type="button"
               disabled={!canAddMechanicsStep}
               onClick={() => onAddMechanicsStep?.("OUTCOME")}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--primary cf-btn--sm"
             >
               <Plus size={14} />
-              Outcome Step
+              Outcome step
             </button>
           </div>
         </div>
@@ -1375,10 +1375,10 @@ export default function MechanicsCompositionBuilderView({
             type="button"
             disabled={!canAddDomainStep}
             onClick={() => onAddDomainStep?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cf-btn cf-btn--primary cf-btn--sm"
           >
             <Plus size={14} />
-            Add Domain Step
+            Add domain step
           </button>
         </div>
 

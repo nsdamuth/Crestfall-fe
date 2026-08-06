@@ -58,10 +58,10 @@ export default function StoryRoomTranscriptView({
           <button
             type="button"
             onClick={loadEarlierMessages}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <ChevronUp size={14} />
-            Load Earlier
+            Load earlier
             <span className="text-[var(--gold-ornament)]">{hiddenCount}</span>
           </button>
         </div>

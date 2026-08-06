@@ -29,10 +29,8 @@ function CreationEngagementButtons({
         <button
           type="button"
           onClick={onToggleLike}
-          className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
-            liked
-              ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
-              : "border-white/10 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className={`cf-btn cf-btn--secondary ${
+            liked ? "border-pink-400/45 bg-pink-400/15 text-pink-200" : ""
           }`}
         >
           <Heart size={14} fill={liked ? "currentColor" : "none"} />
@@ -44,10 +42,8 @@ function CreationEngagementButtons({
         <button
           type="button"
           onClick={onToggleBookmark}
-          className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
-            bookmarked
-              ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
-              : "border-white/10 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className={`cf-btn cf-btn--secondary ${
+            bookmarked ? "border-pink-400/45 bg-pink-400/15 text-pink-200" : ""
           }`}
         >
           <Bookmark size={14} fill={bookmarked ? "currentColor" : "none"} />
@@ -98,17 +94,17 @@ function PreviewActions({
             type="button"
             onClick={onSetDefaultPc}
             disabled={settingDefaultPc}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--primary"
           >
             <UserRound size={14} />
-            {settingDefaultPc ? "Setting..." : "Set Default PC"}
+            {settingDefaultPc ? "Setting..." : "Set default PC"}
           </button>
         ) : null}
 
         {editHref ? (
           <LinkComponent
             href={editHref}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <PenLine size={14} />
             Edit
@@ -117,10 +113,10 @@ function PreviewActions({
           <button
             type="button"
             disabled
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
             <PenLine size={14} />
-            Edit Soon
+            Edit soon
           </button>
         )}
 
@@ -129,7 +125,7 @@ function PreviewActions({
             type="button"
             onClick={onStartStory}
             disabled={startingChat}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
             <MessageCircle size={14} />
             {startingChat ? "Starting..." : "Chat"}
@@ -138,10 +134,10 @@ function PreviewActions({
 
         <LinkComponent
           href={catalogueHref}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
           <ImageIcon size={14} />
-          Image Library
+          Image library
         </LinkComponent>
       </div>
     );
@@ -152,10 +148,10 @@ function PreviewActions({
       <button
         type="button"
         disabled
-        className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] opacity-70"
+        className="cf-btn cf-btn--primary"
       >
         <Sparkles size={14} />
-        Select Soon
+        Select soon
       </button>
     );
   }
@@ -168,7 +164,7 @@ function PreviewActions({
           type="button"
           onClick={onStartStory}
           disabled={startingChat}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+          className="cf-btn cf-btn--primary"
         >
           <MessageCircle size={14} />
           {startingChat ? "Starting..." : "Chat"}
@@ -264,9 +260,9 @@ export default function CreationPreviewModalView({
 
                   <LinkComponent
                     href={catalogueHref}
-                    className="mt-5 inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
+                    className="cf-btn cf-btn--primary mt-5"
                   >
-                    View Catalogue
+                    View catalogue
                   </LinkComponent>
                 </div>
               </div>
@@ -376,7 +372,7 @@ export default function CreationPreviewModalView({
                   <button
                     type="button"
                     onClick={onToggleDescription}
-                    className="inline text-[var(--gold-ornament)] underline-offset-4 transition hover:text-[var(--ink)] hover:underline"
+                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
                   >
                     {description.toggleLabel}
                   </button>

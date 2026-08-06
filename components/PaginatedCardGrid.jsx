@@ -53,7 +53,7 @@ export default function PaginatedCardGrid({
           <button
             type="button"
             onClick={loadMore}
-            className="rounded-xl border border-[var(--gold-ornament)]/30 px-5 py-3 text-sm uppercase tracking-[0.2em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             Load more
           </button>

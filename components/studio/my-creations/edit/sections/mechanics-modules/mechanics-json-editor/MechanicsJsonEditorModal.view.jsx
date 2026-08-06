@@ -62,7 +62,7 @@ function ToolbarButton({
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       <Icon size={13} />
       {children}
@@ -152,10 +152,10 @@ export default function MechanicsJsonEditorModalView({
                 onClick={onDownloadAiGuide}
               >
                 {guideDownloadStatus === "downloaded"
-                  ? "Guide Downloaded"
+                  ? "Guide downloaded"
                   : guideDownloadStatus === "error"
-                    ? "Retry AI Guide"
-                    : "Download AI Guide"}
+                    ? "Retry AI guide"
+                    : "Download AI guide"}
               </ToolbarButton>
 
               <ToolbarButton
@@ -169,7 +169,7 @@ export default function MechanicsJsonEditorModalView({
                 icon={RotateCcw}
                 onClick={onReset}
               >
-                Reset from Builder
+                Reset from builder
               </ToolbarButton>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function MechanicsJsonEditorModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             Cancel
           </button>
@@ -257,10 +257,10 @@ export default function MechanicsJsonEditorModalView({
             type="button"
             onClick={() => onValidateAndApply?.()}
             disabled={!canApply}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25 disabled:cursor-not-allowed disabled:opacity-45"
+            className="cf-btn cf-btn--primary"
           >
             <Check size={14} />
-            Validate & Apply
+            Validate & apply
           </button>
         </div>
       </div>

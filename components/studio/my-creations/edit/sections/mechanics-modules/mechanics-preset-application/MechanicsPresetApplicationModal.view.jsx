@@ -674,7 +674,7 @@ export default function MechanicsPresetApplicationModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+            className="cf-btn cf-btn--secondary"
           >
             Cancel
           </button>
@@ -682,10 +682,10 @@ export default function MechanicsPresetApplicationModalView({
             type="button"
             onClick={() => onApplyPreset?.()}
             disabled={!canApply}
-            className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-45"
+            className="cf-btn cf-btn--primary"
           >
             <Check size={14} />
-            Apply Preset
+            Apply preset
           </button>
         </div>
       </div>

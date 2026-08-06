@@ -172,10 +172,10 @@ export default function RulesCodexEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Braces size={15} />
-            JSON Editor
+            JSON editor
           </button>
 
           <button
@@ -317,10 +317,10 @@ export default function RulesCodexEditorView({
           type="button"
           onClick={() => onAddSection?.()}
           disabled={sectionCount >= sectionLimit}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/15 disabled:cursor-not-allowed disabled:opacity-40"
+          className="cf-btn cf-btn--primary"
         >
           <Plus size={15} />
-          Add Section
+          Add section
         </button>
       </div>
 
@@ -392,7 +392,7 @@ export default function RulesCodexEditorView({
                       aria-label="Remove section"
                       title="Remove section"
                       onClick={() => onRemoveSection?.(section.id)}
-                      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+                      className="cf-btn cf-btn--danger cf-btn--sm"
                     >
                       <Trash2 size={14} />
                       Remove
@@ -610,10 +610,10 @@ export default function RulesCodexEditorView({
                           <button
                             type="button"
                             onClick={() => onClearSection?.(section.id)}
-                            className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--ink-dim)] transition hover:border-red-300/30 hover:text-red-100"
+                            className="cf-btn cf-btn--danger cf-btn--sm"
                           >
                             <Eraser size={13} />
-                            Clear Section
+                            Clear section
                           </button>
                         </div>
                       ) : null}
@@ -655,10 +655,10 @@ export default function RulesCodexEditorView({
           <button
             type="button"
             onClick={() => onAddSection?.()}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em]"
+            className="cf-btn cf-btn--primary mt-4"
           >
             <Plus size={15} />
-            Add First Section
+            Add first section
           </button>
         </div>
       ) : null}

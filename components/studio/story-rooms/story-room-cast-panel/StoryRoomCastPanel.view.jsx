@@ -27,7 +27,7 @@ export default function StoryRoomCastPanelView({
   deleteAction = null,
   deleteError = "",
   roomListHref = "/studio/story-rooms",
-  roomListLabel = "← Room List",
+  roomListLabel = "← Room list",
   playerCharacterPickerContent = null,
   onClosePanel = null,
   onSelectCastMember = null,
@@ -142,12 +142,12 @@ export default function StoryRoomCastPanelView({
             type="button"
             onClick={() => onOpenPlayerCharacterPicker?.()}
             disabled={safePlayerCharacterAction.disabled}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line-strong)] px-6 text-base leading-6 font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--primary"
           >
             <UserRound size={14} />
             {safePlayerCharacterAction.busy
               ? safePlayerCharacterAction.busyLabel || "Setting..."
-              : safePlayerCharacterAction.label || "Set Player Character"}
+              : safePlayerCharacterAction.label || "Set player character"}
           </button>
         ) : null}
 
@@ -166,12 +166,12 @@ export default function StoryRoomCastPanelView({
             type="button"
             onClick={() => onLoadRandomLiked?.()}
             disabled={safeRandomLikedAction.disabled}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line-strong)] px-6 text-base leading-6 font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
             <Shuffle size={14} />
             {safeRandomLikedAction.busy
               ? safeRandomLikedAction.busyLabel || "Loading..."
-              : safeRandomLikedAction.label || "Random Liked"}
+              : safeRandomLikedAction.label || "Random liked"}
           </button>
         ) : null}
 
@@ -186,12 +186,12 @@ export default function StoryRoomCastPanelView({
             type="button"
             onClick={() => onDeleteRoom?.()}
             disabled={safeDeleteAction.disabled}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line-strong)] px-6 text-base leading-6 font-bold text-[var(--status-danger)] transition hover:border-[var(--status-danger)] hover:shadow-[var(--glow-hover)] disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--danger"
           >
             <Trash2 size={14} />
             {safeDeleteAction.busy
               ? safeDeleteAction.busyLabel || "Deleting..."
-              : safeDeleteAction.label || "Delete Story"}
+              : safeDeleteAction.label || "Delete story"}
           </button>
         ) : null}
 
@@ -203,9 +203,9 @@ export default function StoryRoomCastPanelView({
 
         <LinkComponent
           href={roomListHref || "/studio/story-rooms"}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[var(--line-strong)] px-6 text-base leading-6 font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          className="cf-btn cf-btn--secondary"
         >
-          {roomListLabel || "← Room List"}
+          {roomListLabel || "← Room list"}
         </LinkComponent>
       </div>
 

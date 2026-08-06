@@ -329,7 +329,7 @@ export default function MechanicsCommandEffectCardView({
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {eyebrow} {effectIndex + 1}
         </p>
-        <button type="button" onClick={removeEffect} className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5" title="Remove effect">
+        <button type="button" onClick={removeEffect} className="cf-btn cf-btn--danger cf-btn--sm" title="Remove effect">
           <Trash2 size={13} />
           Remove
         </button>
