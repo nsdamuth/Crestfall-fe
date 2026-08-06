@@ -15,6 +15,7 @@ import {
   creatorStopsConfirmDiscardFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
+import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
 import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
 
 const STATES = [
@@ -66,6 +67,14 @@ const STOP_STUBS = {
 const INITIAL_FORM_STATE = {
   name: "",
   title: "",
+  species: "",
+  customSpecies: "",
+  genderPresentation: "",
+  customGenderPresentation: "",
+  shortConcept: "",
+  mbtiType: "",
+  westernZodiacSign: "",
+  eastAsianZodiacSign: "",
   skinTone: "",
   skinCustomValue: "",
   eyeColor: "",
@@ -106,6 +115,7 @@ export default function CreatorStopsPreviewClient() {
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
   const [templateNote, setTemplateNote] = useState("");
   const [moreHairOpen, setMoreHairOpen] = useState(false);
+  const [typingFoldOpen, setTypingFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -140,6 +150,7 @@ export default function CreatorStopsPreviewClient() {
     setActiveStop(CREATOR_STOP_IDS[0]);
     setTemplateNote("");
     setMoreHairOpen(false);
+    setTypingFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -255,6 +266,31 @@ export default function CreatorStopsPreviewClient() {
                   setTemplateNote(
                     "Start-from-a-template takeover is not built in this commit."
                   )
+                }
+              />
+            ) : activeStop === "kind" ? (
+              <KindStopView
+                species={formState.species}
+                customSpecies={formState.customSpecies}
+                genderPresentation={formState.genderPresentation}
+                customGenderPresentation={formState.customGenderPresentation}
+                shortConcept={formState.shortConcept}
+                mbtiType={formState.mbtiType}
+                westernZodiacSign={formState.westernZodiacSign}
+                eastAsianZodiacSign={formState.eastAsianZodiacSign}
+                onChangeSpecies={updateField("species")}
+                onChangeCustomSpecies={updateField("customSpecies")}
+                onChangeGenderPresentation={updateField("genderPresentation")}
+                onChangeCustomGenderPresentation={updateField(
+                  "customGenderPresentation"
+                )}
+                onChangeShortConcept={updateField("shortConcept")}
+                onChangeMbtiType={updateField("mbtiType")}
+                onChangeWesternZodiacSign={updateField("westernZodiacSign")}
+                onChangeEastAsianZodiacSign={updateField("eastAsianZodiacSign")}
+                typingFoldOpen={typingFoldOpen}
+                onToggleTypingFold={() =>
+                  setTypingFoldOpen((current) => !current)
                 }
               />
             ) : activeStop === "face" ? (
