@@ -45,6 +45,41 @@ const SPECIES_TILE_OPTIONS = SPECIES_OPTIONS.map((option) => ({
     : undefined,
 }));
 
+const NOT_CHOSEN_SPECIES_OPTION = SPECIES_TILE_OPTIONS.find(
+  (option) => option.value === ""
+);
+
+// The being tiles break into labeled categories rather than one
+// undifferentiated block, so a user can tell what each group selects.
+const SPECIES_CATEGORIES = [
+  {
+    label: "Folk",
+    values: [
+      "HUMAN",
+      "ELF",
+      "BASTET",
+      "KITSUNE",
+      "HARPY",
+      "MERFOLK",
+      "LAMIA",
+      "WEREWOLF",
+    ],
+  },
+  {
+    label: "Otherworldly",
+    values: ["DEMON", "ANGEL", "VAMPIRE", "GENIE"],
+  },
+  {
+    label: "Other",
+    values: ["CONSTRUCT", "ALIEN", "CUSTOM"],
+  },
+].map((category) => ({
+  ...category,
+  options: category.values
+    .map((value) => SPECIES_TILE_OPTIONS.find((option) => option.value === value))
+    .filter(Boolean),
+}));
+
 function RoleArchetypeField({ value, onChange }) {
   const isCustomMode = value === "CUSTOM" || (value !== "" && !isKnownRoleArchetype(value));
 
@@ -114,11 +149,28 @@ export default function KindStopView({
 
       <div className="mt-6">
         <SectionLabel>Species</SectionLabel>
-        <TileGrid
-          options={SPECIES_TILE_OPTIONS}
-          value={species}
-          onChange={onChangeSpecies}
-        />
+
+        {NOT_CHOSEN_SPECIES_OPTION ? (
+          <TileGrid
+            options={[NOT_CHOSEN_SPECIES_OPTION]}
+            value={species}
+            onChange={onChangeSpecies}
+          />
+        ) : null}
+
+        <div className="mt-[var(--space-3)] space-y-[var(--space-3)]">
+          {SPECIES_CATEGORIES.map((category) => (
+            <div key={category.label}>
+              <SectionLabel>{category.label}</SectionLabel>
+              <TileGrid
+                options={category.options}
+                value={species}
+                onChange={onChangeSpecies}
+              />
+            </div>
+          ))}
+        </div>
+
         {species === "CUSTOM" ? (
           <CustomValueField
             label="Custom Species"
