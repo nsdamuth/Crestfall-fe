@@ -103,7 +103,7 @@ export default function CreationProfilePageView({
                   <button
                     type="button"
                     onClick={() => onToggleDescription?.()}
-                    className="inline text-[var(--gold-ornament)] underline-offset-4 transition hover:text-[var(--ink)] hover:underline"
+                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
                   >
                     {description.toggleLabel}
                   </button>
@@ -131,7 +131,7 @@ export default function CreationProfilePageView({
                 type="button"
                 onClick={() => onStartChat?.()}
                 disabled={startingChat}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
                 <MessageCircle size={14} />
                 {startingChat ? "Starting..." : "Chat"}
@@ -214,9 +214,9 @@ export default function CreationProfilePageView({
             <button
               type="button"
               onClick={() => onLoadMore?.()}
-              className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Load More
+              Load more
             </button>
           </div>
         ) : null}

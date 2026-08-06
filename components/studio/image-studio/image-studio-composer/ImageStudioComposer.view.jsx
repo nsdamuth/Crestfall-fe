@@ -123,14 +123,10 @@ export default function ImageStudioComposerView({
             type="button"
             onClick={() => onGenerateImage?.()}
             disabled={!canGenerateImage}
-            className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-4 text-xs uppercase tracking-[0.18em] transition ${
-              canGenerateImage
-                ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 text-[var(--ink)] hover:bg-[var(--gold-ornament)]/25"
-                : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] opacity-60"
-            }`}
+            className="cf-btn cf-btn--primary mt-4 w-full"
           >
             <Wand2 size={15} />
-            Generate Image
+            Generate image
           </button>
 
           {!canGenerateImage && generationHelpText ? (
