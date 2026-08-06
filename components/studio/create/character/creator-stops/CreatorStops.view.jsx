@@ -135,7 +135,7 @@ export default function CreatorStopsView({
                       state === "done"
                         ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
                         : state === "on"
-                          ? "border-[var(--gold-action)] text-[var(--gold-bright)]"
+                          ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/15 text-[var(--gold-bright)]"
                           : state === "seen"
                             ? "border-[var(--gold-ornament)] text-[var(--gold-ornament)] cursor-pointer"
                             : "cursor-default border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-faint)]"

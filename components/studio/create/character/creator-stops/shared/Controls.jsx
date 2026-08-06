@@ -30,7 +30,7 @@ export function FieldLabel({ children, count, max }) {
 
 export function Eyebrow({ children }) {
   return (
-    <p className="flex items-center gap-[var(--space-3)] text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+    <p className="flex items-center gap-[var(--space-3)] text-[var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-ornament)]">
       <span>{children}</span>
       <span
         aria-hidden="true"
