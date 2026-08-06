@@ -3,6 +3,7 @@
 import {
   ChipRow,
   CustomValueField,
+  Eyebrow,
   Fold,
   InlineDropdown,
   SectionLabel,
@@ -62,8 +63,9 @@ export default function FaceStopView({
   onToggleMoreHair = null,
 } = {}) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <h2 className="font-display text-3xl text-[var(--ink)]">
+    <>
+      <Eyebrow>Shape the face</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Skin, eyes, and hair
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -164,6 +166,6 @@ export default function FaceStopView({
           />
         </div>
       </Fold>
-    </div>
+    </>
   );
 }

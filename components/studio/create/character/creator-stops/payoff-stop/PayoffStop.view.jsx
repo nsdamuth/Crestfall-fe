@@ -2,7 +2,7 @@
 
 import CharacterPreviewView from "../../character-preview/CharacterPreview.view";
 import { useCharacterPreviewViewModel } from "../../character-preview/useCharacterPreviewViewModel";
-import { Fold, TextAreaField } from "../shared/Controls";
+import { Eyebrow, Fold, TextAreaField } from "../shared/Controls";
 import { PAYOFF_NOTES_MAX_LENGTH } from "./PayoffStop.contract";
 
 export default function PayoffStopView({
@@ -35,10 +35,8 @@ export default function PayoffStopView({
   });
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <p className="eyebrow eyebrow--ruled text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-        The soul, forged
-      </p>
+    <>
+      <Eyebrow>The soul, forged</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every choice, brought together.
       </h2>
@@ -74,6 +72,6 @@ export default function PayoffStopView({
           maxLength={PAYOFF_NOTES_MAX_LENGTH}
         />
       </Fold>
-    </div>
+    </>
   );
 }

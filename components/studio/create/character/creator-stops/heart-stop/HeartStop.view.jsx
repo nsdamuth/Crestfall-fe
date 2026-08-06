@@ -2,6 +2,7 @@
 
 import {
   EmptyStateCard,
+  Eyebrow,
   Fold,
   InlineDropdown,
   TextAreaField,
@@ -52,8 +53,9 @@ export default function HeartStopView({
   );
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <h2 className="font-display text-3xl text-[var(--ink)]">
+    <>
+      <Eyebrow>Give them a heart</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         How do they meet the world?
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -165,6 +167,6 @@ export default function HeartStopView({
           maxLength={HEART_NOTES_MAX_LENGTH}
         />
       </Fold>
-    </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import {
   CustomValueField,
+  Eyebrow,
   Fold,
   InlineDropdown,
   SectionLabel,
@@ -139,8 +140,9 @@ export default function KindStopView({
   const typingFilled = Boolean(mbtiType || westernZodiacSign || eastAsianZodiacSign);
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <h2 className="font-display text-3xl text-[var(--ink)]">
+    <>
+      <Eyebrow>Choose their kind</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What kind of being are they?
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -230,6 +232,6 @@ export default function KindStopView({
           onChange={onChangeEastAsianZodiacSign}
         />
       </Fold>
-    </div>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import CharacterColorPaletteModal from "../../CharacterColorPaletteModal";
-import { ChipRow, Fold, SectionLabel } from "../shared/Controls";
+import { ChipRow, Eyebrow, Fold, SectionLabel } from "../shared/Controls";
 import {
   CONTENT_RATING_OPTIONS,
   normalizeAdultAge,
@@ -34,8 +34,9 @@ export default function SealStopView({
   onToggleRenderingFold = null,
 } = {}) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <h2 className="font-display text-3xl text-[var(--ink)]">
+    <>
+      <Eyebrow>Set the seal</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Who may meet them?
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -73,7 +74,7 @@ export default function SealStopView({
           onChange={(event) => onChangeAge?.(event.target.value)}
           onBlur={(event) => onChangeAge?.(normalizeAdultAge(event.target.value))}
           placeholder="18+"
-          className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+          className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
         />
         <p className="mt-[var(--space-2)] text-xs text-[var(--ink-faint)]">
           Every character on Crestfall is an adult. Ages under 18 are raised
@@ -96,6 +97,6 @@ export default function SealStopView({
           />
         </div>
       </Fold>
-    </div>
+    </>
   );
 }

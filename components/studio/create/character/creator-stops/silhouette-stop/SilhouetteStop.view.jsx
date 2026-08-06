@@ -3,6 +3,7 @@
 import {
   ChipRow,
   EmptyStateCard,
+  Eyebrow,
   Fold,
   InlineDropdown,
   MultiChipRow,
@@ -95,8 +96,9 @@ export default function SilhouetteStopView({
         : false;
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-6">
-      <h2 className="font-display text-3xl text-[var(--ink)]">
+    <>
+      <Eyebrow>Shape the silhouette</Eyebrow>
+      <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         The line of their body
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -110,6 +112,7 @@ export default function SilhouetteStopView({
           options={KIBBE_IDENTITY_TILE_OPTIONS}
           value={kibbeIdentity}
           onChange={onChangeKibbeIdentity}
+          imagePosition="contain"
         />
       </div>
 
@@ -120,7 +123,7 @@ export default function SilhouetteStopView({
           value={clothingStyle}
           onChange={(event) => onChangeClothingStyle?.(event.target.value)}
           placeholder="Describe their general clothing style"
-          className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+          className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
         />
       </div>
 
@@ -228,6 +231,6 @@ export default function SilhouetteStopView({
           maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
         />
       </Fold>
-    </div>
+    </>
   );
 }
