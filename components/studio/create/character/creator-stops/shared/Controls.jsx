@@ -24,7 +24,7 @@ export function SwatchGrid({ options, value, onChange }) {
             key={option.value}
             type="button"
             aria-pressed={active}
-            onClick={() => onChange?.(option.value)}
+            onClick={() => onChange?.(active ? "" : option.value)}
             title={option.label}
             className={`rounded-[var(--radius-md)] border p-[var(--space-2)] transition ${
               active
@@ -71,7 +71,7 @@ export function TileGrid({ options, value, onChange }) {
             <button
               type="button"
               aria-pressed={active}
-              onClick={() => onChange?.(option.value)}
+              onClick={() => onChange?.(active ? "" : option.value)}
               className="block w-full text-left"
             >
               <div
@@ -115,7 +115,7 @@ export function ChipRow({ options, value, onChange }) {
             key={option}
             type="button"
             aria-pressed={active}
-            onClick={() => onChange?.(option)}
+            onClick={() => onChange?.(active ? "" : option)}
             className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-2)] text-sm transition ${
               active
                 ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
