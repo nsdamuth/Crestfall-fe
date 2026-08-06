@@ -683,3 +683,21 @@ before batch two converts the affected packages.
    container." Nested content inside a large-radius panel (e.g. a card
    nested in a modal) drops back to standard: the large tier does not
    inherit downward.
+
+---
+
+# Local mockup assets (not committed)
+
+`public/tmp-mockup-images/` holds reference art staged locally for the
+creator-stops restyle. It is listed in `.gitignore` and never
+committed; it exists only on machines actively working the creator
+tiles.
+
+- `canon-character-images/`: full character portraits, used as
+  placeholder art for canon/species and body-identity tiles.
+- `alpha-test-creator-images/`: assorted alpha-test character renders,
+  used as placeholder art for role-archetype and clothing tiles.
+
+Both folders are stand-ins for real art that does not exist yet. Every
+tile using them is a placeholder pending final art, not a shipped
+asset choice.
