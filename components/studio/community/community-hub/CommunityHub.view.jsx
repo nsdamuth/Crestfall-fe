@@ -24,9 +24,9 @@ function LoadMoreButton({ nextLoadCount, onClick }) {
       <button
         type="button"
         onClick={onClick || undefined}
-        className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+        className="cf-btn cf-btn--secondary"
       >
-        Load {nextLoadCount} More
+        Load {nextLoadCount} more
       </button>
     </div>
   );
