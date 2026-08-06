@@ -98,7 +98,7 @@ export default function CreatorStopsView({
           </div>
         ) : (
           <>
-        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-6)] after:right-[var(--space-6)] after:h-px after:bg-[var(--line-whisper)]">
+        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[var(--line-whisper)]">
           <div className="flex min-w-0 flex-1 items-center justify-center gap-0">
             {stopItems.map((stop, index) => {
               const Icon = STOP_ICONS[stop.iconKey] || User;
@@ -156,11 +156,11 @@ export default function CreatorStopsView({
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-5)]">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-6)] pb-[var(--space-6)] pt-[var(--space-5)]">
           {stopContent}
         </div>
 
-        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] before:absolute before:left-[var(--space-6)] before:right-[var(--space-6)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
+        <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
           <button
             type="button"
             onClick={() => onBack?.()}
