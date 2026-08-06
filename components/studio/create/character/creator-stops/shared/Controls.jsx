@@ -5,10 +5,41 @@ import { ChevronDown } from "lucide-react";
 
 import InfoTip from "../InfoTip";
 
+// One shared style for every field label across all seven stops, sized
+// below its field's value in the type hierarchy. Change it here, never
+// per field.
+const FIELD_LABEL_CLASS =
+  "mb-[var(--space-1)] flex items-baseline justify-between gap-[var(--space-3)] text-[10px] font-medium uppercase leading-[0.9rem] tracking-[0.14em] text-[var(--gold-ornament)]";
+
 export function SectionLabel({ children }) {
+  return <p className={FIELD_LABEL_CLASS}>{children}</p>;
+}
+
+export function FieldLabel({ children, count, max }) {
   return (
-    <p className="mb-[var(--space-2)] text-[var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-      {children}
+    <label className={FIELD_LABEL_CLASS}>
+      <span>{children}</span>
+      {typeof max === "number" ? (
+        <span className="font-normal tabular-nums text-[var(--ink-faint)]">
+          {count}/{max}
+        </span>
+      ) : null}
+    </label>
+  );
+}
+
+export function Eyebrow({ children }) {
+  return (
+    <p className="flex items-center gap-[var(--space-3)] text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+      <span>{children}</span>
+      <span
+        aria-hidden="true"
+        className="h-px w-[var(--space-8)] flex-none"
+        style={{
+          background:
+            "linear-gradient(to right, var(--gold-ornament), transparent)",
+        }}
+      />
     </p>
   );
 }
@@ -53,7 +84,13 @@ export function SwatchGrid({ options, value, onChange }) {
 // location in a later pass.
 const TILE_ART_FALLBACK = "/tmp-creator-tiles/logo-mark.svg";
 
-export function TileGrid({ options, value, onChange }) {
+// "top": pins art to the top of the frame so a face stays visible rather
+// than being cropped through the middle (character/species tiles).
+// "contain": keeps the whole figure in frame, never cropped, since the
+// silhouette itself is what's being chosen (body identity tiles).
+export function TileGrid({ options, value, onChange, imagePosition = "top" }) {
+  const isContain = imagePosition === "contain";
+
   return (
     <div className="grid grid-cols-2 gap-[var(--space-2)] sm:grid-cols-3">
       {options.map((option) => {
@@ -75,8 +112,12 @@ export function TileGrid({ options, value, onChange }) {
               className="block w-full text-left"
             >
               <div
-                className={`h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-center bg-no-repeat ${
-                  option.imageUrl ? "bg-cover" : "bg-[var(--fill)]"
+                className={`h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-no-repeat ${
+                  option.imageUrl
+                    ? isContain
+                      ? "bg-contain bg-center"
+                      : "bg-cover bg-top"
+                    : "bg-center bg-[var(--fill)]"
                 }`}
                 style={{
                   backgroundImage: `url(${option.imageUrl || TILE_ART_FALLBACK})`,
@@ -336,42 +377,50 @@ export function InlineDropdown({ label, options, value, onChange, placeholder = 
 export function CustomValueField({ label, value, onChange, placeholder, maxLength = 80 }) {
   return (
     <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/20 p-[var(--space-3)]">
-      <label className="mb-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-3)] text-[var(--text-label)] uppercase text-[var(--gold-ornament)]">
-        <span>{label}</span>
-        <span className="font-normal tabular-nums text-[var(--ink-faint)]">
-          {(value || "").length}/{maxLength}
-        </span>
-      </label>
+      <FieldLabel count={(value || "").length} max={maxLength}>
+        {label}
+      </FieldLabel>
       <input
         type="text"
         value={value || ""}
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={maxLength}
         placeholder={placeholder}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+        className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
       />
     </div>
   );
 }
 
+// Sensible ceiling for auto-grow: past this height a field scrolls
+// internally instead of pushing the footer off screen. Comfortably covers
+// the 800-character fields this creator holds.
+const TEXTAREA_MAX_HEIGHT_PX = 200;
+
 export function TextAreaField({ label, value, onChange, placeholder, maxLength }) {
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    const node = textareaRef.current;
+    if (!node) return;
+    node.style.height = "auto";
+    node.style.height = `${Math.min(node.scrollHeight, TEXTAREA_MAX_HEIGHT_PX)}px`;
+  }, [value]);
+
   return (
     <div>
-      <label className="mb-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-3)] text-[var(--text-label)] uppercase text-[var(--gold-ornament)]">
-        <span>{label}</span>
-        {maxLength ? (
-          <span className="font-normal tabular-nums text-[var(--ink-faint)]">
-            {(value || "").length}/{maxLength}
-          </span>
-        ) : null}
-      </label>
+      <FieldLabel count={(value || "").length} max={maxLength}>
+        {label}
+      </FieldLabel>
       <textarea
+        ref={textareaRef}
         value={value || ""}
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={maxLength}
         placeholder={placeholder}
-        rows={3}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+        rows={1}
+        className="cf-field w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        style={{ maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px` }}
       />
     </div>
   );
@@ -386,7 +435,7 @@ export function TextField({ label, value, onChange, placeholder, type = "text" }
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus-visible:border-[var(--gold-action)]"
+        className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
       />
     </div>
   );

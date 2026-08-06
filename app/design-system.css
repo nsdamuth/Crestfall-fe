@@ -167,6 +167,14 @@
   box-shadow: var(--focus-ring);
 }
 
+/* Creator stops fields: same visible-on-focus law, a quieter mark. A
+   single 1px gold line beats the app-wide 4px ring's weight against the
+   modal's smaller, denser field grid, but never disappears. */
+.cf-field:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--gold-action);
+}
+
 /* --- SCROLLBARS -------------------------------------------------
    Item 9, phase 3 aesthetics. Subtle translucent brand-styled
    scrollbars on every internal scroll container, vertical only.
