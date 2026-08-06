@@ -115,6 +115,75 @@ export function ChipRow({ options, value, onChange }) {
   );
 }
 
+export function MultiChipRow({ options, values = [], onChange }) {
+  function toggle(option) {
+    if (option.exclusive) {
+      onChange?.(values.includes(option.value) ? [] : [option.value]);
+      return;
+    }
+
+    const withoutExclusive = values.filter((value) => {
+      const matched = options.find((o) => o.value === value);
+      return !matched?.exclusive;
+    });
+
+    const next = withoutExclusive.includes(option.value)
+      ? withoutExclusive.filter((value) => value !== option.value)
+      : [...withoutExclusive, option.value];
+
+    onChange?.(next);
+  }
+
+  return (
+    <div className="flex flex-wrap gap-[var(--space-2)]">
+      {options
+        .filter((option) => option.value !== "")
+        .map((option) => {
+          const active = values.includes(option.value);
+
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={active}
+              onClick={() => toggle(option)}
+              title={option.description}
+              className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-2)] text-sm transition ${
+                active
+                  ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+              }`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+    </div>
+  );
+}
+
+export function EmptyStateCard({ message, actions = [] }) {
+  return (
+    <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-[var(--space-4)]">
+      <p className="text-sm text-[var(--ink-dim)]">{message}</p>
+      {actions.length ? (
+        <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-3)]">
+          {actions.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              onClick={action.onClick}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function Fold({ title, sub, open, onToggle, filled = false, children }) {
   return (
     <div className="mt-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">

@@ -63,28 +63,48 @@ Body fine-tuning has visual character and gets tiles or chips, never a
 slider. Clothing, outfit, and wardrobe land here per the brief, since no
 other stop has a home for them.
 
+Two corrections against the live app, found while building this stop.
+`useKibbePresetModalViewModel.js` shows `kibbe_identity` normally drives a
+preset modal that offers to fill or replace `body_type`/`build`/`height`/
+`proportions` from a suggestion table; that modal is exactly "the body
+identity chooser" the brief's full-stop clause says not to build, so this
+stop presents kibbe_identity as a plain tile choice with no auto-fill.
+`useDefaultClothingSelectorViewModel.js` shows the outfit and wardrobe
+fields are normally set as a group by searching and picking one existing
+Outfit or Wardrobe creation in a modal; that search-and-pick modal is "the
+wardrobe browser" the same clause excludes. Both fields still appear
+below; neither gets the takeover that would normally populate them.
+
+Also found there: `proportions` is stored as an array (several from a
+bounded set), not the plain string form.js's default implies, and
+`hips_waist_shoulders` is a legacy field the live app only ever clears
+when proportions is set, never writes to directly. It is carried in this
+stop's state and cleared alongside proportions, with no control of its
+own, matching that behavior. `chest_bust` has no reader or writer anywhere
+else in the live app; given no precedent, it gets a plain text field.
+
 | Field | Exposed / collapsed | Control |
 |---|---|---|
-| kibbe_identity | exposed, primary | tile grid |
+| kibbe_identity | exposed, primary | tile grid, no auto-fill |
 | body_type | collapsed, "Fine-tune the body" fold | chip row |
 | height | collapsed, same fold | chip row |
 | build | collapsed, same fold | chip row |
-| proportions | collapsed, same fold | chip row |
-| chest_bust | collapsed, same fold | inline dropdown |
-| hips_waist_shoulders | collapsed, same fold | inline dropdown |
+| proportions | collapsed, same fold | multi-select chip row |
+| chest_bust | collapsed, same fold | text field |
+| hips_waist_shoulders | collapsed, same fold | none, cleared alongside proportions |
 | body_notes | collapsed, same fold | freeform text area |
-| clothing_style | exposed | chip row |
-| default_clothing_mode | exposed | inline dropdown |
-| default_outfit_id | exposed, via picker | tile grid ("Choose an outfit") |
-| default_outfit_title | exposed, via picker | set by the outfit tile chosen |
-| default_outfit_description | exposed, via picker | set by the outfit tile chosen |
-| default_outfit_image_url | exposed, via picker | set by the outfit tile chosen |
-| default_outfit_content_rating | exposed, via picker | set by the outfit tile chosen |
-| default_wardrobe_id | exposed, via picker | tile grid ("Choose a wardrobe") |
-| default_wardrobe_title | exposed, via picker | set by the wardrobe tile chosen |
-| default_wardrobe_description | exposed, via picker | set by the wardrobe tile chosen |
-| default_wardrobe_image_url | exposed, via picker | set by the wardrobe tile chosen |
-| default_wardrobe_content_rating | exposed, via picker | set by the wardrobe tile chosen |
+| clothing_style | exposed | text field |
+| default_clothing_mode | exposed | inline dropdown (None / Outfit / Wardrobe) |
+| default_outfit_id | exposed, empty-state stub | "Select outfit" stub, no picker built |
+| default_outfit_title | exposed, empty-state stub | set only once a picker exists |
+| default_outfit_description | exposed, empty-state stub | set only once a picker exists |
+| default_outfit_image_url | exposed, empty-state stub | set only once a picker exists |
+| default_outfit_content_rating | exposed, empty-state stub | set only once a picker exists |
+| default_wardrobe_id | exposed, empty-state stub | "Select wardrobe" stub, no picker built |
+| default_wardrobe_title | exposed, empty-state stub | set only once a picker exists |
+| default_wardrobe_description | exposed, empty-state stub | set only once a picker exists |
+| default_wardrobe_image_url | exposed, empty-state stub | set only once a picker exists |
+| default_wardrobe_content_rating | exposed, empty-state stub | set only once a picker exists |
 | appearance_notes | collapsed, "Fine-tune the body" fold | freeform text area |
 
 ## The heart (commit 7)

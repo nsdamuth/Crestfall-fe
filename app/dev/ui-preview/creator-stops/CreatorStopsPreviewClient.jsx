@@ -17,6 +17,7 @@ import {
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
 import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
 import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
+import SilhouetteStopView from "@/components/studio/create/character/creator-stops/silhouette-stop/SilhouetteStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -85,6 +86,18 @@ const INITIAL_FORM_STATE = {
   hairTexture: "",
   hairStyle: "",
   ethnicAppearance: "",
+  kibbeIdentity: "",
+  bodyType: "",
+  height: "",
+  build: "",
+  proportions: [],
+  chestBust: "",
+  bodyNotes: "",
+  appearanceNotes: "",
+  clothingStyle: "",
+  defaultClothingMode: "NONE",
+  defaultOutfitTitle: "",
+  defaultWardrobeTitle: "",
 };
 
 function StopStub({ stopId }) {
@@ -116,6 +129,7 @@ export default function CreatorStopsPreviewClient() {
   const [templateNote, setTemplateNote] = useState("");
   const [moreHairOpen, setMoreHairOpen] = useState(false);
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
+  const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -151,6 +165,7 @@ export default function CreatorStopsPreviewClient() {
     setTemplateNote("");
     setMoreHairOpen(false);
     setTypingFoldOpen(false);
+    setFineTuneFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -317,6 +332,45 @@ export default function CreatorStopsPreviewClient() {
                 onChangeHairStyle={updateField("hairStyle")}
                 onChangeEthnicAppearance={updateField("ethnicAppearance")}
                 onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
+              />
+            ) : activeStop === "silhouette" ? (
+              <SilhouetteStopView
+                kibbeIdentity={formState.kibbeIdentity}
+                bodyType={formState.bodyType}
+                height={formState.height}
+                build={formState.build}
+                proportions={formState.proportions}
+                chestBust={formState.chestBust}
+                bodyNotes={formState.bodyNotes}
+                appearanceNotes={formState.appearanceNotes}
+                clothingStyle={formState.clothingStyle}
+                defaultClothingMode={formState.defaultClothingMode}
+                defaultOutfitTitle={formState.defaultOutfitTitle}
+                defaultWardrobeTitle={formState.defaultWardrobeTitle}
+                onChangeKibbeIdentity={updateField("kibbeIdentity")}
+                onChangeBodyType={updateField("bodyType")}
+                onChangeHeight={updateField("height")}
+                onChangeBuild={updateField("build")}
+                onChangeProportions={updateField("proportions")}
+                onChangeChestBust={updateField("chestBust")}
+                onChangeBodyNotes={updateField("bodyNotes")}
+                onChangeAppearanceNotes={updateField("appearanceNotes")}
+                onChangeClothingStyle={updateField("clothingStyle")}
+                onChangeDefaultClothingMode={updateField("defaultClothingMode")}
+                onOpenOutfitPicker={() =>
+                  setTemplateNote(
+                    "The outfit browser is not built in this pass."
+                  )
+                }
+                onOpenWardrobePicker={() =>
+                  setTemplateNote(
+                    "The wardrobe browser is not built in this pass."
+                  )
+                }
+                fineTuneFoldOpen={fineTuneFoldOpen}
+                onToggleFineTuneFold={() =>
+                  setFineTuneFoldOpen((current) => !current)
+                }
               />
             ) : (
               <StopStub stopId={activeStop} />
