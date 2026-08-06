@@ -14,6 +14,7 @@ import {
   creatorStopsSavingFixture,
   creatorStopsSavedMessageFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
+import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -87,6 +88,9 @@ function StopStub({ stopId }) {
 export default function CreatorStopsPreviewClient() {
   const [selectedState, setSelectedState] = useState(0);
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [templateNote, setTemplateNote] = useState("");
   const fixture = STATES[selectedState][1];
 
   const previewProps = useMemo(() => {
@@ -145,14 +149,36 @@ export default function CreatorStopsPreviewClient() {
         </div>
 
         <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)]">
-          Fixture-driven UI preview. Chrome commit: frame, rail, footer, stop
-          switching. Stop bodies stubbed.
+          Fixture-driven UI preview. The name and title stop is real; every
+          other stop body is still stubbed. Preview loaded, no character
+          form is connected.
         </p>
+        {templateNote ? (
+          <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+            {templateNote}
+          </p>
+        ) : null}
       </div>
 
       <CreatorStopsView
         {...previewProps}
-        stopContent={<StopStub stopId={activeStop} />}
+        stopContent={
+          activeStop === "name" ? (
+            <NameStopView
+              name={name}
+              title={title}
+              onChangeName={setName}
+              onChangeTitle={setTitle}
+              onOpenTemplate={() =>
+                setTemplateNote(
+                  "Start-from-a-template takeover is not built in this commit."
+                )
+              }
+            />
+          ) : (
+            <StopStub stopId={activeStop} />
+          )
+        }
       />
     </main>
   );
