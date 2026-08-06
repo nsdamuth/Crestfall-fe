@@ -167,10 +167,10 @@ export default function MediaLightboxView({
                 {showStudioActions ? (
                   <LinkComponent
                     href={imageStudioHref}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                    className="cf-btn cf-btn--primary"
                   >
                     <Sparkles size={14} />
-                    Generate Variant
+                    Generate variant
                   </LinkComponent>
                 ) : null}
 
@@ -186,27 +186,27 @@ export default function MediaLightboxView({
 
                 <StubToolbarButton>
                   <Wand2 size={14} />
-                  Remix Soon
+                  Remix soon
                 </StubToolbarButton>
 
                 <StubToolbarButton>
                   <ImageIcon size={14} />
-                  Use as Reference Soon
+                  Use as reference soon
                 </StubToolbarButton>
 
                 <StubToolbarButton>
                   <MoreHorizontal size={14} />
-                  More Soon
+                  More soon
                 </StubToolbarButton>
 
                 {showDeleteAction ? (
                   <button
                     type="button"
                     onClick={onDelete}
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:bg-white/5"
+                    className="cf-btn cf-btn--danger"
                   >
                     <Trash2 size={14} />
-                    Delete Image
+                    Delete image
                   </button>
                 ) : null}
               </div>
@@ -306,11 +306,7 @@ function LightboxActionButton({ danger = false, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.14em] transition ${
-        danger
-          ? "border-red-500/20 bg-red-500/5 text-red-200 hover:border-red-400/35 hover:bg-red-500/10"
-          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-      }`}
+      className={`cf-btn ${danger ? "cf-btn--danger" : "cf-btn--secondary"}`}
     >
       {children}
     </button>
@@ -322,7 +318,7 @@ function StubToolbarButton({ children }) {
     <button
       type="button"
       disabled
-      className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] opacity-70"
+      className="cf-btn cf-btn--secondary"
     >
       {children}
     </button>
@@ -511,7 +507,7 @@ function ReportDialog({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--primary"
               >
                 Close
               </button>
@@ -520,7 +516,7 @@ function ReportDialog({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--secondary"
                 >
                   Close
                 </button>
@@ -528,14 +524,14 @@ function ReportDialog({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:border-red-400/45 hover:bg-red-500/15 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="cf-btn cf-btn--danger"
                 >
                   {isSubmitting ? (
                     <Loader2 size={14} className="animate-spin" />
                   ) : (
                     <Flag size={14} />
                   )}
-                  {isSubmitting ? "Submitting..." : "Submit Report"}
+                  {isSubmitting ? "Submitting..." : "Submit report"}
                 </button>
               </>
             )}

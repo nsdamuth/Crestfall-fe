@@ -73,18 +73,18 @@ export default function CreationEditMediaPanelView({
         <button
           type="button"
           onClick={() => onReplaceActiveSlot?.()}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary"
         >
           <Library size={14} />
-          Replace Slot
+          Replace slot
         </button>
 
         <LinkComponent
           href={imageLibraryHref}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
           <Camera size={14} />
-          Go to Library
+          Go to library
         </LinkComponent>
       </div>
 
@@ -154,7 +154,7 @@ function ChatMediaSlot({
       <button
         type="button"
         disabled
-        className="mt-3 w-full rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] opacity-60"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-full"
       >
         {buttonLabel}
       </button>

@@ -80,7 +80,7 @@ export default function CreationReferenceImagePickerModal({
               type="button"
               onClick={reload}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary cf-btn--sm"
             >
               <RefreshCw size={14} />
               Refresh
@@ -186,9 +186,9 @@ export default function CreationReferenceImagePickerModal({
               <button
                 type="button"
                 onClick={loadMoreVisibleImages}
-                className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--secondary"
               >
-                Load More
+                Load more
               </button>
             </div>
           ) : null}

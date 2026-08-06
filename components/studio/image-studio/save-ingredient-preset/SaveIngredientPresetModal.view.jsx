@@ -126,24 +126,24 @@ export default function SaveIngredientPresetModalView({
               type="button"
               onClick={() => onSavePreset?.()}
               disabled={isSaving || !canSave}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary"
             >
               {isSaving ? (
                 <Loader2 size={14} className="animate-spin" />
               ) : (
                 <Save size={14} />
               )}
-              {isSaving ? "Saving..." : "Save as Preset"}
+              {isSaving ? "Saving..." : "Save as preset"}
             </button>
 
             <button
               type="button"
               onClick={() => onUseOnce?.()}
               disabled={isSaving}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/30 disabled:cursor-not-allowed disabled:opacity-60"
+              className="cf-btn cf-btn--primary"
             >
               <Check size={14} />
-              Use Once
+              Use once
             </button>
           </div>
         </div>

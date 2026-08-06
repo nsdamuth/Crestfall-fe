@@ -92,10 +92,10 @@ export default function VideoToolsPanelView({
       <button
         type="button"
         disabled
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] opacity-75"
+        className="cf-btn cf-btn--primary w-full"
       >
         <Wand2 size={15} />
-        Generate Video Soon
+        Generate video soon
       </button>
 
       <p className="flex items-start gap-2 text-xs leading-5 text-[var(--ink-dim)]">
