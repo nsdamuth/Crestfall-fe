@@ -14,8 +14,8 @@ const sharedFixture = Object.freeze({
   ],
   verbosityOptions: [
     { value: "", label: "Not chosen" },
-    { value: "3", label: "3 · Balanced" },
-    { value: "5", label: "5 · Highly Verbose" },
+    { value: "3", label: "3 — Balanced" },
+    { value: "5", label: "5 — Highly Verbose" },
   ],
 });
 

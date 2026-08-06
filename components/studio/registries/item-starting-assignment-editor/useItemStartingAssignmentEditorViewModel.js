@@ -84,8 +84,8 @@ const PLACEMENT_SPECIFICITY_OPTIONS = Object.freeze(
     value: specificity,
     label:
       specificity === "EXPLICIT"
-        ? "Explicit · follow the authored placement"
-        : "Unspecified · allow reasonable narrative staging",
+        ? "Explicit — follow the authored placement"
+        : "Unspecified — allow reasonable narrative staging",
   }))
 );
 

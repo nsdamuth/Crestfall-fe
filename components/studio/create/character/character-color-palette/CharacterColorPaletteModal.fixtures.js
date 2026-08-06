@@ -134,7 +134,7 @@ export const characterColorPaletteLongContentFixture = {
   ...baseFixture,
   triggerPalette: {
     ...warmAutumn,
-    label: "Warm Autumn · Burnished Storytelling Edition",
+    label: "Warm Autumn — Burnished Storytelling Edition",
   },
   selectedPaletteId: warmAutumn.id,
   modalTitle: "Choose a Curated Character Presentation Color Palette",
@@ -148,7 +148,7 @@ export const characterColorPaletteLongContentFixture = {
       palettes: [
         {
           ...warmAutumn,
-          label: "Warm Autumn · Burnished Storytelling Edition",
+          label: "Warm Autumn — Burnished Storytelling Edition",
           description:
             "A deliberately long fixture description that combines burnished orange, ochre, warm russet, antique bronze, and softened earthen neutrals to stress card height, wrapping, and responsive layout behavior.",
         },

@@ -66,11 +66,11 @@ export const CHARACTER_TEMPLATE_GENDER_PRESENTATION_OPTIONS = Object.freeze([
 
 export const CHARACTER_TEMPLATE_VERBOSITY_OPTIONS = Object.freeze([
   { value: "", label: "Not chosen" },
-  { value: "1", label: "1 · Terse" },
-  { value: "2", label: "2 · Concise" },
-  { value: "3", label: "3 · Balanced" },
-  { value: "4", label: "4 · Expressive" },
-  { value: "5", label: "5 · Highly Verbose" },
+  { value: "1", label: "1 — Terse" },
+  { value: "2", label: "2 — Concise" },
+  { value: "3", label: "3 — Balanced" },
+  { value: "4", label: "4 — Expressive" },
+  { value: "5", label: "5 — Highly Verbose" },
 ]);
 
 function normalizeObject(value) {
