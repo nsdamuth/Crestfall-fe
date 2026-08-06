@@ -167,6 +167,34 @@
   box-shadow: var(--focus-ring);
 }
 
+/* --- SCROLLBARS -------------------------------------------------
+   Item 9, phase 3 aesthetics. Subtle translucent brand-styled
+   scrollbars on every internal scroll container, vertical only.
+   Horizontal scrollbars are left at the browser default, never
+   styled or sized here.                                          */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--line-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gold-ornament);
+}
+
 /* --- DROPDOWN TREATMENT ---------------------------------------
    Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
    to library.css lines 300-336. The reusable menu box and row
