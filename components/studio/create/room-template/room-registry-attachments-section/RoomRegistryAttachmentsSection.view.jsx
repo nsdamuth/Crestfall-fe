@@ -48,10 +48,10 @@ export default function RoomRegistryAttachmentsSectionView({
                 <button
                   type="button"
                   onClick={() => onOpenRegistryPicker?.(group?.id)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Link2 size={14} />
-                  {group?.addLabel || "Attach Registry"}
+                  {group?.addLabel || "Attach registry"}
                 </button>
               </div>
 
@@ -120,7 +120,7 @@ function RegistryAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-white/10 px-2 py-2 text-[var(--status-danger)] transition"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached registry"
           }

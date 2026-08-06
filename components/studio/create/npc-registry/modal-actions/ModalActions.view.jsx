@@ -8,7 +8,7 @@ export default function ModalActionsView({
       <button
         type="button"
         onClick={() => onClose?.()}
-        className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
+        className="cf-btn cf-btn--secondary"
       >
         Cancel
       </button>
@@ -16,7 +16,7 @@ export default function ModalActionsView({
       <button
         type="button"
         onClick={() => onSave?.()}
-        className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
+        className="cf-btn cf-btn--primary"
       >
         {saveLabel}
       </button>

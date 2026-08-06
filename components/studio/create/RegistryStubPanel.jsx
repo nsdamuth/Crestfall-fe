@@ -61,9 +61,9 @@ export default function RegistryStubPanel({
         <button
           type="button"
           disabled
-          className="mt-5 inline-flex w-full items-center justify-center rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] opacity-75"
+          className="cf-btn cf-btn--secondary mt-5 w-full"
         >
-          Builder Coming Soon
+          Builder coming soon
         </button>
       </aside>
     </section>

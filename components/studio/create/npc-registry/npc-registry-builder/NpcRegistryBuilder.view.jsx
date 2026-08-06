@@ -156,10 +156,10 @@ export default function NpcRegistryBuilderView({
           type="button"
           onClick={() => onSaveRegistry?.()}
           disabled={saveStatus === "saving"}
-          className="mt-5 inline-flex h-[var(--control-md)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-5 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Registry"}
+          {saveStatus === "saving" ? "Saving..." : "Save registry"}
         </button>
 
         {saveMessage ? (
@@ -252,10 +252,10 @@ function EntriesTab({ entries, onAdd, onEdit, onDelete }) {
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        className="cf-btn cf-btn--secondary w-fit"
       >
         <Plus size={14} />
-        Add Person
+        Add person
       </button>
 
       <div className="grid gap-4">
@@ -320,7 +320,7 @@ function RelationshipsTab({
         className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
-        Add Relationship
+        Add relationship
       </button>
 
       {entries.length < 2 ? (
@@ -386,10 +386,10 @@ function KnowledgeTab({
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        className="cf-btn cf-btn--secondary w-fit"
       >
         <Plus size={14} />
-        Add Knowledge Rule
+        Add knowledge rule
       </button>
 
       <div className="grid gap-4">
@@ -443,7 +443,7 @@ function AliasesTab({ entries, aliases, onAdd, onEdit, onDelete }) {
         className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
-        Add Alias Rule
+        Add alias rule
       </button>
 
       {!entries.length ? (
@@ -552,7 +552,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       {children}
     </button>
@@ -564,7 +564,7 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-[var(--control-sm)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
+      className="cf-btn cf-btn--danger cf-btn--sm"
       aria-label="Delete"
     >
       <Trash2 size={14} />
