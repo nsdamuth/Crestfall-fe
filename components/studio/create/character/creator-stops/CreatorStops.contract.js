@@ -12,16 +12,17 @@ export const CREATOR_STOPS = Object.freeze([
 
 export const CREATOR_STOP_IDS = Object.freeze(CREATOR_STOPS.map((stop) => stop.id));
 
-export function buildCreatorStopItems(activeStop) {
+export function buildCreatorStopItems(activeStop, maxReachedIndex = -1) {
   const activeIndex = Math.max(
     0,
     CREATOR_STOPS.findIndex((stop) => stop.id === activeStop)
   );
+  const furthestIndex = Math.max(activeIndex, maxReachedIndex);
 
   return CREATOR_STOPS.map((stop, index) => ({
     ...stop,
     active: stop.id === activeStop,
-    seen: index <= activeIndex,
-    reachable: index <= activeIndex,
+    seen: index <= furthestIndex,
+    reachable: index <= furthestIndex,
   }));
 }

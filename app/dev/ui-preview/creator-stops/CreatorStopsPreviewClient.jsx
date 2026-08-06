@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import CreatorStopsView from "@/components/studio/create/character/creator-stops/CreatorStops.view";
 import {
@@ -86,6 +86,9 @@ const INITIAL_FORM_STATE = {
 export default function CreatorStopsPreviewClient() {
   const [selectedState, setSelectedState] = useState(0);
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
+  const [maxReachedIndex, setMaxReachedIndex] = useState(
+    Math.max(0, CREATOR_STOP_IDS.indexOf(STATES[0][1].activeStop))
+  );
   const [templateNote, setTemplateNote] = useState("");
   const [moreHairOpen, setMoreHairOpen] = useState(false);
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
@@ -103,6 +106,11 @@ export default function CreatorStopsPreviewClient() {
     () => JSON.stringify(formState) !== JSON.stringify(savedSnapshot),
     [formState, savedSnapshot]
   );
+
+  useEffect(() => {
+    const index = Math.max(0, CREATOR_STOP_IDS.indexOf(activeStop));
+    setMaxReachedIndex((current) => Math.max(current, index));
+  }, [activeStop]);
 
   function updateField(key) {
     return (value) =>
@@ -125,6 +133,7 @@ export default function CreatorStopsPreviewClient() {
     setFormState(INITIAL_FORM_STATE);
     setSavedSnapshot(INITIAL_FORM_STATE);
     setActiveStop(CREATOR_STOP_IDS[0]);
+    setMaxReachedIndex(0);
     setTemplateNote("");
     setMoreHairOpen(false);
     setTypingFoldOpen(false);
@@ -146,7 +155,7 @@ export default function CreatorStopsPreviewClient() {
 
   const fixture = STATES[selectedState][1];
 
-  const stopItems = buildCreatorStopItems(activeStop);
+  const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
 
   const previewProps = {
     ...fixture,
@@ -182,6 +191,7 @@ export default function CreatorStopsPreviewClient() {
     const [, fx] = STATES[index];
     setSelectedState(index);
     setActiveStop(fx.activeStop);
+    setMaxReachedIndex(Math.max(0, CREATOR_STOP_IDS.indexOf(fx.activeStop)));
 
     if (fx.hasUnsavedChanges) {
       setFormState((current) => ({ ...current, name: "Ashira" }));
