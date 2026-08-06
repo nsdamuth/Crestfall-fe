@@ -82,7 +82,7 @@ export default function MechanicsPresetValidationPanelView({
                 <button
                   type="button"
                   onClick={() => onCopyTestCommand?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--primary cf-btn--sm"
                 >
                   <Clipboard size={13} />
                   Copy

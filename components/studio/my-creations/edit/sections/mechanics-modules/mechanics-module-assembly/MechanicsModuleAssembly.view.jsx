@@ -20,14 +20,14 @@ function MechanicsTextField({ label, value, onChange, placeholder, type = "text"
   );
 }
 
-function MechanicsAssemblyActionButton({ children, onClick, title, disabled = false }) {
+function MechanicsAssemblyActionButton({ children, onClick, title, disabled = false, variant = "primary" }) {
   return (
     <button
       type="button"
       title={title}
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+      className={`cf-btn cf-btn--sm ${variant === "secondary" ? "cf-btn--secondary" : "cf-btn--primary"}`}
     >
       {children}
     </button>
@@ -140,7 +140,7 @@ export function MechanicsFoldableItemShell({
           <button
             type="button"
             onClick={() => onRemove?.()}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-3 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]"
+            className="cf-btn cf-btn--danger cf-btn--sm"
             title={removeTitle || `Remove ${title}`}
           >
             <Trash2 size={13} />
@@ -182,7 +182,7 @@ export function MechanicsCommandsAssemblyView({
         </div>
         <MechanicsAssemblyActionButton onClick={onAddCommand}>
           <Plus size={14} />
-          Add Command
+          Add command
         </MechanicsAssemblyActionButton>
       </div>
 
@@ -267,14 +267,15 @@ export default function MechanicsModuleAssemblyView({
             onClick={onCollapseAll}
           >
             <ChevronsUp size={14} />
-            Collapse All
+            Collapse all
           </MechanicsAssemblyActionButton>
           <MechanicsAssemblyActionButton
             title="Expand all Runtime Fields sections and cards"
             onClick={onExpandAll}
+            variant="secondary"
           >
             <ChevronsDown size={14} />
-            Expand All
+            Expand all
           </MechanicsAssemblyActionButton>
         </div>
       </div>
