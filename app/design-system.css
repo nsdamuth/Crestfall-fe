@@ -242,8 +242,9 @@
    stays reserved for tags and icon buttons, never a button. One
    disabled rule, shared by every tier. Destructive is the in-page
    ghost recipe with --status-danger text, per the Destructive
-   ruling; the filled confirm-step variant is not implemented here,
-   since no package in this pass consumes it.                       */
+   ruling; the filled confirm-step variant (--danger-filled) reuses
+   the same --status-danger token, first consumed by the creator's
+   close confirm step.                                              */
 
 .cf-btn {
   display: inline-flex;
@@ -321,6 +322,15 @@
   color: var(--status-danger);
 }
 .cf-btn--danger:hover {
+  box-shadow: var(--glow-hover);
+}
+
+.cf-btn--danger-filled {
+  background-color: var(--status-danger);
+  border-color: transparent;
+  color: var(--ink);
+}
+.cf-btn--danger-filled:hover {
   box-shadow: var(--glow-hover);
 }
 

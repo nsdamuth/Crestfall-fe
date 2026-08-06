@@ -12,9 +12,9 @@ function buildFixture(activeStop, overrides = {}) {
     activeIndex,
     stopItems,
     isLastStop: activeStop === "payoff",
-    saveStatus: "idle",
-    saveMessage: "",
     saveDisabled: false,
+    hasUnsavedChanges: false,
+    confirmDiscardOpen: false,
     ...overrides,
   };
 }
@@ -27,13 +27,13 @@ export const creatorStopsLastFixture = buildFixture("payoff", {
   isLastStop: true,
 });
 
-export const creatorStopsSavingFixture = buildFixture("seal", {
-  saveStatus: "saving",
-  saveDisabled: true,
+export const creatorStopsUnsavedFixture = buildFixture("seal", {
+  hasUnsavedChanges: true,
 });
 
-export const creatorStopsSavedMessageFixture = buildFixture("seal", {
-  saveMessage: "Saved.",
+export const creatorStopsConfirmDiscardFixture = buildFixture("seal", {
+  hasUnsavedChanges: true,
+  confirmDiscardOpen: true,
 });
 
 export { CREATOR_STOP_IDS };

@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
 import {
-  Check,
   Fingerprint,
   Heart,
   ImageIcon,
@@ -26,16 +26,32 @@ export default function CreatorStopsView({
   activeIndex = 0,
   stopItems = [],
   isLastStop = false,
-  saveStatus = "idle",
-  saveMessage = "",
   saveDisabled = false,
+  hasUnsavedChanges = false,
+  confirmDiscardOpen = false,
   onSelectStop = null,
   onBack = null,
   onNext = null,
   onSave = null,
   onClose = null,
+  onKeepEditing = null,
+  onConfirmDiscard = null,
   stopContent = null,
 } = {}) {
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key !== "Escape") return;
+      if (confirmDiscardOpen) {
+        onKeepEditing?.();
+      } else {
+        onClose?.();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [confirmDiscardOpen, onClose, onKeepEditing]);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-[var(--space-3)] sm:p-[var(--space-8)]">
       <button
@@ -54,6 +70,34 @@ export default function CreatorStopsView({
             "linear-gradient(var(--fill-whisper), var(--fill-whisper))",
         }}
       >
+        {confirmDiscardOpen ? (
+          <div className="flex h-full flex-col items-center justify-center gap-[var(--space-4)] px-[var(--space-8)] text-center">
+            <h2 className="font-display text-2xl text-[var(--ink)]">
+              Discard this character?
+            </h2>
+            <p className="max-w-sm text-sm leading-6 text-[var(--ink-dim)]">
+              Nothing on this character has been saved. Closing now discards
+              it completely.
+            </p>
+            <div className="mt-[var(--space-2)] flex items-center gap-[var(--space-3)]">
+              <button
+                type="button"
+                onClick={() => onKeepEditing?.()}
+                className="cf-btn cf-btn--secondary"
+              >
+                Keep editing
+              </button>
+              <button
+                type="button"
+                onClick={() => onConfirmDiscard?.()}
+                className="cf-btn cf-btn--danger-filled"
+              >
+                Discard character
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
         <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-6)] after:right-[var(--space-6)] after:h-px after:bg-[var(--line-whisper)]">
           <div className="flex min-w-0 flex-1 items-center justify-center gap-0">
             {stopItems.map((stop, index) => {
@@ -105,7 +149,7 @@ export default function CreatorStopsView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            aria-label="Close · your work is kept"
+            aria-label="Close character creator"
             className="ml-auto flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
           >
             <X size={18} />
@@ -130,26 +174,20 @@ export default function CreatorStopsView({
           <button
             type="button"
             onClick={() => onSave?.()}
-            className={`inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] transition ${
-              saveStatus === "saving"
-                ? "text-[var(--gold-ornament)] opacity-100"
-                : "text-[var(--ink-faint)] opacity-65 hover:text-[var(--gold-action)] hover:opacity-100"
-            }`}
-          >
-            <Check size={12} />
-            <span className="hidden sm:inline">
-              {saveStatus === "saving" ? "Saving..." : "Saved · draft secured"}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onSave?.()}
             disabled={saveDisabled}
             className="cf-btn cf-btn--secondary"
           >
             Save
           </button>
+
+          <span aria-live="polite" className="inline-flex items-center">
+            {hasUnsavedChanges ? (
+              <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
+                <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
+                <span className="hidden sm:inline">Unsaved changes</span>
+              </span>
+            ) : null}
+          </span>
 
           <div className="flex-1" />
 
@@ -163,12 +201,8 @@ export default function CreatorStopsView({
             <span className="cf-btn__arrow">&rarr;</span>
           </button>
         </div>
-
-        {saveMessage ? (
-          <p className="absolute bottom-[calc(var(--control-md)+var(--space-6))] left-1/2 -translate-x-1/2 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-3)] py-[var(--space-1)] text-[var(--text-label)] text-[var(--ink)]">
-            {saveMessage}
-          </p>
-        ) : null}
+          </>
+        )}
       </div>
     </div>
   );

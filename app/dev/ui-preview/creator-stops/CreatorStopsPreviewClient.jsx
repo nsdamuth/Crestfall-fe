@@ -11,8 +11,8 @@ import {
   creatorStopsFirstFixture,
   creatorStopsLastFixture,
   creatorStopsMidFixture,
-  creatorStopsSavingFixture,
-  creatorStopsSavedMessageFixture,
+  creatorStopsUnsavedFixture,
+  creatorStopsConfirmDiscardFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
 import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
@@ -21,8 +21,8 @@ const STATES = [
   ["First stop", creatorStopsFirstFixture],
   ["Mid stop", creatorStopsMidFixture],
   ["Last stop", creatorStopsLastFixture],
-  ["Saving", creatorStopsSavingFixture],
-  ["Saved message", creatorStopsSavedMessageFixture],
+  ["Unsaved changes", creatorStopsUnsavedFixture],
+  ["Confirm discard", creatorStopsConfirmDiscardFixture],
 ];
 
 const STOP_STUBS = {
@@ -63,6 +63,21 @@ const STOP_STUBS = {
   },
 };
 
+const INITIAL_FORM_STATE = {
+  name: "",
+  title: "",
+  skinTone: "",
+  skinCustomValue: "",
+  eyeColor: "",
+  eyeCustomValue: "",
+  hairColor: "",
+  hairCustomValue: "",
+  hairLength: "",
+  hairTexture: "",
+  hairStyle: "",
+  ethnicAppearance: "",
+};
+
 function StopStub({ stopId }) {
   const stub = STOP_STUBS[stopId] || STOP_STUBS.name;
 
@@ -89,57 +104,99 @@ function StopStub({ stopId }) {
 export default function CreatorStopsPreviewClient() {
   const [selectedState, setSelectedState] = useState(0);
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
-  const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
   const [templateNote, setTemplateNote] = useState("");
-
-  const [skinTone, setSkinTone] = useState("");
-  const [skinCustomValue, setSkinCustomValue] = useState("");
-  const [eyeColor, setEyeColor] = useState("");
-  const [eyeCustomValue, setEyeCustomValue] = useState("");
-  const [hairColor, setHairColor] = useState("");
-  const [hairCustomValue, setHairCustomValue] = useState("");
-  const [hairLength, setHairLength] = useState("");
-  const [hairTexture, setHairTexture] = useState("");
-  const [hairStyle, setHairStyle] = useState("");
-  const [ethnicAppearance, setEthnicAppearance] = useState("");
   const [moreHairOpen, setMoreHairOpen] = useState(false);
+
+  const [formState, setFormState] = useState(INITIAL_FORM_STATE);
+  const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
+  const [isOpen, setIsOpen] = useState(true);
+  const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+
+  const hasUnsavedChanges = useMemo(
+    () => JSON.stringify(formState) !== JSON.stringify(savedSnapshot),
+    [formState, savedSnapshot]
+  );
+
+  function updateField(key) {
+    return (value) =>
+      setFormState((current) => ({ ...current, [key]: value }));
+  }
+
+  function requestClose() {
+    if (hasUnsavedChanges) {
+      setConfirmDiscardOpen(true);
+      return;
+    }
+    setIsOpen(false);
+  }
+
+  function handleKeepEditing() {
+    setConfirmDiscardOpen(false);
+  }
+
+  function handleConfirmDiscard() {
+    setFormState(INITIAL_FORM_STATE);
+    setSavedSnapshot(INITIAL_FORM_STATE);
+    setActiveStop(CREATOR_STOP_IDS[0]);
+    setTemplateNote("");
+    setMoreHairOpen(false);
+    setConfirmDiscardOpen(false);
+    setIsOpen(false);
+  }
+
+  function handleSave() {
+    setSavedSnapshot(formState);
+  }
+
+  function handleReopen() {
+    setIsOpen(true);
+  }
 
   const fixture = STATES[selectedState][1];
 
-  const previewProps = useMemo(() => {
-    const stopItems = buildCreatorStopItems(activeStop);
+  const stopItems = buildCreatorStopItems(activeStop);
 
-    return {
-      ...fixture,
-      activeStop,
-      activeIndex: Math.max(
-        0,
-        stopItems.findIndex((stop) => stop.active)
-      ),
-      stopItems,
-      isLastStop: activeStop === "payoff",
-      onSelectStop: setActiveStop,
-      onBack: () =>
-        setActiveStop((current) => {
-          const index = CREATOR_STOP_IDS.indexOf(current);
-          return CREATOR_STOP_IDS[Math.max(index - 1, 0)];
-        }),
-      onNext: () =>
-        setActiveStop((current) => {
-          const index = CREATOR_STOP_IDS.indexOf(current);
-          return CREATOR_STOP_IDS[
-            Math.min(index + 1, CREATOR_STOP_IDS.length - 1)
-          ];
-        }),
-      onSave: () => {},
-      onClose: () => {},
-    };
-  }, [activeStop, fixture]);
+  const previewProps = {
+    ...fixture,
+    activeStop,
+    activeIndex: Math.max(
+      0,
+      stopItems.findIndex((stop) => stop.active)
+    ),
+    stopItems,
+    isLastStop: activeStop === "payoff",
+    hasUnsavedChanges,
+    confirmDiscardOpen,
+    onSelectStop: setActiveStop,
+    onBack: () =>
+      setActiveStop((current) => {
+        const index = CREATOR_STOP_IDS.indexOf(current);
+        return CREATOR_STOP_IDS[Math.max(index - 1, 0)];
+      }),
+    onNext: () =>
+      setActiveStop((current) => {
+        const index = CREATOR_STOP_IDS.indexOf(current);
+        return CREATOR_STOP_IDS[
+          Math.min(index + 1, CREATOR_STOP_IDS.length - 1)
+        ];
+      }),
+    onSave: handleSave,
+    onClose: requestClose,
+    onKeepEditing: handleKeepEditing,
+    onConfirmDiscard: handleConfirmDiscard,
+  };
 
   function selectFixture(index) {
+    const [, fx] = STATES[index];
     setSelectedState(index);
-    setActiveStop(STATES[index][1].activeStop);
+    setActiveStop(fx.activeStop);
+
+    if (fx.hasUnsavedChanges) {
+      setFormState((current) => ({ ...current, name: "Ashira" }));
+    } else {
+      setSavedSnapshot(formState);
+    }
+    setConfirmDiscardOpen(Boolean(fx.confirmDiscardOpen));
   }
 
   return (
@@ -172,53 +229,65 @@ export default function CreatorStopsPreviewClient() {
             {templateNote}
           </p>
         ) : null}
+
+        {!isOpen ? (
+          <button
+            type="button"
+            onClick={handleReopen}
+            className="cf-btn cf-btn--primary"
+          >
+            Reopen creator
+          </button>
+        ) : null}
       </div>
 
-      <CreatorStopsView
-        {...previewProps}
-        stopContent={
-          activeStop === "name" ? (
-            <NameStopView
-              name={name}
-              title={title}
-              onChangeName={setName}
-              onChangeTitle={setTitle}
-              onOpenTemplate={() =>
-                setTemplateNote(
-                  "Start-from-a-template takeover is not built in this commit."
-                )
-              }
-            />
-          ) : activeStop === "face" ? (
-            <FaceStopView
-              skinTone={skinTone}
-              skinCustomValue={skinCustomValue}
-              eyeColor={eyeColor}
-              eyeCustomValue={eyeCustomValue}
-              hairColor={hairColor}
-              hairCustomValue={hairCustomValue}
-              hairLength={hairLength}
-              hairTexture={hairTexture}
-              hairStyle={hairStyle}
-              ethnicAppearance={ethnicAppearance}
-              moreHairOpen={moreHairOpen}
-              onChangeSkinTone={setSkinTone}
-              onChangeSkinCustomValue={setSkinCustomValue}
-              onChangeEyeColor={setEyeColor}
-              onChangeEyeCustomValue={setEyeCustomValue}
-              onChangeHairColor={setHairColor}
-              onChangeHairCustomValue={setHairCustomValue}
-              onChangeHairLength={setHairLength}
-              onChangeHairTexture={setHairTexture}
-              onChangeHairStyle={setHairStyle}
-              onChangeEthnicAppearance={setEthnicAppearance}
-              onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
-            />
-          ) : (
-            <StopStub stopId={activeStop} />
-          )
-        }
-      />
+      {isOpen ? (
+        <CreatorStopsView
+          {...previewProps}
+          stopContent={
+            activeStop === "name" ? (
+              <NameStopView
+                name={formState.name}
+                title={formState.title}
+                onChangeName={updateField("name")}
+                onChangeTitle={updateField("title")}
+                onOpenTemplate={() =>
+                  setTemplateNote(
+                    "Start-from-a-template takeover is not built in this commit."
+                  )
+                }
+              />
+            ) : activeStop === "face" ? (
+              <FaceStopView
+                skinTone={formState.skinTone}
+                skinCustomValue={formState.skinCustomValue}
+                eyeColor={formState.eyeColor}
+                eyeCustomValue={formState.eyeCustomValue}
+                hairColor={formState.hairColor}
+                hairCustomValue={formState.hairCustomValue}
+                hairLength={formState.hairLength}
+                hairTexture={formState.hairTexture}
+                hairStyle={formState.hairStyle}
+                ethnicAppearance={formState.ethnicAppearance}
+                moreHairOpen={moreHairOpen}
+                onChangeSkinTone={updateField("skinTone")}
+                onChangeSkinCustomValue={updateField("skinCustomValue")}
+                onChangeEyeColor={updateField("eyeColor")}
+                onChangeEyeCustomValue={updateField("eyeCustomValue")}
+                onChangeHairColor={updateField("hairColor")}
+                onChangeHairCustomValue={updateField("hairCustomValue")}
+                onChangeHairLength={updateField("hairLength")}
+                onChangeHairTexture={updateField("hairTexture")}
+                onChangeHairStyle={updateField("hairStyle")}
+                onChangeEthnicAppearance={updateField("ethnicAppearance")}
+                onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
+              />
+            ) : (
+              <StopStub stopId={activeStop} />
+            )
+          }
+        />
+      ) : null}
     </main>
   );
 }
