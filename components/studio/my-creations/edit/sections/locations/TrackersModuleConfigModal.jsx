@@ -978,17 +978,17 @@ export default function TrackersModuleConfigModal({
             <EditorPanel title="Quick Starters">
               <div className="flex flex-wrap gap-3">
                 <ActionButton onClick={addTracker} icon={<Plus size={15} />}>
-                  Add Meter Field
+                  Add meter field
                 </ActionButton>
 
-                <ActionButton onClick={addGuard} icon={<Plus size={15} />}>
-                  Add Guard / Gate
+                <ActionButton onClick={addGuard} icon={<Plus size={15} />} variant="secondary">
+                  Add guard / gate
                 </ActionButton>
 
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
+                  className="cf-btn cf-btn--danger"
                 >
                   <Trash2 size={15} />
                   Clear
@@ -1081,13 +1081,13 @@ export default function TrackersModuleConfigModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
               Close
             </button>
 
             <ActionButton onClick={handleSave} icon={<Save size={15} />}>
-              Save Mechanics Module
+              Save mechanics module
             </ActionButton>
           </div>
         </div>
@@ -1138,7 +1138,7 @@ function TrackerCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
+          className="cf-btn cf-btn--danger cf-btn--sm"
         >
           <Trash2 size={14} />
           Remove
@@ -1240,7 +1240,7 @@ function TrackerCard({
         <Subsection
           icon={<SlidersHorizontal size={16} />}
           title="Phases"
-          actionLabel="Add Phase"
+          actionLabel="Add phase"
           onAction={onAddPhase}
         >
           <div className="grid gap-3">
@@ -1303,7 +1303,7 @@ function TrackerCard({
         <Subsection
           icon={<Zap size={16} />}
           title="Mutation Hints / Triggers"
-          actionLabel="Add Hint"
+          actionLabel="Add hint"
           onAction={onAddHint}
         >
           <div className="grid gap-4">
@@ -1434,7 +1434,7 @@ function HintCard({
       <Subsection
         icon={<Activity size={15} />}
         title="Effects"
-        actionLabel="Add Effect"
+        actionLabel="Add effect"
         onAction={onAddEffect}
         compact
       >
@@ -1553,7 +1553,7 @@ function GuardCard({
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)]"
+          className="cf-btn cf-btn--danger cf-btn--sm"
         >
           <Trash2 size={14} />
           Remove
@@ -1621,7 +1621,7 @@ function GuardCard({
         <Subsection
           icon={<Shield size={16} />}
           title="Conditions"
-          actionLabel="Add Condition"
+          actionLabel="Add condition"
           onAction={onAddCondition}
         >
           <div className="grid gap-3">
@@ -1741,7 +1741,7 @@ function Subsection({ icon, title, actionLabel, onAction, children, compact = fa
         <button
           type="button"
           onClick={onAction}
-          className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <Plus size={12} />
           {actionLabel}
@@ -1886,12 +1886,12 @@ function IconButton({ onClick, children }) {
   );
 }
 
-function ActionButton({ onClick, icon, children }) {
+function ActionButton({ onClick, icon, children, variant = "primary" }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+      className={`cf-btn ${variant === "secondary" ? "cf-btn--secondary" : "cf-btn--primary"}`}
     >
       {icon}
       {children}

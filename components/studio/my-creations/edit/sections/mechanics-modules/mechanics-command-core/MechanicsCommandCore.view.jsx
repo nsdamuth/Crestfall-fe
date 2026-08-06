@@ -106,10 +106,9 @@ function TokenListField({
 }
 
 function SmallActionButton({ children, onClick, variant = "gold", title }) {
-  const className =
-    variant === "danger"
-      ? "inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
-      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]";
+  const className = `cf-btn cf-btn--sm ${
+    variant === "danger" ? "cf-btn--danger" : "cf-btn--primary"
+  }`;
 
   return (
     <button type="button" title={title} onClick={onClick} className={className}>
@@ -188,7 +187,7 @@ export function MechanicsCommandInvocationView({ model }) {
         </div>
         <SmallActionButton onClick={model.addArgument}>
           <Plus size={14} />
-          Add Argument
+          Add argument
         </SmallActionButton>
       </div>
 
@@ -293,7 +292,7 @@ export function MechanicsCommandArgumentsView({ model }) {
             <button
               type="button"
               onClick={() => model.removeArgument(argumentIndex)}
-              className="inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-white/10 px-2 py-2 text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+              className="cf-btn cf-btn--danger cf-btn--sm"
               title="Remove argument"
               aria-label="Remove argument"
             >
@@ -515,7 +514,7 @@ export function MechanicsCommandTriggersView({ model }) {
         />
         <SmallActionButton onClick={submitTrigger}>
           <Plus size={14} />
-          Add Trigger
+          Add trigger
         </SmallActionButton>
       </div>
     </div>

@@ -162,18 +162,18 @@ export default function WeatherModuleConfigModalView({
                 <button
                   type="button"
                   onClick={() => onAddRecommendedCondition?.()}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Plus size={15} />
-                  Add Recommended
+                  Add recommended
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onAddCustomCondition?.()}
-                  className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--secondary"
                 >
-                  Add Custom Draft
+                  Add custom draft
                 </button>
               </div>
 
@@ -248,7 +248,7 @@ export default function WeatherModuleConfigModalView({
             <button
               type="button"
               onClick={() => onClose?.()}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
               Close
             </button>
@@ -257,14 +257,14 @@ export default function WeatherModuleConfigModalView({
               type="button"
               onClick={() => onSave?.()}
               disabled={isSaving}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:opacity-50"
+              className="cf-btn cf-btn--primary"
             >
               {isSaving ? (
                 <Loader2 size={15} className="animate-spin" />
               ) : (
                 <Save size={15} />
               )}
-              Save Weather Module
+              Save weather module
             </button>
           </div>
         </div>
@@ -289,15 +289,15 @@ function WeatherConditionCard({ condition }) {
             type="button"
             onClick={() => condition.onSetCurrent?.()}
             disabled={condition.isCurrent}
-            className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:opacity-50"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
-            {condition.isCurrent ? "Current" : "Set Current"}
+            {condition.isCurrent ? "Current" : "Set current"}
           </button>
 
           <button
             type="button"
             onClick={() => condition.onRemove?.()}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:bg-white/5"
+            className="cf-btn cf-btn--danger cf-btn--sm"
             aria-label={`Remove ${condition.label}`}
           >
             <Trash2 size={13} />

@@ -19,7 +19,7 @@ export default function MechanicsCommandEffectsView({
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">{variant.title}</p>
           {variant.description ? <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{variant.description}</p> : null}
         </div>
-        <button type="button" onClick={addEffect} className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]">
+        <button type="button" onClick={addEffect} className="cf-btn cf-btn--primary cf-btn--sm">
           <Plus size={14} />
           {variant.addLabel}
         </button>
