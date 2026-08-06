@@ -21,13 +21,18 @@ export default function CreationStudioView({
   isLoadingCounts,
   countLoadError,
   LinkComponent = "a",
+  onOpenCharacterCreator = null,
 }) {
   return (
     <div className="mt-8 space-y-8">
       <ModeSelector mode={mode} onModeChange={setMode} />
 
       {mode === CREATION_STUDIO_MODES.QUICK ? (
-        <QuickStartView assets={quickStartAssets} onModeChange={setMode} />
+        <QuickStartView
+          assets={quickStartAssets}
+          onModeChange={setMode}
+          onOpenCharacterCreator={onOpenCharacterCreator}
+        />
       ) : null}
 
       {mode === CREATION_STUDIO_MODES.GUIDED ? (
@@ -45,7 +50,10 @@ export default function CreationStudioView({
       ) : null}
 
       {mode === CREATION_STUDIO_MODES.FULL ? (
-        <FullStudioView sections={fullStudioSections} />
+        <FullStudioView
+          sections={fullStudioSections}
+          onOpenCharacterCreator={onOpenCharacterCreator}
+        />
       ) : null}
     </div>
   );
@@ -84,7 +92,7 @@ function ModeSelector({ mode, onModeChange }) {
   );
 }
 
-function QuickStartView({ assets, onModeChange }) {
+function QuickStartView({ assets, onModeChange, onOpenCharacterCreator }) {
   return (
     <section>
       <SectionIntro
@@ -95,7 +103,15 @@ function QuickStartView({ assets, onModeChange }) {
 
       <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {assets.map((asset) => (
-          <CreateTypeCard key={asset.title} {...asset} />
+          <CreateTypeCard
+            key={asset.title}
+            {...asset}
+            onOpenCreator={
+              asset.href === "/studio/create/character"
+                ? onOpenCharacterCreator
+                : null
+            }
+          />
         ))}
       </div>
 
@@ -594,7 +610,7 @@ function ToolkitFoundationCompletePanel({ onModeChange, LinkComponent }) {
   );
 }
 
-function FullStudioView({ sections }) {
+function FullStudioView({ sections, onOpenCharacterCreator }) {
   return (
     <section>
       <SectionIntro
@@ -607,7 +623,15 @@ function FullStudioView({ sections }) {
         {sections.map((section) => (
           <CreationSection key={section.id} {...section}>
             {section.assets.map((asset) => (
-              <CreateTypeCard key={asset.title} {...asset} />
+              <CreateTypeCard
+                key={asset.title}
+                {...asset}
+                onOpenCreator={
+                  asset.href === "/studio/create/character"
+                    ? onOpenCharacterCreator
+                    : null
+                }
+              />
             ))}
           </CreationSection>
         ))}

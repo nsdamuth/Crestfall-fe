@@ -7,6 +7,7 @@ export default function CreateTypeCardView({
   eyebrow = "",
   disabled = false,
   LinkComponent = "a",
+  onOpenCreator = null,
 }) {
   const content = (
     <article className="group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/50 p-6 transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/60">
@@ -43,6 +44,14 @@ export default function CreateTypeCardView({
 
   if (disabled) {
     return <div className="cursor-not-allowed opacity-60">{content}</div>;
+  }
+
+  if (onOpenCreator) {
+    return (
+      <button type="button" onClick={onOpenCreator} className="block w-full text-left">
+        {content}
+      </button>
+    );
   }
 
   return <LinkComponent href={href}>{content}</LinkComponent>;
