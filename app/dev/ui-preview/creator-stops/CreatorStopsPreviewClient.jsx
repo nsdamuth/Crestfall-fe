@@ -21,6 +21,10 @@ import SilhouetteStopView from "@/components/studio/create/character/creator-sto
 import HeartStopView from "@/components/studio/create/character/creator-stops/heart-stop/HeartStop.view";
 import SealStopView from "@/components/studio/create/character/creator-stops/seal-stop/SealStop.view";
 import PayoffStopView from "@/components/studio/create/character/creator-stops/payoff-stop/PayoffStop.view";
+import PalettePanelBody from "@/components/studio/create/character/creator-stops/shared/PalettePanelBody";
+import TemplatePanelBody from "@/components/studio/create/character/creator-stops/shared/TemplatePanelBody";
+import { useCharacterColorPaletteModalViewModel } from "@/components/studio/create/character/character-color-palette/useCharacterColorPaletteModalViewModel";
+import { useCharacterTemplateModalViewModel } from "@/components/studio/create/character/character-template-picker/useCharacterTemplateModalViewModel";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -99,6 +103,18 @@ export default function CreatorStopsPreviewClient() {
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
   const [isOpen, setIsOpen] = useState(true);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+  const [secondaryPanel, setSecondaryPanel] = useState(null);
+
+  const paletteVM = useCharacterColorPaletteModalViewModel({
+    value: formState.characterColorPaletteId,
+    onChange: updateField("characterColorPaletteId"),
+  });
+
+  const templateVM = useCharacterTemplateModalViewModel({
+    templates: [],
+    onApply: () => setSecondaryPanel(null),
+    onClose: () => setSecondaryPanel(null),
+  });
 
   const hasUnsavedChanges = useMemo(
     () => JSON.stringify(formState) !== JSON.stringify(savedSnapshot),
@@ -137,6 +153,7 @@ export default function CreatorStopsPreviewClient() {
     setTypingFoldOpen(false);
     setFineTuneFoldOpen(false);
     setHeartAdvancedFoldOpen(false);
+    setSecondaryPanel(null);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -152,6 +169,49 @@ export default function CreatorStopsPreviewClient() {
   const fixture = STATES[selectedState][1];
 
   const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
+
+  const secondaryPanelConfig =
+    secondaryPanel === "template"
+      ? {
+          eyebrow: templateVM.eyebrow,
+          title: templateVM.modalTitle,
+          description: templateVM.modalDescription,
+          body: (
+            <TemplatePanelBody
+              tabs={templateVM.tabs}
+              activeTabId={templateVM.activeTabId}
+              searchQuery={templateVM.searchQuery}
+              searchPlaceholder={templateVM.searchPlaceholder}
+              showTemplateGrid={templateVM.showTemplateGrid}
+              templates={templateVM.templates}
+              emptyStateTitle={templateVM.emptyStateTitle}
+              emptyStateDescription={templateVM.emptyStateDescription}
+              onChooseTab={templateVM.onChooseTab}
+              onChangeSearchQuery={templateVM.onChangeSearchQuery}
+              onChooseTemplate={templateVM.onChooseTemplate}
+            />
+          ),
+          onCancel: () => setSecondaryPanel(null),
+        }
+      : secondaryPanel === "palette"
+        ? {
+            eyebrow: paletteVM.modalEyebrow,
+            title: paletteVM.modalTitle,
+            description:
+              "This sets the color of this character's dialogue in chat.",
+            body: (
+              <PalettePanelBody
+                paletteFamilies={paletteVM.paletteFamilies}
+                selectedPaletteId={paletteVM.selectedPaletteId}
+                onChoosePalette={(paletteId) => {
+                  paletteVM.onChoosePalette(paletteId);
+                  setSecondaryPanel(null);
+                }}
+              />
+            ),
+            onCancel: () => setSecondaryPanel(null),
+          }
+        : null;
 
   const previewProps = {
     ...fixture,
@@ -181,6 +241,7 @@ export default function CreatorStopsPreviewClient() {
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
+    secondaryPanel: secondaryPanelConfig,
   };
 
   function selectFixture(index) {
@@ -248,11 +309,7 @@ export default function CreatorStopsPreviewClient() {
                 title={formState.title}
                 onChangeName={updateField("name")}
                 onChangeTitle={updateField("title")}
-                onOpenTemplate={() =>
-                  setTemplateNote(
-                    "Start-from-a-template takeover is not built in this commit."
-                  )
-                }
+                onOpenTemplate={() => setSecondaryPanel("template")}
               />
             ) : activeStop === "kind" ? (
               <KindStopView
@@ -385,13 +442,12 @@ export default function CreatorStopsPreviewClient() {
                 visibility={formState.visibility}
                 contentRating={formState.contentRating}
                 age={formState.age}
-                characterColorPaletteId={formState.characterColorPaletteId}
+                colorPaletteLabel={paletteVM.triggerPalette.label}
+                colorPaletteSwatches={paletteVM.triggerPalette.swatches}
                 onChangeVisibility={updateField("visibility")}
                 onChangeContentRating={updateField("contentRating")}
                 onChangeAge={updateField("age")}
-                onChangeCharacterColorPaletteId={updateField(
-                  "characterColorPaletteId"
-                )}
+                onOpenColorPalette={() => setSecondaryPanel("palette")}
               />
             ) : activeStop === "payoff" ? (
               <PayoffStopView

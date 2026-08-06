@@ -11,6 +11,10 @@ import SilhouetteStopView from "./silhouette-stop/SilhouetteStop.view";
 import HeartStopView from "./heart-stop/HeartStop.view";
 import SealStopView from "./seal-stop/SealStop.view";
 import PayoffStopView from "./payoff-stop/PayoffStop.view";
+import PalettePanelBody from "./shared/PalettePanelBody";
+import TemplatePanelBody from "./shared/TemplatePanelBody";
+import { useCharacterColorPaletteModalViewModel } from "../character-color-palette/useCharacterColorPaletteModalViewModel";
+import { useCharacterTemplateModalViewModel } from "../character-template-picker/useCharacterTemplateModalViewModel";
 
 const INITIAL_FORM_STATE = {
   name: "",
@@ -76,6 +80,19 @@ export default function CharacterCreatorModal({ onClose }) {
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+  // Which field currently owns the secondary panel takeover, or null.
+  const [secondaryPanel, setSecondaryPanel] = useState(null);
+
+  const paletteVM = useCharacterColorPaletteModalViewModel({
+    value: formState.characterColorPaletteId,
+    onChange: updateField("characterColorPaletteId"),
+  });
+
+  const templateVM = useCharacterTemplateModalViewModel({
+    templates: [],
+    onApply: () => setSecondaryPanel(null),
+    onClose: () => setSecondaryPanel(null),
+  });
 
   const hasUnsavedChanges = useMemo(
     () => JSON.stringify(formState) !== JSON.stringify(savedSnapshot),
@@ -114,6 +131,49 @@ export default function CharacterCreatorModal({ onClose }) {
 
   const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
 
+  const secondaryPanelConfig =
+    secondaryPanel === "template"
+      ? {
+          eyebrow: templateVM.eyebrow,
+          title: templateVM.modalTitle,
+          description: templateVM.modalDescription,
+          body: (
+            <TemplatePanelBody
+              tabs={templateVM.tabs}
+              activeTabId={templateVM.activeTabId}
+              searchQuery={templateVM.searchQuery}
+              searchPlaceholder={templateVM.searchPlaceholder}
+              showTemplateGrid={templateVM.showTemplateGrid}
+              templates={templateVM.templates}
+              emptyStateTitle={templateVM.emptyStateTitle}
+              emptyStateDescription={templateVM.emptyStateDescription}
+              onChooseTab={templateVM.onChooseTab}
+              onChangeSearchQuery={templateVM.onChangeSearchQuery}
+              onChooseTemplate={templateVM.onChooseTemplate}
+            />
+          ),
+          onCancel: () => setSecondaryPanel(null),
+        }
+      : secondaryPanel === "palette"
+        ? {
+            eyebrow: paletteVM.modalEyebrow,
+            title: paletteVM.modalTitle,
+            description:
+              "This sets the color of this character's dialogue in chat.",
+            body: (
+              <PalettePanelBody
+                paletteFamilies={paletteVM.paletteFamilies}
+                selectedPaletteId={paletteVM.selectedPaletteId}
+                onChoosePalette={(paletteId) => {
+                  paletteVM.onChoosePalette(paletteId);
+                  setSecondaryPanel(null);
+                }}
+              />
+            ),
+            onCancel: () => setSecondaryPanel(null),
+          }
+        : null;
+
   const viewProps = {
     activeStop,
     activeIndex: Math.max(
@@ -141,6 +201,7 @@ export default function CharacterCreatorModal({ onClose }) {
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
+    secondaryPanel: secondaryPanelConfig,
   };
 
   return (
@@ -153,7 +214,7 @@ export default function CharacterCreatorModal({ onClose }) {
             title={formState.title}
             onChangeName={updateField("name")}
             onChangeTitle={updateField("title")}
-            onOpenTemplate={() => {}}
+            onOpenTemplate={() => setSecondaryPanel("template")}
           />
         ) : activeStop === "kind" ? (
           <KindStopView
@@ -272,13 +333,12 @@ export default function CharacterCreatorModal({ onClose }) {
             visibility={formState.visibility}
             contentRating={formState.contentRating}
             age={formState.age}
-            characterColorPaletteId={formState.characterColorPaletteId}
+            colorPaletteLabel={paletteVM.triggerPalette.label}
+            colorPaletteSwatches={paletteVM.triggerPalette.swatches}
             onChangeVisibility={updateField("visibility")}
             onChangeContentRating={updateField("contentRating")}
             onChangeAge={updateField("age")}
-            onChangeCharacterColorPaletteId={updateField(
-              "characterColorPaletteId"
-            )}
+            onOpenColorPalette={() => setSecondaryPanel("palette")}
           />
         ) : activeStop === "payoff" ? (
           <PayoffStopView

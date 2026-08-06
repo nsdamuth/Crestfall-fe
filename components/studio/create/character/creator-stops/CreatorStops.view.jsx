@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   Fingerprint,
   Heart,
@@ -10,6 +10,8 @@ import {
   User,
   X,
 } from "lucide-react";
+
+import SecondaryPanel from "./shared/SecondaryPanel";
 
 const STOP_ICONS = {
   name: User,
@@ -37,12 +39,23 @@ export default function CreatorStopsView({
   onKeepEditing = null,
   onConfirmDiscard = null,
   stopContent = null,
+  // A field that needs more room than a fold hands this in to take
+  // over the content area in place: { eyebrow, title, description,
+  // body, onCancel, applyLabel, onApply, applyDisabled }. onApply is
+  // optional, some panels apply their choice immediately per item and
+  // only need Cancel.
+  secondaryPanel = null,
 } = {}) {
+  const contentRef = useRef(null);
+  const savedScrollRef = useRef(0);
+
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key !== "Escape") return;
       if (confirmDiscardOpen) {
         onKeepEditing?.();
+      } else if (secondaryPanel) {
+        secondaryPanel.onCancel?.();
       } else {
         onClose?.();
       }
@@ -50,7 +63,22 @@ export default function CreatorStopsView({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [confirmDiscardOpen, onClose, onKeepEditing]);
+  }, [confirmDiscardOpen, secondaryPanel, onClose, onKeepEditing]);
+
+  // The panel takes over the same scrollable region a stop's fields
+  // live in, so a user returns to the exact scroll position they left
+  // on that stop, not the top of it.
+  useEffect(() => {
+    const node = contentRef.current;
+    if (!node) return;
+
+    if (secondaryPanel) {
+      savedScrollRef.current = node.scrollTop;
+      node.scrollTop = 0;
+    } else {
+      node.scrollTop = savedScrollRef.current;
+    }
+  }, [secondaryPanel]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-[var(--space-3)] sm:p-[var(--space-8)]">
@@ -101,7 +129,11 @@ export default function CreatorStopsView({
         <div className="relative grid flex-none grid-cols-[var(--control-md)_1fr_var(--control-md)] items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[var(--line-whisper)]">
           <span aria-hidden="true" />
 
-          <div className="flex min-w-0 items-center justify-center gap-0">
+          <div
+            className={`flex min-w-0 items-center justify-center gap-0 transition-opacity ${
+              secondaryPanel ? "pointer-events-none opacity-40" : ""
+            }`}
+          >
             {stopItems.map((stop, index) => {
               const Icon = STOP_ICONS[stop.iconKey] || User;
               const isFirst = index === 0;
@@ -128,7 +160,7 @@ export default function CreatorStopsView({
                   <button
                     type="button"
                     onClick={() => (stop.reachable ? onSelectStop?.(stop.id) : null)}
-                    disabled={!stop.reachable}
+                    disabled={!stop.reachable || Boolean(secondaryPanel)}
                     aria-label={stop.label}
                     aria-current={stop.active ? "step" : undefined}
                     className={`grid h-7 w-7 flex-none place-items-center rounded-[var(--radius-full)] border p-0 transition sm:h-8 sm:w-8 ${
@@ -150,58 +182,98 @@ export default function CreatorStopsView({
 
           <button
             type="button"
-            onClick={() => onClose?.()}
-            aria-label="Close character creator"
+            onClick={() => (secondaryPanel ? secondaryPanel.onCancel?.() : onClose?.())}
+            aria-label={secondaryPanel ? "Cancel" : "Close character creator"}
             className="flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center justify-self-end rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
           >
             <X size={18} />
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-6)] pb-[var(--space-6)] pt-[var(--space-5)]">
-          {stopContent}
+        <div
+          ref={contentRef}
+          className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-6)] pb-[var(--space-6)] pt-[var(--space-5)]"
+        >
+          {secondaryPanel ? (
+            <SecondaryPanel
+              eyebrow={secondaryPanel.eyebrow}
+              title={secondaryPanel.title}
+              description={secondaryPanel.description}
+            >
+              {secondaryPanel.body}
+            </SecondaryPanel>
+          ) : (
+            stopContent
+          )}
         </div>
 
         <div className="relative flex flex-none items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
-          <button
-            type="button"
-            onClick={() => onBack?.()}
-            disabled={activeIndex === 0}
-            aria-label="Back"
-            className="flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] disabled:cursor-default disabled:opacity-35"
-          >
-            <span className="text-lg leading-none">&larr;</span>
-          </button>
+          {secondaryPanel ? (
+            <>
+              <button
+                type="button"
+                onClick={() => secondaryPanel.onCancel?.()}
+                className="cf-btn cf-btn--secondary"
+              >
+                Cancel
+              </button>
 
-          <button
-            type="button"
-            onClick={() => onSave?.()}
-            disabled={saveDisabled}
-            className="cf-btn cf-btn--secondary"
-          >
-            Save
-          </button>
+              <div className="flex-1" />
 
-          <span aria-live="polite" className="inline-flex items-center">
-            {hasUnsavedChanges ? (
-              <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
-                <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
-                <span className="hidden sm:inline">Unsaved changes</span>
+              {secondaryPanel.onApply ? (
+                <button
+                  type="button"
+                  onClick={() => secondaryPanel.onApply?.()}
+                  disabled={secondaryPanel.applyDisabled}
+                  className="cf-btn cf-btn--primary"
+                >
+                  {secondaryPanel.applyLabel || "Apply"}
+                </button>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => onBack?.()}
+                disabled={activeIndex === 0}
+                aria-label="Back"
+                className="flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] disabled:cursor-default disabled:opacity-35"
+              >
+                <span className="text-lg leading-none">&larr;</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSave?.()}
+                disabled={saveDisabled}
+                className="cf-btn cf-btn--secondary"
+              >
+                Save
+              </button>
+
+              <span aria-live="polite" className="inline-flex items-center">
+                {hasUnsavedChanges ? (
+                  <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
+                    <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
+                    <span className="hidden sm:inline">Unsaved changes</span>
+                  </span>
+                ) : null}
               </span>
-            ) : null}
-          </span>
 
-          <div className="flex-1" />
+              <div className="flex-1" />
 
-          <button
-            type="button"
-            onClick={() => onNext?.()}
-            disabled={saveDisabled}
-            className="cf-btn cf-btn--primary"
-          >
-            {isLastStop ? "Finish" : "Next"}{" "}
-            <span className="cf-btn__arrow">&rarr;</span>
-          </button>
+              <button
+                type="button"
+                onClick={() => onNext?.()}
+                disabled={saveDisabled}
+                className="cf-btn cf-btn--primary"
+              >
+                {isLastStop ? "Finish" : "Next"}{" "}
+                <span className="cf-btn__arrow">&rarr;</span>
+              </button>
+            </>
+          )}
         </div>
           </>
         )}

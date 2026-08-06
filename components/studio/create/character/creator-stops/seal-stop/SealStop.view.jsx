@@ -1,6 +1,5 @@
 "use client";
 
-import CharacterColorPaletteModal from "../../CharacterColorPaletteModal";
 import { ChipRow, Eyebrow, FieldPair, SectionLabel } from "../shared/Controls";
 import {
   CONTENT_RATING_OPTIONS,
@@ -25,11 +24,12 @@ export default function SealStopView({
   visibility = "",
   contentRating = "",
   age = "",
-  characterColorPaletteId = "",
+  colorPaletteLabel = "",
+  colorPaletteSwatches = [],
   onChangeVisibility = null,
   onChangeContentRating = null,
   onChangeAge = null,
-  onChangeCharacterColorPaletteId = null,
+  onOpenColorPalette = null,
 } = {}) {
   return (
     <>
@@ -86,10 +86,24 @@ export default function SealStopView({
 
       <div className="mt-6 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
         <SectionLabel>Chat color when this character speaks</SectionLabel>
-        <CharacterColorPaletteModal
-          value={characterColorPaletteId}
-          onChange={onChangeCharacterColorPaletteId}
-        />
+        <button
+          type="button"
+          onClick={() => onOpenColorPalette?.()}
+          className="flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)]"
+        >
+          <span className="text-sm text-[var(--ink)]">
+            {colorPaletteLabel || "Untitled Palette"}
+          </span>
+          <span className="flex flex-none items-center gap-1">
+            {colorPaletteSwatches.map((color, index) => (
+              <span
+                key={`${color}-${index}`}
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </span>
+        </button>
       </div>
     </>
   );
