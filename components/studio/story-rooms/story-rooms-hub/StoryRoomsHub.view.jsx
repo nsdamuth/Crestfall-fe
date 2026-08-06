@@ -93,28 +93,28 @@ export default function StoryRoomsHubView({
             <div className="flex flex-wrap gap-3">
               <InternalLinkComponent
                 href={createTemplateHref}
-                className="inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+                className="cf-btn cf-btn--secondary"
               >
                 <BookOpen size={14} />
-                New Template
+                New template
               </InternalLinkComponent>
 
               {hasRooms && latestRoomHref ? (
                 <InternalLinkComponent
                   href={latestRoomHref}
-                  className="inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Plus size={14} />
-                  Open Latest Room
+                  Open latest room
                 </InternalLinkComponent>
               ) : (
                 <button
                   type="button"
                   disabled
-                  className="inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--ink-dim)] opacity-60"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Plus size={14} />
-                  No Rooms Yet
+                  No rooms yet
                 </button>
               )}
 
@@ -125,14 +125,12 @@ export default function StoryRoomsHubView({
               <button
                 type="button"
                 onClick={onToggleManageMode || undefined}
-                className={`inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold transition ${
-                  manageMode
-                    ? "border-red-400/30 bg-red-400/10 text-red-200 hover:bg-red-400/15"
-                    : "border-[var(--line-strong)] text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+                className={`cf-btn cf-btn--secondary ${
+                  manageMode ? "border-red-400/30 bg-red-400/10 text-red-200 hover:bg-red-400/15" : ""
                 }`}
               >
                 <Trash2 size={14} />
-                {manageMode ? "Cancel Manage" : "Manage"}
+                {manageMode ? "Cancel manage" : "Manage"}
               </button>
 
               {manageMode ? (
@@ -140,14 +138,14 @@ export default function StoryRoomsHubView({
                   type="button"
                   onClick={onDeleteSelectedRooms || undefined}
                   disabled={!canDeleteSelected}
-                  className="inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--status-danger)] transition hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cf-btn cf-btn--danger"
                 >
                   <Trash2 size={14} />
                   {deletingRooms
                     ? "Deleting..."
                     : selectedCount
-                      ? `Delete Selected (${selectedCount})`
-                      : "Delete Selected"}
+                      ? `Delete selected (${selectedCount})`
+                      : "Delete selected"}
                 </button>
               ) : null}
             </div>
@@ -320,18 +318,18 @@ function MobileStoryRoomsDrawer({
             <button
               type="button"
               disabled
-              className="inline-flex h-[var(--control-md)] items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--ink-dim)] opacity-60"
+              className="cf-btn cf-btn--primary"
             >
               <Plus size={14} />
-              Start Room Soon
+              Start room soon
             </button>
 
             <InternalLinkComponent
               href={createTemplateHref}
-              className="inline-flex h-[var(--control-md)] items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
+              className="cf-btn cf-btn--secondary"
             >
               <BookOpen size={14} />
-              New Template
+              New template
             </InternalLinkComponent>
           </div>
         </div>

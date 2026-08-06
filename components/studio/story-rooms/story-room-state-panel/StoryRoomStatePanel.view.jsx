@@ -71,7 +71,7 @@ export default function StoryRoomStatePanelView({
                 key={action.id}
                 type="button"
                 disabled={action.disabled !== false}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+                className="cf-btn cf-btn--secondary"
               >
                 <ActionIcon size={14} />
                 {action.label}

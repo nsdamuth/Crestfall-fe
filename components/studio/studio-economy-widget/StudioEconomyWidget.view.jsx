@@ -27,7 +27,7 @@ function UtilityModal({ title = "", body = "", onClose = null }) {
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="mt-5 w-full rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary mt-5 w-full"
         >
           Got it
         </button>
@@ -140,16 +140,16 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary mt-3 w-full"
         >
           <ShoppingBag size={14} />
-          Buy Coins
+          Buy coins
         </button>
 
         <button
           type="button"
           onClick={() => onOpenNotificationsInfo?.()}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary mt-2 w-full"
         >
           <Bell size={14} />
           Notifications

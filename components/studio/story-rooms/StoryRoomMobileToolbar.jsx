@@ -23,15 +23,15 @@ export default function StoryRoomMobileToolbar({
         <button
           type="button"
           onClick={onOpenCast}
-          className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
+          className="cf-btn cf-btn--primary"
         >
-          Cast / Room
+          Cast / room
         </button>
 
         <button
           type="button"
           onClick={onOpenState}
-          className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
+          className="cf-btn cf-btn--secondary"
         >
           State
         </button>

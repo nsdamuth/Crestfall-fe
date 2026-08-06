@@ -24,7 +24,7 @@ export default function StorylineBuilderShellView({
   tagsValue = "",
   tagsPlaceholder = "One tag per line",
   onChangeTags = () => {},
-  saveButtonLabel = "Save Draft",
+  saveButtonLabel = "Save draft",
   saveDisabled = false,
   onSaveDraft = () => {},
   saveMessage = "",
@@ -121,7 +121,7 @@ export default function StorylineBuilderShellView({
           type="button"
           onClick={onSaveDraft}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
           {saveButtonLabel}
