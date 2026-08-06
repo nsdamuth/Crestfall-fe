@@ -107,7 +107,7 @@ function SelectedReferenceChip({ item, onRemove }) {
       <button
         type="button"
         onClick={onRemove}
-        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:bg-white/5"
+        className="cf-btn cf-btn--danger cf-btn--sm"
         aria-label={`Remove ${item.title}`}
       >
         <X size={14} />

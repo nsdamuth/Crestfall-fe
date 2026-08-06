@@ -18,7 +18,7 @@ function ReferenceCard({ card = {} }) {
           <button
             type="button"
             onClick={() => card.onClear?.()}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-3 py-2 text-[var(--status-danger)] transition hover:bg-black/35"
+            className="cf-btn cf-btn--danger"
             aria-label={card.clearLabel}
           >
             <X size={16} />
@@ -61,7 +61,7 @@ function ReferenceCard({ card = {} }) {
       <button
         type="button"
         onClick={() => card.onChoose?.()}
-        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+        className="cf-btn cf-btn--primary mt-4"
       >
         <ImageIcon size={14} />
         {card.chooseLabel}
@@ -74,7 +74,7 @@ export default function VisualReferencesSectionView({
   sectionEyebrow = "Visual Consistency",
   sectionTitle = "Visual References",
   sectionDescription = "",
-  refreshLabel = "Refresh Library",
+  refreshLabel = "Refresh library",
   loadStatus = "idle",
   loadErrorMessage = "Image library could not be loaded.",
   referenceCards = [],
@@ -97,7 +97,7 @@ export default function VisualReferencesSectionView({
         <button
           type="button"
           onClick={() => onRefresh?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
           <RefreshCw size={14} />
           {refreshLabel}

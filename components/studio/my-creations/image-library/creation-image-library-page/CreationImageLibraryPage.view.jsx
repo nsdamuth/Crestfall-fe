@@ -70,7 +70,7 @@ export default function CreationImageLibraryPageView({
               type="button"
               onClick={onRefresh}
               disabled={isLoading}
-              className="inline-flex h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-45"
+              className="cf-btn cf-btn--secondary"
             >
               <RefreshCw size={14} />
               Refresh
@@ -79,10 +79,10 @@ export default function CreationImageLibraryPageView({
             {BackLink ? (
               <BackLink
                 href={backHref}
-                className="inline-flex h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+                className="cf-btn cf-btn--secondary"
               >
                 <ArrowLeft size={14} />
-                Back to Editor
+                Back to editor
               </BackLink>
             ) : null}
           </div>
@@ -221,9 +221,9 @@ export default function CreationImageLibraryPageView({
             <button
               type="button"
               onClick={onLoadMoreVisibleImages}
-              className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Load More
+              Load more
             </button>
           </div>
         ) : null}
@@ -392,7 +392,7 @@ function LibraryImageCard({
         type="button"
         onClick={() => onHideImage?.(image.id)}
         disabled={!image.id || image.hideBusy}
-        className="mt-3 inline-flex h-[var(--control-sm)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--gold-action)] transition hover:border-[var(--status-danger)] hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-45"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-full"
       >
         <EyeOff size={13} />
         {image.hideBusy ? "Hiding..." : "Hide"}
@@ -433,7 +433,7 @@ function HiddenImageCard({
         type="button"
         onClick={() => onShowImage?.(image.id)}
         disabled={!image.id || image.showBusy}
-        className="mt-3 inline-flex h-[var(--control-sm)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-45"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-full"
       >
         <Eye size={13} />
         {image.showBusy ? "Restoring..." : "Show"}
@@ -498,10 +498,10 @@ function DeleteButton({ image, onDeleteImage }) {
       type="button"
       onClick={() => onDeleteImage?.(image.id)}
       disabled={!image.id || image.deleting}
-      className="mt-2 inline-flex h-[var(--control-sm)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-bold text-[var(--status-danger)] transition hover:border-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="cf-btn cf-btn--danger cf-btn--sm mt-2 w-full"
     >
       <Trash2 size={13} />
-      {image.deleting ? "Deleting..." : "Delete Image"}
+      {image.deleting ? "Deleting..." : "Delete image"}
     </button>
   );
 }

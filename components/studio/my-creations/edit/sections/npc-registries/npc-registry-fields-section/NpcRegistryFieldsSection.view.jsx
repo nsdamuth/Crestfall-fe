@@ -142,7 +142,7 @@ function PrimaryAction({ children, onClick, disabled = false }) {
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--primary w-fit"
     >
       <Plus size={14} />
       {children}
@@ -155,7 +155,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       {children}
     </button>
@@ -167,7 +167,7 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+      className="cf-btn cf-btn--danger cf-btn--sm"
       aria-label="Delete"
     >
       <Trash2 size={14} />

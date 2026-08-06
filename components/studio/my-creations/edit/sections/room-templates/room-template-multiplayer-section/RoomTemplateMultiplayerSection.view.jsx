@@ -14,7 +14,7 @@ export default function RoomTemplateMultiplayerSectionView({
   turnBasedRequiredMessage = "",
   inviteesLabel = "Multiplayer Invitees",
   inviteesDescription = "",
-  addPlayerLabel = "Add Player",
+  addPlayerLabel = "Add player",
   invitedPlayers = [],
   inviteeStatusLabel = "Pending invite later",
   emptyInviteesMessage = "No multiplayer invitees selected.",
@@ -79,7 +79,7 @@ export default function RoomTemplateMultiplayerSectionView({
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
-              className="inline-flex h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:text-[var(--ink)] hover:shadow-[var(--glow-hover)]"
+              className="cf-btn cf-btn--primary cf-btn--sm"
             >
               <Plus size={14} />
               {addPlayerLabel}
@@ -121,7 +121,7 @@ export default function RoomTemplateMultiplayerSectionView({
                   <button
                     type="button"
                     onClick={() => onRemoveInvitedPlayer?.(player.id)}
-                    className="inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-white/10 px-1 py-1 text-[var(--status-danger)] transition"
+                    className="cf-btn cf-btn--danger cf-btn--sm"
                     aria-label={player.removeAriaLabel}
                   >
                     <X size={14} />
