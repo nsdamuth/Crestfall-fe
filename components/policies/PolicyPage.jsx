@@ -6,10 +6,10 @@ export default function PolicyPage({ policy }) {
     <article className="mt-12 space-y-8">
       <Link
         href="/terms"
-        className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+        className="cf-btn cf-btn--secondary"
       >
         <ArrowLeft size={14} />
-        Terms & Policies
+        Terms & policies
       </Link>
 
       <header className="rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 md:p-8">

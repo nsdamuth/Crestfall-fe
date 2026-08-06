@@ -81,9 +81,9 @@ export default function CreatorListRowView({
 
         <LinkComponent
           href={profileHref}
-          className="ml-auto rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary ml-auto"
         >
-          View Profile
+          View profile
         </LinkComponent>
       </div>
     </article>

@@ -438,7 +438,7 @@ function PublicReleasePanel({
             href={publicHref}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/25 bg-emerald-300/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-emerald-100 transition hover:border-emerald-300/45 hover:bg-emerald-300/10"
+            className="cf-btn cf-btn--secondary"
           >
             <ExternalLink size={14} />
             View public Lore
@@ -675,7 +675,7 @@ export default function LorePublicationReadinessView({
               href={ownerPreviewHref}
               target="_blank"
               rel="noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/55 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary mt-5"
             >
               <ExternalLink size={14} />
               Open full owner preview

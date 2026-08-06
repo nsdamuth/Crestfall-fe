@@ -106,7 +106,7 @@ export default function StudioFeedbackPage() {
             href="https://discord.com/channels/1482041132874727579/1482041133700878529"
             target="_blank"
             rel="noreferrer"
-            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--primary mt-6 w-full"
           >
             <ExternalLink size={14} />
             Open Discord
@@ -114,9 +114,9 @@ export default function StudioFeedbackPage() {
 
           <Link
             href="/studio"
-            className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary mt-3 w-full"
           >
-            Back to Studio
+            Back to studio
           </Link>
         </aside>
       </section>

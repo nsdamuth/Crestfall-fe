@@ -17,10 +17,10 @@ export default function CharacterTemplateBuilder(props) {
       browseTemplatesContent={
         <Link
           href="/studio/templates/characters"
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
           <Sparkles size={14} />
-          Browse Templates
+          Browse templates
         </Link>
       }
       editorContent={

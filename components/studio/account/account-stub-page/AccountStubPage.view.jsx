@@ -11,7 +11,7 @@ export default function AccountStubPageView({
   backHref = "/studio/account",
   backLabel = "Back to Account",
   returnHref = "/studio/account",
-  returnLabel = "Return to Account",
+  returnLabel = "Return to account",
   LinkComponent = "a",
 }) {
   const visibleCards = Array.isArray(cards) ? cards : [];
@@ -65,7 +65,7 @@ export default function AccountStubPageView({
 
       <LinkComponent
         href={returnHref}
-        className="inline-flex rounded-xl border border-[var(--gold-ornament)]/25 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/60 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+        className="cf-btn cf-btn--secondary"
       >
         {returnLabel}
       </LinkComponent>

@@ -260,9 +260,9 @@ export default function CreationPreviewModalView({
 
                   <LinkComponent
                     href={catalogueHref}
-                    className="mt-5 inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
+                    className="cf-btn cf-btn--primary mt-5"
                   >
-                    View Catalogue
+                    View catalogue
                   </LinkComponent>
                 </div>
               </div>

@@ -6,7 +6,7 @@ export default function StudioTopBarView({
   eyebrow = "Studio",
   description = "",
   formattedCoins = "0",
-  buyCoinsLabel = "Buy Coins",
+  buyCoinsLabel = "Buy coins",
   notificationsLabel = "Notifications",
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
@@ -37,7 +37,7 @@ export default function StudioTopBarView({
           <button
             type="button"
             onClick={onOpenBuyCoins}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/15 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <ShoppingBag size={14} />
             {buyCoinsLabel}
@@ -108,7 +108,7 @@ function StudioUtilityModal({
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary mt-5 w-full"
         >
           {dismissLabel}
         </button>
