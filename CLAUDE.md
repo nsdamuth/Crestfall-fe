@@ -69,6 +69,21 @@ inside the brief text.
 Never ask Brian to perform visual analysis in prose. Render it, put the
 options side by side, and mark the recommendation.
 
+Briefs, not commands. The strategy chat writes intent and constraints; it
+never hands Brian a shell command. Every command in this project is
+authored by the agent, which reads the repo first and checks the request
+against the standing rules. The agent's refusal is a required layer of
+protection and must never be treated as friction. When an instruction's
+premise does not match what the agent finds in the repo, the agent stops
+and escalates rather than inventing work or complying anyway. This
+behavior is correct and is not to be tuned out.
+
+Never assert unverified state. No claim about branch state, file
+contents, or how a page renders is made without having read or rendered
+it in that session. Anything expected but unconfirmed is labeled
+"expected, verify first" at the point it is stated, never as a trailing
+caveat. A verdict is never built on top of an assumption.
+
 ## 6. Progressive context
 
 Load only when the task calls for it, not by default:
