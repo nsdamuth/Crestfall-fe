@@ -131,10 +131,10 @@ export default function LocationBuilderView({
           type="button"
           onClick={onSave}
           disabled={saveDisabled}
-          className="mt-6 inline-flex h-[var(--control-md)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
@@ -278,7 +278,7 @@ export default function LocationBuilderView({
                 <button
                   type="button"
                   onClick={() => onOpenParentPicker?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--secondary"
                 >
                   <MapPin size={14} />
                   Change
@@ -287,7 +287,7 @@ export default function LocationBuilderView({
                 <button
                   type="button"
                   onClick={onClearParentLocation}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
+                  className="cf-btn cf-btn--danger"
                 >
                   <X size={14} />
                   Clear
@@ -305,10 +305,10 @@ export default function LocationBuilderView({
               <button
                 type="button"
                 onClick={() => onOpenParentPicker?.()}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--secondary mt-4"
               >
                 <MapPin size={14} />
-                Select Parent
+                Select parent
               </button>
             </div>
           )}

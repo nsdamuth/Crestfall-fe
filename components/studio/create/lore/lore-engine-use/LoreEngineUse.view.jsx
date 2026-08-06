@@ -209,7 +209,7 @@ export default function LoreEngineUseView({
           type="button"
           onClick={refresh}
           disabled={loadStatus === "LOADING"}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-violet-300/35 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <RefreshCw
             size={13}
@@ -308,7 +308,7 @@ export default function LoreEngineUseView({
                     type="button"
                     onClick={cancel}
                     disabled={isWorking}
-                    className="inline-flex items-center gap-2 rounded-xl border border-red-300/25 bg-red-300/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-100 transition hover:border-red-300/45 hover:bg-red-300/10 disabled:cursor-wait disabled:opacity-50"
+                    className="cf-btn cf-btn--danger"
                   >
                     <XCircle size={14} />
                     Cancel submission
@@ -320,10 +320,10 @@ export default function LoreEngineUseView({
                     type="button"
                     onClick={withdraw}
                     disabled={isWorking}
-                    className="inline-flex items-center gap-2 rounded-xl border border-amber-300/25 bg-amber-300/5 px-4 py-3 text-xs uppercase tracking-[0.16em] text-amber-100 transition hover:border-amber-300/45 hover:bg-amber-300/10 disabled:cursor-wait disabled:opacity-50"
+                    className="cf-btn cf-btn--danger"
                   >
                     <XCircle size={14} />
-                    Withdraw from Engine Use
+                    Withdraw from engine use
                   </button>
                 ) : null}
               </div>
@@ -500,14 +500,14 @@ export default function LoreEngineUseView({
                   type="button"
                   onClick={submit}
                   disabled={!canSubmit}
-                  className="inline-flex items-center gap-2 rounded-xl border border-violet-300/35 bg-violet-300/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-violet-100 transition hover:border-violet-300/55 hover:bg-violet-300/15 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="cf-btn cf-btn--primary"
                 >
                   {isWorking ? (
                     <LoaderCircle size={14} className="animate-spin" />
                   ) : (
                     <Send size={14} />
                   )}
-                  Submit for Engine Use
+                  Submit for engine use
                 </button>
 
                 {!selectedCharacterIds.length ? (
