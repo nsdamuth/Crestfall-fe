@@ -48,7 +48,7 @@ function SelectedClothingCard({
             <button
               type="button"
               onClick={() => onClearDefaultClothing?.()}
-              className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[var(--status-danger)] transition hover:bg-white/5"
+              className="cf-btn cf-btn--danger"
               aria-label="Clear default clothing"
             >
               <X size={16} />
@@ -65,19 +65,19 @@ function SelectedClothingCard({
           <button
             type="button"
             onClick={() => onPickOutfit?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary"
           >
             <Shirt size={14} />
-            {selectedClothing.outfitButtonLabel || "Select Outfit"}
+            {selectedClothing.outfitButtonLabel || "Select outfit"}
           </button>
 
           <button
             type="button"
             onClick={() => onPickWardrobe?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Shirt size={14} />
-            {selectedClothing.wardrobeButtonLabel || "Select Wardrobe"}
+            {selectedClothing.wardrobeButtonLabel || "Select wardrobe"}
           </button>
         </div>
       </div>

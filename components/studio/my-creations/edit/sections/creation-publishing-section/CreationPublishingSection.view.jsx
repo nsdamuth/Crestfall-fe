@@ -6,10 +6,10 @@ import {
 
 function getTemplateActionClassName(emphasis) {
   if (emphasis === "primary") {
-    return "rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] opacity-70";
+    return "cf-btn cf-btn--primary";
   }
 
-  return "rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60";
+  return "cf-btn cf-btn--secondary";
 }
 
 export default function CreationPublishingSectionView({

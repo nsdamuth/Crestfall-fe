@@ -15,7 +15,7 @@ export default function CreationDangerSectionView({
   canonNoticeBody = "",
   archiveTitle = "Archive Creation",
   archiveDescription = "",
-  archiveButtonLabel = "Archive Creation",
+  archiveButtonLabel = "Archive creation",
   archiveDisabled = false,
   archiveMessage = "",
   archiveMessageTone = "success",
@@ -23,7 +23,7 @@ export default function CreationDangerSectionView({
   deleteDescription = "",
   showDeleteRequirement = false,
   deleteRequirementMessage = "",
-  deleteButtonLabel = "Delete Creation",
+  deleteButtonLabel = "Delete creation",
   deleteDisabled = false,
   deleteMessage = "",
   deleteMessageTone = "success",
@@ -67,7 +67,7 @@ export default function CreationDangerSectionView({
                 type="button"
                 disabled={archiveDisabled}
                 onClick={() => onArchive?.()}
-                className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--status-danger)] transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--danger mt-5"
               >
                 {archiveButtonLabel}
               </button>
@@ -108,7 +108,7 @@ export default function CreationDangerSectionView({
                 type="button"
                 disabled={deleteDisabled}
                 onClick={() => onDelete?.()}
-                className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-transparent px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--status-danger)] transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--danger mt-5"
               >
                 {deleteButtonLabel}
               </button>

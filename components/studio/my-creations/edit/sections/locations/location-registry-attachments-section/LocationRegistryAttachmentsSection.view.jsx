@@ -39,7 +39,7 @@ export default function LocationRegistryAttachmentsSectionView({
               <button
                 type="button"
                 onClick={() => onOpenPicker?.(group.id)}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--primary"
               >
                 <Link2 size={14} />
                 {group.addLabel}
@@ -102,7 +102,7 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-white/5"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label="Remove attached registry"
         >
           <X size={14} />
