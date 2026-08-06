@@ -246,10 +246,10 @@ export default function ActorMechanicsProfileEditorView({
           <button
             type="button"
             onClick={() => onOpenJsonEditor?.()}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Braces size={15} />
-            JSON Editor
+            JSON editor
           </button>
 
           <button
@@ -344,10 +344,10 @@ export default function ActorMechanicsProfileEditorView({
           <button
             type="button"
             onClick={() => onApplyPreset?.()}
-            className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Sparkles size={15} />
-            Apply Preset
+            Apply preset
           </button>
         </div>
       </div>
@@ -624,10 +624,10 @@ export default function ActorMechanicsProfileEditorView({
           type="button"
           onClick={() => onAddBinding?.()}
           disabled={bindingCount >= bindingLimit}
-          className="inline-flex h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-transparent px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] [font-weight:var(--weight-bold)] text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+          className="cf-btn cf-btn--secondary"
         >
           <Plus size={15} />
-          Add Binding
+          Add binding
         </button>
       </div>
 
@@ -738,7 +738,7 @@ export default function ActorMechanicsProfileEditorView({
                       type="button"
                       onClick={() => onRemoveBinding?.(binding.id)}
                       aria-label={`Remove ${binding.domainLabel}`}
-                      className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
+                      className="cf-btn cf-btn--danger cf-btn--sm"
                     >
                       <Trash2 size={15} />
                       <span className="text-xs">Remove</span>
@@ -893,14 +893,14 @@ export default function ActorMechanicsProfileEditorView({
                             !managedDefinition &&
                             binding.references.length >= referenceLimitPerBinding
                           }
-                          className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink)] transition hover:border-[var(--gold-ornament)]/30 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="cf-btn cf-btn--secondary cf-btn--sm"
                         >
                           <Plus size={13} />
                           {managedDefinition
                             ? managedDefinition.hasReference
                               ? managedDefinition.replaceLabel
                               : managedDefinition.selectLabel
-                            : "Add Reference"}
+                            : "Add reference"}
                         </button>
                       </div>
 
@@ -939,7 +939,7 @@ export default function ActorMechanicsProfileEditorView({
                                       reference.title ||
                                       managedDefinition.fallbackTitle
                                     }`}
-                                    className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
+                                    className="cf-btn cf-btn--danger cf-btn--sm"
                                   >
                                     <Trash2 size={14} />
                                     <span className="text-xs">Remove</span>
@@ -981,7 +981,7 @@ export default function ActorMechanicsProfileEditorView({
                                     aria-label={`Remove reference ${
                                       reference.index + 1
                                     }`}
-                                    className="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
+                                    className="cf-btn cf-btn--danger cf-btn--sm"
                                   >
                                     <Trash2 size={14} />
                                     <span className="text-xs">Remove</span>
@@ -1102,7 +1102,7 @@ export default function ActorMechanicsProfileEditorView({
                         type="button"
                         onClick={() => onRemoveBinding?.(binding.id)}
                         aria-label={`Remove ${binding.domainLabel}`}
-                        className="inline-flex items-center gap-1 rounded-lg border border-[var(--status-danger-border)] px-2 py-2 text-[var(--status-danger)]"
+                        className="cf-btn cf-btn--danger cf-btn--sm"
                       >
                         <Trash2 size={15} />
                         <span className="text-xs">Remove</span>

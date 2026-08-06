@@ -152,10 +152,10 @@ export default function CreatorCardView({
                     ? "Unfollow creator"
                     : "Follow creator"
                 }
-                className={`inline-flex min-h-[var(--control-md)] items-center justify-center gap-2 rounded-[var(--radius-md)] border px-4 text-xs uppercase tracking-[0.14em] transition ${
+                className={`cf-btn cf-btn--secondary cf-btn--sm ${
                   engagementActions.followed
                     ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
-                    : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                    : ""
                 }`}
               >
                 {engagementActions.followed ? (
@@ -169,11 +169,11 @@ export default function CreatorCardView({
 
             <LinkComponent
               href={profileHref}
-              className={`inline-flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] ${
+              className={`cf-btn cf-btn--primary cf-btn--sm ${
                 engagementActions.canFollow ? "" : "col-span-2"
               }`}
             >
-              View Profile
+              View profile
             </LinkComponent>
           </div>
         </div>
@@ -183,9 +183,9 @@ export default function CreatorCardView({
 
           <LinkComponent
             href={profileHref}
-            className="mt-5 inline-flex w-fit rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--primary mt-5 w-fit"
           >
-            View Profile
+            View profile
           </LinkComponent>
         </div>
       </div>

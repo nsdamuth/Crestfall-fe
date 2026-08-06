@@ -89,10 +89,10 @@ export default function CharacterTemplateBuilderView({
               type="button"
               onClick={() => onSave?.()}
               disabled={saveDisabled}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="cf-btn cf-btn--primary"
             >
               <Save size={14} />
-              {saveStatus === "saving" ? "Saving..." : "Save Template"}
+              {saveStatus === "saving" ? "Saving..." : "Save template"}
             </button>
           </div>
 
@@ -140,7 +140,7 @@ export default function CharacterTemplateBuilderView({
             type="button"
             onClick={() => onBack?.()}
             disabled={activeIndex === 0}
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] transition hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="cf-btn cf-btn--secondary"
           >
             Back
           </button>
@@ -150,15 +150,15 @@ export default function CharacterTemplateBuilderView({
               type="button"
               onClick={() => onSave?.()}
               disabled={saveDisabled}
-              className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="cf-btn cf-btn--primary"
             >
-              {saveStatus === "saving" ? "Saving..." : "Save Template"}
+              {saveStatus === "saving" ? "Saving..." : "Save template"}
             </button>
           ) : (
             <button
               type="button"
               onClick={() => onNext?.()}
-              className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--primary"
             >
               Next
             </button>
@@ -215,10 +215,10 @@ function CharacterTemplateSummary({
       <button
         type="button"
         onClick={() => onReset?.()}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--status-danger)]/40 hover:text-[var(--status-danger)]"
+        className="cf-btn cf-btn--danger mt-5 w-full"
       >
         <RotateCcw size={14} />
-        Clear Template Draft
+        Clear template draft
       </button>
     </aside>
   );
