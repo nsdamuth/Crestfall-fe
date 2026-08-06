@@ -18,6 +18,7 @@ import NameStopView from "@/components/studio/create/character/creator-stops/nam
 import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
 import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
 import SilhouetteStopView from "@/components/studio/create/character/creator-stops/silhouette-stop/SilhouetteStop.view";
+import HeartStopView from "@/components/studio/create/character/creator-stops/heart-stop/HeartStop.view";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -98,6 +99,18 @@ const INITIAL_FORM_STATE = {
   defaultClothingMode: "NONE",
   defaultOutfitTitle: "",
   defaultWardrobeTitle: "",
+  outwardPersonality: "",
+  internalPersonality: "",
+  speechStyle: "",
+  greeting: "",
+  scenario: "",
+  backstory: "",
+  verbosityLevel: "3",
+  philosophy: "",
+  interests: "",
+  relationshipToPlayer: "",
+  voiceModuleIds: [],
+  personalityNotes: "",
 };
 
 function StopStub({ stopId }) {
@@ -130,6 +143,7 @@ export default function CreatorStopsPreviewClient() {
   const [moreHairOpen, setMoreHairOpen] = useState(false);
   const [typingFoldOpen, setTypingFoldOpen] = useState(false);
   const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
+  const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
   const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
@@ -166,6 +180,7 @@ export default function CreatorStopsPreviewClient() {
     setMoreHairOpen(false);
     setTypingFoldOpen(false);
     setFineTuneFoldOpen(false);
+    setHeartAdvancedFoldOpen(false);
     setConfirmDiscardOpen(false);
     setIsOpen(false);
   }
@@ -370,6 +385,43 @@ export default function CreatorStopsPreviewClient() {
                 fineTuneFoldOpen={fineTuneFoldOpen}
                 onToggleFineTuneFold={() =>
                   setFineTuneFoldOpen((current) => !current)
+                }
+              />
+            ) : activeStop === "heart" ? (
+              <HeartStopView
+                outwardPersonality={formState.outwardPersonality}
+                internalPersonality={formState.internalPersonality}
+                speechStyle={formState.speechStyle}
+                greeting={formState.greeting}
+                scenario={formState.scenario}
+                backstory={formState.backstory}
+                verbosityLevel={formState.verbosityLevel}
+                philosophy={formState.philosophy}
+                interests={formState.interests}
+                relationshipToPlayer={formState.relationshipToPlayer}
+                voiceModuleIds={formState.voiceModuleIds}
+                personalityNotes={formState.personalityNotes}
+                onChangeOutwardPersonality={updateField("outwardPersonality")}
+                onChangeInternalPersonality={updateField("internalPersonality")}
+                onChangeSpeechStyle={updateField("speechStyle")}
+                onChangeGreeting={updateField("greeting")}
+                onChangeScenario={updateField("scenario")}
+                onChangeBackstory={updateField("backstory")}
+                onChangeVerbosityLevel={updateField("verbosityLevel")}
+                onChangePhilosophy={updateField("philosophy")}
+                onChangeInterests={updateField("interests")}
+                onChangeRelationshipToPlayer={updateField(
+                  "relationshipToPlayer"
+                )}
+                onOpenVoiceModulePicker={() =>
+                  setTemplateNote(
+                    "The voice module picker is not built in this pass."
+                  )
+                }
+                onChangePersonalityNotes={updateField("personalityNotes")}
+                advancedFoldOpen={heartAdvancedFoldOpen}
+                onToggleAdvancedFold={() =>
+                  setHeartAdvancedFoldOpen((current) => !current)
                 }
               />
             ) : (

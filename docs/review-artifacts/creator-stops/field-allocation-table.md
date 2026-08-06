@@ -109,6 +109,25 @@ else in the live app; given no precedent, it gets a plain text field.
 
 ## The heart (commit 7)
 
+BehaviorStep.jsx, the live app's own equivalent step, corrects two guesses
+from the first pass of this table: `interests` is a single choice via the
+same TraitModal pattern as speech style and MBTI, not a multi-select
+despite its plural name, and `verbosity_level` has five fixed values
+(Terse through Highly verbose), not an open chip set. `voice_module_ids`
+is confirmed to be a real multi-value field, set through
+VoiceModulePickerModal, a search-and-pick modal over reusable voice
+creations. That modal is not literally named in the brief's exclusion
+list, but it is the same shape as the outfit and wardrobe browsers the
+list does name, so it gets the same empty-state stub treatment rather
+than an attempt to rebuild it. `relationship_to_player` has no dropdown
+precedent anywhere in the live app, just a plain text value, so it stays
+a text area rather than the dropdown the first pass of this table guessed.
+
+Also noted, not acted on: BehaviorStep.jsx also reads and writes a
+`movement_style` field, used across several other flows, but it is not a
+key in constants/form.js's 53-field initialForm, so it falls outside the
+54 fields this build is scoped to and is left alone.
+
 | Field | Exposed / collapsed | Control |
 |---|---|---|
 | outward_personality | exposed | freeform text area |
@@ -117,11 +136,11 @@ else in the live app; given no precedent, it gets a plain text field.
 | greeting | exposed | freeform text area |
 | scenario | exposed | freeform text area |
 | backstory | exposed | freeform text area |
-| verbosity_level | collapsed, "Advanced" fold | chip row |
+| verbosity_level | collapsed, "Advanced" fold | inline dropdown, five fixed values |
 | philosophy | collapsed, same fold | freeform text area |
-| interests | collapsed, same fold | chip row |
-| relationship_to_player | collapsed, same fold | inline dropdown |
-| voice_module_ids | collapsed, same fold | multi-select list |
+| interests | collapsed, same fold | inline dropdown |
+| relationship_to_player | collapsed, same fold | freeform text area |
+| voice_module_ids | collapsed, same fold | empty-state stub, no picker built |
 | personality_notes | collapsed, same fold | freeform text area |
 
 ## The seal (commit 8)
