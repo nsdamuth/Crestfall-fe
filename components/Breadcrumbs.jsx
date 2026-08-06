@@ -11,7 +11,7 @@ export default function Breadcrumbs({ currentTitle, path = [] }) {
   const crumbs = [{ label: "Archive", href: "/" }, ...path];
 
   return (
-    <nav className="mb-8 font-display text-xs uppercase tracking-[0.25em] text-[#7b5525]">
+    <nav className="mb-8 text-xs uppercase tracking-[0.25em] text-[#7b5525]">
       {crumbs.map((crumb, index) => (
             <span key={`${crumb.href ?? crumb.label}-${index}`}>
           {crumb.href ? (

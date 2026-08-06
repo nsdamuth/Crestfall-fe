@@ -26,7 +26,7 @@ export default function LoreCard({
         </div>
       )}
 
-      <p className="font-display text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
         {eyebrow}
       </p>
 

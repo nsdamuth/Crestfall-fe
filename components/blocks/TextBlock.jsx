@@ -11,7 +11,7 @@ export default function TextBlock({
     <section>
       {title && (
         <h3
-          className={`font-display text-sm uppercase tracking-[0.3em] text-[#7b5525] ${
+          className={`text-sm uppercase tracking-[0.3em] text-[#7b5525] ${
             titleStyle === "bold" ? "font-bold" : ""
           }`}
         >

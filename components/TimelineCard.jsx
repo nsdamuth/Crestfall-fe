@@ -21,7 +21,7 @@ export default function TimelineCard({ entry }) {
         href={entry.slug}
         className="group block border border-[var(--border)] bg-[rgba(12,10,8,0.82)] p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)] hover:bg-[rgba(20,16,12,0.9)]"
       >
-        <p className="font-display text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
           {entry.era}
         </p>
 
@@ -29,7 +29,7 @@ export default function TimelineCard({ entry }) {
           {entry.title}
         </h3>
 
-        <p className="mt-2 font-display text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+        <p className="mt-2 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
           {entry.realm}
         </p>
 
