@@ -17,7 +17,7 @@ export default function ItemStartingAssignmentEditorView({
   hasSelectedHolder = false,
   selectedHolderTitle = "Selected Holder",
   emptyHolderLabel = "holder",
-  pickerAddLabel = "Select Holder",
+  pickerAddLabel = "Select holder",
   showUnassignedState = true,
   showStoryState = false,
   showPlacement = false,
@@ -93,7 +93,7 @@ export default function ItemStartingAssignmentEditorView({
                 <button
                   type="button"
                   onClick={() => onOpenPicker?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Link2 size={14} />
                   Change
@@ -102,7 +102,7 @@ export default function ItemStartingAssignmentEditorView({
                 <button
                   type="button"
                   onClick={() => onClearHolderCreation?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+                  className="cf-btn cf-btn--danger"
                 >
                   <X size={14} />
                   Clear
@@ -118,7 +118,7 @@ export default function ItemStartingAssignmentEditorView({
               <button
                 type="button"
                 onClick={() => onOpenPicker?.()}
-                className="mt-3 inline-flex items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--primary mt-3"
               >
                 <Link2 size={14} />
                 {pickerAddLabel}
@@ -191,7 +191,7 @@ export default function ItemStartingAssignmentEditorView({
                         <button
                           type="button"
                           onClick={() => onDeletePlacementStep?.(step.id)}
-                          className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+                          className="cf-btn cf-btn--danger cf-btn--sm"
                           aria-label="Delete placement level"
                         >
                           <Trash2 size={14} />
@@ -255,10 +255,10 @@ export default function ItemStartingAssignmentEditorView({
                     type="button"
                     onClick={() => onAddPlacementStep?.()}
                     disabled={!canAddPlacementStep}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="cf-btn cf-btn--primary"
                   >
                     <Plus size={14} />
-                    Add New Level
+                    Add new level
                   </button>
                 </div>
               </div>

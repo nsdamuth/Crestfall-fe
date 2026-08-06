@@ -17,7 +17,7 @@ export default function PublicProfileDonateButtonView({
   amountNet = 0,
   taxAmount = 0,
   taxPercent = 0,
-  submitLabel = `Donate ${minimumDonation} Coins`,
+  submitLabel = `Donate ${minimumDonation} coins`,
   statusMessage = "",
   statusTone = "",
   onOpenDonation = null,
@@ -34,7 +34,7 @@ export default function PublicProfileDonateButtonView({
       <button
         type="button"
         onClick={() => onOpenDonation?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-pink-400/35 bg-pink-400/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-pink-200 transition hover:bg-pink-400/15 hover:text-pink-100"
+        className="cf-btn cf-btn--primary"
       >
         <Gift size={14} />
         Donate
@@ -145,7 +145,7 @@ export default function PublicProfileDonateButtonView({
                   <button
                     type="button"
                     onClick={() => onCloseDonation?.()}
-                    className="rounded-xl border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                    className="cf-btn cf-btn--primary"
                   >
                     Close
                   </button>
@@ -154,7 +154,7 @@ export default function PublicProfileDonateButtonView({
                     <button
                       type="button"
                       onClick={() => onCloseDonation?.()}
-                      className="rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                      className="cf-btn cf-btn--secondary"
                     >
                       Cancel
                     </button>
@@ -162,7 +162,7 @@ export default function PublicProfileDonateButtonView({
                     <button
                       type="submit"
                       disabled={isBusy}
-                      className="inline-flex items-center gap-2 rounded-xl border border-pink-400/35 bg-pink-400/15 px-4 py-3 text-xs uppercase tracking-[0.14em] text-pink-100 transition hover:bg-pink-400/25 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="cf-btn cf-btn--primary"
                     >
                       {isBusy ? (
                         <Loader2 size={14} className="animate-spin" />

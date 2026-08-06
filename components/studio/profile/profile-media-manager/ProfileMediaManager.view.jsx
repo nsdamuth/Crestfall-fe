@@ -13,7 +13,7 @@ export default function ProfileMediaManagerView({
     size = "md",
     title: avatarTitle = "Active Profile Picture",
     description: avatarDescription = "",
-    actionLabel: avatarActionLabel = "Choose Soon",
+    actionLabel: avatarActionLabel = "Choose soon",
   } = avatar;
 
   const {
@@ -22,7 +22,7 @@ export default function ProfileMediaManagerView({
     compact = true,
     title: bannerSectionTitle = "Active Profile Banner",
     description: bannerDescription = "",
-    actionLabel: bannerActionLabel = "Choose Soon",
+    actionLabel: bannerActionLabel = "Choose soon",
   } = banner;
 
   return (
@@ -57,7 +57,7 @@ export default function ProfileMediaManagerView({
           <button
             type="button"
             disabled
-            className="rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             {avatarActionLabel}
           </button>
@@ -85,7 +85,7 @@ export default function ProfileMediaManagerView({
             <button
               type="button"
               disabled
-              className="shrink-0 rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)] opacity-60"
+              className="cf-btn cf-btn--secondary cf-btn--sm shrink-0"
             >
               {bannerActionLabel}
             </button>
