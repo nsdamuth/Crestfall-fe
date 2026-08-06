@@ -5,7 +5,7 @@ export default function ActorMechanicsProfileAttachmentSectionView({
   title = "Actor Mechanics Profile",
   body =
     "Attach one reusable Actor Mechanics Profile to this actor. The profile defines which mechanics domains belong to the actor while mutable state remains isolated to this actor.",
-  addLabel = "Attach Actor Mechanics Profile",
+  addLabel = "Attach actor mechanics profile",
   emptyLabel = "No Actor Mechanics Profile attached.",
   runtimeNote =
     "This step saves the actor-to-profile relationship only. Runtime hydration and activation are introduced separately.",
@@ -34,10 +34,10 @@ export default function ActorMechanicsProfileAttachmentSectionView({
           type="button"
           onClick={() => onOpenPicker?.()}
           disabled={disabled}
-          className="inline-flex h-11 items-center gap-2 rounded-xl border border-[var(--line-strong)] bg-transparent px-6 text-base font-bold leading-6 text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="cf-btn cf-btn--secondary"
         >
           <Link2 size={14} />
-          {attachment ? "Replace Profile" : addLabel}
+          {attachment ? "Replace profile" : addLabel}
         </button>
       </div>
 
@@ -125,7 +125,7 @@ function ActorMechanicsProfileAttachmentCard({
           type="button"
           onClick={() => onRemove?.()}
           disabled={disabled}
-          className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line)] px-3 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label={
             attachment.removeAriaLabel ||
             "Remove attached Actor Mechanics Profile"

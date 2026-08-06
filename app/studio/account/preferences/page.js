@@ -121,11 +121,9 @@ function PreferenceCard({ setting }) {
             key={option}
             type="button"
             disabled
-            className={`rounded-xl border px-4 py-3 text-left text-xs uppercase tracking-[0.14em] ${
-              index === 0
-                ? "border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
-                : "border-white/10 bg-black/30 text-[var(--muted)]"
-            } opacity-80`}
+            className={`cf-btn cf-btn--secondary w-full justify-start text-left ${
+              index === 0 ? "border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10" : ""
+            }`}
           >
             {option}
           </button>

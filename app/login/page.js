@@ -86,7 +86,7 @@ export default function LoginPage() {
         type="button"
         onClick={handleGoogleLogin}
         disabled={isSubmitting}
-        className="mt-8 w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/40 bg-black/45 px-4 py-3 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-60"
+        className="cf-btn cf-btn--secondary mt-8 w-full"
         >
         Continue with Google
         </button>
@@ -118,7 +118,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/20 px-4 py-3 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/30 disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary w-full"
           >
             {isSubmitting ? "Sending..." : "Send login link"}
           </button>

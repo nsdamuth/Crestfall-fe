@@ -79,9 +79,9 @@ export default function StudioAccountProfileView({
           {publicProfileHref ? (
             <a
               href={publicProfileHref}
-              className="inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+              className="cf-btn cf-btn--secondary"
             >
-              View Public Profile
+              View public profile
             </a>
           ) : null}
 
@@ -181,16 +181,16 @@ export default function StudioAccountProfileView({
                 <button
                   type="button"
                   onClick={onOpenDefaultPlayerCharacterPicker}
-                  className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+                  className="cf-btn cf-btn--secondary"
                 >
-                  Choose Default PC
+                  Choose default PC
                 </button>
 
                 {hasDefaultPlayerCharacterSelection ? (
                   <button
                     type="button"
                     onClick={onClearDefaultPlayerCharacter}
-                    className="rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--status-danger)] transition hover:border-[var(--status-danger)]/40"
+                    className="cf-btn cf-btn--danger"
                   >
                     Clear
                   </button>
@@ -261,9 +261,9 @@ function SaveButton({ isSaving }) {
     <button
       type="submit"
       disabled={isSaving}
-      className="inline-flex rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60"
+      className="cf-btn cf-btn--primary"
     >
-      {isSaving ? "Saving…" : "Save Profile"}
+      {isSaving ? "Saving…" : "Save profile"}
     </button>
   );
 }
@@ -415,7 +415,7 @@ function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary mt-5 w-full"
         >
           OK
         </button>
