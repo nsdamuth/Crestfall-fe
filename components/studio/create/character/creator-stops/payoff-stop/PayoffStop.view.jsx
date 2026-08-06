@@ -40,14 +40,14 @@ export default function PayoffStopView({
         The soul, forged
       </p>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
-        {previewProps.characterName}
+        Every choice, brought together.
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
         The finished shape of every choice made so far. This preview lives
         here and nowhere else in the creator.
       </p>
 
-      <div className="mt-6 max-w-sm">
+      <div className="mt-6">
         <CharacterPreviewView {...previewProps} />
       </div>
 
