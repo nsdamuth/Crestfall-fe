@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 export default function TraitModalView({
   open = false,
@@ -21,45 +21,47 @@ export default function TraitModalView({
   onUseCustomValue = null,
 }) {
   return (
-    <div>
+    <div
+      className={`overflow-hidden rounded-xl border transition ${
+        open
+          ? "border-[var(--gold-ornament)]/45 bg-black/25"
+          : "border-white/10 bg-black/35"
+      }`}
+    >
       <button
         type="button"
-        onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm transition hover:border-[var(--gold-ornament)]/35"
+        onClick={() => (open ? onClose?.() : onOpen?.())}
+        aria-expanded={open}
+        aria-label={modalTitle}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition hover:border-[var(--gold-ornament)]/35"
       >
-        <span className="block text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-          {triggerLabel}
+        <span className="min-w-0 flex-1">
+          <span className="block text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            {triggerLabel}
+          </span>
+          <span className="mt-1 block text-[var(--ink)]">
+            {triggerSummary || "Not chosen"}
+          </span>
         </span>
-        <span className="mt-1 block text-[var(--ink)]">
-          {triggerSummary || "Not chosen"}
-        </span>
+
+        <ChevronDown
+          size={16}
+          className={`shrink-0 text-[var(--ink-dim)] transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="w-full max-w-5xl rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl">{modalTitle}</h2>
-                {modalDescription ? (
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-                    {modalDescription}
-                  </p>
-                ) : null}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
+        <div className="border-t border-[var(--line-whisper)] px-4 py-4">
+            {modalDescription ? (
+              <p className="mb-4 text-sm leading-6 text-[var(--ink-dim)]">
+                {modalDescription}
+              </p>
+            ) : null}
 
             {customActive ? (
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/30 p-4">
+              <div className="rounded-xl border border-white/10 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                   {customTitle}
                 </p>
@@ -116,7 +118,6 @@ export default function TraitModalView({
                 ))}
               </div>
             )}
-          </div>
         </div>
       ) : null}
     </div>
