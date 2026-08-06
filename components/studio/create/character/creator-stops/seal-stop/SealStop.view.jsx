@@ -1,8 +1,8 @@
 "use client";
 
-import { ChipRow, Fold, SectionLabel, SwatchGrid } from "../shared/Controls";
+import CharacterColorPaletteModal from "../../CharacterColorPaletteModal";
+import { ChipRow, Fold, SectionLabel } from "../shared/Controls";
 import {
-  COLOR_PALETTE_OPTIONS,
   CONTENT_RATING_OPTIONS,
   normalizeAdultAge,
   VISIBILITY_OPTIONS,
@@ -88,11 +88,13 @@ export default function SealStopView({
         onToggle={onToggleRenderingFold}
         filled={Boolean(characterColorPaletteId)}
       >
-        <SwatchGrid
-          options={COLOR_PALETTE_OPTIONS}
-          value={characterColorPaletteId}
-          onChange={onChangeCharacterColorPaletteId}
-        />
+        <div>
+          <SectionLabel>Chat color when this character speaks</SectionLabel>
+          <CharacterColorPaletteModal
+            value={characterColorPaletteId}
+            onChange={onChangeCharacterColorPaletteId}
+          />
+        </div>
       </Fold>
     </div>
   );
