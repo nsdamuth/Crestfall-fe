@@ -155,6 +155,18 @@
   margin-left: auto;
 }
 
+/* --- FOCUS-VISIBLE --------------------------------------------
+   Item 7, phase 3 aesthetics. --focus-ring (app/theme.css) was
+   defined but never wired to a global rule; only one component
+   set focus-visible classes ad hoc. One rule, every interactive
+   element, so keyboard focus is visible everywhere without a
+   per-component opt-in.                                        */
+
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* --- DROPDOWN TREATMENT ---------------------------------------
    Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
    to library.css lines 300-336. The reusable menu box and row
