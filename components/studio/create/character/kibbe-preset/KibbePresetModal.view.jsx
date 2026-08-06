@@ -131,9 +131,9 @@ export default function KibbePresetModalView({
               <button
                 type="button"
                 onClick={() => onSaveIdentityOnly?.()}
-                className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+                className="cf-btn cf-btn--secondary"
               >
-                {hasPendingPreset ? "Save Identity Only" : "Clear Identity"}
+                {hasPendingPreset ? "Save identity only" : "Clear identity"}
               </button>
 
               {hasPendingPreset ? (
@@ -141,16 +141,16 @@ export default function KibbePresetModalView({
                   <button
                     type="button"
                     onClick={() => onFillEmptyFields?.()}
-                    className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20"
+                    className="cf-btn cf-btn--secondary"
                   >
-                    Fill Empty Fields
+                    Fill empty fields
                   </button>
                   <button
                     type="button"
                     onClick={() => onReplaceBodyTraits?.()}
-                    className="rounded-xl border border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/30"
+                    className="cf-btn cf-btn--primary"
                   >
-                    Replace Body Traits
+                    Replace body traits
                   </button>
                 </>
               ) : null}

@@ -103,17 +103,17 @@ function QuickStartView({ assets, onModeChange }) {
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.GUIDED)}
-          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          className="cf-btn cf-btn--secondary"
         >
-          Build a Complete Story →
+          Build a complete story →
         </button>
 
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          className="cf-btn cf-btn--secondary"
         >
-          View Every Tool →
+          View every tool →
         </button>
       </div>
     </section>
@@ -157,7 +157,7 @@ function GuidedBuildView({
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="rounded-full border border-white/10 px-3 py-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--tertiary"
         >
           View all tools
         </button>
@@ -238,9 +238,9 @@ function CorePathCompleteBanner({ LinkComponent }) {
 
         <LinkComponent
           href="/studio/my-creations"
-          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary shrink-0"
         >
-          Open My Creations →
+          Open my creations →
         </LinkComponent>
       </div>
     </div>
@@ -277,7 +277,7 @@ function RecommendedNextPanel({ step, asset, LinkComponent }) {
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/45 bg-black/25 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/45 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary shrink-0"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -422,12 +422,12 @@ function GuidedChapterStep({
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm shrink-0"
         >
           {step.complete
             ? step.id === "SECOND_STORY"
-              ? "Create Another Story"
-              : "Create Another"
+              ? "Create another story"
+              : "Create another"
             : getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
       </div>
@@ -464,9 +464,9 @@ function GuidedStep({
 
           <LinkComponent
             href={asset.href}
-            className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm shrink-0"
           >
-            Create Another →
+            Create another →
           </LinkComponent>
         </div>
       </article>
@@ -508,7 +508,7 @@ function GuidedStep({
 
         <LinkComponent
           href={asset.href}
-          className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary shrink-0"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -546,7 +546,7 @@ function GuidedStep({
 
 function getGuidedStepActionLabel(step, asset) {
   if (step.id === "SECOND_STORY") {
-    return "Create Second Story";
+    return "Create second story";
   }
 
   return `Create ${asset.title}`;
@@ -578,16 +578,16 @@ function ToolkitFoundationCompletePanel({ onModeChange, LinkComponent }) {
       <div className="mt-5 flex flex-wrap gap-3">
         <LinkComponent
           href="/studio/my-creations"
-          className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/45 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-black/55 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--secondary"
         >
-          Open My Creations →
+          Open my creations →
         </LinkComponent>
         <button
           type="button"
           onClick={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
-          className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          className="cf-btn cf-btn--primary"
         >
-          Open Full Studio →
+          Open full studio →
         </button>
       </div>
     </div>

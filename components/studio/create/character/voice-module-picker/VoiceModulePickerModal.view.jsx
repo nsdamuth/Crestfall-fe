@@ -6,7 +6,7 @@ export default function VoiceModulePickerModalView({
   open = false,
   triggerLabel = "Voice Modules",
   triggerDescription = "",
-  triggerActionLabel = "Choose Modules",
+  triggerActionLabel = "Choose modules",
   selectedItems = [],
   emptySelectionMessage = "No voice modules selected.",
   modalAriaLabel = "Choose voice modules",
@@ -14,7 +14,7 @@ export default function VoiceModulePickerModalView({
   modalDescription = "",
   optionGroups = [],
   selectedIds = [],
-  clearActionLabel = "Clear All",
+  clearActionLabel = "Clear all",
   doneActionLabel = "Done",
   canClear = false,
   onOpen = null,
@@ -43,7 +43,7 @@ export default function VoiceModulePickerModalView({
         <button
           type="button"
           onClick={() => onOpen?.()}
-          className="shrink-0 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
+          className="cf-btn cf-btn--primary shrink-0"
         >
           {triggerActionLabel}
         </button>
@@ -161,7 +161,7 @@ export default function VoiceModulePickerModalView({
                 type="button"
                 onClick={() => onClearAll?.()}
                 disabled={!canClear}
-                className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cf-btn cf-btn--danger"
               >
                 {clearActionLabel}
               </button>
@@ -169,7 +169,7 @@ export default function VoiceModulePickerModalView({
               <button
                 type="button"
                 onClick={() => onDone?.()}
-                className="rounded-xl border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 px-5 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
+                className="cf-btn cf-btn--primary"
               >
                 {doneActionLabel}
               </button>
