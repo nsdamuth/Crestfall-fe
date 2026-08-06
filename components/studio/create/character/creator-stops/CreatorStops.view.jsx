@@ -101,11 +101,11 @@ export default function CreatorStopsView({
         {confirmDiscardOpen ? (
           <div className="flex h-full flex-col items-center justify-center gap-[var(--space-4)] px-[var(--space-8)] text-center">
             <h2 className="font-display text-2xl text-[var(--ink)]">
-              Discard this character?
+              Discard unsaved changes?
             </h2>
             <p className="max-w-sm text-sm leading-6 text-[var(--ink-dim)]">
-              Nothing on this character has been saved. Closing now discards
-              it completely.
+              Anything changed since the last save is lost. Closing now
+              discards it.
             </p>
             <div className="mt-[var(--space-2)] flex items-center gap-[var(--space-3)]">
               <button
@@ -120,7 +120,7 @@ export default function CreatorStopsView({
                 onClick={() => onConfirmDiscard?.()}
                 className="cf-btn cf-btn--danger-filled"
               >
-                Discard character
+                Discard unsaved changes
               </button>
             </div>
           </div>
@@ -269,7 +269,7 @@ export default function CreatorStopsView({
                 disabled={saveDisabled}
                 className="cf-btn cf-btn--primary"
               >
-                {isLastStop ? "Finish" : "Next"}{" "}
+                {isLastStop ? "Finish and save" : "Next"}{" "}
                 <span className="cf-btn__arrow">&rarr;</span>
               </button>
             </>

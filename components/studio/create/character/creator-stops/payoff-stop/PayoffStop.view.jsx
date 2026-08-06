@@ -18,6 +18,7 @@ export default function PayoffStopView({
   extraRuntimeNotes = "",
   onChangeCreatorDirectives = null,
   onChangeExtraRuntimeNotes = null,
+  onOpenStoryPanel = null,
 } = {}) {
   const previewProps = useCharacterPreviewViewModel({
     form: {
@@ -46,6 +47,14 @@ export default function PayoffStopView({
       <div className="mt-6">
         <CharacterPreviewView {...previewProps} />
       </div>
+
+      <button
+        type="button"
+        onClick={() => onOpenStoryPanel?.()}
+        className="mt-4 text-[var(--text-ui)] text-[var(--ink-dim)] underline decoration-[var(--line-strong)] underline-offset-4 transition hover:text-[var(--gold-bright)]"
+      >
+        Continue into a story
+      </button>
 
       <div className="mt-6 space-y-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
         <SectionLabel>Advanced directives</SectionLabel>

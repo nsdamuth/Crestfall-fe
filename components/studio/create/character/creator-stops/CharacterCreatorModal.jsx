@@ -13,6 +13,7 @@ import SealStopView from "./seal-stop/SealStop.view";
 import PayoffStopView from "./payoff-stop/PayoffStop.view";
 import PalettePanelBody from "./shared/PalettePanelBody";
 import TemplatePanelBody from "./shared/TemplatePanelBody";
+import { EmptyStateCard } from "./shared/Controls";
 import { useCharacterColorPaletteModalViewModel } from "../character-color-palette/useCharacterColorPaletteModalViewModel";
 import { useCharacterTemplateModalViewModel } from "../character-template-picker/useCharacterTemplateModalViewModel";
 
@@ -172,7 +173,18 @@ export default function CharacterCreatorModal({ onClose }) {
             ),
             onCancel: () => setSecondaryPanel(null),
           }
-        : null;
+        : secondaryPanel === "story"
+          ? {
+              eyebrow: "Next step",
+              title: "Continue into a story",
+              description:
+                "Putting a saved character into a story is coming soon.",
+              body: (
+                <EmptyStateCard message="Story selection is not built in this pass. Once it exists, this will place this character into a story you pick, resumable from any device." />
+              ),
+              onCancel: () => setSecondaryPanel(null),
+            }
+          : null;
 
   const viewProps = {
     activeStop,
@@ -354,6 +366,7 @@ export default function CharacterCreatorModal({ onClose }) {
             extraRuntimeNotes={formState.extraRuntimeNotes}
             onChangeCreatorDirectives={updateField("creatorDirectives")}
             onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
+            onOpenStoryPanel={() => setSecondaryPanel("story")}
           />
         ) : null
       }

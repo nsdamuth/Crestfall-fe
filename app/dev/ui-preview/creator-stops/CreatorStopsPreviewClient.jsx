@@ -25,6 +25,7 @@ import PalettePanelBody from "@/components/studio/create/character/creator-stops
 import TemplatePanelBody from "@/components/studio/create/character/creator-stops/shared/TemplatePanelBody";
 import { useCharacterColorPaletteModalViewModel } from "@/components/studio/create/character/character-color-palette/useCharacterColorPaletteModalViewModel";
 import { useCharacterTemplateModalViewModel } from "@/components/studio/create/character/character-template-picker/useCharacterTemplateModalViewModel";
+import { EmptyStateCard } from "@/components/studio/create/character/creator-stops/shared/Controls";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -211,7 +212,18 @@ export default function CreatorStopsPreviewClient() {
             ),
             onCancel: () => setSecondaryPanel(null),
           }
-        : null;
+        : secondaryPanel === "story"
+          ? {
+              eyebrow: "Next step",
+              title: "Continue into a story",
+              description:
+                "Putting a saved character into a story is coming soon.",
+              body: (
+                <EmptyStateCard message="Story selection is not built in this pass. Once it exists, this will place this character into a story you pick, resumable from any device." />
+              ),
+              onCancel: () => setSecondaryPanel(null),
+            }
+          : null;
 
   const previewProps = {
     ...fixture,
@@ -463,6 +475,7 @@ export default function CreatorStopsPreviewClient() {
                 extraRuntimeNotes={formState.extraRuntimeNotes}
                 onChangeCreatorDirectives={updateField("creatorDirectives")}
                 onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
+                onOpenStoryPanel={() => setSecondaryPanel("story")}
               />
             ) : null
           }

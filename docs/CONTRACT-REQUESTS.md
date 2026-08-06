@@ -41,3 +41,24 @@ a schema decision Nick and Brian need to rule on together; not decided here.
 
 Design intent once it exists: same as CR-001, the field renders where the
 review step already expects it once the schema carries the key.
+
+### CR-003, no way to move a saved character into a story
+
+Feature blocked: the final stop of every creator (creator-stops' payoff
+stop, and any other creator that reaches a saved end state) has no path
+from a finished, saved character into a story. "Continue into a story" on
+the payoff stop opens a secondary panel that says this is coming soon; it
+does not pick, create, or resume a story.
+
+Missing functionality: Nick would need to expose a way to attach a saved
+character (or other playable asset) to a story, an endpoint or state shape
+that records which story a character is in, and a way to resume that
+placement from a different device than the one the character was made on.
+
+Design intent once it exists: every creator that produces a playable asset
+type ends with a path into building or continuing a story with what it
+just made, resumable across devices. Non-playable asset types, such as
+clothing, may not need this path and are not assumed to get one
+automatically. Story selection itself needs its own design once the
+underlying data model exists; this request is the gate on that design
+starting, not a spec for the picker.
