@@ -5,32 +5,47 @@ calls. Anywhere a step would require a decision, the step is BLOCKED and
 names its queue item. Token law: `docs/DESIGN-TOKENS.md`. Process law:
 `docs/FRONTEND-SOP.md`.
 
-## The ruling queue (Tier B, Brian rules in one pass)
+## RULED, 7 August 2026
 
-Full evidence for each item is in the planning run's terminal report.
+Brian ruled the launch-critical Tier B queue in one sitting, 7 Aug 2026.
+No launch-critical item remains open. Full evidence for each item is in
+the planning run's terminal report.
 
-| Item | Question | Starred recommendation |
+| Item | Question | Ruling |
 |---|---|---|
-| T1 | Which theme file is the source of truth | * THIS repo's `app/theme.css`. The 27 Jul design-system file froze; every ruling since 29 Jul landed in the app-side file and this repo carries the latest state (status triad, blur). Confirming costs nothing; reversing would discard five ruled evolutions. |
-| T2 | Do `bg-black/NN` panel fills map onto the opaque surface ramp by elevation role | * Yes: wells to `--surface-1`, cards to `--surface-2`, floating to `--surface-4`; black translucency stays legal only in the wash family over artwork. Locked as principle by the token file's own construction; the per-step mapping needs T5's render first. |
-| T3 | Gold mapping for the old `--muted-gold` fleet | * Keep the live bridge: default `--gold-ornament`, interactive uses graduate to `--gold-action` per package (the creator modal and the proof both work this way). No mass swap; the alternative (everything to `--gold-action`, the old UIUX shim) brightens 1,600+ sites at once. |
-| T4 | Hex promotion (bridge proposal Ruling B) | * Promote only the lore greens (`#44604b`, `#36513e`) and `--blood`/`--deep-green`; map every other stray hex per the debt map. Not yet executed anywhere; needs the ruling before lore/marketing packages convert. |
-| T5 | The `#080706` surface flip (199 files) | * Convert ONE package (`studio-top-bar`), render it at 390/1440, Brian looks once, then the batch runs or stops. The biggest visual change of the bridge; never batched before the render. |
-| T6 | Placeholder vs value | * Placeholder `--ink-faint`, value `--ink`. The proof demonstrates it (`picker.css:34`) and four live packages already do it; 134 sites use `--ink-dim` and read as filled values (the Lilith defect, one problem, three symptoms). One GO closes it. |
-| T7 | Wash value (.40 provisional) | * Close at .40. The wash lab renders A/.70, B/.55, C/.40 side by side with C marked recommended; the copied lab lost its sample image, so Brian views the original at `~/dev/crestfall-main/Crestfall/design-system/labs/wash-lab.html`, or this sprint re-renders the ladder on a live card. Same sitting as T5. |
-| T8 | White hairlines (`border-white/10`, 1,094 uses) and `white/[0.02]`-`[0.04]` washes | * Approve the warm shift to `--line` / `--line-strong` / `--edge-top` / `--fill-whisper`, verified on one rendered package in the same sitting as T5. Alternative: mint a neutral hairline token (adds a token the system deliberately lacks). |
-| T9 | Shell debt (ModalShell, StudioShell, PANEL_CLASS_NAME) | * Carve ModalShell into a LOOM package first (contract: open state, close callbacks, panel slot), then its 11 caller pages convert against a real preview. StudioShell follows. Until then only the literal swaps listed in Phase 1 are touched. |
-| T10 | Sub-11px type (171 `text-[10px]`, 11 `[9px]`, 7 `[8px]`) | * `text-[10px]` converts mechanically to `--text-label`; every `[9px]`/`[8px]` site gets a per-use render check because badges grow 2-3px. Includes the creator's own field labels (`Controls.jsx:12`). |
-| T11 | Which agent-instruction file governs | * This repo's `CLAUDE.md`, alone. The other four (design-system CLAUDE.md, UIUX AGENTS.md, both PROJECT-INSTRUCTIONS) are archived at merge; the still-good rules from them are already folded into `docs/FRONTEND-SOP.md` with citations. |
-| T12 | Legacy-practice divergences (each needs readopt / retire / ignore) | Listed in the terminal report: Tailwind default type sizes vs the ruled scale; dropdowns inside the creator vs the visual-selection law; creator modal centered vs Ruling 1's phone bottom-dock; autosave "Saved" chip vs live "Unsaved changes" dot; the missing `.grand` name field; visibility PRIVATE/UNLISTED vs the ratified four-state enum (CONTRACT-level, also for Nick); `submit-canon` page vs the "no public submit control" ruling. |
-| T13 | Nav-label ownership (View vs ViewModel) | * Ratify live practice: display-ready from the ViewModel. |
-| T14 | Contract version format | * Ratify semver for new contracts; existing dotted names convert opportunistically. |
-| T15 | View-change approver wording (Brian vs Nicholas in legacy sheets) | * Brian rules design, Nick rules dev, per SOL-HANDOFF; fix the Kibbe-sheet wording when it is promoted. |
+| T1 | Which theme file is the source of truth | RULED (Ruling 1): THIS repo's `app/theme.css` is absolute law for token values. The legacy UIUX theme file is dead history. `docs/DESIGN-TOKENS.md` cites it by name as the value authority. |
+| T5 | The `#080706` surface flip (199 files) | RULED (Ruling 4): `#080706` maps to `--surface-1`; Crestfall commits to the new elevation logic where surfaces lighten as they elevate. Scope gate stands: convert the Phase 1 manifest packages ONLY, verify in LOOM preview routes, then STOP. Brian views the result before any wider batch. |
+| T6 | Placeholder vs value | RULED (Ruling 3): placeholder text is `--ink-faint`, an entered value is `--ink`. This is the fix for the Lilith defect (an empty field's placeholder reading as a filled value). `--ink-dim` at roughly 134 sites is the wrong value being converted away from. |
+| T7 | Wash value (.40 provisional) | RULED (Ruling 7), now SETTLED, no longer provisional: `--scrim` stays at `rgba(0,0,0,.40)`. Role unchanged: the lighter tier applies only to artwork under a tag that already carries its own dark bed (`--tag-bed-art`), never elsewhere; tag beds stay at `.70`. Binding rule for every run: every wash/scrim/veil writes the token, never the literal, so a single theme.css edit can move every wash at once. |
+| T8 | White hairlines (`border-white/10`, 1,094 uses) and `white/[0.02]`-`[0.04]` washes | RULED (Ruling 5): `border-white/10` migrates to the warm gold `--line` family; white raised washes go to `--edge-top` / `--fill-whisper`. No neutral white token is minted. Same scope gate as T5: Phase 1 manifest packages only, verified on LOOM preview routes, then STOP. |
+| T9 | Shell debt (ModalShell, StudioShell, PANEL_CLASS_NAME) | RULED (Ruling 6), EXPANDED beyond the starred recommendation: carve BOTH ModalShell and StudioShell into proper LOOM packages, as the very first work of Phase 1, before any other Phase 1 task. The starred recommendation named ModalShell only; Brian's ruling adds StudioShell so no legacy hardcoded value hides in an un-carved wrapper that every downstream package inherits from. |
+
+## Remaining queue (post-launch or backend-dependent, not blocking)
+
+None of the items below block the launch-critical path. Each stays open
+until Brian rules it in a future sitting.
+
+| Item | Question | Status |
+|---|---|---|
+| T2 | Do `bg-black/NN` panel fills map onto the opaque surface ramp by elevation role | Post-launch. Principle implied by the token file's construction, but the per-step mapping needs the wider T5 batch, which is explicitly deferred past this run's gate. |
+| T3 | Gold mapping for the old `--muted-gold` fleet | Post-launch. No mass swap authorized; current bridge behavior (default `--gold-ornament`, interactive graduates to `--gold-action` per package) continues. |
+| T4 | Hex promotion (bridge proposal Ruling B) | Post-launch. Lore/marketing packages (lore greens, `--blood`/`--deep-green`) await this ruling. |
+| T10 | Sub-11px type (171 `text-[10px]`, 11 `[9px]`, 7 `[8px]`) | Post-launch. Mechanical `text-[10px]` conversion and per-use `[9px]`/`[8px]` render checks are queued, not blocking. |
+| T12 | Legacy-practice divergences (proof vs live) | Post-launch / backend-dependent. Includes Tailwind default type sizes vs the ruled scale, dropdowns vs the visual-selection law, creator modal centered vs phone bottom-dock, autosave chip vs "Unsaved changes" dot, the missing `.grand` name field, the visibility PRIVATE/UNLISTED vs the ratified four-state enum (contract-level, also Nick's), and the `submit-canon` page vs the no-public-submit-control ruling. |
+| T13 | Nav-label ownership (View vs ViewModel) | Backend-dependent, SOP-level. Live practice (display-ready from the ViewModel) stands as majority practice until formally ratified; tracked in `docs/FRONTEND-SOP.md` section 6. |
+| T14 | Contract version format | Backend-dependent, SOP-level. Existing dotted names convert opportunistically; tracked in `docs/FRONTEND-SOP.md` section 6. |
+| T15 | View-change approver wording (Brian vs Nicholas in legacy sheets) | Backend-dependent, SOP-level. Tracked in `docs/FRONTEND-SOP.md` section 6. |
+
+T11 (which agent-instruction file governs) is RULED by Ruling 2: this
+repo's `CLAUDE.md` alone, rewritten as a strict pointer. AGENTS.md is
+archived. See `docs/FRONTEND-SOP.md` section 4 for the standing rule
+this produces.
 
 ## Phase 1: globals and shells (START NOW except where marked)
 
-Order: these are inherited by everything, so they land before any
-consumer package is verified.
+Order: item 1.7 (shell carving, Ruling 6) lands FIRST, before 1.1-1.6.
+These are inherited by everything, so they land before any consumer
+package is verified.
 
 | # | File | Find (exact) | Replace (exact) | Authority | Verify |
 |---|---|---|---|---|---|
@@ -38,9 +53,9 @@ consumer package is verified.
 | 1.2 | `app/design-system.css` | (append at end of file) | `@media (prefers-reduced-motion: reduce) {\n  *, *::before, *::after {\n    animation-duration: .01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: .01ms !important;\n  }\n}` | Both ancestor theme files carried this rule; it was lost in the 3 Aug copy. Restores the accessibility catch-all | Build exit 0; `/dev/ui-preview/creation-card` still animates nothing under OS reduced-motion |
 | 1.3 | `components/ui/ModalShell.jsx` | `bg-black/80 p-4` | `bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]` | Scrim + blur rulings (one scrim, one blur, floating panels only) | `/dev/ui-preview/creation-preview-modal`, default and longest fixtures, 390/1440 |
 | 1.4 | `components/studio/creations/CreationPreviewModal.jsx` | `shadow-2xl lg:overflow-hidden` | `shadow-[var(--shadow-modal)] lg:overflow-hidden` | Elevation item 1.9 | same route as 1.3 |
-| 1.5 | `components/studio/creations/CreationPreviewModal.jsx` | `bg-[#080706] ` | BLOCKED | T5 | n/a |
+| 1.5 | `components/studio/creations/CreationPreviewModal.jsx` | `bg-[#080706] ` | `bg-[var(--surface-1)] ` | Ruling 4, closes T5. Scope-gated to this manifest package only | same route as 1.3, 390/1440 |
 | 1.6 | docs task: migrate the still-relevant legacy N-queue items (N1-N15 in `docs/_legacy-reference/design-system/DECISIONS-FOR-NICK.md`, all unanswered) into `docs/CONTRACT-REQUESTS.md` as CR items, and promote `docs/_legacy-reference/docs/architecture/CRESTFALL_LOOM_PATTERN.md` to `docs/architecture/` | n/a | n/a | Post-merge governance below; the legacy folder is deleted at sprint end and these are the only two things in it with no live home | Files exist at the new paths; em-dash count zero |
-| 1.7 | `components/studio/StudioShell.jsx` carving | BLOCKED | BLOCKED | T9 | n/a |
+| 1.7 | `components/ui/ModalShell.jsx` and `components/studio/StudioShell.jsx` carving into LOOM packages | n/a | n/a | Ruling 6, closes T9, EXPANDED beyond the plan's starred recommendation to include StudioShell. This is the very first work of Phase 1, before 1.1-1.6. Contract for ModalShell: open state, close callbacks, panel slot. StudioShell follows the same carving pattern. Once carved, downstream packages inherit correct tokens natively | Each package's new `/dev/ui-preview/<feature-name>` route, every fixture state, 390/1440 |
 
 Commit template, one file family per commit:
 `fix: <area> <what> to tokens` body: which ruling, "Mechanical token

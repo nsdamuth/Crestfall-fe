@@ -1,3 +1,11 @@
+> **DEMOTED, 7 Aug 2026.** This file is a historical changelog, not
+> law. It is never cited as an execution authority. Its settled content
+> has been folded into `docs/DESIGN-TOKENS.md` (token values, roles,
+> legal usage) and `docs/FRONTEND-SOP.md` (process). Where this file
+> and either of those two disagree, the two law files win. This file is
+> kept as an audit trail and is not edited beyond this notice and the
+> single wash-ruling update below.
+
 # Restyle rules: extracted from the proof draft
 
 Source: `~/dev/crestfall-main/Crestfall/design-system/proof/` (read-only reference, never written to). Canonical page-head recipe lives in `library.css` (`.pagehead`, `.pagehead h1`/`.h1like`, `.pagehead .lede`) and `proof.css` (`.eyebrow`, `.eyebrow--ruled`). `library.css` explicitly states this is the one shared recipe; older per-page copies (e.g. `studio.html`'s local `.pagehead` override) are earlier/retired duplicates and were not used as the source of truth.
@@ -524,7 +532,7 @@ it does something. No package is touched by this ruling yet. It is
 recorded so batch two knows which shape is correct before converting
 any pill-shaped button it finds.
 
-## Wash: lighter tier where a tag carries its own bed (PROVISIONAL)
+## Wash: lighter tier where a tag carries its own bed
 
 Full covers (bottom promo banners, hero, endcap-style payoff banners)
 keep the heavy screen at `.70`, `--scrim-strong` / `--veil-screen`,
@@ -540,13 +548,13 @@ The lighter tier is `--scrim`, already defined in `app/theme.css` at
 `.castcard::after` caption fade), no new token name is needed, this
 existing token is now assigned the role.
 
-**PROVISIONAL: the exact value is not settled.** `.40` is the
-placeholder pending Brian's eye on a real render; it may move. What is
-settled and not provisional: which token plays this role (`--scrim`),
-and the rule that governs when it applies (under a tag's own bed, not
-elsewhere). Tag beds themselves are unaffected and stay `.70`, this
-ruling only touches the wash on the artwork *underneath* a tag that
-already has its own bed, never the bed itself.
+**Ruled 7 Aug 2026: the value was settled at `.40`.** The ruling is
+recorded in `docs/DESIGN-TOKENS.md`. What is settled: which token plays
+this role (`--scrim`), the rule that governs when it applies (under a
+tag's own bed, not elsewhere), and the value, `.40`. Tag beds themselves
+are unaffected and stay `.70`, this ruling only touches the wash on the
+artwork *underneath* a tag that already has its own bed, never the bed
+itself.
 
 ## Blur: one strength, panels only
 

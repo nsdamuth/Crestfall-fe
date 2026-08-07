@@ -8,15 +8,14 @@ to reconcile.
 ## Authority
 
 - `app/theme.css` in THIS repo (Crestfall-fe) is the law for token
-  VALUES. It is the only file that declares a token. Its lineage: the
+  VALUES, ruled LOCKED by Brian 7 Aug 2026 (Ruling 1, closing queue
+  item T1). It is the only file that declares a token. Its lineage: the
   design-system origin file (frozen 27 Jul 2026) evolved in the legacy
   Crestfall repo's `app/theme.css` through 2 Aug, was copied here in
   commit 3981a10 (3 Aug), and gained the status triad (3 Aug) and
   `--blur-panel` (4 Aug) here. Every later ruling landed here and
-  nowhere else. Confirmation that this file formally supersedes the
-  27 Jul "source of truth" declaration is queue item T1 in
-  `docs/SPRINT-3-PLAN.md`; until Brian rules otherwise, this file is
-  canonical per `docs/_legacy-reference/MANIFEST.md` lines 4-6.
+  nowhere else. This file formally supersedes the 27 Jul "source of
+  truth" declaration; the legacy UIUX theme file is dead history.
 - THIS file is the law for ROLES and legal usage. If this file and
   `app/theme.css` ever disagree on a value, that is a bug: stop and
   escalate to Brian. An execution agent never resolves it silently.
@@ -63,14 +62,16 @@ translucency is legal only in the wash family below, over artwork.
 | Token | Dark | Light | Role | Legal on | Never on | Status |
 |---|---|---|---|---|---|---|
 | `--ink` | `#ece7dc` | `#2a2418` | Primary text, and entered field VALUES | Body copy, headings, input values | Text over artwork (use `--art-ink`) | locked |
-| `--ink-dim` | `#a9a294` | `#5a5243` | Secondary text, metadata | Ledes, helper copy, idle controls | Field placeholders once T6 is ruled | locked |
-| `--ink-faint` | `#8d8674` | `#7c7259` | Tertiary, disabled, timestamps, counters | Counters, timestamps, disabled labels, placeholders (pending T6) | Primary copy | locked |
+| `--ink-dim` | `#a9a294` | `#5a5243` | Secondary text, metadata | Ledes, helper copy, idle controls | Field placeholders | locked |
+| `--ink-faint` | `#8d8674` | `#7c7259` | Tertiary, disabled, timestamps, counters | Counters, timestamps, disabled labels, placeholders | Primary copy | locked |
 
-Placeholder vs value: queue item T6 proposes placeholder text is
-`--ink-faint` and an entered value is `--ink`, matching the proof
-(`picker.css:34`, `.pksearch::placeholder{color:var(--ink-faint)}`) and
-four live witnesses. Until Brian rules T6, do not convert placeholders
-in bulk.
+Placeholder vs value, RULED 7 Aug 2026 (Ruling 3, closes queue item
+T6): placeholder text is `--ink-faint`, an entered value is `--ink`,
+matching the proof (`picker.css:34`,
+`.pksearch::placeholder{color:var(--ink-faint)}`) and four live
+witnesses. `--ink-dim` at roughly 134 sites is the WRONG value being
+converted away from (the defect where an empty field's placeholder
+reads as a filled value). This is the fix for the Lilith defect.
 
 ## Gold
 
@@ -120,7 +121,7 @@ exactly one place, the confirming button inside a confirm step
 | `--fill-whisper` | `rgba(242,209,148,.06)` | `rgba(96,74,34,.05)` | Quietest gold wash | Nav hover, panel gradients | Whole large surfaces | locked |
 | `--fill` | `rgba(242,209,148,.12)` | `rgba(96,74,34,.10)` | Standard gold wash; the canvas tag bed | Nav active, tag beds on canvas | Paired with a line-family border (they collide) | locked |
 | `--fill-strong` | `rgba(242,209,148,.20)` | `rgba(96,74,34,.16)` | Strongest gold wash | Small accents | Large surfaces | locked |
-| `--scrim` | `rgba(0,0,0,.40)` | same | The lighter wash over artwork UNDER a tag that carries its own bed | Artwork under tag beds | Panel chrome | **provisional** (value .40 awaits Brian's eye; role is settled; queue item T7) |
+| `--scrim` | `rgba(0,0,0,.40)` | same | The lighter wash over artwork UNDER a tag that carries its own bed | Artwork under tag beds | Panel chrome | locked (Ruling 7, 7 Aug 2026, closes queue item T7: .40 is settled, not provisional. Brian may adjust the value after viewing it live; that option survives only if code references the token, never the literal) |
 | `--scrim-strong` | `rgba(0,0,0,.70)` | same | The heavy screen: floating-panel scrims, full banner covers | Modal/picker/sheet veils, banner treatment (a) | Panel fills | locked |
 | `--tag-bed-art` | `var(--scrim-strong)` | follows referent | Tag bed over artwork, with 1px `--line` border and `--ink` text | Tags over art | Tags on canvas | locked |
 | `--tag-bed-canvas` | `var(--fill)` | follows referent | Tag bed on canvas, no border, `--gold-bright` text | Tags on surfaces | Tags over art | locked |
@@ -267,7 +268,7 @@ its package verified at 390 and 1440.
 | `--muted` | `--ink-dim` | approximate (very close) | Bridge |
 | `--foreground` | `--ink` | approximate (very close) | Bridge |
 | `--border` | `--line-strong` | approximate | Bridge |
-| `#080706` panel fills | `--surface-1` | approximate, THE BIGGEST VISUAL CHANGE of the bridge: panels flip from darker-than-page to lighter-than-page. GATED on queue item T5 (Brian sees one rendered package first) | Bridge proposal; do not batch before T5 |
+| `#080706` panel fills | `--surface-1` | approximate, THE BIGGEST VISUAL CHANGE of the bridge: panels flip from darker-than-page to lighter-than-page. RULED 7 Aug 2026 (Ruling 4, closes queue item T5): the mapping is locked. Scope is gated: convert only the packages named in the Sprint 3 Phase 1 manifest, verify in LOOM preview routes, then STOP for Brian's render review before any wider batch | Ruling 4; `docs/SPRINT-3-PLAN.md` Phase 1 manifest |
 | `#0b0907`, `#0b0a09`, `#0b0908`, `#100d09` | `--surface-1` | approximate, gated with T5 | Bridge proposal |
 | `#090807`, `#090806` | `--canvas` | approximate (near exact) | Bridge proposal |
 | `#7b5525`, `#6a481f` | `--gold-deep` | approximate | Bridge proposal |
@@ -276,9 +277,9 @@ its package verified at 390 and 1440.
 | story-room-message golds (`#ffd99a` `#f5e7c7` `#e2b96f` `#d6b36a` `#c89b5a` `#afa08a` `#8a6a3c`) | `--gold-bright` / `--ink` / `--gold-action` / `--gold-ornament` / `--gold-ornament` / `--ink-dim` / `--gold-deep` | approximate | Bridge proposal; chat surfaces have a dedicated sitting, log only |
 | `#f2ead9` | `--ink` | approximate | Bridge proposal |
 | `#44604b`, `#36513e` | log, do not guess | n/a | Queue item T4 |
-| `border-white/10` and the white hairline family | log, do not guess | n/a | Queue item T8 (nearest token `--line` is gold-warm, not neutral; Brian approves the warm shift or names a neutral token) |
-| `bg-black/20` through `bg-black/45` panel fills | log, do not guess | n/a | Queue items T2 and T5 (map onto the opaque surface ramp by elevation role) |
-| `white/[0.02]` to `white/[0.04]` raised washes | log, do not guess | n/a | Queue item T8 (candidates `--edge-top`, `--fill-whisper`) |
+| `border-white/10` and the white hairline family | `--line` / `--line-strong` per context | approximate | RULED 7 Aug 2026 (Ruling 5, closes queue item T8): warm gold shift approved, no neutral token minted. Scope gated: Sprint 3 Phase 1 manifest packages only, verified on LOOM preview routes, then STOP for the wider batch |
+| `bg-black/20` through `bg-black/45` panel fills | log, do not guess | n/a | Queue items T2 and T5 (map onto the opaque surface ramp by elevation role; principle locked, per-step mapping still needs T5's render before the wider batch) |
+| `white/[0.02]` to `white/[0.04]` raised washes | `--edge-top` / `--fill-whisper` per context | approximate | RULED 7 Aug 2026 (Ruling 5, closes queue item T8), same scope gate as the hairline family above |
 | placeholder `--ink-dim` | `--ink-faint` | approximate | Queue item T6; convert only after the ruling |
 
 ## Retired names
@@ -327,6 +328,13 @@ zero-tolerance counts).
    Detect: `grep -rn 'rounded-full' components/ --include='*.view.jsx'` then rule each hit: tag or icon button is legal, text button is not.
 7. Legacy bridge variables in anything NEW.
    Detect: `grep -rnE 'var\(--(muted|muted-gold|foreground|border|background|panel|panel-strong|bone-white)\)' components/ --include='*.view.jsx'`
-8. White hairlines (`border-white/10` family). Replacement: log, do not
-   guess (T8).
+8. White hairlines (`border-white/10` family). Replacement: `--line` /
+   `--line-strong` per context (Ruling 5), scope-gated to the Sprint 3
+   Phase 1 manifest until the wider batch is authorized.
    Detect: `grep -rnE 'border-white/[0-9]+' components/`
+9. Wash/scrim/veil literals instead of the token (Ruling 7). Every
+   wash, scrim, and veil writes `var(--scrim)` or `var(--scrim-strong)`.
+   No file anywhere writes `rgba(0,0,0,.40)`, `bg-black/40`, or any
+   other literal form of a wash value; a single-line change in
+   `app/theme.css` must be able to move every wash in the app at once.
+   Detect: `grep -rnE 'rgba\(0,\s*0,\s*0,\s*\.(4|7)0?\)|bg-black/(40|70)' components/ app/ --include='*.jsx' --include='*.js' --include='*.css' | grep -v theme.css`
