@@ -16,9 +16,8 @@ command, a path, or a yes/no question.
 
 The birth checklist for any new component. A module is not started, not
 "mostly done", until every line answers yes. Shape and boundaries per
-`docs/_legacy-reference/docs/architecture/CRESTFALL_LOOM_PATTERN.md`
-(the one legacy doc the live repo fully implements; fold its content
-forward before the legacy folder is deleted).
+`docs/architecture/CRESTFALL_LOOM_PATTERN.md`, promoted from the legacy
+reference folder 7 Aug 2026 (Sprint 3 Phase 1 item 1.6).
 
 1. LOOM shape exists. Check: the feature folder contains all five files
    plus the Shell one level up:

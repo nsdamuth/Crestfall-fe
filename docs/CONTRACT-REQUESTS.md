@@ -126,6 +126,254 @@ Design intent once it exists: not ruled. No split between "seven-stop
 creator" and "standalone editor" scope is assumed from this gap alone, and
 none should be built toward until Brian rules on it.
 
+### CR-009, one creation system: wizard and visual picker
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N1
+(`docs/_legacy-reference/design-system/DECISIONS-FOR-NICK.md`), Sprint 3
+Phase 1 item 1.6.
+
+Feature blocked: none directly. The draft uses one reusable visual picker
+(search, filter chips, image tile grid, gold-ring selection, bottom sheet
+on mobile) across the wizard, Image Studio slots, and the account
+default-PC chooser.
+
+Missing functionality: confirmation that the live Player Character
+creator adopts the same wizard and picker system (one system, two
+flavors), and the picker contract shape (`items`, `filters`, `selectedId`,
+`onSelect`).
+
+Design intent once it exists: one picker component serves every
+selection surface named above under a single contract.
+
+### CR-010, top bar composes the economy widget
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N2.
+
+Feature blocked: none directly. `StudioTopBar` re-implements the coins
+chip, Buy Coins, and Notifications, modals included, duplicating
+`StudioEconomyWidget`.
+
+Missing functionality: a `"topBar"` layout mode on `StudioEconomyWidget`
+so the top bar View can compose it and the duplicated implementation is
+deleted. A mirror rename, not a rewrite.
+
+Design intent once it exists: `StudioTopBar` no longer owns its own copy
+of coin/notification chrome.
+
+### CR-011, bottom dock label "Rooms" vs "Stories"
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N3.
+
+Feature blocked: none directly. Dock, drawer, and sidebar now agree on
+"Stories" for `/studio/story-rooms` (the drawer's "Storys" typo is also
+fixed).
+
+Missing functionality: confirmation from Nick that "Rooms" was not a
+deliberate distinct label; otherwise this stands as already-landed copy.
+
+Design intent once it exists: none further, this closes once confirmed.
+
+### CR-012, search enters on the top bar contract
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N4.
+
+Feature blocked: the draft top bar carries search; the live product top
+bar has none.
+
+Missing functionality: confirmation that when search lands, it enters as
+`searchValue` / `onSearchChange` on the top bar View contract, never as
+View-local state.
+
+Design intent once it exists: search state is ViewModel-owned like every
+other top bar behavior.
+
+### CR-013, duplicate drawer nav tree retirement
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N5.
+
+Feature blocked: none directly. `StudioMobileNav` and `StudioSidebar`
+render separate copies of the nav tree.
+
+Missing functionality: agreement to land the rail doubling as the
+drawer, one element, off-canvas below the desktop breakpoint, with the
+ViewModel only toggling visibility, at contract v0.2.0, timed with the
+shell binding (see the Ruling 6 ModalShell/StudioShell carve, Sprint 3
+Phase 1 item 1.7).
+
+Design intent once it exists: one nav-tree element, not two.
+
+### CR-014, visibility four-state enum data-model shape
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N6. Cross-
+referenced in `docs/SPRINT-3-PLAN.md` queue item T12 (proof-vs-live
+divergences: the live PRIVATE/UNLISTED pair vs this ratified enum).
+
+Feature blocked: the live visibility field does not yet carry the ruled
+four-state shape.
+
+Missing functionality: ruled design law is `private | internal | public |
+canon`, spanning assets and lore (internal = share link, logged-in
+viewers, no remix; public = SEO-visible outside login, remixable; canon
+= public and official). The data-model shape, the migration path from
+the live two-state field, and whether publish (Story to Adventure) rides
+the same field are all still open.
+
+Design intent once it exists: the live visibility control reads and
+writes the four-state enum directly, no PRIVATE/UNLISTED shim.
+
+### CR-015, lore pipeline confirmation
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N7.
+
+Feature blocked: none directly, this confirms an already-ruled pipeline.
+
+Missing functionality: confirmation of the ruled pipeline (visual
+builder authoritative; JSON import is Validate and Apply on the complete
+`lore_document_contract_v4` document, ids preserved, references only
+reuse existing Characters/Locations; page-level Save persists the Asset;
+the exact revision passes certification and security scanning before
+production publication) and the name of the scanning gate.
+
+Design intent once it exists: none further, this closes once confirmed.
+
+### CR-016, chat_palette preference field
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N8.
+
+Feature blocked: none directly, no UI depends on this yet.
+
+Missing functionality: a per-character (later per-user) preference field
+choosing Crestfall Default or one of twelve seasonal palettes, resolving
+display-side to six colour roles as CSS variable overrides. Never
+affects image generation; must arrive display-ready. Field shape and
+storage location need confirmation.
+
+Design intent once it exists: a display-ready preference the View
+applies as CSS variable overrides, no palette logic in the View.
+
+### CR-017, notifications feed shape
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N9.
+
+Feature blocked: none directly, `StudioTopBar`'s notifications utility
+modal is currently a stub (`docs/DESIGN-TOKENS.md`-governed tokens
+already apply to its chrome).
+
+Missing functionality: confirmation of the ruled shape (the bell carries
+a boolean "something is new", never a count; opening the sheet clears
+it; sheet rows are deep links: render finished, creator published, daily
+bonus ready) and the ViewModel feed shape plus clear semantics.
+
+Design intent once it exists: the top bar ViewModel consumes a boolean
+plus a deep-link row list, nothing else.
+
+### CR-018, backend copy alignment for Sessions vs Stories
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N10.
+
+Feature blocked: none directly. The Sessions page keeps its locked name;
+its bucket chip reads Stories.
+
+Missing functionality: the live page's old "Storys" naming and the new
+Story object are different things; backend copy needs to align to the
+ratified model so session history and Story buckets never share a
+label.
+
+Design intent once it exists: none further, this closes once confirmed.
+
+### CR-019, chat control intent confirmation
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N11. Chat
+surfaces are excluded from mechanical sweeps per the sweep-scope ruling
+(`docs/SPRINT-3-PLAN.md` Phase 3 "chat/story-room raw golds" row);
+dedicated sitting.
+
+Feature blocked: none directly. The draft renames "Use current scene" to
+"Describe the scene" (inserts a scene-setting beat) and "Prose" to
+"Reading face: Serif/Sans" (a reading-typeface toggle); both are best
+guesses at the live controls' real function.
+
+Missing functionality: confirmation of the real functions; draft copy is
+corrected if either guess is wrong.
+
+Design intent once it exists: none further, this closes once confirmed.
+
+### CR-020, the Loom transition sequence
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N12.
+
+Feature blocked: none directly, this is a sequencing agreement for
+future Loom carves beyond ModalShell and StudioShell (Ruling 6, Sprint 3
+Phase 1 item 1.7).
+
+Missing functionality: agreement on the proposed sequence: mapping audit
+per the LOOM pattern doc into a gap report, gap report reviewed
+together, bind order agreed (proposed: shell/nav, browse surfaces on one
+control-bar contract, modal creators on one recipe-chassis contract,
+chat last), each binding negotiates on its own contract sheet, with
+`CONTRACT_VERSION` bumps as the change signal.
+
+Design intent once it exists: every future carve follows this same
+sequence and negotiation shape.
+
+### CR-021, tile style sampler run 2 review
+
+Status: OPEN, with Nick/art. Migrated 7 Aug 2026 from legacy N13.
+
+Feature blocked: production art generation for the species tile set.
+
+Missing functionality: review of the twelve-sample style report (Elf and
+Werewolf in six render treatments, plus two transparent PNGs for the
+backdrop test) and the modal mockup, then a ruling on treatment or
+blend, backdrop, prompt edits, alignment rules, and production models,
+plus who runs production per the runbook. Source material lived in the
+legacy design-system repo's `review/tiles-run-2/` tree
+(`style-report.html`, `modal-mockup.html`, `tile-checklist.md`, 40
+production rows); confirm its current location before acting, it is not
+present in this repo.
+
+Design intent once it exists: none further, this is a production
+go-ahead, not a UI change.
+
+### CR-022, proof-layer tokens fold into theme.css at binding
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N14. Partially
+superseded: `--scrim-strong` is already the live token for the banner
+screen veil in this repo's `app/theme.css`/`docs/DESIGN-TOKENS.md`
+(Ruling 7), so the `--veil-screen` alias question is narrowed to naming
+only, not value.
+
+Feature blocked: none directly.
+
+Missing functionality: confirmation of whether the deepened modal
+surface once proposed for the proof layer (`color-mix(in srgb,
+var(--surface-2) 88%, var(--canvas))`) needs a first-class token, or
+whether the live `--surface-4` (already locked, see
+`docs/DESIGN-TOKENS.md`) supersedes it outright. `--veil-screen` itself
+is already retired to `--scrim-strong` per the Retired names table.
+
+Design intent once it exists: no new token is minted unless this
+confirms `--surface-4` cannot do the job.
+
+### CR-023, Community vs Adventures structural model
+
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N15.
+
+Feature blocked: the Community and Adventures surfaces cannot be built
+past their copy-level ruling.
+
+Missing functionality: ruled at the copy level (Adventures is playable
+published stories, every CTA plays; Community is the makers' wall,
+individual creations, the people behind them, Featured as spotlight).
+Open: does Community query the same published-object store as
+Adventures with a different facet, or its own feed? Where does a
+playable item in Community link, its Adventure detail or straight into
+chat? Does Featured need a backend flag or stay curatorial?
+
+Design intent once it exists: Community and Adventures share a data
+model where the copy-level ruling implies they should, and diverge only
+where confirmed necessary.
+
 ## Ruled
 
 ### CR-006, seal stop's age field is empty, not pre-filled
