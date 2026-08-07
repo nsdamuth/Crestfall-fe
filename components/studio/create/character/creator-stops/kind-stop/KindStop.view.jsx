@@ -20,32 +20,9 @@ import {
   WESTERN_ZODIAC_OPTIONS,
 } from "./KindStop.contract";
 
-// Slugs mirror the tile art naming rule (lowercase, non-alphanumerics to
-// one hyphen). Review-pass staging path; see TileGrid's art fallback note.
-const SPECIES_TILE_SLUGS = {
-  HUMAN: "human",
-  BASTET: "bastet-catfolk",
-  KITSUNE: "kitsune",
-  LAMIA: "lamia-gorgon",
-  GENIE: "genie",
-  CONSTRUCT: "construct-robot",
-  DEMON: "demon",
-  ANGEL: "angel",
-  ELF: "elf",
-  ALIEN: "alien",
-  MERFOLK: "merfolk",
-  HARPY: "harpy",
-  VAMPIRE: "vampire",
-  WEREWOLF: "werewolf",
-  CUSTOM: "custom",
-};
-
-const SPECIES_TILE_OPTIONS = SPECIES_OPTIONS.map((option) => ({
-  ...option,
-  imageUrl: SPECIES_TILE_SLUGS[option.value]
-    ? `/tmp-creator-tiles/tiles/species/${SPECIES_TILE_SLUGS[option.value]}.jpg`
-    : undefined,
-}));
+// Photographic species art was retired; every tile falls back to
+// TileGrid's geometric placeholder mark.
+const SPECIES_TILE_OPTIONS = SPECIES_OPTIONS;
 
 // The being tiles break into labeled categories rather than one
 // undifferentiated block, so a user can tell what each group selects.

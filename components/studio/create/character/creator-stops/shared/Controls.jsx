@@ -91,9 +91,8 @@ export function SwatchGrid({ options, value, onChange }) {
   );
 }
 
-// Art-less tiles fall back to the geometric circle mark, matching the
-// draft. Review-pass staging path; production art lands in a tracked
-// location in a later pass.
+// Photographic tile art was retired; every tile in the creator falls
+// back to this geometric circle mark.
 const TILE_ART_FALLBACK = "/tmp-creator-tiles/logo-mark.svg";
 
 // "top": pins art to the top of the frame so a face stays visible rather

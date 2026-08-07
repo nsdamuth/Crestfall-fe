@@ -29,27 +29,9 @@ import {
   SILHOUETTE_NOTES_MAX_LENGTH,
 } from "./SilhouetteStop.contract";
 
-// Slugs mirror the tile art naming rule (lowercase, non-alphanumerics to
-// one hyphen). Review-pass staging path; see TileGrid's art fallback note.
-const KIBBE_IDENTITY_TILE_SLUGS = {
-  DRAMATIC: "dramatic",
-  SOFT_DRAMATIC: "soft-dramatic",
-  FLAMBOYANT_NATURAL: "flamboyant-natural",
-  SOFT_NATURAL: "soft-natural",
-  DRAMATIC_CLASSIC: "dramatic-classic",
-  SOFT_CLASSIC: "soft-classic",
-  FLAMBOYANT_GAMINE: "flamboyant-gamine",
-  SOFT_GAMINE: "soft-gamine",
-  THEATRICAL_ROMANTIC: "theatrical-romantic",
-  ROMANTIC: "romantic",
-};
-
-const KIBBE_IDENTITY_TILE_OPTIONS = KIBBE_IDENTITY_OPTIONS.map((option) => ({
-  ...option,
-  imageUrl: KIBBE_IDENTITY_TILE_SLUGS[option.value]
-    ? `/tmp-creator-tiles/tiles/kibbe/${KIBBE_IDENTITY_TILE_SLUGS[option.value]}.jpg`
-    : undefined,
-}));
+// Photographic kibbe identity art was retired; every tile falls back to
+// TileGrid's geometric placeholder mark.
+const KIBBE_IDENTITY_TILE_OPTIONS = KIBBE_IDENTITY_OPTIONS;
 
 export default function SilhouetteStopView({
   kibbeIdentity = "",
