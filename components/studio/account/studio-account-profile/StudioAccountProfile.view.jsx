@@ -37,7 +37,7 @@ export default function StudioAccountProfileView({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-sm text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-sm text-[var(--ink-dim)]">
         Loading profile…
       </div>
     );
@@ -45,7 +45,7 @@ export default function StudioAccountProfileView({
 
   if (loadErrorMessage) {
     return (
-      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+      <div className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-4 text-sm text-[var(--status-danger)]">
         {loadErrorMessage}
       </div>
     );
@@ -94,7 +94,7 @@ export default function StudioAccountProfileView({
           {hasPublicProfile ? (
             profileMediaContent
           ) : (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               Set a username to enable your public profile page and profile
               media controls.
             </div>
@@ -172,7 +172,7 @@ export default function StudioAccountProfileView({
                   playerCharacter={defaultPlayerCharacter}
                 />
               ) : (
-                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+                <p className="mt-4 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
                   No default Player Character selected.
                 </p>
               )}
@@ -231,13 +231,13 @@ export default function StudioAccountProfileView({
       </section>
 
       {saveErrorMessage ? (
-        <div className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-3 text-sm text-[var(--status-danger)]">
           {saveErrorMessage}
         </div>
       ) : null}
 
       {statusMessage ? (
-        <div className="mt-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-3 text-sm text-[var(--status-success)]">
           {statusMessage}
         </div>
       ) : null}
@@ -270,14 +270,14 @@ function SaveButton({ isSaving }) {
 
 function DefaultPlayerCharacterCard({ playerCharacter }) {
   return (
-    <div className="mt-4 flex items-start gap-4 rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="mt-4 flex items-start gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
       {playerCharacter.imageUrl ? (
         <div
-          className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+          className="h-16 w-16 shrink-0 rounded-[var(--radius-md)] border border-white/10 bg-cover bg-center"
           style={{ backgroundImage: `url(${playerCharacter.imageUrl})` }}
         />
       ) : (
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
           {playerCharacter.title?.slice(0, 1).toUpperCase() || "P"}
         </div>
       )}
@@ -314,7 +314,7 @@ function LabeledInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {note ? (
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{note}</p>
@@ -341,7 +341,7 @@ function LabeledTextarea({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -368,7 +368,7 @@ function ReadOnlyValue({ label, value, note }) {
       <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value}
       </div>
       {note ? (
@@ -381,7 +381,7 @@ function ReadOnlyValue({ label, value, note }) {
 function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <section className="w-full max-w-md rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
+      <section className="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
