@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import InfoTip from "../InfoTip";
+import GlobalEyebrow from "@/components/ui/Eyebrow";
 
 // One shared style for every field label across all seven stops, sized
 // below its field's value in the type hierarchy. Change it here, never
@@ -28,18 +29,9 @@ export function FieldLabel({ children, count, max }) {
   );
 }
 
-export function Eyebrow({ children }) {
-  return (
-    <p className="flex items-center gap-[var(--space-3)] text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-      <span>{children}</span>
-      <span
-        aria-hidden="true"
-        className="h-px w-[var(--space-8)] flex-none"
-        style={{ background: "var(--grad-rule)" }}
-      />
-    </p>
-  );
-}
+// Promoted to a global LOOM package, 7 Aug 2026: components/ui/Eyebrow.
+// Re-exported here so all seven stops keep this import path unchanged.
+export const Eyebrow = GlobalEyebrow;
 
 // Two short controls side by side on desktop where the pair reads
 // cleanly, stacking at 390 where they'd be too narrow. A child that
