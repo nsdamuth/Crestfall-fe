@@ -211,12 +211,6 @@ export default function CreatorStopsView({
         </div>
 
         <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
-          {saveError ? (
-            <p role="alert" className="text-sm leading-6 text-[var(--status-danger)]">
-              {saveError}
-            </p>
-          ) : null}
-
           <div className="flex items-center gap-[var(--space-3)]">
           {secondaryPanel ? (
             <>
@@ -263,7 +257,12 @@ export default function CreatorStopsView({
               </button>
 
               <span aria-live="polite" className="inline-flex items-center">
-                {hasUnsavedChanges ? (
+                {saveError ? (
+                  <span role="alert" className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+                    <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-danger)]" />
+                    <span className="inline">Save unsuccessful</span>
+                  </span>
+                ) : hasUnsavedChanges ? (
                   <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
                     <span className="hidden sm:inline">Unsaved changes</span>

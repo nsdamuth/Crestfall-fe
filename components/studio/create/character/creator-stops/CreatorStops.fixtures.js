@@ -37,7 +37,7 @@ export const creatorStopsSavingFixture = buildFixture("payoff", {
 export const creatorStopsSaveErrorFixture = buildFixture("payoff", {
   isLastStop: true,
   hasUnsavedChanges: true,
-  saveError: "The save did not go through. Your work is still here, try again.",
+  saveError: true,
 });
 
 export const creatorStopsUnsavedFixture = buildFixture("seal", {

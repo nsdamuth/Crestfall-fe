@@ -13,6 +13,7 @@ import {
   creatorStopsMidFixture,
   creatorStopsUnsavedFixture,
   creatorStopsConfirmDiscardFixture,
+  creatorStopsSaveErrorFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
 import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
@@ -33,6 +34,7 @@ const STATES = [
   ["Last stop", creatorStopsLastFixture],
   ["Unsaved changes", creatorStopsUnsavedFixture],
   ["Confirm discard", creatorStopsConfirmDiscardFixture],
+  ["Save unsuccessful", creatorStopsSaveErrorFixture],
 ];
 
 const INITIAL_FORM_STATE = {

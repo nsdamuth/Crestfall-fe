@@ -63,29 +63,6 @@ automatically. Story selection itself needs its own design once the
 underlying data model exists; this request is the gate on that design
 starting, not a spec for the picker.
 
-### CR-004, signed-in Supabase user has no row in the backend's users table
-
-Status: OPEN, with Nick.
-
-Feature blocked: saving a character from the creator. The frontend correctly
-authenticates and posts to `/v1/studio/creations` with a real user id, but
-the write fails: Postgres rejects the insert with
-`insert or update on table "creations" violates foreign key constraint
-"creations_owner_id_fkey"`, `Key (owner_id)=(<the signed-in user's id>) is
-not present in table "users"`. This is not a creator bug; every write for
-this signed-in account will fail the same way until this account has a row
-in services-api's `users` table.
-
-Missing functionality: whichever step is supposed to create a `public.users`
-row when a person signs in through Supabase auth (a trigger, a
-provisioning endpoint, a backfill) did not run for this account, or does
-not exist yet. Nick needs to confirm the intended provisioning path and
-either run it for existing accounts or fix why it did not fire.
-
-Design intent once it exists: no design change, this is pure plumbing. The
-creator's save path is already correct and needs nothing further once
-accounts are provisioned.
-
 ### CR-005, services-api can report success on a failed write
 
 Status: OPEN, with Nick.
@@ -114,11 +91,46 @@ correctness fix so "the request answered 200" reliably means "the write
 succeeded" everywhere in the app, not just where the frontend has learned
 to double-check.
 
+### CR-007, no reopen path from My Creations into the seven-stop creator
+
+Status: OPEN, design decision needed.
+
+Feature blocked: none directly, but update-in-place for a saved character is
+untested and unproven. My Creations opens a preview modal for a saved
+creation, and its edit action routes to the older standalone editor
+(`studio/my-creations/[id]/edit`). Nothing loads an existing creation back
+into `CharacterCreatorModal`, the seven-stop creator built this branch.
+
+Missing functionality: a path from a saved creation into the seven-stop
+creator, pre-loaded with that creation's saved `formState` and `creationId`
+so a save from that session updates the existing row instead of creating a
+new one.
+
+Design intent once it exists: not decided here. Whether the seven-stop
+creator becomes the one edit surface for a saved character, or the
+standalone editor stays authoritative and the seven-stop creator is
+create-only, is the open question this request gates.
+
+### CR-008, standalone editor carries fields the seven-stop creator does not
+
+Status: OPEN, design decision needed.
+
+Feature blocked: none directly. The standalone edit page
+(`studio/my-creations/[id]/edit`) exposes Runtime Modules, Mechanics
+Profile, Publishing, Danger Zone, and more; the seven-stop creator's seven
+stops do not cover this ground.
+
+Missing functionality: none, this is a scope question, not a build gap.
+
+Design intent once it exists: not ruled. No split between "seven-stop
+creator" and "standalone editor" scope is assumed from this gap alone, and
+none should be built toward until Brian rules on it.
+
 ## Ruled
 
 ### CR-006, seal stop's age field is empty, not pre-filled
 
-Status: RULED, not yet implemented.
+Status: RULED, implemented.
 
 Feature blocked: none, the field works and does not cause the save failure
 investigated for CR-004, confirmed by reading the actual Postgres error,
@@ -129,6 +141,22 @@ types, even though every Crestfall character is an adult.
 
 Ruling: the age field pre-fills 18 by default. Every Crestfall character is
 an adult and the field is required, so a real value belongs there instead
-of ghost text a user could mistake for an entered value. Not yet
-implemented; `CharacterCreatorModal.jsx`'s `INITIAL_FORM_STATE.age` still
-defaults to `""` as of this entry.
+of ghost text a user could mistake for an entered value. Implemented;
+`CharacterCreatorModal.jsx`'s `INITIAL_FORM_STATE.age` now defaults to
+`"18"`, confirmed rendered as a real editable value (not placeholder text)
+at 390 and 1440 width.
+
+## Cleared
+
+### CR-004, signed-in Supabase user has no row in the backend's users table
+
+Status: CLEARED. The frontend correctly authenticated and posted to
+`/v1/studio/creations` with a real user id, but the write failed: Postgres
+rejected the insert with `insert or update on table "creations" violates
+foreign key constraint "creations_owner_id_fkey"`, `Key (owner_id)=(<the
+signed-in user's id>) is not present in table "users"`. This account now
+has a `users` row: a creation write for the signed-in account
+(`8bfe3176-bd2e-4e2c-98f8-f6c1a852608e`) returned row id
+`cecab068-7801-48a1-839a-20dac2eef73c`, `error: null`, `owner_id` matching
+the signed-in user. The creator's save path needed no changes once the
+account was provisioned.

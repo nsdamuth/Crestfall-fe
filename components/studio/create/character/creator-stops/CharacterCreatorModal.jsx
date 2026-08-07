@@ -69,7 +69,7 @@ const INITIAL_FORM_STATE = {
   personalityNotes: "",
   visibility: "PRIVATE",
   contentRating: "SFW",
-  age: "",
+  age: "18",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
   creatorDirectives: "",
   extraRuntimeNotes: "",
@@ -200,11 +200,8 @@ export default function CharacterCreatorModal({ onClose }) {
 
       setSavedSnapshot(snapshot);
       return snapshot;
-    } catch (error) {
-      setSaveError(
-        error?.message ||
-          "The save did not go through. Your work is still here, try again."
-      );
+    } catch {
+      setSaveError(true);
       return null;
     } finally {
       setIsSaving(false);
