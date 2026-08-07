@@ -113,6 +113,13 @@ export async function PATCH(request, { params }) {
       },
     });
 
+    // The upstream service can answer 200 with an error body (a
+    // masked GraphQL error keeps the transport status as-is). A
+    // failed write must not report success.
+    if (responsePayload?.error) {
+      return NextResponse.json(responsePayload, { status: 500 });
+    }
+
     return NextResponse.json(responsePayload);
   } catch (error) {
     return forwardServiceError(

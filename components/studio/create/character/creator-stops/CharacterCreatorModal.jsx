@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import CreatorStopsView from "./CreatorStops.view";
 import { buildCreatorStopItems, CREATOR_STOP_IDS } from "./CreatorStops.contract";
+import {
+  createCreationDraft,
+  updateCreationDraft,
+  getCreationApiErrorMessage,
+} from "@/lib/client/studio/creations/creationClient";
 import NameStopView from "./name-stop/NameStop.view";
 import KindStopView from "./kind-stop/KindStop.view";
 import FaceStopView from "./face-stop/FaceStop.view";
@@ -70,6 +75,35 @@ const INITIAL_FORM_STATE = {
   extraRuntimeNotes: "",
 };
 
+// Same top-level shape (type, title, description, visibility,
+// content_rating, data) the working character creator posts to
+// /v1/studio/creations, sourced from this form's own field names.
+function buildSaveCreationPayload(formState) {
+  const name = formState.name?.trim() || "Unnamed Character";
+
+  return {
+    type: "CHARACTER",
+    title: name,
+    description:
+      formState.shortConcept ||
+      formState.title ||
+      formState.species ||
+      "A private draft character created in Crestfall Studio.",
+    visibility: formState.visibility || "PRIVATE",
+    content_rating: formState.contentRating || "SFW",
+    data: {
+      ...formState,
+      name,
+      builder: "CHARACTER_CREATOR",
+      builder_version: "1.0",
+    },
+  };
+}
+
+function extractCreationFromApiResponse(payload) {
+  return payload?.creation || payload?.data?.creation || null;
+}
+
 export default function CharacterCreatorModal({ onClose }) {
   const [activeStop, setActiveStop] = useState(CREATOR_STOP_IDS[0]);
   const [maxReachedIndex, setMaxReachedIndex] = useState(0);
@@ -83,6 +117,8 @@ export default function CharacterCreatorModal({ onClose }) {
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
+  const [creationId, setCreationId] = useState(null);
+  const saveInFlightRef = useRef(false);
   // Which field currently owns the secondary panel takeover, or null.
   const [secondaryPanel, setSecondaryPanel] = useState(null);
 
@@ -128,20 +164,62 @@ export default function CharacterCreatorModal({ onClose }) {
     onClose?.();
   }
 
+  // Shared by the footer Save and Finish and save actions. Guards
+  // against a duplicate record: the first successful save records a
+  // creationId, and every save after that updates that same record.
+  async function persistCreation() {
+    if (saveInFlightRef.current) return null;
+    saveInFlightRef.current = true;
+    setSaveError(null);
+    setIsSaving(true);
+
+    const snapshot = formState;
+
+    try {
+      const payload = buildSaveCreationPayload(snapshot);
+      const response = creationId
+        ? await updateCreationDraft(creationId, payload)
+        : await createCreationDraft(payload);
+      const creation = extractCreationFromApiResponse(response);
+
+      // A request that completed without throwing is not the same
+      // thing as a save that succeeded: read the body before
+      // treating this as done.
+      if (!creation?.id) {
+        throw new Error(
+          getCreationApiErrorMessage(
+            response,
+            "The save did not go through. Your work is still here, try again."
+          )
+        );
+      }
+
+      if (!creationId) {
+        setCreationId(creation.id);
+      }
+
+      setSavedSnapshot(snapshot);
+      return snapshot;
+    } catch (error) {
+      setSaveError(
+        error?.message ||
+          "The save did not go through. Your work is still here, try again."
+      );
+      return null;
+    } finally {
+      setIsSaving(false);
+      saveInFlightRef.current = false;
+    }
+  }
+
   function handleSave() {
-    setSavedSnapshot(formState);
+    persistCreation();
   }
 
   async function handleFinishAndSave() {
-    setSaveError(null);
-    setIsSaving(true);
-    try {
-      await Promise.resolve(formState).then(setSavedSnapshot);
-      setIsSaving(false);
+    const saved = await persistCreation();
+    if (saved) {
       onClose?.();
-    } catch (error) {
-      setIsSaving(false);
-      setSaveError("The save did not go through. Your work is still here, try again.");
     }
   }
 
@@ -209,6 +287,7 @@ export default function CharacterCreatorModal({ onClose }) {
     ),
     stopItems,
     isLastStop: activeStop === "payoff",
+    saveDisabled: isSaving,
     hasUnsavedChanges,
     confirmDiscardOpen,
     isSaving,

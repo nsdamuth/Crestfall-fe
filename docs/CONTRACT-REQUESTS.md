@@ -62,3 +62,68 @@ clothing, may not need this path and are not assumed to get one
 automatically. Story selection itself needs its own design once the
 underlying data model exists; this request is the gate on that design
 starting, not a spec for the picker.
+
+### CR-004, signed-in Supabase user has no row in the backend's users table
+
+Feature blocked: saving a character from the creator. The frontend correctly
+authenticates and posts to `/v1/studio/creations` with a real user id, but
+the write fails: Postgres rejects the insert with
+`insert or update on table "creations" violates foreign key constraint
+"creations_owner_id_fkey"`, `Key (owner_id)=(<the signed-in user's id>) is
+not present in table "users"`. This is not a creator bug; every write for
+this signed-in account will fail the same way until this account has a row
+in services-api's `users` table.
+
+Missing functionality: whichever step is supposed to create a `public.users`
+row when a person signs in through Supabase auth (a trigger, a
+provisioning endpoint, a backfill) did not run for this account, or does
+not exist yet. Nick needs to confirm the intended provisioning path and
+either run it for existing accounts or fix why it did not fire.
+
+Design intent once it exists: no design change, this is pure plumbing. The
+creator's save path is already correct and needs nothing further once
+accounts are provisioned.
+
+### CR-005, services-api can report success on a failed write
+
+Feature blocked: none directly, but this masked the CR-004 failure as a
+silent no-op instead of a visible error, and would do the same for any
+other write that hits a masked GraphQL error. In
+`services/api/src/clients/postgraphileClient.js`, `postgraphileRequest`
+sets `error.status = response.status` whenever the GraphQL response
+contains an `errors` entry, even though GraphQL servers return transport
+status 200 for application-level errors. `creationsRoute.js`'s
+`failFromError` then uses that status verbatim
+(`Number.isInteger(error?.status) ? error.status : 500`), so a real write
+failure is answered with HTTP 200 and an error body. The frontend's
+`/api/creations` route now guards against this (see this branch's commit),
+but the transport status leaving services-api is still wrong for every
+caller, not just this one.
+
+Missing functionality: `postgraphileRequest` needs to treat a GraphQL
+`errors` entry as a failure status (for example 500, or a mapped status
+from the GraphQL error's extensions) rather than trusting the outer HTTP
+status when the body contains an error.
+
+Design intent once it exists: no design change, this is a transport
+correctness fix so "the request answered 200" reliably means "the write
+succeeded" everywhere in the app, not just where the frontend has learned
+to double-check.
+
+### CR-006, seal stop's age field is empty, not pre-filled
+
+Feature blocked: none, the field works and does not cause the save failure
+investigated for CR-004, confirmed by reading the actual Postgres error,
+which was solely the owner_id foreign key. But the seal stop's age input
+(`seal-stop/SealStop.view.jsx`) shows "18+" only as placeholder ghost
+text; `formState.age` defaults to `""` and stays empty until the user
+types, even though every Crestfall character is an adult.
+
+Missing functionality: not backend, this is a design call. Whether
+`age` should default to a real value such as `"18"` in
+`CharacterCreatorModal.jsx`'s `INITIAL_FORM_STATE`, or stay
+placeholder-only by design, is Brian's decision, not assumed here.
+
+Design intent once it exists: if a real pre-fill is wanted, the field
+shows an actual value the user can change rather than ghost text they
+might mistake for an entered value.

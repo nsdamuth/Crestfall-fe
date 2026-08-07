@@ -211,7 +211,7 @@ export default function CreatorStopsView({
         </div>
 
         <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
-          {isLastStop && saveError ? (
+          {saveError ? (
             <p role="alert" className="text-sm leading-6 text-[var(--status-danger)]">
               {saveError}
             </p>
