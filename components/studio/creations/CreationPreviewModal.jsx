@@ -13,7 +13,7 @@ import CreationPreviewModalView from "./creation-preview-modal/CreationPreviewMo
 import { useCreationPreviewModalViewModel } from "./creation-preview-modal/useCreationPreviewModalViewModel";
 
 const PANEL_CLASS_NAME =
-  "relative max-h-[92vh] w-full max-w-4xl overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] shadow-[var(--shadow-modal)] lg:overflow-hidden";
+  "relative max-h-[92vh] w-full max-w-4xl overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)] lg:overflow-hidden";
 
 export default function CreationPreviewModal(props) {
   const router = useRouter();

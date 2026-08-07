@@ -13,6 +13,11 @@ import {
   X,
 } from "lucide-react";
 
+import Eyebrow from "@/components/ui/Eyebrow";
+
+const ICON_BUTTON_CLASS =
+  "flex items-center justify-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] shadow-[var(--shadow-popover)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]";
+
 function CreationEngagementButtons({
   liked = false,
   bookmarked = false,
@@ -30,7 +35,9 @@ function CreationEngagementButtons({
           type="button"
           onClick={onToggleLike}
           className={`cf-btn cf-btn--secondary ${
-            liked ? "border-pink-400/45 bg-pink-400/15 text-pink-200" : ""
+            liked
+              ? "border-[var(--gold-action)] bg-[var(--gold-action)]/15 text-[var(--gold-bright)]"
+              : ""
           }`}
         >
           <Heart size={14} fill={liked ? "currentColor" : "none"} />
@@ -43,7 +50,9 @@ function CreationEngagementButtons({
           type="button"
           onClick={onToggleBookmark}
           className={`cf-btn cf-btn--secondary ${
-            bookmarked ? "border-pink-400/45 bg-pink-400/15 text-pink-200" : ""
+            bookmarked
+              ? "border-[var(--gold-action)] bg-[var(--gold-action)]/15 text-[var(--gold-bright)]"
+              : ""
           }`}
         >
           <Bookmark size={14} fill={bookmarked ? "currentColor" : "none"} />
@@ -229,15 +238,15 @@ export default function CreationPreviewModalView({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-4 top-4 z-20 rounded-lg border border-white/10 bg-black/50 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+        className={`absolute right-4 top-4 z-20 h-[var(--control-md)] w-[var(--control-md)] ${ICON_BUTTON_CLASS}`}
         aria-label="Close preview"
       >
         <X size={18} />
       </button>
 
       <div className="grid lg:max-h-[92vh] lg:grid-cols-[0.95fr_1.05fr] lg:overflow-hidden">
-        <div className="border-b border-white/10 bg-black/35 p-5 lg:border-b-0 lg:border-r">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
+        <div className="p-5">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
             {isMoreSlide ? (
               <div
                 className="relative flex h-full w-full items-center justify-center overflow-hidden p-6"
@@ -249,10 +258,8 @@ export default function CreationPreviewModalView({
               >
                 <div className="absolute inset-0 bg-black/25" />
 
-                <div className="relative z-10 max-w-xs rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/65 p-6 text-center shadow-2xl shadow-black/40">
-                  <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-                    Want to see more?
-                  </p>
+                <div className="relative z-10 max-w-xs rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-6 text-center shadow-[var(--shadow-popover)]">
+                  <Eyebrow showRuleMark={false}>Want to see more?</Eyebrow>
                   <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
                     Open the full catalogue to view this creation&apos;s media
                     library, details, and future public gallery.
@@ -278,7 +285,7 @@ export default function CreationPreviewModalView({
                   <p className="font-display text-5xl text-[var(--gold-ornament)]">
                     {titleInitial}
                   </p>
-                  <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
+                  <p className="mt-4 text-[var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-faint)]">
                     Preview Pending
                   </p>
                 </div>
@@ -290,7 +297,7 @@ export default function CreationPreviewModalView({
                 <button
                   type="button"
                   onClick={onPreviousMedia}
-                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--ink)] shadow-lg shadow-black/40 transition hover:border-[var(--gold-ornament)]/50 hover:bg-[var(--gold-ornament)]/15"
+                  className={`absolute left-3 top-1/2 h-[var(--control-md)] w-[var(--control-md)] -translate-y-1/2 ${ICON_BUTTON_CLASS}`}
                   aria-label="Previous preview image"
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -299,13 +306,13 @@ export default function CreationPreviewModalView({
                 <button
                   type="button"
                   onClick={onNextMedia}
-                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-[var(--ink)] shadow-lg shadow-black/40 transition hover:border-[var(--gold-ornament)]/50 hover:bg-[var(--gold-ornament)]/15"
+                  className={`absolute right-3 top-1/2 h-[var(--control-md)] w-[var(--control-md)] -translate-y-1/2 ${ICON_BUTTON_CLASS}`}
                   aria-label="Next preview image"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
 
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 rounded-full border border-white/10 bg-black/55 px-3 py-2">
+                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2 rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] px-3 py-2">
                   {mediaIndicators.map((indicator) => (
                     <button
                       key={indicator.id}
@@ -313,8 +320,8 @@ export default function CreationPreviewModalView({
                       onClick={() => onSelectMedia?.(indicator.index)}
                       className={`h-2 rounded-full transition ${
                         indicator.index === activeMediaIndex
-                          ? "w-6 bg-[var(--gold-ornament)]"
-                          : "w-2 bg-white/35 hover:bg-white/60"
+                          ? "w-6 bg-[var(--gold-action)]"
+                          : "w-2 bg-[var(--ink-faint)] hover:bg-[var(--ink-dim)]"
                       }`}
                       aria-label={indicator.label}
                     />
@@ -339,9 +346,9 @@ export default function CreationPreviewModalView({
           <h2 className="mt-4 font-display text-4xl">{title}</h2>
 
           {subtitle ? (
-            <p className="mt-1 text-sm uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-              {subtitle}
-            </p>
+            <div className="mt-1">
+              <Eyebrow showRuleMark={false}>{subtitle}</Eyebrow>
+            </div>
           ) : null}
 
           {creator.handle ? (
@@ -386,7 +393,7 @@ export default function CreationPreviewModalView({
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+                  className="rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-3 py-1 text-[var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]"
                 >
                   {tag}
                 </span>
@@ -396,7 +403,7 @@ export default function CreationPreviewModalView({
 
           <LinkComponent
             href={catalogueHref}
-            className="mt-5 inline-block text-sm uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
+            className="mt-5 inline-block text-[var(--text-ui)] uppercase leading-[var(--lh-ui)] tracking-[var(--track-label)] text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
           >
             View Full Catalogue →
           </LinkComponent>
@@ -428,19 +435,19 @@ export default function CreationPreviewModalView({
             />
 
             {chatError ? (
-              <p className="mt-3 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+              <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs text-[var(--status-danger)]">
                 {chatError}
               </p>
             ) : null}
 
             {defaultPcError ? (
-              <p className="mt-3 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+              <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs text-[var(--status-danger)]">
                 {defaultPcError}
               </p>
             ) : null}
 
             {defaultPcStatus ? (
-              <p className="mt-3 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+              <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-success-border)] bg-[var(--status-success-bed)] px-3 py-2 text-xs text-[var(--status-success)]">
                 {defaultPcStatus}
               </p>
             ) : null}
