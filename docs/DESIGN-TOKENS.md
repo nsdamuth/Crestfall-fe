@@ -338,3 +338,10 @@ zero-tolerance counts).
    other literal form of a wash value; a single-line change in
    `app/theme.css` must be able to move every wash in the app at once.
    Detect: `grep -rnE 'rgba\(0,\s*0,\s*0,\s*\.(4|7)0?\)|bg-black/(40|70)' components/ app/ --include='*.jsx' --include='*.js' --include='*.css' | grep -v theme.css`
+10. Token-first directive (ruled 7 Aug 2026, Brian's architectural
+    directive, `docs/FRONTEND-SOP.md` section 17). Every color and
+    typography value pulls from a global token first; a local literal
+    is legal only when Brian has explicitly requested that specific
+    adjustment. No value with no matching token is invented; it is
+    reported as a missing token and the work stops there.
+    Detect: `grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\([0-9]' components/ app/ --include='*.jsx' --include='*.js' --include='*.css' | grep -vE 'app/theme\.css|app/globals\.css|fixtures'`

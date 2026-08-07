@@ -405,3 +405,21 @@ detected.
 Every sprint ends with before and after renders at 390 and 1440. Work
 that changes nothing Brian can see does not close a sprint on its
 own.
+
+## 17. Token-first directive
+
+RULED 7 Aug 2026 (Brian's architectural directive, binding on all
+future work). Every color and typography value pulls from a global
+token first. A local adjustment is permitted only when Brian has
+explicitly requested that specific adjustment. If a value needed has
+no token, the agent stops and reports it as a missing token; it never
+invents a literal.
+
+Check: every new or touched line resolves through `var(--token)` (CSS)
+or a `var(--token)`-wrapped Tailwind arbitrary value (`text-[var(--x)]`,
+`bg-[var(--x)]`), never a raw hex, rgb/rgba, or a bare Tailwind color
+utility (`red-500`, `white/10`, etc.) outside the token files
+themselves.
+
+Detect: `grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\([0-9]' components/ app/ --include='*.jsx' --include='*.js' --include='*.css' | grep -vE 'app/theme\.css|app/globals\.css|fixtures'`
+must return nothing new for any file touched in the current pass.
