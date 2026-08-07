@@ -20,4 +20,5 @@
   --muted: var(--ink-dim);
   --foreground: var(--ink);
   --border: var(--line-strong);
+  --font-serif: var(--font-display);
 }
