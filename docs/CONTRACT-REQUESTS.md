@@ -65,6 +65,8 @@ starting, not a spec for the picker.
 
 ### CR-004, signed-in Supabase user has no row in the backend's users table
 
+Status: OPEN, with Nick.
+
 Feature blocked: saving a character from the creator. The frontend correctly
 authenticates and posts to `/v1/studio/creations` with a real user id, but
 the write fails: Postgres rejects the insert with
@@ -85,6 +87,8 @@ creator's save path is already correct and needs nothing further once
 accounts are provisioned.
 
 ### CR-005, services-api can report success on a failed write
+
+Status: OPEN, with Nick.
 
 Feature blocked: none directly, but this masked the CR-004 failure as a
 silent no-op instead of a visible error, and would do the same for any
@@ -110,7 +114,11 @@ correctness fix so "the request answered 200" reliably means "the write
 succeeded" everywhere in the app, not just where the frontend has learned
 to double-check.
 
+## Ruled
+
 ### CR-006, seal stop's age field is empty, not pre-filled
+
+Status: RULED, not yet implemented.
 
 Feature blocked: none, the field works and does not cause the save failure
 investigated for CR-004, confirmed by reading the actual Postgres error,
@@ -119,11 +127,8 @@ which was solely the owner_id foreign key. But the seal stop's age input
 text; `formState.age` defaults to `""` and stays empty until the user
 types, even though every Crestfall character is an adult.
 
-Missing functionality: not backend, this is a design call. Whether
-`age` should default to a real value such as `"18"` in
-`CharacterCreatorModal.jsx`'s `INITIAL_FORM_STATE`, or stay
-placeholder-only by design, is Brian's decision, not assumed here.
-
-Design intent once it exists: if a real pre-fill is wanted, the field
-shows an actual value the user can change rather than ghost text they
-might mistake for an entered value.
+Ruling: the age field pre-fills 18 by default. Every Crestfall character is
+an adult and the field is required, so a real value belongs there instead
+of ghost text a user could mistake for an entered value. Not yet
+implemented; `CharacterCreatorModal.jsx`'s `INITIAL_FORM_STATE.age` still
+defaults to `""` as of this entry.
