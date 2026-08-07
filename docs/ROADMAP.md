@@ -8,7 +8,7 @@ This file updates in the same commit as the work it records.
 language in `docs/NICK-SWEEP-NOTES.md`, full detail in
 `docs/BATCH-TWO-ORDER.md`'s flagged list.
 
-Roughly 85 packages of mechanical-only findings remain open in
+Roughly 81 packages of mechanical-only findings remain open in
 `docs/CLOSING-INVENTORY.md`, scoped for a dedicated follow-up pass.
 
 ## Next
@@ -23,6 +23,27 @@ Close the remaining ~85 mechanical-only packages in
 `/dev/ui-preview/*` route), not the 4-surface spot-check this run did.
 
 ## Done
+
+Unattended run, 6 Aug 2026, `design/creator-stops`: fixed the shared
+creator-stops eyebrow (all seven stops used the tag-and-meta type scale
+instead of the ruled global eyebrow scale; now `--text-eyebrow`/
+`--lh-eyebrow`/`--track-eyebrow` and the `--grad-rule` token). Converted
+4 account-family packages against `docs/CLOSING-INVENTORY.md`'s open
+mechanical backlog (`default-player-character-picker`,
+`studio-account-coins`, `studio-account-metrics`,
+`studio-account-profile`): off-scale `rounded-xl` panels to
+`--radius-md`, two floating dialogs from `--radius-md` up to
+`--radius-lg` per the corners final ruling, one dialog scrim from
+`bg-black/70` to `--scrim-strong`, and raw red/emerald status colors to
+the `--status-danger`/`--status-success` token pairs. All four verified
+at 390 and 1440 in `/dev/ui-preview`, zero new console errors, build
+exit 0. This run's brief pointed at `docs/BATCH-TWO-SCOPE.md` for the
+next block, but that file's own scope (179/179 packages) is already
+fully converted per this doc's "Done" section above; the actual open
+mechanical backlog lives in `docs/CLOSING-INVENTORY.md` per its own
+superseding note, so this run worked from there instead and logged the
+substitution rather than guessing or stalling. Roughly 81 packages of
+`CLOSING-INVENTORY.md`'s mechanical-only backlog remain after this run.
 
 Batch one, 20 packages, on `design/global-sweep`.
 
