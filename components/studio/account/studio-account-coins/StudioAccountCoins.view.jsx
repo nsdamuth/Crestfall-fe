@@ -27,7 +27,7 @@ export default function StudioAccountCoinsView({
             </p>
 
             {balanceErrorMessage ? (
-              <p className="mt-2 text-xs leading-5 text-red-200">
+              <p className="mt-2 text-xs leading-5 text-[var(--status-danger)]">
                 {balanceErrorMessage}
               </p>
             ) : null}
@@ -47,7 +47,7 @@ export default function StudioAccountCoinsView({
           {statItems.map((item, index) => (
             <div
               key={item?.id || item?.label || index}
-              className="rounded-xl border border-white/10 bg-black/30 p-3"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3"
             >
               <p className="font-display text-2xl">{item?.value ?? "0"}</p>
               <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
@@ -59,8 +59,8 @@ export default function StudioAccountCoinsView({
       </div>
 
       {purchaseInfoOpen ? (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[2px]">
-          <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
+          <section className="w-full max-w-sm rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">

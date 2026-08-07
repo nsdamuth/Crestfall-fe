@@ -6,7 +6,7 @@ export default function StudioAccountMetricsView({
   return (
     <>
       {errorMessage ? (
-        <p className="mb-3 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
+        <p className="mb-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
           {errorMessage}
         </p>
       ) : null}
@@ -15,7 +15,7 @@ export default function StudioAccountMetricsView({
         {metricItems.map((item, index) => (
           <div
             key={item?.id || item?.label || index}
-            className="rounded-xl border border-white/10 bg-black/30 p-3"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3"
           >
             <p className="font-display text-2xl">{item?.value ?? "0"}</p>
             <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
