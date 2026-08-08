@@ -12,6 +12,32 @@ outside it consumes, is presentation and stays editable under the normal
 rules. This backlog is for shared contracts, anything Nick owns, and
 anything genuinely blocked on backend work.
 
+## Process (rough draft, pending Nick's feedback on process and brief format)
+
+Written 8 Aug 2026 to name a pattern this backlog had already fallen into
+without ever writing it down: design builds a feature ahead of backend,
+finishes it as a reviewable, working mockup so it can ship the moment real
+data exists, and this file is the handoff, not an afterthought.
+
+Concretely: when a feature's design is ready but its data is not (no
+endpoint, no contract, sometimes not even a ruling on the shape), design
+still builds the real View, ViewModel, and contract against the shape it
+expects, then feeds them sample data from one clearly named module, marked
+in its own header comment as mock or demo, pending the matching CR here
+(see `components/studio/studio-top-bar/studioTopBarNotifications.mock.js`
+and its paired `studioTopBarNotificationsDemoState.js` for the current
+example). The CR entry for that feature is the dev handoff: it names the
+mock module, states exactly what is faked versus real today, and specifies
+the data shape, endpoint behavior, and semantics Nick's side needs to
+build. When the real feed lands, the mock module (and any paired demo
+state) is a single deletion, not a rewrite.
+
+This is written down as a rough draft because it describes practice that
+already happened, not a ruling that was made in advance. Whether this is
+the right shape for future features, and whether CR entries should keep
+following this brief-and-handoff format, is open for Nick's feedback
+before it is treated as settled process.
+
 ## Open requests
 
 ### CR-001, movement_style missing from creator form schema
@@ -261,18 +287,40 @@ its one import in `components/studio/StudioTopBar.jsx` are the entire
 footprint; deleting both returns the bell to its honest empty-list
 default. No View, ViewModel, or contract change was needed to wire it
 in, since the shape already matched what the View renders (see the dev
-handoff below). Feed is otherwise still stubbed pending real data.
+handoff below).
+
+Interactions made real for review 8 Aug 2026 (Review Mode port /
+mobile nav restyle / notification demo brief, items 2-4): the compact
+panel's "Open the notification center" button is now the primary
+filled-gold action, relabelled exactly "Notification Center"; "Clear
+all" stays the ghost button, same height and padding, side by side.
+Per-row dismiss and clear-all are no longer no-ops in the running app;
+`components/studio/studio-top-bar/studioTopBarNotificationsDemoState.js`,
+a hook living beside the mock module, owns an in-memory (session-only,
+resets on reload) copy of the mock list and exposes
+`onDismissNotification(id)` and `onClearAllNotifications()`, which the
+Shell (`StudioTopBar.jsx`) wires directly onto the View, bypassing
+`useStudioTopBarViewModel` so the production Chassis's own contract
+(accepts a `notifications` array, owns no mutation logic) stays
+untouched. Dismissing every row in a TODAY or EARLIER group makes that
+group disappear (the View already filters empty groups); clearing the
+list drops the bell to idle and shows the empty state, both already
+derived from `notifications.length`. This is demo scaffolding, not a
+real mutation: delete `studioTopBarNotificationsDemoState.js` together
+with the mock module when the real feed lands (see the dev handoff
+below for what a real dismiss/clear-all endpoint needs to do instead).
+Feed is otherwise still stubbed pending real data.
 
 Feature blocked: none directly. `StudioTopBar`'s notifications control
 is a real open/close panel pair built on the shared `ModalShell`
 primitive: a compact panel (title, subtitle, close, gold-dot two-line
-rows, per-row dismiss, Clear all / Open the notification center
-footer) and a full notification center (same row recipe, grouped under
-TODAY / EARLIER labels), both closing on the close control, outside
-click, and Escape, with focus returned to the bell. It renders from a
+rows, per-row dismiss, Clear all / Notification Center footer) and a
+full notification center (same row recipe, grouped under TODAY /
+EARLIER labels), both closing on the close control, outside click, and
+Escape, with focus returned to the bell. It renders from a
 `notifications` prop that defaults to `[]` (honest stub, no backend);
-`onDismissNotification` and `onClearAllNotifications` are no-ops with
-nothing to mutate.
+`onDismissNotification` and `onClearAllNotifications` are wired to
+session-only in-memory demo state (see above), not a real mutation.
 
 Missing functionality: confirmation of the ruled shape from this CR
 (the bell carries a boolean "something is new", never a count; opening
@@ -280,8 +328,9 @@ the panel clears it; rows are deep links: render finished, creator
 published, daily bonus ready) against what actually shipped (the bell
 today derives its glow from `notifications.length > 0`, functionally a
 boolean but not sourced from a real feed; opening the panel does not
-clear anything, there is nothing to clear; rows are plain text, not deep
-links) and the ViewModel feed shape plus clear semantics.
+clear the has-new signal, only dismiss/clear-all remove rows; rows are
+plain text, not deep links) and the ViewModel feed shape plus clear
+semantics.
 
 Design intent once it exists: the top bar ViewModel consumes a boolean
 plus a deep-link row list, nothing else.
@@ -317,18 +366,24 @@ until this CR is answered.
   replace that derivation, or the feed endpoint could simply return an
   empty array when there is nothing new and the existing derivation
   keeps working unchanged.
-- Clear-all behavior: `onClearAllNotifications` exists on the View
-  contract today as a no-op. Going live means it needs a real mutation
-  (a clear-all endpoint or a client-side "mark all read" call) that the
+- Clear-all behavior: as of 8 Aug 2026, `onClearAllNotifications` empties
+  an in-memory demo list (`studioTopBarNotificationsDemoState.js`),
+  session-only, gone on reload, no network call. Going live means
+  replacing that hook's `setNotifications([])` with a real mutation (a
+  clear-all endpoint or a client-side "mark all read" call) that the
   ViewModel calls, then either re-fetches or optimistically empties the
   list. Per this CR's ruled intent, opening the panel is what clears
   the "something is new" signal, which is a separate call from
   clear-all (dismissing individual rows does not clear the badge by
-  itself in the ruled model, only viewing does).
-- Per-row dismiss behavior: `onDismissNotification(id)` exists today as
-  a no-op. Going live means a real per-row dismiss/delete endpoint the
-  ViewModel calls, then removes that row from the list (optimistically
-  or via re-fetch).
+  itself in the ruled model, only viewing does); the demo does not
+  implement that opening-clears-the-badge behavior, only the list
+  mutations.
+- Per-row dismiss behavior: as of 8 Aug 2026, `onDismissNotification(id)`
+  filters that id out of the same in-memory demo list, session-only, no
+  network call. Going live means a real per-row dismiss/delete endpoint
+  the ViewModel calls, then removes that row from the list
+  (optimistically or via re-fetch), replacing the demo hook's
+  `setNotifications((current) => current.filter(...))`.
 - Deep-link targets: per the ruled shape, each row should navigate
   somewhere on click ("render finished, creator published, daily bonus
   ready" are the three examples named in this CR). The `href` field
