@@ -32,41 +32,43 @@ export default function StudioTopBarView({
   const isFullOpen = notificationsView === "full";
 
   return (
-    <header className="hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
-      <input
-        type="search"
-        value={searchValue}
-        onChange={(event) => onSearchChange?.(event.target.value)}
-        placeholder={searchPlaceholder}
-        aria-label="Search"
-        autoFocus={searchAutoFocus}
-        className="ml-auto h-[var(--control-md)] w-full max-w-[26rem] touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] font-sans text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus-visible:border-[var(--gold-action)]"
-      />
+    <>
+      <header className="sticky top-0 z-40 hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
+        <input
+          type="search"
+          value={searchValue}
+          onChange={(event) => onSearchChange?.(event.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label="Search"
+          autoFocus={searchAutoFocus}
+          className="ml-auto h-[var(--control-md)] w-full max-w-[26rem] touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] font-sans text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[color:var(--ink)] placeholder:text-[length:var(--text-label)] placeholder:font-[var(--weight-regular)] placeholder:text-[color:var(--ink-faint)] focus-visible:border-[var(--gold-action)]"
+        />
 
-      <button
-        ref={bellRef}
-        type="button"
-        onClick={onOpenNotifications}
-        aria-label={notificationsLabel}
-        aria-expanded={isCompactOpen || isFullOpen}
-        className={`flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
-          hasNotifications
-            ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
-            : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
-        }`}
-      >
-        <Bell size={17} />
-      </button>
-
-      {accountLinkSlot || (
-        <a
-          href={accountHref}
-          aria-label={accountAriaLabel}
-          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        <button
+          ref={bellRef}
+          type="button"
+          onClick={onOpenNotifications}
+          aria-label={notificationsLabel}
+          aria-expanded={isCompactOpen || isFullOpen}
+          className={`flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
+            hasNotifications
+              ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
+              : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          }`}
         >
-          <UserRound size={17} />
-        </a>
-      )}
+          <Bell size={17} />
+        </button>
+
+        {accountLinkSlot || (
+          <a
+            href={accountHref}
+            aria-label={accountAriaLabel}
+            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          >
+            <UserRound size={17} />
+          </a>
+        )}
+      </header>
 
       {isCompactOpen ? (
         <ModalShell
@@ -139,7 +141,7 @@ export default function StudioTopBarView({
           )}
         </ModalShell>
       ) : null}
-    </header>
+    </>
   );
 }
 
@@ -154,11 +156,11 @@ function NotificationsHeader({
       <div className="min-w-0">
         <h2
           id={titleId}
-          className="font-display text-[var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
+          className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
         >
           {title}
         </h2>
-        <p className="text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+        <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
           {subtitle}
         </p>
       </div>
@@ -188,7 +190,7 @@ function NotificationGroups({ notifications = [], onDismiss = () => {} }) {
     <>
       {groups.map((group) => (
         <div key={group.key}>
-          <p className="mt-[var(--space-4)] text-[var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase font-[var(--weight-medium)] text-[var(--ink-faint)] first:mt-0">
+          <p className="mt-[var(--space-4)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase font-[var(--weight-medium)] text-[color:var(--ink-faint)] first:mt-0">
             {group.label}
           </p>
           <ul className="divide-y divide-[var(--line-whisper)]">
@@ -215,10 +217,10 @@ function NotificationRow({ notification, onDismiss = () => {} }) {
           className="mt-[var(--space-2)] h-2 w-2 shrink-0 rounded-[var(--radius-full)] bg-[var(--gold-action)]"
         />
         <div className="min-w-0">
-          <h3 className="text-[var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-pretty">
+          <h3 className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-pretty">
             {notification.title}
           </h3>
-          <p className="mt-0.5 text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+          <p className="mt-0.5 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
             {notification.supportingLine}
           </p>
         </div>
@@ -238,7 +240,7 @@ function NotificationRow({ notification, onDismiss = () => {} }) {
 
 function EmptyNotifications() {
   return (
-    <p className="py-[var(--space-4)] text-center text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
+    <p className="py-[var(--space-4)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[color:var(--ink-faint)]">
       No notifications yet.
     </p>
   );

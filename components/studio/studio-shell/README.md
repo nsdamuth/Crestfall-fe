@@ -44,6 +44,20 @@ The View renders only the canvas background and the sidebar/content
 layout with page padding. It receives its chrome as slots and knows
 nothing about studio account state.
 
+Restructured 8 Aug 2026 (Phase 2.2 top bar layout brief). Before this,
+`mobileNavSlot` and `topBarSlot` rendered as the first two children
+inside the same padded `<section>` as page `children`. That padding
+(`px-5/8/10`, `lg:py-8`) constrained the top bar to less than the full
+content-column width and left no gap between the bar and page content.
+`mobileNavSlot` and `topBarSlot` now render in an unpadded wrapper
+above the padded `<section>`; `mobileNavSlot` is unaffected since it is
+`fixed` (removed from flow regardless of DOM position), but
+`topBarSlot` can now span the full content-column width and sit
+sticky. The `<section>`'s own className is unchanged, so no page's
+padding or spacing moved: the same `lg:py-8` top padding that
+previously sat before the bar (as its first child) now reads as the
+gap after the bar, since the bar moved above the section entirely.
+
 ## Public contract
 
 Unchanged from the pre-carve component: `user`, `children`. Carving

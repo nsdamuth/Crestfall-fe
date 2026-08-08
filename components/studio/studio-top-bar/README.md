@@ -77,6 +77,51 @@ dialogs.
   2026 and applied here as `backdrop-blur-[var(--blur-chrome)]`. See
   `docs/DESIGN-TOKENS.md`'s Lines/fills/scrims table.
 
+## Layout fixes (Phase 2.2, 8 Aug 2026)
+
+**Root cause, item 1.** Two separate bugs, one each in the shell and this
+package, both traced before any fix landed:
+
+- The bar not reaching the content area's right edge: `StudioShell.view.jsx`
+  rendered `topBarSlot` as a child of the same padded `<section>` as page
+  content (`px-5/8/10`), so the bar's `w-full` filled the padded box, not
+  the true column width. Fixed in the shell package: `topBarSlot` (and
+  `mobileNavSlot`, unaffected either way since it is `fixed`) now render in
+  an unpadded wrapper above the padded section. See
+  `components/studio/studio-shell/README.md`.
+- The notification panel pinning to the top of the viewport instead of
+  centering: the two `ModalShell` panels were rendered as JSX children
+  inside the same `<header>` that carries `backdrop-blur-[var(--blur-chrome)]`.
+  A non-none `backdrop-filter` on an element establishes a new containing
+  block for that element's `position: fixed` descendants (same rule as
+  `filter`/`transform`), so `ModalShell`'s `fixed inset-0` was resolving
+  against the header's small bounding box, not the viewport. Fixed inside
+  this package alone: the View now returns a Fragment with `<header>` and
+  the two panels as siblings, not descendants, so nothing here needed to
+  change in the shell or in `ModalShell` itself.
+
+**Item 3, sticky.** `sticky top-0 z-40` added to the header, matching the
+proof's `.topbar{position:sticky;top:0;z-index:40}`.
+
+**Item 6, breathing room.** No new spacing was added. Moving `topBarSlot`
+out of the padded section (the item 1 shell fix) means the section's
+existing `lg:py-[var(--space-8)]` top padding, previously spent before the
+bar as its first child, now reads as the gap between the sticky bar and
+page content, on every page in the shell, unchanged in value.
+
+**Item 7, search placeholder.** `placeholder:text-[length:var(--text-label)]
+placeholder:font-[var(--weight-regular)]` added; field height/width
+untouched. While verifying this, found and fixed a real defect this file
+already had: every bare `text-[var(--text-ui)]`-shaped font-size utility
+in this file was being interpreted by Tailwind as a color arbitrary value
+(ambiguous `text-[var(--x)]` defaults to color, per the `text-[length:...]` /
+`text-[color:...]` convention already established in
+`StudioSidebar.view.jsx`), so no font-size in this file was actually
+applying; text sat at browser/UA default size everywhere. Fixed throughout
+this file, not only on the placeholder, since the placeholder fix could not
+be verified without it.
+
+
 The component remains mounted by `StudioShell.jsx`. Mobile Studio navigation is
 outside this package and remains a separate conversion target.
 
