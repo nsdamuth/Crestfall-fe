@@ -40,6 +40,7 @@
   background-image: var(--grad-sheen);
   background-size: 250% 100%;
   background-position: 120% 0;
+  background-repeat: no-repeat;
   opacity: 0;
   pointer-events: none;
 }
@@ -69,6 +70,7 @@
   z-index: -2;
   pointer-events: none;
   background-image: var(--atm-constellation);
+  background-repeat: no-repeat;
   animation:
     cf-galaxy-drift var(--anim-galaxy) linear infinite,
     cf-galaxy-twinkle var(--anim-twinkle) ease-in-out infinite alternate;
@@ -328,6 +330,7 @@
 .cf-btn--primary {
   background-color: var(--gold-action);
   background-image: var(--grad-gold);
+  background-repeat: no-repeat;
   color: var(--tag-fill-ink);
 }
 .cf-btn--primary:hover {

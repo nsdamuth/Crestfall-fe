@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import StudioMobileNavView from "@/components/studio/studio-mobile-nav/StudioMobileNav.view";
 import {
+  studioMobileNavActiveDockTileFixture,
   studioMobileNavClosedFixture,
   studioMobileNavDrawerOpenFixture,
   studioMobileNavSocialOpenFixture,
@@ -15,6 +16,10 @@ const STATES = Object.freeze([
   Object.freeze({
     label: "Community Links Open",
     fixture: studioMobileNavSocialOpenFixture,
+  }),
+  Object.freeze({
+    label: "Active Dock Tile",
+    fixture: studioMobileNavActiveDockTileFixture,
   }),
 ]);
 
