@@ -6,13 +6,11 @@ export const STUDIO_MOBILE_NAV_DISCORD_URL =
   "https://discord.com/channels/1482041132874727579/1482041133700878529";
 
 export const STUDIO_MOBILE_NAV_COPY = Object.freeze({
-  brandLabel: "Crestfall",
   drawerEyebrow: "Crestfall",
   drawerTitle: "Studio",
   communityLinksLabel: "Community Links",
   signedInLabel: "Signed in",
   logoutLabel: "Log out",
-  openMenuAriaLabel: "Open menu",
   closeMenuAriaLabel: "Close menu",
   closeOverlayAriaLabel: "Close menu overlay",
   accountFallbackAriaLabel: "Account",
@@ -70,13 +68,21 @@ function buildNavigationLinks(links, pathname) {
   }));
 }
 
-export function useStudioMobileNavViewModel({ user, pathname = "" } = {}) {
-  const [open, setOpen] = useState(false);
+// Drawer open/closed is owned one level up, by StudioShell.jsx, since
+// StudioTopBar's mobile hamburger (a separate LOOM package) must open
+// the same drawer this package renders (8 Aug 2026, mobile nav restyle
+// brief item 7). This ViewModel receives it as `open` / `onCloseMenu`
+// rather than creating its own state.
+export function useStudioMobileNavViewModel({
+  user,
+  pathname = "",
+  open = false,
+  onCloseMenu = () => {},
+} = {}) {
   const [socialOpen, setSocialOpen] = useState(false);
   const signedInEmail = normalizeStudioMobileNavEmail(user);
 
   return {
-    brandLabel: STUDIO_MOBILE_NAV_COPY.brandLabel,
     brandHref: "/studio",
     drawerEyebrow: STUDIO_MOBILE_NAV_COPY.drawerEyebrow,
     drawerTitle: STUDIO_MOBILE_NAV_COPY.drawerTitle,
@@ -88,7 +94,6 @@ export function useStudioMobileNavViewModel({ user, pathname = "" } = {}) {
     accountHref: "/studio/account",
     accountAriaLabel:
       signedInEmail || STUDIO_MOBILE_NAV_COPY.accountFallbackAriaLabel,
-    openMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.openMenuAriaLabel,
     closeMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.closeMenuAriaLabel,
     closeOverlayAriaLabel: STUDIO_MOBILE_NAV_COPY.closeOverlayAriaLabel,
     open,
@@ -97,9 +102,8 @@ export function useStudioMobileNavViewModel({ user, pathname = "" } = {}) {
     utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname),
     socialLinks: STUDIO_MOBILE_NAV_SOCIAL_LINKS,
     bottomLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_BOTTOM_LINKS, pathname),
-    onOpenMenu: () => setOpen(true),
-    onCloseMenu: () => setOpen(false),
+    onCloseMenu,
     onToggleSocial: () => setSocialOpen((value) => !value),
-    onNavigate: () => setOpen(false),
+    onNavigate: () => onCloseMenu(),
   };
 }

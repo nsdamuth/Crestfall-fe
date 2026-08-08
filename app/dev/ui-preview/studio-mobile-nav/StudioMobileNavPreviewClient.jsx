@@ -41,6 +41,7 @@ function EconomyFixture({ label }) {
 
 export default function StudioMobileNavPreviewClient() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [closedFeedback, setClosedFeedback] = useState("");
   const selectedState = STATES[selectedIndex] || STATES[0];
 
   return (
@@ -53,8 +54,16 @@ export default function StudioMobileNavPreviewClient() {
           <h1 className="mt-2 font-display text-3xl">Studio Mobile Nav</h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--muted)]">
             Fixture-driven closed, drawer-open, and Community Links states.
-            View this preview below the large breakpoint.
+            The header row (hamburger, search, bell) moved to the
+            studio-top-bar package (8 Aug 2026); this package now owns only
+            the drawer and bottom dock. View this preview below the large
+            breakpoint.
           </p>
+          {closedFeedback ? (
+            <p className="mt-2 text-xs text-[var(--muted-gold)]">
+              {closedFeedback}
+            </p>
+          ) : null}
         </header>
 
         <div className="relative z-[70] flex flex-wrap gap-2">
@@ -62,7 +71,10 @@ export default function StudioMobileNavPreviewClient() {
             <button
               key={state.label}
               type="button"
-              onClick={() => setSelectedIndex(index)}
+              onClick={() => {
+                setSelectedIndex(index);
+                setClosedFeedback("");
+              }}
               className={`rounded-lg border px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
                 selectedIndex === index
                   ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
@@ -82,8 +94,8 @@ export default function StudioMobileNavPreviewClient() {
           <StudioMobileNavView
             {...selectedState.fixture}
             InternalLinkComponent={PreviewLink}
-            headerEconomySlot={<EconomyFixture label="Header coins" />}
             drawerEconomySlot={<EconomyFixture label="Drawer coins" />}
+            onCloseMenu={() => setClosedFeedback("onCloseMenu callback received.")}
           />
         </section>
       </div>

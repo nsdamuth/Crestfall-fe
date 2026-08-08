@@ -17,32 +17,33 @@ test("Studio Mobile Nav Shell stays thin and application-owned", () => {
   assert.match(shell, /StudioMobileNavView/);
   assert.match(shell, /usePathname/);
   assert.match(shell, /InternalLinkComponent=\{Link\}/);
-  assert.match(shell, /variant="mobileHeader"/);
   assert.match(shell, /variant="drawer"/);
+  assert.match(shell, /open, onCloseMenu/);
+  assert.doesNotMatch(shell, /variant="mobileHeader"/);
   assert.doesNotMatch(shell, /useState/);
   assert.doesNotMatch(shell, /studioLinks|utilityLinks|socialLinks|bottomLinks/);
   assert.doesNotMatch(shell, /isActivePath|startsWith/);
 });
 
-test("Studio Mobile Nav View is portable and semantic", () => {
+test("Studio Mobile Nav View is portable and semantic, and owns no header", () => {
   const view = read("components/studio/studio-mobile-nav/StudioMobileNav.view.jsx");
   assert.match(view, /InternalLinkComponent/);
-  assert.match(view, /headerEconomySlot/);
   assert.match(view, /drawerEconomySlot/);
   assert.match(view, /primaryLinks/);
   assert.match(view, /utilityLinks/);
   assert.match(view, /socialLinks/);
   assert.match(view, /bottomLinks/);
-  assert.match(view, /onOpenMenu/);
   assert.match(view, /onCloseMenu/);
   assert.match(view, /onToggleSocial/);
   assert.match(view, /onNavigate/);
   assert.doesNotMatch(view, /next\/link|next\/navigation/);
   assert.doesNotMatch(view, /StudioEconomyWidget/);
   assert.doesNotMatch(view, /useState|usePathname/);
+  assert.doesNotMatch(view, /headerEconomySlot|onOpenMenu/);
+  assert.doesNotMatch(view, /<header/);
 });
 
-test("Studio Mobile Nav ViewModel owns navigation and UI state", () => {
+test("Studio Mobile Nav ViewModel owns Community Links state, not drawer open state", () => {
   const viewModel = read(
     "components/studio/studio-mobile-nav/useStudioMobileNavViewModel.js"
   );
@@ -53,8 +54,8 @@ test("Studio Mobile Nav ViewModel owns navigation and UI state", () => {
   assert.match(viewModel, /STUDIO_MOBILE_NAV_BOTTOM_LINKS/);
   assert.match(viewModel, /isStudioMobileNavPathActive/);
   assert.match(viewModel, /normalizeStudioMobileNavEmail/);
-  assert.match(viewModel, /setOpen/);
   assert.match(viewModel, /setSocialOpen/);
+  assert.doesNotMatch(viewModel, /setOpen\b/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
@@ -115,7 +116,7 @@ test("Studio Mobile Nav preview is development-only and fixture driven", () => {
   assert.match(preview, /Closed/);
   assert.match(preview, /Drawer Open/);
   assert.match(preview, /Community Links Open/);
-  assert.match(preview, /headerEconomySlot/);
+  assert.doesNotMatch(preview, /headerEconomySlot/);
   assert.match(preview, /drawerEconomySlot/);
 });
 
