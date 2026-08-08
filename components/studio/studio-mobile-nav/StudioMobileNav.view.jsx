@@ -133,7 +133,7 @@ export default function StudioMobileNavView({
             </div>
 
             <div className="mt-8 flex-1 overflow-y-auto pr-1">
-              <nav className="space-y-1.5">
+              <nav className="space-y-[var(--space-1)]">
                 {primaryLinks.map((link) => (
                   <MobileDrawerInternalLink
                     key={link.href}
@@ -148,7 +148,7 @@ export default function StudioMobileNavView({
               {drawerEconomySlot}
               <MobileDivider />
 
-              <nav className="space-y-1.5">
+              <nav className="space-y-[var(--space-1)]">
                 {utilityLinks.map((link) => (
                   <MobileDrawerInternalLink
                     key={link.href}
@@ -176,7 +176,7 @@ export default function StudioMobileNavView({
                 </button>
 
                 {socialOpen ? (
-                  <nav className="mt-1 space-y-1.5">
+                  <nav className="mt-1 space-y-[var(--space-1)]">
                     {socialLinks.map((link) => (
                       <MobileDrawerExternalLink
                         key={link.href}
