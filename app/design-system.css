@@ -230,10 +230,44 @@
   background-color: var(--fill);
 }
 
+/* Ruled: rail/drawer active recipe traced to the proof's
+   .navgroup a[aria-current] (gold fade + leading edge rule),
+   distinct from the bottom tab dock below, which gets its own
+   .cf-dock-link recipe because it is a different shape (narrow
+   column tiles, not a horizontal-reading list row) and the proof
+   itself never shares one recipe across both. */
 .cf-nav-link[aria-current="page"] {
-  border-color: var(--line-strong);
-  background-color: var(--fill);
+  background-image: var(--grad-nav-active);
+  color: var(--gold-bright);
+  box-shadow: inset 2px 0 0 var(--gold-action);
+}
+
+.cf-nav-link[aria-current="page"]:hover {
+  background-image: var(--grad-nav-active);
+}
+
+/* Bottom tab dock active state, traced to the proof's
+   .dock a[aria-current] (shell.css): color only, no fill, no
+   border, no inset rule. Kept separate from .cf-nav-link so the
+   rail/drawer gradient recipe above never lands on the dock's
+   narrow column tiles. */
+.cf-dock-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-dock-link:hover {
+  background-color: var(--fill-whisper);
   color: var(--ink);
+}
+
+.cf-dock-link:active {
+  background-color: var(--fill);
+}
+
+.cf-dock-link[aria-current="page"] {
+  color: var(--gold-bright);
 }
 
 /* --- BUTTON SYSTEM ------------------------------------------------

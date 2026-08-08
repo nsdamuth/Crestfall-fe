@@ -58,6 +58,16 @@ export default function StudioSidebarView({
   onToggleCollapsed = () => {},
   onToggleSocial = () => {},
 }) {
+  const discordLink =
+    socialLinks.find((link) => /discord/i.test(link?.href || "")) ||
+    socialLinks[0] ||
+    null;
+  // Gear icon: the proof opens a settings modal, which has no contract
+  // callback yet. Pointed at the existing Account link until that
+  // exists. Change this line, not the markup below, to redirect it.
+  const accountLink =
+    utilityLinks.find((link) => link.iconKey === "castle") || null;
+
   return (
     <aside
       className={`
@@ -80,13 +90,13 @@ export default function StudioSidebarView({
             </svg>
 
             <span>
-              <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
+              <h1 className="font-display text-[length:var(--text-ui)] font-[var(--weight-medium)] uppercase leading-none tracking-[.04em] text-[color:var(--ink)] first-letter:text-[1.45em]">
                 {brandEyebrow}
-              </p>
-
-              <h1 className="mt-1 font-display text-xl tracking-[0.08em]">
-                {brandTitle}
               </h1>
+
+              <p className="mt-[2px] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[color:var(--ink-faint)]">
+                {brandTitle}
+              </p>
             </span>
           </InternalLinkComponent>
         ) : null}
@@ -170,7 +180,73 @@ export default function StudioSidebarView({
       )}
 
       {!collapsed ? (
-        <div className="mt-8 rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3 text-xs text-[var(--ink-dim)]">
+        <div className="mt-4 space-y-[var(--space-2)] px-1">
+          <div className="flex items-center gap-[var(--space-3)]">
+            <span
+              aria-hidden="true"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)]"
+            >
+              {signedInEmail ? signedInEmail.charAt(0).toUpperCase() : "?"}
+            </span>
+
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[color:var(--ink)]">
+                {signedInLabel}
+              </h3>
+              <p className="truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
+                {signedInEmail}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-[var(--space-2)]">
+            {discordLink ? (
+              <a
+                href={discordLink.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={discordLink.label}
+                className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <use href="/assets/icons/icons-v7.svg#i-58" />
+                </svg>
+              </a>
+            ) : null}
+
+            {accountLink ? (
+              <InternalLinkComponent
+                href={accountLink.href}
+                aria-label={accountLink.label}
+                className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <use href="/assets/icons/icons-v7.svg#i-12" />
+                </svg>
+              </InternalLinkComponent>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      {!collapsed ? (
+        <div className="mt-4 rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3 text-xs text-[var(--ink-dim)]">
           <p className="text-[var(--gold-ornament)]">{signedInLabel}</p>
           <p className="mt-1 break-all">{signedInEmail}</p>
 
@@ -206,11 +282,11 @@ function SidebarInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-xs uppercase tracking-[0.16em]
+        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border border-transparent px-3 py-2.5 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)]
         ${
           link.variant === "return"
-            ? "border-[var(--gold-ornament)]/15 bg-black/35 text-[var(--gold-ornament)] hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-            : "text-[var(--ink-dim)]"
+            ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
+            : "text-[color:var(--ink-faint)]"
         }
         ${collapsed ? "justify-center px-2" : ""}
       `}
