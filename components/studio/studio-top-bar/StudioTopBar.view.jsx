@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, X } from "lucide-react";
+import { Bell, Menu, X } from "lucide-react";
 
 import ModalShell from "@/components/ui/ModalShell";
 
@@ -21,12 +21,14 @@ export default function StudioTopBarView({
   accountAriaLabel = "Account",
   accountInitial = "?",
   accountLinkSlot = null,
+  openMenuAriaLabel = "Open menu",
   onSearchChange = () => {},
   onOpenNotifications = () => {},
   onOpenNotificationCenter = () => {},
   onCloseNotifications = () => {},
   onDismissNotification = () => {},
   onClearAllNotifications = () => {},
+  onOpenMenu = () => {},
 }) {
   const hasNotifications = notifications.length > 0;
   const isCompactOpen = notificationsView === "compact";
@@ -34,7 +36,16 @@ export default function StudioTopBarView({
 
   return (
     <>
-      <header className="sticky top-0 z-40 hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
+      <header className="sticky top-0 z-40 flex w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)]">
+        <button
+          type="button"
+          onClick={onOpenMenu}
+          aria-label={openMenuAriaLabel}
+          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)] lg:hidden"
+        >
+          <Menu size={20} />
+        </button>
+
         <input
           type="search"
           value={searchValue}
@@ -64,7 +75,7 @@ export default function StudioTopBarView({
           <a
             href={accountHref}
             aria-label={accountAriaLabel}
-            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="hidden h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)] lg:flex"
           >
             {accountInitial}
           </a>
@@ -110,9 +121,9 @@ export default function StudioTopBarView({
               <button
                 type="button"
                 onClick={onOpenNotificationCenter}
-                className="cf-btn cf-btn--tertiary"
+                className="cf-btn cf-btn--primary cf-btn--sm"
               >
-                Open the notification center
+                Notification Center
               </button>
             </div>
           ) : null}

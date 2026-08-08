@@ -4,12 +4,15 @@ import { useRef, useState } from "react";
 
 import StudioTopBarView from "@/components/studio/studio-top-bar/StudioTopBar.view";
 import {
+  studioTopBarAllClearedFixture,
   studioTopBarBellIdleFixture,
   studioTopBarBellWithNotificationsFixture,
   studioTopBarCompactPanelOpenFixture,
   studioTopBarEmptyPanelOpenFixture,
   studioTopBarFullCenterOpenFixture,
   studioTopBarIdleFixture,
+  studioTopBarMobileBarIdleFixture,
+  studioTopBarPanelAfterDismissFixture,
   studioTopBarSearchFocusedFixture,
 } from "@/components/studio/studio-top-bar/StudioTopBar.fixtures";
 
@@ -17,6 +20,10 @@ const STATES = {
   idle: {
     label: "Bar idle",
     fixture: studioTopBarIdleFixture,
+  },
+  mobileBarIdle: {
+    label: "Mobile bar idle",
+    fixture: studioTopBarMobileBarIdleFixture,
   },
   searchFocused: {
     label: "Search focused",
@@ -37,6 +44,14 @@ const STATES = {
   fullOpen: {
     label: "Full notification center open",
     fixture: studioTopBarFullCenterOpenFixture,
+  },
+  panelAfterDismiss: {
+    label: "Panel after a dismiss",
+    fixture: studioTopBarPanelAfterDismissFixture,
+  },
+  allCleared: {
+    label: "All cleared (empty)",
+    fixture: studioTopBarAllClearedFixture,
   },
   emptyOpen: {
     label: "Empty state",
@@ -97,6 +112,7 @@ export default function StudioTopBarPreviewClient() {
         accountHref={STATES[stateKey].fixture.accountHref}
         accountAriaLabel={STATES[stateKey].fixture.accountAriaLabel}
         accountInitial={STATES[stateKey].fixture.accountInitial}
+        openMenuAriaLabel="Open menu"
         notifications={notifications}
         notificationsView={notificationsView}
         bellRef={bellRef}
@@ -104,11 +120,12 @@ export default function StudioTopBarPreviewClient() {
           <a
             href="/studio/account"
             aria-label="creator@example.com"
-            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="hidden h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)] lg:flex"
           >
             {STATES[stateKey].fixture.accountInitial}
           </a>
         }
+        onOpenMenu={() => setFeedback("onOpenMenu callback received.")}
         onSearchChange={() => setFeedback("onSearchChange callback received.")}
         onOpenNotifications={() => {
           setNotificationsView("compact");
@@ -135,10 +152,12 @@ export default function StudioTopBarPreviewClient() {
 
       <div className="mx-auto max-w-7xl px-[var(--space-5)] py-[var(--space-8)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
         <p className="mb-6 text-sm leading-7 text-[var(--ink-dim)]">
-          The production bar is hidden below the large-screen breakpoint. Widen
-          the preview window to test the exact desktop layout. Everything below
-          is filler content, scrolled to verify the bar stays sticky, spans full
-          width, and reads frosted with real content passing beneath it.
+          The bar renders at every breakpoint as of 8 Aug 2026: narrow this
+          window to see the hamburger trigger appear and the account avatar
+          hide, matching the mobile studio-home mockup&apos;s topbar. Everything
+          below is filler content, scrolled to verify the bar stays sticky,
+          spans full width, and reads frosted with real content passing
+          beneath it.
         </p>
 
         <div className="space-y-4">

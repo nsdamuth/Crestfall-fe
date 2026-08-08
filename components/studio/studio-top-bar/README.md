@@ -27,7 +27,53 @@ bell's focus-return ref all live in the ViewModel.
 
 Coin balance and Buy Coins were removed from this package 8 Aug 2026 (Phase
 2 top bar restyle). Coins remain in the sidebar `StudioEconomyWidget` card
-and the mobile header, neither owned by this package.
+and the mobile drawer (`studio-mobile-nav`), neither owned by this package.
+The mobile header coin badge (`StudioEconomyWidget variant="mobileHeader"`)
+was retired 8 Aug 2026 when the mobile header row merged into this package
+(see "Mobile nav restyle" below); that variant is now unused anywhere in the
+app and was left in place in its own package rather than deleted here, one
+package per commit.
+
+## Mobile nav restyle (8 Aug 2026, item 7)
+
+This header now renders at every breakpoint, not only `lg:` and above. A
+hamburger trigger (`onOpenMenu`, `Menu` icon, `lg:hidden`) renders first in
+the row, matching the proof's mobile studio-home topbar (hamburger, search,
+bell, no theme toggle); the account avatar link renders `hidden lg:flex`
+instead, since mobile account access moved to the `studio-mobile-nav`
+drawer's signed-in footer, matching the proof (its mobile topbar carries no
+account icon either).
+
+`onOpenMenu` is a ViewModel-owned passthrough only. The actual drawer
+open/closed boolean is owned by `StudioShell.jsx`, the Binding Shell that
+composes both this package and `studio-mobile-nav`; neither package may own
+the other's state, so it lives one level up, threaded in as `onOpenMenu`
+here and as `open` / `onCloseMenu` into `StudioMobileNav`. The bell and its
+two panels are unchanged by this and open the same centered `ModalShell`
+panels at every breakpoint.
+
+## Notification demo interactions (8 Aug 2026, items 2-4)
+
+The compact panel's "Open the notification center" button is now the
+primary filled-gold action (`cf-btn--primary`), relabelled exactly
+"Notification Center"; "Clear all" stays the ghost `cf-btn--secondary`
+button, same height and padding, side by side, unchanged position.
+
+Per-row dismiss and clear-all are now real, interactive, session-only demo
+state, not no-ops: `components/studio/studio-top-bar/studioTopBarNotificationsDemoState.js`
+is a small hook, paired with and living beside `studioTopBarNotifications.mock.js`,
+that owns a `useState` copy of the mock list and exposes `onDismissNotification`
+/ `onClearAllNotifications` that mutate it. The Shell (`StudioTopBar.jsx`)
+wires this hook's `notifications` into the ViewModel and its two callbacks
+directly onto the View, bypassing `useStudioTopBarViewModel` entirely so the
+production Chassis's own data contract (accepts a `notifications` array,
+owns no mutation logic) is untouched. Dismissing every row in a TODAY or
+EARLIER group makes that group disappear (the View already filtered empty
+groups); clearing the list drops the bell to idle and shows the empty
+state, both already derived from `notifications.length`. This state is
+in-memory only, resets on reload, and is demo scaffolding: delete
+`studioTopBarNotificationsDemoState.js` together with the mock module and
+their imports in `StudioTopBar.jsx` when the real feed lands.
 
 ## Overlay primitive (Phase 2.1, 8 Aug 2026)
 
@@ -129,8 +175,9 @@ this file, not only on the placeholder, since the placeholder fix could not
 be verified without it.
 
 
-The component remains mounted by `StudioShell.jsx`. Mobile Studio navigation is
-outside this package and remains a separate conversion target.
+The component remains mounted by `StudioShell.jsx`. As of 8 Aug 2026 this
+package's header renders at every breakpoint, including mobile; the mobile
+drawer and bottom dock remain the separate `studio-mobile-nav` package.
 
 ## Diagnostics
 

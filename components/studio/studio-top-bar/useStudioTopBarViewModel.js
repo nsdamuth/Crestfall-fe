@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 export const STUDIO_TOP_BAR_COPY = Object.freeze({
   searchPlaceholder: "Search characters, stories, and adventures",
   notificationsLabel: "Notifications",
+  openMenuAriaLabel: "Open menu",
 });
 
 export function getStudioTopBarAccountLabel(user = {}) {
@@ -24,7 +25,11 @@ export function getStudioTopBarAccountInitial(user = {}) {
 // No notification source exists in the app yet (no contract, no
 // endpoint); an empty list is the honest default until CR-017 is
 // answered. See StudioTopBar/README.md.
-export function useStudioTopBarViewModel({ user, notifications = [] } = {}) {
+export function useStudioTopBarViewModel({
+  user,
+  notifications = [],
+  onOpenMenu = () => {},
+} = {}) {
   const [searchValue, setSearchValue] = useState("");
   const [notificationsView, setNotificationsView] = useState(null);
   const bellRef = useRef(null);
@@ -56,5 +61,7 @@ export function useStudioTopBarViewModel({ user, notifications = [] } = {}) {
     accountHref: "/studio/account",
     accountAriaLabel: getStudioTopBarAccountLabel(user),
     accountInitial: getStudioTopBarAccountInitial(user),
+    openMenuAriaLabel: STUDIO_TOP_BAR_COPY.openMenuAriaLabel,
+    onOpenMenu,
   };
 }

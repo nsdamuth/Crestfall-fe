@@ -12,6 +12,12 @@ const baseFixture = Object.freeze({
 
 export const studioTopBarIdleFixture = baseFixture;
 
+// Same fixture, named for item 10 of the mobile nav restyle brief
+// (8 Aug 2026): the header now renders at every breakpoint, so "idle"
+// covers mobile too. Rendered width, not fixture content, is what
+// changes between the desktop and mobile checks.
+export const studioTopBarMobileBarIdleFixture = baseFixture;
+
 export const studioTopBarSearchFocusedFixture = Object.freeze({
   ...baseFixture,
   searchValue: "image studio",
@@ -78,5 +84,22 @@ export const studioTopBarFullCenterOpenFixture = Object.freeze({
 
 export const studioTopBarEmptyPanelOpenFixture = Object.freeze({
   ...baseFixture,
+  notificationsView: "compact",
+});
+
+// Items 3-4 (notification demo interactions, 8 Aug 2026): the compact
+// panel after one row has been dismissed, and the all-cleared empty
+// state. The live demo (studioTopBarNotificationsDemoState.js) reaches
+// both interactively; these fixtures give the preview harness the same
+// two states without needing to click through the demo.
+export const studioTopBarPanelAfterDismissFixture = Object.freeze({
+  ...baseFixture,
+  notifications: sampleNotifications.filter((notification) => notification.id !== "n-1"),
+  notificationsView: "compact",
+});
+
+export const studioTopBarAllClearedFixture = Object.freeze({
+  ...baseFixture,
+  notifications: [],
   notificationsView: "compact",
 });
