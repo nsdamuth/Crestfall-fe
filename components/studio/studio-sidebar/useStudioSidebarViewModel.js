@@ -14,12 +14,6 @@ export const STUDIO_SIDEBAR_COPY = Object.freeze({
 });
 
 export const STUDIO_SIDEBAR_PRIMARY_LINKS = Object.freeze([
-  Object.freeze({
-    label: "Lore Archive",
-    href: "/",
-    iconKey: "bookOpen",
-    variant: "return",
-  }),
   Object.freeze({ label: "Studio Home", href: "/studio", iconKey: "home" }),
   Object.freeze({ label: "Create", href: "/studio/create", iconKey: "user" }),
   Object.freeze({ label: "Games", href: "/studio/games", iconKey: "sparkles" }),
@@ -52,6 +46,12 @@ export const STUDIO_SIDEBAR_PRIMARY_LINKS = Object.freeze([
     label: "Community",
     href: "/studio/community",
     iconKey: "compass",
+  }),
+  Object.freeze({
+    label: "Lore",
+    href: "/",
+    iconKey: "bookOpen",
+    variant: "return",
   }),
 ]);
 

@@ -1,12 +1,5 @@
 const primaryLinks = Object.freeze([
   Object.freeze({
-    label: "Lore Archive",
-    href: "/",
-    iconKey: "bookOpen",
-    variant: "return",
-    isActive: true,
-  }),
-  Object.freeze({
     label: "Studio Home",
     href: "/studio",
     iconKey: "home",
@@ -59,6 +52,13 @@ const primaryLinks = Object.freeze([
     href: "/studio/community",
     iconKey: "compass",
     isActive: false,
+  }),
+  Object.freeze({
+    label: "Lore",
+    href: "/",
+    iconKey: "bookOpen",
+    variant: "return",
+    isActive: true,
   }),
 ]);
 
