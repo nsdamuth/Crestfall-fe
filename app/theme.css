@@ -373,7 +373,7 @@
      than repeating --fill-whisper, which would flatten the
      gradient into a single wash.                            */
   --grad-panel:      linear-gradient(160deg, var(--fill-whisper), transparent);
-  --grad-nav-active: linear-gradient(90deg, var(--fill), transparent 88%);
+  --grad-nav-active: linear-gradient(90deg, var(--fill), transparent);
   --grad-rule:       linear-gradient(90deg, var(--gold-ornament), transparent);
   --grad-rule-soft:  linear-gradient(90deg, var(--line-strong), transparent);
 

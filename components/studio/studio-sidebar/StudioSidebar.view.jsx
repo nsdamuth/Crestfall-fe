@@ -124,7 +124,7 @@ export default function StudioSidebarView({
         </button>
       </div>
 
-      <nav className="mt-6 space-y-1.5">
+      <nav className="mt-6 space-y-[var(--space-1)]">
         {primaryLinks.map((link) => (
           <SidebarInternalLink
             key={link.href}
@@ -137,7 +137,7 @@ export default function StudioSidebarView({
 
       <SidebarDivider />
 
-      <nav className="space-y-1.5">
+      <nav className="space-y-[var(--space-1)]">
         {utilityLinks.map((link) => (
           <SidebarInternalLink
             key={link.href}
@@ -164,7 +164,7 @@ export default function StudioSidebarView({
           </button>
 
           {socialOpen ? (
-            <nav className="mt-1 space-y-1.5">
+            <nav className="mt-1 space-y-[var(--space-1)]">
               {socialLinks.map((link) => (
                 <SidebarExternalLink key={link.href} link={link} />
               ))}
@@ -172,7 +172,7 @@ export default function StudioSidebarView({
           ) : null}
         </section>
       ) : (
-        <nav className="space-y-1.5">
+        <nav className="space-y-[var(--space-1)]">
           {socialLinks.map((link) => (
             <SidebarExternalLink key={link.href} link={link} collapsed />
           ))}
