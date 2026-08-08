@@ -1,6 +1,15 @@
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
+// Dev-only Review Mode / Notes overlay (docs/_legacy-reference/design-system/proof
+// port, 8 Aug 2026). RootLayout is a server component: the NODE_ENV
+// check below means DevOnlyReviewMode is never mounted in a production
+// render, so its dynamic import (see DevOnlyReviewMode.jsx) is never
+// triggered and the real overlay's chunk is never requested by a
+// production browser. Verified by grepping the production build
+// output; see the mobile nav restyle brief report.
+import DevOnlyReviewMode from "./dev/review-mode/DevOnlyReviewMode";
+
 const cormorantDisplay = Cormorant_Garamond({
   variable: "--next-cormorant",
   subsets: ["latin"],
@@ -81,6 +90,7 @@ export default function RootLayout({ children }) {
         className={`${cormorantDisplay.variable} ${cormorant.variable} ${inter.variable}`}
       >
         {children}
+        {process.env.NODE_ENV !== "production" ? <DevOnlyReviewMode /> : null}
       </body>
     </html>
   );
