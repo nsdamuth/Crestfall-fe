@@ -15,7 +15,7 @@ export default function StudioTopBar(props) {
       accountLinkSlot={
         <Link
           href={viewProps.accountHref}
-          className="rounded-full border border-[var(--gold-ornament)]/25 p-2.5 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/50 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           aria-label={viewProps.accountAriaLabel}
         >
           <UserRound size={17} />

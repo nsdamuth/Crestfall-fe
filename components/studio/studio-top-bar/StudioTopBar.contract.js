@@ -1,30 +1,26 @@
-export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v1";
+export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v2";
 
 export const studioTopBarViewContract = Object.freeze({
   version: STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION,
   purpose:
-    "Render Studio account utilities without owning account context, balance normalization, or utility-modal state.",
+    "Render the Studio global search field and account utilities without owning search state, notification data, or account context.",
   inputs: Object.freeze([
-    "eyebrow",
-    "description",
-    "formattedCoins",
-    "buyCoinsLabel",
+    "searchValue",
+    "searchPlaceholder",
+    "searchAutoFocus",
+    "notifications",
     "notificationsLabel",
+    "initialNotificationsOpen",
     "accountHref",
     "accountAriaLabel",
     "accountLinkSlot",
-    "utilityModal",
   ]),
-  callbacks: Object.freeze([
-    "onOpenBuyCoins",
-    "onOpenNotifications",
-    "onCloseUtility",
-  ]),
-  applicationOwnedDependencies: Object.freeze(["useStudioAccount"]),
+  callbacks: Object.freeze(["onSearchChange", "onOpenNotifications"]),
+  applicationOwnedDependencies: Object.freeze([]),
   behavior: Object.freeze({
-    accountStatusLoadingDisplay: "...",
-    invalidBalanceDisplay: "0",
-    utilityKinds: ["buy", "notifications"],
+    hasNotifications: "derived as notifications.length > 0",
+    notificationsPopupOpenState:
+      "local to the view, presentation-only; initialNotificationsOpen only seeds the preview harness",
     desktopBreakpoint: "lg",
   }),
 });

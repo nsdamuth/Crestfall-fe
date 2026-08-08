@@ -145,21 +145,6 @@ flavors), and the picker contract shape (`items`, `filters`, `selectedId`,
 Design intent once it exists: one picker component serves every
 selection surface named above under a single contract.
 
-### CR-010, top bar composes the economy widget
-
-Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N2.
-
-Feature blocked: none directly. `StudioTopBar` re-implements the coins
-chip, Buy Coins, and Notifications, modals included, duplicating
-`StudioEconomyWidget`.
-
-Missing functionality: a `"topBar"` layout mode on `StudioEconomyWidget`
-so the top bar View can compose it and the duplicated implementation is
-deleted. A mirror rename, not a rewrite.
-
-Design intent once it exists: `StudioTopBar` no longer owns its own copy
-of coin/notification chrome.
-
 ### CR-011, bottom dock label "Rooms" vs "Stories"
 
 Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N3.
@@ -175,17 +160,25 @@ Design intent once it exists: none further, this closes once confirmed.
 
 ### CR-012, search enters on the top bar contract
 
-Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N4.
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N4. Contract
+shape landed 8 Aug 2026 (Phase 2 top bar restyle brief); live wiring
+still open.
 
 Feature blocked: the draft top bar carries search; the live product top
-bar has none.
+bar had none.
 
-Missing functionality: confirmation that when search lands, it enters as
-`searchValue` / `onSearchChange` on the top bar View contract, never as
-View-local state.
+Progress: `searchValue` / `onSearchChange` now exist on the top bar View
+contract (`studio-top-bar.view.v2`), ViewModel-owned exactly as this CR
+asked, presentation only. `onSearchChange` is still a safe no-op; no
+search operation or endpoint exists to wire it to.
+
+Missing functionality: the actual search operation. What it searches
+(tools and builders, per the proof copy, or something broader), the
+endpoint or client-side index it hits, and result presentation are all
+still undecided.
 
 Design intent once it exists: search state is ViewModel-owned like every
-other top bar behavior.
+other top bar behavior. (Landed.)
 
 ### CR-013, duplicate drawer nav tree retirement
 
@@ -253,16 +246,27 @@ applies as CSS variable overrides, no palette logic in the View.
 
 ### CR-017, notifications feed shape
 
-Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N9.
+Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N9. Popup
+shell landed 8 Aug 2026 (Phase 2 top bar restyle brief); feed still
+stubbed.
 
-Feature blocked: none directly, `StudioTopBar`'s notifications utility
-modal is currently a stub (`docs/DESIGN-TOKENS.md`-governed tokens
-already apply to its chrome).
+Feature blocked: none directly. `StudioTopBar`'s notifications control
+is no longer a static utility modal; it is now a real open/close popup
+panel (`cf-dropdown`, closes on outside click and Escape, internal
+scroll), but it renders from a `notifications` prop that defaults to
+`[]` (honest stub, no backend). No proof recipe or live precedent
+exists for the popup's internal row layout either; the current row
+(title text + relative time) reuses this file's own prior typographic
+pairing and is unruled, pending a render review.
 
-Missing functionality: confirmation of the ruled shape (the bell carries
-a boolean "something is new", never a count; opening the sheet clears
-it; sheet rows are deep links: render finished, creator published, daily
-bonus ready) and the ViewModel feed shape plus clear semantics.
+Missing functionality: confirmation of the ruled shape from this CR
+(the bell carries a boolean "something is new", never a count; opening
+the panel clears it; rows are deep links: render finished, creator
+published, daily bonus ready) against what actually shipped (the bell
+today derives its glow from `notifications.length > 0`, functionally a
+boolean but not sourced from a real feed; opening the panel does not
+clear anything, there is nothing to clear; rows are plain text, not deep
+links) and the ViewModel feed shape plus clear semantics.
 
 Design intent once it exists: the top bar ViewModel consumes a boolean
 plus a deep-link row list, nothing else.
@@ -375,6 +379,23 @@ model where the copy-level ruling implies they should, and diverge only
 where confirmed necessary.
 
 ## Ruled
+
+### CR-010, top bar composes the economy widget
+
+Status: RULED, implemented. Migrated 7 Aug 2026 from legacy N2; resolved
+8 Aug 2026 (Phase 2 top bar restyle brief).
+
+Feature blocked: none directly. `StudioTopBar` re-implemented the coins
+chip, Buy Coins, and Notifications, modals included, duplicating
+`StudioEconomyWidget`.
+
+Ruling: rather than composing `StudioEconomyWidget` into the top bar
+under a `"topBar"` layout mode, Brian ruled the coin chip and Buy Coins
+button removed from the top bar entirely (8 Aug 2026 brief, manifest
+item 4); coins now live only in the sidebar coins card
+(`StudioEconomyWidget`, untouched) and the mobile header. The
+duplication this CR flagged no longer exists, resolved by removal
+rather than composition.
 
 ### CR-006, seal stop's age field is empty, not pre-filled
 

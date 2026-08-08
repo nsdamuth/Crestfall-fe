@@ -1,92 +1,85 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import { UserRound } from "lucide-react";
 
 import StudioTopBarView from "@/components/studio/studio-top-bar/StudioTopBar.view";
 import {
-  studioTopBarBuyCoinsFixture,
-  studioTopBarDefaultFixture,
-  studioTopBarLoadingFixture,
-  studioTopBarNotificationsFixture,
+  studioTopBarIdleFixture,
+  studioTopBarNotificationsEmptyOpenFixture,
+  studioTopBarNotificationsOpenFixture,
+  studioTopBarSearchFocusedFixture,
 } from "@/components/studio/studio-top-bar/StudioTopBar.fixtures";
 
 const STATES = {
-  default: {
-    label: "Default",
-    fixture: studioTopBarDefaultFixture,
+  idle: {
+    label: "Bell idle",
+    fixture: studioTopBarIdleFixture,
   },
-  loading: {
-    label: "Loading",
-    fixture: studioTopBarLoadingFixture,
+  searchFocused: {
+    label: "Search focused",
+    fixture: studioTopBarSearchFocusedFixture,
   },
-  buy: {
-    label: "Buy Coins Modal",
-    fixture: studioTopBarBuyCoinsFixture,
+  notificationsOpen: {
+    label: "Bell with notifications, popup open",
+    fixture: studioTopBarNotificationsOpenFixture,
   },
-  notifications: {
-    label: "Notifications Modal",
-    fixture: studioTopBarNotificationsFixture,
+  notificationsEmptyOpen: {
+    label: "Popup open, no notifications",
+    fixture: studioTopBarNotificationsEmptyOpenFixture,
   },
 };
 
 export default function StudioTopBarPreviewClient() {
-  const [stateKey, setStateKey] = useState("default");
-  const [viewState, setViewState] = useState(STATES.default.fixture);
+  const [stateKey, setStateKey] = useState("idle");
   const [feedback, setFeedback] = useState("Fixture preview ready.");
-
-  useEffect(() => {
-    setViewState(STATES[stateKey].fixture);
-    setFeedback(`${STATES[stateKey].label} fixture loaded.`);
-  }, [stateKey]);
-
-  const viewProps = useMemo(
-    () => ({
-      ...viewState,
-      onOpenBuyCoins: () => {
-        setViewState(studioTopBarBuyCoinsFixture);
-        setFeedback("Buy Coins callback received.");
-      },
-      onOpenNotifications: () => {
-        setViewState(studioTopBarNotificationsFixture);
-        setFeedback("Notifications callback received.");
-      },
-      onCloseUtility: () => {
-        setViewState(studioTopBarDefaultFixture);
-        setFeedback("Utility modal closed.");
-      },
-    }),
-    [viewState]
-  );
+  const state = STATES[stateKey];
 
   return (
-    <main className="min-h-screen bg-[#080706] p-8 text-[var(--foreground)]">
+    <main className="min-h-screen bg-[var(--canvas)] p-8 text-[var(--ink)]">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-5 rounded-xl border border-[var(--muted-gold)]/25 bg-black/40 p-4">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="mb-5 rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-4">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Studio Top Bar Preview
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {Object.entries(STATES).map(([key, state]) => (
+            {Object.entries(STATES).map(([key, entry]) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setStateKey(key)}
-                className={`rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.12em] ${
+                className={`rounded-[var(--radius-md)] border px-3 py-2 text-[10px] uppercase tracking-[0.12em] ${
                   stateKey === key
-                    ? "border-[var(--muted-gold)]/50 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)]"
+                    ? "border-[var(--gold-ornament)]/50 text-[var(--ink)]"
+                    : "border-[var(--line)] text-[var(--ink-dim)]"
                 }`}
               >
-                {state.label}
+                {entry.label}
               </button>
             ))}
           </div>
-          <p className="mt-3 text-xs text-[var(--muted)]">{feedback}</p>
+          <p className="mt-3 text-xs text-[var(--ink-dim)]">{feedback}</p>
         </div>
 
-        <StudioTopBarView {...viewProps} />
+        <StudioTopBarView
+          key={stateKey}
+          {...state.fixture}
+          accountLinkSlot={
+            <a
+              href="/studio/account"
+              aria-label="creator@example.com"
+              className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            >
+              <UserRound size={17} />
+            </a>
+          }
+          onSearchChange={() => setFeedback("onSearchChange callback received.")}
+          onOpenNotifications={() =>
+            setFeedback("onOpenNotifications callback received.")
+          }
+        />
 
-        <div className="rounded-2xl border border-white/10 bg-black/30 p-8 text-sm leading-7 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-8 text-sm leading-7 text-[var(--ink-dim)]">
           The production bar is hidden below the large-screen breakpoint. Widen
           the preview window to test the exact desktop layout.
         </div>

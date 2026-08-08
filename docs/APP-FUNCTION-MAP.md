@@ -9,9 +9,8 @@ Coverage: 63 surfaces, 844 controls. Status counts: working 782, gated 5, stubbe
 
 - **BROKEN** `/ (site shell)` / footer / Terms of Service link: Links to /terms/service (Target slug service does not exist in data/policies.js (real slug is terms-of-service); this link 404s via notFound() in app/terms/[slug]/page.js)
 - **BROKEN** `/ (site shell)` / footer / Contact link: Links to /contact (No app/contact route found in repo listing seen so far; unverified, flagged as risk)
-- **STUBBED** `/studio/* (studio shell)` / sidebar/mobile-nav/top-bar - economy widget / Coin balance display, Buy Coins info, Notifications info: Shows coin balance loaded from account snapshot; Buy Coins and Notifications open static informational panels (both messages say the real feature is not built yet, an admin must manually add coins). (Coin balance itself is real/wired; the Buy Coins and Notifications actions are intentional stub modals, not connected to any purchase or notification backend.)
-- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Buy Coins: Opens a static modal explaining coin purchases are not yet available.
-- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Notifications: Opens a static modal explaining notifications are not yet available.
+- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Search: Presentation-only global search field, not yet wired to a search operation. (No search contract or endpoint exists yet; onSearchChange is a safe no-op until a CR is answered. See docs/CONTRACT-REQUESTS.md.)
+- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Notifications: Opens a popup panel listing notifications; idle icon with a gold-glow state when notifications exist. (No notification data source exists yet; the viewmodel defaults to an empty list. Real data needs a services-api contract (CR pending). See docs/CONTRACT-REQUESTS.md.)
 - **BROKEN** `/stories/[...slug]` / page component / (none - file is empty): app/stories/[...slug]/page.js is a literal 0-byte file with no default export; Next.js has no valid page module for this route (Confirmed via wc -l returning 0 and ls -la showing 0 bytes; matches docs/REDESIGN-ORDER.md item 1 which already flags this as a dead route)
 - **STUBBED** `/studio/profile` / page head / Edit Soon: Nothing; the button is rendered with the disabled attribute and no onClick handler. (Entire page is hardcoded fixture markup (featuredItems array, hand-typed stats string, static 'crestfallen' identity); no server/client data fetch exists anywhere in this file.)
 - **STUBBED** `/studio/profile` / tab bar / Featured / Characters / Storys / Images & Presets / Updates / Activity tabs: Nothing; every tab button is rendered with the disabled attribute and no onClick handler, only the first is visually 'active'. (Tab labels are a hardcoded array; no tab switching logic exists.)
@@ -119,14 +118,14 @@ Shared chrome (sidebar, mobile nav, top bar, account/economy) mounted around eve
 
 - Log out (link): Anchor to /logout which calls supabase.auth.signOut() server-side and redirects to site root.; wired to `GET /logout`; missing states: empty/loading/error
 
-**sidebar/mobile-nav/top-bar - economy widget**
+**sidebar card / mobile header - economy widget**
 
-- Coin balance display, Buy Coins info, Notifications info (display): Shows coin balance loaded from account snapshot; Buy Coins and Notifications open static informational panels (both messages say the real feature is not built yet, an admin must manually add coins).; wired to `fetchCurrentStudioAccount GET /api/profile/me`; **STUBBED**; missing states: empty/error
+- Coin balance display (display): Shows coin balance loaded from account snapshot. Buy Coins is no longer offered from shared chrome (removed from the top bar Phase 2; not replaced elsewhere).; wired to `fetchCurrentStudioAccount GET /api/profile/me`; missing states: empty/error
 
 **top bar (desktop)**
 
-- Buy Coins (button): Opens a static modal explaining coin purchases are not yet available.; data: local_state; **STUBBED**
-- Notifications (button): Opens a static modal explaining notifications are not yet available.; data: local_state; **STUBBED**
+- Search (input): Presentation-only global search field, not yet wired to a search operation.; data: none; **STUBBED**
+- Notifications (button): Opens a popup panel listing notifications; idle icon with a gold-glow state when notifications exist.; data: local_state; **STUBBED**
 
 **top bar (desktop) / mobile header**
 

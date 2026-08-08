@@ -1,118 +1,125 @@
 "use client";
 
-import { Bell, Coins, ShoppingBag, UserRound, X } from "lucide-react";
+import { useState } from "react";
+import { Bell, Search, UserRound } from "lucide-react";
 
 export default function StudioTopBarView({
-  eyebrow = "Studio",
-  description = "",
-  formattedCoins = "0",
-  buyCoinsLabel = "Buy coins",
+  searchValue = "",
+  searchPlaceholder = "Search tools and builders",
+  searchAutoFocus = false,
+  notifications = [],
   notificationsLabel = "Notifications",
+  initialNotificationsOpen = false,
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
   accountLinkSlot = null,
-  utilityModal = null,
-  onOpenBuyCoins = () => {},
+  onSearchChange = () => {},
   onOpenNotifications = () => {},
-  onCloseUtility = () => {},
 }) {
-  return (
-    <>
-      <header className="mb-[var(--space-8)] hidden items-center justify-between gap-[var(--space-6)] rounded-2xl border border-[var(--gold-ornament)]/15 bg-black/45 px-[var(--space-5)] py-[var(--space-4)] backdrop-blur-md lg:flex">
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.28em] text-[var(--gold-ornament)]">
-            {eyebrow}
-          </p>
-          <p className="mt-1 truncate text-sm text-[var(--ink-dim)]">
-            {description}
-          </p>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-2 text-sm text-[var(--gold-ornament)]">
-            <Coins size={16} />
-            <span>{formattedCoins}</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={onOpenBuyCoins}
-            className="cf-btn cf-btn--secondary cf-btn--sm"
-          >
-            <ShoppingBag size={14} />
-            {buyCoinsLabel}
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenNotifications}
-            className="rounded-full border border-white/10 p-2.5 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-            aria-label={notificationsLabel}
-          >
-            <Bell size={17} />
-          </button>
-
-          {accountLinkSlot || (
-            <a
-              href={accountHref}
-              className="rounded-full border border-[var(--gold-ornament)]/25 p-2.5 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/50 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-              aria-label={accountAriaLabel}
-            >
-              <UserRound size={17} />
-            </a>
-          )}
-        </div>
-      </header>
-
-      {utilityModal ? (
-        <StudioUtilityModal
-          title={utilityModal.title}
-          body={utilityModal.body}
-          dismissLabel={utilityModal.dismissLabel}
-          onClose={onCloseUtility}
-        />
-      ) : null}
-    </>
+  const [notificationsOpen, setNotificationsOpen] = useState(
+    initialNotificationsOpen,
   );
-}
+  const hasNotifications = notifications.length > 0;
 
-function StudioUtilityModal({
-  title = "",
-  body = "",
-  dismissLabel = "Got it",
-  onClose = () => {},
-}) {
+  function closeNotifications() {
+    setNotificationsOpen(false);
+  }
+
+  function toggleNotifications() {
+    setNotificationsOpen((open) => {
+      const next = !open;
+      if (next) onOpenNotifications?.();
+      return next;
+    });
+  }
+
+  function handleNotificationsKeyDown(event) {
+    if (event.key === "Escape") closeNotifications();
+  }
+
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
-      <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Crestfall
-            </p>
-            <h2 className="mt-2 font-display text-3xl">{title}</h2>
-          </div>
+    <header className="mb-[var(--space-8)] hidden items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
+      <div className="relative ml-auto flex w-full max-w-[26rem] items-center">
+        <Search
+          size={16}
+          className="pointer-events-none absolute left-[var(--space-4)] text-[var(--ink-faint)]"
+          aria-hidden="true"
+        />
+        <input
+          type="search"
+          value={searchValue}
+          onChange={(event) => onSearchChange?.(event.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label="Search"
+          autoFocus={searchAutoFocus}
+          className="h-[var(--control-md)] w-full touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] pl-[var(--space-9)] pr-[var(--space-4)] font-sans text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)]"
+        />
+      </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-            aria-label="Close"
-          >
-            <X size={16} />
-          </button>
-        </div>
-
-        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
-
+      <div
+        className="relative shrink-0"
+        onKeyDown={handleNotificationsKeyDown}
+      >
         <button
           type="button"
-          onClick={onClose}
-          className="cf-btn cf-btn--primary mt-5 w-full"
+          onClick={toggleNotifications}
+          aria-label={notificationsLabel}
+          aria-expanded={notificationsOpen}
+          className={`flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
+            hasNotifications
+              ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
+              : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          }`}
         >
-          {dismissLabel}
+          <Bell size={17} />
         </button>
-      </section>
-    </div>
+
+        {notificationsOpen ? (
+          <>
+            <button
+              type="button"
+              aria-label={`Close ${notificationsLabel.toLowerCase()}`}
+              onClick={closeNotifications}
+              className="fixed inset-0 z-40 cursor-default"
+            />
+            <div className="cf-dropdown absolute right-0 top-[calc(100%+var(--space-2))] z-50 w-72">
+              {hasNotifications ? (
+                <ul className="divide-y divide-[var(--line-whisper)]">
+                  {notifications.map((notification) => (
+                    <li
+                      key={notification.id}
+                      className="px-[var(--space-3)] py-[var(--space-3)]"
+                    >
+                      <p className="text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] text-pretty">
+                        {notification.title}
+                      </p>
+                      {notification.timeAgo ? (
+                        <p className="mt-1 text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+                          {notification.timeAgo}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="px-[var(--space-3)] py-[var(--space-4)] text-center text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
+                  No notifications yet.
+                </p>
+              )}
+            </div>
+          </>
+        ) : null}
+      </div>
+
+      {accountLinkSlot || (
+        <a
+          href={accountHref}
+          aria-label={accountAriaLabel}
+          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        >
+          <UserRound size={17} />
+        </a>
+      )}
+    </header>
   );
 }

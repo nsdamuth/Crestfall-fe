@@ -1,35 +1,62 @@
 const baseFixture = Object.freeze({
-  eyebrow: "Studio",
-  description: "Manage creations, images, rooms, and account tools.",
-  formattedCoins: "99,550",
-  buyCoinsLabel: "Buy Coins",
+  searchValue: "",
+  searchPlaceholder: "Search tools and builders",
+  searchAutoFocus: false,
+  notifications: [],
   notificationsLabel: "Notifications",
+  initialNotificationsOpen: false,
   accountHref: "/studio/account",
   accountAriaLabel: "creator@example.com",
-  utilityModal: null,
 });
 
-export const studioTopBarDefaultFixture = baseFixture;
+export const studioTopBarIdleFixture = baseFixture;
 
-export const studioTopBarLoadingFixture = Object.freeze({
+export const studioTopBarSearchFocusedFixture = Object.freeze({
   ...baseFixture,
-  formattedCoins: "...",
+  searchValue: "image studio",
+  searchAutoFocus: true,
 });
 
-export const studioTopBarBuyCoinsFixture = Object.freeze({
-  ...baseFixture,
-  utilityModal: Object.freeze({
-    title: "Buy Coins",
-    body: "Coin purchases are coming later. For private testing, an admin can manually add coins to your account.",
-    dismissLabel: "Got it",
+const sampleNotifications = Object.freeze([
+  Object.freeze({
+    id: "n-1",
+    title: "Your character \"Lysandra\" passed review and is now public.",
+    timeAgo: "12m ago",
   }),
+  Object.freeze({
+    id: "n-2",
+    title: "New comment on your Story \"The Hollow Court\".",
+    timeAgo: "1h ago",
+  }),
+  Object.freeze({
+    id: "n-3",
+    title: "Image Studio finished generating 4 portraits.",
+    timeAgo: "3h ago",
+  }),
+  Object.freeze({
+    id: "n-4",
+    title: "Weekly creator digest is ready.",
+    timeAgo: "1d ago",
+  }),
+  Object.freeze({
+    id: "n-5",
+    title: "\"Morning Star\" reached 100 sessions played.",
+    timeAgo: "2d ago",
+  }),
+  Object.freeze({
+    id: "n-6",
+    title: "A room you follow, \"Ashfall Tavern\", went live.",
+    timeAgo: "3d ago",
+  }),
+]);
+
+export const studioTopBarNotificationsOpenFixture = Object.freeze({
+  ...baseFixture,
+  notifications: sampleNotifications,
+  initialNotificationsOpen: true,
 });
 
-export const studioTopBarNotificationsFixture = Object.freeze({
+export const studioTopBarNotificationsEmptyOpenFixture = Object.freeze({
   ...baseFixture,
-  utilityModal: Object.freeze({
-    title: "Notifications",
-    body: "Notifications are coming later. This will eventually show review updates, system messages, and creator activity.",
-    dismissLabel: "Got it",
-  }),
+  initialNotificationsOpen: true,
 });
