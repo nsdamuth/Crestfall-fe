@@ -3,6 +3,15 @@
 @import "./token-bridge.css";
 @import "./design-system.css";
 
+/* Scanner guard, ruled 8 Aug 2026 (Brief: account icon, notification
+   mockup data, scanner guard). Tailwind v4's automatic class scanner
+   reads every text file in the repo, including markdown prose in
+   docs/. A doc edit containing a Tailwind-class-shaped string (e.g.
+   "text-[10px]" in a code span) gets treated as a live candidate class
+   and can break the dev server's CSS compile. docs/ ships no product
+   markup and must never feed the scanner. */
+@source not "../docs";
+
 :root {
   --background: var(--canvas);
   --panel: rgba(16, 14, 12, 0.82);

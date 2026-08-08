@@ -93,6 +93,14 @@ UIUX-repo AGENTS.md, preview-harness rules, carried forward here).
   `text-wrap: pretty`, `touch-action: manipulation` on controls; a skip
   link on every full page.
 - Never sed or awk on markup or CSS.
+- The Tailwind content scanner never reads `docs/`. Check:
+  `grep -n '@source not "../docs"' app/globals.css` returns a hit. Cause:
+  Tailwind v4 scans every text file in the repo for candidate class
+  strings, including markdown prose; a doc edit containing a
+  Tailwind-class-shaped string in a code span (e.g. `text-[10px]`) can
+  be read as a live class and break the dev server's CSS compile.
+  `docs/` ships no product markup, so it is excluded at the source
+  rather than requiring every doc author to escape class-like strings.
 - Views never fake application state. A missing backend is stubbed
   honestly (visible "Soon" or hidden per the HIDE/STUB call in
   section 5), never simulated. Source: SOL-HANDOFF.md and
