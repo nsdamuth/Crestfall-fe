@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, UserRound, X } from "lucide-react";
+import { Bell, X } from "lucide-react";
 
 import ModalShell from "@/components/ui/ModalShell";
 
@@ -19,6 +19,7 @@ export default function StudioTopBarView({
   bellRef = null,
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
+  accountInitial = "?",
   accountLinkSlot = null,
   onSearchChange = () => {},
   onOpenNotifications = () => {},
@@ -63,9 +64,9 @@ export default function StudioTopBarView({
           <a
             href={accountHref}
             aria-label={accountAriaLabel}
-            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           >
-            <UserRound size={17} />
+            {accountInitial}
           </a>
         )}
       </header>
@@ -85,7 +86,7 @@ export default function StudioTopBarView({
 
           {hasNotifications ? (
             <ul className="divide-y divide-[var(--line-whisper)]">
-              {notifications.map((notification) => (
+              {notifications.slice(0, 3).map((notification) => (
                 <NotificationRow
                   key={notification.id}
                   notification={notification}

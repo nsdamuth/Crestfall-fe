@@ -246,10 +246,22 @@ applies as CSS variable overrides, no palette logic in the View.
 
 ### CR-017, notifications feed shape
 
-Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N9. Popup
-shell landed 8 Aug 2026 (Phase 2 top bar restyle brief); ported to the
-proof's compact + full panel recipe 8 Aug 2026 (Phase 2.1 top bar
-chrome correction brief); feed still stubbed.
+Status: OPEN, with Nick, frontend complete and blocked only on data.
+Migrated 7 Aug 2026 from legacy N9. Popup shell landed 8 Aug 2026
+(Phase 2 top bar restyle brief); ported to the proof's compact + full
+panel recipe 8 Aug 2026 (Phase 2.1 top bar chrome correction brief);
+finished as a reviewable mockup 8 Aug 2026 (account icon / notification
+mockup data / scanner guard brief): the bell now carries its gold
+has-new state, the compact panel shows a three-row quick view, and the
+full center groups the complete list under TODAY/EARLIER, all sourced
+from one sample data module,
+`components/studio/studio-top-bar/studioTopBarNotifications.mock.js`
+(header comment states it is mock data pending this CR). That file and
+its one import in `components/studio/StudioTopBar.jsx` are the entire
+footprint; deleting both returns the bell to its honest empty-list
+default. No View, ViewModel, or contract change was needed to wire it
+in, since the shape already matched what the View renders (see the dev
+handoff below). Feed is otherwise still stubbed pending real data.
 
 Feature blocked: none directly. `StudioTopBar`'s notifications control
 is a real open/close panel pair built on the shared `ModalShell`

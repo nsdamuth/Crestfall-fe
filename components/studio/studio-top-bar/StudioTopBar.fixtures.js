@@ -7,6 +7,7 @@ const baseFixture = Object.freeze({
   notificationsView: null,
   accountHref: "/studio/account",
   accountAriaLabel: "creator@example.com",
+  accountInitial: "C",
 });
 
 export const studioTopBarIdleFixture = baseFixture;

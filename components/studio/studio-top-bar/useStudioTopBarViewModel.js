@@ -13,6 +13,14 @@ export function getStudioTopBarAccountLabel(user = {}) {
     : "Account";
 }
 
+// Same initial-from-name recipe as the sidebar's signed-in footer
+// (StudioSidebar.view.jsx): first character of the account email,
+// uppercased, or "?" when there is none.
+export function getStudioTopBarAccountInitial(user = {}) {
+  const email = typeof user?.email === "string" ? user.email.trim() : "";
+  return email ? email.charAt(0).toUpperCase() : "?";
+}
+
 // No notification source exists in the app yet (no contract, no
 // endpoint); an empty list is the honest default until CR-017 is
 // answered. See StudioTopBar/README.md.
@@ -47,5 +55,6 @@ export function useStudioTopBarViewModel({ user, notifications = [] } = {}) {
     onCloseNotifications: closeNotifications,
     accountHref: "/studio/account",
     accountAriaLabel: getStudioTopBarAccountLabel(user),
+    accountInitial: getStudioTopBarAccountInitial(user),
   };
 }

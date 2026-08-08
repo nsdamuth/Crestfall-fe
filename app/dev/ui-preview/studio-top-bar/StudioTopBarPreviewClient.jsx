@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { UserRound } from "lucide-react";
 
 import StudioTopBarView from "@/components/studio/studio-top-bar/StudioTopBar.view";
 import {
@@ -97,6 +96,7 @@ export default function StudioTopBarPreviewClient() {
         notificationsLabel={STATES[stateKey].fixture.notificationsLabel}
         accountHref={STATES[stateKey].fixture.accountHref}
         accountAriaLabel={STATES[stateKey].fixture.accountAriaLabel}
+        accountInitial={STATES[stateKey].fixture.accountInitial}
         notifications={notifications}
         notificationsView={notificationsView}
         bellRef={bellRef}
@@ -104,9 +104,9 @@ export default function StudioTopBarPreviewClient() {
           <a
             href="/studio/account"
             aria-label="creator@example.com"
-            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           >
-            <UserRound size={17} />
+            {STATES[stateKey].fixture.accountInitial}
           </a>
         }
         onSearchChange={() => setFeedback("onSearchChange callback received.")}

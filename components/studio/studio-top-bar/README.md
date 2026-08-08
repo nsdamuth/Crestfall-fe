@@ -65,11 +65,18 @@ dialogs.
   is exposed with a safe no-op default. Wiring live search is a CR against
   services-api; see `docs/CONTRACT-REQUESTS.md` (CR-012).
 - **Notifications.** No notification data source exists anywhere in the app.
-  `notifications` defaults to `[]`, which keeps the bell honestly idle in
-  production. `onDismissNotification` and `onClearAllNotifications` are
-  presentation-only with no-op defaults; there is nothing for them to mutate
-  without a real feed. Real data needs a services-api contract; see
-  `docs/CONTRACT-REQUESTS.md` (CR-017).
+  `notifications` still defaults to `[]` in the ViewModel; `onDismissNotification`
+  and `onClearAllNotifications` remain presentation-only no-ops with nothing
+  to mutate without a real feed. As of 8 Aug 2026, the Shell
+  (`StudioTopBar.jsx`) feeds a fixed mock list to the ViewModel so the bell
+  has-new state and both panels can be reviewed as a finished design; the
+  content lives in ONE file,
+  `components/studio/studio-top-bar/studioTopBarNotifications.mock.js`
+  (header comment marks it mock data pending CR-017). Delete that file and
+  its one import in `StudioTopBar.jsx` to return to the honest empty
+  default. Real data needs a services-api contract; see
+  `docs/CONTRACT-REQUESTS.md` (CR-017), which also records the dev handoff
+  shape.
 - **Resolved: chrome frost token.** The proof's `.topbar` uses
   `backdrop-filter: blur(12px)` on the chrome bar itself, a strength
   `--blur-panel` (2px, floating-panel-only) does not cover. Minted

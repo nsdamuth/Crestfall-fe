@@ -1,4 +1,4 @@
-export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v3";
+export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v4";
 
 export const studioTopBarViewContract = Object.freeze({
   version: STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION,
@@ -14,6 +14,7 @@ export const studioTopBarViewContract = Object.freeze({
     "bellRef",
     "accountHref",
     "accountAriaLabel",
+    "accountInitial",
     "accountLinkSlot",
   ]),
   callbacks: Object.freeze([
@@ -32,6 +33,10 @@ export const studioTopBarViewContract = Object.freeze({
     focusReturn:
       "bellRef is a ViewModel-owned ref; onCloseNotifications refocuses it after closing.",
     notificationShape: "{ id, title, supportingLine, group: 'today' | 'earlier' }",
+    compactPanelRowLimit:
+      "The compact panel shows the first 3 items of notifications (a quick view); the full center groups the complete list under TODAY/EARLIER. Presentation-only slicing, same data and same handlers.",
+    accountInitial:
+      "ViewModel-owned single uppercase character (account email initial, '?' when unknown), rendered in the same circular avatar recipe as the sidebar's signed-in footer (surface-3 fill, --line border, gold-ornament initial), sized to the top bar's control-md icon button.",
     desktopBreakpoint: "lg",
   }),
 });
