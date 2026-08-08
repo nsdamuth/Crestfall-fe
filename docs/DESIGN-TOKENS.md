@@ -125,12 +125,16 @@ exactly one place, the confirming button inside a confirm step
 | `--scrim-strong` | `rgba(0,0,0,.70)` | same | The heavy screen: floating-panel scrims, full banner covers | Modal/picker/sheet veils, banner treatment (a) | Panel fills | locked |
 | `--tag-bed-art` | `var(--scrim-strong)` | follows referent | Tag bed over artwork, with 1px `--line` border and `--ink` text | Tags over art | Tags on canvas | locked |
 | `--tag-bed-canvas` | `var(--fill)` | follows referent | Tag bed on canvas, no border, `--gold-bright` text | Tags on surfaces | Tags over art | locked |
-| `--blur-panel` | `2px` | same | The ONE blur strength, floating panels only, paired with `--scrim-strong` | Modal/sheet/picker veils | Tile art, banners, tag beds | locked |
+| `--blur-panel` | `2px` | same | Floating panels only, paired with `--scrim-strong` | Modal/sheet/picker veils | Tile art, banners, tag beds, persistent chrome | locked |
+| `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value | Sticky top bars and other persistent (non-floating) chrome | Floating panels (use `--blur-panel`), tile art, banners, tag beds | locked |
 
 Scrims do not flip with the theme because the artwork under them does
-not flip. The sticky filter bar's `blur(12px)` canvas-tinted bar and a
-meta tag's `blur(4px)` are different mechanisms and are not governed by
-`--blur-panel`.
+not flip. `--blur-panel` and `--blur-chrome` are separate strengths by
+role, not by preference: `--blur-panel` is always paired with
+`--scrim-strong` on a floating veil; `--blur-chrome` never pairs with a
+scrim and applies only to chrome that stays in the document flow. A
+meta tag's `blur(4px)` is a third, unrelated mechanism and is not
+governed by either token.
 
 ## Over-art ink
 

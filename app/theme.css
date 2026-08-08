@@ -110,6 +110,12 @@
      tile art, banners, or tag beds. Ruled 4 Aug 2026. */
   --blur-panel:    2px;
 
+  /* Chrome frost: persistent chrome only (sticky top bars), never a
+     floating panel and never paired with --scrim-strong. Distinct
+     strength from --blur-panel by role, not by preference. Minted
+     8 Aug 2026 at the proof's create-hub .topbar value. */
+  --blur-chrome:   12px;
+
   /* --- OVER-ART INK -----------------------------------------
      Sprint 3. Artwork and the scrims over it do not flip with
      the theme, so text sitting on art cannot use the flipping

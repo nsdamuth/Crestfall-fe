@@ -32,7 +32,7 @@ export default function StudioTopBarView({
   const isFullOpen = notificationsView === "full";
 
   return (
-    <header className="hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
+    <header className="hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
       <input
         type="search"
         value={searchValue}

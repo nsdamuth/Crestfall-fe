@@ -70,12 +70,12 @@ dialogs.
   presentation-only with no-op defaults; there is nothing for them to mutate
   without a real feed. Real data needs a services-api contract; see
   `docs/CONTRACT-REQUESTS.md` (CR-017).
-- **Missing token.** The proof's `.topbar` uses
-  `backdrop-filter: blur(12px)` on the chrome bar itself. `app/theme.css`
-  only defines `--blur-panel` (2px), scoped to modal/sheet/picker veils, not
-  persistent chrome. No blur is applied to the bar; it renders as an opaque
-  `color-mix(in srgb, var(--canvas) 88%, transparent)` wash without the
-  blur. Flagged, not invented.
+- **Resolved: chrome frost token.** The proof's `.topbar` uses
+  `backdrop-filter: blur(12px)` on the chrome bar itself, a strength
+  `--blur-panel` (2px, floating-panel-only) does not cover. Minted
+  `--blur-chrome` (12px, persistent-chrome-only) in `app/theme.css` 8 Aug
+  2026 and applied here as `backdrop-blur-[var(--blur-chrome)]`. See
+  `docs/DESIGN-TOKENS.md`'s Lines/fills/scrims table.
 
 The component remains mounted by `StudioShell.jsx`. Mobile Studio navigation is
 outside this package and remains a separate conversion target.

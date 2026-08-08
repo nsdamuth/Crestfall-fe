@@ -38,7 +38,7 @@ test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   assert.doesNotMatch(view, /formattedCoins|onOpenBuyCoins|utilityModal/);
 });
 
-test("Studio Top Bar View has no card chrome and no invented blur literal", () => {
+test("Studio Top Bar View has no card chrome and frosts with the chrome token, not a literal", () => {
   const view = read("components/studio/studio-top-bar/StudioTopBar.view.jsx");
   const headerOpenTag = view.match(/<header className="([^"]+)"/);
   assert.ok(headerOpenTag, "expected a <header> element with a className");
@@ -53,7 +53,8 @@ test("Studio Top Bar View has no card chrome and no invented blur literal", () =
     ),
     "expected no radius, shadow, or non-bottom border on the chrome bar"
   );
-  assert.doesNotMatch(view, /backdrop-blur/);
+  assert.match(view, /backdrop-blur-\[var\(--blur-chrome\)\]/);
+  assert.doesNotMatch(view, /backdrop-blur-\[(?!var\(--blur-chrome\))/);
   assert.match(view, /color-mix\(in_srgb,var\(--canvas\)_88%,transparent\)/);
 });
 
