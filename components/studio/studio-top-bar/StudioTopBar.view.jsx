@@ -1,115 +1,62 @@
 "use client";
 
-import { useState } from "react";
-import { Bell, Search, UserRound } from "lucide-react";
+import { Bell, UserRound, X } from "lucide-react";
+
+import ModalShell from "@/components/ui/ModalShell";
+
+const GROUP_LABELS = Object.freeze({
+  today: "Today",
+  earlier: "Earlier",
+});
 
 export default function StudioTopBarView({
   searchValue = "",
-  searchPlaceholder = "Search tools and builders",
+  searchPlaceholder = "Search characters, stories, and adventures",
   searchAutoFocus = false,
   notifications = [],
   notificationsLabel = "Notifications",
-  initialNotificationsOpen = false,
+  notificationsView = null,
+  bellRef = null,
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
   accountLinkSlot = null,
   onSearchChange = () => {},
   onOpenNotifications = () => {},
+  onOpenNotificationCenter = () => {},
+  onCloseNotifications = () => {},
+  onDismissNotification = () => {},
+  onClearAllNotifications = () => {},
 }) {
-  const [notificationsOpen, setNotificationsOpen] = useState(
-    initialNotificationsOpen,
-  );
   const hasNotifications = notifications.length > 0;
-
-  function closeNotifications() {
-    setNotificationsOpen(false);
-  }
-
-  function toggleNotifications() {
-    setNotificationsOpen((open) => {
-      const next = !open;
-      if (next) onOpenNotifications?.();
-      return next;
-    });
-  }
-
-  function handleNotificationsKeyDown(event) {
-    if (event.key === "Escape") closeNotifications();
-  }
+  const isCompactOpen = notificationsView === "compact";
+  const isFullOpen = notificationsView === "full";
 
   return (
-    <header className="mb-[var(--space-8)] hidden items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
-      <div className="relative ml-auto flex w-full max-w-[26rem] items-center">
-        <Search
-          size={16}
-          className="pointer-events-none absolute left-[var(--space-4)] text-[var(--ink-faint)]"
-          aria-hidden="true"
-        />
-        <input
-          type="search"
-          value={searchValue}
-          onChange={(event) => onSearchChange?.(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label="Search"
-          autoFocus={searchAutoFocus}
-          className="h-[var(--control-md)] w-full touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] pl-[var(--space-9)] pr-[var(--space-4)] font-sans text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)]"
-        />
-      </div>
+    <header className="hidden w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] lg:flex">
+      <input
+        type="search"
+        value={searchValue}
+        onChange={(event) => onSearchChange?.(event.target.value)}
+        placeholder={searchPlaceholder}
+        aria-label="Search"
+        autoFocus={searchAutoFocus}
+        className="ml-auto h-[var(--control-md)] w-full max-w-[26rem] touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] font-sans text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus-visible:border-[var(--gold-action)]"
+      />
 
-      <div
-        className="relative shrink-0"
-        onKeyDown={handleNotificationsKeyDown}
+      <button
+        ref={bellRef}
+        type="button"
+        onClick={onOpenNotifications}
+        aria-label={notificationsLabel}
+        aria-expanded={isCompactOpen || isFullOpen}
+        className={`flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
+          hasNotifications
+            ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
+            : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        }`}
       >
-        <button
-          type="button"
-          onClick={toggleNotifications}
-          aria-label={notificationsLabel}
-          aria-expanded={notificationsOpen}
-          className={`flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
-            hasNotifications
-              ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
-              : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
-          }`}
-        >
-          <Bell size={17} />
-        </button>
-
-        {notificationsOpen ? (
-          <>
-            <button
-              type="button"
-              aria-label={`Close ${notificationsLabel.toLowerCase()}`}
-              onClick={closeNotifications}
-              className="fixed inset-0 z-40 cursor-default"
-            />
-            <div className="cf-dropdown absolute right-0 top-[calc(100%+var(--space-2))] z-50 w-72">
-              {hasNotifications ? (
-                <ul className="divide-y divide-[var(--line-whisper)]">
-                  {notifications.map((notification) => (
-                    <li
-                      key={notification.id}
-                      className="px-[var(--space-3)] py-[var(--space-3)]"
-                    >
-                      <p className="text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] text-pretty">
-                        {notification.title}
-                      </p>
-                      {notification.timeAgo ? (
-                        <p className="mt-1 text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
-                          {notification.timeAgo}
-                        </p>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="px-[var(--space-3)] py-[var(--space-4)] text-center text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
-                  No notifications yet.
-                </p>
-              )}
-            </div>
-          </>
-        ) : null}
-      </div>
+        <Bell size={17} />
+      </button>
 
       {accountLinkSlot || (
         <a
@@ -120,6 +67,179 @@ export default function StudioTopBarView({
           <UserRound size={17} />
         </a>
       )}
+
+      {isCompactOpen ? (
+        <ModalShell
+          onClose={onCloseNotifications}
+          ariaLabelledBy="studio-notif-compact-title"
+          panelClassName="relative flex w-full max-w-[26rem] max-h-[86vh] flex-col overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-5)] shadow-[var(--shadow-modal)]"
+        >
+          <NotificationsHeader
+            titleId="studio-notif-compact-title"
+            title={notificationsLabel}
+            subtitle="Recent activity"
+            onClose={onCloseNotifications}
+          />
+
+          {hasNotifications ? (
+            <ul className="divide-y divide-[var(--line-whisper)]">
+              {notifications.map((notification) => (
+                <NotificationRow
+                  key={notification.id}
+                  notification={notification}
+                  onDismiss={onDismissNotification}
+                />
+              ))}
+            </ul>
+          ) : (
+            <EmptyNotifications />
+          )}
+
+          {hasNotifications ? (
+            <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-center gap-[var(--space-2)]">
+              <button
+                type="button"
+                onClick={onClearAllNotifications}
+                className="cf-btn cf-btn--secondary cf-btn--sm"
+              >
+                Clear all
+              </button>
+              <button
+                type="button"
+                onClick={onOpenNotificationCenter}
+                className="cf-btn cf-btn--tertiary"
+              >
+                Open the notification center
+              </button>
+            </div>
+          ) : null}
+        </ModalShell>
+      ) : null}
+
+      {isFullOpen ? (
+        <ModalShell
+          onClose={onCloseNotifications}
+          ariaLabelledBy="studio-notif-full-title"
+          panelClassName="relative flex w-full max-w-[30rem] max-h-[42rem] flex-col overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-5)] shadow-[var(--shadow-modal)]"
+        >
+          <NotificationsHeader
+            titleId="studio-notif-full-title"
+            title="Notification Center"
+            subtitle="Everything, organized by day"
+            onClose={onCloseNotifications}
+          />
+
+          {hasNotifications ? (
+            <NotificationGroups
+              notifications={notifications}
+              onDismiss={onDismissNotification}
+            />
+          ) : (
+            <EmptyNotifications />
+          )}
+        </ModalShell>
+      ) : null}
     </header>
+  );
+}
+
+function NotificationsHeader({
+  titleId,
+  title = "",
+  subtitle = "",
+  onClose = () => {},
+}) {
+  return (
+    <div className="mb-[var(--space-4)] flex items-center gap-[var(--space-3)]">
+      <div className="min-w-0">
+        <h2
+          id={titleId}
+          className="font-display text-[var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
+        >
+          {title}
+        </h2>
+        <p className="text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+          {subtitle}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="ml-auto flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)]"
+      >
+        <X size={16} />
+      </button>
+    </div>
+  );
+}
+
+function NotificationGroups({ notifications = [], onDismiss = () => {} }) {
+  const groups = ["today", "earlier"]
+    .map((key) => ({
+      key,
+      label: GROUP_LABELS[key],
+      items: notifications.filter((notification) => notification.group === key),
+    }))
+    .filter((group) => group.items.length > 0);
+
+  return (
+    <>
+      {groups.map((group) => (
+        <div key={group.key}>
+          <p className="mt-[var(--space-4)] text-[var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase font-[var(--weight-medium)] text-[var(--ink-faint)] first:mt-0">
+            {group.label}
+          </p>
+          <ul className="divide-y divide-[var(--line-whisper)]">
+            {group.items.map((notification) => (
+              <NotificationRow
+                key={notification.id}
+                notification={notification}
+                onDismiss={onDismiss}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function NotificationRow({ notification, onDismiss = () => {} }) {
+  return (
+    <li className="flex items-center gap-[var(--space-1)]">
+      <div className="flex flex-1 min-w-0 items-start gap-[var(--space-3)] py-[var(--space-3)]">
+        <span
+          aria-hidden="true"
+          className="mt-[var(--space-2)] h-2 w-2 shrink-0 rounded-[var(--radius-full)] bg-[var(--gold-action)]"
+        />
+        <div className="min-w-0">
+          <h3 className="text-[var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-pretty">
+            {notification.title}
+          </h3>
+          <p className="mt-0.5 text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+            {notification.supportingLine}
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => onDismiss?.(notification.id)}
+        aria-label={`Dismiss ${notification.title}`}
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-faint)] transition-[color,background-color] duration-[var(--dur-hover)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
+      >
+        <X size={14} />
+      </button>
+    </li>
+  );
+}
+
+function EmptyNotifications() {
+  return (
+    <p className="py-[var(--space-4)] text-center text-[var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
+      No notifications yet.
+    </p>
   );
 }

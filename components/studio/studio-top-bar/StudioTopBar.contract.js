@@ -1,26 +1,37 @@
-export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v2";
+export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v3";
 
 export const studioTopBarViewContract = Object.freeze({
   version: STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION,
   purpose:
-    "Render the Studio global search field and account utilities without owning search state, notification data, or account context.",
+    "Render the Studio global search field, the notifications bell, its two floating panels (compact and full notification center), and account utilities, without owning search state, notification data, panel open state, or account context.",
   inputs: Object.freeze([
     "searchValue",
     "searchPlaceholder",
     "searchAutoFocus",
     "notifications",
     "notificationsLabel",
-    "initialNotificationsOpen",
+    "notificationsView",
+    "bellRef",
     "accountHref",
     "accountAriaLabel",
     "accountLinkSlot",
   ]),
-  callbacks: Object.freeze(["onSearchChange", "onOpenNotifications"]),
+  callbacks: Object.freeze([
+    "onSearchChange",
+    "onOpenNotifications",
+    "onOpenNotificationCenter",
+    "onCloseNotifications",
+    "onDismissNotification",
+    "onClearAllNotifications",
+  ]),
   applicationOwnedDependencies: Object.freeze([]),
   behavior: Object.freeze({
     hasNotifications: "derived as notifications.length > 0",
-    notificationsPopupOpenState:
-      "local to the view, presentation-only; initialNotificationsOpen only seeds the preview harness",
+    notificationsView:
+      "ViewModel-owned: null | 'compact' | 'full'. The View renders the shared ModalShell primitive (components/ui/ModalShell) for either panel, unmodified from its 12 other callers.",
+    focusReturn:
+      "bellRef is a ViewModel-owned ref; onCloseNotifications refocuses it after closing.",
+    notificationShape: "{ id, title, supportingLine, group: 'today' | 'earlier' }",
     desktopBreakpoint: "lg",
   }),
 });

@@ -1,39 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { UserRound } from "lucide-react";
 
 import StudioTopBarView from "@/components/studio/studio-top-bar/StudioTopBar.view";
 import {
+  studioTopBarBellIdleFixture,
+  studioTopBarBellWithNotificationsFixture,
+  studioTopBarCompactPanelOpenFixture,
+  studioTopBarEmptyPanelOpenFixture,
+  studioTopBarFullCenterOpenFixture,
   studioTopBarIdleFixture,
-  studioTopBarNotificationsEmptyOpenFixture,
-  studioTopBarNotificationsOpenFixture,
   studioTopBarSearchFocusedFixture,
 } from "@/components/studio/studio-top-bar/StudioTopBar.fixtures";
 
 const STATES = {
   idle: {
-    label: "Bell idle",
+    label: "Bar idle",
     fixture: studioTopBarIdleFixture,
   },
   searchFocused: {
     label: "Search focused",
     fixture: studioTopBarSearchFocusedFixture,
   },
-  notificationsOpen: {
-    label: "Bell with notifications, popup open",
-    fixture: studioTopBarNotificationsOpenFixture,
+  bellIdle: {
+    label: "Bell idle",
+    fixture: studioTopBarBellIdleFixture,
   },
-  notificationsEmptyOpen: {
-    label: "Popup open, no notifications",
-    fixture: studioTopBarNotificationsEmptyOpenFixture,
+  bellWithNotifications: {
+    label: "Bell with notifications",
+    fixture: studioTopBarBellWithNotificationsFixture,
+  },
+  compactOpen: {
+    label: "Compact panel open",
+    fixture: studioTopBarCompactPanelOpenFixture,
+  },
+  fullOpen: {
+    label: "Full notification center open",
+    fixture: studioTopBarFullCenterOpenFixture,
+  },
+  emptyOpen: {
+    label: "Empty state",
+    fixture: studioTopBarEmptyPanelOpenFixture,
   },
 };
 
 export default function StudioTopBarPreviewClient() {
   const [stateKey, setStateKey] = useState("idle");
   const [feedback, setFeedback] = useState("Fixture preview ready.");
-  const state = STATES[stateKey];
+  const [notifications, setNotifications] = useState(
+    STATES[stateKey].fixture.notifications,
+  );
+  const [notificationsView, setNotificationsView] = useState(
+    STATES[stateKey].fixture.notificationsView,
+  );
+  const bellRef = useRef(null);
+
+  function selectState(key) {
+    setStateKey(key);
+    setNotifications(STATES[key].fixture.notifications);
+    setNotificationsView(STATES[key].fixture.notificationsView);
+    setFeedback(`${STATES[key].label} fixture loaded.`);
+  }
 
   return (
     <main className="min-h-screen bg-[var(--canvas)] p-8 text-[var(--ink)]">
@@ -47,7 +75,7 @@ export default function StudioTopBarPreviewClient() {
               <button
                 key={key}
                 type="button"
-                onClick={() => setStateKey(key)}
+                onClick={() => selectState(key)}
                 className={`rounded-[var(--radius-md)] border px-3 py-2 text-[10px] uppercase tracking-[0.12em] ${
                   stateKey === key
                     ? "border-[var(--gold-ornament)]/50 text-[var(--ink)]"
@@ -62,8 +90,15 @@ export default function StudioTopBarPreviewClient() {
         </div>
 
         <StudioTopBarView
-          key={stateKey}
-          {...state.fixture}
+          searchValue={STATES[stateKey].fixture.searchValue}
+          searchPlaceholder={STATES[stateKey].fixture.searchPlaceholder}
+          searchAutoFocus={STATES[stateKey].fixture.searchAutoFocus}
+          notificationsLabel={STATES[stateKey].fixture.notificationsLabel}
+          accountHref={STATES[stateKey].fixture.accountHref}
+          accountAriaLabel={STATES[stateKey].fixture.accountAriaLabel}
+          notifications={notifications}
+          notificationsView={notificationsView}
+          bellRef={bellRef}
           accountLinkSlot={
             <a
               href="/studio/account"
@@ -74,9 +109,27 @@ export default function StudioTopBarPreviewClient() {
             </a>
           }
           onSearchChange={() => setFeedback("onSearchChange callback received.")}
-          onOpenNotifications={() =>
-            setFeedback("onOpenNotifications callback received.")
-          }
+          onOpenNotifications={() => {
+            setNotificationsView("compact");
+            setFeedback("onOpenNotifications callback received.");
+          }}
+          onOpenNotificationCenter={() => {
+            setNotificationsView("full");
+            setFeedback("onOpenNotificationCenter callback received.");
+          }}
+          onCloseNotifications={() => {
+            setNotificationsView(null);
+            bellRef.current?.focus();
+            setFeedback("onCloseNotifications callback received; focus returned to the bell.");
+          }}
+          onDismissNotification={(id) => {
+            setNotifications((current) => current.filter((n) => n.id !== id));
+            setFeedback(`onDismissNotification("${id}") callback received.`);
+          }}
+          onClearAllNotifications={() => {
+            setNotifications([]);
+            setFeedback("onClearAllNotifications callback received.");
+          }}
         />
 
         <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-8 text-sm leading-7 text-[var(--ink-dim)]">

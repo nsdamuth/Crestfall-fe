@@ -247,17 +247,20 @@ applies as CSS variable overrides, no palette logic in the View.
 ### CR-017, notifications feed shape
 
 Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N9. Popup
-shell landed 8 Aug 2026 (Phase 2 top bar restyle brief); feed still
-stubbed.
+shell landed 8 Aug 2026 (Phase 2 top bar restyle brief); ported to the
+proof's compact + full panel recipe 8 Aug 2026 (Phase 2.1 top bar
+chrome correction brief); feed still stubbed.
 
 Feature blocked: none directly. `StudioTopBar`'s notifications control
-is no longer a static utility modal; it is now a real open/close popup
-panel (`cf-dropdown`, closes on outside click and Escape, internal
-scroll), but it renders from a `notifications` prop that defaults to
-`[]` (honest stub, no backend). No proof recipe or live precedent
-exists for the popup's internal row layout either; the current row
-(title text + relative time) reuses this file's own prior typographic
-pairing and is unruled, pending a render review.
+is a real open/close panel pair built on the shared `ModalShell`
+primitive: a compact panel (title, subtitle, close, gold-dot two-line
+rows, per-row dismiss, Clear all / Open the notification center
+footer) and a full notification center (same row recipe, grouped under
+TODAY / EARLIER labels), both closing on the close control, outside
+click, and Escape, with focus returned to the bell. It renders from a
+`notifications` prop that defaults to `[]` (honest stub, no backend);
+`onDismissNotification` and `onClearAllNotifications` are no-ops with
+nothing to mutate.
 
 Missing functionality: confirmation of the ruled shape from this CR
 (the bell carries a boolean "something is new", never a count; opening

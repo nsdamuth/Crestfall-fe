@@ -22,36 +22,54 @@ test("Studio Top Bar Shell stays thin", () => {
   assert.doesNotMatch(shell, /formatCoins|formatStudioCoinBalance/);
 });
 
-test("Studio Top Bar View is portable and semantic", () => {
+test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   const view = read("components/studio/studio-top-bar/StudioTopBar.view.jsx");
   assert.match(view, /searchValue/);
   assert.match(view, /onSearchChange/);
   assert.match(view, /notifications/);
-  assert.match(view, /onOpenNotifications/);
+  assert.match(view, /notificationsView/);
+  assert.match(view, /bellRef/);
+  assert.match(view, /onOpenNotificationCenter/);
   assert.match(view, /accountLinkSlot/);
+  assert.match(view, /from "@\/components\/ui\/ModalShell"/);
   assert.doesNotMatch(view, /StudioAccountProvider|useStudioAccount/);
-  assert.doesNotMatch(view, /useEffect/);
+  assert.doesNotMatch(view, /useState|useEffect/);
   assert.doesNotMatch(view, /next\/link/);
   assert.doesNotMatch(view, /formattedCoins|onOpenBuyCoins|utilityModal/);
 });
 
-test("Studio Top Bar ViewModel owns search state and account labelling", () => {
+test("Studio Top Bar View has no card chrome and no invented blur literal", () => {
+  const view = read("components/studio/studio-top-bar/StudioTopBar.view.jsx");
+  const headerOpenTag = view.match(/<header className="([^"]+)"/);
+  assert.ok(headerOpenTag, "expected a <header> element with a className");
+  const headerClasses = headerOpenTag[1].split(/\s+/);
+  assert.ok(
+    headerClasses.includes("border-b"),
+    "expected the chrome bar to keep the proof's flush bottom-only border"
+  );
+  assert.ok(
+    !headerClasses.some(
+      (c) => /^rounded-|^shadow-/.test(c) || c === "border" || /^border-[tlr]$/.test(c)
+    ),
+    "expected no radius, shadow, or non-bottom border on the chrome bar"
+  );
+  assert.doesNotMatch(view, /backdrop-blur/);
+  assert.match(view, /color-mix\(in_srgb,var\(--canvas\)_88%,transparent\)/);
+});
+
+test("Studio Top Bar ViewModel owns search and panel state", () => {
   const viewModel = read(
     "components/studio/studio-top-bar/useStudioTopBarViewModel.js"
   );
   assert.match(viewModel, /useState/);
+  assert.match(viewModel, /useRef/);
   assert.match(viewModel, /searchValue/);
+  assert.match(viewModel, /notificationsView/);
+  assert.match(viewModel, /bellRef/);
   assert.match(viewModel, /getStudioTopBarAccountLabel/);
   assert.doesNotMatch(viewModel, /useStudioAccount/);
   assert.doesNotMatch(viewModel, /activeUtility|formatStudioCoinBalance/);
   assert.doesNotMatch(viewModel, /<\w+/);
-});
-
-test("Studio Top Bar account label normalization preserves existing fallback behavior", () => {
-  const viewModel = read(
-    "components/studio/studio-top-bar/useStudioTopBarViewModel.js"
-  );
-  assert.match(viewModel, /"Account"/);
 });
 
 test("Studio Top Bar contract and fixtures cover all visible states", () => {
@@ -63,11 +81,14 @@ test("Studio Top Bar contract and fixtures cover all visible states", () => {
   );
   assert.match(contract, /STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /applicationOwnedDependencies/);
-  assert.doesNotMatch(contract, /accountStatusLoadingDisplay/);
+  assert.match(contract, /notificationsView/);
   assert.match(fixtures, /studioTopBarIdleFixture/);
   assert.match(fixtures, /studioTopBarSearchFocusedFixture/);
-  assert.match(fixtures, /studioTopBarNotificationsOpenFixture/);
-  assert.match(fixtures, /studioTopBarNotificationsEmptyOpenFixture/);
+  assert.match(fixtures, /studioTopBarBellIdleFixture/);
+  assert.match(fixtures, /studioTopBarBellWithNotificationsFixture/);
+  assert.match(fixtures, /studioTopBarCompactPanelOpenFixture/);
+  assert.match(fixtures, /studioTopBarFullCenterOpenFixture/);
+  assert.match(fixtures, /studioTopBarEmptyPanelOpenFixture/);
 });
 
 test("Studio Top Bar preview is development-only and fixture driven", () => {
@@ -78,9 +99,13 @@ test("Studio Top Bar preview is development-only and fixture driven", () => {
   assert.match(page, /process\.env\.NODE_ENV === "production"/);
   assert.match(page, /notFound\(\)/);
   assert.match(preview, /StudioTopBarView/);
-  assert.match(preview, /Bell idle/);
+  assert.match(preview, /Bar idle/);
   assert.match(preview, /Search focused/);
-  assert.match(preview, /popup open/);
+  assert.match(preview, /Bell idle/);
+  assert.match(preview, /Bell with notifications/);
+  assert.match(preview, /Compact panel open/);
+  assert.match(preview, /Full notification center open/);
+  assert.match(preview, /Empty state/);
 });
 
 test("Studio Shell integration and package documentation remain explicit", () => {
@@ -89,6 +114,7 @@ test("Studio Shell integration and package documentation remain explicit", () =>
   const packageJson = read("package.json");
   assert.equal((studioShell.match(/<StudioTopBar/g) || []).length, 1);
   assert.match(readme, /Binding Shell/);
+  assert.match(readme, /ModalShell/);
   assert.match(readme, /\/dev\/ui-preview\/studio-top-bar/);
   assert.match(packageJson, /diagnostics:loom:studio-top-bar/);
 });

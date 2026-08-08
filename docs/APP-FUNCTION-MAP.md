@@ -10,7 +10,7 @@ Coverage: 63 surfaces, 844 controls. Status counts: working 782, gated 5, stubbe
 - **BROKEN** `/ (site shell)` / footer / Terms of Service link: Links to /terms/service (Target slug service does not exist in data/policies.js (real slug is terms-of-service); this link 404s via notFound() in app/terms/[slug]/page.js)
 - **BROKEN** `/ (site shell)` / footer / Contact link: Links to /contact (No app/contact route found in repo listing seen so far; unverified, flagged as risk)
 - **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Search: Presentation-only global search field, not yet wired to a search operation. (No search contract or endpoint exists yet; onSearchChange is a safe no-op until a CR is answered. See docs/CONTRACT-REQUESTS.md.)
-- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Notifications: Opens a popup panel listing notifications; idle icon with a gold-glow state when notifications exist. (No notification data source exists yet; the viewmodel defaults to an empty list. Real data needs a services-api contract (CR pending). See docs/CONTRACT-REQUESTS.md.)
+- **STUBBED** `/studio/* (studio shell)` / top bar (desktop) / Notifications: Opens a compact floating notification panel; idle icon with a gold-glow state when notifications exist; its Open the notification center button switches to a full panel grouped by Today/Earlier. (No notification data source exists yet; the viewmodel defaults to an empty list. Dismiss and Clear all are presentation-only no-ops. Real data needs a services-api contract (CR pending). See docs/CONTRACT-REQUESTS.md.)
 - **BROKEN** `/stories/[...slug]` / page component / (none - file is empty): app/stories/[...slug]/page.js is a literal 0-byte file with no default export; Next.js has no valid page module for this route (Confirmed via wc -l returning 0 and ls -la showing 0 bytes; matches docs/REDESIGN-ORDER.md item 1 which already flags this as a dead route)
 - **STUBBED** `/studio/profile` / page head / Edit Soon: Nothing; the button is rendered with the disabled attribute and no onClick handler. (Entire page is hardcoded fixture markup (featuredItems array, hand-typed stats string, static 'crestfallen' identity); no server/client data fetch exists anywhere in this file.)
 - **STUBBED** `/studio/profile` / tab bar / Featured / Characters / Storys / Images & Presets / Updates / Activity tabs: Nothing; every tab button is rendered with the disabled attribute and no onClick handler, only the first is visually 'active'. (Tab labels are a hardcoded array; no tab switching logic exists.)
@@ -125,7 +125,7 @@ Shared chrome (sidebar, mobile nav, top bar, account/economy) mounted around eve
 **top bar (desktop)**
 
 - Search (input): Presentation-only global search field, not yet wired to a search operation.; data: none; **STUBBED**
-- Notifications (button): Opens a popup panel listing notifications; idle icon with a gold-glow state when notifications exist.; data: local_state; **STUBBED**
+- Notifications (button): Opens a compact floating notification panel; idle icon with a gold-glow state when notifications exist; switches to a full notification center grouped by Today/Earlier.; data: local_state; **STUBBED**
 
 **top bar (desktop) / mobile header**
 

@@ -1,10 +1,10 @@
 const baseFixture = Object.freeze({
   searchValue: "",
-  searchPlaceholder: "Search tools and builders",
+  searchPlaceholder: "Search characters, stories, and adventures",
   searchAutoFocus: false,
   notifications: [],
   notificationsLabel: "Notifications",
-  initialNotificationsOpen: false,
+  notificationsView: null,
   accountHref: "/studio/account",
   accountAriaLabel: "creator@example.com",
 });
@@ -21,42 +21,61 @@ const sampleNotifications = Object.freeze([
   Object.freeze({
     id: "n-1",
     title: "Your character \"Lysandra\" passed review and is now public.",
-    timeAgo: "12m ago",
+    supportingLine: "12m ago",
+    group: "today",
   }),
   Object.freeze({
     id: "n-2",
     title: "New comment on your Story \"The Hollow Court\".",
-    timeAgo: "1h ago",
+    supportingLine: "1h ago",
+    group: "today",
   }),
   Object.freeze({
     id: "n-3",
     title: "Image Studio finished generating 4 portraits.",
-    timeAgo: "3h ago",
+    supportingLine: "3h ago",
+    group: "today",
   }),
   Object.freeze({
     id: "n-4",
     title: "Weekly creator digest is ready.",
-    timeAgo: "1d ago",
+    supportingLine: "1d ago",
+    group: "earlier",
   }),
   Object.freeze({
     id: "n-5",
     title: "\"Morning Star\" reached 100 sessions played.",
-    timeAgo: "2d ago",
+    supportingLine: "2d ago",
+    group: "earlier",
   }),
   Object.freeze({
     id: "n-6",
     title: "A room you follow, \"Ashfall Tavern\", went live.",
-    timeAgo: "3d ago",
+    supportingLine: "3d ago",
+    group: "earlier",
   }),
 ]);
 
-export const studioTopBarNotificationsOpenFixture = Object.freeze({
+export const studioTopBarBellIdleFixture = baseFixture;
+
+export const studioTopBarBellWithNotificationsFixture = Object.freeze({
   ...baseFixture,
   notifications: sampleNotifications,
-  initialNotificationsOpen: true,
 });
 
-export const studioTopBarNotificationsEmptyOpenFixture = Object.freeze({
+export const studioTopBarCompactPanelOpenFixture = Object.freeze({
   ...baseFixture,
-  initialNotificationsOpen: true,
+  notifications: sampleNotifications,
+  notificationsView: "compact",
+});
+
+export const studioTopBarFullCenterOpenFixture = Object.freeze({
+  ...baseFixture,
+  notifications: sampleNotifications,
+  notificationsView: "full",
+});
+
+export const studioTopBarEmptyPanelOpenFixture = Object.freeze({
+  ...baseFixture,
+  notificationsView: "compact",
 });
