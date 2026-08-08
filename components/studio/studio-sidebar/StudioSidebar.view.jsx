@@ -4,8 +4,6 @@ import {
   BookOpen,
   Castle,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   ChevronUp,
   Compass,
   ExternalLink,
@@ -63,7 +61,7 @@ export default function StudioSidebarView({
   return (
     <aside
       className={`
-        hidden shrink-0 border-r border-[var(--gold-ornament)]/15 bg-black/80 px-3 py-5 transition-all duration-300 lg:block
+        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:block
         ${collapsed ? "w-16" : "w-56"}
       `}
     >
@@ -73,11 +71,13 @@ export default function StudioSidebarView({
             href={brandHref}
             className="flex items-center gap-[var(--space-2)]"
           >
-            <img
-              src="/assets/branding/crestfall-seal.svg"
-              alt=""
-              className="h-10 w-10 shrink-0 object-contain"
-            />
+            <svg
+              viewBox="0 0 64 64"
+              aria-hidden="true"
+              className="h-10 w-10 shrink-0 text-[var(--gold-ornament)]"
+            >
+              <use href="/assets/icons/icons-v7.svg#i-59" />
+            </svg>
 
             <span>
               <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--gold-ornament)]">
@@ -94,10 +94,23 @@ export default function StudioSidebarView({
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="rounded-lg border border-[var(--gold-ornament)]/20 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/60 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+          className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           aria-label={collapseAriaLabel}
         >
-          {collapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M9 4v16" />
+          </svg>
         </button>
       </div>
 
