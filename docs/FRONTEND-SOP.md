@@ -245,6 +245,15 @@ in a pass is re-counted to zero em dashes before the pass is reported
 done. Every finished-task report echoes the brief's manifest, part by
 part, each marked DONE or STOPPED.
 
+Dev server ownership (ruled, ports and processes): Brian runs his
+own dev server on 3001 in a separate terminal. Before starting a
+server for verification, check whether one is already listening on
+3001 (`lsof -i :3001` or `curl`). If one is, use it. Never restart
+it. If a server must be started for the run, start it on a different
+port and track its own PID. Cleanup targets only that PID, never a
+broad process-name kill (`pkill -f "next dev"` and equivalents are
+banned outright). Never kill a process this run did not start.
+
 ## 9. Working with Brian
 
 Brian is the design authority and is not a coder. He never receives
