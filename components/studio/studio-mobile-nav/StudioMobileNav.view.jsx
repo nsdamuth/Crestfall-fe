@@ -213,7 +213,7 @@ export default function StudioMobileNavView({
               key={link.href}
               href={link.href}
               aria-current={link.isActive ? "page" : undefined}
-              className="cf-nav-link flex flex-col items-center gap-1 rounded-lg border border-transparent px-1 py-1.5 text-[10px] text-[var(--ink-dim)]"
+              className="cf-dock-link flex flex-col items-center gap-1 rounded-lg border border-transparent px-1 py-1.5 text-[10px] text-[var(--ink-dim)]"
             >
               <Icon size={18} />
               <span>{link.label}</span>
