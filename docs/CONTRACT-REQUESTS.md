@@ -274,6 +274,56 @@ links) and the ViewModel feed shape plus clear semantics.
 Design intent once it exists: the top bar ViewModel consumes a boolean
 plus a deep-link row list, nothing else.
 
+Data check (8 Aug 2026, Phase 2.2 top bar layout brief): confirmed no
+real notification source exists anywhere in this repo. Searched
+`app/api/`, `lib/server/`, `lib/client/studio/` (including
+`engagement`, which covers reactions/likes, not notifications), and
+`docs/contracts/` for any notification endpoint, proxy route, or
+contract field; none found. The only other "Notifications" surface in
+the app, `app/studio/account/notifications/page.js`, is a fully static
+`AccountStubPage` with hardcoded preference-category copy (Email, Room
+Activity, Creator Alerts, Review & Safety); it fetches nothing and
+shares no data model with the top bar bell. **Finding: no, real
+notification data does not exist.** The panels stay fixture-driven
+until this CR is answered.
+
+**Dev handoff: what the frontend needs to go live.**
+
+- Data shape per row (matches what the View already renders, so no
+  View change would be needed, only the data source):
+  `{ id: string, title: string, supportingLine: string, group: "today" | "earlier", href?: string }`.
+  `title` is the row's bold headline (`h3`), `supportingLine` is the
+  quiet line beneath it (currently used for relative time, e.g. "12m
+  ago"), `group` sorts the row into the full panel's TODAY or EARLIER
+  section. `href` is new: the ruled design intent is that every row is
+  a deep link (see below); today's rows render as plain text with no
+  navigation.
+- Has-new signal: a single boolean, never a count, matching the ruled
+  language in this CR ("something is new"). The bell's gold-glow state
+  already derives from `notifications.length > 0` in
+  `StudioTopBar.view.jsx`; a real boolean field (e.g. `hasNew`) would
+  replace that derivation, or the feed endpoint could simply return an
+  empty array when there is nothing new and the existing derivation
+  keeps working unchanged.
+- Clear-all behavior: `onClearAllNotifications` exists on the View
+  contract today as a no-op. Going live means it needs a real mutation
+  (a clear-all endpoint or a client-side "mark all read" call) that the
+  ViewModel calls, then either re-fetches or optimistically empties the
+  list. Per this CR's ruled intent, opening the panel is what clears
+  the "something is new" signal, which is a separate call from
+  clear-all (dismissing individual rows does not clear the badge by
+  itself in the ruled model, only viewing does).
+- Per-row dismiss behavior: `onDismissNotification(id)` exists today as
+  a no-op. Going live means a real per-row dismiss/delete endpoint the
+  ViewModel calls, then removes that row from the list (optimistically
+  or via re-fetch).
+- Deep-link targets: per the ruled shape, each row should navigate
+  somewhere on click ("render finished, creator published, daily bonus
+  ready" are the three examples named in this CR). The `href` field
+  above is the minimal addition; whether rows also carry a distinct
+  "kind" for icon/category treatment is undecided and would need its
+  own ruling before building.
+
 ### CR-018, backend copy alignment for Sessions vs Stories
 
 Status: OPEN, with Nick. Migrated 7 Aug 2026 from legacy N10.
