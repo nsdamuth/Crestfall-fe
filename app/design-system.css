@@ -238,12 +238,14 @@
    itself never shares one recipe across both. */
 .cf-nav-link[aria-current="page"] {
   background-image: var(--grad-nav-active);
+  background-repeat: no-repeat;
   color: var(--gold-bright);
   box-shadow: inset 2px 0 0 var(--gold-action);
 }
 
 .cf-nav-link[aria-current="page"]:hover {
   background-image: var(--grad-nav-active);
+  background-repeat: no-repeat;
 }
 
 /* Bottom tab dock active state, traced to the proof's
