@@ -67,6 +67,28 @@ const sheetContent = (
   </div>
 );
 
+// Viewer-variant content (R2/R5; refreshed 10 Aug 2026 review gate,
+// find D-1: the phase-1 "empty shell" placeholder rendered a text
+// block and never exercised the chromeless surface). A synthetic
+// image inside the gold hairline recipe, plus a pointer-events-auto
+// wrapper matching the click-transparent panel contract (R3).
+const viewerImageSrc = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="720" height="960"><rect width="720" height="960" fill="#1d1a15"/><circle cx="360" cy="400" r="180" fill="#d9bd82" opacity="0.75"/></svg>'
+)}`;
+
+const viewerContent = (
+  <div className="pointer-events-none flex h-full w-full items-center justify-center">
+    <div className="pointer-events-auto overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={viewerImageSrc}
+        alt="Viewer fixture"
+        className="block h-auto max-h-[78dvh] w-auto max-w-full"
+      />
+    </div>
+  </div>
+);
+
 const noCloseContent = (
   <div className="p-[var(--space-6)]">
     <p
@@ -136,12 +158,12 @@ export const kitModalFrameFixtures = [
   },
   {
     id: "viewer",
-    label: "Viewer (empty shell, phase 2 fills this in)",
+    label: "Viewer (chromeless, R2/R5)",
     props: {
       variant: "viewer",
       panelClassName: "",
-      ariaLabelledBy: "kit-modal-frame-default-title",
-      children: standardContent,
+      ariaLabel: "Viewer fixture",
+      children: viewerContent,
     },
   },
 ];

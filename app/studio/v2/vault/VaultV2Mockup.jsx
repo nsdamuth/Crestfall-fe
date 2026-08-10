@@ -20,6 +20,7 @@ import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.vie
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
+import FixtureActionNotice from "../FixtureActionNotice";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -137,6 +138,10 @@ export default function VaultV2Mockup() {
   const [savedIds, setSavedIds] = useState([]);
   const [overlayImage, setOverlayImage] = useState(null);
   const [assetDetailId, setAssetDetailId] = useState(null);
+  // R4 (10 Aug 2026 review gate): controls whose real behavior waits
+  // on live wiring open a non-persisting notice instead of doing
+  // nothing.
+  const [actionNotice, setActionNotice] = useState(null);
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
@@ -256,6 +261,7 @@ export default function VaultV2Mockup() {
             <button
               key={key}
               type="button"
+              aria-pressed={fixtureMode === key}
               onClick={() => setFixtureMode(key)}
               className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                 fixtureMode === key
@@ -306,7 +312,13 @@ export default function VaultV2Mockup() {
           line=""
           ctaLabel="Browse the Community"
           imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
-          onCtaClick={() => {}}
+          onCtaClick={() =>
+            setActionNotice({
+              label: "Browse the Community",
+              message:
+                "This banner routes to Community when the new pages cut over. Nothing was opened in this preview.",
+            })
+          }
         />
       }
     >
@@ -366,11 +378,17 @@ export default function VaultV2Mockup() {
       <KitImageOverlay
         imageSrc={overlayImage.imageSrc}
         title={overlayImage.title}
-        isLoved={false}
+        isLoved={likedIds.includes(overlayImage.id)}
         isSaved={savedIds.includes(overlayImage.id)}
-        onLove={() => {}}
+        onLove={() => toggleLiked(overlayImage.id)}
         onSave={() => toggleSaved(overlayImage.id)}
-        onShare={() => {}}
+        onShare={() =>
+          setActionNotice({
+            label: "Share",
+            message:
+              "Sharing is wired when the page goes live. Nothing leaves this preview.",
+          })
+        }
         onClose={() => setOverlayImage(null)}
       />
     )}
@@ -400,15 +418,34 @@ export default function VaultV2Mockup() {
           isLiked={likedIds.includes(item.id)}
           isSaved={savedIds.includes(item.id)}
           onLike={() => toggleLiked(item.id)}
-          onPrimaryAction={() => {}}
-          onShare={() => {}}
+          onPrimaryAction={() =>
+            setActionNotice({
+              label: item.assetKind === "image" ? "Open" : "Play",
+              message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+            })
+          }
+          onShare={() =>
+            setActionNotice({
+              label: "Share",
+              message:
+                "Sharing is wired when the page goes live. Nothing leaves this preview.",
+            })
+          }
           onSave={() => toggleSaved(item.id)}
-          onViewCatalogue={() => {}}
+          onViewCatalogue={() =>
+            setActionNotice({
+              label: "View catalogue",
+              message:
+                "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
+            })
+          }
           credits={item.credits || []}
           onClose={() => setAssetDetailId(null)}
         />
       );
     })()}
+
+    <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the branded dropdown kit piece
@@ -40,6 +40,13 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {((value: string) => void)|null} onToggleOption
  *   fires per option activation; single-select closes after firing,
  *   multi-select stays open for further toggles
+ * @property {string|null} [ariaLabel] (added 1.1.0, 10 Aug 2026
+ *   review gate, D-3) the control's purpose for assistive tech when
+ *   the visible label carries a VALUE rather than the group name
+ *   (the account draft's Content Preference dropdown shows the
+ *   selected tier as its label). Trigger announces
+ *   "{ariaLabel}: {label}"; the listbox and sheet take ariaLabel
+ *   alone. Omitted: behavior identical to 1.0.0.
  */
 
 export {};

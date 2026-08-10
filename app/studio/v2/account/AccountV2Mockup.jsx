@@ -29,6 +29,7 @@ import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitDropdown from "@/components/kit/KitDropdown";
+import FixtureActionNotice from "../FixtureActionNotice";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import {
   USERNAME_MAX,
@@ -120,7 +121,15 @@ function FieldLabel({ label, count }) {
         {label}
       </span>
       {typeof count === "string" && (
-        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        // aria-hidden: the counter lives inside the field's <label>,
+        // so without it the field's accessible name reads
+        // "Username 10 / 30" (review-gate find N-2). The cap is still
+        // enforced by maxLength; richer aria-describedby wiring is
+        // Sprint E polish.
+        <span
+          aria-hidden="true"
+          className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
+        >
           {count}
         </span>
       )}
@@ -315,6 +324,7 @@ function DefaultPcPickerModal({ selectedId, onClose, onSelect, onClear }) {
                 <button
                   key={pc.id}
                   type="button"
+                  aria-pressed={isSelected}
                   onClick={() => onSelect(pc.id)}
                   className={`kit-focus overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
                     isSelected ? "border-[var(--gold-ornament)]" : "border-[var(--line)] hover:border-[var(--line-strong)]"
@@ -367,6 +377,10 @@ export default function AccountV2Mockup() {
   const [ageGateLabel, setAgeGateLabel] = useState(null);
   const [isBuyCoinsOpen, setIsBuyCoinsOpen] = useState(false);
   const [isPcPickerOpen, setIsPcPickerOpen] = useState(false);
+  // R4 (10 Aug 2026 review gate): controls whose real behavior waits
+  // on live wiring open a non-persisting notice instead of doing
+  // nothing.
+  const [actionNotice, setActionNotice] = useState(null);
 
   function selectFixtureMode(mode) {
     const next = FIXTURE_STATES[mode];
@@ -411,6 +425,7 @@ export default function AccountV2Mockup() {
               <button
                 key={key}
                 type="button"
+                aria-pressed={fixtureMode === key}
                 onClick={() => selectFixtureMode(key)}
                 className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                   fixtureMode === key
@@ -460,7 +475,17 @@ export default function AccountV2Mockup() {
                     View public profile
                   </Link>
                 )}
-                <button type="button" className="kit-focus cf-btn cf-btn--primary">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActionNotice({
+                      label: "Save profile",
+                      message:
+                        "Saving is wired when the page goes live. Your edits live only in this preview and nothing was stored.",
+                    })
+                  }
+                  className="kit-focus cf-btn cf-btn--primary"
+                >
                   Save profile
                 </button>
               </div>
@@ -539,6 +564,7 @@ export default function AccountV2Mockup() {
                 <FieldLabel label="Content Preference" />
                 <div className="mt-[var(--space-2)]">
                   <KitDropdown
+                    ariaLabel="Content Preference"
                     label={selectedRatingLabel}
                     options={CONTENT_RATING_TIERS.map((tier) => ({ value: tier.tier, label: tier.label, tooltip: tier.tooltip }))}
                     selectedValues={[contentRatingPreference]}
@@ -634,9 +660,20 @@ export default function AccountV2Mockup() {
             </div>
           </SectionCard>
 
-          {/* Sign out row: styled, fixture no-op. */}
+          {/* Sign out row: styled; opens the R4 fixture notice, real
+              sign-out stays with live wiring. */}
           <div className="pt-[var(--space-2)] text-center">
-            <button type="button" className="kit-focus cf-btn cf-btn--secondary">
+            <button
+              type="button"
+              onClick={() =>
+                setActionNotice({
+                  label: "Sign Out",
+                  message:
+                    "Signing out is wired when the page goes live. Nothing happened to your session in this preview.",
+                })
+              }
+              className="kit-focus cf-btn cf-btn--secondary"
+            >
               Sign Out
             </button>
           </div>
@@ -659,6 +696,8 @@ export default function AccountV2Mockup() {
           }}
         />
       )}
+
+      <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

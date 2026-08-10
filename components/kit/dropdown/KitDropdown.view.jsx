@@ -106,6 +106,7 @@ export default function KitDropdownView({
   isMultiSelect = false,
   isDisabled = false,
   onToggleOption = null,
+  ariaLabel = null,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPhoneWidth, setIsPhoneWidth] = useState(
@@ -190,6 +191,7 @@ export default function KitDropdownView({
         disabled={isDisabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-label={ariaLabel ? `${ariaLabel}: ${label}` : undefined}
         onClick={toggleOpen}
         className={`kit-focus inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
           isMarked
@@ -218,7 +220,7 @@ export default function KitDropdownView({
         // byte unchanged from before the frame conversion.
         <div
           role="listbox"
-          aria-label={label}
+          aria-label={ariaLabel || label}
           aria-multiselectable={isMultiSelect}
           className="absolute left-0 top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)]"
         >
@@ -234,7 +236,7 @@ export default function KitDropdownView({
       {isOpen && isPhoneWidth && (
         <KitModalFrame
           variant="sheet"
-          ariaLabel={label}
+          ariaLabel={ariaLabel || label}
           onClose={() => setIsOpen(false)}
         >
           <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
@@ -244,7 +246,7 @@ export default function KitDropdownView({
           </div>
           <div
             role="listbox"
-            aria-label={label}
+            aria-label={ariaLabel || label}
             aria-multiselectable={isMultiSelect}
             className="p-[var(--space-2)]"
           >

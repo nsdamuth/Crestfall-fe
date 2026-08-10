@@ -15,6 +15,7 @@ import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.vie
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
+import FixtureActionNotice from "../FixtureActionNotice";
 
 function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
@@ -103,6 +104,13 @@ export default function CreatorsV2Mockup() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [followingIds, setFollowingIds] = useState([]);
   const [overlayImage, setOverlayImage] = useState(null);
+  // R4 (10 Aug 2026 review gate): the creator-thumbnail viewer's
+  // Love/Save toggle locally like every other viewer host, and
+  // controls whose real behavior waits on live wiring open a
+  // non-persisting notice instead of doing nothing.
+  const [lovedThumbIds, setLovedThumbIds] = useState([]);
+  const [savedThumbIds, setSavedThumbIds] = useState([]);
+  const [actionNotice, setActionNotice] = useState(null);
 
   const filteredCreators = useMemo(() => {
     if (fixtureMode === "empty") return [];
@@ -175,7 +183,11 @@ export default function CreatorsV2Mockup() {
             setOverlayImage({ id: thumbnailId, imageSrc: thumbnail, title: creator.handle });
           }
         },
-        onViewProfile: () => {},
+        onViewProfile: () =>
+          setActionNotice({
+            label: "View profile",
+            message: `Opening ${creator.handle}'s full profile is wired when live wiring lands. Nothing was opened in this preview.`,
+          }),
       });
     }
     return map;
@@ -193,6 +205,7 @@ export default function CreatorsV2Mockup() {
             <button
               key={key}
               type="button"
+              aria-pressed={fixtureMode === key}
               onClick={() => setFixtureMode(key)}
               className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                 fixtureMode === key
@@ -240,7 +253,13 @@ export default function CreatorsV2Mockup() {
           line=""
           ctaLabel="Read the lore"
           imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
-          onCtaClick={() => {}}
+          onCtaClick={() =>
+            setActionNotice({
+              label: "Read the lore",
+              message:
+                "This banner routes to Lore when the new pages cut over. Nothing was opened in this preview.",
+            })
+          }
         />
       }
     >
@@ -286,14 +305,34 @@ export default function CreatorsV2Mockup() {
       <KitImageOverlay
         imageSrc={overlayImage.imageSrc}
         title={overlayImage.title}
-        isLoved={false}
-        isSaved={false}
-        onLove={() => {}}
-        onSave={() => {}}
-        onShare={() => {}}
+        isLoved={lovedThumbIds.includes(overlayImage.id)}
+        isSaved={savedThumbIds.includes(overlayImage.id)}
+        onLove={() =>
+          setLovedThumbIds((ids) =>
+            ids.includes(overlayImage.id)
+              ? ids.filter((id) => id !== overlayImage.id)
+              : [...ids, overlayImage.id]
+          )
+        }
+        onSave={() =>
+          setSavedThumbIds((ids) =>
+            ids.includes(overlayImage.id)
+              ? ids.filter((id) => id !== overlayImage.id)
+              : [...ids, overlayImage.id]
+          )
+        }
+        onShare={() =>
+          setActionNotice({
+            label: "Share",
+            message:
+              "Sharing is wired when the page goes live. Nothing leaves this preview.",
+          })
+        }
         onClose={() => setOverlayImage(null)}
       />
     )}
+
+    <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

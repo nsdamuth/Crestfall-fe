@@ -16,7 +16,12 @@ export default function KitCreditsModalView({
   onClose = null,
 }) {
   return (
-    <div className="flex max-h-[92dvh] flex-col min-[700px]:max-h-[80dvh]">
+    // Under 700px the frame's panel is the full screen (R4), so the
+    // column fills it (h-full); the 92dvh cap was a leftover from the
+    // pre-R4 bottom dock and left an empty band under the list
+    // (review-gate find N-4). At 700px and up the centered panel is
+    // content-sized and the 80dvh cap bounds the scroll region.
+    <div className="flex h-full flex-col min-[700px]:h-auto min-[700px]:max-h-[80dvh]">
       <div className="flex flex-none items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] p-[var(--space-4)]">
         <button
           type="button"

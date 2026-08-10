@@ -17,8 +17,6 @@ const VARIANT_ALIGNMENT = {
   modal:
     "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
   sheet: "items-end p-0",
-  // Empty shell for phase 1; filled in by the R2/R5 viewer rebuild
-  // (plan section 1.2, phase 2).
   viewer:
     "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
 };

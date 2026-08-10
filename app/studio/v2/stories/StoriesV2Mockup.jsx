@@ -17,6 +17,7 @@ import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.vie
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
+import FixtureActionNotice from "../FixtureActionNotice";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -172,6 +173,10 @@ export default function StoriesV2Mockup() {
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [assetDetailId, setAssetDetailId] = useState(null);
+  // R4 (10 Aug 2026 review gate): controls whose real behavior waits
+  // on live wiring open a non-persisting notice instead of doing
+  // nothing.
+  const [actionNotice, setActionNotice] = useState(null);
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
@@ -313,6 +318,7 @@ export default function StoriesV2Mockup() {
               <button
                 key={key}
                 type="button"
+                aria-pressed={fixtureMode === key}
                 onClick={() => setFixtureMode(key)}
                 className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                   fixtureMode === key
@@ -363,7 +369,13 @@ export default function StoriesV2Mockup() {
             line=""
             ctaLabel="Browse Adventures"
             imageSrc={encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png")}
-            onCtaClick={() => {}}
+            onCtaClick={() =>
+              setActionNotice({
+                label: "Browse Adventures",
+                message:
+                  "This banner routes to Adventures when the new pages cut over. Nothing was opened in this preview.",
+              })
+            }
           />
         }
       >
@@ -372,7 +384,16 @@ export default function StoriesV2Mockup() {
         {fixtureMode !== "loading" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
             {visibleContinueItems.map((item) => (
-              <ContinueCard key={item.id} item={item} onContinue={() => {}} />
+              <ContinueCard
+                key={item.id}
+                item={item}
+                onContinue={() =>
+                  setActionNotice({
+                    label: "Continue",
+                    message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
+                  })
+                }
+              />
             ))}
             {!continueExpanded && continueItems.length > CONTINUE_VISIBLE_CAP && (
               <button
@@ -455,15 +476,34 @@ export default function StoriesV2Mockup() {
             isLiked={likedIds.includes(item.id)}
             isSaved={savedIds.includes(item.id)}
             onLike={() => toggleLiked(item.id)}
-            onPrimaryAction={() => {}}
-            onShare={() => {}}
+            onPrimaryAction={() =>
+              setActionNotice({
+                label: "Play",
+                message: `Playing "${item.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+              })
+            }
+            onShare={() =>
+              setActionNotice({
+                label: "Share",
+                message:
+                  "Sharing is wired when the page goes live. Nothing leaves this preview.",
+              })
+            }
             onSave={() => toggleSaved(item.id)}
-            onViewCatalogue={() => {}}
+            onViewCatalogue={() =>
+              setActionNotice({
+                label: "View catalogue",
+                message:
+                  "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
+              })
+            }
             credits={item.credits || []}
             onClose={() => setAssetDetailId(null)}
           />
         );
       })()}
+
+      <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

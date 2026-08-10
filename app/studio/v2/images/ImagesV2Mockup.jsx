@@ -20,6 +20,7 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
+import FixtureActionNotice from "../FixtureActionNotice";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -128,6 +129,10 @@ export default function ImagesV2Mockup() {
   const [lovedIds, setLovedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [overlayImage, setOverlayImage] = useState(null);
+  // R4 (10 Aug 2026 review gate): controls whose real behavior waits
+  // on live wiring open a non-persisting notice instead of doing
+  // nothing.
+  const [actionNotice, setActionNotice] = useState(null);
 
   const filterGroups = useMemo(() => {
     const pool = fixtureMode === "empty" ? [] : FIXTURE_IMAGES;
@@ -230,6 +235,7 @@ export default function ImagesV2Mockup() {
               <button
                 key={key}
                 type="button"
+                aria-pressed={fixtureMode === key}
                 onClick={() => setFixtureMode(key)}
                 className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                   fixtureMode === key
@@ -280,7 +286,13 @@ export default function ImagesV2Mockup() {
             line=""
             ctaLabel="Open the Vault"
             imageSrc={encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-8.png")}
-            onCtaClick={() => {}}
+            onCtaClick={() =>
+              setActionNotice({
+                label: "Open the Vault",
+                message:
+                  "This banner routes to the Vault when the new pages cut over. Nothing was opened in this preview.",
+              })
+            }
           />
         }
       >
@@ -341,10 +353,18 @@ export default function ImagesV2Mockup() {
           isSaved={savedIds.includes(overlayImage.id)}
           onLove={() => toggleLoved(overlayImage.id)}
           onSave={() => toggleSaved(overlayImage.id)}
-          onShare={() => {}}
+          onShare={() =>
+            setActionNotice({
+              label: "Share",
+              message:
+                "Sharing is wired when the page goes live. Nothing leaves this preview.",
+            })
+          }
           onClose={() => setOverlayImage(null)}
         />
       )}
+
+      <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

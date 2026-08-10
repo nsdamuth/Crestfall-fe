@@ -21,6 +21,10 @@ const STATES = {
   unlinkedHandle: { label: "Unlinked handle", props: kitCreditsUnlinkedHandleFixture },
   noAssetTitle: { label: "No asset title", props: kitCreditsNoAssetTitleFixture },
   longestContent: { label: "Longest content", props: kitCreditsLongestContentFixture },
+  // Review-gate find N-1 (10 Aug 2026): the eight-row fixture fed
+  // only the modal demo below; the list view itself was never
+  // previewed at that length.
+  manyCredits: { label: "Many credits (8)", props: kitCreditsManyFixture },
   empty: { label: "Empty", props: kitCreditsEmptyFixture },
 };
 

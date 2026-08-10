@@ -11,6 +11,7 @@ export function useKitDropdownViewModel({
   isMultiSelect = false,
   isDisabled = false,
   onToggleOption = null,
+  ariaLabel = null,
 } = {}) {
   return {
     label,
@@ -19,5 +20,6 @@ export function useKitDropdownViewModel({
     isMultiSelect: Boolean(isMultiSelect),
     isDisabled: Boolean(isDisabled),
     onToggleOption,
+    ariaLabel: ariaLabel || null,
   };
 }

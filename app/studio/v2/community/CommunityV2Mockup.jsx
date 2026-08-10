@@ -20,6 +20,7 @@ import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
+import FixtureActionNotice from "../FixtureActionNotice";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -128,6 +129,10 @@ export default function CommunityV2Mockup() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [overlayImage, setOverlayImage] = useState(null);
   const [assetDetailId, setAssetDetailId] = useState(null);
+  // R4 (10 Aug 2026 review gate): controls whose real behavior waits
+  // on live wiring open a non-persisting notice instead of doing
+  // nothing.
+  const [actionNotice, setActionNotice] = useState(null);
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [lovedOverlayIds, setLovedOverlayIds] = useState([]);
@@ -243,6 +248,7 @@ export default function CommunityV2Mockup() {
             <button
               key={key}
               type="button"
+              aria-pressed={fixtureMode === key}
               onClick={() => setFixtureMode(key)}
               className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
                 fixtureMode === key
@@ -296,7 +302,13 @@ export default function CommunityV2Mockup() {
           imageSrc={encodeURI(
             "/tmp-mockup-images/canon-character-images/Lilith.png"
           )}
-          onCtaClick={() => {}}
+          onCtaClick={() =>
+            setActionNotice({
+              label: "Browse creators",
+              message:
+                "This banner routes to Creators when the new pages cut over. Nothing was opened in this preview.",
+            })
+          }
         />
       }
     >
@@ -371,7 +383,13 @@ export default function CommunityV2Mockup() {
           isSaved={savedIds.includes(overlayImage.id)}
           onLove={() => toggleLovedOverlay(overlayImage.id)}
           onSave={() => toggleSaved(overlayImage.id)}
-          onShare={() => {}}
+          onShare={() =>
+            setActionNotice({
+              label: "Share",
+              message:
+                "Sharing is wired when the page goes live. Nothing leaves this preview.",
+            })
+          }
           onClose={() => setOverlayImage(null)}
         />
       )}
@@ -401,15 +419,34 @@ export default function CommunityV2Mockup() {
             isLiked={likedIds.includes(creation.id)}
             isSaved={savedIds.includes(creation.id)}
             onLike={() => toggleLiked(creation.id)}
-            onPrimaryAction={() => {}}
-            onShare={() => {}}
+            onPrimaryAction={() =>
+              setActionNotice({
+                label: "Play",
+                message: `Playing "${creation.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+              })
+            }
+            onShare={() =>
+              setActionNotice({
+                label: "Share",
+                message:
+                  "Sharing is wired when the page goes live. Nothing leaves this preview.",
+              })
+            }
             onSave={() => toggleSaved(creation.id)}
-            onViewCatalogue={() => {}}
+            onViewCatalogue={() =>
+              setActionNotice({
+                label: "View catalogue",
+                message:
+                  "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
+              })
+            }
             credits={creation.credits || []}
             onClose={() => setAssetDetailId(null)}
           />
         );
       })()}
+
+      <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
     </>
   );
 }

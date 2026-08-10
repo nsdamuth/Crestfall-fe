@@ -48,6 +48,23 @@ The chassis choice between the two is a presentation-only
 is open, replacing the prior CSS-only `hidden`/`min-[700px]:block`
 split. Inherited-by-construction change: the phone sheet now
 scroll-locks the body while open (frame law); it previously did not.
+
+R7 (10 Aug 2026, Sprint D phase 1): the frame's sheet variant now
+renders a structural close header row as its first child, so the
+close control can never overlap sheet content. This package's former
+right-padding clearance on the sheet label row
+(`pr-[calc(var(--control-md)+var(--space-3))]`) was dead once the
+band existed and was deleted in the same pass; the label row renders
+as ordinary content beneath the frame-owned band.
+
+## Accessible name (1.1.0, 10 Aug 2026 review gate)
+
+Optional `ariaLabel` prop for consumers whose visible trigger label
+carries a VALUE rather than the group name (the account draft's
+Content Preference dropdown renders the selected tier as its label).
+The trigger announces "{ariaLabel}: {label}"; the listbox and sheet
+take `ariaLabel` alone. Omitted, behavior is identical to 1.0.0
+(filter-line consumers already pass the group name as `label`).
 The popover still never locks.
 
 ## Honest stubs
