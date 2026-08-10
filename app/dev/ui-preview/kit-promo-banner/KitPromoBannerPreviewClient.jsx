@@ -58,10 +58,10 @@ export default function KitPromoBannerPreviewClient() {
               <KitPromoBannerView
                 treatment="bottom"
                 bottomVariant="uniform"
-                eyebrow="The realm runs deeper"
-                title="Meet the makers."
-                line="Follow the creators shaping the realm."
-                ctaLabel="Browse Creators"
+                eyebrow="Explore"
+                title="Follow the creators behind every world you love."
+                line=""
+                ctaLabel="Browse creators"
                 imageSrc={kitPromoBannerTopFixture.imageSrc}
                 onCtaClick={() => setLastAction("Bottom uniform CTA clicked (local preview only).")}
               />
@@ -71,10 +71,10 @@ export default function KitPromoBannerPreviewClient() {
               <KitPromoBannerView
                 treatment="bottom"
                 bottomVariant="bottom-fade"
-                eyebrow="The realm runs deeper"
-                title="Meet the makers."
-                line="Follow the creators shaping the realm."
-                ctaLabel="Browse Creators"
+                eyebrow="Explore"
+                title="Follow the creators behind every world you love."
+                line=""
+                ctaLabel="Browse creators"
                 imageSrc={kitPromoBannerTopFixture.imageSrc}
                 onCtaClick={() => setLastAction("Bottom-fade CTA clicked (local preview only).")}
               />

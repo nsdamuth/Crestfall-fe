@@ -4,10 +4,14 @@
 // treatment can carry the galaxy layer (the existing .cf-galaxy
 // recipe from app/design-system.css, reduced-motion safe), layered
 // between the art and the veil.
+// Heights reduced about 20% across every treatment, RULED 9 Aug 2026
+// (kit polish 2 pass): each aspect ratio's height term is the prior
+// term times 0.8 (4/3 -> 5/3, 21/9 -> 35/12, 16/9 -> 20/9), so the
+// banner is meaningfully shorter without an arbitrary round number.
 const TREATMENT_CONFIG = {
   top: {
     radius: "rounded-[var(--radius-lg)]",
-    aspect: "aspect-[4/3] min-[700px]:aspect-[21/9]",
+    aspect: "aspect-[5/3] min-[700px]:aspect-[35/12]",
     veil: "bg-gradient-to-t from-[var(--scrim-strong)] to-transparent",
     body: "items-start justify-end text-left",
     line: "",
@@ -16,14 +20,14 @@ const TREATMENT_CONFIG = {
     // Corners final ruling: the in-flow banner card is a STANDARD
     // surface (sits alongside siblings), never the large-radius tier.
     radius: "rounded-[var(--radius-md)]",
-    aspect: "aspect-[4/3] min-[700px]:aspect-[16/9]",
+    aspect: "aspect-[5/3] min-[700px]:aspect-[20/9]",
     veil: "bg-gradient-to-r from-[var(--scrim-strong)] to-transparent",
     body: "items-start justify-end text-left",
     line: "",
   },
   bottom: {
     radius: "rounded-[var(--radius-lg)]",
-    aspect: "aspect-[4/3] min-[700px]:aspect-[21/9]",
+    aspect: "aspect-[5/3] min-[700px]:aspect-[35/12]",
     veil: null, // resolved from bottomVariant below
     body: "items-center justify-center text-center",
     line: "mx-auto",
@@ -57,9 +61,21 @@ export default function KitPromoBannerView({
     >
       {imageSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src={imageSrc}
+          alt=""
+          loading={treatment === "bottom" ? "lazy" : "eager"}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       ) : (
-        <div className="absolute inset-0 bg-[var(--surface-2)]" aria-hidden="true" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)]"
+        >
+          <svg viewBox="0 0 64 64" className="h-10 w-10 text-[var(--ink-faint)]">
+            <use href="/assets/icons/icons-v7.svg#i-59" />
+          </svg>
+        </div>
       )}
 
       {showGalaxy && treatment === "top" && (
@@ -71,7 +87,7 @@ export default function KitPromoBannerView({
       <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${veilClass}`} />
 
       <div
-        className={`relative z-[1] flex h-full w-full flex-col p-[var(--space-6)] min-[700px]:px-[var(--space-8)] min-[700px]:py-[var(--space-8)] ${config.body}`}
+        className={`relative z-[1] flex h-full w-full flex-col p-[var(--space-5)] min-[700px]:px-[var(--space-8)] min-[700px]:py-[var(--space-6)] ${config.body}`}
       >
         {eyebrow && (
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--art-gold)]">

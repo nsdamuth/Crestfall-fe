@@ -22,13 +22,18 @@ const BANNER_IMAGE = encodeURI(
 
 const noop = () => {};
 
+// Copy rewritten 9 Aug 2026 (kit polish 2 pass): one line selling the
+// next section's unique value, one CTA, sentence case, no em dashes.
+// The reduced banner height leaves less room for a stacked
+// title-plus-description; each banner now carries its sell in the
+// title alone and drops the separate description line.
 export const kitPromoBannerTopFixture = {
   treatment: "top",
   bottomVariant: "uniform",
-  eyebrow: "Explore",
-  title: "Adventures worth committing to.",
-  line: "Discover published Adventures, or open the builder without leaving the page.",
-  ctaLabel: "Build an Adventure",
+  eyebrow: "Create",
+  title: "Build an adventure your players won't stop talking about.",
+  line: "",
+  ctaLabel: "Build an adventure",
   imageSrc: BANNER_IMAGE,
   onCtaClick: noop,
 };
@@ -37,8 +42,8 @@ export const kitPromoBannerCardFixture = {
   ...kitPromoBannerTopFixture,
   treatment: "card",
   eyebrow: "Continue",
-  title: "The First Exile",
-  line: "Character, Location, and Scenario ready. Pick up where you left off.",
+  title: "Pick up The First Exile right where you left off.",
+  line: "",
   ctaLabel: "Resume",
 };
 
@@ -46,10 +51,10 @@ export const kitPromoBannerBottomUniformFixture = {
   ...kitPromoBannerTopFixture,
   treatment: "bottom",
   bottomVariant: "uniform",
-  eyebrow: "The realm runs deeper",
-  title: "Meet the makers.",
-  line: "Follow the creators shaping the realm. New work lands from them every day.",
-  ctaLabel: "Browse Creators",
+  eyebrow: "Explore",
+  title: "Follow the creators behind every world you love.",
+  line: "",
+  ctaLabel: "Browse creators",
 };
 
 export const kitPromoBannerBottomFadeFixture = {
