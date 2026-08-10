@@ -28,8 +28,10 @@ function creatorArt(name) {
 }
 
 // Rating values use the presentation tiers (lib/shared/presentation/
-// terminology.js): EVERYONE and ADULT map to real backend values,
-// TEEN is a disabled row with no backend value yet (CR-027).
+// terminology.js): EVERYONE, TEEN, and ADULT are all live, one to one
+// against SFW/MATURE/EXPLICIT (CR-027, ruled final 9 Aug 2026). These
+// fixture ratingTier values are illustrative only, not the result of
+// the required content audit named in CR-027.
 const FIXTURE_CREATIONS = [
   { id: "c1", assetKind: "character", title: "Lilith", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Lilith"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 10880, hearts: 2210, saves: 960, recency: 18 },
   { id: "c2", assetKind: "character", title: "Elowen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Elowen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 8400, hearts: 1630, saves: 440, recency: 17 },
@@ -71,14 +73,24 @@ const FIXTURE_MODES = {
 
 const PAGE_SIZE = 8;
 
+function GeometricMark({ className = "h-8 w-8" }) {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true" className={`${className} text-[var(--ink-faint)]`}>
+      <use href="/assets/icons/icons-v7.svg#i-59" />
+    </svg>
+  );
+}
+
 function LoadingGrid() {
   return (
     <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4 min-[700px]:gap-[var(--space-4)]">
       {Array.from({ length: 8 }, (_, index) => (
         <div
           key={index}
-          className="aspect-[3/4] animate-pulse rounded-[var(--radius-md)] bg-[var(--surface-2)]"
-        />
+          className="flex aspect-[3/4] animate-pulse items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)]"
+        >
+          <GeometricMark />
+        </div>
       ))}
     </div>
   );
@@ -87,6 +99,7 @@ function LoadingGrid() {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-1)] p-[var(--space-12)] text-center">
+      <GeometricMark className="h-10 w-10" />
       <p className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
         Nothing matches
       </p>
@@ -347,10 +360,10 @@ export default function CommunityV2Mockup() {
       <KitPromoBannerView
         treatment="bottom"
         bottomVariant="uniform"
-        eyebrow="The realm runs deeper"
-        title="Meet the makers."
-        line="Follow the creators shaping the realm. New work lands from them every day."
-        ctaLabel="Browse Creators"
+        eyebrow="Explore"
+        title="Follow the creators behind every world you love."
+        line=""
+        ctaLabel="Browse creators"
         imageSrc={encodeURI(
           "/tmp-mockup-images/canon-character-images/Serapha Veyloria.png"
         )}

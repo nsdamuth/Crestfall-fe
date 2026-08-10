@@ -6,9 +6,9 @@
 //
 // Rebuilt 9 Aug 2026 on the revised kit (2.16 rulings): one-line
 // filter bar with branded dropdowns, full-bleed cards with overlay
-// actions, rating facet as a dropdown (Everyone and Adult live,
-// Teen disabled pending CR-027). The composition lives in
-// CommunityV2Mockup.jsx and is mirrored at
+// actions, rating facet as a dropdown (Everyone, Teen, and Adult all
+// live per CR-027, ruled final in the kit polish 2 pass). The
+// composition lives in CommunityV2Mockup.jsx and is mirrored at
 // /dev/ui-preview/community-v2-page for auth-free verification.
 //
 // Parity echo: not yet run. That echo is a build-order task, not
