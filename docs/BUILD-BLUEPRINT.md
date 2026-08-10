@@ -383,6 +383,47 @@ proposed tables). `--background` still has 24 references outside
 `globals.css` (measured this session); the others measured zero
 consumers outside `globals.css` itself.
 
+## 1.11 Page grid law, RULED 9 Aug 2026
+
+Three named breakpoint grids, structured after the reference research
+(fixed columns, margins, and gutters per breakpoint; phone few columns
+and tight margins, desktop 12 columns and generous margins) with every
+value mapped onto an existing or newly ratified spacing-ladder step.
+No new tokens are minted for the grid itself; the law names which
+existing step plays which role. Breakpoints match the app's own
+dominant convention already in force (700px and 1100px are the
+existing library-template and sidebar breakpoints per
+`docs/RESTYLE-RULES.md` Hub layouts and Sidebar nav), not new values.
+
+| Grid | Range | Columns | Outer margin | Gutter |
+|---|---|---|---|---|
+| `--grid-phone` | up to 699px (390 is the review width) | 4 | `--space-4` (16px) | `--space-3` (12px) |
+| `--grid-tablet` | 700 to 1099px | 8 | `--space-6` (24px) | `--space-4` (16px) |
+| `--grid-desktop` | 1100px and up (1440 is the review width) | 12 | `--space-10` (40px) | `--space-5` (20px) |
+
+Three more rhythm values, ruled once here so nothing downstream
+invents a literal:
+
+- **List-row vertical gap**: `--space-3`, matching the already-ruled
+  `.wall` content-grid gap (`docs/RESTYLE-RULES.md` Hub layouts:
+  "Content grid (`.wall`): gap: `var(--space-3)`"). Applies to every
+  vertically stacked list this session (creator card lists, list-layout
+  creation cards).
+- **Grid gutter**: the per-breakpoint gutter column above; a page's
+  content grid never hardcodes a gap value outside this table.
+- **Card internal padding**: `--space-3`, matching the base card
+  recipe already in force (`docs/RESTYLE-RULES.md` Cards: base card
+  `padding: var(--space-3)`) and this blueprint's own 2.6 grid card
+  body padding. One step for every card kind; a card that needs more
+  room nests a second padding step inside, it never overrides the
+  outer step.
+
+Applies to everything built this session (chapter 2 packages upgraded
+or added in this pass, and the `/studio/v2/community` page). Earlier
+kit batch 1 packages are not retroactively re-verified against this
+table in this pass; a package found off-ladder on a later touch is
+logged, not silently left.
+
 ---
 
 # Chapter 2: shared component kit spec
@@ -474,31 +515,53 @@ no endpoint to wire to (CSV row 17; CR-012).
 - Blocked note: shipping real search waits on CR-012 (Nick). The kit
   piece itself is buildable now under the mock-module process note.
 
-## 2.3 Bottom promo banner (`promo-banner`)
+## 2.3 Promo banner, three treatments exactly (`promo-banner`, RULED 9 Aug 2026 in full)
 
-Witness: banner taxonomy treatment (a) (RESTYLE-RULES, corrected 4 Aug
-2026): full width at page end, uniform screen `--scrim-strong`,
-copy/CTA centered both axes, `--radius-lg` (full-content-width surface,
-corners final ruling). The proof's `.endcap` in `create-hub.html` is
-the shape: art, veil, eyebrow (in `--art-gold` over artwork), display
-heading, one line, one `--lg` CTA.
+Witness: banner taxonomy (RESTYLE-RULES, corrected 4 Aug 2026) plus
+the proof's `.endcap` (bottom banner shape) and `.continuecard` (card
+shape) in `library.css`: art, veil, eyebrow (`--art-gold` over
+artwork), display heading, one line, one CTA. This section finalizes
+all three treatments together, RULED 9 Aug 2026; nothing here is a new
+value, every treatment composes tokens already locked.
 
-- Anatomy: art layer, uniform veil layer (`var(--scrim-strong)`, token
-  never literal, Ruling 7 detection law), centered body stack (eyebrow
-  with ruled mark, `--font-display` heading, `--art-ink-dim` line, one
+One package, one `treatment` prop constrained to exactly three names.
+No fourth treatment, no per-instance veil/anchor settings (banner
+taxonomy law): fade direction and copy position are fixed per
+treatment, never configurable per instance.
+
+| Treatment | Where | Veil | Copy/CTA position |
+|---|---|---|---|
+| `top` | page head (e.g. a hero) | fade from the bottom | bottom-left |
+| `card` | in-flow, mid-page (e.g. a continue card) | fade from the left | bottom-left |
+| `bottom` | full width, page end (e.g. an endcap) | uniform screen (default) or a bottom-fade variant | centered, both axes |
+
+- Anatomy, all three: art layer at `--radius-lg` (full-content-width
+  or floating, corners final ruling), body stack (eyebrow with the
+  ruled mark, `--font-display` heading, `--art-ink-dim` line, one
   primary CTA). Text over artwork uses the three `--art-*` constants
-  only. No blur (blur never on banners).
+  only. No blur, ever (blur never on banners).
+- `top` veil: `linear-gradient(to top, var(--scrim-strong), transparent)`
+  (fade from the bottom edge upward, so the page-head copy at the
+  bottom of the banner sits on the darkest part).
+- `card` veil: `linear-gradient(to right, var(--scrim-strong), transparent)`
+  (fade from the left edge rightward, so bottom-left copy sits on the
+  darkest part).
+- `bottom` veil, default sub-variant `uniform`: flat `var(--scrim-strong)`
+  across the whole surface (RESTYLE-RULES Ruling 7 detection law: the
+  token, never a literal). Second sub-variant `bottom-fade`:
+  `linear-gradient(to top, var(--scrim-strong), transparent)`, the same
+  recipe as `top` reused for a page-end surface. Both sub-variants ship
+  in fixtures for a Brian render sitting; `uniform` is the default
+  until that ruling lands, per this session's manifest.
 - States: the banner surface is REST only. The CTA carries all five
   (primary button recipe `cf-btn--primary`; PRESSED via
   `--state-pressed-gold`, RULED 9 Aug 2026 per 1.7).
-- LOOM: `PromoBanner.jsx` shell; `promo-banner/` View, contract
-  (`eyebrow`, `title`, `line`, `ctaLabel`, `imageSrc`, `onCtaClick`),
-  fixtures (default, longest copy, missing image fallback onto
-  `--surface-2`, disabled CTA), ViewModel, README, preview route.
-- The other two banner treatments (banner card, top banner) are the
-  same package with a `treatment` prop constrained to the three ruled
-  names; fade direction and copy anchor are fixed per treatment, never
-  configurable per instance (banner taxonomy).
+- LOOM: `KitPromoBanner.jsx` shell; `promo-banner/` View, contract
+  (`treatment`, `bottomVariant` for the `bottom` treatment only,
+  `eyebrow`, `title`, `line`, `ctaLabel`, `imageSrc`, `onCtaClick`),
+  fixtures (one per treatment, plus both `bottom` sub-variants, longest
+  copy, missing image fallback onto `--surface-2`, disabled CTA),
+  ViewModel, README, preview route.
 
 ## 2.4 Load-more (`load-more`)
 
@@ -550,57 +613,185 @@ in `app/design-system.css`, and the ruled ModalShell/StudioShell carve
   T12. The kit frame docks per Ruling 1; the creator adopts the frame's
   fill and blur only (Sprint 3 item 4.1) until T12 is ruled.
 
-## 2.6 Card anatomy (`creation-card` list and grid)
+## 2.6 Media card template, synthesized and RULED 9 Aug 2026
 
-Witnesses: the four card sub-species (base, art-bleed, creator, wall)
-in RESTYLE-RULES Cards; the CSV's grid/list toggle on story-rooms
-(ViewModeToggle, persisted view mode); the media tile quick actions and
-lightbox rows on image-studio and image-library.
+Second pass, superseding this section's earlier draft. Inspiration
+source: the legacy proof pass recorded in the Inspiration appendix
+(creators, images, community, and vault surfaces); nothing below is
+lifted verbatim, the structure is synthesized against the current
+token system, per this session's manifest. Witnesses carried forward:
+the four card sub-species in RESTYLE-RULES Cards, the proof's `.lcard`
+recipe (`library.css`: `aspect-ratio: 3/4`, bottom gradient scrim,
+hover lift plus a 1.04 image scale), the CSV's grid/list toggle on
+story-rooms (`ViewModeToggle`), and the live `MediaLightbox` /
+`MediaTileQuickActions` action set.
 
-- Grid card anatomy (art-bleed species): `--surface-2`, `1px --line`
-  border, `--radius-md` (grid sibling), zero padding art to the edge,
-  bottom seam fade to `--canvas`, body block (title `--text-lead`
-  display face, meta `--ink-dim`), tag row (badges 2.10, recipes keyed
-  to background: over art vs on canvas), stat row (plays, hearts,
-  saves, followers order, `--space-1` gap, `--icon-sm`, tabular-nums,
-  Ruling 4 values).
-- List card anatomy (row species): flex row on `--surface-1` or
-  `--surface-2` per context, thumbnail at `--radius-sm` (the one small
-  art exception), same title/meta/tag/stat slots, actions right.
-- Image actions, scoped strictly to functionality that exists in the
-  inventory today:
-  - image view: clicking the image opens the media lightbox
-    (`MediaLightbox`, CSV image-studio and image-library rows).
-  - zoom: RULED 9 Aug 2026, zoom means the existing Expand quick
-    action, which opens the same lightbox (CSV: "Expand: opens the
-    lightbox for that card"); nothing new. No pinch or in-lightbox
-    zoom control exists in the inventory and none is specified here,
-    since the inventory contains no other zoom functionality and card
-    anatomy is scoped to what exists; an in-lightbox zoom control would
-    be new functionality needing a CR and Nick, out of scope here.
-  - share: the lightbox Share button (navigator.share, clipboard
-    fallback, status word shown; CSV row notes it shares the page URL,
-    not a canonical image link, which stays a logged limitation, not a
-    design fix). On cards outside the lightbox, share renders only
-    where a share control already exists in the inventory, always icon
-    plus the word "Share" (Ruling 6), ghost small button.
-  - the other quick actions that exist (Like, Bookmark, Download where
-    `allowDownload`, Delete with confirm) keep their wiring; Delete
-    follows the destructive law (quiet ghost, `--status-danger` word;
-    filled danger only inside the confirm step, which must use the
-    modal frame, not `window.confirm`, a gap REDESIGN-ORDER already
-    flags on image-library).
-- States, card surface: REST (border `--line`), HOVER (wall species:
-  translateY(-2px) plus `--glow-hover`; row species: border to
-  `--state-hover-line`), FOCUS, PRESSED (`--state-pressed-fill` flash),
-  DISABLED (`--state-disabled-opacity`, non-navigable). Every quick
-  action button carries its own five states.
-- LOOM: `CreationCard.jsx` shell; `creation-card/` View with a
-  `layout` prop constrained to `grid | list`, contract (display-ready
-  fields only: title, subtitle, imageSrc, badges[], stats{}, action
-  callbacks by intent), fixtures (default, no image, longest title,
-  badge overflow, disabled, list and grid at both widths), ViewModel,
+**One base template, variants only where the asset kind demands it.**
+The base is the image-first, art-bleed grid card: `--surface-2`,
+`1px --line` border, `--radius-md` (grid sibling), art fills the card
+edge to edge at `aspect-ratio: 3/4` (an intrinsic proportion, not a
+token value, matching the already-ruled `.lcard` recipe verbatim), a
+bottom gradient scrim (`--canvas` to transparent, composing existing
+surface tokens rather than the proof's raw `rgba(6,5,4,.86)` literal,
+which is flagged, not copied, in the Inspiration appendix), title and
+meta set directly over the image on that scrim (title `--text-lead`
+display face, meta `--art-ink-dim`, since text sits on artwork here),
+tag row (badges, 2.10, `surface="art"` recipe), stat row (plays,
+hearts, saves, followers order, `--space-1` gap, `--icon-sm`,
+tabular-nums, Ruling 4 values). Hover adds a `1.04` image scale to the
+existing lift plus glow, RULED 9 Aug 2026 from the proof witness (a
+literal scale factor, not a spacing or color value, so it is not
+routed through a token, matching how the corners/elevation rulings
+already treat transform values like `translateY(-2px)`).
+
+**Where variants diverge, and only there:**
+
+- **List layout** keeps its own row composition (flex row on
+  `--surface-1`, thumbnail at `--radius-sm`, title/meta/tag/stat
+  slots beside the thumbnail rather than over it, since a small
+  thumbnail cannot carry legible over-art text). It is not the image-
+  first template shrunk down; it is the row species the CSV and
+  RESTYLE-RULES already document, now on the ruled rhythm (chapter
+  1.11): `--space-3` list-row vertical gap between rows, `--space-3`
+  internal padding.
+- **No-image fallback**: `--surface-1` placeholder fill with the word
+  "No image" in `--ink-faint`, no art-bleed, no scrim, since there is
+  no art for the scrim to sit on.
+- Everything else (badges, stats, quick actions, states) is the same
+  component reading the same props on both layouts; a difference in
+  behavior between grid and list that is not one of the two items
+  above is a bug, not a variant.
+
+**Two click destinations, RULED 9 Aug 2026.** Every card carries an
+`assetKind` (`"image" | "character" | "story" | "adventure"`). Image
+click and the Expand quick action both route to whichever destination
+`assetKind` resolves to; there is no third destination and no card
+that opens neither:
+
+- `image` assets open the **image overlay** (2.14): actions love,
+  save, share.
+- `character`, `story`, and `adventure` assets open the **asset
+  detail popup** (2.15).
+
+Both overlays are specced in full below. The image overlay ships this
+batch, interim (2.14). The asset detail popup is specced only this
+batch and stubbed as a marked placeholder destination (2.15); no
+component renders it yet.
+
+- Other quick actions unchanged from the CSV witnesses: Share is
+  always icon plus the word "Share" (Ruling 6), never icon-only. Like,
+  Bookmark, Download (where `allowDownload`) keep their wiring. Delete
+  follows the destructive law (quiet ghost, `--status-danger` word;
+  filled danger only inside a confirm step, which must use the modal
+  frame, not `window.confirm`, a gap REDESIGN-ORDER already flags on
+  image-library); the `modal-frame` kit piece is not yet built, so the
+  confirm step is an inline two-click disclosure, flagged for
+  conversion once `modal-frame` ships (unchanged from kit batch 1).
+- States, card surface: REST (border `--line`), HOVER (grid: the
+  image-scale plus lift plus glow above; list: border to
+  `--state-hover-line`), FOCUS, PRESSED (`--state-pressed-fill`
+  flash), DISABLED (`--state-disabled-opacity`, non-navigable). Every
+  quick action button carries its own five states.
+- LOOM: `KitCreationCard.jsx` shell; `creation-card/` View with a
+  `layout` prop constrained to `grid | list` and an `assetKind` prop
+  constrained to the four ruled kinds, contract (display-ready fields
+  only: title, subtitle, imageSrc, badges[], stats{}, `assetKind`,
+  action callbacks by intent including the two destination callbacks),
+  fixtures (default per asset kind, no image, longest title, Canon
+  over art, badge overflow, disabled, list and grid), ViewModel,
   README, preview route.
+
+## 2.13 Creator card (`creator-card`), RULED 9 Aug 2026
+
+New kit piece, synthesized from the proof's rich creator card
+(`creators.html` `.crt--rich`, `library.css` `.crt`/`.crtworks`):
+avatar, handle, follower/play/work stats, a strip of up to three
+recent-work thumbnails, and two actions. Adopted structure only; the
+proof's literal card layout (a flex row with the thumb strip trailing)
+is kept, its colors and sizes are re-expressed in tokens.
+
+- Anatomy: `--surface-1` bed (creator card is one step quieter than
+  the base grid card, matching the already-ruled Creator card row in
+  RESTYLE-RULES Cards), `1px --line` border, `--radius-md`, avatar
+  circle (`--space-12` diameter, `1px --line-strong` border), handle
+  (`--font-display`, `--text-lead`), stat row reusing the same
+  plays/hearts/saves/followers icon set and order as the media card
+  (Ruling 4), a strip of up to three thumbnails at `--radius-sm` (the
+  small-art exception), each independently clickable.
+- **Every thumbnail routes to the image overlay** (2.14), never the
+  asset detail popup: a creator's recent-work thumbnail is always a
+  rendered image, not a playable asset card, so it only ever needs the
+  image destination.
+- Zero, one, or three images: the strip never invents placeholder
+  frames for a creator with fewer than three works (unlike the proof's
+  `rev`/`sassy` gated-art placeholders, which are a moderation
+  concern, out of scope here); it lays out however many are given,
+  narrower than three, up to the ruled maximum of three.
+- Actions beneath the strip, per the shape law: Follow and View
+  profile are both soft-cornered rectangle buttons (`--radius-md`),
+  never pills, correcting the proof's own `.btn--sm.btn--ghost` pair
+  which the corners final ruling already governs identically (buttons
+  are never pill-shaped, full stop). Follow toggles between "Follow"
+  and "Following" states; View profile always navigates (out of scope
+  for fixtures, a no-op callback here).
+- States: card surface REST/HOVER (border lift)/FOCUS-within; each
+  thumbnail and both buttons carry their own five states.
+- LOOM: `KitCreatorCard.jsx` shell; `creator-card/` View, contract
+  (`handle`, `avatarSrc`, `stats{}`, `thumbnails[]` 0 to 3,
+  `isFollowing`, `onThumbnailOpen`, `onFollow`, `onViewProfile`),
+  fixtures (zero images, one image, three images, followed,
+  unfollowed, longest handle), ViewModel, README, preview route.
+
+## 2.14 Image overlay, interim (`image-overlay`), RULED 9 Aug 2026
+
+The destination every `image`-kind media card and every creator-card
+thumbnail opens. This batch ships a fixture-level interim; converting
+to the unified modal frame is explicitly deferred to batch 2, marked
+in both the component's own comment and its README so no later agent
+mistakes the interim for the final shape.
+
+- Anatomy: full image display, `--scrim-strong` veil behind it (no
+  `--blur-panel` yet in the interim, since that pairing belongs to the
+  modal-frame conversion), three actions along the bottom or side:
+  love (heart, toggled), save (bookmark, toggled), share (icon plus
+  the word "Share", Ruling 6). No download, no details, no report, no
+  remix in this interim; those are the live `MediaLightbox`'s
+  additional actions and are out of scope for this fixture-level piece
+  until the batch-2 conversion reconciles the two.
+- States: the veil is REST only; every action button carries its own
+  five states, love and save additionally carry an active/toggled
+  visual (matching the existing `MediaTileQuickActions` pattern).
+- LOOM: `KitImageOverlay.jsx` shell; `image-overlay/` View, contract
+  (`imageSrc`, `title`, `isLoved`, `isSaved`, `onLove`, `onSave`,
+  `onShare`, `onClose`), fixtures (default, loved, saved, longest
+  title), ViewModel, README (states plainly: "interim, converts to the
+  unified modal frame in batch 2"), preview route.
+
+## 2.15 Asset detail popup, specced only (`asset-detail-popup`), RULED 9 Aug 2026
+
+The destination every `character`, `story`, and `adventure` media card
+opens. No proof witness exists for this exact composition (the closest
+analog, `chat.html`'s Cast panel, is a docked side panel, not a
+centered popup; see the Inspiration appendix); this spec is
+synthesized against the unified modal frame (2.5) rather than lifted.
+**Not built this batch.** `KitCreationCard`'s destination callback for
+these three asset kinds is wired to a stub that renders a marked
+placeholder, never a real popup, so the contract shape exists without
+inventing UI ahead of the modal-frame conversion.
+
+- Anatomy (specced, not implemented): the unified modal frame (2.5)
+  centered at desktop, bottom-docked at phone; header with the asset's
+  art-bleed image, title, and badges (reusing 2.6's over-art title/tag
+  treatment inside the frame); body with the asset's description and
+  stat row; footer with the primary action for that asset kind (Play
+  for `character` and `story`, Continue for `adventure`) plus Share
+  and, where applicable, Save.
+- Open question this spec does not settle: whether `character` and
+  `story` share one action label ("Play") or need distinct copy; not
+  guessed here, flagged for the batch that actually builds this piece.
+- LOOM (specced, not created): `KitAssetDetailPopup.jsx` would carry
+  the same contract-first discipline as every other kit piece; no
+  files are created for it this batch.
 
 ## 2.7 Filter chips (`filter-chip`)
 
@@ -796,6 +987,9 @@ converted); the proof's one sanctioned explainer container, the
 | 2.9 | picker-modal and menu-popover | yes plus selected | same |
 | 2.10 | badge | rest only by law (labels) | same |
 | 2.11 | alert-strip | on contained actions | same |
+| 2.13 | creator-card | yes, card, thumbnails, both buttons | same |
+| 2.14 | image-overlay (interim, converts batch 2) | yes on every action | same |
+| 2.15 | asset-detail-popup | n/a, specced only, not built | none this batch |
 
 ---
 
@@ -990,4 +1184,97 @@ log is the index, not a restatement.
     2.11.
 12. Which spacing steps are added: all four proposed
     (`--space-7/9/14/24`). Folded into 1.4.
+
+---
+
+# Appendix: inspiration inventory, legacy proof pass, 9 Aug 2026
+
+Read this session, in full or by targeted section:
+`docs/_legacy-reference/design-system/proof/creators.html`,
+`community.html`, `image-studio.html`, `my-vault.html`, `browse.html`,
+`chat.html`, and the shared `library.css`/`proof.css` stylesheets they
+load. This is inspiration inventory, not law: structure is adopted
+where it clarifies a synthesis decision above, visual style and raw
+literals are never copied. Every card, banner, and overlay ruling in
+chapter 2 above already cites its specific witness; this appendix is
+the shorter, browsable catalog.
+
+## Image-first card recipes found
+
+- **`.lcard`** (`library.css`, used by `community.html` and
+  `my-vault.html`): the base image-first card. `aspect-ratio: 3/4`,
+  art fills edge to edge, bottom gradient scrim
+  (`linear-gradient(to top, rgba(6,5,4,.86) 6%, rgba(6,5,4,.16) 40%,
+  transparent 60%)`, a raw literal, **flagged, not copied**; 2.6 maps
+  this to a `--canvas`-to-transparent token composition instead),
+  title and meta over the art on the scrim, a top-left type tag, hover
+  lift plus `scale(1.04)` on the image. This is the closest existing
+  recipe to "one base media card template" and is this session's
+  primary structural source for 2.6.
+- **`.lcard.ph`** (placeholder variant): a flat `--surface-1` card
+  with a centered camera glyph for a creation with no art yet, used
+  for Lore entries in `community.html`. Source for the media card's
+  no-image fallback in 2.6.
+- **`.crt` / `.crt--rich`** (`library.css`, `creators.html`): the
+  creator card. Flex row, avatar, handle, a stat line
+  (followers, plays, work count) built from inline SVG icons and
+  `&middot;` separators, a `.crtworks` strip of up to three recent-work
+  thumbnails, Follow and View profile as `.btn--sm.btn--ghost`
+  (already pill-shaped in the proof; corners final ruling already
+  requires these to be rectangles, so 2.13 corrects this on adoption,
+  not a new finding). Primary source for 2.13.
+- **`.shot`** (`image-studio.html` `.libgrid`): a bare image tile, no
+  title, no meta, no card chrome at all, just the art with a type tag
+  for video. This is the plainest possible image-first card and
+  confirms the image kind does not need the title/meta/stat furniture
+  the character/story/adventure kinds carry, supporting 2.6's
+  "variants only where the asset kind demands it" rule.
+- **`.card`** (`browse.html`): an even leaner card family
+  (`data-type="story free"`, `"character free"`, `"asset"`), read but
+  not separately catalogued in detail since `.lcard` is the more
+  fully specified sibling already lifted into RESTYLE-RULES.
+
+## Banner treatments found
+
+- **`.continuecard`** (`library.css`): the in-flow banner card,
+  `min-height: 16rem`, `--radius-lg`, uniform `--veil-screen`
+  (`= --scrim-strong`) in the proof rather than a directional fade.
+  This session's manifest rules the `card` treatment to fade from the
+  left instead (2.3); the proof's own uniform veil on this component
+  is superseded by that ruling, not followed.
+- **`.endcap`** (`library.css`, used at the foot of `creators.html`,
+  `community.html`, `image-studio.html`): the bottom promo banner,
+  `min-height: 20rem`, `--radius-lg`, same uniform `--veil-screen`,
+  centered-reading body copy though not flex-centered in the proof's
+  own CSS (`padding` only, text reads left-aligned in the markup).
+  2.3's `bottom` treatment rules true centering, a refinement over the
+  proof, not a literal copy.
+- No literal "top banner" (hero-with-fade-from-bottom) composition was
+  found as its own named class; `studio-home.html`'s `.hero` is the
+  closest analog and was not read in full this pass (out of the named
+  file list). The `top` treatment in 2.3 is synthesized from the
+  banner taxonomy's own text plus the `endcap`/`continuecard` veil
+  mechanics, not lifted from a fourth proof file.
+
+## Both overlay patterns
+
+- **Image lightbox**: no fully-realized lightbox markup (image plus
+  love/save/share actions) exists anywhere in the static proof HTML;
+  `image-studio.html` references a "zoom preview" only in a code
+  comment, with the actual implementation left to `modal.js`/`picker.js`
+  (not present as markup in the proof tree). The real, live source for
+  this pattern is production code, not proof: `MediaLightbox` and
+  `MediaTileQuickActions` (`components/studio/media/`), already
+  surveyed in an earlier session pass. 2.14's interim overlay is
+  synthesized from that live component's Like/Bookmark/Share shape,
+  renamed to this session's ruled love/save/share vocabulary, not from
+  any proof file.
+- **Asset detail popup for chat-based assets**: no centered-popup
+  pattern exists in `chat.html` either. The closest analog is the Cast
+  panel (`#castPanel`, `.panel--cast`), a docked/sliding side panel
+  listing the narrator and cast with a "who answers next" picker, not
+  a centered detail popup for a single asset. No CSS or markup for a
+  tap-to-preview card was found. 2.15 is therefore specced fresh
+  against the unified modal frame (2.5) rather than adapted from a
+  proof witness, and is explicitly not built this batch.
 
