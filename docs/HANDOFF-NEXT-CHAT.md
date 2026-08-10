@@ -1,5 +1,45 @@
 # Handoff to next chat
 
+## Sprint A polish pass (10 Aug 2026, overnight, unattended)
+
+Ran `docs/SPRINT-A-POLISH-SONNET-BRIEF.md` against
+`docs/SPRINT-A-POLISH-PLAN.md`, all seven phases, in order, per the
+brief's own stop rules. Branch `design/kit-polish-3`, tree clean at
+session start, matched the brief's premise. Full per-phase echo, R1
+measurements, R8/R10/R11 records, and open items are in the session
+report; commit hashes below.
+
+1. **DONE.** `studio-page` kit package (R1/R2/R6), filter-bar padding
+   mirror, three page migrations off `PAGE_COLUMN`, BUILD-BLUEPRINT
+   2.16 law entries (l)(m)(n). Commit `07eb4fa`.
+2. **DONE.** Asset detail popup recomposition, contract `2.0.0`
+   (R3/R8/R9): carousel ported from the old preview modal, four-
+   action footer, description clamp, stats-placement pick logged.
+   Commit `5471deb`.
+3. **DONE.** Image overlay hairline frame, action shelf, zoom/pan
+   (R4), contract stays `1.0.0`. Commit `7ba5842`.
+4. **DONE.** Creator card labels (R5), sidebar section-label scopes
+   (R7, law entry (o)), Vault Remix filter (R10). Commit `44e8b84`.
+5. **DONE.** `credits` kit package (R11), popup contract `2.1.0`,
+   page fixture credits, CSV rows, parity-echo cross-check recorded.
+   Commit `ae3da68`.
+6. **DONE**, with one item logged as not applied. Image sizing hints
+   and CreatorsV2Mockup re-render churn fix; the eager/fetchpriority
+   above-fold sub-item was not applied (a genuine conflict between
+   "kit package APIs untouched" and needing a new per-card position
+   prop, logged rather than guessed past). Commit `88b3d87`.
+7. This entry (handoff update, final report in the session's chat
+   transcript).
+
+Contract version table this pass: `KitStudioPage` none to `1.0.0`;
+`KitAssetDetailPopup` `1.0.0` to `2.0.0` to `2.1.0`; `KitCredits` none
+to `1.0.0`; `KitImageOverlay`, `KitCreatorCard`, `KitStudioFilterBar`,
+`KitPromoBanner` unchanged.
+
+Production build was skipped throughout (dev server law); pending a
+morning check. `docs/APP-FUNCTION-MAP.md` rollup was not regenerated
+(script not in repo) for any phase's CSV edits.
+
 Written 10 Aug 2026, updated at the end of the Sprint A overnight
 pass (unattended, engine Sonnet), branch `design/kit-polish-3`. This
 section is the current state; the kit polish 3 sections below it are
