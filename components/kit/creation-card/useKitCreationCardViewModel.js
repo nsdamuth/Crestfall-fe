@@ -1,6 +1,7 @@
 const VALID_LAYOUTS = new Set(["grid", "list"]);
 const VALID_ASSET_KINDS = new Set(["image", "character", "story", "adventure"]);
 const VALID_BADGE_VARIANTS = new Set(["canon", "status", "meta"]);
+const VALID_ACTION_PLACEMENTS = new Set(["overlay-top", "scrim-row"]);
 
 function toCallback(value) {
   return typeof value === "function" ? value : null;
@@ -39,14 +40,13 @@ export function useKitCreationCardViewModel(props) {
     },
     liked: Boolean(props?.liked),
     bookmarked: Boolean(props?.bookmarked),
-    allowDownload: Boolean(props?.allowDownload),
+    actionPlacement: VALID_ACTION_PLACEMENTS.has(props?.actionPlacement)
+      ? props.actionPlacement
+      : "overlay-top",
     isDisabled: Boolean(props?.isDisabled),
     onOpenImageOverlay: toCallback(props?.onOpenImageOverlay),
     onOpenAssetDetail: toCallback(props?.onOpenAssetDetail),
-    onShare: toCallback(props?.onShare),
     onLike: toCallback(props?.onLike),
     onBookmark: toCallback(props?.onBookmark),
-    onDownload: toCallback(props?.onDownload),
-    onDelete: toCallback(props?.onDelete),
   };
 }

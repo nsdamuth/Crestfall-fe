@@ -1,28 +1,37 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "2.0.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.0.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
- * (docs/BUILD-BLUEPRINT.md section 2.6, synthesized media card
- * template, RULED 9 Aug 2026). Grid is the image-first template:
- * title, meta, and stats sit directly over the art on a bottom
- * gradient scrim. List keeps its own row composition.
+ * (docs/BUILD-BLUEPRINT.md 2.6 as amended by 2.16(a), the card law,
+ * RULED 9 Aug 2026). Full-bleed art in BOTH layouts: grid is the 3/4
+ * image-first template with title, meta, and stats on a bottom fade;
+ * list is a wide full-bleed art row with a left-anchored fade. There
+ * is no bottom action bar in any layout.
  *
- * The View receives only display-ready fields, semantic action
- * callbacks, and layout/assetKind switches. It does not receive a raw
- * creation record, resolve visibility/ownership policy, call a media
- * or reaction API, or navigate.
+ * Face actions are exactly three overlay icons: like, save, expand.
+ * Share, download, and delete belong to the destination the card
+ * opens (Ruling 6 and the destructive law both require their words,
+ * and worded controls have no home on a full-bleed face).
  *
- * Two ruled click destinations: image assets open the image overlay
- * (onOpenImageOverlay); character, story, and adventure assets open
- * the asset detail popup (onOpenAssetDetail). The image click and the
- * Expand quick action both route through the same resolved
- * destination for the card's assetKind; there is no third
- * destination.
+ * Two ruled click destinations, unchanged from v2: image assets open
+ * the image overlay (onOpenImageOverlay); character, story, and
+ * adventure assets open the asset detail popup (onOpenAssetDetail).
  *
- * Contract-breaking change from v1.0.0: onOpen split into
- * onOpenImageOverlay and onOpenAssetDetail, and assetKind added as a
- * required routing input. No consumer exists yet (kit batch 1 shipped
- * fixtures only), so this is a version bump with no live migration.
+ * actionPlacement ships BOTH credible grid-card overlay placements
+ * for Brian's pick (2.16(a)): "overlay-top" (icons top-right over
+ * the art) or "scrim-row" (icons bottom-right in the scrim band
+ * beside the title). List layout always trails its actions at the
+ * row's right edge.
+ *
+ * Tag economy (2.16(c)) is enforced by the DATA a caller passes:
+ * Canon always; visibility badges only in own-work contexts; never a
+ * badge restating an active filter selection.
+ *
+ * Contract-breaking change from v2.0.0: onShare, onDownload,
+ * onDelete, and allowDownload leave the card contract (they belong
+ * to destination surfaces); actionPlacement added. No live consumer
+ * existed (fixture pages only), so this is a version bump with the
+ * fixture pages migrated in the same commit.
  *
  * @typedef {Object} KitCreationCardBadge
  * @property {string} label
@@ -44,15 +53,12 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {KitCreationCardStats} stats
  * @property {boolean} liked
  * @property {boolean} bookmarked
- * @property {boolean} allowDownload
+ * @property {"overlay-top"|"scrim-row"} actionPlacement
  * @property {boolean} isDisabled
  * @property {(() => void)|null} onOpenImageOverlay
  * @property {(() => void)|null} onOpenAssetDetail
- * @property {(() => void)|null} onShare
  * @property {(() => void)|null} onLike
  * @property {(() => void)|null} onBookmark
- * @property {(() => void)|null} onDownload
- * @property {(() => void)|null} onDelete
  */
 
 export {};

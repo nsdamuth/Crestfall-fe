@@ -1,15 +1,14 @@
 # Kit Creation Card LOOM Package
 
-**Contract:** `KitCreationCard.contract.js` (v2.0.0)
+**Contract:** `KitCreationCard.contract.js` (v3.0.0)
 
 ## Purpose
 
-The synthesized media card template ratified in
-`docs/BUILD-BLUEPRINT.md` section 2.6 (RULED 9 Aug 2026, superseding
-the kit-batch-1 draft): one image-first grid template, with variants
-only for the list layout and the no-image fallback. Built against
-`docs/RESTYLE-RULES.md` Cards and the legacy proof's `.lcard` recipe
-(Inspiration appendix), never lifted verbatim.
+The media card template under the card law of 9 Aug 2026
+(`docs/BUILD-BLUEPRINT.md` 2.6 as amended by 2.16(a)): full-bleed art
+in BOTH layouts, no bottom action bar anywhere. The legacy proof
+never carried a face action bar (`docs/MOCKUP-DECISIONS.md`, card
+treatments); this revision removes the one the kit batch invented.
 
 ## Boundary
 
@@ -17,58 +16,60 @@ only for the list layout and the no-image fallback. Built against
 KitCreationCard.jsx
   -> useKitCreationCardViewModel.js
   -> KitCreationCard.view.jsx
-      -> KitBadge.view.jsx (tag row)
+      -> KitBadge.view.jsx (badge row, over-art recipe)
 ```
 
-- The ViewModel validates `layout`, `assetKind`, and every badge
-  variant against their constrained sets, coerces stat values to a
-  number or `null`, and defends every callback.
-- The portable View owns grid (image-first, title/meta/stats over the
-  art on a bottom scrim) vs list (row) composition, the stat-row icon
-  order (plays, hearts, saves, followers, per Ruling 4), and the
-  destructive-action law for Delete.
-- The caller owns the real creation record, media reactions, and
-  navigation; it reports every action through the semantic callbacks
-  only.
+- The ViewModel validates `layout`, `assetKind`, `actionPlacement`,
+  and badge variants against their constrained sets, coerces stats,
+  and defends every callback.
+- Grid: 3/4 full-bleed art, bottom fade composed from `--canvas`,
+  title/meta/stats over the art, badges top-left.
+- List: wide full-bleed art row (5/2 at phone, 16/5 at 700px and up),
+  left-anchored fade (the card-banner veil direction), text left,
+  actions trailing. Two-up at desktop is the consuming grid's call
+  (list density law 2.16(g)).
+- The caller owns the record, reactions, and navigation.
+
+## Face actions
+
+Exactly three overlay icons: like, save, expand. They reveal on
+hover/focus at fine pointers and stay visible at coarse pointers
+(mobile law). Share, download, and delete live inside the open
+destination: Ruling 6 and the destructive law both require their
+words, and worded controls have no home on a full-bleed face.
+
+## Brian's pick: actionPlacement
+
+Both credible grid placements ship side by side in fixtures and the
+preview: `overlay-top` (icons top-right over the art) vs `scrim-row`
+(icons bottom-right in the scrim band beside the title). Witnesses
+for each are recorded in `docs/MOCKUP-DECISIONS.md`.
 
 ## Two ruled click destinations
 
-Image click and the Expand quick action both resolve through the
-card's `assetKind`:
+Unchanged: `assetKind: "image"` calls `onOpenImageOverlay` (2.14);
+`character | story | adventure` call `onOpenAssetDetail` (2.15,
+still a marked placeholder this batch).
 
-- `assetKind: "image"` calls `onOpenImageOverlay` (2.14, `KitImageOverlay`).
-- `assetKind: "character" | "story" | "adventure"` calls
-  `onOpenAssetDetail` (2.15, specced only, not built this batch).
+## Tag economy
 
-## Deferred, flagged
-
-Delete follows the destructive law (quiet ghost, `--status-danger`
-word; a confirm step, filled red, before anything happens) but the
-confirm step here is an inline two-click disclosure
-(presentation-only local state, per the LOOM view hard rules) rather
-than the unified modal frame the law calls for. The `modal-frame` kit
-piece (section 2.5) is still not part of this batch; this card's
-confirm step is a placeholder until that package ships.
-
-The asset detail popup destination has no real component yet
-(section 2.15); `onOpenAssetDetail` is a plain callback the page wires
-to a marked placeholder this batch, never a real popup.
+Enforced by the data a caller passes (2.16(c)): Canon always;
+visibility badges only in own-work contexts (see the own-work
+fixture); never a badge restating an active filter.
 
 ## States
 
-Card surface: rest, hover (grid: 1.04 image scale plus lift and glow;
-list: border to the shared hover-line state token), focus-within,
-pressed (state-token flash), disabled (state-token opacity,
-`pointer-events-none`). Every quick action button (Like, Bookmark,
-Expand, Share, Download, Delete) carries its own five states.
+Card surface: rest, hover (1.04 image scale plus lift and glow),
+focus-within, pressed, disabled. Every overlay action carries its own
+five states plus the active toggle treatment.
 
 ## Package assets
 
 - `KitCreationCard.contract.js`
-- `KitCreationCard.fixtures.js`
+- `KitCreationCard.fixtures.js` (draft-asset art from
+  `public/tmp-mockup-images/`, gitignored interim fixtures)
 - `useKitCreationCardViewModel.js`
 - `/dev/ui-preview/kit-creation-card`
 
-The preview is fixture-only; every action only updates local preview
-state or logs to the action log, never a real reaction, save, or
-delete.
+Fixture-only; every action updates local preview state, never a real
+reaction or save.
