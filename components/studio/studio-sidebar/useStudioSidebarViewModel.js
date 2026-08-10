@@ -14,7 +14,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     label: "Play",
     items: Object.freeze([
       Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: false }),
-      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: false }),
+      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true }),
       Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: false }),
     ]),
   }),

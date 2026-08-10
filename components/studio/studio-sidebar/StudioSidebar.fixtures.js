@@ -99,7 +99,7 @@ const previewGroups = Object.freeze([
     label: "Play",
     items: Object.freeze([
       Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: false, isActive: false }),
-      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: false, isActive: false }),
+      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: false, isActive: false }),
     ]),
   }),
