@@ -105,3 +105,6 @@ launch and the restyle does not touch any of them.
 
 Where an in-progress chat appears now that Sessions is retired, and
 what it is called on screen. Not ruled.
+
+Ruled 9 Aug 2026: Characters are directly playable in chat, the same
+as Stories and Adventures.
