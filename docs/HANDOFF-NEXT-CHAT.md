@@ -1,9 +1,215 @@
 # Handoff to next chat
 
-Written 10 Aug 2026, end of the kit polish 3 pass, branch
-`design/kit-polish-3` (off `design/kit-polish-2`).
+Written 10 Aug 2026, updated at the end of the Sprint A overnight
+pass (unattended, engine Sonnet), branch `design/kit-polish-3`. This
+section is the current state; the kit polish 3 sections below it are
+prior history on the same branch, kept for lineage.
 
-## State summary
+## Sprint A pass (10 Aug 2026, overnight, unattended)
+
+Ran `docs/SPRINT-A-SONNET-BRIEF.md` against `docs/SPRINT-A-PLAN.md`,
+all six phases, in order, per the brief's own stop rules. Repo state
+verified at session start: branch `design/kit-polish-3`, tree clean,
+matched the brief's premise. Report below echoes the brief's manifest
+part by part, per its REPORT section.
+
+### Per-phase echo
+
+1. **DONE.** Modal frame kit package (`components/kit/modal-frame/`,
+   `components/kit/KitModalFrame.jsx`), preview at
+   `/dev/ui-preview/modal-frame`, all five fixtures. CSV row for the
+   close control. Commit `6fbeaf0`.
+2. **DONE.** Asset detail popup kit package
+   (`components/kit/asset-detail-popup/`,
+   `components/kit/KitAssetDetailPopup.jsx`), preview at
+   `/dev/ui-preview/kit-asset-detail-popup`, all six fixtures.
+   `CommunityV2Mockup.jsx` migrated off the `AssetDetailPlaceholder`
+   stub onto the real popup, Save wired to the existing `savedIds`
+   state. CSV rows for the popup's four controls. Commit `5ecf753`.
+3. **DONE.** Image overlay converted onto the frame, contract
+   `0.1.0-interim` to `1.0.0`. `CommunityV2Mockup.jsx` migrated off its
+   `ModalShell` wrapper to direct `<KitImageOverlay />`. Preview route
+   updated, one additive `noImage` fixture. Commit `5a521f5`.
+4. **DONE.** Dropdown sheet unification: `KitDropdown`'s under-700px
+   sheet now renders `KitModalFrame` `variant="sheet"` behind a
+   presentation-only `matchMedia` flag; the popover is byte-for-byte
+   unchanged. **A real bug was found and fixed during verification**:
+   the dropdown's own outside-pointerdown dismissal listener was not
+   scoped away from the phone chassis, so it misread every click
+   inside the portaled sheet as an outside click and closed the sheet
+   on the first multi-select toggle. Fixed by scoping that listener to
+   the popover chassis only. Verified the full behavior list in plan
+   section 5.1 at both widths. Commit `2d6ba30`.
+5. **DONE.** `/studio/v2/creators`, fixture-driven, mirror at
+   `/dev/ui-preview/creators-v2-page`. Thirteen fixture creators.
+   Flipped to `isBuilt: true` in the sidebar preview nav. Parity echo
+   below. Commit `180a404`.
+6. **DONE.** `/studio/v2/vault`, fixture-driven, mirror at
+   `/dev/ui-preview/vault-v2-page`. Eighteen fixture items, own-work
+   badge suppression verified live under an active Visibility filter.
+   Flipped to `isBuilt: true` in the sidebar preview nav. Parity echo
+   below. Commit `0de291d`.
+
+All six phases verified per the brief's VERIFY section at every
+commit: 390x844x2 mobile touch first, then 1440, every fixture state,
+zero new console errors (the one pre-existing `crestfall-seal.svg`
+preload warning only), zero new ESLint errors (the three pre-existing
+`react-hooks/static-components` errors in `StudioSidebar.view.jsx`
+untouched, confirmed unchanged), zero em dashes on every touched file.
+
+### Parity echo, Phase 5 (`/studio/v2/creators`)
+
+Every `docs/APP-FUNCTION-MAP.csv` row for `/studio/profile`,
+`/studio/profile/[username]`, and
+`/studio/profile/[username]/connections` (26 rows). The new page is a
+browse hub only; no profile-detail page is built this pass, so almost
+everything below the hub level is Flagged, the honest pre-parity
+reading.
+
+- **Present (2):** the Follow / Following toggle, twice (once cited
+  from the profile hero's engagement row, once from the connections
+  list's per-connection row): `app/studio/v2/creators/CreatorsV2Mockup.jsx`,
+  `KitCreatorCardView` `onFollow`, toggling local `followingIds`.
+- **Flagged (24), no ruling exists either way, none resolved here:**
+  `/studio/profile` Edit Soon (disabled stub); the six-tab bar
+  (disabled stubs); the featured items grid; `/studio/profile/[username]`
+  Back button; the profile hero (banner, avatar, bio, stat tiles);
+  Followers count link; Following count link; Like creator button;
+  Bookmark creator button; Donate button plus modal; the donation
+  amount input, message textarea, and anonymous checkbox; the Share
+  button; the Creations/Activity/Badges tab switch; the public
+  creation card grid and its own like/bookmark buttons; the activity
+  feed; the badges grid; the public-profile load-error banner; the
+  connections page's Back to Profile link; its Followers/Following tab
+  links; its connection card list; and its View Profile link (a
+  fixture no-op is not Present, per the parity echo law).
+
+### Parity echo, Phase 6 (`/studio/v2/vault`)
+
+Every `docs/APP-FUNCTION-MAP.csv` row for `/studio/my-creations`,
+`/studio/my-creations/[id]/edit`, and
+`/studio/my-creations/[id]/preview`. **Correction to the plan's own
+count, logged rather than silently reconciled:** those three named
+routes sum to 90 rows, not the 112 the plan cites; the remaining 22
+live under a fourth route in the same tree,
+`/studio/my-creations/[id]/image-library` (the featured-image
+picker inside editing), which the echo below includes so the total
+matches 112.
+
+**Hub, `/studio/my-creations` (15 rows), accounted one by one:**
+
+- **Present (7):** Search your creations (search input); Status/type
+  tabs (covered by the Type filter dropdown, presentation change only
+  per contract law); Creation card grid; Like (heart icon); Bookmark
+  icon; Card body / open preview (covered by Expand, opening
+  `KitImageOverlay` or `KitAssetDetailPopup`); Load more.
+- **Deliberately excluded (1):** Edit (pencil icon), citing
+  CR-007/CR-008 (the standalone edit-tree hold) and the card law
+  (`docs/BUILD-BLUEPRINT.md` 2.6: overlay actions are exactly three,
+  like/save/expand, no fourth).
+- **Flagged (7), no ruling exists either way:** Your Tags (tag filter
+  pills, no facet built); Grid/Large mobile density toggle (the new
+  view toggle switches grid vs. list at every width, not the same
+  function as the old mobile-only column-density switch); Create New;
+  the load-error banner (no real fetch exists to error); Set as
+  default Player Character; Start chat; Generate image (none of these
+  three have a ruled home on the card law's three-action overlay or on
+  the asset detail popup's footer; whether they move somewhere or drop
+  is undecided).
+
+**Edit tree, preview tree, and image-library (97 rows total:
+68 + 7 + 22), all Deliberately excluded**, citing the build-order
+partial hold (`docs/BUILD-BLUEPRINT.md` 3.1 row 3: "the standalone
+edit tree stays out of scope until CR-007/CR-008 is ruled") and
+CR-007/CR-008 by name.
+
+Total: 8 Present, 7 Flagged, 97 Deliberately excluded = 112.
+
+### OPEN FOR BRIAN
+
+The plan's original eight (`docs/SPRINT-A-PLAN.md`, OPEN FOR BRIAN
+section), none resolved, all built at the documented default:
+
+1. The lighter wash value for artwork under a tag bed (standing,
+   carried from the batch-two sweep, unchanged this pass).
+2. Asset detail primary-action copy: character and story both read
+   "Play" tonight.
+3. Love on the asset detail popup: shipped without one (2.15's footer
+   names primary, Share, and Save only).
+4. Image overlay on the frame's `--surface-4` panel instead of the
+   interim scrim-black plate: built per law, confirm at render.
+5. Creators grid columns (1/2/3): this plan's default, confirm at
+   render.
+6. Saved-from-others items in the Vault carry no visibility badge:
+   confirm, or rule a "Saved" mark instead.
+7. Fixture copy: every new page description and both new
+   bottom-banner titles/CTAs (Creators, Vault) are drafted placeholder
+   copy, yours to rewrite.
+8. Vault list two-up at 1100px and up: applied per the
+   permitted-where-whitespace-allows reading Community already ships,
+   confirm at render.
+
+New items this run surfaced, none resolved, none guessed past:
+
+9. **Creators "Most hearted" sort has no matching stat.**
+   `KitCreatorCard`'s contract carries `stats{followers, plays, works}`
+   only, no hearts field. The sort orders by `works` as the closest
+   proxy rather than inventing a hearts count. Either add a hearts
+   stat to the creator-card contract, or rule the sort should read
+   differently.
+10. **Vault's "Grid/Large mobile density toggle" has no ruled successor.**
+    The old page's mobile-only 2-col/1-col density switch and the new
+    page's grid/list view toggle are different functions; the density
+    behavior itself has no home on the new page. Confirm whether it is
+    dropped or needs its own control.
+11. **Three my-creations card actions (Set as default Player
+    Character, Start chat, Generate image) have no ruled destination.**
+    The card law caps overlay actions at three (like/save/expand) and
+    the asset detail popup's footer has no fourth slot either. Whether
+    these move into the popup, get a new home, or are dropped is
+    undecided.
+
+### Everything unverified, named as unverified
+
+- **Production build pending morning check.** Skipped deliberately
+  overnight per the brief; not run this session.
+- **Rollup not regenerated, script not in repo.** Every CSV edit this
+  pass (Phases 1, 2, 5, 6) logs this per plan section 0.3; no
+  `scripts/` directory or `package.json` entry exists to regenerate
+  `docs/APP-FUNCTION-MAP.md` from the CSV.
+- The real (auth-gated) routes `/studio/v2/creators` and
+  `/studio/v2/vault` were confirmed to compile (redirect to `/login`,
+  same as `/studio/v2/community`) but were not walked signed-in, since
+  no test account was available this session.
+- The kit-creator-card package preview's own thumbnail context does
+  not actually render `KitImageOverlay` (its `onThumbnailOpen` is a
+  local no-op), so Phase 3's "creator thumbnail context" verification
+  point was covered by the Community image card and the package
+  preview instead; noted so this isn't mistaken for a skipped check.
+
+### Assumptions made and logged, per the brief's own rule
+
+- Creators sort "Most hearted" reads by `works` count (see OPEN FOR
+  BRIAN item 9 above).
+- The modal frame's `ariaLabel` prop is implemented as a
+  visually-hidden `aria-labelledby` target rather than a raw
+  `aria-label` attribute, since the composed `ModalShellView` (not
+  touched by this package) accepts `ariaLabelledBy` only; the rendered
+  accessible name is identical.
+- CSV rows for new kit primitives with no live page host yet (the
+  modal frame's close control, Phase 1) are logged against the kit
+  package path itself rather than a page route, since every existing
+  row in the ledger is scoped to a real page route and none of this
+  sprint's primitives had one yet at the time they shipped.
+
+### Final git status
+
+Branch `design/kit-polish-3`, tree clean, six commits ahead of the
+branch's state at session start, all pushed to `origin`:
+`6fbeaf0`, `5ecf753`, `5a521f5`, `2d6ba30`, `180a404`, `0de291d`, plus
+this handoff commit.
+
+## State summary (kit polish 3, prior pass)
 
 The kit rebuild (`docs/BUILD-BLUEPRINT.md` chapter 2) is the current
 design system: full-bleed cards with a single ruled overlay-action
@@ -282,12 +488,15 @@ toggle, remixable fold) are landed; see
 regenerated to reflect this pass, next session's task if it drifts).
 
 **Nine-page build order** (`docs/BUILD-BLUEPRINT.md` section 3.1),
-Community built first because it builds the whole browse kit once:
+Community built first because it builds the whole browse kit once,
+Creators and Vault built this pass (Sprint A, see the section above):
 
 1. Community, built, pre-parity (`/studio/v2/community`)
-2. Creators, not started (no lock; reuses page 1's skeleton)
-3. Vault, not started (partial hold on the standalone edit tree,
-   CR-007/CR-008)
+2. Creators, built, pre-parity (`/studio/v2/creators`), 2 of 26 parity
+   rows Present, 24 Flagged for Brian (no profile-detail page exists)
+3. Vault, built, pre-parity (`/studio/v2/vault`), 8 of 112 parity rows
+   Present, 7 Flagged for Brian, 97 Deliberately excluded under the
+   CR-007/CR-008 partial hold on the standalone edit tree
 4. Stories, not started (no lock)
 5. Images, not started (no lock)
 6. Studio, not started (waits on Nick's CR-026 quick-create pass)
@@ -337,5 +546,5 @@ later-pass, non-blocking unless noted:
 ## Opener line for the new chat
 
 ```
-Continuing Crestfall-fe on design/kit-polish-3. Read docs/HANDOFF-NEXT-CHAT.md first, then docs/CRESTFALL-DESIGN-CONTEXT.md for current design law. One pick is waiting on you (tag-bed wash value); everything else is ready to keep moving. What's next?
+Continuing Crestfall-fe on design/kit-polish-3. Read docs/HANDOFF-NEXT-CHAT.md first (Sprint A section at the top is the current state: modal frame, asset detail popup, image overlay conversion, dropdown unification, Creators, and Vault all landed overnight). Eleven OPEN FOR BRIAN picks are waiting on render review, three of them new from this run. Production build is unverified, pending this morning's check. What's next?
 ```
