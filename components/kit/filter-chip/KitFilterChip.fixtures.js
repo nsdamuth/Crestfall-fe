@@ -29,14 +29,14 @@ export const kitFilterChipSortFixture = {
 
 export const kitFilterChipToggleIdleFixture = {
   ...kitFilterChipDefaultFixture,
-  label: "Remixable only",
+  label: "Remix",
   variant: "toggle",
   isSelected: false,
 };
 
 export const kitFilterChipToggleArmedFixture = {
   ...kitFilterChipDefaultFixture,
-  label: "Remixable only",
+  label: "Remix",
   variant: "toggle",
   isSelected: true,
 };

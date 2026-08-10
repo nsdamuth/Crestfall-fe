@@ -14,7 +14,7 @@ const defaultFilterGroups = [
       { value: "story", label: "Stories", count: 88 },
       { value: "adventure", label: "Adventures", count: 12 },
       { value: "image", label: "Images", count: 96 },
-      { value: "remixable", label: "Remixable only", count: 122 },
+      { value: "remixable", label: "Remix", count: 122 },
     ],
   },
   {

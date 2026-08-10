@@ -189,7 +189,7 @@ export default function CommunityV2Mockup() {
           })),
           {
             value: "remixable",
-            label: "Remixable only",
+            label: "Remix",
             count: pool.filter((item) => item.isRemixable).length,
           },
         ],
