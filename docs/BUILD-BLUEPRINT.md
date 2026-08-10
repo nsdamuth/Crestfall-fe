@@ -972,6 +972,109 @@ converted); the proof's one sanctioned explainer container, the
   `onAction`, `onDismiss` optional), fixtures (all four tones, with
   and without action, longest copy), ViewModel, README, preview route.
 
+## 2.16 Kit revision rulings, RULED 9 Aug 2026 (kit revision pass)
+
+Eight rulings landed after the deep extraction of every legacy
+surface (`docs/MOCKUP-DECISIONS.md` is the pattern register; every
+adopted pattern below traces to an entry there). Where a ruling
+amends an earlier section, the amendment is stated here and the
+earlier section stands amended; nothing else in chapter 2 moves.
+
+**(a) Card law, amends 2.6.** Cards are full-bleed art in BOTH grid
+and list layouts; the list layout is no longer a thumbnail row, it is
+a wide full-bleed art row (left-anchored legibility fade, the card
+veil direction, since list text reads from the left). There is no
+bottom action bar anywhere; the legacy proof never had one (register:
+card treatments). Face actions are exactly three small overlay icons:
+like, save, expand. Share, download, and delete live inside the open
+destination, because Ruling 6 (share always carries its word) and the
+destructive law (danger always carries its word) both forbid
+icon-only forms, and a worded control has no home on a full-bleed
+face. Overlay actions reveal on hover/focus at fine pointers and stay
+fully visible at coarse pointers. Two overlay placements are
+genuinely credible and both ship in fixtures side by side for Brian's
+pick (`actionPlacement`: `overlay-top` vs `scrim-row`); the register
+records the witness for each. KitCreationCard contract moves to
+v3.0.0: `onShare`, `onDownload`, `onDelete`, `allowDownload` leave
+the card contract and belong to the destination surfaces.
+
+**(b) Filter line law, amends 2.1.** Search, sort, and every filter
+share ONE sticky line. Filters and multi-selects are branded
+dropdowns (the new `dropdown` package below) opening below their
+trigger, with live selection counts on multi-select triggers and the
+gold selected value on single-select triggers (legacy trigger
+grammar, register: filter line). Loose tag rows are retired from
+filter surfaces; chips survive only as rows inside dropdown panels.
+The legacy control bar ruled this same shape ("every category is a
+dropdown on one line"); this ruling re-lands it on current tokens.
+
+**(c) Tag economy.** A card badge appears only when it informs:
+Canon always; visibility badges only in own-work contexts; never a
+badge restating an active filter selection (the legacy already ruled
+ratings off card faces, register: badges). The badge package (2.10)
+is unchanged; this governs WHEN a badge renders, enforced by the
+data each surface passes.
+
+**(d) Mobile law at 390.** Every component fully functional and
+comfortable at 390. Search takes its own full-width row inside the
+sticky filter block (ruled: a deliberate second row beats the legacy
+bar's accidental flex wrap, and an always-visible field beats a
+two-tap icon-expand for the page's highest-frequency control); the
+dropdown line scrolls horizontally without clipping. Dropdown panels
+dock to the bottom edge as sheets under 700px per the modal law
+(veil `--scrim-strong` + `--blur-panel`, top corners `--radius-lg`,
+safe-area padding); at 700px and up they are popovers below the
+trigger. Nothing overflows; no critical text truncates.
+
+**(e) Focus law.** A focused search control outlines the FULL
+control border, never the inner field: the wrapper carries
+`--focus-ring` via focus-within and the inner input suppresses the
+per-element ring. This matches the proof's own focus history
+(register: chrome, focus entry).
+
+**(f) Banner hierarchy law, amends 2.3.** One primary CTA
+emphasized per banner; the description is de-emphasized
+(`--art-ink-dim`, measure-capped) and the stack spaces on the ladder
+(`--space-2` inside the copy block, `--space-4` before the CTA,
+`--space-8`/`--space-6` body padding), no crowding. The proof's own
+hero law is adopted: one decision per banner, a primary button plus
+at most a quiet link, never two buttons. The `top` treatment gains
+an opt-in galaxy layer (`showGalaxy`), composed from the existing
+`.cf-galaxy` recipe (`--atm-constellation`, `--anim-galaxy`,
+`--anim-twinkle`, reduced-motion kill already in
+`app/design-system.css`), layered between the art and the veil.
+
+**(g) List density.** Image presence is maximized: the list row is
+full-bleed art (see a). Two-up list rows are permitted at desktop
+widths where whitespace allows; the Community page renders its list
+two-up at 1100px and up on the ruled grid (1.11).
+
+**(h) Ratings presentation.** Four display tiers: Everyone, Teen,
+Mature, Adult 18+, with film anchors in description text only. The
+mapping lives in `lib/shared/presentation/terminology.js`
+(`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as
+Mature, EXPLICIT as Adult 18+. Teen has no backend value and ships
+as an honest stub (disabled row, the word "Soon") until CR-027 lands
+the backend field; labels and tier count stay pending Brian's final
+ruling per the draft content-standards doc. The rating facet renders
+as a dropdown on every filter surface, never as loose chips and
+never as a card badge.
+
+### 2.17 Branded dropdown (`dropdown`), new package this pass
+
+The one dropdown every filter surface consumes. Anatomy per the 2.9
+menu-popover recipe (`--surface-4`, `1px --line`, `--radius-md`,
+`--shadow-popover`, `--space-2` padding, min 13rem, max 19rem
+scrolling) with the legacy trigger grammar (category label, gold
+value or count, chevron). Selected rows: `--gold-bright` text with a
+leading check (the legacy trailing check yields the trailing slot to
+counts). Disabled rows read the word "Soon". Phone: bottom-docked
+sheet per (d). Open/closed is sanctioned presentation-only local
+state; selection lives with the caller via `onToggleOption(value)`.
+LOOM: `KitDropdown.jsx` shell; `dropdown/` View, contract v1.0.0,
+fixtures (type multi, selected, rating four-tier, sort single,
+longest labels, empty, disabled), ViewModel, README, preview route.
+
 ## 2.12 Kit summary
 
 | # | Package | Five states | LOOM files |
@@ -990,6 +1093,13 @@ converted); the proof's one sanctioned explainer container, the
 | 2.13 | creator-card | yes, card, thumbnails, both buttons | same |
 | 2.14 | image-overlay (interim, converts batch 2) | yes on every action | same |
 | 2.15 | asset-detail-popup | n/a, specced only, not built | none this batch |
+| 2.17 | dropdown (kit revision pass) | yes plus selected, open, Soon rows | same |
+
+Kit revision pass (9 Aug 2026): 2.6 and 2.1 stand amended by 2.16
+(full-bleed card law, one-line filter law); 2.3 stands amended by
+2.16(f) (hierarchy and the galaxy option); the grid/list toggle
+(`components/studio/view-mode-toggle`) restyles onto the token
+system in the same pass.
 
 ---
 
@@ -1184,6 +1294,17 @@ log is the index, not a restatement.
     2.11.
 12. Which spacing steps are added: all four proposed
     (`--space-7/9/14/24`). Folded into 1.4.
+
+# Rulings log, 9 Aug 2026, kit revision pass
+
+Eight rulings (a) through (h) folded into chapter 2 section 2.16,
+with the new dropdown package specced in 2.17. Evidence base:
+`docs/MOCKUP-DECISIONS.md`, the full extraction of
+`docs/_legacy-reference/` performed the same day. Open item shipped
+for Brian's pick rather than ruled: grid-card overlay-action
+placement (`overlay-top` vs `scrim-row`), both live in fixtures.
+Ratings presentation ruled at (h); the backend four-tier field is
+CR-027, owner Nick, later pass.
 
 ---
 
