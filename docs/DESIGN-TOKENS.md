@@ -126,14 +126,20 @@ exactly one place, the confirming button inside a confirm step
 | `--tag-bed-art` | `var(--scrim-strong)` | follows referent | Tag bed over artwork, with 1px `--line` border and `--ink` text | Tags over art | Tags on canvas | locked |
 | `--tag-bed-canvas` | `var(--fill)` | follows referent | Tag bed on canvas, no border, `--gold-bright` text | Tags on surfaces | Tags over art | locked |
 | `--blur-panel` | `2px` | same | Floating panels only, paired with `--scrim-strong` | Modal/sheet/picker veils | Tile art, banners, tag beds, persistent chrome | locked |
-| `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value | Sticky top bars and other persistent (non-floating) chrome | Floating panels (use `--blur-panel`), tile art, banners, tag beds | locked |
+| `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; the image viewer veil (R2, 10 Aug 2026, Brian's ruling; the one floating surface that carries chrome frost instead of the scrim-plus-`--blur-panel` pair) | Sticky top bars and other persistent (non-floating) chrome; the image viewer veil (`KitModalFrame` `variant="viewer"`) | Other floating panels (use `--blur-panel`), tile art, banners, tag beds | locked |
 
 Scrims do not flip with the theme because the artwork under them does
 not flip. `--blur-panel` and `--blur-chrome` are separate strengths by
 role, not by preference: `--blur-panel` is always paired with
 `--scrim-strong` on a floating veil; `--blur-chrome` never pairs with a
-scrim and applies only to chrome that stays in the document flow. A
-meta tag's `blur(4px)` is a third, unrelated mechanism and is not
+scrim and applies only to chrome that stays in the document flow, with
+the one named exception of the image viewer veil (R2, 10 Aug 2026): a
+floating surface ruled to carry the chrome-frost treatment
+(`bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)]` plus
+`backdrop-blur-[var(--blur-chrome)]`, the same recipe as
+`StudioTopBar` and `KitStudioFilterBar`) instead of `--scrim-strong`
+plus `--blur-panel`. No token value changes; no new token is minted.
+A meta tag's `blur(4px)` is a third, unrelated mechanism and is not
 governed by either token.
 
 ## Over-art ink

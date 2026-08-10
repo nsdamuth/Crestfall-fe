@@ -23,19 +23,36 @@ const VARIANT_ALIGNMENT = {
     "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
 };
 
-const VARIANT_PANEL = {
+// Panel recipes are self-contained per variant (not layered on a
+// shared base): Tailwind's default-scale utilities do not reliably
+// override each other by source order (see the R4 veil-padding find,
+// phase 1), so "no chrome" for the viewer variant is built by never
+// emitting the chrome classes at all, rather than trying to zero them
+// out after the fact.
+const PANEL_RECIPE = {
   modal:
-    "h-[100dvh] max-h-[100dvh] w-full rounded-none border-0 pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border min-[700px]:pb-0",
+    "relative w-full h-[100dvh] max-h-[100dvh] overflow-y-auto bg-[var(--surface-4)] border-0 shadow-[var(--shadow-modal)] rounded-none pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:border min-[700px]:border-[var(--line)] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:pb-0",
   sheet:
-    "rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
-  // Empty shell for phase 1; filled in by the R2/R5 viewer rebuild
-  // (plan section 1.2, phase 2).
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--surface-4)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+  // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
+  // its own surface, never a panel with an image inside it. No
+  // background, border, shadow, or radius anywhere; a transparent
+  // full-viewport flex column, its only chrome the frame's close
+  // control.
   viewer:
-    "h-[100dvh] max-h-[100dvh] w-full rounded-none border-0 pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border min-[700px]:pb-0",
+    "relative flex h-[100dvh] max-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto",
 };
 
-const PANEL_BASE =
-  "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--surface-4)] border border-[var(--line)] shadow-[var(--shadow-modal)]";
+// R2 (plan 1.2): the viewer variant's veil is the sticky nav
+// chrome-frost treatment, never the scrim-plus-blur-panel pair. Modal
+// and sheet keep ModalShellView's own default (undefined here so the
+// View's default parameter applies).
+const VARIANT_VEIL = {
+  modal: undefined,
+  sheet: undefined,
+  viewer:
+    "bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)]",
+};
 
 function toCallback(value) {
   return typeof value === "function" ? value : null;
@@ -76,7 +93,8 @@ export function useKitModalFrameViewModel({
     onClose: onCloseCallback,
     variant: resolvedVariant,
     className: VARIANT_ALIGNMENT[resolvedVariant],
-    panelClassName: [PANEL_BASE, VARIANT_PANEL[resolvedVariant], panelClassName]
+    veilClassName: VARIANT_VEIL[resolvedVariant],
+    panelClassName: [PANEL_RECIPE[resolvedVariant], panelClassName]
       .filter(Boolean)
       .join(" "),
     ariaLabelledBy: hasOwnLabelledBy

@@ -15,6 +15,7 @@ export function useModalShellViewModel({
   // callers) keeps the same default gutter unless it supplies its own
   // className.
   className = "p-4",
+  veilClassName,
   panelClassName = "",
   ariaLabelledBy,
   ariaDescribedBy,
@@ -60,6 +61,7 @@ export function useModalShellViewModel({
   return {
     children,
     className,
+    veilClassName,
     panelClassName,
     ariaLabelledBy,
     ariaDescribedBy,

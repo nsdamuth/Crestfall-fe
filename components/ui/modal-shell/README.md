@@ -2,7 +2,10 @@
 
 **Status:** Loom-separated, 7 Aug 2026 (Ruling 6)
 
-**View contract:** `1.0.0`
+**View contract:** `1.1.0` (10 Aug 2026, kit polish 3 pass: additive
+`veilClassName` full-substitution prop for the veil background/blur
+treatment, default unchanged; KitModalFrame's `viewer` variant is the
+first consumer)
 
 ## Purpose
 

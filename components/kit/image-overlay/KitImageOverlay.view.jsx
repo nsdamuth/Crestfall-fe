@@ -1,23 +1,15 @@
 "use client";
 
-// Converted onto the unified modal frame (docs/BUILD-BLUEPRINT.md
-// 2.5). The frame (rendered by the KitImageOverlay shell) owns the
-// veil, panel, and close control; this view owns the figure block
-// (image viewport plus its action shelf), the title line, and zoom
-// and pan.
-//
-// Recomposed 10 Aug 2026 (kit polish 3 pass, R4,
-// docs/SPRINT-A-POLISH-PLAN.md section 3): one framed figure block
-// spans the panel's full inner width, a thin gold hairline around
-// the image viewport, and the Love/Save/Share action shelf sits
-// directly beneath the image inside the same frame instead of below
-// it as a separate row. The title moves below the figure in --ink
-// (it no longer sits on art). Zoom and pan are new, presentation-only
-// local state with no product-data effects.
+// Recomposed onto the modal frame's viewer variant (R2/R5, 10 Aug
+// 2026, kit polish 3 pass, docs/BUILD-BLUEPRINT.md 2.16 (r)). The
+// frame (rendered by the KitImageOverlay shell) owns the chrome-frost
+// veil and the close control; this view owns the shrink-wrapped
+// figure column (gold hairline hugging the image alone, never around
+// empty space) and the Love/Save/Share action shelf beneath it,
+// width-synced to the image by construction. No visible title line;
+// the accessible name travels through the frame's ariaLabel instead.
 import { useRef, useState } from "react";
 import { Bookmark, Heart, Share2 } from "lucide-react";
-
-export const KIT_IMAGE_OVERLAY_TITLE_ID = "kit-image-overlay-title";
 
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 4;
@@ -62,7 +54,11 @@ function OverlayActionButton({ label, active = false, onClick = null, children }
   );
 }
 
-function ImageViewport({ imageSrc, title, zoomDisabled }) {
+// The gold hairline frame: wraps the image ALONE (or the no-image
+// stand-in box), snapped to its rendered edges, never around empty
+// space. Also the zoom/pan viewport and pan-clamp measurement
+// container, since it clips to the same box it hugs.
+function ImageFrame({ imageSrc, title, zoomDisabled }) {
   const containerRef = useRef(null);
   const pointersRef = useRef(new Map());
   const pinchStartRef = useRef(null);
@@ -173,7 +169,7 @@ function ImageViewport({ imageSrc, title, zoomDisabled }) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       style={{ touchAction: isZoomed ? "none" : "auto" }}
-      className={`flex max-h-[65vh] min-[700px]:max-h-[70vh] w-full items-center justify-center overflow-hidden bg-[var(--canvas)] ${
+      className={`relative flex min-h-0 max-h-full min-w-0 max-w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)] ${
         isZoomed ? "cursor-grabbing" : !zoomDisabled ? "cursor-grab" : ""
       }`}
     >
@@ -181,16 +177,24 @@ function ImageViewport({ imageSrc, title, zoomDisabled }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={imageSrc}
-          alt={title}
+          alt={title || "Image"}
           draggable={false}
-          className="max-h-[65vh] min-[700px]:max-h-[70vh] w-auto select-none object-contain"
+          // The hairline shrink-wraps to whatever size the image
+          // renders at (never a bigger box with the image floating
+          // inside it, per R2); the max-height reservation under
+          // 700px accounts for the shelf's own height (control-md
+          // plus its space-3 padding and 1px top/bottom border) and
+          // the space-3 gap above it, so the image still uses the
+          // maximum remaining space per R5 without ever overflowing
+          // into, or leaving a gap in front of, the shelf.
+          className="block h-auto max-h-[calc(100dvh-var(--control-md)-var(--space-3)*3-2px)] w-auto max-w-full select-none min-[700px]:max-h-[78dvh] min-[700px]:max-w-[min(88vw,76rem)]"
           style={{
             transform: `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.scale})`,
             transition: isInteracting ? "none" : "transform 120ms var(--ease, ease-out)",
           }}
         />
       ) : (
-        <div className="flex h-[40vh] w-full flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-1)]">
+        <div className="flex aspect-[5/3] w-[min(88vw,40rem)] flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-1)]">
           <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
             <use href="/assets/icons/icons-v7.svg#i-59" />
           </svg>
@@ -211,36 +215,25 @@ export default function KitImageOverlayView({
   onShare = null,
 }) {
   return (
-    <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-6)]">
-      <div className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]">
-        <ImageViewport imageSrc={imageSrc} title={title} zoomDisabled={!imageSrc} />
+    <div className="flex h-full max-h-full w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:w-fit min-[700px]:max-h-full min-[700px]:px-0">
+      <ImageFrame imageSrc={imageSrc} title={title} zoomDisabled={!imageSrc} />
 
-        <div className="flex items-center justify-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)]">
-          <OverlayActionButton label="Love" active={isLoved} onClick={onLove}>
-            <Heart size={18} fill={isLoved ? "currentColor" : "none"} />
-          </OverlayActionButton>
-          <OverlayActionButton label="Save" active={isSaved} onClick={onSave}>
-            <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
-          </OverlayActionButton>
-          <button
-            type="button"
-            onClick={() => onShare?.()}
-            className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--gold-action)] transition-colors hover:border-[var(--gold-ornament)]"
-          >
-            <Share2 size={16} aria-hidden="true" />
-            Share
-          </button>
-        </div>
-      </div>
-
-      {title && (
-        <p
-          id={KIT_IMAGE_OVERLAY_TITLE_ID}
-          className="text-center font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]"
+      <div className="flex flex-none items-center justify-center gap-[var(--space-3)] self-stretch rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)]">
+        <OverlayActionButton label="Love" active={isLoved} onClick={onLove}>
+          <Heart size={18} fill={isLoved ? "currentColor" : "none"} />
+        </OverlayActionButton>
+        <OverlayActionButton label="Save" active={isSaved} onClick={onSave}>
+          <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
+        </OverlayActionButton>
+        <button
+          type="button"
+          onClick={() => onShare?.()}
+          className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--gold-action)] transition-colors hover:border-[var(--gold-ornament)]"
         >
-          {title}
-        </p>
-      )}
+          <Share2 size={16} aria-hidden="true" />
+          Share
+        </button>
+      </div>
     </div>
   );
 }

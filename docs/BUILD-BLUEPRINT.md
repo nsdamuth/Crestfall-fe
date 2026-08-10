@@ -774,6 +774,12 @@ is kept, its colors and sizes are re-expressed in tokens.
 
 ## 2.14 Image overlay, interim (`image-overlay`), RULED 9 Aug 2026
 
+**Superseded 10 Aug 2026 (kit polish 3 pass) by (r) above.** The
+"interim" anatomy this section describes (the modal-frame panel with
+a letterbox-bedded figure) is gone: the viewer is now its own
+chromeless surface per R2/R5. This section is kept for lineage only;
+follow (r), never this text, for current law.
+
 The destination every `image`-kind media card and every creator-card
 thumbnail opens. This batch ships a fixture-level interim; converting
 to the unified modal frame is explicitly deferred to batch 2, marked
@@ -1172,6 +1178,15 @@ every future modal inherits it.
 sort, and settings sheets, the close control sits in its own header
 row above the content, never overlapping option rows; the row is
 frame anatomy so every sheet inherits it.
+
+**(r) Image viewer law (R2, R5), RULED 10 Aug 2026.** The image
+viewer is its own surface, never a panel with an image inside it.
+Gold hairline snapped to the image's own edges, never around empty
+space. Surround is the sticky nav treatment (canvas 88 percent mix
+plus `--blur-chrome`). Action shelf snaps to the image's width. No
+creator handle on the viewer. Zoom by wheel, double-click, and pinch;
+pan by drag while zoomed; sensible ceiling; reset on close. On mobile
+the image takes the maximum available space.
 
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 

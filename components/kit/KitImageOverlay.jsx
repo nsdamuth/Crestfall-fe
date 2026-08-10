@@ -1,14 +1,13 @@
 "use client";
 
-// Converted onto the unified modal frame (docs/BUILD-BLUEPRINT.md
-// section 2.5), per docs/SPRINT-A-PLAN.md section 4. The shell owns
-// the composition of KitModalFrame (veil, panel, close control)
-// wrapping the interim view's remaining content (image, title, and
-// the love/save/share action row).
+// Recomposed onto the modal frame's viewer variant (R2/R5, 10 Aug
+// 2026, kit polish 3 pass, docs/BUILD-BLUEPRINT.md 2.16 (r)). The
+// shell owns the composition of KitModalFrame (chrome-frost veil, no
+// panel chrome, close control) wrapping the view's remaining content
+// (the hairline-framed image and its action shelf). No visible title
+// line renders on the viewer; `title` is the accessible name only.
 import KitModalFrame from "./KitModalFrame";
-import KitImageOverlayView, {
-  KIT_IMAGE_OVERLAY_TITLE_ID,
-} from "./image-overlay/KitImageOverlay.view";
+import KitImageOverlayView from "./image-overlay/KitImageOverlay.view";
 import { useKitImageOverlayViewModel } from "./image-overlay/useKitImageOverlayViewModel";
 
 export default function KitImageOverlay(props) {
@@ -16,11 +15,9 @@ export default function KitImageOverlay(props) {
 
   return (
     <KitModalFrame
-      variant="modal"
-      panelClassName="w-full max-w-[76rem]"
+      variant="viewer"
       onClose={viewProps.onClose}
-      ariaLabelledBy={viewProps.title ? KIT_IMAGE_OVERLAY_TITLE_ID : undefined}
-      ariaLabel={viewProps.title ? undefined : "Image"}
+      ariaLabel={viewProps.title || "Image"}
     >
       <KitImageOverlayView {...viewProps} />
     </KitModalFrame>

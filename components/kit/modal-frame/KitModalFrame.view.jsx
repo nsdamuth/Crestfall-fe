@@ -55,6 +55,7 @@ export default function KitModalFrameView({
   onClose = null,
   className = "",
   panelClassName = "",
+  veilClassName,
   variant = "modal",
   ariaLabelledBy,
   ariaDescribedBy,
@@ -70,6 +71,7 @@ export default function KitModalFrameView({
     <ModalShellView
       className={className}
       panelClassName={panelClassName}
+      veilClassName={veilClassName}
       ariaLabelledBy={ariaLabelledBy}
       ariaDescribedBy={ariaDescribedBy}
       onBackdropMouseDown={onBackdropMouseDown}
