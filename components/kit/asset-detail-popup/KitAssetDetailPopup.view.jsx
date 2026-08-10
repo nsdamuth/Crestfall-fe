@@ -115,7 +115,7 @@ function CollapsedCreditsBlock({ credits, LinkComponent, onOpenCreditsModal }) {
         <button
           type="button"
           onClick={() => onOpenCreditsModal?.()}
-          className="kit-focus mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+          className="kit-focus -mx-[var(--space-2)] mt-[var(--space-1)] flex min-h-[var(--control-md)] items-center px-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
         >
           View all credits ({credits.length})
         </button>
