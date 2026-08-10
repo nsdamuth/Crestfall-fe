@@ -498,6 +498,60 @@ Design intent once it exists: Community and Adventures share a data
 model where the copy-level ruling implies they should, and diverge only
 where confirmed necessary.
 
+### CR-024, rename Room Template to Story
+
+Status: OPEN, with Nick. Filed 9 Aug 2026, later-pass and non-blocking.
+
+Feature blocked: none directly; this is a naming-alignment request, not
+a broken feature. `docs/CRESTFALL-PRODUCT-MODEL.md`'s "Naming gaps owed
+by Nick" section already names this gap: the playable unit is named
+Room Template in code (`ROOM_TEMPLATE` creation type, `roomTemplateClient`,
+`useRoomTemplateBuilderViewModel`, etc.) but is a Story in the product
+model. `lib/shared/creations/creationTypePolicy.js`'s `ROOM_TEMPLATE`
+entry already presents `label: "Story"`, so the display layer is ahead
+of the backend name.
+
+Missing functionality: a renamed backend type/table/field naming (or a
+confirmed decision to keep the backend name and rely on presentation
+mapping only), landing wherever Nick judges least disruptive.
+
+Design intent once it exists: no UI change, since the display label
+already reads "Story." This CR exists to close the gap between backend
+and product-model naming, not to change anything a player sees.
+
+### CR-025, rename Storyline to Adventure
+
+Status: OPEN, with Nick. Filed 9 Aug 2026, later-pass and non-blocking.
+
+Feature blocked: none directly. `docs/CRESTFALL-PRODUCT-MODEL.md`'s
+"Naming gaps owed by Nick" section names this gap: Storyline in code
+(`STORYLINE` creation type, `components/studio/storylines/`,
+`lib/shared/storylines/storylineAuthoring.mjs`) is an Adventure in the
+product model. Unlike Room Template, the display layer has not been
+updated yet: `creationTypePolicy.js`'s `STORYLINE` entry still presents
+`label: "Storyline"`. The product model's "Retired words" section rules
+that "Storyline is retired from copy the moment the Adventure rename
+lands in code," so the copy change and the backend rename are meant to
+land together.
+
+Missing functionality: a renamed backend type/table/field naming (or a
+confirmed decision to keep the backend name and rely on presentation
+mapping only), landing wherever Nick judges least disruptive.
+
+Design intent once it exists: `creationTypePolicy.js`'s `STORYLINE.label`
+updates from "Storyline" to "Adventure" in the same change, and
+"Storyline" stops appearing anywhere in player-facing copy.
+
+Note: the Scenario category value "Adventure" (`components/studio/create/scenario/constants.js`,
+`{ value: "ADVENTURE", label: "Adventure" }`) needs no backend rename
+request of its own. As-shipped it currently renders as "Adventure,"
+which would collide with the Adventure unit name once CR-025 lands.
+Ruling 9 Aug 2026: this value displays as "Scenario," no alias, and
+that mapping now lives in the presentation terminology module
+(`lib/shared/presentation/terminology.js`) rather than in the option's
+own `label`, so the two "Adventure" surfaces do not collide. No backend
+rename is needed for this one; it is a display-mapping fix only.
+
 ## Ruled
 
 ### CR-010, top bar composes the economy widget
