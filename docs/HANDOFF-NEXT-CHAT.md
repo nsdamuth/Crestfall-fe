@@ -1,5 +1,105 @@
 # Handoff to next chat
 
+## Sprint D pass (10 Aug 2026, unattended, engine Sonnet)
+
+Ran `docs/SPRINT-D-SONNET-BRIEF.md` against `docs/SPRINT-D-PLAN.md`,
+all nine phases, in order, per the brief's own stop rules. Branch
+`design/kit-polish-3`, tree clean at session start (matched the
+brief's premise, verified against commit `724853c`), tree clean and
+pushed at session end. Full per-phase echo, R1/R4/R5/R7 measurements,
+the phase 5 sweep record, all three parity echoes, and every OPEN FOR
+BRIAN item are in the session's final chat report; commit hashes
+below.
+
+1. **DONE.** Phase 1 (W1): SOP section 8 R3 paragraph; KitModalFrame
+   1.0.0 to 1.1.0 (R4 mobile full-screen maximize on variant modal,
+   R7 structural close header row on variant sheet, empty-shell
+   `viewer` variant added); ModalShell 1.0.0 to 1.1.0 (additive
+   `veilClassName`, unused this phase); dropdown sheet clearance
+   padding removed; BUILD-BLUEPRINT.md 2.5/2.16(p)(q), product model
+   3.5 edits; CSV notes. Commit `11a25b8`.
+2. **DONE.** Phase 2 (W1): the `viewer` variant filled in (R2/R5);
+   KitImageOverlay recomposed onto it, contract stays 1.0.0; a real
+   letterbox bug (the hairline stretching past the rendered image on
+   mobile) was caught in emulated-390 verification and fixed before
+   commit; `--blur-chrome` token-law amendment; BUILD-BLUEPRINT.md
+   2.16(r), 2.14 supersession note. Commit `f7cb53c`.
+3. **DONE.** Phase 3 (W1): R1 credits collapse; new `KitCreditsModal`
+   package (KitCredits 1.0.0 to 1.1.0, additive); popup recomposed
+   (contract stays 2.1.0); Escape-layering (credits modal first, then
+   popup) verified; fixtures (adventure grows to five credits,
+   `manyCredits` eight-row fixture); CSV rows; BUILD-BLUEPRINT.md
+   2.16(s). Commit `837befe`.
+4. **DONE.** Phase 4 (W1): R6 bottom promo banner mobile aspect (5/3
+   to 1/1) and a lighter mobile CTA. Discovered mid-phase that `.cf-btn`
+   is unlayered CSS while Tailwind's own utilities live in a
+   lower-priority CSS cascade layer, so no combination of Tailwind
+   utility classes can override it regardless of class order
+   (confirmed empirically); worked around with a new sibling modifier
+   class, `cf-btn--banner-cta-compact`, in `app/design-system.css`,
+   not an edit to `.cf-btn` itself. BUILD-BLUEPRINT.md 2.3 note,
+   2.16(t). Commit `3bf0aff`.
+5. **DONE.** Phase 5 (W1 sweep, closes W1): true-390 re-verification
+   sweep via two parallel read-only audit subagents (page mirrors;
+   package previews) plus direct manual re-verification. Both audit
+   agents independently found that this session's Chrome DevTools MCP
+   `emulate` command's literal `390x844x2,mobile,touch` string clamps
+   `window.innerWidth` (and `position:fixed` sizing) to roughly
+   452px in this specific live-browser session, while
+   `document.documentElement.clientWidth` and `visualViewport.width`
+   correctly report 390; this is an environment artifact of this
+   session, not a code defect (ordinary flow content and
+   non-transformed `position:fixed` elements are bounded by the CSS
+   viewport by specification). One real finding, fixed: the "View all
+   credits (N)" control measured 113x20px with zero padding, under
+   the 44px touch floor; given a `min-h-[var(--control-md)]` flex row.
+   Two findings logged, not fixed (dev-only preview-page scaffolding,
+   not the shipped components): a preview page's own long fixture-
+   label text not wrapping at 390; a desktop-only stacking collision
+   between a preview page's own status banner and its dropdown
+   popover. Commit `03843ed`.
+6. **DONE.** Phase 6 (W2): the Images page at `/studio/v2/images`,
+   mirror, eighteen fixtures, sidebar preview flip, CSV, parity echo.
+   Commit `ddc3027`.
+7. **DONE.** Phase 7 (W3): the Stories hub at `/studio/v2/stories`,
+   mirror, sixteen fixtures (Continue group plus startable shelf),
+   sidebar preview flip, CSV, parity echo. Commit `0b6db0d`.
+8. **DONE.** Phase 8 (W4): the Account draft at `/studio/v2/account`,
+   amended by Brian's ratified A1 (Canon stat dropped from the
+   account profile) and informed by the A2 witness search (found on
+   the old crestfall-main repo's `UIUX` branch: `design-system/proof/
+   account.html` and `creator-profile.html`, design intent only, no
+   code imported). All three live-page defects fixed (title
+   collision, stat duplication, raw controls). One real finding caught
+   and fixed in verification: six of the draft's own form fields were
+   missing `name`/`id` attributes. Mirror, CSV, parity echo. Commit
+   `c046fe1`.
+9. **DONE.** Phase 9 (this entry): handoff update, Sprint B
+   supersession re-confirmed (`docs/SPRINT-B-PLAN.md` and
+   `docs/SPRINT-B-SONNET-BRIEF.md` both still carry their superseded
+   headers, untouched this pass), final report in the session's chat
+   transcript.
+
+Contract version table this pass: `KitModalFrame` `1.0.0` to `1.1.0`;
+`ModalShell` (components/ui) `1.0.0` to `1.1.0`; `KitCredits` `1.0.0`
+to `1.1.0`; `KitImageOverlay`, `KitAssetDetailPopup`, `KitPromoBanner`,
+`KitDropdown` unchanged (presentation-only recompositions).
+
+Production build was skipped throughout (dev server law); pending a
+morning check. `docs/APP-FUNCTION-MAP.md` rollup was not regenerated
+(script not in repo) for any phase's CSV edits.
+
+Every OPEN FOR BRIAN item from `docs/SPRINT-D-PLAN.md` (the standing
+ten from Sprint A, the eleven new at the 10 Aug modal-system gate)
+still stands; none were resolved this pass. See the session's final
+chat report for the full restated list plus anything new this run
+surfaced (none beyond what the plan already named).
+
+Written 10 Aug 2026, at the end of the Sprint D unattended pass
+(engine Sonnet), branch `design/kit-polish-3`. This section is the
+current state; the sections below it are prior history on the same
+branch, kept for lineage.
+
 ## Sprint A polish pass (10 Aug 2026, overnight, unattended)
 
 Ran `docs/SPRINT-A-POLISH-SONNET-BRIEF.md` against
