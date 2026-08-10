@@ -625,6 +625,20 @@ in `app/design-system.css`, and the ruled ModalShell/StudioShell carve
   modal's phone bottom-dock vs the proof's ratified centered modal is
   T12. The kit frame docks per Ruling 1; the creator adopts the frame's
   fill and blur only (Sprint 3 item 4.1) until T12 is ruled.
+- Backdrop dismissal, RULED enforced 10 Aug 2026 (kit polish 3 pass):
+  the veil-click law above was already written but not universally
+  applied. Two modal surfaces predating this frame hand-rolled their
+  own scrim divs with no backdrop or Escape handling: the Community
+  mockup's asset detail placeholder and its image overlay wrapper
+  (`CommunityV2Mockup.jsx`). Both now route through `ModalShell`
+  (`components/ui/ModalShell.jsx`), which already implements the
+  ruled behavior correctly (a `mousedown` on the veil closes only
+  when `event.target === event.currentTarget`, so a press-and-drag
+  originating inside the panel never bubbles into a false close;
+  Escape closes; scroll locks). Any future modal surface in the kit
+  is built on `ModalShell` (or the picker/sheet variants once they
+  ship) rather than a hand-rolled backdrop, so this law is inherited
+  by construction instead of re-implemented per surface.
 
 ## 2.6 Media card template, synthesized and RULED 9 Aug 2026
 

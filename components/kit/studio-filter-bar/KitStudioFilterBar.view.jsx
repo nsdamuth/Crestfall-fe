@@ -34,6 +34,25 @@
 // fourth dropdown. Same law at every width; below 700px the group
 // stays the existing horizontally scrolling control line, search
 // keeps its own full-width row above it.
+//
+// Sticky bar width, RULED 10 Aug 2026 (kit polish 3 pass): the bar
+// must span the full width of StudioShell's content column, exactly
+// as StudioTopBar does, whether the sidebar is collapsed or expanded
+// (the leftover inset was most visible collapsed, since the same
+// fixed gap reads as a much larger fraction of a narrow sidebar's
+// width). Two padding layers used to stack between this bar and the
+// true edge: StudioShell's own `<section>` padding and the consuming
+// page's own content padding, and the old negative margin here only
+// cancelled a single, non-responsive value. The consuming page
+// (CommunityV2Mockup) now carries its own padding on its inner
+// sections instead of its outer wrapper, so this bar's negative
+// margin only has one layer left to cancel: StudioShell's section,
+// matched breakpoint for breakpoint (`sm`/`lg`, StudioShell's own
+// keywords) and token for token so the two can never drift out of
+// sync silently. This bar's own inner padding is re-applied
+// separately on the app's content breakpoints (`min-[700px]`/
+// `min-[1100px]`) so its controls still align with the rest of the
+// page's content above and below it.
 import { useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
@@ -126,7 +145,7 @@ export default function KitStudioFilterBarView({
   viewModeSlot = null,
 }) {
   return (
-    <div className="sticky top-[var(--topbar-h)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)]">
+    <div className="sticky top-[var(--topbar-h)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-4)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]">
       <SearchField
         value={searchValue}
         placeholder={searchPlaceholder}

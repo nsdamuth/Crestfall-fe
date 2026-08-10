@@ -10,6 +10,7 @@
 // navigation.
 import { useMemo, useState } from "react";
 
+import ModalShell from "@/components/ui/ModalShell";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
@@ -117,29 +118,44 @@ function EmptyState() {
   );
 }
 
+// Modal dismissal, RULED 10 Aug 2026 (kit polish 3 pass,
+// docs/BUILD-BLUEPRINT.md 2.5): every modal surface closes on its own
+// close control, Escape, and a backdrop click, all three. This
+// placeholder and the image overlay below it predate the unified
+// modal frame (2.5) and hand-rolled their own scrim divs with no
+// backdrop or Escape handling; both now route through ModalShell
+// (components/ui/ModalShell.jsx), which already implements the ruled
+// behavior (backdrop click checked against event.target so a click
+// inside the panel never bubbles into a close, Escape, and the
+// existing scroll lock), rather than re-implementing it locally.
 function AssetDetailPlaceholder({ title, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
-      <div className="max-w-sm rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-6)] text-center shadow-[var(--shadow-modal)]">
-        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          Placeholder destination
-        </p>
-        <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
-          Asset detail popup for &quot;{title}&quot;
-        </h2>
-        <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-          Specced in docs/BUILD-BLUEPRINT.md section 2.15, not built
-          this batch. Share, save, and play live here when it ships.
-        </p>
-        <button
-          type="button"
-          onClick={onClose}
-          className="cf-btn cf-btn--secondary mt-[var(--space-5)]"
-        >
-          Close
-        </button>
-      </div>
-    </div>
+    <ModalShell
+      onClose={onClose}
+      ariaLabelledBy="community-asset-detail-title"
+      panelClassName="max-w-sm rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-6)] text-center shadow-[var(--shadow-modal)]"
+    >
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+        Placeholder destination
+      </p>
+      <h2
+        id="community-asset-detail-title"
+        className="mt-[var(--space-2)] font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]"
+      >
+        Asset detail popup for &quot;{title}&quot;
+      </h2>
+      <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        Specced in docs/BUILD-BLUEPRINT.md section 2.15, not built
+        this batch. Share, save, and play live here when it ships.
+      </p>
+      <button
+        type="button"
+        onClick={onClose}
+        className="cf-btn cf-btn--secondary mt-[var(--space-5)]"
+      >
+        Close
+      </button>
+    </ModalShell>
   );
 }
 
@@ -255,33 +271,53 @@ export default function CommunityV2Mockup() {
   const toggleSaved = toggleId(setSavedIds);
   const toggleLovedOverlay = toggleId(setLovedOverlayIds);
 
-  return (
-    <div className="mx-auto flex max-w-[var(--container)] flex-col gap-[var(--space-6)] px-[var(--space-4)] py-[var(--space-6)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]">
-      <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
-        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-          Fixture mode
-        </span>
-        {Object.entries(FIXTURE_MODES).map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setFixtureMode(key)}
-            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
-              fixtureMode === key
-                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
-                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+  // Page padding, RULED 10 Aug 2026 (kit polish 3 pass): every other
+  // section keeps the page's own max-w-container, centered, padded
+  // column; the sticky filter bar carries neither. A max-w wrapper
+  // centers itself with an mx-auto margin whenever the available
+  // column is wider than the cap, and that centering margin cannot
+  // be cancelled by a fixed-token negative margin the way ordinary
+  // padding can (its size depends on runtime viewport width, not a
+  // token). Nesting the bar inside the capped column was the root
+  // cause of its leftover inset (most visible with the sidebar
+  // collapsed, since collapsing frees enough width for the cap to
+  // engage at 1440 when it otherwise would not). The bar now sits
+  // outside every max-w wrapper, a full-width sibling that only has
+  // to escape StudioShell's own section padding (its negative margin
+  // below); its own inner padding keeps its controls visually
+  // aligned with the capped column around it.
+  const PAGE_COLUMN =
+    "mx-auto max-w-[var(--container)] px-[var(--space-4)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]";
 
-      <StudioPageHeaderView
-        eyebrow="Explore"
-        title="Community"
-        description="Every public creation the community has released. Discover, claim, and make it yours."
-      />
+  return (
+    <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
+      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+        <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
+          <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+            Fixture mode
+          </span>
+          {Object.entries(FIXTURE_MODES).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFixtureMode(key)}
+              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
+                fixtureMode === key
+                  ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <StudioPageHeaderView
+          eyebrow="Explore"
+          title="Community"
+          description="Every public creation the community has released. Discover, claim, and make it yours."
+        />
+      </div>
 
       <KitStudioFilterBarView
         searchValue={searchValue}
@@ -301,87 +337,91 @@ export default function CommunityV2Mockup() {
         }
       />
 
-      {fixtureMode === "loading" && <LoadingGrid />}
+      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+        {fixtureMode === "loading" && <LoadingGrid />}
 
-      {fixtureMode !== "loading" && filteredCreations.length === 0 && <EmptyState />}
+        {fixtureMode !== "loading" && filteredCreations.length === 0 && <EmptyState />}
 
-      {fixtureMode !== "loading" && filteredCreations.length > 0 && (
-        <>
-          <div
-            className={
-              layout === "grid"
-                ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
-                : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
-            }
-          >
-            {visibleCreations.map((creation) => (
-              <KitCreationCardView
-                key={creation.id}
-                layout={layout}
-                assetKind={creation.assetKind}
-                title={creation.title}
-                subtitle={creation.subtitle}
-                imageSrc={creation.imageSrc}
-                badges={
-                  // Tag economy (2.16(c)): Canon always informs; no
-                  // visibility badge in this public context; never a
-                  // badge restating an active filter.
-                  creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []
-                }
-                stats={{
-                  plays: creation.plays,
-                  hearts: creation.hearts,
-                  saves: creation.saves,
-                  followers: null,
-                }}
-                liked={likedIds.includes(creation.id)}
-                bookmarked={savedIds.includes(creation.id)}
-                onOpenImageOverlay={() =>
-                  setOverlayImage({
-                    id: creation.id,
-                    imageSrc: creation.imageSrc,
-                    title: creation.title,
-                  })
-                }
-                onOpenAssetDetail={() => setAssetDetailTitle(creation.title)}
-                onLike={() => toggleLiked(creation.id)}
-                onBookmark={() => toggleSaved(creation.id)}
-              />
-            ))}
-          </div>
+        {fixtureMode !== "loading" && filteredCreations.length > 0 && (
+          <>
+            <div
+              className={
+                layout === "grid"
+                  ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
+                  : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
+              }
+            >
+              {visibleCreations.map((creation) => (
+                <KitCreationCardView
+                  key={creation.id}
+                  layout={layout}
+                  assetKind={creation.assetKind}
+                  title={creation.title}
+                  subtitle={creation.subtitle}
+                  imageSrc={creation.imageSrc}
+                  badges={
+                    // Tag economy (2.16(c)): Canon always informs; no
+                    // visibility badge in this public context; never a
+                    // badge restating an active filter.
+                    creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []
+                  }
+                  stats={{
+                    plays: creation.plays,
+                    hearts: creation.hearts,
+                    saves: creation.saves,
+                    followers: null,
+                  }}
+                  liked={likedIds.includes(creation.id)}
+                  bookmarked={savedIds.includes(creation.id)}
+                  onOpenImageOverlay={() =>
+                    setOverlayImage({
+                      id: creation.id,
+                      imageSrc: creation.imageSrc,
+                      title: creation.title,
+                    })
+                  }
+                  onOpenAssetDetail={() => setAssetDetailTitle(creation.title)}
+                  onLike={() => toggleLiked(creation.id)}
+                  onBookmark={() => toggleSaved(creation.id)}
+                />
+              ))}
+            </div>
 
-          <KitLoadMoreView
-            isLoading={false}
-            hasMore={hasMore}
-            remainingCount={filteredCreations.length - visibleCount}
-            onLoadMore={() =>
-              setVisibleCount((count) =>
-                Math.min(count + PAGE_SIZE, filteredCreations.length)
-              )
-            }
-          />
-        </>
-      )}
-
-      <KitPromoBannerView
-        treatment="bottom"
-        bottomVariant="uniform"
-        eyebrow="Explore"
-        title="Follow the creators behind every world you love."
-        line=""
-        ctaLabel="Browse creators"
-        // Banner art, RULED 10 Aug 2026 (kit polish 3 pass): Lilith.png
-        // replaces the portrait-oriented Serapha Veyloria.png, the only
-        // genuinely wide, single-subject draft asset in the set (see
-        // KitPromoBanner.fixtures.js for the full survey and reasoning).
-        imageSrc={encodeURI(
-          "/tmp-mockup-images/canon-character-images/Lilith.png"
+            <KitLoadMoreView
+              isLoading={false}
+              hasMore={hasMore}
+              remainingCount={filteredCreations.length - visibleCount}
+              onLoadMore={() =>
+                setVisibleCount((count) =>
+                  Math.min(count + PAGE_SIZE, filteredCreations.length)
+                )
+              }
+            />
+          </>
         )}
-        onCtaClick={() => {}}
-      />
+      </div>
+
+      <div className={PAGE_COLUMN}>
+        <KitPromoBannerView
+          treatment="bottom"
+          bottomVariant="uniform"
+          eyebrow="Explore"
+          title="Follow the creators behind every world you love."
+          line=""
+          ctaLabel="Browse creators"
+          // Banner art, RULED 10 Aug 2026 (kit polish 3 pass): Lilith.png
+          // replaces the portrait-oriented Serapha Veyloria.png, the only
+          // genuinely wide, single-subject draft asset in the set (see
+          // KitPromoBanner.fixtures.js for the full survey and reasoning).
+          imageSrc={encodeURI(
+            "/tmp-mockup-images/canon-character-images/Lilith.png"
+          )}
+          onCtaClick={() => {}}
+        />
+      </div>
 
       {overlayImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
+        <ModalShell onClose={() => setOverlayImage(null)}>
           <KitImageOverlayView
             imageSrc={overlayImage.imageSrc}
             title={overlayImage.title}
@@ -392,7 +432,7 @@ export default function CommunityV2Mockup() {
             onShare={() => {}}
             onClose={() => setOverlayImage(null)}
           />
-        </div>
+        </ModalShell>
       )}
 
       {assetDetailTitle && (
