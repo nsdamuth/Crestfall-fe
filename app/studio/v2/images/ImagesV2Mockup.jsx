@@ -4,12 +4,15 @@
 // Rendered by /studio/v2/images (pre-parity staging address) and
 // mirrored at /dev/ui-preview/images-v2-page. Per docs/SPRINT-D-PLAN.md
 // section 2 (absorbs and supersedes SPRINT-B-PLAN, updated to inherit
-// R1 through R7 of the 10 Aug 2026 modal-system gate): the LIBRARY
-// BROWSE HUB fixture-first, same shape as Community, Creators, and
-// Vault. The composer surface (prompt bar, batch controls, ingredient
-// picker) has no ruling assigning it a home here; no composer stub is
-// invented, its CSV rows land Flagged. No live data, no API calls, no
-// real navigation.
+// R1 through R7 of the 10 Aug 2026 modal-system gate) and
+// docs/SPRINT-E-PLAN.md section 1.4 (R6, the creator panel): the
+// LIBRARY BROWSE HUB, fixture-first, same shape as Community,
+// Creators, and Vault, now composed with the image creator panel
+// (1.1 through 1.3). Desktop 1100px and up: sticky right rail beside
+// the grid, inside the page column (content width law, R1). Under
+// 1100px: sticky bottom-right create CTA opening the panel as a
+// full-screen modal (R4). No live data, no API calls, no real
+// navigation; generation and persistence stay honest R4 stubs.
 import { useMemo, useState } from "react";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
@@ -19,8 +22,26 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
+import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
+import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
+import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
+import {
+  RENDER_STYLE_OPTIONS,
+  CAMERA_OPTIONS,
+  WARDROBE_THEME_OPTIONS,
+  ASPECT_RATIO_OPTIONS,
+  OUTPUT_COUNT_OPTIONS,
+  VIDEO_DURATION_OPTIONS,
+  VIDEO_ASPECT_OPTIONS,
+  VIDEO_MOTION_STYLE_OPTIONS,
+  NO_SOURCE_HELP_TEXT,
+  NO_CLOTHING_HELP_TEXT,
+  CUSTOM_SUBJECT_HELP_TEXT,
+  insufficientCoinsHelpText,
+} from "@/components/kit/image-creator-panel/KitImageCreatorPanel.fixtures";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -81,6 +102,57 @@ const FIXTURE_MODES = {
 };
 
 const PAGE_SIZE = 12;
+const COIN_COST = 5;
+
+// Creator panel fixed anatomy (docs/SPRINT-E-PLAN.md section 1.1):
+// slot labels and which slots are savable, mirroring
+// components/studio/image-studio/imageStudioData.js verbatim.
+const SLOT_LABELS = {
+  character: "Character",
+  playerCharacter: "Player Character",
+  pose: "Pose",
+  outfit: "Clothing Source",
+  location: "Location / Scene",
+  preset: "Rendering Preset",
+};
+const SAVABLE_SLOTS = ["pose", "outfit", "location", "preset"];
+const EMPTY_SLOT = { selection: null, isCustomMode: false, customText: "" };
+
+// Small per-slot ingredient pools for the picker (fixture-only, this
+// page's own set, distinct from the kit package's own preview
+// fixtures).
+const ITEM_POOLS = {
+  character: [
+    { id: "char-1", title: "Vesper Ash", subtitle: "Character", imageSrc: creatorArt("vermillion-8") },
+    { id: "char-2", title: "Kaela Veynskald", subtitle: "Character", imageSrc: canonArt("Kaela Veynskald") },
+    { id: "char-3", title: "Elowen", subtitle: "Character", imageSrc: canonArt("Elowen") },
+  ],
+  playerCharacter: [
+    { id: "pc-1", title: "Mara Veyne", subtitle: "Player Character", imageSrc: creatorArt("vermillion-2") },
+    { id: "pc-2", title: "Silas Thorn", subtitle: "Player Character", imageSrc: creatorArt("vermillion-4") },
+  ],
+  pose: [
+    { id: "pose-1", title: "Half-Turn, Cloak Drawn Back", subtitle: "Pose", imageSrc: creatorArt("vermillion-6") },
+    { id: "pose-2", title: "Seated, Hands Folded", subtitle: "Pose", imageSrc: creatorArt("vermillion-9") },
+  ],
+  outfit: [
+    { id: "outfit-1", title: "Dockside Coat, Weathered", subtitle: "Clothing Source", imageSrc: creatorArt("vermillion-3") },
+    { id: "outfit-2", title: "Formal Vermillion Coat", subtitle: "Clothing Source", imageSrc: creatorArt("vermillion-10") },
+  ],
+  location: [
+    { id: "location-1", title: "Harborfront at Dusk", subtitle: "Location / Scene", imageSrc: creatorArt("vermillion-11") },
+    { id: "location-2", title: "The Coldwater Vigil Interior", subtitle: "Location / Scene", imageSrc: creatorArt("vermillion-12") },
+  ],
+  preset: [
+    { id: "preset-1", title: "Crestfall Realistic, High Detail", subtitle: "Rendering Preset", imageSrc: null },
+    { id: "preset-2", title: "Crestfall Fantasy, Soft Light", subtitle: "Rendering Preset", imageSrc: null },
+  ],
+};
+
+const SAVE_PRESET_INTRO_TEXT =
+  "Save this custom guidance as a private reusable draft. You can return to it later from My Creations or select it again from the Image Studio picker.";
+const SAVE_PRESET_HELPER_TEXT =
+  "Saving creates a private SFW draft and selects it for the current Image Studio request. Using it once does not create a saved asset.";
 
 function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }) {
   return (
@@ -92,7 +164,7 @@ function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }
 
 function LoadingGrid() {
   return (
-    <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4 min-[700px]:gap-[var(--space-4)]">
+    <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-3 min-[700px]:gap-[var(--space-4)]">
       {Array.from({ length: 12 }, (_, index) => (
         <div
           key={index}
@@ -119,6 +191,40 @@ function EmptyState() {
   );
 }
 
+// Live block-reason grammar, mirrored from
+// getImageGenerationAvailability (useImageStudioWorkbenchViewModel.js,
+// READ ONLY reference): insufficient coins beats no-renderable-source
+// beats the non-blocking no-clothing help line.
+function computeAvailability(slots, coinBalance) {
+  const hasSource = (slot) => Boolean(slot?.selection) || Boolean(slot?.isCustomMode && slot.customText.trim());
+  const hasCustomSubject = (slot) => Boolean(slot?.isCustomMode && slot.customText.trim());
+
+  const hasVisualSubject = hasSource(slots.character) || hasSource(slots.playerCharacter);
+  const hasCustomVisualSubject = hasCustomSubject(slots.character) || hasCustomSubject(slots.playerCharacter);
+  const hasOutfitSource = hasSource(slots.outfit);
+  const hasRenderableSource = hasVisualSubject || hasOutfitSource || hasSource(slots.location);
+  const hasEnoughCoins = coinBalance >= COIN_COST;
+
+  const blockReason = !hasEnoughCoins
+    ? insufficientCoinsHelpText(String(COIN_COST))
+    : !hasRenderableSource
+      ? NO_SOURCE_HELP_TEXT
+      : "";
+
+  const helpText =
+    !blockReason && hasVisualSubject && !hasOutfitSource
+      ? hasCustomVisualSubject
+        ? CUSTOM_SUBJECT_HELP_TEXT
+        : NO_CLOTHING_HELP_TEXT
+      : blockReason;
+
+  return {
+    canGenerate: !blockReason,
+    showInsufficientCoins: !hasEnoughCoins,
+    generationHelpText: helpText,
+  };
+}
+
 export default function ImagesV2Mockup() {
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -133,6 +239,35 @@ export default function ImagesV2Mockup() {
   // on live wiring open a non-persisting notice instead of doing
   // nothing.
   const [actionNotice, setActionNotice] = useState(null);
+
+  // Creator panel state (R6, docs/SPRINT-E-PLAN.md section 1.4).
+  const [panelMode, setPanelMode] = useState("IMAGE");
+  const [slots, setSlots] = useState({
+    character: { selection: { id: "char-1", title: "Vesper Ash", subtitle: "Character" }, isCustomMode: false, customText: "" },
+  });
+  const [promptValue, setPromptValue] = useState("A quiet moment before the storm breaks over the harbor.");
+  const [negativePromptValue, setNegativePromptValue] = useState("");
+  const [optionValues, setOptionValues] = useState({
+    renderStyle: "auto",
+    camera: "AUTO",
+    wardrobe: "AUTO",
+    aspectRatio: "PORTRAIT_4_5",
+    outputCount: "1",
+  });
+  const [videoOptionValues, setVideoOptionValues] = useState({
+    duration: "4",
+    videoAspect: "PORTRAIT",
+    motionStyle: "SUBTLE",
+  });
+  const [videoDirectionValue, setVideoDirectionValue] = useState("");
+  const [coinBalance] = useState(40);
+  const [isMobileCreatorOpen, setIsMobileCreatorOpen] = useState(false);
+
+  // Ingredient picker and save-preset modal state.
+  const [activePickerSlotId, setActivePickerSlotId] = useState(null);
+  const [pickerSearchValue, setPickerSearchValue] = useState("");
+  const [savePresetSlotId, setSavePresetSlotId] = useState(null);
+  const [savePresetForm, setSavePresetForm] = useState({ name: "", description: "", prompt: "", tags: "" });
 
   const filterGroups = useMemo(() => {
     const pool = fixtureMode === "empty" ? [] : FIXTURE_IMAGES;
@@ -223,6 +358,116 @@ export default function ImagesV2Mockup() {
     return item.linkedAsset ? `Image, linked to ${item.linkedAsset.label}` : "Image";
   }
 
+  // Character and Player Character are mutually exclusive (live
+  // rule): picking or customizing one clears the other.
+  function applySlotChange(slotId, nextSlotState) {
+    setSlots((current) => {
+      const next = { ...current, [slotId]: nextSlotState };
+      if (slotId === "character") next.playerCharacter = EMPTY_SLOT;
+      if (slotId === "playerCharacter") next.character = EMPTY_SLOT;
+      return next;
+    });
+  }
+
+  function handleSlotActivate(slotId) {
+    setPickerSearchValue("");
+    setActivePickerSlotId(slotId);
+  }
+
+  function handleSlotClear(slotId) {
+    setSlots((current) => ({ ...current, [slotId]: EMPTY_SLOT }));
+  }
+
+  function handleCustomChangeText(slotId, text) {
+    setSlots((current) => ({ ...current, [slotId]: { ...current[slotId], customText: text } }));
+  }
+
+  function handleCustomBackToPresets(slotId) {
+    setPickerSearchValue("");
+    setActivePickerSlotId(slotId);
+  }
+
+  function openSavePreset(slotId, initialPrompt = "") {
+    setSavePresetSlotId(slotId);
+    setSavePresetForm({ name: "", description: "", prompt: initialPrompt, tags: "" });
+  }
+
+  function handleCustomSavePreset(slotId) {
+    openSavePreset(slotId, slots[slotId]?.customText || "");
+  }
+
+  function handlePickerChooseIngredient(itemId) {
+    const pool = ITEM_POOLS[activePickerSlotId] || [];
+    const item = pool.find((entry) => entry.id === itemId);
+    if (item) applySlotChange(activePickerSlotId, { selection: item, isCustomMode: false, customText: "" });
+    setActivePickerSlotId(null);
+  }
+
+  function handlePickerUseCustom() {
+    applySlotChange(activePickerSlotId, { selection: null, isCustomMode: true, customText: "" });
+    setActivePickerSlotId(null);
+  }
+
+  function handlePickerCreatePreset() {
+    const slotId = activePickerSlotId;
+    applySlotChange(slotId, { selection: null, isCustomMode: true, customText: "" });
+    setActivePickerSlotId(null);
+    openSavePreset(slotId);
+  }
+
+  const activePickerPool = activePickerSlotId ? ITEM_POOLS[activePickerSlotId] || [] : [];
+  const pickerItems = activePickerPool
+    .filter((item) => item.title.toLowerCase().includes(pickerSearchValue.trim().toLowerCase()))
+    .map((item) => ({ ...item, isSelected: item.id === slots[activePickerSlotId]?.selection?.id }));
+
+  const savePresetCanSave = savePresetForm.name.trim().length > 0 && savePresetForm.prompt.trim().length > 0;
+
+  const optionFields = [
+    { id: "renderStyle", label: "Render Style", value: optionValues.renderStyle, options: RENDER_STYLE_OPTIONS },
+    { id: "camera", label: "Camera / Framing", value: optionValues.camera, options: CAMERA_OPTIONS },
+    { id: "wardrobe", label: "Wardrobe Theme", value: optionValues.wardrobe, options: WARDROBE_THEME_OPTIONS },
+    { id: "aspectRatio", label: "Aspect Ratio", value: optionValues.aspectRatio, options: ASPECT_RATIO_OPTIONS },
+    { id: "outputCount", label: "Output Count", value: optionValues.outputCount, options: OUTPUT_COUNT_OPTIONS },
+  ];
+  const videoOptionFields = [
+    { id: "duration", label: "Duration", value: videoOptionValues.duration, options: VIDEO_DURATION_OPTIONS },
+    { id: "videoAspect", label: "Video Aspect", value: videoOptionValues.videoAspect, options: VIDEO_ASPECT_OPTIONS },
+    { id: "motionStyle", label: "Motion Style", value: videoOptionValues.motionStyle, options: VIDEO_MOTION_STYLE_OPTIONS },
+  ];
+
+  const availability = computeAvailability(slots, coinBalance);
+
+  const panelProps = {
+    mode: panelMode,
+    onChangeMode: setPanelMode,
+    slots,
+    onSlotActivate: handleSlotActivate,
+    onSlotClear: handleSlotClear,
+    onCustomChangeText: handleCustomChangeText,
+    onCustomBackToPresets: handleCustomBackToPresets,
+    onCustomSavePreset: handleCustomSavePreset,
+    promptValue,
+    onChangePrompt: setPromptValue,
+    negativePromptValue,
+    onChangeNegativePrompt: setNegativePromptValue,
+    optionFields,
+    onChangeOption: (fieldId, value) => setOptionValues((current) => ({ ...current, [fieldId]: value })),
+    coinBalanceLabel: String(coinBalance),
+    coinCostLabel: String(COIN_COST),
+    showInsufficientCoins: availability.showInsufficientCoins,
+    canGenerate: availability.canGenerate,
+    generationHelpText: availability.generationHelpText,
+    onGenerate: () =>
+      setActionNotice({
+        label: "Generate image",
+        message: "Generation is wired when the page goes live. Nothing was generated in this preview.",
+      }),
+    videoOptionFields,
+    onChangeVideoOption: (fieldId, value) => setVideoOptionValues((current) => ({ ...current, [fieldId]: value })),
+    videoDirectionValue,
+    onChangeVideoDirection: setVideoDirectionValue,
+  };
+
   return (
     <>
       <KitStudioPageView
@@ -296,54 +541,142 @@ export default function ImagesV2Mockup() {
           />
         }
       >
-        {fixtureMode === "loading" && <LoadingGrid />}
+        {/* Desktop 1100px and up: sticky right rail beside the grid,
+            inside the content width (R1). Under 1100px: no rail, the
+            create CTA below opens the panel as a modal instead
+            (docs/SPRINT-E-PLAN.md section 1.4). */}
+        <div className="flex items-start gap-[var(--space-6)]">
+          <div className="flex min-w-0 flex-1 flex-col gap-[var(--space-6)]">
+            {fixtureMode === "loading" && <LoadingGrid />}
 
-        {fixtureMode !== "loading" && filteredItems.length === 0 && <EmptyState />}
+            {fixtureMode !== "loading" && filteredItems.length === 0 && <EmptyState />}
 
-        {fixtureMode !== "loading" && filteredItems.length > 0 && (
-          <>
-            <div
-              className={
-                layout === "grid"
-                  ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
-                  : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
-              }
-            >
-              {visibleItems.map((item) => (
-                <KitCreationCardView
-                  key={item.id}
-                  layout={layout}
-                  assetKind="image"
-                  title={item.title}
-                  subtitle={subtitleFor(item)}
-                  imageSrc={item.imageSrc}
-                  badges={[]}
-                  stats={{ plays: null, hearts: item.hearts, saves: item.saves, followers: null }}
-                  liked={lovedIds.includes(item.id)}
-                  bookmarked={savedIds.includes(item.id)}
-                  onOpenImageOverlay={() =>
-                    setOverlayImage({ id: item.id, imageSrc: item.imageSrc, title: item.title })
+            {fixtureMode !== "loading" && filteredItems.length > 0 && (
+              <>
+                <div
+                  className={
+                    layout === "grid"
+                      ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-3"
+                      : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
                   }
-                  onOpenAssetDetail={() =>
-                    setOverlayImage({ id: item.id, imageSrc: item.imageSrc, title: item.title })
+                >
+                  {visibleItems.map((item) => (
+                    <KitCreationCardView
+                      key={item.id}
+                      layout={layout}
+                      assetKind="image"
+                      title={item.title}
+                      subtitle={subtitleFor(item)}
+                      imageSrc={item.imageSrc}
+                      badges={[]}
+                      stats={{ plays: null, hearts: item.hearts, saves: item.saves, followers: null }}
+                      liked={lovedIds.includes(item.id)}
+                      bookmarked={savedIds.includes(item.id)}
+                      onOpenImageOverlay={() =>
+                        setOverlayImage({ id: item.id, imageSrc: item.imageSrc, title: item.title })
+                      }
+                      onOpenAssetDetail={() =>
+                        setOverlayImage({ id: item.id, imageSrc: item.imageSrc, title: item.title })
+                      }
+                      onLike={() => toggleLoved(item.id)}
+                      onBookmark={() => toggleSaved(item.id)}
+                    />
+                  ))}
+                </div>
+
+                <KitLoadMoreView
+                  isLoading={false}
+                  hasMore={hasMore}
+                  remainingCount={filteredItems.length - visibleCount}
+                  onLoadMore={() =>
+                    setVisibleCount((count) => Math.min(count + PAGE_SIZE, filteredItems.length))
                   }
-                  onLike={() => toggleLoved(item.id)}
-                  onBookmark={() => toggleSaved(item.id)}
                 />
-              ))}
-            </div>
+              </>
+            )}
+          </div>
 
-            <KitLoadMoreView
-              isLoading={false}
-              hasMore={hasMore}
-              remainingCount={filteredItems.length - visibleCount}
-              onLoadMore={() =>
-                setVisibleCount((count) => Math.min(count + PAGE_SIZE, filteredItems.length))
-              }
-            />
-          </>
-        )}
+          <aside
+            className="sticky hidden w-[24rem] flex-none overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] min-[1100px]:block"
+            style={{
+              top: "calc(var(--topbar-h) + var(--control-filter) + var(--space-3) * 2 + var(--space-4))",
+              maxHeight:
+                "calc(100dvh - var(--topbar-h) - var(--control-filter) - var(--space-3) * 2 - var(--space-4) * 2)",
+            }}
+          >
+            <KitImageCreatorPanel {...panelProps} />
+          </aside>
+        </div>
       </KitStudioPageView>
+
+      {/* Mobile and tablet (under 1100px): sticky create CTA opening
+          the panel as a full-screen modal at 390, centered 700 to
+          1099 (R4). */}
+      <button
+        type="button"
+        onClick={() => setIsMobileCreatorOpen(true)}
+        className="kit-focus fixed bottom-[calc(var(--space-4)+env(safe-area-inset-bottom))] right-[var(--space-4)] z-30 cf-btn cf-btn--primary min-[1100px]:hidden"
+      >
+        Create image
+      </button>
+
+      {isMobileCreatorOpen && (
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-2xl"
+          onClose={() => setIsMobileCreatorOpen(false)}
+          ariaLabel="Create image"
+        >
+          <div className="p-[var(--space-6)] pt-[var(--space-8)]">
+            <KitImageCreatorPanel {...panelProps} />
+          </div>
+        </KitModalFrame>
+      )}
+
+      {activePickerSlotId && (
+        <KitIngredientPicker
+          slotLabel={SLOT_LABELS[activePickerSlotId]}
+          searchValue={pickerSearchValue}
+          searchPlaceholder={`Search ${SLOT_LABELS[activePickerSlotId].toLowerCase()}...`}
+          onSearchChange={setPickerSearchValue}
+          items={pickerItems}
+          emptyMessage={`No ${SLOT_LABELS[activePickerSlotId].toLowerCase()} assets found.`}
+          loadErrorMessage=""
+          onChooseIngredient={handlePickerChooseIngredient}
+          showUseCustomAction
+          onUseCustom={handlePickerUseCustom}
+          showCreatePresetAction={SAVABLE_SLOTS.includes(activePickerSlotId)}
+          onCreatePreset={handlePickerCreatePreset}
+          onClose={() => setActivePickerSlotId(null)}
+        />
+      )}
+
+      {savePresetSlotId && (
+        <KitSaveIngredientPreset
+          presetTypeLabel={SLOT_LABELS[savePresetSlotId]}
+          introText={SAVE_PRESET_INTRO_TEXT}
+          helperText={SAVE_PRESET_HELPER_TEXT}
+          nameValue={savePresetForm.name}
+          onChangeName={(value) => setSavePresetForm((current) => ({ ...current, name: value }))}
+          descriptionValue={savePresetForm.description}
+          onChangeDescription={(value) => setSavePresetForm((current) => ({ ...current, description: value }))}
+          promptValue={savePresetForm.prompt}
+          onChangePrompt={(value) => setSavePresetForm((current) => ({ ...current, prompt: value }))}
+          tagsValue={savePresetForm.tags}
+          onChangeTags={(value) => setSavePresetForm((current) => ({ ...current, tags: value }))}
+          isSaving={false}
+          canSave={savePresetCanSave}
+          onSavePreset={() => {
+            setActionNotice({
+              label: "Save as preset",
+              message: "Saving a preset is wired when the page goes live. Nothing was stored in this preview.",
+            });
+            setSavePresetSlotId(null);
+          }}
+          onUseOnce={() => setSavePresetSlotId(null)}
+          onClose={() => setSavePresetSlotId(null)}
+        />
+      )}
 
       {overlayImage && (
         <KitImageOverlay

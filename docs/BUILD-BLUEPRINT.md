@@ -1206,6 +1206,22 @@ credit list.
 banner on mobile is taller with a smaller button so more artwork
 shows; desktop proportions unchanged.
 
+**(u) Creator panel law (R6), RULED 10 Aug 2026 (Sprint E).** The
+Images page carries its creator as a sticky surface: browsing and
+creating are both effortless at any scroll depth. Desktop 1100px and
+up: a sticky right rail beside the library grid, inside the content
+width (R1), docked directly beneath the filter line with no gap and
+no overlap. Under 1100px: a sticky create CTA opens the panel as a
+full-screen modal (R4). The panel carries the complete function of
+the live composer (mode toggle, the six live ingredient slots, the
+inline custom-guidance editor, the single Options expander, the
+generate and video blocks); the ingredient picker and save-preset
+modals open from it. Generation and persistence stay honest R4 stubs
+until live wiring. Sticky budget (A2, Brian's ruling): the ceiling in
+view at once is the top bar, the filter line, and one create
+affordance; the rail or the CTA is that one affordance, never a
+fourth sticky layer.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9
@@ -1312,7 +1328,7 @@ first work by T9), 2.7 (chips), 2.10 (badge), 2.4 (load-more), 2.8
 | 2 | Creators (`/studio/profile`, `/studio/profile/[username]`, connections) | skeleton from page 1: filter bar, cards, chips, badges, load-more | creator-card species (with the ruled 4 Aug changes: actions below the image strip, one-line header) and the Follow / View profile de-pill fix (shape law) | No lock. CR-011 label note applies (profile hero). Phone-width name truncation is already flagged to Brian in ROADMAP; its ruling rides this page |
 | 3 | Vault (`/studio/my-creations`, preview) | full skeleton, creation-card list AND grid, picker-modal (featured image picker), alert-strip | list-card species, bulk/manage affordances styling | Partial hold, Brian not Nick: the standalone edit tree (`my-creations/[id]/edit`) stays out of scope until CR-007/CR-008 (one edit surface or two) is ruled; the Vault hub itself converts freely |
 | 4 | Stories (`/studio/story-rooms` hub only) | full skeleton, cards, chips, load-more, banner card treatment (b) | continue-card usage of promo-banner treatment (b) | Naming lock, partial: display already reads "Story" via the terminology module; CR-024 (backend rename) is ruled non-blocking. CR-018 (Sessions vs Stories copy) and CR-011 (dock label) are Nick's; hub converts, copy that depends on them is logged. The chat room `[id]` surface is excluded (dedicated sitting, sweep-scope ruling) |
-| 5 | Images (`/studio/image-studio`, `[id]/image-library`) | modal-frame, form-field, load-more, filter-chip, alert-strip | media-lightbox restyle (share/download/details per inventory), composer field anatomy, the missing page head (REDESIGN-ORDER: image-studio ships a bare eyebrow, no display title) | No lock. All lightbox wiring exists and stays; the `window.confirm` delete gap converts to the modal-frame confirm step, presentation of an existing operation |
+| 5 | Images (`/studio/image-studio`, `[id]/image-library`) | modal-frame, form-field, load-more, filter-chip, alert-strip | media-lightbox restyle (share/download/details per inventory), composer field anatomy, the missing page head (REDESIGN-ORDER: image-studio ships a bare eyebrow, no display title). Gains the creator panel at Sprint E (R6): the library-plus-creator composition, sticky right rail at 1100px and up, sticky create CTA and modal below it, is the page's ruled layout | No lock. All lightbox wiring exists and stays; the `window.confirm` delete gap converts to the modal-frame confirm step, presentation of an existing operation |
 | 6 | Studio (`/studio/create` and the 26 builders' shared chrome) | form-field, picker-modal, modal-frame, alert-strip, cards | create-hub ladder layout per the proof (levels, doors, tool cards, story bridge strip), quick-create surfaces | YES. CR-026 is exactly Nick's pass over the quick-create allocation before build, and CR-009 (one wizard/picker system) governs the Player Character creator. The hub's own restyle can start; quick-create composition waits for CR-026. T12 items (centered vs docked creator) stay queued |
 | 7 | Adventures (`/studio/storylines`) | full skeleton, cards, chips | nothing new (smallest surface, 6 CSV rows) | YES. CR-025: the display layer still reads "Storyline" and the product model rules the copy retirement lands the moment the rename lands in code, so copy and backend rename are meant to land together. Restyling before that means touching the page twice; it waits |
 | 8 | Home (Play > Home) | everything: skeleton, cards, banners, search | the dynamic feed composition per the UXUI doc section 4.1 (continue-playing cards, new releases, community highlights, creator activity, fresh lore, an editorial signed-out version) | RULED 9 Aug 2026: `/studio` becomes Play > Home and adopts this feed composition, since the route already plays the guidepost role for signed-in users and a new dedicated route would leave two home-shaped pages, violating one-canonical-home. Also CR-003 (character into story) shapes Home's continue rail |

@@ -6,7 +6,7 @@
 // matching components/studio/image-studio/imageStudioData.js
 // verbatim (READ ONLY reference, never imported). Tokens only; every
 // control on kit or cf-* recipes; no fetch anywhere.
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   BookOpen,
   Check,
@@ -131,7 +131,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
   );
 }
 
-function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePreset, onClear }) {
+function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePreset, onClear, idPrefix }) {
   return (
     <div className="col-span-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill-whisper)] p-[var(--space-4)]">
       <div className="flex items-start justify-between gap-[var(--space-3)]">
@@ -145,8 +145,8 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
       <label className="mt-[var(--space-3)] block">
         <FieldCaption>Custom Guidance</FieldCaption>
         <textarea
-          name={`custom-guidance-${def.id}`}
-          id={`custom-guidance-${def.id}`}
+          name={`${idPrefix}-custom-guidance-${def.id}`}
+          id={`${idPrefix}-custom-guidance-${def.id}`}
           value={state.customText}
           onChange={(event) => onChangeText?.(def.id, event.target.value)}
           placeholder={`Describe the custom ${def.label.toLowerCase()} guidance...`}
@@ -190,6 +190,7 @@ function OptionsExpander({
   onChangeOption,
   negativePromptValue,
   onChangeNegativePrompt,
+  idPrefix,
 }) {
   return (
     <div>
@@ -222,8 +223,8 @@ function OptionsExpander({
           <label className="block">
             <FieldCaption>Negative Prompt</FieldCaption>
             <textarea
-              name="image-creator-negative-prompt"
-              id="image-creator-negative-prompt"
+              name={`${idPrefix}-negative-prompt`}
+              id={`${idPrefix}-negative-prompt`}
               value={negativePromptValue}
               onChange={(event) => onChangeNegativePrompt?.(event.target.value)}
               placeholder="Optional: describe what to avoid..."
@@ -250,6 +251,7 @@ function GenerateBlock({
   onChangeOption,
   negativePromptValue,
   onChangeNegativePrompt,
+  idPrefix,
 }) {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
@@ -258,8 +260,8 @@ function GenerateBlock({
       <label className="block">
         <FieldCaption>Prompt</FieldCaption>
         <textarea
-          name="image-creator-prompt"
-          id="image-creator-prompt"
+          name={`${idPrefix}-prompt`}
+          id={`${idPrefix}-prompt`}
           value={promptValue}
           onChange={(event) => onChangePrompt?.(event.target.value)}
           placeholder="Describe what you want to see..."
@@ -275,6 +277,7 @@ function GenerateBlock({
         onChangeOption={onChangeOption}
         negativePromptValue={negativePromptValue}
         onChangeNegativePrompt={onChangeNegativePrompt}
+        idPrefix={idPrefix}
       />
 
       <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)]">
@@ -318,6 +321,7 @@ function VideoBlock({
   onChangeVideoOption,
   videoDirectionValue,
   onChangeVideoDirection,
+  idPrefix,
 }) {
   return (
     <div className="flex flex-col gap-[var(--space-4)]">
@@ -338,8 +342,8 @@ function VideoBlock({
       <label className="block">
         <FieldCaption>Video Direction</FieldCaption>
         <textarea
-          name="image-creator-video-direction"
-          id="image-creator-video-direction"
+          name={`${idPrefix}-video-direction`}
+          id={`${idPrefix}-video-direction`}
           value={videoDirectionValue}
           onChange={(event) => onChangeVideoDirection?.(event.target.value)}
           placeholder="Describe the short motion, scene beat, or recap moment..."
@@ -383,6 +387,10 @@ export default function KitImageCreatorPanelView({
   onChangeVideoDirection = null,
 }) {
   const isVideoMode = mode === "VIDEO";
+  // Unique per mounted instance: the Images page composes the rail
+  // (desktop, CSS-hidden below 1100px) and the mobile modal
+  // simultaneously, so static ids would collide in the DOM.
+  const idPrefix = useId();
 
   return (
     <div className="flex flex-col gap-[var(--space-4)]">
@@ -400,6 +408,7 @@ export default function KitImageCreatorPanelView({
               onBackToPresets={onCustomBackToPresets}
               onSavePreset={onCustomSavePreset}
               onClear={onSlotClear}
+              idPrefix={idPrefix}
             />
           ) : (
             <SlotTile
@@ -419,6 +428,7 @@ export default function KitImageCreatorPanelView({
           onChangeVideoOption={onChangeVideoOption}
           videoDirectionValue={videoDirectionValue}
           onChangeVideoDirection={onChangeVideoDirection}
+          idPrefix={idPrefix}
         />
       ) : (
         <GenerateBlock
@@ -434,6 +444,7 @@ export default function KitImageCreatorPanelView({
           onChangeOption={onChangeOption}
           negativePromptValue={negativePromptValue}
           onChangeNegativePrompt={onChangeNegativePrompt}
+          idPrefix={idPrefix}
         />
       )}
     </div>
