@@ -58,7 +58,14 @@ export default function KitCreatorCardView({
         <span className="flex h-[var(--space-12)] w-[var(--space-12)] flex-none items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line-strong)] bg-[var(--surface-3)]">
           {avatarSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarSrc} alt="" loading="lazy" className="h-full w-full object-cover" />
+            <img
+              src={avatarSrc}
+              alt=""
+              width={48}
+              height={48}
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
           ) : (
             <span className="font-display text-[length:var(--text-lead)] text-[var(--ink-dim)]">
               {handle ? handle.charAt(0).toUpperCase() : "?"}
@@ -87,6 +94,8 @@ export default function KitCreatorCardView({
               <img
                 src={thumbnail.imageSrc}
                 alt=""
+                width={300}
+                height={300}
                 loading="lazy"
                 className="h-full w-full object-cover object-[center_18%]"
               />

@@ -6,7 +6,7 @@
 // (docs/BUILD-BLUEPRINT.md 3.1): reuses page 1's skeleton wholesale
 // (filter bar, load-more), introduces the creator-card species in
 // page composition. No live data, no API calls, no real navigation.
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -132,11 +132,54 @@ export default function CreatorsV2Mockup() {
   const visibleCreators = filteredCreators.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCreators.length;
 
-  function toggleFollowing(id) {
+  const toggleFollowing = useCallback((id) => {
     setFollowingIds((current) =>
       current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]
     );
-  }
+  }, []);
+
+  // Perf audit (Sprint A polish, Phase 6): FIXTURE_CREATORS is a
+  // stable module-level array, so each creator's stats and thumbnail
+  // props only need to be built once rather than on every render
+  // (every keystroke of search previously rebuilt these for all
+  // thirteen cards). isFollowing is looked up separately since it is
+  // the one per-card value that actually changes.
+  const creatorCardPropsById = useMemo(() => {
+    const map = new Map();
+    for (const creator of FIXTURE_CREATORS) {
+      map.set(creator.id, {
+        stats: { followers: creator.followers, plays: creator.plays, works: creator.works },
+        thumbnails: creator.thumbnails.map((imageSrc, index) => ({
+          id: `${creator.id}-thumb-${index}`,
+          imageSrc,
+          alt: `${creator.handle} recent work ${index + 1}`,
+        })),
+      });
+    }
+    return map;
+  }, []);
+
+  // Stable per-card callbacks, built once (creator objects themselves
+  // are stable references from the module-level fixture array;
+  // toggleFollowing and setOverlayImage are both stable setters).
+  const cardHandlersById = useMemo(() => {
+    const map = new Map();
+    for (const creator of FIXTURE_CREATORS) {
+      map.set(creator.id, {
+        onFollow: () => toggleFollowing(creator.id),
+        onThumbnailOpen: (thumbnailId) => {
+          const thumbnail = creator.thumbnails.find(
+            (_, index) => `${creator.id}-thumb-${index}` === thumbnailId
+          );
+          if (thumbnail) {
+            setOverlayImage({ id: thumbnailId, imageSrc: thumbnail, title: creator.handle });
+          }
+        },
+        onViewProfile: () => {},
+      });
+    }
+    return map;
+  }, [toggleFollowing]);
 
   return (
     <>
@@ -208,34 +251,23 @@ export default function CreatorsV2Mockup() {
         {fixtureMode !== "loading" && filteredCreators.length > 0 && (
           <>
             <div className="grid grid-cols-1 gap-[var(--space-3)] min-[700px]:grid-cols-2 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-3">
-              {visibleCreators.map((creator) => (
-                <KitCreatorCardView
-                  key={creator.id}
-                  handle={creator.handle}
-                  avatarSrc={creator.avatarSrc}
-                  stats={{
-                    followers: creator.followers,
-                    plays: creator.plays,
-                    works: creator.works,
-                  }}
-                  thumbnails={creator.thumbnails.map((imageSrc, index) => ({
-                    id: `${creator.id}-thumb-${index}`,
-                    imageSrc,
-                    alt: `${creator.handle} recent work ${index + 1}`,
-                  }))}
-                  isFollowing={followingIds.includes(creator.id)}
-                  onThumbnailOpen={(thumbnailId) => {
-                    const thumbnail = creator.thumbnails.find(
-                      (_, index) => `${creator.id}-thumb-${index}` === thumbnailId
-                    );
-                    if (thumbnail) {
-                      setOverlayImage({ id: thumbnailId, imageSrc: thumbnail, title: creator.handle });
-                    }
-                  }}
-                  onFollow={() => toggleFollowing(creator.id)}
-                  onViewProfile={() => {}}
-                />
-              ))}
+              {visibleCreators.map((creator) => {
+                const cardProps = creatorCardPropsById.get(creator.id);
+                const handlers = cardHandlersById.get(creator.id);
+                return (
+                  <KitCreatorCardView
+                    key={creator.id}
+                    handle={creator.handle}
+                    avatarSrc={creator.avatarSrc}
+                    stats={cardProps.stats}
+                    thumbnails={cardProps.thumbnails}
+                    isFollowing={followingIds.includes(creator.id)}
+                    onThumbnailOpen={handlers.onThumbnailOpen}
+                    onFollow={handlers.onFollow}
+                    onViewProfile={handlers.onViewProfile}
+                  />
+                );
+              })}
             </div>
 
             <KitLoadMoreView
