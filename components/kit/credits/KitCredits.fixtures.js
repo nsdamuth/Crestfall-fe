@@ -85,3 +85,25 @@ export const kitCreditsLongestContentFixture = {
 export const kitCreditsEmptyFixture = {
   credits: [],
 };
+
+// Additive, KitCredits 1.1.0 (R1, kit polish 3 pass, plan 1.3): the
+// credits modal preview fixture, eight rows to exercise the modal's
+// own scroll.
+export const kitCreditsManyFixture = {
+  credits: Array.from({ length: 8 }, (_, index) => ({
+    id: `credit-many-${index + 1}`,
+    kindLabel: [
+      "Character Template",
+      "Outfit",
+      "Pose",
+      "Scenario",
+      "Location",
+      "Narrator",
+      "Location Reference",
+      "Backdrop",
+    ][index],
+    creatorHandle: `@contributor_${index + 1}`,
+    creatorHref: index % 3 === 0 ? null : `/studio/profile/contributor_${index + 1}`,
+    assetTitle: index % 2 === 0 ? `Credited Asset ${index + 1}` : null,
+  })),
+};

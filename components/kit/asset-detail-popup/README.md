@@ -35,9 +35,29 @@ a major bump per contract law). `isLiked`, `onLike`, and
 
 Optional `credits` array ADDED, same item shape as `KitCredits`,
 default `[]`. The shell injects `next/link` for the credits' handle
-links. Rendered by `KitCreditsView` between the description/stats
-block and the footer, matching the old modal's own order (credits
-after description and tags, before actions).
+links. Rendered between the description/stats block and the footer,
+matching the old modal's own order (credits after description and
+tags, before actions).
+
+## Credits collapse, RULED 10 Aug 2026 (R1, kit polish 3 pass, plan 1.3)
+
+Presentation-only recomposition, contract stays `2.1.0`. In place of
+the full `KitCreditsView` list, the popup renders a one-row collapsed
+credit block on the same bed recipe (`--surface-1`, `--line` border,
+`--radius-md`, `p-[var(--space-4)]`): the gold "Credits" label, the
+FIRST credit only, and, when `credits.length > 1`, a "View all
+credits (N)" control (quiet text button, `--gold-ornament`). One
+credit: no control, just the row. Zero credits: nothing renders, as
+before.
+
+The control opens `KitCreditsModal` (`components/kit/credits/`,
+package `1.1.0`) stacked above the popup, in the popup's own space
+(`max-w-xl`). While it is open, the shell suppresses THIS frame's own
+Escape and backdrop dismissal (`closeOnEscape`/`closeOnBackdrop`,
+props the frame already has) so one Escape keypress closes only the
+credits modal first; a second Escape closes the popup. The popup
+never unmounts while the credits modal is open, so its scroll
+position is preserved when the credits modal closes.
 
 ## Anatomy
 

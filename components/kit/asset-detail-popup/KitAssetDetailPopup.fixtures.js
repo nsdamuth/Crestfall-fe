@@ -69,6 +69,8 @@ export const kitAssetDetailPopupAdventureFixture = {
   stats: { plays: 512, hearts: 88, saves: 19, followers: null },
   description:
     "A branching adventure through the harbor district, built for repeat play with shifting outcomes.",
+  // Five credits (R1, kit polish 3 pass, plan 1.3): exercises the
+  // collapsed row's count and the credits modal's own scroll.
   credits: [
     {
       id: "credit-location",
@@ -83,6 +85,27 @@ export const kitAssetDetailPopupAdventureFixture = {
       creatorHandle: "@Crestfall",
       creatorHref: "/studio/profile/Crestfall",
       assetTitle: "Lilith",
+    },
+    {
+      id: "credit-outfit",
+      kindLabel: "Outfit",
+      creatorHandle: "@golden_thread",
+      creatorHref: "/studio/profile/golden_thread",
+      assetTitle: "Harborwatch Coat",
+    },
+    {
+      id: "credit-pose",
+      kindLabel: "Pose",
+      creatorHandle: "@anonymous_contributor",
+      creatorHref: null,
+      assetTitle: null,
+    },
+    {
+      id: "credit-score",
+      kindLabel: "Score",
+      creatorHandle: "@map_room",
+      creatorHref: "/studio/profile/map_room",
+      assetTitle: "Neon Harbor Theme",
     },
   ],
 };

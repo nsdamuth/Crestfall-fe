@@ -22,7 +22,7 @@ import { useState } from "react";
 import { Bookmark, ChevronLeft, ChevronRight, Heart, Play, Share2, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
-import KitCreditsView from "../credits/KitCredits.view";
+import KitCreditsModal from "../KitCreditsModal";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -76,6 +76,48 @@ function DescriptionBlock({ description }) {
           className="kit-focus mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
         >
           {expanded ? "See less" : "See more"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// R1 credits collapse (10 Aug 2026, kit polish 3 pass, plan 1.3): the
+// popup's space budget goes to art and description, not the credit
+// list. One row tall regardless of credit count: the first credit
+// only, plus a "View all credits (N)" control when more than one
+// exists, opening the stacked KitCreditsModal. Zero credits render
+// nothing, same as before.
+function CollapsedCreditsBlock({ credits, LinkComponent, onOpenCreditsModal }) {
+  if (!credits.length) return null;
+
+  const [first] = credits;
+
+  return (
+    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-4)]">
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+        Credits
+      </p>
+      <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        {first.kindLabel} from{" "}
+        {first.creatorHref ? (
+          <LinkComponent
+            href={first.creatorHref}
+            className="text-[var(--ink)] transition-colors hover:text-[var(--gold-ornament)]"
+          >
+            {first.creatorHandle}
+          </LinkComponent>
+        ) : (
+          <span className="text-[var(--ink)]">{first.creatorHandle}</span>
+        )}
+      </p>
+      {credits.length > 1 && (
+        <button
+          type="button"
+          onClick={() => onOpenCreditsModal?.()}
+          className="kit-focus mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+        >
+          View all credits ({credits.length})
         </button>
       )}
     </div>
@@ -220,6 +262,9 @@ export default function KitAssetDetailPopupView({
   onViewCatalogue = null,
   credits = [],
   creditsLinkComponent = "a",
+  isCreditsModalOpen = false,
+  onOpenCreditsModal = null,
+  onCloseCreditsModal = null,
 }) {
   const hasMedia = media.length > 0;
 
@@ -259,7 +304,11 @@ export default function KitAssetDetailPopupView({
 
         {credits.length > 0 && (
           <div className="mt-[var(--space-4)]">
-            <KitCreditsView credits={credits} LinkComponent={creditsLinkComponent} />
+            <CollapsedCreditsBlock
+              credits={credits}
+              LinkComponent={creditsLinkComponent}
+              onOpenCreditsModal={onOpenCreditsModal}
+            />
           </div>
         )}
 
@@ -300,6 +349,10 @@ export default function KitAssetDetailPopupView({
           </button>
         </div>
       </div>
+
+      {isCreditsModalOpen && (
+        <KitCreditsModal credits={credits} onClose={onCloseCreditsModal} />
+      )}
     </div>
   );
 }

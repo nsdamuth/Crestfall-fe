@@ -19,6 +19,20 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
  * old modal's own order (credits after description and tags, before
  * actions).
  *
+ * Presentation recomposed 10 Aug 2026 (R1, kit polish 3 pass, plan
+ * 1.3), contract stays 2.1.0 (contract law: presentation may change,
+ * reporting may not; the `credits` prop, its shape, and every
+ * callback are unchanged). Credits now render as a one-row collapsed
+ * block (first credit only, plus a "View all credits (N)" control
+ * when more than one exists) instead of the full `KitCreditsView`
+ * list, opening the stacked `KitCreditsModal` (`components/kit/
+ * credits/`, package v1.1.0) in the same space. The shell owns
+ * whether that stacked modal is open (internal plumbing only, never
+ * part of this package's public prop surface): it suppresses this
+ * frame's own Escape and backdrop dismissal while the credits modal
+ * is open, via the frame's existing `closeOnEscape`/`closeOnBackdrop`
+ * props, so one Escape keypress never closes both layers.
+ *
  * @typedef {Object} KitAssetDetailPopupBadge
  * @property {string} label
  * @property {"canon"|"status"|"meta"} variant

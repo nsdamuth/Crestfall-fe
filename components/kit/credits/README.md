@@ -1,6 +1,19 @@
 # Kit Credits LOOM Package
 
-**Contract:** `KitCredits.contract.js` (`1.0.0`)
+**Contract:** `KitCredits.contract.js` (`1.1.0`)
+
+## KitCreditsModal, added 1.1.0 (R1, 10 Aug 2026, kit polish 3 pass)
+
+The secondary surface the asset detail popup's "View all credits"
+control opens, stacked above the popup in the same space
+(`docs/BUILD-BLUEPRINT.md` 2.16 (s)). `KitModalFrame` `variant="modal"`
+`panelClassName="w-full max-w-xl"` (the popup's own width); a header
+row with a back control (`cf-btn cf-btn--secondary cf-btn--sm`, also
+fires `onClose`, same as the frame's X) and the gold uppercase
+"Credits" label; a scrollable body rendering this package's own
+`KitCreditsView` with the full list. See
+`components/kit/KitCreditsModal.jsx` and
+`components/kit/credits/KitCreditsModal.view.jsx`.
 
 ## Purpose
 
@@ -49,8 +62,9 @@ work, not this package's job. This cross-design link is deliberate.
 
 - `KitCredits.contract.js`
 - `KitCredits.fixtures.js` (mixed, allLinked, unlinkedHandle,
-  noAssetTitle, longestContent, empty)
+  noAssetTitle, longestContent, empty, many)
 - `useKitCreditsViewModel.js`
+- `KitCreditsModal.view.jsx` / `../KitCreditsModal.jsx`
 - `/dev/ui-preview/kit-credits`
 
 Fixture-only; no query, persistence, or navigation is wired.

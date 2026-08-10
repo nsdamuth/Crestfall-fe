@@ -1188,6 +1188,13 @@ creator handle on the viewer. Zoom by wheel, double-click, and pinch;
 pan by drag while zoomed; sensible ceiling; reset on close. On mobile
 the image takes the maximum available space.
 
+**(s) Credits collapse law (R1), RULED 10 Aug 2026.** The asset
+detail popup shows only the first credit plus a View all credits
+control opening a secondary modal in the same space, scrollable, with
+handles routing to profiles, with a back path returning to the popup
+beneath. Popup space budget goes to art and description, not the
+credit list.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9

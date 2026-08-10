@@ -1,4 +1,4 @@
-export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the shared attribution kit piece
@@ -6,6 +6,18 @@ export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.0.0";
  * old-design credits panel
  * (components/studio/creations/creation-credits/, read-only
  * reference, never edited) onto current tokens.
+ *
+ * v1.1.0, RULED 10 Aug 2026 (R1, kit polish 3 pass, plan 1.3):
+ * additive. The package gains a second documented component,
+ * `KitCreditsModal` (shell `components/kit/KitCreditsModal.jsx`, view
+ * `components/kit/credits/KitCreditsModal.view.jsx`), the secondary
+ * surface the asset detail popup's "View all credits" control opens:
+ * a back control plus the gold "Credits" label, a scrollable region
+ * rendering this same `KitCreditsView` with the full list. Props:
+ * `credits` (same item shape as this component), `LinkComponent`
+ * (the shell injects `next/link`), `onClose` (fired by both the back
+ * control and the frame's own close control). `KitCreditsView` itself
+ * is unchanged.
  *
  * The View receives display-ready attribution rows. It does not
  * receive the raw creation graph or know how Crestfall resolves
