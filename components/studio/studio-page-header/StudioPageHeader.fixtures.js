@@ -53,6 +53,20 @@ export const studioPageHeaderFixtures = [
     },
   },
   {
+    // R7 hardening witness (10 Aug 2026): many live pages pass the
+    // description as bare text children; the view now routes
+    // text-only children through the description branch so they can
+    // never sit beside the H1.
+    id: "text-children",
+    label: "Text Children (legacy misuse)",
+    props: {
+      eyebrow: "Account",
+      title: "Profile & Preferences",
+      children:
+        "Manage your private account settings, Studio preferences, subscription status, and public creator profile.",
+    },
+  },
+  {
     id: "long-content",
     label: "Long Content",
     props: {
