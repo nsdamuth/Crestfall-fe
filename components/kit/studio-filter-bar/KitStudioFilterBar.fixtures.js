@@ -25,7 +25,8 @@ const defaultFilterGroups = [
       value: tier.tier,
       label: tier.label,
       tooltip: tier.tooltip,
-      count: 40,
+      isDisabled: Boolean(tier.isDisabled),
+      count: tier.isDisabled ? null : 40,
     })),
   },
 ];

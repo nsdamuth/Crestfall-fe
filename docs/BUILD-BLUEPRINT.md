@@ -1057,18 +1057,24 @@ full-bleed art (see a). Two-up list rows are permitted at desktop
 widths where whitespace allows; the Community page renders its list
 two-up at 1100px and up on the ruled grid (1.11).
 
-**(h) Ratings presentation, RULED 9 Aug 2026 (kit polish pass).**
-Three display tiers: Everyone, Teen, Adult, over the three ruled
-backend values, no stub row. Film anchors move out of visible
-description lines onto the row tooltip (native title attribute as an
-interim, pending a design-system tooltip pattern, flagged in
+**(h) Ratings presentation, RULED 9 Aug 2026 (kit polish pass),
+mapping CORRECTED 9 Aug 2026 (demo prep pass).** Everyone and Adult
+are live display tiers over real backend values; Teen is a disabled
+row with no backend value, arriving with CR-027, no stub row for the
+other two. Film anchors move out of visible description lines onto
+the row tooltip (native title attribute as an interim, pending a
+design-system tooltip pattern, flagged in
 docs/CONTRACT-REQUESTS.md CR-027). The mapping lives in
 `lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
-SFW displays as Everyone, MATURE as Teen, EXPLICIT as Adult. Whether
-the backend should carry a fourth value is deferred to Nick (CR-027),
-pending the draft content-standards doc revision. The rating facet
-renders as a dropdown on every filter surface, never as loose chips
-and never as a card badge.
+SFW displays as Everyone, MATURE and EXPLICIT both display as Adult
+(EXPLICIT's mapping is interim, pending Nick's migrate-or-reclassify
+ruling), Teen has no backend value yet. The prior mapping recorded
+here (MATURE as Teen, EXPLICIT as Adult) was a semantic error and is
+superseded; see CR-027 for the corrected detail. Whether the backend
+should carry a fourth value is deferred to Nick (CR-027), pending the
+draft content-standards doc revision. The rating facet renders as a
+dropdown on every filter surface, never as loose chips and never as a
+card badge.
 
 **(i) Selection-state law, RULED 9 Aug 2026 (kit polish pass).**
 Selected and active states read as a gold icon or text plus a light

@@ -53,7 +53,7 @@ the details below carry only what is still actionable.
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
-| CR-027 | backend three-vs-four-tier content rating question | Labels ruled 9 Aug 2026: three user-facing tiers (Everyone, Teen, Adult) over the three backend values, no stub row. Whether the backend should carry a fourth value is deferred to Nick | open | Nick | later-pass, non-blocking; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
+| CR-027 | backend three-vs-four-tier content rating question | Labels corrected 9 Aug 2026 (demo prep pass): Everyone (SFW) and Adult (MATURE, EXPLICIT) are live tiers over real backend values; Teen is a disabled row with no backend value, arriving with this CR. EXPLICIT's mapping to Adult is interim, pending Nick's ruling on migrating or reclassifying EXPLICIT-tagged content under the Adult/R ceiling | open | Nick | later-pass, non-blocking; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 
 ## Details
 
@@ -308,19 +308,29 @@ allocated ADVANCED that he wants promoted into QUICK before build.
 ### CR-027, backend three-vs-four-tier content rating question
 
 Later-pass, non-blocking, filed 9 Aug 2026 by the kit revision pass,
-updated 9 Aug 2026 by the kit polish pass. The backend carries three
-content rating values (`lib/server/creations/constants.js`: `SFW`,
-`MATURE`, `EXPLICIT`). Labels ruled 9 Aug 2026: three user-facing
-tiers, display-mapped in `lib/shared/presentation/terminology.js`
-(`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as Teen,
-EXPLICIT as Adult, with film anchors as the row tooltip, never a
-visible description line. No stub row ships; every tier maps to a
-real backend value today.
+updated 9 Aug 2026 by the kit polish pass, corrected 9 Aug 2026 by the
+demo prep pass. The backend carries three content rating values
+(`lib/server/creations/constants.js`: `SFW`, `MATURE`, `EXPLICIT`).
+Corrected mapping, display-mapped in
+`lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
+SFW displays as Everyone (tooltip "Comparable to a G or PG film.");
+MATURE displays as Adult (tooltip "Comparable to an R film.");
+EXPLICIT also displays as Adult, pending migration, sharing the same
+Adult tooltip; Teen renders as a disabled row with no backend value
+(tooltip "Comparable to a PG-13 film."), marked arriving with this
+CR. Film anchors ride the row tooltip, never a visible description
+line. The prior (pre-correction) mapping had displayed MATURE as
+Teen and EXPLICIT as Adult; that was a semantic error, since MATURE
+content is not teen-appropriate. It is superseded by the mapping
+above.
 
-Open question for Nick, deferred rather than answered here: whether
-the backend should carry a fourth content-rating value, and if so
-what it buckets. No build spec is fixed until that three-vs-four
-question is ruled.
+Open questions for Nick, deferred rather than answered here:
+1. Whether the backend should carry a fourth content-rating value to
+   seat an actual Teen tier, and if so what it buckets.
+2. Whether EXPLICIT-tagged content should migrate to a distinct
+   ceiling above Adult/R, or be permanently reclassified and folded
+   under the Adult/R ceiling alongside MATURE. No build spec is fixed
+   until both questions are ruled.
 
 Caveat that gates final naming: the referenced standards doc
 (CRESTFALL-CONTENT-STANDARDS.md) is a draft and is not in this repo
