@@ -349,6 +349,150 @@
 }
 
 /* ============================================================
+   CHAPTER 1 TOKEN EXPANSION, RULED 9 Aug 2026
+   docs/BUILD-BLUEPRINT.md chapter 1, sections 1.3 through 1.8.
+   Every token below is a primitive layer under the existing role
+   tokens, or a documented alias, never a replacement. No existing
+   role token's declaration changes in this pass (docs/BUILD-
+   BLUEPRINT.md section 1.10): a role token keeps its own literal
+   value; a ladder step below points at the role token with var(),
+   so a ladder step that resolves through a theme-flipping role
+   token (ink, edge-top, shadows) flips automatically and needs no
+   separate light-theme declaration.
+
+   Steps with no ruled value are commented placeholders, never a
+   literal (token-first directive, FRONTEND-SOP section 17): the
+   name is reserved in docs/DESIGN-TOKENS.md at status "proposed"
+   and stays out of CSS until a real value is ruled.
+   ============================================================ */
+
+:root {
+
+  /* --- GOLD LADDER, 10 named steps, 5 filled ----------------- */
+  /* --gold-1: reserved, unset, no ruled value */
+  --gold-2:  var(--gold-bright);
+  /* --gold-3: reserved, unset, no ruled value */
+  --gold-4:  var(--gold-action);
+  --gold-5:  var(--gold-ornament);
+  /* --gold-6: reserved, unset, no ruled value */
+  --gold-7:  var(--gold-deep);
+  /* --gold-8: reserved, unset, no ruled value */
+  /* --gold-9: reserved, unset, no ruled value */
+  --gold-10: var(--tag-fill-ink);
+
+  /* --- WARM NEUTRAL LADDER, 10 named steps, 8 filled --------- */
+  --neutral-1:  var(--ink);
+  /* --neutral-2: reserved, unset, no ruled value */
+  --neutral-3:  var(--ink-dim);
+  --neutral-4:  var(--ink-faint);
+  /* --neutral-5: reserved, unset, no ruled value */
+  --neutral-6:  var(--surface-4);
+  --neutral-7:  var(--surface-3);
+  --neutral-8:  var(--surface-2);
+  --neutral-9:  var(--surface-1);
+  --neutral-10: var(--canvas);
+
+  /* --- STATUS LADDERS, 3 families x 10 named steps, step 5 only
+     filled per family. Bed/border alpha pairs are untouched;      */
+  /* --success-1: reserved, unset, no ruled value */
+  /* --success-2: reserved, unset, no ruled value */
+  /* --success-3: reserved, unset, no ruled value */
+  /* --success-4: reserved, unset, no ruled value */
+  --success-5:  var(--status-success);
+  /* --success-6: reserved, unset, no ruled value */
+  /* --success-7: reserved, unset, no ruled value */
+  /* --success-8: reserved, unset, no ruled value */
+  /* --success-9: reserved, unset, no ruled value */
+  /* --success-10: reserved, unset, no ruled value */
+
+  /* --warning-1: reserved, unset, no ruled value */
+  /* --warning-2: reserved, unset, no ruled value */
+  /* --warning-3: reserved, unset, no ruled value */
+  /* --warning-4: reserved, unset, no ruled value */
+  --warning-5:  var(--status-warning);
+  /* --warning-6: reserved, unset, no ruled value */
+  /* --warning-7: reserved, unset, no ruled value */
+  /* --warning-8: reserved, unset, no ruled value */
+  /* --warning-9: reserved, unset, no ruled value */
+  /* --warning-10: reserved, unset, no ruled value */
+
+  /* --danger-1: reserved, unset, no ruled value */
+  /* --danger-2: reserved, unset, no ruled value */
+  /* --danger-3: reserved, unset, no ruled value */
+  /* --danger-4: reserved, unset, no ruled value */
+  --danger-5:   var(--status-danger);
+  /* --danger-6: reserved, unset, no ruled value */
+  /* --danger-7: reserved, unset, no ruled value */
+  /* --danger-8: reserved, unset, no ruled value */
+  /* --danger-9: reserved, unset, no ruled value */
+  /* --danger-10: reserved, unset, no ruled value */
+
+  /* --- SPACING, 4 added steps on the existing 4px rhythm ----- */
+  --space-7:  1.75rem;  /* 28 */
+  --space-9:  2.25rem;  /* 36 */
+  --space-14: 3.5rem;   /* 56 */
+  --space-24: 6rem;     /* 96 */
+
+  /* --- TYPE MOBILE PAIRS, 8 steps x 2, RULED fill rule -------
+     label/ui/body/lead alias their own step unchanged (small
+     type does not compress); subhead/heading/title/display each
+     alias one ladder step down, absorbing the compression from
+     the existing ratio scale instead of minting new sizes.     */
+  --text-label-m:    var(--text-label);
+  --lh-label-m:      var(--lh-label);
+  --text-ui-m:       var(--text-ui);
+  --lh-ui-m:         var(--lh-ui);
+  --text-body-m:     var(--text-body);
+  --lh-body-m:       var(--lh-body);
+  --text-lead-m:     var(--text-lead);
+  --lh-lead-m:       var(--lh-lead);
+  --text-subhead-m:  var(--text-lead);
+  --lh-subhead-m:    var(--lh-lead);
+  --text-heading-m:  var(--text-subhead);
+  --lh-heading-m:    var(--lh-subhead);
+  --text-title-m:    var(--text-heading);
+  --lh-title-m:      var(--lh-heading);
+  --text-display-m:  var(--text-title);
+  --lh-display-m:    var(--lh-title);
+
+  /* --- ELEVATION, 6 named levels, 4 filled -------------------
+     Composed entirely from existing tokens; the "exactly two
+     floating shadow tokens" ruling stays true at the value
+     level, this only names the composed recipe per level.     */
+  --elev-1: none;
+  --elev-2: var(--edge-top);
+  --elev-3: var(--shadow-popover), var(--edge-top);
+  --elev-4: var(--shadow-modal), var(--edge-top);
+  /* --elev-5: reserved, unset, no ruled value */
+  /* --elev-6: reserved, unset, no ruled value */
+
+  /* --- BLUR, 6 named levels, 4 filled -------------------------
+     Documents the three strengths that already exist in law,
+     plus the no-blur floor. The one-blur-strength-per-role law
+     (panel blur always with --scrim-strong, chrome frost never
+     with a scrim) is untouched; this only names the ladder.    */
+  --blur-1: 0;
+  --blur-2: var(--blur-panel);
+  --blur-3: 4px;
+  /* --blur-4: reserved, unset, no ruled value */
+  --blur-5: var(--blur-chrome);
+  /* --blur-6: reserved, unset, no ruled value */
+
+  /* --- FIVE-STATE SET -----------------------------------------
+     One state token family every kit control consumes (docs/
+     architecture and docs/BUILD-BLUEPRINT.md chapter 2). Rest is
+     each component's own idle recipe and needs no token. Pressed
+     on gold-filled controls maps to --gold-deep, the token whose
+     ruled role is already "pressed states".                    */
+  --state-hover-fill:      var(--fill-whisper);
+  --state-hover-line:      var(--line);
+  --state-pressed-fill:    var(--fill);
+  --state-pressed-gold:    var(--gold-deep);
+  --state-disabled-opacity: 0.5;
+  --state-focus-ring:      var(--focus-ring);
+}
+
+/* ============================================================
    v2 ADDITIONS, restoring the atmospheric layer
    Added 26 Jul 2026 after the v6/v8 review. The first pass
    tokenised structure correctly and stripped the things that

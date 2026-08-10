@@ -237,6 +237,141 @@ Atmosphere: `--atm-hearth`, `--atm-vault`, `--atm-veil`,
 `--atm-constellation`, locked, applied as positioned layers, never baked
 into a surface color.
 
+## Ladder and state primitives, RULED 9 Aug 2026
+
+`docs/BUILD-BLUEPRINT.md` chapter 1, sections 1.3 through 1.8, ruled
+and written into `app/theme.css` in the same commit as this entry.
+These 88 names are a PRIMITIVE layer under the role tokens above, not
+a replacement: every existing role token above keeps its own name and
+literal value, unchanged. A filled step below is declared in
+`app/theme.css` as `var()` onto an already-locked role token, so its
+status here is **locked**: it introduces no new value and an
+execution run may consume it directly. An unset step is a commented
+placeholder in `app/theme.css`, never a literal, and its status here
+is **proposed**: named so it is not lost, no value invented, never
+written as a literal until a render sitting rules one.
+
+No existing role token's own declaration has been rewritten onto a
+ladder step in this pass (that migration is separate execution work
+the ladders make possible, not part of this ruling), and no component
+has been migrated to consume a ladder or state token yet; that is
+chapter 2 and chapter 3 work, package by package, under the normal
+render gate.
+
+### Gold ladder (`--gold-1` to `--gold-10`)
+
+| Step | Value | Status |
+|---|---|---|
+| `--gold-1` | unset | proposed |
+| `--gold-2` | `var(--gold-bright)` | locked |
+| `--gold-3` | unset | proposed |
+| `--gold-4` | `var(--gold-action)` | locked |
+| `--gold-5` | `var(--gold-ornament)` | locked |
+| `--gold-6` | unset | proposed |
+| `--gold-7` | `var(--gold-deep)` | locked |
+| `--gold-8` | unset | proposed |
+| `--gold-9` | unset | proposed |
+| `--gold-10` | `var(--tag-fill-ink)` | locked |
+
+### Warm neutral ladder (`--neutral-1` to `--neutral-10`)
+
+| Step | Value | Status |
+|---|---|---|
+| `--neutral-1` | `var(--ink)` | locked |
+| `--neutral-2` | unset | proposed |
+| `--neutral-3` | `var(--ink-dim)` | locked |
+| `--neutral-4` | `var(--ink-faint)` | locked |
+| `--neutral-5` | unset | proposed |
+| `--neutral-6` | `var(--surface-4)` | locked |
+| `--neutral-7` | `var(--surface-3)` | locked |
+| `--neutral-8` | `var(--surface-2)` | locked |
+| `--neutral-9` | `var(--surface-1)` | locked |
+| `--neutral-10` | `var(--canvas)` | locked |
+
+### Status ladders (`--success-1..10`, `--warning-1..10`, `--danger-1..10`)
+
+Every family fills only step 5, its existing base value; steps 1 to 4
+and 6 to 10 are unset in all three families, proposed.
+
+| Family | Step 5 | Steps 1-4, 6-10 |
+|---|---|---|
+| `--success-5` | `var(--status-success)`, locked | unset, proposed |
+| `--warning-5` | `var(--status-warning)`, locked | unset, proposed |
+| `--danger-5` | `var(--status-danger)`, locked | unset, proposed |
+
+### Spacing, 4 added steps (`--space-7`, `--space-9`, `--space-14`, `--space-24`)
+
+| Token | Value | Status |
+|---|---|---|
+| `--space-7` | 28px | locked |
+| `--space-9` | 36px | locked |
+| `--space-14` | 56px | locked |
+| `--space-24` | 96px | locked |
+
+### Type mobile pairs, 8 steps x 2 (16 tokens)
+
+`label`/`ui`/`body`/`lead` alias their own desktop step unchanged;
+`subhead`/`heading`/`title`/`display` each alias one ladder step down.
+All locked (each aliases an already-locked step).
+
+| Mobile token | Value |
+|---|---|
+| `--text-label-m` / `--lh-label-m` | `var(--text-label)` / `var(--lh-label)` |
+| `--text-ui-m` / `--lh-ui-m` | `var(--text-ui)` / `var(--lh-ui)` |
+| `--text-body-m` / `--lh-body-m` | `var(--text-body)` / `var(--lh-body)` |
+| `--text-lead-m` / `--lh-lead-m` | `var(--text-lead)` / `var(--lh-lead)` |
+| `--text-subhead-m` / `--lh-subhead-m` | `var(--text-lead)` / `var(--lh-lead)` |
+| `--text-heading-m` / `--lh-heading-m` | `var(--text-subhead)` / `var(--lh-subhead)` |
+| `--text-title-m` / `--lh-title-m` | `var(--text-heading)` / `var(--lh-heading)` |
+| `--text-display-m` / `--lh-display-m` | `var(--text-title)` / `var(--lh-title)` |
+
+### Elevation, 6 named levels (`--elev-1` to `--elev-6`)
+
+Composed entirely from existing tokens; the standing "exactly two
+floating shadow tokens" ruling is untouched, this only names the
+composed recipe per level.
+
+| Level | Value | Status |
+|---|---|---|
+| `--elev-1` | `none` | locked |
+| `--elev-2` | `var(--edge-top)` | locked |
+| `--elev-3` | `var(--shadow-popover), var(--edge-top)` | locked |
+| `--elev-4` | `var(--shadow-modal), var(--edge-top)` | locked |
+| `--elev-5` | unset | proposed |
+| `--elev-6` | unset | proposed |
+
+### Blur, 6 named levels (`--blur-1` to `--blur-6`)
+
+Documents the strengths that already exist in law (`--blur-panel`,
+`--blur-chrome`) plus the `.tag--meta` 4px mechanism DESIGN-TOKENS
+already names as a third, ungoverned strength. The standing
+one-blur-strength-per-role law is untouched.
+
+| Level | Value | Status |
+|---|---|---|
+| `--blur-1` | `0` | locked |
+| `--blur-2` | `var(--blur-panel)` | locked |
+| `--blur-3` | `4px` | locked |
+| `--blur-4` | unset | proposed |
+| `--blur-5` | `var(--blur-chrome)` | locked |
+| `--blur-6` | unset | proposed |
+
+### Five-state set
+
+One state token family every kit control consumes going forward
+(`docs/BUILD-BLUEPRINT.md` chapter 2). Rest is each component's own
+idle recipe and needs no token. Pressed on gold-filled controls maps
+to `--gold-deep`, whose ruled role is already "pressed states".
+
+| Token | Value | Status |
+|---|---|---|
+| `--state-hover-fill` | `var(--fill-whisper)` | locked |
+| `--state-hover-line` | `var(--line)` | locked |
+| `--state-pressed-fill` | `var(--fill)` | locked |
+| `--state-pressed-gold` | `var(--gold-deep)` | locked |
+| `--state-disabled-opacity` | `0.5` | locked |
+| `--state-focus-ring` | `var(--focus-ring)` | locked |
+
 ## Proposed (do not write into product code)
 
 | Name | Would cover | Blocked on |
