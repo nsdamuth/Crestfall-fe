@@ -25,7 +25,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-serif: var(--font-display);
   --font-display: var(--font-display);
 }
 
@@ -63,7 +63,7 @@ body {
 }
 
 .font-serif {
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-display), serif;
 }
 
 .sourcebook-panel {
@@ -375,7 +375,7 @@ body {
 }
 
 .sourcebook-pullquote p {
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-display), serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   line-height: 1.15;
   font-style: italic;
@@ -429,7 +429,7 @@ body {
 }
 
 .sourcebook-statblock dd {
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-display), serif;
   color: #2a2118;
 }
 
@@ -441,7 +441,7 @@ body {
 
 .sourcebook-callout p {
   margin-top: 0.75rem;
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-display), serif;
   font-size: 1.05rem;
   line-height: 1.7;
   color: #2a2118;
