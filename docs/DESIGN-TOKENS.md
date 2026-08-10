@@ -219,6 +219,16 @@ override so touch keeps the 44px floor; never on any other control),
 48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
 All locked.
 
+`--topbar-h`, minted 10 Aug 2026 (kit polish 3 pass): the sticky
+`StudioTopBar` header's own rendered height, `calc(var(--control-md)
++ var(--space-3) * 2 + 1px)` (control height, its top and bottom
+padding, its 1px bottom border), a derived layout constant rather
+than a new primitive value. Legal use: the `top` offset of any sticky
+surface that must dock directly beneath the top bar with no gap and
+no overlap (the studio filter bar is the first consumer). Never used
+to set an element's own height; it exists only so a second sticky
+layer can measure the first. Locked.
+
 ## Motion and focus
 
 `--ease`, `--ease-hover`, `--dur-fast/base/slow/hover/ambient`,

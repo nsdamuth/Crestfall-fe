@@ -316,6 +316,12 @@
                                   polish 2 ruling; touch keeps control-md */
   --control-md:  2.75rem;   /* 44, default, touch safe       */
   --control-lg:  3rem;      /* 48, primary CTAs              */
+  --topbar-h: calc(var(--control-md) + var(--space-3) * 2 + 1px);
+    /* StudioTopBar's own height (control height, its py-space-3 top
+       and bottom, its 1px bottom border), minted 10 Aug 2026 (kit
+       polish 3 pass) so a sticky surface beneath the top bar can
+       dock to it with no gap and no overlap instead of guessing a
+       literal. */
   --icon-sm:     1rem;      /* 16 */
   --icon-md:     1.25rem;   /* 20 */
   --icon-lg:     1.5rem;    /* 24 */

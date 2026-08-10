@@ -190,6 +190,32 @@
   box-shadow: 0 0 0 1px var(--line-strong);
 }
 
+/* Search field, RULED final 10 Aug 2026 (kit polish 3 pass): no gold
+   treatment in any state. Pointer interaction shows nothing; keyboard
+   focus-visible shows only the wrapper's own border brightening
+   (KitStudioFilterBar.view.jsx's has-[:focus-visible]:border-line-
+   strong). This class suppresses the app-wide gold ring on the input
+   element itself so nothing doubles up inside the wrapper's border.
+   Higher specificity than the app-wide rule above by design, so load
+   order never matters here. */
+.kit-search-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* The native type=search cancel/clear icon renders in the browser's
+   own color (Chromium and Edge both draw it outside token law); it
+   is hidden here so KitStudioFilterBar's own --ink-faint clear icon
+   is the only one shown. */
+.kit-search-input::-webkit-search-cancel-button,
+.kit-search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.kit-search-input::-ms-clear {
+  display: none;
+}
+
 /* --- SCROLLBARS -------------------------------------------------
    Item 9, phase 3 aesthetics. Subtle translucent brand-styled
    scrollbars on every internal scroll container, vertical only.
