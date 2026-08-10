@@ -1,22 +1,36 @@
+import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
+
 const noop = () => {};
 
 const defaultFilterGroups = [
   {
     id: "type",
     label: "Type",
+    isMultiSelect: true,
     options: [
-      { value: "character", label: "Character", count: 214 },
-      { value: "story", label: "Story", count: 88 },
-      { value: "adventure", label: "Adventure", count: 12 },
+      { value: "character", label: "Characters", count: 214 },
+      { value: "story", label: "Stories", count: 88 },
+      { value: "adventure", label: "Adventures", count: 12 },
+      { value: "image", label: "Images", count: 96 },
     ],
   },
   {
     id: "rating",
-    label: "Rating tier",
-    options: [
-      { value: "sfw", label: "SFW", count: 301 },
-      { value: "mature", label: "Mature", count: 13 },
-    ],
+    label: "Rating",
+    isMultiSelect: true,
+    options: CONTENT_RATING_TIERS.map((tier) => ({
+      value: tier.tier,
+      label: tier.label,
+      description: tier.description,
+      count: tier.isPending ? null : 40,
+      isDisabled: Boolean(tier.isPending),
+    })),
+  },
+  {
+    id: "remixable",
+    label: "Remixable",
+    isMultiSelect: true,
+    options: [{ value: "remixable", label: "Remixable only", count: 122 }],
   },
 ];
 
@@ -53,6 +67,7 @@ export const kitStudioFilterBarLongestLabelsFixture = {
     {
       id: "registry",
       label: "Attached registries",
+      isMultiSelect: true,
       options: [
         { value: "faction", label: "Faction Registry Attachments", count: 4 },
         { value: "organization", label: "Organization Registry Attachments", count: 2 },
@@ -63,18 +78,20 @@ export const kitStudioFilterBarLongestLabelsFixture = {
   selectedValues: { registry: ["organization"] },
 };
 
-export const kitStudioFilterBarManyChipsFixture = {
+export const kitStudioFilterBarManyOptionsFixture = {
   ...kitStudioFilterBarDefaultFixture,
   filterGroups: [
     {
       id: "realm",
       label: "Realm",
+      isMultiSelect: true,
       options: Array.from({ length: 14 }, (_, index) => ({
         value: `realm-${index + 1}`,
         label: `Realm ${index + 1}`,
         count: (index + 1) * 3,
       })),
     },
+    ...defaultFilterGroups,
   ],
   selectedValues: { realm: ["realm-3", "realm-9"] },
 };

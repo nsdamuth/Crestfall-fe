@@ -9,6 +9,7 @@ function toGroups(value) {
     .map((group) => ({
       id: group.id,
       label: typeof group.label === "string" ? group.label : "",
+      isMultiSelect: group.isMultiSelect !== false,
       options: Array.isArray(group.options)
         ? group.options
             .filter((option) => option && typeof option.value === "string")
@@ -19,6 +20,9 @@ function toGroups(value) {
                 typeof option.count === "number" && Number.isFinite(option.count)
                   ? option.count
                   : null,
+              description:
+                typeof option.description === "string" ? option.description : undefined,
+              isDisabled: Boolean(option.isDisabled),
             }))
         : [],
     }));

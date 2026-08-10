@@ -8,7 +8,7 @@ import {
   kitStudioFilterBarEmptyGroupsFixture,
   kitStudioFilterBarLoadingCountsFixture,
   kitStudioFilterBarLongestLabelsFixture,
-  kitStudioFilterBarManyChipsFixture,
+  kitStudioFilterBarManyOptionsFixture,
 } from "@/components/kit/studio-filter-bar/KitStudioFilterBar.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -16,7 +16,7 @@ const STATES = {
   default: { label: "Default", props: kitStudioFilterBarDefaultFixture },
   empty: { label: "Empty groups", props: kitStudioFilterBarEmptyGroupsFixture },
   longest: { label: "Longest labels", props: kitStudioFilterBarLongestLabelsFixture },
-  many: { label: "Many chips", props: kitStudioFilterBarManyChipsFixture },
+  many: { label: "Many options", props: kitStudioFilterBarManyOptionsFixture },
   loading: { label: "Loading counts", props: kitStudioFilterBarLoadingCountsFixture },
 };
 
@@ -51,7 +51,7 @@ export default function KitStudioFilterBarPreviewClient() {
   return (
     <KitPreviewShell
       title="Kit Studio Filter Bar"
-      description="Search, filter chips, sort, and a view-mode slot, in one sticky bar. Configured per page with whatever groups are relevant to that page's entities."
+      description="One sticky line: search, branded filter dropdowns with selection counts, sort dropdown, and a view-mode slot. At 390 the search takes its own row inside the sticky block; dropdowns open as bottom sheets."
       states={Object.entries(STATES).map(([key, state]) => ({
         key,
         label: state.label,

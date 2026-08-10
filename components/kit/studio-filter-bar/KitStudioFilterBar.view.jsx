@@ -1,13 +1,28 @@
 "use client";
 
-import { ChevronDown, Search } from "lucide-react";
+// One-line filter law (9 Aug 2026, docs/BUILD-BLUEPRINT.md 2.16):
+// search, every filter, and sort share one sticky line; filters and
+// multi-selects are branded dropdowns (KitDropdown) with selection
+// counts; loose chip rows are retired from filter surfaces. Bar shell
+// traces to the legacy control bar (docs/MOCKUP-DECISIONS.md, control
+// bar entry): canvas-tinted translucency with chrome frost, full-bleed
+// margin trick, controls-with-their-own-states inside a REST-only bar.
+//
+// Mobile (390): search takes its own full-width row above the control
+// line (ruled this pass; the always-visible field beats a two-tap
+// icon-expand for the page's highest-frequency control), and the
+// control line scrolls horizontally without clipping.
+import { Search } from "lucide-react";
 
-import KitFilterChipView from "../filter-chip/KitFilterChip.view";
+import KitDropdownView from "../dropdown/KitDropdown.view";
 
 function SearchField({ value, placeholder, onChange }) {
+  // Focus law (9 Aug 2026): the ring outlines the full control border,
+  // never the inner field. The wrapper carries the ring via
+  // focus-within; the input suppresses the global per-element ring.
   return (
-    <div className="flex min-h-[var(--control-md)] flex-1 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
-      <Search size={16} className="text-[var(--ink-faint)]" aria-hidden="true" />
+    <div className="flex min-h-[var(--control-md)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors focus-within:[box-shadow:var(--focus-ring)] hover:border-[var(--line)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1">
+      <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"
         name="kit-studio-filter-bar-search"
@@ -15,63 +30,8 @@ function SearchField({ value, placeholder, onChange }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none"
+        className="w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none focus-visible:[box-shadow:none] [@media(pointer:coarse)]:text-[length:var(--text-body)]"
       />
-    </div>
-  );
-}
-
-function SortSelect({ options, value, onChange }) {
-  if (!options.length) return null;
-
-  return (
-    <div className="relative inline-flex flex-none">
-      <select
-        name="kit-studio-filter-bar-sort"
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        aria-label="Sort by"
-        className="min-h-[var(--control-sm)] appearance-none rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] py-0 pl-[var(--space-4)] pr-[var(--space-8)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition-colors hover:border-[var(--line)] hover:text-[var(--ink)] focus:outline-none"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        size={14}
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[var(--space-2)] top-1/2 -translate-y-1/2 text-[var(--ink-faint)]"
-      />
-    </div>
-  );
-}
-
-function FilterGroupRow({ group, selectedValues, isLoadingCounts, onFilterToggle }) {
-  if (!group.options.length) return null;
-
-  const selected = selectedValues?.[group.id] || [];
-
-  return (
-    <div className="flex min-w-0 flex-col gap-[var(--space-1)]">
-      {group.label && (
-        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-          {group.label}
-        </p>
-      )}
-      <div className="scrollbar-none flex gap-[var(--space-2)] overflow-x-auto">
-        {group.options.map((option) => (
-          <KitFilterChipView
-            key={option.value}
-            label={option.label}
-            count={isLoadingCounts ? null : option.count}
-            isSelected={selected.includes(option.value)}
-            variant="default"
-            onToggle={() => onFilterToggle?.(group.id, option.value)}
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -90,40 +50,42 @@ export default function KitStudioFilterBarView({
   viewModeSlot = null,
 }) {
   return (
-    <div className="sticky top-0 z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-3)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)]">
-      <div className="flex flex-wrap items-center gap-[var(--space-3)]">
-        <SearchField
-          value={searchValue}
-          placeholder={searchPlaceholder}
-          onChange={onSearchChange}
-        />
-        <SortSelect
-          options={sortOptions}
-          value={selectedSort}
-          onChange={onSortChange}
-        />
-        {viewModeSlot}
-      </div>
+    <div className="sticky top-0 z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)]">
+      <SearchField
+        value={searchValue}
+        placeholder={searchPlaceholder}
+        onChange={onSearchChange}
+      />
 
-      {filterGroups.length > 0 && (
-        <div className="flex flex-wrap gap-[var(--space-4)]">
-          {filterGroups.map((group) => (
-            <FilterGroupRow
-              key={group.id}
-              group={group}
-              selectedValues={selectedValues}
-              isLoadingCounts={isLoadingCounts}
-              onFilterToggle={onFilterToggle}
-            />
-          ))}
+      <div className="scrollbar-none flex items-center gap-[var(--space-2)] overflow-x-auto min-[700px]:flex-1 min-[700px]:flex-wrap min-[700px]:overflow-visible">
+        {filterGroups.map((group) => (
+          <KitDropdownView
+            key={group.id}
+            label={group.label}
+            options={(group.options || []).map((option) => ({
+              ...option,
+              count: isLoadingCounts ? null : option.count,
+            }))}
+            selectedValues={selectedValues?.[group.id] || []}
+            isMultiSelect={group.isMultiSelect !== false}
+            onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+          />
+        ))}
+
+        {sortOptions.length > 0 && (
+          <KitDropdownView
+            label="Sort"
+            options={sortOptions}
+            selectedValues={selectedSort ? [selectedSort] : []}
+            isMultiSelect={false}
+            onToggleOption={(value) => onSortChange?.(value)}
+          />
+        )}
+
+        <div className="ml-auto flex flex-none items-center pl-[var(--space-2)]">
+          {viewModeSlot}
         </div>
-      )}
-
-      {isLoadingCounts && (
-        <p className="text-[length:var(--text-label)] text-[var(--ink-faint)]">
-          Updating counts...
-        </p>
-      )}
+      </div>
     </div>
   );
 }
