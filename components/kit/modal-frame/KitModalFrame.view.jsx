@@ -21,7 +21,7 @@ function CircularCloseButton({ onClose = null, className = "" }) {
       type="button"
       onClick={() => onClose?.()}
       aria-label="Close"
-      className={`kit-focus flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] ${className}`}
+      className={`kit-focus pointer-events-auto flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] ${className}`}
     >
       <X size={18} aria-hidden="true" />
     </button>

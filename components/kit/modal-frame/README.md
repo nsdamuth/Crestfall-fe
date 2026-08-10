@@ -41,10 +41,15 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
   2026): full-width band, close control static inside it, content
   renders below.
 - `variant="viewer"` (added 1.1.0, 10 Aug 2026): the chromeless image
-  viewer surface (R2/R5). Empty shell in phase 1 of the kit polish 3
-  pass, sharing the modal variant's full-screen-maximize alignment
-  until the viewer rebuild (phase 2) fills in its chrome-frost veil
-  and transparent panel.
+  viewer surface (R2/R5): chrome-frost veil, transparent full-viewport
+  panel. The panel is click-transparent (`pointer-events-none`, R3
+  review-gate fix, 10 Aug 2026): a transparent full-viewport panel
+  otherwise swallows every veil click, so ModalShell's
+  target===currentTarget backdrop guard could never fire and backdrop
+  dismissal was dead. Content rendered into this variant must
+  re-enable pointer events (`pointer-events-auto`) on each interactive
+  box and leave everything else transparent; the frame's own close
+  control already does.
 - Width and height stay per-surface via `panelClassName` (caps only,
   never surface/border/radius/shadow/dismissal overrides).
 - Close control: circular recipe, `absolute` top-right inside the

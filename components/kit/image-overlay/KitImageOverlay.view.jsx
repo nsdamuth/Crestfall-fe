@@ -169,7 +169,7 @@ function ImageFrame({ imageSrc, title, zoomDisabled }) {
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       style={{ touchAction: isZoomed ? "none" : "auto" }}
-      className={`relative flex min-h-0 max-h-full min-w-0 max-w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)] ${
+      className={`pointer-events-auto relative flex min-h-0 max-h-full min-w-0 max-w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)] ${
         isZoomed ? "cursor-grabbing" : !zoomDisabled ? "cursor-grab" : ""
       }`}
     >
@@ -183,11 +183,15 @@ function ImageFrame({ imageSrc, title, zoomDisabled }) {
           // renders at (never a bigger box with the image floating
           // inside it, per R2); the max-height reservation under
           // 700px accounts for the shelf's own height (control-md
-          // plus its space-3 padding and 1px top/bottom border) and
-          // the space-3 gap above it, so the image still uses the
-          // maximum remaining space per R5 without ever overflowing
-          // into, or leaving a gap in front of, the shelf.
-          className="block h-auto max-h-[calc(100dvh-var(--control-md)-var(--space-3)*3-2px)] w-auto max-w-full select-none min-[700px]:max-h-[78dvh] min-[700px]:max-w-[min(88vw,76rem)]"
+          // plus its space-3 padding and 1px top/bottom border), the
+          // space-3 gap above it, AND the hairline frame's own 1px
+          // top/bottom border (the 4px term: 2px shelf border plus
+          // 2px frame border; at 2px, tall images clipped 1px at the
+          // top and bottom edge, R2 review-gate find), so the image
+          // still uses the maximum remaining space per R5 without
+          // ever overflowing into, or leaving a gap in front of, the
+          // shelf.
+          className="block h-auto max-h-[calc(100dvh-var(--control-md)-var(--space-3)*3-4px)] w-auto max-w-full select-none min-[700px]:max-h-[78dvh] min-[700px]:max-w-[min(88vw,76rem)]"
           style={{
             transform: `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.scale})`,
             transition: isInteracting ? "none" : "transform 120ms var(--ease, ease-out)",
@@ -215,10 +219,23 @@ export default function KitImageOverlayView({
   onShare = null,
 }) {
   return (
-    <div className="flex h-full max-h-full w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:w-fit min-[700px]:max-h-full min-[700px]:px-0">
+    // pointer-events-none continues the frame's click-transparent
+    // viewer panel (R3): only the image frame and the shelf re-enable
+    // their own pointer events, so a click anywhere else falls
+    // through to the veil and dismisses. w-fit at every width (R5,
+    // 10 Aug 2026 review gate): the column shrink-wraps the image on
+    // mobile too, so the shelf snaps to the image's own width by
+    // construction instead of spanning the viewport past a narrow
+    // image.
+    <div className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:max-h-full min-[700px]:px-0">
       <ImageFrame imageSrc={imageSrc} title={title} zoomDisabled={!imageSrc} />
 
-      <div className="flex flex-none items-center justify-center gap-[var(--space-3)] self-stretch rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)]">
+      {/* R1 (10 Aug 2026, Brian's ruling): the shelf sits darker and
+          slightly translucent so focus stays on the image, reusing
+          the sticky-chrome recipe's exact composition (the canvas
+          88 percent mix) on the existing surface tokens; no new
+          value is minted. */}
+      <div className="pointer-events-auto flex flex-none items-center justify-center gap-[var(--space-3)] self-stretch rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] p-[var(--space-3)]">
         <OverlayActionButton label="Love" active={isLoved} onClick={onLove}>
           <Heart size={18} fill={isLoved ? "currentColor" : "none"} />
         </OverlayActionButton>

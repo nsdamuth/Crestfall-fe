@@ -38,9 +38,14 @@ const PANEL_RECIPE = {
   // its own surface, never a panel with an image inside it. No
   // background, border, shadow, or radius anywhere; a transparent
   // full-viewport flex column, its only chrome the frame's close
-  // control.
+  // control. pointer-events-none (R3, 10 Aug 2026 review gate): the
+  // transparent panel spans the whole viewport, so without it every
+  // veil click landed on the panel and ModalShell's
+  // target===currentTarget backdrop guard could never fire; the
+  // panel is click-transparent and each interactive child (close
+  // control, image frame, shelf) re-enables its own pointer events.
   viewer:
-    "relative flex h-[100dvh] max-h-[100dvh] w-full flex-col items-center justify-center overflow-y-auto",
+    "relative flex h-[100dvh] max-h-[100dvh] w-full flex-col items-center justify-center pointer-events-none",
 };
 
 // R2 (plan 1.2): the viewer variant's veil is the sticky nav

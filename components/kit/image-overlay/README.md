@@ -21,10 +21,16 @@ The viewer is its own surface, never a panel with an image inside it:
 - **Panel**: none. No background, border, shadow, or radius anywhere;
   a transparent, full-viewport (`h-[100dvh] w-full`) flex column whose
   only chrome is the frame's close control, absolutely positioned top
-  right.
-- **The figure column**: shrink-wrapped (`w-fit` at 700px and up, full
-  available width minus `--space-2` gutters under 700px), centered in
-  the viewport.
+  right. The panel and the figure column are click-transparent
+  (`pointer-events-none`, R3 review-gate fix, 10 Aug 2026): only the
+  hairline frame, the shelf, and the close control accept pointer
+  events, so a click anywhere else reaches the veil and dismisses
+  (backdrop click, close control, and Escape all close, standing
+  Sprint A law).
+- **The figure column**: shrink-wrapped (`w-fit max-w-full` at every
+  width, R5 review-gate fix: on mobile too, so the shelf snaps to a
+  narrow image's own width instead of spanning the viewport), with
+  `--space-2` gutters under 700px, centered in the viewport.
   - **The gold hairline** (`1px solid var(--gold-ornament)`,
     `--radius-md`, `overflow-hidden`) wraps the IMAGE ALONE, snapped
     to its rendered edges. Never around empty space: the image is
@@ -38,9 +44,12 @@ The viewer is its own surface, never a panel with an image inside it:
     hairline by construction: both are children of the same
     `items-center` flex column, and the shelf uses `self-stretch`
     (not a hardcoded width) to match whatever width the hairline
-    shrank to around the image. Recipe unchanged: `--surface-1` bed,
-    `--line` border, `--radius-md`, `p-[var(--space-3)]`, centered
-    row, Love/Save/Share exactly as before.
+    shrank to around the image. Bed RULED darker and slightly
+    translucent (R1, 10 Aug 2026): the sticky-chrome recipe's exact
+    composition, `bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)]`,
+    replacing the `--surface-1` bed so focus stays on the image; no
+    new value minted. `--line` border, `--radius-md`,
+    `p-[var(--space-3)]`, centered row, Love/Save/Share unchanged.
 - **No visible title line** (OPEN FOR BRIAN item 11, plan 1.2): the
   witness renders no text around the image. `title` is forwarded as
   the frame's `ariaLabel`, the accessible name only.
@@ -99,4 +108,6 @@ image.
 - `/dev/ui-preview/kit-image-overlay`
 
 The preview is fixture-only; zoom and pan are interactive and not
-fixture-capturable.
+fixture-capturable. Fixture states cover default, loved, saved,
+longest title, no image, and (R2, 10 Aug 2026) the four aspect
+witnesses: wide, tall, square, tiny.

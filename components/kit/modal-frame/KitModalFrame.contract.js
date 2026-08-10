@@ -34,8 +34,10 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.1.0";
  *   (added 1.1.0, 10 Aug 2026) is the chromeless image-viewer surface
  *   (R2/R5): no panel background, border, shadow, or radius, sticky
  *   nav veil treatment, full-screen maximize under 700px identical to
- *   modal. Empty shell in 1.1.0 phase 1; filled in by the phase 2
- *   viewer rebuild.
+ *   modal. Its panel is click-transparent (pointer-events none, R3
+ *   review-gate fix, 10 Aug 2026) so backdrop clicks reach the veil
+ *   and dismiss; viewer content re-enables pointer events on each
+ *   interactive box (presentation behavior, not a prop change).
  * @property {string} panelClassName per-surface WIDTH and HEIGHT caps
  *   only (e.g. `max-w-lg`); never surface, border, radius, shadow, or
  *   dismissal overrides

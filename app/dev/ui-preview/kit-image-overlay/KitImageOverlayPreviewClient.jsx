@@ -9,6 +9,10 @@ import {
   kitImageOverlayLovedFixture,
   kitImageOverlayNoImageFixture,
   kitImageOverlaySavedFixture,
+  kitImageOverlaySquareFixture,
+  kitImageOverlayTallFixture,
+  kitImageOverlayTinyFixture,
+  kitImageOverlayWideFixture,
 } from "@/components/kit/image-overlay/KitImageOverlay.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -18,6 +22,10 @@ const STATES = {
   saved: { label: "Saved", props: kitImageOverlaySavedFixture },
   longest: { label: "Longest title", props: kitImageOverlayLongestTitleFixture },
   noImage: { label: "No image", props: kitImageOverlayNoImageFixture },
+  wide: { label: "Wide image", props: kitImageOverlayWideFixture },
+  tall: { label: "Tall image", props: kitImageOverlayTallFixture },
+  square: { label: "Square image", props: kitImageOverlaySquareFixture },
+  tiny: { label: "Tiny image", props: kitImageOverlayTinyFixture },
 };
 
 export default function KitImageOverlayPreviewClient() {

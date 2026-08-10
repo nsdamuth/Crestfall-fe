@@ -1,6 +1,7 @@
-function previewSvg(seed) {
+function previewSvg(seed, width = 720, height = 960) {
+  const r = Math.min(width, height) / 4;
   const svg = encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 960">
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <defs>
         <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stop-color="#100d0a" />
@@ -8,8 +9,8 @@ function previewSvg(seed) {
           <stop offset="1" stop-color="#15100a" />
         </linearGradient>
       </defs>
-      <rect width="720" height="960" fill="url(#g)" />
-      <circle cx="360" cy="360" r="180" fill="#d9bd82" opacity="0.75" />
+      <rect width="${width}" height="${height}" fill="url(#g)" />
+      <circle cx="${width / 2}" cy="${height / 2}" r="${r}" fill="#d9bd82" opacity="0.75" />
     </svg>
   `);
   return `data:image/svg+xml,${svg}`;
@@ -53,4 +54,33 @@ export const kitImageOverlayNoImageFixture = {
   ...kitImageOverlayDefaultFixture,
   imageSrc: null,
   title: "Untitled render",
+};
+
+// Aspect-coverage fixtures, RULED 10 Aug 2026 (R2 review gate): the
+// hairline must snap to the image's own edges with no internal gap
+// at every aspect ratio, witnessed by wide, tall, square, and tiny
+// states. The wide state uses the one genuinely wide draft asset;
+// the synthetic generator covers the shapes the draft library lacks.
+export const kitImageOverlayWideFixture = {
+  ...kitImageOverlayDefaultFixture,
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  title: "Lilith, Banner Study",
+};
+
+export const kitImageOverlayTallFixture = {
+  ...kitImageOverlayDefaultFixture,
+  imageSrc: previewSvg("#44604b", 400, 1600),
+  title: "Tower Interior, Full Height",
+};
+
+export const kitImageOverlaySquareFixture = {
+  ...kitImageOverlayDefaultFixture,
+  imageSrc: previewSvg("#7a5717", 800, 800),
+  title: "Sigil Study, Square Crop",
+};
+
+export const kitImageOverlayTinyFixture = {
+  ...kitImageOverlayDefaultFixture,
+  imageSrc: previewSvg("#5a4732", 120, 90),
+  title: "Thumbnail Sketch",
 };
