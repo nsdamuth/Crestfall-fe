@@ -52,6 +52,7 @@ the details below carry only what is still actionable.
 | CR-023 | Community vs Adventures structural model | Data-model question under an already-ruled copy-level split | open | Nick | feed/link/flag questions still open |
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
+| CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
 
 ## Details
 
@@ -290,6 +291,18 @@ category value "Adventure" needs no rename of its own: it displays as
 "Scenario," no alias, mapped in
 `lib/shared/presentation/terminology.js` rather than in its own
 `label`, so it does not collide with the Adventure unit name.
+
+### CR-026, Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick
+
+Later-pass, non-blocking. `docs/APP-FUNCTION-INVENTORY.md`'s "Character
+allocation" section sorts every Character field into QUICK (quick
+create and the editor) or ADVANCED (editor only), following the 9 Aug
+2026 ruled pattern. Two placements were kept in QUICK against the
+pattern's literal wording under the item 4 guardrail (appearance-step
+fields, Default Rendering Style) and are separately flagged there for
+Brian, not Nick, to rule on. This CR is the later step once quick-create
+mockups exist: Nick reviews them and selects any field currently
+allocated ADVANCED that he wants promoted into QUICK before build.
 
 ## Closed
 
