@@ -53,7 +53,7 @@ the details below carry only what is still actionable.
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
-| CR-027 | backend three-vs-four-tier content rating question | Labels corrected 9 Aug 2026 (demo prep pass): Everyone (SFW) and Adult (MATURE, EXPLICIT) are live tiers over real backend values; Teen is a disabled row with no backend value, arriving with this CR. EXPLICIT's mapping to Adult is interim, pending Nick's ruling on migrating or reclassifying EXPLICIT-tagged content under the Adult/R ceiling | open | Nick | later-pass, non-blocking; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
+| CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Teen, EXPLICIT=Adult, no disabled row. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 
 ## Details
 
@@ -305,38 +305,41 @@ Brian, not Nick, to rule on. This CR is the later step once quick-create
 mockups exist: Nick reviews them and selects any field currently
 allocated ADVANCED that he wants promoted into QUICK before build.
 
-### CR-027, backend three-vs-four-tier content rating question
+### CR-027, content rating labels, ruled final, gated on a content audit
 
-Later-pass, non-blocking, filed 9 Aug 2026 by the kit revision pass,
-updated 9 Aug 2026 by the kit polish pass, corrected 9 Aug 2026 by the
-demo prep pass. The backend carries three content rating values
-(`lib/server/creations/constants.js`: `SFW`, `MATURE`, `EXPLICIT`).
-Corrected mapping, display-mapped in
+Filed 9 Aug 2026 by the kit revision pass, updated 9 Aug 2026 by the
+kit polish pass, corrected 9 Aug 2026 by the demo prep pass, ruled
+final 9 Aug 2026 by the kit polish 2 pass. Labels are no longer open:
+the backend's three content rating values
+(`lib/server/creations/constants.js`: `SFW`, `MATURE`, `EXPLICIT`) map
+one to one onto three live display tiers, display-mapped in
 `lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
 SFW displays as Everyone (tooltip "Comparable to a G or PG film.");
-MATURE displays as Adult (tooltip "Comparable to an R film.");
-EXPLICIT also displays as Adult, pending migration, sharing the same
-Adult tooltip; Teen renders as a disabled row with no backend value
-(tooltip "Comparable to a PG-13 film."), marked arriving with this
-CR. Film anchors ride the row tooltip, never a visible description
-line. The prior (pre-correction) mapping had displayed MATURE as
-Teen and EXPLICIT as Adult; that was a semantic error, since MATURE
-content is not teen-appropriate. It is superseded by the mapping
-above.
+MATURE displays as Teen (tooltip "Comparable to a PG-13 film.");
+EXPLICIT displays as Adult (tooltip "Comparable to an R film."). No
+disabled row, no interim note, no NC-17 anywhere. Film anchors ride
+the row tooltip, never a visible description line.
 
-Open questions for Nick, deferred rather than answered here:
-1. Whether the backend should carry a fourth content-rating value to
-   seat an actual Teen tier, and if so what it buckets.
-2. Whether EXPLICIT-tagged content should migrate to a distinct
-   ceiling above Adult/R, or be permanently reclassified and folded
-   under the Adult/R ceiling alongside MATURE. No build spec is fixed
-   until both questions are ruled.
+REQUIRED GATE before this mapping reaches live data: every existing
+`MATURE` and `EXPLICIT` tagged creation must be audited and re-tagged
+against this ladder before real (non-fixture) content is shown under
+these labels to users. `MATURE` content now surfaces as Teen; any
+`MATURE`-tagged item that is not actually teen-appropriate under this
+ladder must be re-tagged `EXPLICIT` (Adult) as part of the audit, not
+left mislabeled. This gate is Nick's to run and blocks turning on live
+data for the rating filter and rating badge; fixture-driven previews
+are unaffected and may ship ahead of the audit.
+
+Open question for Nick, deferred rather than answered here: whether
+the backend should carry a fourth content-rating value distinct from
+today's three, once the audit above is complete and the standards doc
+below is final.
 
 Caveat that gates final naming: the referenced standards doc
 (CRESTFALL-CONTENT-STANDARDS.md) is a draft and is not in this repo
-yet; the three-vs-four backend question and its label consequences
-stay pending that revision. Nothing blocks frontend work; the display
-mapping is live against the three real values today.
+yet. Nothing blocks frontend work; the display mapping is live against
+the three real values today, gated only on the audit above before
+live (non-fixture) data reaches users under these labels.
 
 ## Closed
 
