@@ -1,3 +1,10 @@
+# SPRINT-B-PLAN v1.0.0, SUPERSEDED 10 Aug 2026 by docs/SPRINT-D-PLAN.md
+
+**SUPERSEDED.** This plan's content is absorbed into
+docs/SPRINT-D-PLAN.md section 2 (workstream W2), updated to inherit
+rulings R1 through R7 of the 10 Aug 2026 modal-system gate. Do not
+execute from this document. Kept for lineage only.
+
 # SPRINT-B-PLAN v1.0.0, written 10 Aug 2026, branch design/kit-polish-3, planning gate only
 
 Sprint B: the Images page at `/studio/v2/images`, fixture-driven, out

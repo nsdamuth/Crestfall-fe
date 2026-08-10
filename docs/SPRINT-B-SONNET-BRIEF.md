@@ -1,3 +1,11 @@
+# SPRINT-B-SONNET-BRIEF v1.0.0, SUPERSEDED 10 Aug 2026 by docs/SPRINT-D-SONNET-BRIEF.md
+
+**SUPERSEDED.** This brief is replaced by
+docs/SPRINT-D-SONNET-BRIEF.md, whose phase 6 (workstream W2) carries
+this sprint's scope updated to inherit rulings R1 through R7 of the
+10 Aug 2026 modal-system gate. Do not run this brief. Kept for
+lineage only.
+
 # SPRINT-B-SONNET-BRIEF v1.0.0, written 10 Aug 2026, for one unattended Sonnet session
 
 Engine Sonnet, effort high, auto-accept. Execute the three phases
