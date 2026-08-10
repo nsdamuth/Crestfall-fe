@@ -16,6 +16,17 @@ rules of its own. It points. Read it first, every session.
 
 Those three are the only documents an agent follows as law.
 
+## Standing reference docs
+
+Not law, kept current as living reference material:
+
+- `docs/APP-FUNCTION-MAP.csv`: row-per-control ledger of every page's
+  wiring, referenced by `FRONTEND-SOP.md` section 13 (contract law)
+  and section 14 (definition of done).
+- `docs/APP-FUNCTION-INVENTORY.md`: what the CSV is, how it is
+  maintained, and analysis (create/edit field deltas, destination-page
+  mapping) that does not fit in a CSV cell.
+
 ## Not law
 
 - `docs/RESTYLE-RULES.md`: historical changelog, never cited as an
