@@ -2,12 +2,18 @@
 
 // Branded dropdown, docs/BUILD-BLUEPRINT.md 2.9 menu-popover recipe
 // plus the 2.16 filter-line law (9 Aug 2026). Desktop: popover below
-// the trigger. Under 700px: bottom-docked sheet per the modal law
-// (RESTYLE-RULES Ruling 7). Open/closed is sanctioned presentation-
-// only local state; selection lives with the caller.
+// the trigger. Under 700px: bottom-docked sheet, now KitModalFrame
+// variant="sheet" (docs/SPRINT-A-PLAN.md section 5, kit polish
+// Sprint A Phase 4), behind a presentation-only matchMedia flag; the
+// 700px-and-up popover is byte-for-byte unchanged. Open/closed is
+// sanctioned presentation-only local state; selection lives with the
+// caller.
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
+
+import KitModalFrame from "../KitModalFrame";
+
+const PHONE_WIDTH_QUERY = "(max-width: 699.98px)";
 
 // Trigger grammar adopted from the legacy control bar (library.css
 // .cbdrop, docs/MOCKUP-DECISIONS.md): category label, then the gold
@@ -102,22 +108,25 @@ export default function KitDropdownView({
   onToggleOption = null,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isPhoneWidth, setIsPhoneWidth] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(PHONE_WIDTH_QUERY).matches
+  );
   const rootRef = useRef(null);
-  const sheetRef = useRef(null);
 
-  // Presentation-only dismissal wiring: outside click and Escape close
-  // the panel. No data access; the LOOM no-useEffect check targets
-  // fetching, and this effect touches only the open flag. The phone
-  // sheet lives in a body portal (below), so both containers count as
-  // inside.
+  // Presentation-only dismissal wiring for the POPOVER only: outside
+  // click and Escape close the panel. No data access; the LOOM
+  // no-useEffect check targets fetching, and this effect touches only
+  // the open flag. Scoped to !isPhoneWidth: the phone sheet
+  // (KitModalFrame variant="sheet") is portaled to document.body, so
+  // it sits outside rootRef's DOM subtree by design, and the frame
+  // already answers its own Escape and backdrop click; without this
+  // scope, this listener would misread every click inside the
+  // portaled sheet as an "outside" click and close it immediately.
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen || isPhoneWidth) return undefined;
 
     function onPointerDown(event) {
-      if (
-        !rootRef.current?.contains(event.target) &&
-        !sheetRef.current?.contains(event.target)
-      ) {
+      if (!rootRef.current?.contains(event.target)) {
         setIsOpen(false);
       }
     }
@@ -131,6 +140,26 @@ export default function KitDropdownView({
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
+  }, [isOpen, isPhoneWidth]);
+
+  // Presentation-only chassis-select flag (Sprint A Phase 4,
+  // docs/SPRINT-A-PLAN.md section 5.2): while open, phone width mounts
+  // the frame sheet, 700px and up renders the popover unchanged. Same
+  // sanctioned local-state class as the open flag; scoped to the open
+  // window like the dismissal effect above.
+  useEffect(() => {
+    if (!isOpen || typeof window === "undefined") return undefined;
+
+    const query = window.matchMedia(PHONE_WIDTH_QUERY);
+
+    function onChange(event) {
+      setIsPhoneWidth(event.matches);
+    }
+
+    query.addEventListener("change", onChange);
+    return () => {
+      query.removeEventListener("change", onChange);
+    };
   }, [isOpen]);
 
   const selectionCount = selectedValues?.length || 0;
@@ -142,6 +171,18 @@ export default function KitDropdownView({
     if (!isMultiSelect) setIsOpen(false);
   }
 
+  function toggleOpen() {
+    const next = !isOpen;
+    // Refresh the chassis-select flag at the moment of opening (not
+    // just at mount): a viewport resize while closed would otherwise
+    // leave it stale until the next matchMedia "change" event, which
+    // this effect only listens for while open.
+    if (next && typeof window !== "undefined") {
+      setIsPhoneWidth(window.matchMedia(PHONE_WIDTH_QUERY).matches);
+    }
+    setIsOpen(next);
+  }
+
   return (
     <div ref={rootRef} className="relative inline-flex flex-none">
       <button
@@ -149,7 +190,7 @@ export default function KitDropdownView({
         disabled={isDisabled}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={toggleOpen}
         className={`kit-focus inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
           isMarked
             ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
@@ -172,14 +213,40 @@ export default function KitDropdownView({
         />
       </button>
 
-      {isOpen && (
-        <>
-          {/* Popover, 700px and up: anchored below the trigger. */}
+      {isOpen && !isPhoneWidth && (
+        // Popover, 700px and up: anchored below the trigger, byte-for-
+        // byte unchanged from before the frame conversion.
+        <div
+          role="listbox"
+          aria-label={label}
+          aria-multiselectable={isMultiSelect}
+          className="absolute left-0 top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)]"
+        >
+          <PanelRows
+            options={options}
+            selectedValues={selectedValues}
+            isMultiSelect={isMultiSelect}
+            onActivate={activateOption}
+          />
+        </div>
+      )}
+
+      {isOpen && isPhoneWidth && (
+        <KitModalFrame
+          variant="sheet"
+          ariaLabel={label}
+          onClose={() => setIsOpen(false)}
+        >
+          <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)] pr-[calc(var(--control-md)+var(--space-3))]">
+            <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+              {label}
+            </span>
+          </div>
           <div
             role="listbox"
             aria-label={label}
             aria-multiselectable={isMultiSelect}
-            className="absolute left-0 top-[calc(100%+var(--space-1))] z-50 hidden w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)] min-[700px]:block"
+            className="p-[var(--space-2)]"
           >
             <PanelRows
               options={options}
@@ -188,51 +255,7 @@ export default function KitDropdownView({
               onActivate={activateOption}
             />
           </div>
-
-          {/* Bottom-docked sheet under 700px, portaled to the body:
-              the sticky bar's backdrop-filter makes it the containing
-              block for fixed descendants, so the sheet must escape it
-              (the legacy menus did the same, docs/MOCKUP-DECISIONS.md
-              dropdown entries). Veil pairs --scrim-strong with
-              --blur-panel per the floating-panel law. */}
-          {typeof document !== "undefined" &&
-            createPortal(
-              <div ref={sheetRef} className="min-[700px]:hidden">
-                <div
-                  aria-hidden="true"
-                  onClick={() => setIsOpen(false)}
-                  className="fixed inset-0 z-40 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
-                />
-                <div
-                  role="listbox"
-                  aria-label={label}
-                  aria-multiselectable={isMultiSelect}
-                  className="fixed inset-x-0 bottom-0 z-50 max-h-[70dvh] overflow-y-auto rounded-t-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] pb-[calc(var(--space-4)+env(safe-area-inset-bottom))] shadow-[var(--shadow-modal)]"
-                >
-                  <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
-                    <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-                      {label}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setIsOpen(false)}
-                      aria-label={`Close ${label || "options"}`}
-                      className="kit-focus flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                  <PanelRows
-                    options={options}
-                    selectedValues={selectedValues}
-                    isMultiSelect={isMultiSelect}
-                    onActivate={activateOption}
-                  />
-                </div>
-              </div>,
-              document.body
-            )}
-        </>
+        </KitModalFrame>
       )}
     </div>
   );

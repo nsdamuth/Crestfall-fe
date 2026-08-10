@@ -32,12 +32,23 @@ KitDropdown.jsx
 
 ## Mobile law (390)
 
-Under 700px the panel docks to the bottom edge as a sheet
-(`--radius-lg` top corners, `--shadow-modal`, `--scrim-strong` veil
-with `--blur-panel`, safe-area padding via the sheet's own bottom
-inset); at 700px and up it is a popover below the trigger with
-`--shadow-popover` and no veil. Rows bump to `--control-md` at coarse
+Under 700px the panel docks to the bottom edge as a sheet, now the
+unified modal frame's `KitModalFrame` (`variant="sheet"`,
+`docs/BUILD-BLUEPRINT.md` 2.5), converted this pass per
+`docs/SPRINT-A-PLAN.md` section 5: `--radius-lg` top corners,
+`--shadow-modal`, `--scrim-strong` veil with `--blur-panel`, safe-area
+padding, and the frame's own circular close control (the sheet's
+former hand-rolled X is deleted). At 700px and up it is the popover
+below the trigger, `--shadow-popover`, no veil, byte-for-byte
+unchanged by the conversion. Rows bump to `--control-md` at coarse
 pointers.
+
+The chassis choice between the two is a presentation-only
+`matchMedia("(max-width: 699.98px)")` flag evaluated while the panel
+is open, replacing the prior CSS-only `hidden`/`min-[700px]:block`
+split. Inherited-by-construction change: the phone sheet now
+scroll-locks the body while open (frame law); it previously did not.
+The popover still never locks.
 
 ## Honest stubs
 
