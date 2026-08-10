@@ -1,17 +1,28 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
- * (docs/BUILD-BLUEPRINT.md section 2.6), grid and list layouts.
+ * (docs/BUILD-BLUEPRINT.md section 2.6, synthesized media card
+ * template, RULED 9 Aug 2026). Grid is the image-first template:
+ * title, meta, and stats sit directly over the art on a bottom
+ * gradient scrim. List keeps its own row composition.
  *
  * The View receives only display-ready fields, semantic action
- * callbacks, and a layout switch. It does not receive a raw creation
- * record, resolve visibility/ownership policy, call a media or
- * reaction API, or navigate. Image actions are scoped strictly to
- * functionality that exists today: opening the lightbox (the same
- * destination for both the image click and the Expand quick action,
- * so both fire onOpen), and sharing (icon plus the word "Share",
- * never icon-only, per the ruled Share controls law).
+ * callbacks, and layout/assetKind switches. It does not receive a raw
+ * creation record, resolve visibility/ownership policy, call a media
+ * or reaction API, or navigate.
+ *
+ * Two ruled click destinations: image assets open the image overlay
+ * (onOpenImageOverlay); character, story, and adventure assets open
+ * the asset detail popup (onOpenAssetDetail). The image click and the
+ * Expand quick action both route through the same resolved
+ * destination for the card's assetKind; there is no third
+ * destination.
+ *
+ * Contract-breaking change from v1.0.0: onOpen split into
+ * onOpenImageOverlay and onOpenAssetDetail, and assetKind added as a
+ * required routing input. No consumer exists yet (kit batch 1 shipped
+ * fixtures only), so this is a version bump with no live migration.
  *
  * @typedef {Object} KitCreationCardBadge
  * @property {string} label
@@ -25,6 +36,7 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} KitCreationCardViewProps
  * @property {"grid"|"list"} layout
+ * @property {"image"|"character"|"story"|"adventure"} assetKind
  * @property {string} title
  * @property {string} subtitle
  * @property {string|null} imageSrc
@@ -34,7 +46,8 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} bookmarked
  * @property {boolean} allowDownload
  * @property {boolean} isDisabled
- * @property {(() => void)|null} onOpen
+ * @property {(() => void)|null} onOpenImageOverlay
+ * @property {(() => void)|null} onOpenAssetDetail
  * @property {(() => void)|null} onShare
  * @property {(() => void)|null} onLike
  * @property {(() => void)|null} onBookmark

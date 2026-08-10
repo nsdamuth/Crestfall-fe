@@ -1,4 +1,5 @@
 const VALID_LAYOUTS = new Set(["grid", "list"]);
+const VALID_ASSET_KINDS = new Set(["image", "character", "story", "adventure"]);
 const VALID_BADGE_VARIANTS = new Set(["canon", "status", "meta"]);
 
 function toCallback(value) {
@@ -21,9 +22,11 @@ function toStatValue(value) {
 
 export function useKitCreationCardViewModel(props) {
   const layout = VALID_LAYOUTS.has(props?.layout) ? props.layout : "grid";
+  const assetKind = VALID_ASSET_KINDS.has(props?.assetKind) ? props.assetKind : "character";
 
   return {
     layout,
+    assetKind,
     title: typeof props?.title === "string" ? props.title : "",
     subtitle: typeof props?.subtitle === "string" ? props.subtitle : "",
     imageSrc: typeof props?.imageSrc === "string" ? props.imageSrc : null,
@@ -38,7 +41,8 @@ export function useKitCreationCardViewModel(props) {
     bookmarked: Boolean(props?.bookmarked),
     allowDownload: Boolean(props?.allowDownload),
     isDisabled: Boolean(props?.isDisabled),
-    onOpen: toCallback(props?.onOpen),
+    onOpenImageOverlay: toCallback(props?.onOpenImageOverlay),
+    onOpenAssetDetail: toCallback(props?.onOpenAssetDetail),
     onShare: toCallback(props?.onShare),
     onLike: toCallback(props?.onLike),
     onBookmark: toCallback(props?.onBookmark),
