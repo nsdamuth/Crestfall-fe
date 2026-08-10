@@ -991,12 +991,15 @@ destination, because Ruling 6 (share always carries its word) and the
 destructive law (danger always carries its word) both forbid
 icon-only forms, and a worded control has no home on a full-bleed
 face. Overlay actions reveal on hover/focus at fine pointers and stay
-fully visible at coarse pointers. Two overlay placements are
-genuinely credible and both ship in fixtures side by side for Brian's
-pick (`actionPlacement`: `overlay-top` vs `scrim-row`); the register
-records the witness for each. KitCreationCard contract moves to
-v3.0.0: `onShare`, `onDownload`, `onDelete`, `allowDownload` leave
-the card contract and belong to the destination surfaces.
+fully visible at coarse pointers. Overlay-action placement RULED 10
+Aug 2026 (kit polish 3 pass): `overlay-top` everywhere, icons
+top-right over the art. The `scrim-row` alternative (icons
+bottom-right beside the title) is retired and its fixtures removed;
+the register still records the witness each placement drew on.
+KitCreationCard contract moves to v3.0.0: `onShare`, `onDownload`,
+`onDelete`, `allowDownload` leave the card contract and belong to the
+destination surfaces. v3.1.0 (10 Aug 2026) removes `actionPlacement`
+now that placement is ruled rather than a per-instance choice.
 
 **(b) Filter line law, amends 2.1.** Search, sort, and every filter
 share ONE sticky line. Filters and multi-selects are branded
@@ -1337,11 +1340,11 @@ log is the index, not a restatement.
 Eight rulings (a) through (h) folded into chapter 2 section 2.16,
 with the new dropdown package specced in 2.17. Evidence base:
 `docs/MOCKUP-DECISIONS.md`, the full extraction of
-`docs/_legacy-reference/` performed the same day. Open item shipped
-for Brian's pick rather than ruled: grid-card overlay-action
-placement (`overlay-top` vs `scrim-row`), both live in fixtures.
-Ratings presentation ruled at (h); the backend four-tier field is
-CR-027, owner Nick, later pass.
+`docs/_legacy-reference/` performed the same day. Grid-card
+overlay-action placement, shipped for Brian's pick rather than ruled
+in this pass, is RULED 10 Aug 2026 (kit polish 3 pass): `overlay-top`
+everywhere, `scrim-row` retired. Ratings presentation ruled at (h);
+the backend four-tier field is CR-027, owner Nick, later pass.
 
 ---
 

@@ -6,8 +6,9 @@
 // download, and delete live inside the open destination, because
 // Ruling 6 (share always carries its word) and the destructive law
 // (danger always carries its word) both forbid icon-only forms on
-// the card face. Two overlay placements are genuinely credible and
-// both ship for Brian's pick via `actionPlacement`.
+// the card face. Placement is top-right over the art, RULED 10 Aug
+// 2026 (kit polish 3 pass, docs/BUILD-BLUEPRINT.md); the scrim-row
+// alternative is retired.
 //
 // Art-anchor law, RULED 9 Aug 2026 (kit polish pass), REVISED 9 Aug
 // 2026 (kit polish 2 pass): art anchors 18% down from the top of the
@@ -18,6 +19,11 @@
 // primary subject in frame across the set without losing meaningful
 // headroom. A future editor-side, per-view reposition capability is a
 // later expansion, not built here.
+//
+// Overlay-action placement, RULED 10 Aug 2026 (kit polish 3 pass):
+// overlay-top everywhere. The scrim-row alternative (icons bottom-right
+// beside the title) is retired; icons top-right over the art, clear of
+// the title block, is the only placement now.
 import { Bookmark, Heart, Maximize2, Play, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
@@ -128,13 +134,11 @@ function GridCard({
   stats,
   liked,
   bookmarked,
-  actionPlacement,
   onOpen,
   onLike,
   onBookmark,
 }) {
   const hasImage = Boolean(imageSrc);
-  const actionsInScrim = actionPlacement === "scrim-row";
 
   return (
     <>
@@ -163,7 +167,7 @@ function GridCard({
         </>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
-          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-8 w-8 text-[var(--ink-faint)]">
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-10)] w-[var(--space-10)] text-[var(--ink-faint)]">
             <use href="/assets/icons/icons-v7.svg#i-59" />
           </svg>
           <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
@@ -175,17 +179,15 @@ function GridCard({
           <div className="pointer-events-auto">
             <BadgeRow badges={badges} />
           </div>
-          {actionPlacement === "overlay-top" && (
-            <div className={`pointer-events-auto flex gap-[var(--space-1)] ${OVERLAY_REVEAL}`}>
-              <OverlayActions
-                liked={liked}
-                bookmarked={bookmarked}
-                onLike={onLike}
-                onBookmark={onBookmark}
-                onOpen={onOpen}
-              />
-            </div>
-          )}
+          <div className={`pointer-events-auto flex gap-[var(--space-1)] ${OVERLAY_REVEAL}`}>
+            <OverlayActions
+              liked={liked}
+              bookmarked={bookmarked}
+              onLike={onLike}
+              onBookmark={onBookmark}
+              onOpen={onOpen}
+            />
+          </div>
         </div>
 
         <div className="flex items-end justify-between gap-[var(--space-2)]">
@@ -204,19 +206,6 @@ function GridCard({
             )}
             <StatRow stats={stats} />
           </div>
-          {actionsInScrim && (
-            <div
-              className={`pointer-events-auto flex flex-none gap-[var(--space-1)] ${OVERLAY_REVEAL}`}
-            >
-              <OverlayActions
-                liked={liked}
-                bookmarked={bookmarked}
-                onLike={onLike}
-                onBookmark={onBookmark}
-                onOpen={onOpen}
-              />
-            </div>
-          )}
         </div>
       </div>
     </>
@@ -266,7 +255,7 @@ function ListCard({
         </>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
-          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-8 w-8 text-[var(--ink-faint)]">
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-10)] w-[var(--space-10)] text-[var(--ink-faint)]">
             <use href="/assets/icons/icons-v7.svg#i-59" />
           </svg>
           <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
@@ -319,7 +308,6 @@ export default function KitCreationCardView({
   stats = {},
   liked = false,
   bookmarked = false,
-  actionPlacement = "overlay-top",
   isDisabled = false,
   onOpenImageOverlay = null,
   onOpenAssetDetail = null,
@@ -361,7 +349,6 @@ export default function KitCreationCardView({
           stats={stats}
           liked={liked}
           bookmarked={bookmarked}
-          actionPlacement={actionPlacement}
           onOpen={onOpen}
           onLike={onLike}
           onBookmark={onBookmark}

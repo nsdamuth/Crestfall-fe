@@ -68,7 +68,7 @@ export default function KitCreationCardPreviewClient() {
   return (
     <KitPreviewShell
       title="Kit Creation Card"
-      description="Full-bleed art in both layouts, overlay icon actions, no bottom action bar (card law, 9 Aug 2026). Share, download, and delete live inside the open destination. Grid states render BOTH overlay-action placements side by side for Brian's pick."
+      description="Full-bleed art in both layouts, overlay icon actions, no bottom action bar (card law, 9 Aug 2026). Share, download, and delete live inside the open destination. Overlay-action placement is ruled overlay-top everywhere (10 Aug 2026)."
       states={Object.entries(STATES).map(([key, state]) => ({
         key,
         label: state.label,
@@ -78,27 +78,8 @@ export default function KitCreationCardPreviewClient() {
       note={lastAction}
     >
       {isGrid ? (
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-[var(--space-5)] min-[700px]:grid-cols-2">
-          <div className="flex flex-col gap-[var(--space-2)]">
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-              Placement A · overlay-top
-            </p>
-            <KitCreationCardView
-              {...localProps}
-              actionPlacement="overlay-top"
-              {...sharedCallbacks}
-            />
-          </div>
-          <div className="flex flex-col gap-[var(--space-2)]">
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-              Placement B · scrim-row
-            </p>
-            <KitCreationCardView
-              {...localProps}
-              actionPlacement="scrim-row"
-              {...sharedCallbacks}
-            />
-          </div>
+        <div className="mx-auto max-w-sm">
+          <KitCreationCardView {...localProps} {...sharedCallbacks} />
         </div>
       ) : (
         <div className="mx-auto max-w-3xl">

@@ -135,10 +135,10 @@ repo is the only value authority.
 | Review-mode annotation harness | studio.html:323-448 | SKIP | Prototype tooling, not product UI |
 | Two-panel sticky composer layouts, node relocation on breakpoint | image-studio.html:128-151 | SKIP this pass | Images-page concern; logged for that build |
 
-## Placement questions shipped for Brian's pick
+## Placement question, RULED 10 Aug 2026
 
-Two grid-card overlay-action placements are genuinely credible and
-both ship side by side in fixtures (KitCreationCard
+Two grid-card overlay-action placements were genuinely credible and
+shipped side by side in fixtures for Brian's pick (KitCreationCard
 `actionPlacement`):
 
 1. **overlay-top**: icons top-right over the art, clear of the title
@@ -146,7 +146,9 @@ both ship side by side in fixtures (KitCreationCard
 2. **scrim-row**: icons bottom-right inside the scrim band, beside
    the title, one visual zone for everything the card says.
 
-The legacy witness (my-vault edit pen, bottom-right overlay) supports
-scrim-row; the live MediaTileQuickActions practice supports
-overlay-top. Not decided here; both render in the preview and on the
-mirror page.
+The legacy witness (my-vault edit pen, bottom-right overlay) supported
+scrim-row; the live MediaTileQuickActions practice supported
+overlay-top. RULED 10 Aug 2026 (kit polish 3 pass): overlay-top
+everywhere. `scrim-row` and its fixture are removed from
+`KitCreationCard`; see `docs/BUILD-BLUEPRINT.md` for the ruling
+record.

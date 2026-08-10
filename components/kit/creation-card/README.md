@@ -1,6 +1,6 @@
 # Kit Creation Card LOOM Package
 
-**Contract:** `KitCreationCard.contract.js` (v3.0.0)
+**Contract:** `KitCreationCard.contract.js` (v3.1.0)
 
 ## Purpose
 
@@ -19,9 +19,9 @@ KitCreationCard.jsx
       -> KitBadge.view.jsx (badge row, over-art recipe)
 ```
 
-- The ViewModel validates `layout`, `assetKind`, `actionPlacement`,
-  and badge variants against their constrained sets, coerces stats,
-  and defends every callback.
+- The ViewModel validates `layout`, `assetKind`, and badge variants
+  against their constrained sets, coerces stats, and defends every
+  callback.
 - Grid: 3/4 full-bleed art, bottom fade composed from `--canvas`,
   title/meta/stats over the art, badges top-left.
 - List: wide full-bleed art row (5/2 at phone, 16/5 at 700px and up),
@@ -38,12 +38,13 @@ hover/focus at fine pointers and stay visible at coarse pointers
 destination: Ruling 6 and the destructive law both require their
 words, and worded controls have no home on a full-bleed face.
 
-## Brian's pick: actionPlacement
+## Overlay-action placement, ruled
 
-Both credible grid placements ship side by side in fixtures and the
-preview: `overlay-top` (icons top-right over the art) vs `scrim-row`
-(icons bottom-right in the scrim band beside the title). Witnesses
-for each are recorded in `docs/MOCKUP-DECISIONS.md`.
+RULED 10 Aug 2026 (kit polish 3 pass): `overlay-top` everywhere,
+icons top-right over the art. The `scrim-row` alternative (icons
+bottom-right in the scrim band beside the title) is retired; there
+is no placement prop. See `docs/BUILD-BLUEPRINT.md` for the ruling
+and `docs/MOCKUP-DECISIONS.md` for the original witnesses.
 
 ## Two ruled click destinations
 

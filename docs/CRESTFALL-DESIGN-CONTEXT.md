@@ -77,9 +77,9 @@ the confirming button of an "are you sure" step.
   a wide full-bleed art row, left-anchored legibility fade, no bottom
   action bar anywhere. Face actions are exactly three small overlay
   icons: like, save, expand. Share, download, and delete live inside
-  the open destination. Two overlay placements ship in fixtures for
-  Brian's pick (`actionPlacement`: `overlay-top` vs `scrim-row`).
-  Art anchors to the top of the frame in both layouts. No-art
+  the open destination. Overlay-action placement is RULED 10 Aug
+  2026 (kit polish 3 pass): `overlay-top` everywhere, `scrim-row`
+  retired. Art anchors to the top of the frame in both layouts. No-art
   fallback and any kit card surface without art sits on the lighter
   elevated surface token (`--surface-2`) against the canvas, ruled 9
   Aug 2026 (demo prep pass): `KitCreationCard`'s no-image fallback
@@ -208,10 +208,10 @@ section 6, item 4) has not yet run.
 Every other kit package above has its own `/dev/ui-preview/<package>`
 route, fixture-driven, unavailable in production.
 
-Two open picks await Brian, both live in fixtures for a rendered
-choice: the creation-card overlay-action placement (`overlay-top` vs
-`scrim-row`), and (carried from the batch-two sweep) the lighter wash
-value for artwork under a tag bed.
+One open pick awaits Brian, live in fixtures for a rendered choice:
+the lighter wash value for artwork under a tag bed, carried from the
+batch-two sweep. The creation-card overlay-action placement is ruled
+(see above).
 
 ## The quality floor
 

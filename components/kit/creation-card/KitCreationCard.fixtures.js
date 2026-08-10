@@ -29,16 +29,8 @@ export const kitCreationCardCharacterFixture = {
   stats: { plays: 412, hearts: 96, saves: 21, followers: null },
   liked: false,
   bookmarked: false,
-  actionPlacement: "overlay-top",
   isDisabled: false,
   ...baseCallbacks,
-};
-
-export const kitCreationCardScrimRowFixture = {
-  ...kitCreationCardCharacterFixture,
-  title: "Kaela Veynskald",
-  imageSrc: canonArt("Kaela Veynskald"),
-  actionPlacement: "scrim-row",
 };
 
 export const kitCreationCardStoryFixture = {
