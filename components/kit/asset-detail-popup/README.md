@@ -1,13 +1,15 @@
 # Kit Asset Detail Popup LOOM package
 
-**Contract:** `KitAssetDetailPopup.contract.js` (`1.0.0`)
+**Contract:** `KitAssetDetailPopup.contract.js` (`2.0.0`)
 
 ## Purpose
 
 The destination every `character`, `story`, and `adventure` media card
-opens (`docs/BUILD-BLUEPRINT.md` section 2.15, specced 9 Aug 2026,
-built this pass per `docs/SPRINT-A-PLAN.md` section 3). Replaces the
-Community mockup's marked `AssetDetailPlaceholder`.
+opens (`docs/BUILD-BLUEPRINT.md` section 2.15). Recomposed 10 Aug 2026
+(kit polish 3 pass, R3/R8/R9, `docs/SPRINT-A-POLISH-PLAN.md` section 2)
+against the live old-design creation preview modal
+(`components/studio/creations/creation-preview-modal/`, read-only
+reference, never edited).
 
 ## Boundary
 
@@ -23,34 +25,71 @@ The shell composes `KitModalFrame` (`variant="modal"`,
 view. The popup renders no close control of its own; the frame owns
 dismissal (backdrop click, Escape, close control).
 
+## v2.0.0, RULED 10 Aug 2026
+
+`imageSrc` is REMOVED, replaced by `media: {id, src}[]` (a removal is
+a major bump per contract law). `isLiked`, `onLike`, and
+`onViewCatalogue` are ADDED.
+
 ## Anatomy
 
-- **Header**: full-width art-bleed block, `aspect-[5/3]`,
-  `object-cover object-[center_18%]`, bottom fade from `--canvas`,
-  title over the art in `font-display` at `--text-subhead`, subtitle
-  in `--text-ui` `--art-ink-dim`, badge row above the title
-  (`surface="art"`).
-- **Body**: `p-[var(--space-6)]` content padding, description
-  measure-capped, stat row beneath it (same icons and order as the
-  card: plays, hearts, saves, followers).
-- **Footer**: primary CTA (label derived from `assetKind`: Play for
-  character and story, Continue for adventure), Share (icon plus the
-  word, Ruling 6), Save (icon plus the word, toggled state reads
-  "Saved" with the gold text plus light fill wash per the
-  selection-state law, `aria-pressed`).
+- **Carousel frame** (top, full inner width, `aspect-[5/3]`,
+  art-bleed into the frame's top LARGE corners, `object-cover
+  object-[center_18%]`): at most 4 media items (the old modal's own
+  cap) plus one synthetic catalogue slide. Circular arrow buttons
+  (`--control-md`, `--radius-full`, `--surface-2` fill,
+  `--line-whisper` border, `--shadow-popover`) wrap in both directions
+  through the catalogue slide. A pill dot tray (N+1 dots) sits
+  bottom-center over the art; the active dot is a gold lozenge
+  (`--gold-action`), inactive dots are small `--ink-faint` circles.
+  Empty or absent `media`: the standard no-art fallback renders and
+  NO carousel chrome and NO catalogue slide render.
+- **The catalogue slide** (the final slide): the first media item
+  under a flat `--scrim-strong` veil, a centered `--surface-4` card
+  (`max-w-xs`, `1px --line` border, `--radius-md`,
+  `--shadow-popover`) with the gold eyebrow "Want to see more?", one
+  fixture line, and the "View catalogue" primary CTA firing
+  `onViewCatalogue`. The real destination (owner context routes to
+  `/studio/my-creations/[id]/image-library`, public context to
+  `/studio/creations/[id]`, per the old ViewModel) is a later wiring
+  concern; fixtures wire a no-op.
+- **Body** (`p-[var(--space-6)]`): badge row (`surface="canvas"`,
+  moved off the art since chrome now owns the carousel), title
+  (`font-display`, `--text-subhead`, `--ink`, keeps
+  `KIT_ASSET_DETAIL_POPUP_TITLE_ID` for the frame's `ariaLabelledBy`),
+  subtitle (`--text-ui`, `--ink-dim`), description (clamps at three
+  lines past 160 characters with a See more / See less control,
+  `--gold-ornament` text), then the stat row (same icons and order as
+  the card: plays, hearts, saves, followers).
+- **Stats placement, R8 render-time pick, LOGGED:** both plan-2.5
+  readings (stacked vs. side-by-side) were built against the
+  `longestCopy` fixture. Reading A, stacked, ships: at this panel's
+  fixed `max-w-xl` (576px) width, Reading B's side-by-side split left
+  too little room for both a legible description measure and the
+  stat column, and Reading B collapses to Reading A under 700px
+  anyway, so the split only ever applied at a width the panel never
+  reaches. Stacking also matches every other stat row already in the
+  app (the card face).
+- **Footer**: exactly four actions, `grid grid-cols-4`, evenly
+  distributed, one row, `whitespace-nowrap`: Like (Heart), Save
+  (Bookmark), Share (Share2, Ruling 6: icon plus the word), Play
+  (primary, R9: universal label for all three asset kinds, superseding
+  the prior per-kind Continue for adventure). Toggled Like and Save
+  follow the selection-state law: gold text plus the light `--fill`
+  wash, icon filled, `aria-pressed`, never a bold border.
 
 ## Open flags carried to OPEN FOR BRIAN
 
-- Whether `character` and `story` need distinct primary-action copy
-  (both read "Play" tonight).
-- Whether a Love action belongs on this popup (2.15's footer names
-  primary, Share, and Save only; the popup ships without Love while
-  the card face and the image overlay both have one).
+- Whether a Love action belongs on this popup in addition to Like (the
+  image overlay and the card face both use Love/Heart language in
+  different places; R3's four-action footer is Like, Save, Share,
+  Play and does not add a fifth).
 
 ## Package assets
 
 - `KitAssetDetailPopup.contract.js`
-- `KitAssetDetailPopup.fixtures.js`
+- `KitAssetDetailPopup.fixtures.js` (character, story, adventure,
+  likedAndSaved, longestCopy, noImage)
 - `useKitAssetDetailPopupViewModel.js`
 - `/dev/ui-preview/kit-asset-detail-popup`
 

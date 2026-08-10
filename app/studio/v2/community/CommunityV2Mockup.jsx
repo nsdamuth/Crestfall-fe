@@ -39,9 +39,9 @@ const FIXTURE_CREATIONS = [
   { id: "c2", assetKind: "character", title: "Elowen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Elowen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 8400, hearts: 1630, saves: 440, recency: 17, description: "A wandering herbalist with a canon-tied backstory, built for gentle, exploratory play." },
   { id: "c3", assetKind: "character", title: "Kaela Veynskald", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Kaela Veynskald"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 5120, hearts: 880, saves: 190, recency: 16, description: "A frontier captain holding the northern line, written for tactical and diplomatic scenes alike." },
   { id: "c4", assetKind: "character", title: "The Seer", subtitle: "Character · by @Crestfall", imageSrc: canonArt("The Seer"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 4100, hearts: 492, saves: 123, recency: 15, description: "An oracle whose counsel always costs the asker something. Canon-tied, mature themes." },
-  { id: "c5", assetKind: "story", title: "The First Exile", subtitle: "Story · by @vermillion", imageSrc: creatorArt("vermillion-3"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 9800, hearts: 1240, saves: 510, recency: 14, description: "A community-authored story following the exile of a border scholar, told across three acts." },
+  { id: "c5", assetKind: "story", title: "The First Exile", subtitle: "Story · by @vermillion", imageSrc: creatorArt("vermillion-3"), extraMedia: [creatorArt("vermillion-8"), creatorArt("vermillion-9")], isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 9800, hearts: 1240, saves: 510, recency: 14, description: "A community-authored story following the exile of a border scholar, told across three acts." },
   { id: "c6", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 2700, hearts: 324, saves: 81, recency: 13, description: "A mercenary's road story through contested territory, remixable for your own cast." },
-  { id: "c7", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 512, hearts: 88, saves: 19, recency: 12, description: "A branching adventure through the harbor district, built for repeat play with shifting outcomes." },
+  { id: "c7", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), extraMedia: [creatorArt("vermillion-13")], isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 512, hearts: 88, saves: 19, recency: 12, description: "A branching adventure through the harbor district, built for repeat play with shifting outcomes." },
   { id: "c8", assetKind: "adventure", title: "The Long Road West", subtitle: "Adventure · by @sassy", imageSrc: creatorArt("sassy"), isCanon: false, ratingTier: "EVERYONE", isRemixable: false, plays: 1250, hearts: 203, saves: 66, recency: 11, description: "A caravan-escort adventure across open frontier, family-friendly throughout." },
   { id: "c9", assetKind: "image", title: "Vesper Ash Render", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-8"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: null, hearts: 410, saves: 120, recency: 10 },
   { id: "c10", assetKind: "image", title: "Harborlight Study", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-15"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: null, hearts: 96, saves: 30, recency: 9 },
@@ -380,12 +380,16 @@ export default function CommunityV2Mockup() {
         const creation = FIXTURE_CREATIONS.find((item) => item.id === assetDetailId);
         if (!creation) return null;
 
+        const media = [creation.imageSrc, ...(creation.extraMedia || [])]
+          .filter(Boolean)
+          .map((src, index) => ({ id: `${creation.id}-media-${index + 1}`, src }));
+
         return (
           <KitAssetDetailPopup
             assetKind={creation.assetKind}
             title={creation.title}
             subtitle={creation.subtitle}
-            imageSrc={creation.imageSrc}
+            media={media}
             badges={creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []}
             stats={{
               plays: creation.plays,
@@ -394,10 +398,13 @@ export default function CommunityV2Mockup() {
               followers: null,
             }}
             description={creation.description}
+            isLiked={likedIds.includes(creation.id)}
             isSaved={savedIds.includes(creation.id)}
+            onLike={() => toggleLiked(creation.id)}
             onPrimaryAction={() => {}}
             onShare={() => {}}
             onSave={() => toggleSaved(creation.id)}
+            onViewCatalogue={() => {}}
             onClose={() => setAssetDetailId(null)}
           />
         );

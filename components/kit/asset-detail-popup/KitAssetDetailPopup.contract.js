@@ -1,17 +1,26 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
- * (docs/BUILD-BLUEPRINT.md section 2.15, specced 9 Aug 2026, built
- * this pass per docs/SPRINT-A-PLAN.md section 3). The destination
- * every "character", "story", and "adventure" media card opens.
- * Composed on the unified modal frame (`KitModalFrame`, variant
- * "modal", `panelClassName="w-full max-w-xl"`); the popup renders no
- * close control of its own, the frame owns dismissal.
+ * (docs/BUILD-BLUEPRINT.md section 2.15, specced 9 Aug 2026, recomposed
+ * 10 Aug 2026 kit polish 3 pass per R3/R8/R9, docs/SPRINT-A-POLISH-PLAN.md
+ * section 2). The destination every "character", "story", and
+ * "adventure" media card opens. Composed on the unified modal frame
+ * (`KitModalFrame`, variant "modal", `panelClassName="w-full max-w-xl"`);
+ * the popup renders no close control of its own, the frame owns
+ * dismissal.
+ *
+ * v2.0.0, RULED 10 Aug 2026: `imageSrc` is REMOVED, replaced by
+ * `media`; `isLiked`, `onLike`, and `onViewCatalogue` are ADDED. A
+ * removal is a major bump per contract law.
  *
  * @typedef {Object} KitAssetDetailPopupBadge
  * @property {string} label
  * @property {"canon"|"status"|"meta"} variant
+ *
+ * @typedef {Object} KitAssetDetailPopupMediaItem
+ * @property {string} id
+ * @property {string} src
  *
  * @typedef {Object} KitAssetDetailPopupStats
  * @property {number|null} plays
@@ -20,26 +29,31 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {number|null} followers
  *
  * @typedef {Object} KitAssetDetailPopupViewProps
- * @property {"character"|"story"|"adventure"} assetKind drives the
- *   primary action label: Play for character and story, Continue for
- *   adventure (2.15 verbatim; whether character and story need
- *   distinct copy is 2.15's own open flag, carried in OPEN FOR BRIAN)
- * @property {string} title over-art headline
- * @property {string} subtitle the card's supporting line (kind and
- *   creator)
- * @property {string|null} imageSrc header art; null renders the
- *   standard no-art fallback
- * @property {KitAssetDetailPopupBadge[]} badges same constrained
- *   shape as the card, rendered with KitBadgeView surface="art"
+ * @property {"character"|"story"|"adventure"} assetKind the popup's
+ *   species key; the derived primary action label is "Play" for all
+ *   three kinds (R9)
+ * @property {string} title rendered in the body, not over art (R8)
+ * @property {string} subtitle body, under the title
+ * @property {KitAssetDetailPopupMediaItem[]} media carousel media,
+ *   ported from the old preview modal's normalized shape. At most 4
+ *   items render (the old modal's own cap) plus the synthetic
+ *   catalogue slide. Empty or absent: the standard no-art fallback
+ *   renders and NO carousel chrome and NO catalogue slide render.
+ * @property {KitAssetDetailPopupBadge[]} badges rendered in the body
+ *   above the title, KitBadgeView surface="canvas" (default)
  * @property {KitAssetDetailPopupStats} stats same shape and icon
  *   order as the card stat row
- * @property {string} description body copy
+ * @property {string} description body copy, clamps at three lines
+ *   with a See more / See less control
+ * @property {boolean} isLiked like toggle state (R3)
  * @property {boolean} isSaved save toggle state
- * @property {(() => void)|null} onPrimaryAction Play or Continue
- *   intent
+ * @property {(() => void)|null} onLike Like toggle intent (R3)
+ * @property {(() => void)|null} onPrimaryAction Play intent (R9)
  * @property {(() => void)|null} onShare Share intent (Ruling 6: icon
  *   plus the word, always)
  * @property {(() => void)|null} onSave Save toggle intent
+ * @property {(() => void)|null} onViewCatalogue the catalogue slide's
+ *   CTA intent (R8)
  * @property {(() => void)|null} onClose forwarded to the frame; the
  *   popup renders no close control of its own
  */
