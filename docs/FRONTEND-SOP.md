@@ -262,6 +262,13 @@ port and track its own PID. Cleanup targets only that PID, never a
 broad process-name kill (`pkill -f "next dev"` and equivalents are
 banned outright). Never kill a process this run did not start.
 
+Mobile verification method, RULED 10 Aug 2026 (R3). All mobile
+verification uses the Chrome DevTools MCP emulate command with
+viewport 390x844, deviceScaleFactor 2, mobile true, touch enabled.
+The resize command is banned for mobile verification: it clamps near
+500px wide and has produced false passes. A report claiming a 390
+check that used resize is a failed report.
+
 ## 9. Working with Brian
 
 Brian is the design authority and is not a coder. He never receives

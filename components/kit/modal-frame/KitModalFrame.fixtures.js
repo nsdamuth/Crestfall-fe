@@ -46,7 +46,7 @@ const scrollingContent = (
 );
 
 const sheetContent = (
-  <div className="p-[var(--space-6)] pr-[calc(var(--control-md)+var(--space-6))]">
+  <div className="p-[var(--space-6)]">
     <p
       id="kit-modal-frame-sheet-title"
       className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
@@ -130,6 +130,16 @@ export const kitModalFrameFixtures = [
     props: {
       variant: "modal",
       panelClassName: "max-w-lg",
+      ariaLabelledBy: "kit-modal-frame-default-title",
+      children: standardContent,
+    },
+  },
+  {
+    id: "viewer",
+    label: "Viewer (empty shell, phase 2 fills this in)",
+    props: {
+      variant: "viewer",
+      panelClassName: "",
       ariaLabelledBy: "kit-modal-frame-default-title",
       children: standardContent,
     },

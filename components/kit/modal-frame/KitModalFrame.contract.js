@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -24,11 +24,18 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.0.0";
  *   ModalShell behavior
  * @property {boolean} closeOnEscape default true, pass-through to
  *   ModalShell behavior
- * @property {"modal"|"sheet"} variant default "modal". "modal" is the
- *   ruled responsive frame: bottom-docked sheet under 700px, centered
- *   floating surface at 700px and up. "sheet" is bottom-docked at
- *   every width, for sheet-only consumers that gate their own
- *   mounting by viewport (the dropdown under 700px)
+ * @property {"modal"|"sheet"|"viewer"} variant default "modal". "modal"
+ *   is the ruled responsive frame: full-screen maximize under 700px
+ *   (R4, 10 Aug 2026), centered floating surface at 700px and up.
+ *   "sheet" is bottom-docked at every width, for sheet-only consumers
+ *   that gate their own mounting by viewport (the dropdown under
+ *   700px), and carries a structural close header row (R7, 10 Aug
+ *   2026) so the close control never overlaps sheet content. "viewer"
+ *   (added 1.1.0, 10 Aug 2026) is the chromeless image-viewer surface
+ *   (R2/R5): no panel background, border, shadow, or radius, sticky
+ *   nav veil treatment, full-screen maximize under 700px identical to
+ *   modal. Empty shell in 1.1.0 phase 1; filled in by the phase 2
+ *   viewer rebuild.
  * @property {string} panelClassName per-surface WIDTH and HEIGHT caps
  *   only (e.g. `max-w-lg`); never surface, border, radius, shadow, or
  *   dismissal overrides

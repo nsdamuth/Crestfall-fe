@@ -50,6 +50,7 @@ export default function ModalShellPreviewClient() {
       </h1>
 
       <ModalShellView
+        className="p-4"
         {...active.props}
         onBackdropMouseDown={() => setFeedback("Backdrop dismiss fired.")}
       />

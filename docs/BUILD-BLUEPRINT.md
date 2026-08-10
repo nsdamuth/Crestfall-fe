@@ -607,11 +607,14 @@ in `app/design-system.css`, and the ruled ModalShell/StudioShell carve
 
 - Anatomy: veil `--scrim-strong` with `blur(var(--blur-panel))`; frame
   `--surface-4`, `1px --line` border, `--radius-lg`, `--shadow-modal`;
-  phone docks to the bottom edge (top corners only), 700px and up
-  centers; circular close control (`--control-md`, `--radius-full`,
-  `--surface-2` fill, `--line-whisper` border); X, veil click, and
-  Escape all close in place keeping work; per-layer scroll locks stay
-  separate (Ruling 1). Width/height stay per-surface, not unified.
+  phone maximizes to the full screen, vertically and horizontally,
+  with internal thumb scrolling (R4, 10 Aug 2026), 700px and up
+  centers; sheets keep the bottom dock and carry a structural close
+  header row (R7); circular close control (`--control-md`,
+  `--radius-full`, `--surface-2` fill, `--line-whisper` border); X,
+  veil click, and Escape all close in place keeping work; per-layer
+  scroll locks stay separate (Ruling 1). Width/height stay
+  per-surface, not unified.
 - States: the frame is REST only; close control carries all five.
   Content states (loading, error, empty) belong to the content the
   consumer slots in.
@@ -1157,6 +1160,18 @@ pass, R7).**
   beside a sidebar group label, and never both marks on one element.
   Renders in both collapsed and expanded states; the label itself
   stays expanded-only.
+
+**(p) Mobile modal law (R4), RULED 10 Aug 2026.** On mobile, popup
+modals maximize the screen vertically and horizontally with thumb
+scrolling inside; never anchored to the bottom edge, never small
+floating cards. Applies to the asset detail popup, the credits
+modal, the image viewer, and the modal frame's mobile default, so
+every future modal inherits it.
+
+**(q) Sheet header law (R7), RULED 10 Aug 2026.** On mobile filter,
+sort, and settings sheets, the close control sits in its own header
+row above the content, never overlapping option rows; the row is
+frame anatomy so every sheet inherits it.
 
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 

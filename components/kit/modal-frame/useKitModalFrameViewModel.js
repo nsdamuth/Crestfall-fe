@@ -9,17 +9,29 @@ import { useId } from "react";
 
 import { useModalShellViewModel } from "@/components/ui/modal-shell/useModalShellViewModel";
 
+// R4 (10 Aug 2026, kit polish 3 pass, plan section 1.1): popup modals
+// (variant modal, variant viewer) maximize the screen under 700px
+// instead of docking to the bottom edge. The sheet variant is not
+// named by R4 and keeps the bottom dock (subject of R7 instead).
 const VARIANT_ALIGNMENT = {
   modal:
-    "items-end p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
+    "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
   sheet: "items-end p-0",
+  // Empty shell for phase 1; filled in by the R2/R5 viewer rebuild
+  // (plan section 1.2, phase 2).
+  viewer:
+    "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
 };
 
 const VARIANT_PANEL = {
   modal:
-    "rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
+    "h-[100dvh] max-h-[100dvh] w-full rounded-none border-0 pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border min-[700px]:pb-0",
   sheet:
     "rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+  // Empty shell for phase 1; filled in by the R2/R5 viewer rebuild
+  // (plan section 1.2, phase 2).
+  viewer:
+    "h-[100dvh] max-h-[100dvh] w-full rounded-none border-0 pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border min-[700px]:pb-0",
 };
 
 const PANEL_BASE =
@@ -40,7 +52,8 @@ export function useKitModalFrameViewModel({
   ariaDescribedBy,
   ariaLabel,
 } = {}) {
-  const resolvedVariant = variant === "sheet" ? "sheet" : "modal";
+  const resolvedVariant =
+    variant === "sheet" ? "sheet" : variant === "viewer" ? "viewer" : "modal";
   const onCloseCallback = toCallback(onClose);
 
   const shellProps = useModalShellViewModel({
@@ -61,6 +74,7 @@ export function useKitModalFrameViewModel({
   return {
     ...shellProps,
     onClose: onCloseCallback,
+    variant: resolvedVariant,
     className: VARIANT_ALIGNMENT[resolvedVariant],
     panelClassName: [PANEL_BASE, VARIANT_PANEL[resolvedVariant], panelClassName]
       .filter(Boolean)

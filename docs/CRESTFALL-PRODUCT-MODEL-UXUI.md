@@ -76,7 +76,7 @@ No infinite scroll. Lists render an initial batch, then a "show more" CTA that a
 
 ### 3.5 Modal dialogs
 
-Quick creation and builders open as modals in the unified modal frame: close in place, never navigate, dock to the bottom edge at phone width, vertical internal scrolling only. Progressive disclosure for multi-step creation.
+Quick creation and builders open as modals in the unified modal frame: close in place, never navigate, maximize the full screen vertically and horizontally at phone width with internal thumb scrolling (R4, 10 Aug 2026), center at 700px and up. Progressive disclosure for multi-step creation.
 
 ## 4\. Page specifications
 

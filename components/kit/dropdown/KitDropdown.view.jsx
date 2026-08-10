@@ -237,7 +237,7 @@ export default function KitDropdownView({
           ariaLabel={label}
           onClose={() => setIsOpen(false)}
         >
-          <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)] pr-[calc(var(--control-md)+var(--space-3))]">
+          <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
             <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
               {label}
             </span>

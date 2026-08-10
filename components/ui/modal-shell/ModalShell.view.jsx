@@ -10,7 +10,7 @@ export default function ModalShellView({
 }) {
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)] ${className}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)] ${className}`}
       onMouseDown={onBackdropMouseDown}
     >
       <div

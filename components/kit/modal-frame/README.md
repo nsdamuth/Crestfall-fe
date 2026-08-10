@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.0.0`)
+**Contract:** `KitModalFrame.contract.js` (`1.1.0`)
 
 ## Purpose
 
@@ -31,17 +31,25 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
 - Veil `--scrim-strong` with `blur(var(--blur-panel))`.
 - Panel `--surface-4`, `1px --line` border, `--radius-lg`,
   `--shadow-modal`.
-- `variant="modal"` (default): bottom-docked sheet under 700px (top
-  corners only, safe-area bottom padding), centered floating surface
-  at 700px and up (corners all around).
+- `variant="modal"` (default): full-screen maximize under 700px (R4,
+  10 Aug 2026: `items-stretch p-0` veil, `h-[100dvh]` panel, no
+  corners, no outer border, internal scroll), centered floating
+  surface at 700px and up (corners all around, `--space-4` gutters).
 - `variant="sheet"`: bottom-docked at every width, for sheet-only
   consumers that gate their own mounting by viewport (the dropdown
-  under 700px, phase 4 of this sprint).
+  under 700px). Gains a structural close header row (R7, 10 Aug
+  2026): full-width band, close control static inside it, content
+  renders below.
+- `variant="viewer"` (added 1.1.0, 10 Aug 2026): the chromeless image
+  viewer surface (R2/R5). Empty shell in phase 1 of the kit polish 3
+  pass, sharing the modal variant's full-screen-maximize alignment
+  until the viewer rebuild (phase 2) fills in its chrome-frost veil
+  and transparent panel.
 - Width and height stay per-surface via `panelClassName` (caps only,
   never surface/border/radius/shadow/dismissal overrides).
-- Circular close control, fixed frame anatomy, `absolute` top-right
-  inside the panel. Content that must not sit under it clears it with
-  its own top or right padding.
+- Close control: circular recipe, `absolute` top-right inside the
+  panel for `modal` and `viewer`; static flow content inside the
+  sheet's header row for `sheet` (R7), never overlapping content.
 - Portaled to `document.body`: a `backdrop-filter` ancestor (the
   sticky filter bar, the frosted top bar) becomes the containing block
   for `fixed` descendants, so the frame must escape it.

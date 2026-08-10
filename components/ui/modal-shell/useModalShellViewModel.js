@@ -6,7 +6,15 @@ export function useModalShellViewModel({
   onClose,
   closeOnBackdrop = true,
   closeOnEscape = true,
-  className = "",
+  // Default veil gutter, presentation only (R4, 10 Aug 2026, kit
+  // polish 3 pass, plan 1.1). Previously hardcoded on ModalShellView
+  // itself; moved here so KitModalFrame (which calls ModalShellView
+  // directly with its own alignment classes, bypassing this hook) can
+  // fully control its own inset per variant, while every consumer
+  // that goes through this hook (components/ui/ModalShell.jsx and its
+  // callers) keeps the same default gutter unless it supplies its own
+  // className.
+  className = "p-4",
   panelClassName = "",
   ariaLabelledBy,
   ariaDescribedBy,
