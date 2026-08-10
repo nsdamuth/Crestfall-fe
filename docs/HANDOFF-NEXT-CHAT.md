@@ -16,9 +16,14 @@ on the lighter
 `--surface-2` elevated token against canvas. `/studio/v2/community`
 is the only nine-page-architecture route built so far, fixture-driven
 and pre-parity, mirrored auth-free at
-`/dev/ui-preview/community-v2-page` (now also carrying `StudioTopBar`
-in the mirror, harness-only, so the sticky-stack relationship can be
-verified without auth).
+`/dev/ui-preview/community-v2-page`, which now composes the real
+`StudioShellView` with fixture sidebar props and a real `StudioTopBar`
+(harness-only, no account/network calls) so the full sticky-stack,
+full-bleed, and sidebar collapse/expand relationships can all be
+verified without auth. The flag-gated nine-destination sidebar
+preview's group headers (Play, Create, Explore) each carry a short
+gold rule under the label, and every modal surface in the kit closes
+on its close control, Escape, and a backdrop click.
 
 ## This pass (kit polish 3, 10 Aug 2026)
 
@@ -140,6 +145,72 @@ Manifest, echoed DONE:
    only), ESLint clean on the touched file.
 4. **DONE.** Ruling recorded in `docs/BUILD-BLUEPRINT.md` section 2.1,
    this handoff updated, committed, pushed.
+
+## Follow-up 2 (same pass, same branch, 10 Aug 2026): sidebar finish, control parity, sticky-bar width, modal dismissal
+
+Manifest, echoed DONE:
+
+1. **DONE.** Stayed on `design/kit-polish-3`.
+2. **DONE.** Sidebar finish. The flag-gated preview nav's group
+   headers (Play, Create, Explore, `StudioSidebar.view.jsx`'s
+   `PreviewGroup`) each carry a short gold rule under the label, the
+   same `--grad-rule` mark and `--space-8` width the page-head eyebrow
+   rule already uses, turned to sit under the label instead of
+   trailing beside it. The gap from the logo lockup to the first
+   group opened one ladder step, `--space-6` to `--space-7` (24px to
+   28px), so the header no longer crowds Play.
+3. **DONE.** Control height parity. Search, the three dropdowns, and
+   the grid/list toggle all already declared the same
+   `--control-filter` height, but the toggle's OWN frame (border,
+   radius, `--space-1` padding) sat on top of that, making the
+   visible toggle 48px tall against 38px for everything else.
+   `ViewModeToggleView` now puts the single source of truth for
+   height on the frame itself (fixed, border-box, matching Search and
+   KitDropdown's own `--control-filter`/coarse-pointer `--control-md`
+   exactly); its buttons fill it (`h-full`, `aspect-square`) instead
+   of each declaring their own size. Verified live: all five controls
+   measure exactly 38px.
+4. **DONE.** Sticky bar full width when collapsed. Two separate bugs
+   combined: `CommunityV2Mockup`'s own wrapper stacked a second,
+   mismatched padding layer on top of `StudioShell`'s section padding
+   (the sticky bar's negative margin only ever cancelled one, fixed
+   value), and the bar was nested inside a `max-w-[var(--container)]
+   mx-auto` column, whose own centering margin cannot be cancelled by
+   a fixed-token negative margin at all since its size depends on
+   runtime viewport width. Fixed by moving page padding off the
+   consuming page's outer wrapper onto each padded section
+   individually, and moving the filter bar entirely outside every
+   max-w wrapper so it only ever has to escape `StudioShell`'s own
+   section padding, matched breakpoint for breakpoint (`sm`/`lg`,
+   `StudioShell`'s own keywords). Verified live at 1440, sidebar
+   expanded and collapsed, and at 390: the bar's left/right edges
+   measure pixel-identical to `StudioTopBar`'s own edges in every
+   case (previously off by up to 102px collapsed). The auth-free
+   mirror (`CommunityV2PagePreviewClient.jsx`, new this pass) now
+   composes the real `StudioShellView` with a togglable fixture
+   sidebar specifically so this could be verified without auth.
+5. **DONE.** Modal dismissal ruled and enforced. The unified modal
+   frame's own law already specified backdrop click, Escape, and the
+   close control (`docs/BUILD-BLUEPRINT.md` 2.5's anatomy line), and
+   `ModalShell` already implements all three correctly. Two modal
+   surfaces predating that frame did not use it: the Community
+   mockup's asset detail placeholder and its image overlay wrapper,
+   both hand-rolled scrim divs with no backdrop or Escape handling.
+   Both now route through `ModalShell` instead of re-implementing the
+   law locally. Verified live: a backdrop click closes each one, a
+   click inside the panel does not, and Escape and the close control
+   still work. Recorded as an enforcement note on 2.5 so future modal
+   surfaces build on `ModalShell` (or the picker/sheet variants once
+   they ship) rather than hand-rolling a backdrop again.
+6. **DONE.** Verified in the auth-free mirror at 390 then 1440,
+   sidebar expanded and collapsed, scrolled and docked: zero new
+   console errors (the same pre-existing, unrelated preload warning
+   only), ESLint clean on every touched file (the same 3 pre-existing
+   `react-hooks/static-components` errors in `StudioSidebar.view.jsx`
+   are untouched debt, confirmed unchanged by diffing against the
+   pre-pass file), `next build` exits 0, mobile comfortable.
+7. **DONE.** This handoff updated, committed in logical chunks,
+   pushed.
 
 ## Contract change this pass
 
