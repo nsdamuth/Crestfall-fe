@@ -246,7 +246,7 @@ export default function StudioSidebarView({
       )}
 
       {!collapsed ? (
-        <div className="mt-4 space-y-[var(--space-2)] px-1">
+        <div className="mt-[var(--space-4)] space-y-[var(--space-2)] px-1">
           <div className="flex items-center gap-[var(--space-3)]">
             <span
               aria-hidden="true"
@@ -308,19 +308,20 @@ export default function StudioSidebarView({
               </InternalLinkComponent>
             ) : null}
           </div>
-        </div>
-      ) : null}
 
-      {!collapsed ? (
-        <div className="mt-4 rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3 text-xs text-[var(--ink-dim)]">
-          <p className="text-[var(--gold-ornament)]">{signedInLabel}</p>
-          <p className="mt-1 break-all">{signedInEmail}</p>
-
+          {/* Consolidated with the former duplicate sign-in panel
+              below it (RULED 9 Aug 2026, kit polish 2 pass): both
+              blocks rendered simultaneously and unconditionally,
+              repeating the same email; logout is the only affordance
+              the second block carried that this one did not, so it
+              folds in here instead, tokenized, word beside the icon
+              per the destructive-word law even though logout is not
+              itself destructive. */}
           <a
             href={logoutHref}
-            className="mt-4 flex items-center gap-2 text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
+            className="kit-focus inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
           >
-            <LogOut size={14} />
+            <LogOut size={14} aria-hidden="true" />
             {logoutLabel}
           </a>
         </div>
@@ -330,7 +331,7 @@ export default function StudioSidebarView({
 }
 
 function SidebarDivider() {
-  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
+  return <div className="my-[var(--space-4)] border-t border-[var(--line-strong)]" />;
 }
 
 function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
