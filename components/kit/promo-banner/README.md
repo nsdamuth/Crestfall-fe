@@ -12,8 +12,11 @@ up). One decision per banner: a single primary button, never two.
 The `top` treatment accepts `showGalaxy`, layering the existing
 `.cf-galaxy` starfield (`--atm-constellation`, `--anim-galaxy`,
 `--anim-twinkle`, reduced-motion safe) between the art and the veil.
-At phone widths every treatment relaxes to `aspect-[4/3]` so copy
-never crowds at 390.
+At phone widths `top` and `card` relax to `aspect-[5/3]` so copy never
+crowds at 390. `bottom` relaxes to `aspect-[1/1]` (R6, 10 Aug 2026,
+kit polish 3 pass: taller than 5/3, more artwork shows, a 67 percent
+height increase; desktop `35/12` unchanged). R6 names the bottom
+promo banner only; `top` and `card` mobile proportions are untouched.
 
 ## Purpose
 
@@ -63,7 +66,15 @@ and the corner law is violated.
 ## States
 
 The banner surface is REST only. The CTA (`cf-btn cf-btn--primary`)
-carries all five states.
+carries all five states. On the `bottom` treatment under 700px the
+CTA also carries `cf-btn--banner-cta-compact` (R6, 10 Aug 2026, kit
+polish 3 pass): a new `app/design-system.css` modifier, visually
+lighter padding and type without dropping below the `--control-md`
+touch floor. This is a new sibling class, not an edit to `.cf-btn`
+itself; Tailwind utility classes cannot express this override on a
+`.cf-btn` element, since `.cf-btn` is unlayered CSS and Tailwind's own
+utilities live in a lower-priority cascade layer (confirmed
+empirically, phase 4).
 
 ## Package assets
 

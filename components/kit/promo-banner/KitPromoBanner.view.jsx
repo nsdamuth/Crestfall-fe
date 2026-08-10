@@ -32,7 +32,11 @@ const TREATMENT_CONFIG = {
   },
   bottom: {
     radius: "rounded-[var(--radius-lg)]",
-    aspect: "aspect-[5/3] min-[700px]:aspect-[35/12]",
+    // R6 (10 Aug 2026, kit polish 3 pass): mobile aspect moves from
+    // 5/3 to 1/1, a 67 percent height increase so more artwork shows;
+    // desktop unchanged. The top and card treatments are untouched
+    // (R6 names the bottom promo banner only).
+    aspect: "aspect-[1/1] min-[700px]:aspect-[35/12]",
     veil: null, // resolved from bottomVariant below
     body: "items-center justify-center text-center",
     line: "mx-auto",
@@ -115,7 +119,9 @@ export default function KitPromoBannerView({
           <button
             type="button"
             onClick={() => onCtaClick?.()}
-            className="kit-focus cf-btn cf-btn--primary mt-[var(--space-4)] w-fit"
+            className={`kit-focus cf-btn cf-btn--primary mt-[var(--space-4)] w-fit ${
+              treatment === "bottom" ? "cf-btn--banner-cta-compact" : ""
+            }`}
           >
             {ctaLabel}
           </button>

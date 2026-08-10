@@ -18,6 +18,11 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.1.0";
  * .cf-galaxy starfield between the art and the veil; the flag is
  * ignored on the other two treatments.
  *
+ * Mobile banner law (R6, 10 Aug 2026, kit polish 3 pass, 2.16(t)):
+ * presentation-only, contract stays 1.1.0, no prop changes. The
+ * `bottom` treatment's mobile aspect and CTA sizing change; `top` and
+ * `card` are untouched.
+ *
  * @typedef {Object} KitPromoBannerViewProps
  * @property {"top"|"card"|"bottom"} treatment
  * @property {"uniform"|"bottom-fade"} bottomVariant only read when treatment is "bottom"

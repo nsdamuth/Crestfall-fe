@@ -569,6 +569,13 @@ treatment, never configurable per instance.
 - States: the banner surface is REST only. The CTA carries all five
   (primary button recipe `cf-btn--primary`; PRESSED via
   `--state-pressed-gold`, RULED 9 Aug 2026 per 1.7).
+- Mobile bottom-banner aspect (R6, 10 Aug 2026, kit polish 3 pass):
+  under 700px the `bottom` treatment's aspect moves from `5/3` to
+  `1/1` (taller, more artwork shows); desktop `35/12` unchanged. `top`
+  and `card` mobile proportions are untouched (R6 names the bottom
+  promo banner only). The CTA gains a `cf-btn--banner-cta-compact`
+  modifier under 700px on `bottom` only (lighter padding and type,
+  height stays `--control-md`, the touch floor).
 - LOOM: `KitPromoBanner.jsx` shell; `promo-banner/` View, contract
   (`treatment`, `bottomVariant` for the `bottom` treatment only,
   `eyebrow`, `title`, `line`, `ctaLabel`, `imageSrc`, `onCtaClick`),
@@ -1194,6 +1201,10 @@ control opening a secondary modal in the same space, scrollable, with
 handles routing to profiles, with a back path returning to the popup
 beneath. Popup space budget goes to art and description, not the
 credit list.
+
+**(t) Mobile banner law (R6), RULED 10 Aug 2026.** The bottom promo
+banner on mobile is taller with a smaller button so more artwork
+shows; desktop proportions unchanged.
 
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 

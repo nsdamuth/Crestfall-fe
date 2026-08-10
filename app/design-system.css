@@ -420,6 +420,25 @@
   box-shadow: var(--glow-hover);
 }
 
+/* R6 (10 Aug 2026, kit polish 3 pass): the bottom promo banner's CTA
+   is visually lighter on mobile without breaking the 44px touch
+   floor (height stays --control-md, untouched here). A new modifier,
+   not an edit to .cf-btn itself (the shared recipe serves every
+   button in the app and is not forked for one banner). Tailwind
+   utility classes cannot reach these properties on a .cf-btn element:
+   .cf-btn is unlayered CSS and Tailwind's own utilities live inside a
+   lower-priority CSS cascade layer, so a `px-*`/`text-*` utility never
+   overrides it regardless of class order (confirmed empirically, kit
+   polish 3 pass phase 4). */
+@media (max-width: 699.98px) {
+  .cf-btn--banner-cta-compact {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+    font-size: var(--text-ui);
+    line-height: var(--lh-ui);
+  }
+}
+
 .cf-btn:disabled,
 .cf-btn[aria-disabled="true"] {
   opacity: 0.5;
