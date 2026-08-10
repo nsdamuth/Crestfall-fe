@@ -9,8 +9,10 @@ The kit rebuild (`docs/BUILD-BLUEPRINT.md` chapter 2) is the current
 design system: full-bleed cards with a single ruled overlay-action
 placement, one branded-dropdown filter line at a single unified
 control height (`--control-filter`) that now docks flush beneath the
-sticky top bar, a content rating system ruled final at three fully
-live tiers, and card surfaces without art sitting on the lighter
+sticky top bar with search anchored left and every filter, sort, and
+the view toggle grouped anchored right, a content rating system ruled
+final at three fully live tiers, and card surfaces without art sitting
+on the lighter
 `--surface-2` elevated token against canvas. `/studio/v2/community`
 is the only nine-page-architecture route built so far, fixture-driven
 and pre-parity, mirrored auth-free at
@@ -112,6 +114,32 @@ Full manifest, echoed DONE against the brief:
    `crestfall-seal.svg`), zero new ESLint errors on every touched
    file, `next build` exits 0, mobile comfortable throughout.
 8. **DONE.** This handoff. Committed in logical chunks, pushed.
+
+## Follow-up (same pass, same branch, 10 Aug 2026): filter line balance
+
+Manifest, echoed DONE:
+
+1. **DONE.** Stayed on `design/kit-polish-3`.
+2. **DONE.** Filter line balance ruled: search anchors left; Type,
+   Rating, Sort, and the view toggle group together anchored right
+   via `ml-auto` on the whole right group, replacing the prior
+   `flex-1` on both sides (which made them compete for space instead
+   of leaving one flexible gap between two anchored ends). Inside the
+   right group, `--space-2` holds the dropdown/sort cluster; `--space-
+   4`, the standing control-group separator elsewhere in the system
+   (sidebar dividers, grid gutters), opens a wider gap before the view
+   toggle. Same law at every width; below 700px the group stays the
+   existing horizontally scrolling control line, search keeps its own
+   full-width row above it.
+3. **DONE.** Verified in the auth-free mirror at 390 then 1440,
+   scrolled and docked: balance reads correctly (measured live: 8px
+   between dropdowns, roughly 16 to 21px before the toggle, search
+   compact and left with the flexible gap in between), every control
+   reachable (Rating dropdown opened and closed cleanly while docked),
+   zero new console errors (the same pre-existing preload warning
+   only), ESLint clean on the touched file.
+4. **DONE.** Ruling recorded in `docs/BUILD-BLUEPRINT.md` section 2.1,
+   this handoff updated, committed, pushed.
 
 ## Contract change this pass
 

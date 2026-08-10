@@ -20,6 +20,20 @@
 // line (ruled this pass; the always-visible field beats a two-tap
 // icon-expand for the page's highest-frequency control), and the
 // control line scrolls horizontally without clipping.
+//
+// Filter line balance, RULED 10 Aug 2026 (kit polish 3 pass, amends
+// BUILD-BLUEPRINT.md 2.1): search anchors left; Type, Rating, Sort,
+// and the view toggle group together anchored right, on
+// `ml-auto` rather than splitting growth with search (the prior
+// `flex-1` on both sides made them compete for space instead of
+// leaving one flexible gap between two anchored ends). Inside the
+// right group, `--space-2` holds the dropdown/sort cluster together
+// as before; `--space-4`, the system's standing control-group
+// separator (sidebar dividers, grid gutters), opens a wider, ruled
+// gap before the view toggle so it reads as its own control, not a
+// fourth dropdown. Same law at every width; below 700px the group
+// stays the existing horizontally scrolling control line, search
+// keeps its own full-width row above it.
 import { useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
@@ -119,34 +133,34 @@ export default function KitStudioFilterBarView({
         onChange={onSearchChange}
       />
 
-      <div className="scrollbar-none flex items-center gap-[var(--space-2)] overflow-x-auto min-[700px]:flex-1 min-[700px]:flex-wrap min-[700px]:overflow-visible">
-        {filterGroups.map((group) => (
-          <KitDropdownView
-            key={group.id}
-            label={group.label}
-            options={(group.options || []).map((option) => ({
-              ...option,
-              count: isLoadingCounts ? null : option.count,
-            }))}
-            selectedValues={selectedValues?.[group.id] || []}
-            isMultiSelect={group.isMultiSelect !== false}
-            onToggleOption={(value) => onFilterToggle?.(group.id, value)}
-          />
-        ))}
+      <div className="scrollbar-none flex items-center gap-[var(--space-4)] overflow-x-auto min-[700px]:ml-auto min-[700px]:flex-none min-[700px]:flex-wrap min-[700px]:overflow-visible">
+        <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">
+          {filterGroups.map((group) => (
+            <KitDropdownView
+              key={group.id}
+              label={group.label}
+              options={(group.options || []).map((option) => ({
+                ...option,
+                count: isLoadingCounts ? null : option.count,
+              }))}
+              selectedValues={selectedValues?.[group.id] || []}
+              isMultiSelect={group.isMultiSelect !== false}
+              onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+            />
+          ))}
 
-        {sortOptions.length > 0 && (
-          <KitDropdownView
-            label="Sort"
-            options={sortOptions}
-            selectedValues={selectedSort ? [selectedSort] : []}
-            isMultiSelect={false}
-            onToggleOption={(value) => onSortChange?.(value)}
-          />
-        )}
-
-        <div className="ml-auto flex flex-none items-center pl-[var(--space-2)]">
-          {viewModeSlot}
+          {sortOptions.length > 0 && (
+            <KitDropdownView
+              label="Sort"
+              options={sortOptions}
+              selectedValues={selectedSort ? [selectedSort] : []}
+              isMultiSelect={false}
+              onToggleOption={(value) => onSortChange?.(value)}
+            />
+          )}
         </div>
+
+        <div className="flex flex-none items-center">{viewModeSlot}</div>
       </div>
     </div>
   );

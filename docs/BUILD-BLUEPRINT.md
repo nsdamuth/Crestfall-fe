@@ -487,6 +487,19 @@ row, banner, sticky filter bar, grid, endcap. Live witnesses:
   counts), `useStudioFilterBarViewModel.js`, README, preview route.
 - Note: presentation change only; each hub's existing filter wiring
   (operation names in the CSV) must remain reachable per contract law.
+- **Balance, RULED 10 Aug 2026 (kit polish 3 pass):** search anchors
+  left; the filter dropdowns, sort, and the view-mode toggle group
+  together anchored right, via `ml-auto` on the whole right group
+  rather than splitting flex-grow between both sides (the prior
+  `flex-1` on each side made them compete for space instead of
+  leaving one flexible gap between two anchored ends). Inside the
+  right group, `--space-2` holds the dropdown/sort cluster together;
+  `--space-4`, the system's standing control-group separator (sidebar
+  dividers, grid gutters, 1.11), opens a wider, ruled gap before the
+  view toggle so it reads as its own control rather than a fourth
+  dropdown. Same law at every width; below 700px the group stays the
+  existing horizontally scrolling control line and search keeps its
+  own full-width row above it (2.1's mobile note, unchanged).
 
 ## 2.2 Global search (`global-search`)
 
