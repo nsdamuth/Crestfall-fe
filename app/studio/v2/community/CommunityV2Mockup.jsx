@@ -17,6 +17,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlayView from "@/components/kit/image-overlay/KitImageOverlay.view";
+import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 
@@ -34,22 +35,22 @@ function creatorArt(name) {
 // fixture ratingTier values are illustrative only, not the result of
 // the required content audit named in CR-027.
 const FIXTURE_CREATIONS = [
-  { id: "c1", assetKind: "character", title: "Lilith", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Lilith"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 10880, hearts: 2210, saves: 960, recency: 18 },
-  { id: "c2", assetKind: "character", title: "Elowen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Elowen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 8400, hearts: 1630, saves: 440, recency: 17 },
-  { id: "c3", assetKind: "character", title: "Kaela Veynskald", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Kaela Veynskald"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 5120, hearts: 880, saves: 190, recency: 16 },
-  { id: "c4", assetKind: "character", title: "The Seer", subtitle: "Character · by @Crestfall", imageSrc: canonArt("The Seer"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 4100, hearts: 492, saves: 123, recency: 15 },
-  { id: "c5", assetKind: "story", title: "The First Exile", subtitle: "Story · by @vermillion", imageSrc: creatorArt("vermillion-3"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 9800, hearts: 1240, saves: 510, recency: 14 },
-  { id: "c6", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 2700, hearts: 324, saves: 81, recency: 13 },
-  { id: "c7", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 512, hearts: 88, saves: 19, recency: 12 },
-  { id: "c8", assetKind: "adventure", title: "The Long Road West", subtitle: "Adventure · by @sassy", imageSrc: creatorArt("sassy"), isCanon: false, ratingTier: "EVERYONE", isRemixable: false, plays: 1250, hearts: 203, saves: 66, recency: 11 },
+  { id: "c1", assetKind: "character", title: "Lilith", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Lilith"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 10880, hearts: 2210, saves: 960, recency: 18, description: "A canon character woven into the founding myth of the realm. Her presence anchors any scene she enters." },
+  { id: "c2", assetKind: "character", title: "Elowen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Elowen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 8400, hearts: 1630, saves: 440, recency: 17, description: "A wandering herbalist with a canon-tied backstory, built for gentle, exploratory play." },
+  { id: "c3", assetKind: "character", title: "Kaela Veynskald", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Kaela Veynskald"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 5120, hearts: 880, saves: 190, recency: 16, description: "A frontier captain holding the northern line, written for tactical and diplomatic scenes alike." },
+  { id: "c4", assetKind: "character", title: "The Seer", subtitle: "Character · by @Crestfall", imageSrc: canonArt("The Seer"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 4100, hearts: 492, saves: 123, recency: 15, description: "An oracle whose counsel always costs the asker something. Canon-tied, mature themes." },
+  { id: "c5", assetKind: "story", title: "The First Exile", subtitle: "Story · by @vermillion", imageSrc: creatorArt("vermillion-3"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 9800, hearts: 1240, saves: 510, recency: 14, description: "A community-authored story following the exile of a border scholar, told across three acts." },
+  { id: "c6", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 2700, hearts: 324, saves: 81, recency: 13, description: "A mercenary's road story through contested territory, remixable for your own cast." },
+  { id: "c7", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 512, hearts: 88, saves: 19, recency: 12, description: "A branching adventure through the harbor district, built for repeat play with shifting outcomes." },
+  { id: "c8", assetKind: "adventure", title: "The Long Road West", subtitle: "Adventure · by @sassy", imageSrc: creatorArt("sassy"), isCanon: false, ratingTier: "EVERYONE", isRemixable: false, plays: 1250, hearts: 203, saves: 66, recency: 11, description: "A caravan-escort adventure across open frontier, family-friendly throughout." },
   { id: "c9", assetKind: "image", title: "Vesper Ash Render", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-8"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: null, hearts: 410, saves: 120, recency: 10 },
   { id: "c10", assetKind: "image", title: "Harborlight Study", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-15"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: null, hearts: 96, saves: 30, recency: 9 },
-  { id: "c11", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 3300, hearts: 410, saves: 140, recency: 8 },
-  { id: "c12", assetKind: "character", title: "Selena Velvet", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Selena Velvet"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 2900, hearts: 350, saves: 96, recency: 7 },
-  { id: "c13", assetKind: "story", title: "Kaira, Princess-Errant", subtitle: "Story · by @yagirltee", imageSrc: creatorArt("yagirltee"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 4100, hearts: 492, saves: 123, recency: 6 },
+  { id: "c11", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 3300, hearts: 410, saves: 140, recency: 8, description: "A canon investigator working cases at the edge of the known world." },
+  { id: "c12", assetKind: "character", title: "Selena Velvet", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Selena Velvet"), isCanon: true, ratingTier: "ADULT", isRemixable: false, plays: 2900, hearts: 350, saves: 96, recency: 7, description: "A canon performer whose stage persona hides a sharper edge, mature themes." },
+  { id: "c13", assetKind: "story", title: "Kaira, Princess-Errant", subtitle: "Story · by @yagirltee", imageSrc: creatorArt("yagirltee"), isCanon: false, ratingTier: "EVERYONE", isRemixable: true, plays: 4100, hearts: 492, saves: 123, recency: 6, description: "A runaway royal story, told episodically, remixable for a co-op cast." },
   { id: "c14", assetKind: "image", title: "Cinder Veil", subtitle: "Image · by @rev", imageSrc: creatorArt("rev"), isCanon: false, ratingTier: "ADULT", isRemixable: false, plays: null, hearts: 44, saves: 9, recency: 5 },
-  { id: "c15", assetKind: "character", title: "Dr. Elara Kade", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Dr. Elara Kade"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 1800, hearts: 260, saves: 71, recency: 4 },
-  { id: "c16", assetKind: "story", title: "Whiteviolin Nocturne", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin-2"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 760, hearts: 130, saves: 25, recency: 3 },
+  { id: "c15", assetKind: "character", title: "Dr. Elara Kade", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Dr. Elara Kade"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 1800, hearts: 260, saves: 71, recency: 4, description: "A canon field physician written for slower, character-driven scenes." },
+  { id: "c16", assetKind: "story", title: "Whiteviolin Nocturne", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin-2"), isCanon: false, ratingTier: "ADULT", isRemixable: true, plays: 760, hearts: 130, saves: 25, recency: 3, description: "A late-night story cycle set in a city that never quite sleeps, mature themes." },
 ];
 
 const TYPE_OPTIONS = [
@@ -118,47 +119,6 @@ function EmptyState() {
   );
 }
 
-// Modal dismissal, RULED 10 Aug 2026 (kit polish 3 pass,
-// docs/BUILD-BLUEPRINT.md 2.5): every modal surface closes on its own
-// close control, Escape, and a backdrop click, all three. This
-// placeholder and the image overlay below it predate the unified
-// modal frame (2.5) and hand-rolled their own scrim divs with no
-// backdrop or Escape handling; both now route through ModalShell
-// (components/ui/ModalShell.jsx), which already implements the ruled
-// behavior (backdrop click checked against event.target so a click
-// inside the panel never bubbles into a close, Escape, and the
-// existing scroll lock), rather than re-implementing it locally.
-function AssetDetailPlaceholder({ title, onClose }) {
-  return (
-    <ModalShell
-      onClose={onClose}
-      ariaLabelledBy="community-asset-detail-title"
-      panelClassName="max-w-sm rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-6)] text-center shadow-[var(--shadow-modal)]"
-    >
-      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-        Placeholder destination
-      </p>
-      <h2
-        id="community-asset-detail-title"
-        className="mt-[var(--space-2)] font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]"
-      >
-        Asset detail popup for &quot;{title}&quot;
-      </h2>
-      <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-        Specced in docs/BUILD-BLUEPRINT.md section 2.15, not built
-        this batch. Share, save, and play live here when it ships.
-      </p>
-      <button
-        type="button"
-        onClick={onClose}
-        className="cf-btn cf-btn--secondary mt-[var(--space-5)]"
-      >
-        Close
-      </button>
-    </ModalShell>
-  );
-}
-
 export default function CommunityV2Mockup() {
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -167,7 +127,7 @@ export default function CommunityV2Mockup() {
   const [selectedSort, setSelectedSort] = useState("recommended");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [overlayImage, setOverlayImage] = useState(null);
-  const [assetDetailTitle, setAssetDetailTitle] = useState(null);
+  const [assetDetailId, setAssetDetailId] = useState(null);
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [lovedOverlayIds, setLovedOverlayIds] = useState([]);
@@ -380,7 +340,7 @@ export default function CommunityV2Mockup() {
                       title: creation.title,
                     })
                   }
-                  onOpenAssetDetail={() => setAssetDetailTitle(creation.title)}
+                  onOpenAssetDetail={() => setAssetDetailId(creation.id)}
                   onLike={() => toggleLiked(creation.id)}
                   onBookmark={() => toggleSaved(creation.id)}
                 />
@@ -435,12 +395,32 @@ export default function CommunityV2Mockup() {
         </ModalShell>
       )}
 
-      {assetDetailTitle && (
-        <AssetDetailPlaceholder
-          title={assetDetailTitle}
-          onClose={() => setAssetDetailTitle(null)}
-        />
-      )}
+      {assetDetailId && (() => {
+        const creation = FIXTURE_CREATIONS.find((item) => item.id === assetDetailId);
+        if (!creation) return null;
+
+        return (
+          <KitAssetDetailPopup
+            assetKind={creation.assetKind}
+            title={creation.title}
+            subtitle={creation.subtitle}
+            imageSrc={creation.imageSrc}
+            badges={creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []}
+            stats={{
+              plays: creation.plays,
+              hearts: creation.hearts,
+              saves: creation.saves,
+              followers: null,
+            }}
+            description={creation.description}
+            isSaved={savedIds.includes(creation.id)}
+            onPrimaryAction={() => {}}
+            onShare={() => {}}
+            onSave={() => toggleSaved(creation.id)}
+            onClose={() => setAssetDetailId(null)}
+          />
+        );
+      })()}
     </div>
   );
 }
