@@ -463,3 +463,34 @@ containing "unverified" were re-checked against the current code.
 Every one still reproduces exactly as described; none were stale. See
 git history for the row-by-row trace. No CSV `status`/`notes` values
 changed as a result of this pass.
+
+## Image creator inventory pass (R6, 10 Aug 2026 review gate)
+
+Preparation for the Images page creator panel (Sprint E): every
+user-facing field and function of the live image creator
+(`/studio/image-studio`, entry `ImageStudioWorkbench`) was enumerated
+against the CSV.
+
+- Counted at the CSV's own grouping granularity (the six ingredient
+  slots are one row, the five option selects are one row, matching
+  rows already in the ledger): **58 control units** in the live flow.
+- **48 were already in the inventory** (the `/studio/image-studio`
+  block, all `status: working`).
+- **10 were missing and were added**, each carrying the note
+  "Newly mapped 10 Aug 2026 (R6 creator-panel inventory pass)":
+  the custom-ingredient editor's disabled Use once indicator, the
+  composer's Options expander row (duplicate of the sliders icon),
+  the ingredient picker's search input and close control, the
+  save-preset modal's close control, the media grid's per-card
+  select/deselect, the lightbox details dialog close, and the
+  lightbox report dialog's reason select, note textarea, and
+  submit/close controls.
+- Two label drifts noted, not changed: the existing ingredient-slot
+  row says "Outfit" where the live label is "Clothing Source", and
+  "Location" where the live label is "Location / Scene"
+  (`imageStudioData.js`). The rows are otherwise accurate.
+- The constraint columns on every `/studio/image-studio` row are
+  `n/a (not a create or edit flow row)` by the pass-A convention, so
+  the Sprint E creator-panel spec takes field caps and defaults from
+  the source files, not the CSV.
+- Rollup not regenerated, script not in repo.
