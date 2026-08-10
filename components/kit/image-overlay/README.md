@@ -1,35 +1,40 @@
-# Kit Image Overlay LOOM Package (INTERIM)
+# Kit Image Overlay LOOM package
 
-**Contract:** `KitImageOverlay.contract.js` (`0.1.0-interim`)
+**Contract:** `KitImageOverlay.contract.js` (`1.0.0`)
 
-## This is an interim shape
+## Converted onto the unified modal frame
 
-This package **converts to the unified modal frame (section 2.5) in
-batch 2**. It exists now so `KitCreationCard` and `KitCreatorCard` have
-a real destination for `assetKind: "image"` and every thumbnail this
-batch, without waiting on `modal-frame`. Do not extend this component
-with new affordances; extend the modal-frame version once it ships.
+Batch-2 conversion (`docs/BUILD-BLUEPRINT.md` section 2.5), landed
+this pass per `docs/SPRINT-A-PLAN.md` section 4. The package is now
+the whole destination: callers render `<KitImageOverlay ... />` when
+open, no external `ModalShell` wrapper. The shell composes
+`KitModalFrame` (variant `modal`, `panelClassName="w-full
+max-w-[76rem] min-[700px]:w-fit"`), which owns the veil, panel, and
+close control; the view owns only the image block, the title line,
+and the love/save/share action row.
 
 ## Purpose
 
-The image destination ratified in `docs/BUILD-BLUEPRINT.md` section
-2.14: full image display, love, save, share. No download, details,
-report, or remix; those live on the production `MediaLightbox`
-(`components/studio/media/media-lightbox`) and are reconciled at the
-batch-2 conversion, not duplicated here.
+The destination every `image`-kind media card and every creator card
+thumbnail opens (`docs/BUILD-BLUEPRINT.md` section 2.14): full image
+display, love, save, share. No download, details, report, or remix;
+those live on the production `MediaLightbox`
+(`components/studio/media/media-lightbox`) and are reconciled at that
+surface's own conversion, not duplicated here.
 
 ## Boundary
 
 ```text
 KitImageOverlay.jsx
+  -> KitModalFrame (components/kit/KitModalFrame.jsx)
   -> useKitImageOverlayViewModel.js
   -> KitImageOverlay.view.jsx
 ```
 
 ## States
 
-The veil is REST only; Love, Save, and Share each carry their own
-five states, Love and Save additionally carry an active/toggled
+The veil is REST only (frame anatomy); every action button carries its
+own five states, Love and Save additionally carry an active/toggled
 visual.
 
 ## Package assets

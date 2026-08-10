@@ -46,3 +46,11 @@ export const kitImageOverlayLongestTitleFixture = {
   ...kitImageOverlayDefaultFixture,
   title: "The Lantern-Keeper of the Vermillion Coast, rendered at dusk, third attempt",
 };
+
+// Additive fixture, Sprint A Phase 3 (frame conversion): the standard
+// no-art fallback rendered inside the converted frame.
+export const kitImageOverlayNoImageFixture = {
+  ...kitImageOverlayDefaultFixture,
+  imageSrc: null,
+  title: "Untitled render",
+};

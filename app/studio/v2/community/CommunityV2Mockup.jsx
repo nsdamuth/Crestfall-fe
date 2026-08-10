@@ -10,13 +10,12 @@
 // navigation.
 import { useMemo, useState } from "react";
 
-import ModalShell from "@/components/ui/ModalShell";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
-import KitImageOverlayView from "@/components/kit/image-overlay/KitImageOverlay.view";
+import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
@@ -381,18 +380,16 @@ export default function CommunityV2Mockup() {
       </div>
 
       {overlayImage && (
-        <ModalShell onClose={() => setOverlayImage(null)}>
-          <KitImageOverlayView
-            imageSrc={overlayImage.imageSrc}
-            title={overlayImage.title}
-            isLoved={lovedOverlayIds.includes(overlayImage.id)}
-            isSaved={savedIds.includes(overlayImage.id)}
-            onLove={() => toggleLovedOverlay(overlayImage.id)}
-            onSave={() => toggleSaved(overlayImage.id)}
-            onShare={() => {}}
-            onClose={() => setOverlayImage(null)}
-          />
-        </ModalShell>
+        <KitImageOverlay
+          imageSrc={overlayImage.imageSrc}
+          title={overlayImage.title}
+          isLoved={lovedOverlayIds.includes(overlayImage.id)}
+          isSaved={savedIds.includes(overlayImage.id)}
+          onLove={() => toggleLovedOverlay(overlayImage.id)}
+          onSave={() => toggleSaved(overlayImage.id)}
+          onShare={() => {}}
+          onClose={() => setOverlayImage(null)}
+        />
       )}
 
       {assetDetailId && (() => {

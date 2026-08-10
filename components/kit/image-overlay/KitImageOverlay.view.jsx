@@ -1,7 +1,11 @@
-// INTERIM view. Converts to the unified modal frame (section 2.5) in
-// batch 2; do not build further affordances onto this shape, extend
-// the modal-frame version instead once it ships.
-import { Bookmark, Heart, Share2, X } from "lucide-react";
+// Converted onto the unified modal frame (docs/BUILD-BLUEPRINT.md
+// 2.5), per docs/SPRINT-A-PLAN.md section 4. The frame (rendered by
+// the KitImageOverlay shell) owns the veil, panel, and close control;
+// this view owns only the image block, the title line, and the
+// love/save/share action row, wrapped in its own content padding.
+import { Bookmark, Heart, Share2 } from "lucide-react";
+
+export const KIT_IMAGE_OVERLAY_TITLE_ID = "kit-image-overlay-title";
 
 function OverlayActionButton({ label, active = false, onClick = null, children }) {
   return (
@@ -30,19 +34,9 @@ export default function KitImageOverlayView({
   onLove = null,
   onSave = null,
   onShare = null,
-  onClose = null,
 }) {
   return (
-    <div className="relative flex flex-col items-center gap-[var(--space-4)] rounded-[var(--radius-lg)] bg-[var(--scrim-strong)] p-[var(--space-6)]">
-      <button
-        type="button"
-        onClick={() => onClose?.()}
-        aria-label="Close"
-        className="kit-focus absolute right-[var(--space-3)] top-[var(--space-3)] flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
-      >
-        <X size={18} />
-      </button>
-
+    <div className="flex flex-col items-center gap-[var(--space-4)] p-[var(--space-6)]">
       {/* Art-anchor law, RULED 9 Aug 2026, REVISED 9 Aug 2026 (kit
           polish 2 pass): the frame centers rather than hard-anchors
           to the top. This overlay renders the full image uncropped
@@ -50,8 +44,8 @@ export default function KitImageOverlayView({
           is rarely any letterboxed space for a percentage anchor to
           bias into; the numeric 18%-down anchor applies where images
           are actually cropped (card grid/list art, creator
-          thumbnails, below). Center is the safe default for the rare
-          case a wider-than-tall image does leave vertical room. */}
+          thumbnails). Center is the safe default for the rare case a
+          wider-than-tall image does leave vertical room. */}
       <div className="flex max-h-[70vh] w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)]">
         {imageSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -67,7 +61,10 @@ export default function KitImageOverlayView({
       </div>
 
       {title && (
-        <p className="text-center font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]">
+        <p
+          id={KIT_IMAGE_OVERLAY_TITLE_ID}
+          className="text-center font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]"
+        >
           {title}
         </p>
       )}
