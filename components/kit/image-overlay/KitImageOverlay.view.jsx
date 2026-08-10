@@ -43,16 +43,25 @@ export default function KitImageOverlayView({
         <X size={18} />
       </button>
 
-      {/* Art-anchor law, RULED 9 Aug 2026: the frame aligns to the
-          top of the image so faces stay visible when the frame is
-          shorter than the image. */}
-      <div className="flex max-h-[70vh] w-full items-start justify-center overflow-hidden rounded-[var(--radius-md)]">
+      {/* Art-anchor law, RULED 9 Aug 2026, REVISED 9 Aug 2026 (kit
+          polish 2 pass): the frame centers rather than hard-anchors
+          to the top. This overlay renders the full image uncropped
+          (object-contain) and the frame shrink-wraps to it, so there
+          is rarely any letterboxed space for a percentage anchor to
+          bias into; the numeric 18%-down anchor applies where images
+          are actually cropped (card grid/list art, creator
+          thumbnails, below). Center is the safe default for the rare
+          case a wider-than-tall image does leave vertical room. */}
+      <div className="flex max-h-[70vh] w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)]">
         {imageSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={imageSrc} alt={title} className="max-h-[70vh] w-auto object-contain" />
         ) : (
-          <div className="flex h-[40vh] w-full items-center justify-center bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-            No image
+          <div className="flex h-[40vh] w-full flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-1)]">
+            <svg viewBox="0 0 64 64" aria-hidden="true" className="h-10 w-10 text-[var(--ink-faint)]">
+              <use href="/assets/icons/icons-v7.svg#i-59" />
+            </svg>
+            <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
           </div>
         )}
       </div>

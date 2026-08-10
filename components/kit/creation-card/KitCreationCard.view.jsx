@@ -9,9 +9,14 @@
 // the card face. Two overlay placements are genuinely credible and
 // both ship for Brian's pick via `actionPlacement`.
 //
-// Art-anchor law, RULED 9 Aug 2026 (kit polish pass): art anchors to
-// the top of the frame in both layouts so faces stay visible when
-// the crop is tight. A future editor-side reposition capability is a
+// Art-anchor law, RULED 9 Aug 2026 (kit polish pass), REVISED 9 Aug
+// 2026 (kit polish 2 pass): art anchors 18% down from the top of the
+// frame in both layouts, not the hard top edge. Rendered against the
+// draft asset set both ways: a hard top anchor clips foreheads and
+// crowns on tighter crops (list layout, narrow grid columns) with no
+// offsetting benefit, while 18% consistently keeps the face and
+// primary subject in frame across the set without losing meaningful
+// headroom. A future editor-side, per-view reposition capability is a
 // later expansion, not built here.
 import { Bookmark, Heart, Maximize2, Play, Users } from "lucide-react";
 
@@ -31,6 +36,12 @@ function resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail) {
 }
 
 function IconActionButton({ label, active = false, onClick = null, children }) {
+  // Selection-state law: active reads as a gold mark plus a light
+  // wash, never a border change. The dark art-plate behind the icon
+  // (--tag-bed-art) stays in both states for legibility over any
+  // fixture art; RULED 9 Aug 2026 (kit polish 2 pass) its opacity
+  // lowers when active instead of adding a border, so the gold wash
+  // layered on top reads against both the lightest and darkest art.
   return (
     <button
       type="button"
@@ -38,13 +49,18 @@ function IconActionButton({ label, active = false, onClick = null, children }) {
       aria-label={label}
       aria-pressed={active}
       onClick={(event) => stopAndRun(event, onClick)}
-      className={`kit-focus flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+      className={`kit-focus relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
         active
-          ? "border-[var(--line)] bg-[var(--fill)] text-[var(--gold-bright)]"
-          : "border-[var(--line)] bg-[var(--tag-bed-art)] text-[var(--art-ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)] active:bg-[var(--state-pressed-fill)]"
+          ? "text-[var(--gold-bright)]"
+          : "text-[var(--art-ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)]"
       }`}
     >
-      {children}
+      <span
+        aria-hidden="true"
+        className={`absolute inset-0 bg-[var(--tag-bed-art)] transition-opacity ${active ? "opacity-60" : "opacity-100"}`}
+      />
+      {active && <span aria-hidden="true" className="absolute inset-0 bg-[var(--fill)]" />}
+      <span className="relative">{children}</span>
     </button>
   );
 }
@@ -137,7 +153,8 @@ function GridCard({
           <img
             src={imageSrc}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover object-[center_top] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
           />
           <div
             aria-hidden="true"
@@ -145,8 +162,11 @@ function GridCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-          No image
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-8 w-8 text-[var(--ink-faint)]">
+            <use href="/assets/icons/icons-v7.svg#i-59" />
+          </svg>
+          <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
         </div>
       )}
 
@@ -234,7 +254,8 @@ function ListCard({
           <img
             src={imageSrc}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover object-[center_top] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
           />
           {/* List rows read left to right, so the legibility fade
               anchors to the left edge (card-banner veil direction). */}
@@ -244,8 +265,11 @@ function ListCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-          No image
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-8 w-8 text-[var(--ink-faint)]">
+            <use href="/assets/icons/icons-v7.svg#i-59" />
+          </svg>
+          <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
         </div>
       )}
 
