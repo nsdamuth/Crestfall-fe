@@ -891,6 +891,66 @@ destination and needs contracts before pixels.
 - The blocked token buckets (T2/T5/T8 opacity and hex fleets, T10 type
   floor) stay blocked; pages convert what is ruled and log the rest.
 
+## 3.3 Route law, RULED 9 Aug 2026
+
+The concrete addressing and cutover mechanics for the strangler
+migration ratified in 3.0 (which itself follows
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6). Four rules:
+
+(a) **Build address.** All nine new pages build under
+`/studio/v2/<page>` (for example `/studio/v2/community`,
+`/studio/v2/home`). This is the one staging address for every page in
+the build order (3.1); no page skips it.
+
+(b) **Sidebar gate.** A `/studio/v2/<page>` route stays out of the
+sidebar until it passes parity. Parity is the UXUI doc section 6 check:
+every function the old page served exists on the new page, verified on
+a rendered page at 390 and 1440. A page failing parity is a page still
+under construction, reachable only by direct URL, never linked from
+navigation.
+
+(c) **Cutover.** Cutover happens per page, never a single cutover
+across all nine (UXUI doc section 6, item 5). Cutover is exactly three
+actions, together, one commit: the page moves from
+`/studio/v2/<page>` to its final address (the route named in this
+chapter's 3.1 table); the sidebar gains a one-line swap pointing at the
+new final address in place of the old page's entry; the old address
+issues a redirect to the new one, so no existing link, bookmark, or
+saved URL 404s.
+
+(d) **Deletion.** An old page's code is deleted only after the
+full-inventory sweep at the deletion milestone, a single dedicated pass
+across every retired old page once all nine new pages have cut over,
+never as a per-page cleanup step riding a single page's cutover commit.
+Until that milestone, a cut-over old page exists only as a redirect;
+its component code stays in the repository, unreachable but not yet
+removed, so a cutover can be reverted by removing the redirect without
+reconstructing anything.
+
+## 3.4 Parity echo law, RULED 9 Aug 2026
+
+Every page build brief, for every one of the nine pages, ends with a
+parity echo: every `docs/APP-FUNCTION-MAP.csv` row assigned to that
+page's destination (per the destination-page mapping in
+`docs/APP-FUNCTION-INVENTORY.md` pass C) is accounted for, marked one
+of exactly three ways:
+
+- **Present**: the row's function exists on the new page, with the
+  file and line where it is implemented.
+- **Deliberately excluded**: the row's function is intentionally not
+  carried to the new page, with the ruling that authorizes dropping it
+  cited by name (a CR, a ruling number, or a line in this document).
+  Nothing is dropped silently; an exclusion with no ruling to cite is
+  not deliberate, it is a flag.
+- **Flagged for Brian**: the row's function has no ruling either way;
+  work stops on it and it is reported, never guessed past (silence is
+  never ratification, per CLAUDE.md).
+
+A page with any open flag cannot enter the sidebar, regardless of
+whether every other row on it passed parity. One unresolved flag holds
+the whole page at the `/studio/v2/<page>` staging address until Brian
+rules it.
+
 ---
 
 # Rulings log, 9 Aug 2026

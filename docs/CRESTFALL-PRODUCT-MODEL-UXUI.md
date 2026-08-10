@@ -132,6 +132,18 @@ The new nine-page architecture is built alongside the existing pages, not by reb
 4. A page is retired only after a parity check: every function the old page served exists on the new page, verified on a rendered page at 390 and 1440\.  
 5. Retirement is per page, never a single cutover.
 
+**Route law and parity echo, RULED 9 Aug 2026** (full detail:
+`docs/BUILD-BLUEPRINT.md` chapter 3, sections 3.3 and 3.4). All nine
+new pages build under `/studio/v2/<page>` and stay out of the sidebar
+until parity. Cutover per page is one commit: move to the final
+address, swap the sidebar entry, redirect the old address to the new
+one. Old page code is deleted only in the single full-inventory sweep
+at the deletion milestone, after all nine have cut over, never per
+page. Every page build brief ends by echoing every function-map row
+assigned to that page as present, deliberately excluded with its
+ruling cited, or flagged for Brian; one open flag holds the page out of
+the sidebar.
+
 ## 7\. Open items
 
 * **DECIDED:** Character can be played in chat directly (tap a character, start a chat). The Stories page lists playable Characters, Stories, and Adventures.  
