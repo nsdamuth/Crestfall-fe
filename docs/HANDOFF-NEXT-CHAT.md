@@ -1,130 +1,143 @@
 # Handoff to next chat
 
-Written 10 Aug 2026, end of the kit polish 2 pass, branch
-`design/kit-polish-2` (off `design/demo-prep`).
+Written 10 Aug 2026, end of the kit polish 3 pass, branch
+`design/kit-polish-3` (off `design/kit-polish-2`).
 
 ## State summary
 
 The kit rebuild (`docs/BUILD-BLUEPRINT.md` chapter 2) is the current
-design system: full-bleed cards, one branded-dropdown filter line at
-a single unified control height (`--control-filter`, new this pass),
-selection-state and focus laws, a content rating system now ruled
-final at three fully live tiers (Everyone, Teen, Adult, one to one
-against SFW/MATURE/EXPLICIT, no disabled row, CR-027 closed on
-labels), and card surfaces without art sitting on the lighter
+design system: full-bleed cards with a single ruled overlay-action
+placement, one branded-dropdown filter line at a single unified
+control height (`--control-filter`) that now docks flush beneath the
+sticky top bar, a content rating system ruled final at three fully
+live tiers, and card surfaces without art sitting on the lighter
 `--surface-2` elevated token against canvas. `/studio/v2/community`
 is the only nine-page-architecture route built so far, fixture-driven
 and pre-parity, mirrored auth-free at
-`/dev/ui-preview/community-v2-page`. The flag-gated preview of the
-full nine-destination sidebar nav
-(`NEXT_PUBLIC_SIDEBAR_V2_PREVIEW`) is unchanged in shape this pass,
-polished (real dividers and spacing, a demo-visible duplicate
-sign-in panel removed and consolidated into one).
+`/dev/ui-preview/community-v2-page` (now also carrying `StudioTopBar`
+in the mirror, harness-only, so the sticky-stack relationship can be
+verified without auth).
 
-## This pass (kit polish 2, 10 Aug 2026)
+## This pass (kit polish 3, 10 Aug 2026)
 
 Full manifest, echoed DONE against the brief:
 
-1. **DONE.** Branched `design/kit-polish-2` off `design/demo-prep`.
-2. **DONE.** Ratings ruled final: SFW/Everyone, MATURE/Teen,
-   EXPLICIT/Adult, one to one, no disabled row, no interim note, no
-   NC-17 anywhere (`lib/shared/presentation/terminology.js`). CR-027
-   updated with a required gate: existing MATURE/EXPLICIT content
-   must be audited and re-tagged against this ladder before live
-   (non-fixture) data reaches users under these labels; that audit is
-   Nick's to run and is not done here.
-3. **DONE.** Filter line unified to one control height,
-   `--control-filter` (38px, new locked token, splits
-   `--control-sm`/`--control-md`, desktop only, touch keeps the 44px
-   floor) across search, dropdown triggers, sort, and the view
-   toggle. Sticky behavior (`sticky top-0` in
-   `KitStudioFilterBar.view.jsx`) verified at 390 and 1440: the page
-   head scrolls away and the filter line pins, dropdowns still open
-   and are still usable while pinned.
-4. **DONE.** Overlay icon active state restructured
-   (`KitCreationCard.view.jsx` `IconActionButton`): the dark art-plate
-   now stays under the gold wash at lowered opacity when active
-   instead of the border changing (there was never a border change;
-   the real defect was the plate disappearing on activation, losing
-   its dark backing against light art). Verified against the darkest
-   fixture (Lilith) and a light/mixed fixture (Elowen): the gold mark
-   reads on both.
-5. **DONE.** Sidebar: real `SidebarDivider`s now use `--line-strong`
-   (the dividers role) and `--space-4` instead of a raw gold/15
-   opacity slash; the duplicate, unconverted sign-in panel (raw
-   `rounded-xl`/`bg-black/40`) is removed and its only unique
-   affordance (logout) folded into the one polished sign-in block.
-   Confirmed structurally: `StudioSidebar.view.jsx` is the single
-   component behind both `/dev/ui-preview/studio-sidebar` and the
-   real `StudioShell` render path, so cutover is still only a route
-   swap.
-6. **DONE.** Banners: every treatment's aspect ratio reduced ~20% in
-   height (4/3 to 5/3, 21/9 to 35/12, 16/9 to 20/9), padding trimmed
-   to match. Copy rewritten to one line plus one CTA, sentence case,
-   no em dashes, across the fixtures and the live Community bottom
-   banner ("Follow the creators behind every world you love." /
-   "Browse creators"). Draft art unchanged for the live banner; it
-   already read well at the reduced height.
-7. **DONE.** Image anchoring: card grid/list art and creator
-   thumbnails move from a hard top anchor to `object-[center_18%]`.
-   Ruling, rendered both ways against the draft set: a hard top
-   anchor clipped foreheads/crowns on tight crops (list rows, narrow
-   grid columns) with no offsetting benefit; 18% down held faces
-   consistently across the set. The image overlay (lightbox) is left
-   centered, not given the same numeric anchor: it renders the full
-   image uncropped (`object-contain`) and shrink-wraps to it, so
-   there is normally no letterboxed space for a percentage anchor to
-   act on. Per-view adjustment stays a later expansion, not built.
-8. **DONE.** Loading and empty placeholders (card art fallback, image
-   overlay fallback, banner no-image fallback, the Community mockup's
-   loading grid and empty state) all carry the geometric brand mark
-   (`icons-v7.svg#i-59`) instead of a blank fill.
-9. **DONE.** Card grid/list art, creator avatars and thumbnails, and
-   the bottom-treatment banner image now carry `loading="lazy"`; top
-   and card treatments stay eager (frequently the page's own hero
-   art). Reserved aspect ratio already existed everywhere via
-   Tailwind `aspect-[...]` containers, so no layout shift risk either
-   way. Global smooth scroll (`app/globals.css`) is now gated behind
-   `prefers-reduced-motion: no-preference`; it never fights sticky
-   positioning or keyboard focus movement since it only changes how
-   the browser's own scroll-into-view animates, not whether it fires.
-10. **DONE.** Verified in the auth-free mirror
-    (`/dev/ui-preview/community-v2-page`) and package previews
-    (`kit-studio-filter-bar`, `kit-promo-banner`, `studio-sidebar`,
-    `kit-creator-card`) at 390 then 1440: every fixture state (grid,
-    list, empty, loading), sticky filter line, all three dropdowns
-    usable, banners at the new height, zero console errors, zero new
-    ESLint errors on every touched file (3 pre-existing
-    `react-hooks/static-components` errors in
-    `StudioSidebar.view.jsx` are untouched debt outside this pass's
-    edited lines, confirmed by diffing against the pre-pass file),
-    `next build` exits 0, mobile comfortable throughout.
-11. **DONE.** This handoff. Committed in logical chunks, pushed.
+1. **DONE.** Branched `design/kit-polish-3` off `design/kit-polish-2`.
+2. **DONE.** Overlay-action placement ruled final: `overlay-top`
+   everywhere. The `scrim-row` variant, its fixture
+   (`kitCreationCardScrimRowFixture`), and the `actionPlacement` prop
+   are removed from `KitCreationCard` (contract v3.0.0 to v3.1.0);
+   the side-by-side placement comparison in the package preview
+   collapsed to one card. Ruling recorded in `docs/BUILD-BLUEPRINT.md`
+   (2.6 and the 9 Aug rulings log), `docs/MOCKUP-DECISIONS.md`, and
+   `docs/CRESTFALL-DESIGN-CONTEXT.md`.
+3. **DONE.** Sticky stack fixed: the filter line was pinned at
+   `top: 0`, the same offset as `StudioTopBar`'s own `sticky top-0`,
+   so the two surfaces overlapped once both were pinned instead of
+   stacking. A new token, `--topbar-h`
+   (`calc(var(--control-md) + var(--space-3) * 2 + 1px)`, the top
+   bar's own measured height), lets `KitStudioFilterBar` dock at
+   `top: var(--topbar-h)` instead, closing the gap and clearing the
+   overlap. Verified scrolling at 390 and 1440 in the auth-free
+   mirror (which now renders `StudioTopBar` above the mockup for
+   exactly this check): search stays anchored left, dropdowns/sort/
+   view-toggle stay reachable on the right at the aligned control
+   height, top bar always wins the stack.
+4. **DONE.** Search field focus and clear control, ruled final. The
+   kit polish 2 fix was incomplete: its `focus-visible:[box-shadow:
+   none]` Tailwind utility on the raw `<input>` lost the cascade to
+   the app-wide gold `:focus-visible` rule (both single-class
+   specificity, and `design-system.css` imports after `tailwindcss`
+   in `app/globals.css`, so the gold rule always won). Fixed with a
+   dedicated `.kit-search-input:focus-visible` rule in
+   `app/design-system.css` at higher specificity, order-independent.
+   Deeper defect found and fixed the same pass: Chromium marks a text
+   `<input>` `:focus-visible` on ANY focus, pointer or keyboard
+   (verified live in Chrome DevTools), so the wrapper's
+   `has-[:focus-visible]` border brightening was firing on mouse
+   clicks too, not just keyboard, contradicting "pointer focus shows
+   nothing." Replaced with explicit local state
+   (`KitStudioFilterBar.view.jsx`'s `SearchField`): a `pointerdown` on
+   the wrapper is recorded in a ref before the resulting focus event
+   fires, so the handler can tell a pointer-caused focus from a
+   keyboard-caused one and only light the `--line-strong` border for
+   the latter. Verified both paths live: click leaves the wrapper at
+   `border-[var(--line-whisper)]` (or the hover step), Tab leaves it
+   at `border-[var(--line-strong)]`, gold never appears either way.
+   Clear control: the native `type=search` cancel icon (browser
+   blue/gray) is hidden
+   (`.kit-search-input::-webkit-search-cancel-button` etc.) and
+   replaced with a component-owned `X` icon in `--ink-faint`, the
+   same token that colors the placeholder, shown only when the field
+   has a value.
+5. **DONE.** Loading and empty geometric marks (`icons-v7.svg#i-59`)
+   scaled up on the existing spacing ladder: `var(--space-10)` (40px,
+   +25% from the prior 32px) for the smaller marks (card no-image
+   fallback in both layouts, the Community loading-grid tiles);
+   `var(--space-14)` (56px, +40% from the prior 40px) for the larger
+   marks (the Community empty state, the image-overlay fallback, the
+   promo-banner no-image fallback). Both land inside the manifest's
+   ruled 25 to 50 percent range; verified at 390 and 1440 that neither
+   size dominates its card.
+6. **DONE.** Banner art surveyed and replaced. Every draft asset (71
+   files across `canon-character-images/` and
+   `alpha-test-creator-images/`) was measured for orientation. Exactly
+   one is a genuinely wide, single-subject composition: `Lilith.png`
+   at 2560x1441 (1.78:1). The only other landscape file, `sassy.png`
+   at 2352x1426, is an eight-panel reference sheet (a mood board with
+   overlaid labels), not a scene, and does not compose at any crop, so
+   it stays out. `Lilith.png` replaces the portrait-oriented `Serapha
+   Veyloria.png` used through kit polish 2, in every `KitPromoBanner`
+   fixture (top, card, both bottom sub-variants, the galaxy-top
+   fixture) and the live Community bottom banner
+   (`CommunityV2Mockup.jsx`). Its subject sits close enough to center
+   (measured at roughly 35% down) that it survives every banner crop
+   this pass uses, mobile 5/3 through desktop 35/12 and 20/9, without
+   cutting into the face; `KitPromoBannerView`'s art now carries an
+   explicit `object-[center_35%]` anchor recording that measurement
+   rather than relying on a lucky center-crop. Only one asset is used
+   across every banner instance because it is the only draft asset
+   that qualifies; the team should supply proper wide-format banner
+   art (distinct per journey) before this set needs to diversify
+   further.
+7. **DONE.** Verified in the auth-free mirror
+   (`/dev/ui-preview/community-v2-page`, now StudioTopBar-fronted) and
+   package previews (`kit-creation-card`, `kit-promo-banner`) at 390
+   then 1440: sticky stack docks with no gap and no overlap while
+   scrolling, search states (pointer, keyboard, populated, cleared)
+   read correctly with no gold anywhere, marks read clearly at both
+   sizes, banner art composes with the face in frame at every
+   treatment and both widths, zero new console errors (one
+   pre-existing, unrelated preload warning for
+   `crestfall-seal.svg`), zero new ESLint errors on every touched
+   file, `next build` exits 0, mobile comfortable throughout.
+8. **DONE.** This handoff. Committed in logical chunks, pushed.
 
-## Ruling recorded this pass: image anchor
+## Contract change this pass
 
-Face-safe anchor is `object-[center_18%]` (roughly the middle of the
-manifest's 15-20% range), applied to `KitCreationCard` grid and list
-art and `KitCreatorCard` thumbnails. Reasoning: rendered against the
-canon/creator draft asset set both at the old hard-top anchor and at
-several percentages in range, a hard top anchor cuts into foreheads
-and crowns whenever the crop is tighter than the source art's own
-headroom (narrow grid columns, the wide-and-short list-row crop), and
-gains nothing when it doesn't, since centered subjects already sit
-near the top of most of this art. 18% consistently kept the face and
-primary subject in frame across the set without giving up meaningful
-headroom above it. The image overlay (lightbox) was evaluated
-separately and left centered; see item 7 above for why.
+`KitCreationCard.contract.js` moves v3.0.0 to v3.1.0: `actionPlacement`
+is removed now that placement is ruled rather than a per-instance
+choice. No live consumer existed beyond `CommunityV2Mockup` (which is
+pre-parity, fixture-driven) and the package's own fixtures/preview,
+all migrated in this same pass.
+
+## New token this pass
+
+`--topbar-h` (`app/theme.css`, documented in `docs/DESIGN-TOKENS.md`
+sizing section): a derived layout constant, not a new primitive
+value, for the sticky top bar's own rendered height. Legal use is the
+`top` offset of a sticky surface docking directly beneath the top bar;
+never an element's own height.
 
 ## Sprint map
 
-**Kit revision / kit polish / kit polish 2 passes (9 to 10 Aug
-2026):** the eleven `components/kit/` packages and their governing
-rulings (card, filter line, tag economy, mobile, focus, banner
-hierarchy, list density, ratings, selection-state, grid/list toggle,
-remixable fold) are landed; see `docs/CRESTFALL-DESIGN-CONTEXT.md` for
-the full list (not yet regenerated to reflect this pass, next
-session's task if it drifts).
+**Kit revision / kit polish / kit polish 2 / kit polish 3 passes (9 to
+10 Aug 2026):** the eleven `components/kit/` packages and their
+governing rulings (card, filter line, tag economy, mobile, focus,
+banner hierarchy, list density, ratings, selection-state, grid/list
+toggle, remixable fold) are landed; see
+`docs/CRESTFALL-DESIGN-CONTEXT.md` for the full list (not yet
+regenerated to reflect this pass, next session's task if it drifts).
 
 **Nine-page build order** (`docs/BUILD-BLUEPRINT.md` section 3.1),
 Community built first because it builds the whole browse kit once:
@@ -141,29 +154,23 @@ Community built first because it builds the whole browse kit once:
 9. Lore, not started (most net-new contract surface, needs Nick's
    CR-015 first)
 
-## Two open picks awaiting Brian
+## One open pick awaiting Brian
 
-Both live in fixtures today for a rendered side-by-side choice, never
-decided by an agent:
-
-1. **Creation-card overlay-action placement.** `actionPlacement`:
-   `overlay-top` vs `scrim-row`, both shipped in
-   `KitCreationCard.fixtures.js`.
-2. **Lighter wash value for artwork under a tag bed.** Carried over
-   from the batch-two sweep, provisional until Brian rules it from a
-   rendered card.
+Lives in fixtures today for a rendered choice, never decided by an
+agent: the lighter wash value for artwork under a tag bed, carried
+from the batch-two sweep. The creation-card overlay-action placement
+pick from prior handoffs is now ruled (see item 2 above); it is no
+longer open.
 
 ## Open CRs for Nick
 
-Full detail in `docs/CONTRACT-REQUESTS.md`. Later-pass, non-blocking
-unless noted:
+Full detail in `docs/CONTRACT-REQUESTS.md`. Unchanged this pass,
+later-pass, non-blocking unless noted:
 
-- **CR-027**, content rating labels are now ruled final (see above);
-  what remains open and blocks turning on live (non-fixture) rating
-  data is the required audit: re-tag existing MATURE and EXPLICIT
-  content against the new ladder (MATURE now surfaces as Teen, so any
-  MATURE-tagged item that is not teen-appropriate under this ladder
-  needs to move to EXPLICIT/Adult as part of the audit).
+- **CR-027**, content rating labels are ruled final; the required
+  audit (re-tag existing MATURE and EXPLICIT content against the new
+  ladder before live, non-fixture data reaches users under these
+  labels) is still open and is Nick's to run.
 - **CR-024/CR-025**, Room Template to Story and Storyline to Adventure
   backend renames (display layer already reads the new names; CR-025
   blocks the Adventures page conversion until it lands).
@@ -180,14 +187,13 @@ unless noted:
   CR-009, CR-011, CR-012, CR-014, CR-016 through CR-022. None block
   current work; each is logged with its own verify-with-Nick note in
   `docs/CONTRACT-REQUESTS.md`.
-
-Two CRs are Brian's, not Nick's, and are the "two open picks" above
-in a different frame: CR-007 and CR-008 (one edit surface or two;
-what the standalone editor exposes that the seven-stop creator does
-not).
+- CR-007 and CR-008 (one edit surface or two; what the standalone
+  editor exposes that the seven-stop creator does not) are Brian's,
+  not Nick's, and remain open, folded into the Vault build-order item
+  above.
 
 ## Opener line for the new chat
 
 ```
-Continuing Crestfall-fe on design/kit-polish-2. Read docs/HANDOFF-NEXT-CHAT.md first, then docs/CRESTFALL-DESIGN-CONTEXT.md for current design law. Two picks are waiting on you (overlay-action placement, tag-bed wash value); everything else is ready to keep moving. What's next?
+Continuing Crestfall-fe on design/kit-polish-3. Read docs/HANDOFF-NEXT-CHAT.md first, then docs/CRESTFALL-DESIGN-CONTEXT.md for current design law. One pick is waiting on you (tag-bed wash value); everything else is ready to keep moving. What's next?
 ```
