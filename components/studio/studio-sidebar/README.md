@@ -43,6 +43,15 @@ it did before the flag existed: this is a smallest-edit, fully
 reversible change gated entirely on `previewEnabled` in
 `StudioSidebar.view.jsx`.
 
+Preview group headers (Play, Create, Explore) follow
+`docs/BUILD-BLUEPRINT.md` 2.16(o) scope 2, RULED 10 Aug 2026 (kit
+polish 3 pass, R7): the label carries no ornament rule beside it (that
+mark is scope 1's page-head eyebrow treatment, and was wrong here); a
+plain full-width divider (the Legacy divider recipe,
+`border-t border-[var(--line-strong)]`) renders beneath the label row
+instead, in both collapsed and expanded states. The label itself
+stays gold uppercase and expanded-only, unchanged.
+
 ## Diagnostics
 
 ```bash

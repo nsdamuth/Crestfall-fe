@@ -35,7 +35,7 @@ function RectButton({ label, tone = "ghost", onClick = null }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className={`kit-focus inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
+      className={`kit-focus inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
     >
       {label}
     </button>
@@ -101,7 +101,7 @@ export default function KitCreatorCardView({
           tone={isFollowing ? "primary" : "ghost"}
           onClick={onFollow}
         />
-        <RectButton label="View profile" tone="ghost" onClick={onViewProfile} />
+        <RectButton label="Profile" tone="ghost" onClick={onViewProfile} />
       </div>
     </article>
   );

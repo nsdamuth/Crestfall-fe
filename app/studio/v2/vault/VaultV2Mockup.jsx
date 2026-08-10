@@ -48,14 +48,14 @@ const FIXTURE_VAULT_ITEMS = [
   { id: "v5", assetKind: "character", title: "Corwin Bex", subtitle: "Character", imageSrc: canonArt("Jax Riker"), isOwn: true, visibility: "INTERNAL", plays: 180, hearts: 22, saves: 6, recency: 16, description: "Shared with the internal test group only." },
   { id: "v6", assetKind: "story", title: "Nine Coin Night", subtitle: "Story", imageSrc: creatorArt("vermillion-6"), isOwn: true, visibility: "INTERNAL", plays: 240, hearts: 40, saves: 10, recency: 15, description: "Internal-only story, feedback pending." },
   { id: "v7", assetKind: "image", title: "Palette Test", subtitle: "Image", imageSrc: creatorArt("vermillion-7"), isOwn: true, visibility: "INTERNAL", plays: null, hearts: 9, saves: 2, recency: 14 },
-  { id: "v8", assetKind: "adventure", title: "The Ferry Contract", subtitle: "Adventure", imageSrc: creatorArt("vermillion-9"), isOwn: true, visibility: "INTERNAL", plays: 60, hearts: 8, saves: 3, recency: 13, description: "Internal playtest build." },
+  { id: "v8", assetKind: "adventure", title: "The Ferry Contract", subtitle: "Adventure", imageSrc: creatorArt("vermillion-9"), isOwn: true, isRemix: true, visibility: "INTERNAL", plays: 60, hearts: 8, saves: 3, recency: 13, description: "Remixed from another creator's adventure, internal playtest build." },
   { id: "v9", assetKind: "character", title: "Delphine Roux", subtitle: "Character", imageSrc: canonArt("Rachel Sentry"), isOwn: true, visibility: "PUBLIC", plays: 3400, hearts: 610, saves: 220, recency: 12, description: "Released to the community." },
   { id: "v10", assetKind: "story", title: "Coldwater Vigil", subtitle: "Story", imageSrc: creatorArt("vermillion-10"), isOwn: true, visibility: "PUBLIC", plays: 5200, hearts: 900, saves: 340, recency: 11, description: "A finished, published story." },
   { id: "v11", assetKind: "image", title: "Harbor at Dusk", subtitle: "Image", imageSrc: creatorArt("vermillion-11"), isOwn: true, visibility: "PUBLIC", plays: null, hearts: 210, saves: 80, recency: 10 },
   { id: "v12", assetKind: "character", title: "Lilith", subtitle: "Character", imageSrc: canonArt("Lilith"), isOwn: true, visibility: "CANON", isCanon: true, plays: 10880, hearts: 2210, saves: 960, recency: 9, description: "A canon character woven into the founding myth of the realm." },
   { id: "v13", assetKind: "story", title: "The First Exile", subtitle: "Story", imageSrc: creatorArt("vermillion-3"), isOwn: true, visibility: "CANON", isCanon: true, plays: 9800, hearts: 1240, saves: 510, recency: 8, description: "A canon story arc, released community-wide." },
   { id: "v14", assetKind: "character", title: "Kaela Veynskald", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Kaela Veynskald"), isOwn: false, visibility: "PUBLIC", plays: 5120, hearts: 880, saves: 190, recency: 7, description: "Saved from the Community, not your own work." },
-  { id: "v15", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isOwn: false, visibility: "PUBLIC", plays: 2700, hearts: 324, saves: 81, recency: 6, description: "Saved from the Community, not your own work." },
+  { id: "v15", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isOwn: false, isRemix: true, visibility: "PUBLIC", plays: 2700, hearts: 324, saves: 81, recency: 6, description: "Saved from the Community, not your own work." },
   { id: "v16", assetKind: "image", title: "Vesper Ash Render", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-8"), isOwn: false, visibility: "PUBLIC", plays: null, hearts: 410, saves: 120, recency: 5 },
   { id: "v17", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), isOwn: false, visibility: "PUBLIC", plays: 512, hearts: 88, saves: 19, recency: 4, description: "Saved from the Community, not your own work." },
   { id: "v18", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isOwn: false, visibility: "PUBLIC", plays: 3300, hearts: 410, saves: 140, recency: 3, description: "Saved from the Community, not your own work." },
@@ -147,10 +147,20 @@ export default function VaultV2Mockup() {
         id: "type",
         label: "Type",
         isMultiSelect: true,
-        options: TYPE_OPTIONS.map((option) => ({
-          ...option,
-          count: pool.filter((item) => item.assetKind === option.value).length,
-        })),
+        // Remix folded in as an additional option row (R10, RULED 10
+        // Aug 2026, docs/BUILD-BLUEPRINT.md 2.16(k) fold-in semantics):
+        // the standalone Remixable dropdown stays retired.
+        options: [
+          ...TYPE_OPTIONS.map((option) => ({
+            ...option,
+            count: pool.filter((item) => item.assetKind === option.value).length,
+          })),
+          {
+            value: "remix",
+            label: "Remix",
+            count: pool.filter((item) => item.isRemix).length,
+          },
+        ],
       },
       {
         id: "visibility",
@@ -168,11 +178,14 @@ export default function VaultV2Mockup() {
     if (fixtureMode === "empty") return [];
 
     const query = searchValue.trim().toLowerCase();
-    const types = selectedValues.type || [];
+    const typeValues = selectedValues.type || [];
+    const remixOnly = typeValues.includes("remix");
+    const types = typeValues.filter((value) => value !== "remix");
     const visibilities = selectedValues.visibility || [];
 
     const filtered = FIXTURE_VAULT_ITEMS.filter((item) => {
       if (types.length && !types.includes(item.assetKind)) return false;
+      if (remixOnly && !item.isRemix) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
       if (query && !`${item.title} ${item.subtitle}`.toLowerCase().includes(query)) return false;
       return true;

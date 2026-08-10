@@ -342,23 +342,20 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
   return (
     <div>
       {!collapsed ? (
-        // Section-label law, RULED final 10 Aug 2026 (kit polish 3
-        // pass, corrects the same-day earlier attempt below the
-        // label): gold uppercase label, one short SOLID gold rule to
-        // its right, vertically centered on the label via the row's
-        // own flex centering. No underline, no gradient tapering to
-        // a point (the page-head eyebrow's --grad-rule fades and was
-        // wrong for this law), no icon or mark of any kind.
-        <div className="flex items-center gap-[var(--space-2)] px-3 pb-[var(--space-2)]">
-          <p className="text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            {group.label}
-          </p>
-          <span
-            aria-hidden="true"
-            className="h-px w-[var(--space-8)] shrink-0 bg-[var(--gold-ornament)]"
-          />
-        </div>
+        // Section labels, two scopes, RULED 10 Aug 2026 (kit polish 3
+        // pass, docs/BUILD-BLUEPRINT.md 2.16(o)). This is scope 2,
+        // sidebar nav group headers: structural, not decorative. The
+        // label keeps its gold uppercase treatment with NO ornament
+        // rule beside it (the short gold rule this pass removes was
+        // scope 1's page-head eyebrow treatment, wrong here); a plain
+        // full-width divider (the Legacy divider recipe) renders
+        // beneath the label row instead, in both collapsed and
+        // expanded states.
+        <p className="px-3 pb-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          {group.label}
+        </p>
       ) : null}
+      <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
       <nav className="space-y-[var(--space-1)]">
         {group.items.map((item) =>
           item.isBuilt ? (

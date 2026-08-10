@@ -1146,6 +1146,18 @@ never narrower or shorter than the content above it.
 Eyebrow, title, and description left-aligned to the content edge; the
 separator beneath the block spans the full content width per (l).
 
+**(o) Section labels, two scopes, RULED 10 Aug 2026 (kit polish 3
+pass, R7).**
+
+- Scope 1, page section eyebrows: gold uppercase label with one short
+  solid gold rule to its right. Unchanged law.
+- Scope 2, sidebar nav group headers (Play, Create, Explore):
+  structural, not decorative. Label plus a plain full-width divider
+  line beneath it, the Legacy divider recipe. No gold ornament rule
+  beside a sidebar group label, and never both marks on one element.
+  Renders in both collapsed and expanded states; the label itself
+  stays expanded-only.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9
