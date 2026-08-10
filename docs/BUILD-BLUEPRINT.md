@@ -1,15 +1,17 @@
 # Build blueprint
 
-Written 9 Aug 2026 on branch `design/build-blueprint`. Three chapters:
-the token expansion plan, the shared component kit spec, and the
-nine-page build order. Everything here is a PROPOSAL under the standing
-law (`docs/DESIGN-TOKENS.md` for tokens, `docs/FRONTEND-SOP.md` for
-process). Nothing in this document is ruled; every proposed token
-enters at status `proposed` per the DESIGN-TOKENS status vocabulary and
-is never written into product code before Brian rules it. Expansion
-only: no existing token, ruling, or brand style is renamed, removed, or
-restyled here. Where a proposal touches a standing ruling, the conflict
-is listed under Open questions for Brian, never resolved in place.
+Written 9 Aug 2026 on branch `design/build-blueprint`. Twelve open
+judgment calls RULED 9 Aug 2026 on branch `design/token-expansion`, all
+option A; each ruling is folded into its chapter below rather than kept
+as a separate question. Three chapters: the token expansion plan, the
+shared component kit spec, and the nine-page build order. Every
+proposed token enters `docs/DESIGN-TOKENS.md` at status `proposed`
+first per the DESIGN-TOKENS status vocabulary; a token is written into
+`app/theme.css` only once this ruling pass authorizes it (chapter 1,
+section 1.10 records exactly what that authorizes). Expansion only: no
+existing token, ruling, or brand style is renamed, removed, or
+restyled beyond the two ratified bridge-alias migrations recorded in
+1.9.
 
 Sources read for this document, in this session: `docs/RESTYLE-RULES.md`,
 `docs/CRESTFALL-PRODUCT-MODEL.md`, `docs/APP-FUNCTION-INVENTORY.md`,
@@ -63,20 +65,20 @@ is adopted, never their visual style.
 
 | Reference gap | What exists today (file witness) | Verdict |
 |---|---|---|
-| Ten-step color ladder per family | Gold: 5 solid values (`--gold-bright/action/ornament/deep`, `--tag-fill-ink`, `app/theme.css`). Warm neutrals: 8 solid values (canvas, surfaces 1 to 4, ink triad). Status: 1 solid value each plus alpha bed/border pairs | Gap is real. Ladders proposed in 1.3 |
-| Named surface levels | `--canvas`, `--surface-1..4`, `--surface-footer`, each with a role, legal-on, never-on row (DESIGN-TOKENS Surfaces) | Already satisfied. No new surface tokens proposed; the ramp is anchored onto the neutral ladder in 1.3 for documentation only |
-| ~15-step spacing scale on one rhythm | 11 steps, `--space-1..20`, strict multiples of 4 (`app/theme.css`) | Partial. 4 in-rhythm steps proposed in 1.4 |
-| Full desktop/mobile type scale with label styles | 8-step ladder plus eyebrow/cta aliases and label tracking; no mobile pair on any step (`app/theme.css`) | Label styles exist. Mobile pairs are the gap; proposed in 1.5 |
-| Six elevation levels | Exactly two floating shadows (`--shadow-modal`, `--shadow-popover`) plus `--edge-top`, by explicit ruling: "Exactly two floating tokens" (`app/theme.css` elevation comment; DESIGN-TOKENS Elevation) | CONFLICT with the reference. Ladder proposed in 1.6 with only ruled values filled; adoption is open question OQ2 |
-| Six blur levels | `--blur-panel` 2px, `--blur-chrome` 12px, plus one ungoverned 4px mechanism on `.tag--meta` noted in DESIGN-TOKENS | CONFLICT with the one-strength blur law. Ladder proposed in 1.6, documenting the three existing strengths only; adoption is OQ3 |
-| Five interaction states on every control | States live per recipe (`cf-btn` hover and disabled, `cf-nav-link` hover/active, chip `.sel` in the proof); `--focus-ring` is the one state token; no rest/pressed/disabled tokens exist | Gap is real. State tokens proposed in 1.7 |
+| Ten-step color ladder per family | Gold: 5 solid values (`--gold-bright/action/ornament/deep`, `--tag-fill-ink`, `app/theme.css`). Warm neutrals: 8 solid values (canvas, surfaces 1 to 4, ink triad). Status: 1 solid value each plus alpha bed/border pairs | Gap is real. Ladders built in 1.3, RULED |
+| Named surface levels | `--canvas`, `--surface-1..4`, `--surface-footer`, each with a role, legal-on, never-on row (DESIGN-TOKENS Surfaces) | Already satisfied. No new surface tokens; the ramp is anchored onto the neutral ladder in 1.3 for documentation only |
+| ~15-step spacing scale on one rhythm | 11 steps, `--space-1..20`, strict multiples of 4 (`app/theme.css`) | Partial. 4 in-rhythm steps built in 1.4, RULED |
+| Full desktop/mobile type scale with label styles | 8-step ladder plus eyebrow/cta aliases and label tracking; no mobile pair on any step (`app/theme.css`) | Label styles exist. Mobile pairs built in 1.5, RULED |
+| Six elevation levels | Exactly two floating shadows (`--shadow-modal`, `--shadow-popover`) plus `--edge-top`, by explicit ruling: "Exactly two floating tokens" (`app/theme.css` elevation comment; DESIGN-TOKENS Elevation) | RULED: ladder built in 1.6 as structure with only already-ruled values filled; the two-shadow ruling stays true at the value level |
+| Six blur levels | `--blur-panel` 2px, `--blur-chrome` 12px, plus one ungoverned 4px mechanism on `.tag--meta` noted in DESIGN-TOKENS | RULED: ladder built in 1.6 documenting the three existing strengths only, bringing the stray 4px under law |
+| Five interaction states on every control | States live per recipe (`cf-btn` hover and disabled, `cf-nav-link` hover/active, chip `.sel` in the proof); `--focus-ring` is the one state token; no rest/pressed/disabled tokens exist | Gap is real. State tokens built in 1.7, RULED, including the gold-filled pressed mapping |
 | Input anatomy with label/hint/error slots and success/error styling | Field labels ride `FIELD_LABEL_CLASS` at raw `text-[10px]` (Sprint 3 item 4.3, blocked on T10); status triads exist but no named slot anatomy | Anatomy spec is chapter 2 work; no new tokens needed beyond the state set |
 | Searchable and multi-select menu anatomy with rich rows | `.cbmenu` recipe (RESTYLE-RULES Filter panels), `cf-dropdown` (`app/design-system.css`), live pickers in the CSV (rows for RoomTemplatePickerModal, ScenarioReferencePickerModal, mechanics module picker) | Chapter 2 work; no new tokens |
 | Selectable filter chips with counts | `.fchip` family fully specified, "OPEN: none" (RESTYLE-RULES Tag and filter chips) | Already satisfied; chapter 2 lifts it into a LOOM package |
-| Alert tone system | Status usage law (state only, word beside it, no info color) exists; no alert component | Chapter 2 work; no new tokens beyond the neutral bed question OQ11 |
+| Alert tone system | Status usage law (state only, word beside it, no info color) exists; no alert component | Chapter 2 work; neutral tone bed RULED in 2.11 |
 | Documented badge taxonomy | `.tag` recipe plus Ruling 3 (Canon stays gold, status badges go neutral) | Already satisfied; chapter 2 lifts it into a LOOM package |
 
-## 1.3 Color ladders (50 proposed tokens)
+## 1.3 Color ladders (50 tokens, RULED 9 Aug 2026)
 
 Principle: ladders are a PRIMITIVE layer underneath the existing role
 tokens, not a replacement for them. Components keep consuming role
@@ -95,7 +97,11 @@ render sitting.
 
 Step naming runs 1 (lightest) to 10 (darkest) in both themes; the
 light theme re-anchors the same step names onto the light values, the
-same way the role tokens flip today. Naming scheme itself is OQ1.
+same way the role tokens flip today. Naming scheme RULED 9 Aug 2026:
+numbered steps 1 to 10, lightest to darkest (`--gold-4`), not a
+hundreds scale and not an extension of role names. Reason: shortest
+names, reads in one glance, matches how the surfaces already count
+upward.
 
 ### Gold ladder, 10 tokens
 
@@ -159,7 +165,7 @@ Usage law is untouched: state only, never decoration, a word beside
 every use, no info color, one red. The ladder adds shades of the three
 ruled hues, never a fourth hue.
 
-## 1.4 Spacing ladder (4 proposed tokens, 15 steps total)
+## 1.4 Spacing ladder (4 tokens, RULED 9 Aug 2026, 15 steps total)
 
 Existing: `--space-1,2,3,4,5,6,8,10,12,16,20` (11 steps, multiples of
 4, suffix times 4 = pixels). Proposed additions on the same rhythm and
@@ -172,35 +178,50 @@ the same suffix rule:
 | `--space-14` | 56px | between 48 and 64, section rhythm |
 | `--space-24` | 96px | above 80, page-end banner clearance |
 
-Migration note: pure addition. No existing step moves. Which of the
-four are actually wanted is OQ12.
+Migration note: pure addition. No existing step moves. RULED 9 Aug
+2026: all four steps are added, reaching 15 steps on the one 4px
+rhythm. Reason: fills every observed gap once, matching the
+reference's roughly 15-step shape; fewer steps leaves the
+section-rhythm and page-end gaps above 48px unfillable without
+literals, which the token-first directive would then have to reject
+one at a time.
 
-## 1.5 Type ladder mobile pairs (16 proposed tokens)
+## 1.5 Type ladder mobile pairs (16 tokens, RULED 9 Aug 2026)
 
 The desktop ladder stands untouched. Every step gains a named mobile
 pair: `--text-<step>-m` and `--lh-<step>-m`, consumed at the 390-width
 breakpoint. 8 steps times 2 tokens = 16.
 
-Proposed fill rule (OQ4 rules it): steps `label`, `ui`, `body`, `lead`
+Fill rule, RULED 9 Aug 2026: steps `label`, `ui`, `body`, `lead`
 alias their desktop values unchanged (small type does not compress);
 steps `subhead`, `heading`, `title`, `display` take the value one
 ladder step down (so `--text-title-m` = `var(--text-heading)`, and so
 on). This inherits the ratio scale instead of minting new sizes, the
 same absorb-without-a-rewrite property the scale was built for (the
-type assignment comment in `app/theme.css`). `--text-hero` already
-handles its own fluidity via clamp and gets no pair. The eyebrow and
-cta aliases follow whatever their referent steps do.
+type assignment comment in `app/theme.css`); the alternative of bespoke
+mobile values per step was rejected as needing a render sitting per
+step for marginal gain, and fluid clamp() per step was rejected because
+the system deliberately keeps fluid type confined to `--text-hero` and
+clamping product UI would break the 4px leading grid. `--text-hero`
+already handles its own fluidity via clamp and gets no pair. The
+eyebrow and cta aliases follow whatever their referent steps do.
 
 Migration note: pure addition. No live style changes until a package
 consumes a `-m` pair; adoption is per package under the normal render
 gate.
 
-## 1.6 Elevation and blur ladders (12 proposed tokens)
+## 1.6 Elevation and blur ladders (12 tokens, RULED 9 Aug 2026)
 
-Both ladders CONFLICT with standing rulings and are therefore proposed
-as structure with only already-ruled values filled. Adoption is OQ2
-(elevation) and OQ3 (blur). No new visible depth or blur strength is
-invented here.
+Both ladders touch standing rulings (exactly two floating shadows;
+exactly one blur strength) and are RULED to be built as structure with
+only already-ruled values filled, levels with no ruled value staying
+empty. Reason: reference structure gained, zero new visible depth or
+blur strength invented, and each standing ruling stays true at the
+value level. The alternative of skipping the ladders was rejected
+because the reference gap would stay open and every future depth
+question would reopen ad hoc; the alternative of minting new real
+values for every level was rejected as directly contradicting the
+standing rulings without a render sitting.
 
 Design intent for a near-black canvas, from the theme's own physics:
 depth on `#090805` cannot come from gray drop shadows (a dark object
@@ -242,7 +263,7 @@ Migration note: `--blur-panel` and `--blur-chrome` keep their names;
 role pairing law (panel blur always with `--scrim-strong`, chrome frost
 never with a scrim) is untouched.
 
-## 1.7 Five-state tokens (6 proposed tokens)
+## 1.7 Five-state tokens (6 tokens, RULED 9 Aug 2026)
 
 The five states every control must define: rest, hover, focus,
 pressed, disabled. Today each recipe hand-writes its own (witnesses:
@@ -261,11 +282,15 @@ same everywhere and can be tuned in one line.
 | `--state-focus-ring` | `var(--focus-ring)` | focus; pure alias so kit specs can name one state family. `--focus-ring` remains the law and the only declaring token |
 
 Rest is the component's own idle recipe and needs no token. Gold-filled
-pressed treatment is OQ5. Migration note: pure addition; existing
-recipes migrate to the state tokens per package, zero visual change
-where values match (they are chosen to match).
+pressed treatment RULED 9 Aug 2026: pressed swaps the fill to
+`--gold-deep` via `--state-pressed-gold`, using the value already
+minted for the job rather than a motion-only change (invisible under
+reduced motion) or no distinct pressed state (touch has no hover, so a
+control needs its own pressed signal). Migration note: pure addition;
+existing recipes migrate to the state tokens per package, zero visual
+change where values match (they are chosen to match).
 
-## 1.8 Proposed token count by group
+## 1.8 Token count by group, RULED 9 Aug 2026
 
 | Group | New tokens |
 |---|---|
@@ -280,11 +305,30 @@ where values match (they are chosen to match).
 | Five-state set | 6 |
 | Total | 88 |
 
-All 88 enter `docs/DESIGN-TOKENS.md` at status `proposed` first.
-Nothing lands in `app/theme.css` before its ruling (maintenance law,
-FRONTEND-SOP section 4: a new token enters theme.css only through a
-Brian ruling, with name, both theme values, role, legal-on/never-on,
-and status in the same commit).
+All 88 enter `docs/DESIGN-TOKENS.md` at status `proposed` in this same
+ruling pass. Every unset ladder step stays exactly that: a documented
+placeholder with no value, never written into `app/theme.css` until a
+real value is ruled (maintenance law, FRONTEND-SOP section 4: a new
+token enters theme.css only through a Brian ruling, with name, both
+theme values, role, legal-on/never-on, and status in the same commit).
+Section 1.10 states precisely what this 9 Aug 2026 ruling authorizes
+in code.
+
+## 1.10 What this ruling authorizes for execution
+
+This ruling pass authorizes writing the 88 tokens above into
+`app/theme.css` and `docs/DESIGN-TOKENS.md` at status `proposed`,
+filled only where a value already exists in the ruled system (every
+"unset" cell in 1.3 through 1.7 stays unset in code, declared as a
+comment placeholder, never a literal). It authorizes no restyle: no
+component migrates to consume a new token in this pass, and no
+existing role token's declaration is rewritten onto a ladder `var()`
+yet, that migration is separate execution work the ladders make
+possible, not part of this ruling. It also authorizes bridge shrink
+steps one and two (1.9): the `--border` and `--font-serif` alias
+migrations, chosen because both are small, fully mapped, and produce
+zero visual change. The three large bridge aliases stay untouched this
+phase.
 
 ## 1.9 Shrinking app/token-bridge.css to zero
 
@@ -446,7 +490,7 @@ heading, one line, one `--lg` CTA.
   only. No blur (blur never on banners).
 - States: the banner surface is REST only. The CTA carries all five
   (primary button recipe `cf-btn--primary`; PRESSED via
-  `--state-pressed-gold` pending OQ5).
+  `--state-pressed-gold`, RULED 9 Aug 2026 per 1.7).
 - LOOM: `PromoBanner.jsx` shell; `promo-banner/` View, contract
   (`eyebrow`, `title`, `line`, `ctaLabel`, `imageSrc`, `onCtaClick`),
   fixtures (default, longest copy, missing image fallback onto
@@ -527,11 +571,13 @@ lightbox rows on image-studio and image-library.
   inventory today:
   - image view: clicking the image opens the media lightbox
     (`MediaLightbox`, CSV image-studio and image-library rows).
-  - zoom: the inventory's zoom affordance is the Expand quick action,
-    which opens the same lightbox (CSV: "Expand: opens the lightbox
-    for that card"). No pinch or in-lightbox zoom control exists in
-    the inventory; none is specified here (OQ10 confirms this
-    scoping).
+  - zoom: RULED 9 Aug 2026, zoom means the existing Expand quick
+    action, which opens the same lightbox (CSV: "Expand: opens the
+    lightbox for that card"); nothing new. No pinch or in-lightbox
+    zoom control exists in the inventory and none is specified here,
+    since the inventory contains no other zoom functionality and card
+    anatomy is scoped to what exists; an in-lightbox zoom control would
+    be new functionality needing a CR and Nick, out of scope here.
   - share: the lightbox Share button (navigator.share, clipboard
     fallback, status word shown; CSV row notes it shares the page URL,
     not a canonical image link, which stays a logged limitation, not a
@@ -719,10 +765,15 @@ converted); the proof's one sanctioned explainer container, the
   - warning: warning triad, same shape; used only where no other
     signal works (warning is reserved).
   - danger: danger triad, same shape.
-  - neutral: ink family text on a quiet bed with `--line` border; the
-    proof witness uses `--fill-whisper`; the bed choice is OQ11. No
-    info color exists and none is minted; neutral IS the info tone,
-    rendered through ink.
+  - neutral: ink family text on a quiet bed with `--line` border. Bed
+    RULED 9 Aug 2026: `--fill-whisper`, matching the proof's sanctioned
+    info strip exactly, since it is the only neutral explainer
+    container the draft ever ratified (a `--surface-1` bed was
+    rejected as reading like an input well, not a notice; no bed at
+    all was rejected as losing the one sanctioned home for explainer
+    copy and inviting the orphan loose text the proof explicitly
+    bans). No info color exists and none is minted; neutral IS the
+    info tone, rendered through ink.
 - States: the strip is REST only; a dismiss control or inline action
   carries all five states.
 - LOOM: `AlertStrip.jsx` shell; `alert-strip/` View, contract
@@ -768,18 +819,34 @@ Sequencing rules used:
   pages (Ruling 8), so a browse page leads.
 - Merge risk second: a page whose surfaces carry open Nick-owned CRs
   that would collide with in-flight backend work waits. "Nick's merge
-  lock" is not defined in any document read this session (unknown);
-  this chapter interprets it as: the set of open Nick-owned CRs
-  touching that page's surfaces, plus the two rename CRs whose copy
-  and code are ruled to land together. That interpretation is OQ7.
+  lock" matched no text in any document read this session at the time
+  this chapter was drafted; RULED 9 Aug 2026: a page is locked while
+  any open Nick-owned CR touches its surfaces in a way that would make
+  the restyle land twice (the reading already used in 3.1), not a
+  literal announced code freeze (none is recorded anywhere in the
+  repo) and not narrowed to only the two rename CRs (CR-026
+  explicitly schedules Nick's own pass over quick-create before build,
+  which is lock-shaped for the Studio page and would be missed by the
+  narrower reading).
 - Strangler rules: the phrase "strangler rules from the product model"
-  matches no text in `docs/CRESTFALL-PRODUCT-MODEL.md` or any other
-  document read this session (unknown; OQ6). The discipline applied
-  below, pending that ruling, is the one the repo's own law already
-  implies: kit pieces land as shared LOOM packages first; each page
-  then converts as one unit behind its Views; the legacy page keeps
-  rendering until the converted page passes the QA gate at 390 and
-  1440; presentation changes only, contracts and ViewModels untouched,
+  matched no text in `docs/CRESTFALL-PRODUCT-MODEL.md` at the time
+  this chapter was drafted, but Brian's reissued
+  `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` (registered in CLAUDE.md 9 Aug
+  2026, now the current product model for page architecture) names the
+  strangler pattern explicitly in its section 6, "Migration strategy:
+  build new, then retire old": each new page builds as a fresh route
+  under the updated system, reads the same live data through the same
+  API surface as the old page, old pages stay routable but leave the
+  sidebar once the new page carries their function, and a page retires
+  only after a parity check confirms every old function exists on the
+  new page, rendered at 390 and 1440, retirement per page never a
+  single cutover. RULED 9 Aug 2026: this chapter follows that section 6
+  discipline, which also matches and confirms the repo-law-derived
+  discipline drafted here: kit pieces land as shared LOOM packages
+  first; each page then converts as one unit behind its Views; the
+  legacy page keeps rendering until the converted page passes both the
+  QA gate at 390 and 1440 and the UXUI section 6 parity check;
+  presentation changes only, contracts and ViewModels untouched,
   anything needing a contract change stops and escalates (contract
   law); preview routes before product pages (new module protocol).
 
@@ -798,8 +865,8 @@ first work by T9), 2.7 (chips), 2.10 (badge), 2.4 (load-more), 2.8
 | 5 | Images (`/studio/image-studio`, `[id]/image-library`) | modal-frame, form-field, load-more, filter-chip, alert-strip | media-lightbox restyle (share/download/details per inventory), composer field anatomy, the missing page head (REDESIGN-ORDER: image-studio ships a bare eyebrow, no display title) | No lock. All lightbox wiring exists and stays; the `window.confirm` delete gap converts to the modal-frame confirm step, presentation of an existing operation |
 | 6 | Studio (`/studio/create` and the 26 builders' shared chrome) | form-field, picker-modal, modal-frame, alert-strip, cards | create-hub ladder layout per the proof (levels, doors, tool cards, story bridge strip), quick-create surfaces | YES. CR-026 is exactly Nick's pass over the quick-create allocation before build, and CR-009 (one wizard/picker system) governs the Player Character creator. The hub's own restyle can start; quick-create composition waits for CR-026. T12 items (centered vs docked creator) stay queued |
 | 7 | Adventures (`/studio/storylines`) | full skeleton, cards, chips | nothing new (smallest surface, 6 CSV rows) | YES. CR-025: the display layer still reads "Storyline" and the product model rules the copy retirement lands the moment the rename lands in code, so copy and backend rename are meant to land together. Restyling before that means touching the page twice; it waits |
-| 8 | Home (Play > Home, no route assigned) | everything: skeleton, cards, banners, search | possibly the dashboard composition (hero, doors, shelf), which Ruling 8 explicitly kept out of the library sweep | Brian lock, not Nick: no ruling assigns a route or composition to Home ("/studio" is unassigned; where in-progress chats appear is "Not ruled" in the product model). OQ8. Also CR-003 (character into story) shapes Home's continue rail |
-| 9 | Lore (Explore > Lore, no route assigned) | skeleton, cards, badges, alert-strip | the public Lorebook reading and submission surface; today only the builder (`/studio/create/lore`) and unassigned archive routes (`/characters`, `/studio/official-characters`) exist | YES plus Brian. CR-015 (pipeline confirmation, and whether the new lore-validation route answers it) is Nick's; which archive routes fold into the destination is OQ9. Most net-new contract surface of the nine, so last |
+| 8 | Home (Play > Home) | everything: skeleton, cards, banners, search | the dynamic feed composition per the UXUI doc section 4.1 (continue-playing cards, new releases, community highlights, creator activity, fresh lore, an editorial signed-out version) | RULED 9 Aug 2026: `/studio` becomes Play > Home and adopts this feed composition, since the route already plays the guidepost role for signed-in users and a new dedicated route would leave two home-shaped pages, violating one-canonical-home. Also CR-003 (character into story) shapes Home's continue rail |
+| 9 | Lore (Explore > Lore) | skeleton, cards, badges, alert-strip | the public Lorebook reading and submission surface; today only the builder (`/studio/create/lore`) and unassigned archive routes (`/characters`, `/studio/official-characters`) exist | YES plus Brian. CR-015 (pipeline confirmation, and whether the new lore-validation route answers it) is Nick's. RULED 9 Aug 2026: the public archive routes (`/characters`, the lore-site pages) plus `/studio/official-characters` fold into the Lore destination when it is built, retiring duplicates, since the inventory flags exactly these as unassignable between Community and Lore and a single ruling places them all rather than leaving them homeless or folding them into Community, which the product model describes as the makers' wall, not the home of backstory reading. Most net-new contract surface of the nine, so last |
 
 One-line reasons, in order: Community builds the whole browse kit
 once; Creators reuses it wholesale and lands two ruled fixes; Vault
@@ -826,175 +893,41 @@ destination and needs contracts before pixels.
 
 ---
 
-# Open questions for Brian
+# Rulings log, 9 Aug 2026
 
-Every judgment call this document could not settle from the written
-rules. Three options each, one recommended. Per working law these are
-presented one at a time at a gate, translated out of token language;
-this list is the doc-side record.
+The twelve judgment calls this document could not settle from the
+written rules were presented at a gate and ruled, all option A. Each
+ruling is folded into its chapter above at the point it applies; this
+log is the index, not a restatement.
 
-## OQ1: how the new color ladder steps are named
+1. Color ladder step naming: numbered 1 to 10, lightest to darkest.
+   Folded into 1.3.
+2. Elevation ladder vs the exactly-two-shadows ruling: adopt as
+   structure, levels 1 to 4 filled from existing tokens, 5 and 6
+   empty. Folded into 1.2 and 1.6.
+3. Blur ladder vs the one-strength law: adopt documenting only the
+   existing strengths (0, 2px, 4px, 12px), two levels empty. Folded
+   into 1.2 and 1.6.
+4. Type mobile pairs fill rule: one ladder step down for subhead and
+   larger, smaller steps aliased unchanged. Folded into 1.5.
+5. Pressed state of gold-filled controls: `--gold-deep` via
+   `--state-pressed-gold`. Folded into 1.7, 2.3.
+6. The strangler rules the brief cited: matched to
+   `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6, now registered as
+   the current product model; this chapter's discipline follows it.
+   Folded into 3.0.
+7. What "Nick's merge lock" means: any open Nick-owned CR touching a
+   page's surfaces in a way that would make the restyle land twice.
+   Folded into 3.0.
+8. Where Play > Home lives: `/studio` becomes Home and adopts the
+   UXUI doc's dynamic feed composition. Folded into 3.1, row 8.
+9. Which routes fold into Explore > Lore: the public archive routes
+   plus `/studio/official-characters`. Folded into 3.1, row 9.
+10. What "zoom" means in card anatomy: the existing Expand action
+    opening the lightbox, nothing new. Folded into 2.6.
+11. The neutral alert tone's bed: `--fill-whisper` with `--line`
+    border, matching the proof's sanctioned info strip. Folded into
+    2.11.
+12. Which spacing steps are added: all four proposed
+    (`--space-7/9/14/24`). Folded into 1.4.
 
-- A (recommended): number steps 1 to 10, lightest to darkest
-  (`--gold-4`). Reason: shortest names, reads in one glance, matches
-  how the surfaces already count upward. Cost: none now; the scheme is
-  new namespace only.
-- B: hundreds scale (`--gold-400`), the convention many published
-  systems use. Reason not: implies compatibility with outside systems
-  we do not follow; longer names for no added meaning here.
-- C: no primitive ladder; extend role names instead
-  (`--gold-action-hover`). Reason not: multiplies names per role
-  rather than per family and leaves future roles nothing to draw from;
-  it also mixes state naming into color naming while chapter 1
-  proposes a separate state set.
-
-## OQ2: the six-level elevation ladder vs the exactly-two-shadows ruling
-
-- A (recommended): adopt the ladder as structure with only levels 1 to
-  4 filled (composed entirely from existing tokens); levels 5 and 6
-  stay empty until a real surface class needs them. Reason: reference
-  structure gained, zero new visual values, the two-token ruling stays
-  true in substance. Cost: six new names, no render change.
-- B: keep the two shadow tokens and skip the ladder. Reason not: the
-  reference gap stays open and every future depth question reopens ad
-  hoc.
-- C: mint all six levels with real new values now. Reason not:
-  directly contradicts the standing "exactly two floating tokens"
-  ruling and invents values without a render sitting.
-
-## OQ3: the six-level blur ladder vs the one-blur-strength law
-
-- A (recommended): adopt the ladder documenting only the three
-  strengths that already exist in law or in the noted meta-tag
-  mechanism (0, 2px, 4px, 12px across four filled levels), two levels
-  reserved empty. Reason: brings the stray 4px under law, changes
-  nothing visually. Cost: six names.
-- B: keep only `--blur-panel` and `--blur-chrome`. Reason not: the
-  4px mechanism stays ungoverned, exactly what the token file's
-  history warns about.
-- C: mint six real strengths. Reason not: contradicts the one-strength
-  floating-panel law and invents unruled values.
-
-## OQ4: how each type step gets its mobile pair
-
-- A (recommended): mobile pair = one existing ladder step down, for
-  subhead and larger only; smaller steps alias unchanged. Reason: no
-  new sizes minted, the ratio scale absorbs it, exactly the mechanism
-  the scale was built to provide. Cost: 16 alias tokens, zero new
-  values.
-- B: bespoke ruled mobile values per step. Reason not: a render
-  sitting per step and eight new literals for marginal gain over A.
-- C: fluid clamp() per step. Reason not: the system deliberately keeps
-  fluid type confined to `--text-hero`; clamping product UI breaks the
-  4px leading grid.
-
-## OQ5: the pressed state of gold-filled controls
-
-- A (recommended): pressed swaps the fill to `--gold-deep` via
-  `--state-pressed-gold` (that token's ruled role is already "pressed
-  states"). Reason: uses the value minted for the job. Cost: one
-  render check on primary buttons.
-- B: keep the gradient and add translateY(1px) only. Reason not:
-  motion-as-state without a color change is invisible to anyone the
-  motion rule quiets it for.
-- C: no distinct pressed state (hover treatment covers it). Reason
-  not: five states are the reference bar this blueprint is asked to
-  meet, and touch has no hover.
-
-## OQ6: the strangler rules the brief cites
-
-The brief says "Strangler rules from the product model apply"; no such
-rules exist in `docs/CRESTFALL-PRODUCT-MODEL.md` or any document read
-this session (unknown).
-
-- A (recommended): ratify the discipline written in 3.0 (kit packages
-  first, page-by-page conversion behind LOOM views, legacy renders
-  until the replacement passes the QA gate, contracts untouched).
-  Reason: it is assembled entirely from rules already in force, so it
-  adds no new law. Cost: none.
-- B: supply the missing strangler rules text and this chapter re-sorts
-  under it. Reason not chosen by default: only Brian knows if such a
-  text exists outside the repo.
-- C: drop the strangler framing and treat chapter 3 as a plain
-  sequence. Reason not: the legacy-page-keeps-rendering guarantee is
-  worth keeping explicit.
-
-## OQ7: what "Nick's merge lock" means
-
-The phrase appears in the brief and in no document read this session
-(unknown).
-
-- A (recommended): a page is locked while any open Nick-owned CR
-  touches its surfaces in a way that would make the restyle land twice
-  (the reading used in 3.1). Reason: derivable from the CR backlog,
-  checkable per page. Cost: none.
-- B: a literal announced code freeze on branches Nick is merging.
-  Reason not chosen by default: no such freeze is recorded anywhere in
-  the repo.
-- C: only the two rename CRs (CR-024, CR-025) constitute the lock.
-  Reason not: CR-026 explicitly schedules Nick's own pass over
-  quick-create before build, which reads as lock-shaped for the Studio
-  page.
-
-## OQ8: where Play > Home lives
-
-- A (recommended): `/studio` becomes Play > Home and adopts the
-  dashboard composition after its own ruling (it is today an
-  unassigned bespoke page per the inventory and REDESIGN-ORDER).
-  Reason: the route already plays the role for signed-in users. Cost:
-  a composition ruling plus one page build.
-- B: a new dedicated route, `/studio` stays as-is. Reason not: two
-  home-shaped pages violate one-canonical-home.
-- C: defer Home past launch. Reason not: Home is the guidepost in the
-  ruled model; deferring it defers the model's front door, though the
-  build order already places it late either way.
-
-## OQ9: which existing routes fold into Explore > Lore
-
-- A (recommended): the public archive routes (`/characters`, the
-  lore-site pages) plus `/studio/official-characters` fold into the
-  Lore destination when it is built, retiring duplicates. Reason: the
-  inventory flags exactly these as unassignable between Community and
-  Lore; a single ruling places them all. Cost: one ruling, then
-  routing work.
-- B: Lore is only published Lorebooks; archives stay separate. Reason
-  not: leaves the unassigned routes permanently homeless in the
-  nine-page model.
-- C: fold them into Community instead. Reason not: the product model
-  describes Lore, not Community, as the home of backstory reading.
-
-## OQ10: what "zoom" means in card anatomy
-
-- A (recommended): zoom = the existing Expand action opening the media
-  lightbox; nothing new. Reason: the inventory contains no other zoom
-  functionality, and the brief scopes card anatomy to what exists.
-  Cost: none.
-- B: add an in-lightbox zoom control. Reason not: new functionality,
-  needs a CR and Nick, out of the brief's scope rule.
-- C: drop zoom from card anatomy. Reason not: Expand exists and is
-  already the de facto zoom affordance in two surfaces.
-
-## OQ11: the neutral alert tone's bed
-
-- A (recommended): `--fill-whisper` bed with `--line` border, matching
-  the proof's sanctioned info strip exactly. Reason: it is the only
-  neutral explainer container the draft ever ratified. Cost: none.
-- B: `--surface-1` bed with `--line` border. Reason not: reads as an
-  inset well, not a notice; wells already mean "input bed" in the
-  surface law.
-- C: no bed, text only with an icon. Reason not: loses the one
-  sanctioned home for explainer copy and invites orphan loose text,
-  which the proof explicitly bans.
-
-## OQ12: which spacing steps are added
-
-- A (recommended): all four proposed (`--space-7`, `--space-9`,
-  `--space-14`, `--space-24`), reaching 15 steps on the one 4px
-  rhythm. Reason: fills every observed gap once, matching the
-  reference's ~15-step shape. Cost: four names, no render change until
-  consumed.
-- B: only `--space-7` and `--space-9`. Reason not: the section-rhythm
-  and page-end gaps above 48px stay unfillable without literals.
-- C: none. Reason not: builders keep reaching for arbitrary values in
-  the gaps, which the token-first directive then has to reject one at
-  a time.
