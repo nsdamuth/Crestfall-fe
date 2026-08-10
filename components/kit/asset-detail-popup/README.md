@@ -1,6 +1,6 @@
 # Kit Asset Detail Popup LOOM package
 
-**Contract:** `KitAssetDetailPopup.contract.js` (`2.0.0`)
+**Contract:** `KitAssetDetailPopup.contract.js` (`2.1.0`)
 
 ## Purpose
 
@@ -30,6 +30,14 @@ dismissal (backdrop click, Escape, close control).
 `imageSrc` is REMOVED, replaced by `media: {id, src}[]` (a removal is
 a major bump per contract law). `isLiked`, `onLike`, and
 `onViewCatalogue` are ADDED.
+
+## v2.1.0, RULED 10 Aug 2026 (R11)
+
+Optional `credits` array ADDED, same item shape as `KitCredits`,
+default `[]`. The shell injects `next/link` for the credits' handle
+links. Rendered by `KitCreditsView` between the description/stats
+block and the footer, matching the old modal's own order (credits
+after description and tags, before actions).
 
 ## Anatomy
 

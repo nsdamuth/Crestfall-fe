@@ -43,6 +43,15 @@ export const kitAssetDetailPopupStoryFixture = {
   stats: { plays: 9800, hearts: 1240, saves: 510, followers: null },
   description:
     "A community-authored story following the exile of a border scholar, told across three acts.",
+  credits: [
+    {
+      id: "credit-narrator",
+      kindLabel: "Narrator",
+      creatorHandle: "@vermillion",
+      creatorHref: "/studio/profile/vermillion",
+      assetTitle: null,
+    },
+  ],
 };
 
 export const kitAssetDetailPopupAdventureFixture = {
@@ -60,6 +69,22 @@ export const kitAssetDetailPopupAdventureFixture = {
   stats: { plays: 512, hearts: 88, saves: 19, followers: null },
   description:
     "A branching adventure through the harbor district, built for repeat play with shifting outcomes.",
+  credits: [
+    {
+      id: "credit-location",
+      kindLabel: "Location",
+      creatorHandle: "@vermillion",
+      creatorHref: "/studio/profile/vermillion",
+      assetTitle: "Neon Harbor District",
+    },
+    {
+      id: "credit-character",
+      kindLabel: "Character",
+      creatorHandle: "@Crestfall",
+      creatorHref: "/studio/profile/Crestfall",
+      assetTitle: "Lilith",
+    },
+  ],
 };
 
 export const kitAssetDetailPopupLikedAndSavedFixture = {

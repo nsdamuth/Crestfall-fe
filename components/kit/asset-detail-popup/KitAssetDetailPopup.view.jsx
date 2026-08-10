@@ -22,6 +22,7 @@ import { useState } from "react";
 import { Bookmark, ChevronLeft, ChevronRight, Heart, Play, Share2, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
+import KitCreditsView from "../credits/KitCredits.view";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -217,6 +218,8 @@ export default function KitAssetDetailPopupView({
   onShare = null,
   onSave = null,
   onViewCatalogue = null,
+  credits = [],
+  creditsLinkComponent = "a",
 }) {
   const hasMedia = media.length > 0;
 
@@ -253,6 +256,12 @@ export default function KitAssetDetailPopupView({
           <DescriptionBlock description={description} />
           <StatRow stats={stats} />
         </div>
+
+        {credits.length > 0 && (
+          <div className="mt-[var(--space-4)]">
+            <KitCreditsView credits={credits} LinkComponent={creditsLinkComponent} />
+          </div>
+        )}
 
         <div className="mt-[var(--space-4)] grid w-full grid-cols-4 gap-[var(--space-2)]">
           <button

@@ -42,8 +42,8 @@ const VISIBILITY_LABELS = {
 // all four visibilities plus several saved-from-others public items.
 const FIXTURE_VAULT_ITEMS = [
   { id: "v1", assetKind: "character", title: "Ashwynn Vale", subtitle: "Character", imageSrc: canonArt("Alyera Valecourt"), isOwn: true, visibility: "PRIVATE", plays: 40, hearts: 3, saves: 1, recency: 20, description: "A private draft, not yet shared." },
-  { id: "v2", assetKind: "story", title: "The Hollow Road", subtitle: "Story", imageSrc: creatorArt("vermillion-2"), extraMedia: [creatorArt("vermillion-6"), creatorArt("vermillion-7")], isOwn: true, visibility: "PRIVATE", plays: 12, hearts: 1, saves: 0, recency: 19, description: "An unfinished story, private while drafting." },
-  { id: "v3", assetKind: "adventure", title: "Salt Marsh Run", subtitle: "Adventure", imageSrc: creatorArt("vermillion-4"), extraMedia: [creatorArt("vermillion-5")], isOwn: true, visibility: "PRIVATE", plays: 5, hearts: 0, saves: 0, recency: 18, description: "A private adventure sketch." },
+  { id: "v2", assetKind: "story", title: "The Hollow Road", subtitle: "Story", imageSrc: creatorArt("vermillion-2"), extraMedia: [creatorArt("vermillion-6"), creatorArt("vermillion-7")], isOwn: true, visibility: "PRIVATE", plays: 12, hearts: 1, saves: 0, recency: 19, description: "An unfinished story, private while drafting.", credits: [{ id: "v2-credit-narrator", kindLabel: "Narrator", creatorHandle: "@vermillion", creatorHref: "/studio/profile/vermillion", assetTitle: null }] },
+  { id: "v3", assetKind: "adventure", title: "Salt Marsh Run", subtitle: "Adventure", imageSrc: creatorArt("vermillion-4"), extraMedia: [creatorArt("vermillion-5")], isOwn: true, visibility: "PRIVATE", plays: 5, hearts: 0, saves: 0, recency: 18, description: "A private adventure sketch.", credits: [{ id: "v3-credit-location", kindLabel: "Location", creatorHandle: "@Crestfall", creatorHref: "/studio/profile/Crestfall", assetTitle: "Salt Marsh" }] },
   { id: "v4", assetKind: "image", title: "Study, Untitled", subtitle: "Image", imageSrc: creatorArt("vermillion-5"), isOwn: true, visibility: "PRIVATE", plays: null, hearts: 2, saves: 0, recency: 17 },
   { id: "v5", assetKind: "character", title: "Corwin Bex", subtitle: "Character", imageSrc: canonArt("Jax Riker"), isOwn: true, visibility: "INTERNAL", plays: 180, hearts: 22, saves: 6, recency: 16, description: "Shared with the internal test group only." },
   { id: "v6", assetKind: "story", title: "Nine Coin Night", subtitle: "Story", imageSrc: creatorArt("vermillion-6"), isOwn: true, visibility: "INTERNAL", plays: 240, hearts: 40, saves: 10, recency: 15, description: "Internal-only story, feedback pending." },
@@ -404,6 +404,7 @@ export default function VaultV2Mockup() {
           onShare={() => {}}
           onSave={() => toggleSaved(item.id)}
           onViewCatalogue={() => {}}
+          credits={item.credits || []}
           onClose={() => setAssetDetailId(null)}
         />
       );

@@ -3,6 +3,8 @@
 // Composed on the unified modal frame (docs/BUILD-BLUEPRINT.md 2.15).
 // The shell owns the composition of KitModalFrame (veil, panel,
 // close control) wrapping the popup's own content view.
+import Link from "next/link";
+
 import KitModalFrame from "./KitModalFrame";
 import KitAssetDetailPopupView, {
   KIT_ASSET_DETAIL_POPUP_TITLE_ID,
@@ -19,7 +21,7 @@ export default function KitAssetDetailPopup(props) {
       onClose={viewProps.onClose}
       ariaLabelledBy={KIT_ASSET_DETAIL_POPUP_TITLE_ID}
     >
-      <KitAssetDetailPopupView {...viewProps} />
+      <KitAssetDetailPopupView {...viewProps} creditsLinkComponent={Link} />
     </KitModalFrame>
   );
 }

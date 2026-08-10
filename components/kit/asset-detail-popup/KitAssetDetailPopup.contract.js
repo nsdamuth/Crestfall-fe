@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.0.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -14,9 +14,21 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.0.0";
  * `media`; `isLiked`, `onLike`, and `onViewCatalogue` are ADDED. A
  * removal is a major bump per contract law.
  *
+ * v2.1.0, RULED 10 Aug 2026 (R11): optional `credits` ADDED, rendered
+ * between the description/stats block and the footer, matching the
+ * old modal's own order (credits after description and tags, before
+ * actions).
+ *
  * @typedef {Object} KitAssetDetailPopupBadge
  * @property {string} label
  * @property {"canon"|"status"|"meta"} variant
+ *
+ * @typedef {Object} KitAssetDetailPopupCreditItem
+ * @property {string} id
+ * @property {string} kindLabel
+ * @property {string} creatorHandle
+ * @property {string|null} creatorHref
+ * @property {string|null} assetTitle
  *
  * @typedef {Object} KitAssetDetailPopupMediaItem
  * @property {string} id
@@ -54,6 +66,9 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {(() => void)|null} onSave Save toggle intent
  * @property {(() => void)|null} onViewCatalogue the catalogue slide's
  *   CTA intent (R8)
+ * @property {KitAssetDetailPopupCreditItem[]} credits optional (R11),
+ *   default []; rendered by KitCreditsView between the description/
+ *   stats block and the footer
  * @property {(() => void)|null} onClose forwarded to the frame; the
  *   popup renders no close control of its own
  */

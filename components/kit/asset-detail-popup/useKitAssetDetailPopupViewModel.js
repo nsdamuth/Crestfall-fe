@@ -36,6 +36,7 @@ export function useKitAssetDetailPopupViewModel({
   onShare = null,
   onSave = null,
   onViewCatalogue = null,
+  credits = [],
   onClose = null,
 } = {}) {
   return {
@@ -54,6 +55,7 @@ export function useKitAssetDetailPopupViewModel({
     onShare: toCallback(onShare),
     onSave: toCallback(onSave),
     onViewCatalogue: toCallback(onViewCatalogue),
+    credits: Array.isArray(credits) ? credits : [],
     onClose: toCallback(onClose),
   };
 }
