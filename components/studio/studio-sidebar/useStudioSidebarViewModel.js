@@ -2,6 +2,52 @@
 
 import { useState } from "react";
 
+import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
+
+// Preview-only nav, journey order per docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
+// section 2. Built destinations route to their live studio v2 page
+// route; unbuilt destinations carry no href and render quiet
+// (non-interactive) until their page ships. Icon keys reuse the
+// existing ICONS set in StudioSidebar.view.jsx, no new icons added.
+export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
+  Object.freeze({
+    label: "Play",
+    items: Object.freeze([
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: false }),
+      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: false }),
+      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: false }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Create",
+    items: Object.freeze([
+      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: false }),
+      Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: false }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: false }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Explore",
+    items: Object.freeze([
+      Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true }),
+      Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: false }),
+      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: false }),
+    ]),
+  }),
+]);
+
+export const STUDIO_SIDEBAR_LEGACY_LABEL = "Legacy";
+
+function buildPreviewGroups(pathname) {
+  return STUDIO_SIDEBAR_PREVIEW_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.map((item) => ({
+      ...item,
+      isActive: item.isBuilt && isStudioSidebarPathActive(pathname, item.href),
+    })),
+  }));
+}
+
 export const STUDIO_SIDEBAR_DISCORD_URL =
   "https://discord.com/channels/1482041132874727579/1482041133700878529";
 
@@ -97,8 +143,15 @@ function buildNavigationLinks(links, pathname) {
 export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
+  const [legacyOpen, setLegacyOpen] = useState(false);
+  const previewEnabled = isSidebarV2PreviewEnabled();
 
   return {
+    previewEnabled,
+    previewGroups: previewEnabled ? buildPreviewGroups(pathname) : [],
+    legacyLabel: STUDIO_SIDEBAR_LEGACY_LABEL,
+    legacyOpen,
+    onToggleLegacy: () => setLegacyOpen((value) => !value),
     brandEyebrow: STUDIO_SIDEBAR_COPY.brandEyebrow,
     brandTitle: STUDIO_SIDEBAR_COPY.brandTitle,
     brandHref: "/studio",

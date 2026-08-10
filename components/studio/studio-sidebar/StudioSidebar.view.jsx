@@ -19,6 +19,8 @@ import {
   Users,
 } from "lucide-react";
 
+const PREVIEW_SOON_LABEL = "Soon";
+
 const ICONS = Object.freeze({
   bookOpen: BookOpen,
   castle: Castle,
@@ -57,6 +59,11 @@ export default function StudioSidebarView({
   economySlot = null,
   onToggleCollapsed = () => {},
   onToggleSocial = () => {},
+  previewEnabled = false,
+  previewGroups = [],
+  legacyLabel = "Legacy",
+  legacyOpen = false,
+  onToggleLegacy = () => {},
 }) {
   const discordLink =
     socialLinks.find((link) => /discord/i.test(link?.href || "")) ||
@@ -124,31 +131,90 @@ export default function StudioSidebarView({
         </button>
       </div>
 
-      <nav className="mt-6 space-y-[var(--space-1)]">
-        {primaryLinks.map((link) => (
-          <SidebarInternalLink
-            key={link.href}
-            link={link}
-            collapsed={collapsed}
-            InternalLinkComponent={InternalLinkComponent}
-          />
-        ))}
-      </nav>
+      {previewEnabled ? (
+        <>
+          <div className="mt-6 space-y-[var(--space-3)]">
+            {previewGroups.map((group) => (
+              <PreviewGroup
+                key={group.label}
+                group={group}
+                collapsed={collapsed}
+                InternalLinkComponent={InternalLinkComponent}
+              />
+            ))}
+          </div>
 
-      <SidebarDivider />
+          <SidebarDivider />
 
-      <nav className="space-y-[var(--space-1)]">
-        {utilityLinks.map((link) => (
-          <SidebarInternalLink
-            key={link.href}
-            link={link}
-            collapsed={collapsed}
-            InternalLinkComponent={InternalLinkComponent}
-          />
-        ))}
-      </nav>
+          <section>
+            <button
+              type="button"
+              onClick={onToggleLegacy}
+              className={`flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)] ${collapsed ? "justify-center" : "justify-between"}`}
+              aria-expanded={legacyOpen}
+            >
+              {!collapsed ? <span>{legacyLabel}</span> : null}
+              {legacyOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+            </button>
 
-      <SidebarDivider />
+            {legacyOpen ? (
+              <>
+                <nav className="mt-1 space-y-[var(--space-1)]">
+                  {primaryLinks.map((link) => (
+                    <SidebarInternalLink
+                      key={link.href}
+                      link={link}
+                      collapsed={collapsed}
+                      InternalLinkComponent={InternalLinkComponent}
+                    />
+                  ))}
+                </nav>
+
+                <nav className="mt-1 space-y-[var(--space-1)]">
+                  {utilityLinks.map((link) => (
+                    <SidebarInternalLink
+                      key={link.href}
+                      link={link}
+                      collapsed={collapsed}
+                      InternalLinkComponent={InternalLinkComponent}
+                    />
+                  ))}
+                </nav>
+              </>
+            ) : null}
+          </section>
+
+          <SidebarDivider />
+        </>
+      ) : (
+        <>
+          <nav className="mt-6 space-y-[var(--space-1)]">
+            {primaryLinks.map((link) => (
+              <SidebarInternalLink
+                key={link.href}
+                link={link}
+                collapsed={collapsed}
+                InternalLinkComponent={InternalLinkComponent}
+              />
+            ))}
+          </nav>
+
+          <SidebarDivider />
+
+          <nav className="space-y-[var(--space-1)]">
+            {utilityLinks.map((link) => (
+              <SidebarInternalLink
+                key={link.href}
+                link={link}
+                collapsed={collapsed}
+                InternalLinkComponent={InternalLinkComponent}
+              />
+            ))}
+          </nav>
+
+          <SidebarDivider />
+        </>
+      )}
       {economySlot}
       <SidebarDivider />
 
@@ -265,6 +331,54 @@ export default function StudioSidebarView({
 
 function SidebarDivider() {
   return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
+}
+
+function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
+  return (
+    <div>
+      {!collapsed ? (
+        <p className="px-3 pb-1 text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          {group.label}
+        </p>
+      ) : null}
+      <nav className="space-y-[var(--space-1)]">
+        {group.items.map((item) =>
+          item.isBuilt ? (
+            <SidebarInternalLink
+              key={item.label}
+              link={item}
+              collapsed={collapsed}
+              InternalLinkComponent={InternalLinkComponent}
+            />
+          ) : (
+            <PreviewQuietRow key={item.label} item={item} collapsed={collapsed} />
+          )
+        )}
+      </nav>
+    </div>
+  );
+}
+
+function PreviewQuietRow({ item, collapsed }) {
+  const Icon = resolveIcon(item.iconKey);
+
+  return (
+    <span
+      title={collapsed ? item.label : undefined}
+      aria-disabled="true"
+      className={`flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border border-transparent px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${collapsed ? "justify-center px-2" : ""}`}
+    >
+      <Icon size={16} className="shrink-0" />
+      {!collapsed ? (
+        <>
+          <span className="min-w-0 flex-1 truncate">{item.label}</span>
+          <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+            {PREVIEW_SOON_LABEL}
+          </span>
+        </>
+      ) : null}
+    </span>
+  );
 }
 
 function SidebarInternalLink({

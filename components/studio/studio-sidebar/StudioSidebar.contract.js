@@ -21,13 +21,20 @@ export const studioSidebarViewContract = Object.freeze({
     "socialLinks",
     "InternalLinkComponent",
     "economySlot",
+    "previewEnabled",
+    "previewGroups",
+    "legacyLabel",
+    "legacyOpen",
   ]),
-  callbacks: Object.freeze(["onToggleCollapsed", "onToggleSocial"]),
+  callbacks: Object.freeze(["onToggleCollapsed", "onToggleSocial", "onToggleLegacy"]),
   applicationOwnedDependencies: Object.freeze([
     "next/link",
     "next/navigation usePathname",
     "StudioEconomyWidget",
+    "lib/shared/flags/sidebarV2Preview.isSidebarV2PreviewEnabled",
   ]),
+  chromeNote:
+    "previewEnabled, previewGroups, legacyLabel, legacyOpen, onToggleLegacy are additive optional props (compatible, no version bump) gating the flagged nine-destination preview nav (docs/FRONTEND-SOP.md flag doc, CRESTFALL-PRODUCT-MODEL-UXUI.md section 2). Flag off: identical output to pre-flag markup. previewGroups items carry isBuilt; unbuilt items render quiet (no href, no navigation), never a real contract.",
   behavior: Object.freeze({
     desktopBreakpoint: "lg",
     expandedWidth: "w-56",

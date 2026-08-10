@@ -440,3 +440,24 @@ themselves.
 
 Detect: `grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\([0-9]' components/ app/ --include='*.jsx' --include='*.js' --include='*.css' | grep -vE 'app/theme\.css|app/globals\.css|fixtures'`
 must return nothing new for any file touched in the current pass.
+
+## 18. Feature flags
+
+Standing law once a flag ships: default state is stated in words (not
+just code), the override env var name is named, and the flag's scope
+(what it gates) is one sentence. A flag with no line here is not
+ruled to exist.
+
+- **Sidebar v2 preview**, RULED 9 Aug 2026 (demo prep pass). Env var
+  `NEXT_PUBLIC_SIDEBAR_V2_PREVIEW`, read by
+  `lib/shared/flags/sidebarV2Preview.js`. On by default for dev and
+  staging (any `NODE_ENV` other than `production`), off in
+  production; the env var forces either direction explicitly
+  (`"true"` or `"false"`). Gates the nine-destination journey-order
+  preview nav on `components/studio/studio-sidebar/StudioSidebar.view.jsx`
+  (journey order per `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 2):
+  built destinations route to their live `/studio/v2/*` page, unbuilt
+  destinations render quiet and non-interactive, and today's existing
+  sidebar links collapse into a Legacy group beneath, unchanged.
+  Flag off renders the sidebar exactly as it did before the flag
+  existed. Full detail: `components/studio/studio-sidebar/README.md`.

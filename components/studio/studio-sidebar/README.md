@@ -15,12 +15,33 @@ context, own React state, or interpret the current pathname.
 
 - the primary, utility, and social navigation definitions;
 - exact `/studio` and prefix-based nested-route matching;
-- collapsed and Community Links state;
+- collapsed, Community Links, and Legacy group state;
+- the flagged nine-destination preview nav (below);
 - signed-in email normalization; and
 - existing brand, logout, and accessibility copy.
 
 The component remains mounted once by `StudioShell.jsx`. `StudioMobileNav` is a
 separate application surface and remains a later conversion target.
+
+## Sidebar v2 preview flag
+
+Flag: `NEXT_PUBLIC_SIDEBAR_V2_PREVIEW`, read by
+`lib/shared/flags/sidebarV2Preview.js`. On by default for dev and
+staging (any `NODE_ENV` other than `production`), off in production;
+the env var forces either direction explicitly (`"true"` or
+`"false"`).
+
+When on, the sidebar renders the nine-destination journey-order nav
+(Play: Home, Stories, Adventures; Create: Studio, Images, Vault;
+Explore: Community, Creators, Lore, per
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 2) above a collapsible
+Legacy group holding today's existing primary and utility links
+unchanged. Built destinations (Community, at `/studio/v2/community`)
+route normally; unbuilt destinations render quiet, non-interactive,
+no href, with a "Soon" mark. When off, the sidebar renders exactly as
+it did before the flag existed: this is a smallest-edit, fully
+reversible change gated entirely on `previewEnabled` in
+`StudioSidebar.view.jsx`.
 
 ## Diagnostics
 
