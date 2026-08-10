@@ -1,5 +1,86 @@
 # Handoff to next chat
 
+## Review gate and Sprint E planning (10 Aug 2026 evening, engine Fable)
+
+Ran the post-Sprint-D review gate against `docs/SPRINT-D-PLAN.md`
+and the law documents, fixed Brian's evening rulings R1 through R5
+and R7 directly, mapped the live image creator for R6, and wrote
+the Sprint E pair. Branch `design/kit-polish-3`, tree clean and
+pushed at session end. Dev server was run on port 3002 (own PID)
+and stopped; Brian's 3001 was never touched.
+
+1. **DONE, Phase 0.** Production build exit 0 (the morning check
+   flagged by the Sprint D pass is closed). All six v2 routes
+   compile.
+2. **DONE, R1/R2/R3/R5 (viewer).** Commit `cb95535`. Shelf goes
+   darker translucent (the canvas 88 percent chrome recipe, no new
+   value); backdrop dismissal restored (the transparent viewer
+   panel swallowed veil clicks; panel is now click-transparent with
+   per-box pointer-events re-enable, fixed in the frame's viewer
+   variant so every host inherits); wide/tall/square/tiny aspect
+   fixtures added and the 1px tall-image clip fixed; the figure
+   column shrink-wraps at every width so the shelf snaps to the
+   image on mobile. All verified live at emulated 390 and 1440.
+   The R2 "black gap" did not reproduce on committed code at any
+   aspect; the fixtures now lock the behavior.
+3. **DONE, R7 (heading law).** Commit `e5e3de5`. Premise finding:
+   all six v2 pages already conform at both widths; the drift is on
+   LIVE pages passing the description as text children of
+   StudioPageHeader, which rendered beside the H1. Kit hardened
+   (contract 1.1.0): text-only children render through the
+   description branch, so the misuse can never produce the drift
+   again; live pages snap to the law with no live-page edits.
+4. **DONE, R4 (fixture interactivity) plus review-gate fixes.**
+   Commit `9bc4d98`. New `app/studio/v2/FixtureActionNotice.jsx`
+   (the honest non-persisting stub); Share, banner CTAs, Continue,
+   popup Play and View catalogue, Creators View profile, Account
+   Save profile and Sign Out all respond; Vault viewer Love and
+   Creators viewer Love/Save toggle real state. A11y: aria-pressed
+   on fixture toggles and PC picker cards; KitDropdown 1.1.0
+   additive `ariaLabel` (account Content Preference announces its
+   purpose); account counters aria-hidden. Also: viewer fixture
+   rebuilt from its stale placeholder, stale phase-1 comments and
+   READMEs corrected, credits preview gains the eight-row state,
+   KitCreditsModal drops its stale 92dvh mobile cap.
+5. **DONE, CSV and R6 mapping.** Commit `6f7b3e7`. Stories credits
+   rows, image viewer rows, Stories popup rows added (audit finds
+   D-4/D-5); every v2 "fixture no-op" row now describes the R4
+   notice. R6 inventory: 58 live creator control units, 48 already
+   in the ledger, 10 newly mapped and added flagged; analysis in
+   `docs/APP-FUNCTION-INVENTORY.md`. CSV validated 956 rows x 21
+   columns, CRLF preserved.
+6. **DONE, Sprint E pair.** `docs/SPRINT-E-PLAN.md` (the R6
+   creator panel spec in full: panel anatomy mirroring the live
+   composer, picker and save-preset modals, desktop sticky rail
+   plus mobile sticky CTA, the 58-unit disposition table, phases,
+   OPEN FOR BRIAN items 22 through 30 new at this gate) and
+   `docs/SPRINT-E-SONNET-BRIEF.md` (paste-ready, five phases,
+   established shape).
+
+Contract versions this pass: StudioPageHeader 1.0.0 to 1.1.0,
+KitDropdown 1.0.0 to 1.1.0 (both additive). Everything else
+unchanged.
+
+Deferred to Sprint E rather than fixed: the viewer close control
+overlapping tall images at 390 (needs a ruling, OPEN item 24),
+account aria-describedby counter wiring, account form semantics,
+the live play page `descriptions=` typo (live pages read-only,
+OPEN item 30), the two CSV slot-label drifts (fix with the panel
+build), and the Stories In-progress facet behavior (OPEN item 16).
+
+OPEN FOR BRIAN: the standing 21 from Sprint D, none resolved, plus
+nine new (22 through 30) in `docs/SPRINT-E-PLAN.md`, including the
+creator-panel placement three-option gate (item 26, rail
+recommended) and the R1 shelf value confirm-at-render (item 22).
+
+Rollup not regenerated, script not in repo (standing). Render
+evidence in `docs/review-artifacts/` (viewer at 1440 wide fixture,
+viewer at 390 on the Images page).
+
+Written 10 Aug 2026 evening, at the end of the review gate (engine
+Fable), branch `design/kit-polish-3`. This section is the current
+state; the sections below are prior history on the same branch.
+
 ## Sprint D pass (10 Aug 2026, unattended, engine Sonnet)
 
 Ran `docs/SPRINT-D-SONNET-BRIEF.md` against `docs/SPRINT-D-PLAN.md`,
