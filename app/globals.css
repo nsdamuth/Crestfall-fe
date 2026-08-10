@@ -33,8 +33,17 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Smooth scroll, gated on reduced motion (kit polish 2 pass): the
+   sticky filter line and keyboard focus movement both rely on the
+   browser's normal instant scroll-into-view; scroll-behavior only
+   changes the animation of that same scroll, so it never fights
+   sticky positioning or keyboard navigation. Reduced-motion users get
+   the instant behavior instead, matching the reduced-motion catch-all
+   in app/design-system.css. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
