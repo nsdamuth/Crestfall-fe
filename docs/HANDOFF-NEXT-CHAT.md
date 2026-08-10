@@ -20,10 +20,15 @@ and pre-parity, mirrored auth-free at
 `StudioShellView` with fixture sidebar props and a real `StudioTopBar`
 (harness-only, no account/network calls) so the full sticky-stack,
 full-bleed, and sidebar collapse/expand relationships can all be
-verified without auth. The flag-gated nine-destination sidebar
-preview's group headers (Play, Create, Explore) each carry a short
-gold rule under the label, and every modal surface in the kit closes
-on its close control, Escape, and a backdrop click.
+verified without auth (it now also renders the preview-nav sidebar
+fixture, Play/Create/Explore, specifically so the group-header law
+below can be checked there). The flag-gated nine-destination sidebar
+preview's group headers (Play, Create, Explore) follow the
+section-label law: gold uppercase label, one short solid gold rule to
+its right, vertically centered, no underline, taper, or icon. Every
+modal surface in the kit closes on its close control, Escape, and a
+backdrop click. The Community filter's remixable option reads "Remix"
+everywhere, not "Remixable only".
 
 ## This pass (kit polish 3, 10 Aug 2026)
 
@@ -158,7 +163,11 @@ Manifest, echoed DONE:
    rule already uses, turned to sit under the label instead of
    trailing beside it. The gap from the logo lockup to the first
    group opened one ladder step, `--space-6` to `--space-7` (24px to
-   28px), so the header no longer crowds Play.
+   28px), so the header no longer crowds Play. **Corrected in
+   Follow-up 3 below**: this treatment (rule under the label,
+   gradient, ink-faint label color) was wrong against the actual
+   section-label law; see Follow-up 3 item 2 for the ruled final
+   version (gold label, solid rule beside it).
 3. **DONE.** Control height parity. Search, the three dropdowns, and
    the grid/list toggle all already declared the same
    `--control-filter` height, but the toggle's OWN frame (border,
@@ -211,6 +220,40 @@ Manifest, echoed DONE:
    pre-pass file), `next build` exits 0, mobile comfortable.
 7. **DONE.** This handoff updated, committed in logical chunks,
    pushed.
+
+## Follow-up 3 (same pass, same branch, 10 Aug 2026): section-label law correction, Remix rename
+
+Manifest, echoed DONE:
+
+1. **DONE.** Stayed on `design/kit-polish-3`.
+2. **DONE.** Sidebar group headers now follow the section-label law
+   exactly, correcting Follow-up 2 item 2: gold uppercase label
+   (`--gold-ornament`, was `--ink-faint`), one short SOLID gold rule
+   to its right (`bg-[var(--gold-ornament)]`, flat color, was
+   `--grad-rule`, which fades to transparent and was wrong for this
+   law), vertically centered on the label via the row's own flex
+   centering (was stacked underneath). No underline, no gradient
+   tapering to a point, no icon or mark of any kind. Applied to Play,
+   Create, and Explore in the preview nav
+   (`StudioSidebar.view.jsx`'s `PreviewGroup`).
+3. **DONE.** The filter option label "Remixable only" reads "Remix"
+   everywhere it renders: the live Community Type dropdown
+   (`CommunityV2Mockup.jsx`), `KitStudioFilterBar.fixtures.js`'s
+   default fixture, and `KitFilterChip.fixtures.js`'s two toggle
+   fixtures (that package's own standalone Remixable chip is retired
+   per its own comment, but its fixture copy still had the old
+   label). No other copy referenced it.
+4. **DONE.** Verified in the auth-free mirror at 390 then 1440,
+   sidebar expanded and collapsed: each group header measured live
+   confirms a flat `background-color` (no `background-image`/
+   gradient) at `--gold-ornament` on both the label and the rule, the
+   rule holds a fixed `--space-8` (32px) width regardless of label
+   length, and the Type dropdown's last option reads "Remix" at both
+   widths. Zero new console errors (the same pre-existing, unrelated
+   preload warning only), ESLint clean on every touched file (the
+   same 3 pre-existing `react-hooks/static-components` errors in
+   `StudioSidebar.view.jsx`, unchanged).
+5. **DONE.** This handoff updated, committed, pushed.
 
 ## Contract change this pass
 
