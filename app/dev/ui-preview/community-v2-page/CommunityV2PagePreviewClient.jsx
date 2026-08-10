@@ -4,10 +4,7 @@ import { useState } from "react";
 
 import StudioShellView from "@/components/studio/studio-shell/StudioShell.view";
 import StudioSidebarView from "@/components/studio/studio-sidebar/StudioSidebar.view";
-import {
-  studioSidebarCollapsedFixture,
-  studioSidebarExpandedFixture,
-} from "@/components/studio/studio-sidebar/StudioSidebar.fixtures";
+import { studioSidebarPreviewFixture } from "@/components/studio/studio-sidebar/StudioSidebar.fixtures";
 import StudioTopBar from "@/components/studio/StudioTopBar";
 import CommunityV2Mockup from "@/app/studio/v2/community/CommunityV2Mockup";
 
@@ -18,11 +15,18 @@ import CommunityV2Mockup from "@/app/studio/v2/community/CommunityV2Mockup";
 // matching StudioShellView's real structure (sidebarSlot, topBarSlot,
 // children) exactly, which is what the full-bleed sticky bar math in
 // docs/BUILD-BLUEPRINT.md 2.1 depends on.
+//
+// The preview-nav fixture (Play/Create/Explore group headers) is
+// used, not the legacy nav, RULED 10 Aug 2026 (kit polish 3 pass):
+// this mirror is the only auth-free surface where the section-label
+// law on those group headers can be verified at all.
 export default function CommunityV2PagePreviewClient() {
   const [collapsed, setCollapsed] = useState(false);
-  const sidebarFixture = collapsed
-    ? studioSidebarCollapsedFixture
-    : studioSidebarExpandedFixture;
+  const sidebarFixture = {
+    ...studioSidebarPreviewFixture,
+    collapsed,
+    collapseAriaLabel: collapsed ? "Expand sidebar" : "Collapse sidebar",
+  };
 
   return (
     <StudioShellView

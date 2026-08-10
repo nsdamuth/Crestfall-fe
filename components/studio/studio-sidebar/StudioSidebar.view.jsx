@@ -342,19 +342,20 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
   return (
     <div>
       {!collapsed ? (
-        <div className="px-3 pb-[var(--space-2)]">
-          <p className="text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        // Section-label law, RULED final 10 Aug 2026 (kit polish 3
+        // pass, corrects the same-day earlier attempt below the
+        // label): gold uppercase label, one short SOLID gold rule to
+        // its right, vertically centered on the label via the row's
+        // own flex centering. No underline, no gradient tapering to
+        // a point (the page-head eyebrow's --grad-rule fades and was
+        // wrong for this law), no icon or mark of any kind.
+        <div className="flex items-center gap-[var(--space-2)] px-3 pb-[var(--space-2)]">
+          <p className="text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {group.label}
           </p>
-          {/* Section-label rule, RULED 10 Aug 2026 (kit polish 3
-              pass): a short gold rule under every group header
-              (Play, Create, Explore), the same --grad-rule mark and
-              --space-8 width the page-head eyebrow rule already
-              uses (components/ui/eyebrow/Eyebrow.view.jsx), turned
-              to sit under the label instead of trailing beside it. */}
           <span
             aria-hidden="true"
-            className="mt-[var(--space-1)] block h-px w-[var(--space-8)] bg-[image:var(--grad-rule)]"
+            className="h-px w-[var(--space-8)] shrink-0 bg-[var(--gold-ornament)]"
           />
         </div>
       ) : null}
