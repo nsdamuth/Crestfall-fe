@@ -31,3 +31,15 @@ Render it, put the options side by side, mark the recommendation. Brian looks on
 
 ## Rulings are never inferred from silence
 If Brian has not ruled, it is not ruled. Absence of objection is not approval. Flag it as open rather than guessing.
+
+## Model lanes, RULED 9 Aug 2026 (demo prep pass)
+Three engines, three jobs, never swapped:
+
+- **Opus** rules chat decisions: this strategy chat's own rulings, the gate work that closes them, and synthesis passes that reconcile more than one source document.
+- **Fable** takes novel components, sprint reviews, and planning gates: any work with no established pattern to follow yet, or that judges a sprint's output against its plan.
+- **Sonnet** propagates: every pass that applies an already-ruled pattern across more files, packages, or pages. The bulk of execution work lives here.
+
+A brief that names the wrong engine for its job is corrected before it is sent, not after.
+
+## Standing session rule
+Clear the session at a clean boundary: work committed, tree clean, nothing mid-edit. Hand off mid-work instead of clearing, so the next session picks up with full context rather than reconstructing it from the repo. Continue an already-clear session only for unwritten discoveries, something learned this session that has not yet reached a doc or a commit; once it is written down, the session closes the same way, clear or handoff, never left open by default.
