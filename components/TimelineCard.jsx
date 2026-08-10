@@ -19,7 +19,7 @@ export default function TimelineCard({ entry }) {
 
       <Link
         href={entry.slug}
-        className="group block border border-[var(--border)] bg-[rgba(12,10,8,0.82)] p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)] hover:bg-[rgba(20,16,12,0.9)]"
+        className="group block border border-[var(--line-strong)] bg-[rgba(12,10,8,0.82)] p-6 transition hover:-translate-y-1 hover:border-[var(--muted-gold)] hover:bg-[rgba(20,16,12,0.9)]"
       >
         <p className="text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
           {entry.era}

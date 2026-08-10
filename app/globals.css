@@ -68,7 +68,7 @@ body {
 
 .sourcebook-panel {
   position: relative;
-  border: 1px solid var(--border);
+  border: 1px solid var(--line-strong);
 
   background:
     linear-gradient(
@@ -141,7 +141,7 @@ body {
   position: relative;
   min-height: 260px;
 
-  border: 1px solid var(--border);
+  border: 1px solid var(--line-strong);
 
   background:
     linear-gradient(
@@ -180,7 +180,7 @@ body {
 .inserted-story {
   position: relative;
 
-  border: 1px solid var(--border);
+  border: 1px solid var(--line-strong);
 
   background:
     linear-gradient(

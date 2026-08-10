@@ -78,7 +78,7 @@ export default function FilterableIndexPreviewClient() {
           renderCard={(card) => (
             <article
               key={card.key}
-              className="border border-[var(--border)] bg-[rgba(12,10,8,0.82)] p-6"
+              className="border border-[var(--line-strong)] bg-[rgba(12,10,8,0.82)] p-6"
             >
               <p className="font-display text-xs uppercase tracking-[0.32em] text-[var(--muted-gold)]">
                 {card.eyebrow}

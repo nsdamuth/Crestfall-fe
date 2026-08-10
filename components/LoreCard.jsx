@@ -12,10 +12,10 @@ export default function LoreCard({
   return (
     <Link
       href={href}
-      className="group block border border-[var(--border)] bg-[rgba(12,10,8,0.82)] p-6 transition hover:border-[var(--muted-gold)]"
+      className="group block border border-[var(--line-strong)] bg-[rgba(12,10,8,0.82)] p-6 transition hover:border-[var(--muted-gold)]"
     >
       {image && (
-        <div className="-mx-6 -mt-6 mb-5 aspect-[4/3] overflow-hidden border-b border-[var(--border)]">
+        <div className="-mx-6 -mt-6 mb-5 aspect-[4/3] overflow-hidden border-b border-[var(--line-strong)]">
           <Image
             src={image}
             alt={imageAlt ?? title}
