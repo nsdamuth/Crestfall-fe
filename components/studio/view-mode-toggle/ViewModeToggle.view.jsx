@@ -24,11 +24,21 @@ export default function ViewModeToggleView({
   onChange = null,
   label = "View",
 }) {
+  // Control height parity, RULED 10 Aug 2026 (kit polish 3 pass):
+  // the group's own frame (border, radius, padding) used to sit on
+  // TOP of each button's own fixed --control-filter height, making
+  // the visible toggle 10px taller than search/dropdown/sort. The
+  // frame now carries the single source of truth for height
+  // (fixed, border-box, matching Search/KitDropdown's own
+  // --control-filter and coarse-pointer --control-md exactly);
+  // buttons fill it (`h-full`, `aspect-square`) instead of each
+  // declaring their own size, so the whole control, not just its
+  // buttons, measures the same as every sibling on the line.
   return (
     <div
       role="group"
       aria-label={label}
-      className="inline-flex rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]"
+      className="inline-flex h-[var(--control-filter)] items-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)] [@media(pointer:coarse)]:h-[var(--control-md)]"
     >
       {VIEW_MODE_OPTIONS.map((option) => {
         const Icon = option.icon;
@@ -42,7 +52,7 @@ export default function ViewModeToggleView({
             aria-label={option.label}
             title={option.label}
             onClick={() => onChange?.(option.id)}
-            className={`kit-focus inline-flex h-[var(--control-filter)] w-[var(--control-filter)] items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+            className={`kit-focus flex aspect-square h-full items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] ${
               active
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
