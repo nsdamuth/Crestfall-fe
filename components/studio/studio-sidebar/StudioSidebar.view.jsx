@@ -133,7 +133,11 @@ export default function StudioSidebarView({
 
       {previewEnabled ? (
         <>
-          <div className="mt-6 space-y-[var(--space-3)]">
+          {/* Gap opened to the next ladder step up (--space-6 to
+              --space-7), RULED 10 Aug 2026 (kit polish 3 pass): the
+              logo lockup was crowding the first group header
+              (Play) at the prior --space-6. */}
+          <div className="mt-[var(--space-7)] space-y-[var(--space-3)]">
             {previewGroups.map((group) => (
               <PreviewGroup
                 key={group.label}
@@ -338,9 +342,21 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
   return (
     <div>
       {!collapsed ? (
-        <p className="px-3 pb-1 text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--ink-faint)]">
-          {group.label}
-        </p>
+        <div className="px-3 pb-[var(--space-2)]">
+          <p className="text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--ink-faint)]">
+            {group.label}
+          </p>
+          {/* Section-label rule, RULED 10 Aug 2026 (kit polish 3
+              pass): a short gold rule under every group header
+              (Play, Create, Explore), the same --grad-rule mark and
+              --space-8 width the page-head eyebrow rule already
+              uses (components/ui/eyebrow/Eyebrow.view.jsx), turned
+              to sit under the label instead of trailing beside it. */}
+          <span
+            aria-hidden="true"
+            className="mt-[var(--space-1)] block h-px w-[var(--space-8)] bg-[image:var(--grad-rule)]"
+          />
+        </div>
       ) : null}
       <nav className="space-y-[var(--space-1)]">
         {group.items.map((item) =>
