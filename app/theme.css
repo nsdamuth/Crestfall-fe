@@ -311,6 +311,9 @@
      default control height on every surface.               */
 
   --control-sm:  2rem;      /* 32, desktop-only dense chrome */
+  --control-filter: 2.375rem; /* 38, filter-line desktop height, splits
+                                  control-sm/control-md per the kit
+                                  polish 2 ruling; touch keeps control-md */
   --control-md:  2.75rem;   /* 44, default, touch safe       */
   --control-lg:  3rem;      /* 48, primary CTAs              */
   --icon-sm:     1rem;      /* 16 */

@@ -208,9 +208,16 @@ Tier is decided by where a surface sits, not how big it is. `rounded-xl`
 (16px) and `rounded-2xl` (16px+) are off scale and resolve DOWN to
 `--radius-md` unless the surface floats or spans full width.
 
-Sizing: `--control-sm` 32 (desktop-dense only), `--control-md` 44 (the
-default and the touch floor), `--control-lg` 48, `--icon-sm/md/lg`
-16/20/24, `--container` 1200, `--measure` 68ch. All locked.
+Sizing: `--control-sm` 32 (desktop-dense only), `--control-filter` 38
+(RULED 9 Aug 2026, kit polish 2 pass: the unified filter-line control
+height, splitting the difference between `--control-sm` and
+`--control-md`; legal on search, dropdown, sort, and view-toggle
+controls on the sticky filter line, desktop widths only, always
+paired with a `[@media(pointer:coarse)]:min-h-[var(--control-md)]`
+override so touch keeps the 44px floor; never on any other control),
+`--control-md` 44 (the default and the touch floor), `--control-lg`
+48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
+All locked.
 
 ## Motion and focus
 

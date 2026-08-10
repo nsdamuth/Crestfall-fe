@@ -25,7 +25,7 @@ function SearchField({ value, placeholder, onChange }) {
   // mouse click into the field never triggers it, only keyboard entry
   // does.
   return (
-    <div className="flex min-h-[var(--control-md)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors has-[:focus-visible]:border-[var(--line-strong)] hover:border-[var(--line)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1">
+    <div className="flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors has-[:focus-visible]:border-[var(--line-strong)] hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1">
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"

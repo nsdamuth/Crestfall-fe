@@ -42,7 +42,7 @@ export default function ViewModeToggleView({
             aria-label={option.label}
             title={option.label}
             onClick={() => onChange?.(option.id)}
-            className={`kit-focus inline-flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+            className={`kit-focus inline-flex h-[var(--control-filter)] w-[var(--control-filter)] items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
               active
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
