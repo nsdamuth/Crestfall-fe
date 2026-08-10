@@ -30,7 +30,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     label: "Explore",
     items: Object.freeze([
       Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true }),
-      Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: false }),
+      Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: true }),
       Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: false }),
     ]),
   }),
