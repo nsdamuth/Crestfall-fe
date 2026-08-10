@@ -14,7 +14,11 @@ function previewSvg(stopA, stopB) {
   return `data:image/svg+xml,${svg}`;
 }
 
-const BANNER_IMAGE = previewSvg("#100d0a", "#5b4321");
+// Draft-asset fixture art (public/tmp-mockup-images/, gitignored
+// interim art); the SVG stays as the synthetic fallback generator.
+const BANNER_IMAGE = encodeURI(
+  "/tmp-mockup-images/canon-character-images/Serapha Veyloria.png"
+);
 
 const noop = () => {};
 
@@ -67,4 +71,12 @@ export const kitPromoBannerNoImageFixture = {
 export const kitPromoBannerNoCtaFixture = {
   ...kitPromoBannerTopFixture,
   ctaLabel: "",
+};
+
+export const kitPromoBannerGalaxyTopFixture = {
+  ...kitPromoBannerTopFixture,
+  showGalaxy: true,
+  eyebrow: "Crestfall Chronicles",
+  title: "The realm under one sky.",
+  line: "The galaxy layer drifts and twinkles on the ruled animation tokens, and holds still under reduced motion.",
 };

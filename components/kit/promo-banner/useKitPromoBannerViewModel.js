@@ -7,6 +7,7 @@ export function useKitPromoBannerViewModel(props) {
     bottomVariant: VALID_BOTTOM_VARIANTS.has(props?.bottomVariant)
       ? props.bottomVariant
       : "uniform",
+    showGalaxy: Boolean(props?.showGalaxy),
     eyebrow: typeof props?.eyebrow === "string" ? props.eyebrow : "",
     title: typeof props?.title === "string" ? props.title : "",
     line: typeof props?.line === "string" ? props.line : "",

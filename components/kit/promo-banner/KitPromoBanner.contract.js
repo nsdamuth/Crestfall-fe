@@ -1,4 +1,4 @@
-export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the shared promo banner kit piece
@@ -11,9 +11,17 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.0.0";
  * navigates; the caller supplies display-ready copy and reports
  * intent through onCtaClick.
  *
+ * Hierarchy law (2.16(f), 9 Aug 2026): one primary CTA emphasized,
+ * the description de-emphasized and measure capped, the stack spaced
+ * on the ladder. v1.1.0 adds the optional showGalaxy flag
+ * (compatible addition): the `top` treatment may layer the existing
+ * .cf-galaxy starfield between the art and the veil; the flag is
+ * ignored on the other two treatments.
+ *
  * @typedef {Object} KitPromoBannerViewProps
  * @property {"top"|"card"|"bottom"} treatment
  * @property {"uniform"|"bottom-fade"} bottomVariant only read when treatment is "bottom"
+ * @property {boolean} [showGalaxy] top treatment only
  * @property {string} eyebrow
  * @property {string} title
  * @property {string} line

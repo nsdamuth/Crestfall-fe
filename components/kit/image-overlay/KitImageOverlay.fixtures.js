@@ -17,9 +17,13 @@ function previewSvg(seed) {
 
 const noop = () => {};
 
+// Draft-asset fixture art (public/tmp-mockup-images/, gitignored
+// interim art); the SVG generator stays as the synthetic fallback.
 export const kitImageOverlayDefaultFixture = {
-  imageSrc: previewSvg("#5b4321"),
-  title: "Render #4821",
+  imageSrc: encodeURI(
+    "/tmp-mockup-images/alpha-test-creator-images/vermillion-8.png"
+  ),
+  title: "Vesper Ash Render",
   isLoved: false,
   isSaved: false,
   onLove: noop,

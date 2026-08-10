@@ -5,6 +5,7 @@ import { useState } from "react";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import {
   kitPromoBannerCardFixture,
+  kitPromoBannerGalaxyTopFixture,
   kitPromoBannerLongestCopyFixture,
   kitPromoBannerNoCtaFixture,
   kitPromoBannerNoImageFixture,
@@ -14,6 +15,7 @@ import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
 const STATES = {
   top: { label: "Top", props: kitPromoBannerTopFixture },
+  galaxy: { label: "Top, galaxy", props: kitPromoBannerGalaxyTopFixture },
   card: { label: "In-flow card", props: kitPromoBannerCardFixture },
   longest: { label: "Longest copy", props: kitPromoBannerLongestCopyFixture },
   noImage: { label: "No image", props: kitPromoBannerNoImageFixture },

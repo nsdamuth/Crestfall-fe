@@ -1,5 +1,9 @@
 "use client";
 
+// Restyled to the token system in the 9 Aug 2026 kit revision pass
+// (docs/BUILD-BLUEPRINT.md 2.16 note in 2.12): the white/black
+// literals and off-scale text sizes convert to tokens. Contract and
+// reporting are unchanged (contract law).
 import { Grid2X2, List } from "lucide-react";
 
 const VIEW_MODE_OPTIONS = [
@@ -13,12 +17,12 @@ export default function ViewModeToggleView({
   label = "View",
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="hidden text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)] sm:inline">
+    <div className="flex items-center gap-[var(--space-2)]">
+      <span className="hidden text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] sm:inline">
         {label}
       </span>
 
-      <div className="inline-flex rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-1">
+      <div className="inline-flex rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]">
         {VIEW_MODE_OPTIONS.map((option) => {
           const Icon = option.icon;
           const active = value === option.id;
@@ -27,14 +31,15 @@ export default function ViewModeToggleView({
             <button
               key={option.id}
               type="button"
+              aria-pressed={active}
               onClick={() => onChange?.(option.id)}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
+              className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
                 active
-                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                  ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
               }`}
             >
-              <Icon className="h-4 w-4" />
+              <Icon size={16} aria-hidden="true" />
               <span className="hidden sm:inline">{option.label}</span>
             </button>
           );
