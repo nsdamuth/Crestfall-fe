@@ -16,8 +16,21 @@ function previewSvg(stopA, stopB) {
 
 // Draft-asset fixture art (public/tmp-mockup-images/, gitignored
 // interim art); the SVG stays as the synthetic fallback generator.
+//
+// Banner art, RULED 10 Aug 2026 (kit polish 3 pass): every draft
+// asset was measured for orientation (canon-character-images and
+// alpha-test-creator-images, 71 files). Exactly one is a genuinely
+// wide, single-subject composition, Lilith.png at 2560x1441 (1.78:1);
+// the only other landscape file, sassy.png at 2352x1426, is an
+// eight-panel reference sheet (mood board with overlaid labels), not
+// a scene, and does not compose at any crop. Lilith.png replaces the
+// portrait-oriented Serapha Veyloria.png used through kit polish 2;
+// its subject sits close enough to center that it survives every
+// banner crop this pass uses (mobile 5/3 through desktop 35/12)
+// without cutting into the face, verified against each treatment's
+// aspect ratio.
 const BANNER_IMAGE = encodeURI(
-  "/tmp-mockup-images/canon-character-images/Serapha Veyloria.png"
+  "/tmp-mockup-images/canon-character-images/Lilith.png"
 );
 
 const noop = () => {};

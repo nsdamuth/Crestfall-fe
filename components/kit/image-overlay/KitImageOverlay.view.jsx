@@ -58,7 +58,7 @@ export default function KitImageOverlayView({
           <img src={imageSrc} alt={title} className="max-h-[70vh] w-auto object-contain" />
         ) : (
           <div className="flex h-[40vh] w-full flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-1)]">
-            <svg viewBox="0 0 64 64" aria-hidden="true" className="h-10 w-10 text-[var(--ink-faint)]">
+            <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
               <use href="/assets/icons/icons-v7.svg#i-59" />
             </svg>
             <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>

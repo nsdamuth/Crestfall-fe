@@ -8,6 +8,11 @@
 // (kit polish 2 pass): each aspect ratio's height term is the prior
 // term times 0.8 (4/3 -> 5/3, 21/9 -> 35/12, 16/9 -> 20/9), so the
 // banner is meaningfully shorter without an arbitrary round number.
+// Art anchor, RULED 10 Aug 2026 (kit polish 3 pass): banner art
+// crops at object-[center_35%], the face-safe anchor measured
+// against the chosen wide draft asset (KitPromoBanner.fixtures.js),
+// the same face-safe-anchor practice the card template already uses
+// at a different measured value.
 const TREATMENT_CONFIG = {
   top: {
     radius: "rounded-[var(--radius-lg)]",
@@ -65,14 +70,14 @@ export default function KitPromoBannerView({
           src={imageSrc}
           alt=""
           loading={treatment === "bottom" ? "lazy" : "eager"}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
         />
       ) : (
         <div
           aria-hidden="true"
           className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)]"
         >
-          <svg viewBox="0 0 64 64" className="h-10 w-10 text-[var(--ink-faint)]">
+          <svg viewBox="0 0 64 64" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
             <use href="/assets/icons/icons-v7.svg#i-59" />
           </svg>
         </div>

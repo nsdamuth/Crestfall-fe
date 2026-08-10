@@ -73,7 +73,14 @@ const FIXTURE_MODES = {
 
 const PAGE_SIZE = 8;
 
-function GeometricMark({ className = "h-8 w-8" }) {
+// Loading and empty geometric marks, RULED 10 Aug 2026 (kit polish 3
+// pass): scaled up from the kit polish 2 pass's raw h-8/h-10 so they
+// read clearly at both 390 and 1440 without dominating the card;
+// var(--space-10) (40px, +25% from 32) for the smaller loading-tile
+// mark, var(--space-14) (56px, +40% from 40) for the larger empty-
+// state mark, both inside the manifest's ruled 25 to 50 percent
+// range.
+function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={`${className} text-[var(--ink-faint)]`}>
       <use href="/assets/icons/icons-v7.svg#i-59" />
@@ -99,7 +106,7 @@ function LoadingGrid() {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-1)] p-[var(--space-12)] text-center">
-      <GeometricMark className="h-10 w-10" />
+      <GeometricMark className="h-[var(--space-14)] w-[var(--space-14)]" />
       <p className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
         Nothing matches
       </p>
@@ -329,7 +336,6 @@ export default function CommunityV2Mockup() {
                 }}
                 liked={likedIds.includes(creation.id)}
                 bookmarked={savedIds.includes(creation.id)}
-                actionPlacement="overlay-top"
                 onOpenImageOverlay={() =>
                   setOverlayImage({
                     id: creation.id,
@@ -364,8 +370,12 @@ export default function CommunityV2Mockup() {
         title="Follow the creators behind every world you love."
         line=""
         ctaLabel="Browse creators"
+        // Banner art, RULED 10 Aug 2026 (kit polish 3 pass): Lilith.png
+        // replaces the portrait-oriented Serapha Veyloria.png, the only
+        // genuinely wide, single-subject draft asset in the set (see
+        // KitPromoBanner.fixtures.js for the full survey and reasoning).
         imageSrc={encodeURI(
-          "/tmp-mockup-images/canon-character-images/Serapha Veyloria.png"
+          "/tmp-mockup-images/canon-character-images/Lilith.png"
         )}
         onCtaClick={() => {}}
       />
