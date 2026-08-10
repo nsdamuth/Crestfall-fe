@@ -53,7 +53,7 @@ the details below carry only what is still actionable.
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
-| CR-027 | backend four-tier content rating field | Presentation shows four tiers (Everyone, Teen, Mature, Adult 18+) over the three backend values; Teen has no backend value and ships as an honest stub until this lands | open | Nick | later-pass, non-blocking; labels and tier count pending Brian's final ruling |
+| CR-027 | backend three-vs-four-tier content rating question | Labels ruled 9 Aug 2026: three user-facing tiers (Everyone, Teen, Adult) over the three backend values, no stub row. Whether the backend should carry a fourth value is deferred to Nick | open | Nick | later-pass, non-blocking; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 
 ## Details
 
@@ -305,29 +305,27 @@ Brian, not Nick, to rule on. This CR is the later step once quick-create
 mockups exist: Nick reviews them and selects any field currently
 allocated ADVANCED that he wants promoted into QUICK before build.
 
-### CR-027, backend four-tier content rating field
+### CR-027, backend three-vs-four-tier content rating question
 
-Later-pass, non-blocking, filed 9 Aug 2026 by the kit revision pass.
-The backend carries three content rating values
-(`lib/server/creations/constants.js`: `SFW`, `MATURE`, `EXPLICIT`).
-The ruled presentation is a four-tier system, display-mapped in
-`lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
-SFW displays as Everyone, MATURE as Mature, EXPLICIT as Adult 18+,
-with film anchors in description text only. Teen sits between
-Everyone and Mature and has NO backend value; every surface renders
-it as an honest disabled stub (the word "Soon") until this CR lands.
+Later-pass, non-blocking, filed 9 Aug 2026 by the kit revision pass,
+updated 9 Aug 2026 by the kit polish pass. The backend carries three
+content rating values (`lib/server/creations/constants.js`: `SFW`,
+`MATURE`, `EXPLICIT`). Labels ruled 9 Aug 2026: three user-facing
+tiers, display-mapped in `lib/shared/presentation/terminology.js`
+(`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as Teen,
+EXPLICIT as Adult, with film anchors as the row tooltip, never a
+visible description line. No stub row ships; every tier maps to a
+real backend value today.
 
-Build spec for the backend pass: add a fourth enum value (working
-name `TEEN`) to the content-rating enum on creations, plus whatever
-migration re-buckets existing rows (expected: none re-bucket, Teen
-starts empty). The frontend mapping then gains
-`TEEN: "Teen"` and drops the stub flag; that is a one-file change in
-the terminology module by design.
+Open question for Nick, deferred rather than answered here: whether
+the backend should carry a fourth content-rating value, and if so
+what it buckets. No build spec is fixed until that three-vs-four
+question is ruled.
 
 Caveat that gates final naming: the referenced standards doc
 (CRESTFALL-CONTENT-STANDARDS.md) is a draft and is not in this repo
-yet; this CR is marked pending Brian's final ruling on the tier
-labels and the tier count. Nothing blocks frontend work; the display
+yet; the three-vs-four backend question and its label consequences
+stay pending that revision. Nothing blocks frontend work; the display
 mapping is live against the three real values today.
 
 ## Closed

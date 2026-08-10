@@ -28,8 +28,7 @@ function creatorArt(name) {
 }
 
 // Rating values use the presentation tiers; each maps onto a real
-// backend value via lib/shared/presentation/terminology.js (Teen has
-// none yet, CR-027, so no fixture carries it).
+// backend value via lib/shared/presentation/terminology.js.
 const FIXTURE_CREATIONS = [
   { id: "c1", assetKind: "character", title: "Lilith", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Lilith"), isCanon: true, ratingTier: "MATURE", isRemixable: false, plays: 10880, hearts: 2210, saves: 960, recency: 18 },
   { id: "c2", assetKind: "character", title: "Elowen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Elowen"), isCanon: true, ratingTier: "EVERYONE", isRemixable: false, plays: 8400, hearts: 1630, saves: 440, recency: 17 },
@@ -143,10 +142,20 @@ export default function CommunityV2Mockup() {
         id: "type",
         label: "Type",
         isMultiSelect: true,
-        options: TYPE_OPTIONS.map((option) => ({
-          ...option,
-          count: pool.filter((item) => item.assetKind === option.value).length,
-        })),
+        // Remixable folded in as an additional option group (9 Aug
+        // 2026 kit polish pass); the standalone Remixable dropdown is
+        // retired.
+        options: [
+          ...TYPE_OPTIONS.map((option) => ({
+            ...option,
+            count: pool.filter((item) => item.assetKind === option.value).length,
+          })),
+          {
+            value: "remixable",
+            label: "Remixable only",
+            count: pool.filter((item) => item.isRemixable).length,
+          },
+        ],
       },
       {
         id: "rating",
@@ -155,24 +164,9 @@ export default function CommunityV2Mockup() {
         options: CONTENT_RATING_TIERS.map((tier) => ({
           value: tier.tier,
           label: tier.label,
-          description: tier.description,
-          count: tier.isPending
-            ? null
-            : pool.filter((item) => item.ratingTier === tier.tier).length,
-          isDisabled: Boolean(tier.isPending),
+          tooltip: tier.tooltip,
+          count: pool.filter((item) => item.ratingTier === tier.tier).length,
         })),
-      },
-      {
-        id: "remixable",
-        label: "Remixable",
-        isMultiSelect: true,
-        options: [
-          {
-            value: "remixable",
-            label: "Remixable only",
-            count: pool.filter((item) => item.isRemixable).length,
-          },
-        ],
       },
     ];
   }, [fixtureMode]);
@@ -181,9 +175,10 @@ export default function CommunityV2Mockup() {
     if (fixtureMode === "empty") return [];
 
     const query = searchValue.trim().toLowerCase();
-    const types = selectedValues.type || [];
+    const typeValues = selectedValues.type || [];
+    const remixOnly = typeValues.includes("remixable");
+    const types = typeValues.filter((value) => value !== "remixable");
     const ratings = selectedValues.rating || [];
-    const remixOnly = (selectedValues.remixable || []).includes("remixable");
 
     const filtered = FIXTURE_CREATIONS.filter((item) => {
       if (types.length && !types.includes(item.assetKind)) return false;
@@ -249,7 +244,7 @@ export default function CommunityV2Mockup() {
             onClick={() => setFixtureMode(key)}
             className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
               fixtureMode === key
-                ? "border-[var(--gold-action)] text-[var(--gold-bright)]"
+                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
             }`}
           >

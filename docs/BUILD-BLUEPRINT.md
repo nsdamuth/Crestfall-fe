@@ -1026,11 +1026,19 @@ dock to the bottom edge as sheets under 700px per the modal law
 safe-area padding); at 700px and up they are popovers below the
 trigger. Nothing overflows; no critical text truncates.
 
-**(e) Focus law.** A focused search control outlines the FULL
+**(e) Focus law, amended 9 Aug 2026 (kit polish pass).** Keyboard
+focus (`:focus-visible`) keeps one subtle indicator for
+accessibility: a slight border brightening (`--line-strong`), never a
+gold box. Pointer interaction shows no focus ring at all. This
+replaces the prior all-pointer `--focus-ring` gold box on the search
+field and kit controls; the original wording is struck below and
+kept only for lineage.
+
+~~A focused search control outlines the FULL
 control border, never the inner field: the wrapper carries
 `--focus-ring` via focus-within and the inner input suppresses the
 per-element ring. This matches the proof's own focus history
-(register: chrome, focus entry).
+(register: chrome, focus entry).~~
 
 **(f) Banner hierarchy law, amends 2.3.** One primary CTA
 emphasized per banner; the description is de-emphasized
@@ -1049,16 +1057,39 @@ full-bleed art (see a). Two-up list rows are permitted at desktop
 widths where whitespace allows; the Community page renders its list
 two-up at 1100px and up on the ruled grid (1.11).
 
-**(h) Ratings presentation.** Four display tiers: Everyone, Teen,
-Mature, Adult 18+, with film anchors in description text only. The
-mapping lives in `lib/shared/presentation/terminology.js`
-(`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as
-Mature, EXPLICIT as Adult 18+. Teen has no backend value and ships
-as an honest stub (disabled row, the word "Soon") until CR-027 lands
-the backend field; labels and tier count stay pending Brian's final
-ruling per the draft content-standards doc. The rating facet renders
-as a dropdown on every filter surface, never as loose chips and
-never as a card badge.
+**(h) Ratings presentation, RULED 9 Aug 2026 (kit polish pass).**
+Three display tiers: Everyone, Teen, Adult, over the three ruled
+backend values, no stub row. Film anchors move out of visible
+description lines onto the row tooltip (native title attribute as an
+interim, pending a design-system tooltip pattern, flagged in
+docs/CONTRACT-REQUESTS.md CR-027). The mapping lives in
+`lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
+SFW displays as Everyone, MATURE as Teen, EXPLICIT as Adult. Whether
+the backend should carry a fourth value is deferred to Nick (CR-027),
+pending the draft content-standards doc revision. The rating facet
+renders as a dropdown on every filter surface, never as loose chips
+and never as a card badge.
+
+**(i) Selection-state law, RULED 9 Aug 2026 (kit polish pass).**
+Selected and active states read as a gold icon or text plus a light
+gold wash (`--fill`); no bold borders, no heavy outlines. Selection
+indicators appear only where they inform; media and content stay the
+visual priority. Applies to dropdown triggers, the grid/list toggle,
+and any control previously using a bold `--gold-action` selected
+border (`KitDropdown` trigger, `KitFilterChip`, the overlay action
+buttons on `KitCreationCard` and `KitImageOverlay`).
+
+**(j) Grid/list toggle, amends 2.12's `view-mode-toggle` entry.**
+Icons only: no visible "Layout" group title, no visible "Grid"/"List"
+text labels. The `label` prop still reaches the control for
+accessibility (wired to `aria-label`, not rendered as text). Selected
+state follows (i): gold icon plus `--fill` wash, tight padding,
+`--radius-full` per icon-button per the PR checklist's radius tier
+test.
+
+**(k) Remixable fold, amends (b).** Remixable is an option row inside
+the Type multi-select dropdown, not a standalone facet dropdown. The
+standalone Remixable dropdown is retired.
 
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
@@ -1072,7 +1103,7 @@ counts). Disabled rows read the word "Soon". Phone: bottom-docked
 sheet per (d). Open/closed is sanctioned presentation-only local
 state; selection lives with the caller via `onToggleOption(value)`.
 LOOM: `KitDropdown.jsx` shell; `dropdown/` View, contract v1.0.0,
-fixtures (type multi, selected, rating four-tier, sort single,
+fixtures (type multi, selected, rating three-tier, sort single,
 longest labels, empty, disabled), ViewModel, README, preview route.
 
 ## 2.12 Kit summary

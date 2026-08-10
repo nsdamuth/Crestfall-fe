@@ -17,7 +17,7 @@ import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 const STATES = {
   type: { label: "Type (multi)", props: kitDropdownTypeFixture },
   selected: { label: "Type (2 selected)", props: kitDropdownTypeSelectedFixture },
-  rating: { label: "Rating (4 tiers)", props: kitDropdownRatingFixture },
+  rating: { label: "Rating (3 tiers)", props: kitDropdownRatingFixture },
   sort: { label: "Sort (single)", props: kitDropdownSortFixture },
   longest: { label: "Longest labels", props: kitDropdownLongestLabelsFixture },
   empty: { label: "Empty", props: kitDropdownEmptyFixture },
@@ -59,7 +59,7 @@ export default function KitDropdownPreviewClient() {
       }))}
       activeKey={activeKey}
       onSelectState={openState}
-      note="Fixture-only. Open each state at 390 and 1440; the panel must be fully usable in both. The Teen rating tier is an honest stub (Soon) pending CR-027."
+      note="Fixture-only. Open each state at 390 and 1440; the panel must be fully usable in both. Rating tiers carry their film anchor as a row tooltip (native title attribute), not a visible description line."
     >
       <div className="flex min-h-[24rem] flex-wrap items-start gap-[var(--space-3)]">
         <KitDropdownView

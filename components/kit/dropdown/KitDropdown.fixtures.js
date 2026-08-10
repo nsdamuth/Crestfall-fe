@@ -21,17 +21,16 @@ export const kitDropdownTypeSelectedFixture = {
   selectedValues: ["character", "story"],
 };
 
-// The rating facet, four presentation tiers over three backend values
-// (lib/shared/presentation/terminology.js). Teen is an honest stub:
-// disabled with the word "Soon" until CR-027 lands the backend field.
+// The rating facet, three presentation tiers over the three backend
+// values (lib/shared/presentation/terminology.js). Film anchors ride
+// as the row tooltip, not a visible description line.
 export const kitDropdownRatingFixture = {
   label: "Rating",
   options: CONTENT_RATING_TIERS.map((tier) => ({
     value: tier.tier,
     label: tier.label,
-    description: tier.description,
-    count: tier.isPending ? null : 4,
-    isDisabled: Boolean(tier.isPending),
+    tooltip: tier.tooltip,
+    count: 4,
   })),
   selectedValues: [],
   isMultiSelect: true,

@@ -24,9 +24,12 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} label
  * @property {number|null} [count] displayed right-aligned, tabular
  * @property {string} [description] supporting line under the label
- *   (rating tiers carry film anchors here, description text only)
- * @property {boolean} [isDisabled] honest stub for a tier or option
- *   the backend cannot answer yet; renders with the word "Soon"
+ * @property {string} [tooltip] system tooltip text for the row
+ *   (rating tiers carry their film anchor here); rendered via the
+ *   native title attribute as an interim, pending a design-system
+ *   tooltip pattern, flagged in docs/CONTRACT-REQUESTS.md CR-027
+ * @property {boolean} [isDisabled] honest stub for an option the
+ *   backend cannot answer yet; renders with the word "Soon"
  *
  * @typedef {Object} KitDropdownViewProps
  * @property {string} label the group name shown on the trigger

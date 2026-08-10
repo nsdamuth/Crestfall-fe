@@ -7,11 +7,14 @@ const defaultFilterGroups = [
     id: "type",
     label: "Type",
     isMultiSelect: true,
+    // Remixable folded in as an additional option group (9 Aug 2026
+    // kit polish pass); the standalone Remixable dropdown is retired.
     options: [
       { value: "character", label: "Characters", count: 214 },
       { value: "story", label: "Stories", count: 88 },
       { value: "adventure", label: "Adventures", count: 12 },
       { value: "image", label: "Images", count: 96 },
+      { value: "remixable", label: "Remixable only", count: 122 },
     ],
   },
   {
@@ -21,16 +24,9 @@ const defaultFilterGroups = [
     options: CONTENT_RATING_TIERS.map((tier) => ({
       value: tier.tier,
       label: tier.label,
-      description: tier.description,
-      count: tier.isPending ? null : 40,
-      isDisabled: Boolean(tier.isPending),
+      tooltip: tier.tooltip,
+      count: 40,
     })),
-  },
-  {
-    id: "remixable",
-    label: "Remixable",
-    isMultiSelect: true,
-    options: [{ value: "remixable", label: "Remixable only", count: 122 }],
   },
 ];
 
