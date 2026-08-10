@@ -17,7 +17,7 @@ export default function KitImageOverlay(props) {
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-[76rem] min-[700px]:w-fit"
+      panelClassName="w-full max-w-[76rem]"
       onClose={viewProps.onClose}
       ariaLabelledBy={viewProps.title ? KIT_IMAGE_OVERLAY_TITLE_ID : undefined}
       ariaLabel={viewProps.title ? undefined : "Image"}
