@@ -1237,6 +1237,75 @@ LOOM: `KitDropdown.jsx` shell; `dropdown/` View, contract v1.0.0,
 fixtures (type multi, selected, rating three-tier, sort single,
 longest labels, empty, disabled), ViewModel, README, preview route.
 
+### 2.18 Rail (`rail`), new package this pass, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md`)
+
+The horizontally scrolling rail that holds existing cards
+(`docs/CRESTFALL-DESIGN-CONTEXT.md`, 10 Aug 2026 ruling): "No
+horizontally scrolling card row exists in the kit today, so this is a
+new kit package, built once and used four times on Home. It holds
+existing cards; no card-level work is needed." Head anatomy is
+2.16(o) scope 1: gold uppercase label, one short solid gold rule to
+its right, View all beside the label, never at the end of the scroll.
+
+- **Empty-rail law.** A rail with nothing in it renders nothing at
+  all, head included. Matches the ruled Continue strip precedent
+  ("renders nothing when nothing is in progress") and the
+  creator-card strip law ("the strip never invents placeholder
+  frames").
+- **Arrow behavior.** Native scroll everywhere (touch, trackpad,
+  shift-wheel) is the baseline at every width. Gold arrow controls
+  additionally appear from 700px up, one pair riding the right end of
+  the head row after the head control seat. Each arrow disables at
+  its own end (`--state-disabled-opacity`, non-interactive) and
+  advances the scrollport by one full card group via `scrollBy`. No
+  dot indicators, no page counter, anywhere.
+- **Trailing fade.** A right-edge overlay signals more content:
+  `linear-gradient(90deg, transparent, var(--canvas))`, about
+  `--space-10` wide, `pointer-events-none`, hidden once the rail
+  rests at its end. Package-local recipe, not a token: no fade token
+  exists in `docs/DESIGN-TOKENS.md` (it lists a proposed-but-unminted
+  tile fade under "needs a ruling"), so this composes existing
+  tokens in place rather than minting one.
+- **Snap and resize.** `scroll-snap-type: x proximity` on the
+  scrollport, `scroll-snap-align: start` on each cell, aligned to the
+  content edge by `scroll-padding-inline`. Proximity, not mandatory:
+  a scroll that ends near a card edge settles there, but momentum
+  flicks and trackpad glides are never hijacked, preserving the
+  native-scroll feel. On resize, nothing is stored and nothing is
+  scripted: cell widths are percentages (`calc((100% - N * gutter) /
+  (N + 0.4))`, N full cards plus a 0.4-card peek as the more-content
+  signal) so they reflow, and the browser clamps scroll position and
+  re-resolves snap after layout on its own. A `ResizeObserver`
+  attached in a ref callback only recomputes the `atStart`/`atEnd`
+  flags so the arrows and the fade stay truthful; it stores no scroll
+  offset and drives no scripted repositioning.
+- **Edge bleed.** The head row stays in normal flow, sharing the page
+  content edges by construction. The scrollport alone bleeds, reusing
+  the sticky filter bar's exact mechanism against the same shell:
+  negative horizontal margins cancelling the shell's section padding
+  (`mx-[calc(var(--space-5)*-1)]`, `sm:mx-[calc(var(--space-8)*-1)]`,
+  `lg:mx-[calc(var(--space-10)*-1)]`), the same values re-added as
+  padding-inline on the scrollport and mirrored as
+  `scroll-padding-inline`.
+- **Keyboard.** Natural DOM tab order: head first (View all, then the
+  seated head control, then the arrow pair), then each card's own
+  controls in card order. No roving tabindex; the scrollport carries
+  no tabindex so arrow keys keep their native page meaning. The
+  browser scrolls a focused element into a scroll container natively,
+  and `scroll-padding-inline` insets that target from the clip edge
+  so the 1px kit-focus mark always sits in open space.
+- **Reduced motion.** Arrow clicks choose the scroll behavior at
+  event time: `smooth` normally, `auto` (an instant jump) when
+  `matchMedia("(prefers-reduced-motion: reduce)")` matches. No CSS
+  `scroll-behavior` is set, so native user scrolling is never
+  reinterpreted.
+- LOOM: `KitRail.jsx` shell; `rail/` View, contract v1.0.0 (`label`,
+  `viewAllLabel`, `onViewAll`, `headControlSlot`, `children`),
+  fixtures (four Home rails, one card, two cards, empty, longest
+  content), ViewModel, README, preview route. Cards are consumed
+  unmodified from `creation-card` and `creator-card`; this package
+  does no card-level work.
+
 ## 2.12 Kit summary
 
 | # | Package | Five states | LOOM files |
@@ -1256,6 +1325,7 @@ longest labels, empty, disabled), ViewModel, README, preview route.
 | 2.14 | image-overlay (interim, converts batch 2) | yes on every action | same |
 | 2.15 | asset-detail-popup | n/a, specced only, not built | none this batch |
 | 2.17 | dropdown (kit revision pass) | yes plus selected, open, Soon rows | same |
+| 2.18 | rail | on View all and the arrow pair | same |
 
 Kit revision pass (9 Aug 2026): 2.6 and 2.1 stand amended by 2.16
 (full-bleed card law, one-line filter law); 2.3 stands amended by
