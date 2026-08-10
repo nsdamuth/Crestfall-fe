@@ -145,7 +145,7 @@ function GridCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
           No image
         </div>
       )}
@@ -244,7 +244,7 @@ function ListCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
           No image
         </div>
       )}

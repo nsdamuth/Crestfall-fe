@@ -53,9 +53,9 @@ export default function KitCreatorCardView({
   onViewProfile = null,
 }) {
   return (
-    <article className="flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-4)] transition-colors hover:border-[var(--state-hover-line)]">
+    <article className="flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] transition-colors hover:border-[var(--state-hover-line)]">
       <div className="flex items-center gap-[var(--space-3)]">
-        <span className="flex h-[var(--space-12)] w-[var(--space-12)] flex-none items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line-strong)] bg-[var(--surface-2)]">
+        <span className="flex h-[var(--space-12)] w-[var(--space-12)] flex-none items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line-strong)] bg-[var(--surface-3)]">
           {avatarSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarSrc} alt="" className="h-full w-full object-cover" />
