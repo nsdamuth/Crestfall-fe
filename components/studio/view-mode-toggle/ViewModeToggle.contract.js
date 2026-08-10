@@ -9,7 +9,8 @@ export const VIEW_MODE_TOGGLE_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} ViewModeToggleViewProps
  * @property {"grid"|"list"} value
- * @property {string} label
+ * @property {string} label accessible group name (aria-label); not
+ *   rendered as visible text, RULED 9 Aug 2026 icons-only pass
  * @property {((nextValue: "grid"|"list") => void)|null} onChange
  */
 

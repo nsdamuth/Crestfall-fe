@@ -177,6 +177,19 @@
   box-shadow: 0 0 0 1px var(--gold-action);
 }
 
+/* Focus law, RULED 9 Aug 2026 (kit polish pass, docs/BUILD-BLUEPRINT.md
+   2.16(e)): the search field and every components/kit control keep a
+   subtler keyboard-only mark, a border brightening, never the
+   app-wide gold box; pointer interaction shows nothing extra. A 1px
+   line-strong outline (box-shadow, not border-color) so the mark
+   still reads against controls whose own border already sits at
+   --line-strong. Opt-in class so the app-wide rule above is
+   untouched everywhere else. */
+.kit-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+
 /* --- SCROLLBARS -------------------------------------------------
    Item 9, phase 3 aesthetics. Subtle translucent brand-styled
    scrollbars on every internal scroll container, vertical only.

@@ -8,6 +8,11 @@
 // (danger always carries its word) both forbid icon-only forms on
 // the card face. Two overlay placements are genuinely credible and
 // both ship for Brian's pick via `actionPlacement`.
+//
+// Art-anchor law, RULED 9 Aug 2026 (kit polish pass): art anchors to
+// the top of the frame in both layouts so faces stay visible when
+// the crop is tight. A future editor-side reposition capability is a
+// later expansion, not built here.
 import { Bookmark, Heart, Maximize2, Play, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
@@ -33,9 +38,9 @@ function IconActionButton({ label, active = false, onClick = null, children }) {
       aria-label={label}
       aria-pressed={active}
       onClick={(event) => stopAndRun(event, onClick)}
-      className={`flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+      className={`kit-focus flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
         active
-          ? "border-[var(--gold-action)] bg-[var(--fill)] text-[var(--gold-bright)]"
+          ? "border-[var(--line)] bg-[var(--fill)] text-[var(--gold-bright)]"
           : "border-[var(--line)] bg-[var(--tag-bed-art)] text-[var(--art-ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)] active:bg-[var(--state-pressed-fill)]"
       }`}
     >
@@ -121,7 +126,7 @@ function GridCard({
         type="button"
         onClick={(event) => stopAndRun(event, onOpen)}
         aria-label={`Open ${title || "creation"}`}
-        className="absolute inset-0 z-[1] block w-full"
+        className="kit-focus absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
       >
         <span className="sr-only">Open {title || "creation"}</span>
       </button>
@@ -218,7 +223,7 @@ function ListCard({
         type="button"
         onClick={(event) => stopAndRun(event, onOpen)}
         aria-label={`Open ${title || "creation"}`}
-        className="absolute inset-0 z-[1] block w-full"
+        className="kit-focus absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
       >
         <span className="sr-only">Open {title || "creation"}</span>
       </button>
@@ -229,7 +234,7 @@ function ListCard({
           <img
             src={imageSrc}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover object-[center_20%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
+            className="absolute inset-0 h-full w-full object-cover object-[center_top] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
           />
           {/* List rows read left to right, so the legibility fade
               anchors to the left edge (card-banner veil direction). */}

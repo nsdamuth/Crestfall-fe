@@ -17,11 +17,15 @@ import { Search } from "lucide-react";
 import KitDropdownView from "../dropdown/KitDropdown.view";
 
 function SearchField({ value, placeholder, onChange }) {
-  // Focus law (9 Aug 2026): the ring outlines the full control border,
-  // never the inner field. The wrapper carries the ring via
-  // focus-within; the input suppresses the global per-element ring.
+  // Focus law, amended RULED 9 Aug 2026 (kit polish pass, amends
+  // BUILD-BLUEPRINT.md 2.16(e)): keyboard focus keeps one subtle
+  // indicator (a slight border brightening to --line-strong), never a
+  // gold box; pointer interaction shows no ring at all. The wrapper
+  // reads its descendant's :focus-visible via the has-* variant so a
+  // mouse click into the field never triggers it, only keyboard entry
+  // does.
   return (
-    <div className="flex min-h-[var(--control-md)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors focus-within:[box-shadow:var(--focus-ring)] hover:border-[var(--line)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1">
+    <div className="flex min-h-[var(--control-md)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors has-[:focus-visible]:border-[var(--line-strong)] hover:border-[var(--line)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1">
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"

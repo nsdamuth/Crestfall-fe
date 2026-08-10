@@ -94,7 +94,7 @@ export default function KitPromoBannerView({
           <button
             type="button"
             onClick={() => onCtaClick?.()}
-            className="cf-btn cf-btn--primary mt-[var(--space-4)] w-fit"
+            className="kit-focus cf-btn cf-btn--primary mt-[var(--space-4)] w-fit"
           >
             {ctaLabel}
           </button>

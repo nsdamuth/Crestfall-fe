@@ -11,9 +11,9 @@ function OverlayActionButton({ label, active = false, onClick = null, children }
       aria-label={label}
       aria-pressed={active}
       onClick={() => onClick?.()}
-      className={`flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border transition-colors ${
+      className={`kit-focus flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border transition-colors ${
         active
-          ? "border-[var(--gold-action)] bg-[var(--fill)] text-[var(--gold-bright)]"
+          ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
           : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
       }`}
     >
@@ -38,12 +38,15 @@ export default function KitImageOverlayView({
         type="button"
         onClick={() => onClose?.()}
         aria-label="Close"
-        className="absolute right-[var(--space-3)] top-[var(--space-3)] flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+        className="kit-focus absolute right-[var(--space-3)] top-[var(--space-3)] flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
       >
         <X size={18} />
       </button>
 
-      <div className="flex max-h-[70vh] w-full items-center justify-center overflow-hidden rounded-[var(--radius-md)]">
+      {/* Art-anchor law, RULED 9 Aug 2026: the frame aligns to the
+          top of the image so faces stay visible when the frame is
+          shorter than the image. */}
+      <div className="flex max-h-[70vh] w-full items-start justify-center overflow-hidden rounded-[var(--radius-md)]">
         {imageSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={imageSrc} alt={title} className="max-h-[70vh] w-auto object-contain" />
@@ -70,7 +73,7 @@ export default function KitImageOverlayView({
         <button
           type="button"
           onClick={() => onShare?.()}
-          className="inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--gold-action)] transition-colors hover:border-[var(--gold-ornament)]"
+          className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--gold-action)] transition-colors hover:border-[var(--gold-ornament)]"
         >
           <Share2 size={16} aria-hidden="true" />
           Share
