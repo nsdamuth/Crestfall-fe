@@ -114,19 +114,24 @@ const SETTINGS_ROWS = [
 
 const FIXTURE_MODES = { default: "Default", empty: "Empty", longestContent: "Longest content" };
 
-function FieldLabel({ label, count }) {
+function FieldLabel({ label, count, countId }) {
   return (
     <div className="flex items-center justify-between gap-[var(--space-3)]">
       <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {label}
       </span>
       {typeof count === "string" && (
-        // aria-hidden: the counter lives inside the field's <label>,
-        // so without it the field's accessible name reads
-        // "Username 10 / 30" (review-gate find N-2). The cap is still
-        // enforced by maxLength; richer aria-describedby wiring is
-        // Sprint E polish.
+        // N-2 follow-through (review-gate deferral 2.2, Sprint E phase
+        // 4): aria-hidden stays on the counter so the field's label
+        // text (which wraps both the caption and this counter) keeps
+        // a clean accessible NAME ("Username", not "Username 10 /
+        // 30", review-gate find N-2). aria-describedby on the field
+        // now points at this same span's id: per the accname spec, a
+        // referenced aria-hidden element's text still contributes to
+        // the DESCRIPTION even though it is excluded from name
+        // computation, so the cap still reaches assistive tech.
         <span
+          id={countId}
           aria-hidden="true"
           className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
         >
@@ -146,9 +151,10 @@ function fieldName(label) {
 
 function LabeledInput({ label, value, onChange, maxLength, note, disabled = false }) {
   const name = fieldName(label);
+  const counterId = maxLength ? `${name}-counter` : undefined;
   return (
     <label className="block">
-      <FieldLabel label={label} count={maxLength ? `${value.length} / ${maxLength}` : undefined} />
+      <FieldLabel label={label} count={maxLength ? `${value.length} / ${maxLength}` : undefined} countId={counterId} />
       <input
         type="text"
         name={name}
@@ -156,6 +162,7 @@ function LabeledInput({ label, value, onChange, maxLength, note, disabled = fals
         value={value}
         maxLength={maxLength}
         disabled={disabled}
+        aria-describedby={counterId}
         onChange={(event) => onChange?.(event.target.value)}
         className={`${FIELD_RECIPE} disabled:opacity-[var(--state-disabled-opacity)]`}
       />
@@ -166,15 +173,17 @@ function LabeledInput({ label, value, onChange, maxLength, note, disabled = fals
 
 function LabeledTextarea({ label, value, onChange, maxLength, rows = 5 }) {
   const name = fieldName(label);
+  const counterId = maxLength ? `${name}-counter` : undefined;
   return (
     <label className="block">
-      <FieldLabel label={label} count={maxLength ? `${value.length} / ${maxLength}` : undefined} />
+      <FieldLabel label={label} count={maxLength ? `${value.length} / ${maxLength}` : undefined} countId={counterId} />
       <textarea
         name={name}
         id={name}
         value={value}
         maxLength={maxLength}
         rows={rows}
+        aria-describedby={counterId}
         onChange={(event) => onChange?.(event.target.value)}
         className={`${FIELD_RECIPE} resize-none`}
       />
