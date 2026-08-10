@@ -1,5 +1,190 @@
 # Handoff to next chat
 
+## Sprint E build, R6 image creator panel (10 Aug 2026, unattended, engine Sonnet)
+
+Ran `docs/SPRINT-E-SONNET-BRIEF.md` against `docs/SPRINT-E-PLAN.md`, all
+five phases, in order. Branch `design/kit-polish-3`, tree clean and
+matching the brief's premise at session start (verified against commit
+`26ca6df`), tree clean and pushed at session end. Brian's dev server on
+3001 was used throughout and never touched or restarted; this session
+started no server of its own.
+
+1. **DONE, Phase 1.** `KitImageCreatorPanel` package, contract 1.0.0.
+   Mode toggle, the six live ingredient slots (Character, Player
+   Character, Pose, Clothing Source, Location / Scene, Rendering
+   Preset, fixed anatomy mirroring `imageStudioData.js` verbatim),
+   inline custom-guidance editor, the single Options expander (five
+   dropdowns plus negative prompt, collapsing the live composer's
+   duplicate sliders-icon control), the generate block (live
+   block-reason grammar), and the video mode block. Six required
+   fixture states. Preview `/dev/ui-preview/kit-image-creator-panel`.
+   A real defect was caught and fixed during 390 verification: the
+   Required badge on the Character slot clipped outside its tile at
+   390 (header row lacked `min-w-0`/`truncate`); fixed before commit.
+   Commit `433894a`.
+2. **DONE, Phase 2.** `KitIngredientPicker` (1.0.0) and
+   `KitSaveIngredientPreset` (1.0.0), both on `KitModalFrame`
+   variant="modal" (full-screen at 390 per R4). Picker: search
+   (caller-filtered, matching the studio-filter-bar convention),
+   ingredient card grid, Use Once and New Preset action cards,
+   load-error state. Save preset: Preset Name, Description, Prompt /
+   Guidance, Tags (no character caps in the live flow, so none
+   invented), Save as preset and Use once, saving state disables
+   close via `onClose={null}`. Previews
+   `/dev/ui-preview/kit-ingredient-picker` and
+   `/dev/ui-preview/kit-save-ingredient-preset`. Commit `f205c5e`.
+3. **DONE, Phase 3.** Images page integration
+   (`app/studio/v2/images/ImagesV2Mockup.jsx`). Desktop 1100px and
+   up: sticky right rail (24rem, top offset composed entirely from
+   existing tokens via calc: `--topbar-h` + `--control-filter` +
+   `--space-3` x2 + `--space-4`, no new token minted), grid drops to
+   three columns. Under 1100px: sticky bottom-right "Create image" CTA
+   opening the panel as a full-screen modal at 390, centered 700 to
+   1099. Full ingredient picker and save-preset flow wired end to
+   end and verified live: activating a slot opens the picker,
+   choosing an item or Use Once fills or customizes the slot,
+   Character/Player Character mutual exclusion confirmed (choosing
+   one clears the other), New Preset opens the save-preset modal
+   stacked over the panel, Escape dismisses only the top layer.
+   `docs/APP-FUNCTION-MAP.csv`: 26 new rows for the panel, picker, and
+   save-preset controls on `/studio/v2/images` (destination Create >
+   Images), plus the two image-studio slot-label rows corrected
+   (Outfit to Clothing Source, Location to Location / Scene). CRLF and
+   21-column shape preserved and validated with the csv module.
+   `docs/BUILD-BLUEPRINT.md` 2.16 gains ruling (u); 3.1 row 5 notes the
+   panel composition. A real defect was caught and fixed during 390
+   verification: the panel renders simultaneously in the CSS-hidden
+   desktop rail and the mobile modal, and its static field ids
+   collided; `KitImageCreatorPanel` now derives a per-instance id
+   prefix via `useId()` (internal only, contract unaffected). Commit
+   `6cc4f95`.
+4. **DONE, Phase 4.** Review-gate deferral 2.2 (N-2 follow-through):
+   the five capped account fields (Username, Display Name, Tagline,
+   Description, Announcement) now wire `aria-describedby` from the
+   field to its counter. `aria-hidden` stays on the counter (removing
+   it reintroduced the original N-2 name-pollution bug, caught during
+   verification and reverted before commit): per the accname spec, a
+   referenced `aria-hidden` element's text still reaches the
+   description even though it is excluded from the accessible name.
+   Verified with an accessibility-tree read: every capped field's name
+   is the bare label, the cap rides as `description`. No other plan-2
+   item's ruling had landed (checked `docs/SPRINT-E-PLAN.md`'s git
+   history: one commit, no rulings since); 2.2 was the only item in
+   scope, per the brief's own fallback. Commit `5d0d774`.
+5. **DONE, Phase 5.** Dev server: none of this session's own to stop
+   (Brian's 3001 was used throughout, untouched). Production build
+   exit 0 at session end, dev server left running throughout (build
+   and Brian's persistent dev server coexisted without conflict both
+   at session start and session end). This section written and
+   committed as the final commit of the session.
+
+### Contract versions this pass
+
+| Contract | From | To |
+|---|---|---|
+| KitImageCreatorPanel | none | 1.0.0 (new) |
+| KitIngredientPicker | none | 1.0.0 (new) |
+| KitSaveIngredientPreset | none | 1.0.0 (new) |
+| KitStudioPage | 1.0.0 | 1.0.0 (unchanged; the rail composed inside the existing `children` slot, no new prop needed) |
+| Everything else | current | same |
+
+### A2 sticky inventory (Brian's ruling, before adding any sticky element)
+
+Checked by reading every v2 page's shell composition
+(`app/dev/ui-preview/*-v2-page/*PreviewClient.jsx`) and every shared
+chrome piece for `sticky`/`fixed` classes, then confirmed live at
+emulated 390 and 1440. Result, identical across all six v2 pages
+(account, community, creators, images, stories, vault), before this
+sprint: exactly two sticky elements, at every width. `StudioMobileNav`
+(the bottom tab bar, `fixed bottom-0`) exists as its own package but no
+v2 page mirror wires `mobileNavSlot`, so it is not present on any of
+the six pages today; this is a standing gap, not something this sprint
+introduced or fixed.
+
+| Element | Before (all six pages) | After (Images only) |
+|---|---|---|
+| `StudioTopBar` | sticky `top-0`, z-40 | unchanged |
+| `KitStudioFilterBar` | sticky `top-[var(--topbar-h)]`, z-10 | unchanged |
+| Creator rail (1100px and up) | did not exist | sticky, new, third layer |
+| Create CTA (under 1100px) | did not exist | fixed bottom-right, new, third layer |
+
+Measured live (scrolled, not the natural unscrolled position, which
+reads differently): `topbar` bottom at 69px exactly matches
+`--topbar-h`; filter bar top sits at 69px (zero gap, zero overlap);
+filter bar bottom at 131px; rail top at 147px (exactly
+`--space-4` = 16px past the filter bar, zero overlap), held constant
+through further scroll. The ceiling in view at once on Images is now
+the top bar, the filter line, and the rail or the CTA: exactly three,
+matching A2's stated ceiling. No fourth sticky layer exists on Images
+today (the mobile nav gap above means the filter line never needed to
+yield); if `StudioMobileNav` is wired into the Images mirror in a
+future pass, the filter-line-yields rule in A2 becomes load-bearing
+and must be re-applied then.
+
+### R1 five-edge measurement, Images, with the rail present and absent
+
+At 1440 (rail present, sidebar expanded and collapsed, both
+identical): heading, filter line's content row, grid, and load-more
+all share left edge 264px (expanded) / 60px (collapsed, sidebar
+narrower); the bottom banner's right edge (1389px) matches the rail's
+right edge (1389px) exactly, confirming the rail sits inside the
+content width, not outside it. At 390 (rail absent, CTA only): heading
+and grid share left edge 20px; rail confirmed `display: none`, CTA
+confirmed visible and fully inside the 390x844 viewport (top 784,
+bottom 828, both under the 844 floor).
+
+### R4 full-screen checks, all three new modal surfaces, at 390
+
+All three measured via `getBoundingClientRect()` against the true
+emulated 390x844x2 viewport, mobile and touch enabled, never resize:
+
+- Creator panel modal (mobile CTA path): panel measures exactly
+  0,0 to 390,844 (full viewport). Generate button reachable via
+  internal scroll, fully inside viewport bounds (top 686, bottom 730).
+- Ingredient picker: full-screen at 390 (X close visible top-right,
+  action cards reachable), centered at 1440 (max-w-5xl).
+- Save-preset modal: full-screen at 390, "Use once" button reachable
+  via internal scroll (top 776, bottom 820, inside the 844 floor);
+  centered at 1440 (max-w-2xl).
+
+### Parity echo, the 58 live image-creator units (R6 disposition)
+
+Every unit lands in exactly one of: panel, ingredient picker, save
+preset, library grid (Images page's existing grid already carries
+this function), viewer reconciliation (OPEN item 28, not this
+sprint's scope), viewer (already carried by `KitImageOverlay`), or
+page head (already carried by the v2 page's own `StudioPageHeaderView`,
+not part of the panel). Count: panel 18, ingredient picker 5, save
+preset 4, library grid 14, viewer reconciliation 13, viewer already
+carried 3, page head already carried 1. Total 58, all accounted.
+
+### Open picks
+
+The standing 21 from Sprint D plus 9 from Sprint E (`docs/SPRINT-E-PLAN.md`
+OPEN FOR BRIAN 22 through 30), none resolved this pass. New this pass:
+none. Item 26 (creator panel placement) was built per the plan's
+RECOMMENDED default (sticky rail at 1100px and up, sticky CTA plus
+modal below it) and is not re-decided by this build.
+
+### Everything unverified
+
+- Escape/backdrop layering when the ingredient picker or save-preset
+  modal stacks over the FULL-SCREEN mobile creator modal (verified
+  only the desktop-rail composition's stacking live; the mobile
+  modal-over-modal stack was not separately driven through Escape at
+  390 this pass).
+- The A2 sticky inventory's "after" column for the other five v2 pages
+  (community, creators, stories, vault, account): unchanged from
+  "before" since this sprint touched only Images, but not re-rendered
+  and re-measured this pass to confirm no regression; inventory above
+  is derived from the shared-chrome analysis, not a fresh render of
+  each of the five.
+- Rollup not regenerated, script not in repo (standing).
+
+Written 10 Aug 2026, at the end of the Sprint E build (engine Sonnet),
+branch `design/kit-polish-3`. This section is the current state; the
+sections below are prior history on the same branch.
+
 ## Review gate and Sprint E planning (10 Aug 2026 evening, engine Fable)
 
 Ran the post-Sprint-D review gate against `docs/SPRINT-D-PLAN.md`
