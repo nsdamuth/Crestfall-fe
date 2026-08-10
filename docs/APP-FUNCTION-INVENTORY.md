@@ -186,6 +186,276 @@ Player Character, and Narrator share).
   Wardrobe" / "Clear"**. Functionally overlapping, structured
   differently. Not counted as an absence on either side.
 
+## Character allocation (ruled 9 Aug 2026)
+
+Baseline: every Character row in `docs/APP-FUNCTION-MAP.csv` for
+`/studio/create/character` (rows 245-284, 40 rows) and
+`/studio/my-creations/[id]/edit` (rows 717-784, 68 rows), read against
+the source components, not summarized from memory. Two edit rows are
+excluded from the Character baseline because their own block scoping
+excludes Character: row 724 ("Image Studio Ingredient / Storyline
+Media info card," `for non-chat types` only, and Character is chat
+capable) and rows 729-730 ("mechanics quick nav," `Mechanics Module
+type, fields section only`). That leaves 40 create rows + 65 edit rows
+= 105 source rows, deduplicated below wherever create and edit expose
+the same underlying field.
+
+Order correction found while reading source: the CSV's row grouping
+for the edit flow is not the actual on-screen tab order. The real
+order is `CHARACTER_EDIT_SECTIONS` in
+`components/studio/my-creations/edit/creationEditConstants.js`:
+Overview, Identity, Appearance, Visual References, Body, Behavior,
+Mechanics Profile, Runtime Modules, Advanced, Publishing, Danger Zone.
+Media panel and shell chrome render outside this tab list, as
+persistent chrome (`mediaPanelProps` is built separately from section
+content in `useCreationEditShellViewModel.js`); the sticky action bar
+is confirmed persistent by its own CSV block name ("persists across
+all sections"). The tables below use this real order, not the CSV's
+incidental row grouping; that is a correction to reflect Nick's actual
+order, not a proposed reorder.
+
+The create flow's order is confirmed by
+`CHARACTER_CREATOR_STEPS` in
+`components/studio/create/character/character-creator/CharacterCreator.contract.js`:
+Identity, Appearance, Body, Behavior, Review. The template picker
+lives inside Identity (a trigger at the top of the step); Visibility,
+Content Rating, Default Rendering Style, Age, Advanced Creator
+Guidance, Advanced Prompting, and Draft Summary all live inside Review
+(confirmed in `CharacterReviewStep.view.jsx` and
+`ReviewStep.jsx`/`AdvancedPromptingEditor`).
+
+Both flows' step-internal field order were spot-checked directly
+against source (`IdentityStep.jsx`, `AppearanceStep.jsx`,
+`BodyStep.jsx`, `BehaviorStep.jsx`, `CharacterReviewStep.view.jsx`,
+`CharacterIdentitySection.view.jsx`, `CharacterAppearanceSection.view.jsx`,
+`CharacterAdvancedSection.view.jsx`) and match the CSV's field order
+within each step/section exactly.
+
+One discovery worth flagging on its own: the create flow's "Advanced
+Creator Guidance" toggle (row 281) is not just an expand/collapse UI
+state, as pass B's row-281 read assumed. It reveals the same seven
+fields as the edit flow's dedicated "advanced section" (row 769):
+Greeting, Scenario, Relationship to Player, Backstory, Appearance
+Notes, Personality Notes, Extra Runtime Notes (confirmed via
+`useCharacterReviewStepViewModel.js`'s `advancedFields`, sourced from
+`CHARACTER_REVIEW_ADVANCED_FIELDS` and the same `form.greeting` /
+`form.scenario` / etc. keys the edit section reads). These fields are
+not create-only or edit-only; they exist in both flows, already gated
+behind a control Nick labeled "Advanced" in both places.
+
+### QUICK (appears in quick create and in the editor)
+
+**Template picker**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Use Template | 251 | (none) |
+| Built-In / My Templates / Community tabs | 252 | (none) |
+| Search templates | 253 | (none) |
+| Built-in template grid / Apply Template | 254 | (none) |
+
+**Identity**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Name / Character Name | 255 | 748 |
+| Title / Character Title | 256 | 749 |
+| Species (+ Custom Species) | 257 | 750, 751 |
+| Age | 280 (Review step) | 753 |
+
+**Appearance** (see needs-Brian-ruling item 1: the ruled pattern's
+QUICK list does not name "appearance," this placement is a guardrail
+call, not a literal reading of the pattern)
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Skin Tone | 261 | 759 |
+| Eye Color | 262 | 760 |
+| Hair | 263 | 761 |
+| Ethnic Appearance / Visual Heritage | 264 | 762 |
+| Default Clothing / Select Outfit / Select Wardrobe / Clear | 265 | 763, 764, 765 |
+
+**Body**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Kibbe-Inspired Body Identity | 266 | (none, create-only) |
+| Body Type | 267 | (none, create-only) |
+| Height | 268 | (none, create-only) |
+| Build | 269 | (none, create-only) |
+| Proportions | 270 | (none, create-only) |
+| Custom Body Notes | 271 | 766 |
+
+**Behavior**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Outward Personality / Internal Personality | 272 | (none, create-only) |
+| Speech Style / Movement Style | 274 | (none, create-only) |
+| Verbosity | 276 | 767 |
+| Interests | 277 | (none, create-only) |
+| Philosophy | 278 | 768 |
+
+**Default Rendering Style** (Review step; see needs-Brian-ruling item 2)
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Default Rendering Style | 279 (split, see below) | 752 |
+
+**Image payoff**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Character preview panel (initial, name, subtitle, species, gender presentation, clothing style) | 250 | (none) |
+| Draft Summary | 284 | (none) |
+
+**Create-flow navigation chrome** (present only because a create flow,
+quick or full, needs its own controls to move through it; not content
+fields)
+
+| Field/control | Create row(s) |
+|---|---|
+| Back to Create | 245 |
+| Save Draft / Finish Draft | 246 |
+| Identity / Appearance / Body / Behavior / Review tabs | 247 |
+| Back (footer) | 248 |
+| Next (footer) | 249 |
+
+QUICK total: 26 content fields/controls + 5 create-flow navigation
+chrome = 31.
+
+### ADVANCED (editor only)
+
+**Explicitly named by the ruled pattern** ("optional flavor and
+enhancement dropdowns")
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Role Archetype | 259 | 757 |
+| Gender Presentation (+ Custom Gender Presentation) | 258 | 754, 755 |
+| MBTI / Western Zodiac / East Asian Zodiac | 273 | (none, create-only) |
+
+**Judgment calls: similar in kind to the pattern's named examples, not
+required by validation, not referenced by the image/generation step**
+
+| Field/control | Create row(s) | Edit row(s) | Why |
+|---|---|---|---|
+| Character Color Palette | 260 | 756 | Chat text-color theming (dialogue/narration/emphasis roles), not portrait generation; has a working default (`CRESTFALL_DEFAULT`). |
+| Voice Modules (choose/clear) | 275 | (none) | Optional audio-voice enhancement, same "additional options" spirit as typing/zodiac. |
+| Visibility | 279 (split) | 734, 739 (sticky pills, same field) | No required-validation found on the live select; always carries a default (`PRIVATE`). |
+| Content Rating | 279 (split) | 735 | Same as Visibility: no required-validation, always defaults (`SFW`). |
+
+**Named "Advanced" by Nick's own UI in both flows**
+
+| Field/control | Create row(s) | Edit row(s) |
+|---|---|---|
+| Advanced Creator Guidance (expand/collapse) | 281 | (n/a, toggle is create-only UI; the fields it reveals are shared, see below) |
+| Greeting / Scenario / Relationship to Player / Backstory / Appearance Notes / Personality Notes / Extra Runtime Notes | 281 (revealed by toggle, confirmed via source, no separate CSV row) | 769 |
+| Enable Advanced Prompting | 282 | (none, create-only) |
+| Core Identity / Voice & Verbal Texture / Relationship / Combat / Romance / Territory / Power Escalation / Profession & Domain / Portrayal Boundaries | 283 | (none, create-only) |
+
+**Everything edit-only today** (per the ruled pattern's default;
+publishing/danger/media/mechanics-attachment machinery that manages an
+*already-created* character, none of it required to produce a working
+one)
+
+| Field/control | Edit row(s) |
+|---|---|
+| Creation Type (read display) | 758 |
+| Overview: Title (creation-level, distinct from Character Name) | 731 |
+| Overview: Public Description | 732 |
+| Overview: Preview Soon | 733 |
+| Publishing: Convert To Template Soon / Duplicate Template Soon / Use Template Soon | 736 |
+| Publishing: Submit for Public Review | 737 |
+| Publishing: Submit for Canon Review | 738 |
+| Sticky action bar: Public toggle | 740 |
+| Sticky action bar: Review Actions / In Review Queue / Public Live / Review-Resubmit / Archived / Official Canon Locked | 741 |
+| Sticky action bar: Unlist for Editing | 742 |
+| Sticky action bar: Save Changes | 743 |
+| Sticky action bar: Cancel Review | 744 |
+| Danger: Canon Locked notice | 745 |
+| Danger: Archive Creation | 746 |
+| Danger: Delete Creation | 747 |
+| Shell chrome: Set Default PC | 717 |
+| Shell chrome: ← My Creations | 718 |
+| Shell chrome: Section tabs | 719 |
+| Media panel: Featured slot thumbnails | 720 |
+| Media panel: Replace Slot | 721 |
+| Media panel: Go to Library | 722 |
+| Media panel: Chat Media section | 723 |
+| Featured image picker modal: Refresh | 725 |
+| Featured image picker modal: Close | 726 |
+| Featured image picker modal: Use as [Slot] | 727 |
+| Featured image picker modal: Load More | 728 |
+| Visual References: Refresh Library | 770 |
+| Visual References: Choose (per reference card) | 771 |
+| Visual References: Clear (per reference card) | 772 |
+| Mechanics Profile: Attach Actor Mechanics Profile / Replace Profile | 773 |
+| Mechanics Profile: Remove | 774 |
+| Mechanics Profile: Actor Attachment Notes | 775 |
+| Runtime Modules: Attach Mechanics Module | 776 |
+| Runtime Modules: Remove mechanics module (per binding) | 777 |
+| Runtime Modules: Enabled (per binding) | 778 |
+| Runtime Modules: Priority (per binding) | 779 |
+| Runtime Modules: Inheritance Mode (per binding) | 780 |
+| Runtime Modules: Mechanics Scope (per binding) | 781 |
+| Mechanics module picker modal: My Mechanics / Public Mechanics tabs | 782 |
+| Mechanics module picker modal: Search mechanics modules | 783 |
+| Mechanics module picker modal: Module result card | 784 |
+
+ADVANCED total: 11 pattern-named/judgment fields + 39 edit-only
+administrative rows = 50.
+
+Grand total allocated: 31 + 50 = 81 allocation entries, tracing back to
+all 105 source rows (many entries cite one create row and one edit row
+for the same field; the count of *rows accounted for*, not allocation
+entries, is what the verify step checks).
+
+### Needs Brian ruling
+
+Guardrail per item 4: only fields the ruled pattern would otherwise
+send to ADVANCED, kept in QUICK instead because they read as
+functionally necessary to produce a working character.
+
+1. **Appearance step (Skin Tone, Eye Color, Hair, Ethnic
+   Appearance/Visual Heritage, Default Clothing/Select Outfit/Select
+   Wardrobe)** placed in QUICK. Evidence: the ruled pattern's QUICK
+   list names identity, body, behavior, template picker, and the image
+   payoff, but never names appearance; `AppearanceStep.jsx`'s
+   `TraitModal` for Ethnic Appearance is described in its own code as
+   "the real-world visual heritage reference the image generator
+   should use for this character" (`components/studio/create/character/AppearanceStep.jsx`,
+   field `visual_heritage_reference`), and Skin Tone/Eye Color/Hair are
+   the same class of portrait-generation input. Moving these to
+   Advanced-only would hide inputs that directly shape the payoff
+   image from quick create. Brian should confirm appearance belongs in
+   quick create, since the pattern's own wording never says so
+   explicitly.
+2. **Default Rendering Style** placed in QUICK. Evidence:
+   `AppearanceStep.jsx`'s step description states "Rendering style will
+   remain changeable later; the character identity is not locked to
+   one image style," and the Review step's `rendering_style` select
+   (`useCharacterReviewStepViewModel.js`, `CHARACTER_REVIEW_RENDERING_STYLE_OPTIONS`)
+   is the control that sets which art style (e.g. anime vs realistic)
+   the image generator uses. This directly affects the payoff image
+   and should not be Advanced-only without Brian's sign-off.
+
+### Reorder proposals
+
+None. Every source read in this pass confirmed the field order the
+CSV already implied (once corrected to the real edit-flow tab order,
+see above), so there is no UX reorder to propose here; default order
+stays Nick's throughout.
+
+### Template pattern note
+
+This allocation is the template pattern for all other asset types.
+Other types get allocated the same way (QUICK vs ADVANCED, one pass
+per type) only after their edit-flow rows are inventoried in the CSV;
+per enrichment pass B above, most other asset types do not yet have
+edit-flow rows recorded, which is the known gap this allocation
+depends on closing first.
+
 ## Flagged-row verification (item 6, 9 Aug 2026)
 
 All 15 rows carrying `status: broken`, `status: gated`, or a note
