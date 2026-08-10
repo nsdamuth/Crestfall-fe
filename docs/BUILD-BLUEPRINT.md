@@ -1127,6 +1127,25 @@ test.
 the Type multi-select dropdown, not a standalone facet dropdown. The
 standalone Remixable dropdown is retired.
 
+**(l) Content width law, RULED 10 Aug 2026 (kit polish 3 pass, R1).**
+One content width per page. The shell's section padding is the page
+container margin; heading block, sticky filter line, card grid and
+list, load-more, and bottom banner share the same left and right
+edges, flush to that margin, both layouts, every width. No max-width
+cap, no second padding layer, no element in a narrower column than
+the filter line. The `studio-page` kit package owns the skeleton;
+`studio-filter-bar`'s inner padding mirrors the shell padding token
+for token.
+
+**(m) Banner sizing law, RULED 10 Aug 2026 (kit polish 3 pass, R2),
+amends 2.3.** The bottom promo banner keeps its fixed per-treatment
+proportions and scales responsively with the content width. It is
+never narrower or shorter than the content above it.
+
+**(n) Page heading law, RULED 10 Aug 2026 (kit polish 3 pass, R6).**
+Eyebrow, title, and description left-aligned to the content edge; the
+separator beneath the block spans the full content width per (l).
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9

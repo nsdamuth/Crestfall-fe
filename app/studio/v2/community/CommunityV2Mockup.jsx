@@ -10,6 +10,7 @@
 // navigation.
 import { useMemo, useState } from "react";
 
+import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
@@ -230,27 +231,10 @@ export default function CommunityV2Mockup() {
   const toggleSaved = toggleId(setSavedIds);
   const toggleLovedOverlay = toggleId(setLovedOverlayIds);
 
-  // Page padding, RULED 10 Aug 2026 (kit polish 3 pass): every other
-  // section keeps the page's own max-w-container, centered, padded
-  // column; the sticky filter bar carries neither. A max-w wrapper
-  // centers itself with an mx-auto margin whenever the available
-  // column is wider than the cap, and that centering margin cannot
-  // be cancelled by a fixed-token negative margin the way ordinary
-  // padding can (its size depends on runtime viewport width, not a
-  // token). Nesting the bar inside the capped column was the root
-  // cause of its leftover inset (most visible with the sidebar
-  // collapsed, since collapsing frees enough width for the cap to
-  // engage at 1440 when it otherwise would not). The bar now sits
-  // outside every max-w wrapper, a full-width sibling that only has
-  // to escape StudioShell's own section padding (its negative margin
-  // below); its own inner padding keeps its controls visually
-  // aligned with the capped column around it.
-  const PAGE_COLUMN =
-    "mx-auto max-w-[var(--container)] px-[var(--space-4)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]";
-
   return (
-    <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+    <>
+    <KitStudioPageView
+      harnessSlot={
         <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
           <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             Fixture mode
@@ -270,97 +254,34 @@ export default function CommunityV2Mockup() {
             </button>
           ))}
         </div>
-
+      }
+      headerSlot={
         <StudioPageHeaderView
           eyebrow="Explore"
           title="Community"
           description="Every public creation the community has released. Discover, claim, and make it yours."
         />
-      </div>
-
-      <KitStudioFilterBarView
-        searchValue={searchValue}
-        searchPlaceholder="Search creations"
-        onSearchChange={(value) => {
-          setSearchValue(value);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        filterGroups={filterGroups}
-        selectedValues={selectedValues}
-        onFilterToggle={toggleFilter}
-        sortOptions={SORT_OPTIONS}
-        selectedSort={selectedSort}
-        onSortChange={setSelectedSort}
-        viewModeSlot={
-          <ViewModeToggleView value={layout} label="Layout" onChange={setLayout} />
-        }
-      />
-
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
-        {fixtureMode === "loading" && <LoadingGrid />}
-
-        {fixtureMode !== "loading" && filteredCreations.length === 0 && <EmptyState />}
-
-        {fixtureMode !== "loading" && filteredCreations.length > 0 && (
-          <>
-            <div
-              className={
-                layout === "grid"
-                  ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
-                  : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
-              }
-            >
-              {visibleCreations.map((creation) => (
-                <KitCreationCardView
-                  key={creation.id}
-                  layout={layout}
-                  assetKind={creation.assetKind}
-                  title={creation.title}
-                  subtitle={creation.subtitle}
-                  imageSrc={creation.imageSrc}
-                  badges={
-                    // Tag economy (2.16(c)): Canon always informs; no
-                    // visibility badge in this public context; never a
-                    // badge restating an active filter.
-                    creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []
-                  }
-                  stats={{
-                    plays: creation.plays,
-                    hearts: creation.hearts,
-                    saves: creation.saves,
-                    followers: null,
-                  }}
-                  liked={likedIds.includes(creation.id)}
-                  bookmarked={savedIds.includes(creation.id)}
-                  onOpenImageOverlay={() =>
-                    setOverlayImage({
-                      id: creation.id,
-                      imageSrc: creation.imageSrc,
-                      title: creation.title,
-                    })
-                  }
-                  onOpenAssetDetail={() => setAssetDetailId(creation.id)}
-                  onLike={() => toggleLiked(creation.id)}
-                  onBookmark={() => toggleSaved(creation.id)}
-                />
-              ))}
-            </div>
-
-            <KitLoadMoreView
-              isLoading={false}
-              hasMore={hasMore}
-              remainingCount={filteredCreations.length - visibleCount}
-              onLoadMore={() =>
-                setVisibleCount((count) =>
-                  Math.min(count + PAGE_SIZE, filteredCreations.length)
-                )
-              }
-            />
-          </>
-        )}
-      </div>
-
-      <div className={PAGE_COLUMN}>
+      }
+      filterBarSlot={
+        <KitStudioFilterBarView
+          searchValue={searchValue}
+          searchPlaceholder="Search creations"
+          onSearchChange={(value) => {
+            setSearchValue(value);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          filterGroups={filterGroups}
+          selectedValues={selectedValues}
+          onFilterToggle={toggleFilter}
+          sortOptions={SORT_OPTIONS}
+          selectedSort={selectedSort}
+          onSortChange={setSelectedSort}
+          viewModeSlot={
+            <ViewModeToggleView value={layout} label="Layout" onChange={setLayout} />
+          }
+        />
+      }
+      bannerSlot={
         <KitPromoBannerView
           treatment="bottom"
           bottomVariant="uniform"
@@ -377,9 +298,72 @@ export default function CommunityV2Mockup() {
           )}
           onCtaClick={() => {}}
         />
-      </div>
+      }
+    >
+      {fixtureMode === "loading" && <LoadingGrid />}
 
-      {overlayImage && (
+      {fixtureMode !== "loading" && filteredCreations.length === 0 && <EmptyState />}
+
+      {fixtureMode !== "loading" && filteredCreations.length > 0 && (
+        <>
+          <div
+            className={
+              layout === "grid"
+                ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
+                : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
+            }
+          >
+            {visibleCreations.map((creation) => (
+              <KitCreationCardView
+                key={creation.id}
+                layout={layout}
+                assetKind={creation.assetKind}
+                title={creation.title}
+                subtitle={creation.subtitle}
+                imageSrc={creation.imageSrc}
+                badges={
+                  // Tag economy (2.16(c)): Canon always informs; no
+                  // visibility badge in this public context; never a
+                  // badge restating an active filter.
+                  creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []
+                }
+                stats={{
+                  plays: creation.plays,
+                  hearts: creation.hearts,
+                  saves: creation.saves,
+                  followers: null,
+                }}
+                liked={likedIds.includes(creation.id)}
+                bookmarked={savedIds.includes(creation.id)}
+                onOpenImageOverlay={() =>
+                  setOverlayImage({
+                    id: creation.id,
+                    imageSrc: creation.imageSrc,
+                    title: creation.title,
+                  })
+                }
+                onOpenAssetDetail={() => setAssetDetailId(creation.id)}
+                onLike={() => toggleLiked(creation.id)}
+                onBookmark={() => toggleSaved(creation.id)}
+              />
+            ))}
+          </div>
+
+          <KitLoadMoreView
+            isLoading={false}
+            hasMore={hasMore}
+            remainingCount={filteredCreations.length - visibleCount}
+            onLoadMore={() =>
+              setVisibleCount((count) =>
+                Math.min(count + PAGE_SIZE, filteredCreations.length)
+              )
+            }
+          />
+        </>
+      )}
+    </KitStudioPageView>
+
+    {overlayImage && (
         <KitImageOverlay
           imageSrc={overlayImage.imageSrc}
           title={overlayImage.title}
@@ -418,6 +402,6 @@ export default function CommunityV2Mockup() {
           />
         );
       })()}
-    </div>
+    </>
   );
 }

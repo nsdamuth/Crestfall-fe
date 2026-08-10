@@ -49,10 +49,17 @@
 // margin only has one layer left to cancel: StudioShell's section,
 // matched breakpoint for breakpoint (`sm`/`lg`, StudioShell's own
 // keywords) and token for token so the two can never drift out of
-// sync silently. This bar's own inner padding is re-applied
-// separately on the app's content breakpoints (`min-[700px]`/
-// `min-[1100px]`) so its controls still align with the rest of the
-// page's content above and below it.
+// sync silently.
+//
+// Content width law, RULED 10 Aug 2026 (R1, kit polish 3 pass,
+// docs/BUILD-BLUEPRINT.md 2.16(l)): this bar's own inner padding now
+// mirrors StudioShell's section padding token for token, breakpoint
+// keyword for keyword (`px-[var(--space-5)] sm:px-[var(--space-8)]
+// lg:px-[var(--space-10)]`), replacing the prior
+// `min-[700px]`/`min-[1100px]` breakpoints and different token
+// steps. Page content no longer carries its own padded column (the
+// `studio-page` kit package owns the one content width); this bar is
+// simply the first consumer of the shared padding.
 import { useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
@@ -145,7 +152,7 @@ export default function KitStudioFilterBarView({
   viewModeSlot = null,
 }) {
   return (
-    <div className="sticky top-[var(--topbar-h)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-4)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]">
+    <div className="sticky top-[var(--topbar-h)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
       <SearchField
         value={searchValue}
         placeholder={searchPlaceholder}

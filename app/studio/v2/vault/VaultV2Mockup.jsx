@@ -11,6 +11,7 @@
 // calls, no real navigation.
 import { useMemo, useState } from "react";
 
+import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
@@ -125,9 +126,6 @@ function EmptyState() {
   );
 }
 
-const PAGE_COLUMN =
-  "mx-auto max-w-[var(--container)] px-[var(--space-4)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]";
-
 export default function VaultV2Mockup() {
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -234,8 +232,9 @@ export default function VaultV2Mockup() {
   }
 
   return (
-    <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+    <>
+    <KitStudioPageView
+      harnessSlot={
         <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
           <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             Fixture mode
@@ -255,36 +254,49 @@ export default function VaultV2Mockup() {
             </button>
           ))}
         </div>
-
+      }
+      headerSlot={
         <StudioPageHeaderView
           eyebrow="Create"
           title="Vault"
           description="Everything yours, and everything you have claimed, always findable."
         />
-      </div>
-
-      <KitStudioFilterBarView
-        searchValue={searchValue}
-        searchPlaceholder="Search your vault"
-        onSearchChange={(value) => {
-          setSearchValue(value);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        filterGroups={filterGroups}
-        selectedValues={selectedValues}
-        onFilterToggle={toggleFilter}
-        sortOptions={SORT_OPTIONS}
-        selectedSort={selectedSort}
-        onSortChange={(value) => {
-          setSelectedSort(value);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        viewModeSlot={
-          <ViewModeToggleView value={layout} label="Layout" onChange={setLayout} />
-        }
-      />
-
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+      }
+      filterBarSlot={
+        <KitStudioFilterBarView
+          searchValue={searchValue}
+          searchPlaceholder="Search your vault"
+          onSearchChange={(value) => {
+            setSearchValue(value);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          filterGroups={filterGroups}
+          selectedValues={selectedValues}
+          onFilterToggle={toggleFilter}
+          sortOptions={SORT_OPTIONS}
+          selectedSort={selectedSort}
+          onSortChange={(value) => {
+            setSelectedSort(value);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          viewModeSlot={
+            <ViewModeToggleView value={layout} label="Layout" onChange={setLayout} />
+          }
+        />
+      }
+      bannerSlot={
+        <KitPromoBannerView
+          treatment="bottom"
+          bottomVariant="uniform"
+          eyebrow="Explore"
+          title="See what the rest of the realm has released."
+          line=""
+          ctaLabel="Browse the Community"
+          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
+          onCtaClick={() => {}}
+        />
+      }
+    >
         {fixtureMode === "loading" && <LoadingGrid />}
 
         {fixtureMode !== "loading" && filteredItems.length === 0 && <EmptyState />}
@@ -335,60 +347,47 @@ export default function VaultV2Mockup() {
             />
           </>
         )}
-      </div>
+    </KitStudioPageView>
 
-      <div className={PAGE_COLUMN}>
-        <KitPromoBannerView
-          treatment="bottom"
-          bottomVariant="uniform"
-          eyebrow="Explore"
-          title="See what the rest of the realm has released."
-          line=""
-          ctaLabel="Browse the Community"
-          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
-          onCtaClick={() => {}}
-        />
-      </div>
+    {overlayImage && (
+      <KitImageOverlay
+        imageSrc={overlayImage.imageSrc}
+        title={overlayImage.title}
+        isLoved={false}
+        isSaved={savedIds.includes(overlayImage.id)}
+        onLove={() => {}}
+        onSave={() => toggleSaved(overlayImage.id)}
+        onShare={() => {}}
+        onClose={() => setOverlayImage(null)}
+      />
+    )}
 
-      {overlayImage && (
-        <KitImageOverlay
-          imageSrc={overlayImage.imageSrc}
-          title={overlayImage.title}
-          isLoved={false}
-          isSaved={savedIds.includes(overlayImage.id)}
-          onLove={() => {}}
-          onSave={() => toggleSaved(overlayImage.id)}
+    {assetDetailId && (() => {
+      const item = FIXTURE_VAULT_ITEMS.find((entry) => entry.id === assetDetailId);
+      if (!item) return null;
+
+      return (
+        <KitAssetDetailPopup
+          assetKind={item.assetKind}
+          title={item.title}
+          subtitle={item.subtitle}
+          imageSrc={item.imageSrc}
+          badges={badgesFor(item)}
+          stats={{
+            plays: item.plays,
+            hearts: item.hearts,
+            saves: item.saves,
+            followers: null,
+          }}
+          description={item.description}
+          isSaved={savedIds.includes(item.id)}
+          onPrimaryAction={() => {}}
           onShare={() => {}}
-          onClose={() => setOverlayImage(null)}
+          onSave={() => toggleSaved(item.id)}
+          onClose={() => setAssetDetailId(null)}
         />
-      )}
-
-      {assetDetailId && (() => {
-        const item = FIXTURE_VAULT_ITEMS.find((entry) => entry.id === assetDetailId);
-        if (!item) return null;
-
-        return (
-          <KitAssetDetailPopup
-            assetKind={item.assetKind}
-            title={item.title}
-            subtitle={item.subtitle}
-            imageSrc={item.imageSrc}
-            badges={badgesFor(item)}
-            stats={{
-              plays: item.plays,
-              hearts: item.hearts,
-              saves: item.saves,
-              followers: null,
-            }}
-            description={item.description}
-            isSaved={savedIds.includes(item.id)}
-            onPrimaryAction={() => {}}
-            onShare={() => {}}
-            onSave={() => toggleSaved(item.id)}
-            onClose={() => setAssetDetailId(null)}
-          />
-        );
-      })()}
-    </div>
+      );
+    })()}
+    </>
   );
 }

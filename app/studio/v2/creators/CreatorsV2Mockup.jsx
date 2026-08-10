@@ -8,6 +8,7 @@
 // page composition. No live data, no API calls, no real navigation.
 import { useMemo, useState } from "react";
 
+import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
@@ -95,9 +96,6 @@ function EmptyState() {
   );
 }
 
-const PAGE_COLUMN =
-  "mx-auto max-w-[var(--container)] px-[var(--space-4)] min-[700px]:px-[var(--space-6)] min-[1100px]:px-[var(--space-10)]";
-
 export default function CreatorsV2Mockup() {
   const [fixtureMode, setFixtureMode] = useState("default");
   const [searchValue, setSearchValue] = useState("");
@@ -141,8 +139,9 @@ export default function CreatorsV2Mockup() {
   }
 
   return (
-    <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+    <>
+    <KitStudioPageView
+      harnessSlot={
         <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
           <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             Fixture mode
@@ -162,33 +161,46 @@ export default function CreatorsV2Mockup() {
             </button>
           ))}
         </div>
-
+      }
+      headerSlot={
         <StudioPageHeaderView
           eyebrow="Explore"
           title="Creators"
           description="Find whose worlds you love and keep them close."
         />
-      </div>
-
-      <KitStudioFilterBarView
-        searchValue={searchValue}
-        searchPlaceholder="Search creators"
-        onSearchChange={(value) => {
-          setSearchValue(value);
-          setVisibleCount(PAGE_SIZE);
-        }}
-        filterGroups={[]}
-        selectedValues={{}}
-        onFilterToggle={() => {}}
-        sortOptions={SORT_OPTIONS}
-        selectedSort={selectedSort}
-        onSortChange={(value) => {
-          setSelectedSort(value);
-          setVisibleCount(PAGE_SIZE);
-        }}
-      />
-
-      <div className={`flex flex-col gap-[var(--space-6)] ${PAGE_COLUMN}`}>
+      }
+      filterBarSlot={
+        <KitStudioFilterBarView
+          searchValue={searchValue}
+          searchPlaceholder="Search creators"
+          onSearchChange={(value) => {
+            setSearchValue(value);
+            setVisibleCount(PAGE_SIZE);
+          }}
+          filterGroups={[]}
+          selectedValues={{}}
+          onFilterToggle={() => {}}
+          sortOptions={SORT_OPTIONS}
+          selectedSort={selectedSort}
+          onSortChange={(value) => {
+            setSelectedSort(value);
+            setVisibleCount(PAGE_SIZE);
+          }}
+        />
+      }
+      bannerSlot={
+        <KitPromoBannerView
+          treatment="bottom"
+          bottomVariant="uniform"
+          eyebrow="Explore"
+          title="Read the world the community is writing."
+          line=""
+          ctaLabel="Read the lore"
+          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
+          onCtaClick={() => {}}
+        />
+      }
+    >
         {fixtureMode === "loading" && <LoadingGrid />}
 
         {fixtureMode !== "loading" && filteredCreators.length === 0 && <EmptyState />}
@@ -236,33 +248,20 @@ export default function CreatorsV2Mockup() {
             />
           </>
         )}
-      </div>
+    </KitStudioPageView>
 
-      <div className={PAGE_COLUMN}>
-        <KitPromoBannerView
-          treatment="bottom"
-          bottomVariant="uniform"
-          eyebrow="Explore"
-          title="Read the world the community is writing."
-          line=""
-          ctaLabel="Read the lore"
-          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
-          onCtaClick={() => {}}
-        />
-      </div>
-
-      {overlayImage && (
-        <KitImageOverlay
-          imageSrc={overlayImage.imageSrc}
-          title={overlayImage.title}
-          isLoved={false}
-          isSaved={false}
-          onLove={() => {}}
-          onSave={() => {}}
-          onShare={() => {}}
-          onClose={() => setOverlayImage(null)}
-        />
-      )}
-    </div>
+    {overlayImage && (
+      <KitImageOverlay
+        imageSrc={overlayImage.imageSrc}
+        title={overlayImage.title}
+        isLoved={false}
+        isSaved={false}
+        onLove={() => {}}
+        onSave={() => {}}
+        onShare={() => {}}
+        onClose={() => setOverlayImage(null)}
+      />
+    )}
+    </>
   );
 }
