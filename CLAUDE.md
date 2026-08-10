@@ -11,10 +11,15 @@ rules of its own. It points. Read it first, every session.
    working with Brian, progressive-context files, parallelism law, QA
    gate, contract law, definition of done, PR checklist, backend
    contract handoff.
-3. Any active sprint plan in `docs/` (e.g. `docs/SPRINT-3-PLAN.md`):
+3. `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`: the current product model.
+   Reissued 9 Aug 2026, it supersedes `docs/CRESTFALL-PRODUCT-MODEL.md`
+   for page architecture, the nine-page information architecture, and
+   the strangler migration strategy. Living document: verify its
+   assumptions against the live system before building against it.
+4. Any active sprint plan in `docs/` (e.g. `docs/SPRINT-3-PLAN.md`):
    the current phases and manifest.
 
-Those three are the only documents an agent follows as law.
+Those four are the only documents an agent follows as law.
 
 ## Standing reference docs
 

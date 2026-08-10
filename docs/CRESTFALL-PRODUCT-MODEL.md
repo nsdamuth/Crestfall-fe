@@ -1,5 +1,13 @@
 # Crestfall product model
 
+> **SUPERSEDED, 9 Aug 2026.** `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` is
+> the current product model for page architecture, the nine-page
+> information architecture, shared component patterns, and the
+> strangler migration strategy. This file is kept for the unit ladder
+> (assets, Story, Adventure) and the visibility model, which the UXUI
+> doc restates and does not contradict. Where this file and the UXUI
+> doc disagree, the UXUI doc wins.
+
 Canonical definition of what Crestfall is made of and what each
 destination is for. Ruled 4 Aug 2026. Supersedes the product model
 section of CRESTFALL-DESIGN-CONTEXT.md and the product model section
