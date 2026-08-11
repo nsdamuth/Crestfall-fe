@@ -7,6 +7,7 @@
 // (filter bar, load-more), introduces the creator-card species in
 // page composition. No live data, no API calls, no real navigation.
 import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -100,6 +101,7 @@ function EmptyState() {
 }
 
 export default function CreatorsV2Mockup() {
+  const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
   const [searchValue, setSearchValue] = useState("");
   const [selectedSort, setSelectedSort] = useState("followers");
@@ -185,15 +187,15 @@ export default function CreatorsV2Mockup() {
             setOverlayImage({ id: thumbnailId, imageSrc: thumbnail, title: creator.handle });
           }
         },
-        onViewProfile: () =>
-          setActionNotice({
-            label: "View profile",
-            message: `Opening ${creator.handle}'s full profile is wired when live wiring lands. Nothing was opened in this preview.`,
-          }),
+        // Hub link-up (Creators profile-detail brief, section 6):
+        // routes to the new /studio/v2/creators/[handle] page, the
+        // smallest edit that wires this without touching
+        // components/kit/creator-card (out of this pass's file set).
+        onViewProfile: () => router.push(`/studio/v2/creators/${creator.handle.replace(/^@/, "")}`),
       });
     }
     return map;
-  }, [toggleFollowing]);
+  }, [toggleFollowing, router]);
 
   return (
     <>
