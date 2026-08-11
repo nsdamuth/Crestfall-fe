@@ -1,6 +1,6 @@
 # Kit Asset Detail Popup LOOM package
 
-**Contract:** `KitAssetDetailPopup.contract.js` (`2.2.0`)
+**Contract:** `KitAssetDetailPopup.contract.js` (`2.3.0`)
 
 ## Purpose
 
@@ -113,18 +113,31 @@ position is preserved when the credits modal closes.
   four-action footer stays pixel-stable everywhere else (Community and
   every non-owner context).
 
-## v2.2.0, RULED 11 Aug 2026 (design/community-parity)
+## v2.2.0, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio brief S5)
 
-Restores the parity audit's candidate 6 leftovers (`docs/PARITY-AUDIT.md`
-section 5) for `/studio/v2/community`: optional `creator: {handle, href}`
-ADDED, rendering the old modal's "by @handle" line under the subtitle
-(linked when `href` is present, plain text otherwise); optional
-`tags: string[]` ADDED, rendering the old modal's tag pill row between
-the description/stats block and credits. Both default to `null`/`[]`
-and render nothing when absent, so every existing consumer (Vault,
-Stories) that does not pass them stays pixel-stable. The credits
-block's existing `creditsLinkComponent` prop is reused for the
-creator-handle link rather than adding a second link-component prop.
+Optional `onEdit` ADDED, the fifth footer action described above (see
+Anatomy > Footer).
+
+## v2.3.0, RULED 11 Aug 2026: reconciliation of two independent 2.2.0 drafts
+
+design/sprint-h-final and design/community-parity each bumped this
+contract from 2.1.0 to 2.2.0 independently, with different additions.
+2.3.0 is the union of both, merged whole, nothing dropped:
+
+- From **design/sprint-h-final**: optional `onEdit`, the fifth footer
+  action (v2.2.0 above).
+- From **design/community-parity**, restoring the parity audit's
+  candidate 6 leftovers (`docs/PARITY-AUDIT.md` section 5) for
+  `/studio/v2/community`: optional `creator: {handle, href}` ADDED,
+  rendering the old modal's "by @handle" line under the subtitle
+  (linked when `href` is present, plain text otherwise); optional
+  `tags: string[]` ADDED, rendering the old modal's tag pill row
+  between the description/stats block and credits. Both default to
+  `null`/`[]` and render nothing when absent, so every existing
+  consumer (Vault, Stories) that does not pass them stays
+  pixel-stable. The credits block's existing `creditsLinkComponent`
+  prop is reused for the creator-handle link rather than adding a
+  second link-component prop.
 
 `tags` ships with no live data source: the Community page's fixture
 model carries no tag field on any creation (CR-037, filed

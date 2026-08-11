@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.2.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.3.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -19,7 +19,15 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.2.0";
  * old modal's own order (credits after description and tags, before
  * actions).
  *
- * v2.2.0, RULED 11 Aug 2026 (design/community-parity, restoring the
+ * v2.2.0, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio
+ * brief S5): optional `onEdit` ADDED, rendering a fifth footer action,
+ * Edit, only when provided.
+ *
+ * v2.3.0, RULED 11 Aug 2026: reconciles two independent 2.2.0 drafts
+ * that diverged from the same 2.1.0 base (design/sprint-h-final and
+ * design/community-parity), merged whole, nothing dropped. From
+ * design/sprint-h-final: optional `onEdit`, the fifth footer action
+ * documented above. From design/community-parity (restoring the
  * parity audit's candidate 6 leftovers for /studio/v2/community):
  * optional `tags` and `creator` ADDED. `tags` renders a pill row
  * matching the old preview modal's tag treatment, between the
@@ -76,10 +84,10 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.2.0";
  *   three kinds (R9)
  * @property {string} title rendered in the body, not over art (R8)
  * @property {string} subtitle body, under the title
- * @property {KitAssetDetailPopupCreator|null} creator optional (v2.2.0),
+ * @property {KitAssetDetailPopupCreator|null} creator optional (v2.3.0),
  *   default null; renders "by @handle" under the subtitle, matching
  *   the old preview modal's creator-handle link
- * @property {string[]} tags optional (v2.2.0), default []; renders a
+ * @property {string[]} tags optional (v2.3.0), default []; renders a
  *   pill row between the description/stats block and credits,
  *   matching the old preview modal's tag treatment
  * @property {KitAssetDetailPopupMediaItem[]} media carousel media,
