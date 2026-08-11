@@ -91,6 +91,19 @@ on every existing consumer, pixel-stable. First consumer: Home's top
 continue banner, filled state only (`app/studio/v2/home/home/
 Home.view.jsx`), routing to `/studio/v2/stories`.
 
+## Compact continue row, RULED 11 Aug 2026 (Stories continue group density)
+
+`KitContinueRow.view.jsx`, a sibling file in this same folder, not
+part of the `KitPromoBannerView` contract (a different shape, list
+row rather than banner/hero, no version number of its own). Small art
+thumbnail left, title, "Last played" line, Continue button right,
+full content width, list-density height. Pairs with the continue
+banner: only the most recent in-progress item renders as the full
+banner, every other in-progress item renders as this row instead of a
+second stacked banner. First consumer: Stories
+(`app/studio/v2/stories/StoriesV2Mockup.jsx`); Home may reuse it
+later for its own continue surface.
+
 ## Package assets
 
 - `KitPromoBanner.contract.js`

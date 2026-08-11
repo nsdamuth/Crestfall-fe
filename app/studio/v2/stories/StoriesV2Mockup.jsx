@@ -14,6 +14,7 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
+import KitContinueRowView from "@/components/kit/promo-banner/KitContinueRow.view";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import { CheckSquare, Square } from "lucide-react";
@@ -106,7 +107,17 @@ const SORT_OPTIONS = [
   { value: "title", label: "Title A to Z" },
 ];
 
-const FIXTURE_MODES = { default: "Default", empty: "Empty", loading: "Loading", error: "Error" };
+const FIXTURE_MODES = {
+  default: "Default",
+  // Continue group density (RULED 11 Aug 2026): a dedicated one-item
+  // state proves the banner-only shape (no compact rows, no Show all
+  // control) as distinctly as the default four-item state proves
+  // banner-plus-compact-rows.
+  singleContinue: "1 in progress",
+  empty: "Empty",
+  loading: "Loading",
+  error: "Error",
+};
 
 // Search restores original field coverage (title, subtitle, type,
 // status, visibility, rating, scenario, narrator, location, last
@@ -262,9 +273,11 @@ export default function StoriesV2Mockup() {
   const continueItems = useMemo(() => {
     if (fixtureMode === "empty" || fixtureMode === "error") return [];
     const query = searchValue.trim().toLowerCase();
-    return FIXTURE_STORIES.filter((item) => item.isContinue).filter(
-      (item) => !query || searchableText(item).includes(query)
-    );
+    const source =
+      fixtureMode === "singleContinue"
+        ? FIXTURE_STORIES.filter((item) => item.isContinue).slice(0, 1)
+        : FIXTURE_STORIES.filter((item) => item.isContinue);
+    return source.filter((item) => !query || searchableText(item).includes(query));
   }, [fixtureMode, searchValue]);
 
   // Templates and Archived stay out of the default startable shelf,
@@ -543,18 +556,37 @@ export default function StoriesV2Mockup() {
 
         {fixtureMode !== "loading" && fixtureMode !== "error" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
-            {visibleContinueItems.map((item) => (
-              <ContinueCard
-                key={item.id}
-                item={item}
-                onContinue={() =>
-                  setActionNotice({
-                    label: "Continue",
-                    message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
-                  })
-                }
-              />
-            ))}
+            {/* Continue group density, RULED 11 Aug 2026: only the
+                most recent in-progress item renders as the full
+                banner; every other in-progress item renders as a
+                compact row instead of a second stacked banner. */}
+            <ContinueCard
+              item={visibleContinueItems[0]}
+              onContinue={() =>
+                setActionNotice({
+                  label: "Continue",
+                  message: `Resuming "${visibleContinueItems[0].title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
+                })
+              }
+            />
+            {visibleContinueItems.length > 1 && (
+              <div className="flex flex-col gap-[var(--space-2)]">
+                {visibleContinueItems.slice(1).map((item) => (
+                  <KitContinueRowView
+                    key={item.id}
+                    title={item.title}
+                    lastPlayedLabel={`Last played ${item.lastPlayed} · ${KIND_LABELS[item.kind]}`}
+                    imageSrc={item.imageSrc}
+                    onContinue={() =>
+                      setActionNotice({
+                        label: "Continue",
+                        message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
+                      })
+                    }
+                  />
+                ))}
+              </div>
+            )}
             {!continueExpanded && continueItems.length > CONTINUE_VISIBLE_CAP && (
               <button
                 type="button"
