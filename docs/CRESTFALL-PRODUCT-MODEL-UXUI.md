@@ -84,7 +84,7 @@ Each page below states its purpose, primary layout, key components, and the user
 
 ### Play
 
-**4.1 Home.** Purpose: the guidepost. Layout: a dynamic feed aggregating from every other section, personalized to the account: continue-playing cards, new releases, community highlights, creator activity, fresh lore. Every card routes outward; Home holds no content of its own. Signed-out visitors receive an editorial (non-personalized) version. Journey: land, orient, and step into whichever section calls.
+**4.1 Home.** Purpose: the guidepost, not a dashboard and not an editorial front page. **Layout, RULED 10 Aug 2026** (amends the earlier "dynamic feed" description below; full detail: `docs/CRESTFALL-DESIGN-CONTEXT.md`, `docs/SPRINT-G-PLAN.md` section 1): top to bottom, a medium top banner (galaxy layer on); a Continue strip that renders nothing when nothing is in progress; a block of eight destination tiles covering every other section; four curated rails (top rated, recently added, from the community, creators to follow); a medium bottom banner routing to Stories. Every card and tile routes outward; Home holds no content of its own. Journey: land, orient, and step into whichever section calls.
 
 **4.2 Stories.** Purpose: play history and next session in one place. Layout: the Continue group leads (every in-progress Story and Adventure, newest activity first, one tap resumes the chat), then the startable shelf: playable Characters, Stories, and Adventures across all visibilities the user can access (own private work, saved public work, link-shared Internal work). Journey: open Stories, resume in one tap, or choose what to start next.
 
