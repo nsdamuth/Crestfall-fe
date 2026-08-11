@@ -11,7 +11,7 @@ function StatRow({ stats }) {
   if (!entries.length) return null;
 
   return (
-    <div className="flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
+    <div className="flex flex-wrap items-center gap-[var(--space-2)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
       {entries.map(([key, value]) => {
         const Icon = STAT_ICONS[key];
         return (
@@ -104,7 +104,7 @@ export default function KitCreatorCardView({
         </div>
       )}
 
-      <div className="flex gap-[var(--space-2)]">
+      <div className="flex flex-wrap gap-[var(--space-2)]">
         <RectButton
           label={isFollowing ? "Following" : "Follow"}
           tone={isFollowing ? "primary" : "ghost"}

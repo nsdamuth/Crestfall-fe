@@ -25,7 +25,7 @@ const TOP_BANNER = {
   eyebrow: "Crestfall Chronicles",
   title: "The realm under one sky.",
   ctaLabel: "Start exploring",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
   onCtaClick: noop,
 };
 
@@ -33,7 +33,7 @@ const BOTTOM_BANNER = {
   eyebrow: "Play",
   title: "Worlds worth committing to.",
   ctaLabel: "Browse Stories",
-  imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
   onCtaClick: noop,
 };
 
@@ -58,7 +58,9 @@ const SORT_CONTROL = {
 
 const DESTINATION_TILES = HOME_DESTINATION_TILES.map((tile) => ({ ...tile, onOpen: noop }));
 
-// Full page: every section populated, the ruled default state.
+// Full page: every section populated, the ruled default state. With
+// continueItem present, the one top banner shows the continue-state
+// content (RULED 10 Aug 2026, docs/SPRINT-H-PLAN.md 1a).
 export const homeFullPageFixture = {
   topBanner: TOP_BANNER,
   continueItem: CONTINUE_ITEM,
@@ -73,8 +75,10 @@ export const homeFullPageFixture = {
   onCloseNotice: noop,
 };
 
-// Empty Continue strip: nothing in progress. Ruled to render nothing
-// at all, not an empty-state placeholder.
+// Empty Continue: nothing in progress. Ruled (docs/SPRINT-H-PLAN.md
+// 1a): the one top banner falls back to the general hero (Eden art,
+// stubbed "Start exploring" CTA) rather than rendering a second empty
+// surface.
 export const homeEmptyContinueFixture = {
   ...homeFullPageFixture,
   continueItem: null,
@@ -82,10 +86,9 @@ export const homeEmptyContinueFixture = {
 
 // Empty rails: every rail has zero cards. Ruled (empty-rail law,
 // docs/BUILD-BLUEPRINT.md 2.18): a rail with nothing in it renders
-// nothing at all, head included. Continue strip also empties here so
-// this state demonstrates both empty-rail law and the empty-Continue
-// law rendering nothing at once, leaving only the two banners and the
-// destination tiles.
+// nothing at all, head included. Continue is also empty here (the top
+// banner falls back to the general hero), leaving only the top
+// banner, the destination tiles, and the bottom banner.
 export const homeEmptyRailsFixture = {
   ...homeFullPageFixture,
   continueItem: null,

@@ -47,6 +47,16 @@ Card surface rest/hover/focus-within. Each thumbnail and both buttons
 carry their own five states; Follow additionally carries a
 following/not-following visual (filled gold vs ghost).
 
+## Narrow-seat hardening, RULED 10 Aug 2026 (Home fix wave,
+`docs/SPRINT-H-PLAN.md` 1d)
+
+The stat row and the action-button row each allow wrapping
+(`flex-wrap`) instead of overflowing when their seat is narrower than
+their content. No visual change at healthy widths (the widest fixture
+measures 256px natural, under every rail cell this card ships in); the
+wrap only engages if a future seat is narrower still. No contract
+change.
+
 ## Package assets
 
 - `KitCreatorCard.contract.js`

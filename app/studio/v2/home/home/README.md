@@ -1,6 +1,6 @@
 # Home LOOM package
 
-**Contract:** `Home.contract.js` (v1.0.0)
+**Contract:** `Home.contract.js` (v2.0.0)
 
 ## Purpose
 
@@ -21,7 +21,7 @@ Home.jsx (Shell, ../Home.jsx)
       -> owns like/save/follow toggles, sort selection, the R4 notice
   -> Home.view.jsx
       -> KitStudioPageView (bannerSlot = bottom banner, children = rest)
-      -> KitPromoBannerView x3 (top, card, bottom treatments)
+      -> KitPromoBannerView x2 (top, bottom treatments)
       -> KitDestinationTileView x8
       -> KitRailView x4 (creation-card / creator-card children,
          KitDropdownView seated in the top rail's head control slot only)
@@ -33,16 +33,28 @@ the ViewModel, which itself never imports `next/navigation` (the
 Shell owns that boundary, per `docs/CRESTFALL-DESIGN-CONTEXT.md`'s
 LOOM shape).
 
-## Composition order, ruled and exhaustive
+## Composition order, ruled and exhaustive (seven surfaces)
 
-Medium top banner (promo-banner `top` treatment, galaxy layer on) ->
-Continue strip (renders nothing when nothing is in progress) -> eight
-destination tiles, one per other section, in journey order -> four
-`KitRail` instances (top rated, recently added, from the community,
-creators to follow), the top rail alone seating the sort dropdown ->
-medium bottom banner (`bottom` treatment) routing to Stories. No
-filter line, no local search; the sort control is Home's one control
-beyond navigation.
+RULED 10 Aug 2026 (Home fix wave, `docs/SPRINT-H-PLAN.md` 1a): one
+top banner (promo-banner `top` treatment, galaxy layer always on),
+the continue surface -> eight destination tiles, one per other
+section, in journey order -> four `KitRail` instances (top rated,
+recently added, from the community, creators to follow), the top
+rail alone seating the sort dropdown -> medium bottom banner
+(`bottom` treatment) routing to Stories. No filter line, no local
+search; the sort control is Home's one control beyond navigation.
+
+The separate card-treatment Continue strip is REMOVED. The one top
+banner is now the continue surface: with an item in progress
+(`continueItem` set) the banner shows eyebrow "Continue", the item's
+title, a "Last played" supporting line, CTA "Continue" wired to the
+item's resume callback, and the item's own art (falling back to the
+hero art when the item has none). With nothing in progress the
+banner falls back to the general hero (the existing
+eyebrow/title/CTA content on the Eden artwork). This logic lives in
+`Home.view.jsx`, which chooses between the two supplied prop sets;
+`KitPromoBannerView` itself is unchanged and unaware of Home's
+continue state.
 
 ## Destination tiles, routing
 
@@ -54,12 +66,30 @@ than a dead link or a fabricated page.
 
 ## Empty-state laws
 
-- **Continue strip.** Empty renders nothing at all (no wrapper, no
-  placeholder), matching the rail precedent.
+- **Continue.** Empty (`continueItem` null) is not a missing surface;
+  the one top banner falls back to the general hero content and art,
+  never a placeholder.
 - **Rails.** Empty-rail law (`docs/BUILD-BLUEPRINT.md` 2.18): a rail
   with nothing in it renders nothing at all, head included. `KitRail`
   enforces this itself; the ViewModel only ever passes an empty
   `items` array, never renders a placeholder card.
+
+## Banner art, RULED 10 Aug 2026 (Home fix wave, `docs/SPRINT-H-PLAN.md` 1b/1c)
+
+Both banners' stand-in art moved off shared creator-tile crops onto
+art located in the crestfall-main sibling checkout's hero mockup
+(`Crestfall/out/draft-site/proof/studio-home.html`), copied per the
+sample-art mechanism (`docs/FRONTEND-SOP.md` section 7): resized to
+1280px wide, compressed, placed in
+`public/tmp-mockup-images/canon-character-images/`, filenames added
+to the `.gitignore` allowlist.
+
+- Top banner (general-hero fallback): `lilith-lux-eden-confrontation.png`,
+  the Eden confrontation art (source: `lilith-lux-eden-confrontation.png`,
+  `crestfall-design-system/assets/`).
+- Bottom banner: `athelgard-ampitheater-profile.png`, the Aethelgard
+  amphitheater art, landscape orientation (source filename kept for
+  traceability).
 
 ## CR-029, open
 

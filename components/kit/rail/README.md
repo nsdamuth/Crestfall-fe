@@ -114,11 +114,29 @@ scroll-padding inset are `--space-3/4/5`.
 
 Item cells are percentage based: `calc((100% - N * gutter) / (N +
 0.4))`, yielding N full cards plus a 0.4-card peek of the next as the
-more-content signal. 2 cards under 700px, 3 at `min-[700px]`, 4 at
-`min-[1100px]`. Both card kinds share the same cell width;
-creation-card fills it and derives height from its own
-`aspect-[3/4]`, creator-card fills it at its intrinsic height. Cells
-use `items-stretch` so creator cards in one rail equalize height.
+more-content signal. 3 cards at `min-[700px]`, 4 at `min-[1100px]`.
+Both card kinds share the same cell width; creation-card fills it and
+derives height from its own `aspect-[3/4]`, creator-card fills it at
+its intrinsic height. Cells use `items-stretch` so creator cards in
+one rail equalize height.
+
+**Phone tier, RULED 10 Aug 2026 (Home fix wave, `docs/SPRINT-H-PLAN.md`
+1d).** Below 700px the tier moved from 2.4 to 1.4 cards in view (one
+full card plus the ruled 0.4-card peek), a 136px to 247px cell change
+at 390. Diagnosed cause: the creator card's measured content minimum
+(227 to 256px, a nowrap stat row plus two nowrap action buttons) and
+the creation-rail overlay actions at the coarse-pointer 44px floor
+both exceed a 136px cell, so cards refused to shrink and overlapped
+their neighbor by about 108px. No smaller change satisfies the mobile
+law (fully functional and comfortable at 390, nothing overflows): at
+2.4 the three 44px overlay actions alone exceed the card, and the peek
+law (0.4 at every tier) permits no width between the two tiers. Tablet
+and desktop tiers are untouched. Package-local CSS change, no contract
+change.
+
+The rail head's `View all` control also gained the 44px touch floor
+at coarse pointers (`min-height` to `--control-md` via the coarse
+pointer media query; visual size at fine pointers is unchanged).
 
 ## Package assets
 

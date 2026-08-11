@@ -23,7 +23,7 @@ import { Children, useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CELL_WIDTH_CLASSES =
-  "w-[calc((100%-2*var(--space-3))/2.4)] min-[700px]:w-[calc((100%-3*var(--space-4))/3.4)] min-[1100px]:w-[calc((100%-4*var(--space-5))/4.4)]";
+  "w-[calc((100%-1*var(--space-3))/1.4)] min-[700px]:w-[calc((100%-3*var(--space-4))/3.4)] min-[1100px]:w-[calc((100%-4*var(--space-5))/4.4)]";
 
 const SCROLL_PADDING_CLASSES =
   "[scroll-padding-inline:var(--space-3)] min-[700px]:[scroll-padding-inline:var(--space-4)] min-[1100px]:[scroll-padding-inline:var(--space-5)]";
@@ -116,7 +116,7 @@ export default function KitRailView({
           <button
             type="button"
             onClick={() => onViewAll()}
-            className="kit-focus ml-auto flex-none rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline min-[700px]:ml-0"
+            className="kit-focus ml-auto inline-flex flex-none items-center rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline min-[700px]:ml-0 [@media(pointer:coarse)]:min-h-[var(--control-md)]"
           >
             {viewAllLabel}
           </button>

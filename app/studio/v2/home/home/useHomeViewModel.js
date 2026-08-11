@@ -23,14 +23,14 @@ const TOP_BANNER = {
   eyebrow: "Crestfall Chronicles",
   title: "The realm under one sky.",
   ctaLabel: "Start exploring",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
 };
 
 const BOTTOM_BANNER = {
   eyebrow: "Play",
   title: "Worlds worth committing to.",
   ctaLabel: "Browse Stories",
-  imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 };
 
 export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {}) {
