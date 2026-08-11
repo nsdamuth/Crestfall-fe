@@ -110,7 +110,7 @@ export default function KitCreatorCardView({
           tone={isFollowing ? "primary" : "ghost"}
           onClick={onFollow}
         />
-        <RectButton label="Profile" tone="ghost" onClick={onViewProfile} />
+        <RectButton label="View profile" tone="ghost" onClick={onViewProfile} />
       </div>
     </article>
   );

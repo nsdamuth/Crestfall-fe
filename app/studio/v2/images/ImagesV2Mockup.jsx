@@ -91,6 +91,7 @@ const STYLE_OPTIONS = [
 
 const SORT_OPTIONS = [
   { value: "recent", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
   { value: "hearts", label: "Most hearted" },
   { value: "saved", label: "Most saved" },
 ];
@@ -324,6 +325,8 @@ export default function ImagesV2Mockup() {
       sorted.sort((a, b) => b.hearts - a.hearts);
     } else if (selectedSort === "saved") {
       sorted.sort((a, b) => b.saves - a.saves);
+    } else if (selectedSort === "oldest") {
+      sorted.sort((a, b) => a.recency - b.recency);
     } else {
       sorted.sort((a, b) => b.recency - a.recency);
     }
