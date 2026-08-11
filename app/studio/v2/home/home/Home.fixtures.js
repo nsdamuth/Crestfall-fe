@@ -1,0 +1,96 @@
+// Local, deterministic View-shaped fixtures (docs/FRONTEND-SOP.md
+// section 1, LOOM item 5): the three states named by
+// docs/SPRINT-G-PLAN.md's Home brief. Built directly from
+// useHomeViewModel's shape rather than re-deriving from
+// homeContent.mock.js, so these exercise the View in isolation
+// (preview route, section 1 item 6) without mounting the hook.
+import {
+  HOME_CREATORS_TO_FOLLOW_ITEMS,
+  HOME_DESTINATION_TILES,
+  HOME_FROM_THE_COMMUNITY_ITEMS,
+  HOME_RECENTLY_ADDED_ITEMS,
+  HOME_SORT_OPTIONS,
+  HOME_TOP_RATED_ITEMS,
+} from "./homeContent.mock";
+
+const noop = () => {};
+
+function decorate(item) {
+  return item.cardKind === "creator"
+    ? { ...item, onThumbnailOpen: noop, onFollow: noop, onViewProfile: noop }
+    : { ...item, onOpenImageOverlay: noop, onOpenAssetDetail: noop, onLike: noop, onBookmark: noop };
+}
+
+const TOP_BANNER = {
+  eyebrow: "Crestfall Chronicles",
+  title: "The realm under one sky.",
+  ctaLabel: "Start exploring",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  onCtaClick: noop,
+};
+
+const BOTTOM_BANNER = {
+  eyebrow: "Play",
+  title: "Worlds worth committing to.",
+  ctaLabel: "Browse Stories",
+  imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png"),
+  onCtaClick: noop,
+};
+
+const CONTINUE_ITEM = {
+  id: "home-continue-1",
+  title: "The Hollow Road",
+  kindLabel: "Story",
+  lastPlayedLabel: "2 hours ago",
+  imageSrc: HOME_TOP_RATED_ITEMS[1]?.imageSrc ?? null,
+  onContinue: noop,
+};
+
+function rail(label, items) {
+  return { label, viewAllLabel: "View all", onViewAll: noop, items: items.map(decorate) };
+}
+
+const SORT_CONTROL = {
+  options: HOME_SORT_OPTIONS,
+  selectedValue: HOME_SORT_OPTIONS[0].value,
+  onChange: noop,
+};
+
+const DESTINATION_TILES = HOME_DESTINATION_TILES.map((tile) => ({ ...tile, onOpen: noop }));
+
+// Full page: every section populated, the ruled default state.
+export const homeFullPageFixture = {
+  topBanner: TOP_BANNER,
+  continueItem: CONTINUE_ITEM,
+  destinationTiles: DESTINATION_TILES,
+  topRatedRail: rail("Top rated", HOME_TOP_RATED_ITEMS),
+  recentlyAddedRail: rail("Recently added", HOME_RECENTLY_ADDED_ITEMS),
+  fromTheCommunityRail: rail("From the community", HOME_FROM_THE_COMMUNITY_ITEMS),
+  creatorsToFollowRail: rail("Creators to follow", HOME_CREATORS_TO_FOLLOW_ITEMS),
+  sortControl: SORT_CONTROL,
+  bottomBanner: BOTTOM_BANNER,
+  notice: null,
+  onCloseNotice: noop,
+};
+
+// Empty Continue strip: nothing in progress. Ruled to render nothing
+// at all, not an empty-state placeholder.
+export const homeEmptyContinueFixture = {
+  ...homeFullPageFixture,
+  continueItem: null,
+};
+
+// Empty rails: every rail has zero cards. Ruled (empty-rail law,
+// docs/BUILD-BLUEPRINT.md 2.18): a rail with nothing in it renders
+// nothing at all, head included. Continue strip also empties here so
+// this state demonstrates both empty-rail law and the empty-Continue
+// law rendering nothing at once, leaving only the two banners and the
+// destination tiles.
+export const homeEmptyRailsFixture = {
+  ...homeFullPageFixture,
+  continueItem: null,
+  topRatedRail: rail("Top rated", []),
+  recentlyAddedRail: rail("Recently added", []),
+  fromTheCommunityRail: rail("From the community", []),
+  creatorsToFollowRail: rail("Creators to follow", []),
+};
