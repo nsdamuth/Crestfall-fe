@@ -64,6 +64,8 @@ the details below carry only what is still actionable.
 | CR-035 | Per-media type and engagement fields on KitAssetDetailPopup media | The restored popup media library (Images/Videos/Liked/Bookmarked tabs, sort, search) has no fixture field for per-media type or per-media like/bookmark state; Videos and per-media Liked/Bookmarked render their honest empty state until this lands | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
 | CR-036 | Images moderation eligibility field | The restored eligibility filter and Eligible First/Needs Review First sorts have no real moderation field; the interim derives eligibility deterministically from item id | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
 | CR-037 | Community creation tags | The restored `KitAssetDetailPopup` tags row (`docs/PARITY-AUDIT.md` section 5, candidate 6) has no tag data on any `/studio/v2/community` fixture creation; the row renders and works but is empty on every real card today | open | Nick | non-blocking; filed 11 Aug 2026 by the design/community-parity branch |
+| CR-038 | Community and Vault five-bucket type filter grouping | Community and Vault type filters present a five-bucket display grouping (Characters, Worlds, Looks, Stories, Adventures) over the backend's raw creation types; the frontend owns this mapping today in display code | open | Nick | dev awareness only; presentation-layer mapping, no backend change required unless dev prefers to serve grouped types; ruled by Brian 11 Aug 2026 |
+| CR-039 | STORYLINE display name is Adventure platform-wide | Ruled by Brian 11 Aug 2026: the user-facing name for STORYLINE is Adventure everywhere on the platform, implemented as display mapping via the terminology module | open | Nick | non-blocking; does not duplicate CR-025, which already carries the backend rename request; see CR-025 |
 
 ## Details
 
@@ -504,6 +506,28 @@ one named mock module in `app/studio/v2/editor/` (header comment:
 mock, pending CR-031) returning saved-creation fixtures with the
 full field set. When this CR lands, the mock module is a single
 deletion and the page reads through the existing creation client.
+
+### CR-038, Community and Vault five-bucket type filter grouping
+
+Ruled 11 Aug 2026 (Brian). Community and Vault type filters both
+present the same five-bucket display grouping (Characters, Worlds,
+Looks, Stories, Adventures, `ASSET_KIND_TO_TYPE_BUCKET` in
+`CommunityV2Mockup.jsx` and `VaultV2Mockup.jsx`) over the backend's
+raw creation types. This grouping is owned entirely by frontend
+display code today. Request is dev awareness only: the grouping is
+presentation-layer, no backend change is required unless Nick would
+prefer to serve the grouped types directly.
+
+### CR-039, STORYLINE display name is Adventure platform-wide
+
+Ruled 11 Aug 2026 (Brian). The user-facing name for STORYLINE is
+Adventure everywhere on the platform, implemented as a display
+mapping via `lib/shared/presentation/terminology.js`. The backend
+rename itself, STORYLINE and related identifiers to Adventure
+naming, remains Nick's later pass at his discretion. This entry does
+not duplicate CR-025, which already carries that backend-rename
+request and its detail; see CR-025 for the standing display-mapping
+detail and the rename request itself.
 
 ## Closed
 
