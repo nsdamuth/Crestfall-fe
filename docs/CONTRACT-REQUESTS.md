@@ -55,7 +55,8 @@ the details below carry only what is still actionable.
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
 | CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Teen, EXPLICIT=Adult, no disabled row. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 | CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
-| CR-029 | Home feed data: four rails and the Continue strip | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the Continue strip (in-progress items, newest activity first); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate |
+| CR-029 | Home feed data: four rails and the continue surface | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the in-progress item feeding the top banner's continue state (10 Aug 2026 Home review: the separate Continue strip merged into the top banner; feed shape unchanged); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate, updated 10 Aug 2026 by the Sprint H planning gate |
+| CR-030 | Home creations filter: persisted preference and feed support | Account-level persistence for Home's creations filter (All creations / just mine, plus visibility values) and whatever feed support the three creation rails need to honor it; interim is a client-side filter over fixture data with a localStorage-persisted selection | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint H planning gate |
 
 ## Details
 
@@ -389,6 +390,53 @@ empty list is the legal "render nothing" state for any rail and for
 the strip. Sort on the top rail is client-side over the delivered
 list until ruled otherwise. Muted creators (CR-028) are excluded from
 every one of these feeds server-side once both CRs are live.
+
+Updated 10 Aug 2026 (Sprint H planning gate, Brian's Home review
+ruling): the separate Continue strip surface merged into the top
+banner; the top banner IS the continue surface, showing the most
+recent in-progress item and falling back to the general hero when
+nothing is in progress. The feed shape above is unchanged: the same
+in-progress list, newest activity first, now feeds the banner's
+continue state instead of a strip. Additionally, each creation-rail
+item gains two fields for the CR-030 filter: `ownership`
+(`"mine" | "community"`) and `visibility` (the ruled four-state
+enum, whose data-model landing remains CR-014). Fixture data carries
+both fields ahead of the real feed.
+
+### CR-030, Home creations filter: persisted preference and feed support
+
+Filed 10 Aug 2026 by the Sprint H planning gate
+(`docs/SPRINT-H-PLAN.md` section 1e). Brian's 10 Aug Home review
+ruled a new Home control: a creations filter over the three creation
+rails, options All creations / just mine plus the ruled visibility
+values (private, internal, public, canon), whose selection persists
+across sessions.
+
+Needed from the backend, in two parts:
+
+1. **Preference persistence.** An account-level preference storing
+   the selection (shape: `{ scope: "all" | "mine", visibility?:
+   "private" | "internal" | "public" | "canon" }`), readable at page
+   load and written on change, so the selection follows the account
+   across devices and sessions.
+2. **Feed support.** Either the three creation-rail feeds (CR-029)
+   accept the filter server-side (ownership plus visibility
+   parameters), or each delivered item carries `ownership` and
+   `visibility` fields so the client filters the delivered list.
+   Whichever way, the fields ride the CR-029 item shape (see the
+   CR-029 update above). Visibility values depend on CR-014's
+   four-state enum landing; until then only the states the data
+   model actually has can be filtered live.
+
+What is faked versus real until this lands: the control, the
+filtering, and the fixtures are real frontend; the data is the
+CR-029 mock module; persistence is a single namespaced localStorage
+key (`cf.home.creationsFilter`) written by the Home Binding Shell,
+which persists per browser rather than per account. When this CR
+lands, the localStorage interim is one deletion in the Shell plus
+one read/write against the real preference, and the mock module
+follows CR-029's own deletion path. No component outside
+`app/studio/v2/home/` is involved.
 
 ## Closed
 
