@@ -63,11 +63,27 @@ const FIXTURE_VAULT_ITEMS = [
   { id: "v18", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isOwn: false, visibility: "PUBLIC", plays: 3300, hearts: 410, saves: 140, recency: 3, description: "Saved from the Community, not your own work." },
 ];
 
+// Vault type filter, RULED 10 Aug 2026 (section 10 candidate 1, ruling
+// 1): the 27 legacy my-creations buckets do NOT return; five type
+// options replace them, every legacy bucket mapped into exactly one
+// (full mapping in the h-restore branch report). "Worlds" has no
+// fixture data yet (no location/lore/faction card kind exists in the
+// v2 model); its option ships with an honest zero count rather than
+// fabricated fixture items. CR-032 filed for the card-kind field
+// extension needed to populate it for real.
+const ASSET_KIND_TO_TYPE_BUCKET = {
+  character: "characters",
+  story: "stories",
+  adventure: "adventures",
+  image: "looks",
+};
+
 const TYPE_OPTIONS = [
-  { value: "character", label: "Characters" },
-  { value: "story", label: "Stories" },
-  { value: "adventure", label: "Adventures" },
-  { value: "image", label: "Images" },
+  { value: "characters", label: "Characters" },
+  { value: "worlds", label: "Worlds" },
+  { value: "looks", label: "Looks" },
+  { value: "stories", label: "Stories" },
+  { value: "adventures", label: "Adventures" },
 ];
 
 const VISIBILITY_OPTIONS = [
@@ -166,7 +182,7 @@ export default function VaultV2Mockup() {
         options: [
           ...TYPE_OPTIONS.map((option) => ({
             ...option,
-            count: pool.filter((item) => item.assetKind === option.value).length,
+            count: pool.filter((item) => ASSET_KIND_TO_TYPE_BUCKET[item.assetKind] === option.value).length,
           })),
           {
             value: "remix",
@@ -197,7 +213,7 @@ export default function VaultV2Mockup() {
     const visibilities = selectedValues.visibility || [];
 
     const filtered = FIXTURE_VAULT_ITEMS.filter((item) => {
-      if (types.length && !types.includes(item.assetKind)) return false;
+      if (types.length && !types.includes(ASSET_KIND_TO_TYPE_BUCKET[item.assetKind])) return false;
       if (remixOnly && !item.isRemix) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
       // Search restores original field coverage (title, description,

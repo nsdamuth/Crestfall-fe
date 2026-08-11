@@ -146,7 +146,18 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     [mineSource, selectedValues, searchValue]
   );
 
-  function decorate(item, { showApprovalBadge }) {
+  // Lore edit door, RULED 10 Aug 2026 (h-restore ruling 4): the "Your
+  // Lore" grid is the only edit door; its cards open the advanced lore
+  // page directly, single path, no fork, the same way the Vault popup
+  // opens the advanced editor. The advanced page exists at
+  // /studio/create/lore (the standalone chapters/sections/blocks
+  // builder) but only as a create-mode address, no per-id edit route;
+  // navigating there from an existing card opens the builder honestly
+  // rather than that item's saved content, the same CR-007/CR-008
+  // reopen-in-place gap already carried for Vault. Community Lore
+  // cards stay read-only (no advanced-editor path, no community/browse
+  // list surface per ruling 4).
+  function decorate(item, { showApprovalBadge, isMine }) {
     const badges = [];
     if (item.approvalState === "canon") {
       badges.push({ label: "Canon", variant: "canon" });
@@ -166,16 +177,19 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
       stats: item.stats,
       liked: likedIds.includes(item.id),
       bookmarked: savedIds.includes(item.id),
-      onOpenAssetDetail: () =>
-        openNotice(item.title, `Opening "${item.title}" happens on its own page when live wiring lands.`),
+      onOpenAssetDetail: isMine
+        ? () => onNavigate?.("/studio/create/lore")
+        : () => openNotice(item.title, `Reading "${item.title}" opens once the Lore reading surface is built.`),
       onLike: () => toggleLiked(item.id),
       onBookmark: () => toggleSaved(item.id),
     };
   }
 
   const visibleCommunityItems = filteredCommunity.slice(0, visibleCommunityCount);
-  const communityItems = visibleCommunityItems.map((item) => decorate(item, { showApprovalBadge: false }));
-  const mineItems = filteredMine.map((item) => decorate(item, { showApprovalBadge: true }));
+  const communityItems = visibleCommunityItems.map((item) =>
+    decorate(item, { showApprovalBadge: false, isMine: false })
+  );
+  const mineItems = filteredMine.map((item) => decorate(item, { showApprovalBadge: true, isMine: true }));
 
   const communityHasMore = visibleCommunityCount < filteredCommunity.length;
   const communityRemainingCount = communityHasMore ? filteredCommunity.length - visibleCommunityCount : null;
@@ -268,6 +282,7 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     onContentChange: setCreateField("content"),
     onSubmit: submitCreateModal,
     onClose: closeCreateModal,
+    onOpenAdvancedEditor: () => onNavigate?.("/studio/create/lore"),
   };
 
   return {

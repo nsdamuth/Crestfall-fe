@@ -1,4 +1,4 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.3.0";
+export const LORE_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Stable portable UI boundary for the Lore page View
@@ -91,6 +91,7 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {((value: string) => void)|null} onContentChange
  * @property {(() => void)|null} onSubmit Validates title, then stubs with the R4 notice (no submission pipeline yet).
  * @property {(() => void)|null} onClose Fires from all of modal-frame's dismissal paths; resets the fields.
+ * @property {(() => void)|null} onOpenAdvancedEditor Added 1.4.0 (10 Aug 2026, h-restore ruling 4). Navigates to /studio/create/lore, the advanced chapters/sections/blocks builder; the modal's own field set is unchanged.
  *
  * @typedef {Object} LoreViewProps
  * @property {LoreBannerProps} topBanner

@@ -101,6 +101,7 @@ const CREATE_MODAL_CLOSED = {
   onContentChange: noop,
   onSubmit: noop,
   onClose: noop,
+  onOpenAdvancedEditor: noop,
 };
 
 // Default: both sections populated, community grid mid-catalog with
