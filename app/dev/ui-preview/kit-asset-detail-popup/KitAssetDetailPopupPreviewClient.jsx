@@ -8,6 +8,7 @@ import {
   kitAssetDetailPopupCharacterFixture,
   kitAssetDetailPopupLikedAndSavedFixture,
   kitAssetDetailPopupLongestCopyFixture,
+  kitAssetDetailPopupNoCreatorNoTagsFixture,
   kitAssetDetailPopupNoImageFixture,
   kitAssetDetailPopupOwnWorkFixture,
   kitAssetDetailPopupStoryFixture,
@@ -22,6 +23,10 @@ const STATES = {
   longestCopy: { label: "Longest copy", props: kitAssetDetailPopupLongestCopyFixture },
   noImage: { label: "No image", props: kitAssetDetailPopupNoImageFixture },
   ownWork: { label: "Own work (Edit action)", props: kitAssetDetailPopupOwnWorkFixture },
+  noCreatorNoTags: {
+    label: "No creator link, no tags",
+    props: kitAssetDetailPopupNoCreatorNoTagsFixture,
+  },
 };
 
 export default function KitAssetDetailPopupPreviewClient() {

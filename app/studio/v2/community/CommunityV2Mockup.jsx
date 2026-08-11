@@ -31,6 +31,20 @@ function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
 
+// Creator-handle link, restored 11 Aug 2026 (design/community-parity,
+// parity audit candidate 6): FIXTURE_CREATIONS carries no dedicated
+// creator field, only the handle embedded in `subtitle` ("Type - by
+// @handle"). The handle is real data already displayed on every card;
+// this only extracts it and builds the profile href using the exact
+// convention already present elsewhere in this same fixture array
+// (each `credits[].creatorHref` is `/studio/profile/{handle}`, e.g.
+// "@vermillion" -> "/studio/profile/vermillion"). No data invented.
+function creatorFromSubtitle(subtitle) {
+  const match = /@([A-Za-z0-9_]+)/.exec(subtitle || "");
+  if (!match) return null;
+  return { handle: `@${match[1]}`, href: `/studio/profile/${match[1]}` };
+}
+
 // Rating values use the presentation tiers (lib/shared/presentation/
 // terminology.js): EVERYONE, TEEN, and ADULT are all live, one to one
 // against SFW/MATURE/EXPLICIT (CR-027, ruled final 9 Aug 2026). These
@@ -509,6 +523,7 @@ export default function CommunityV2Mockup() {
             assetKind={creation.assetKind}
             title={creation.title}
             subtitle={creation.subtitle}
+            creator={creatorFromSubtitle(creation.subtitle)}
             media={media}
             badges={creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []}
             stats={{
@@ -518,6 +533,7 @@ export default function CommunityV2Mockup() {
               followers: null,
             }}
             description={creation.description}
+            tags={creation.tags || []}
             isLiked={likedIds.includes(creation.id)}
             isSaved={savedIds.includes(creation.id)}
             onLike={() => toggleLiked(creation.id)}

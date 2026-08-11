@@ -63,6 +63,7 @@ the details below carry only what is still actionable.
 | CR-034 | Community renderStyle field | The restored Rendering filter (Anime/Realistic/Either/Auto) has no per-item renderStyle field; the interim derives a value deterministically from item id so the facet is honestly non-trivial rather than fabricated per row | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
 | CR-035 | Per-media type and engagement fields on KitAssetDetailPopup media | The restored popup media library (Images/Videos/Liked/Bookmarked tabs, sort, search) has no fixture field for per-media type or per-media like/bookmark state; Videos and per-media Liked/Bookmarked render their honest empty state until this lands | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
 | CR-036 | Images moderation eligibility field | The restored eligibility filter and Eligible First/Needs Review First sorts have no real moderation field; the interim derives eligibility deterministically from item id | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
+| CR-037 | Community creation tags | The restored `KitAssetDetailPopup` tags row (`docs/PARITY-AUDIT.md` section 5, candidate 6) has no tag data on any `/studio/v2/community` fixture creation; the row renders and works but is empty on every real card today | open | Nick | non-blocking; filed 11 Aug 2026 by the design/community-parity branch |
 
 ## Details
 
