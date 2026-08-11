@@ -222,6 +222,7 @@ export default function CreatorProfileView({
   worksLoadMore,
   activityItems = [],
   activityEmptyMessage = null,
+  activityLoadMore,
   badgeItems = [],
   badgesEmptyMessage = null,
   errorMessage = null,
@@ -361,7 +362,19 @@ export default function CreatorProfileView({
 
             <div className="flex flex-col gap-[var(--space-4)]">
               <SectionLabel>Activity</SectionLabel>
-              {activityEmptyMessage ? <EmptySection message={activityEmptyMessage} /> : <ActivityList items={activityItems} />}
+              {activityEmptyMessage ? (
+                <EmptySection message={activityEmptyMessage} />
+              ) : (
+                <>
+                  <ActivityList items={activityItems} />
+                  <KitLoadMoreView
+                    isLoading={activityLoadMore?.isLoading}
+                    hasMore={activityLoadMore?.hasMore}
+                    remainingCount={activityLoadMore?.remainingCount ?? null}
+                    onLoadMore={() => activityLoadMore?.onLoadMore?.()}
+                  />
+                </>
+              )}
             </div>
 
             <div className="flex flex-col gap-[var(--space-4)]">

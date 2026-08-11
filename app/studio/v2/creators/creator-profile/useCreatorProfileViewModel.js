@@ -12,6 +12,11 @@ import { useMemo, useState } from "react";
 import { CREATOR_PROFILE_LONGEST, resolveCreatorProfile } from "./creatorProfileContent.mock";
 
 const PAGE_SIZE = 4;
+// Activity list cap, RULED 11 Aug 2026: renders at most five entries,
+// then the same batch-then-append KitLoadMoreView pattern the works
+// grid already uses. Local honest floor; platform-wide high-volume
+// list behavior is a queued Fable gate, not decided here.
+const ACTIVITY_PAGE_SIZE = 5;
 const DONATE_FIELDS_INITIAL = { amount: "", message: "", isAnonymous: false };
 
 const BOTTOM_BANNER = {
@@ -39,6 +44,7 @@ export function useCreatorProfileViewModel({
   const [likedWorkIds, setLikedWorkIds] = useState([]);
   const [bookmarkedWorkIds, setBookmarkedWorkIds] = useState([]);
   const [visibleWorksCount, setVisibleWorksCount] = useState(PAGE_SIZE);
+  const [visibleActivityCount, setVisibleActivityCount] = useState(ACTIVITY_PAGE_SIZE);
   const [notice, setNotice] = useState(null);
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(fixtureMode === "longestContent");
   const [donateFields, setDonateFields] = useState(
@@ -86,6 +92,15 @@ export function useCreatorProfileViewModel({
     hasMore: worksHasMore,
     remainingCount: worksHasMore ? worksSource.length - visibleWorksCount : null,
     onLoadMore: () => setVisibleWorksCount((current) => current + PAGE_SIZE),
+  };
+
+  const visibleActivity = activitySource.slice(0, visibleActivityCount);
+  const activityHasMore = visibleActivityCount < activitySource.length;
+  const activityLoadMore = {
+    isLoading: false,
+    hasMore: activityHasMore,
+    remainingCount: activityHasMore ? activitySource.length - visibleActivityCount : null,
+    onLoadMore: () => setVisibleActivityCount((current) => current + ACTIVITY_PAGE_SIZE),
   };
 
   const worksEmptyMessage = worksSource.length === 0 && fixtureMode !== "error" ? "Nothing published yet." : null;
@@ -169,8 +184,9 @@ export function useCreatorProfileViewModel({
     workItems,
     worksEmptyMessage,
     worksLoadMore,
-    activityItems: activitySource,
+    activityItems: visibleActivity,
     activityEmptyMessage,
+    activityLoadMore,
     badgeItems: badgesSource,
     badgesEmptyMessage,
     errorMessage,

@@ -39,6 +39,8 @@ const BOTTOM_BANNER = {
 };
 
 const WORKS_LOAD_MORE = { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop };
+const ACTIVITY_LOAD_MORE_DONE = { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop };
+const ACTIVITY_PAGE_SIZE = 5;
 
 const DONATE_MODAL_CLOSED = {
   recipientDisplayName: VERMILLION.displayName,
@@ -76,8 +78,9 @@ function baseFixture(record, { mutePlacement = "engagement" } = {}) {
     workItems: record.works.map(decorateWork),
     worksEmptyMessage: record.works.length === 0 ? "Nothing published yet." : null,
     worksLoadMore: WORKS_LOAD_MORE,
-    activityItems: record.activity,
+    activityItems: record.activity.slice(0, ACTIVITY_PAGE_SIZE),
     activityEmptyMessage: record.activity.length === 0 ? "No activity yet." : null,
+    activityLoadMore: ACTIVITY_LOAD_MORE_DONE,
     badgeItems: record.badges,
     badgesEmptyMessage: record.badges.length === 0 ? "No badges yet." : null,
     errorMessage: null,
@@ -137,6 +140,47 @@ export const creatorProfileMutedFixture = {
 export const creatorProfileMutedStandalonePlacementFixture = {
   ...creatorProfileMutedFixture,
   mutePlacement: "standalone",
+};
+
+// Activity list cap, RULED 11 Aug 2026: 27 entries, the same
+// batch-then-append KitLoadMoreView pattern the works grid already
+// uses. activityItems carries only the first five, activityLoadMore
+// exposes the remaining 22 for Show more; onLoadMore proves the
+// append-more-rows behavior by revealing the next batch instead of
+// swapping pages.
+const ACTIVITY_CAP_ENTRIES = Array.from({ length: 27 }, (_, index) => ({
+  id: `activity-cap-${index + 1}`,
+  kind: index % 2 === 0 ? "creation" : "donation",
+  label:
+    index % 2 === 0
+      ? `Published "Fixture Entry ${index + 1}"`
+      : `Received a donation from @fixture-creator-${index + 1}`,
+  timestamp: `${index + 1} days ago`,
+}));
+
+function activityLoadMoreFor(visibleCount, allEntries) {
+  const hasMore = visibleCount < allEntries.length;
+  return {
+    isLoading: false,
+    hasMore,
+    remainingCount: hasMore ? allEntries.length - visibleCount : null,
+    onLoadMore: noop,
+  };
+}
+
+export const creatorProfileActivityCapFixture = {
+  ...creatorProfileDefaultFixture,
+  activityItems: ACTIVITY_CAP_ENTRIES.slice(0, ACTIVITY_PAGE_SIZE),
+  activityEmptyMessage: null,
+  activityLoadMore: activityLoadMoreFor(ACTIVITY_PAGE_SIZE, ACTIVITY_CAP_ENTRIES),
+};
+
+// Second batch revealed: proves the append behavior itself, ten
+// entries visible (two Show more presses), fifteen still to come.
+export const creatorProfileActivityCapAppendedFixture = {
+  ...creatorProfileActivityCapFixture,
+  activityItems: ACTIVITY_CAP_ENTRIES.slice(0, ACTIVITY_PAGE_SIZE * 2),
+  activityLoadMore: activityLoadMoreFor(ACTIVITY_PAGE_SIZE * 2, ACTIVITY_CAP_ENTRIES),
 };
 
 // Large stat values: seven-digit counts on every tile plus the
