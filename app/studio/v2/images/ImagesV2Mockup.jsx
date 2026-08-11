@@ -90,11 +90,29 @@ const STYLE_OPTIONS = [
   { value: "realistic", label: "Realistic" },
 ];
 
+// Eligibility machinery, RESTORED 10 Aug 2026 (h-restore, section 10
+// candidate 13): no real moderation eligibility field exists in the
+// v2 image-library model yet, so it is derived deterministically from
+// id parity below rather than hand-authored per row, same pattern as
+// Community's Rendering filter. CR-036 filed for a real eligibility
+// field on the image record.
+const ELIGIBILITY_OPTIONS = [
+  { value: "eligible", label: "Eligible" },
+  { value: "blocked", label: "Blocked" },
+];
+
+function eligibilityFor(item) {
+  const seed = Number.parseInt(item.id.replace(/\D/g, ""), 10) || 0;
+  return seed % 5 === 0 ? "blocked" : "eligible";
+}
+
 const SORT_OPTIONS = [
   { value: "recent", label: "Newest" },
   { value: "oldest", label: "Oldest" },
   { value: "hearts", label: "Most hearted" },
   { value: "saved", label: "Most saved" },
+  { value: "eligibleFirst", label: "Eligible First" },
+  { value: "needsReviewFirst", label: "Needs Review First" },
 ];
 
 const FIXTURE_MODES = {
@@ -297,6 +315,15 @@ export default function ImagesV2Mockup() {
           count: pool.filter((item) => item.style === option.value).length,
         })),
       },
+      {
+        id: "eligibility",
+        label: "Eligibility",
+        isMultiSelect: true,
+        options: ELIGIBILITY_OPTIONS.map((option) => ({
+          ...option,
+          count: pool.filter((item) => eligibilityFor(item) === option.value).length,
+        })),
+      },
     ];
   }, [fixtureMode]);
 
@@ -306,6 +333,7 @@ export default function ImagesV2Mockup() {
     const query = searchValue.trim().toLowerCase();
     const linkedAssetValues = selectedValues.linkedAsset || [];
     const styleValues = selectedValues.style || [];
+    const eligibilityValues = selectedValues.eligibility || [];
 
     const filtered = FIXTURE_IMAGES.filter((item) => {
       if (linkedAssetValues.length) {
@@ -315,6 +343,7 @@ export default function ImagesV2Mockup() {
         if (!matches) return false;
       }
       if (styleValues.length && !styleValues.includes(item.style)) return false;
+      if (eligibilityValues.length && !eligibilityValues.includes(eligibilityFor(item))) return false;
       if (query) {
         const haystack = `${item.title} ${item.linkedAsset?.label || ""}`.toLowerCase();
         if (!haystack.includes(query)) return false;
@@ -329,6 +358,10 @@ export default function ImagesV2Mockup() {
       sorted.sort((a, b) => b.saves - a.saves);
     } else if (selectedSort === "oldest") {
       sorted.sort((a, b) => a.recency - b.recency);
+    } else if (selectedSort === "eligibleFirst") {
+      sorted.sort((a, b) => Number(eligibilityFor(b) === "eligible") - Number(eligibilityFor(a) === "eligible"));
+    } else if (selectedSort === "needsReviewFirst") {
+      sorted.sort((a, b) => Number(eligibilityFor(b) === "blocked") - Number(eligibilityFor(a) === "blocked"));
     } else {
       sorted.sort((a, b) => b.recency - a.recency);
     }

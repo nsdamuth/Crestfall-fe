@@ -57,6 +57,11 @@ the details below carry only what is still actionable.
 | CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
 | CR-029 | Home feed data: four rails and the continue surface | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the in-progress item feeding the top banner's continue state (10 Aug 2026 Home review: the separate Continue strip merged into the top banner; feed shape unchanged); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate, updated 10 Aug 2026 by the Sprint H planning gate |
 | CR-030 | Home creations filter: persisted preference and feed support | Account-level persistence for Home's creations filter (All creations / just mine, plus visibility values) and whatever feed support the three creation rails need to honor it; interim is a client-side filter over fixture data with a localStorage-persisted selection | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint H planning gate |
+| CR-032 | Vault Worlds card-kind field | The ruled five-option Vault type facet (Characters/Worlds/Looks/Stories/Adventures, h-restore ruling 1) needs a real location/lore/faction card kind; none exists today, so the Worlds option ships with an honest zero count | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
+| CR-033 | Community updatedAt timestamp | Community's Recently Updated curation row and the Recently Updated sort candidate both need a real updated timestamp; the interim reuses the existing recency field as a stand-in signal | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
+| CR-034 | Community renderStyle field | The restored Rendering filter (Anime/Realistic/Either/Auto) has no per-item renderStyle field; the interim derives a value deterministically from item id so the facet is honestly non-trivial rather than fabricated per row | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
+| CR-035 | Per-media type and engagement fields on KitAssetDetailPopup media | The restored popup media library (Images/Videos/Liked/Bookmarked tabs, sort, search) has no fixture field for per-media type or per-media like/bookmark state; Videos and per-media Liked/Bookmarked render their honest empty state until this lands | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
+| CR-036 | Images moderation eligibility field | The restored eligibility filter and Eligible First/Needs Review First sorts have no real moderation field; the interim derives eligibility deterministically from item id | open | Nick | non-blocking; filed 10 Aug 2026 by the h-restore branch |
 
 ## Details
 
@@ -437,6 +442,18 @@ lands, the localStorage interim is one deletion in the Shell plus
 one read/write against the real preference, and the mock module
 follows CR-029's own deletion path. No component outside
 `app/studio/v2/home/` is involved.
+
+**Amended 10 Aug 2026 (h-restore, ruling 3).** View-mode (grid/list)
+persistence, section 10 candidate 11 of `docs/PARITY-AUDIT.md`
+(the original Stories hub persisted grid/list per device with a
+mobile list default; v2 reset to grid every load), rides this same
+CR rather than a separate mechanism. Interim: a second namespaced
+localStorage key, `cf.stories.viewMode`, written by
+`app/studio/v2/stories/StoriesV2Mockup.jsx` on every layout change and
+read on mount, falling back to a coarse-pointer (mobile) check for
+the default when nothing is stored yet. When CR-030 lands its real
+preference, this key folds into the same account-level object rather
+than shipping its own field.
 
 ## Closed
 

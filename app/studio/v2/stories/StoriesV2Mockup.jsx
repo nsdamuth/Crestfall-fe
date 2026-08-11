@@ -6,7 +6,7 @@
 // section 3 (W3): the hub only, chat room [id] excluded by the
 // standing sweep-scope ruling (blueprint 3.1 row 4). No live data, no
 // API calls, no real navigation.
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -16,6 +16,7 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import { CheckSquare, Square } from "lucide-react";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import FixtureActionNotice from "../FixtureActionNotice";
@@ -69,6 +70,15 @@ const FIXTURE_STORIES = [
     { id: "s12-credit-1", kindLabel: "Location", creatorHandle: "@vermillion", creatorHref: "/studio/profile/vermillion", assetTitle: "Neon Harbor District" },
     { id: "s12-credit-2", kindLabel: "Character", creatorHandle: "@Crestfall", creatorHref: "/studio/profile/Crestfall", assetTitle: "Lilith" },
   ] },
+
+  // Templates and Archived, RESTORED 10 Aug 2026 (h-restore, ruling 5):
+  // the original hub's Templates and Archived buckets return as Status
+  // options alongside In progress/Startable; two fixture items each so
+  // the buckets are honestly non-empty.
+  { id: "tmpl1", kind: "story", title: "Frontier Escort Template", imageSrc: creatorArt("vermillion-11"), visibility: "PRIVATE", ratingTier: "EVERYONE", isTemplate: true, plays: 0, hearts: 0, saves: 0, recency: 4, description: "A reusable room template, not yet started." },
+  { id: "tmpl2", kind: "adventure", title: "Harbor Cycle Template", imageSrc: creatorArt("vermillion-14"), visibility: "PRIVATE", ratingTier: "EVERYONE", isTemplate: true, plays: 0, hearts: 0, saves: 0, recency: 3, description: "A reusable room template, not yet started." },
+  { id: "arch1", kind: "story", title: "The Last Ferry Crossing", imageSrc: creatorArt("whiteviolin-2"), visibility: "PRIVATE", ratingTier: "TEEN", isArchived: true, plays: 40, hearts: 5, saves: 1, recency: 2, description: "Archived, no longer active." },
+  { id: "arch2", kind: "character", title: "Retired NPC: Old Dockmaster", imageSrc: canonArt("Dr. Elara Kade"), visibility: "PRIVATE", ratingTier: "EVERYONE", isArchived: true, plays: 12, hearts: 0, saves: 0, recency: 1, description: "Archived, no longer active." },
 ];
 
 const TYPE_OPTIONS = [
@@ -80,6 +90,8 @@ const TYPE_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: "inProgress", label: "In progress" },
   { value: "startable", label: "Startable" },
+  { value: "templates", label: "Templates" },
+  { value: "archived", label: "Archived" },
 ];
 
 const VISIBILITY_OPTIONS = [
@@ -121,6 +133,27 @@ function searchableText(item) {
 
 const PAGE_SIZE = 12;
 const CONTINUE_VISIBLE_CAP = 3;
+
+// View-mode persistence, RESTORED 10 Aug 2026 (h-restore ruling 3,
+// folded into CR-030 rather than a separate mechanism, per
+// docs/CONTRACT-REQUESTS.md). Original device default: mobile lists,
+// desktop grids; read once on mount, written on every change.
+const VIEW_MODE_STORAGE_KEY = "cf.stories.viewMode";
+
+function readStoredViewMode() {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = window.localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return stored === "grid" || stored === "list" ? stored : null;
+  } catch {
+    return null;
+  }
+}
+
+function defaultViewModeForDevice() {
+  if (typeof window === "undefined" || !window.matchMedia) return "grid";
+  return window.matchMedia("(pointer: coarse)").matches ? "list" : "grid";
+}
 
 function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }) {
   return (
@@ -188,7 +221,22 @@ function ContinueCard({ item, onContinue }) {
 
 export default function StoriesV2Mockup() {
   const [fixtureMode, setFixtureMode] = useState("default");
-  const [layout, setLayout] = useState("grid");
+  const [layout, setLayoutState] = useState("grid");
+
+  useEffect(() => {
+    setLayoutState(readStoredViewMode() || defaultViewModeForDevice());
+  }, []);
+
+  function setLayout(nextLayout) {
+    setLayoutState(nextLayout);
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, nextLayout);
+    } catch {
+      // Storage unavailable (private mode, quota); the session still
+      // works, it just does not persist across reloads.
+    }
+  }
   const [searchValue, setSearchValue] = useState("");
   const [selectedValues, setSelectedValues] = useState({});
   const [selectedSort, setSelectedSort] = useState("recent");
@@ -201,6 +249,13 @@ export default function StoriesV2Mockup() {
   // on live wiring open a non-persisting notice instead of doing
   // nothing.
   const [actionNotice, setActionNotice] = useState(null);
+  // Manage mode and bulk delete, RESTORED 10 Aug 2026 (h-restore
+  // ruling 5). deletedIds hides rows locally on confirm, the same
+  // fixture-only local-state pattern already used for liked/saved
+  // toggles on this page; nothing is sent anywhere.
+  const [manageMode, setManageMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [deletedIds, setDeletedIds] = useState([]);
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
@@ -212,12 +267,33 @@ export default function StoriesV2Mockup() {
     );
   }, [fixtureMode, searchValue]);
 
+  // Templates and Archived stay out of the default startable shelf,
+  // same exclusivity the original single-select buckets carried, and
+  // surface only when their Status option is explicitly selected.
   const startablePool = useMemo(
     () =>
       fixtureMode === "empty" || fixtureMode === "error"
         ? []
-        : FIXTURE_STORIES.filter((item) => !item.isContinue),
-    [fixtureMode]
+        : FIXTURE_STORIES.filter(
+            (item) => !item.isContinue && !item.isTemplate && !item.isArchived && !deletedIds.includes(item.id)
+          ),
+    [fixtureMode, deletedIds]
+  );
+
+  const templatesPool = useMemo(
+    () =>
+      fixtureMode === "empty" || fixtureMode === "error"
+        ? []
+        : FIXTURE_STORIES.filter((item) => item.isTemplate && !deletedIds.includes(item.id)),
+    [fixtureMode, deletedIds]
+  );
+
+  const archivedPool = useMemo(
+    () =>
+      fixtureMode === "empty" || fixtureMode === "error"
+        ? []
+        : FIXTURE_STORIES.filter((item) => item.isArchived && !deletedIds.includes(item.id)),
+    [fixtureMode, deletedIds]
   );
 
   const filterGroups = useMemo(() => {
@@ -239,10 +315,12 @@ export default function StoriesV2Mockup() {
         id: "status",
         label: "Status",
         isMultiSelect: true,
-        options: STATUS_OPTIONS.map((option) => ({
-          ...option,
-          count: option.value === "inProgress" ? inProgressCount : startablePool.length,
-        })),
+        options: STATUS_OPTIONS.map((option) => {
+          if (option.value === "inProgress") return { ...option, count: inProgressCount };
+          if (option.value === "templates") return { ...option, count: templatesPool.length };
+          if (option.value === "archived") return { ...option, count: archivedPool.length };
+          return { ...option, count: startablePool.length };
+        }),
       },
       {
         id: "visibility",
@@ -265,7 +343,7 @@ export default function StoriesV2Mockup() {
         })),
       },
     ];
-  }, [fixtureMode, startablePool]);
+  }, [fixtureMode, startablePool, templatesPool, archivedPool]);
 
   const filteredStartable = useMemo(() => {
     const query = searchValue.trim().toLowerCase();
@@ -274,15 +352,22 @@ export default function StoriesV2Mockup() {
     const visibilities = selectedValues.visibility || [];
     const ratings = selectedValues.rating || [];
 
-    // Status is a shelf-scoped facet (plan 3.2: filters apply to the
-    // startable shelf, the Continue group ignores them): the shelf
-    // pool contains only startable items by construction, so
+    // Templates and Archived are exclusive buckets, same as the
+    // original single-select pills (RESTORED 10 Aug 2026, ruling 5):
+    // selecting either swaps the shelf pool entirely rather than
+    // filtering within the startable shelf.
+    let pool = startablePool;
+    if (statusValues.includes("templates")) pool = templatesPool;
+    else if (statusValues.includes("archived")) pool = archivedPool;
+    // Status is otherwise a shelf-scoped facet (plan 3.2: filters
+    // apply to the startable shelf, the Continue group ignores them):
+    // the shelf pool contains only startable items by construction, so
     // selecting "In progress" here correctly yields an empty shelf
     // result rather than reaching into the Continue group above it.
     // Logged as a built default, not a resolved ruling.
-    if (statusValues.length && !statusValues.includes("startable")) return [];
+    else if (statusValues.length && !statusValues.includes("startable")) return [];
 
-    const filtered = startablePool.filter((item) => {
+    const filtered = pool.filter((item) => {
       if (typeValues.length && !typeValues.includes(item.kind)) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
       if (ratings.length && !ratings.includes(item.ratingTier)) return false;
@@ -297,7 +382,7 @@ export default function StoriesV2Mockup() {
       sorted.sort((a, b) => b.recency - a.recency);
     }
     return sorted;
-  }, [searchValue, selectedValues, selectedSort, startablePool]);
+  }, [searchValue, selectedValues, selectedSort, startablePool, templatesPool, archivedPool]);
 
   const visibleItems = filteredStartable.slice(0, visibleCount);
   const hasMore = visibleCount < filteredStartable.length;
@@ -323,6 +408,33 @@ export default function StoriesV2Mockup() {
 
   const toggleLiked = toggleId(setLikedIds);
   const toggleSaved = toggleId(setSavedIds);
+  const toggleSelected = toggleId(setSelectedIds);
+
+  function toggleManageMode() {
+    setManageMode((current) => !current);
+    setSelectedIds([]);
+  }
+
+  // Wording restored verbatim from the original hub's confirm dialog
+  // (components/studio/story-rooms/story-rooms-hub/useStoryRoomsHubViewModel.js
+  // confirmStoryRoomDeletion), per ruling 5.
+  function deleteSelected() {
+    if (typeof window === "undefined") return;
+    const confirmed = window.confirm(
+      [
+        "Delete selected Storys?",
+        "",
+        "This permanently deletes the selected chat sessions and their messages.",
+        "Underlying characters, templates, scenarios, narrators, and locations are not deleted.",
+        "Interaction totals will remain.",
+        "",
+        "This cannot be undone.",
+      ].join("\n")
+    );
+    if (!confirmed) return;
+    setDeletedIds((current) => [...current, ...selectedIds]);
+    setSelectedIds([]);
+  }
 
   // Badges follow the own-work context (plan 3.2): visibility badges
   // are legal here (every item is the player's own creation); Canon
@@ -447,7 +559,45 @@ export default function StoriesV2Mockup() {
 
         {fixtureMode !== "loading" && fixtureMode !== "error" && (
           <div className="flex flex-col gap-[var(--space-4)]">
-            <SectionLabel>Start something</SectionLabel>
+            <div className="flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+              <SectionLabel>Start something</SectionLabel>
+
+              {/* New Template routing and manage/bulk-delete mode,
+                  RESTORED 10 Aug 2026 (h-restore ruling 5). */}
+              <div className="flex flex-wrap items-center gap-[var(--space-2)]">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActionNotice({
+                      label: "New Template",
+                      message:
+                        "This opens the room-template builder when live wiring lands. Nothing was opened in this preview.",
+                    })
+                  }
+                  className="kit-focus cf-btn cf-btn--secondary"
+                >
+                  New Template
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={manageMode}
+                  onClick={toggleManageMode}
+                  className={`kit-focus cf-btn ${manageMode ? "cf-btn--danger" : "cf-btn--secondary"}`}
+                >
+                  {manageMode ? "Cancel manage" : "Manage"}
+                </button>
+                {manageMode && (
+                  <button
+                    type="button"
+                    disabled={selectedIds.length === 0}
+                    onClick={deleteSelected}
+                    className="kit-focus cf-btn cf-btn--danger disabled:opacity-50"
+                  >
+                    {selectedIds.length > 0 ? `Delete selected (${selectedIds.length})` : "Delete selected"}
+                  </button>
+                )}
+              </div>
+            </div>
 
             {filteredStartable.length === 0 ? (
               <EmptyState />
@@ -461,22 +611,38 @@ export default function StoriesV2Mockup() {
                   }
                 >
                   {visibleItems.map((item) => (
-                    <KitCreationCardView
-                      key={item.id}
-                      layout={layout}
-                      assetKind={item.kind}
-                      title={item.title}
-                      subtitle={KIND_LABELS[item.kind]}
-                      imageSrc={item.imageSrc}
-                      badges={badgesFor(item)}
-                      stats={{ plays: item.plays, hearts: item.hearts, saves: item.saves, followers: null }}
-                      liked={likedIds.includes(item.id)}
-                      bookmarked={savedIds.includes(item.id)}
-                      onOpenImageOverlay={() => setAssetDetailId(item.id)}
-                      onOpenAssetDetail={() => setAssetDetailId(item.id)}
-                      onLike={() => toggleLiked(item.id)}
-                      onBookmark={() => toggleSaved(item.id)}
-                    />
+                    <div key={item.id} className="relative">
+                      {manageMode && (
+                        <button
+                          type="button"
+                          aria-pressed={selectedIds.includes(item.id)}
+                          aria-label={selectedIds.includes(item.id) ? "Deselect Story" : "Select Story"}
+                          onClick={() => toggleSelected(item.id)}
+                          className="kit-focus absolute left-[var(--space-2)] top-[var(--space-2)] z-[3] flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-bright)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+                        >
+                          {selectedIds.includes(item.id) ? (
+                            <CheckSquare size={16} aria-hidden="true" />
+                          ) : (
+                            <Square size={16} aria-hidden="true" />
+                          )}
+                        </button>
+                      )}
+                      <KitCreationCardView
+                        layout={layout}
+                        assetKind={item.kind}
+                        title={item.title}
+                        subtitle={KIND_LABELS[item.kind]}
+                        imageSrc={item.imageSrc}
+                        badges={badgesFor(item)}
+                        stats={{ plays: item.plays, hearts: item.hearts, saves: item.saves, followers: null }}
+                        liked={likedIds.includes(item.id)}
+                        bookmarked={savedIds.includes(item.id)}
+                        onOpenImageOverlay={() => (manageMode ? toggleSelected(item.id) : setAssetDetailId(item.id))}
+                        onOpenAssetDetail={() => (manageMode ? toggleSelected(item.id) : setAssetDetailId(item.id))}
+                        onLike={() => toggleLiked(item.id)}
+                        onBookmark={() => toggleSaved(item.id)}
+                      />
+                    </div>
                   ))}
                 </div>
 

@@ -70,6 +70,7 @@ function LoreCreateModal({
   onContentChange = null,
   onSubmit = null,
   onClose = null,
+  onOpenAdvancedEditor = null,
 }) {
   return (
     <KitModalFrame variant="modal" panelClassName="w-full max-w-xl" onClose={onClose} ariaLabel="Write lore">
@@ -83,6 +84,18 @@ function LoreCreateModal({
           title="New lore is reviewed before it becomes canon."
           body="Submissions enter the community archive as pending, and the best of it becomes part of play."
         />
+
+        {/* CTA to the advanced lore page, RULED 10 Aug 2026 (ruling 4):
+            this quick modal keeps its small field set and gains a path
+            to the full chapters/sections/blocks builder rather than
+            absorbing its 18 rows. */}
+        <button
+          type="button"
+          onClick={() => onOpenAdvancedEditor?.()}
+          className="kit-focus self-start text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+        >
+          Need chapters, tags, or images? Open the advanced lore editor
+        </button>
 
         <KitFormFieldView
           label="Title"
@@ -233,6 +246,7 @@ export default function LoreView({
           onContentChange={createModal?.onContentChange}
           onSubmit={createModal?.onSubmit}
           onClose={createModal?.onClose}
+          onOpenAdvancedEditor={createModal?.onOpenAdvancedEditor}
         />
       )}
 

@@ -18,8 +18,8 @@
 // column, and read cramped at 390 where it collapses to Reading A
 // anyway. Stacking also matches every other stat row already in the
 // app (the card face). Logged per R8's render-time pick.
-import { useState } from "react";
-import { Bookmark, ChevronLeft, ChevronRight, Heart, Play, Share2, Users } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Bookmark, ChevronLeft, ChevronRight, Heart, Play, Search, Share2, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitCreditsModal from "../KitCreditsModal";
@@ -245,6 +245,130 @@ function Carousel({ media, onViewCatalogue }) {
   );
 }
 
+// Media library restored, 10 Aug 2026 (h-restore ruling 5): the
+// original creation detail page's media tabs, sort, and search return
+// here rather than at a separate detail surface, per Brian's ruling on
+// candidate 6. Local state only (presentation interaction, same
+// pattern as the carousel's own activeIndex above); it filters and
+// sorts the same `media` array the carousel already receives, capped
+// at four items per fixture. Videos and per-media Liked/Bookmarked
+// state have no fixture field yet (the fixture model only carries
+// images and creation-level like/save, not per-media), so those tabs
+// render their honest empty or all-media state rather than inventing
+// data; CR-035 filed for real per-media type and engagement fields.
+const MEDIA_TABS = [
+  { value: "images", label: "Images" },
+  { value: "videos", label: "Videos" },
+  { value: "liked", label: "Liked" },
+  { value: "bookmarked", label: "Bookmarked" },
+];
+
+const MEDIA_SORTS = [
+  { value: "newest", label: "Newest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "top", label: "Top" },
+  { value: "likedFirst", label: "Liked First" },
+];
+
+function MediaLibrary({ media, isLiked, isSaved }) {
+  const [tab, setTab] = useState("images");
+  const [sort, setSort] = useState("newest");
+  const [query, setQuery] = useState("");
+
+  const visible = useMemo(() => {
+    let items = media.map((item, index) => ({ ...item, index }));
+
+    if (tab === "videos") items = [];
+    if (tab === "liked" && !isLiked) items = [];
+    if (tab === "bookmarked" && !isSaved) items = [];
+
+    if (query.trim()) {
+      const needle = query.trim().toLowerCase();
+      items = items.filter((item) => (item.id || "").toLowerCase().includes(needle));
+    }
+
+    const sorted = [...items];
+    if (sort === "oldest") sorted.reverse();
+    if (sort === "top" || sort === "likedFirst") {
+      // No per-media popularity or like field exists yet (CR-035);
+      // stable original order is the honest fallback for both.
+    }
+    return sorted;
+  }, [media, tab, sort, query, isLiked, isSaved]);
+
+  if (media.length === 0) return null;
+
+  return (
+    <div className="mt-[var(--space-6)]">
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+        Media
+      </p>
+
+      <div className="mt-[var(--space-2)] flex flex-wrap items-center gap-[var(--space-2)]">
+        <div className="flex flex-wrap gap-[var(--space-1)]">
+          {MEDIA_TABS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={tab === option.value}
+              onClick={() => setTab(option.value)}
+              className={`kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+                tab === option.value
+                  ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        <label className="ml-auto flex min-h-[var(--control-sm)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
+          <Search size={14} aria-hidden="true" className="text-[var(--ink-faint)]" />
+          <span className="sr-only">Search media</span>
+          <input
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search media"
+            className="w-24 bg-transparent text-[length:var(--text-label)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
+          />
+        </label>
+
+        <select
+          value={sort}
+          onChange={(event) => setSort(event.target.value)}
+          className="kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] text-[length:var(--text-label)] text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+        >
+          {MEDIA_SORTS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {visible.length === 0 ? (
+        <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
+          Nothing here yet.
+        </p>
+      ) : (
+        <div className="mt-[var(--space-3)] grid grid-cols-4 gap-[var(--space-2)]">
+          {visible.map((item) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={item.id || item.index}
+              src={item.src}
+              alt=""
+              className="aspect-square w-full rounded-[var(--radius-md)] object-cover object-[center_18%]"
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function KitAssetDetailPopupView({
   primaryActionLabel = "Play",
   title = "",
@@ -311,6 +435,8 @@ export default function KitAssetDetailPopupView({
             />
           </div>
         )}
+
+        <MediaLibrary media={media} isLiked={isLiked} isSaved={isSaved} />
 
         <div className="mt-[var(--space-4)] grid w-full grid-cols-4 gap-[var(--space-2)]">
           <button
