@@ -33,8 +33,8 @@ the details below carry only what is still actionable.
 | CR-004 | signed-in Supabase user has no row in backend users table | Postgres FK violation on creation write for an unprovisioned account | done | Nick | closed 8 Aug 2026, account provisioned |
 | CR-005 | services-api can report success on a failed write | `postgraphileRequest` can pass a GraphQL error through as HTTP 200 | open | Nick | verify with Nick: services-api repo, cannot confirm current state from here |
 | CR-006 | seal stop's age field is empty, not pre-filled | Age input showed "18+" as placeholder only, never a real value | done | Nick | implemented, confirmed still true 9 Aug 2026 |
-| CR-007 | no reopen path from My Creations into the seven-stop creator | My Creations edit action still routes to the standalone editor, never `CharacterCreatorModal` | open | Brian | design decision needed: one edit surface or two |
-| CR-008 | standalone editor carries fields the seven-stop creator does not | Standalone editor exposes Runtime Modules, Mechanics Profile, Publishing, Danger Zone; the seven stops do not | open | Brian | scope question, not a build gap |
+| CR-007 | no reopen path from My Creations into the seven-stop creator | Ruled 10 Aug 2026: the single reopen path is Vault popup to the advanced editor page; the seven-stop creator stays create-only quick path | ruled, build scheduled | Brian (ruled) | design question closed by the Studio spec; the update-in-place proof moves to CR-031 |
+| CR-008 | standalone editor carries fields the seven-stop creator does not | Ruled 10 Aug 2026: the advanced editor page is the one full edit surface; create-only fields gain edit sections there | ruled, build scheduled | Brian (ruled) | closed as a question; tracked as build in `docs/STUDIO-SPEC.md` |
 | CR-009 | one creation system: wizard and visual picker | Confirm the live Player Character creator adopts the same wizard/picker system as the draft | open | Nick | no shared picker component exists yet |
 | CR-010 | top bar composes the economy widget | `StudioTopBar` duplicated `StudioEconomyWidget` | done | Brian | resolved by removal, not composition, 8 Aug 2026 |
 | CR-011 | bottom dock label "Rooms" vs "Stories" | Confirm "Rooms" was not a deliberate distinct label | open | Nick | verify with Nick: "Rooms" still present in mobile nav, profile hero, and community hub as of 9 Aug 2026, contradicting this CR's own "now agree on Stories" note |
@@ -57,6 +57,7 @@ the details below carry only what is still actionable.
 | CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
 | CR-029 | Home feed data: four rails and the continue surface | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the in-progress item feeding the top banner's continue state (10 Aug 2026 Home review: the separate Continue strip merged into the top banner; feed shape unchanged); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate, updated 10 Aug 2026 by the Sprint H planning gate |
 | CR-030 | Home creations filter: persisted preference and feed support | Account-level persistence for Home's creations filter (All creations / just mine, plus visibility values) and whatever feed support the three creation rails need to honor it; interim is a client-side filter over fixture data with a localStorage-persisted selection | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint H planning gate |
+| CR-031 | advanced editor full-field read and update path | Opening a saved creation by id must return the complete creator-written field set, and update-in-place on that record must be proven end to end | open | Nick | non-blocking (fixture-first per CR-017 pattern); filed 10 Aug 2026 by the Studio spec gate |
 
 ## Details
 
@@ -66,14 +67,21 @@ the details below carry only what is still actionable.
 `movement_style` is not a key in `constants/form.js`'s `initialForm`
 (53 keys, confirmed still missing 9 Aug 2026). Needs a 54th key with a
 default value and a signed contract entry. No new UI required once the
-schema catches up.
+schema catches up. Update 10 Aug 2026 (Studio spec gate): the
+seven-stop creator adds Movement Style frontend-side per the QUICK
+allocation (`docs/STUDIO-SPEC.md` section 2.2, build brief S2); the
+backend schema catch-up stays this CR and stays Nick's.
 
 ### CR-002, rendering_style missing from creator form schema
 
 `review-step/useCharacterReviewStepViewModel.js` reads
 `form.rendering_style`, not a key in `initialForm` (confirmed still
 missing 9 Aug 2026). Whether to add it as a 55th field is a joint
-Nick/Brian schema decision, not made here.
+Nick/Brian schema decision, not made here. Update 10 Aug 2026
+(Studio spec gate): the seven-stop creator adds Default Rendering
+Style frontend-side per the QUICK allocation (`docs/STUDIO-SPEC.md`
+section 2.2, build brief S2); the backend schema decision stays this
+CR.
 
 ### CR-003, no way to move a saved character into a story
 
@@ -113,9 +121,15 @@ text, since every Crestfall character is an adult.
 My Creations' edit action still builds an `editHref` of
 `/studio/my-creations/[id]/edit` (confirmed 9 Aug 2026,
 `useCreationCardViewModel.js`), never into `CharacterCreatorModal`.
-Whether the seven-stop creator becomes the one edit surface, or the
-standalone editor stays authoritative and the seven-stop creator stays
-create-only, is Brian's call, not decided here.
+
+Ruled 10 Aug 2026 (Brian, recorded in `docs/STUDIO-SPEC.md` section
+1): the single reopen path is the Vault popup's Edit action routing
+straight to the advanced editor page; the seven-stop creator stays
+the create-only quick path, ending with a post-save CTA into that
+same editor. No fork, no choice dialog. The design question this CR
+carried is closed. What remains open, the end-to-end update-in-place
+proof (the old check (c)), moves to CR-031 with Nick as owner. Build
+is scheduled as briefs S3 and S5 in `docs/STUDIO-SPEC.md`.
 
 ### CR-008, standalone editor carries fields the seven-stop creator does not
 
@@ -124,8 +138,16 @@ Confirmed by this branch's own inventory work
 editor's body/behavior/advanced sections and Runtime Mechanics Modules
 have no equivalent in the seven-stop creator, and several of the
 seven-stop creator's own fields (Advanced Prompting, full body/behavior
-detail) have no editing surface at all. Scope question, not a build
-gap; no split is assumed until Brian rules on it.
+detail) have no editing surface at all.
+
+Ruled 10 Aug 2026 (Brian, recorded in `docs/STUDIO-SPEC.md` section
+1): the advanced editor page is the one full edit surface, carrying
+ALL fields. The create-only fields this CR flagged gain their first
+edit sections there (body detail, behavior detail, Advanced
+Prompting; brief S4 in `docs/STUDIO-SPEC.md`). The field split
+between quick create and the editor follows the Character allocation
+in `docs/APP-FUNCTION-INVENTORY.md` as written. Closed as a
+question; tracked as build.
 
 ### CR-009, one creation system: wizard and visual picker
 
@@ -437,6 +459,33 @@ lands, the localStorage interim is one deletion in the Shell plus
 one read/write against the real preference, and the mock module
 follows CR-029's own deletion path. No component outside
 `app/studio/v2/home/` is involved.
+
+### CR-031, advanced editor full-field read and update path
+
+Filed 10 Aug 2026 by the Studio spec gate (`docs/STUDIO-SPEC.md`
+section 7). The ruled advanced editor page (`/studio/v2/editor/[id]`)
+opens saved creations for editing across the complete field set.
+Needed from the backend, in two parts:
+
+1. **Full-field read.** Opening a saved creation by id must return
+   the complete creator-written field set: the creation `data` blob
+   as the seven-stop creator writes it (including body and behavior
+   detail, typing frameworks, and Advanced Prompting content), plus
+   the record-level fields (title, description, visibility,
+   content_rating). Today no path reads a saved creation back into a
+   creator-shaped form (the old CR-007 gap).
+2. **Update-in-place, proven.** Saving from the editor must update
+   the same record end to end. This inherits the old CR-007 check
+   (c), never proven, and the CR-005 transport caveat (services-api
+   can report HTTP 200 on a failed GraphQL write); the proof is a
+   real edit observed persisted, not a 200 response.
+
+What is faked versus real until this lands: the editor page, its
+sections, and the fixtures are real frontend; `[id]` resolves through
+one named mock module in `app/studio/v2/editor/` (header comment:
+mock, pending CR-031) returning saved-creation fixtures with the
+full field set. When this CR lands, the mock module is a single
+deletion and the page reads through the existing creation client.
 
 ## Closed
 
