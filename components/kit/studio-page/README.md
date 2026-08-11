@@ -53,6 +53,19 @@ above.
 with no centering; inside this column its `border-b` separator spans
 the full content width by construction.
 
+## The headerAlign seat (v1.1.0, additive)
+
+Lore (`docs/SPRINT-H-PLAN.md` section 5.7, wave H3) is the one page
+in the set that centers its editorial section labels. `headerAlign`
+("left" | "center", default "left") wraps `headerSlot` in a
+`flex flex-col items-center text-center` column when "center";
+default "left" renders exactly what v1.0.0 rendered, so every
+existing consumer is unchanged. This does not touch
+`StudioPageHeaderView` (a different package, `components/studio/
+studio-page-header/`); Lore composes its own centered heading content
+as page-local `headerSlot` children instead of reusing that
+component's hardcoded left-aligned internals.
+
 ## Package assets
 
 - `KitStudioPage.contract.js`

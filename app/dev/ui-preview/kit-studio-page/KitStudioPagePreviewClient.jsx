@@ -7,6 +7,7 @@ import {
   kitStudioPageDefaultFixture,
   kitStudioPageNoBannerFixture,
   kitStudioPageLongestContentFixture,
+  kitStudioPageCenteredHeaderFixture,
 } from "@/components/kit/studio-page/KitStudioPage.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -16,6 +17,10 @@ const STATES = {
   longestContent: {
     label: "Longest content",
     props: kitStudioPageLongestContentFixture,
+  },
+  centeredHeader: {
+    label: "Centered header (Lore seat)",
+    props: kitStudioPageCenteredHeaderFixture,
   },
 };
 

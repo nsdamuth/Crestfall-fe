@@ -10,6 +10,7 @@
 export default function KitStudioPageView({
   harnessSlot = null,
   headerSlot = null,
+  headerAlign = "left",
   filterBarSlot = null,
   bannerSlot = null,
   children = null,
@@ -17,7 +18,13 @@ export default function KitStudioPageView({
   return (
     <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
       {harnessSlot}
-      {headerSlot}
+      {headerSlot ? (
+        headerAlign === "center" ? (
+          <div className="flex flex-col items-center text-center">{headerSlot}</div>
+        ) : (
+          headerSlot
+        )
+      ) : null}
       {filterBarSlot}
       <div className="flex flex-col gap-[var(--space-6)]">{children}</div>
       {bannerSlot}
