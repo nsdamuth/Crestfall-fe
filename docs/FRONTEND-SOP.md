@@ -236,6 +236,23 @@ Crestfall FE 3000.
 Branch law: work on `design/*` or `fix/*` branches. Never commit to
 main.
 
+Sample art, RULED 10 Aug 2026. `public/tmp-mockup-images/canon-character-images/`
+and `public/tmp-mockup-images/alpha-test-creator-images/` are scratch
+art folders, ignored by default; a curated, resized, and compressed
+subset (the files every current kit fixture and v2 mockup page
+actually references, listed by name in `.gitignore`) is committed so
+a fresh clone renders the kit previews and the v2 pages with no image
+404s. `public/tmp-creator-tiles/logo-mark.svg` is committed the same
+way. New scratch art dropped into either mockup folder stays ignored
+unless its filename is added to the `.gitignore` allowlist; do that
+only after resizing to a card/tile display dimension and compressing
+it, never by committing a raw original. Some legacy paths still
+referenced by older, non-v2 components
+(`/characters/<name>/card.jpg`, `/locations/<name>/card.jpg`,
+`/images/placeholder-card.jpg`) have no local file anywhere in this
+repo and will still 404 on a fresh clone; no file exists to sample
+from, so none is invented here.
+
 Absolute constraints: no em dashes anywhere, in code or in docs. Views
 are presentation-only, no product-data access, no business logic in
 page components. Every change is the smallest edit that satisfies the
