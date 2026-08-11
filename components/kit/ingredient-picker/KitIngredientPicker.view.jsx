@@ -5,7 +5,7 @@
 // (components/studio/image-studio/ingredient-picker/, READ ONLY
 // reference). Standing on KitModalFrame variant="modal" (full-screen
 // at 390 per R4). Tokens only; no fetch anywhere.
-import { BookOpen, Plus, Search } from "lucide-react";
+import { BookOpen, ChevronLeft, Plus, Search } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 
@@ -98,6 +98,7 @@ export default function KitIngredientPickerView({
   onUseCustom = null,
   showCreatePresetAction = false,
   onCreatePreset = null,
+  backLabel = null,
   onClose = null,
 }) {
   const introParts = ["Choose a reusable Crestfall creation"];
@@ -116,6 +117,17 @@ export default function KitIngredientPickerView({
       ariaLabel={`Select ${slotLabel}`}
     >
       <div className="flex flex-col gap-[var(--space-5)] p-[var(--space-6)] pt-[var(--space-8)]">
+        {backLabel && (
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            <ChevronLeft size={16} aria-hidden="true" />
+            {backLabel}
+          </button>
+        )}
+
         <div>
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Select Ingredient

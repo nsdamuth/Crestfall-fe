@@ -1,4 +1,4 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.1.0";
+export const LORE_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the Lore page View
@@ -13,12 +13,20 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.1.0";
  * Aug 2026: the top banner CTA, "Write lore") -> studio-filter-bar
  * (search plus approval state, world or faction, and recency facets;
  * no separate sort, matching the three ruled facets exactly) ->
- * centered editorial section labels (headerAlign="center" seat on
- * KitStudioPageView, v1.1.0, additive; the one page in the set that
- * centers them) -> two creation-card grids, Community Lore (public
+ * left-aligned editorial labels, the standard design-system section-
+ * label treatment (LORE HEADER, RULING CHANGED, 10 Aug 2026 defect
+ * ruling: superseded the 9 Aug centered ruling; Lore now matches the
+ * other eight pages, StudioPageHeaderView for the page eyebrow/title/
+ * description, the same eyebrow recipe reused for the two grid
+ * section labels) -> two creation-card grids, Community Lore (public
  * archive, load-more paginated) then Your Lore (one creator's own
  * drafts, every approval state, shown in full) -> bottom banner
  * routing to Home, the loop's closing banner.
+ *
+ * headerAlign, KitStudioPage's additive v1.1.0 seat added specifically
+ * for this page's earlier centered ruling, is no longer consumed by
+ * any page now that Lore left-aligns (default "left" applies). Left
+ * in place per the 10 Aug 2026 defect ruling rather than removed.
  *
  * The write-lore CTA (docs/SPRINT-G-PLAN.md section 4) opens a
  * creation modal composed on modal-frame with KitFormField fields

@@ -7,14 +7,16 @@
 // (promo-banner top treatment) with the write-lore CTA, item 39
 // RULED 10 Aug 2026 -> the sticky filter bar (search plus approval
 // state, world or faction, and recency facets, no separate sort) ->
-// centered editorial section labels, the one page in the set that
-// centers them (headerAlign="center" seat on KitStudioPageView) ->
+// left-aligned editorial labels, the standard design-system section-
+// label treatment (LORE HEADER, RULING CHANGED, 10 Aug 2026 defect
+// ruling: Lore no longer centers, matching the other eight pages) ->
 // two creation-card grids, Community Lore then Your Lore -> load-more
 // on the community grid -> bottom banner routing to Home, the loop's
 // closing banner. The write-lore CTA opens the creation modal
 // (modal-frame plus KitFormField fields and KitAlertStrip approval
 // notice, item 39 RULED 10 Aug 2026), unrelated to page flow order.
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
+import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
@@ -24,9 +26,15 @@ import KitFormFieldView from "@/components/kit/form-field/KitFormField.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 
+// Standard section-label treatment (StudioPageHeaderView's eyebrow
+// recipe, LORE HEADER RULING): gold uppercase, one short gold rule to
+// its right via the after: pseudo-element, never a line on the left,
+// no arrow or caret. Reused here for the two grid section labels
+// (Community Lore, Your Lore), which are page-local labels, not the
+// page eyebrow itself (that's StudioPageHeaderView, below).
 function SectionLabel({ children }) {
   return (
-    <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
       {children}
     </p>
   );
@@ -143,17 +151,12 @@ export default function LoreView({
     <>
       <KitStudioPageView
         harnessSlot={harnessSlot}
-        headerAlign="center"
         headerSlot={
-          <div className="flex flex-col gap-[var(--space-2)]">
-            <SectionLabel>The Archive</SectionLabel>
-            <h1 className="font-[family-name:var(--font-display)] text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]">
-              Lore
-            </h1>
-            <p className="mx-auto max-w-[44rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-              Read the world, write into it, and let the best of it become part of play.
-            </p>
-          </div>
+          <StudioPageHeaderView
+            eyebrow="The Archive"
+            title="Lore"
+            description="Read the world, write into it, and let the best of it become part of play."
+          />
         }
         filterBarSlot={
           <KitStudioFilterBarView
@@ -190,9 +193,7 @@ export default function LoreView({
         />
 
         <div className="flex flex-col gap-[var(--space-4)]">
-          <div className="flex flex-col items-center text-center">
-            <SectionLabel>Community Lore</SectionLabel>
-          </div>
+          <SectionLabel>Community Lore</SectionLabel>
           {communityEmptyMessage ? (
             <EmptySection message={communityEmptyMessage} />
           ) : (
@@ -209,9 +210,7 @@ export default function LoreView({
         </div>
 
         <div className="flex flex-col gap-[var(--space-4)]">
-          <div className="flex flex-col items-center text-center">
-            <SectionLabel>Your Lore</SectionLabel>
-          </div>
+          <SectionLabel>Your Lore</SectionLabel>
           {mineEmptyMessage ? <EmptySection message={mineEmptyMessage} /> : <CardGrid items={mineItems} />}
         </div>
       </KitStudioPageView>

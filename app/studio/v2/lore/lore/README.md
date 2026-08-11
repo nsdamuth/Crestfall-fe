@@ -1,6 +1,6 @@
 # Lore LOOM package
 
-**Contract:** `Lore.contract.js` (v1.1.0)
+**Contract:** `Lore.contract.js` (v1.2.0)
 
 ## Purpose
 
@@ -28,12 +28,16 @@ Lore.jsx (Shell, ../Lore.jsx)
          (approval state, world or faction, recency), the community
          grid's load-more paging, the R4 notice
   -> Lore.view.jsx
-      -> KitStudioPageView (headerAlign="center", filterBarSlot =
-         filter bar, bannerSlot = bottom banner, children = rest)
+      -> KitStudioPageView (filterBarSlot = filter bar, bannerSlot =
+         bottom banner, children = rest; headerAlign left at its
+         "left" default, see "The centered-label seat, retired" below)
+      -> StudioPageHeaderView (eyebrow "The Archive", title "Lore",
+         description) as headerSlot
       -> KitPromoBannerView x2 (top, bottom treatments)
       -> KitStudioFilterBarView (search plus the three ruled facets;
          no separate sort)
-      -> two centered section labels (Community Lore, Your Lore)
+      -> two left-aligned section labels (Community Lore, Your Lore),
+         the standard eyebrow-with-trailing-rule recipe
       -> KitCreationCardView xN per section
       -> KitLoadMoreView (community section only)
       -> LoreCreateModal (page-local, mounted only while open):
@@ -55,8 +59,10 @@ LOOM shape).
 Top banner (promo-banner `top` treatment) with the write-lore CTA ->
 the sticky filter bar (search plus approval state, world or faction,
 and recency, the three ruled facets, `docs/CRESTFALL-PRODUCT-MODEL-
-UXUI.md` 3.1; no separate sort) -> centered editorial section labels,
-the one page in the set that centers them -> the Community Lore
+UXUI.md` 3.1; no separate sort) -> left-aligned editorial labels, the
+standard design-system section-label treatment matching the other
+eight pages (LORE HEADER, RULING CHANGED, 10 Aug 2026 defect ruling;
+supersedes the 9 Aug centered ruling below) -> the Community Lore
 grid (the public archive, load-more paginated) -> Your Lore (one
 creator's own drafts, every approval state, shown in full, no
 paging) -> bottom banner (`bottom` treatment) routing to Home, the
@@ -89,18 +95,25 @@ tokens as `KitFormField`'s own input bed so it reads as one field
 family; flagged for a future kit pass if a multi-line field type is
 ever warranted more broadly.
 
-## The centered-label seat
+## LORE HEADER, RULING CHANGED (10 Aug 2026 defect ruling)
 
-`KitStudioPageView` gained an additive `headerAlign` prop (v1.0.0 to
-v1.1.0, `components/kit/studio-page/`) for exactly this page: "left"
-(default, every other consumer unchanged) or "center". Lore composes
-its own centered heading content (eyebrow, title, description) as
-page-local `headerSlot` children rather than reusing
-`StudioPageHeaderView` (a different package, `components/studio/
-studio-page-header/`, out of this wave's file set and hardcoded
-left-aligned internally). The two grid section labels (Community
-Lore, Your Lore) are page-local centered `<p>` elements, not a kit
-seat; nothing else in the kit was touched for them.
+The 9 Aug ruling that centered Lore's editorial labels is superseded:
+Lore no longer centers anything. The page eyebrow, title, and
+description now compose `StudioPageHeaderView`
+(`components/studio/studio-page-header/`), the same left-aligned
+package the other eight pages use, rather than page-local centered
+markup. The two grid section labels (Community Lore, Your Lore) keep
+their own page-local `<p>` treatment (not a kit seat) but drop their
+centering wrapper and adopt the same eyebrow-with-trailing-rule
+recipe as `StudioPageHeaderView`'s eyebrow: gold uppercase text, one
+short gold rule to its right via an `after:` pseudo-element, never a
+line on the left, no arrow or caret.
+
+`KitStudioPageView`'s additive `headerAlign` prop (v1.0.0 to v1.1.0,
+`components/kit/studio-page/`), added for the superseded centered
+ruling, is no longer consumed anywhere (Lore was its only caller).
+Per the defect ruling, the prop is left in the kit package rather than
+removed; this is the one place that fact is recorded.
 
 ## KitCreationCard's assetKind, a non-blocking note
 
@@ -123,3 +136,9 @@ approval state, one Canon, some no-art) and three Mine items (every
 approval state represented: pending, approved, canon). No CR filed
 this wave; CR-015 (pipeline confirmation) stays open with Nick,
 non-blocking, per `docs/SPRINT-G-PLAN.md` section 4.
+
+`LORE_APPROVAL_OPTIONS`'s pending label reads "Reviewing", not
+"Pending review" (10 Aug 2026 defect ruling): at the creation-card
+badge's fixed width the longer copy wrapped to two lines. Shared by
+both the "Approval state" filter dropdown option and the card badge,
+so the one change fixes both.

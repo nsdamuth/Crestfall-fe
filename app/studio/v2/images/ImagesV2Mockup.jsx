@@ -647,6 +647,7 @@ export default function ImagesV2Mockup() {
           onUseCustom={handlePickerUseCustom}
           showCreatePresetAction={SAVABLE_SLOTS.includes(activePickerSlotId)}
           onCreatePreset={handlePickerCreatePreset}
+          backLabel={isMobileCreatorOpen ? "Back to Image Creator" : null}
           onClose={() => setActivePickerSlotId(null)}
         />
       )}
@@ -674,6 +675,7 @@ export default function ImagesV2Mockup() {
             setSavePresetSlotId(null);
           }}
           onUseOnce={() => setSavePresetSlotId(null)}
+          backLabel={isMobileCreatorOpen ? "Back to Image Creator" : null}
           onClose={() => setSavePresetSlotId(null)}
         />
       )}

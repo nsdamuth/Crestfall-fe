@@ -16,8 +16,12 @@ function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
 
+// "Reviewing", not "Pending review" (10 Aug 2026 defect ruling): the
+// longer copy wrapped to two lines on the creation-card status pill
+// at its fixed width. Shared by both the filter dropdown option and
+// the card badge, so one change fixes both.
 export const LORE_APPROVAL_OPTIONS = [
-  { value: "pending", label: "Pending review" },
+  { value: "pending", label: "Reviewing" },
   { value: "approved", label: "Approved" },
   { value: "canon", label: "Canon" },
 ];

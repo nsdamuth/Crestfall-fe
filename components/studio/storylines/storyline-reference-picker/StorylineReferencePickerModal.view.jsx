@@ -1,11 +1,22 @@
-import { BookOpen, Search, X } from "lucide-react";
+// NESTED MODAL LAW (docs/BUILD-BLUEPRINT.md, the R1 credits pattern,
+// generalized 10 Aug 2026 defect ruling): a modal opened from inside
+// another modal opens in the same space, on the same KitModalFrame
+// branding as the primary, scrollable, with an explicit back path
+// back to the surface beneath. Previously a bespoke fixed-position
+// overlay with its own portal, escape handler, scroll lock, and
+// z-index override, all now redundant with what KitModalFrame (via
+// ModalShell) already provides; removed in favor of composing it
+// directly.
+import { ArrowLeft, BookOpen, Search } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function StorylineReferencePickerModalView({
   eyebrow = "Storyline Sequence",
   title = "Add a Story or Scenario",
   description = "",
   dialogTitleId = "storyline-reference-picker-title",
-  closeLabel = "Close Storyline reference picker",
+  backLabel = "Back to Storyline",
   tabs = [],
   searchQuery = "",
   searchPlaceholder = "Search references",
@@ -17,18 +28,23 @@ export default function StorylineReferencePickerModalView({
   onClose = null,
 }) {
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center overflow-y-auto bg-[var(--scrim-strong)] p-2 backdrop-blur-[var(--blur-panel)] sm:p-4"
-      style={{
-        zIndex: 2147483647,
-        isolation: "isolate",
-      }}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={dialogTitleId}
+    <KitModalFrame
+      variant="modal"
+      panelClassName="w-full max-w-4xl"
+      onClose={onClose}
+      ariaLabelledBy={dialogTitleId}
     >
-      <div className="flex max-h-[calc(100dvh-1rem)] w-full max-w-4xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/30 bg-[#0b0908] shadow-2xl sm:max-h-[calc(100dvh-2rem)]">
-        <header className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+      <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
+        <header className="flex flex-col gap-3 border-b border-[var(--line-whisper)] p-5">
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="kit-focus flex w-fit items-center gap-2 rounded-[var(--radius-md)] text-[length:var(--text-label)] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+          >
+            <ArrowLeft size={14} aria-hidden="true" />
+            {backLabel}
+          </button>
+
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               {eyebrow}
@@ -42,18 +58,9 @@ export default function StorylineReferencePickerModalView({
               </p>
             ) : null}
           </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-            aria-label={closeLabel}
-          >
-            <X size={18} />
-          </button>
         </header>
 
-        <div className="border-b border-white/10 p-5">
+        <div className="border-b border-[var(--line-whisper)] p-5">
           <div className="flex flex-wrap gap-2">
             {tabs.map((tab) => (
               <button
@@ -127,6 +134,6 @@ export default function StorylineReferencePickerModalView({
           )}
         </div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }

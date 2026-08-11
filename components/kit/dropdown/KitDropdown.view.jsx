@@ -8,12 +8,24 @@
 // 700px-and-up popover is byte-for-byte unchanged. Open/closed is
 // sanctioned presentation-only local state; selection lives with the
 // caller.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 
 const PHONE_WIDTH_QUERY = "(max-width: 699.98px)";
+
+// DROPDOWN OVERFLOW (10 Aug 2026 defect ruling): the popover was
+// always left-anchored to its trigger (`left-0`), so the last
+// dropdown in a filter row (Lore's Recency, and any other row where a
+// trigger sits close to the right edge) renders its panel past the
+// viewport's right edge. Measured after mount (viewport width is
+// layout, not fetched data, so this stays inside the LOOM's
+// no-fetch-in-effects rule): flip to right-anchored when the
+// left-anchored panel would overflow, and reserve a same-size guard
+// on the far side (--space-4) so a flip never just moves the overflow
+// to the opposite edge on a narrow viewport.
+const EDGE_GUARD_PX = 16;
 
 // Trigger grammar adopted from the legacy control bar (library.css
 // .cbdrop, docs/MOCKUP-DECISIONS.md): category label, then the gold
@@ -112,7 +124,31 @@ export default function KitDropdownView({
   const [isPhoneWidth, setIsPhoneWidth] = useState(
     () => typeof window !== "undefined" && window.matchMedia(PHONE_WIDTH_QUERY).matches
   );
+  const [panelAlign, setPanelAlign] = useState("left");
   const rootRef = useRef(null);
+  const panelRef = useRef(null);
+
+  // Measured, not assumed: re-checks on open and on resize while open,
+  // so rotating a device or resizing a desktop window with the panel
+  // open never leaves it in a stale, now-wrong alignment.
+  useLayoutEffect(() => {
+    if (!isOpen || isPhoneWidth) return undefined;
+
+    function measure() {
+      const panel = panelRef.current;
+      if (!panel || typeof window === "undefined") return;
+      const rect = panel.getBoundingClientRect();
+      setPanelAlign((current) => {
+        if (current === "left" && rect.right > window.innerWidth - EDGE_GUARD_PX) return "right";
+        if (current === "right" && rect.left < EDGE_GUARD_PX) return "left";
+        return current;
+      });
+    }
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [isOpen, isPhoneWidth]);
 
   // Presentation-only dismissal wiring for the POPOVER only: outside
   // click and Escape close the panel. No data access; the LOOM
@@ -180,6 +216,11 @@ export default function KitDropdownView({
     // this effect only listens for while open.
     if (next && typeof window !== "undefined") {
       setIsPhoneWidth(window.matchMedia(PHONE_WIDTH_QUERY).matches);
+      // Always re-measure from the left-anchored baseline: the trigger
+      // may have moved (filter row reflow, window resize) since this
+      // dropdown was last open, so a stale "right" from before could
+      // otherwise persist into a layout where it no longer applies.
+      setPanelAlign("left");
     }
     setIsOpen(next);
   }
@@ -216,13 +257,19 @@ export default function KitDropdownView({
       </button>
 
       {isOpen && !isPhoneWidth && (
-        // Popover, 700px and up: anchored below the trigger, byte-for-
-        // byte unchanged from before the frame conversion.
+        // Popover, 700px and up: anchored below the trigger, left by
+        // default, flipped to right-anchored (measured, see the
+        // useLayoutEffect above) when left-anchoring would overflow
+        // the viewport's right edge (DROPDOWN OVERFLOW, 10 Aug 2026
+        // defect ruling).
         <div
+          ref={panelRef}
           role="listbox"
           aria-label={ariaLabel || label}
           aria-multiselectable={isMultiSelect}
-          className="absolute left-0 top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)]"
+          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)] ${
+            panelAlign === "right" ? "right-0" : "left-0"
+          }`}
         >
           <PanelRows
             options={options}

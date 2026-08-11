@@ -13,6 +13,14 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
  * in a query; the caller supplies display-ready options and receives
  * intent through the semantic callbacks.
  *
+ * DROPDOWN OVERFLOW fix (10 Aug 2026 defect ruling), no prop change:
+ * the 700px-and-up popover used to always anchor left of the trigger,
+ * so the last dropdown in a row near the viewport's right edge (Lore's
+ * Recency filter, named in the ruling) rendered off-screen. The View
+ * now measures the panel after it opens and flips to right-anchored
+ * when left-anchoring would overflow, re-measuring on resize while
+ * open. Purely internal; the public props above are unchanged.
+ *
  * Selection count law (filter-line law, 9 Aug 2026): a multi-select
  * trigger shows its live selection count beside the label; a
  * single-select trigger shows the selected option's label. The count

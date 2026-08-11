@@ -5,7 +5,7 @@
 // (components/studio/image-studio/save-ingredient-preset/, READ ONLY
 // reference). Standing on KitModalFrame variant="modal". Tokens only;
 // no fetch anywhere.
-import { Check, Loader2, Save } from "lucide-react";
+import { Check, ChevronLeft, Loader2, Save } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 
@@ -36,6 +36,7 @@ export default function KitSaveIngredientPresetView({
   canSave = false,
   onSavePreset = null,
   onUseOnce = null,
+  backLabel = null,
   onClose = null,
 }) {
   return (
@@ -46,6 +47,17 @@ export default function KitSaveIngredientPresetView({
       ariaLabel={`Save ${presetTypeLabel}`}
     >
       <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-6)] pt-[var(--space-8)]">
+        {backLabel && (
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            <ChevronLeft size={16} aria-hidden="true" />
+            {backLabel}
+          </button>
+        )}
+
         <div>
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Save Preset

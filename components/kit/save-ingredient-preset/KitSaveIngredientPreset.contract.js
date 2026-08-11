@@ -1,4 +1,4 @@
-export const KIT_SAVE_INGREDIENT_PRESET_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_SAVE_INGREDIENT_PRESET_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the save-ingredient-preset kit
@@ -12,6 +12,13 @@ export const KIT_SAVE_INGREDIENT_PRESET_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * No field carries a character cap in the live flow, so none is
  * invented here (token-first / honesty law): no counters render.
+ *
+ * 1.0.0 to 1.1.0, additive: backLabel. NESTED MODAL LAW (the R1
+ * credits pattern, generalized 10 Aug 2026): when this piece opens
+ * from inside another modal (Images v2's mobile create-image panel,
+ * under 700px), the caller passes a labeled backLabel so the return
+ * path reads at a glance, rather than a bare close icon. Null when
+ * opened as a top-level modal.
  *
  * @typedef {Object} KitSaveIngredientPresetViewProps
  * @property {string} presetTypeLabel the modal title (e.g. "Pose
@@ -33,6 +40,9 @@ export const KIT_SAVE_INGREDIENT_PRESET_VIEW_CONTRACT_VERSION = "1.0.0";
  *   fixture-action notice in every fixture-mode consumer; the real
  *   persistence call is live wiring
  * @property {(() => void)|null} onUseOnce closes without persisting
+ * @property {string|null} [backLabel] Added 1.1.0. Non-null renders a
+ *   labeled back row above the title (e.g. "Back to Image Creator"),
+ *   firing onClose, for the nested-modal case.
  * @property {(() => void)|null} onClose the caller passes null while
  *   isSaving is true so backdrop, Escape, and the close control are
  *   all no-ops (KitModalFrame's null-safe dismissal), matching the
