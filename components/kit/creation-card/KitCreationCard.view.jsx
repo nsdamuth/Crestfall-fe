@@ -24,7 +24,7 @@
 // overlay-top everywhere. The scrim-row alternative (icons bottom-right
 // beside the title) is retired; icons top-right over the art, clear of
 // the title block, is the only placement now.
-import { Bookmark, Heart, Maximize2, Play, Users } from "lucide-react";
+import { Bookmark, Heart, Maximize2, Play, Users, Wand2 } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
 
@@ -39,6 +39,21 @@ function stopAndRun(event, handler) {
 
 function resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail) {
   return assetKind === "image" ? onOpenImageOverlay : onOpenAssetDetail;
+}
+
+// Contextual third face action, RULED 11 Aug 2026: play (Story,
+// Adventure), generate (Image asset), expand everywhere else,
+// including any card whose caller passes no handler for its
+// contextual action. Expand is the universal fallback; a card never
+// renders a dead third icon.
+function resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen }) {
+  if ((assetKind === "story" || assetKind === "adventure") && onPlay) {
+    return { label: "Start Chat", Icon: Play, onClick: onPlay };
+  }
+  if (assetKind === "image" && onGenerate) {
+    return { label: "Generate", Icon: Wand2, onClick: onGenerate };
+  }
+  return { label: "Expand", Icon: Maximize2, onClick: onOpen };
 }
 
 function IconActionButton({ label, active = false, onClick = null, children }) {
@@ -105,7 +120,9 @@ function BadgeRow({ badges }) {
   );
 }
 
-function OverlayActions({ liked, bookmarked, onLike, onBookmark, onOpen }) {
+function OverlayActions({ liked, bookmarked, onLike, onBookmark, contextualAction }) {
+  const { label, Icon, onClick } = contextualAction;
+
   return (
     <>
       <IconActionButton label="Like" active={liked} onClick={onLike}>
@@ -114,8 +131,8 @@ function OverlayActions({ liked, bookmarked, onLike, onBookmark, onOpen }) {
       <IconActionButton label="Save" active={bookmarked} onClick={onBookmark}>
         <Bookmark size={16} fill={bookmarked ? "currentColor" : "none"} />
       </IconActionButton>
-      <IconActionButton label="Expand" onClick={onOpen}>
-        <Maximize2 size={16} />
+      <IconActionButton label={label} onClick={onClick}>
+        <Icon size={16} />
       </IconActionButton>
     </>
   );
@@ -137,6 +154,7 @@ function GridCard({
   onOpen,
   onLike,
   onBookmark,
+  contextualAction,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -185,7 +203,7 @@ function GridCard({
               bookmarked={bookmarked}
               onLike={onLike}
               onBookmark={onBookmark}
-              onOpen={onOpen}
+              contextualAction={contextualAction}
             />
           </div>
         </div>
@@ -223,6 +241,7 @@ function ListCard({
   onOpen,
   onLike,
   onBookmark,
+  contextualAction,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -290,7 +309,7 @@ function ListCard({
             bookmarked={bookmarked}
             onLike={onLike}
             onBookmark={onBookmark}
-            onOpen={onOpen}
+            contextualAction={contextualAction}
           />
         </div>
       </div>
@@ -313,9 +332,12 @@ export default function KitCreationCardView({
   onOpenAssetDetail = null,
   onLike = null,
   onBookmark = null,
+  onPlay = null,
+  onGenerate = null,
 }) {
   const isList = layout === "list";
   const onOpen = resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail);
+  const contextualAction = resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen });
 
   const disabledClasses = isDisabled
     ? "pointer-events-none opacity-[var(--state-disabled-opacity)]"
@@ -339,6 +361,7 @@ export default function KitCreationCardView({
           onOpen={onOpen}
           onLike={onLike}
           onBookmark={onBookmark}
+          contextualAction={contextualAction}
         />
       ) : (
         <GridCard
@@ -352,6 +375,7 @@ export default function KitCreationCardView({
           onOpen={onOpen}
           onLike={onLike}
           onBookmark={onBookmark}
+          contextualAction={contextualAction}
         />
       )}
     </article>

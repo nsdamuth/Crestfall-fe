@@ -342,6 +342,16 @@ export default function CommunityV2Mockup() {
   const toggleSaved = toggleId(setSavedIds);
   const toggleLovedOverlay = toggleId(setLovedOverlayIds);
 
+  // Shared with the card grid's new contextual third face action
+  // (RULED 11 Aug 2026): the card's play icon routes to the same
+  // destination as the opened popup's own Play primary action.
+  function handlePlay(creation) {
+    setActionNotice({
+      label: "Play",
+      message: `Playing "${creation.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+    });
+  }
+
   return (
     <>
     <KitStudioPageView
@@ -473,6 +483,11 @@ export default function CommunityV2Mockup() {
                 onOpenAssetDetail={() => setAssetDetailId(creation.id)}
                 onLike={() => toggleLiked(creation.id)}
                 onBookmark={() => toggleSaved(creation.id)}
+                onPlay={
+                  creation.assetKind === "story" || creation.assetKind === "adventure"
+                    ? () => handlePlay(creation)
+                    : undefined
+                }
               />
             ))}
           </div>
@@ -537,12 +552,7 @@ export default function CommunityV2Mockup() {
             isLiked={likedIds.includes(creation.id)}
             isSaved={savedIds.includes(creation.id)}
             onLike={() => toggleLiked(creation.id)}
-            onPrimaryAction={() =>
-              setActionNotice({
-                label: "Play",
-                message: `Playing "${creation.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
-              })
-            }
+            onPrimaryAction={() => handlePlay(creation)}
             onShare={() =>
               setActionNotice({
                 label: "Share",

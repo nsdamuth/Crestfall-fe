@@ -8,6 +8,7 @@ import {
   kitCreationCardCanonOverArtFixture,
   kitCreationCardCharacterFixture,
   kitCreationCardDisabledFixture,
+  kitCreationCardGenerateActionFixture,
   kitCreationCardImageFixture,
   kitCreationCardListDefaultFixture,
   kitCreationCardListDisabledFixture,
@@ -15,6 +16,7 @@ import {
   kitCreationCardLongestTitleFixture,
   kitCreationCardNoImageFixture,
   kitCreationCardOwnWorkFixture,
+  kitCreationCardPlayActionFixture,
   kitCreationCardStoryFixture,
 } from "@/components/kit/creation-card/KitCreationCard.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
@@ -29,6 +31,8 @@ const STATES = {
   noImage: { label: "Grid, no image", props: kitCreationCardNoImageFixture },
   longest: { label: "Grid, longest title", props: kitCreationCardLongestTitleFixture },
   disabled: { label: "Grid, disabled", props: kitCreationCardDisabledFixture },
+  playAction: { label: "Grid, story (play action)", props: kitCreationCardPlayActionFixture },
+  generateAction: { label: "Grid, image (generate action)", props: kitCreationCardGenerateActionFixture },
   listDefault: { label: "List, default", props: kitCreationCardListDefaultFixture },
   listNoImage: { label: "List, no image", props: kitCreationCardListNoImageFixture },
   listDisabled: { label: "List, disabled", props: kitCreationCardListDisabledFixture },
@@ -65,6 +69,17 @@ export default function KitCreationCardPreviewClient() {
       })),
   };
 
+  // Only wraps onPlay/onGenerate when the active fixture defines one,
+  // so every other fixture keeps exercising the expand fallback.
+  const contextualCallbacks = {
+    ...(localProps.onPlay
+      ? { onPlay: () => setLastAction("Start Chat fired (local preview only).") }
+      : {}),
+    ...(localProps.onGenerate
+      ? { onGenerate: () => setLastAction("Generate fired (local preview only).") }
+      : {}),
+  };
+
   return (
     <KitPreviewShell
       title="Kit Creation Card"
@@ -79,11 +94,11 @@ export default function KitCreationCardPreviewClient() {
     >
       {isGrid ? (
         <div className="mx-auto max-w-sm">
-          <KitCreationCardView {...localProps} {...sharedCallbacks} />
+          <KitCreationCardView {...localProps} {...sharedCallbacks} {...contextualCallbacks} />
         </div>
       ) : (
         <div className="mx-auto max-w-3xl">
-          <KitCreationCardView {...localProps} {...sharedCallbacks} />
+          <KitCreationCardView {...localProps} {...sharedCallbacks} {...contextualCallbacks} />
         </div>
       )}
     </KitPreviewShell>

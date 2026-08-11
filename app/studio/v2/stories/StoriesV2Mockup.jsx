@@ -448,6 +448,16 @@ export default function StoriesV2Mockup() {
     return [{ label: VISIBILITY_LABELS[item.visibility], variant: "status" }];
   }
 
+  // Shared with the card grid's new contextual third face action
+  // (RULED 11 Aug 2026): the card's play icon routes to the same
+  // destination as the opened popup's own Play primary action.
+  function handlePlay(item) {
+    setActionNotice({
+      label: "Play",
+      message: `Playing "${item.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+    });
+  }
+
   return (
     <>
       <KitStudioPageView
@@ -641,6 +651,11 @@ export default function StoriesV2Mockup() {
                         onOpenAssetDetail={() => (manageMode ? toggleSelected(item.id) : setAssetDetailId(item.id))}
                         onLike={() => toggleLiked(item.id)}
                         onBookmark={() => toggleSaved(item.id)}
+                        onPlay={
+                          item.kind === "story" || item.kind === "adventure"
+                            ? () => handlePlay(item)
+                            : undefined
+                        }
                       />
                     </div>
                   ))}
@@ -680,12 +695,7 @@ export default function StoriesV2Mockup() {
             isLiked={likedIds.includes(item.id)}
             isSaved={savedIds.includes(item.id)}
             onLike={() => toggleLiked(item.id)}
-            onPrimaryAction={() =>
-              setActionNotice({
-                label: "Play",
-                message: `Playing "${item.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
-              })
-            }
+            onPrimaryAction={() => handlePlay(item)}
             onShare={() =>
               setActionNotice({
                 label: "Share",

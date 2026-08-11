@@ -44,5 +44,7 @@ export function useKitCreationCardViewModel(props) {
     onOpenAssetDetail: toCallback(props?.onOpenAssetDetail),
     onLike: toCallback(props?.onLike),
     onBookmark: toCallback(props?.onBookmark),
+    onPlay: toCallback(props?.onPlay),
+    onGenerate: toCallback(props?.onGenerate),
   };
 }

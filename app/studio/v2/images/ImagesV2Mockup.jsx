@@ -475,6 +475,15 @@ export default function ImagesV2Mockup() {
 
   const availability = computeAvailability(slots, coinBalance);
 
+  // Shared with the card grid's new contextual third face action
+  // (RULED 11 Aug 2026): the card's Generate icon routes to the same
+  // destination as the panel's own Generate control.
+  const handleGenerate = () =>
+    setActionNotice({
+      label: "Generate image",
+      message: "Generation is wired when the page goes live. Nothing was generated in this preview.",
+    });
+
   const panelProps = {
     mode: panelMode,
     onChangeMode: setPanelMode,
@@ -495,11 +504,7 @@ export default function ImagesV2Mockup() {
     showInsufficientCoins: availability.showInsufficientCoins,
     canGenerate: availability.canGenerate,
     generationHelpText: availability.generationHelpText,
-    onGenerate: () =>
-      setActionNotice({
-        label: "Generate image",
-        message: "Generation is wired when the page goes live. Nothing was generated in this preview.",
-      }),
+    onGenerate: handleGenerate,
     videoOptionFields,
     onChangeVideoOption: (fieldId, value) => setVideoOptionValues((current) => ({ ...current, [fieldId]: value })),
     videoDirectionValue,
@@ -628,6 +633,7 @@ export default function ImagesV2Mockup() {
                       }
                       onLike={() => toggleLoved(item.id)}
                       onBookmark={() => toggleSaved(item.id)}
+                      onGenerate={handleGenerate}
                     />
                   ))}
                 </div>

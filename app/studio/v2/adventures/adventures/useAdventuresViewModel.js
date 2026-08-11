@@ -91,6 +91,12 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
           openNotice(item.title, `Opening "${item.title}" happens on its own page when live wiring lands.`),
         onLike: () => toggleLiked(item.id),
         onBookmark: () => toggleSaved(item.id),
+        // Contextual third face action (RULED 11 Aug 2026): every
+        // catalog item here is an Adventure, so every card gets the
+        // play action. Same honest-stub posture as the page's other
+        // controls, no live destination exists yet.
+        onPlay: () =>
+          openNotice("Start Chat", `Starting "${item.title}" begins its session when live wiring lands. Nothing was started in this preview.`),
       })),
     [visibleItems, likedIds, savedIds]
   );

@@ -1,6 +1,6 @@
 # Kit Creation Card LOOM Package
 
-**Contract:** `KitCreationCard.contract.js` (v3.1.0)
+**Contract:** `KitCreationCard.contract.js` (v3.2.0)
 
 ## Purpose
 
@@ -32,11 +32,35 @@ KitCreationCard.jsx
 
 ## Face actions
 
-Exactly three overlay icons: like, save, expand. They reveal on
-hover/focus at fine pointers and stay visible at coarse pointers
-(mobile law). Share, download, and delete live inside the open
-destination: Ruling 6 and the destructive law both require their
-words, and worded controls have no home on a full-bleed face.
+Exactly three overlay icons, never more. They reveal on hover/focus
+at fine pointers and stay visible at coarse pointers (mobile law).
+Share, download, and delete live inside the open destination: Ruling
+6 and the destructive law both require their words, and worded
+controls have no home on a full-bleed face.
+
+Slots one and two are always like and save, unchanged everywhere.
+Slot three, RULED 11 Aug 2026 (v3.2.0), is contextual by
+`assetKind`:
+
+- `"story"` and `"adventure"` with an `onPlay` handler: a play action,
+  icon plus accessible label "Start Chat".
+- `"image"` with an `onGenerate` handler: a generate action, icon plus
+  accessible label "Generate".
+- Every other card type, and any card whose caller passes no handler
+  for its contextual action, keeps today's expand action. Expand is
+  the universal fallback; a card never renders a dead third icon.
+
+Icons: `Play` (already the plays-stat icon in this same package) for
+the play action, `Wand2` (the existing Generate-action glyph used by
+`KitImageCreatorPanel`) for the generate action, both from
+`lucide-react`, the library already in use here. No new icon library.
+
+Tapping the card artwork opens the card (the expand destination) on
+every card, all types, both layouts: the full-bleed absolute-inset
+open button under the face icons already did this pre-3.2.0, verified
+unchanged by this bump. Face icon taps never trigger the artwork tap;
+`stopAndRun` (`preventDefault` plus `stopPropagation`) already
+isolates every overlay icon click from the underlying open button.
 
 ## Overlay-action placement, ruled
 
@@ -68,7 +92,8 @@ five states plus the active toggle treatment.
 
 - `KitCreationCard.contract.js`
 - `KitCreationCard.fixtures.js` (draft-asset art from
-  `public/tmp-mockup-images/`, gitignored interim fixtures)
+  `public/tmp-mockup-images/`, gitignored interim fixtures; includes
+  the play-action and generate-action states, v3.2.0)
 - `useKitCreationCardViewModel.js`
 - `/dev/ui-preview/kit-creation-card`
 

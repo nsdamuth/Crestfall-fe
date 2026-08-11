@@ -124,3 +124,17 @@ export const kitCreationCardListDisabledFixture = {
   ...kitCreationCardDisabledFixture,
   layout: "list",
 };
+
+// Contextual third face action, RULED 11 Aug 2026: play (Story,
+// Adventure cards) and generate (Image asset cards). Every other
+// fixture above omits onPlay/onGenerate deliberately, so the expand
+// fallback stays exercised everywhere else.
+export const kitCreationCardPlayActionFixture = {
+  ...kitCreationCardStoryFixture,
+  onPlay: noop,
+};
+
+export const kitCreationCardGenerateActionFixture = {
+  ...kitCreationCardImageFixture,
+  onGenerate: noop,
+};

@@ -270,6 +270,16 @@ export default function VaultV2Mockup() {
   const toggleLiked = toggleId(setLikedIds);
   const toggleSaved = toggleId(setSavedIds);
 
+  // Shared with the card grid's new contextual third face action
+  // (RULED 11 Aug 2026): the card's play icon routes to the same
+  // destination as the opened popup's own Play primary action.
+  function handlePlay(item) {
+    setActionNotice({
+      label: "Play",
+      message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+    });
+  }
+
   // Badges follow the own-work context (plan section 7.3): owned
   // items carry their visibility badge or Canon where canon;
   // saved-from-others items carry no visibility badge (they are not
@@ -415,6 +425,11 @@ export default function VaultV2Mockup() {
                   onOpenAssetDetail={() => setAssetDetailId(item.id)}
                   onLike={() => toggleLiked(item.id)}
                   onBookmark={() => toggleSaved(item.id)}
+                  onPlay={
+                    item.assetKind === "story" || item.assetKind === "adventure"
+                      ? () => handlePlay(item)
+                      : undefined
+                  }
                 />
               ))}
             </div>
@@ -476,10 +491,12 @@ export default function VaultV2Mockup() {
           isSaved={savedIds.includes(item.id)}
           onLike={() => toggleLiked(item.id)}
           onPrimaryAction={() =>
-            setActionNotice({
-              label: item.assetKind === "image" ? "Open" : "Play",
-              message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
-            })
+            item.assetKind === "image"
+              ? setActionNotice({
+                  label: "Open",
+                  message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+                })
+              : handlePlay(item)
           }
           onShare={() =>
             setActionNotice({
