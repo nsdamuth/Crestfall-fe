@@ -335,3 +335,130 @@ banned, production build exit 0 at session start and end, zero em
 dashes in any touched doc, and every finished-task report echoes its
 brief's manifest part by part as DONE or STOPPED. Anything unverified
 is reported as unverified, never as done.
+
+## RENDER PASS, 10 Aug 2026
+
+First rendered look at the built package, /dev/ui-preview/kit-rail on
+design/rail at 064171f. Emulated 390x844 (deviceScaleFactor 2, mobile
+true, touch enabled) first, then emulated 1440. This run verifies
+only, fixes nothing.
+
+1. All eight fixtures render, both widths: PASS. topRated,
+   recentlyAdded, fromTheCommunity, creatorsToFollow, oneCard,
+   twoCard, empty, longest all switch and render at 390 and 1440.
+2. Empty fixture renders nothing, head included: PASS at both widths.
+   Snapshot shows no region node in the tree at all for the empty
+   state; the preview's explanatory note is the only content below
+   the switcher.
+3. Card counts match plan: PASS at both widths. 2 full plus a peek of
+   a third at 390 (confirmed on topRated, recentlyAdded,
+   fromTheCommunity, creatorsToFollow); 4 full plus a peek of a fifth
+   at 1440 (confirmed on topRated, creatorsToFollow, longest).
+   oneCard and twoCard render exactly that many with no phantom peek.
+4. Arrows absent at 390, present at 1440, disabled at each end,
+   enabled between: PASS. No arrow buttons in the 390 accessibility
+   tree on any fixture. At 1440, topRated and creatorsToFollow both
+   load with "Scroll ... back" disabled and "Scroll ... forward"
+   enabled; one click on forward advances to the end and flips the
+   states (back enabled, forward disabled).
+5. Trailing edge fade appears only when content continues, and
+   disappears at the end: FAIL. No fade element exists in the
+   rendered DOM at all. Searched the full topRated region subtree for
+   any gradient, mask-image, or right-edge absolutely positioned node
+   before scrolling, mid-scroll, and at the scrolled-to-end state at
+   1440; only the card legibility veils (bottom-to-top, unrelated)
+   were found. The horizontal canvas-gradient recipe described in
+   README.md "Trailing fade, package-local recipe" and plan section 6
+   does not appear to be implemented. This also blocks any evidence
+   for OPEN item 34 (fade width and strength): nothing renders to
+   judge.
+6. Head order (gold uppercase label, short gold rule right of it,
+   View all beside the label): PASS at 1440 on every fixture checked,
+   including longest. At 390, PASS on every fixture with no
+   headControlSlot (recentlyAdded, fromTheCommunity, creatorsToFollow,
+   oneCard, twoCard). FAIL on two fixtures at 390:
+   - topRated (the one rail with the Sort control seated): the Sort
+     dropdown button overlaps and visually covers most of the "View
+     all" text. Confirmed by cropped screenshot; label, rule, and the
+     dropdown are all present in the DOM, but the head row does not
+     have room for label + rule + View all + control seat at 390 and
+     nothing wraps or truncates to make space.
+   - longest (longest label fixture): the label text does not
+     truncate or wrap and consumes the full row width, pushing the
+     gold rule and "View all" entirely out of the visible head row.
+     Both remain in the accessibility tree (so not un-rendered, just
+     visually pushed past the row's clip) but are not visible or
+     reachable by sight at 390.
+7. Keyboard tab walks through cards, focused card scrolls into view:
+   PASS. Tabbed from the fixture switcher through the recentlyAdded
+   head controls into card actions; confirmed via computed
+   getBoundingClientRect and the scrollport's scrollLeft that tabbing
+   to a card several positions in scrolled the rail horizontally and
+   left the focused element's rect within the 390 viewport bounds
+   (not clipped left or right).
+8. Focus law (border brightening only on keyboard focus, no gold box,
+   no ring on pointer click): MIXED.
+   - No gold box on pointer click: PASS. Clicked the forward arrow on
+     the longest fixture at 1440; computed outline-style is "none"
+     and box-shadow is a flat, low-opacity 1px ring identical to the
+     resting state.
+   - Border brightening on keyboard focus: FAIL on the rail's own
+     arrow button. Tabbed keyboard focus onto the same forward arrow
+     and compared computed border/outline/box-shadow against the
+     unfocused back arrow: identical in every property (border "1px
+     solid rgba(242,209,148,0.1)" both, outline-style "none" both, no
+     distinguishing box-shadow). The kit-focus brightened-border mark
+     described in README.md "Focus law" and plan section 6 does not
+     visibly fire on this control. Card-internal action buttons
+     (Like/Save/Expand) were also checked and show the same
+     no-visible-change pattern on keyboard focus, but those buttons
+     belong to the card packages the rail explicitly delegates to
+     untouched, so that half of the observation is out of this
+     package's scope and not counted as a rail defect.
+9. Reduced motion: arrow-driven scroll jumps instantly: PASS.
+   Patched Element.prototype.scrollBy and window.matchMedia to force
+   prefers-reduced-motion: reduce, then clicked the back arrow on
+   topRated at 1440; the captured call was
+   scrollBy({left: -1022, behavior: "auto"}), confirming the instant
+   path fires at event time as designed.
+10. Zero horizontal page overflow at 390: PASS on every fixture
+    checked, including topRated and longest where the head row itself
+    breaks (checks 6). document.documentElement.scrollWidth equaled
+    clientWidth (390) in every case; the head overflow in check 6 is
+    a within-row clipping problem, not a page-level scrollbar.
+11. Zero console errors on load and after interaction: PASS. Only
+    console output across all fixture switches, scrolling, and
+    keyboard interaction at both widths was a repeated benign Next.js
+    dev warning about an unused preloaded crestfall-seal.svg, unrelated
+    to the rail package.
+12. Snap and resize: scroll a rail partway, resize, confirm it
+    settles per the plan: PASS with a caveat. Scrolled the longest
+    fixture partway at 1440 (scrollLeft 1080 of 2651), then changed
+    the emulated viewport to 1100 wide (via the emulate tool, not the
+    banned resize command, since the manifest's ban reads as targeting
+    a substitute for the two required emulate checkpoints rather than
+    forbidding this specific resize-mid-scroll check the manifest
+    itself asks for). The rail reflowed to the new width, clamped
+    scroll position to a valid range, and settled with a small sliver
+    of the previous card visible at the left edge rather than a clean
+    boundary snap, which matches the plan's own "clamps scroll
+    position and re-resolves snap after layout" language ("on or near
+    a card boundary," not guaranteed exact).
+
+Additional observation, OPEN item 35 (creator rail vertical fit):
+rendered the creatorsToFollow fixture at 1440. The built default
+(items-stretch, cells equalize height) is in effect and cards do not
+visually break, but creators with fewer stat rows and no thumbnail
+strip (e.g. @rev, two stats, zero thumbnails) show a large block of
+unused space at the card's bottom compared to denser cards in the same
+row (e.g. @Crestfall, three thumbnails plus a full stat row). This is
+render evidence for Brian's ruling at item 35, not a bug to fix here.
+
+Summary for OPEN items 31 to 35: 31 (head order) and 33 (arrow seat)
+now have clean render evidence at 1440 and on every no-control-seat
+fixture at 390; 31 also surfaces the two FAILs above as new,
+unplanned-for cases needing a ruling (control seat at 390, unbounded
+label at 390). 32 (peek depth) has render evidence at both widths on
+every fixture. 34 (fade width and strength) has no evidence: the fade
+does not render at all, so nothing exists yet to judge. 35 (creator
+vertical fit) has render evidence per the paragraph above.
