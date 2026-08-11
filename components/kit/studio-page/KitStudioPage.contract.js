@@ -1,4 +1,4 @@
-export const KIT_STUDIO_PAGE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_STUDIO_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the studio-v2 page skeleton
@@ -11,9 +11,17 @@ export const KIT_STUDIO_PAGE_VIEW_CONTRACT_VERSION = "1.0.0";
  * adds max-width, mx-auto, or horizontal padding around a slot is out
  * of contract.
  *
+ * v1.1.0 adds the optional headerAlign seat (additive, docs/SPRINT-H-
+ * PLAN.md section 5.7, wave H3): the one page in the set that centers
+ * its editorial section labels wraps headerSlot in a text-center
+ * column instead of the default left column. Default "left" renders
+ * byte-for-byte what v1.0.0 rendered; every existing consumer is
+ * unchanged.
+ *
  * @typedef {Object} KitStudioPageViewProps
  * @property {import("react").ReactNode} harnessSlot Fixture-mode row. Preview and staging harness only; real pages pass nothing.
- * @property {import("react").ReactNode} headerSlot The StudioPageHeaderView block.
+ * @property {import("react").ReactNode} headerSlot The StudioPageHeaderView block, or any page-local heading content.
+ * @property {"left"|"center"} [headerAlign] defaults "left"
  * @property {import("react").ReactNode} filterBarSlot The KitStudioFilterBarView, rendered as a direct child of the root with no wrapper.
  * @property {import("react").ReactNode} bannerSlot The bottom KitPromoBannerView.
  * @property {import("react").ReactNode} children Everything between the filter line and the banner: grid, list, load-more, loading, empty.

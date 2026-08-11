@@ -21,6 +21,12 @@ export const kitStudioPageNoBannerFixture = {
   bannerSlot: null,
 };
 
+export const kitStudioPageCenteredHeaderFixture = {
+  ...kitStudioPageDefaultFixture,
+  headerAlign: "center",
+  headerSlot: placeholderBlock("Header slot, centered (Lore seat)", "h-[var(--space-14)]"),
+};
+
 export const kitStudioPageLongestContentFixture = {
   ...kitStudioPageDefaultFixture,
   children: (

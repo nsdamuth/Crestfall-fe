@@ -1,0 +1,87 @@
+export const LORE_VIEW_CONTRACT_VERSION = "1.0.0";
+
+/**
+ * Stable portable UI boundary for the Lore page View
+ * (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md 4.9; docs/SPRINT-G-PLAN.md
+ * section 4; docs/SPRINT-H-PLAN.md section 5.7). New page this pass,
+ * contract authorized none to 1.0.0 at this gate. Build address
+ * /studio/v2/lore (route law, cutover sequence). Fixture-driven only,
+ * pre-parity: no fetch, no services-api, no product data.
+ *
+ * Ruled composition, top to bottom, exhaustive: top banner (promo-
+ * banner top treatment) with the write-lore CTA (item 39, RULED 10
+ * Aug 2026: the top banner CTA, "Write lore") -> studio-filter-bar
+ * (search plus approval state, world or faction, and recency facets;
+ * no separate sort, matching the three ruled facets exactly) ->
+ * centered editorial section labels (headerAlign="center" seat on
+ * KitStudioPageView, v1.1.0, additive; the one page in the set that
+ * centers them) -> two creation-card grids, Community Lore (public
+ * archive, load-more paginated) then Your Lore (one creator's own
+ * drafts, every approval state, shown in full) -> bottom banner
+ * routing to Home, the loop's closing banner.
+ *
+ * The write-lore CTA's real destination (docs/SPRINT-G-PLAN.md
+ * section 4: a creation modal composed on modal-frame with
+ * KitFormField fields and KitAlertStrip approval notices) needs both
+ * kit packages; neither exists yet (waves H2a form-field and H2c
+ * alert-strip have not landed). The CTA stubs with the R4 fixture-
+ * action notice until they do (HIDE/STUB law, docs/FRONTEND-SOP.md
+ * section 5).
+ *
+ * What the View renders itself: the section order and every ruled
+ * kit composition (promo-banner, studio-filter-bar, creation-card,
+ * load-more). What it delegates: all data, all routing (every onX
+ * callback), all local state that is not presentation-only. The View
+ * fetches nothing.
+ *
+ * @typedef {Object} LoreBannerProps
+ * @property {string} eyebrow
+ * @property {string} title
+ * @property {string} ctaLabel
+ * @property {string|null} imageSrc
+ * @property {(() => void)|null} onCtaClick
+ *
+ * @typedef {Object} LoreCardItem
+ * @property {"creation"} cardKind
+ * @property {"lore"} assetKind Not yet in KitCreationCard's documented assetKind enum ("image"|"character"|"story"|"adventure"); the View's onOpen resolver only special-cases "image", so "lore" routes to onOpenAssetDetail exactly like character/story/adventure. Flagged for H6 as a KitCreationCard contract note, not a required contract change (nothing in components/kit/creation-card is edited by this wave).
+ * @property {string} id
+ * @property {string} title
+ * @property {string} subtitle
+ * @property {string|null} imageSrc
+ * @property {import("@/components/kit/creation-card/KitCreationCard.contract").KitCreationCardBadge[]} badges
+ * @property {import("@/components/kit/creation-card/KitCreationCard.contract").KitCreationCardStats} stats
+ * @property {boolean} liked
+ * @property {boolean} bookmarked
+ * @property {(() => void)|null} onOpenAssetDetail
+ * @property {(() => void)|null} onLike
+ * @property {(() => void)|null} onBookmark
+ *
+ * @typedef {Object} LoreFilterBar
+ * @property {string} searchValue
+ * @property {string} searchPlaceholder
+ * @property {((value: string) => void)|null} onSearchChange
+ * @property {import("@/components/kit/studio-filter-bar/KitStudioFilterBar.contract").KitStudioFilterBarGroup[]} filterGroups
+ * @property {Record<string, string[]>} selectedValues
+ * @property {((groupId: string, value: string) => void)|null} onFilterToggle
+ *
+ * @typedef {Object} LoreLoadMore
+ * @property {boolean} isLoading
+ * @property {boolean} hasMore
+ * @property {number|null} remainingCount
+ * @property {(() => void)|null} onLoadMore
+ *
+ * @typedef {Object} LoreViewProps
+ * @property {LoreBannerProps} topBanner
+ * @property {LoreFilterBar} filterBar
+ * @property {LoreCardItem[]} communityItems Visible slice of the public archive, already paged.
+ * @property {string|null} communityEmptyMessage Non-null renders the empty-section state instead of the community grid.
+ * @property {LoreLoadMore} communityLoadMore
+ * @property {LoreCardItem[]} mineItems The creator's own drafts, shown in full, no paging.
+ * @property {string|null} mineEmptyMessage Non-null renders the empty-section state instead of the mine grid.
+ * @property {LoreBannerProps} bottomBanner
+ * @property {{label: string, message: string}|null} notice R4 fixture-action notice (10 Aug 2026 review gate): non-persisting acknowledgement for any control whose real behavior waits on live wiring. Null renders nothing.
+ * @property {(() => void)|null} onCloseNotice
+ * @property {import("react").ReactNode} [harnessSlot] Dev-only fixture-state switcher, never product.
+ */
+
+export {};
