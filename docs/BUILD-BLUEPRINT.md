@@ -1518,9 +1518,14 @@ the page. Studio (row 6) has a ruled composition (quick-create modals
 for phone, the advanced full editor for desktop); CR-026 remains
 Nick's later promotion pass over the QUICK/ADVANCED allocation, not a
 build gate. Lore (row 9) ships as an index page on the shared v2
-composition with centered editorial labels; CR-015 stays open and
-non-blocking. `docs/SPRINT-G-PLAN.md` carries the build plan for all
-four.
+composition; CR-015 stays open and non-blocking. LORE HEADER, RULING
+CHANGED (10 Aug 2026 defect ruling, wave H-defects, commit `0a46d3b`):
+supersedes this section's earlier "centered editorial labels" reading.
+Lore's eyebrow/title/description and its two grid section labels
+(Community Lore, Your Lore) are left aligned, the standard gold-
+eyebrow-with-trailing-rule treatment, matching the other eight pages;
+see `docs/CRESTFALL-DESIGN-CONTEXT.md` for the full ruling record.
+`docs/SPRINT-G-PLAN.md` carries the build plan for all four.
 
 ## 3.2 Standing constraints on every page in the order
 
