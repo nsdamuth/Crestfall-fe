@@ -1,12 +1,12 @@
 # Crestfall design context
 
-Regenerated 10 Aug 2026 (post kit-polish-3 / Sprint E, folding in the
-10 Aug strategy-chat rulings) from the repo's current ruled state.
-Supersedes every earlier version of this file. Not law itself;
-CLAUDE.md names the four law documents (`docs/DESIGN-TOKENS.md`,
-`docs/FRONTEND-SOP.md`, `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the
-active sprint plan). This file orients a new session fast; when it
-and a law document disagree, the law document wins and this file is
+Regenerated 10 Aug 2026 at Sprint F close (KitRail shipped, rail
+rulings folded into law, the cutover sequence ruled). Supersedes every
+earlier version of this file. Not law itself; CLAUDE.md names the four
+law documents (`docs/DESIGN-TOKENS.md`, `docs/FRONTEND-SOP.md`,
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the active sprint plan, now
+`docs/SPRINT-G-PLAN.md`). This file orients a new session fast; when
+it and a law document disagree, the law document wins and this file is
 stale and should be regenerated.
 
 ## What Crestfall is
@@ -33,21 +33,42 @@ The journey loop: Home to Stories to Adventures to Studio to Images
 to Vault to Community to Creators to Lore, back to Home; every page's
 bottom promo banner sells the next stop and its CTA routes there.
 
-Migration strategy (the strangler pattern, section 6): each new page
-builds fresh under `/studio/v2/<page>`, stays out of the sidebar
-until it clears a parity check against its old-page equivalent
-(rendered at 390 and 1440), then cuts over in one commit: move to the
-final address, swap the sidebar entry, redirect the old address.
-Retirement is per page, never a single cutover. Old page code is
-deleted only in one full-inventory sweep after all nine have cut
-over.
+## The cutover sequence, standing process, RULED 10 Aug 2026
+
+This sequence supersedes the per-page cutover previously described in
+the migration strategy (`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section
+6 and `docs/BUILD-BLUEPRINT.md` section 3.3 both carry the dated
+amendment). The order:
+
+1. All nine new pages build and stay at `/studio/v2/<page>`.
+2. Old pages and old addresses are untouched until the new set covers
+   100 percent of live features, measured against
+   `docs/APP-FUNCTION-MAP.csv`. The per-page parity echo
+   (`docs/BUILD-BLUEPRINT.md` section 3.4) is the instrument for that
+   measure.
+3. Nick reviews and signs off on the completed front end.
+4. Nick freezes new code; his outstanding work merges in.
+5. The full site stages; final tests run.
+6. The new site goes live, fully Loom compatible, so backend and
+   frontend proceed independently from there.
+
+No page cuts over individually ahead of this sequence. No new page
+enters the live sidebar before the go-live step; the preview-flag
+navigation (below) remains the only pre-cutover navigation surface.
+Old page code is deleted only in the single full-inventory sweep
+after go-live, unchanged from route law 3.3(d).
+
+**The `/studio` address question is an open CUTOVER question, not a
+build blocker.** A 9 Aug ruling (`docs/BUILD-BLUEPRINT.md` section
+3.1, row 8) makes `/studio` become Play > Home, while Studio is also
+one of the nine pages in its own right (Create > Studio). Because
+every page builds and stays at `/studio/v2/<page>` until the single
+go-live, this collision blocks nothing today, including the Home and
+Studio builds. It is to be ruled during the cutover sequence (when
+final addresses are assigned at step 6), not now. Do not interpret or
+guess past it.
 
 ## Rulings from the 10 Aug 2026 strategy chat
-
-These are orientation notes on decisions made outside this repo's
-commit history; they are not yet reflected in the law documents and
-carry the same "law document wins on conflict" caveat as the rest of
-this file.
 
 - **Home page, ruled.** A guidepost that routes, not a dashboard and
   not an editorial front page. Order, top to bottom: medium top
@@ -58,29 +79,33 @@ this file.
   community, creators to follow); medium bottom banner routing to
   Stories. "View all" sits at each rail's head beside the label, not
   at the far end of the scroll. One sort control, on the top rail
-  only.
-- **Rails, ruled.** No horizontally scrolling card row exists in the
-  kit today, so this is a new kit package, built once and used four
-  times on Home. It holds existing cards; no card-level work is
-  needed.
+  only. Home consumes KitRail four times.
+- **Rails, ruled and now BUILT.** The horizontally scrolling rail is
+  the `rail` kit package (KitRail, contract 1.0.0), shipped in Sprint
+  F. It holds existing cards; no card-level work was needed. Its full
+  law is `docs/BUILD-BLUEPRINT.md` section 2.18.
 - **Lore, ruled.** Ships as an index page on the same composition the
   five built v2 pages share (Community, Creators, Vault, Images,
   Stories). The existing reading routes stay untouched. Lore keeps
   its centered editorial labels, the one page in the nine-page set
   that does.
+- **Studio, ruled composition.** Quick-create modals for phone and
+  the advanced full editor for desktop. CR-026 (Nick's promotion pass
+  over the QUICK/ADVANCED allocation) remains a later pass, not a
+  build gate.
+- **Adventures, ruled approach.** Proceeds now using display-name
+  mapping only, through the terminology module
+  (`lib/shared/presentation/terminology.js`, which already maps
+  STORYLINE to "Adventure"; no component wires it in yet). Nick's
+  backend naming stays as built; CR-025 stays a later, non-blocking
+  rename.
 - **Nick engagement, standing.** The front end changes display names
   only; Nick's backend naming stays as built. No contract request is
-  escalated to him during the Home/Rails/Lore build. He is updated
-  once the front end is fully built and reviewed, and every
-  contract request is level-set with him in one pass at that review.
-  Nothing in status reporting is described as blocked on Nick during
-  the build.
-- **Open, not ruled: the `/studio` address question.** A 9 Aug ruling
-  (`docs/BUILD-BLUEPRINT.md` section 3.1, row 8) makes `/studio`
-  become Play > Home. Studio is also one of the nine pages in its own
-  right (Create > Studio). This collision is an open address
-  question, explicitly not resolved by the 10 Aug chat. Do not
-  interpret or guess past it.
+  escalated to him during the Sprint G build. He is updated once the
+  front end is fully built and reviewed, and every contract request
+  is level-set with him in one pass at that review (cutover sequence
+  step 3). Nothing in status reporting is described as blocked on
+  Nick during the build.
 
 ## Typography and design language
 
@@ -151,7 +176,11 @@ the confirming button of an "are you sure" step.
   scrolling (R4); sheets keep the bottom dock.
 - **Focus law.** Keyboard focus (`:focus-visible`) keeps one subtle
   indicator: a slight border brightening (`--line-strong`), never a
-  gold box. Pointer interaction shows no focus ring at all.
+  gold box. Pointer interaction shows no focus ring at all. Note:
+  `docs/DESIGN-TOKENS.md` "Motion and focus" still names the global
+  gold `--focus-ring` as the only focus treatment; the kit focus law
+  supersedes it on kit surfaces, and the tokens-doc alignment edit is
+  a carried Sprint G item, not yet made.
 - **Banner hierarchy law.** One primary CTA per banner; description
   de-emphasized (`--art-ink-dim`, measure-capped). The `top` treatment
   carries an opt-in galaxy layer (`showGalaxy`). The `bottom`
@@ -160,12 +189,16 @@ the confirming button of an "are you sure" step.
 - **List density.** Two-up list rows permitted at desktop widths where
   whitespace allows; Community renders its list two-up at 1100px and
   up.
-- **Ratings presentation.** SFW displays as Everyone. MATURE and
-  EXPLICIT both display as Adult (EXPLICIT's mapping is interim,
-  pending CR-027). Teen renders as a disabled row with no backend
-  value yet. Film anchors ride the row tooltip, never a visible
-  description line or a card badge. Mapping lives in
-  `lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`).
+- **Ratings presentation.** Ruled final per CR-027 (kit polish 2
+  pass) and implemented in `lib/shared/presentation/terminology.js`
+  (`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as Teen,
+  EXPLICIT as Adult, one to one, no disabled row. Film anchors ride
+  the row tooltip, never a visible description line or a card badge.
+  A required content audit (CR-027) gates live, non-fixture data
+  under these labels; fixture-driven previews are unaffected. (The
+  prose of `docs/BUILD-BLUEPRINT.md` 2.16(h) predates the final
+  CR-027 ruling and defers to it by its own reference; CR-027 and the
+  terminology module are the current truth.)
 - **Selection-state law.** Selected and active states read as a gold
   icon or text plus a light gold wash (`--fill`); no bold borders, no
   heavy outlines.
@@ -197,6 +230,36 @@ the confirming button of an "are you sure" step.
   `resize` command is banned for mobile checks (clamps near 500px,
   produces false passes); see `docs/FRONTEND-SOP.md` section 8.
 
+## The rail rulings, now law in `docs/BUILD-BLUEPRINT.md` section 2.18
+
+Sprint F's OPEN items 31 through 35 are RULED and CLOSED
+(`docs/SPRINT-F-PLAN.md`); the built defaults stand:
+
+- **Head layout (item 31, variant A).** Label, short gold rule, then
+  View all, reading left to right. Above 700px the head is one row
+  with the control seat and arrow pair pushed right; below 700px it
+  wraps to two rows (label and rule on row one; View all and the
+  control seat grouped and right-aligned on row two), the label
+  wrapping rather than truncating.
+- **Edge alignment (item 32).** Peek depth stays 0.4 of a card at
+  every tier. The scrollport and its trailing fade terminate at the
+  page content edges at every width including 390; no mobile
+  full-bleed, no negative-margin bleed.
+- **Arrow seat (item 33, variant D).** Native scroll everywhere; gold
+  arrow pair rides the right end of the head row from 700px up,
+  disabled at each end. No dot indicators, no page counter.
+- **Fade (item 34, variant G).** Right-edge overlay,
+  `linear-gradient(90deg, transparent, var(--canvas))`, about
+  `--space-10` wide, hidden at rest-at-end. Package-local recipe, not
+  a token.
+- **Creator rail fit (item 35).** Cells stretch; creator cards in one
+  rail equalize height.
+- **Empty-rail law.** A rail with nothing in it renders nothing at
+  all, head included.
+
+Item 36 (mute control placement on the creator profile, CR-028) stays
+open, settled at render once the Creators profile-detail page exists.
+
 ## Sidebar v2 preview flag
 
 `NEXT_PUBLIC_SIDEBAR_V2_PREVIEW`, read by
@@ -211,8 +274,9 @@ collapsible Legacy group beneath. Flag off renders the sidebar exactly
 as before the flag existed. The Account v2 draft is NOT part of this
 flag or the nine-page model; it is a staging draft outside the journey
 loop with no sidebar entry at all. This preview surface is distinct
-from the real per-page cutover process in the product model's section
-6 migration strategy; it does not move any page's real sidebar entry.
+from the real cutover: under the 10 Aug 2026 cutover sequence above,
+no page enters the live sidebar until the whole new site goes live at
+step 6.
 
 ## The LOOM file shape
 
@@ -257,21 +321,23 @@ page composes from (`docs/BUILD-BLUEPRINT.md` chapter 2):
 | `asset-detail-popup` | expand destination for creation cards | 2.1.0 | credits presentation collapses per R1 |
 | `image-overlay` | the image viewer, composed on the modal-frame viewer variant | 1.0.0 | rebuilt per R2/R5, presentation-only recomposition |
 | `credits` | credit list plus the R1 modal composition (`KitCreditsModal`) | 1.1.0 | |
-| `image-creator-panel` | image generator panel: mode toggle, six ingredient slots, options, generate/video blocks | 1.0.0 | new this sprint (Sprint E); fixture-only, no fetch |
-| `ingredient-picker` | search plus ingredient card grid, Use Once / New Preset | 1.0.0 | new this sprint |
-| `save-ingredient-preset` | preset name/description/prompt/tags save flow | 1.0.0 | new this sprint |
+| `image-creator-panel` | image generator panel: mode toggle, six ingredient slots, options, generate/video blocks | 1.0.0 | Sprint E; fixture-only, no fetch |
+| `ingredient-picker` | search plus ingredient card grid, Use Once / New Preset | 1.0.0 | Sprint E |
+| `save-ingredient-preset` | preset name/description/prompt/tags save flow | 1.0.0 | Sprint E |
+| `rail` | horizontally scrolling card rail: head (label, gold rule, View all, control seat, arrow pair), snap scrollport, trailing fade | 1.0.0 | Sprint F; section 2.18 law; items 31 to 35 closed; empty rail renders nothing |
 
 Not yet built as kit packages: global search, form field (ad hoc
 `cf-field` recipes still cover this), picker-modal/menu-popover beyond
-the ingredient picker, alert-strip, the horizontally scrolling **rail**
-package Home's four curated rails need (ruled 10 Aug, not yet built).
+the ingredient picker, alert-strip. Sprint G's OPEN items 37 and 38
+may add a destination-tile package and a continue-strip treatment for
+Home, pending Brian's rulings.
 
 ## Where the build stands
 
 Built under `/studio/v2/<page>`, all fixture-driven, pre-parity, out
-of the sidebar until parity per the route law, each with an auth-free
-mirror at `/dev/ui-preview/<page>-v2-page` for verification without
-signing in:
+of the sidebar until the go-live step of the cutover sequence, each
+with an auth-free mirror at `/dev/ui-preview/<page>-v2-page` for
+verification without signing in:
 
 1. **Community** (`/studio/v2/community`): built first, established
    the whole browse kit. Parity echo not yet run.
@@ -294,22 +360,32 @@ signing in:
    nine-page model: no sidebar entry, no banner, no filter bar, not
    part of the journey loop.
 
-Not started: Adventures (waits on Nick's CR-025 rename), Studio (waits
-on Nick's CR-026 quick-create review, and now also carries the open
-`/studio` address collision with Home above), Home (composition ruled
-10 Aug 2026, see above; not yet built), Lore (ruled 10 Aug 2026 to
-ship as an index page on the shared v2 composition with centered
-editorial labels; still needs Nick's CR-015 pipeline confirmation and
-is otherwise the most net-new contract surface of the nine).
+The `rail` kit package (KitRail) shipped in Sprint F with its own
+preview route (`/dev/ui-preview/kit-rail`), render pass, and defect
+fix pass; it has no live-page consumer yet. Its function-map rows land
+with the Home build (`docs/SPRINT-G-PLAN.md` resolves Sprint F step 6
+this way).
+
+Not started, all four planned together in `docs/SPRINT-G-PLAN.md`:
+**Home** (composition ruled 10 Aug 2026, consumes KitRail four times,
+Sprint G wave 1), **Lore** (ruled index page on the shared v2
+composition with centered editorial labels, Sprint G wave 3),
+**Adventures** (proceeds via the terminology display mapping, Sprint
+G wave 3; CR-025 stays a later backend pass), **Studio** (quick-create
+modals for phone plus the advanced full editor for desktop, Sprint G
+wave 4; CR-026 stays Nick's later promotion pass). The `/studio`
+address collision is an open cutover question and blocks none of
+them.
 
 Every kit package above has its own `/dev/ui-preview/<package>` route,
 fixture-driven, unavailable in production.
 
-Open picks awaiting Brian's render review live in
-`docs/SPRINT-D-PLAN.md` and `docs/SPRINT-E-PLAN.md`'s own OPEN FOR
-BRIAN sections (the current count: the Sprint D standing 21 plus
-Sprint E's 22 through 30), not restated here since they are numerous
-and change per sprint; read those plans directly for the live list.
+Open picks awaiting Brian's render review: Sprint D items 1 through
+21 and Sprint E items 22 through 30 stand in those plans' own OPEN FOR
+BRIAN sections; Sprint F items 31 through 35 are ruled and closed;
+item 36 (mute placement) stays open; Sprint G opens items 37 through
+41 in `docs/SPRINT-G-PLAN.md`. Read the plans directly for the live
+lists.
 
 ## The quality floor
 

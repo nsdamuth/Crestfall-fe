@@ -122,33 +122,32 @@ The universal four-state enum on all assets, Stories, and Adventures:
 
 Editing rules: Public work is never edited in place (pull a private copy, edit, resubmit). Internal exists to bypass approval for fast peer feedback. Canon is final and locked.
 
-## 6\. Migration strategy: build new, then retire old
+## 6\. Migration strategy: build new, then cut over once
 
-The new nine-page architecture is built alongside the existing pages, not by rebuilding them in place (the strangler pattern):
+The new nine-page architecture is built alongside the existing pages, not by rebuilding them in place (the strangler build pattern). **The cutover sequence, RULED 10 Aug 2026, supersedes the per-page cutover this section previously described.** The order:
 
-1. Each new page is built as a fresh route under the updated design system and LOOM component architecture, and added to the sidebar as it becomes usable.  
-2. New pages read the same live data as the old pages through the same API surface. No duplicated state, no copied data.  
-3. Old pages remain routable while their replacements are built, but leave the sidebar once the new page carries their function, so the navigation never shows two versions of one destination.  
-4. A page is retired only after a parity check: every function the old page served exists on the new page, verified on a rendered page at 390 and 1440\.  
-5. Retirement is per page, never a single cutover.
+1. All nine new pages build and stay at `/studio/v2/<page>`. New pages read the same live data as the old pages through the same API surface. No duplicated state, no copied data.  
+2. Old pages and old addresses are untouched until the new set covers 100 percent of live features, measured against `docs/APP-FUNCTION-MAP.csv`. The per-page parity echo (`docs/BUILD-BLUEPRINT.md` section 3.4) is the instrument for that measure: every function the old pages serve exists on the new pages, verified on a rendered page at 390 and 1440\.  
+3. Nick reviews and signs off on the completed front end.  
+4. Nick freezes new code; his outstanding work merges in.  
+5. The full site stages; final tests run.  
+6. The new site goes live, fully Loom compatible, so backend and frontend proceed independently from there.
 
-**Route law and parity echo, RULED 9 Aug 2026** (full detail:
-`docs/BUILD-BLUEPRINT.md` chapter 3, sections 3.3 and 3.4). All nine
-new pages build under `/studio/v2/<page>` and stay out of the sidebar
-until parity. Cutover per page is one commit: move to the final
-address, swap the sidebar entry, redirect the old address to the new
-one. Old page code is deleted only in the single full-inventory sweep
-at the deletion milestone, after all nine have cut over, never per
-page. Every page build brief ends by echoing every function-map row
-assigned to that page as present, deliberately excluded with its
-ruling cited, or flagged for Brian; one open flag holds the page out of
-the sidebar.
+No page cuts over individually ahead of this sequence, and no new
+page enters the live sidebar before the go-live step; the preview
+flag (`docs/FRONTEND-SOP.md` section 18) remains the only pre-cutover
+navigation surface. Old page code is deleted only in the single
+full-inventory sweep after go-live (`docs/BUILD-BLUEPRINT.md` route
+law 3.3(d), unchanged). Every page build brief still ends by echoing
+every function-map row assigned to that page as present, deliberately
+excluded with its ruling cited, or flagged for Brian; one open flag
+holds that page's rows out of the 100 percent coverage measure.
 
 ## 7\. Open items
 
 * **DECIDED:** Character can be played in chat directly (tap a character, start a chat). The Stories page lists playable Characters, Stories, and Adventures.  
 * **DECIDED:** update display alias for the Scenario category value "Scenario” so backend aligns with front end copy, can change later if needed.   
-* **Ruled (9 Aug 2026):** new pages are built alongside old ones and old pages are retired per page after parity, per section 6\.  
+* **Ruled (9 Aug 2026, cutover amended 10 Aug 2026):** new pages are built alongside old ones; retirement follows the single cutover sequence in section 6, never per page.  
 * **Ruled (9 Aug 2026):** load-more pagination replaces infinite scroll on all list pages.
 
 ## 8\. Backend alignment (contract requests, later, non-blocking)

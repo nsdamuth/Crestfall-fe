@@ -1414,6 +1414,15 @@ Sequencing rules used:
   presentation changes only, contracts and ViewModels untouched,
   anything needing a contract change stops and escalates (contract
   law); preview routes before product pages (new module protocol).
+  **Cutover amendment, RULED 10 Aug 2026:** the per-page retirement
+  clause quoted above is superseded. The UXUI doc's section 6 now
+  rules a single cutover sequence (build all nine at
+  `/studio/v2/<page>`; old pages untouched until 100 percent live
+  feature coverage measured against `docs/APP-FUNCTION-MAP.csv`; Nick
+  review and sign-off; freeze and merge; stage and test; one go-live,
+  fully Loom compatible). The strangler build discipline itself (kit
+  first, fresh routes, presentation only, parity verified) stands
+  unchanged; only the cutover mechanics move. See the 3.3 amendment.
 
 Kit-before-pages: chapter 2's packages 2.5 (modal frame, already ruled
 first work by T9), 2.7 (chips), 2.10 (badge), 2.4 (load-more), 2.8
@@ -1443,6 +1452,26 @@ waits for the rename that its copy is ruled to land with (CR-025);
 Home has no ruled composition to build yet; Lore barely exists as a
 destination and needs contracts before pixels.
 
+**Amendment, 10 Aug 2026 (Sprint G planning gate,
+`docs/SPRINT-G-PLAN.md`).** Four wait conditions in the table above
+are superseded by the 10 Aug 2026 rulings. Home's composition is now
+ruled (the guidepost order recorded in
+`docs/CRESTFALL-DESIGN-CONTEXT.md`: top banner with galaxy layer,
+Continue strip, eight destination tiles, four KitRail rails, bottom
+banner to Stories); row 8's earlier "no ruled composition" no longer
+holds, and its `/studio` address ruling is reclassified as an open
+cutover question, ruled during the cutover sequence, blocking
+nothing. Adventures (row 7) proceeds now using display-name mapping
+only, through `lib/shared/presentation/terminology.js`; CR-025's
+backend rename stays a later, non-blocking pass and no longer holds
+the page. Studio (row 6) has a ruled composition (quick-create modals
+for phone, the advanced full editor for desktop); CR-026 remains
+Nick's later promotion pass over the QUICK/ADVANCED allocation, not a
+build gate. Lore (row 9) ships as an index page on the shared v2
+composition with centered editorial labels; CR-015 stays open and
+non-blocking. `docs/SPRINT-G-PLAN.md` carries the build plan for all
+four.
+
 ## 3.2 Standing constraints on every page in the order
 
 - One package, one commit; pilot the first units and stop for a
@@ -1456,11 +1485,27 @@ destination and needs contracts before pixels.
 - The blocked token buckets (T2/T5/T8 opacity and hex fleets, T10 type
   floor) stay blocked; pages convert what is ruled and log the rest.
 
-## 3.3 Route law, RULED 9 Aug 2026
+## 3.3 Route law, RULED 9 Aug 2026, cutover AMENDED 10 Aug 2026
 
 The concrete addressing and cutover mechanics for the strangler
 migration ratified in 3.0 (which itself follows
-`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6). Four rules:
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6).
+
+**Amendment, RULED 10 Aug 2026.** Cutover is no longer per page.
+Rule (a) stands unchanged. Rule (b) stands with one change: the
+sidebar gate lifts only at the single go-live, never per page. Rule
+(c) is superseded: its three cutover actions (final-address move,
+sidebar swap, old-address redirect) now happen for all nine pages
+together at the go-live step of the ruled sequence (old pages
+untouched until 100 percent live feature coverage measured against
+`docs/APP-FUNCTION-MAP.csv`, then Nick review and sign-off, freeze
+and merge, stage and test, one go-live, fully Loom compatible). Rule
+(d) stands unchanged: deletion still waits for the single
+full-inventory sweep, now after go-live. The original rules below are
+kept for lineage; where they say per-page cutover, this amendment
+governs.
+
+Four rules:
 
 (a) **Build address.** All nine new pages build under
 `/studio/v2/<page>` (for example `/studio/v2/community`,
@@ -1511,10 +1556,12 @@ of exactly three ways:
   work stops on it and it is reported, never guessed past (silence is
   never ratification, per CLAUDE.md).
 
-A page with any open flag cannot enter the sidebar, regardless of
-whether every other row on it passed parity. One unresolved flag holds
-the whole page at the `/studio/v2/<page>` staging address until Brian
-rules it.
+A page with any open flag cannot count toward the 100 percent
+coverage measure that opens the cutover sequence (3.3 amendment, 10
+Aug 2026), regardless of whether every other row on it passed parity.
+One unresolved flag holds the whole page at the `/studio/v2/<page>`
+staging address until Brian rules it; sidebar entry itself now
+happens only at the single go-live, never per page.
 
 ---
 

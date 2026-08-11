@@ -51,10 +51,11 @@ the details below carry only what is still actionable.
 | CR-022 | proof-layer tokens fold into theme.css at binding | Confirm whether a deepened-modal-surface token is still needed or `--surface-4` supersedes it | open | Nick | verify with Nick: `--veil-screen`/`--scrim-strong` already resolved (Ruling 7), narrowed to this one token question |
 | CR-023 | Community vs Adventures structural model | Data-model question under an already-ruled copy-level split | open | Nick | feed/link/flag questions still open |
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
-| CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
+| CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; v2 surfaces display "Adventure" via the terminology module (ruled 10 Aug 2026) | open | Nick | later-pass, non-blocking; display mapping proceeds frontend-side ahead of the rename |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
 | CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Teen, EXPLICIT=Adult, no disabled row. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 | CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
+| CR-029 | Home feed data: four rails and the Continue strip | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the Continue strip (in-progress items, newest activity first); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate |
 
 ## Details
 
@@ -284,11 +285,19 @@ presentation terminology module instead.
 
 ### CR-025, rename Storyline to Adventure
 
-Later-pass, non-blocking. Unlike Room Template, the display layer has
-not been updated yet: `creationTypePolicy.js`'s `STORYLINE.label` still
-reads "Storyline." The product model rules that "Storyline is retired
-from copy the moment the Adventure rename lands in code," so the copy
-change and backend rename are meant to land together. The Scenario
+Later-pass, non-blocking. Updated 10 Aug 2026 (Sprint G planning
+gate): the standing ruling is now that the front end proceeds with
+display-name mapping only, through
+`lib/shared/presentation/terminology.js`, which already maps
+STORYLINE to "Adventure" (no component wires it in yet; the
+Adventures v2 page build wires it on v2 surfaces). This supersedes
+the earlier reading that the copy change and backend rename land
+together: v2 surfaces display "Adventure" ahead of the rename, and
+Nick's backend naming stays as built until his own later pass. Legacy
+surfaces reading `creationTypePolicy.js`'s `STORYLINE.label`
+("Storyline") are untouched until cutover. When the backend rename
+lands, the mapping row becomes an identity and can be retired in one
+file. The Scenario
 category value "Adventure" needs no rename of its own: it displays as
 "Scenario," no alias, mapped in
 `lib/shared/presentation/terminology.js` rather than in its own
@@ -356,6 +365,30 @@ account's muted creators, for a future settings surface.
 
 No frontend work depends on this until the Creators profile-detail
 page is built; the mute control ships on that profile.
+
+### CR-029, Home feed data: four rails and the Continue strip
+
+Filed 10 Aug 2026 by the Sprint G planning gate. Home's ruled
+composition consumes four curated rails (top rated, recently added,
+from the community, creators to follow) and a Continue strip that
+renders nothing when nothing is in progress. No endpoint exists for
+any of the five feeds. Home builds fixture-first per the CR-017
+mock-module pattern: real View, ViewModel, and contract against the
+expected shape, fed from one named mock module whose header states it
+is mock pending this CR.
+
+Expected shapes, for the later real feed: the three creation rails
+deliver ordered lists of display-ready creation summaries matching
+the `KitCreationCard` contract fields (title, subtitle, imageSrc,
+badges, stats, assetKind); the creators rail delivers display-ready
+creator summaries matching the `KitCreatorCard` contract fields
+(handle, avatarSrc, stats, thumbnails 0 to 3, isFollowing); the
+Continue strip delivers the account's in-progress Stories and
+Adventures, newest activity first, with a resume route per item. An
+empty list is the legal "render nothing" state for any rail and for
+the strip. Sort on the top rail is client-side over the delivered
+list until ruled otherwise. Muted creators (CR-028) are excluded from
+every one of these feeds server-side once both CRs are live.
 
 ## Closed
 
