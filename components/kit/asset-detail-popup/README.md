@@ -1,6 +1,6 @@
 # Kit Asset Detail Popup LOOM package
 
-**Contract:** `KitAssetDetailPopup.contract.js` (`2.1.0`)
+**Contract:** `KitAssetDetailPopup.contract.js` (`2.2.0`)
 
 ## Purpose
 
@@ -106,6 +106,25 @@ position is preserved when the credits modal closes.
   follow the selection-state law: gold text plus the light `--fill`
   wash, icon filled, `aria-pressed`, never a bold border.
 
+## v2.2.0, RULED 11 Aug 2026 (design/community-parity)
+
+Restores the parity audit's candidate 6 leftovers (`docs/PARITY-AUDIT.md`
+section 5) for `/studio/v2/community`: optional `creator: {handle, href}`
+ADDED, rendering the old modal's "by @handle" line under the subtitle
+(linked when `href` is present, plain text otherwise); optional
+`tags: string[]` ADDED, rendering the old modal's tag pill row between
+the description/stats block and credits. Both default to `null`/`[]`
+and render nothing when absent, so every existing consumer (Vault,
+Stories) that does not pass them stays pixel-stable. The credits
+block's existing `creditsLinkComponent` prop is reused for the
+creator-handle link rather than adding a second link-component prop.
+
+`tags` ships with no live data source: the Community page's fixture
+model carries no tag field on any creation (CR-037, filed
+`docs/CONTRACT-REQUESTS.md`), so the row is built and wired but
+renders nothing until that data exists, the same honest-stub posture
+as this package's own video/liked/bookmarked media tabs.
+
 ## Open flags carried to OPEN FOR BRIAN
 
 - Whether a Love action belongs on this popup in addition to Like (the
@@ -117,7 +136,7 @@ position is preserved when the credits modal closes.
 
 - `KitAssetDetailPopup.contract.js`
 - `KitAssetDetailPopup.fixtures.js` (character, story, adventure,
-  likedAndSaved, longestCopy, noImage)
+  likedAndSaved, longestCopy, noImage, noCreatorNoTags)
 - `useKitAssetDetailPopupViewModel.js`
 - `/dev/ui-preview/kit-asset-detail-popup`
 

@@ -21,14 +21,26 @@ function normalizeMedia(media) {
     .slice(0, 4);
 }
 
+function normalizeCreator(creator) {
+  if (!creator || typeof creator.handle !== "string" || !creator.handle) return null;
+  return { handle: creator.handle, href: creator.href || null };
+}
+
+function normalizeTags(tags) {
+  if (!Array.isArray(tags)) return [];
+  return tags.filter((tag) => typeof tag === "string" && tag);
+}
+
 export function useKitAssetDetailPopupViewModel({
   assetKind = "character",
   title = "",
   subtitle = "",
+  creator = null,
   media = [],
   badges = [],
   stats = {},
   description = "",
+  tags = [],
   isLiked = false,
   isSaved = false,
   onLike = null,
@@ -44,10 +56,12 @@ export function useKitAssetDetailPopupViewModel({
     primaryActionLabel: "Play",
     title,
     subtitle,
+    creator: normalizeCreator(creator),
     media: normalizeMedia(media),
     badges: Array.isArray(badges) ? badges : [],
     stats: stats || {},
     description,
+    tags: normalizeTags(tags),
     isLiked: Boolean(isLiked),
     isSaved: Boolean(isSaved),
     onLike: toCallback(onLike),

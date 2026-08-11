@@ -8,6 +8,7 @@ import {
   kitAssetDetailPopupCharacterFixture,
   kitAssetDetailPopupLikedAndSavedFixture,
   kitAssetDetailPopupLongestCopyFixture,
+  kitAssetDetailPopupNoCreatorNoTagsFixture,
   kitAssetDetailPopupNoImageFixture,
   kitAssetDetailPopupStoryFixture,
 } from "@/components/kit/asset-detail-popup/KitAssetDetailPopup.fixtures";
@@ -20,6 +21,10 @@ const STATES = {
   likedAndSaved: { label: "Liked and saved", props: kitAssetDetailPopupLikedAndSavedFixture },
   longestCopy: { label: "Longest copy", props: kitAssetDetailPopupLongestCopyFixture },
   noImage: { label: "No image", props: kitAssetDetailPopupNoImageFixture },
+  noCreatorNoTags: {
+    label: "No creator link, no tags",
+    props: kitAssetDetailPopupNoCreatorNoTagsFixture,
+  },
 };
 
 export default function KitAssetDetailPopupPreviewClient() {

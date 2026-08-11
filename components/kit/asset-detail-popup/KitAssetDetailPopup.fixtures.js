@@ -18,11 +18,13 @@ export const kitAssetDetailPopupCharacterFixture = {
   assetKind: "character",
   title: "Lilith",
   subtitle: "Character - by @Crestfall",
+  creator: { handle: "@Crestfall", href: "/studio/profile/Crestfall" },
   media: media(canonArt("Lilith")),
   badges: [{ label: "Canon", variant: "canon" }],
   stats: { plays: 10880, hearts: 2210, saves: 960, followers: null },
   description:
     "A canon character woven into the founding myth of the realm. Her presence anchors any scene she enters.",
+  tags: ["Founding Myth", "Canon", "Realm Anchor"],
   isLiked: false,
   isSaved: false,
   onLike: noop,
@@ -128,6 +130,16 @@ export const kitAssetDetailPopupNoImageFixture = {
   ...kitAssetDetailPopupCharacterFixture,
   title: "Untitled Draft",
   subtitle: "Character - by @unknown",
+  creator: { handle: "@unknown", href: null },
   media: [],
   badges: [],
+};
+
+// Exercises the honest-stub path: no creator link, no tags row. This
+// is the real /studio/v2/community state today (CR-037, tags data
+// does not exist yet on any fixture creation).
+export const kitAssetDetailPopupNoCreatorNoTagsFixture = {
+  ...kitAssetDetailPopupCharacterFixture,
+  creator: null,
+  tags: [],
 };

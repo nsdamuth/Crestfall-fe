@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -18,6 +18,17 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
  * between the description/stats block and the footer, matching the
  * old modal's own order (credits after description and tags, before
  * actions).
+ *
+ * v2.2.0, RULED 11 Aug 2026 (design/community-parity, restoring the
+ * parity audit's candidate 6 leftovers for /studio/v2/community):
+ * optional `tags` and `creator` ADDED. `tags` renders a pill row
+ * matching the old preview modal's tag treatment, between the
+ * description/stats block and credits; empty by default, renders
+ * nothing (the fixture model carries no tag data yet, CR-037).
+ * `creator` renders the old modal's "by @handle" line under the
+ * subtitle, linking to the profile when `href` is present; both
+ * additive, defaulting to [] and null, pixel-stable for every
+ * existing consumer (Vault, Stories) that does not pass them.
  *
  * Presentation recomposed 10 Aug 2026 (R1, kit polish 3 pass, plan
  * 1.3), contract stays 2.1.0 (contract law: presentation may change,
@@ -54,12 +65,23 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {number|null} saves
  * @property {number|null} followers
  *
+ * @typedef {Object} KitAssetDetailPopupCreator
+ * @property {string} handle rendered with its leading "@" as given
+ * @property {string|null} href profile link; a plain span renders
+ *   when absent
+ *
  * @typedef {Object} KitAssetDetailPopupViewProps
  * @property {"character"|"story"|"adventure"} assetKind the popup's
  *   species key; the derived primary action label is "Play" for all
  *   three kinds (R9)
  * @property {string} title rendered in the body, not over art (R8)
  * @property {string} subtitle body, under the title
+ * @property {KitAssetDetailPopupCreator|null} creator optional (v2.2.0),
+ *   default null; renders "by @handle" under the subtitle, matching
+ *   the old preview modal's creator-handle link
+ * @property {string[]} tags optional (v2.2.0), default []; renders a
+ *   pill row between the description/stats block and credits,
+ *   matching the old preview modal's tag treatment
  * @property {KitAssetDetailPopupMediaItem[]} media carousel media,
  *   ported from the old preview modal's normalized shape. At most 4
  *   items render (the old modal's own cap) plus the synthetic

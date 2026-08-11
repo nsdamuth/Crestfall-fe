@@ -124,6 +124,51 @@ function CollapsedCreditsBlock({ credits, LinkComponent, onOpenCreditsModal }) {
   );
 }
 
+// Creator-handle link, restored 11 Aug 2026 (design/community-parity,
+// parity audit candidate 6): matches the old preview modal's "by
+// @handle" line exactly (components/studio/creations/creation-preview-
+// modal/CreationPreviewModal.view.jsx), a plain span when no href.
+function CreatorLine({ creator, LinkComponent }) {
+  if (!creator?.handle) return null;
+
+  return (
+    <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+      by{" "}
+      {creator.href ? (
+        <LinkComponent
+          href={creator.href}
+          className="text-[var(--ink)] transition-colors hover:text-[var(--gold-ornament)]"
+        >
+          {creator.handle}
+        </LinkComponent>
+      ) : (
+        <span className="text-[var(--ink)]">{creator.handle}</span>
+      )}
+    </p>
+  );
+}
+
+// Tags row, restored 11 Aug 2026 (design/community-parity, parity
+// audit candidate 6): matches the old preview modal's tag pill
+// treatment exactly. Renders nothing when empty (the fixture model
+// carries no tag data yet, CR-037); this is the honest stub.
+function TagsRow({ tags }) {
+  if (!tags.length) return null;
+
+  return (
+    <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-2)]">
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className="rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]"
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function CarouselArrow({ direction, onClick }) {
   const Icon = direction === "previous" ? ChevronLeft : ChevronRight;
   return (
@@ -373,10 +418,12 @@ export default function KitAssetDetailPopupView({
   primaryActionLabel = "Play",
   title = "",
   subtitle = "",
+  creator = null,
   media = [],
   badges = [],
   stats = {},
   description = "",
+  tags = [],
   isLiked = false,
   isSaved = false,
   onLike = null,
@@ -421,9 +468,12 @@ export default function KitAssetDetailPopupView({
           </p>
         )}
 
+        <CreatorLine creator={creator} LinkComponent={creditsLinkComponent} />
+
         <div className="mt-[var(--space-4)]">
           <DescriptionBlock description={description} />
           <StatRow stats={stats} />
+          <TagsRow tags={tags} />
         </div>
 
         {credits.length > 0 && (
