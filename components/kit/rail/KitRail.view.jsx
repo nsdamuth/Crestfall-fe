@@ -104,22 +104,32 @@ export default function KitRailView({
     <section aria-label={label} className="flex flex-col gap-[var(--space-4)]">
       <div className="flex flex-wrap items-center gap-x-[var(--space-3)] gap-y-[var(--space-2)]">
         <div className="flex min-w-0 flex-1 items-center gap-[var(--space-3)]">
-          <p className="flex-none truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          <p className="min-w-0 flex-1 break-words text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] min-[700px]:flex-none min-[700px]:truncate">
             {label}
           </p>
           <div aria-hidden="true" className="h-px w-[var(--space-8)] flex-none bg-[var(--gold-ornament)]" />
-          {onViewAll && (
-            <button
-              type="button"
-              onClick={() => onViewAll()}
-              className="kit-focus flex-none rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline"
-            >
-              {viewAllLabel}
-            </button>
-          )}
         </div>
 
-        <div className="ml-auto flex flex-none items-center gap-[var(--space-3)]">
+        {/* Forces the head onto two rows below 700px: label and rule
+            on row one, View all and the head control seat right-aligned
+            on row two (RULED 10 Aug 2026, docs/BUILD-BLUEPRINT.md 2.18). */}
+        <div aria-hidden="true" className="basis-full min-[700px]:hidden" />
+
+        {onViewAll && (
+          <button
+            type="button"
+            onClick={() => onViewAll()}
+            className="kit-focus ml-auto flex-none rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline min-[700px]:ml-0"
+          >
+            {viewAllLabel}
+          </button>
+        )}
+
+        <div
+          className={`flex flex-none items-center gap-[var(--space-3)] min-[700px]:ml-auto ${
+            onViewAll ? "ml-0" : "ml-auto"
+          }`}
+        >
           {headControlSlot}
           <div className="hidden flex-none items-center gap-[var(--space-2)] min-[700px]:flex">
             <RailArrowButton

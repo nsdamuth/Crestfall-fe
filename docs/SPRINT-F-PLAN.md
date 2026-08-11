@@ -462,3 +462,52 @@ label at 390). 32 (peek depth) has render evidence at both widths on
 every fixture. 34 (fade width and strength) has no evidence: the fade
 does not render at all, so nothing exists yet to judge. 35 (creator
 vertical fit) has render evidence per the paragraph above.
+
+## DEFECT FIX PASS, 10 Aug 2026
+
+Fix pass against the three defects assigned from the RENDER PASS
+above, starting HEAD 5914355. Before touching code, each defect was
+re-verified live against the running preview to confirm the exact
+failure before editing.
+
+- Defect 1 (trailing fade missing entirely): did not reproduce.
+  Re-checked the fade against a fresh page load, before scrolling, at
+  a partial scroll, and at the true end, at both 390 and 1440; the
+  fade element renders, is positioned correctly, and hides at the
+  end in every case. The original RENDER PASS finding was a testing
+  error, not a code defect: that check ran immediately after the rail
+  had already been scrolled to its true end (where the fade is
+  correctly absent), so the absence observed then was correct
+  behavior, not a bug. No code change made; nothing to fix.
+- Defect 2 (head crowding at 390): confirmed and fixed. The head row
+  now force-wraps below 700px into two rows (label and rule on row
+  one, View all and the head control seat grouped and right-aligned
+  on row two) and stays a single row at 700px and up, unchanged. The
+  label wraps rather than truncates below 700px so it never pushes
+  the rule or View all out of view; at 700px and up it still
+  truncates exactly as before. Implemented with a CSS-only forced
+  flex-wrap break (an empty basis-full div hidden at min-[700px])
+  and breakpoint-conditional margin-auto so View all and the control
+  seat land together as one right-aligned group on the wrapped row,
+  rather than spreading apart. No new prop; KitRail.view.jsx only.
+- Defect 3 (arrow focus law): did not reproduce. Re-checked with a
+  real keyboard Tab (not just a DOM comparison) and confirmed
+  `:focus-visible` matches and applies a visible box-shadow ring on
+  the arrow buttons, while a mouse click leaves no ring and
+  `:focus-visible` does not match. The original RENDER PASS finding
+  compared the `border` CSS property between focused and unfocused
+  states, which is unchanged by design (the kit-focus mark is a
+  box-shadow, not a border-color change, per design-system.css's own
+  comment); it should have compared `box-shadow`, which does change.
+  No code change made; nothing to fix.
+
+Verification: all eight fixtures still render at both widths, empty
+still renders nothing, zero horizontal overflow at 390 on every
+fixture checked, zero console errors beyond the pre-existing benign
+preload warning, single-row head confirmed at exactly 700px and at
+1440, two-row head confirmed at 390 on topRated (with the sort
+control) and longest (unbounded label), production build exit 0.
+
+Item 34 (fade width and strength) now has nothing new to judge: the
+fade was already rendering before this pass (see Defect 1 above), so
+Brian's evidence gap there was already closed, not opened by this fix.

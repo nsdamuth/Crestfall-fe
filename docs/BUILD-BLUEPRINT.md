@@ -1247,6 +1247,15 @@ existing cards; no card-level work is needed." Head anatomy is
 2.16(o) scope 1: gold uppercase label, one short solid gold rule to
 its right, View all beside the label, never at the end of the scroll.
 
+- **Head row width, RULED 10 Aug 2026 (rail defect fix pass,
+  `docs/SPRINT-F-PLAN.md`).** Above 700px the head is one row: label,
+  rule, View all, then the head control seat and the arrow pair
+  pushed to the far right. Below 700px the head becomes two rows:
+  the gold uppercase label and its short gold rule on row one; View
+  all and the head control seat, grouped together and right-aligned,
+  on row two. The label wraps rather than truncates below 700px, so
+  a long label never pushes the rule or View all out of view; at
+  700px and up it still truncates as before.
 - **Empty-rail law.** A rail with nothing in it renders nothing at
   all, head included. Matches the ruled Continue strip precedent
   ("renders nothing when nothing is in progress") and the
