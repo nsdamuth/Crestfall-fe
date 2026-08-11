@@ -13,6 +13,21 @@ export const CONTENT_RATING_OPTIONS = [
 
 export const MINIMUM_ADULT_AGE = 18;
 
+// Default Rendering Style, QUICK field ADDED per docs/STUDIO-SPEC.md
+// section 2.2 (10 Aug 2026, Studio brief S2). Options mirror the
+// image-creator kit's Render Style list verbatim
+// (components/kit/image-creator-panel/KitImageCreatorPanel.fixtures.js),
+// values copied not imported since this package is a separate LOOM
+// feature. CR-002 carries the backend schema catch-up, still Nick's.
+export const RENDERING_STYLE_OPTIONS = [
+  { value: "auto", label: "Auto / Character Default" },
+  { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
+  { value: "crestfall_realistic", label: "Crestfall Realistic" },
+  { value: "crestfall_anime_anime", label: "Crestfall Anime / Anime" },
+  { value: "crestfall_fantasy_realistic", label: "Crestfall Fantasy → Realistic" },
+  { value: "crestfall_realistic_fantasy", label: "Crestfall Realistic → Fantasy" },
+];
+
 export const COLOR_PALETTE_OPTIONS = CHARACTER_COLOR_PALETTES.map(
   (palette) => ({
     value: palette.id,

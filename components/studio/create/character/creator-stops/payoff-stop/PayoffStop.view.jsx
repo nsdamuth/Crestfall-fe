@@ -19,7 +19,13 @@ export default function PayoffStopView({
   onChangeCreatorDirectives = null,
   onChangeExtraRuntimeNotes = null,
   onOpenStoryPanel = null,
+  // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): the preview
+  // panel and the Continue-into-a-story panel stay in both scopes;
+  // quick create hides Advanced directives (Creator directives, Extra
+  // runtime notes), editor only.
+  fieldScope = "full",
 } = {}) {
+  const isQuick = fieldScope === "quick";
   const previewProps = useCharacterPreviewViewModel({
     form: {
       name,
@@ -56,25 +62,27 @@ export default function PayoffStopView({
         Continue into a story
       </button>
 
-      <div className="mt-6 space-y-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-        <SectionLabel>Advanced directives</SectionLabel>
+      {!isQuick ? (
+        <div className="mt-6 space-y-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <SectionLabel>Advanced directives</SectionLabel>
 
-        <TextAreaField
-          label="Creator directives"
-          value={creatorDirectives}
-          onChange={onChangeCreatorDirectives}
-          placeholder="Instructions for how the AI should run this character"
-          maxLength={PAYOFF_NOTES_MAX_LENGTH}
-        />
+          <TextAreaField
+            label="Creator directives"
+            value={creatorDirectives}
+            onChange={onChangeCreatorDirectives}
+            placeholder="Instructions for how the AI should run this character"
+            maxLength={PAYOFF_NOTES_MAX_LENGTH}
+          />
 
-        <TextAreaField
-          label="Extra runtime notes"
-          value={extraRuntimeNotes}
-          onChange={onChangeExtraRuntimeNotes}
-          placeholder="Anything else the story needs to know at runtime"
-          maxLength={PAYOFF_NOTES_MAX_LENGTH}
-        />
-      </div>
+          <TextAreaField
+            label="Extra runtime notes"
+            value={extraRuntimeNotes}
+            onChange={onChangeExtraRuntimeNotes}
+            placeholder="Anything else the story needs to know at runtime"
+            maxLength={PAYOFF_NOTES_MAX_LENGTH}
+          />
+        </div>
+      ) : null}
     </>
   );
 }

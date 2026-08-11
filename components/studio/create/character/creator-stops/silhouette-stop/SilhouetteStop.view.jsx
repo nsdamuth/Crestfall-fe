@@ -60,7 +60,13 @@ export default function SilhouetteStopView({
   onOpenWardrobePicker = null,
   fineTuneFoldOpen = false,
   onToggleFineTuneFold = null,
+  // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): every field
+  // on this stop is QUICK except Appearance notes; chest/bust has no
+  // allocation row (section 9 item 1) and stays in both scopes
+  // unresolved rather than guessed.
+  fieldScope = "full",
 } = {}) {
+  const isQuick = fieldScope === "quick";
   const fineTuneFilled = Boolean(
     bodyType ||
       height ||
@@ -208,13 +214,15 @@ export default function SilhouetteStopView({
           maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
         />
 
-        <TextAreaField
-          label="Appearance notes"
-          value={appearanceNotes}
-          onChange={onChangeAppearanceNotes}
-          placeholder="Anything else about how they look"
-          maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
-        />
+        {!isQuick ? (
+          <TextAreaField
+            label="Appearance notes"
+            value={appearanceNotes}
+            onChange={onChangeAppearanceNotes}
+            placeholder="Anything else about how they look"
+            maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
+          />
+        ) : null}
       </Fold>
     </>
   );

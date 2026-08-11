@@ -73,6 +73,7 @@ const INITIAL_FORM_STATE = {
   outwardPersonality: "",
   internalPersonality: "",
   speechStyle: "",
+  movementStyle: "",
   greeting: "",
   scenario: "",
   backstory: "",
@@ -85,12 +86,18 @@ const INITIAL_FORM_STATE = {
   visibility: "PRIVATE",
   contentRating: "SFW",
   age: "",
+  renderingStyle: "auto",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
   creatorDirectives: "",
   extraRuntimeNotes: "",
 };
 
 export default function CreatorStopsPreviewClient() {
+  // fieldScope harness, added 10 Aug 2026 (Studio brief S2,
+  // docs/STUDIO-SPEC.md section 3.2): exercises both "full" (default,
+  // pixel-stable) and "quick" (the v2 Studio hub's set) in this dev-
+  // only preview.
+  const [fieldScope, setFieldScope] = useState("full");
   const [selectedState, setSelectedState] = useState(0);
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
   const [maxReachedIndex, setMaxReachedIndex] = useState(
@@ -252,6 +259,12 @@ export default function CreatorStopsPreviewClient() {
         ];
       }),
     onSave: handleSave,
+    onSaveAndOpenEditor: () => {
+      handleSave();
+      setTemplateNote(
+        'Saving and opening the advanced editor routes to /studio/v2/editor/[id] once a real creationId exists. Preview only.'
+      );
+    },
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
@@ -275,6 +288,24 @@ export default function CreatorStopsPreviewClient() {
   return (
     <main className="min-h-screen bg-[var(--background)] px-6 py-10 text-[var(--foreground)]">
       <div className="mx-auto max-w-3xl">
+        <div className="mb-4 flex flex-wrap gap-2">
+          {["full", "quick"].map((scope) => (
+            <button
+              key={scope}
+              type="button"
+              aria-pressed={fieldScope === scope}
+              onClick={() => setFieldScope(scope)}
+              className={`rounded-lg border px-3 py-2 text-xs uppercase tracking-[0.16em] ${
+                fieldScope === scope
+                  ? "border-[var(--gold-ornament)] bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
+                  : "border-white/10 text-[var(--ink-dim)]"
+              }`}
+            >
+              {scope === "full" ? "Full (legacy default)" : "Quick (Studio hub)"}
+            </button>
+          ))}
+        </div>
+
         <div className="mb-6 flex flex-wrap gap-2">
           {STATES.map(([label], index) => (
             <button
@@ -349,6 +380,7 @@ export default function CreatorStopsPreviewClient() {
                 onToggleTypingFold={() =>
                   setTypingFoldOpen((current) => !current)
                 }
+                fieldScope={fieldScope}
               />
             ) : activeStop === "face" ? (
               <FaceStopView
@@ -413,12 +445,14 @@ export default function CreatorStopsPreviewClient() {
                 onToggleFineTuneFold={() =>
                   setFineTuneFoldOpen((current) => !current)
                 }
+                fieldScope={fieldScope}
               />
             ) : activeStop === "heart" ? (
               <HeartStopView
                 outwardPersonality={formState.outwardPersonality}
                 internalPersonality={formState.internalPersonality}
                 speechStyle={formState.speechStyle}
+                movementStyle={formState.movementStyle}
                 greeting={formState.greeting}
                 scenario={formState.scenario}
                 backstory={formState.backstory}
@@ -431,6 +465,7 @@ export default function CreatorStopsPreviewClient() {
                 onChangeOutwardPersonality={updateField("outwardPersonality")}
                 onChangeInternalPersonality={updateField("internalPersonality")}
                 onChangeSpeechStyle={updateField("speechStyle")}
+                onChangeMovementStyle={updateField("movementStyle")}
                 onChangeGreeting={updateField("greeting")}
                 onChangeScenario={updateField("scenario")}
                 onChangeBackstory={updateField("backstory")}
@@ -450,18 +485,22 @@ export default function CreatorStopsPreviewClient() {
                 onToggleAdvancedFold={() =>
                   setHeartAdvancedFoldOpen((current) => !current)
                 }
+                fieldScope={fieldScope}
               />
             ) : activeStop === "seal" ? (
               <SealStopView
                 visibility={formState.visibility}
                 contentRating={formState.contentRating}
                 age={formState.age}
+                renderingStyle={formState.renderingStyle}
                 colorPaletteLabel={paletteVM.triggerPalette.label}
                 colorPaletteSwatches={paletteVM.triggerPalette.swatches}
                 onChangeVisibility={updateField("visibility")}
                 onChangeContentRating={updateField("contentRating")}
                 onChangeAge={updateField("age")}
+                onChangeRenderingStyle={updateField("renderingStyle")}
                 onOpenColorPalette={() => setSecondaryPanel("palette")}
+                fieldScope={fieldScope}
               />
             ) : activeStop === "payoff" ? (
               <PayoffStopView
@@ -478,6 +517,7 @@ export default function CreatorStopsPreviewClient() {
                 onChangeCreatorDirectives={updateField("creatorDirectives")}
                 onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
                 onOpenStoryPanel={() => setSecondaryPanel("story")}
+                fieldScope={fieldScope}
               />
             ) : null
           }

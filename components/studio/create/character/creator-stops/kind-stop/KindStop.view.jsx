@@ -113,8 +113,13 @@ export default function KindStopView({
   onChangeEastAsianZodiacSign = null,
   typingFoldOpen = false,
   onToggleTypingFold = null,
+  // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): quick create
+  // hides Gender presentation (and its custom field), Role archetype,
+  // and the Typing and zodiac fold. Species stays in both scopes.
+  fieldScope = "full",
 } = {}) {
   const typingFilled = Boolean(mbtiType || westernZodiacSign || eastAsianZodiacSign);
+  const isQuick = fieldScope === "quick";
 
   return (
     <>
@@ -149,56 +154,60 @@ export default function KindStopView({
         ) : null}
       </div>
 
-      <div className="mt-6">
-        <FieldPair>
-          <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
+      {!isQuick ? (
+        <div className="mt-6">
+          <FieldPair>
+            <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
 
-          <div>
-            <InlineDropdown
-              label="Gender presentation"
-              options={GENDER_PRESENTATION_OPTIONS}
-              value={genderPresentation}
-              onChange={onChangeGenderPresentation}
-            />
-            {genderPresentation === "CUSTOM" ? (
-              <CustomValueField
-                label="Custom Gender Presentation"
-                value={customGenderPresentation}
-                onChange={onChangeCustomGenderPresentation}
-                placeholder="Describe the character's gender presentation"
-                maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
+            <div>
+              <InlineDropdown
+                label="Gender presentation"
+                options={GENDER_PRESENTATION_OPTIONS}
+                value={genderPresentation}
+                onChange={onChangeGenderPresentation}
               />
-            ) : null}
-          </div>
-        </FieldPair>
-      </div>
+              {genderPresentation === "CUSTOM" ? (
+                <CustomValueField
+                  label="Custom Gender Presentation"
+                  value={customGenderPresentation}
+                  onChange={onChangeCustomGenderPresentation}
+                  placeholder="Describe the character's gender presentation"
+                  maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
+                />
+              ) : null}
+            </div>
+          </FieldPair>
+        </div>
+      ) : null}
 
-      <Fold
-        title="Typing and zodiac"
-        sub="Optional personality-typing flavor"
-        open={typingFoldOpen}
-        onToggle={onToggleTypingFold}
-        filled={typingFilled}
-      >
-        <InlineDropdown
-          label="MBTI type"
-          options={MBTI_TYPE_OPTIONS}
-          value={mbtiType}
-          onChange={onChangeMbtiType}
-        />
-        <InlineDropdown
-          label="Western zodiac"
-          options={WESTERN_ZODIAC_OPTIONS}
-          value={westernZodiacSign}
-          onChange={onChangeWesternZodiacSign}
-        />
-        <InlineDropdown
-          label="East Asian zodiac"
-          options={EAST_ASIAN_ZODIAC_OPTIONS}
-          value={eastAsianZodiacSign}
-          onChange={onChangeEastAsianZodiacSign}
-        />
-      </Fold>
+      {!isQuick ? (
+        <Fold
+          title="Typing and zodiac"
+          sub="Optional personality-typing flavor"
+          open={typingFoldOpen}
+          onToggle={onToggleTypingFold}
+          filled={typingFilled}
+        >
+          <InlineDropdown
+            label="MBTI type"
+            options={MBTI_TYPE_OPTIONS}
+            value={mbtiType}
+            onChange={onChangeMbtiType}
+          />
+          <InlineDropdown
+            label="Western zodiac"
+            options={WESTERN_ZODIAC_OPTIONS}
+            value={westernZodiacSign}
+            onChange={onChangeWesternZodiacSign}
+          />
+          <InlineDropdown
+            label="East Asian zodiac"
+            options={EAST_ASIAN_ZODIAC_OPTIONS}
+            value={eastAsianZodiacSign}
+            onChange={onChangeEastAsianZodiacSign}
+          />
+        </Fold>
+      ) : null}
     </>
   );
 }

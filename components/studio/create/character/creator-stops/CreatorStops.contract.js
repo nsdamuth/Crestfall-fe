@@ -1,4 +1,10 @@
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v1";
+// v1 to v2 (10 Aug 2026, Studio brief S2, docs/STUDIO-SPEC.md section
+// 3.2): additive only. CharacterCreatorModal gains fieldScope
+// ("full" | "quick", default "full", pixel-stable at default);
+// CreatorStopsView gains onSaveAndOpenEditor, rendered on the payoff
+// stop in both scopes. No removal, no rename, no handler signature
+// change on any existing prop.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v2";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),

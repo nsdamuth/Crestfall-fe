@@ -38,6 +38,7 @@ export default function CreatorStopsView({
   onNext = null,
   onSave = null,
   onFinishAndSave = null,
+  onSaveAndOpenEditor = null,
   onClose = null,
   onKeepEditing = null,
   onConfirmDiscard = null,
@@ -271,6 +272,21 @@ export default function CreatorStopsView({
               </span>
 
               <div className="flex-1" />
+
+              {/* Payoff-stop CTA, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md
+                  section 3.3): both field scopes. persistCreation runs
+                  first; navigation only follows a confirmed save. */}
+              {isLastStop ? (
+                <button
+                  type="button"
+                  onClick={() => onSaveAndOpenEditor?.()}
+                  disabled={saveDisabled || isSaving}
+                  aria-busy={isSaving}
+                  className="cf-btn cf-btn--secondary"
+                >
+                  {isSaving ? "Saving..." : "Save and open the advanced editor"}
+                </button>
+              ) : null}
 
               <button
                 type="button"

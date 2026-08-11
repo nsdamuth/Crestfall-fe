@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import CreatorStopsView from "./CreatorStops.view";
 import { buildCreatorStopItems, CREATOR_STOP_IDS } from "./CreatorStops.contract";
@@ -58,6 +59,13 @@ const INITIAL_FORM_STATE = {
   outwardPersonality: "",
   internalPersonality: "",
   speechStyle: "",
+  // QUICK fields added per docs/STUDIO-SPEC.md section 2.2 (10 Aug
+  // 2026, Studio brief S2): the allocation names both QUICK but the
+  // seven-stop form state was missing them. Schema catch-up is
+  // CR-001 (movement_style) and CR-002 (rendering_style), still
+  // Nick's; these keys ride the existing data blob same as every
+  // other field.
+  movementStyle: "",
   greeting: "",
   scenario: "",
   backstory: "",
@@ -70,6 +78,7 @@ const INITIAL_FORM_STATE = {
   visibility: "PRIVATE",
   contentRating: "SFW",
   age: "18",
+  renderingStyle: "auto",
   characterColorPaletteId: "CRESTFALL_DEFAULT",
   creatorDirectives: "",
   extraRuntimeNotes: "",
@@ -104,7 +113,13 @@ function extractCreationFromApiResponse(payload) {
   return payload?.creation || payload?.data?.creation || null;
 }
 
-export default function CharacterCreatorModal({ onClose }) {
+// fieldScope, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 3.2,
+// Studio brief S2): "full" | "quick", default "full". Default renders
+// exactly today's field set so the legacy /studio/create hub (which
+// imports this same modal) stays pixel-stable under the strangler
+// law; the v2 Studio hub passes "quick" for the section 2.2 QUICK set.
+export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) {
+  const router = useRouter();
   const [activeStop, setActiveStop] = useState(CREATOR_STOP_IDS[0]);
   const [maxReachedIndex, setMaxReachedIndex] = useState(0);
   const [moreHairOpen, setMoreHairOpen] = useState(false);
@@ -199,7 +214,7 @@ export default function CharacterCreatorModal({ onClose }) {
       }
 
       setSavedSnapshot(snapshot);
-      return snapshot;
+      return { snapshot, id: creation.id };
     } catch {
       setSaveError(true);
       return null;
@@ -217,6 +232,20 @@ export default function CharacterCreatorModal({ onClose }) {
     const saved = await persistCreation();
     if (saved) {
       onClose?.();
+    }
+  }
+
+  // Payoff-stop CTA, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section
+  // 3.3): persistCreation first (creates on first save, updates the
+  // same creationId after), navigate to the advanced editor only on a
+  // confirmed save, using the id persistCreation just resolved rather
+  // than the creationId state (which has not re-rendered yet on a
+  // first save). On failure the error strip renders and nothing
+  // navigates.
+  async function handleSaveAndOpenEditor() {
+    const saved = await persistCreation();
+    if (saved?.id) {
+      router.push(`/studio/v2/editor/${saved.id}`);
     }
   }
 
@@ -304,6 +333,7 @@ export default function CharacterCreatorModal({ onClose }) {
       }),
     onSave: handleSave,
     onFinishAndSave: handleFinishAndSave,
+    onSaveAndOpenEditor: handleSaveAndOpenEditor,
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
@@ -346,6 +376,7 @@ export default function CharacterCreatorModal({ onClose }) {
             onToggleTypingFold={() =>
               setTypingFoldOpen((current) => !current)
             }
+            fieldScope={fieldScope}
           />
         ) : activeStop === "face" ? (
           <FaceStopView
@@ -402,12 +433,14 @@ export default function CharacterCreatorModal({ onClose }) {
             onToggleFineTuneFold={() =>
               setFineTuneFoldOpen((current) => !current)
             }
+            fieldScope={fieldScope}
           />
         ) : activeStop === "heart" ? (
           <HeartStopView
             outwardPersonality={formState.outwardPersonality}
             internalPersonality={formState.internalPersonality}
             speechStyle={formState.speechStyle}
+            movementStyle={formState.movementStyle}
             greeting={formState.greeting}
             scenario={formState.scenario}
             backstory={formState.backstory}
@@ -420,6 +453,7 @@ export default function CharacterCreatorModal({ onClose }) {
             onChangeOutwardPersonality={updateField("outwardPersonality")}
             onChangeInternalPersonality={updateField("internalPersonality")}
             onChangeSpeechStyle={updateField("speechStyle")}
+            onChangeMovementStyle={updateField("movementStyle")}
             onChangeGreeting={updateField("greeting")}
             onChangeScenario={updateField("scenario")}
             onChangeBackstory={updateField("backstory")}
@@ -433,18 +467,22 @@ export default function CharacterCreatorModal({ onClose }) {
             onToggleAdvancedFold={() =>
               setHeartAdvancedFoldOpen((current) => !current)
             }
+            fieldScope={fieldScope}
           />
         ) : activeStop === "seal" ? (
           <SealStopView
             visibility={formState.visibility}
             contentRating={formState.contentRating}
             age={formState.age}
+            renderingStyle={formState.renderingStyle}
             colorPaletteLabel={paletteVM.triggerPalette.label}
             colorPaletteSwatches={paletteVM.triggerPalette.swatches}
             onChangeVisibility={updateField("visibility")}
             onChangeContentRating={updateField("contentRating")}
             onChangeAge={updateField("age")}
+            onChangeRenderingStyle={updateField("renderingStyle")}
             onOpenColorPalette={() => setSecondaryPanel("palette")}
+            fieldScope={fieldScope}
           />
         ) : activeStop === "payoff" ? (
           <PayoffStopView
@@ -461,6 +499,7 @@ export default function CharacterCreatorModal({ onClose }) {
             onChangeCreatorDirectives={updateField("creatorDirectives")}
             onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
             onOpenStoryPanel={() => setSecondaryPanel("story")}
+            fieldScope={fieldScope}
           />
         ) : null
       }
