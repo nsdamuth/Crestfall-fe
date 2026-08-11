@@ -93,20 +93,21 @@ const socialLinks = Object.freeze([
 
 // Preview-nav fixture: journey order per docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
 // section 2, mirroring STUDIO_SIDEBAR_PREVIEW_GROUPS in
-// useStudioSidebarViewModel.js. Only Community is built today.
+// useStudioSidebarViewModel.js. All nine destinations are built,
+// RULED 11 Aug 2026.
 const previewGroups = Object.freeze([
   Object.freeze({
     label: "Play",
     items: Object.freeze([
-      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: false, isActive: false }),
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true, isActive: false }),
-      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: false, isActive: false }),
+      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true, isActive: false }),
     ]),
   }),
   Object.freeze({
     label: "Create",
     items: Object.freeze([
-      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: false, isActive: false }),
+      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: true, isActive: false }),
     ]),
@@ -116,7 +117,7 @@ const previewGroups = Object.freeze([
     items: Object.freeze([
       Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: true, isActive: false }),
-      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: false, isActive: false }),
+      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: true, isActive: false }),
     ]),
   }),
 ]);
