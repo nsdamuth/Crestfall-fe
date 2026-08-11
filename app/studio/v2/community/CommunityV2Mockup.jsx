@@ -65,6 +65,7 @@ const SORT_OPTIONS = [
   { value: "recommended", label: "Recommended" },
   { value: "popular", label: "Most played" },
   { value: "recent", label: "Newest" },
+  { value: "hearts", label: "Most hearted" },
   { value: "saved", label: "Most saved" },
 ];
 
@@ -203,6 +204,8 @@ export default function CommunityV2Mockup() {
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
     } else if (selectedSort === "recent") {
       sorted.sort((a, b) => b.recency - a.recency);
+    } else if (selectedSort === "hearts") {
+      sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
     } else if (selectedSort === "saved") {
       sorted.sort((a, b) => (b.saves || 0) - (a.saves || 0));
     }
