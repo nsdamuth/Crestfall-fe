@@ -1,4 +1,4 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const LORE_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the Lore page View
@@ -20,13 +20,16 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.0.0";
  * drafts, every approval state, shown in full) -> bottom banner
  * routing to Home, the loop's closing banner.
  *
- * The write-lore CTA's real destination (docs/SPRINT-G-PLAN.md
- * section 4: a creation modal composed on modal-frame with
- * KitFormField fields and KitAlertStrip approval notices) needs both
- * kit packages; neither exists yet (waves H2a form-field and H2c
- * alert-strip have not landed). The CTA stubs with the R4 fixture-
- * action notice until they do (HIDE/STUB law, docs/FRONTEND-SOP.md
- * section 5).
+ * The write-lore CTA (docs/SPRINT-G-PLAN.md section 4) opens a
+ * creation modal composed on modal-frame with KitFormField fields
+ * (title, world or faction) and a KitAlertStrip approval notice,
+ * wired 10 Aug 2026 (Sprint H integration) now that waves H2a
+ * (form-field) and H2c (alert-strip) have landed. 1.0.0 -> 1.1.0,
+ * additive: isCreateModalOpen and createModal. Submission itself
+ * still stubs with the R4 fixture-action notice: no services-api
+ * exists to submit to (CR-015 pipeline confirmation stays open with
+ * Nick, non-blocking, per docs/SPRINT-G-PLAN.md section 4; HIDE/STUB
+ * law, docs/FRONTEND-SOP.md section 5).
  *
  * What the View renders itself: the section order and every ruled
  * kit composition (promo-banner, studio-filter-bar, creation-card,
@@ -70,6 +73,17 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {number|null} remainingCount
  * @property {(() => void)|null} onLoadMore
  *
+ * @typedef {Object} LoreCreateModal
+ * @property {string} title
+ * @property {((value: string) => void)|null} onTitleChange
+ * @property {string} titleError Empty string when valid; set on submit if title is blank.
+ * @property {string} world
+ * @property {((value: string) => void)|null} onWorldChange
+ * @property {string} content
+ * @property {((value: string) => void)|null} onContentChange
+ * @property {(() => void)|null} onSubmit Validates title, then stubs with the R4 notice (no submission pipeline yet).
+ * @property {(() => void)|null} onClose Fires from all of modal-frame's dismissal paths; resets the fields.
+ *
  * @typedef {Object} LoreViewProps
  * @property {LoreBannerProps} topBanner
  * @property {LoreFilterBar} filterBar
@@ -79,6 +93,8 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {LoreCardItem[]} mineItems The creator's own drafts, shown in full, no paging.
  * @property {string|null} mineEmptyMessage Non-null renders the empty-section state instead of the mine grid.
  * @property {LoreBannerProps} bottomBanner
+ * @property {boolean} isCreateModalOpen Added 1.1.0. The write-lore CTA's creation modal, mounted only while open (modal-frame convention).
+ * @property {LoreCreateModal} createModal Added 1.1.0.
  * @property {{label: string, message: string}|null} notice R4 fixture-action notice (10 Aug 2026 review gate): non-persisting acknowledgement for any control whose real behavior waits on live wiring. Null renders nothing.
  * @property {(() => void)|null} onCloseNotice
  * @property {import("react").ReactNode} [harnessSlot] Dev-only fixture-state switcher, never product.

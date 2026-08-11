@@ -91,6 +91,18 @@ const COMMUNITY_LOAD_MORE = {
   onLoadMore: noop,
 };
 
+const CREATE_MODAL_CLOSED = {
+  title: "",
+  onTitleChange: noop,
+  titleError: "",
+  world: "",
+  onWorldChange: noop,
+  content: "",
+  onContentChange: noop,
+  onSubmit: noop,
+  onClose: noop,
+};
+
 // Default: both sections populated, community grid mid-catalog with
 // load-more available.
 export const loreDefaultFixture = {
@@ -102,6 +114,8 @@ export const loreDefaultFixture = {
   mineItems: LORE_MINE_ITEMS.map((item) => decorate(item, { showApprovalBadge: true })),
   mineEmptyMessage: null,
   bottomBanner: BOTTOM_BANNER,
+  isCreateModalOpen: false,
+  createModal: CREATE_MODAL_CLOSED,
   notice: null,
   onCloseNotice: noop,
 };
@@ -133,11 +147,22 @@ export const lorePendingApprovalFixture = {
   mineEmptyMessage: null,
 };
 
-// Longest content: the full catalog visible, load-more exhausted,
-// the longest title/subtitle fixture present in both sections.
+// Longest content: the full catalog visible, load-more exhausted, the
+// longest title/subtitle fixture present in both sections, and the
+// creation modal open with its longest states: a filled world/lore
+// draft plus the title validation error.
 export const loreLongestContentFixture = {
   ...loreDefaultFixture,
   communityItems: LORE_COMMUNITY_ITEMS.map((item) => decorate(item, { showApprovalBadge: false })),
   communityLoadMore: { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop },
   mineItems: LORE_MINE_ITEMS.map((item) => decorate(item, { showApprovalBadge: true })),
+  isCreateModalOpen: true,
+  createModal: {
+    ...CREATE_MODAL_CLOSED,
+    title: "",
+    titleError: "Give your lore a title before submitting.",
+    world: "The Sundered Choir",
+    content:
+      "Before the Choir fractured, its seven voices sang the wards that kept Aethelgard's border quiet. What broke first was not the song, but the silence between verses that no one thought to guard.",
+  },
 };

@@ -1,6 +1,6 @@
 # Lore LOOM package
 
-**Contract:** `Lore.contract.js` (v1.0.0)
+**Contract:** `Lore.contract.js` (v1.1.0)
 
 ## Purpose
 
@@ -36,6 +36,12 @@ Lore.jsx (Shell, ../Lore.jsx)
       -> two centered section labels (Community Lore, Your Lore)
       -> KitCreationCardView xN per section
       -> KitLoadMoreView (community section only)
+      -> LoreCreateModal (page-local, mounted only while open):
+         KitModalFrame -> KitAlertStripView (neutral, review notice)
+         -> KitFormFieldView x2 (Title, World or faction) -> a
+         page-local textarea (Lore's body; KitFormField's type enum
+         has no multi-line variant and the package is not touched by
+         this pass) -> Cancel / Submit for review
       -> FixtureActionNotice (shared staging scaffold, honest stub)
 ```
 
@@ -59,16 +65,29 @@ loop's closing banner.
 ## Item 39, RULED 10 Aug 2026
 
 The write-new-lore action is the top banner CTA, reading "Write
-lore." Its real destination (`docs/SPRINT-G-PLAN.md` section 4: a
-creation modal composed on `modal-frame` with `KitFormField` fields
-and `KitAlertStrip` approval notices) needs both kit packages; wave
-H2a (form-field) and wave H2c (alert-strip) have not landed at the
-time this wave ran (checked: neither `components/kit/form-field/`
-nor `components/kit/alert-strip/` exists in this tree). Per the R4
-HIDE/STUB law (`docs/FRONTEND-SOP.md` section 5), the CTA opens the
-honest stub notice instead: press acknowledged, destination stated,
-nothing opened. STOPPED, not built: the creation modal itself.
-Re-run this unit once H2a and H2c land to wire the real modal.
+lore." It opens a creation modal composed on `modal-frame` with
+`KitFormField` fields (Title, World or faction) and a `KitAlertStrip`
+approval notice, per `docs/SPRINT-G-PLAN.md` section 4. Wired during
+Sprint H integration (`design/sprint-h-integration`, 10 Aug 2026) now
+that wave H2a (form-field) and wave H2c (alert-strip) have landed;
+neither kit package is edited by this wiring pass.
+
+The modal itself is fully live: open, fill, close (backdrop, Escape,
+close control, or Cancel all reset the fields), and a required-title
+validation on Submit. What still stubs, honestly, is the submission
+destination: there is no services-api or approval pipeline to submit
+to yet (CR-015 stays open with Nick, non-blocking). Submit for review
+closes the modal and opens the shared R4 fixture-action notice instead
+of persisting anything, per the HIDE/STUB law
+(`docs/FRONTEND-SOP.md` section 5).
+
+The body field is a page-local `<textarea>`, not a `KitFormField`:
+the package's `type` enum (`"text"|"search"|"email"|"password"|
+"number"`) has no multi-line variant, and `components/kit/form-field/`
+is out of this wiring pass's file set. Styled to the same field
+tokens as `KitFormField`'s own input bed so it reads as one field
+family; flagged for a future kit pass if a multi-line field type is
+ever warranted more broadly.
 
 ## The centered-label seat
 

@@ -10,10 +10,13 @@
 // instead.
 //
 // Item 39, RULED 10 Aug 2026: the write-new-lore action is the top
-// banner CTA, "Write lore." The brief's creation modal (modal-frame
-// plus KitFormField fields and KitAlertStrip approval notices) needs
-// both kit packages, and neither exists yet (waves H2a and H2c have
-// not landed). The CTA stubs with the R4 notice until they do.
+// banner CTA, "Write lore," opening the creation modal (modal-frame
+// plus KitFormField fields and KitAlertStrip approval notices). Wired
+// this pass now that waves H2a (form-field) and H2c (alert-strip)
+// have landed. Submission itself still stubs with the R4 notice: no
+// services-api exists to submit to (CR-015 pipeline confirmation
+// stays open with Nick, non-blocking, per docs/SPRINT-G-PLAN.md
+// section 4).
 import { useMemo, useState } from "react";
 
 import {
@@ -25,6 +28,8 @@ import {
 } from "./loreContent.mock";
 
 const PAGE_SIZE = 4;
+
+const CREATE_FIELDS_INITIAL = { title: "", world: "", content: "" };
 
 const TOP_BANNER = {
   eyebrow: "Lore",
@@ -59,6 +64,9 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   const [selectedValues, setSelectedValues] = useState({});
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(PAGE_SIZE);
   const [notice, setNotice] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createFields, setCreateFields] = useState(CREATE_FIELDS_INITIAL);
+  const [createTitleError, setCreateTitleError] = useState("");
 
   function toggleId(setter) {
     return (id) =>
@@ -203,13 +211,49 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   const topBanner = {
     ...TOP_BANNER,
     imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
-    onCtaClick: () =>
-      openNotice("Write lore", "The lore creation editor opens once its kit packages (form-field, alert-strip) are built. Nothing was opened in this preview."),
+    onCtaClick: () => setIsCreateModalOpen(true),
   };
 
   const bottomBanner = {
     ...BOTTOM_BANNER,
     onCtaClick: () => navigateOrStub("/studio/v2/home", "Return to Home"),
+  };
+
+  function closeCreateModal() {
+    setIsCreateModalOpen(false);
+    setCreateFields(CREATE_FIELDS_INITIAL);
+    setCreateTitleError("");
+  }
+
+  function setCreateField(field) {
+    return (value) => {
+      setCreateFields((current) => ({ ...current, [field]: value }));
+      if (field === "title" && createTitleError) setCreateTitleError("");
+    };
+  }
+
+  function submitCreateModal() {
+    if (!createFields.title.trim()) {
+      setCreateTitleError("Give your lore a title before submitting.");
+      return;
+    }
+    closeCreateModal();
+    openNotice(
+      "Write lore",
+      "Submission opens for review once the live approval pipeline is wired (CR-015). Nothing was published in this preview."
+    );
+  }
+
+  const createModal = {
+    title: createFields.title,
+    onTitleChange: setCreateField("title"),
+    titleError: createTitleError,
+    world: createFields.world,
+    onWorldChange: setCreateField("world"),
+    content: createFields.content,
+    onContentChange: setCreateField("content"),
+    onSubmit: submitCreateModal,
+    onClose: closeCreateModal,
   };
 
   return {
@@ -221,6 +265,8 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     mineItems,
     mineEmptyMessage,
     bottomBanner,
+    isCreateModalOpen,
+    createModal,
     notice,
     onCloseNotice: () => setNotice(null),
   };
