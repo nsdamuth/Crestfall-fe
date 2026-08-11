@@ -25,11 +25,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const CELL_WIDTH_CLASSES =
   "w-[calc((100%-2*var(--space-3))/2.4)] min-[700px]:w-[calc((100%-3*var(--space-4))/3.4)] min-[1100px]:w-[calc((100%-4*var(--space-5))/4.4)]";
 
-const BLEED_MARGIN_CLASSES =
-  "mx-[calc(var(--space-5)*-1)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)]";
-
-const BLEED_PADDING_CLASSES =
-  "px-[var(--space-5)] sm:px-[var(--space-8)] lg:px-[var(--space-10)] [scroll-padding-inline:var(--space-5)] sm:[scroll-padding-inline:var(--space-8)] lg:[scroll-padding-inline:var(--space-10)]";
+const SCROLL_PADDING_CLASSES =
+  "[scroll-padding-inline:var(--space-3)] min-[700px]:[scroll-padding-inline:var(--space-4)] min-[1100px]:[scroll-padding-inline:var(--space-5)]";
 
 function readEdges(node) {
   if (!node) return { atStart: true, atEnd: true };
@@ -148,11 +145,11 @@ export default function KitRailView({
         </div>
       </div>
 
-      <div className={`relative ${BLEED_MARGIN_CLASSES}`}>
+      <div className="relative">
         <div
           ref={scrollportRef}
           onScroll={handleScroll}
-          className={`scrollbar-none flex snap-x snap-proximity items-stretch gap-[var(--space-3)] overflow-x-auto py-[var(--space-3)] min-[700px]:gap-[var(--space-4)] min-[1100px]:gap-[var(--space-5)] ${BLEED_PADDING_CLASSES}`}
+          className={`scrollbar-none flex snap-x snap-proximity items-stretch gap-[var(--space-3)] overflow-x-auto py-[var(--space-3)] min-[700px]:gap-[var(--space-4)] min-[1100px]:gap-[var(--space-5)] ${SCROLL_PADDING_CLASSES}`}
         >
           {Children.map(children, (child) => (
             <div className={`grid flex-none snap-start ${CELL_WIDTH_CLASSES}`}>{child}</div>

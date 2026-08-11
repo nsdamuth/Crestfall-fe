@@ -1247,6 +1247,12 @@ existing cards; no card-level work is needed." Head anatomy is
 2.16(o) scope 1: gold uppercase label, one short solid gold rule to
 its right, View all beside the label, never at the end of the scroll.
 
+- **Head layout, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item 31,
+  variant A).** View all sits immediately beside the gold rule, to
+  its right, both above and below 700px; the alternative seating
+  View all at the far end of the head row was rejected. This is the
+  built default, unmodified. Combines with the head row width ruling
+  below.
 - **Head row width, RULED 10 Aug 2026 (rail defect fix pass,
   `docs/SPRINT-F-PLAN.md`).** Above 700px the head is one row: label,
   rule, View all, then the head control seat and the arrow pair
@@ -1261,20 +1267,28 @@ its right, View all beside the label, never at the end of the scroll.
   ("renders nothing when nothing is in progress") and the
   creator-card strip law ("the strip never invents placeholder
   frames").
-- **Arrow behavior.** Native scroll everywhere (touch, trackpad,
+- **Arrow placement, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item
+  33, variant D).** Native scroll everywhere (touch, trackpad,
   shift-wheel) is the baseline at every width. Gold arrow controls
   additionally appear from 700px up, one pair riding the right end of
-  the head row after the head control seat. Each arrow disables at
-  its own end (`--state-disabled-opacity`, non-interactive) and
-  advances the scrollport by one full card group via `scrollBy`. No
-  dot indicators, no page counter, anywhere.
-- **Trailing fade.** A right-edge overlay signals more content:
+  the head row after the head control seat, clear of the cards and
+  the fade. This is the built default, unmodified; the rejected
+  alternative overlaid the arrows on the scrollport edges at
+  mid-card height, which competes with the trailing fade and the
+  card face actions. Each arrow disables at its own end
+  (`--state-disabled-opacity`, non-interactive) and advances the
+  scrollport by one full card group via `scrollBy`. No dot
+  indicators, no page counter, anywhere.
+- **Fade strength, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item
+  34, variant G).** A right-edge overlay signals more content:
   `linear-gradient(90deg, transparent, var(--canvas))`, about
   `--space-10` wide, `pointer-events-none`, hidden once the rail
-  rests at its end. Package-local recipe, not a token: no fade token
-  exists in `docs/DESIGN-TOKENS.md` (it lists a proposed-but-unminted
-  tile fade under "needs a ruling"), so this composes existing
-  tokens in place rather than minting one.
+  rests at its end. This is the built default, unmodified; the
+  rejected alternatives were a visibly softer/narrower fade and a
+  visibly stronger/wider fade. Package-local recipe, not a token: no
+  fade token exists in `docs/DESIGN-TOKENS.md` (it lists a
+  proposed-but-unminted tile fade under "needs a ruling"), so this
+  composes existing tokens in place rather than minting one.
 - **Snap and resize.** `scroll-snap-type: x proximity` on the
   scrollport, `scroll-snap-align: start` on each cell, aligned to the
   content edge by `scroll-padding-inline`. Proximity, not mandatory:
@@ -1288,14 +1302,20 @@ its right, View all beside the label, never at the end of the scroll.
   attached in a ref callback only recomputes the `atStart`/`atEnd`
   flags so the arrows and the fade stay truthful; it stores no scroll
   offset and drives no scripted repositioning.
-- **Edge bleed.** The head row stays in normal flow, sharing the page
-  content edges by construction. The scrollport alone bleeds, reusing
-  the sticky filter bar's exact mechanism against the same shell:
-  negative horizontal margins cancelling the shell's section padding
-  (`mx-[calc(var(--space-5)*-1)]`, `sm:mx-[calc(var(--space-8)*-1)]`,
-  `lg:mx-[calc(var(--space-10)*-1)]`), the same values re-added as
-  padding-inline on the scrollport and mirrored as
-  `scroll-padding-inline`.
+- **Edge alignment, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item
+  32).** Peek depth is unchanged from the built default (0.4 of a
+  card at every tier; the shallower 0.25 and louder 0.5 alternatives
+  were rejected). The rail's scrollport and its trailing fade
+  terminate at the same horizontal position as every other page
+  component's right edge, at every width including 390: no mobile
+  full-bleed exception. The left edge matches the same gutter. The
+  head row stays in normal flow, sharing the page content edges by
+  construction; the scrollport carries no negative margin and no
+  bleed padding, so its edges are the section's own content edges
+  rather than the true viewport edge. `scroll-padding-inline` is set
+  on the scrollport purely to inset the scroll-into-view target from
+  the overflow clip edge for the keyboard focus law below; it adds
+  no visual padding and does not reintroduce a bleed.
 - **Keyboard.** Natural DOM tab order: head first (View all, then the
   seated head control, then the arrow pair), then each card's own
   controls in card order. No roving tabindex; the scrollport carries

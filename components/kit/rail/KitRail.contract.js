@@ -10,8 +10,8 @@ export const KIT_RAIL_VIEW_CONTRACT_VERSION = "1.0.0";
  * What the rail renders itself: the section root; the head row
  * (label, the short gold rule, View all, the head control seat, the
  * gold arrow pair from 700px up); the scrollport with its item
- * cells, snap, edge bleed, and trailing fade; the arrow enable and
- * disable state.
+ * cells, snap, edge alignment, and trailing fade; the arrow enable
+ * and disable state.
  *
  * What the rail delegates: everything inside the cards (children,
  * passed through untouched); the View all destination (onViewAll,

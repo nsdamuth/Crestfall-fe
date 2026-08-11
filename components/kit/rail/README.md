@@ -73,16 +73,18 @@ token exists and none is minted here; `docs/DESIGN-TOKENS.md` already
 lists a proposed-but-unminted tile fade under "needs a ruling", and
 this fade stays a package-local recipe until that ruling happens.
 
-## Edge bleed on mobile
+## Edge alignment, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item 32)
 
 The head row stays in normal flow, sharing the page content edges by
-construction. The scrollport alone bleeds, using the exact mechanism
-the sticky filter bar already uses against the same shell: negative
-horizontal margins that cancel the shell's section padding
-(`mx-[calc(var(--space-5)*-1)]`, `sm:mx-[calc(var(--space-8)*-1)]`,
-`lg:mx-[calc(var(--space-10)*-1)]`), the same values re-added as
-padding-inline on the scrollport and mirrored as
-`scroll-padding-inline`.
+construction. The scrollport and its trailing fade terminate at the
+same horizontal position as every other page component's right edge,
+at every width including 390; the left edge matches the same gutter.
+No mobile full-bleed exception. There is no negative-margin bleed:
+the scrollport carries no horizontal margin or padding of its own, so
+its edges are the section's own content edges. Only
+`scroll-padding-inline` is set, purely to inset the scroll-into-view
+target from the overflow clip edge for the focus law below; it adds
+no visual padding.
 
 ## Keyboard behavior
 
@@ -105,8 +107,8 @@ None. The head uses `--gold-ornament`, `--text-label`,
 `--track-label`, `--space-3`, `--space-8`. The link and arrows use
 `--gold-action`, `--icon-md`, `--control-sm` with the
 `[@media(pointer:coarse)]:min-h-[var(--control-md)]` bump,
-`--state-disabled-opacity`, and `kit-focus`. Gutters and bleed are
-`--space-3/4/5` and `--space-5/8/10`.
+`--state-disabled-opacity`, and `kit-focus`. Cell gutters and the
+scroll-padding inset are `--space-3/4/5`.
 
 ## Card sizing
 

@@ -300,29 +300,38 @@ end. Production build at session start and end, dev server law observed.
 ## 13. OPEN FOR BRIAN
 
 Items 1 through 30 stand as written in docs/SPRINT-D-PLAN.md and
-docs/SPRINT-E-PLAN.md, none resolved at this gate. New items, all picks
-that need a render to settle:
+docs/SPRINT-E-PLAN.md, none resolved at this gate.
 
-31. Head order. Built default: label, short gold rule, then View all,
-    reading left to right. The alternative seats View all tight to the
-    label with the rule after it. Both satisfy 2.16(o) and the
-    beside-the-label ruling; which reads better needs the render.
-32. Peek depth. Built default: 0.4 of a card at every tier. Render
-    alternatives: a shallower 0.25 peek (calmer, more of each card) or
-    a 0.5 peek (louder more-content signal, smaller cards).
-33. Arrow seat. Built default: the arrow pair rides the right end of
-    the head row, after the control seat, clear of the cards and the
-    fade. Render alternative: arrows overlaid on the scrollport edges
-    at mid-card height. The overlay competes with the trailing fade
-    and the card face actions, which is why it is not the default.
-34. Fade width and strength. Built default: about --space-10 wide,
-    transparent to full canvas. Whether it reads as an invitation or a
-    smudge over gold-lit art only a render can say.
-35. Creator rail vertical fit. Built default: cells stretch, so
-    creator cards in one rail equalize height. Render alternative:
-    top-aligned intrinsic heights with a ragged bottom edge.
-36. Mute control placement on the creator profile. To be settled at
-    render once the Creators profile-detail page exists (CR-028).
+Items 31 through 35, RULED and CLOSED (strategy chat, written into
+docs/BUILD-BLUEPRINT.md section 2.18):
+
+31. Head order, RULED, variant A. Built default: label, short gold
+    rule, then View all, reading left to right. This is the current
+    unmodified KitRailView; no component change required.
+32. Peek depth, RULED, unchanged. Peek depth stays 0.4 of a card at
+    every tier. The rail's scrollport and its right-edge fade now
+    terminate at the same horizontal position as every other page
+    component's right edge, at every width including 390, with no
+    mobile full-bleed exception; the left edge matches the same
+    gutter. This closes the edge-bleed defect the render pass and the
+    9.5-Aug rail inspection surfaced: the scrollport previously bled
+    past the page side gutter on mobile via a negative-margin trick
+    that has been removed. `components/kit/rail/KitRail.view.jsx` and
+    its README were the files touched; no contract or prop change.
+33. Arrow seat, RULED, variant D. Built default: the arrow pair rides
+    the right end of the head row, after the control seat, clear of
+    the cards and the fade. This is the current unmodified
+    KitRailView; no component change required.
+34. Fade width and strength, RULED, variant G. Built default: about
+    --space-10 wide, transparent to full canvas. This is the current
+    unmodified KitRailView; no component change required.
+35. Creator rail vertical fit, RULED, unchanged. Cells stretch, so
+    creator cards in one rail equalize height; no component change
+    required.
+
+36. Mute control placement on the creator profile. Still open. To be
+    settled at render once the Creators profile-detail page exists
+    (CR-028).
 
 ## Verification law for this sprint
 
