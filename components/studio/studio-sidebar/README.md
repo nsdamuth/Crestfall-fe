@@ -36,11 +36,12 @@ When on, the sidebar renders the nine-destination journey-order nav
 Explore: Community, Creators, Lore, per
 `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 2) above a collapsible
 Legacy group holding today's existing primary and utility links
-unchanged. Built destinations (Community, at `/studio/v2/community`)
-route normally; unbuilt destinations render quiet, non-interactive,
-no href, with a "Soon" mark. When off, the sidebar renders exactly as
-it did before the flag existed: this is a smallest-edit, fully
-reversible change gated entirely on `previewEnabled` in
+unchanged. All nine destinations are built, RULED 11 Aug 2026, and
+route normally to their live `/studio/v2/<page>` page; the quiet,
+non-interactive, no-href "Soon" treatment stays in the view for any
+future destination that ships unbuilt. When off, the sidebar renders
+exactly as it did before the flag existed: this is a smallest-edit,
+fully reversible change gated entirely on `previewEnabled` in
 `StudioSidebar.view.jsx`.
 
 Preview group headers (Play, Create, Explore) follow

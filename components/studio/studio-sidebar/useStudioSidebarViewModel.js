@@ -9,19 +9,23 @@ import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 // route; unbuilt destinations carry no href and render quiet
 // (non-interactive) until their page ships. Icon keys reuse the
 // existing ICONS set in StudioSidebar.view.jsx, no new icons added.
+//
+// All nine destinations are built, RULED 11 Aug 2026: every isBuilt
+// flag moves false to true, so every item routes to its live
+// /studio/v2/<page> route. No hrefs changed, no icon keys changed.
 export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
     items: Object.freeze([
-      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: false }),
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true }),
       Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true }),
-      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: false }),
+      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true }),
     ]),
   }),
   Object.freeze({
     label: "Create",
     items: Object.freeze([
-      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: false }),
+      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
       Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: true }),
     ]),
@@ -31,7 +35,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     items: Object.freeze([
       Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true }),
       Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: true }),
-      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: false }),
+      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: true }),
     ]),
   }),
 ]);
