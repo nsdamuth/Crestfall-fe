@@ -20,6 +20,7 @@ import KitRailView from "@/components/kit/rail/KitRail.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 
 function RailCard({ item }) {
@@ -54,6 +55,7 @@ export default function HomeView({
   creatorsToFollowRail,
   sortControl,
   bottomBanner,
+  errorMessage = null,
   notice = null,
   onCloseNotice = null,
   harnessSlot = null,
@@ -88,36 +90,42 @@ export default function HomeView({
           onCtaClick={() => (continueItem ? continueItem.onContinue?.() : topBanner?.onCtaClick?.())}
         />
 
-        {destinationTiles.length > 0 && (
-          <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4">
-            {destinationTiles.map((tile) => (
-              <KitDestinationTileView
-                key={tile.id}
-                label={tile.label}
-                supportingLine={tile.supportingLine}
-                imageSrc={tile.imageSrc ?? null}
-                onOpen={() => tile.onOpen?.()}
-              />
-            ))}
-          </div>
-        )}
+        {errorMessage ? (
+          <KitAlertStripView tone="danger" title={errorMessage} body="Try refreshing the page." />
+        ) : (
+          <>
+            {destinationTiles.length > 0 && (
+              <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4">
+                {destinationTiles.map((tile) => (
+                  <KitDestinationTileView
+                    key={tile.id}
+                    label={tile.label}
+                    supportingLine={tile.supportingLine}
+                    imageSrc={tile.imageSrc ?? null}
+                    onOpen={() => tile.onOpen?.()}
+                  />
+                ))}
+              </div>
+            )}
 
-        <Rail
-          rail={topRatedRail}
-          headControlSlot={
-            <KitDropdownView
-              label="Sort"
-              options={sortControl?.options ?? []}
-              selectedValues={sortControl?.selectedValue ? [sortControl.selectedValue] : []}
-              isMultiSelect={false}
-              isDisabled={false}
-              onToggleOption={(value) => sortControl?.onChange?.(value)}
+            <Rail
+              rail={topRatedRail}
+              headControlSlot={
+                <KitDropdownView
+                  label="Sort"
+                  options={sortControl?.options ?? []}
+                  selectedValues={sortControl?.selectedValue ? [sortControl.selectedValue] : []}
+                  isMultiSelect={false}
+                  isDisabled={false}
+                  onToggleOption={(value) => sortControl?.onChange?.(value)}
+                />
+              }
             />
-          }
-        />
-        <Rail rail={recentlyAddedRail} />
-        <Rail rail={fromTheCommunityRail} />
-        <Rail rail={creatorsToFollowRail} />
+            <Rail rail={recentlyAddedRail} />
+            <Rail rail={fromTheCommunityRail} />
+            <Rail rail={creatorsToFollowRail} />
+          </>
+        )}
       </KitStudioPageView>
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />

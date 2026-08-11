@@ -140,6 +140,7 @@ export default function LoreView({
   communityLoadMore,
   mineItems = [],
   mineEmptyMessage = null,
+  errorMessage = null,
   bottomBanner,
   isCreateModalOpen = false,
   createModal = null,
@@ -192,27 +193,33 @@ export default function LoreView({
           onCtaClick={() => topBanner?.onCtaClick?.()}
         />
 
-        <div className="flex flex-col gap-[var(--space-4)]">
-          <SectionLabel>Community Lore</SectionLabel>
-          {communityEmptyMessage ? (
-            <EmptySection message={communityEmptyMessage} />
-          ) : (
-            <>
-              <CardGrid items={communityItems} />
-              <KitLoadMoreView
-                isLoading={communityLoadMore?.isLoading}
-                hasMore={communityLoadMore?.hasMore}
-                remainingCount={communityLoadMore?.remainingCount ?? null}
-                onLoadMore={() => communityLoadMore?.onLoadMore?.()}
-              />
-            </>
-          )}
-        </div>
+        {errorMessage ? (
+          <KitAlertStripView tone="danger" title={errorMessage} body="Try refreshing the page." />
+        ) : (
+          <>
+            <div className="flex flex-col gap-[var(--space-4)]">
+              <SectionLabel>Community Lore</SectionLabel>
+              {communityEmptyMessage ? (
+                <EmptySection message={communityEmptyMessage} />
+              ) : (
+                <>
+                  <CardGrid items={communityItems} />
+                  <KitLoadMoreView
+                    isLoading={communityLoadMore?.isLoading}
+                    hasMore={communityLoadMore?.hasMore}
+                    remainingCount={communityLoadMore?.remainingCount ?? null}
+                    onLoadMore={() => communityLoadMore?.onLoadMore?.()}
+                  />
+                </>
+              )}
+            </div>
 
-        <div className="flex flex-col gap-[var(--space-4)]">
-          <SectionLabel>Your Lore</SectionLabel>
-          {mineEmptyMessage ? <EmptySection message={mineEmptyMessage} /> : <CardGrid items={mineItems} />}
-        </div>
+            <div className="flex flex-col gap-[var(--space-4)]">
+              <SectionLabel>Your Lore</SectionLabel>
+              {mineEmptyMessage ? <EmptySection message={mineEmptyMessage} /> : <CardGrid items={mineItems} />}
+            </div>
+          </>
+        )}
       </KitStudioPageView>
 
       {isCreateModalOpen && (

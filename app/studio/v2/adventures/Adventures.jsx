@@ -17,6 +17,7 @@ import { useAdventuresViewModel } from "./adventures/useAdventuresViewModel";
 const FIXTURE_MODES = {
   full: "Full catalog",
   emptyCatalog: "Empty catalog",
+  error: "Error",
 };
 
 function FixtureModeHarness({ fixtureMode, onChangeFixtureMode }) {

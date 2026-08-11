@@ -89,9 +89,13 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   }
 
   const communitySource =
-    fixtureMode === "empty" ? [] : fixtureMode === "pendingApproval" ? [] : LORE_COMMUNITY_ITEMS;
+    fixtureMode === "empty" || fixtureMode === "error"
+      ? []
+      : fixtureMode === "pendingApproval"
+        ? []
+        : LORE_COMMUNITY_ITEMS;
   const mineSource =
-    fixtureMode === "empty"
+    fixtureMode === "empty" || fixtureMode === "error"
       ? []
       : fixtureMode === "pendingApproval"
         ? LORE_MINE_ITEMS.filter((item) => item.approvalState === "pending")
@@ -177,8 +181,18 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   const communityRemainingCount = communityHasMore ? filteredCommunity.length - visibleCommunityCount : null;
 
   const communityEmptyMessage =
-    filteredCommunity.length === 0 ? "No published Lore matches these filters yet." : null;
-  const mineEmptyMessage = filteredMine.length === 0 ? "Nothing of yours matches these filters yet." : null;
+    filteredCommunity.length === 0 && fixtureMode !== "error"
+      ? "No published Lore matches these filters yet."
+      : null;
+  const mineEmptyMessage =
+    filteredMine.length === 0 && fixtureMode !== "error"
+      ? "Nothing of yours matches these filters yet."
+      : null;
+
+  // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
+  // one; this restores the KitAlertStrip danger banner every fixture-
+  // driven page now carries under fixtureMode "error".
+  const errorMessage = fixtureMode === "error" ? "Lore could not be loaded." : null;
 
   const filterBar = {
     searchValue,
@@ -264,6 +278,7 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     communityLoadMore,
     mineItems,
     mineEmptyMessage,
+    errorMessage,
     bottomBanner,
     isCreateModalOpen,
     createModal,

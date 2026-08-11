@@ -18,6 +18,7 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import FixtureActionNotice from "../FixtureActionNotice";
@@ -73,6 +74,7 @@ const FIXTURE_MODES = {
   default: "Default",
   empty: "Empty",
   loading: "Loading",
+  error: "Error",
 };
 
 const PAGE_SIZE = 8;
@@ -139,7 +141,7 @@ export default function CommunityV2Mockup() {
   const [lovedOverlayIds, setLovedOverlayIds] = useState([]);
 
   const filterGroups = useMemo(() => {
-    const pool = fixtureMode === "empty" ? [] : FIXTURE_CREATIONS;
+    const pool = fixtureMode === "empty" || fixtureMode === "error" ? [] : FIXTURE_CREATIONS;
     return [
       {
         id: "type",
@@ -178,7 +180,7 @@ export default function CommunityV2Mockup() {
   }, [fixtureMode]);
 
   const filteredCreations = useMemo(() => {
-    if (fixtureMode === "empty") return [];
+    if (fixtureMode === "empty" || fixtureMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
     const typeValues = selectedValues.type || [];
@@ -190,9 +192,16 @@ export default function CommunityV2Mockup() {
       if (types.length && !types.includes(item.assetKind)) return false;
       if (ratings.length && !ratings.includes(item.ratingTier)) return false;
       if (remixOnly && !item.isRemixable) return false;
+      // Search restores original field coverage (title, description,
+      // creator handle, tags per the 10 Aug 2026 parity audit): the
+      // handle lives in subtitle here and the v2 card model carries no
+      // separate tags field, so title, subtitle, and description are
+      // the honest equivalent set.
       if (
         query &&
-        !`${item.title} ${item.subtitle}`.toLowerCase().includes(query)
+        !`${item.title} ${item.subtitle} ${item.description || ""}`
+          .toLowerCase()
+          .includes(query)
       ) {
         return false;
       }
@@ -315,11 +324,21 @@ export default function CommunityV2Mockup() {
         />
       }
     >
+      {fixtureMode === "error" && (
+        <KitAlertStripView
+          tone="danger"
+          title="Community could not be loaded."
+          body="Try refreshing the page."
+        />
+      )}
+
       {fixtureMode === "loading" && <LoadingGrid />}
 
-      {fixtureMode !== "loading" && filteredCreations.length === 0 && <EmptyState />}
+      {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreations.length === 0 && (
+        <EmptyState />
+      )}
 
-      {fixtureMode !== "loading" && filteredCreations.length > 0 && (
+      {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreations.length > 0 && (
         <>
           <div
             className={

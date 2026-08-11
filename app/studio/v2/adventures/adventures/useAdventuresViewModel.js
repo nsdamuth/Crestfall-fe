@@ -68,7 +68,8 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
     openNotice(label, `${label} opens once this section is built. Nothing was opened in this preview.`);
   }
 
-  const sourceItems = fixtureMode === "emptyCatalog" ? [] : ADVENTURES_CATALOG_ITEMS;
+  const sourceItems =
+    fixtureMode === "emptyCatalog" || fixtureMode === "error" ? [] : ADVENTURES_CATALOG_ITEMS;
 
   const filteredItems = useMemo(() => {
     const query = searchValue.trim().toLowerCase();
@@ -98,11 +99,16 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
   const remainingCount = hasMore ? filteredItems.length - visibleCount : null;
 
   const emptyMessage =
-    filteredItems.length === 0
+    filteredItems.length === 0 && fixtureMode !== "error"
       ? searchValue.trim()
         ? `No Adventures match "${searchValue.trim()}".`
         : "No Adventures have been published yet."
       : null;
+
+  // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
+  // one; this restores the KitAlertStrip danger banner every fixture-
+  // driven page now carries under fixtureMode "error".
+  const errorMessage = fixtureMode === "error" ? "Adventures could not be loaded." : null;
 
   const filterBar = {
     searchValue,
@@ -142,6 +148,7 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
     filterBar,
     catalogItems,
     emptyMessage,
+    errorMessage,
     loadMore,
     bottomBanner,
     isBuilderOpen,

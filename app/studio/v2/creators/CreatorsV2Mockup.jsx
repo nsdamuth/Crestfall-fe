@@ -15,6 +15,7 @@ import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.vie
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "../FixtureActionNotice";
 
 function creatorArt(name) {
@@ -56,6 +57,7 @@ const FIXTURE_MODES = {
   default: "Default",
   empty: "Empty",
   loading: "Loading",
+  error: "Error",
 };
 
 const PAGE_SIZE = 9;
@@ -113,7 +115,7 @@ export default function CreatorsV2Mockup() {
   const [actionNotice, setActionNotice] = useState(null);
 
   const filteredCreators = useMemo(() => {
-    if (fixtureMode === "empty") return [];
+    if (fixtureMode === "empty" || fixtureMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
     const filtered = FIXTURE_CREATORS.filter((creator) =>
@@ -263,11 +265,21 @@ export default function CreatorsV2Mockup() {
         />
       }
     >
+        {fixtureMode === "error" && (
+          <KitAlertStripView
+            tone="danger"
+            title="Creators could not be loaded."
+            body="Try refreshing the page."
+          />
+        )}
+
         {fixtureMode === "loading" && <LoadingGrid />}
 
-        {fixtureMode !== "loading" && filteredCreators.length === 0 && <EmptyState />}
+        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreators.length === 0 && (
+          <EmptyState />
+        )}
 
-        {fixtureMode !== "loading" && filteredCreators.length > 0 && (
+        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreators.length > 0 && (
           <>
             <div className="grid grid-cols-1 gap-[var(--space-3)] min-[700px]:grid-cols-2 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-3">
               {visibleCreators.map((creator) => {

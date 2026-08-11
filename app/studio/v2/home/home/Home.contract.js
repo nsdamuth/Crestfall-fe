@@ -1,4 +1,4 @@
-export const HOME_VIEW_CONTRACT_VERSION = "2.0.0";
+export const HOME_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
  * Stable portable UI boundary for the Home page View
@@ -104,6 +104,7 @@ export const HOME_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {HomeRail} creatorsToFollowRail
  * @property {HomeSortControl} sortControl Seated in the top rail's head control slot only.
  * @property {HomeBannerProps} bottomBanner
+ * @property {string|null} errorMessage Added 2.1.0 (10 Aug 2026 parity audit, section 2). Non-null renders a KitAlertStrip danger banner in place of the destination tiles and rails.
  * @property {{label: string, message: string}|null} notice R4 fixture-action notice (10 Aug 2026 review gate): non-persisting acknowledgement for any control whose real behavior waits on live wiring. Null renders nothing.
  * @property {(() => void)|null} onCloseNotice
  * @property {import("react").ReactNode} [harnessSlot] Dev-only fixture-state switcher, never product.

@@ -51,6 +51,7 @@ export const adventuresDefaultFixture = {
   filterBar: FILTER_BAR,
   catalogItems: ADVENTURES_CATALOG_ITEMS.slice(0, 6).map(decorate),
   emptyMessage: null,
+  errorMessage: null,
   loadMore: LOAD_MORE,
   bottomBanner: BOTTOM_BANNER,
   isBuilderOpen: false,
@@ -75,4 +76,15 @@ export const adventuresLongestContentFixture = {
   ...adventuresDefaultFixture,
   catalogItems: ADVENTURES_CATALOG_ITEMS.map(decorate),
   loadMore: { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop },
+};
+
+// Error: load failed (10 Aug 2026 parity audit, section 2 fix). A
+// KitAlertStrip danger banner replaces the grid; no page had this
+// state before this pass.
+export const adventuresErrorFixture = {
+  ...adventuresDefaultFixture,
+  catalogItems: [],
+  emptyMessage: null,
+  errorMessage: "Adventures could not be loaded.",
+  loadMore: { ...LOAD_MORE, hasMore: false, remainingCount: null },
 };

@@ -1,4 +1,4 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.2.0";
+export const LORE_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the Lore page View
@@ -100,6 +100,7 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {LoreLoadMore} communityLoadMore
  * @property {LoreCardItem[]} mineItems The creator's own drafts, shown in full, no paging.
  * @property {string|null} mineEmptyMessage Non-null renders the empty-section state instead of the mine grid.
+ * @property {string|null} errorMessage Added 1.3.0 (10 Aug 2026 parity audit, section 2). Non-null renders a KitAlertStrip danger banner instead of both grids.
  * @property {LoreBannerProps} bottomBanner
  * @property {boolean} isCreateModalOpen Added 1.1.0. The write-lore CTA's creation modal, mounted only while open (modal-frame convention).
  * @property {LoreCreateModal} createModal Added 1.1.0.

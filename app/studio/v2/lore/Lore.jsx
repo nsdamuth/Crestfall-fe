@@ -18,6 +18,7 @@ const FIXTURE_MODES = {
   full: "Full",
   empty: "Empty",
   pendingApproval: "Pending approval",
+  error: "Error",
 };
 
 function FixtureModeHarness({ fixtureMode, onChangeFixtureMode }) {

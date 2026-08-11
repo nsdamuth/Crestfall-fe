@@ -113,6 +113,7 @@ export const loreDefaultFixture = {
   communityLoadMore: COMMUNITY_LOAD_MORE,
   mineItems: LORE_MINE_ITEMS.map((item) => decorate(item, { showApprovalBadge: true })),
   mineEmptyMessage: null,
+  errorMessage: null,
   bottomBanner: BOTTOM_BANNER,
   isCreateModalOpen: false,
   createModal: CREATE_MODAL_CLOSED,
@@ -165,4 +166,17 @@ export const loreLongestContentFixture = {
     content:
       "Before the Choir fractured, its seven voices sang the wards that kept Aethelgard's border quiet. What broke first was not the song, but the silence between verses that no one thought to guard.",
   },
+};
+
+// Error: load failed (10 Aug 2026 parity audit, section 2 fix). A
+// KitAlertStrip danger banner replaces both grids; no page had this
+// state before this pass.
+export const loreErrorFixture = {
+  ...loreDefaultFixture,
+  communityItems: [],
+  communityEmptyMessage: null,
+  communityLoadMore: { ...COMMUNITY_LOAD_MORE, hasMore: false, remainingCount: null },
+  mineItems: [],
+  mineEmptyMessage: null,
+  errorMessage: "Lore could not be loaded.",
 };

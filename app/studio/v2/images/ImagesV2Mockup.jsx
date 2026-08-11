@@ -26,6 +26,7 @@ import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
 import {
@@ -100,6 +101,7 @@ const FIXTURE_MODES = {
   default: "Default",
   empty: "Empty",
   loading: "Loading",
+  error: "Error",
 };
 
 const PAGE_SIZE = 12;
@@ -271,7 +273,7 @@ export default function ImagesV2Mockup() {
   const [savePresetForm, setSavePresetForm] = useState({ name: "", description: "", prompt: "", tags: "" });
 
   const filterGroups = useMemo(() => {
-    const pool = fixtureMode === "empty" ? [] : FIXTURE_IMAGES;
+    const pool = fixtureMode === "empty" || fixtureMode === "error" ? [] : FIXTURE_IMAGES;
     return [
       {
         id: "linkedAsset",
@@ -299,7 +301,7 @@ export default function ImagesV2Mockup() {
   }, [fixtureMode]);
 
   const filteredItems = useMemo(() => {
-    if (fixtureMode === "empty") return [];
+    if (fixtureMode === "empty" || fixtureMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
     const linkedAssetValues = selectedValues.linkedAsset || [];
@@ -550,11 +552,21 @@ export default function ImagesV2Mockup() {
             (docs/SPRINT-E-PLAN.md section 1.4). */}
         <div className="flex items-start gap-[var(--space-6)]">
           <div className="flex min-w-0 flex-1 flex-col gap-[var(--space-6)]">
+            {fixtureMode === "error" && (
+              <KitAlertStripView
+                tone="danger"
+                title="Images could not be loaded."
+                body="Try refreshing the page."
+              />
+            )}
+
             {fixtureMode === "loading" && <LoadingGrid />}
 
-            {fixtureMode !== "loading" && filteredItems.length === 0 && <EmptyState />}
+            {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length === 0 && (
+              <EmptyState />
+            )}
 
-            {fixtureMode !== "loading" && filteredItems.length > 0 && (
+            {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length > 0 && (
               <>
                 <div
                   className={

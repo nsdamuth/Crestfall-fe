@@ -15,6 +15,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import FixtureActionNotice from "../FixtureActionNotice";
@@ -93,7 +94,30 @@ const SORT_OPTIONS = [
   { value: "title", label: "Title A to Z" },
 ];
 
-const FIXTURE_MODES = { default: "Default", empty: "Empty", loading: "Loading" };
+const FIXTURE_MODES = { default: "Default", empty: "Empty", loading: "Loading", error: "Error" };
+
+// Search restores original field coverage (title, subtitle, type,
+// status, visibility, rating, scenario, narrator, location, last
+// message, cast per the 10 Aug 2026 parity audit): the v2 fixture
+// model carries no scenario/narrator/location/last-message/cast
+// fields, so title, type, status, visibility, rating, description,
+// and last-played are the honest equivalent set.
+function searchableText(item) {
+  return [
+    item.title,
+    KIND_LABELS[item.kind],
+    item.isContinue ? "In progress" : "Startable",
+    item.visibility ? VISIBILITY_LABELS[item.visibility] : "",
+    item.ratingTier
+      ? CONTENT_RATING_TIERS.find((tier) => tier.tier === item.ratingTier)?.label
+      : "",
+    item.description,
+    item.lastPlayed,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
 
 const PAGE_SIZE = 12;
 const CONTINUE_VISIBLE_CAP = 3;
@@ -181,20 +205,26 @@ export default function StoriesV2Mockup() {
   const activeVisibilityValues = selectedValues.visibility || [];
 
   const continueItems = useMemo(() => {
-    if (fixtureMode === "empty") return [];
+    if (fixtureMode === "empty" || fixtureMode === "error") return [];
     const query = searchValue.trim().toLowerCase();
     return FIXTURE_STORIES.filter((item) => item.isContinue).filter(
-      (item) => !query || item.title.toLowerCase().includes(query)
+      (item) => !query || searchableText(item).includes(query)
     );
   }, [fixtureMode, searchValue]);
 
   const startablePool = useMemo(
-    () => (fixtureMode === "empty" ? [] : FIXTURE_STORIES.filter((item) => !item.isContinue)),
+    () =>
+      fixtureMode === "empty" || fixtureMode === "error"
+        ? []
+        : FIXTURE_STORIES.filter((item) => !item.isContinue),
     [fixtureMode]
   );
 
   const filterGroups = useMemo(() => {
-    const inProgressCount = fixtureMode === "empty" ? 0 : FIXTURE_STORIES.filter((item) => item.isContinue).length;
+    const inProgressCount =
+      fixtureMode === "empty" || fixtureMode === "error"
+        ? 0
+        : FIXTURE_STORIES.filter((item) => item.isContinue).length;
     return [
       {
         id: "type",
@@ -256,7 +286,7 @@ export default function StoriesV2Mockup() {
       if (typeValues.length && !typeValues.includes(item.kind)) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
       if (ratings.length && !ratings.includes(item.ratingTier)) return false;
-      if (query && !item.title.toLowerCase().includes(query)) return false;
+      if (query && !searchableText(item).includes(query)) return false;
       return true;
     });
 
@@ -379,9 +409,17 @@ export default function StoriesV2Mockup() {
           />
         }
       >
+        {fixtureMode === "error" && (
+          <KitAlertStripView
+            tone="danger"
+            title="Stories could not be loaded."
+            body="Try refreshing the page."
+          />
+        )}
+
         {fixtureMode === "loading" && <LoadingGrid />}
 
-        {fixtureMode !== "loading" && continueItems.length > 0 && (
+        {fixtureMode !== "loading" && fixtureMode !== "error" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
             {visibleContinueItems.map((item) => (
               <ContinueCard
@@ -407,7 +445,7 @@ export default function StoriesV2Mockup() {
           </div>
         )}
 
-        {fixtureMode !== "loading" && (
+        {fixtureMode !== "loading" && fixtureMode !== "error" && (
           <div className="flex flex-col gap-[var(--space-4)]">
             <SectionLabel>Start something</SectionLabel>
 

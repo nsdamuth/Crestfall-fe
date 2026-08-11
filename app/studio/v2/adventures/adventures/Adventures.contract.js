@@ -1,4 +1,4 @@
-export const ADVENTURES_VIEW_CONTRACT_VERSION = "1.0.0";
+export const ADVENTURES_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the Adventures page View
@@ -62,6 +62,7 @@ export const ADVENTURES_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {AdventuresFilterBar} filterBar
  * @property {AdventuresCatalogItem[]} catalogItems Visible slice, already paged.
  * @property {string|null} emptyMessage Non-null renders the empty-catalog state instead of the grid.
+ * @property {string|null} errorMessage Non-null renders a KitAlertStrip danger banner instead of the grid or the empty-catalog state (10 Aug 2026 parity audit, section 2).
  * @property {AdventuresLoadMore} loadMore
  * @property {AdventuresBannerProps} bottomBanner
  * @property {boolean} isBuilderOpen

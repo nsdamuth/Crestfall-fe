@@ -14,6 +14,7 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import StorylineBuilderShell from "@/components/studio/storylines/StorylineBuilderShell";
 
@@ -32,6 +33,7 @@ export default function AdventuresView({
   filterBar,
   catalogItems = [],
   emptyMessage = null,
+  errorMessage = null,
   loadMore,
   bottomBanner,
   isBuilderOpen = false,
@@ -78,7 +80,9 @@ export default function AdventuresView({
           onCtaClick={() => topBanner?.onCtaClick?.()}
         />
 
-        {emptyMessage ? (
+        {errorMessage ? (
+          <KitAlertStripView tone="danger" title={errorMessage} body="Try refreshing the page." />
+        ) : emptyMessage ? (
           <EmptyCatalog message={emptyMessage} />
         ) : (
           <>

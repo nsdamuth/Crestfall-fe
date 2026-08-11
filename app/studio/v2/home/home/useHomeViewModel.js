@@ -62,7 +62,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
   }
 
   const continueItem = useMemo(() => {
-    if (fixtureMode === "emptyContinue" || fixtureMode === "emptyRails") return null;
+    if (fixtureMode === "emptyContinue" || fixtureMode === "emptyRails" || fixtureMode === "error") return null;
     return {
       ...HOME_CONTINUE_ITEM,
       onContinue: () =>
@@ -75,14 +75,16 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
 
   const destinationTiles = useMemo(
     () =>
-      HOME_DESTINATION_TILES.map((tile) => ({
-        id: tile.id,
-        label: tile.label,
-        supportingLine: tile.supportingLine,
-        imageSrc: tile.imageSrc,
-        onOpen: () => navigateOrStub(tile.route, tile.label),
-      })),
-    []
+      fixtureMode === "error"
+        ? []
+        : HOME_DESTINATION_TILES.map((tile) => ({
+            id: tile.id,
+            label: tile.label,
+            supportingLine: tile.supportingLine,
+            imageSrc: tile.imageSrc,
+            onOpen: () => navigateOrStub(tile.route, tile.label),
+          })),
+    [fixtureMode]
   );
 
   function decorateCreationItem(item) {
@@ -115,7 +117,12 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
     return item.cardKind === "creator" ? decorateCreatorItem(item) : decorateCreationItem(item);
   }
 
-  const railItemSource = fixtureMode === "emptyRails" ? [] : null;
+  const railItemSource = fixtureMode === "emptyRails" || fixtureMode === "error" ? [] : null;
+
+  // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
+  // one; this restores the KitAlertStrip danger banner every fixture-
+  // driven page now carries under fixtureMode "error".
+  const errorMessage = fixtureMode === "error" ? "Home could not be loaded." : null;
 
   const topRatedRail = useMemo(
     () => ({
@@ -184,6 +191,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
     creatorsToFollowRail,
     sortControl,
     bottomBanner,
+    errorMessage,
     notice,
     onCloseNotice: () => setNotice(null),
   };

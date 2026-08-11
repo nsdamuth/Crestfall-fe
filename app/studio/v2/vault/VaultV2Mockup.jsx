@@ -19,6 +19,7 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
 
@@ -86,6 +87,7 @@ const FIXTURE_MODES = {
   default: "Default",
   empty: "Empty",
   loading: "Loading",
+  error: "Error",
 };
 
 const PAGE_SIZE = 8;
@@ -113,7 +115,10 @@ function LoadingGrid() {
   );
 }
 
-function EmptyState() {
+// Start Creating restored (10 Aug 2026 parity audit, section 7): the
+// original my-creations hub's empty state always carried this
+// next-step action; the v2 empty state had dropped it to copy only.
+function EmptyState({ onStartCreating }) {
   return (
     <div className="flex flex-col items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-1)] p-[var(--space-12)] text-center">
       <GeometricMark className="h-[var(--space-14)] w-[var(--space-14)]" />
@@ -123,6 +128,9 @@ function EmptyState() {
       <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
         Create something, or save work you love from the Community.
       </p>
+      <button type="button" onClick={onStartCreating} className="kit-focus cf-btn cf-btn--secondary mt-[var(--space-2)]">
+        Start Creating
+      </button>
     </div>
   );
 }
@@ -146,7 +154,7 @@ export default function VaultV2Mockup() {
   const activeVisibilityValues = selectedValues.visibility || [];
 
   const filterGroups = useMemo(() => {
-    const pool = fixtureMode === "empty" ? [] : FIXTURE_VAULT_ITEMS;
+    const pool = fixtureMode === "empty" || fixtureMode === "error" ? [] : FIXTURE_VAULT_ITEMS;
     return [
       {
         id: "type",
@@ -180,7 +188,7 @@ export default function VaultV2Mockup() {
   }, [fixtureMode]);
 
   const filteredItems = useMemo(() => {
-    if (fixtureMode === "empty") return [];
+    if (fixtureMode === "empty" || fixtureMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
     const typeValues = selectedValues.type || [];
@@ -192,7 +200,16 @@ export default function VaultV2Mockup() {
       if (types.length && !types.includes(item.assetKind)) return false;
       if (remixOnly && !item.isRemix) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
-      if (query && !`${item.title} ${item.subtitle}`.toLowerCase().includes(query)) return false;
+      // Search restores original field coverage (title, description,
+      // creator handle, visibility, status, tags per the 10 Aug 2026
+      // parity audit): the handle lives in subtitle here, and the v2
+      // card model carries no separate status or tags field, so
+      // title, subtitle, description, and the visibility label are
+      // the honest equivalent set.
+      const haystack = `${item.title} ${item.subtitle} ${item.description || ""} ${
+        VISIBILITY_LABELS[item.visibility] || ""
+      }`.toLowerCase();
+      if (query && !haystack.includes(query)) return false;
       return true;
     });
 
@@ -322,11 +339,29 @@ export default function VaultV2Mockup() {
         />
       }
     >
+        {fixtureMode === "error" && (
+          <KitAlertStripView
+            tone="danger"
+            title="Vault could not be loaded."
+            body="Try refreshing the page."
+          />
+        )}
+
         {fixtureMode === "loading" && <LoadingGrid />}
 
-        {fixtureMode !== "loading" && filteredItems.length === 0 && <EmptyState />}
+        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length === 0 && (
+          <EmptyState
+            onStartCreating={() =>
+              setActionNotice({
+                label: "Start Creating",
+                message:
+                  "This opens the creation picker when live wiring lands. Nothing was opened in this preview.",
+              })
+            }
+          />
+        )}
 
-        {fixtureMode !== "loading" && filteredItems.length > 0 && (
+        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length > 0 && (
           <>
             <div
               className={

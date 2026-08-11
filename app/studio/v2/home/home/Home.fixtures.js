@@ -71,6 +71,7 @@ export const homeFullPageFixture = {
   creatorsToFollowRail: rail("Creators to follow", HOME_CREATORS_TO_FOLLOW_ITEMS),
   sortControl: SORT_CONTROL,
   bottomBanner: BOTTOM_BANNER,
+  errorMessage: null,
   notice: null,
   onCloseNotice: noop,
 };
@@ -96,4 +97,18 @@ export const homeEmptyRailsFixture = {
   recentlyAddedRail: rail("Recently added", []),
   fromTheCommunityRail: rail("From the community", []),
   creatorsToFollowRail: rail("Creators to follow", []),
+};
+
+// Error: load failed (10 Aug 2026 parity audit, section 2 fix). A
+// KitAlertStrip danger banner replaces the destination tiles and
+// rails; no page had this state before this pass.
+export const homeErrorFixture = {
+  ...homeFullPageFixture,
+  continueItem: null,
+  destinationTiles: [],
+  topRatedRail: rail("Top rated", []),
+  recentlyAddedRail: rail("Recently added", []),
+  fromTheCommunityRail: rail("From the community", []),
+  creatorsToFollowRail: rail("Creators to follow", []),
+  errorMessage: "Home could not be loaded.",
 };
