@@ -4,12 +4,17 @@
 // Rendered by /studio/v2/vault (pre-parity staging address) and
 // mirrored at /dev/ui-preview/vault-v2-page. Build order row 3
 // (docs/BUILD-BLUEPRINT.md 3.1): full skeleton, list AND grid
-// creation-card layouts, introduces the own-work badge context. The
-// standalone edit tree (my-creations/[id]/edit) stays out of scope
-// under the CR-007/CR-008 partial hold; no edit, delete, or bulk
-// affordance appears anywhere on this page. No live data, no API
-// calls, no real navigation.
+// creation-card layouts, introduces the own-work badge context.
+//
+// Vault edit path, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5,
+// Studio brief S5): the CR-007/CR-008 partial hold LIFTS for the
+// single edit path, own-work items only. Opening a saved asset from
+// the popup goes straight to /studio/v2/editor/[id]. No fork, no
+// choice dialog. No other edit, delete, or bulk affordance appears
+// anywhere on this page; the rest of the prior hold stands. No live
+// data, no API calls otherwise, no other real navigation.
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -152,6 +157,7 @@ function EmptyState({ onStartCreating }) {
 }
 
 export default function VaultV2Mockup() {
+  const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
@@ -492,6 +498,10 @@ export default function VaultV2Mockup() {
           }
           credits={item.credits || []}
           onClose={() => setAssetDetailId(null)}
+          // Single edit path, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md
+          // section 5): own-work items only, straight to the advanced
+          // editor, no fork, no choice dialog.
+          onEdit={item.isOwn ? () => router.push(`/studio/v2/editor/${item.id}`) : undefined}
         />
       );
     })()}

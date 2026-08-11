@@ -9,6 +9,7 @@ import {
   kitAssetDetailPopupLikedAndSavedFixture,
   kitAssetDetailPopupLongestCopyFixture,
   kitAssetDetailPopupNoImageFixture,
+  kitAssetDetailPopupOwnWorkFixture,
   kitAssetDetailPopupStoryFixture,
 } from "@/components/kit/asset-detail-popup/KitAssetDetailPopup.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
@@ -20,6 +21,7 @@ const STATES = {
   likedAndSaved: { label: "Liked and saved", props: kitAssetDetailPopupLikedAndSavedFixture },
   longestCopy: { label: "Longest copy", props: kitAssetDetailPopupLongestCopyFixture },
   noImage: { label: "No image", props: kitAssetDetailPopupNoImageFixture },
+  ownWork: { label: "Own work (Edit action)", props: kitAssetDetailPopupOwnWorkFixture },
 };
 
 export default function KitAssetDetailPopupPreviewClient() {
@@ -80,6 +82,11 @@ export default function KitAssetDetailPopupPreviewClient() {
           onShare={() => setLastAction(`${STATES[openKey].label}: shared.`)}
           onViewCatalogue={() =>
             setLastAction(`${STATES[openKey].label}: view catalogue fired.`)
+          }
+          onEdit={
+            active.props.onEdit
+              ? () => setLastAction(`${STATES[openKey].label}: edit fired.`)
+              : undefined
           }
           onClose={() => {
             setOpenKey(null);

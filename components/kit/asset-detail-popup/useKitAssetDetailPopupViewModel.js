@@ -38,6 +38,10 @@ export function useKitAssetDetailPopupViewModel({
   onViewCatalogue = null,
   credits = [],
   onClose = null,
+  // onEdit, ADDED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio
+  // brief S5). Optional; the View renders the Edit action only when
+  // this resolves to a function.
+  onEdit = null,
 } = {}) {
   return {
     assetKind,
@@ -57,5 +61,6 @@ export function useKitAssetDetailPopupViewModel({
     onViewCatalogue: toCallback(onViewCatalogue),
     credits: Array.isArray(credits) ? credits : [],
     onClose: toCallback(onClose),
+    onEdit: toCallback(onEdit),
   };
 }

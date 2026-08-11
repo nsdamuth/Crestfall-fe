@@ -98,13 +98,20 @@ position is preserved when the credits modal closes.
   anyway, so the split only ever applied at a width the panel never
   reaches. Stacking also matches every other stat row already in the
   app (the card face).
-- **Footer**: exactly four actions, `grid grid-cols-4`, evenly
+- **Footer**: four actions by default, `grid grid-cols-4`, evenly
   distributed, one row, `whitespace-nowrap`: Like (Heart), Save
   (Bookmark), Share (Share2, Ruling 6: icon plus the word), Play
   (primary, R9: universal label for all three asset kinds, superseding
   the prior per-kind Continue for adventure). Toggled Like and Save
   follow the selection-state law: gold text plus the light `--fill`
-  wash, icon filled, `aria-pressed`, never a bold border.
+  wash, icon filled, `aria-pressed`, never a bold border. ADDED 10 Aug
+  2026 (v2.1.0 to v2.2.0, docs/STUDIO-SPEC.md section 5, Studio brief
+  S5): an optional fifth action, Edit (Pencil), rendered only when
+  `onEdit` is provided (`grid-cols-5` in that state), the ruled single
+  path from the Vault popup into the advanced editor. Every fixture
+  but `kitAssetDetailPopupOwnWorkFixture` omits `onEdit`, so the
+  four-action footer stays pixel-stable everywhere else (Community and
+  every non-owner context).
 
 ## Open flags carried to OPEN FOR BRIAN
 
@@ -117,7 +124,7 @@ position is preserved when the credits modal closes.
 
 - `KitAssetDetailPopup.contract.js`
 - `KitAssetDetailPopup.fixtures.js` (character, story, adventure,
-  likedAndSaved, longestCopy, noImage)
+  likedAndSaved, longestCopy, noImage, ownWork)
 - `useKitAssetDetailPopupViewModel.js`
 - `/dev/ui-preview/kit-asset-detail-popup`
 

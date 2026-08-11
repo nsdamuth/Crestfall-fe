@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -85,6 +85,14 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.1.0";
  *   stats block and the footer
  * @property {(() => void)|null} onClose forwarded to the frame; the
  *   popup renders no close control of its own
+ * @property {(() => void)|null} [onEdit] ADDED 10 Aug 2026 (v2.1.0 to
+ *   v2.2.0, docs/STUDIO-SPEC.md section 5, Studio brief S5): optional,
+ *   compatible addition (docs/FRONTEND-SOP.md section 5). Renders a
+ *   fifth footer action, Edit, only when provided; omitted entirely
+ *   renders the same four-action footer as before, so Community and
+ *   every non-owner context is pixel-stable. The Vault v2 page passes
+ *   this for isOwn items, routing straight to the advanced editor
+ *   (/studio/v2/editor/[id]), the ruled single edit path.
  */
 
 export {};

@@ -19,7 +19,7 @@
 // anyway. Stacking also matches every other stat row already in the
 // app (the card face). Logged per R8's render-time pick.
 import { useMemo, useState } from "react";
-import { Bookmark, ChevronLeft, ChevronRight, Heart, Play, Search, Share2, Users } from "lucide-react";
+import { Bookmark, ChevronLeft, ChevronRight, Heart, Pencil, Play, Search, Share2, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitCreditsModal from "../KitCreditsModal";
@@ -389,8 +389,14 @@ export default function KitAssetDetailPopupView({
   isCreditsModalOpen = false,
   onOpenCreditsModal = null,
   onCloseCreditsModal = null,
+  // onEdit, ADDED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio
+  // brief S5): the single ruled edit path, own-work items only.
+  // Optional; renders as a footer action only when provided, so
+  // Community and every non-owner context stays pixel-stable.
+  onEdit = null,
 }) {
   const hasMedia = media.length > 0;
+  const hasEdit = Boolean(onEdit);
 
   return (
     <div>
@@ -438,7 +444,7 @@ export default function KitAssetDetailPopupView({
 
         <MediaLibrary media={media} isLiked={isLiked} isSaved={isSaved} />
 
-        <div className="mt-[var(--space-4)] grid w-full grid-cols-4 gap-[var(--space-2)]">
+        <div className={`mt-[var(--space-4)] grid w-full gap-[var(--space-2)] ${hasEdit ? "grid-cols-5" : "grid-cols-4"}`}>
           <button
             type="button"
             aria-pressed={isLiked}
@@ -465,6 +471,16 @@ export default function KitAssetDetailPopupView({
             <Share2 size={16} aria-hidden="true" />
             Share
           </button>
+          {hasEdit ? (
+            <button
+              type="button"
+              onClick={() => onEdit?.()}
+              className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
+            >
+              <Pencil size={16} aria-hidden="true" />
+              Edit
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={() => onPrimaryAction?.()}

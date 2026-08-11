@@ -131,3 +131,12 @@ export const kitAssetDetailPopupNoImageFixture = {
   media: [],
   badges: [],
 };
+
+// Own-work fixture, ADDED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5,
+// Studio brief S5): the only fixture that passes onEdit, exercising
+// the five-action footer. Every other fixture omits it deliberately,
+// pixel-stable at the four-action footer.
+export const kitAssetDetailPopupOwnWorkFixture = {
+  ...kitAssetDetailPopupCharacterFixture,
+  onEdit: noop,
+};
