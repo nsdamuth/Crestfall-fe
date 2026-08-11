@@ -40,13 +40,17 @@ function EmptySection({ message }) {
   );
 }
 
+// Overflow fix, RULED 11 Aug 2026: min-w-0 lets the tile shrink inside
+// its grid track instead of forcing siblings wide, and break-words on
+// both lines guarantees a seven-digit value or a long label wraps
+// inside the border rather than crossing it, at any value length.
 function StatTile({ label, value }) {
   return (
-    <div className="flex flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-3)]">
-      <span className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] tabular-nums text-[var(--ink)]">
+    <div className="flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center">
+      <span className="w-full break-words font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] tabular-nums text-[var(--ink)]">
         {value ?? "0"}
       </span>
-      <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+      <span className="w-full break-words text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
     </div>
@@ -67,7 +71,7 @@ function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onCl
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className={`kit-focus inline-flex min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
+      className={`kit-focus inline-flex min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
     >
       {Icon && <Icon size={16} aria-hidden="true" />}
       {label}
@@ -84,7 +88,7 @@ function QuietAction({ label, icon: Icon, isPressed = false, onClick = null }) {
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className="kit-focus inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)]"
+      className="kit-focus inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
     >
       {Icon && <Icon size={16} aria-hidden="true" />}
       {label}
@@ -110,8 +114,8 @@ function ActivityList({ items }) {
           key={item.id}
           className="flex items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]"
         >
-          <span className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">{item.label}</span>
-          <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">{item.timestamp}</span>
+          <span className="min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">{item.label}</span>
+          <span className="flex-none text-[length:var(--text-label)] text-[var(--ink-faint)]">{item.timestamp}</span>
         </li>
       ))}
     </ul>
@@ -299,7 +303,7 @@ export default function CreatorProfileView({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-[var(--space-2)]">
+                <div className="grid grid-cols-2 gap-[var(--space-2)] min-[500px]:grid-cols-4">
                   <StatTile label="Followers" value={stats?.followers} />
                   <StatTile label="Following" value={stats?.following} />
                   <StatTile label="Plays" value={stats?.plays} />

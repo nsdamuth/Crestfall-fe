@@ -139,6 +139,14 @@ export const creatorProfileMutedStandalonePlacementFixture = {
   mutePlacement: "standalone",
 };
 
+// Large stat values: seven-digit counts on every tile plus the
+// longest label (Following), proving the overflow fix (RULED 11 Aug
+// 2026) at the widest realistic value length.
+export const creatorProfileLargeStatsFixture = {
+  ...creatorProfileDefaultFixture,
+  stats: { followers: 2480000, following: 1000000, plays: 9999999, works: 1234567 },
+};
+
 // Longest content: every section at its fullest, longest bio and
 // title strings, donate modal open with its longest states (filled
 // fields, anonymous checked).
