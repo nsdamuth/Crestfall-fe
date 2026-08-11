@@ -86,9 +86,17 @@ guess past it.
   law is `docs/BUILD-BLUEPRINT.md` section 2.18.
 - **Lore, ruled.** Ships as an index page on the same composition the
   five built v2 pages share (Community, Creators, Vault, Images,
-  Stories). The existing reading routes stay untouched. Lore keeps
-  its centered editorial labels, the one page in the nine-page set
-  that does.
+  Stories). The existing reading routes stay untouched. LORE HEADER,
+  RULING CHANGED (10 Aug 2026 defect ruling, wave H-defects, commit
+  `0a46d3b`): supersedes the earlier 9 Aug 2026 ruling that Lore kept
+  centered editorial labels as the one page in the nine-page set that
+  did. Lore's eyebrow/title/description now compose
+  `StudioPageHeaderView`, left aligned, the standard gold-eyebrow-
+  with-trailing-rule treatment, matching the other eight pages. The
+  two grid section labels (Community Lore, Your Lore) adopt the same
+  eyebrow recipe, left aligned. `KitStudioPageView`'s `headerAlign`
+  prop, added for the superseded centered ruling, is now unused by
+  any page; left in place per the ruling rather than removed.
 - **Studio, ruled composition.** Quick-create modals for phone and
   the advanced full editor for desktop. CR-026 (Nick's promotion pass
   over the QUICK/ADVANCED allocation) remains a later pass, not a
@@ -371,7 +379,9 @@ this way).
 Not started, all four planned together in `docs/SPRINT-G-PLAN.md`:
 **Home** (composition ruled 10 Aug 2026, consumes KitRail four times,
 Sprint G wave 1), **Lore** (ruled index page on the shared v2
-composition with centered editorial labels, Sprint G wave 3),
+composition, Sprint G wave 3; left-aligned editorial labels per the
+10 Aug 2026 LORE HEADER ruling change above, superseding the earlier
+centered-label ruling this line originally described),
 **Adventures** (proceeds via the terminology display mapping, Sprint
 G wave 3; CR-025 stays a later backend pass), **Studio** (quick-create
 modals for phone plus the advanced full editor for desktop, Sprint G
