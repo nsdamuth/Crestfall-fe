@@ -321,6 +321,8 @@ that need a render to settle:
 35. Creator rail vertical fit. Built default: cells stretch, so
     creator cards in one rail equalize height. Render alternative:
     top-aligned intrinsic heights with a ragged bottom edge.
+36. Mute control placement on the creator profile. To be settled at
+    render once the Creators profile-detail page exists (CR-028).
 
 ## Verification law for this sprint
 

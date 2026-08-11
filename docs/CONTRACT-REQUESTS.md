@@ -54,6 +54,7 @@ the details below carry only what is still actionable.
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; display layer still reads "Storyline" | open | Nick | later-pass, non-blocking; copy and rename meant to land together |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
 | CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Teen, EXPLICIT=Adult, no disabled row. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
+| CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
 
 ## Details
 
@@ -340,6 +341,21 @@ Caveat that gates final naming: the referenced standards doc
 yet. Nothing blocks frontend work; the display mapping is live against
 the three real values today, gated only on the audit above before
 live (non-fixture) data reaches users under these labels.
+
+### CR-028, mute a creator
+
+Needs a mute relationship between an account and a creator, persisted
+per account, with mute and unmute paths. Muted creators are excluded
+from every discovery surface: Home rails, Community browse, Creators
+browse, and search results. The muted creator's own profile stays
+reachable by direct link, since muting hides a creator from discovery
+rather than blocking a direct visit. Credit lines and remix chains are
+unaffected: a muted creator's name still renders where it is part of a
+credit on someone else's work. Also needs a readable list of an
+account's muted creators, for a future settings surface.
+
+No frontend work depends on this until the Creators profile-detail
+page is built; the mute control ships on that profile.
 
 ## Closed
 
