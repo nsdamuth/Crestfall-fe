@@ -12,11 +12,11 @@ import { ArrowLeft, BookOpen, Search } from "lucide-react";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function StorylineReferencePickerModalView({
-  eyebrow = "Storyline Sequence",
+  eyebrow = "Adventure Sequence",
   title = "Add a Story or Scenario",
   description = "",
   dialogTitleId = "storyline-reference-picker-title",
-  backLabel = "Back to Storyline",
+  backLabel = "Back to Adventure",
   tabs = [],
   searchQuery = "",
   searchPlaceholder = "Search references",
@@ -119,7 +119,7 @@ export default function StorylineReferencePickerModalView({
                       </p>
                       {item.isSelected ? (
                         <p className="mt-3 text-xs uppercase tracking-[0.16em] text-emerald-200">
-                          Already in this Storyline
+                          Already in this Adventure
                         </p>
                       ) : null}
                     </div>

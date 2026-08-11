@@ -4,7 +4,7 @@ export const storylineBuilderReadyFixture = Object.freeze({
   form: {
     title: "The Brasswhisker Continuity",
     description:
-      "A continuing Storyline that moves from the workshop mystery into Old Crescent pressure without resetting the chat.",
+      "A continuing Adventure that moves from the workshop mystery into Old Crescent pressure without resetting the chat.",
     visibility: "PRIVATE",
     contentRating: "SFW",
     tags: "aethelgard\nold-crescent\nmystery",
@@ -36,5 +36,5 @@ export const storylineBuilderSavingFixture = Object.freeze({
 export const storylineBuilderErrorFixture = Object.freeze({
   ...storylineBuilderReadyFixture,
   saveStatus: "error",
-  saveMessage: "A Storyline title is required.",
+  saveMessage: "An Adventure title is required.",
 });

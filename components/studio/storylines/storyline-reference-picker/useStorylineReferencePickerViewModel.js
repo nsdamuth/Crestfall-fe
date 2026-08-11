@@ -61,12 +61,12 @@ export function getStorylineReferencePickerViewProps({
     .map((option) => normalizeOption(option, safeTab, selectedIds));
 
   return {
-    eyebrow: "Storyline Sequence",
+    eyebrow: "Adventure Sequence",
     title: "Add a Story or Scenario",
     description:
       "Stories load a complete playable package. Scenarios apply a reusable narrative structure to the continuing chat.",
     dialogTitleId: "storyline-reference-picker-title",
-    backLabel: "Back to Storyline",
+    backLabel: "Back to Adventure",
     tabs: [
       {
         id: STORY_TAB,

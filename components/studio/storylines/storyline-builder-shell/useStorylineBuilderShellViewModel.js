@@ -56,8 +56,8 @@ export function getStorylineBuilderShellViewProps({
   const normalizedSaveStatus = normalizeText(saveStatus).toLowerCase() || "idle";
 
   return {
-    eyebrow: "Storyline Builder",
-    displayTitle: normalizedForm.title || "Untitled Storyline",
+    eyebrow: "Adventure Builder",
+    displayTitle: normalizedForm.title || "Untitled Adventure",
     description:
       "Sequence Stories and Scenarios inside one continuing chat. Completion may return the player to open-world play until the next authored trigger is satisfied.",
     titleLabel: "Title",
@@ -116,7 +116,7 @@ export function useStorylineBuilderShellViewModel({
 
     try {
       if (!form.title.trim()) {
-        throw new Error("A Storyline title is required.");
+        throw new Error("An Adventure title is required.");
       }
 
       if (validation.errors.length) {
@@ -136,7 +136,7 @@ export function useStorylineBuilderShellViewModel({
 
       if (!creation?.id) {
         throw new Error(
-          "Storyline draft was saved, but no creation ID was returned."
+          "Adventure draft was saved, but no creation ID was returned."
         );
       }
 
@@ -151,7 +151,7 @@ export function useStorylineBuilderShellViewModel({
       }
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(error?.message || "Storyline draft could not be saved.");
+      setSaveMessage(error?.message || "Adventure draft could not be saved.");
     }
   }
 

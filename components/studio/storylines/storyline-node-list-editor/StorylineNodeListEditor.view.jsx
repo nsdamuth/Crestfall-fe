@@ -9,7 +9,7 @@ import {
 export default function StorylineNodeListEditorView({
   headerEyebrow = "Narrative Sequence",
   headerDescription = "",
-  nodeCountLabel = "0 Storyline Nodes",
+  nodeCountLabel = "0 Adventure Nodes",
   addReferenceLabel = "Add story or scenario",
   showStructureControls = true,
   showTransitionControls = true,
@@ -18,7 +18,7 @@ export default function StorylineNodeListEditorView({
   nodes = [],
   validationErrors = [],
   visibleWarnings = [],
-  errorsTitle = "Storyline authoring errors",
+  errorsTitle = "Adventure authoring errors",
   warningsTitle = "Draft readiness notes",
   onOpenReferencePicker = null,
   onMoveNodeUp = null,
@@ -286,7 +286,7 @@ export default function StorylineNodeListEditorView({
 
                     {!node.triggers.length ? (
                       <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-[var(--ink-dim)]">
-                        Add at least one trigger before treating this Storyline as
+                        Add at least one trigger before treating this Adventure as
                         runtime-ready.
                       </p>
                     ) : null}

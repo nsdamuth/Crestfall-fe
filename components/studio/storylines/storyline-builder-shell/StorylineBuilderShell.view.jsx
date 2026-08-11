@@ -3,8 +3,8 @@
 import { Save } from "lucide-react";
 
 export default function StorylineBuilderShellView({
-  eyebrow = "Storyline Builder",
-  displayTitle = "Untitled Storyline",
+  eyebrow = "Adventure Builder",
+  displayTitle = "Untitled Adventure",
   description = "",
   titleLabel = "Title",
   titleValue = "",
