@@ -59,6 +59,8 @@ export default function KitPromoBannerView({
   ctaLabel = "",
   imageSrc = null,
   onCtaClick = null,
+  secondaryCtaLabel = "",
+  onSecondaryCtaClick = null,
 }) {
   const config = TREATMENT_CONFIG[treatment] || TREATMENT_CONFIG.bottom;
   const veilClass =
@@ -115,16 +117,29 @@ export default function KitPromoBannerView({
             {line}
           </p>
         )}
-        {ctaLabel && (
-          <button
-            type="button"
-            onClick={() => onCtaClick?.()}
-            className={`kit-focus cf-btn cf-btn--primary mt-[var(--space-4)] w-fit ${
-              treatment === "bottom" ? "cf-btn--banner-cta-compact" : ""
-            }`}
-          >
-            {ctaLabel}
-          </button>
+        {(ctaLabel || secondaryCtaLabel) && (
+          <div className="mt-[var(--space-4)] flex flex-wrap items-center gap-[var(--space-3)]">
+            {ctaLabel && (
+              <button
+                type="button"
+                onClick={() => onCtaClick?.()}
+                className={`kit-focus cf-btn cf-btn--primary w-fit ${
+                  treatment === "bottom" ? "cf-btn--banner-cta-compact" : ""
+                }`}
+              >
+                {ctaLabel}
+              </button>
+            )}
+            {secondaryCtaLabel && (
+              <button
+                type="button"
+                onClick={() => onSecondaryCtaClick?.()}
+                className="kit-focus cf-btn cf-btn--secondary w-fit"
+              >
+                {secondaryCtaLabel}
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

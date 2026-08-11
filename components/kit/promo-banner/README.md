@@ -1,6 +1,6 @@
 # Kit Promo Banner LOOM Package
 
-**Contract:** `KitPromoBanner.contract.js` (v1.1.0)
+**Contract:** `KitPromoBanner.contract.js` (v1.2.0)
 
 ## Hierarchy law (9 Aug 2026, kit revision)
 
@@ -8,7 +8,11 @@
 description de-emphasized (`--art-ink-dim`, 30rem measure cap) and
 the stack spaced on the ladder (`--space-2` inside the copy block,
 `--space-4` before the CTA, `--space-8` body padding at 700px and
-up). One decision per banner: a single primary button, never two.
+up). One PRIMARY decision per banner, never two: a single primary
+button, `cf-btn--primary`. AMENDED 11 Aug 2026 (v1.2.0): an optional
+quiet secondary action may sit beside it, `cf-btn--secondary` (border
+only, no fill), visually subordinate and never a second primary; see
+Package assets below.
 The `top` treatment accepts `showGalaxy`, layering the existing
 `.cf-galaxy` starfield (`--atm-constellation`, `--anim-galaxy`,
 `--anim-twinkle`, reduced-motion safe) between the art and the veil.
@@ -75,6 +79,17 @@ itself; Tailwind utility classes cannot express this override on a
 `.cf-btn` element, since `.cf-btn` is unlayered CSS and Tailwind's own
 utilities live in a lower-priority cascade layer (confirmed
 empirically, phase 4).
+
+## v1.2.0, RULED 11 Aug 2026 (Home continue banner secondary CTA)
+
+Optional `secondaryCtaLabel`/`onSecondaryCtaClick` ADDED, additive.
+Renders a `cf-btn cf-btn--secondary` ghost button beside the primary
+CTA (border only, no fill), visually subordinate; one primary per
+banner still holds. Both buttons resolve to `cf-btn`'s default
+`--control-md` height (44px), the mobile law floor. Omitted entirely
+on every existing consumer, pixel-stable. First consumer: Home's top
+continue banner, filled state only (`app/studio/v2/home/home/
+Home.view.jsx`), routing to `/studio/v2/stories`.
 
 ## Package assets
 

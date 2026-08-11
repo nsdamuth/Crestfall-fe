@@ -70,6 +70,11 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
           "Continue",
           `Resuming "${HOME_CONTINUE_ITEM.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`
         ),
+      // Secondary CTA, RULED 11 Aug 2026: quiet ghost action beside
+      // Continue, filled state only (the empty-state fallback CTA is
+      // a separate open decision, untouched here).
+      secondaryCtaLabel: "Explore recent stories",
+      onSecondaryCtaClick: () => navigateOrStub("/studio/v2/stories", "Explore recent stories"),
     };
   }, [fixtureMode]);
 

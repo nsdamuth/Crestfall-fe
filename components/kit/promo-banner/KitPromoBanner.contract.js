@@ -1,4 +1,4 @@
-export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the shared promo banner kit piece
@@ -23,6 +23,15 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.1.0";
  * `bottom` treatment's mobile aspect and CTA sizing change; `top` and
  * `card` are untouched.
  *
+ * v1.2.0, RULED 11 Aug 2026 (Home continue banner secondary CTA):
+ * optional `secondaryCtaLabel`/`onSecondaryCtaClick` ADDED, additive.
+ * Renders a ghost button (`cf-btn--secondary`, border only, no fill)
+ * beside the primary CTA, visually subordinate; one primary per
+ * banner still holds. Omitted entirely on every existing consumer
+ * that does not pass it, pixel-stable. Both CTAs resolve to
+ * `cf-btn`'s default `--control-md` height (44px), the mobile law
+ * floor.
+ *
  * @typedef {Object} KitPromoBannerViewProps
  * @property {"top"|"card"|"bottom"} treatment
  * @property {"uniform"|"bottom-fade"} bottomVariant only read when treatment is "bottom"
@@ -33,6 +42,10 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} ctaLabel
  * @property {string|null} imageSrc
  * @property {(() => void)|null} onCtaClick
+ * @property {string} [secondaryCtaLabel] optional (v1.2.0), default
+ *   "", renders a quiet ghost button beside the primary CTA when set
+ * @property {(() => void)|null} [onSecondaryCtaClick] optional
+ *   (v1.2.0), the secondary CTA's click intent
  */
 
 export {};

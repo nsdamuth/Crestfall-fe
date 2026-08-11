@@ -88,6 +88,8 @@ export default function HomeView({
           ctaLabel={continueItem ? "Continue" : topBanner?.ctaLabel}
           imageSrc={(continueItem ? continueItem.imageSrc : null) ?? topBanner?.imageSrc ?? null}
           onCtaClick={() => (continueItem ? continueItem.onContinue?.() : topBanner?.onCtaClick?.())}
+          secondaryCtaLabel={continueItem ? continueItem.secondaryCtaLabel : ""}
+          onSecondaryCtaClick={() => continueItem?.onSecondaryCtaClick?.()}
         />
 
         {errorMessage ? (
