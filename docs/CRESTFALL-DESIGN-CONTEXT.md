@@ -325,12 +325,14 @@ page composes from (`docs/BUILD-BLUEPRINT.md` chapter 2):
 | `ingredient-picker` | search plus ingredient card grid, Use Once / New Preset | 1.0.0 | Sprint E |
 | `save-ingredient-preset` | preset name/description/prompt/tags save flow | 1.0.0 | Sprint E |
 | `rail` | horizontally scrolling card rail: head (label, gold rule, View all, control seat, arrow pair), snap scrollport, trailing fade | 1.0.0 | Sprint F; section 2.18 law; items 31 to 35 closed; empty rail renders nothing |
+| `destination-tile` | compact art tile, section label, one short supporting line, routes outward on tap | 1.0.0 | Sprint G planning gate; OPEN item 37 ruled option A; no live-page consumer yet, built ahead of the Home page itself |
 
 Not yet built as kit packages: global search, form field (ad hoc
 `cf-field` recipes still cover this), picker-modal/menu-popover beyond
-the ingredient picker, alert-strip. Sprint G's OPEN items 37 and 38
-may add a destination-tile package and a continue-strip treatment for
-Home, pending Brian's rulings.
+the ingredient picker, alert-strip. Item 37's `destination-tile`
+package shipped ahead of Home itself; item 38 (the Continue strip's
+filled-state treatment) is still open and may add its own package,
+pending Brian's ruling.
 
 ## Where the build stands
 

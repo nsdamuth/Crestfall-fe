@@ -1335,6 +1335,55 @@ its right, View all beside the label, never at the end of the scroll.
   unmodified from `creation-card` and `creator-card`; this package
   does no card-level work.
 
+### 2.19 Destination tile (`destination-tile`), new package this pass, RULED 10 Aug 2026 (`docs/SPRINT-G-PLAN.md` OPEN item 37, option A)
+
+Home's block of eight destination tiles (`docs/CRESTFALL-DESIGN-CONTEXT.md`,
+10 Aug 2026 ruling: "a block of eight destination tiles covering
+every other section") had no ruled treatment or packaging at the
+Sprint G planning gate. Ruled option A: "a new kit package, built
+once," consumed eight times by Home, one tile per non-Home section
+(Stories, Adventures, Studio, Images, Vault, Community, Creators,
+Lore). Reason: a repeated composition becomes a kit package (the
+`rail` precedent, 2.18), and the tile stays reusable if any other
+surface later wants section links.
+
+- **Anatomy.** A single tappable, art-bleed, grid-sibling surface:
+  the section label over the art (`--art-ink`, `--text-lead`) and one
+  short supporting line beneath it (`--art-ink-dim`, `--text-label`,
+  clamped to two lines), a bottom-anchored canvas-to-transparent
+  legibility scrim behind the text, matching the creation-card grid
+  composition's text-over-art grammar. Corner tier is STANDARD
+  (`--radius-md`), the grid-sibling tier per the corners final
+  ruling; the tile is never a floating or full-width surface.
+- **Art anchor.** `object-position: center 18%`, the same anchor as
+  `creation-card` (2.6 second revision), keeping the primary subject
+  in frame on a cropped tile.
+- **No-art fallback.** `--surface-2`, matching the creation-card
+  no-art rule and the card law's "no-art fallback ... sits on the
+  lighter elevated surface token" (`docs/CRESTFALL-DESIGN-CONTEXT.md`).
+- **What the tile does NOT carry, by design.** No overlay actions
+  (like, save, expand): the tile is a single navigation surface, not
+  an asset card with per-card reactions. No badges, no stats. The
+  whole tile is the tap target, routing outward via `onOpen`; the
+  page owns navigation.
+- **Aspect ratio, package-local, not previously ruled.** `4/3`,
+  chosen to read as a compact landscape tile distinct from the
+  portrait (`3/4`) creation-card. This is a build-time choice inside
+  option A's "compact picture tile" description, not a separate
+  ruling; a later Brian render sitting can change it as a one-line
+  edit confined to this package.
+- **Grid placement.** Not part of this package's contract: Home's
+  own layout decides column counts per width. The package's preview
+  route demonstrates a package-local reference grid (2 per row under
+  700px, 3 at 700px, 4 at 1100px and up) for legibility testing only;
+  Home's actual build may differ.
+- LOOM: `KitDestinationTile.jsx` shell; `destination-tile/` View,
+  contract v1.0.0 (`label`, `supportingLine`, `imageSrc`, `onOpen`),
+  fixtures (all eight Home-set sections with art, one no-art
+  fallback, one longest label, one longest supporting line),
+  ViewModel, README, preview route. Built ahead of the Home page
+  itself; no live-page consumer yet.
+
 ## 2.12 Kit summary
 
 | # | Package | Five states | LOOM files |
@@ -1355,6 +1404,7 @@ its right, View all beside the label, never at the end of the scroll.
 | 2.15 | asset-detail-popup | n/a, specced only, not built | none this batch |
 | 2.17 | dropdown (kit revision pass) | yes plus selected, open, Soon rows | same |
 | 2.18 | rail | on View all and the arrow pair | same |
+| 2.19 | destination-tile | rest, hover, focus on the one tap surface (no pressed/disabled variant, single-action tile) | same |
 
 Kit revision pass (9 Aug 2026): 2.6 and 2.1 stand amended by 2.16
 (full-bleed card law, one-line filter law); 2.3 stands amended by
