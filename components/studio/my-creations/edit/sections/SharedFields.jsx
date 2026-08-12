@@ -56,7 +56,14 @@ const TEXTAREA_ROWS_EXPANDED = 8;
 // a tabular-nums "used / limit" counter renders per the standing
 // tabular-numerals law; when omitted (most callers today, since no
 // ruled per-field limit exists in the data model yet), no counter
-// renders rather than inventing a number.
+// renders rather than inventing a number. `disabled` and `mono`,
+// RULED (sf1 pass): both additive and optional, default false, no
+// change to any existing consumer. `disabled` forwards to the
+// textarea and applies the same `disabled:cursor-not-allowed
+// disabled:opacity-55` treatment already used by every other
+// disableable text control across the advanced editors. `mono`
+// renders the value in the codebase's standard `font-mono` utility
+// for fields holding literal/code-shaped lines rather than prose.
 export function TextAreaField({
   label,
   value = "",
@@ -64,6 +71,8 @@ export function TextAreaField({
   placeholder,
   maxLength,
   helperText,
+  disabled = false,
+  mono = false,
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const rows = isFocused ? TEXTAREA_ROWS_EXPANDED : TEXTAREA_ROWS_COLLAPSED;
@@ -88,7 +97,8 @@ export function TextAreaField({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength || undefined}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        disabled={disabled}
+        className={`mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55${mono ? " font-mono" : ""}`}
       />
       {helperText ? (
         <span className="mt-1 block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
