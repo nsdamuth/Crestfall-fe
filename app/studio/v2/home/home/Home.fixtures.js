@@ -23,10 +23,12 @@ function decorate(item) {
 
 const TOP_BANNER = {
   eyebrow: "Crestfall Chronicles",
-  title: "The realm under one sky.",
-  ctaLabel: "Start exploring",
+  title: "Start something worth finishing.",
+  ctaLabel: "Browse stories",
+  secondaryCtaLabel: "See what others made",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
   onCtaClick: noop,
+  onSecondaryCtaClick: noop,
 };
 
 const BOTTOM_BANNER = {
@@ -76,10 +78,11 @@ export const homeFullPageFixture = {
   onCloseNotice: noop,
 };
 
-// Empty Continue: nothing in progress. Ruled (docs/SPRINT-H-PLAN.md
-// 1a): the one top banner falls back to the general hero (Eden art,
-// stubbed "Start exploring" CTA) rather than rendering a second empty
-// surface.
+// Empty Continue: nothing in progress. Ruled 11 Aug 2026 (Home top
+// banner empty state): the one top banner falls back to the
+// cold-start invitation (Eden art, galaxy on, "Browse stories"
+// primary CTA, "See what others made" ghost CTA) rather than
+// rendering a second empty surface.
 export const homeEmptyContinueFixture = {
   ...homeFullPageFixture,
   continueItem: null,
