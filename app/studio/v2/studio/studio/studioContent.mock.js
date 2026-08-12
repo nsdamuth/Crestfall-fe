@@ -31,10 +31,11 @@ export const STUDIO_LEVELS = [
 ];
 
 // Quick Start doors, asset-first (docs/_legacy-reference proof,
-// docs/STUDIO-SPEC.md section 3.1). Character is the only live door
-// (docs/STUDIO-SPEC.md section 3.2); every other type has no
-// allocation yet (docs/STUDIO-SPEC.md section 9, item 2) and renders
-// the standing Soon treatment.
+// docs/STUDIO-SPEC.md section 3.1). Character and Worlds are the two
+// live doors (docs/STUDIO-SPEC.md section 3.2 for Character; the
+// Worlds quick create is this pass's own brief). Every other type has
+// no allocation yet (docs/STUDIO-SPEC.md section 9, item 2) and
+// renders the standing Soon treatment.
 export const STUDIO_DOORS = [
   {
     id: "character",
@@ -53,12 +54,15 @@ export const STUDIO_DOORS = [
     isLive: false,
   },
   {
+    // World-space door, renamed from "Location" this pass (RULED, the
+    // Q1 world quick-create brief): same door, now opening the
+    // WorldCreatorModal quick create instead of the Soon treatment.
     id: "location",
-    label: "Location",
+    label: "Worlds",
     eyebrow: "World space",
-    description: "A place that can be used in stories, image prompts, rooms, and canon submissions.",
+    description: "A setting, place, or premise a story or character can live in.",
     imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
-    isLive: false,
+    isLive: true,
   },
   {
     id: "outfit",

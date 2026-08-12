@@ -32,8 +32,9 @@ function decorateToolGroups() {
 const STORY_BRIDGE = { ...STUDIO_STORY_BRIDGE, onAction: noop };
 const BOTTOM_BANNER = { ...STUDIO_BOTTOM_BANNER, onCtaClick: noop };
 
-// Default: Quick Start, the primary surface, one live door (Character)
-// among three quiet Soon doors, the Story bridge strip beneath.
+// Default: Quick Start, the primary surface, two live doors
+// (Character, Worlds) among two quiet Soon doors, the Story bridge
+// strip beneath.
 export const studioDefaultFixture = {
   levels: STUDIO_LEVELS,
   activeLevelId: "quickStart",

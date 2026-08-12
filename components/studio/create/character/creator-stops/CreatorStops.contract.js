@@ -30,7 +30,19 @@
 // Before any save, the footer is the unchanged v2 footer in both
 // cases. No removal, no rename, no handler signature change on any
 // existing prop.
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v3";
+//
+// v3 to v4 (this pass, world-quick-create fixes, RULED): additive
+// only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
+// gains four entries for the Worlds quick create's non-"name" stop
+// ids: premise (BookOpen), setting (Compass), tone (Palette), look
+// (ImageIcon). This is presentation-only icon coverage inside the
+// existing stop-item shape (stop.iconKey already existed; only which
+// keys resolve to a non-default icon changes); it is not part of this
+// file's exported surface, since STOP_ICONS was never exported.
+// Character's seven existing icon entries (name, kind, face,
+// silhouette, heart, seal, payoff) are unchanged. No prop added,
+// removed, or renamed on CreatorStopsView itself.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v4";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),

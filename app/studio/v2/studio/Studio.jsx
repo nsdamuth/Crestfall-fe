@@ -2,12 +2,15 @@
 
 // Binding Shell (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape): owns
 // Crestfall-specific integration only. Next.js navigation (useRouter)
-// is one piece of application wiring the Studio hub needs; the other
-// is CharacterCreatorModal itself, the existing live-wired seven-stop
+// is one piece of application wiring the Studio hub needs; the others
+// are CharacterCreatorModal, the existing live-wired seven-stop
 // creator (components/studio/create/character/creator-stops/),
 // imported read-only per docs/STUDIO-SPEC.md section 3.2 and NOT
-// modified by this brief. The Shell owns its open/close boolean
-// directly, the same pattern as the legacy hub's
+// modified by this brief, and WorldCreatorModal, the five-stop
+// creator this pass adds (components/studio/create/world/
+// creator-stops/), consuming CreatorStopsView, the same shared
+// quick-create shape, directly. The Shell owns each modal's own
+// open/close boolean directly, the same pattern as the legacy hub's
 // CreationStudioExperience.jsx, because this is real integration, not
 // fixture-shaped ViewModel state. The fixture-mode harness (default /
 // empty / longest content) is dev-only QA scaffolding, never product,
@@ -18,6 +21,7 @@ import { useRouter } from "next/navigation";
 import StudioView from "./studio/Studio.view";
 import { useStudioViewModel } from "./studio/useStudioViewModel";
 import CharacterCreatorModal from "@/components/studio/create/character/creator-stops/CharacterCreatorModal";
+import WorldCreatorModal from "@/components/studio/create/world/creator-stops/WorldCreatorModal";
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -54,11 +58,13 @@ export default function Studio() {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
   const [isCharacterCreatorOpen, setIsCharacterCreatorOpen] = useState(false);
+  const [isWorldCreatorOpen, setIsWorldCreatorOpen] = useState(false);
 
   const viewProps = useStudioViewModel({
     fixtureMode,
     onNavigate: (route) => router.push(route),
     onOpenCharacterCreator: () => setIsCharacterCreatorOpen(true),
+    onOpenWorldCreator: () => setIsWorldCreatorOpen(true),
   });
 
   return (
@@ -81,6 +87,14 @@ export default function Studio() {
           fieldScope="quick"
           onClose={() => setIsCharacterCreatorOpen(false)}
         />
+      ) : null}
+
+      {isWorldCreatorOpen ? (
+        // The Worlds quick create, this pass's own brief
+        // (components/studio/create/world/creator-stops/): live-wired
+        // the same way CharacterCreatorModal is, mounted by the Shell,
+        // not the View.
+        <WorldCreatorModal onClose={() => setIsWorldCreatorOpen(false)} />
       ) : null}
     </>
   );
