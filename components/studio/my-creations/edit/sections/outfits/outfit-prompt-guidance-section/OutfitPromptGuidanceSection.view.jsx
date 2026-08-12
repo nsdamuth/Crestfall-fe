@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function OutfitPromptGuidanceSectionView({
@@ -82,6 +84,7 @@ export default function OutfitPromptGuidanceSectionView({
             onChange={(value) => onNormalClothingPromptChange?.(value)}
             placeholder={normalPromptPlaceholder}
             rows={8}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         ) : null}
 
@@ -93,6 +96,7 @@ export default function OutfitPromptGuidanceSectionView({
               onChange={(value) => onSignatureClothingChange?.(value)}
               placeholder={signatureClothingPlaceholder}
               rows={4}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
 
             <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
@@ -114,6 +118,7 @@ export default function OutfitPromptGuidanceSectionView({
                 }
                 placeholder={field.placeholder}
                 rows={4}
+                maxLength={DEEP_LONGFORM_MAX_LENGTH}
               />
             ))}
           </div>
@@ -125,6 +130,7 @@ export default function OutfitPromptGuidanceSectionView({
           onChange={(value) => onStandaloneImagePromptChange?.(value)}
           placeholder={standalonePromptPlaceholder}
           rows={5}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -133,6 +139,7 @@ export default function OutfitPromptGuidanceSectionView({
           onChange={(value) => onNegativePromptChange?.(value)}
           placeholder={negativePromptPlaceholder}
           rows={5}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -140,6 +147,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={usageNotes}
           onChange={(value) => onUsageNotesChange?.(value)}
           placeholder={usageNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -147,6 +155,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={compatibilityNotes}
           onChange={(value) => onCompatibilityNotesChange?.(value)}
           placeholder={compatibilityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

@@ -2,6 +2,7 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CharacterBehaviorSectionView({
@@ -76,6 +77,7 @@ export default function CharacterBehaviorSectionView({
             value={philosophyValue}
             onChange={(value) => onChangePhilosophy?.(value)}
             placeholder={philosophyPlaceholder}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

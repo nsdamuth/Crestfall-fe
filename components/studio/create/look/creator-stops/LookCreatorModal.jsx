@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 // The shared quick-create shape, consumed directly per the brief: do
 // not fork or reimplement it. Same modal shell, stepper, discard
 // dialog, and save-and-reaccess loop footer the Character and World
-// quick creates use (contract creator-stops.view.v5).
+// quick creates use (contract creator-stops.view.v6; comment
+// corrected this pass per the Q3 story-quick-create brief's
+// stale-comment-fix precedent, no behavior change).
 import CreatorStopsView from "@/components/studio/create/character/creator-stops/CreatorStops.view";
 import {
   createCreationDraft,

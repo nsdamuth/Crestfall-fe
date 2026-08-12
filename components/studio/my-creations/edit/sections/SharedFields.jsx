@@ -1,6 +1,18 @@
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 
+// Long-form field character limits, RULED (this pass, docs/CONTRACT-
+// REQUESTS.md "Long-form field character limits"): two size classes,
+// applied to every long-form field in the advanced editor via
+// TextAreaField's existing maxLength prop. SHORT for fields that
+// describe in a line or a short paragraph (appearance, tone, premise,
+// summary, and their kin); DEEP for fields that hold extended writing
+// (personality, backstory, history, lore body, scenario detail, and
+// their kin). Display-layer ruling, pending Nick's confirmation
+// against the backend data model; not a backend change, not blocking.
+export const SHORT_LONGFORM_MAX_LENGTH = 600;
+export const DEEP_LONGFORM_MAX_LENGTH = 2000;
+
 // Section label recipe, RULED (a1 advanced-creator pass): the
 // standard gold eyebrow with the trailing gold rule, matching
 // components/studio/studio-page-header/StudioPageHeader.view.jsx's

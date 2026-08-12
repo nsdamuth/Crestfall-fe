@@ -2,6 +2,8 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function LocationVisualDescriptionSectionView({
@@ -68,6 +70,7 @@ export default function LocationVisualDescriptionSectionView({
             value={layoutValue}
             onChange={(value) => onChangeLayout?.(value)}
             placeholder={layoutPlaceholder}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         </div>
 
@@ -77,6 +80,7 @@ export default function LocationVisualDescriptionSectionView({
             value={designNotesValue}
             onChange={(value) => onChangeDesignNotes?.(value)}
             placeholder={designNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

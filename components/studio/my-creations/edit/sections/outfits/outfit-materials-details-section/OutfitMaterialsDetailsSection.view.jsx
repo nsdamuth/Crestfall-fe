@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function OutfitMaterialsDetailsSectionView({
@@ -68,6 +69,7 @@ export default function OutfitMaterialsDetailsSectionView({
             value={detailsValue}
             onChange={(value) => onChangeDetails?.(value)}
             placeholder={detailsPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
 
@@ -77,6 +79,7 @@ export default function OutfitMaterialsDetailsSectionView({
             value={armorNotesValue}
             onChange={(value) => onChangeArmorNotes?.(value)}
             placeholder={armorNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

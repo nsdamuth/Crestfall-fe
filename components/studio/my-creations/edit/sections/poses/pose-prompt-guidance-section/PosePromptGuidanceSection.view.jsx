@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function PosePromptGuidanceSectionView({
@@ -34,6 +36,7 @@ export default function PosePromptGuidanceSectionView({
           value={promptGuidanceValue}
           onChange={(value) => onChangePromptGuidance?.(value)}
           placeholder={promptGuidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -41,6 +44,7 @@ export default function PosePromptGuidanceSectionView({
           value={usageNotesValue}
           onChange={(value) => onChangeUsageNotes?.(value)}
           placeholder={usageNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -48,6 +52,7 @@ export default function PosePromptGuidanceSectionView({
           value={compatibilityNotesValue}
           onChange={(value) => onChangeCompatibilityNotes?.(value)}
           placeholder={compatibilityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

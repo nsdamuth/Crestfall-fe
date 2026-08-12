@@ -3,6 +3,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function parseTags(value) {
@@ -69,6 +70,7 @@ export default function VisualAssetSettingsSection({ form, updateDataField }) {
             value={data.compatibility_notes || ""}
             onChange={(value) => updateDataField("compatibility_notes", value)}
             placeholder="Optional notes about what kinds of characters, styles, rooms, or image workflows this asset works best with."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

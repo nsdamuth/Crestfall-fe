@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function LocationSceneAtmosphereSectionView({
@@ -84,6 +85,7 @@ export default function LocationSceneAtmosphereSectionView({
             value={sensoryNotesValue}
             onChange={onChangeSensoryNotes}
             placeholder={sensoryNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function NarratorGuidanceSectionView({
@@ -30,6 +31,7 @@ export default function NarratorGuidanceSectionView({
           value={guidanceValue}
           onChange={(value) => onChangeGuidance?.(value)}
           placeholder={guidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -37,6 +39,7 @@ export default function NarratorGuidanceSectionView({
           value={avoidGuidanceValue}
           onChange={(value) => onChangeAvoidGuidance?.(value)}
           placeholder={avoidGuidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>
