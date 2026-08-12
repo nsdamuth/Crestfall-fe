@@ -83,7 +83,7 @@ export default function CreationEditStickyActionBarView({
               type="button"
               disabled={Boolean(visibilityOption.disabled)}
               onClick={() => onSelectVisibility?.(visibilityOption.value)}
-              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
+              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
                 visibilityOption.active
                   ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                   : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -101,7 +101,7 @@ export default function CreationEditStickyActionBarView({
           <button
             type="button"
             disabled={Boolean(publicVisibility?.disabled)}
-            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
+            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
               publicVisibility?.active
                 ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-100"
                 : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)]"
@@ -154,19 +154,31 @@ export default function CreationEditStickyActionBarView({
             </button>
           ) : null}
 
-          {/* SKIPPED: save-feedback tone (error/success) is likewise an
-              unmapped semantic color — left as raw Tailwind red-200/
-              emerald-200 rather than inventing a token. */}
+          {/* Save confirmation, RULED (a1 advanced-creator pass): the
+              status-token dot-plus-word treatment now shipping in the
+              quick creates (components/studio/create/character/
+              creator-stops/CreatorStops.view.jsx), read here only as
+              a reference, not imported. Was raw Tailwind
+              red-200/emerald-200 with no token, no dot, no aria-live. */}
           {saveFeedback?.message ? (
-            <p
-              className={`basis-full text-xs ${
+            <span
+              role={saveFeedback.tone === "error" ? "alert" : undefined}
+              aria-live="polite"
+              className={`inline-flex basis-full items-center gap-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] ${
                 saveFeedback.tone === "error"
-                  ? "text-red-200"
-                  : "text-emerald-200"
+                  ? "text-[var(--status-danger)]"
+                  : "text-[var(--status-success)]"
               }`}
             >
-              {saveFeedback.message}
-            </p>
+              <span
+                className={`h-1.5 w-1.5 flex-none rounded-full ${
+                  saveFeedback.tone === "error"
+                    ? "bg-[var(--status-danger)]"
+                    : "bg-[var(--status-success)]"
+                }`}
+              />
+              <span className="inline">{saveFeedback.message}</span>
+            </span>
           ) : null}
         </div>
       </div>
