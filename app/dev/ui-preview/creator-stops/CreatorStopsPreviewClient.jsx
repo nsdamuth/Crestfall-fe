@@ -14,6 +14,7 @@ import {
   creatorStopsUnsavedFixture,
   creatorStopsConfirmDiscardFixture,
   creatorStopsSaveErrorFixture,
+  creatorStopsJustSavedFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
 import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
@@ -35,6 +36,7 @@ const STATES = [
   ["Unsaved changes", creatorStopsUnsavedFixture],
   ["Confirm discard", creatorStopsConfirmDiscardFixture],
   ["Save unsuccessful", creatorStopsSaveErrorFixture],
+  ["Saved (post-save footer)", creatorStopsJustSavedFixture],
 ];
 
 const INITIAL_FORM_STATE = {
@@ -114,6 +116,7 @@ export default function CreatorStopsPreviewClient() {
   const [isOpen, setIsOpen] = useState(true);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [secondaryPanel, setSecondaryPanel] = useState(null);
+  const [justSaved, setJustSaved] = useState(false);
 
   const paletteVM = useCharacterColorPaletteModalViewModel({
     value: formState.characterColorPaletteId,
@@ -137,8 +140,10 @@ export default function CreatorStopsPreviewClient() {
   }, [activeStop]);
 
   function updateField(key) {
-    return (value) =>
+    return (value) => {
       setFormState((current) => ({ ...current, [key]: value }));
+      setJustSaved(false);
+    };
   }
 
   function requestClose() {
@@ -165,15 +170,29 @@ export default function CreatorStopsPreviewClient() {
     setHeartAdvancedFoldOpen(false);
     setSecondaryPanel(null);
     setConfirmDiscardOpen(false);
+    setJustSaved(false);
     setIsOpen(false);
   }
 
   function handleSave() {
     setSavedSnapshot(formState);
+    setJustSaved(true);
+  }
+
+  function handleContinueInEditor() {
+    setTemplateNote(
+      'Keep editing routes to /studio/v2/editor/[id] for the just-saved item once a real creationId exists. Preview only.'
+    );
+  }
+
+  function handleDone() {
+    setTemplateNote("Done closes the modal in place. No navigation, no toast.");
+    setIsOpen(false);
   }
 
   function handleReopen() {
     setIsOpen(true);
+    setJustSaved(false);
   }
 
   const fixture = STATES[selectedState][1];
@@ -245,6 +264,7 @@ export default function CreatorStopsPreviewClient() {
     isLastStop: activeStop === "payoff",
     hasUnsavedChanges,
     confirmDiscardOpen,
+    justSaved,
     onSelectStop: setActiveStop,
     onBack: () =>
       setActiveStop((current) => {
@@ -259,12 +279,10 @@ export default function CreatorStopsPreviewClient() {
         ];
       }),
     onSave: handleSave,
-    onSaveAndOpenEditor: () => {
-      handleSave();
-      setTemplateNote(
-        'Saving and opening the advanced editor routes to /studio/v2/editor/[id] once a real creationId exists. Preview only.'
-      );
-    },
+    onFinishAndSave: handleSave,
+    onSaveAndOpenEditor: handleSave,
+    onContinueInEditor: handleContinueInEditor,
+    onDone: handleDone,
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
@@ -283,6 +301,7 @@ export default function CreatorStopsPreviewClient() {
       setSavedSnapshot(formState);
     }
     setConfirmDiscardOpen(Boolean(fx.confirmDiscardOpen));
+    setJustSaved(Boolean(fx.justSaved));
   }
 
   return (
