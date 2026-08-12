@@ -9,7 +9,7 @@
 // does for the legacy `/studio/my-creations/[id]/edit` page (read for
 // precedent, never edited). Nothing in `components/studio/my-creations/**`
 // is changed by this brief.
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import CreationEditMediaPanel from "@/components/studio/my-creations/CreationEditMediaPanel";
 import CreationEditStickyActionBar from "@/components/studio/my-creations/edit/CreationEditStickyActionBar";
@@ -20,8 +20,28 @@ import CreationEditMechanicsRuntimeQuickNav from "@/components/studio/my-creatio
 import EditorView from "./editor/Editor.view";
 import { useEditorViewModel } from "./editor/useEditorViewModel";
 
-export default function Editor({ creationId, harnessSlot = null }) {
+// Origin tracking, RULED 11 Aug 2026: the back control returns to the
+// surface that opened the editor. A `?origin=` query param is the
+// mechanism (the pattern this repo already uses to carry navigation
+// context across a hard page boundary, e.g. FilterableIndex's
+// query-string-driven state), read here at the Binding Shell so the
+// portable View stays presentation only. Falls back to the Vault
+// when no origin is present (direct link, cold load, refresh).
+const ORIGIN_BACK_HREFS = {
+  studio: "/studio/v2/studio",
+  vault: "/studio/v2/vault",
+};
+const FALLBACK_BACK_HREF = "/studio/v2/vault";
+
+export default function Editor({ creationId, harnessSlot = null, originOverride }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // originOverride lets the auth-free preview mirror
+  // (/dev/ui-preview/editor-v2-page) simulate every origin state
+  // without real navigation; product always resolves origin from the
+  // URL.
+  const origin = originOverride !== undefined ? originOverride : searchParams.get("origin");
+  const backHref = ORIGIN_BACK_HREFS[origin] || FALLBACK_BACK_HREF;
 
   const {
     viewProps,
@@ -43,22 +63,8 @@ export default function Editor({ creationId, harnessSlot = null }) {
       defaultPcError={defaultPcError}
       mobileNavOpen={mobileNavOpen}
       onToggleMobileNav={onToggleMobileNav}
-      backAction={
-        // Judgment call, flagged: the legacy editor's back action
-        // returns to /studio/my-creations. This v2 page is reached
-        // from the Studio hub's quick-create CTA and the Vault's
-        // single edit path (docs/STUDIO-SPEC.md sections 3.3, 5), so
-        // "back" here returns to the v2 Vault, the v2 list surface
-        // this editor serves. Not settled explicitly by the spec;
-        // documented rather than silently assumed.
-        <button
-          type="button"
-          onClick={() => router.push("/studio/v2/vault")}
-          className="cf-btn cf-btn--secondary"
-        >
-          ← Vault
-        </button>
-      }
+      backLabel="Back"
+      onBack={() => router.push(backHref)}
       mediaPanel={<CreationEditMediaPanel {...mediaPanelProps} />}
       mechanicsQuickNav={
         <CreationEditMechanicsRuntimeQuickNav {...mechanicsQuickNavProps} />

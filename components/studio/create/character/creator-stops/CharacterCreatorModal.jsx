@@ -245,7 +245,9 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
   async function handleSaveAndOpenEditor() {
     const saved = await persistCreation();
     if (saved?.id) {
-      router.push(`/studio/v2/editor/${saved.id}`);
+      // Origin tracking, RULED 11 Aug 2026: carries the opening
+      // surface so the advanced editor's back control returns here.
+      router.push(`/studio/v2/editor/${saved.id}?origin=studio`);
     }
   }
 

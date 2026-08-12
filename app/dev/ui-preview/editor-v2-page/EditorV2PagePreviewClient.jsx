@@ -20,8 +20,19 @@ const FIXTURE_OPTIONS = [
   { id: MOCK_SAVED_CREATION_IDS.longestContent, label: "Longest content" },
 ];
 
+// Origin states, RULED 11 Aug 2026: the three doors the back control
+// must prove (Studio hub quick-create, Vault popup edit, no origin
+// i.e. the Vault fallback). `originOverride` mirrors what a real
+// `?origin=` query param would carry, without real navigation.
+const ORIGIN_OPTIONS = [
+  { id: "studio", label: "From Studio" },
+  { id: "vault", label: "From Vault" },
+  { id: null, label: "No origin (fallback)" },
+];
+
 export default function EditorV2PagePreviewClient() {
   const [creationId, setCreationId] = useState(FIXTURE_OPTIONS[0].id);
+  const [origin, setOrigin] = useState(ORIGIN_OPTIONS[0].id);
   const [collapsed, setCollapsed] = useState(false);
   const sidebarFixture = {
     ...studioSidebarPreviewFixture,
@@ -52,6 +63,29 @@ export default function EditorV2PagePreviewClient() {
     </div>
   );
 
+  const originHarnessSlot = (
+    <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
+      <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        Origin
+      </span>
+      {ORIGIN_OPTIONS.map((option) => (
+        <button
+          key={option.label}
+          type="button"
+          aria-pressed={origin === option.id}
+          onClick={() => setOrigin(option.id)}
+          className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
+            origin === option.id
+              ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+              : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
+          }`}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <StudioShellView
       sidebarSlot={
@@ -62,7 +96,16 @@ export default function EditorV2PagePreviewClient() {
       }
       topBarSlot={<StudioTopBar />}
     >
-      <Editor creationId={creationId} harnessSlot={harnessSlot} />
+      <Editor
+        creationId={creationId}
+        originOverride={origin}
+        harnessSlot={
+          <div className="flex flex-col gap-[var(--space-2)]">
+            {harnessSlot}
+            {originHarnessSlot}
+          </div>
+        }
+      />
     </StudioShellView>
   );
 }

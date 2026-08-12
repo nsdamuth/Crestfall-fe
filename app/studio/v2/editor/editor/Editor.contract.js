@@ -1,4 +1,14 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "1.0.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "1.1.0";
+
+// Version note, 1.0.0 -> 1.1.0 (additive, RULED 11 Aug 2026): the back
+// control returns the person to the surface they entered from
+// (Studio hub quick-create, Vault popup edit), falling back to
+// /studio/v2/vault when no origin is known. Origin resolution is the
+// Binding Shell's business (`../Editor.jsx`), never the View's; the
+// View swaps the old `backAction` ReactNode slot for a plain
+// `backLabel` string and `onBack` callback so it stays presentation
+// only. The visible label is now the neutral "Back" (it previously
+// named a fixed destination, "← Vault").
 
 /**
  * Stable portable UI boundary for the advanced editor page View
@@ -74,7 +84,8 @@ export const EDITOR_VIEW_CONTRACT_VERSION = "1.0.0";
  *   is Lore's rehosted structured authoring surface (the ruling's
  *   ADDITIONAL item). Used only to widen the content panel; the
  *   authoring surface itself is part of `sectionContent`.
- * @property {import("react").ReactNode} backAction
+ * @property {string} backLabel
+ * @property {() => void} onBack
  * @property {import("react").ReactNode} mediaPanel
  * @property {import("react").ReactNode} mechanicsQuickNav
  * @property {import("react").ReactNode} sectionContent

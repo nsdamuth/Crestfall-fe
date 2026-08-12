@@ -517,8 +517,10 @@ export default function VaultV2Mockup() {
           onClose={() => setAssetDetailId(null)}
           // Single edit path, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md
           // section 5): own-work items only, straight to the advanced
-          // editor, no fork, no choice dialog.
-          onEdit={item.isOwn ? () => router.push(`/studio/v2/editor/${item.id}`) : undefined}
+          // editor, no fork, no choice dialog. Origin tracking, RULED
+          // 11 Aug 2026: carries the opening surface so the advanced
+          // editor's back control returns to the Vault.
+          onEdit={item.isOwn ? () => router.push(`/studio/v2/editor/${item.id}?origin=vault`) : undefined}
         />
       );
     })()}

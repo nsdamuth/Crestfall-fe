@@ -28,7 +28,8 @@ export default function EditorView({
   defaultPcStatus = null,
   defaultPcError = null,
   showMechanicsQuickNav = false,
-  backAction = null,
+  backLabel = "Back",
+  onBack,
   mediaPanel = null,
   mechanicsQuickNav = null,
   sectionContent = null,
@@ -87,7 +88,15 @@ export default function EditorView({
               </button>
             ) : null}
 
-            {backAction}
+            {onBack ? (
+              <button
+                type="button"
+                onClick={onBack}
+                className="cf-btn cf-btn--secondary"
+              >
+                ← {backLabel}
+              </button>
+            ) : null}
           </div>
         </div>
 
