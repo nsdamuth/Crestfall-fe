@@ -1,13 +1,13 @@
 # Crestfall design context
 
-Regenerated 10 Aug 2026 at Sprint F close (KitRail shipped, rail
-rulings folded into law, the cutover sequence ruled). Supersedes every
-earlier version of this file. Not law itself; CLAUDE.md names the four
-law documents (`docs/DESIGN-TOKENS.md`, `docs/FRONTEND-SOP.md`,
-`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the active sprint plan, now
-`docs/SPRINT-G-PLAN.md`). This file orients a new session fast; when
-it and a law document disagree, the law document wins and this file is
-stale and should be regenerated.
+Regenerated 11 Aug 2026 (branch `design/h-docs-close`, cut from
+`origin/design/sprint-h-final` at c2c6d1d). Supersedes the 10 Aug 2026
+Sprint F version. Not law itself; CLAUDE.md names the four law
+documents (`docs/DESIGN-TOKENS.md`, `docs/FRONTEND-SOP.md`,
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the active sprint plan). This
+file orients a new session fast; when it and a law document disagree,
+the law document wins and this file is stale and should be
+regenerated.
 
 ## What Crestfall is
 
@@ -33,11 +33,19 @@ The journey loop: Home to Stories to Adventures to Studio to Images
 to Vault to Community to Creators to Lore, back to Home; every page's
 bottom promo banner sells the next stop and its CTA routes there.
 
+**All nine pages are now built** on this branch, at their
+`/studio/v2/<page>` staging addresses, plus two supporting surfaces
+the ruled model always implied but that shipped only this pass: the
+Creators profile-detail page and its connections sub-page, and the
+advanced editor (the CR-007/CR-008 destination). See "Where the build
+stands" below for the full inventory.
+
 ## The cutover sequence, standing process, RULED 10 Aug 2026
 
-This sequence supersedes the per-page cutover previously described in
-the migration strategy (`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section
-6 and `docs/BUILD-BLUEPRINT.md` section 3.3 both carry the dated
+Unchanged by this pass. This sequence supersedes the per-page cutover
+previously described in the migration strategy
+(`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6 and
+`docs/BUILD-BLUEPRINT.md` section 3.3 both carry the dated
 amendment). The order:
 
 1. All nine new pages build and stay at `/studio/v2/<page>`.
@@ -63,10 +71,78 @@ build blocker.** A 9 Aug ruling (`docs/BUILD-BLUEPRINT.md` section
 3.1, row 8) makes `/studio` become Play > Home, while Studio is also
 one of the nine pages in its own right (Create > Studio). Because
 every page builds and stays at `/studio/v2/<page>` until the single
-go-live, this collision blocks nothing today, including the Home and
-Studio builds. It is to be ruled during the cutover sequence (when
-final addresses are assigned at step 6), not now. Do not interpret or
-guess past it.
+go-live, this collision blocks nothing today. It is to be ruled during
+the cutover sequence (when final addresses are assigned at step 6),
+not now. Do not interpret or guess past it.
+
+## Rulings from the 11 Aug 2026 session
+
+All ruled by Brian, all already implemented in code on this branch
+before this document was regenerated.
+
+- **Card law amendment, closed.** The creation card's third overlay
+  icon (previously a fixed Expand) is now contextual: Play ("Start
+  Chat") on Story and Adventure cards, Generate on Image cards where a
+  real destination exists, Expand as the universal fallback. Like and
+  Save unchanged; artwork tap still opens the card. Creation-card
+  contract 3.2.0. Full record: `docs/BUILD-BLUEPRINT.md` 2.16(v).
+- **Five-bucket type filter, closed (CR-038).** Community and Vault
+  share one presentation-layer type grouping: Characters, Worlds,
+  Looks, Stories, Adventures, replacing the earlier four-kind-plus-
+  Remix set on both pages. Full record: `docs/BUILD-BLUEPRINT.md`
+  2.16(y).
+- **Adventure display naming, extended platform-wide.** The
+  terminology-module display mapping (STORYLINE reads "Adventure")
+  now covers the shared builder components too, not only the browse
+  page. Backend naming is unaffected; CR-025/CR-039 remain the later,
+  non-blocking backend rename pass.
+- **Item 36 / CR-028 CLOSED.** The mute control on the Creators
+  profile-detail page's engagement row, exact label "Mute content"
+  ("Muted" when active). Was the last open item in the rail rulings
+  section below; now closed since the profile-detail page it was
+  waiting on is built.
+- **Editor back control, closed.** The editor's back control returns
+  to the page it was opened from, falling back to Vault when no origin
+  is known; label is exactly "Back" (rendered "← Back"), never "Back
+  to X", a presentation change from the legacy "← My Creations" link
+  under the same underlying function. Editor contract 1.2.0.
+- **Home cold-start banner, closed.** Eden confrontation art, galaxy
+  layer on, headline "Start something worth finishing.", primary CTA
+  "Browse stories", ghost CTA "See what others made". Home contract
+  2.2.0. The promo-banner package gains an optional quiet secondary
+  CTA beside its one primary, `cf-btn--secondary`, contract 1.2.0;
+  Home's filled/continue state uses it too ("Continue" primary,
+  "Explore recent stories" ghost). Full record:
+  `docs/BUILD-BLUEPRINT.md` 2.16(w).
+- **Stories: hero continue banner RETIRED, closed.** Compact continue
+  rows only (capped three, "Show all in progress (N)" reveals the
+  rest), superseding the same-day banner-plus-rows treatment. Home is
+  the only page in the nine-page set that carries a continue banner.
+  Full record: `docs/BUILD-BLUEPRINT.md` 2.16(x),
+  `components/kit/promo-banner/README.md`.
+- **Sidebar v2 preview routes all nine pages, closed.** Every
+  destination in the preview nav's Play/Create/Explore groups now
+  routes to a live `/studio/v2/<page>`; none renders the quiet "Soon"
+  state anymore. See "Sidebar v2 preview flag" below.
+- **`docs/APP-FUNCTION-MAP.md` rollup deleted.** No generator script
+  for it exists anywhere in the repo (confirmed by search); the CSV
+  (`docs/APP-FUNCTION-MAP.csv`) is the sole live map going forward.
+- **CR-007/CR-008 hold RESOLVED.** Settled via
+  `docs/VAULT-EDIT-TREE-CLASSIFICATION.md`: 97 rows classified 72
+  COVERED, 15 GAP (all built this pass), 9 DEFERRED, 1 RETIRED. The
+  edit tree, most of the preview tree, and the image-library are now
+  reachable from Vault via the new `/studio/v2/editor/[id]` route and
+  its `/studio/v2/editor/[id]/image-library` child. The 9 DEFERRED rows
+  sit under the separate, standing OPEN item 28 (viewer
+  reconciliation); the 1 RETIRED row is superseded by the tab-based
+  navigation model.
+
+Also shipped this session, each covered by its own contract: the
+Creators profile-detail page (`/studio/v2/creators/[handle]`, contract
+1.2.0), the Creators connections page
+(`/studio/v2/creators/[handle]/connections`, contract 1.0.0), and the
+editor's image-library page (`/studio/v2/editor/[id]/image-library`,
+contract 1.0.0).
 
 ## Rulings from the 10 Aug 2026 strategy chat
 
@@ -85,33 +161,34 @@ guess past it.
   F. It holds existing cards; no card-level work was needed. Its full
   law is `docs/BUILD-BLUEPRINT.md` section 2.18.
 - **Lore, ruled.** Ships as an index page on the same composition the
-  five built v2 pages share (Community, Creators, Vault, Images,
-  Stories). The existing reading routes stay untouched. LORE HEADER,
-  RULING CHANGED (10 Aug 2026 defect ruling, wave H-defects, commit
-  `0a46d3b`): supersedes the earlier 9 Aug 2026 ruling that Lore kept
-  centered editorial labels as the one page in the nine-page set that
-  did. Lore's eyebrow/title/description now compose
-  `StudioPageHeaderView`, left aligned, the standard gold-eyebrow-
-  with-trailing-rule treatment, matching the other eight pages. The
-  two grid section labels (Community Lore, Your Lore) adopt the same
-  eyebrow recipe, left aligned. `KitStudioPageView`'s `headerAlign`
-  prop, added for the superseded centered ruling, is now unused by
-  any page; left in place per the ruling rather than removed.
-- **Studio, ruled composition.** Quick-create modals for phone and
-  the advanced full editor for desktop. CR-026 (Nick's promotion pass
-  over the QUICK/ADVANCED allocation) remains a later pass, not a
-  build gate.
-- **Adventures, ruled approach.** Proceeds now using display-name
-  mapping only, through the terminology module
-  (`lib/shared/presentation/terminology.js`, which already maps
-  STORYLINE to "Adventure"; no component wires it in yet). Nick's
-  backend naming stays as built; CR-025 stays a later, non-blocking
-  rename.
+  built v2 pages share. The existing reading routes stay untouched.
+  LORE HEADER, RULING CHANGED (10 Aug 2026 defect ruling, wave
+  H-defects, commit `0a46d3b`): supersedes the earlier 9 Aug 2026
+  ruling that Lore kept centered editorial labels as the one page in
+  the nine-page set that did. Lore's eyebrow/title/description now
+  compose `StudioPageHeaderView`, left aligned, the standard gold-
+  eyebrow-with-trailing-rule treatment, matching the other eight
+  pages. The two grid section labels (Community Lore, Your Lore)
+  adopt the same eyebrow recipe, left aligned. `KitStudioPageView`'s
+  `headerAlign` prop, added for the superseded centered ruling, is now
+  unused by any page; left in place per the ruling rather than
+  removed.
+- **Studio, ruled composition, now BUILT.** Quick-create modals for
+  phone and the advanced full editor for desktop (Brief S1, the
+  ladder layout with Character quick create). CR-026 (Nick's
+  promotion pass over the QUICK/ADVANCED allocation) remains a later
+  pass, not a build gate.
+- **Adventures, ruled approach, now BUILT and extended.** Proceeds
+  using display-name mapping only, through the terminology module
+  (`lib/shared/presentation/terminology.js`, which maps STORYLINE to
+  "Adventure"); the 11 Aug 2026 session extends this mapping to the
+  shared builder components. Nick's backend naming stays as built;
+  CR-025/CR-039 stay later, non-blocking renames.
 - **Nick engagement, standing.** The front end changes display names
   only; Nick's backend naming stays as built. No contract request is
-  escalated to him during the Sprint G build. He is updated once the
-  front end is fully built and reviewed, and every contract request
-  is level-set with him in one pass at that review (cutover sequence
+  escalated to him during the build. He is updated once the front end
+  is fully built and reviewed, and every contract request is
+  level-set with him in one pass at that review (cutover sequence
   step 3). Nothing in status reporting is described as blocked on
   Nick during the build.
 
@@ -153,13 +230,18 @@ the confirming button of an "are you sure" step.
 - **Card law.** Full-bleed art in BOTH grid and list layouts; list is
   a wide full-bleed art row, left-anchored legibility fade, no bottom
   action bar anywhere. Face actions are exactly three small overlay
-  icons: like, save, expand. Share, download, and delete live inside
-  the open destination. Overlay-action placement is RULED (kit polish
-  3 pass): `overlay-top` everywhere, `scrim-row` retired. Art anchors
-  to the top of the frame in both layouts. No-art fallback and any kit
-  card surface without art sits on the lighter elevated surface token
-  (`--surface-2`) against the canvas; the creator-card avatar chip
-  sits on `--surface-3` to keep a visible step above the card body.
+  icons: like, save, and a contextual third action. **AMENDED 11 Aug
+  2026 (Creation-card contract 3.2.0):** the third icon resolves per
+  card, Play ("Start Chat") on Story/Adventure-kind cards where wired,
+  Generate on Image-kind cards where wired, Expand as the universal
+  fallback, superseding the earlier fixed-Expand reading. Share,
+  download, and delete live inside the open destination. Overlay-action
+  placement is RULED (kit polish 3 pass): `overlay-top` everywhere,
+  `scrim-row` retired. Art anchors to the top of the frame in both
+  layouts. No-art fallback and any kit card surface without art sits
+  on the lighter elevated surface token (`--surface-2`) against the
+  canvas; the creator-card avatar chip sits on `--surface-3` to keep a
+  visible step above the card body.
 - **Filter line law.** Search, sort, and every filter share one
   sticky line, docking flush beneath the sticky top bar via
   `--topbar-h`. Filters and multi-selects are branded dropdowns
@@ -168,7 +250,9 @@ the confirming button of an "are you sure" step.
   from filter surfaces. Remixable folds in as an option row inside
   the Type dropdown, reading "Remix" everywhere (not "Remixable
   only"). Balance: search anchors left; Type/Rating/Sort/view-toggle
-  group anchored right as one unit.
+  group anchored right as one unit. **AMENDED 11 Aug 2026 (CR-038):**
+  Community and Vault's Type dropdown shares one five-bucket option
+  set: Characters, Worlds, Looks, Stories, Adventures.
 - **Tag economy.** A card badge appears only when it informs: Canon
   always; visibility badges only in own-work contexts; never a badge
   restating an active filter selection. Ratings never render as a
@@ -193,7 +277,20 @@ the confirming button of an "are you sure" step.
   de-emphasized (`--art-ink-dim`, measure-capped). The `top` treatment
   carries an opt-in galaxy layer (`showGalaxy`). The `bottom`
   treatment's mobile aspect is `1/1` (taller, more artwork visible)
-  with a lighter, still-44px-floor CTA; desktop unchanged.
+  with a lighter, still-44px-floor CTA; desktop unchanged. **AMENDED
+  11 Aug 2026 (promo-banner contract 1.2.0):** an optional quiet
+  secondary action, `cf-btn--secondary` (border only, no fill), may
+  sit beside the one primary CTA; never a second primary. First
+  consumer: Home's top banner, both its cold-start and filled/continue
+  states.
+- **Compact continue row, RULED 11 Aug 2026, new pattern.**
+  `KitContinueRow`, a package sibling to `promo-banner`, not part of
+  its contract: small art thumbnail left, title, "Last played" line,
+  Continue button right, list-density height. Stories is its only
+  consumer: up to three most-recent in-progress items render as rows,
+  capped, with "Show all in progress (N)" revealing the rest; Stories
+  carries no continue banner at all. Home is the only page keeping a
+  continue banner and does not consume this pattern.
 - **List density.** Two-up list rows permitted at desktop widths where
   whitespace allows; Community renders its list two-up at 1100px and
   up.
@@ -265,8 +362,11 @@ Sprint F's OPEN items 31 through 35 are RULED and CLOSED
 - **Empty-rail law.** A rail with nothing in it renders nothing at
   all, head included.
 
-Item 36 (mute control placement on the creator profile, CR-028) stays
-open, settled at render once the Creators profile-detail page exists.
+**Item 36 (mute control placement on the creator profile, CR-028)
+CLOSED 11 Aug 2026.** The Creators profile-detail page is built
+(`/studio/v2/creators/[handle]`, contract 1.2.0) and its engagement
+row carries the control, exact label "Mute content" ("Muted" when
+active).
 
 ## Sidebar v2 preview flag
 
@@ -274,17 +374,17 @@ open, settled at render once the Creators profile-detail page exists.
 `lib/shared/flags/sidebarV2Preview.js`, documented in full in
 `docs/FRONTEND-SOP.md` section 18. On by default for dev and staging,
 off in production. Gates a preview-only nine-destination journey-order
-nav on the live `StudioSidebar`: built destinations route to their
-live `/studio/v2/*` page (today: Community, Creators, Vault, Images,
-Stories), unbuilt destinations render quiet and non-interactive with a
-"Soon" mark, and today's existing sidebar links collapse into a
-collapsible Legacy group beneath. Flag off renders the sidebar exactly
-as before the flag existed. The Account v2 draft is NOT part of this
-flag or the nine-page model; it is a staging draft outside the journey
-loop with no sidebar entry at all. This preview surface is distinct
-from the real cutover: under the 10 Aug 2026 cutover sequence above,
-no page enters the live sidebar until the whole new site goes live at
-step 6.
+nav on the live `StudioSidebar`, grouped Play/Create/Explore.
+**Updated 11 Aug 2026: all nine destinations now route to a live
+`/studio/v2/<page>`** (`useStudioSidebarViewModel.js`, every entry
+`isBuilt: true`), superseding the earlier partial set where four of
+nine rendered quiet with a "Soon" mark; today's existing sidebar links
+collapse into a collapsible Legacy group beneath. The Account v2 draft
+is NOT part of this flag or the nine-page model; it is a staging draft
+outside the journey loop with no sidebar entry at all. This preview
+surface is distinct from the real cutover: under the 10 Aug 2026
+cutover sequence above, no page enters the live sidebar until the
+whole new site goes live at step 6.
 
 ## The LOOM file shape
 
@@ -318,10 +418,10 @@ page composes from (`docs/BUILD-BLUEPRINT.md` chapter 2):
 |---|---|---|---|
 | `studio-page` | one-width page shell, header/filter/children/banner slots | 1.0.0 | R1 one-width law |
 | `studio-filter-bar` | search, filter dropdowns, sort, view-mode slot on one sticky line | 2.0.0 | filter line law |
-| `dropdown` | branded popover/sheet, multi and single select | 1.1.0 | additive `ariaLabel`; sheet variant carries the R7 close-header row |
-| `promo-banner` | three treatments: bottom, card, top | 1.1.0 | `top` carries the opt-in galaxy layer; `bottom` carries the R6 mobile proportions |
+| `dropdown` | branded popover/sheet, multi and single select | 1.1.0 | additive `ariaLabel`; sheet variant carries the R7 close-header row; carries the five-bucket Type option set (CR-038) where consumed by Community/Vault |
+| `promo-banner` | three treatments: bottom, card, top | 1.2.0 | `top` carries the opt-in galaxy layer; `bottom` carries the R6 mobile proportions; v1.2.0 (11 Aug 2026) adds the optional quiet secondary CTA. `KitContinueRow` ships as a sibling file in this package, Stories-only, not part of this contract |
 | `load-more` | batch-then-append pagination, no infinite scroll | 1.0.0 | |
-| `creation-card` | full-bleed grid and list card | 3.1.0 | card law; `actionPlacement` retired, `overlay-top` only |
+| `creation-card` | full-bleed grid and list card | 3.2.0 | card law; `actionPlacement` retired, `overlay-top` only; v3.2.0 (11 Aug 2026) adds the contextual third overlay action (Play/Generate/Expand) |
 | `creator-card` | avatar, stats, recent-work thumbnails, follow | 1.0.0 | card-without-art surface ruling |
 | `filter-chip` | chip rows inside dropdown panels | 1.0.0 | loose filter chips retired from top-level surfaces |
 | `badge` | rest-only labels (Canon, visibility) | 1.0.0 | tag economy governs when it renders |
@@ -339,55 +439,71 @@ Not yet built as kit packages: global search, form field (ad hoc
 `cf-field` recipes still cover this), picker-modal/menu-popover beyond
 the ingredient picker, alert-strip. Item 37's `destination-tile`
 package shipped ahead of Home itself; item 38 (the Continue strip's
-filled-state treatment) is still open and may add its own package,
-pending Brian's ruling.
+filled-state treatment) is closed by the promo-banner v1.2.0 ghost-CTA
+addition above, Home's own consumer.
 
 ## Where the build stands
 
 Built under `/studio/v2/<page>`, all fixture-driven, pre-parity, out
 of the sidebar until the go-live step of the cutover sequence, each
 with an auth-free mirror at `/dev/ui-preview/<page>-v2-page` for
-verification without signing in:
+verification without signing in. **All nine pages of the ruled model
+are now built**, plus two supporting pages the model always implied
+and the advanced editor:
 
-1. **Community** (`/studio/v2/community`): built first, established
-   the whole browse kit. Parity echo not yet run.
-2. **Creators** (`/studio/v2/creators`): hub only, no profile-detail
-   page; 2 of 26 legacy parity rows Present, 24 Flagged.
-3. **Vault** (`/studio/v2/vault`): hub only, standalone edit tree
-   held out under CR-007/CR-008; 8 of 112 parity rows Present, 7
-   Flagged, 97 Deliberately excluded.
-4. **Images** (`/studio/v2/images`): the library grid plus the
+1. **Home** (`/studio/v2/home`, contract 2.2.0): the guidepost
+   composition (top banner, Continue rows, eight destination tiles,
+   four KitRail rails, bottom banner), consuming KitRail four times.
+   Cold-start and filled/continue banner states both ship, each with
+   its own primary and ghost CTA (11 Aug 2026).
+2. **Stories** (`/studio/v2/stories`): hub only; compact continue rows
+   (capped three, "Show all" reveals the rest) lead, then the
+   startable shelf; no hero continue banner (retired 11 Aug 2026).
+   Chat room `[id]` surface excluded by standing sweep-scope ruling.
+3. **Adventures** (`/studio/v2/adventures`): browse hub plus the
+   rehosted Storyline builder modal, all 27 original fields intact.
+   Display naming extended to the shared builder components 11 Aug
+   2026.
+4. **Studio** (`/studio/v2/studio`, contract 1.0.0, Brief S1): the
+   create-hub ladder layout with Character quick create.
+5. **Images** (`/studio/v2/images`): the library grid plus the
    Sprint E creator panel: sticky right rail at 1100px and up, sticky
    "Create image" CTA opening a full-screen modal under 1100px. Full
    ingredient-picker and save-preset flow wired end to end against
    fixtures.
-5. **Stories** (`/studio/v2/stories`): hub only; the Continue group
-   (in-progress items) leads, then the startable shelf. Chat room
-   `[id]` surface excluded by standing sweep-scope ruling.
-6. **Account** (`/studio/v2/account`): a fixture-driven restyle draft
-   of the live account page, fixing three read live defects (title
-   collision, stat duplication, raw controls). Explicitly OUTSIDE the
-   nine-page model: no sidebar entry, no banner, no filter bar, not
-   part of the journey loop.
+6. **Vault** (`/studio/v2/vault`): hub, now with its edit tree,
+   preview tree, and image-library all reachable through the new
+   editor route (CR-007/CR-008 resolved 11 Aug 2026, see the rulings
+   section above).
+7. **Community** (`/studio/v2/community`): built first, established
+   the whole browse kit.
+8. **Creators** (`/studio/v2/creators`): browse hub, plus the
+   profile-detail page (`/studio/v2/creators/[handle]`, contract
+   1.2.0) and its connections sub-page
+   (`/studio/v2/creators/[handle]/connections`, contract 1.0.0), both
+   shipped 11 Aug 2026, closing the item 36 mute-control ruling and
+   the parity echo's largest previously-open block.
+9. **Lore** (`/studio/v2/lore`): index page on the shared v2
+   composition; left-aligned editorial labels per the 10 Aug 2026 LORE
+   HEADER ruling.
+
+Supporting surfaces, not their own destination in the nine-page model:
+
+- **The advanced editor** (`/studio/v2/editor/[id]`, contract 1.2.0):
+  the CR-007/CR-008 destination, composing the unmodified legacy edit
+  tree; origin-aware back control (label exactly "Back", Vault
+  fallback). Its own image-library page
+  (`/studio/v2/editor/[id]/image-library`, contract 1.0.0) composes
+  the unmodified legacy `CreationImageLibraryPage` package.
+- **Account** (`/studio/v2/account`): a fixture-driven restyle draft
+  of the live account page, fixing three read live defects (title
+  collision, stat duplication, raw controls). Explicitly OUTSIDE the
+  nine-page model: no sidebar entry, no banner, no filter bar, not
+  part of the journey loop.
 
 The `rail` kit package (KitRail) shipped in Sprint F with its own
 preview route (`/dev/ui-preview/kit-rail`), render pass, and defect
-fix pass; it has no live-page consumer yet. Its function-map rows land
-with the Home build (`docs/SPRINT-G-PLAN.md` resolves Sprint F step 6
-this way).
-
-Not started, all four planned together in `docs/SPRINT-G-PLAN.md`:
-**Home** (composition ruled 10 Aug 2026, consumes KitRail four times,
-Sprint G wave 1), **Lore** (ruled index page on the shared v2
-composition, Sprint G wave 3; left-aligned editorial labels per the
-10 Aug 2026 LORE HEADER ruling change above, superseding the earlier
-centered-label ruling this line originally described),
-**Adventures** (proceeds via the terminology display mapping, Sprint
-G wave 3; CR-025 stays a later backend pass), **Studio** (quick-create
-modals for phone plus the advanced full editor for desktop, Sprint G
-wave 4; CR-026 stays Nick's later promotion pass). The `/studio`
-address collision is an open cutover question and blocks none of
-them.
+fix pass; its function-map rows landed with the Home build.
 
 Every kit package above has its own `/dev/ui-preview/<package>` route,
 fixture-driven, unavailable in production.
@@ -395,9 +511,35 @@ fixture-driven, unavailable in production.
 Open picks awaiting Brian's render review: Sprint D items 1 through
 21 and Sprint E items 22 through 30 stand in those plans' own OPEN FOR
 BRIAN sections; Sprint F items 31 through 35 are ruled and closed;
-item 36 (mute placement) stays open; Sprint G opens items 37 through
-41 in `docs/SPRINT-G-PLAN.md`. Read the plans directly for the live
-lists.
+item 36 (mute placement) is now closed (see above); OPEN item 42 (the
+Home creations-filter seat) stays open. Read the plans directly for
+the live lists.
+
+## Named future workstreams
+
+Not scheduled inside the nine-page build; recorded here so they are
+not lost between sessions.
+
+- **Marketing site with a CMS.** A public-facing marketing site,
+  content-managed, separate from the Studio product surfaces this
+  document otherwise tracks.
+- **Admin dashboard.** An internal administrative surface, no build
+  detail settled yet.
+- **Sidebar rebuild.** Fixed positioning and an account-area cleanup,
+  distinct from the preview-flag journey-order nav above; the
+  preview-flag work stages the destinations, the rebuild itself is a
+  separate, later structural pass on the sidebar shell.
+- **The Fable review gate.** Covers the creation-type quick/advanced
+  allocation (the CR-026 lineage this document already tracks under
+  Studio) and high-volume creator behavior, using G Stack read-only
+  tools for that review.
+- **Recommendation and sorting logic**, on Nick's agenda: the backend
+  ranking behind the sort controls this document records as fixture-
+  driven across every browse page (Home's rail sort, Community's and
+  Vault's Sort dropdowns, and kin).
+- **Private-content nudity policy decision**, on Nick's agenda: a
+  content-standards ruling in the same family as CR-027's rating-tier
+  work, not yet decided.
 
 ## The quality floor
 
