@@ -9,7 +9,9 @@ import {
   ImageIcon,
   Palette,
   ShieldCheck,
+  Shirt,
   SmilePlus,
+  Sparkles,
   User,
   X,
 } from "lucide-react";
@@ -24,13 +26,19 @@ const STOP_ICONS = {
   heart: Heart,
   seal: ShieldCheck,
   payoff: ImageIcon,
-  // Additive, RULED (this pass, world-quick-create fixes): the Worlds
-  // quick create's non-"name" stop ids. Character's own icons above
-  // are unchanged.
+  // Additive, RULED (world-quick-create fixes): the Worlds quick
+  // create's non-"name" stop ids. Character's own icons above are
+  // unchanged.
   premise: BookOpen,
   setting: Compass,
   tone: Palette,
   look: ImageIcon,
+  // Additive, RULED (this pass, look-quick-create brief): the Looks
+  // quick create's non-"name", non-"look" stop ids. World's and
+  // Character's icons above are unchanged.
+  vibe: Sparkles,
+  garments: Shirt,
+  palette: Palette,
 };
 
 export default function CreatorStopsView({

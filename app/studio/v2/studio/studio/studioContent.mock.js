@@ -31,11 +31,12 @@ export const STUDIO_LEVELS = [
 ];
 
 // Quick Start doors, asset-first (docs/_legacy-reference proof,
-// docs/STUDIO-SPEC.md section 3.1). Character and Worlds are the two
-// live doors (docs/STUDIO-SPEC.md section 3.2 for Character; the
-// Worlds quick create is this pass's own brief). Every other type has
-// no allocation yet (docs/STUDIO-SPEC.md section 9, item 2) and
-// renders the standing Soon treatment.
+// docs/STUDIO-SPEC.md section 3.1). Character, Worlds, and Looks are
+// the three live doors (docs/STUDIO-SPEC.md section 3.2 for
+// Character; the Worlds and Looks quick creates are their own
+// briefs). Every other type has no allocation yet
+// (docs/STUDIO-SPEC.md section 9, item 2) and renders the standing
+// Soon treatment.
 export const STUDIO_DOORS = [
   {
     id: "character",
@@ -65,12 +66,16 @@ export const STUDIO_DOORS = [
     isLive: true,
   },
   {
+    // Outfit/clothing door, relabeled from "Outfit / Clothing" to
+    // "Looks" this pass (RULED, the Q2 look quick-create brief): same
+    // door, existing OUTFIT creation type, now opening
+    // LookCreatorModal instead of the Soon treatment.
     id: "outfit",
-    label: "Outfit / Clothing",
+    label: "Looks",
     eyebrow: "Visual asset",
     description: "Reusable clothing, armor, uniforms, costumes, and outfit presets for characters.",
     imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png"),
-    isLive: false,
+    isLive: true,
   },
 ];
 
