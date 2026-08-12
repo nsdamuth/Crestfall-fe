@@ -32,11 +32,11 @@ export const kitFormFieldSuccessFixture = {
 
 export const kitFormFieldCounterFixture = {
   label: "Short bio",
-  value: "A wanderer of the black crown sky.",
+  value: "A wanderer of the crown sky.",
   placeholder: "Tell us about your character",
   helper: "Keep it brief.",
   maxLength: 40,
-  count: 35,
+  count: 28,
   isDisabled: false,
   onChange: noop,
 };
