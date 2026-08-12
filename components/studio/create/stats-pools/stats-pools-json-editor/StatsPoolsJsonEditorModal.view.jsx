@@ -88,7 +88,7 @@ export default function StatsPoolsJsonEditorModalView({
     >
       <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             <Braces size={15} />
             Loom Authoring Tool
           </p>
@@ -114,7 +114,7 @@ export default function StatsPoolsJsonEditorModalView({
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                 <Code2 size={14} />
                 Authored Stats & Pools Profile
               </p>
@@ -158,7 +158,7 @@ export default function StatsPoolsJsonEditorModalView({
 
         <aside className="grid content-start gap-4">
           <section className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Apply Behavior
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -170,7 +170,7 @@ export default function StatsPoolsJsonEditorModalView({
           </section>
 
           <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               AI Guide
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -182,7 +182,7 @@ export default function StatsPoolsJsonEditorModalView({
 
           {statusMessage ? (
             <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                 Status
               </p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">

@@ -20,6 +20,11 @@ import {
 } from "./ProgressionProfileEditor.contract";
 
 import ProgressionJsonEditorModal from "../progression-json-editor/ProgressionJsonEditorModal";
+import {
+  SectionTitle,
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function Label({ children }) {
   return (
@@ -75,18 +80,6 @@ function SelectInput({ value, onChange, options = [] }) {
         </option>
       ))}
     </select>
-  );
-}
-
-function TextArea({ value, onChange, rows = 4, placeholder = "" }) {
-  return (
-    <textarea
-      rows={rows}
-      value={value ?? ""}
-      onChange={(event) => onChange?.(event.target.value)}
-      placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-    />
   );
 }
 
@@ -225,12 +218,10 @@ export default function ProgressionProfileEditorView({
     <div className="space-y-6">
       <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             <Activity size={18} />
-            <p className="text-xs uppercase tracking-[0.2em]">
-              Progression Definition
-            </p>
-          </div>
+            Progression Definition
+          </p>
 
           <button
             type="button"
@@ -260,13 +251,14 @@ export default function ProgressionProfileEditorView({
             />
           </div>
           <div className="lg:col-span-2">
-            <Label>Description</Label>
-            <TextArea
+            <TextAreaField
+              label="Description"
               value={profile.description || ""}
               onChange={(value) =>
                 onUpdateProfileField?.("description", value)
               }
               placeholder="Explain how this progression profile should be used."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
         </div>
@@ -285,16 +277,11 @@ export default function ProgressionProfileEditorView({
 
       <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-              Progression Curve
-            </p>
-            <h3 className="mt-2 font-display text-3xl">Experience by Level</h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-              Choose a compact algorithmic curve, add selected overrides, or
-              author every cumulative XP threshold directly.
-            </p>
-          </div>
+          <SectionTitle
+            eyebrow="Progression Curve"
+            title="Experience by Level"
+            body="Choose a compact algorithmic curve, add selected overrides, or author every cumulative XP threshold directly."
+          />
           <div className="rounded-xl border border-emerald-300/20 bg-emerald-300/5 p-3 text-xs text-emerald-100">
             <div className="flex items-center gap-2">
               <ShieldCheck size={15} />
@@ -355,7 +342,7 @@ export default function ProgressionProfileEditorView({
 
         {generatedMode ? (
           <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Algorithmic Settings
             </p>
             <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -457,7 +444,7 @@ export default function ProgressionProfileEditorView({
           <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                   Level Overrides
                 </p>
                 <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -553,7 +540,7 @@ export default function ProgressionProfileEditorView({
 
         {curve.mode === "EXPLICIT_TABLE" ? (
           <div className="mt-6 overflow-hidden rounded-xl border border-white/10">
-            <div className="grid grid-cols-[0.35fr_1fr] bg-white/[0.04] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+            <div className="grid gap-1 bg-white/[0.04] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] sm:grid-cols-[0.35fr_1fr] sm:gap-0">
               <span>Level</span>
               <span>Cumulative experience</span>
             </div>
@@ -561,7 +548,7 @@ export default function ProgressionProfileEditorView({
               {thresholds.map((threshold) => (
                 <div
                   key={threshold.level}
-                  className="grid grid-cols-[0.35fr_1fr] items-center gap-4 px-4 py-3"
+                  className="grid items-center gap-2 px-4 py-3 sm:grid-cols-[0.35fr_1fr] sm:gap-4"
                 >
                   <span className="text-sm font-semibold">
                     {threshold.level}
@@ -584,7 +571,7 @@ export default function ProgressionProfileEditorView({
             <summary className="cursor-pointer list-none px-4 py-3 [&::-webkit-details-marker]:hidden">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                     Generated Threshold Preview
                   </p>
                   <p className="mt-1 text-xs text-[var(--ink-dim)]">
@@ -626,15 +613,11 @@ export default function ProgressionProfileEditorView({
 
       <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/35 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-              Tier Definitions
-            </p>
-            <h3 className="mt-2 font-display text-3xl">Level Bands</h3>
-            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-              Optional non-overlapping labels for interpreting resolved levels.
-            </p>
-          </div>
+          <SectionTitle
+            eyebrow="Tier Definitions"
+            title="Level Bands"
+            body="Optional non-overlapping labels for interpreting resolved levels."
+          />
           <button
             type="button"
             onClick={() => onAddTier?.()}
@@ -705,13 +688,13 @@ export default function ProgressionProfileEditorView({
                   />
                 </div>
                 <div className="lg:col-span-2">
-                  <Label>Description</Label>
-                  <TextArea
-                    rows={3}
+                  <TextAreaField
+                    label="Description"
                     value={tier.description || ""}
                     onChange={(value) =>
                       onUpdateTier?.(index, "description", value)
                     }
+                    maxLength={SHORT_LONGFORM_MAX_LENGTH}
                   />
                 </div>
                 <div className="lg:col-span-2">

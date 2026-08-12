@@ -20,6 +20,12 @@ import {
   X,
 } from "lucide-react";
 
+import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function Field({ label, children, detail = "" }) {
   return (
@@ -277,7 +283,7 @@ function ColumnBlockCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           {block.type === "image"
             ? "Character Image"
             : block.type === "inline-quote"
@@ -412,15 +418,12 @@ function BlockFields({
             }
           />
         </Field>
-        <Field label="Body text">
-          <textarea
-            className={`${inputClass} min-h-40 resize-y leading-7`}
-            value={block.body}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "body", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Body text"
+          value={block.body}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "body", value)}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
+        />
         <div className="flex flex-wrap gap-4 text-sm text-[var(--ink-dim)]">
           <label className="flex items-center gap-2">
             <input
@@ -503,15 +506,12 @@ function BlockFields({
 
     return (
       <div className="grid gap-4">
-        <Field label={quoteLabel}>
-          <textarea
-            className={`${inputClass} min-h-28 resize-y`}
-            value={block.text}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "text", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label={quoteLabel}
+          value={block.text}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "text", value)}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
         <Field label="Attribution">
           <input
             className={inputClass}
@@ -543,15 +543,12 @@ function BlockFields({
             }
           />
         </Field>
-        <Field label="Excerpt body">
-          <textarea
-            className={`${inputClass} min-h-32 resize-y leading-7`}
-            value={block.body}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "body", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Excerpt body"
+          value={block.body}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "body", value)}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
+        />
       </div>
     );
   }
@@ -592,15 +589,12 @@ function BlockFields({
             />
           </Field>
         </div>
-        <Field label="Story excerpt">
-          <textarea
-            className={`${inputClass} min-h-40 resize-y leading-7`}
-            value={block.body}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "body", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Story excerpt"
+          value={block.body}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "body", value)}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
+        />
         <Field label="Attribution">
           <input
             className={inputClass}
@@ -632,30 +626,21 @@ function BlockFields({
             }
           />
         </Field>
-        <Field label="Optional introduction">
-          <textarea
-            className={`${inputClass} min-h-24 resize-y leading-7`}
-            value={block.body}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "body", event.target.value)
-            }
-          />
-        </Field>
-        <Field label="List items" detail="One item per line">
-          <textarea
-            className={`${inputClass} min-h-36 resize-y leading-7`}
-            value={(block.items || []).join("\n")}
-            onChange={(event) =>
-              onUpdate?.(
-                chapterId,
-                sectionId,
-                block.id,
-                "items",
-                event.target.value.split("\n")
-              )
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Optional introduction"
+          value={block.body}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "body", value)}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
+        <TextAreaField
+          label="List items"
+          value={(block.items || []).join("\n")}
+          onChange={(value) =>
+            onUpdate?.(chapterId, sectionId, block.id, "items", value.split("\n"))
+          }
+          placeholder="One item per line"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
       </div>
     );
   }
@@ -695,22 +680,14 @@ function BlockFields({
                   }
                 />
               </Field>
-              <Field label="Value">
-                <textarea
-                  className={`${inputClass} min-h-20 resize-y`}
-                  value={item.value}
-                  onChange={(event) =>
-                    onUpdateStatItem?.(
-                      chapterId,
-                      sectionId,
-                      block.id,
-                      item.id,
-                      "value",
-                      event.target.value
-                    )
-                  }
-                />
-              </Field>
+              <TextAreaField
+                label="Value"
+                value={item.value}
+                onChange={(value) =>
+                  onUpdateStatItem?.(chapterId, sectionId, block.id, item.id, "value", value)
+                }
+                maxLength={SHORT_LONGFORM_MAX_LENGTH}
+              />
               <div className="flex items-end gap-1.5 pb-0.5">
                 <button
                   type="button"
@@ -793,7 +770,7 @@ function BlockFields({
               className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                   Column {columnIndex + 1}
                 </p>
                 <span className="text-xs text-[var(--ink-dim)]">
@@ -869,15 +846,12 @@ function BlockFields({
             }
           />
         </Field>
-        <Field label="Callout body">
-          <textarea
-            className={`${inputClass} min-h-28 resize-y`}
-            value={block.body}
-            onChange={(event) =>
-              onUpdate?.(chapterId, sectionId, block.id, "body", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Callout body"
+          value={block.body}
+          onChange={(value) => onUpdate?.(chapterId, sectionId, block.id, "body", value)}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
       </div>
     );
   }
@@ -888,7 +862,7 @@ function BlockFields({
         <button
           type="button"
           onClick={() => onOpenImagePicker?.(chapterId, sectionId, block.id)}
-          className="flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--gold-ornament)]/35 bg-black/25 text-sm text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
+          className="relative flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--gold-ornament)]/35 bg-black/25 text-sm text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
         >
           {block.src ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -898,9 +872,12 @@ function BlockFields({
               className="max-h-72 w-full object-contain"
             />
           ) : (
-            <span className="inline-flex items-center gap-2">
-              <ImageIcon size={18} /> Select from an owned tagged Character library
-            </span>
+            <>
+              <KitArtPlaceholder size="md" />
+              <span className="absolute inset-x-0 bottom-3 inline-flex items-center justify-center gap-2 px-3">
+                <ImageIcon size={18} /> Select from an owned tagged Character library
+              </span>
+            </>
           )}
         </button>
         <div className="grid gap-4 md:grid-cols-2">
@@ -999,7 +976,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Lore Block Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Add content block</h3>
@@ -1044,7 +1021,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
                     aria-hidden="true"
                   />
                 ) : null}
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                   {category}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -1100,7 +1077,7 @@ function ImagePickerModal({
       <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[#100d09] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Character Image Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Select lore image</h3>
@@ -1257,7 +1234,9 @@ export default function LoreEditorView({
         <div>
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={18} />
-            <p className="text-xs uppercase tracking-[0.22em]">Lore Document</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              Lore Document
+            </p>
           </div>
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             Chapters, sections & sourcebook blocks
@@ -1269,7 +1248,7 @@ export default function LoreEditorView({
           </p>
         </div>
         <div className="grid gap-3">
-          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+          <div className="grid gap-2 text-center text-xs sm:grid-cols-3">
             {[
               ["Chapters", chapterCount],
               ["Sections", sectionCount],
@@ -1360,22 +1339,19 @@ export default function LoreEditorView({
             placeholder="Crestfall"
           />
         </Field>
-        <Field label="Publication summary">
-          <textarea
-            className={`${inputClass} min-h-28 resize-y`}
-            value={document.summary}
-            onChange={(event) =>
-              onUpdateDocumentField?.("summary", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Publication summary"
+          value={document.summary}
+          onChange={(value) => onUpdateDocumentField?.("summary", value)}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
       </div>
 
       <div className="mt-7 border-t border-white/10" aria-hidden="true" />
       <div className="mt-6">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <Users size={17} />
-          <p className="text-xs uppercase tracking-[0.2em]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Asset-level Character Tags
           </p>
         </div>
@@ -1401,7 +1377,7 @@ export default function LoreEditorView({
         <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <MapPin size={16} />
-            <p className="text-xs uppercase tracking-[0.18em]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Asset-level Location Tags
             </p>
           </div>
@@ -1429,7 +1405,7 @@ export default function LoreEditorView({
       <div className="mt-8 border-t border-white/10" aria-hidden="true" />
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Chapters
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -1578,23 +1554,18 @@ export default function LoreEditorView({
                         }
                       />
                     </Field>
-                    <Field label="Chapter summary">
-                      <textarea
-                        className={`${inputClass} min-h-28 resize-y`}
-                        value={chapter.summary}
-                        onChange={(event) =>
-                          onUpdateChapterField?.(
-                            chapter.id,
-                            "summary",
-                            event.target.value
-                          )
-                        }
-                      />
-                    </Field>
+                    <TextAreaField
+                      label="Chapter summary"
+                      value={chapter.summary}
+                      onChange={(value) =>
+                        onUpdateChapterField?.(chapter.id, "summary", value)
+                      }
+                      maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                    />
                   </div>
 
                   <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                       Chapter-only Character Tags
                     </p>
                     <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1623,7 +1594,7 @@ export default function LoreEditorView({
                   <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
                     <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                       <MapPin size={15} />
-                      <p className="text-xs uppercase tracking-[0.18em]">
+                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                         Chapter-only Location Tags
                       </p>
                     </div>
@@ -1655,7 +1626,7 @@ export default function LoreEditorView({
                   />
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                         Sections
                       </p>
                       <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -1819,24 +1790,23 @@ export default function LoreEditorView({
                                     }
                                   />
                                 </Field>
-                                <Field label="Section summary">
-                                  <textarea
-                                    className={`${inputClass} min-h-24 resize-y`}
-                                    value={section.summary}
-                                    onChange={(event) =>
-                                      onUpdateSectionField?.(
-                                        chapter.id,
-                                        section.id,
-                                        "summary",
-                                        event.target.value
-                                      )
-                                    }
-                                  />
-                                </Field>
+                                <TextAreaField
+                                  label="Section summary"
+                                  value={section.summary}
+                                  onChange={(value) =>
+                                    onUpdateSectionField?.(
+                                      chapter.id,
+                                      section.id,
+                                      "summary",
+                                      value
+                                    )
+                                  }
+                                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                                />
                               </div>
 
                               <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-                                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                   Section-only Character Tags
                                 </p>
                                 <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1868,7 +1838,7 @@ export default function LoreEditorView({
                               <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
                                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                                   <MapPin size={15} />
-                                  <p className="text-xs uppercase tracking-[0.18em]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                     Section-only Location Tags
                                   </p>
                                 </div>
@@ -1899,7 +1869,7 @@ export default function LoreEditorView({
 
                               <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/20 p-4">
                                 <div>
-                                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                     Section Content
                                   </p>
                                   <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1929,7 +1899,7 @@ export default function LoreEditorView({
                                         ) : (
                                           <BookOpenText size={15} />
                                         )}
-                                        <p className="text-xs uppercase tracking-[0.17em]">
+                                        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                           {blockTypes.find(
                                             (option) => option.value === block.type
                                           )?.label || block.type}

@@ -3,6 +3,11 @@
 import { Activity, Save, ShieldCheck } from "lucide-react";
 
 import ProgressionProfileEditorView from "@/components/studio/create/progression/progression-profile-editor/ProgressionProfileEditor.view";
+import {
+  SectionTitle,
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function FieldLabel({ children }) {
   return (
@@ -58,21 +63,16 @@ export default function ProgressionProfileBuilderView({
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
       <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
-          <Activity size={18} />
-          <p className="text-xs uppercase tracking-[0.22em]">
-            Progression Profile
-          </p>
-        </div>
-
-        <h2 className="mt-3 font-display text-4xl">
-          {title.trim() || "Untitled Progression Profile"}
-        </h2>
-        <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
-          Define reusable cumulative-experience thresholds and level tiers.
-          Actor experience, current level, and point balances remain isolated to
-          actor-owned runtime state.
-        </p>
+        <SectionTitle
+          eyebrow={
+            <>
+              <Activity size={18} />
+              Progression Profile
+            </>
+          }
+          title={title.trim() || "Untitled Progression Profile"}
+          body="Define reusable cumulative-experience thresholds and level tiers. Actor experience, current level, and point balances remain isolated to actor-owned runtime state."
+        />
 
         <div className="mt-5 rounded-xl border border-emerald-300/20 bg-emerald-300/5 p-4 text-sm text-emerald-100">
           <div className="flex items-start gap-3">
@@ -84,7 +84,7 @@ export default function ProgressionProfileBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-black/25 p-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
@@ -109,15 +109,12 @@ export default function ProgressionProfileBuilderView({
             />
           </div>
           <div>
-            <FieldLabel>Creation description</FieldLabel>
-            <textarea
-              rows={4}
+            <TextAreaField
+              label="Creation description"
               value={description}
-              onChange={(event) =>
-                onUpdateIdentity?.("description", event.target.value)
-              }
+              onChange={(value) => onUpdateIdentity?.("description", value)}
               placeholder="Describe where this progression curve is intended to be used."
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
           <div>
