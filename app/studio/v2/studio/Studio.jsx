@@ -7,9 +7,10 @@
 // creator (components/studio/create/character/creator-stops/),
 // imported read-only per docs/STUDIO-SPEC.md section 3.2 and NOT
 // modified by this brief; WorldCreatorModal, the five-stop creator
-// (components/studio/create/world/creator-stops/); and
-// LookCreatorModal, the five-stop creator this pass adds
-// (components/studio/create/look/creator-stops/). All three consume
+// (components/studio/create/world/creator-stops/); LookCreatorModal,
+// the five-stop creator (components/studio/create/look/creator-stops/);
+// and StoryCreatorModal, the five-stop creator this pass adds
+// (components/studio/create/story/creator-stops/). All four consume
 // CreatorStopsView, the same shared quick-create shape, directly. The
 // Shell owns each modal's own open/close boolean directly, the same
 // pattern as the legacy hub's CreationStudioExperience.jsx, because
@@ -25,6 +26,7 @@ import { useStudioViewModel } from "./studio/useStudioViewModel";
 import CharacterCreatorModal from "@/components/studio/create/character/creator-stops/CharacterCreatorModal";
 import WorldCreatorModal from "@/components/studio/create/world/creator-stops/WorldCreatorModal";
 import LookCreatorModal from "@/components/studio/create/look/creator-stops/LookCreatorModal";
+import StoryCreatorModal from "@/components/studio/create/story/creator-stops/StoryCreatorModal";
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -63,6 +65,7 @@ export default function Studio() {
   const [isCharacterCreatorOpen, setIsCharacterCreatorOpen] = useState(false);
   const [isWorldCreatorOpen, setIsWorldCreatorOpen] = useState(false);
   const [isLookCreatorOpen, setIsLookCreatorOpen] = useState(false);
+  const [isStoryCreatorOpen, setIsStoryCreatorOpen] = useState(false);
 
   const viewProps = useStudioViewModel({
     fixtureMode,
@@ -70,6 +73,7 @@ export default function Studio() {
     onOpenCharacterCreator: () => setIsCharacterCreatorOpen(true),
     onOpenWorldCreator: () => setIsWorldCreatorOpen(true),
     onOpenLookCreator: () => setIsLookCreatorOpen(true),
+    onOpenStoryCreator: () => setIsStoryCreatorOpen(true),
   });
 
   return (
@@ -103,11 +107,19 @@ export default function Studio() {
       ) : null}
 
       {isLookCreatorOpen ? (
-        // The Looks quick create, this pass's own brief
-        // (components/studio/create/look/creator-stops/): live-wired
-        // the same way CharacterCreatorModal and WorldCreatorModal
-        // are, mounted by the Shell, not the View.
+        // The Looks quick create (components/studio/create/look/
+        // creator-stops/): live-wired the same way
+        // CharacterCreatorModal and WorldCreatorModal are, mounted by
+        // the Shell, not the View.
         <LookCreatorModal onClose={() => setIsLookCreatorOpen(false)} />
+      ) : null}
+
+      {isStoryCreatorOpen ? (
+        // The Stories quick create, this pass's own brief
+        // (components/studio/create/story/creator-stops/): live-wired
+        // the same way the other three quick creates are, mounted by
+        // the Shell, not the View.
+        <StoryCreatorModal onClose={() => setIsStoryCreatorOpen(false)} />
       ) : null}
     </>
   );
