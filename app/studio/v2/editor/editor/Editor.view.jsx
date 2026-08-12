@@ -38,6 +38,8 @@ export default function EditorView({
   featuredImagePicker = null,
   loadError = null,
   harnessSlot = null,
+  isLoreDraftPreview = false,
+  imageLibraryHref = null,
 }) {
   const activeTab = activeSections.find((section) => section.id === activeSection);
   const seatSlot =
@@ -145,6 +147,14 @@ export default function EditorView({
       <div className="mt-[var(--space-5)] grid gap-[var(--space-5)] lg:grid-cols-[minmax(0,0.4fr)_minmax(0,1fr)]">
         <div className="min-w-0 space-y-[var(--space-4)] lg:self-start">
           {mediaPanel}
+          {imageLibraryHref ? (
+            <a
+              href={imageLibraryHref}
+              className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
+            >
+              Manage image library
+            </a>
+          ) : null}
           {showMechanicsQuickNav ? mechanicsQuickNav : null}
         </div>
 
@@ -153,6 +163,11 @@ export default function EditorView({
             {activeTab ? (
               <p className="mb-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                 {activeTab.label}
+              </p>
+            ) : null}
+            {isLoreDraftPreview ? (
+              <p className="mb-[var(--space-4)] inline-flex items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]">
+                Owner-only draft preview
               </p>
             ) : null}
             {sectionContent}

@@ -1,14 +1,27 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "1.1.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "1.2.0";
 
+// Version note, 1.1.0 -> 1.2.0 (additive, vault-edit-tree pass, 11 Aug
+// 2026): two optional props close two CR-007/CR-008 held rows the
+// classification found buildable. `isLoreDraftPreview` (boolean,
+// default false) shows an "Owner-only draft preview" badge above the
+// section content panel when the Binding Shell resolves the active
+// section to Lore's rehosted Public Preview (CSV row 839; the
+// standalone preview page's badge has no v2 equivalent otherwise).
+// `imageLibraryHref` (string|null, default null) renders a "Manage
+// image library" link beside the media panel, routing to the new
+// `/studio/v2/editor/[id]/image-library` page (CSV rows 409-421, 430).
+// Both are additive; every existing consumer is unaffected when
+// unset.
+//
 // Version note, 1.0.0 -> 1.1.0 (additive, RULED 11 Aug 2026): the back
-// control returns the person to the surface they entered from
-// (Studio hub quick-create, Vault popup edit), falling back to
-// /studio/v2/vault when no origin is known. Origin resolution is the
-// Binding Shell's business (`../Editor.jsx`), never the View's; the
-// View swaps the old `backAction` ReactNode slot for a plain
-// `backLabel` string and `onBack` callback so it stays presentation
-// only. The visible label is now the neutral "Back" (it previously
-// named a fixed destination, "← Vault").
+// control returns to the surface that opened the editor (Studio hub
+// quick-create, Vault popup edit), falling back to /studio/v2/vault
+// when no origin is known. Origin resolution is the Binding Shell's
+// business (`../Editor.jsx`), never the View's; the View swaps the
+// old `backAction` ReactNode slot for a plain `backLabel` string and
+// `onBack` callback so it stays presentation only. The visible label
+// is now the neutral "Back" (it previously named a fixed destination,
+// "← Vault").
 
 /**
  * Stable portable UI boundary for the advanced editor page View
@@ -86,6 +99,13 @@ export const EDITOR_VIEW_CONTRACT_VERSION = "1.1.0";
  *   authoring surface itself is part of `sectionContent`.
  * @property {string} backLabel
  * @property {() => void} onBack
+ * @property {boolean} [isLoreDraftPreview] Shows the owner-only draft
+ *   preview badge above the section content panel. Set by the
+ *   Binding Shell when `sectionContentProps.isLore` and the active
+ *   section is Lore's Public Preview. Default false.
+ * @property {string|null} [imageLibraryHref] When set, renders a
+ *   "Manage image library" link beside the media panel routing to
+ *   `/studio/v2/editor/[id]/image-library`. Default null (hidden).
  * @property {import("react").ReactNode} mediaPanel
  * @property {import("react").ReactNode} mechanicsQuickNav
  * @property {import("react").ReactNode} sectionContent

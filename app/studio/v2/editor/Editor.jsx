@@ -56,6 +56,20 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
     onToggleMobileNav,
   } = useEditorViewModel({ creationId });
 
+  // Vault-edit-tree pass, 11 Aug 2026: two rows (CSV 839, 409-421 +
+  // 430) close by composing already-built read-only surfaces rather
+  // than editing the forbidden creation-edit-shell lineage. Both
+  // derive from data the Shell already has (sectionContentProps.isLore
+  // and the [id] itself); the View stays a pure function of props.
+  const isLoreDraftPreview =
+    Boolean(sectionContentProps?.isLore) &&
+    sectionContentProps?.activeSection === "preview";
+  const imageLibraryHref = creationId
+    ? `/studio/v2/editor/${encodeURIComponent(creationId)}/image-library${
+        origin ? `?origin=${encodeURIComponent(origin)}` : ""
+      }`
+    : null;
+
   return (
     <EditorView
       {...viewProps}
@@ -65,6 +79,8 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
       onToggleMobileNav={onToggleMobileNav}
       backLabel="Back"
       onBack={() => router.push(backHref)}
+      isLoreDraftPreview={isLoreDraftPreview}
+      imageLibraryHref={imageLibraryHref}
       mediaPanel={<CreationEditMediaPanel {...mediaPanelProps} />}
       mechanicsQuickNav={
         <CreationEditMechanicsRuntimeQuickNav {...mechanicsQuickNavProps} />
