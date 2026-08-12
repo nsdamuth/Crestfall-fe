@@ -1,3 +1,5 @@
+import { CHARACTER_PREVIEW_TOKEN_COST } from "./useCharacterPreviewViewModel";
+
 export const characterPreviewDefaultFixture = {
   displayInitial: "S",
   characterName: "Seraphine Vale",
@@ -5,6 +7,7 @@ export const characterPreviewDefaultFixture = {
   speciesLabel: "Human",
   genderPresentationLabel: "Feminine",
   clothingStyleLabel: "Layered ceremonial tailoring",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 
 export const characterPreviewCustomIdentityFixture = {
@@ -14,6 +17,7 @@ export const characterPreviewCustomIdentityFixture = {
   speciesLabel: "Tideborn",
   genderPresentationLabel: "Androgynous",
   clothingStyleLabel: "Weathered expedition clothing",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 
 export const characterPreviewEmptyFixture = {
@@ -23,6 +27,7 @@ export const characterPreviewEmptyFixture = {
   speciesLabel: "Species not chosen yet.",
   genderPresentationLabel: "Gender presentation not chosen yet.",
   clothingStyleLabel: "Clothing style not chosen yet.",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 
 export const characterPreviewMissingCustomValuesFixture = {
@@ -32,6 +37,7 @@ export const characterPreviewMissingCustomValuesFixture = {
   speciesLabel: "Custom species not entered yet.",
   genderPresentationLabel: "Custom gender presentation not entered yet.",
   clothingStyleLabel: "Travel-worn leathers",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 
 export const characterPreviewConceptFallbackFixture = {
@@ -41,6 +47,7 @@ export const characterPreviewConceptFallbackFixture = {
   speciesLabel: "Human",
   genderPresentationLabel: "Masculine",
   clothingStyleLabel: "Simple archival robes",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 
 export const characterPreviewLongContentFixture = {
@@ -55,4 +62,5 @@ export const characterPreviewLongContentFixture = {
     "A fluid and ceremonial presentation described with intentionally extended copy",
   clothingStyleLabel:
     "Layered expedition silks, weatherproof ceremonial armor, engraved navigation tools, and a long mantle designed to stress wrapping behavior",
+  previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };

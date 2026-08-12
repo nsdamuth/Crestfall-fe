@@ -11,6 +11,8 @@
 // ratio is a package-local choice, not previously ruled, distinct
 // from the portrait creation-card, chosen to read as a compact tile
 // rather than an asset card.
+import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
+
 function stopAndRun(event, handler) {
   event.preventDefault();
   handler?.();
@@ -46,14 +48,8 @@ export default function KitDestinationTileView({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
-          <svg
-            viewBox="0 0 64 64"
-            aria-hidden="true"
-            className="h-[var(--space-8)] w-[var(--space-8)] text-[var(--ink-faint)]"
-          >
-            <use href="/assets/icons/icons-v7.svg#i-59" />
-          </svg>
+        <div className="absolute inset-0">
+          <KitArtPlaceholderView size="sm" />
         </div>
       )}
 

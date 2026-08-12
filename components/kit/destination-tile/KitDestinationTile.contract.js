@@ -1,4 +1,4 @@
-export const KIT_DESTINATION_TILE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_DESTINATION_TILE_VIEW_CONTRACT_VERSION = "1.0.1";
 
 /**
  * Stable portable UI boundary for the Home destination tile kit piece
@@ -20,6 +20,10 @@ export const KIT_DESTINATION_TILE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} supportingLine One short supporting line under the label.
  * @property {string|null} imageSrc Tile art. Null renders the no-art fallback surface.
  * @property {(() => void)|null} onOpen Routes outward on tap. Null is a safe no-op (fixture use only; Home always supplies a real callback).
+ *
+ * v1.0.1, RULED 11 Aug 2026 (Sprint H render review, item 5): the
+ * no-art fallback swaps its generic icon for the shared
+ * KitArtPlaceholder camellia mark. No prop change.
  */
 
 export {};

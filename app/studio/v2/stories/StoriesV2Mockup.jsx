@@ -14,13 +14,20 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
-import KitContinueRowView from "@/components/kit/promo-banner/KitContinueRow.view";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import { CheckSquare, Square } from "lucide-react";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import FixtureActionNotice from "../FixtureActionNotice";
+
+// First formal contract marker for this page, established at this
+// ruling (previously untracked). RULED 11 Aug 2026 (Sprint H render
+// review, item 1, CORRECTING the same-day Continue-group-density
+// ruling): no continue banner, no compact continue rows; in-progress
+// items render as normal creation cards in the Continue group's own
+// grid/list, CTA "Continue" (KitCreationCard v3.3.0 onContinue).
+export const STORIES_PAGE_CONTRACT_VERSION = "1.0.0";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -109,10 +116,12 @@ const SORT_OPTIONS = [
 
 const FIXTURE_MODES = {
   default: "Default",
-  // Continue group density, RULED 11 Aug 2026, SUPERSEDING the
-  // earlier banner-plus-rows treatment: a dedicated one-item state
-  // proves the single-row shape (no Show all control) as distinctly
-  // as the default four-item state proves three rows plus Show all.
+  // Continue group density, RULED 11 Aug 2026, CORRECTED: no continue
+  // banner and no compact continue rows. In-progress items render as
+  // normal creation cards in the Continue group's own grid/list; a
+  // dedicated one-item state proves the single-card shape (no Show
+  // all control) as distinctly as the default four-item state proves
+  // a full row plus Show all.
   singleContinue: "1 in progress",
   empty: "Empty",
   loading: "Loading",
@@ -443,8 +452,18 @@ export default function StoriesV2Mockup() {
     if (item.isCanon) {
       return activeVisibilityValues.includes("CANON") ? [] : [{ label: "Canon", variant: "canon" }];
     }
-    if (activeVisibilityValues.includes(item.visibility)) return [];
+    // Continue-group fixtures carry no visibility field (the compact
+    // row treatment never showed one); an unset visibility renders no
+    // badge rather than an undefined label.
+    if (!item.visibility || activeVisibilityValues.includes(item.visibility)) return [];
     return [{ label: VISIBILITY_LABELS[item.visibility], variant: "status" }];
+  }
+
+  function handleContinue(item) {
+    setActionNotice({
+      label: "Continue",
+      message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
+    });
   }
 
   // Shared with the card grid's new contextual third face action
@@ -542,25 +561,39 @@ export default function StoriesV2Mockup() {
 
         {fixtureMode !== "loading" && fixtureMode !== "error" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
-            {/* Continue group density, RULED 11 Aug 2026, SUPERSEDING
-                the earlier banner-plus-rows treatment: no hero
-                continue banner on this page, every in-progress item
-                renders as a compact row, most recent first, capped at
-                three with Show all revealing the rest. */}
+            {/* CORRECTED ruling, 11 Aug 2026: no hero continue banner,
+                no compact continue rows. In-progress items render as
+                normal creation cards, same grid/list collection shape
+                and view-mode toggle as the startable shelf below,
+                CTA "Continue" on every card. This group renders
+                first, above startable stories, most recent activity
+                first, capped at three with Show all revealing the
+                rest. */}
             <SectionLabel>Continue</SectionLabel>
-            <div className="flex flex-col gap-[var(--space-2)]">
+            <div
+              className={
+                layout === "grid"
+                  ? "grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4"
+                  : "grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2"
+              }
+            >
               {visibleContinueItems.map((item) => (
-                <KitContinueRowView
+                <KitCreationCardView
                   key={item.id}
+                  layout={layout}
+                  assetKind={item.kind}
                   title={item.title}
-                  lastPlayedLabel={`Last played ${item.lastPlayed} · ${KIND_LABELS[item.kind]}`}
+                  subtitle={KIND_LABELS[item.kind]}
                   imageSrc={item.imageSrc}
-                  onContinue={() =>
-                    setActionNotice({
-                      label: "Continue",
-                      message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
-                    })
-                  }
+                  badges={badgesFor(item)}
+                  stats={{ plays: null, hearts: null, saves: null, followers: null }}
+                  liked={likedIds.includes(item.id)}
+                  bookmarked={savedIds.includes(item.id)}
+                  onOpenImageOverlay={() => setAssetDetailId(item.id)}
+                  onOpenAssetDetail={() => setAssetDetailId(item.id)}
+                  onLike={() => toggleLiked(item.id)}
+                  onBookmark={() => toggleSaved(item.id)}
+                  onContinue={() => handleContinue(item)}
                 />
               ))}
             </div>

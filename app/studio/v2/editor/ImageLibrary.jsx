@@ -1,10 +1,14 @@
 "use client";
 
 // Binding Shell (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape). Owns
-// Next.js navigation and composes the existing, read-only
-// `CreationImageLibraryPage` (components/studio/my-creations/image-library/**,
-// NOT edited by this brief) into a ReactNode slot, exactly the way
-// ../Editor.jsx composes the rest of the creation-edit-shell lineage.
+// Next.js navigation and composes the existing `CreationImageLibraryPage`
+// (components/studio/my-creations/image-library/**) into a ReactNode
+// slot, exactly the way ../Editor.jsx composes the rest of the
+// creation-edit-shell lineage. RULED 11 Aug 2026 (Sprint H render
+// review, item 4): showBackLink={false} removes that package's own
+// inner "Back to editor" control (it routed to the legacy
+// /studio/my-creations/[id]/edit address), leaving this page's
+// origin-aware Back below as the only back path.
 import { useRouter, useSearchParams } from "next/navigation";
 
 import CreationImageLibraryPage from "@/components/studio/my-creations/image-library/CreationImageLibraryPage";
@@ -24,7 +28,9 @@ export default function ImageLibrary({ creationId, originOverride }) {
       creationId={creationId}
       backLabel="Back to editor"
       onBack={() => router.push(backHref)}
-      libraryPanel={<CreationImageLibraryPage creationId={creationId} />}
+      libraryPanel={
+        <CreationImageLibraryPage creationId={creationId} showBackLink={false} />
+      }
     />
   );
 }

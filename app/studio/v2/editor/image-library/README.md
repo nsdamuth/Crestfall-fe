@@ -1,6 +1,6 @@
 # Image Library LOOM package (v2 wrapper)
 
-**Contract:** `ImageLibrary.contract.js` (v1.0.0)
+**Contract:** `ImageLibrary.contract.js` (v1.1.0)
 
 ## Purpose
 
@@ -38,21 +38,19 @@ image-library/
   README.md
 ```
 
-## Known, composed-around limitation
+## Double back control, FIXED 11 Aug 2026 (Sprint H render review, item 4)
 
-`CreationImageLibraryPage`'s own internal "Back to editor" link and
-`imageStudioHref` are hardcoded inside its forbidden Chassis hook
-(`useCreationImageLibraryPageViewModel.js:492-493`) to the legacy
-`/studio/my-creations/[id]/edit` and `/studio/image-studio` addresses.
-This package cannot override them without editing that file, which is
-outside `app/studio/v2/vault/**`, `app/studio/v2/editor/**`, and their
-preview mirrors. This wrapper adds its OWN correct "Back to editor"
-control (routing to `/studio/v2/editor/[id]`) above the composed
-panel; the legacy panel's own internal back link is unchanged and
-still points at the old address. Two back-navigation controls appear
-on the page as a result; this is a known, logged limitation of
-composing a read-only package, not a design choice, and is not fixed
-this pass.
+`CreationImageLibraryPage`'s own internal "Back to editor" link
+routed to the legacy `/studio/my-creations/[id]/edit` address
+(`useCreationImageLibraryPageViewModel.js`), duplicating this
+wrapper's own origin-aware "Back to editor" control. This pass's
+ruling authorized editing that legacy package as the fix: it gained
+an additive optional `showBackLink` prop (default `true`, unchanged
+for its own `/studio/my-creations/[id]/image-library` caller), and
+`../ImageLibrary.jsx` now passes `showBackLink={false}` when
+composing it here. Only this wrapper's own "Back to editor" (routing
+to `/studio/v2/editor/[id]`) renders on this page now.
+`imageStudioHref` is untouched (out of this item's scope).
 
 ## Reached from
 

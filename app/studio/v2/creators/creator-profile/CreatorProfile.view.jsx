@@ -228,6 +228,14 @@ function DonateModal({
   );
 }
 
+// RULED 11 Aug 2026 (Sprint H render review, item 6): Works is an
+// honest in-page destination (the Creations grid rendered below on
+// this same page), scrolled to rather than navigated to. No Chassis
+// callback needed, contained entirely in this View.
+function scrollToWorks() {
+  document.getElementById("creator-profile-works")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export default function CreatorProfileView({
   displayName = "",
   handle = "",
@@ -237,6 +245,7 @@ export default function CreatorProfileView({
   engagement = {},
   onOpenFollowers = null,
   onOpenFollowing = null,
+  onOpenPlays = null,
   workItems = [],
   worksEmptyMessage = null,
   worksLoadMore,
@@ -336,8 +345,18 @@ export default function CreatorProfileView({
                     onClick={onOpenFollowing}
                     accessibleName="View following"
                   />
-                  <StatTile label="Plays" value={stats?.plays} />
-                  <StatTile label="Works" value={stats?.works} />
+                  <StatTile
+                    label="Plays"
+                    value={stats?.plays}
+                    onClick={onOpenPlays}
+                    accessibleName="View plays"
+                  />
+                  <StatTile
+                    label="Works"
+                    value={stats?.works}
+                    onClick={scrollToWorks}
+                    accessibleName="Jump to creations"
+                  />
                 </div>
               </div>
 
@@ -372,7 +391,7 @@ export default function CreatorProfileView({
               </div>
             </div>
 
-            <div className="flex flex-col gap-[var(--space-4)]">
+            <div id="creator-profile-works" className="flex flex-col gap-[var(--space-4)] scroll-mt-[var(--space-6)]">
               <SectionLabel>Creations</SectionLabel>
               {worksEmptyMessage ? (
                 <EmptySection message={worksEmptyMessage} />
