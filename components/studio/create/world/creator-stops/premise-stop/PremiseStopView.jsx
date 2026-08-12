@@ -3,9 +3,9 @@
 import { Eyebrow, FoldingTextField } from "../shared/Controls";
 import { WORLD_FIELD_LIMITS } from "../WorldCreatorStops.contract";
 
-export default function EssenceStopView({
-  essence = "",
-  onChangeEssence = null,
+export default function PremiseStopView({
+  premise = "",
+  onChangePremise = null,
 } = {}) {
   return (
     <>
@@ -19,11 +19,11 @@ export default function EssenceStopView({
 
       <div className="mt-6">
         <FoldingTextField
-          label="Essence or premise"
-          value={essence}
-          onChange={onChangeEssence}
+          label="Premise"
+          value={premise}
+          onChange={onChangePremise}
           placeholder="A drowned coastal city ruled by a council of merchant houses, one generation past a war nobody won."
-          maxLength={WORLD_FIELD_LIMITS.essence}
+          maxLength={WORLD_FIELD_LIMITS.premise}
         />
       </div>
     </>

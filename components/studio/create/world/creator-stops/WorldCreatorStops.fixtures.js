@@ -27,7 +27,7 @@ export const worldCreatorStopsEmptyFixture = buildFixture("name");
 
 export const EMPTY_WORLD_FORM_STATE = {
   name: "",
-  essence: "",
+  premise: "",
   setting: "",
   tone: "",
 };
@@ -41,7 +41,7 @@ export const worldCreatorStopsFilledFixture = buildFixture("look", {
 
 export const FILLED_WORLD_FORM_STATE = {
   name: "Crestfall",
-  essence:
+  premise:
     "A drowned coastal city ruled by a council of merchant houses, one generation past a war nobody won.",
   setting: "Gaslamp fantasy, flooded archipelago",
   tone: "Wry and weary. Grand ruins, small people, gallows humor.",
@@ -49,7 +49,7 @@ export const FILLED_WORLD_FORM_STATE = {
 
 // Mid-flow saved: a confirmed save from a non-final stop, the Saved
 // confirmation only, the rest of the footer unchanged.
-export const worldCreatorStopsMidSavedFixture = buildFixture("essence", {
+export const worldCreatorStopsMidSavedFixture = buildFixture("premise", {
   justSaved: true,
 });
 

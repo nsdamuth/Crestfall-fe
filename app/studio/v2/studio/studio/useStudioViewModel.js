@@ -23,6 +23,15 @@ import {
   STUDIO_BOTTOM_BANNER,
 } from "./studioContent.mock";
 
+// Door id -> the opener prop it calls when live, RULED (this pass,
+// replaces the door.id if/else branch): data, not branches. A third
+// and fourth live door drop in as one row here plus one new opener
+// prop on the hook's own signature; no new conditional is added.
+const DOOR_OPENER_PROP_BY_ID = {
+  character: "onOpenCharacterCreator",
+  location: "onOpenWorldCreator",
+};
+
 // docs/STUDIO-SPEC.md section 8.1 names three fixture states (default,
 // empty, longest content). This hub has no user-owned data list to
 // vary in count, so the three states are mapped onto the ladder's own
@@ -44,20 +53,20 @@ export function useStudioViewModel({ fixtureMode = "default", onNavigate = null,
     openNotice(label, `${label} isn't built yet. This door will open its own creator once it exists.`);
   }
 
-  // Each live door opens its own creator; door.id, not just door.isLive,
-  // picks which one now that Character and Worlds are both live.
-  const doors = useMemo(
-    () =>
-      STUDIO_DOORS.map((door) => ({
-        ...door,
-        onOpen: !door.isLive
-          ? () => openSoon(door.label)
-          : door.id === "location"
-            ? () => onOpenWorldCreator?.()
-            : () => onOpenCharacterCreator?.(),
-      })),
-    [onOpenCharacterCreator, onOpenWorldCreator]
-  );
+  // Each live door opens its own creator, looked up by door.id in
+  // DOOR_OPENER_PROP_BY_ID against this hook's own opener props.
+  const doors = useMemo(() => {
+    const openerByPropName = { onOpenCharacterCreator, onOpenWorldCreator };
+
+    return STUDIO_DOORS.map((door) => {
+      if (!door.isLive) {
+        return { ...door, onOpen: () => openSoon(door.label) };
+      }
+
+      const opener = openerByPropName[DOOR_OPENER_PROP_BY_ID[door.id]];
+      return { ...door, onOpen: () => opener?.() };
+    });
+  }, [onOpenCharacterCreator, onOpenWorldCreator]);
 
   const toolGroups = useMemo(
     () =>

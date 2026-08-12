@@ -6,12 +6,12 @@ import { Eyebrow } from "../shared/Controls";
 
 export default function LookStopView({
   name = "",
-  essence = "",
+  premise = "",
   setting = "",
   tone = "",
 } = {}) {
   const previewProps = useWorldPreviewViewModel({
-    form: { name, essence, setting, tone },
+    form: { name, premise, setting, tone },
   });
 
   return (

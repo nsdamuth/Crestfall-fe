@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 // The shared quick-create shape, consumed directly per the brief: do
 // not fork or reimplement it. Same modal shell, stepper, discard
 // dialog, and save-and-reaccess loop footer the Character quick
-// create uses (contract creator-stops.view.v3).
+// create uses (contract creator-stops.view.v4).
 import CreatorStopsView from "@/components/studio/create/character/creator-stops/CreatorStops.view";
 import {
   createCreationDraft,
@@ -15,14 +15,14 @@ import {
 } from "@/lib/client/studio/creations/creationClient";
 import { buildWorldStopItems, WORLD_STOP_IDS } from "./WorldCreatorStops.contract";
 import NameStopView from "./name-stop/NameStopView";
-import EssenceStopView from "./essence-stop/EssenceStopView";
+import PremiseStopView from "./premise-stop/PremiseStopView";
 import SettingStopView from "./setting-stop/SettingStopView";
 import ToneStopView from "./tone-stop/ToneStopView";
 import LookStopView from "./look-stop/LookStopView";
 
 const INITIAL_FORM_STATE = {
   name: "",
-  essence: "",
+  premise: "",
   setting: "",
   tone: "",
 };
@@ -40,7 +40,7 @@ function buildSaveCreationPayload(formState) {
     type: "LOCATION",
     title: name,
     description:
-      formState.essence || formState.setting || "A private draft world created in Crestfall Studio.",
+      formState.premise || formState.setting || "A private draft world created in Crestfall Studio.",
     visibility: "PRIVATE",
     content_rating: "SFW",
     data: {
@@ -218,10 +218,10 @@ export default function WorldCreatorModal({ onClose }) {
       stopContent={
         activeStop === "name" ? (
           <NameStopView name={formState.name} onChangeName={updateField("name")} />
-        ) : activeStop === "essence" ? (
-          <EssenceStopView
-            essence={formState.essence}
-            onChangeEssence={updateField("essence")}
+        ) : activeStop === "premise" ? (
+          <PremiseStopView
+            premise={formState.premise}
+            onChangePremise={updateField("premise")}
           />
         ) : activeStop === "setting" ? (
           <SettingStopView
@@ -233,7 +233,7 @@ export default function WorldCreatorModal({ onClose }) {
         ) : activeStop === "look" ? (
           <LookStopView
             name={formState.name}
-            essence={formState.essence}
+            premise={formState.premise}
             setting={formState.setting}
             tone={formState.tone}
           />

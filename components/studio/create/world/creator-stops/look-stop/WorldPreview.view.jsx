@@ -7,12 +7,14 @@ import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceh
 // Mirrors CharacterPreviewView (components/studio/create/character/
 // character-preview/CharacterPreview.view.jsx): empty art slots render
 // the shared camellia mark, never a blank box; preview generation
-// never fires without a tap, exact CTA pattern "Generate preview, X
-// tokens".
+// never fires without a tap. CTA separator, RULED correction (this
+// pass, withdraws the prior comma): the house middot, matching
+// Character's own string character for character, "Generate preview
+// · X tokens".
 export default function WorldPreviewView({
   displayInitial = "W",
   worldName = "Unnamed World",
-  essenceLabel = "Premise not written yet.",
+  premiseLabel = "Premise not written yet.",
   settingLabel = "Setting not chosen yet.",
   toneLabel = "Tone not set yet.",
   previewCostLabel = "40",
@@ -43,7 +45,7 @@ export default function WorldPreviewView({
                   onClick={() => setHasGenerated(true)}
                   className="cf-btn cf-btn--primary w-full text-sm"
                 >
-                  {`Generate preview, ${previewCostLabel} tokens`}
+                  {`Generate preview · ${previewCostLabel} tokens`}
                 </button>
               </div>
             </>
@@ -58,7 +60,7 @@ export default function WorldPreviewView({
           </p>
 
           <div className="mt-5 space-y-2 text-sm leading-6 text-[var(--ink-dim)]">
-            <p>{essenceLabel}</p>
+            <p>{premiseLabel}</p>
             <p>{settingLabel}</p>
             <p>{toneLabel}</p>
           </div>

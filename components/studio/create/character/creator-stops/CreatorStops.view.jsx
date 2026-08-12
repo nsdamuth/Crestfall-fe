@@ -2,9 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import {
+  BookOpen,
+  Compass,
   Fingerprint,
   Heart,
   ImageIcon,
+  Palette,
   ShieldCheck,
   SmilePlus,
   User,
@@ -21,6 +24,13 @@ const STOP_ICONS = {
   heart: Heart,
   seal: ShieldCheck,
   payoff: ImageIcon,
+  // Additive, RULED (this pass, world-quick-create fixes): the Worlds
+  // quick create's non-"name" stop ids. Character's own icons above
+  // are unchanged.
+  premise: BookOpen,
+  setting: Compass,
+  tone: Palette,
+  look: ImageIcon,
 };
 
 export default function CreatorStopsView({

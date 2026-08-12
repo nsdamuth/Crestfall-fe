@@ -16,7 +16,7 @@ import {
   FILLED_WORLD_FORM_STATE,
 } from "@/components/studio/create/world/creator-stops/WorldCreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/world/creator-stops/name-stop/NameStopView";
-import EssenceStopView from "@/components/studio/create/world/creator-stops/essence-stop/EssenceStopView";
+import PremiseStopView from "@/components/studio/create/world/creator-stops/premise-stop/PremiseStopView";
 import SettingStopView from "@/components/studio/create/world/creator-stops/setting-stop/SettingStopView";
 import ToneStopView from "@/components/studio/create/world/creator-stops/tone-stop/ToneStopView";
 import LookStopView from "@/components/studio/create/world/creator-stops/look-stop/LookStopView";
@@ -194,10 +194,10 @@ export default function WorldCreatorStopsPreviewClient() {
           stopContent={
             activeStop === "name" ? (
               <NameStopView name={formState.name} onChangeName={updateField("name")} />
-            ) : activeStop === "essence" ? (
-              <EssenceStopView
-                essence={formState.essence}
-                onChangeEssence={updateField("essence")}
+            ) : activeStop === "premise" ? (
+              <PremiseStopView
+                premise={formState.premise}
+                onChangePremise={updateField("premise")}
               />
             ) : activeStop === "setting" ? (
               <SettingStopView
@@ -209,7 +209,7 @@ export default function WorldCreatorStopsPreviewClient() {
             ) : activeStop === "look" ? (
               <LookStopView
                 name={formState.name}
-                essence={formState.essence}
+                premise={formState.premise}
                 setting={formState.setting}
                 tone={formState.tone}
               />
