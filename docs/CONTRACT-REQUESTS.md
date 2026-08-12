@@ -66,7 +66,7 @@ the details below carry only what is still actionable.
 | CR-037 | Community creation tags | The restored `KitAssetDetailPopup` tags row (`docs/PARITY-AUDIT.md` section 5, candidate 6) has no tag data on any `/studio/v2/community` fixture creation; the row renders and works but is empty on every real card today | open | Nick | non-blocking; filed 11 Aug 2026 by the design/community-parity branch |
 | CR-038 | Community and Vault five-bucket type filter grouping | Community and Vault type filters present a five-bucket display grouping (Characters, Worlds, Looks, Stories, Adventures) over the backend's raw creation types; the frontend owns this mapping today in display code | open | Nick | dev awareness only; presentation-layer mapping, no backend change required unless dev prefers to serve grouped types; ruled by Brian 11 Aug 2026 |
 | CR-039 | STORYLINE display name is Adventure platform-wide | Ruled by Brian 11 Aug 2026: the user-facing name for STORYLINE is Adventure everywhere on the platform, implemented as display mapping via the terminology module | open | Nick | non-blocking; does not duplicate CR-025, which already carries the backend rename request; see CR-025 |
-| CR-041 | Long-form field character limits | The frontend now enforces two display-layer character-limit classes on every long-form field in the advanced editor: 600 for short long-form (a line or short paragraph), 2,000 for deep long-form (extended writing), per the mapping in `SharedFields.jsx` and its consuming sections | open | Nick | non-blocking; display-layer ruling pending Nick's confirmation against the backend data model, not a backend change request |
+| CR-041 | Long-form field character limits | The frontend now enforces two display-layer character-limit classes on every long-form field in the advanced editor: 600 for short long-form (a line or short paragraph), 2,000 for deep long-form (extended writing), per the mapping in `SharedFields.jsx` and its consuming sections. Reach extended Sprint H (CC1 through CC4, SF1) to every advanced-editor package; six fields keep a real contract-validated limit above their tier, flagged for reconciliation | open | Nick | non-blocking; display-layer ruling pending Nick's confirmation against the backend data model, not a backend change request |
 | CR-042 | Server-side filter, sort, and search for list pages | Every list page filters/sorts one full in-memory fixture array client-side; needs server-side filter, sort, and search so the client keeps only the current slice resident and load-more requests the next slice by the same params | open | Nick | non-blocking; the true scale ceiling per Scale Review H finding B2, not a regression, the known shape of the pre-parity fixture-driven build |
 
 ## Details
@@ -566,6 +566,30 @@ blocking. Needed from Nick: confirm these two ceilings are compatible
 with each field's stored column, and flag any field whose column
 cannot hold 2,000 characters or whose real backend limit is lower
 than what the frontend now allows.
+
+**Reach extended, Sprint H creator-completion sitting (CC1 through
+CC4, SF1).** The two-class mapping now covers every advanced-editor
+package touched this sitting: CC2's 9 unified mechanics-modal call
+sites plus 8 mechanics textareas, all SHORT (600); CC3's
+location-registry (27 textarea sites) and structured-registry (14
+textarea sites) builders, mapped 600/2000 by field kin, neither
+package carrying a pre-existing contract limit to reconcile against;
+CC1's rules-codex, lore, actor-mechanics-profile, and progression
+packages; and SF1's five stats-pools-editor fields, converted once
+`TextAreaField` gained the `disabled` prop the editor's lock state
+needed. The five `JsonEditorModal` views across these packages stay
+JSON-exempt (raw JSON, unlimited, not display-layer prose).
+
+**Reconciliation items.** Six fields keep a real, contract-validated
+limit above their CR-041 tier rather than being forced down to it:
+rules-codex's Codex Summary (2,000, matches the DEEP tier exactly)
+and Interpretive Guidance (8,000, well above DEEP); actor-mechanics-
+profile's Profile Summary (2,400), Capability Notes (4,000), and
+Binding Notes (4,000); and stats-pools' own real-limit fields per SF1
+(2,400/2,400/4,000). Needed from Nick: confirm whether these six
+should stay at their real limit (this sitting's assumption, since a
+real validated limit outranks a display-layer default) or fold down
+to the nearest CR-041 tier once the backend column sizes are known.
 
 ### CR-042, Server-side filter, sort, and search for list pages
 
