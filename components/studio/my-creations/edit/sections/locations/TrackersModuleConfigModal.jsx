@@ -13,6 +13,11 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import {
+  ReadOnlyField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../SharedFields";
 
 const TRACKERS_MODULE_ID = "core.trackers.v1";
 const TRACKERS_INSTANCE_DATA_VERSION = "trackers_instance_data.v0_1";
@@ -561,6 +566,7 @@ export default function TrackersModuleConfigModal({
 }) {
   const [form, setForm] = useState(() => buildInitialForm(trackersBinding));
   const [message, setMessage] = useState("");
+  const [messageTone, setMessageTone] = useState("success");
 
   const trackerOptions = useMemo(
     () =>
@@ -626,6 +632,7 @@ export default function TrackersModuleConfigModal({
         trackers: [...form.trackers, buildStarterTracker(form.trackers)],
     });
     setMessage("Meter field added.");
+    setMessageTone("success");
     }
 
   function addPhase(trackerIndex) {
@@ -783,6 +790,7 @@ export default function TrackersModuleConfigModal({
       ],
     });
     setMessage("Guard / gate added.");
+    setMessageTone("success");
   }
 
   function updateGuard(index, patch) {
@@ -862,6 +870,7 @@ export default function TrackersModuleConfigModal({
       guards: [],
     });
     setMessage("Mechanics cleared.");
+    setMessageTone("success");
   }
 
   function buildBindingPatch() {
@@ -887,8 +896,10 @@ export default function TrackersModuleConfigModal({
         bindingPatch: buildBindingPatch(),
       });
       setMessage("Mechanics module configured. Save the Location to persist the binding.");
+      setMessageTone("success");
     } catch (error) {
       setMessage(error.message || "Mechanics module could not be saved.");
+      setMessageTone("error");
     }
   }
 
@@ -926,9 +937,24 @@ export default function TrackersModuleConfigModal({
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
           {message ? (
-            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              {message}
-            </p>
+            <span
+              role={messageTone === "error" ? "alert" : undefined}
+              aria-live="polite"
+              className={`mb-5 inline-flex items-center gap-[var(--space-1)] rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[length:var(--text-label)] leading-[var(--lh-label)] ${
+                messageTone === "error"
+                  ? "text-[var(--status-danger)]"
+                  : "text-[var(--status-success)]"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 flex-none rounded-full ${
+                  messageTone === "error"
+                    ? "bg-[var(--status-danger)]"
+                    : "bg-[var(--status-success)]"
+                }`}
+              />
+              <span className="inline">{message}</span>
+            </span>
           ) : null}
 
           <div className="grid gap-5">
@@ -1232,9 +1258,9 @@ function TrackerCard({
 
         <TextAreaField
           label="Field Summary / Composer Cue"
-          value={tracker.summary}
+          value={tracker.summary || ""}
           onChange={(value) => onUpdate({ summary: value })}
-          rows={3}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <Subsection
@@ -1289,11 +1315,11 @@ function TrackerCard({
 
                 <TextAreaField
                   label="Phase Composer Guidance"
-                  value={phase.composerGuidance}
+                  value={phase.composerGuidance || ""}
                   onChange={(value) =>
                     onUpdatePhase(phaseIndex, { composerGuidance: value })
                   }
-                  rows={2}
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
                 />
               </div>
             ))}
@@ -1373,9 +1399,9 @@ function HintCard({
 
       <TextAreaField
         label="Reason"
-        value={hint.reason}
+        value={hint.reason || ""}
         onChange={(value) => onUpdate({ reason: value })}
-        rows={2}
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
 
       <div className="mt-4 grid gap-3 md:grid-cols-4">
@@ -1613,9 +1639,9 @@ function GuardCard({
 
         <TextAreaField
           label="Summary"
-          value={guard.summary}
+          value={guard.summary || ""}
           onChange={(value) => onUpdate({ summary: value })}
-          rows={2}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <Subsection
@@ -1648,7 +1674,7 @@ function GuardCard({
                 },
               })
             }
-            rows={3}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
 
           <TextAreaField
@@ -1661,7 +1687,7 @@ function GuardCard({
                 },
               })
             }
-            rows={3}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>
@@ -1780,27 +1806,6 @@ function NumberField({ label, value, onChange, placeholder }) {
   );
 }
 
-function TextAreaField({ label, value, onChange, rows = 5, helperText }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <textarea
-        value={value ?? ""}
-        onChange={(event) => onChange(event.target.value)}
-        rows={rows}
-        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-      />
-      {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
-          {helperText}
-        </span>
-      ) : null}
-    </label>
-  );
-}
-
 function SelectField({ label, value, options, onChange }) {
   return (
     <label className="block">
@@ -1858,19 +1863,6 @@ function CheckboxField({ label, checked, onChange }) {
       />
       <span>{label}</span>
     </label>
-  );
-}
-
-function ReadOnlyField({ label, value }) {
-  return (
-    <div>
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
-        {value || "Not set"}
-      </div>
-    </div>
   );
 }
 

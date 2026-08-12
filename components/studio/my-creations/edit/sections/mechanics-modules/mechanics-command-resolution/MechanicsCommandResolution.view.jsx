@@ -2,6 +2,9 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -59,7 +62,7 @@ function ModifierList({
     <div className="rounded-xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {title}
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -81,7 +84,7 @@ function ModifierList({
               className="rounded-xl border border-white/10 bg-black/35 p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+                <p className={EYEBROW_CLASS}>
                   Fixed Modifier {modifierIndex + 1}
                 </p>
                 <button
@@ -160,7 +163,7 @@ function ModifierSourceCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Authoritative Source {sourceIndex + 1}
         </p>
         <button
@@ -355,7 +358,7 @@ function ModifierSourceCard({
         ) : null}
 
         <div className="rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Numeric Transform
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -486,7 +489,7 @@ function ModifierSourceList({
     <div className="rounded-xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {title}
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -561,7 +564,7 @@ export default function MechanicsCommandResolutionView({
     <section className="rounded-xl border border-white/10 bg-black/20 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Resolution
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -571,7 +574,7 @@ export default function MechanicsCommandResolutionView({
       </div>
 
       <div className="mt-4 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Reference Configuration
         </p>
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -626,7 +629,7 @@ export default function MechanicsCommandResolutionView({
       {isRolling ? (
         <div className="mt-4 grid gap-4">
           <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Actor Check
             </p>
 
@@ -751,7 +754,7 @@ export default function MechanicsCommandResolutionView({
 
           {resolution.mode === "OPPOSED_DIE" ? (
             <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 Opposition Check
               </p>
 

@@ -2,6 +2,9 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
@@ -65,7 +68,7 @@ function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
   return (
     <article className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           {bucket.singularLabel} {entryIndex + 1}
         </p>
         <button
@@ -113,7 +116,7 @@ function DefaultsBucket({ bucket, entries, onAdd, onPatch, onRemove }) {
     <div className="rounded-xl border border-white/10 bg-black/20 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {bucket.title}
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -159,7 +162,7 @@ export default function MechanicsDefaultsView({
     <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">

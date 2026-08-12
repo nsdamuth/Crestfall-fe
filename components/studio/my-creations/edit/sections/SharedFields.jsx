@@ -63,6 +63,7 @@ export function TextAreaField({
   onChange = () => {},
   placeholder,
   maxLength,
+  helperText,
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const rows = isFocused ? TEXTAREA_ROWS_EXPANDED : TEXTAREA_ROWS_COLLAPSED;
@@ -89,6 +90,11 @@ export function TextAreaField({
         maxLength={maxLength || undefined}
         className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
+      {helperText ? (
+        <span className="mt-1 block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          {helperText}
+        </span>
+      ) : null}
     </label>
   );
 }

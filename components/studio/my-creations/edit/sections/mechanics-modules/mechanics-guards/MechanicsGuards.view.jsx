@@ -11,6 +11,13 @@ import {
   MECHANICS_GUARD_OPERATORS,
   MECHANICS_GUARD_PUBLIC_VISIBILITIES,
 } from "./MechanicsGuards.contract.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function valueToInput(value) {
   if (value === null || value === undefined) return "";
@@ -56,7 +63,7 @@ function GuardConditionCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Condition {conditionIndex + 1}
         </p>
         <button
@@ -154,7 +161,7 @@ function GuardCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Guard
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
@@ -279,7 +286,7 @@ function GuardCard({
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 Conditions
               </p>
               <SmallActionButton onClick={() => addCondition(guardIndex)}>
@@ -312,56 +319,41 @@ function GuardCard({
           </div>
 
           <div className="mt-5 grid gap-4">
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                On Fail Summary
-              </span>
-              <textarea
-                value={guard.onFail.summary}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onFail: { summary: event.target.value },
-                  })
-                }
-                rows={2}
-                placeholder="The player has reached too many boundary warnings."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Fail Summary"
+              value={guard.onFail.summary}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onFail: { summary: value },
+                })
+              }
+              placeholder="The player has reached too many boundary warnings."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
 
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                On Fail Composer Guidance
-              </span>
-              <textarea
-                value={guard.onFail.composerGuidance}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onFail: { composerGuidance: event.target.value },
-                  })
-                }
-                rows={3}
-                placeholder="Do not continue warm, intimate, trusting, or emotionally escalating content."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Fail Composer Guidance"
+              value={guard.onFail.composerGuidance}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onFail: { composerGuidance: value },
+                })
+              }
+              placeholder="Do not continue warm, intimate, trusting, or emotionally escalating content."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
 
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                On Pass Summary
-              </span>
-              <textarea
-                value={guard.onPass.summary}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onPass: { summary: event.target.value },
-                  })
-                }
-                rows={2}
-                placeholder="Boundary warning count is below the lock threshold."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Pass Summary"
+              value={guard.onPass.summary}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onPass: { summary: value },
+                })
+              }
+              placeholder="Boundary warning count is below the lock threshold."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
           </div>
         </div>
       ) : null}
@@ -383,7 +375,7 @@ export default function MechanicsGuardsView({
     <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">Guards</h3>

@@ -3,6 +3,9 @@
 import { useMemo, useState } from "react";
 import { Activity, Search, X } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function MechanicsModuleCard({ item, onChooseModule }) {
   return (
     <button
@@ -16,7 +19,7 @@ function MechanicsModuleCard({ item, onChooseModule }) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {item?.sourceLabel || "Mechanics Module"}
           </p>
 
@@ -135,7 +138,7 @@ export default function MechanicsModulePickerModalView({
       <div className="max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               {eyebrow}
             </p>
 

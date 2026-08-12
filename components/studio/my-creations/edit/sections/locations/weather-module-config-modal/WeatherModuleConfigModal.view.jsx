@@ -1,4 +1,9 @@
 import { CloudSun, Loader2, Plus, Save, Trash2, X } from "lucide-react";
+import {
+  ReadOnlyField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
 export default function WeatherModuleConfigModalView({
   isInitializing = false,
@@ -7,6 +12,7 @@ export default function WeatherModuleConfigModalView({
   title = "Configure In-World Weather",
   description = "",
   message = "",
+  messageTone = "success",
   moduleTitle = "",
   priority = "45",
   moduleDescription = "",
@@ -90,9 +96,24 @@ export default function WeatherModuleConfigModalView({
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
           {message ? (
-            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              {message}
-            </p>
+            <span
+              role={messageTone === "error" ? "alert" : undefined}
+              aria-live="polite"
+              className={`mb-5 inline-flex items-center gap-[var(--space-1)] rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[length:var(--text-label)] leading-[var(--lh-label)] ${
+                messageTone === "error"
+                  ? "text-[var(--status-danger)]"
+                  : "text-[var(--status-success)]"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 flex-none rounded-full ${
+                  messageTone === "error"
+                    ? "bg-[var(--status-danger)]"
+                    : "bg-[var(--status-success)]"
+                }`}
+              />
+              <span className="inline">{message}</span>
+            </span>
           ) : null}
 
           <div className="grid gap-5">
@@ -116,7 +137,7 @@ export default function WeatherModuleConfigModalView({
                     label="Description"
                     value={moduleDescription}
                     onChange={onModuleDescriptionChange}
-                    rows={3}
+                    maxLength={SHORT_LONGFORM_MAX_LENGTH}
                   />
                 </div>
 
@@ -374,7 +395,7 @@ function WeatherConditionCard({ condition }) {
           label="Sensory Notes"
           value={condition.sensoryNotesText}
           onChange={condition.onSensoryNotesChange}
-          rows={5}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           helperText="Use lines like Sight: ..., Sound: ..., Touch: ..., Smell: ..."
         />
 
@@ -382,7 +403,7 @@ function WeatherConditionCard({ condition }) {
           label="Composer Guidance"
           value={condition.composerGuidance}
           onChange={condition.onComposerGuidanceChange}
-          rows={5}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           helperText="Short guidance for how this weather should appear in scenes."
         />
       </div>
@@ -417,33 +438,6 @@ function TextField({ label, value = "", onChange, placeholder }) {
         placeholder={placeholder}
         className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
-    </label>
-  );
-}
-
-function TextAreaField({
-  label,
-  value = "",
-  onChange,
-  rows = 5,
-  helperText,
-}) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <textarea
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        rows={rows}
-        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-      />
-      {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
-          {helperText}
-        </span>
-      ) : null}
     </label>
   );
 }
@@ -483,15 +477,3 @@ function CheckboxField({ label, checked = false, onChange }) {
   );
 }
 
-function ReadOnlyField({ label, value }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
-        {value || "Not set"}
-      </div>
-    </label>
-  );
-}

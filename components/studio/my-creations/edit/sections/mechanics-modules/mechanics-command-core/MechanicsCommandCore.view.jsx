@@ -8,6 +8,13 @@ import {
   COMMAND_PRESENTATION_MODES,
   COMMAND_RESULT_VISIBILITIES,
 } from "./MechanicsCommandCore.contract.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
@@ -122,7 +129,7 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
     <>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Command
           </p>
           <h4 className="mt-1 text-xl text-[var(--ink)]">
@@ -154,18 +161,15 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
           onChange={(value) => model.patchIdentity("label", value)}
           placeholder="Mark Player Settled"
         />
-        <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-            Reason
-          </span>
-          <textarea
+        <div className="md:col-span-2">
+          <TextAreaField
+            label="Reason"
             value={model.safeCommand.reason || ""}
-            onChange={(event) => model.patchIdentity("reason", event.target.value)}
-            rows={2}
+            onChange={(value) => model.patchIdentity("reason", value)}
             placeholder="The player is now settled."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
-        </label>
+        </div>
       </div>
     </>
   );
@@ -176,7 +180,7 @@ export function MechanicsCommandInvocationView({ model }) {
     <>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Structured Invocation v1
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -286,7 +290,7 @@ export function MechanicsCommandArgumentsView({ model }) {
           className="rounded-xl border border-white/10 bg-black/35 p-4"
         >
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Argument {argumentIndex + 1}
             </p>
             <button
@@ -474,7 +478,7 @@ export function MechanicsCommandTriggersView({ model }) {
 
   return (
     <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <p className={EYEBROW_CLASS}>
         Triggers
       </p>
       <div className="mt-3 flex flex-wrap gap-2">

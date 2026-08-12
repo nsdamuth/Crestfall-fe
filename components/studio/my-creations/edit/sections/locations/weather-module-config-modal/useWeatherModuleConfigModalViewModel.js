@@ -901,6 +901,7 @@ export function useWeatherModuleConfigModalViewModel({
     allowWeatherComplications: form.allowWeatherComplications,
     respectIndoorOutdoorLogic: form.respectIndoorOutdoorLogic,
     isSaving: status === "saving",
+    messageTone: status === "error" ? "error" : "success",
     footerNote:
       "Weather module changes save immediately. Location binding changes still require the normal Location save button.",
     onClose,

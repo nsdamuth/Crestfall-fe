@@ -13,6 +13,8 @@ import {
   supportsMechanicsEffectValueBinding,
 } from "../mechanicsEffectValueBindingBuilder.js";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function TextField({ label, value, onChange, type = "text", placeholder = "" }) {
   return (
@@ -227,7 +229,7 @@ function ConditionCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Condition
         </p>
         <button
@@ -562,7 +564,7 @@ function EffectCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Mechanics Effect
         </p>
         <button
@@ -697,7 +699,7 @@ function MechanicsStepCard({
     <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Mechanics Step {step.index + 1}
           </p>
           <h5 className="mt-1 text-xl text-[var(--ink)]">
@@ -762,7 +764,7 @@ function MechanicsStepCard({
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Dependencies
         </p>
         <div className="mt-3">
@@ -778,7 +780,7 @@ function MechanicsStepCard({
 
       {step.phase === "OUTCOME" ? (
         <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Apply On Outcomes
           </p>
           <div className="mt-3">
@@ -796,7 +798,7 @@ function MechanicsStepCard({
       <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Step Conditions
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -838,7 +840,7 @@ function MechanicsStepCard({
       <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Ordered Effects
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -1054,7 +1056,7 @@ function DomainStepCard({
     <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Domain Step {step.index + 1}
           </p>
           <h5 className="mt-1 text-xl text-[var(--ink)]">
@@ -1110,7 +1112,7 @@ function DomainStepCard({
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Dependencies
         </p>
         <div className="mt-3">
@@ -1134,7 +1136,7 @@ function DomainStepCard({
 
       {step.action.type !== "NONE" ? (
         <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Apply On Outcomes
           </p>
           <div className="mt-3">
@@ -1202,7 +1204,7 @@ export default function MechanicsCompositionBuilderView({
     <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             <Workflow size={15} />
             Command Composition
           </p>
@@ -1216,7 +1218,7 @@ export default function MechanicsCompositionBuilderView({
           ) : null}
         </div>
 
-        <div className="grid min-w-[240px] grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+        <div className="grid min-w-[240px] md:grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
             <span className="block text-lg text-[var(--ink)]">
               {summary.enabledMechanicsStepCount ?? 0}
@@ -1233,7 +1235,7 @@ export default function MechanicsCompositionBuilderView({
       </div>
 
       <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Reference Composition
         </p>
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -1295,7 +1297,7 @@ export default function MechanicsCompositionBuilderView({
       <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               <GitBranch size={14} />
               Ordered Mechanics Steps
             </p>
@@ -1364,7 +1366,7 @@ export default function MechanicsCompositionBuilderView({
       <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Ordered Domain Steps
             </p>
             <p className="mt-2 max-w-3xl text-xs leading-5 text-[var(--ink-dim)]">

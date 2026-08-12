@@ -11,6 +11,9 @@ import {
 
 import ModalShell from "@/components/ui/ModalShell";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function IssueList({
   title,
   issues = [],
@@ -99,7 +102,7 @@ export default function MechanicsJsonEditorModalView({
     >
       <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             <Braces size={15} />
             Loom Authoring Tool
           </p>
@@ -116,7 +119,7 @@ export default function MechanicsJsonEditorModalView({
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          className="flex min-h-[var(--control-md)] min-w-[var(--control-md)] items-center justify-center rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           aria-label="Close Mechanics JSON Editor"
         >
           <X size={18} />
@@ -127,7 +130,7 @@ export default function MechanicsJsonEditorModalView({
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 <Code2 size={14} />
                 Authored Mechanics Data
               </p>
@@ -187,7 +190,7 @@ export default function MechanicsJsonEditorModalView({
 
         <aside className="grid content-start gap-4">
           <section className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className={EYEBROW_CLASS}>
               Apply Behavior
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -199,7 +202,7 @@ export default function MechanicsJsonEditorModalView({
 
           {statusMessage ? (
             <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 Status
               </p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">

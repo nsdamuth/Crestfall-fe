@@ -10,6 +10,13 @@ import {
   normalizeTrackerString,
   slugifyTrackerId,
 } from "./mechanicsTrackersNormalization.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function ActionButton({ children, onClick, variant = "gold", title }) {
   const className = `cf-btn cf-btn--sm ${variant === "danger" ? "cf-btn--danger" : "cf-btn--secondary"}`;
@@ -60,9 +67,7 @@ function FoldableTracker({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-            Tracker / Meter
-          </p>
+          <p className={EYEBROW_CLASS}>Tracker / Meter</p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h4 className="truncate text-xl text-[var(--ink)]">{title}</h4>
@@ -97,9 +102,7 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-          Phase {phaseIndex + 1}
-        </p>
+        <p className={EYEBROW_CLASS}>Phase {phaseIndex + 1}</p>
         <button
           type="button"
           onClick={onRemove}
@@ -171,9 +174,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-          Mutation Hint {hintIndex + 1}
-        </p>
+        <p className={EYEBROW_CLASS}>Mutation Hint {hintIndex + 1}</p>
         <button
           type="button"
           onClick={onRemove}
@@ -231,16 +232,15 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
           })
         }
       />
-      <label className="mt-4 block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Reason</span>
-        <textarea
+      <div className="mt-4">
+        <TextAreaField
+          label="Reason"
           value={safeHint.reason}
-          onChange={(event) => onPatch({ reason: event.target.value })}
-          rows={2}
+          onChange={(value) => onPatch({ reason: value })}
           placeholder="The player accepted the redirect without pushing."
-          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
-      </label>
+      </div>
     </div>
   );
 }
@@ -248,7 +248,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
 function HintList({ title, values, empty, draft, setDraft, add, placeholder, addLabel, remove }) {
   return (
     <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">{title}</p>
+      <p className={EYEBROW_CLASS}>{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {values.map((value, index) => (
           <span
@@ -356,7 +356,7 @@ function TrackerCard({ entry, handlers }) {
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Phases</p>
+          <p className={EYEBROW_CLASS}>Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
             <Plus size={14} /> Add phase
           </ActionButton>
@@ -381,7 +381,7 @@ function TrackerCard({ entry, handlers }) {
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Mutation Hints</p>
+          <p className={EYEBROW_CLASS}>Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
             <Plus size={14} /> Add hint
           </ActionButton>
@@ -445,7 +445,7 @@ export default function MechanicsTrackersSectionView({
     <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">Visual Builder</p>
+          <p className={EYEBROW_CLASS}>Visual Builder</p>
           <h3 className="mt-2 font-display text-3xl">Trackers / Meters</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable meter fields, display phases, and mutation hints.
