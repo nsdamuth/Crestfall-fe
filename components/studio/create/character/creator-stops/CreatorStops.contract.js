@@ -42,7 +42,16 @@
 // Character's seven existing icon entries (name, kind, face,
 // silhouette, heart, seal, payoff) are unchanged. No prop added,
 // removed, or renamed on CreatorStopsView itself.
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v4";
+//
+// v4 to v5 (this pass, look-quick-create brief, RULED): additive
+// only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
+// gains three entries for the Looks quick create's non-"name",
+// non-"look" stop ids: vibe (Sparkles), garments (Shirt), palette
+// (Palette, the same icon World's "tone" entry already uses, reused
+// deliberately since this stop is literally a color palette).
+// Character's and World's existing icon entries are unchanged. No
+// prop added, removed, or renamed on CreatorStopsView itself.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v5";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),

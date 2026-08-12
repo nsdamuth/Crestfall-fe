@@ -1,12 +1,21 @@
-// 1.0.0 to 1.1.0 (this pass, the Q1 world quick-create brief):
-// additive only. A second door (id "location", relabeled "Worlds")
-// goes live, opening WorldCreatorModal the same way the Character
-// door opens CharacterCreatorModal. StudioDoor's isLive is no longer
-// "Character only"; no shape change to StudioDoor or any other
-// typedef, and the Shell (Studio.jsx) gains onOpenWorldCreator
-// alongside onOpenCharacterCreator, mirroring the existing pattern
-// exactly.
-export const STUDIO_VIEW_CONTRACT_VERSION = "1.1.0";
+// 1.0.0 to 1.1.0 (the Q1 world quick-create brief): additive only. A
+// second door (id "location", relabeled "Worlds") goes live, opening
+// WorldCreatorModal the same way the Character door opens
+// CharacterCreatorModal. StudioDoor's isLive is no longer "Character
+// only"; no shape change to StudioDoor or any other typedef, and the
+// Shell (Studio.jsx) gains onOpenWorldCreator alongside
+// onOpenCharacterCreator, mirroring the existing pattern exactly.
+//
+// 1.1.0 to 1.2.0 (this pass, the Q2 look quick-create brief):
+// additive only. A third door (id "outfit", relabeled "Looks" from
+// "Outfit / Clothing") goes live, opening LookCreatorModal the same
+// way the Character and Worlds doors open their own creators.
+// StudioDoor's isLive is no longer "Character and Worlds only"; no
+// shape change to StudioDoor or any other typedef, and the Shell
+// (Studio.jsx) gains onOpenLookCreator alongside
+// onOpenCharacterCreator and onOpenWorldCreator, mirroring the
+// existing pattern exactly.
+export const STUDIO_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the Studio hub page View
@@ -28,9 +37,10 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.1.0";
  *   - Quick Start: asset-first doors (Character live, opening
  *     CharacterCreatorModal with fieldScope="quick"; Worlds live
  *     (door id "location", labeled "Worlds"), opening
- *     WorldCreatorModal; every other type's door quiet with the
- *     standing Soon treatment) plus the Story bridge strip
- *     (KitAlertStrip neutral, same .stripinfo lineage).
+ *     WorldCreatorModal; Looks live (door id "outfit", labeled
+ *     "Looks"), opening LookCreatorModal; every other type's door
+ *     quiet with the standing Soon treatment) plus the Story bridge
+ *     strip (KitAlertStrip neutral, same .stripinfo lineage).
  *   - Guided Build: no allocation exists yet for Story assembly
  *     (docs/STUDIO-SPEC.md section 9, item 2), so this pane renders
  *     the same quiet Soon treatment as a door, not fabricated
@@ -51,13 +61,14 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.1.0";
  * therefore owned by the ViewModel per the fixture-mode harness
  * convention, not hardcoded in the View). The View fetches nothing.
  *
- * CharacterCreatorModal and WorldCreatorModal are both mounted by the
- * Shell (Studio.jsx), not the View: each is a real, live-wired
- * component (existing save path through creationClient), not a
- * fixture-shaped prop, and the Shell is the LOOM layer that owns real
- * integration per docs/CRESTFALL-DESIGN-CONTEXT.md. The View only
- * reports intent, through onOpenCharacterCreator and
- * onOpenWorldCreator respectively.
+ * CharacterCreatorModal, WorldCreatorModal, and LookCreatorModal are
+ * all mounted by the Shell (Studio.jsx), not the View: each is a
+ * real, live-wired component (existing save path through
+ * creationClient), not a fixture-shaped prop, and the Shell is the
+ * LOOM layer that owns real integration per
+ * docs/CRESTFALL-DESIGN-CONTEXT.md. The View only reports intent,
+ * through onOpenCharacterCreator, onOpenWorldCreator, and
+ * onOpenLookCreator respectively.
  *
  * @typedef {Object} StudioLevel
  * @property {string} id
@@ -72,7 +83,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} eyebrow
  * @property {string} description
  * @property {string|null} imageSrc
- * @property {boolean} isLive Character and Worlds (door id "location") only; every other door is Soon.
+ * @property {boolean} isLive Character, Worlds (door id "location"), and Looks (door id "outfit") only; every other door is Soon.
  * @property {(() => void)|null} onOpen
  *
  * @typedef {Object} StudioToolCard

@@ -6,15 +6,17 @@
 // are CharacterCreatorModal, the existing live-wired seven-stop
 // creator (components/studio/create/character/creator-stops/),
 // imported read-only per docs/STUDIO-SPEC.md section 3.2 and NOT
-// modified by this brief, and WorldCreatorModal, the five-stop
-// creator this pass adds (components/studio/create/world/
-// creator-stops/), consuming CreatorStopsView, the same shared
-// quick-create shape, directly. The Shell owns each modal's own
-// open/close boolean directly, the same pattern as the legacy hub's
-// CreationStudioExperience.jsx, because this is real integration, not
-// fixture-shaped ViewModel state. The fixture-mode harness (default /
-// empty / longest content) is dev-only QA scaffolding, never product,
-// per docs/FRONTEND-SOP.md section 2.
+// modified by this brief; WorldCreatorModal, the five-stop creator
+// (components/studio/create/world/creator-stops/); and
+// LookCreatorModal, the five-stop creator this pass adds
+// (components/studio/create/look/creator-stops/). All three consume
+// CreatorStopsView, the same shared quick-create shape, directly. The
+// Shell owns each modal's own open/close boolean directly, the same
+// pattern as the legacy hub's CreationStudioExperience.jsx, because
+// this is real integration, not fixture-shaped ViewModel state. The
+// fixture-mode harness (default / empty / longest content) is
+// dev-only QA scaffolding, never product, per docs/FRONTEND-SOP.md
+// section 2.
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -22,6 +24,7 @@ import StudioView from "./studio/Studio.view";
 import { useStudioViewModel } from "./studio/useStudioViewModel";
 import CharacterCreatorModal from "@/components/studio/create/character/creator-stops/CharacterCreatorModal";
 import WorldCreatorModal from "@/components/studio/create/world/creator-stops/WorldCreatorModal";
+import LookCreatorModal from "@/components/studio/create/look/creator-stops/LookCreatorModal";
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -59,12 +62,14 @@ export default function Studio() {
   const [fixtureMode, setFixtureMode] = useState("default");
   const [isCharacterCreatorOpen, setIsCharacterCreatorOpen] = useState(false);
   const [isWorldCreatorOpen, setIsWorldCreatorOpen] = useState(false);
+  const [isLookCreatorOpen, setIsLookCreatorOpen] = useState(false);
 
   const viewProps = useStudioViewModel({
     fixtureMode,
     onNavigate: (route) => router.push(route),
     onOpenCharacterCreator: () => setIsCharacterCreatorOpen(true),
     onOpenWorldCreator: () => setIsWorldCreatorOpen(true),
+    onOpenLookCreator: () => setIsLookCreatorOpen(true),
   });
 
   return (
@@ -90,11 +95,19 @@ export default function Studio() {
       ) : null}
 
       {isWorldCreatorOpen ? (
-        // The Worlds quick create, this pass's own brief
-        // (components/studio/create/world/creator-stops/): live-wired
-        // the same way CharacterCreatorModal is, mounted by the Shell,
-        // not the View.
+        // The Worlds quick create (components/studio/create/world/
+        // creator-stops/): live-wired the same way
+        // CharacterCreatorModal is, mounted by the Shell, not the
+        // View.
         <WorldCreatorModal onClose={() => setIsWorldCreatorOpen(false)} />
+      ) : null}
+
+      {isLookCreatorOpen ? (
+        // The Looks quick create, this pass's own brief
+        // (components/studio/create/look/creator-stops/): live-wired
+        // the same way CharacterCreatorModal and WorldCreatorModal
+        // are, mounted by the Shell, not the View.
+        <LookCreatorModal onClose={() => setIsLookCreatorOpen(false)} />
       ) : null}
     </>
   );
