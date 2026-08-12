@@ -3,6 +3,10 @@
 import { Save, ShieldCheck, UserRoundCog } from "lucide-react";
 
 import ActorMechanicsProfileEditorView from "@/components/studio/create/actor-mechanics-profile/actor-mechanics-profile-editor/ActorMechanicsProfileEditor.view";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function FieldLabel({ children }) {
   return (
@@ -60,7 +64,7 @@ export default function ActorMechanicsProfileBuilderView({
       <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <UserRoundCog size={18} />
-          <p className="text-xs uppercase tracking-[0.22em]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Actor Mechanics Profile
           </p>
         </div>
@@ -83,7 +87,7 @@ export default function ActorMechanicsProfileBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-black/25 p-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
@@ -121,7 +125,7 @@ export default function ActorMechanicsProfileBuilderView({
 
       <div className="space-y-6">
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Asset Identity
           </p>
           <h2 className="mt-2 font-display text-3xl">Name and access</h2>
@@ -136,18 +140,13 @@ export default function ActorMechanicsProfileBuilderView({
               />
             </div>
 
-            <div>
-              <FieldLabel>Description</FieldLabel>
-              <textarea
-                value={description}
-                onChange={(event) =>
-                  onUpdateIdentity?.("description", event.target.value)
-                }
-                rows={4}
-                placeholder="Describe the actor types and mechanics domains this profile supports..."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-              />
-            </div>
+            <TextAreaField
+              label="Description"
+              value={description}
+              onChange={(value) => onUpdateIdentity?.("description", value)}
+              placeholder="Describe the actor types and mechanics domains this profile supports..."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
 
             <div className="grid gap-5 md:grid-cols-2">
               <div>

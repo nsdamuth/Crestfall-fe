@@ -222,7 +222,9 @@ export default function LoreDocumentRendererView({
         >
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={17} />
-            <p className="text-xs uppercase tracking-[0.2em]">Contents</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              Contents
+            </p>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {chapters.map((chapter, chapterIndex) => (

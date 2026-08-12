@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import RulesCodexJsonEditorModal from "../rules-codex-json-editor/RulesCodexJsonEditorModal";
+import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function Counter({ value = 0, limit = 0 }) {
   const safeValue = Number.isFinite(Number(value)) ? Number(value) : 0;
@@ -153,7 +154,7 @@ export default function RulesCodexEditorView({
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={18} />
-            <p className="text-xs uppercase tracking-[0.22em]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Rules Codex · Interpretation Layer
             </p>
           </div>
@@ -242,22 +243,17 @@ export default function RulesCodexEditorView({
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div>
-          <FieldLabel
-            detail={`${summaryCharacterCount.toLocaleString()} / ${summaryCharacterLimit.toLocaleString()}`}
-          >
-            Codex Summary
-          </FieldLabel>
-          <textarea
+          <TextAreaField
+            label="Codex Summary"
             value={summary}
-            onChange={(event) => onUpdateSummary?.(event.target.value)}
+            onChange={(value) => onUpdateSummary?.(value)}
             placeholder="Describe what this Codex governs, where it applies, and what it helps the engine interpret..."
-            rows={5}
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+            maxLength={summaryCharacterLimit}
           />
         </div>
 
         <aside className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Selection Budget
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -304,7 +300,7 @@ export default function RulesCodexEditorView({
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Rules Sections
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -528,23 +524,14 @@ export default function RulesCodexEditorView({
                       </div>
 
                       <div className="mt-5">
-                        <FieldLabel
-                          detail={`${section.bodyCharacterCount.toLocaleString()} / ${section.bodyCharacterLimit.toLocaleString()}`}
-                        >
-                          Interpretive Guidance
-                        </FieldLabel>
-                        <textarea
+                        <TextAreaField
+                          label="Interpretive Guidance"
                           value={section.body}
-                          onChange={(event) =>
-                            onUpdateSection?.(
-                              section.id,
-                              "body",
-                              event.target.value
-                            )
+                          onChange={(value) =>
+                            onUpdateSection?.(section.id, "body", value)
                           }
                           placeholder="Explain what the verified values or outcome mean, when this rule applies, and how the result should be portrayed. Do not define hidden state changes here..."
-                          rows={9}
-                          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                          maxLength={section.bodyCharacterLimit}
                         />
                       </div>
 
@@ -556,7 +543,7 @@ export default function RulesCodexEditorView({
                               className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
                             />
                             <div>
-                              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                 Contextual Activation Signals
                               </p>
                               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">

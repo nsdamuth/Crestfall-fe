@@ -129,7 +129,7 @@ function SubmissionHistory({ submissions }) {
 
   return (
     <div className="mt-5 border-t border-white/10 pt-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         Recent engine-use submissions
       </p>
       <div className="mt-3 grid gap-2">

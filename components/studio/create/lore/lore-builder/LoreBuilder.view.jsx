@@ -3,6 +3,10 @@
 import { BookOpenText, Eye, Pencil, Save, ShieldCheck } from "lucide-react";
 import LoreEditorView from "@/components/studio/create/lore/lore-editor/LoreEditor.view";
 import LoreDocumentRendererView from "@/components/studio/create/lore/lore-document-renderer/LoreDocumentRenderer.view";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const inputClass =
   "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
@@ -43,7 +47,9 @@ export default function LoreBuilderView({
       <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <BookOpenText size={18} />
-          <p className="text-xs uppercase tracking-[0.22em]">Lore Asset</p>
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            Lore Asset
+          </p>
         </div>
         <h2 className="mt-3 font-display text-4xl">{title.trim() || "Untitled Lore Asset"}</h2>
         <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
@@ -61,7 +67,7 @@ export default function LoreBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+        <div className="mt-5 grid gap-3 text-sm md:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Errors</p><p className="mt-2 text-lg">{errorCount}</p></div>
           <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
         </div>
@@ -74,11 +80,17 @@ export default function LoreBuilderView({
 
       <div className="space-y-6">
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">Publication Identity</p>
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">Publication Identity</p>
           <h2 className="mt-2 font-display text-3xl">Name and draft access</h2>
           <div className="mt-5 grid gap-5">
             <Field label="Title"><input className={inputClass} value={title} onChange={(event) => onUpdateIdentity?.("title", event.target.value)} placeholder="Name this Lore Asset…" /></Field>
-            <Field label="Description"><textarea className={`${inputClass} min-h-28 resize-y leading-6`} value={description} onChange={(event) => onUpdateIdentity?.("description", event.target.value)} placeholder="Describe this public lore publication." /></Field>
+            <TextAreaField
+              label="Description"
+              value={description}
+              onChange={(value) => onUpdateIdentity?.("description", value)}
+              placeholder="Describe this public lore publication."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Draft visibility"><select className={inputClass} value={visibility} onChange={(event) => onUpdateIdentity?.("visibility", event.target.value)}>{visibilityOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></Field>
               <Field label="Content rating"><select className={inputClass} value={contentRating} onChange={(event) => onUpdateIdentity?.("contentRating", event.target.value)}>{contentRatingOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></Field>

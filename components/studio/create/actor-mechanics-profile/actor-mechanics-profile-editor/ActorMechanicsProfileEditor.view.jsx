@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 
 import ActorMechanicsProfileJsonEditorModal from "../actor-mechanics-profile-json-editor/ActorMechanicsProfileJsonEditorModal";
+import { ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS } from "./ActorMechanicsProfileEditor.contract";
+import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function humanize(value) {
   return String(value || "")
@@ -227,7 +229,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <UserRoundCog size={18} />
-            <p className="text-xs uppercase tracking-[0.22em]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Actor Mechanics Profile · Actor State
             </p>
           </div>
@@ -312,7 +314,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="flex items-start gap-3">
           <RefreshCcw size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Profile Preset
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -378,17 +380,12 @@ export default function ActorMechanicsProfileEditorView({
       </div>
 
       <div className="mt-5">
-        <FieldLabel
-          detail={`${summaryCharacterCount.toLocaleString()} / ${summaryCharacterLimit.toLocaleString()}`}
-        >
-          Profile Summary
-        </FieldLabel>
-        <textarea
+        <TextAreaField
+          label="Profile Summary"
           value={summary}
-          onChange={(event) => onUpdateIdentity?.("summary", event.target.value)}
-          rows={4}
+          onChange={(value) => onUpdateIdentity?.("summary", value)}
           placeholder="Explain what this actor's actor mechanics profile contains and when it should be used..."
-          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          maxLength={summaryCharacterLimit || ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS.maxSummaryLength}
         />
       </div>
 
@@ -400,7 +397,7 @@ export default function ActorMechanicsProfileEditorView({
             <UserRoundCog size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           )}
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Actor Owner
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -476,7 +473,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="flex items-start gap-3">
           <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Fixed State Policy
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -506,7 +503,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="flex items-start gap-3">
           <CircleGauge size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Capability Policy
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -586,19 +583,14 @@ export default function ActorMechanicsProfileEditorView({
         ) : null}
 
         <div className="mt-5">
-          <FieldLabel
-            detail={`${capabilityNotesCharacterCount.toLocaleString()} / ${capabilityNotesCharacterLimit.toLocaleString()}`}
-          >
-            Capability Notes
-          </FieldLabel>
-          <textarea
+          <TextAreaField
+            label="Capability Notes"
             value={capabilityNotes}
-            onChange={(event) =>
-              onUpdateCapabilityPolicy?.("notes", event.target.value)
+            onChange={(value) =>
+              onUpdateCapabilityPolicy?.("notes", value)
             }
-            rows={4}
             placeholder="Explain capability restrictions and the boundary between ordinary mechanics and narrative-only resolution..."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+            maxLength={capabilityNotesCharacterLimit || ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS.maxNotesLength}
           />
         </div>
       </div>
@@ -607,7 +599,9 @@ export default function ActorMechanicsProfileEditorView({
         <div>
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <Boxes size={17} />
-            <p className="text-xs uppercase tracking-[0.2em]">Domain Bindings</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              Domain Bindings
+            </p>
           </div>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Bind shared definitions by domain. Activation controls when the
@@ -851,19 +845,14 @@ export default function ActorMechanicsProfileEditorView({
                     </div>
 
                     <div className="mt-5">
-                      <FieldLabel>Binding Notes</FieldLabel>
-                      <textarea
+                      <TextAreaField
+                        label="Binding Notes"
                         value={binding.notes}
-                        onChange={(event) =>
-                          onUpdateBinding?.(
-                            binding.id,
-                            "notes",
-                            event.target.value
-                          )
+                        onChange={(value) =>
+                          onUpdateBinding?.(binding.id, "notes", value)
                         }
-                        rows={3}
                         placeholder="Explain actor-specific restrictions or how shared definitions should be interpreted..."
-                        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                        maxLength={ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS.maxNotesLength}
                       />
                     </div>
 
@@ -872,7 +861,7 @@ export default function ActorMechanicsProfileEditorView({
                         <div>
                           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                             <Link2 size={15} />
-                            <p className="text-xs uppercase tracking-[0.18em]">
+                            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                               Reusable Definitions
                             </p>
                           </div>
@@ -967,7 +956,7 @@ export default function ActorMechanicsProfileEditorView({
                                 className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
                               >
                                 <div className="flex items-center justify-between gap-3">
-                                  <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                     Reference {reference.index + 1}
                                   </p>
                                   <button

@@ -273,7 +273,7 @@ function FormulaEditor({
       <div className="flex items-start gap-3">
         <Calculator size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Declarative Formula
           </p>
           <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
@@ -1346,7 +1346,7 @@ export default function StatsPoolsEditorView({
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <CircleGauge size={18} />
-            <p className="text-xs uppercase tracking-[0.22em]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Stats & Pools · Reusable Definitions
             </p>
           </div>
@@ -1472,7 +1472,7 @@ export default function StatsPoolsEditorView({
         <div className="flex items-start gap-3">
           <Layers3 size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Capability Policy
             </p>
             <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">

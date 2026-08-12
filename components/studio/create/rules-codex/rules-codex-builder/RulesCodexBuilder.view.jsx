@@ -3,6 +3,10 @@
 import { BookOpenText, Save, ShieldCheck } from "lucide-react";
 
 import RulesCodexEditorView from "@/components/studio/create/rules-codex/rules-codex-editor/RulesCodexEditor.view";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function FieldLabel({ children }) {
   return (
@@ -60,7 +64,9 @@ export default function RulesCodexBuilderView({
       <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <BookOpenText size={18} />
-          <p className="text-xs uppercase tracking-[0.22em]">Rules Codex</p>
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            Rules Codex
+          </p>
         </div>
 
         <h2 className="mt-3 font-display text-4xl">
@@ -81,7 +87,7 @@ export default function RulesCodexBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-black/25 p-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
@@ -119,7 +125,7 @@ export default function RulesCodexBuilderView({
 
       <div className="space-y-6">
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Codex Identity
           </p>
           <h2 className="mt-2 font-display text-3xl">Name and access</h2>
@@ -135,15 +141,12 @@ export default function RulesCodexBuilderView({
             </div>
 
             <div>
-              <FieldLabel>Description</FieldLabel>
-              <textarea
+              <TextAreaField
+                label="Description"
                 value={description}
-                onChange={(event) =>
-                  onUpdateIdentity?.("description", event.target.value)
-                }
-                rows={4}
+                onChange={(value) => onUpdateIdentity?.("description", value)}
                 placeholder="Describe the rules and interpretation domains this Codex supports."
-                className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                maxLength={SHORT_LONGFORM_MAX_LENGTH}
               />
             </div>
 
