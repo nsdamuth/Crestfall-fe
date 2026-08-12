@@ -80,8 +80,8 @@ function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onCl
 }
 
 // Quiet secondary action, never a filled button: icon plus word, no
-// border, no fill. Used for Mute (item 36, CR-028) in both placement
-// variants.
+// border, no fill. Used for Mute content (item 36, CR-028, RULED
+// 11 Aug 2026: inline in the engagement row, no other placement).
 function QuietAction({ label, icon: Icon, isPressed = false, onClick = null }) {
   return (
     <button
@@ -216,7 +216,6 @@ export default function CreatorProfileView({
   avatarSrc = null,
   stats = {},
   engagement = {},
-  mutePlacement = "engagement",
   workItems = [],
   worksEmptyMessage = null,
   worksLoadMore,
@@ -236,7 +235,7 @@ export default function CreatorProfileView({
 }) {
   const muteAction = (
     <QuietAction
-      label={engagement?.isMuted ? "Muted" : "Mute"}
+      label={engagement?.isMuted ? "Muted" : "Mute content"}
       icon={VolumeX}
       isPressed={engagement?.isMuted}
       onClick={engagement?.onToggleMute}
@@ -300,7 +299,6 @@ export default function CreatorProfileView({
                     <p className="max-w-[36rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                       {bio || "No public bio yet."}
                     </p>
-                    {mutePlacement === "standalone" && muteAction}
                   </div>
                 </div>
 
@@ -339,7 +337,7 @@ export default function CreatorProfileView({
                   onClick={engagement?.onBookmark}
                 />
                 <QuietAction label="Share" icon={Share2} onClick={engagement?.onShare} />
-                {mutePlacement === "engagement" && muteAction}
+                {muteAction}
               </div>
             </div>
 

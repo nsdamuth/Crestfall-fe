@@ -55,7 +55,7 @@ const DONATE_MODAL_CLOSED = {
   onClose: noop,
 };
 
-function baseFixture(record, { mutePlacement = "engagement" } = {}) {
+function baseFixture(record) {
   return {
     displayName: record.displayName,
     handle: record.handle,
@@ -74,7 +74,6 @@ function baseFixture(record, { mutePlacement = "engagement" } = {}) {
       isMuted: record.isMuted,
       onToggleMute: noop,
     },
-    mutePlacement,
     workItems: record.works.map(decorateWork),
     worksEmptyMessage: record.works.length === 0 ? "Nothing published yet." : null,
     worksLoadMore: WORKS_LOAD_MORE,
@@ -128,18 +127,12 @@ export const creatorProfileErrorFixture = {
   badgesEmptyMessage: null,
 };
 
-// Muted: item 36 / CR-028, a fixture state showing a muted creator.
+// Muted: item 36 / CR-028, RULED 11 Aug 2026 (placement is the
+// engagement row, no other variant): a fixture state showing a muted
+// creator, the "Muted" label in the engagement row.
 export const creatorProfileMutedFixture = {
   ...baseFixture(MOONGLASS),
   engagement: { ...baseFixture(MOONGLASS).engagement, isMuted: true },
-};
-
-// Muted, alternate placement: the same muted state with Mute rendered
-// standalone under the bio instead of in the engagement row, the
-// competing placement for item 36 (AWAITING BRIAN RENDER REVIEW).
-export const creatorProfileMutedStandalonePlacementFixture = {
-  ...creatorProfileMutedFixture,
-  mutePlacement: "standalone",
 };
 
 // Activity list cap, RULED 11 Aug 2026: 27 entries, the same

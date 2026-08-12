@@ -1,4 +1,4 @@
-export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the Creators profile-detail page
@@ -20,12 +20,18 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.0.0";
  * content area below the header when errorMessage is set, distinct
  * from a per-section empty state.
  *
- * mutePlacement is an OPEN item (standing open item CR-028 / item 36,
- * AWAITING BRIAN RENDER REVIEW): placement is not ruled. "engagement"
- * (the shipped default) renders Mute inline in the engagement action
- * row; "standalone" renders it as its own quiet line beneath the bio,
- * a genuinely competing placement. The product page always passes
- * "engagement"; the preview route exposes both through its harness.
+ * v1.1.0, RULED 11 Aug 2026 (item 36, CR-028, closed): mute
+ * placement is ruled, inline in the engagement action row only,
+ * labeled "Mute content" ("Muted" when active). The
+ * standalone-under-bio variant this contract once carried as a
+ * genuinely competing placement is retired; `mutePlacement` leaves
+ * the prop surface, no toggle, no second render path. A removal is a
+ * major bump per contract law elsewhere in this repo, but this prop
+ * was never ruled stable (AWAITING BRIAN RENDER REVIEW since it
+ * shipped), so its retirement closes the open item rather than
+ * breaking a settled one; v1.1.0 records the removal for
+ * traceability. Accessible label matches the visible label (button
+ * text content is the accessible name); the icon is unchanged.
  *
  * @typedef {Object} CreatorProfileStats
  * @property {number|null} followers
@@ -91,7 +97,6 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string|null} avatarSrc
  * @property {CreatorProfileStats} stats
  * @property {CreatorProfileEngagement} engagement
- * @property {"engagement"|"standalone"} mutePlacement
  * @property {CreatorProfileWorkItem[]} workItems
  * @property {string|null} worksEmptyMessage
  * @property {{isLoading: boolean, hasMore: boolean, remainingCount: number|null, onLoadMore: (() => void)|null}} worksLoadMore

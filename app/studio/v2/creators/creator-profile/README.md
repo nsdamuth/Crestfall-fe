@@ -1,6 +1,6 @@
 # Creator Profile LOOM package
 
-**Contract:** `CreatorProfile.contract.js` (v1.0.0)
+**Contract:** `CreatorProfile.contract.js` (v1.1.0)
 
 ## Purpose
 
@@ -69,21 +69,19 @@ distinct from a section's own empty-state message (Creators parity
 row 808-813 note: "the page's own top-level error state is a
 different control").
 
-## Item 36 / CR-028, mute control, AWAITING BRIAN RENDER REVIEW
+## Item 36 / CR-028, mute control, RULED 11 Aug 2026, CLOSED
 
-Placement is not ruled. The shipped default (`mutePlacement:
-"engagement"`) renders Mute as a quiet secondary action (icon plus
-word, never a filled button) inline in the identity block's
-engagement row, alongside Follow, Donate, Like, Save, and Share. A
-genuinely competing placement exists and is built as the
-`"standalone"` variant: Mute rendered on its own line directly under
-the bio, separated from the transactional actions. Both variants ship
-as fixtures (`creatorProfileMutedFixture`,
-`creatorProfileMutedStandalonePlacementFixture`) and the harness on
-both the product page and the preview mirror carries a live toggle
-between them, so this is a render decision, not a prose one. The
-product page itself always renders the shipped default; the toggle is
-dev-only scaffolding.
+Placement is ruled: Mute content lives inline in the identity block's
+engagement row only, alongside Follow, Donate, Like, Save, and Share,
+as a quiet secondary action (icon plus word, never a filled button).
+Label is "Mute content" ("Muted" when active); the accessible label
+matches the visible label (button text content is the accessible
+name), the icon is unchanged. The standalone-under-bio variant this
+package once carried as a genuinely competing placement, its fixture
+(`creatorProfileMutedStandalonePlacementFixture`), and the harness
+toggle switching between them on both the product page and the
+preview mirror are all retired. `creatorProfileMutedFixture` stays,
+showing the "Muted" state in the engagement row.
 
 ## Existing kit packages composed, read-only this pass
 

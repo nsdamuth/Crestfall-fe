@@ -29,7 +29,6 @@ const BOTTOM_BANNER = {
 export function useCreatorProfileViewModel({
   handle = "",
   fixtureMode = "default",
-  mutePlacement = "engagement",
   onNavigate = null,
 } = {}) {
   const record = useMemo(() => {
@@ -180,7 +179,6 @@ export function useCreatorProfileViewModel({
     avatarSrc: record.avatarSrc,
     stats: record.stats,
     engagement,
-    mutePlacement,
     workItems,
     worksEmptyMessage,
     worksLoadMore,
