@@ -393,7 +393,7 @@ the two regenerated context docs belong to H6 alone.
 | H1b Home filter | design/home-filter | `app/studio/v2/home/**` (after H1 merges; H1b stacks on H1's branch if H1 has not merged) | item 42 ruled | 1 |
 | H3 Lore | design/lore | `app/studio/v2/lore/**`, its preview mirror, `components/kit/studio-page/**` (the centered-label seat, assigned exclusively here) | item 39 ruled, H2a and H2c landed | 2 |
 | H5 Studio | design/studio | `app/studio/v2/studio/**`, its preview mirror | items 40 and 41 ruled, H2a/H2b/H2c landed | 6 to 9 (3 to 4 if item 40 rules C) |
-| H6 closing pass | design/sprint-h-close | `docs/APP-FUNCTION-MAP.csv`, `docs/APP-FUNCTION-MAP.md`, `docs/BUILD-BLUEPRINT.md`, `docs/CRESTFALL-DESIGN-CONTEXT.md`, `docs/DESIGN-TOKENS.md` (focus note), `docs/CONTRACT-REQUESTS.md` status lines | every other wave landed | 1 |
+| H6 closing pass | design/sprint-h-close | `docs/APP-FUNCTION-MAP.csv`, `docs/BUILD-BLUEPRINT.md`, `docs/CRESTFALL-DESIGN-CONTEXT.md`, `docs/DESIGN-TOKENS.md` (focus note), `docs/CONTRACT-REQUESTS.md` status lines | every other wave landed | 1 |
 
 **Runs simultaneously from GO:** H1, H2a, H2b, H2c, H4. Five Sonnet
 sessions, five branches, zero shared files.
@@ -437,7 +437,7 @@ the rows still land, once, at H6, before the sprint closes.
 Paste-ready, one per wave. Standing header for every brief, stated
 once here and binding on all of them: work only in the file set
 named for your wave (section 3); never edit
-`docs/APP-FUNCTION-MAP.csv`, `docs/APP-FUNCTION-MAP.md`,
+`docs/APP-FUNCTION-MAP.csv`,
 `docs/BUILD-BLUEPRINT.md`, or `docs/CRESTFALL-DESIGN-CONTEXT.md`;
 no render-verification steps, Brian reviews rendered pages himself;
 tokens only, LOOM shape, contract law (a needed contract change
