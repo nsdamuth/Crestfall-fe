@@ -6,6 +6,11 @@ import {
   X,
 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+const EYEBROW_CLASS_INLINE =
+  "inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 export default function MechanicsPresetValidationPanelView({
   eyebrow = "Preset Applied",
   title = "Live Validation Guide",
@@ -72,7 +77,7 @@ export default function MechanicsPresetValidationPanelView({
             <div className="rounded-xl border border-white/10 bg-black/30 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                  <p className={EYEBROW_CLASS}>
                     Reference Test Command
                   </p>
                   <code className="mt-2 block break-all text-sm text-[var(--ink)]">
@@ -96,7 +101,7 @@ export default function MechanicsPresetValidationPanelView({
 
           {steps.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS_INLINE}>
                 <Route size={14} />
                 Live Validation Steps
               </p>
@@ -120,7 +125,7 @@ export default function MechanicsPresetValidationPanelView({
         <aside className="grid content-start gap-4">
           {checks.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS_INLINE}>
                 <CheckCircle2 size={14} />
                 Expected Checks
               </p>

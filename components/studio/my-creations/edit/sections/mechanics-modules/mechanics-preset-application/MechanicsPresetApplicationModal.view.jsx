@@ -37,6 +37,11 @@ const PRESET_FOLDER_DEFINITIONS = Object.freeze([
   },
 ]);
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+const EYEBROW_RULE_AFTER =
+  "after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function IssueList({ title, issues = [], tone = "error" }) {
   if (!issues.length) return null;
 
@@ -80,10 +85,10 @@ function CountGrid({ title, counts }) {
 
   return (
     <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
-      <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+      <p className={EYEBROW_CLASS}>
         {title}
       </p>
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5 xl:grid-cols-2">
+      <div className="mt-3 grid gap-2 md:grid-cols-2 sm:grid-cols-5 xl:grid-cols-2">
         {rows.map(([label, value]) => (
           <div
             key={label}
@@ -179,7 +184,7 @@ function PresetFolder({
                     <p className="truncate text-sm text-[var(--ink)]">
                       {preset.label}
                     </p>
-                    <p className="mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                    <p className={`mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
                       {preset.eyebrow}
                     </p>
                   </div>
@@ -332,7 +337,7 @@ export default function MechanicsPresetApplicationModalView({
     <PresetLibraryModalFrame onClose={onClose}>
       <div className="flex shrink-0 items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
         <div>
-          <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+          <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
             <LibraryBig size={15} />
             Loom Preset Workflow
           </p>
@@ -442,7 +447,7 @@ export default function MechanicsPresetApplicationModalView({
             <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
               <section className="min-w-0 space-y-4">
                 <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
-                  <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                  <p className={EYEBROW_CLASS}>
                     {selectedPreset.eyebrow}
                   </p>
                   <h3 className="mt-2 font-display text-3xl">
@@ -486,7 +491,7 @@ export default function MechanicsPresetApplicationModalView({
 
                       {selectedPreset.liveValidation.testCommand ? (
                         <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
-                          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                          <p className={EYEBROW_CLASS}>
                             Reference Test Command
                           </p>
                           <code className="mt-1 block break-all text-xs text-[var(--ink)]">
@@ -523,7 +528,7 @@ export default function MechanicsPresetApplicationModalView({
                 ) : null}
 
                 <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                  <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                  <p className={EYEBROW_CLASS}>
                     Application Mode
                   </p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -590,7 +595,7 @@ export default function MechanicsPresetApplicationModalView({
 
               <aside className="grid content-start gap-4">
                 <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                  <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                  <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
                     <ShieldCheck size={14} />
                     Atomic Compliance
                   </p>
@@ -601,7 +606,7 @@ export default function MechanicsPresetApplicationModalView({
 
                 {selectedPreset.replacementPaths.length ? (
                   <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                    <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+                    <p className={EYEBROW_CLASS}>
                       Declared Boundary
                     </p>
                     <div className="mt-3 grid gap-2">

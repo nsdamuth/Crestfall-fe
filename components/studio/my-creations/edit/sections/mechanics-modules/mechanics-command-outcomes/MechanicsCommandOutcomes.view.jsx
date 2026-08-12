@@ -8,6 +8,10 @@ import {
 import {
   getCommandOutcomeEffectModeDescription,
 } from "./mechanicsCommandOutcomesNormalization.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
 export default function MechanicsCommandOutcomesView({
   branches = [],
@@ -22,7 +26,7 @@ export default function MechanicsCommandOutcomesView({
   return (
     <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4">
       <div>
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Conditional Outcome Effects
         </p>
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -94,22 +98,17 @@ export default function MechanicsCommandOutcomesView({
                   </select>
                 </label>
 
-                <label className="block">
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                    Outcome Summary
-                  </span>
-                  <textarea
-                    value={branch.summary}
-                    onChange={(event) =>
-                      patchOutcome(outcome, {
-                        summary: event.target.value,
-                      })
-                    }
-                    rows={2}
-                    placeholder="Optional deterministic result note."
-                    className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-                  />
-                </label>
+                <TextAreaField
+                  label="Outcome Summary"
+                  value={branch.summary}
+                  onChange={(value) =>
+                    patchOutcome(outcome, {
+                      summary: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                  placeholder="Optional deterministic result note."
+                />
               </div>
 
               {branchEffects.length ? (

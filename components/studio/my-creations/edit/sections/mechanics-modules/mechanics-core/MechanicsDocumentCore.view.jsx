@@ -1,9 +1,12 @@
 "use client";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function JsonPanel({ label, value }) {
   return (
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <p className={EYEBROW_CLASS}>
         {label}
       </p>
       <pre className="mt-4 max-h-[32rem] overflow-auto rounded-xl border border-white/10 bg-black/50 p-4 text-xs leading-6 text-white/75">
@@ -26,7 +29,7 @@ export default function MechanicsDocumentCoreView({
   return (
     <section className="grid gap-6">
       <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-6">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Mechanics {phase}
         </p>
         <h2 className="mt-2 font-display text-4xl">
@@ -60,7 +63,7 @@ export default function MechanicsDocumentCoreView({
 
       <div className="grid gap-5 xl:grid-cols-[0.3fr_0.7fr]">
         <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             M0 compatibility fixtures
           </p>
           <div className="mt-4 grid gap-2">
@@ -90,7 +93,7 @@ export default function MechanicsDocumentCoreView({
           <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                <p className={EYEBROW_CLASS}>
                   Selected document
                 </p>
                 <h3 className="mt-2 font-display text-3xl">

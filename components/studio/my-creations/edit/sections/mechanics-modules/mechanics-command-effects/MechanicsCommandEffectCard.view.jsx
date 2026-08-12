@@ -17,6 +17,10 @@ import {
   MECHANICS_EFFECT_VALUE_BINDING_MODES,
   MECHANICS_EFFECT_VALUE_BINDING_ROUNDING,
 } from "../mechanicsEffectValueBindingBuilder.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
 function normalizeNumber(value, fallback = 0) {
   const number = Number(value);
@@ -326,7 +330,7 @@ export default function MechanicsCommandEffectCardView({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           {eyebrow} {effectIndex + 1}
         </p>
         <button type="button" onClick={removeEffect} className="cf-btn cf-btn--danger cf-btn--sm" title="Remove effect">
@@ -346,10 +350,15 @@ export default function MechanicsCommandEffectCardView({
         <TextField label="Mechanics State ID" value={safeEffect.targetId} onChange={(value) => patchEffect({ targetId: normalizeMechanicsEffectIdentifier(value, value) })} placeholder="player_settled" />
         <EffectTargetBindingFields effect={safeEffect} argumentOptions={argumentOptions} onPatch={patchEffect} />
         <EffectValueFields effect={safeEffect} numericArgumentOptions={numericArgumentOptions} onPatch={patchEffect} ProgressionProfileFieldsComponent={ProgressionProfileFieldsComponent} />
-        <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Effect Reason</span>
-          <textarea value={safeEffect.reason} onChange={(event) => patchEffect({ reason: event.target.value })} rows={2} placeholder="Describe why this Mechanics effect occurs." className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50" />
-        </label>
+        <div className="md:col-span-2">
+          <TextAreaField
+            label="Effect Reason"
+            value={safeEffect.reason}
+            onChange={(value) => patchEffect({ reason: value })}
+            placeholder="Describe why this Mechanics effect occurs."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
+        </div>
       </div>
     </div>
   );

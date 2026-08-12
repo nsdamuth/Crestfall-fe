@@ -4,6 +4,9 @@ import {
   LOCATION_TRAVEL_OPERATIONS,
 } from "./MechanicsCommandDomainActions.contract.js";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function ArgumentSelect({
   label,
   value,
@@ -51,7 +54,7 @@ export default function MechanicsCommandDomainActionsView({
   return (
     <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4">
       <div>
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Domain Adapter
         </p>
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -239,7 +242,7 @@ export default function MechanicsCommandDomainActionsView({
             ) : null}
 
             <div className="rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 Apply On Outcomes
               </p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

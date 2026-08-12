@@ -2,6 +2,9 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function FieldLabel({ children }) {
   return (
     <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
@@ -86,7 +89,7 @@ function DerivedValueCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Derived Value {index + 1}
         </p>
         <SmallButton danger onClick={onRemove} title="Remove derived value">
@@ -249,7 +252,7 @@ export default function MechanicsProgressionProfileFieldsView({
   return (
     <div className="grid gap-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-5 md:col-span-2 xl:col-span-3">
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+        <p className={EYEBROW_CLASS}>
           Optimized Progression Profile
         </p>
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -388,7 +391,7 @@ export default function MechanicsProgressionProfileFieldsView({
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <FieldLabel>Rank Overrides</FieldLabel>
+              <p className={EYEBROW_CLASS}>Rank Overrides</p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 Override a generated per-rank cost or cumulative threshold for selected ranks.
               </p>
@@ -418,7 +421,7 @@ export default function MechanicsProgressionProfileFieldsView({
       <div className="rounded-xl border border-white/10 bg-black/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <FieldLabel>Derived Counters</FieldLabel>
+            <p className={EYEBROW_CLASS}>Derived Counters</p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Recalculate proficiency, talent points, health, or other counters from the resulting rank.
             </p>
@@ -448,7 +451,7 @@ export default function MechanicsProgressionProfileFieldsView({
 
       <div className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
         <div className="border-b border-white/10 px-4 py-3">
-          <FieldLabel>Generated Threshold Preview</FieldLabel>
+          <p className={EYEBROW_CLASS}>Generated Threshold Preview</p>
           <p className="mt-2 text-xs text-[var(--ink-dim)]">
             {summary.transitionCount} transitions · maximum threshold {Math.round(summary.maximumThreshold).toLocaleString("en-US")}
           </p>

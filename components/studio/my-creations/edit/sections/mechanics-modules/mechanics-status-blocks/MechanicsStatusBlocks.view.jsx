@@ -7,6 +7,13 @@ import {
   MECHANICS_STATUS_BLOCK_PLACEMENTS,
   MECHANICS_STATUS_BLOCK_VISIBILITIES,
 } from "./MechanicsStatusBlocks.contract.js";
+import {
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
@@ -70,7 +77,7 @@ function StatusBlockCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Status Block
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
@@ -177,7 +184,7 @@ function StatusBlockCard({
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+              <p className={EYEBROW_CLASS}>
                 Rendered Lines
               </p>
               <SmallActionButton onClick={submitLine} disabled={!lineDraft.trim()}>
@@ -206,14 +213,16 @@ function StatusBlockCard({
                     key={`${lineIndex}-${line}`}
                     className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
                   >
-                    <textarea
-                      value={line}
-                      onChange={(event) =>
-                        patchLine(blockIndex, lineIndex, event.target.value)
-                      }
-                      rows={2}
-                      className="min-w-0 flex-1 resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                    />
+                    <div className="min-w-0 flex-1">
+                      <TextAreaField
+                        label={`Line ${lineIndex + 1}`}
+                        value={line}
+                        onChange={(value) =>
+                          patchLine(blockIndex, lineIndex, value)
+                        }
+                        maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={() => removeLine(blockIndex, lineIndex)}
@@ -252,7 +261,7 @@ export default function MechanicsStatusBlocksView({
     <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">Status Blocks</h3>

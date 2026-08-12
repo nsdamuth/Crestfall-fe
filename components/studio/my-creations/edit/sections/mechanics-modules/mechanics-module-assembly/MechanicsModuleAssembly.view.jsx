@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronsDown, ChevronsUp, Plus, Trash2 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function MechanicsTextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
@@ -58,7 +61,7 @@ export function MechanicsRuntimeFoldSection({
         className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition hover:bg-white/[0.025]"
       >
         <div className="min-w-0">
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {eyebrow}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -118,7 +121,7 @@ export function MechanicsFoldableItemShell({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             {eyebrow}
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
@@ -171,7 +174,7 @@ export function MechanicsCommandsAssemblyView({
     <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
           <h3 className="mt-2 font-display text-3xl">Commands</h3>
@@ -251,7 +254,7 @@ export default function MechanicsModuleAssemblyView({
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className={EYEBROW_CLASS}>
             Mechanics Module
           </p>
           <h3 className="mt-2 font-display text-3xl">Runtime Fields</h3>
@@ -383,7 +386,7 @@ export default function MechanicsModuleAssemblyView({
       </MechanicsRuntimeFoldSection>
 
       <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Save Shape</p>
+        <p className={EYEBROW_CLASS}>Save Shape</p>
         <p className="mt-3">
           Saves into <span className="text-[var(--ink)]">creation.data.instanceData</span>.
           The runtime resolver can later hydrate this as a reusable
