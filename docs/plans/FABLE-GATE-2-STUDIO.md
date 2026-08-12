@@ -509,6 +509,7 @@ into the waves above and swaps cleanly if another is picked. Nothing
 here is resolved by this plan.
 
 **N1. Editor information architecture** (replaces reopened O3; ED1)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): type-aware grouped tabs: each type's sections regroup
   into at most five named groups (schema-as-data), horizontal group
   tabs with in-group section flow, per-type overview summary card,
@@ -524,6 +525,7 @@ here is resolved by this plan.
   colors."
 
 **N2. Save treatment** (replaces the floating bottom bar; ED1)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): top-docked contextual save bar directly under the
   editor header, appears only when unsaved changes exist, Save +
   Discard + status word; publishing controls leave the bar for the
@@ -540,6 +542,7 @@ here is resolved by this plan.
   wave blocked on backend.
 
 **N3. Quick Start coverage** (S1/S3)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): five doors: Character, Player Character, World,
   Look, Story. Player Character reuses the Character quick grammar
   (S3, 1-2 sessions). Everything else is Full Studio territory:
@@ -555,6 +558,7 @@ here is resolved by this plan.
   deletes a promised surface that is cheap to honor.
 
 **N4. Guided Build name** (S1/S2)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): "Build a Story". Why: says exactly what the flow
   does; the tier's own description already promises it.
 - B: "Story Forge". Why not: brand-flavored but opaque to a new
@@ -563,6 +567,7 @@ here is resolved by this plan.
   outcome; Brian already flagged it.
 
 **N5. Media module on Characters** (P1/ED2)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): media stays on Characters AND Stories/Adventures,
   but as the bounded thumb rail (never the tall block); non-visual
   types (registries, profiles, mechanics, codex) drop it entirely,
@@ -577,6 +582,7 @@ here is resolved by this plan.
   richest engagement surface.
 
 **N6. The failing contrast pair** (X1)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): pairing law with zero token changes: --ink-faint is
   illegal for normal-size meaningful text on --surface-4; counters,
   placeholders, and timestamps inside modals use --ink-dim;
@@ -592,6 +598,7 @@ here is resolved by this plan.
   exemption would barely apply.
 
 **N7. Creation picker scope** (SW1)
+RATIFIED 12 Aug 2026, option A.
 - A (starred): the picker lists ALL owned creations, filtered by
   the five vault buckets (Characters / Worlds / Looks / Stories /
   Adventures) plus a "More" bucket carrying the remaining pro
