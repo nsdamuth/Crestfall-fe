@@ -8,6 +8,7 @@ import {
   kitAssetDetailPopupCharacterFixture,
   kitAssetDetailPopupLikedAndSavedFixture,
   kitAssetDetailPopupLongestCopyFixture,
+  kitAssetDetailPopupManyMediaFixture,
   kitAssetDetailPopupNoCreatorNoTagsFixture,
   kitAssetDetailPopupNoImageFixture,
   kitAssetDetailPopupOwnWorkFixture,
@@ -26,6 +27,10 @@ const STATES = {
   noCreatorNoTags: {
     label: "No creator link, no tags",
     props: kitAssetDetailPopupNoCreatorNoTagsFixture,
+  },
+  manyMedia: {
+    label: "Many media (numeric readout past 8 slides)",
+    props: kitAssetDetailPopupManyMediaFixture,
   },
 };
 

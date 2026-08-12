@@ -538,9 +538,11 @@ all three treatments together, RULED 9 Aug 2026; nothing here is a new
 value, every treatment composes tokens already locked.
 
 One package, one `treatment` prop constrained to exactly three names.
-No fourth treatment, no per-instance veil/anchor settings (banner
+No fourth treatment, no per-instance veil/copy-anchor settings (banner
 taxonomy law): fade direction and copy position are fixed per
-treatment, never configurable per instance.
+treatment, never configurable per instance. The art layer's own crop
+anchor is a separate mechanism, ruled at (z): `imageAnchor`, an
+optional per-instance object-position override, default `"center 10%"`.
 
 | Treatment | Where | Veil | Copy/CTA position |
 |---|---|---|---|
@@ -1098,10 +1100,15 @@ an opt-in galaxy layer (`showGalaxy`), composed from the existing
 `--anim-twinkle`, reduced-motion kill already in
 `app/design-system.css`), layered between the art and the veil.
 
-**(g) List density.** Image presence is maximized: the list row is
-full-bleed art (see a). Two-up list rows are permitted at desktop
-widths where whitespace allows; the Community page renders its list
-two-up at 1100px and up on the ruled grid (1.11).
+**(g) List density, extended 12 Aug 2026 (LD1).** Image presence is
+maximized: the list row is full-bleed art (see a). Two-up list rows
+are permitted at desktop widths where whitespace allows; the Community
+page renders its list two-up at 1100px and up on the ruled grid
+(1.11). Extended 12 Aug 2026: Creator Connections' list adopts the
+same two-up-at-1100px grid (`ConnectionList`, matching
+`CommunityV2Mockup.jsx`'s own layout), closing a gap where its
+single-column rows left large blank middles above 1100px, the pattern
+this law bans.
 
 **(h) Ratings presentation, RULED 9 Aug 2026 (kit polish pass),
 mapping CORRECTED 9 Aug 2026 (demo prep pass).** Everyone and Adult
@@ -1252,7 +1259,7 @@ mobile law floor. First consumer: Home's top banner, both states
 (cold-start: primary "Browse stories", ghost "See what others made";
 filled/continue: primary "Continue", ghost "Explore recent stories").
 See `components/kit/promo-banner/README.md` for the full package
-record.
+record. Superseded same-session by (z): the contract is now v1.3.0.
 
 **(x) Compact continue row, RULED 11 Aug 2026, new sibling pattern
 beside 2.3.** `KitContinueRow`, a sibling file in the `promo-banner`
@@ -1281,6 +1288,26 @@ exists yet); an honest zero count, not a fabricated one. Candidate 1
 in `docs/PARITY-AUDIT.md` section 10 is partially answered by this
 ruling (the type-bucket question); the status-facet half (Drafts, In
 Review) stays open.
+
+**(z) Banner-anchor ruling, RULED 11 Aug 2026, amends 2.3.** Banner art pins toward the top of
+its frame with roughly a 10% downward bias by default, so faces and
+subjects stay visible, or per-image positioning where an image reads
+better another way. Supersedes the 10 Aug 2026 kit polish 3 pass's
+fixed `object-[center_35%]` crop, which was measured against a single
+asset (Lilith.png) whose claimed dimensions turned out to be wrong (it
+is 640x360, not the claimed 2560x1441; see
+`docs/reviews/BANNER-AUDIT.md`). Promo-banner contract moves to
+v1.3.0: `imageAnchor` is ADDED, optional and additive, an
+object-position string applied to the art layer, default
+`"center 10%"`, omitted entirely on every existing consumer (defaults
+to the ruled anchor, pixel-stable elsewhere). This is a distinct
+mechanism from 2.3's per-treatment copy/CTA anchor (still fixed, still
+not configurable per instance); `imageAnchor` positions the art layer
+only. Executed across all 14 v2 banner slots in the same sitting
+(`docs/reviews/BANNER-AUDIT.md`): no page pair one click apart shares
+a banner image where the draft pool allowed otherwise, and the false
+Lilith.png/sassy.png dimension claim in
+`components/kit/promo-banner/KitPromoBanner.fixtures.js` is corrected.
 
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
@@ -1731,7 +1758,7 @@ the backend four-tier field is CR-027, owner Nick, later pass.
 
 # Rulings log, 11 Aug 2026
 
-Four rulings (v) through (y) folded into chapter 2 section 2.16, all
+Five rulings (v) through (z) folded into chapter 2 section 2.16, all
 ruled by Brian the same day, all already implemented in code before
 this document was updated.
 
@@ -1748,6 +1775,18 @@ this document was updated.
 4. Five-bucket type filter (CR-038): Community and Vault share
    Characters, Worlds, Looks, Stories, Adventures as one presentation-
    layer grouping. Folded into 2.16(y), amends (b).
+5. Banner-anchor ruling (promo-banner contract 1.3.0, same-day second
+   version bump): the default art crop moves from the 10 Aug pass's
+   fixed `center 35%` to a top-pinned `center 10%` default, plus an
+   optional per-image `imageAnchor` override. Folded into 2.16(z),
+   amends 2.3. Executed across all 14 v2 banner slots the same
+   sitting; full survey in `docs/reviews/BANNER-AUDIT.md`.
+
+# Rulings log, 12 Aug 2026
+
+1. List density extension (LD1): Creator Connections' list adopts the
+   same two-up-at-1100px grid the (g) list-density law already named
+   for Community, closing a gap the law bans. Folded into 2.16(g).
 
 ---
 

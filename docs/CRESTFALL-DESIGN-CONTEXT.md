@@ -1,13 +1,14 @@
 # Crestfall design context
 
-Regenerated 11 Aug 2026 (branch `design/h-docs-close`, cut from
-`origin/design/sprint-h-final` at c2c6d1d). Supersedes the 10 Aug 2026
-Sprint F version. Not law itself; CLAUDE.md names the four law
-documents (`docs/DESIGN-TOKENS.md`, `docs/FRONTEND-SOP.md`,
-`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the active sprint plan). This
-file orients a new session fast; when it and a law document disagree,
-the law document wins and this file is stale and should be
-regenerated.
+Regenerated 12 Aug 2026 (branch `design/cc7-creator-close`, cut from
+`origin/design/sprint-h-final` at 0262fc0, the closing-docs pass for
+the Sprint H creator-completion sitting: CC1 through CC7, SF1, LD1).
+Supersedes the 11 Aug 2026 `design/h-docs-close` version. Not law
+itself; CLAUDE.md names the four law documents (`docs/DESIGN-TOKENS.md`,
+`docs/FRONTEND-SOP.md`, `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md`, the
+active sprint plan). This file orients a new session fast; when it and
+a law document disagree, the law document wins and this file is stale
+and should be regenerated.
 
 ## What Crestfall is
 
@@ -144,6 +145,105 @@ Creators profile-detail page (`/studio/v2/creators/[handle]`, contract
 editor's image-library page (`/studio/v2/editor/[id]/image-library`,
 contract 1.0.0).
 
+## Rulings from the 12 Aug 2026 sitting (Sprint H creator-completion: CC1-CC7, SF1, LD1)
+
+Eight parallel and sequenced passes, all merged into
+`design/sprint-h-final` before this document was regenerated. Full
+merge history: the branch's own log; this section is the consolidated
+summary.
+
+- **Advanced-editor conformance (CC1, CC2, CC3, SF1), closed.** Every
+  advanced-editor package now uses `SharedFields`' `SectionTitle` (or
+  the `StudioPageHeader` inline eyebrow token recipe) instead of
+  hand-rolled gold eyebrows, and every raw textarea folds into
+  `SharedFields`' `TextAreaField` under CR-041's two-class limit
+  system (SHORT 600, DEEP 2,000), or keeps a real, higher,
+  contract-validated limit where one already existed. Covers
+  rules-codex, lore, actor-mechanics-profile, stats-pools, and
+  progression (CC1); the mechanics-module modal family, 9 unified call
+  sites plus 8 mechanics textareas (CC2); location-registry and
+  structured-registry (CC3); and `SharedFields`' own `TextAreaField`,
+  which gained `disabled` and `mono` so the stats-pools fields CC1
+  stopped on (a disabled-lock regression risk) could convert (SF1).
+  `TextAreaField` also gained `helperText`. JSON-document textareas in
+  every `JsonEditorModal` view stay unlimited, exempt (raw JSON, not
+  display-layer prose). Six fields keep a real limit above their
+  CR-041 tier, flagged for Nick's reconciliation: rules-codex's Codex
+  Summary (2,000) and Interpretive Guidance (8,000); actor-mechanics-
+  profile's Profile Summary (2,400), Capability Notes (4,000), and
+  Binding Notes (4,000); stats-pools' own real-limit fields. Full
+  record: `docs/CONTRACT-REQUESTS.md` CR-041. Three visual items
+  flagged for Brian, not resolved this sitting (see OPEN FOR BRIAN in
+  the closing report): lore's violet and emerald non-gold labels, two
+  progression heading size bumps, lore's Value field row-height
+  asymmetry.
+- **Scale Review H fix pass (CC4), closed.** Home's four rails cap at
+  12 items in `useHomeViewModel.js` before reaching `KitRailView`
+  (finding B1); `KitStudioFilterBar`'s `SearchField` gained a short
+  local debounce so one keystroke buffer serves every consuming page's
+  filter re-run (D1); `KitAssetDetailPopup`'s carousel replaces its
+  dot row with a tabular "1 of N" readout past eight slides (D3), a
+  new many-media fixture exercising the case, now wired into that
+  package's preview client. CR-042 filed: server-side filter, sort,
+  and search for the eight list pages named in finding B2, the true
+  scale ceiling underneath the fixture-driven build. D2 and D4 are
+  recorded watch-items, no code change. Full record:
+  `docs/reviews/SCALE-REVIEW-H.md`, `docs/CONTRACT-REQUESTS.md` CR-042.
+- **Banner-anchor ruling (CC5), closed.** Banner art pins toward the
+  top of its frame with roughly a 10% downward bias by default
+  (`imageAnchor`, promo-banner contract v1.3.0, optional and
+  additive), or per-image positioning where an image reads better
+  another way, superseding the 10 Aug 2026 fixed `center 35%` crop
+  (measured against Lilith.png's claimed 2560x1441 dimensions, which
+  turned out to be wrong; the file is 640x360). All 14 v2 banner slots
+  reassigned so no page pair one click apart shares a banner image
+  where the draft pool allowed otherwise, resolving the Lilith.png x5,
+  eden-confrontation x3, and ampitheater x2 duplicates, and the
+  Lux.png/whiteviolin.png doubling with Studio's door art. Full
+  record: `docs/reviews/BANNER-AUDIT.md`,
+  `components/kit/promo-banner/README.md`, `docs/BUILD-BLUEPRINT.md`
+  2.16(z). Two weak-image flags stand, awaiting Nick or new art (see
+  OPEN FOR BRIAN): Lilith.png upscales at desktop widths (640x360,
+  no wider single-subject asset in the pool); Lux.png is the pool's
+  narrowest portrait, resolved out of every banner slot this sitting
+  but unchanged as Studio's door art.
+- **Quick-create polish sweep (CC6), closed, comment-only.** Closes
+  stale "this pass" claims across all four creator-stops trees
+  (Character, World, Look, Story) to name the actual pass each comment
+  describes; drops dead correction narratives; corrects the three
+  preview-CTA comments to point at
+  `character/character-preview/CharacterPreview.view.jsx`, the file
+  that actually holds the middot string; moves four user-facing
+  "is not built in this pass" strings to pass-neutral "is not built
+  yet" copy. No behavior change, no contract version change, no
+  renames, no prop-shape changes. CC6's own behavior-drift list (items
+  noticed during the sweep, not itself fixed) is open for Brian; its
+  content was not included in the closing-pass summary handed to this
+  sitting and is flagged as missing, not fabricated, in the closing
+  report.
+- **Connections list density (LD1), closed.** Creator Connections'
+  list adopts the same two-up-at-1100px grid Community's own list
+  layout already uses (`ConnectionList`, matching
+  `CommunityV2Mockup.jsx`), closing a gap where single-column rows
+  left large blank middles above 1100px, the pattern the (g)
+  list-density law bans. Full record: `docs/BUILD-BLUEPRINT.md`
+  2.16(g).
+
+**The four quick creates, all now live doors on Studio.** Character
+(the original template, `creator-stops.view.v6` shell, stops name,
+kind, face, silhouette, heart, seal, payoff), World (v1.1.0, stops
+name, premise, setting, tone, look), Look (v1.0.0, the Q2 brief,
+stops name, vibe, garments, palette, look), and Story (v1.0.0, the Q3
+brief, stops name, premise, cast, setting, cover). World, Look, and
+Story each reuse the Character quick create's shared shell
+(`CreatorStopsView`) unmodified and unforked, per each brief's
+explicit instruction; only Character has its own preview/payoff stop
+component lineage, mirrored (not copied) by World's and Look's own
+preview stops. Player Character is the one Studio door still `isLive:
+false`, no quick create built for it yet. Every quick create shares
+the same modal shell, stepper, discard dialog, and save-and-reaccess
+loop footer.
+
 ## Rulings from the 10 Aug 2026 strategy chat
 
 - **Home page, ruled.** A guidepost that routes, not a dashboard and
@@ -175,9 +275,13 @@ contract 1.0.0).
   removed.
 - **Studio, ruled composition, now BUILT.** Quick-create modals for
   phone and the advanced full editor for desktop (Brief S1, the
-  ladder layout with Character quick create). CR-026 (Nick's
-  promotion pass over the QUICK/ADVANCED allocation) remains a later
-  pass, not a build gate.
+  ladder layout). **Extended 11-12 Aug 2026: four quick creates now
+  live** (Character, the original template; World, Look, and Story,
+  each per its own Q1/Q2/Q3 brief, each reusing Character's shared
+  `CreatorStopsView` shell unmodified). See "The four quick creates"
+  above. Player Character is the one remaining Studio door not yet
+  built. CR-026 (Nick's promotion pass over the QUICK/ADVANCED
+  allocation) remains a later pass, not a build gate.
 - **Adventures, ruled approach, now BUILT and extended.** Proceeds
   using display-name mapping only, through the terminology module
   (`lib/shared/presentation/terminology.js`, which maps STORYLINE to
@@ -282,7 +386,11 @@ the confirming button of an "are you sure" step.
   secondary action, `cf-btn--secondary` (border only, no fill), may
   sit beside the one primary CTA; never a second primary. First
   consumer: Home's top banner, both its cold-start and filled/continue
-  states.
+  states. **AMENDED AGAIN 11 Aug 2026, same day (promo-banner contract
+  1.3.0, the banner-anchor ruling):** an optional `imageAnchor` prop,
+  default `"center 10%"`, positions the art layer's crop per instance;
+  see "Rulings from the 12 Aug 2026 sitting" above and
+  `docs/BUILD-BLUEPRINT.md` 2.16(z).
 - **Compact continue row, RULED 11 Aug 2026, new pattern.**
   `KitContinueRow`, a package sibling to `promo-banner`, not part of
   its contract: small art thumbnail left, title, "Last played" line,
@@ -293,7 +401,9 @@ the confirming button of an "are you sure" step.
   continue banner and does not consume this pattern.
 - **List density.** Two-up list rows permitted at desktop widths where
   whitespace allows; Community renders its list two-up at 1100px and
-  up.
+  up. **EXTENDED 12 Aug 2026 (LD1):** Creator Connections' list
+  adopts the same two-up-at-1100px grid, closing the gap the law
+  bans.
 - **Ratings presentation.** Ruled final per CR-027 (kit polish 2
   pass) and implemented in `lib/shared/presentation/terminology.js`
   (`CONTENT_RATING_TIERS`): SFW displays as Everyone, MATURE as Teen,
@@ -419,7 +529,7 @@ page composes from (`docs/BUILD-BLUEPRINT.md` chapter 2):
 | `studio-page` | one-width page shell, header/filter/children/banner slots | 1.0.0 | R1 one-width law |
 | `studio-filter-bar` | search, filter dropdowns, sort, view-mode slot on one sticky line | 2.0.0 | filter line law |
 | `dropdown` | branded popover/sheet, multi and single select | 1.1.0 | additive `ariaLabel`; sheet variant carries the R7 close-header row; carries the five-bucket Type option set (CR-038) where consumed by Community/Vault |
-| `promo-banner` | three treatments: bottom, card, top | 1.2.0 | `top` carries the opt-in galaxy layer; `bottom` carries the R6 mobile proportions; v1.2.0 (11 Aug 2026) adds the optional quiet secondary CTA. `KitContinueRow` ships as a sibling file in this package, Stories-only, not part of this contract |
+| `promo-banner` | three treatments: bottom, card, top | 1.3.0 | `top` carries the opt-in galaxy layer; `bottom` carries the R6 mobile proportions; v1.2.0 (11 Aug 2026) adds the optional quiet secondary CTA; v1.3.0 (11 Aug 2026, banner-anchor ruling) adds the optional `imageAnchor` per-instance art-crop override. `KitContinueRow` ships as a sibling file in this package, Stories-only, not part of this contract |
 | `load-more` | batch-then-append pagination, no infinite scroll | 1.0.0 | |
 | `creation-card` | full-bleed grid and list card | 3.2.0 | card law; `actionPlacement` retired, `overlay-top` only; v3.2.0 (11 Aug 2026) adds the contextual third overlay action (Play/Generate/Expand) |
 | `creator-card` | avatar, stats, recent-work thumbnails, follow | 1.0.0 | card-without-art surface ruling |
@@ -439,7 +549,8 @@ Not yet built as kit packages: global search, form field (ad hoc
 `cf-field` recipes still cover this), picker-modal/menu-popover beyond
 the ingredient picker, alert-strip. Item 37's `destination-tile`
 package shipped ahead of Home itself; item 38 (the Continue strip's
-filled-state treatment) is closed by the promo-banner v1.2.0 ghost-CTA
+filled-state treatment) is closed by the promo-banner v1.2.0 (now
+v1.3.0) ghost-CTA
 addition above, Home's own consumer.
 
 ## Where the build stands
@@ -465,7 +576,9 @@ and the advanced editor:
    Display naming extended to the shared builder components 11 Aug
    2026.
 4. **Studio** (`/studio/v2/studio`, contract 1.0.0, Brief S1): the
-   create-hub ladder layout with Character quick create.
+   create-hub ladder layout, now with four live quick-create doors
+   (Character, World, Look, Story; Player Character is the one door
+   not yet built). See "The four quick creates" above.
 5. **Images** (`/studio/v2/images`): the library grid plus the
    Sprint E creator panel: sticky right rail at 1100px and up, sticky
    "Create image" CTA opening a full-screen modal under 1100px. Full
@@ -513,7 +626,13 @@ Open picks awaiting Brian's render review: Sprint D items 1 through
 BRIAN sections; Sprint F items 31 through 35 are ruled and closed;
 item 36 (mute placement) is now closed (see above); OPEN item 42 (the
 Home creations-filter seat) stays open. Read the plans directly for
-the live lists.
+the live lists. The Sprint H creator-completion sitting (12 Aug 2026)
+adds its own consolidated OPEN FOR BRIAN block, in the closing-pass
+report for `design/cc7-creator-close`: three advanced-editor visual
+flags (CC1), CC6's behavior-drift list (content not received this
+sitting, flagged missing rather than fabricated), and two weak-image
+flags from the banner-anchor pass (CC5), full detail in
+`docs/reviews/BANNER-AUDIT.md`.
 
 ## Named future workstreams
 
@@ -529,10 +648,14 @@ not lost between sessions.
   distinct from the preview-flag journey-order nav above; the
   preview-flag work stages the destinations, the rebuild itself is a
   separate, later structural pass on the sidebar shell.
-- **The Fable review gate.** Covers the creation-type quick/advanced
-  allocation (the CR-026 lineage this document already tracks under
-  Studio) and high-volume creator behavior, using G Stack read-only
-  tools for that review.
+- **The Fable design gate, for creator surfaces and chat.** Covers the
+  creation-type quick/advanced allocation (the CR-026 lineage this
+  document already tracks under Studio), the four quick creates'
+  eventual design review now that all four exist, high-volume creator
+  behavior, and the chat/story-room surface (excluded from every
+  sweep in this sitting by the standing sweep-scope ruling), using
+  G Stack read-only tools for that review. Not scheduled inside this
+  sitting's scope; named here so it is not lost.
 - **Recommendation and sorting logic**, on Nick's agenda: the backend
   ranking behind the sort controls this document records as fixture-
   driven across every browse page (Home's rail sort, Community's and
