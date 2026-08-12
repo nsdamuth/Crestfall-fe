@@ -40,8 +40,15 @@ export const creatorStopsSaveErrorFixture = buildFixture("payoff", {
   saveError: true,
 });
 
-// The save-and-reaccess loop, RULED 11 Aug 2026: the post-save
-// footer state, reachable after a confirmed save from any stop.
+// The save-and-reaccess loop, RULED 11 Aug 2026, two-tier: a confirmed
+// save from a non-final stop shows the Saved confirmation only, the
+// rest of the footer (Back, Save, Next) unchanged.
+export const creatorStopsMidSavedFixture = buildFixture("face", {
+  justSaved: true,
+});
+
+// A confirmed save from the final stop additionally swaps the footer
+// to the two-action post-save state, Keep editing and Done.
 export const creatorStopsJustSavedFixture = buildFixture("payoff", {
   isLastStop: true,
   justSaved: true,

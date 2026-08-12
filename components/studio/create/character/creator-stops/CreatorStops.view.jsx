@@ -243,13 +243,15 @@ export default function CreatorStopsView({
                 </button>
               ) : null}
             </>
-          ) : justSaved ? (
+          ) : justSaved && isLastStop ? (
             <>
-              {/* The save-and-reaccess loop, RULED 11 Aug 2026: the
-                  post-save state. Exactly two actions replace the whole
-                  normal footer; the Saved confirmation sits where the
-                  save status used to, always with the word per the
-                  status-color law, no layout jump. */}
+              {/* The save-and-reaccess loop, RULED 11 Aug 2026,
+                  two-tier since (supersedes the any-stop reading): the
+                  two-action footer appears only on a confirmed save
+                  from the final stop. Exactly two actions replace the
+                  whole normal footer; the Saved confirmation sits
+                  where the save status used to, always with the word
+                  per the status-color law, no layout jump. */}
               <span aria-live="polite" className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
                 <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-success)]" />
                 <span className="inline">Saved</span>
@@ -304,6 +306,17 @@ export default function CreatorStopsView({
                   <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
                     <span className="hidden sm:inline">Unsaved changes</span>
+                  </span>
+                ) : justSaved ? (
+                  // Two-tier save-and-reaccess loop, RULED 11 Aug 2026:
+                  // a confirmed save from a non-final stop shows the
+                  // Saved confirmation only, the rest of the footer
+                  // (Back, Save, Next) unchanged. Unmissable at 390:
+                  // the word stays visible at every width, not hidden
+                  // behind sm:inline like "Unsaved changes" above.
+                  <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
+                    <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-success)]" />
+                    <span className="inline">Saved</span>
                   </span>
                 ) : null}
               </span>

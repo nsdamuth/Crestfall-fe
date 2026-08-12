@@ -14,6 +14,7 @@ import {
   creatorStopsUnsavedFixture,
   creatorStopsConfirmDiscardFixture,
   creatorStopsSaveErrorFixture,
+  creatorStopsMidSavedFixture,
   creatorStopsJustSavedFixture,
 } from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
 import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
@@ -36,7 +37,8 @@ const STATES = [
   ["Unsaved changes", creatorStopsUnsavedFixture],
   ["Confirm discard", creatorStopsConfirmDiscardFixture],
   ["Save unsuccessful", creatorStopsSaveErrorFixture],
-  ["Saved (post-save footer)", creatorStopsJustSavedFixture],
+  ["Saved, mid-flow (confirmation only)", creatorStopsMidSavedFixture],
+  ["Saved, final stop (post-save footer)", creatorStopsJustSavedFixture],
 ];
 
 const INITIAL_FORM_STATE = {

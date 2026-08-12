@@ -5,19 +5,31 @@
 // stop in both scopes. No removal, no rename, no handler signature
 // change on any existing prop.
 //
-// v2 to v3 (11 Aug 2026, the save-and-reaccess loop, ruled): additive
-// only. CreatorStopsView gains three props for the shared quick-create
-// shape's post-save state: `justSaved` (bool, default false), which on
-// a confirmed save swaps the footer to exactly two actions in place of
-// Back/Save/Next/Finish and save/Save and open editor; `onContinueInEditor`
-// (the "Keep editing" action, routes to the advanced editor for the
-// just-saved item); `onDone` (the "Done" action, closes the modal in
-// place, no navigation). Before a save, the footer is the unchanged v2
-// footer. `justSaved` is driven entirely by the consumer, which is
-// expected to clear it the moment the form changes again after a save,
-// so the confirmation and two-action footer are not sticky across
-// further edits. No removal, no rename, no handler signature change on
-// any existing prop.
+// v2 to v3 (11 Aug 2026, the save-and-reaccess loop, ruled, two-tier):
+// additive only. CreatorStopsView gains three props for the shared
+// quick-create shape's post-save state: `justSaved` (bool, default
+// false); `onContinueInEditor` (the "Keep editing" action, routes to
+// the advanced editor for the just-saved item); `onDone` (the "Done"
+// action, closes the modal in place, no navigation). `justSaved` is
+// driven entirely by the consumer, which is expected to clear it the
+// moment the form changes again after a save, so the confirmation is
+// not sticky across further edits.
+//
+// The post-save state is two-tier, keyed on `isLastStop`:
+// - `justSaved` true on any stop that is NOT the final stop (isLastStop
+//   false): the Saved confirmation renders in place of the usual
+//   unsaved/error status, and the rest of the footer (Back, Save,
+//   Next) is exactly the v2 footer, unchanged.
+// - `justSaved` true on the final stop (isLastStop true): the Saved
+//   confirmation renders AND the footer swaps to exactly two actions,
+//   Keep editing and Done, in place of Back/Save/Finish and save/Save
+//   and open editor.
+// A single-stop quick create is always on its final stop, so it gets
+// the two-action footer on every save with no special casing; this is
+// the shape later quick creates (Worlds, Looks, Stories) inherit.
+// Before any save, the footer is the unchanged v2 footer in both
+// cases. No removal, no rename, no handler signature change on any
+// existing prop.
 export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v3";
 
 export const CREATOR_STOPS = Object.freeze([

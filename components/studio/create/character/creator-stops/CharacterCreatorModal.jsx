@@ -230,13 +230,14 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
     }
   }
 
-  // The save-and-reaccess loop, RULED 11 Aug 2026 (supersedes the
-  // three previously distinct post-save behaviors of Save, Finish and
-  // save, and Save and open the advanced editor): every save control
-  // in the footer runs persistCreation, and a confirmed save from any
-  // of them lands in the same post-save state (the Saved confirmation,
-  // footer swapped to Keep editing / Done) rather than each button
-  // taking its own separate action.
+  // The save-and-reaccess loop, RULED 11 Aug 2026, two-tier
+  // (supersedes the three previously distinct post-save behaviors of
+  // Save, Finish and save, and Save and open the advanced editor):
+  // every save control in the footer runs persistCreation and sets
+  // justSaved on a confirmed save. CreatorStopsView keys the actual
+  // footer on isLastStop: a non-final stop shows the Saved
+  // confirmation only (Back/Save/Next unchanged); the final stop
+  // additionally swaps the footer to Keep editing / Done.
   async function handleSave() {
     const saved = await persistCreation();
     if (saved) {
@@ -245,9 +246,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
   }
 
   // Payoff-stop CTA, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section
-  // 3.3), on the save-and-reaccess loop since 11 Aug 2026: on a
-  // confirmed save, the modal reaches the post-save state rather than
-  // navigating immediately. Navigation now waits for "Keep editing".
+  // 3.3), on the two-tier save-and-reaccess loop since 11 Aug 2026: on
+  // a confirmed save from the final stop, the modal reaches the
+  // two-action post-save state rather than navigating immediately.
+  // Navigation now waits for "Keep editing".
   function handleContinueInEditorAfterSave() {
     if (!creationId) return;
     onClose?.();
