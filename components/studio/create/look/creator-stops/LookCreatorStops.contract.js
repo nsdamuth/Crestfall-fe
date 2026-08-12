@@ -1,5 +1,5 @@
-// The Looks quick create, v1.0.0, new package this pass (RULED, the
-// Q2 look quick-create brief). Built using the Worlds quick create
+// The Looks quick create, v1.0.0, new package (RULED, the Q2 look
+// quick-create brief). Built using the Worlds quick create
 // (components/studio/create/world/creator-stops/) as the proven
 // template, itself the same strict template of the Character quick
 // create (components/studio/create/character/creator-stops/): same
@@ -27,8 +27,8 @@
 //
 // Save-and-reaccess loop: this package renders CreatorStopsView
 // (components/studio/create/character/creator-stops/CreatorStops.view,
-// contract creator-stops.view.v6, comment corrected this pass per the
-// Q3 story-quick-create brief's stale-comment-fix precedent, no
+// contract creator-stops.view.v6, comment corrected in the Q3
+// story-quick-create brief's stale-comment-fix precedent, no
 // behavior change) directly, unmodified and unforked, per the
 // brief's explicit instruction. LookCreatorModal supplies isLastStop
 // (true only on "look"), so the two-tier post-save state applies
@@ -53,9 +53,10 @@ export const LOOK_STOPS = Object.freeze([
 
 export const LOOK_STOP_IDS = Object.freeze(LOOK_STOPS.map((stop) => stop.id));
 
-// Character limits per field, RULED (this pass, package-local until a
-// backend schema rules otherwise): visible on every folding and
-// non-folding text field via FieldLabel's counter slot. Transplanted
+// Character limits per field, RULED (the Q2 look quick-create brief,
+// package-local until a backend schema rules otherwise): visible on
+// every folding and non-folding text field via FieldLabel's counter
+// slot. Transplanted
 // from the World template's per-position limits (name 80,
 // folding-field 500, single-line-field 120, folding-field 300).
 export const LOOK_FIELD_LIMITS = Object.freeze({

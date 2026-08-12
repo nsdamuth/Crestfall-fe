@@ -63,7 +63,7 @@ export function TextField({ label, value, onChange, placeholder, maxLength }) {
 // the Character quick create's TextAreaField uses.
 const TEXTAREA_MAX_HEIGHT_PX = 200;
 
-// Folding text inputs, RULED (this pass): collapsed by default (a
+// Folding text inputs, RULED: collapsed by default (a
 // single input-height row), expand on focus, visible character limit
 // at every state. Once a field has been focused it stays expanded for
 // the rest of the session, so a filled-in answer never disappears out

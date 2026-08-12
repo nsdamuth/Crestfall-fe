@@ -206,7 +206,7 @@ export default function HeartStopView({
               message={
                 voiceModuleIds && voiceModuleIds.length
                   ? `${voiceModuleIds.length} voice module${voiceModuleIds.length === 1 ? "" : "s"} attached.`
-                  : "No voice modules attached. The voice module picker is not built in this pass."
+                  : "No voice modules attached. The voice module picker is not built yet."
               }
               actions={[
                 { label: "Select voice modules", onClick: onOpenVoiceModulePicker },

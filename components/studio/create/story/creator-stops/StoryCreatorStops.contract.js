@@ -1,5 +1,5 @@
-// The Stories quick create, v1.0.0, new package this pass (RULED, the
-// Q3 story quick-create brief). Built using the Looks quick create
+// The Stories quick create, v1.0.0, new package (RULED, the Q3 story
+// quick-create brief). Built using the Looks quick create
 // (components/studio/create/look/creator-stops/) as the proven
 // template, itself the same strict template of the Character quick
 // create (components/studio/create/character/creator-stops/): same
@@ -39,9 +39,10 @@
 //
 // Save-and-reaccess loop: this package renders CreatorStopsView
 // (components/studio/create/character/creator-stops/CreatorStops.view,
-// contract creator-stops.view.v6 after this pass) directly, unmodified
-// and unforked, per the brief's explicit instruction. StoryCreatorModal
-// supplies isLastStop (true only on "cover"), so the two-tier post-save
+// contract creator-stops.view.v6, reached by this package's own
+// story-quick-create brief) directly, unmodified and unforked, per
+// the brief's explicit instruction. StoryCreatorModal supplies
+// isLastStop (true only on "cover"), so the two-tier post-save
 // state applies automatically: a save on any earlier stop shows the
 // Saved confirmation only; a save on "cover" additionally swaps the
 // footer to Keep editing / Done.
@@ -63,10 +64,10 @@ export const STORY_STOPS = Object.freeze([
 
 export const STORY_STOP_IDS = Object.freeze(STORY_STOPS.map((stop) => stop.id));
 
-// Character limit for the one free-text field, RULED (this pass,
-// package-local until a backend schema rules otherwise): visible via
-// FieldLabel's counter slot. Transplanted from the Worlds/Looks
-// template's folding-field limit (500).
+// Character limit for the one free-text field, RULED (the Q3 story
+// quick-create brief, package-local until a backend schema rules
+// otherwise): visible via FieldLabel's counter slot. Transplanted
+// from the Worlds/Looks template's folding-field limit (500).
 export const STORY_FIELD_LIMITS = Object.freeze({
   name: 80,
   premise: 500,
