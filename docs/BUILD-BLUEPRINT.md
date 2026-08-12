@@ -1222,6 +1222,66 @@ view at once is the top bar, the filter line, and one create
 affordance; the rail or the CTA is that one affordance, never a
 fourth sticky layer.
 
+**(v) Card law contextual third action, RULED 11 Aug 2026, amends (a)
+and 2.6.** The card face's third overlay icon (previously a fixed
+Expand) is now contextual, resolved per card by `assetKind` and which
+callbacks the consuming page wires: Play, labeled "Start Chat", on
+Story and Adventure kind cards where `onPlay` is supplied; Generate on
+Image kind cards where `onGenerate` is supplied; Expand as the
+universal fallback where neither applies. Like and Save (overlay slots
+one and two) are unchanged. KitCreationCard contract moves to v3.2.0:
+`onPlay` and `onGenerate` are ADDED, both optional and additive,
+resolved by `resolveContextualAction` in the portable View. Consuming
+pages wire what they have: Stories and Community wire `onPlay`
+conditionally per item (`assetKind === "story" || "adventure"`);
+Adventures wires `onPlay` unconditionally (the catalog is
+Adventure-kind only); Vault wires `onPlay` conditionally, matching
+Stories and Community; Images wires `onGenerate` unconditionally (the
+catalog is Image-kind only). No page wires both; Expand is reached
+only where a page supplies neither for a given card.
+
+**(w) Banner hierarchy ghost CTA, RULED 11 Aug 2026, amends (f) and
+2.3.** The one-primary-CTA law stands; an optional quiet secondary
+action may now sit beside the primary, `cf-btn--secondary` (border
+only, no fill), visually subordinate and never a second primary.
+Promo-banner contract moves to v1.2.0: `secondaryCtaLabel` and
+`onSecondaryCtaClick` are ADDED, both optional and additive, omitted
+entirely on every existing consumer, pixel-stable. Both buttons
+resolve to the package's default `--control-md` height (44px), the
+mobile law floor. First consumer: Home's top banner, both states
+(cold-start: primary "Browse stories", ghost "See what others made";
+filled/continue: primary "Continue", ghost "Explore recent stories").
+See `components/kit/promo-banner/README.md` for the full package
+record.
+
+**(x) Compact continue row, RULED 11 Aug 2026, new sibling pattern
+beside 2.3.** `KitContinueRow`, a sibling file in the `promo-banner`
+package folder, not part of the `KitPromoBanner` contract (a distinct
+shape: list row, not banner/hero; no version number of its own).
+Small art thumbnail left, title, "Last played" line, Continue button
+right, full content width, list-density height. **Stories-only usage,
+RULED 11 Aug 2026 (retires the same-day banner-plus-rows treatment):**
+Stories renders up to three most-recent in-progress items as
+`KitContinueRow` rows, capped, with a "Show all in progress (N)"
+control revealing the rest; Stories carries no hero continue banner at
+all. Home is the only page in the nine-page set that carries a
+continue banner; Home does not consume `KitContinueRow`. This
+supersedes 3.1 row 4's earlier "continue-card usage of promo-banner
+treatment (b)" line for Stories, which described the retired
+banner-plus-rows shape.
+
+**(y) Five-bucket type filter, RULED 11 Aug 2026, amends (b) and CR-038.**
+Community and Vault share one five-bucket type filter set at the
+presentation layer: Characters, Worlds, Looks, Stories, Adventures,
+superseding the earlier four-kind-plus-Remix set on both pages. This
+is a shared `TYPE_OPTIONS` array, identical on both pages, consumed by
+the branded dropdown (2.17). Worlds is included as an option ahead of
+any card kind mapping to it (no location/lore/faction asset kind
+exists yet); an honest zero count, not a fabricated one. Candidate 1
+in `docs/PARITY-AUDIT.md` section 10 is partially answered by this
+ruling (the type-bucket question); the status-facet half (Drafts, In
+Review) stays open.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9
@@ -1668,6 +1728,26 @@ overlay-action placement, shipped for Brian's pick rather than ruled
 in this pass, is RULED 10 Aug 2026 (kit polish 3 pass): `overlay-top`
 everywhere, `scrim-row` retired. Ratings presentation ruled at (h);
 the backend four-tier field is CR-027, owner Nick, later pass.
+
+# Rulings log, 11 Aug 2026
+
+Four rulings (v) through (y) folded into chapter 2 section 2.16, all
+ruled by Brian the same day, all already implemented in code before
+this document was updated.
+
+1. Card law contextual third action (Creation-card contract 3.2.0):
+   Play, Generate, or Expand fallback, resolved per card. Folded into
+   2.16(v), amends (a) and 2.6.
+2. Banner hierarchy ghost CTA (promo-banner contract 1.2.0): an
+   optional quiet secondary action beside the one primary. Folded into
+   2.16(w), amends (f) and 2.3.
+3. Compact continue row, Stories-only usage: the hero continue banner
+   is retired on Stories, compact rows only, capped three, "Show all"
+   reveals the rest; Home is the only page keeping a continue banner.
+   Folded into 2.16(x).
+4. Five-bucket type filter (CR-038): Community and Vault share
+   Characters, Worlds, Looks, Stories, Adventures as one presentation-
+   layer grouping. Folded into 2.16(y), amends (b).
 
 ---
 
