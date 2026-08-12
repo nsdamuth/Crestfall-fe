@@ -27,7 +27,13 @@ import FixtureActionNotice from "../FixtureActionNotice";
 // ruling): no continue banner, no compact continue rows; in-progress
 // items render as normal creation cards in the Continue group's own
 // grid/list, CTA "Continue" (KitCreationCard v3.3.0 onContinue).
-export const STORIES_PAGE_CONTRACT_VERSION = "1.0.0";
+//
+// v1.1.0, RULED 11 Aug 2026 (Stories continue section, remove cap):
+// the Continue group's three-card cap and "Show all in progress"
+// reveal control are gone. Every in-progress item renders; volume is
+// governed by the same load-more pagination pattern the startable
+// shelf below already uses (KitLoadMoreView, PAGE_SIZE batches).
+export const STORIES_PAGE_CONTRACT_VERSION = "1.1.0";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -116,12 +122,14 @@ const SORT_OPTIONS = [
 
 const FIXTURE_MODES = {
   default: "Default",
-  // Continue group density, RULED 11 Aug 2026, CORRECTED: no continue
-  // banner and no compact continue rows. In-progress items render as
-  // normal creation cards in the Continue group's own grid/list; a
-  // dedicated one-item state proves the single-card shape (no Show
-  // all control) as distinctly as the default four-item state proves
-  // a full row plus Show all.
+  // Continue group density, RULED 11 Aug 2026, CORRECTED, then
+  // CORRECTED AGAIN (cap removed): no continue banner, no compact
+  // continue rows, no cap, no reveal control. In-progress items
+  // render as normal creation cards in the Continue group's own
+  // grid/list, all of them, paginated by the same load-more pattern
+  // every other collection on this page uses. A dedicated one-item
+  // state still proves the single-card shape distinctly from the
+  // default four-item state.
   singleContinue: "1 in progress",
   empty: "Empty",
   loading: "Loading",
@@ -152,7 +160,6 @@ function searchableText(item) {
 }
 
 const PAGE_SIZE = 12;
-const CONTINUE_VISIBLE_CAP = 3;
 
 // View-mode persistence, RESTORED 10 Aug 2026 (h-restore ruling 3,
 // folded into CR-030 rather than a separate mechanism, per
@@ -247,7 +254,7 @@ export default function StoriesV2Mockup() {
   const [selectedValues, setSelectedValues] = useState({});
   const [selectedSort, setSelectedSort] = useState("recent");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [continueExpanded, setContinueExpanded] = useState(false);
+  const [visibleContinueCount, setVisibleContinueCount] = useState(PAGE_SIZE);
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [assetDetailId, setAssetDetailId] = useState(null);
@@ -394,7 +401,8 @@ export default function StoriesV2Mockup() {
 
   const visibleItems = filteredStartable.slice(0, visibleCount);
   const hasMore = visibleCount < filteredStartable.length;
-  const visibleContinueItems = continueExpanded ? continueItems : continueItems.slice(0, CONTINUE_VISIBLE_CAP);
+  const visibleContinueItems = continueItems.slice(0, visibleContinueCount);
+  const continueHasMore = visibleContinueCount < continueItems.length;
 
   function toggleFilter(groupId, value) {
     setSelectedValues((current) => {
@@ -515,6 +523,7 @@ export default function StoriesV2Mockup() {
             onSearchChange={(value) => {
               setSearchValue(value);
               setVisibleCount(PAGE_SIZE);
+              setVisibleContinueCount(PAGE_SIZE);
             }}
             filterGroups={filterGroups}
             selectedValues={selectedValues}
@@ -561,14 +570,15 @@ export default function StoriesV2Mockup() {
 
         {fixtureMode !== "loading" && fixtureMode !== "error" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
-            {/* CORRECTED ruling, 11 Aug 2026: no hero continue banner,
-                no compact continue rows. In-progress items render as
-                normal creation cards, same grid/list collection shape
-                and view-mode toggle as the startable shelf below,
-                CTA "Continue" on every card. This group renders
-                first, above startable stories, most recent activity
-                first, capped at three with Show all revealing the
-                rest. */}
+            {/* CORRECTED ruling, 11 Aug 2026, cap removed: no hero
+                continue banner, no compact continue rows, no cap, no
+                reveal control. In-progress items render as normal
+                creation cards, same grid/list collection shape and
+                view-mode toggle as the startable shelf below, CTA
+                "Continue" on every card. This group renders first,
+                above startable stories, most recent activity first,
+                every item eventually reachable through the same
+                load-more pattern the startable shelf below uses. */}
             <SectionLabel>Continue</SectionLabel>
             <div
               className={
@@ -597,15 +607,14 @@ export default function StoriesV2Mockup() {
                 />
               ))}
             </div>
-            {!continueExpanded && continueItems.length > CONTINUE_VISIBLE_CAP && (
-              <button
-                type="button"
-                onClick={() => setContinueExpanded(true)}
-                className="kit-focus self-start text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
-              >
-                Show all in progress ({continueItems.length})
-              </button>
-            )}
+            <KitLoadMoreView
+              isLoading={false}
+              hasMore={continueHasMore}
+              remainingCount={continueItems.length - visibleContinueCount}
+              onLoadMore={() =>
+                setVisibleContinueCount((count) => Math.min(count + PAGE_SIZE, continueItems.length))
+              }
+            />
           </div>
         )}
 
