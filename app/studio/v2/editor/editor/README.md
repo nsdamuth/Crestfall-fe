@@ -1,6 +1,6 @@
 # Editor LOOM package
 
-**Contract:** `Editor.contract.js` (v1.0.0)
+**Contract:** `Editor.contract.js` (v1.2.0)
 
 ## Purpose
 
@@ -150,6 +150,27 @@ Each seat renders immediately after the existing rehosted section
 content for that tab, inside the same content panel. The Shell
 (`../Editor.jsx`) currently passes `seats={{}}` (every key undefined);
 `Editor.view.jsx` renders nothing when a seat is absent.
+
+## Two composed-in closures (vault-edit-tree pass, 11 Aug 2026)
+
+`docs/VAULT-EDIT-TREE-CLASSIFICATION.md` found two CR-007/CR-008 held
+rows buildable inside this package's own file boundary, without
+editing the forbidden `creation-edit-shell` lineage:
+
+- **Owner-only draft preview badge** (CSV row 839). `Editor.jsx`
+  derives `isLoreDraftPreview` from `sectionContentProps.isLore` and
+  `sectionContentProps.activeSection === "preview"` (both already
+  returned by the read-only shell hook) and passes it to
+  `Editor.view.jsx`, which renders a small badge above the section
+  content panel. No forbidden file touched.
+- **"Manage image library" link** (CSV rows 409-421, 430). `Editor.jsx`
+  builds `imageLibraryHref` pointing at the new
+  `/studio/v2/editor/[id]/image-library` page (see
+  `../image-library/README.md`) and passes it to `Editor.view.jsx`,
+  which renders it beside the media panel. The existing `CreationEditMediaPanel`'s
+  own "Go to Library" link is unchanged (its route is hardcoded inside
+  the forbidden `creation-edit-media-panel` package); this link is an
+  addition beside it, not a replacement.
 
 ## Fixture-first [id] resolution (brief S3 item 3)
 
