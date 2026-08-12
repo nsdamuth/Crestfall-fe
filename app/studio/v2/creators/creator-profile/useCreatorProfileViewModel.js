@@ -179,6 +179,20 @@ export function useCreatorProfileViewModel({
     avatarSrc: record.avatarSrc,
     stats: record.stats,
     engagement,
+    onOpenFollowers: () => {
+      if (onNavigate) {
+        onNavigate(`/studio/v2/creators/${record.handle}/connections?tab=followers`);
+        return;
+      }
+      openNotice("Followers", "This tile opens the connections page once it is live. Nothing was opened in this preview.");
+    },
+    onOpenFollowing: () => {
+      if (onNavigate) {
+        onNavigate(`/studio/v2/creators/${record.handle}/connections?tab=following`);
+        return;
+      }
+      openNotice("Following", "This tile opens the connections page once it is live. Nothing was opened in this preview.");
+    },
     workItems,
     worksEmptyMessage,
     worksLoadMore,

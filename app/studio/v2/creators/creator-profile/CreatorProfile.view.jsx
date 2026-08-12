@@ -44,15 +44,34 @@ function EmptySection({ message }) {
 // its grid track instead of forcing siblings wide, and break-words on
 // both lines guarantees a seven-digit value or a long label wraps
 // inside the border rather than crossing it, at any value length.
-function StatTile({ label, value }) {
-  return (
-    <div className="flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center">
+function StatTile({ label, value, onClick = null, accessibleName = "" }) {
+  const content = (
+    <>
       <span className="w-full break-words font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] tabular-nums text-[var(--ink)]">
         {value ?? "0"}
       </span>
       <span className="w-full break-words text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={() => onClick()}
+        aria-label={accessibleName || label}
+        className="kit-focus flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center transition-colors hover:border-[var(--state-hover-line)]"
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center">
+      {content}
     </div>
   );
 }
@@ -216,6 +235,8 @@ export default function CreatorProfileView({
   avatarSrc = null,
   stats = {},
   engagement = {},
+  onOpenFollowers = null,
+  onOpenFollowing = null,
   workItems = [],
   worksEmptyMessage = null,
   worksLoadMore,
@@ -303,8 +324,18 @@ export default function CreatorProfileView({
                 </div>
 
                 <div className="grid grid-cols-2 gap-[var(--space-2)] min-[500px]:grid-cols-4">
-                  <StatTile label="Followers" value={stats?.followers} />
-                  <StatTile label="Following" value={stats?.following} />
+                  <StatTile
+                    label="Followers"
+                    value={stats?.followers}
+                    onClick={onOpenFollowers}
+                    accessibleName="View followers"
+                  />
+                  <StatTile
+                    label="Following"
+                    value={stats?.following}
+                    onClick={onOpenFollowing}
+                    accessibleName="View following"
+                  />
                   <StatTile label="Plays" value={stats?.plays} />
                   <StatTile label="Works" value={stats?.works} />
                 </div>
