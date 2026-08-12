@@ -185,7 +185,25 @@ function CarouselArrow({ direction, onClick }) {
   );
 }
 
+// Dot-row cap, RULED (Scale Review H, finding D3): past this many
+// slides the dot row either overflows its pill or crowds unreadably
+// (no `overflow-x-auto`, no wrap). Past the cap, a numeric "1 of N"
+// readout replaces the dot row; the arrow buttons remain the
+// navigation, matching the credits package's own collapse instinct
+// at scale.
+const CAROUSEL_DOTS_MAX = 8;
+
 function CarouselDots({ count, activeIndex, catalogueIndex, onSelect }) {
+  if (count > CAROUSEL_DOTS_MAX) {
+    return (
+      <div className="pointer-events-none absolute bottom-[var(--space-3)] left-1/2 z-[2] flex -translate-x-1/2 items-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-1)]">
+        <span className="text-[length:var(--text-label)] tabular-nums leading-[var(--lh-label)] text-[var(--ink)]">
+          {activeIndex + 1} of {count}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="pointer-events-auto absolute bottom-[var(--space-3)] left-1/2 z-[2] flex -translate-x-1/2 items-center gap-[var(--space-1)] rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-1)]">
       {Array.from({ length: count }, (_, index) => {

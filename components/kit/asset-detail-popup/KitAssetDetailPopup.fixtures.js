@@ -152,3 +152,24 @@ export const kitAssetDetailPopupNoCreatorNoTagsFixture = {
   creator: null,
   tags: [],
 };
+
+// Many-media fixture, ADDED (Scale Review H, finding D3): nine media
+// items push the carousel's slide count (media plus the catalogue
+// slide) past CAROUSEL_DOTS_MAX, exercising the numeric "1 of N"
+// readout in place of the dot row.
+export const kitAssetDetailPopupManyMediaFixture = {
+  ...kitAssetDetailPopupCharacterFixture,
+  title: "Neon Harbor Cycle",
+  subtitle: "Adventure - by @vermillion",
+  media: media(
+    creatorArt("vermillion-3"),
+    creatorArt("vermillion-8"),
+    creatorArt("vermillion-12"),
+    creatorArt("vermillion-13"),
+    creatorArt("vermillion-14"),
+    creatorArt("vermillion-15"),
+    creatorArt("vermillion-3"),
+    creatorArt("vermillion-8"),
+    creatorArt("vermillion-12")
+  ),
+};
