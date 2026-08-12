@@ -133,6 +133,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [creationId, setCreationId] = useState(null);
+  // The save-and-reaccess loop, RULED 11 Aug 2026: true immediately
+  // after any confirmed save, cleared the moment a field changes again
+  // so the post-save footer is not sticky across further edits.
+  const [justSaved, setJustSaved] = useState(false);
   const saveInFlightRef = useRef(false);
   // Which field currently owns the secondary panel takeover, or null.
   const [secondaryPanel, setSecondaryPanel] = useState(null);
@@ -159,8 +163,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
   }, [activeStop]);
 
   function updateField(key) {
-    return (value) =>
+    return (value) => {
       setFormState((current) => ({ ...current, [key]: value }));
+      setJustSaved(false);
+    };
   }
 
   function requestClose() {
@@ -224,31 +230,36 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
     }
   }
 
-  function handleSave() {
-    persistCreation();
-  }
-
-  async function handleFinishAndSave() {
+  // The save-and-reaccess loop, RULED 11 Aug 2026, two-tier
+  // (supersedes the three previously distinct post-save behaviors of
+  // Save, Finish and save, and Save and open the advanced editor):
+  // every save control in the footer runs persistCreation and sets
+  // justSaved on a confirmed save. CreatorStopsView keys the actual
+  // footer on isLastStop: a non-final stop shows the Saved
+  // confirmation only (Back/Save/Next unchanged); the final stop
+  // additionally swaps the footer to Keep editing / Done.
+  async function handleSave() {
     const saved = await persistCreation();
     if (saved) {
-      onClose?.();
+      setJustSaved(true);
     }
   }
 
   // Payoff-stop CTA, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section
-  // 3.3): persistCreation first (creates on first save, updates the
-  // same creationId after), navigate to the advanced editor only on a
-  // confirmed save, using the id persistCreation just resolved rather
-  // than the creationId state (which has not re-rendered yet on a
-  // first save). On failure the error strip renders and nothing
-  // navigates.
-  async function handleSaveAndOpenEditor() {
-    const saved = await persistCreation();
-    if (saved?.id) {
-      // Origin tracking, RULED 11 Aug 2026: carries the opening
-      // surface so the advanced editor's back control returns here.
-      router.push(`/studio/v2/editor/${saved.id}?origin=studio`);
-    }
+  // 3.3), on the two-tier save-and-reaccess loop since 11 Aug 2026: on
+  // a confirmed save from the final stop, the modal reaches the
+  // two-action post-save state rather than navigating immediately.
+  // Navigation now waits for "Keep editing".
+  function handleContinueInEditorAfterSave() {
+    if (!creationId) return;
+    onClose?.();
+    // Origin tracking, RULED 11 Aug 2026: carries the opening surface
+    // so the advanced editor's back control returns here.
+    router.push(`/studio/v2/editor/${creationId}?origin=studio`);
+  }
+
+  function handleDoneAfterSave() {
+    onClose?.();
   }
 
   const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
@@ -320,6 +331,7 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
     confirmDiscardOpen,
     isSaving,
     saveError,
+    justSaved,
     onSelectStop: setActiveStop,
     onBack: () =>
       setActiveStop((current) => {
@@ -334,8 +346,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
         ];
       }),
     onSave: handleSave,
-    onFinishAndSave: handleFinishAndSave,
-    onSaveAndOpenEditor: handleSaveAndOpenEditor,
+    onFinishAndSave: handleSave,
+    onSaveAndOpenEditor: handleSave,
+    onContinueInEditor: handleContinueInEditorAfterSave,
+    onDone: handleDoneAfterSave,
     onClose: requestClose,
     onKeepEditing: handleKeepEditing,
     onConfirmDiscard: handleConfirmDiscard,
