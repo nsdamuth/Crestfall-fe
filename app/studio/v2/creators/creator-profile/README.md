@@ -142,8 +142,8 @@ pass, off limits; listed here for the designated writer)
 - Opening a work from the Creations grid has no creation-detail
   surface to route to yet; `onOpenAssetDetail` stubs with the R4
   notice, matching Lore's Community-grid cards.
-- Follower/following counts render as stat tiles, not links: no
-  followers/following list sub-page exists to route to, and the
-  legacy Connections sub-page (Creators parity rows 814-817) is out of
-  this pass's build list. Rendering them as plain counts rather than
-  dead links is the honest choice per the HIDE/STUB law.
+- RESOLVED (design/creators-connections pass): the Followers and
+  Following stat tiles now route to
+  `/studio/v2/creators/[handle]/connections` (contract bumped 1.1.0 to
+  1.2.0, additive: `onOpenFollowers`, `onOpenFollowing`). See
+  `../creator-connections/README.md`.

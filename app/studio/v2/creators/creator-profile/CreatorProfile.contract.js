@@ -1,4 +1,4 @@
-export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.1.0";
+export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the Creators profile-detail page
@@ -32,6 +32,14 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.1.0";
  * breaking a settled one; v1.1.0 records the removal for
  * traceability. Accessible label matches the visible label (button
  * text content is the accessible name); the icon is unchanged.
+ *
+ * v1.2.0: the Followers and Following stat tiles are interactive,
+ * routing to the new Creators connections sub-page
+ * (/studio/v2/creators/[handle]/connections). Additive minor bump:
+ * `onOpenFollowers` and `onOpenFollowing` join the prop surface,
+ * both optional; when absent the tiles render exactly as before
+ * (non-interactive). Plays and Works stay non-interactive, no prop
+ * added for either.
  *
  * @typedef {Object} CreatorProfileStats
  * @property {number|null} followers
@@ -96,6 +104,8 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} bio
  * @property {string|null} avatarSrc
  * @property {CreatorProfileStats} stats
+ * @property {(() => void)|null} [onOpenFollowers] Routes the Followers stat tile to the connections page (tab=followers). Tile is non-interactive when absent.
+ * @property {(() => void)|null} [onOpenFollowing] Routes the Following stat tile to the connections page (tab=following). Tile is non-interactive when absent.
  * @property {CreatorProfileEngagement} engagement
  * @property {CreatorProfileWorkItem[]} workItems
  * @property {string|null} worksEmptyMessage

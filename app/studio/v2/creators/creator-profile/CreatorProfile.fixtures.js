@@ -62,6 +62,8 @@ function baseFixture(record) {
     bio: record.bio,
     avatarSrc: record.avatarSrc,
     stats: record.stats,
+    onOpenFollowers: noop,
+    onOpenFollowing: noop,
     engagement: {
       isFollowing: record.isFollowing,
       onFollow: noop,
