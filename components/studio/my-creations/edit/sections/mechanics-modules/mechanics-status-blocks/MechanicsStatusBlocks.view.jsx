@@ -221,6 +221,7 @@ function StatusBlockCard({
                           patchLine(blockIndex, lineIndex, value)
                         }
                         maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                        mono
                       />
                     </div>
                     <button

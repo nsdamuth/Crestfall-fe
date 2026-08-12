@@ -21,6 +21,11 @@ import {
 } from "lucide-react";
 
 import StatsPoolsJsonEditorModal from "../stats-pools-json-editor/StatsPoolsJsonEditorModal";
+import { STATS_POOLS_EDITOR_LIMITS } from "./StatsPoolsEditor.contract";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function humanize(value) {
   return String(value || "")
@@ -53,19 +58,6 @@ function TextInput({ value = "", onChange, placeholder = "", disabled = false, t
       placeholder={placeholder}
       disabled={disabled}
       className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    />
-  );
-}
-
-function TextArea({ value = "", onChange, placeholder = "", disabled = false, rows = 4 }) {
-  return (
-    <textarea
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      rows={rows}
-      className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
@@ -443,14 +435,14 @@ function FormulaEditor({
       </button>
 
       <div className="mt-4">
-        <FieldLabel>Formula Notes</FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Formula Notes"
           value={formula?.notes || ""}
-          onChange={(event) =>
-            onUpdateFormula?.(kind, definitionId, "notes", event.target.value)
+          onChange={(value) =>
+            onUpdateFormula?.(kind, definitionId, "notes", value)
           }
           placeholder="Explain the intent of this derived value..."
-          rows={2}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           disabled={disabled}
         />
       </div>
@@ -493,19 +485,14 @@ function SharedDefinitionFields({
         </div>
       </div>
       <div className="mt-4">
-        <FieldLabel>Description</FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Description"
           value={definition.description}
-          onChange={(event) =>
-            onUpdateDefinition?.(
-              kind,
-              definition.id,
-              "description",
-              event.target.value
-            )
+          onChange={(value) =>
+            onUpdateDefinition?.(kind, definition.id, "description", value)
           }
           placeholder="Explain what this definition represents..."
-          rows={3}
+          maxLength={STATS_POOLS_EDITOR_LIMITS.maxDescriptionLength}
           disabled={disabled}
         />
       </div>
@@ -1113,19 +1100,14 @@ function ModifierCard({
           </div>
 
           <div className="mt-4">
-            <FieldLabel>Modifier Notes</FieldLabel>
-            <TextArea
+            <TextAreaField
+              label="Modifier Notes"
               value={definition.notes}
-              onChange={(event) =>
-                onUpdateDefinition?.(
-                  "modifier",
-                  definition.id,
-                  "notes",
-                  event.target.value
-                )
+              onChange={(value) =>
+                onUpdateDefinition?.("modifier", definition.id, "notes", value)
               }
               placeholder="Clarify special stacking or source behavior..."
-              rows={2}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
               disabled={disabled}
             />
           </div>
@@ -1454,16 +1436,12 @@ export default function StatsPoolsEditorView({
       </div>
 
       <div className="mt-5">
-        <FieldLabel
-          detail={`${descriptionCharacterCount.toLocaleString()} / ${descriptionCharacterLimit.toLocaleString()}`}
-        >
-          Description
-        </FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Description"
           value={description}
-          onChange={(event) => onUpdateProfile?.("description", event.target.value)}
+          onChange={(value) => onUpdateProfile?.("description", value)}
           placeholder="Explain the intended actors, scale, and gameplay role..."
-          rows={4}
+          maxLength={descriptionCharacterLimit || STATS_POOLS_EDITOR_LIMITS.maxDescriptionLength}
           disabled={disabled}
         />
       </div>
@@ -1518,16 +1496,12 @@ export default function StatsPoolsEditorView({
         </div>
 
         <div className="mt-4">
-          <FieldLabel
-            detail={`${capabilityNotesCharacterCount.toLocaleString()} / ${capabilityNotesCharacterLimit.toLocaleString()}`}
-          >
-            Capability Notes
-          </FieldLabel>
-          <TextArea
+          <TextAreaField
+            label="Capability Notes"
             value={capabilityPolicy.notes || ""}
-            onChange={(event) => onUpdateCapability?.("notes", event.target.value)}
+            onChange={(value) => onUpdateCapability?.("notes", value)}
             placeholder="Explain restricted manifestations or narrative limits..."
-            rows={3}
+            maxLength={capabilityNotesCharacterLimit || STATS_POOLS_EDITOR_LIMITS.maxNotesLength}
             disabled={disabled}
           />
         </div>
