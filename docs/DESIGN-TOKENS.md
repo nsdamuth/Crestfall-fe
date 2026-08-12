@@ -122,13 +122,46 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
   text (>=24px, or >=18.66px bold) meets 3:1. Placeholder text is
   NOT exempt from this; disabled/inactive text is.
 - `--ink-faint` is ILLEGAL for normal-size meaningful text on
-  `--surface-4` (computed 4.09:1, FAILS 4.5). Counters, placeholders,
-  and timestamps inside modals, menus, and popovers (every
-  `--surface-4` consumer) use `--ink-dim` instead (computed 5.85:1,
-  PASSES). `--ink-faint` remains legal on `--surface-1` (5.11:1) and
-  `--surface-2` (4.79:1), and remains legal at any surface for large
-  text (it clears 3:1 everywhere). Zero token value changes; this is
-  a pairing law only, nothing here mints or edits a token.
+  `--surface-3` (computed 4.43:1, FAILS 4.5) AND `--surface-4`
+  (computed 4.09:1, FAILS 4.5). Extended 12 Aug 2026, same session as
+  N6, closing the `--surface-3` gap the matrix surfaced and N6's text
+  did not name. Counters, placeholders, and timestamps on either
+  surface (topbar/sidebar/sticky chrome for `--surface-3`; modals,
+  menus, and popovers for `--surface-4`) use `--ink-dim` instead
+  (`--neutral-3`, already-locked ladder step: computed 6.33:1 on
+  `--surface-3`, 5.85:1 on `--surface-4`, both PASS). `--ink-faint`
+  remains legal on `--surface-1` (5.11:1) and `--surface-2` (4.79:1),
+  and remains legal at any surface for large text (it clears 3:1
+  everywhere). Zero token value changes; this is a pairing law only,
+  nothing here mints or edits a token.
+- `--gold-deep` is legal for ornament and large display text (>=24px
+  / >=18.66px bold) on any surface; it is ILLEGAL for normal-size
+  meaningful text on every surface but `--canvas` (the only surface
+  where it clears 4.5:1: computed 4.69:1, PASS; `--surface-1` 4.34:1,
+  `--surface-2` 4.06:1, `--surface-3` 3.76:1, `--surface-4` 3.48:1,
+  all FAIL). Ruled 12 Aug 2026, same session as N6. `--gold-deep`'s
+  own role ("pressed states; borders") already excludes ordinary body
+  text; this closes the gap for the rare case of `--gold-deep`
+  rendered AS text (e.g. a pressed-state label) at normal size off
+  `--canvas`. Zero token value changes.
+- Status colors (`--status-success`, `--status-warning`,
+  `--status-danger`) used as normal-size text on `--surface-2`,
+  `--surface-3`, or `--surface-4` are BLOCKED, not ruled, pending a
+  named ladder step: Brian's 12 Aug ruling calls for "their brighter
+  primitive ladder step," but the status ladders
+  (`--success-1..10`, `--warning-1..10`, `--danger-1..10`) fill only
+  step 5 (each family's existing base value); every other step in
+  all three families is unset/proposed in `app/theme.css`, not a
+  locked value an execution run may consume
+  ("Ladder and state primitives" section below). No brighter step
+  exists to name. STOP: this piece of the pairing law is NOT landed;
+  status-color-as-normal-text on the three deeper surfaces stays
+  exactly as documented in the matrix (`--status-warning` FAILS on
+  `--surface-4` at 4.497:1 unrounded; `--status-danger` FAILS on
+  `--surface-2`/`--surface-3`/`--surface-4`) until Brian names which
+  step (or a new one) to fill at a render sitting. Status text
+  continues to ship with its word beside it per standing law
+  regardless.
 - A UI-component boundary that is its SOLE identifier meets 3:1
   (1.4.11) and uses `--line-strong` or a redundant cue (fill delta
   plus label, icon, or state mark). `--line` and `--line-whisper` are
@@ -143,16 +176,18 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
   every locked surface with computed ratio and PASS/FAIL at 4.5 and
   at 3, lives at `docs/review-artifacts/contrast-matrix-x1.md`. It is
   a generated artifact, not hand-maintained; regenerate it if a
-  locked surface, ink, gold, or status value ever changes. The matrix
-  surfaces FAILs beyond the one this ruling resolves (`--ink-faint`
-  on `--surface-3`; `--gold-deep` against every surface but
-  `--canvas`; `--status-warning` and `--status-danger` on the deeper
-  surfaces). Those are reported, not ruled, by this wave; they are
-  open items pending their own ruling, not a license for a sweep to
-  invent a mapping.
+  locked surface, ink, gold, or status value ever changes. The
+  `--ink-faint` and `--gold-deep` FAILs the matrix surfaced are now
+  resolved by the pairing rules above (zero token changes); the
+  status-color FAILs on the deeper surfaces remain open, blocked on a
+  ladder step that does not yet exist (see the status-color bullet
+  above), not a license for a sweep to invent a mapping.
   Check: `grep -rn 'ink-faint' components/ --include='*.view.jsx'`
-  hits reviewed for normal-size text rendered on a `--surface-4`
-  consumer (modal, menu, popover); any such hit is out of contract.
+  hits reviewed for normal-size text rendered on a `--surface-3` or
+  `--surface-4` consumer; any such hit is out of contract.
+  `grep -rn 'gold-deep' components/ --include='*.view.jsx'` hits
+  reviewed for normal-size text off `--canvas`; any such hit is out
+  of contract.
 
 ## Lines, fills, scrims
 

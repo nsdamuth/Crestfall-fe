@@ -90,28 +90,42 @@ product defect.
 
 ## Findings summary
 
-Ratified and resolved by N6 (this wave):
+Ratified and resolved by N6 and its 12 Aug 2026 same-session
+extension:
 
 - `--ink-faint` on `--surface-4`: 4.09:1, FAILS 4.5. Resolution:
   illegal for normal-size meaningful text there; `--ink-dim` used
-  instead (5.85:1, PASS). `--ink-faint` stays legal on `--surface-1`
-  (5.11:1) and `--surface-2` (4.79:1), and at any surface for large
-  text (>=24px / >=18.66px bold, 3:1 threshold, which it clears
-  everywhere).
-
-Found by this matrix, NOT covered by N6's text (open, no ruling
-authored here; STOP items, reported not resolved):
-
-- `--ink-faint` on `--surface-3`: 4.43:1, FAILS 4.5. N6's text names
-  only `--surface-4`. Whether the same dim-substitution applies to
-  `--surface-3` is unruled.
+  instead (5.85:1, PASS).
+- `--ink-faint` on `--surface-3`: 4.43:1, FAILS 4.5. Resolved by the
+  extension: illegal for normal-size meaningful text there too;
+  `--ink-dim` used instead (6.33:1, PASS). `--ink-faint` stays legal
+  on `--surface-1` (5.11:1) and `--surface-2` (4.79:1), and at any
+  surface for large text (>=24px / >=18.66px bold, 3:1 threshold,
+  which it clears everywhere).
 - `--gold-deep` on every surface except `--canvas`: 4.34/4.06/3.76/
-  3.48:1, all FAIL 4.5 (3.48 also fails 3:1 boundary math but
-  `--gold-deep`'s ruled role is "pressed states; borders," not body
-  text, so the 4.5 text threshold may not be the applicable test).
+  3.48:1, all FAIL 4.5. Resolved by the extension: legal for ornament
+  and large display text on any surface; illegal for normal-size
+  meaningful text on every surface but `--canvas` (4.69:1, PASS,
+  the one surface it clears).
+
+BLOCKED, not resolved (missing token; STOP, reported not ruled):
+
 - `--status-warning` on `--surface-4`: 4.497:1 unrounded, FAILS 4.5.
 - `--status-danger` on `--surface-2`/`--surface-3`/`--surface-4`:
   4.28/3.97/3.66:1, all FAIL 4.5.
+  Brian's 12 Aug ruling calls for these to use "their brighter
+  primitive ladder step," but the status ladders
+  (`--success-1..10`, `--warning-1..10`, `--danger-1..10`) fill only
+  step 5, each family's own base value; every other step is
+  unset/proposed in `app/theme.css`, not a locked value. No named
+  step exists to consume, so this piece of the ruling did not land.
+  Status text used at normal size on these three surfaces remains as
+  documented above until Brian names (or a render sitting mints) the
+  step; status text continues to ship with its word beside it
+  regardless, per standing law.
+
+Out of scope, expected:
+
 - `--tag-fill-ink` against every surface: FAILS both thresholds
   everywhere, but its ruled role restricts it to text on a gold
   fill, never directly against a canvas/surface token, so these rows
