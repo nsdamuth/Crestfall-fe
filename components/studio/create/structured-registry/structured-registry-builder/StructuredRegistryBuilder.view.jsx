@@ -13,6 +13,13 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
+import {
+  SectionTitle,
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const TAB_ICONS = {
   overview: ListChecks,
@@ -59,17 +66,11 @@ export default function StructuredRegistryBuilderView({
     <section className="space-y-6">
       <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-              {config.eyebrow}
-            </p>
-            <h2 className="mt-2 font-display text-4xl">
-              {config.builderTitle}
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-              {config.description}
-            </p>
-          </div>
+          <SectionTitle
+            eyebrow={config.eyebrow}
+            title={config.builderTitle}
+            body={config.description}
+          />
 
           <div className="flex flex-wrap gap-2">
             {isEditMode ? (
@@ -95,15 +96,24 @@ export default function StructuredRegistryBuilderView({
         </div>
 
         {saveMessage ? (
-          <p
-            className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
+          <span
+            role={saveStatus === "error" ? "alert" : undefined}
+            aria-live="polite"
+            className={`mt-4 inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] ${
               saveStatus === "error"
-                ? "border-red-500/30 bg-red-500/10 text-red-200"
-                : "border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
+                ? "text-[var(--status-danger)]"
+                : "text-[var(--status-success)]"
             }`}
           >
-            {saveMessage}
-          </p>
+            <span
+              className={`h-1.5 w-1.5 flex-none rounded-full ${
+                saveStatus === "error"
+                  ? "bg-[var(--status-danger)]"
+                  : "bg-[var(--status-success)]"
+              }`}
+            />
+            <span className="inline">{saveMessage}</span>
+          </span>
         ) : null}
 
         {hideTabs ? null : (
@@ -199,7 +209,7 @@ export default function StructuredRegistryBuilderView({
 function Panel({ eyebrow, title, body, children }) {
   return (
     <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
@@ -233,15 +243,6 @@ function TextInput(props) {
   );
 }
 
-function TextArea(props) {
-  return (
-    <textarea
-      {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
-    />
-  );
-}
-
 function OverviewTab({
   config,
   title,
@@ -271,14 +272,13 @@ function OverviewTab({
         </Field>
 
         <div className="lg:col-span-2">
-          <Field label="Description">
-            <TextArea
-              rows={4}
-              value={description}
-              onChange={(event) => onDescriptionChange(event.target.value)}
-              placeholder="Describe what this registry tracks and how future runtime systems should use it."
-            />
-          </Field>
+          <TextAreaField
+            label="Description"
+            value={description}
+            onChange={(value) => onDescriptionChange(value)}
+            placeholder="Describe what this registry tracks and how future runtime systems should use it."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
       </div>
     </Panel>
@@ -404,57 +404,52 @@ function StructuredEntryEditor({
         </Field>
 
         <div className="lg:col-span-2">
-          <Field label="Aliases / alternate names, one per line">
-            <TextArea
-              rows={3}
-              value={entry.aliasesText || ""}
-              onChange={(event) => onAliasesTextChange(event.target.value)}
-            />
-          </Field>
+          <TextAreaField
+            label="Aliases / alternate names, one per line"
+            value={entry.aliasesText || ""}
+            onChange={(value) => onAliasesTextChange(value)}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Summary">
-            <TextArea
-              rows={3}
-              value={entry.summary || ""}
-              onChange={(event) => onChange({ summary: event.target.value })}
-            />
-          </Field>
+          <TextAreaField
+            label="Summary"
+            value={entry.summary || ""}
+            onChange={(value) => onChange({ summary: value })}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Public description">
-            <TextArea
-              rows={4}
-              value={entry.publicDescription || ""}
-              onChange={(event) =>
-                onChange({ publicDescription: event.target.value })
-              }
-            />
-          </Field>
+          <TextAreaField
+            label="Public description"
+            value={entry.publicDescription || ""}
+            onChange={(value) =>
+              onChange({ publicDescription: value })
+            }
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Hidden / restricted notes">
-            <TextArea
-              rows={4}
-              value={entry.hiddenNotes || ""}
-              onChange={(event) => onChange({ hiddenNotes: event.target.value })}
-            />
-          </Field>
+          <TextAreaField
+            label="Hidden / restricted notes"
+            value={entry.hiddenNotes || ""}
+            onChange={(value) => onChange({ hiddenNotes: value })}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Visual identity">
-            <TextArea
-              rows={3}
-              value={entry.visualIdentity || ""}
-              onChange={(event) =>
-                onChange({ visualIdentity: event.target.value })
-              }
-            />
-          </Field>
+          <TextAreaField
+            label="Visual identity"
+            value={entry.visualIdentity || ""}
+            onChange={(value) =>
+              onChange({ visualIdentity: value })
+            }
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
       </div>
 
@@ -522,17 +517,16 @@ function EntryRelationshipFields({
       </p>
 
       <div className="mt-4 grid gap-4">
-        <Field label="Relationship notes">
-          <TextArea
-            rows={3}
-            value={entry.relationshipNotes || ""}
-            onChange={(event) =>
-              onUpdateEntry(entry.id, {
-                relationshipNotes: event.target.value,
-              })
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Relationship notes"
+          value={entry.relationshipNotes || ""}
+          onChange={(value) =>
+            onUpdateEntry(entry.id, {
+              relationshipNotes: value,
+            })
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
         <div className="grid gap-4">
           {(config.relationshipGroups || []).map((group) => (
@@ -564,7 +558,7 @@ function LinkedCreationGroup({
     <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {group.label}
           </p>
           <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
@@ -615,12 +609,16 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
   return (
     <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
-        <div
-          className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${link.imageUrl || "/images/placeholder-card.jpg"})`,
-          }}
-        />
+        {link.imageUrl ? (
+          <div
+            className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
+            style={{ backgroundImage: `url(${link.imageUrl})` }}
+          />
+        ) : (
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10">
+            <KitArtPlaceholder size="sm" />
+          </div>
+        )}
 
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-xl">
@@ -649,12 +647,12 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
           </p>
         ) : null}
 
-        <textarea
-          rows={2}
+        <TextAreaField
+          label="Notes"
           value={link.notes || ""}
-          onChange={(event) => onNotesChange(event.target.value)}
+          onChange={(value) => onNotesChange(value)}
           placeholder="Optional link notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>
@@ -680,53 +678,49 @@ function RulesTab({ config, entries, onUpdateEntry }) {
               </p>
 
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <Field label="Rules notes">
-                  <TextArea
-                    rows={3}
-                    value={entry.rulesNotes || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        rulesNotes: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Rules notes"
+                  value={entry.rulesNotes || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      rulesNotes: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Access / requirements">
-                  <TextArea
-                    rows={3}
-                    value={entry.accessRules || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        accessRules: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Access / requirements"
+                  value={entry.accessRules || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      accessRules: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Knowledge / visibility">
-                  <TextArea
-                    rows={3}
-                    value={entry.knowledgeRules || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        knowledgeRules: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Knowledge / visibility"
+                  value={entry.knowledgeRules || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      knowledgeRules: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Consequences / outcomes">
-                  <TextArea
-                    rows={3}
-                    value={entry.consequences || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        consequences: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Consequences / outcomes"
+                  value={entry.consequences || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      consequences: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
               </div>
             </div>
           ))
@@ -748,38 +742,35 @@ function PromptTab({ config, promptGuidance, onPromptGuidanceChange }) {
       body="Describe how this registry should feed runtime packets and Image Studio prompt compilation."
     >
       <div className="grid gap-4">
-        <Field label="Registry summary">
-          <TextArea
-            rows={4}
-            value={promptGuidance.summary || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange("summary", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Registry summary"
+          value={promptGuidance.summary || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange("summary", value)
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
-        <Field label="Usage notes">
-          <TextArea
-            rows={4}
-            value={promptGuidance.usageNotes || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange("usageNotes", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Usage notes"
+          value={promptGuidance.usageNotes || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange("usageNotes", value)
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
-        <Field label="Negative prompt notes">
-          <TextArea
-            rows={3}
-            value={promptGuidance.negativePromptNotes || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange(
-                "negativePromptNotes",
-                event.target.value
-              )
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Negative prompt notes"
+          value={promptGuidance.negativePromptNotes || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange(
+              "negativePromptNotes",
+              value
+            )
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
       </div>
     </Panel>
   );

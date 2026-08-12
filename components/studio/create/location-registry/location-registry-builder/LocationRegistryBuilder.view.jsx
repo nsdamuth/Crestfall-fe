@@ -15,6 +15,12 @@ import {
   X,
 } from "lucide-react";
 import CreationPickerPanelView from "@/components/studio/creations/pickers/creation-picker-panel/CreationPickerPanel.view";
+import {
+  SectionTitle,
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const TAB_ICON_BY_KEY = Object.freeze({
   overview: BookOpen,
@@ -188,7 +194,7 @@ export default function LocationRegistryBuilderView({
       </div>
 
       <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Registry Summary
         </p>
 
@@ -240,13 +246,24 @@ export default function LocationRegistryBuilderView({
         )}
 
         {saveMessage ? (
-          <p
-            className={`mt-3 text-sm ${
-              saveStatus === "error" ? "text-red-200" : "text-emerald-200"
+          <span
+            role={saveStatus === "error" ? "alert" : undefined}
+            aria-live="polite"
+            className={`mt-3 inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] ${
+              saveStatus === "error"
+                ? "text-[var(--status-danger)]"
+                : "text-[var(--status-success)]"
             }`}
           >
-            {saveMessage}
-          </p>
+            <span
+              className={`h-1.5 w-1.5 flex-none rounded-full ${
+                saveStatus === "error"
+                  ? "bg-[var(--status-danger)]"
+                  : "bg-[var(--status-success)]"
+              }`}
+            />
+            <span className="inline">{saveMessage}</span>
+          </span>
         ) : null}
 
         <p className="mt-4 text-xs leading-5 text-[var(--ink-dim)]">
@@ -337,27 +354,27 @@ function OverviewTab({ registry, onUpdateField, onUpdatePromptGuidance }) {
         placeholder="World, city, district, story room, campaign..."
       />
 
-      <TextArea
+      <TextAreaField
         label="Description"
         value={registry.description}
         onChange={(value) => onUpdateField("description", value)}
-        rows={4}
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
 
-      <TextArea
+      <TextAreaField
         label="Runtime Summary"
         value={registry.promptGuidance?.summary || ""}
         onChange={(value) => onUpdatePromptGuidance("summary", value)}
-        rows={4}
         placeholder="Compact summary for middleware and prompt context."
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
 
-      <TextArea
+      <TextAreaField
         label="Usage Notes"
         value={registry.promptGuidance?.usageNotes || ""}
         onChange={(value) => onUpdatePromptGuidance("usageNotes", value)}
-        rows={4}
         placeholder="How should attached rooms use this registry?"
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
     </div>
   );
@@ -399,7 +416,7 @@ function EntriesTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                     {entry.kind === "CREATION_REF" ? "Linked Location" : "Basic Location"} ·{" "}
                     {entry.category || "Location"} · {entry.locationScale}
                   </p>
@@ -494,7 +511,7 @@ function ConnectionsTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                     {connection.relation} · {connection.defaultRouteType || connection.routeType}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -598,7 +615,7 @@ function PresenceTab({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                     {formatRegistryOption(binding.relationshipRole)} · {formatRegistryOption(binding.frequency)}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -683,7 +700,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                     {scope.scopeType || "Weather Scope"}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -718,27 +735,27 @@ function RuntimeTab({ registry, onUpdateRuntimeGuidance }) {
         body="These fields describe future middleware behavior. The saved registry remains reusable; hydrated chat-instance state can later hold active location and ad-hoc basic locations."
       />
 
-      <TextArea
+      <TextAreaField
         label="Movement Resolver Notes"
         value={registry.runtimeGuidance?.movementResolverNotes || ""}
         onChange={(value) =>
           onUpdateRuntimeGuidance("movementResolverNotes", value)
         }
-        rows={5}
         placeholder="Notes for later movement resolver behavior."
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
 
-      <TextArea
+      <TextAreaField
         label="Ad-Hoc Location Policy"
         value={registry.runtimeGuidance?.adHocLocationPolicy || ""}
         onChange={(value) =>
           onUpdateRuntimeGuidance("adHocLocationPolicy", value)
         }
-        rows={5}
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
 
       <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Middleware Intent
         </p>
         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--ink-dim)]">
@@ -893,59 +910,59 @@ function LocationEntryModal({
           />
         </div>
 
-        <TextArea
+        <TextAreaField
           label="Aliases"
           value={draft.aliasesText || ""}
           onChange={(value) => onListTextChange("aliases", value)}
-          rows={3}
           placeholder="One alias per line."
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Summary"
           value={draft.summary}
           onChange={(value) => onChange("summary", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Public Description"
           value={draft.publicDescription}
           onChange={(value) => onChange("publicDescription", value)}
-          rows={4}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Hidden Notes"
           value={draft.hiddenNotes}
           onChange={(value) => onChange("hiddenNotes", value)}
-          rows={4}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <div className="grid gap-4 md:grid-cols-2">
-          <TextArea
+          <TextAreaField
             label="Atmosphere"
             value={draft.atmosphere}
             onChange={(value) => onChange("atmosphere", value)}
-            rows={4}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
 
-          <TextArea
+          <TextAreaField
             label="Sensory Notes"
             value={draft.sensoryNotes}
             onChange={(value) => onChange("sensoryNotes", value)}
-            rows={4}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
 
-          <TextArea
+          <TextAreaField
             label="Place Function"
             value={draft.placeFunction}
             onChange={(value) => onChange("placeFunction", value)}
-            rows={4}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
 
           <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               People & Presence
             </p>
             <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -959,49 +976,49 @@ function LocationEntryModal({
           </div>
         </div>
 
-        <TextArea
+        <TextAreaField
           label="Themes"
           value={draft.themesText || ""}
           onChange={(value) => onListTextChange("themes", value)}
-          rows={3}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Scene Affordances"
           value={draft.sceneAffordancesText || ""}
           onChange={(value) => onListTextChange("sceneAffordances", value)}
-          rows={3}
           placeholder="Investigation, chase, social scene, ambush..."
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <TextArea
+          <TextAreaField
             label="Access Rules"
             value={draft.accessRules}
             onChange={(value) => onChange("accessRules", value)}
-            rows={4}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
 
-          <TextArea
+          <TextAreaField
             label="Knowledge Rules"
             value={draft.knowledgeRules}
             onChange={(value) => onChange("knowledgeRules", value)}
-            rows={4}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
 
-          <TextArea
+          <TextAreaField
             label="Rules Notes"
             value={draft.rulesNotes}
             onChange={(value) => onChange("rulesNotes", value)}
-            rows={4}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
 
-        <TextArea
+        <TextAreaField
           label="Prompt Guidance"
           value={draft.promptGuidance}
           onChange={(value) => onChange("promptGuidance", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <ModalActions
@@ -1153,18 +1170,18 @@ function LocationConnectionModal({
           ) : null}
         </div>
 
-        <TextArea
+        <TextAreaField
           label="Access Rules"
           value={draft.accessRules}
           onChange={(value) => onChange("accessRules", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Route Notes"
           value={draft.notes}
           onChange={(value) => onChange("notes", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <ModalActions
@@ -1244,7 +1261,7 @@ function PresenceBindingModal({
         </div>
 
         <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             NPC Registry Person
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1270,7 +1287,7 @@ function PresenceBindingModal({
 
         {draft.person?.displayName ? (
           <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Selected Person</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">Selected Person</p>
             <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
             <p className="mt-1 text-sm text-[var(--ink-dim)]">
               {draft.person.registryTitle || "NPC Registry"} · {formatRegistryOption(draft.person.entryKind || "NPC")}
@@ -1301,40 +1318,40 @@ function PresenceBindingModal({
           />
         </div>
 
-        <TextArea
+        <TextAreaField
           label="Presence / Arrival Guidance"
           value={draft.guidance}
           onChange={(value) => onChange("guidance", value)}
-          rows={4}
           placeholder="Usually behind the counter during business hours; may arrive from the neighboring workshop when technical help is needed."
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <div className="grid gap-4 md:grid-cols-2">
-          <TextArea
+          <TextAreaField
             label="Allowed Dayparts"
             value={draft.conditionDaypartsText || ""}
             onChange={(value) => onConditionListTextChange("dayparts", value)}
-            rows={3}
             placeholder="MORNING\nAFTERNOON"
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
-          <TextArea
+          <TextAreaField
             label="Required Scene Tags"
             value={draft.conditionRequiredSceneTagsText || ""}
             onChange={(value) => onConditionListTextChange("requiredSceneTags", value)}
-            rows={3}
             placeholder="technical_problem\nbusiness_hours"
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
-          <TextArea
+          <TextAreaField
             label="Excluded Scene Tags"
             value={draft.conditionExcludedSceneTagsText || ""}
             onChange={(value) => onConditionListTextChange("excludedSceneTags", value)}
-            rows={3}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
-          <TextArea
+          <TextAreaField
             label="Required Runtime Flags"
             value={draft.conditionRequiredFlagsText || ""}
             onChange={(value) => onConditionListTextChange("requiredFlags", value)}
-            rows={3}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
 
@@ -1364,18 +1381,18 @@ function WeatherScopeModal({ draft, onClose, onChange, onSave }) {
           onChange={(value) => onChange("scopeType", value)}
         />
 
-        <TextArea
+        <TextAreaField
           label="Default Weather Behavior"
           value={draft.defaultWeatherBehavior}
           onChange={(value) => onChange("defaultWeatherBehavior", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextArea
+        <TextAreaField
           label="Notes"
           value={draft.notes}
           onChange={(value) => onChange("notes", value)}
-          rows={4}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <ModalActions
@@ -1394,7 +1411,7 @@ function ModalShell({ title, children, onClose }) {
       <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Location Registry
             </p>
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
@@ -1452,14 +1469,16 @@ function ModalActions({
 
 function SectionHeader({ title, body }) {
   return (
-    <div>
-      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-        <Compass size={14} />
-        Location Registry
-      </p>
-      <h2 className="mt-2 font-display text-4xl">{title}</h2>
-      <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">{body}</p>
-    </div>
+    <SectionTitle
+      eyebrow={
+        <>
+          <Compass size={14} />
+          Location Registry
+        </>
+      }
+      title={title}
+      body={body}
+    />
   );
 }
 
@@ -1474,23 +1493,6 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-      />
-    </label>
-  );
-}
-
-function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <textarea
-        value={value || ""}
-        onChange={(event) => onChange(event.target.value)}
-        rows={rows}
-        placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );

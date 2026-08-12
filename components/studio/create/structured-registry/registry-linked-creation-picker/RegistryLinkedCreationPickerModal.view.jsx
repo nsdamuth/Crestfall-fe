@@ -1,4 +1,5 @@
 import { Search, X } from "lucide-react";
+import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
 
 export default function RegistryLinkedCreationPickerModalView({
   title = "Link Creation",
@@ -19,7 +20,7 @@ export default function RegistryLinkedCreationPickerModalView({
       <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Registry Links
             </p>
 
@@ -85,16 +86,22 @@ export default function RegistryLinkedCreationPickerModalView({
                       : "border-white/10"
                   }`}
                 >
-                  <div
-                    className="h-44 bg-cover bg-center"
-                    style={{
-                      backgroundImage: `url(${creation?.displayImageUrl || ""})`,
-                    }}
-                    role="img"
-                    aria-label={
-                      creation?.imageAltText || "Linked creation image"
-                    }
-                  />
+                  {creation?.displayImageUrl ? (
+                    <div
+                      className="h-44 bg-cover bg-center"
+                      style={{
+                        backgroundImage: `url(${creation.displayImageUrl})`,
+                      }}
+                      role="img"
+                      aria-label={
+                        creation?.imageAltText || "Linked creation image"
+                      }
+                    />
+                  ) : (
+                    <div className="h-44">
+                      <KitArtPlaceholder size="lg" />
+                    </div>
+                  )}
 
                   <div className="p-4">
                     <p className="font-display text-2xl">
