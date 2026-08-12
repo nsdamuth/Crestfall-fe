@@ -80,3 +80,72 @@ export const kitFormFieldLongestLabelFixture = {
   isDisabled: false,
   onChange: noop,
 };
+
+// 1.1.0 (K1) fixtures: variant, O1 collapsed-preview resting state,
+// O4 counter rule, mono, select composing KitDropdown.
+
+export const kitFormFieldTextareaCollapsedEmptyFixture = {
+  label: "Backstory",
+  variant: "textarea",
+  value: "",
+  placeholder: "Tell the story of how they came to the Vermillion Coast",
+  helper: "Tap to expand and write.",
+  maxLength: 2000,
+  count: 0,
+  isDisabled: false,
+  onChange: noop,
+};
+
+export const kitFormFieldTextareaCollapsedFilledFixture = {
+  ...kitFormFieldTextareaCollapsedEmptyFixture,
+  value:
+    "A wanderer of the black crown sky, Lilith left the Vermillion Coast the night the tide turned to ash and has not looked back since.",
+  count: 133,
+};
+
+export const kitFormFieldTextareaExpandedFixture = {
+  ...kitFormFieldTextareaCollapsedFilledFixture,
+  startExpanded: true,
+};
+
+export const kitFormFieldSelectFixture = {
+  label: "Kind",
+  variant: "select",
+  value: "mage",
+  options: [
+    { value: "warrior", label: "Warrior", description: "Frontline melee specialist" },
+    { value: "mage", label: "Mage", description: "Arcane damage and control" },
+    { value: "rogue", label: "Rogue", description: "Stealth and precision" },
+    { value: "cleric", label: "Cleric", isDisabled: true },
+  ],
+  isDisabled: false,
+  onSelect: noop,
+};
+
+export const kitFormFieldNumberFixture = {
+  label: "Age",
+  variant: "number",
+  value: "27",
+  placeholder: "0",
+  helper: "In years, at the story's start.",
+  isDisabled: false,
+  onChange: noop,
+};
+
+export const kitFormFieldMonoFixture = {
+  label: "Reference ID",
+  value: "CF-2026-08-12-LX09",
+  mono: true,
+  helper: "Assigned on creation, read only elsewhere.",
+  isDisabled: false,
+  onChange: noop,
+};
+
+export const kitFormFieldLongestContentFixture = {
+  ...kitFormFieldTextareaCollapsedEmptyFixture,
+  label: "Advanced prompting notes",
+  value:
+    "The full combined budget line renders at group level; this single field's preview line must truncate rather than wrap or overflow its one-control-height resting state no matter how long the entered value runs, from the opening sentence through every clause that follows until the character limit itself is finally reached.",
+  maxLength: 320,
+  count: 312,
+};

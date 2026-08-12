@@ -18,6 +18,11 @@ export function useKitFormFieldViewModel({
   children = null,
   isDisabled = false,
   type = "text",
+  variant = "text",
+  mono = false,
+  startExpanded = false,
+  options = [],
+  onSelect = null,
   onChange = null,
 } = {}) {
   return {
@@ -34,6 +39,11 @@ export function useKitFormFieldViewModel({
     children,
     isDisabled: Boolean(isDisabled),
     type,
+    variant,
+    mono: Boolean(mono),
+    startExpanded: Boolean(startExpanded),
+    options,
+    onSelect,
     onChange,
   };
 }
