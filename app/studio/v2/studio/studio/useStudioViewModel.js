@@ -4,12 +4,13 @@
 // every piece of presentation-only local state: the active ladder
 // level and the R4 fixture-action notice. Routing is not owned here:
 // the Shell passes onNavigate (real Next.js navigation, used only for
-// the bottom banner's built /studio/v2/images destination) and
-// onOpenCharacterCreator (the Shell's own state, since
-// CharacterCreatorModal is live-wired, not fixture data). Every other
-// control (every Soon door, every Soon tool card, the Story bridge
-// action) opens the honest R4 stub notice: none of those destinations
-// exist yet (docs/STUDIO-SPEC.md section 9, items 2 and 3).
+// the bottom banner's built /studio/v2/images destination),
+// onOpenCharacterCreator, and onOpenWorldCreator (the Shell's own
+// state, since CharacterCreatorModal and WorldCreatorModal are both
+// live-wired, not fixture data). Every other control (every Soon door,
+// every Soon tool card, the Story bridge action) opens the honest R4
+// stub notice: none of those destinations exist yet
+// (docs/STUDIO-SPEC.md section 9, items 2 and 3).
 import { useMemo, useState } from "react";
 
 import {
@@ -30,7 +31,7 @@ import {
 // empty -> Guided Build (the quietest pane, no doors or cards, one
 // placeholder message), longestContent -> Full Studio (the
 // densest pane, every tool group and card rendered at once).
-export function useStudioViewModel({ fixtureMode = "default", onNavigate = null, onOpenCharacterCreator = null } = {}) {
+export function useStudioViewModel({ fixtureMode = "default", onNavigate = null, onOpenCharacterCreator = null, onOpenWorldCreator = null } = {}) {
   const initialLevel = fixtureMode === "empty" ? "guidedBuild" : fixtureMode === "longestContent" ? "fullStudio" : "quickStart";
   const [activeLevelId, setActiveLevelId] = useState(initialLevel);
   const [notice, setNotice] = useState(null);
@@ -43,13 +44,19 @@ export function useStudioViewModel({ fixtureMode = "default", onNavigate = null,
     openNotice(label, `${label} isn't built yet. This door will open its own creator once it exists.`);
   }
 
+  // Each live door opens its own creator; door.id, not just door.isLive,
+  // picks which one now that Character and Worlds are both live.
   const doors = useMemo(
     () =>
       STUDIO_DOORS.map((door) => ({
         ...door,
-        onOpen: door.isLive ? () => onOpenCharacterCreator?.() : () => openSoon(door.label),
+        onOpen: !door.isLive
+          ? () => openSoon(door.label)
+          : door.id === "location"
+            ? () => onOpenWorldCreator?.()
+            : () => onOpenCharacterCreator?.(),
       })),
-    [onOpenCharacterCreator]
+    [onOpenCharacterCreator, onOpenWorldCreator]
   );
 
   const toolGroups = useMemo(

@@ -1,4 +1,12 @@
-export const STUDIO_VIEW_CONTRACT_VERSION = "1.0.0";
+// 1.0.0 to 1.1.0 (this pass, the Q1 world quick-create brief):
+// additive only. A second door (id "location", relabeled "Worlds")
+// goes live, opening WorldCreatorModal the same way the Character
+// door opens CharacterCreatorModal. StudioDoor's isLive is no longer
+// "Character only"; no shape change to StudioDoor or any other
+// typedef, and the Shell (Studio.jsx) gains onOpenWorldCreator
+// alongside onOpenCharacterCreator, mirroring the existing pattern
+// exactly.
+export const STUDIO_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the Studio hub page View
@@ -18,10 +26,11 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.0.0";
  * the ladder's level selector (three levels: Quick Start, Guided
  * Build, Full Studio) -> the active level's pane:
  *   - Quick Start: asset-first doors (Character live, opening
- *     CharacterCreatorModal with fieldScope="quick"; every other
- *     type's door quiet with the standing Soon treatment) plus the
- *     Story bridge strip (KitAlertStrip neutral, same .stripinfo
- *     lineage).
+ *     CharacterCreatorModal with fieldScope="quick"; Worlds live
+ *     (door id "location", labeled "Worlds"), opening
+ *     WorldCreatorModal; every other type's door quiet with the
+ *     standing Soon treatment) plus the Story bridge strip
+ *     (KitAlertStrip neutral, same .stripinfo lineage).
  *   - Guided Build: no allocation exists yet for Story assembly
  *     (docs/STUDIO-SPEC.md section 9, item 2), so this pane renders
  *     the same quiet Soon treatment as a door, not fabricated
@@ -42,12 +51,13 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.0.0";
  * therefore owned by the ViewModel per the fixture-mode harness
  * convention, not hardcoded in the View). The View fetches nothing.
  *
- * CharacterCreatorModal is mounted by the Shell (Studio.jsx), not the
- * View: it is a real, live-wired component (existing save path
- * through creationClient), not a fixture-shaped prop, and the Shell
- * is the LOOM layer that owns real integration per
- * docs/CRESTFALL-DESIGN-CONTEXT.md. The View only reports intent
- * through onOpenCharacterCreator.
+ * CharacterCreatorModal and WorldCreatorModal are both mounted by the
+ * Shell (Studio.jsx), not the View: each is a real, live-wired
+ * component (existing save path through creationClient), not a
+ * fixture-shaped prop, and the Shell is the LOOM layer that owns real
+ * integration per docs/CRESTFALL-DESIGN-CONTEXT.md. The View only
+ * reports intent, through onOpenCharacterCreator and
+ * onOpenWorldCreator respectively.
  *
  * @typedef {Object} StudioLevel
  * @property {string} id
@@ -62,7 +72,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} eyebrow
  * @property {string} description
  * @property {string|null} imageSrc
- * @property {boolean} isLive Character only; every other door is Soon.
+ * @property {boolean} isLive Character and Worlds (door id "location") only; every other door is Soon.
  * @property {(() => void)|null} onOpen
  *
  * @typedef {Object} StudioToolCard
