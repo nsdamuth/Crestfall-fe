@@ -5,6 +5,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function NpcRegistryFieldsSectionView({
@@ -67,6 +68,7 @@ export default function NpcRegistryFieldsSectionView({
               value={descriptionValue}
               onChange={(value) => onChangeDescription?.(value)}
               placeholder={descriptionPlaceholder}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
 

@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ImagePresetRenderingNotesSectionView({
@@ -82,6 +83,7 @@ export default function ImagePresetRenderingNotesSectionView({
             value={renderingGuidanceValue}
             onChange={(value) => onChangeRenderingGuidance?.(value)}
             placeholder={renderingGuidancePlaceholder}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

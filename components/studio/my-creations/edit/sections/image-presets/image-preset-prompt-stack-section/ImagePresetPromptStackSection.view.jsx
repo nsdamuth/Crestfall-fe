@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ImagePresetPromptStackSectionView({
@@ -50,6 +52,7 @@ export default function ImagePresetPromptStackSectionView({
           value={promptGuidanceValue}
           onChange={(value) => onChangePromptGuidance?.(value)}
           placeholder={promptGuidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -57,6 +60,7 @@ export default function ImagePresetPromptStackSectionView({
           value={stylePromptValue}
           onChange={(value) => onChangeStylePrompt?.(value)}
           placeholder={stylePromptPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -64,6 +68,7 @@ export default function ImagePresetPromptStackSectionView({
           value={qualityNotesValue}
           onChange={(value) => onChangeQualityNotes?.(value)}
           placeholder={qualityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -71,6 +76,7 @@ export default function ImagePresetPromptStackSectionView({
           value={imagePromptValue}
           onChange={(value) => onChangeImagePrompt?.(value)}
           placeholder={imagePromptPlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -78,6 +84,7 @@ export default function ImagePresetPromptStackSectionView({
           value={negativePromptValue}
           onChange={(value) => onChangeNegativePrompt?.(value)}
           placeholder={negativePromptPlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -85,6 +92,7 @@ export default function ImagePresetPromptStackSectionView({
           value={usageNotesValue}
           onChange={(value) => onChangeUsageNotes?.(value)}
           placeholder={usageNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -92,6 +100,7 @@ export default function ImagePresetPromptStackSectionView({
           value={compatibilityNotesValue}
           onChange={(value) => onChangeCompatibilityNotes?.(value)}
           placeholder={compatibilityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

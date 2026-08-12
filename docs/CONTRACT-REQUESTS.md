@@ -66,6 +66,7 @@ the details below carry only what is still actionable.
 | CR-037 | Community creation tags | The restored `KitAssetDetailPopup` tags row (`docs/PARITY-AUDIT.md` section 5, candidate 6) has no tag data on any `/studio/v2/community` fixture creation; the row renders and works but is empty on every real card today | open | Nick | non-blocking; filed 11 Aug 2026 by the design/community-parity branch |
 | CR-038 | Community and Vault five-bucket type filter grouping | Community and Vault type filters present a five-bucket display grouping (Characters, Worlds, Looks, Stories, Adventures) over the backend's raw creation types; the frontend owns this mapping today in display code | open | Nick | dev awareness only; presentation-layer mapping, no backend change required unless dev prefers to serve grouped types; ruled by Brian 11 Aug 2026 |
 | CR-039 | STORYLINE display name is Adventure platform-wide | Ruled by Brian 11 Aug 2026: the user-facing name for STORYLINE is Adventure everywhere on the platform, implemented as display mapping via the terminology module | open | Nick | non-blocking; does not duplicate CR-025, which already carries the backend rename request; see CR-025 |
+| CR-041 | Long-form field character limits | The frontend now enforces two display-layer character-limit classes on every long-form field in the advanced editor: 600 for short long-form (a line or short paragraph), 2,000 for deep long-form (extended writing), per the mapping in `SharedFields.jsx` and its consuming sections | open | Nick | non-blocking; display-layer ruling pending Nick's confirmation against the backend data model, not a backend change request |
 
 ## Details
 
@@ -542,6 +543,28 @@ total plays across a creator's published works, by creator id or
 handle. Until this lands, the Plays tile opens an honest stub notice
 on tap (`useCreatorProfileViewModel.js`, `onOpenPlays`) rather than
 routing anywhere fake.
+
+### CR-041, Long-form field character limits
+
+Filed 11 Aug 2026 (Sprint H, the a2 field-limits brief). The frontend
+now enforces two display-layer character-limit classes on every
+long-form field in the advanced editor
+(`components/studio/my-creations/edit/sections/**`), wired through
+`SharedFields.jsx`'s existing `TextAreaField` `maxLength` prop (no
+new counter mechanism built): SHORT long-form at 600 characters
+(fields that describe in a line or a short paragraph: appearance,
+tone, premise, summary, and their kin) and DEEP long-form at 2,000
+characters (fields that hold extended writing: personality,
+backstory, history, lore body, scenario detail, and their kin). The
+full field-to-class mapping lives in the a2 branch's commit and PR
+description.
+
+This is a display-layer ruling pending Nick's confirmation against
+the backend data model, not a backend change request and not
+blocking. Needed from Nick: confirm these two ceilings are compatible
+with each field's stored column, and flag any field whose column
+cannot hold 2,000 characters or whose real backend limit is lower
+than what the frontend now allows.
 
 ## Closed
 

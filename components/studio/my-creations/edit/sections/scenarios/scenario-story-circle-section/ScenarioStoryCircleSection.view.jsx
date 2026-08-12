@@ -1,6 +1,7 @@
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ScenarioStoryCircleSectionView({
@@ -41,6 +42,7 @@ export default function ScenarioStoryCircleSectionView({
                 value={step.value}
                 onChange={(value) => step.onChange?.(value)}
                 placeholder={step.placeholder}
+                maxLength={DEEP_LONGFORM_MAX_LENGTH}
               />
             </div>
           </div>

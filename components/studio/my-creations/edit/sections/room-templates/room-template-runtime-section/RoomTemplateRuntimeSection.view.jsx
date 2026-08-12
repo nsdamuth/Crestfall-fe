@@ -3,6 +3,7 @@ import StoryRulesCodexAttachmentsSectionView from "@/components/studio/create/ro
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function RoomTemplateRuntimeSectionView({
@@ -39,6 +40,7 @@ export default function RoomTemplateRuntimeSectionView({
           value={privateGuidance}
           onChange={(value) => onChangePrivateGuidance?.(value)}
           placeholder={privateGuidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

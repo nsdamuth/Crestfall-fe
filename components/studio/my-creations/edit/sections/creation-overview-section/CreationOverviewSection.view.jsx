@@ -4,6 +4,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CreationOverviewSectionView({
@@ -41,6 +42,7 @@ export default function CreationOverviewSectionView({
           value={descriptionValue}
           onChange={(value) => onChangeDescription?.(value)}
           placeholder={descriptionPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
 

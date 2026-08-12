@@ -4,6 +4,8 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CharacterTemplateFieldsSectionView({
@@ -108,6 +110,7 @@ export default function CharacterTemplateFieldsSectionView({
               value={shortDescriptionValue}
               onChange={(value) => onChangeShortDescription?.(value)}
               placeholder={shortDescriptionPlaceholder}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
 
@@ -191,6 +194,7 @@ export default function CharacterTemplateFieldsSectionView({
               value={bodyNotesValue}
               onChange={(value) => onChangeBodyNotes?.(value)}
               placeholder={bodyNotesPlaceholder}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
         </div>
@@ -237,6 +241,7 @@ export default function CharacterTemplateFieldsSectionView({
               value={philosophyValue}
               onChange={(value) => onChangePhilosophy?.(value)}
               placeholder={philosophyPlaceholder}
+              maxLength={DEEP_LONGFORM_MAX_LENGTH}
             />
           </div>
         </div>

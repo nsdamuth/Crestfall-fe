@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function PoseBodyPositionSectionView({
@@ -82,6 +83,7 @@ export default function PoseBodyPositionSectionView({
             value={bodyPositionNotesValue}
             onChange={(value) => onChangeBodyPositionNotes?.(value)}
             placeholder={bodyPositionNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

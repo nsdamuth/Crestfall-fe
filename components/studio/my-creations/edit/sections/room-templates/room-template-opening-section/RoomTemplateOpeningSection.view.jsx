@@ -4,6 +4,7 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function RoomTemplateOpeningSectionView({
@@ -40,6 +41,7 @@ export default function RoomTemplateOpeningSectionView({
           value={publicOpeningContextValue}
           onChange={(value) => onChangePublicOpeningContext?.(value)}
           placeholder={publicOpeningContextPlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <div className="grid gap-4">
@@ -81,6 +83,7 @@ export default function RoomTemplateOpeningSectionView({
                     onChangeOpeningMessageBody?.(message.id, value)
                   }
                   placeholder={messagePlaceholder}
+                  maxLength={DEEP_LONGFORM_MAX_LENGTH}
                 />
               </div>
             </div>
