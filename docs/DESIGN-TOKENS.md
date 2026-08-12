@@ -111,6 +111,49 @@ Destructive controls: the in-page trigger is a quiet ghost with
 exactly one place, the confirming button inside a confirm step
 (`cf-btn--danger` / `cf-btn--danger-filled` in `app/design-system.css`).
 
+## Contrast law
+
+RULED 12 Aug 2026 (Ruling N6, `docs/plans/FABLE-GATE-2-STUDIO.md`,
+ratified option A, wave X1). Checkable, dark-theme baseline (the
+theme the matrix below is computed against); WCAG 2.2 numbers,
+1.4.3 and 1.4.11.
+
+- Normal-size meaningful text meets 4.5:1 against its surface; large
+  text (>=24px, or >=18.66px bold) meets 3:1. Placeholder text is
+  NOT exempt from this; disabled/inactive text is.
+- `--ink-faint` is ILLEGAL for normal-size meaningful text on
+  `--surface-4` (computed 4.09:1, FAILS 4.5). Counters, placeholders,
+  and timestamps inside modals, menus, and popovers (every
+  `--surface-4` consumer) use `--ink-dim` instead (computed 5.85:1,
+  PASSES). `--ink-faint` remains legal on `--surface-1` (5.11:1) and
+  `--surface-2` (4.79:1), and remains legal at any surface for large
+  text (it clears 3:1 everywhere). Zero token value changes; this is
+  a pairing law only, nothing here mints or edits a token.
+- A UI-component boundary that is its SOLE identifier meets 3:1
+  (1.4.11) and uses `--line-strong` or a redundant cue (fill delta
+  plus label, icon, or state mark). `--line` and `--line-whisper` are
+  legal only as decorative or redundant edges, including input beds,
+  where label, placeholder, and focus ring jointly identify the
+  field; a sweep never "fixes" an input bed's `--line-whisper` edge
+  on boundary-contrast grounds.
+- The focus indicator (`--focus-ring`, `--gold-ornament` on
+  `--canvas`) passes 3:1 and is the one sanctioned focus mechanism;
+  1.4.11 exempts disabled controls from all of the above.
+- The full generated matrix, every locked ink/gold/status token over
+  every locked surface with computed ratio and PASS/FAIL at 4.5 and
+  at 3, lives at `docs/review-artifacts/contrast-matrix-x1.md`. It is
+  a generated artifact, not hand-maintained; regenerate it if a
+  locked surface, ink, gold, or status value ever changes. The matrix
+  surfaces FAILs beyond the one this ruling resolves (`--ink-faint`
+  on `--surface-3`; `--gold-deep` against every surface but
+  `--canvas`; `--status-warning` and `--status-danger` on the deeper
+  surfaces). Those are reported, not ruled, by this wave; they are
+  open items pending their own ruling, not a license for a sweep to
+  invent a mapping.
+  Check: `grep -rn 'ink-faint' components/ --include='*.view.jsx'`
+  hits reviewed for normal-size text rendered on a `--surface-4`
+  consumer (modal, menu, popover); any such hit is out of contract.
+
 ## Lines, fills, scrims
 
 | Token | Dark | Light | Role | Legal on | Never on | Status |

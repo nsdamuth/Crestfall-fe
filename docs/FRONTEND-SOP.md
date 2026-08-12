@@ -108,6 +108,24 @@ UIUX-repo AGENTS.md, preview-harness rules, carried forward here).
 - Nothing is ruled by silence. An unanswered question stays open and
   the work routes around it. Source: every prior instruction set,
   unanimous on this one point.
+- Contrast law (X1, `docs/DESIGN-TOKENS.md` "Contrast law" section,
+  Ruling N6 12 Aug 2026). Normal-size meaningful text meets 4.5:1
+  against its surface, large text meets 3:1; placeholders are not
+  exempt. `--ink-faint` is illegal for normal-size meaningful text on
+  `--surface-4`; use `--ink-dim` there instead. `--ink-faint` stays
+  legal on `--surface-1`/`--surface-2` and for large text anywhere.
+  Check: `grep -rn 'ink-faint' components/ --include='*.view.jsx'`
+  hits reviewed against `--surface-4` consumers (modal, menu,
+  popover); any normal-size text hit is out of contract.
+- Sole-identifier boundaries meet 3:1 (1.4.11): a control identified
+  ONLY by its border uses `--line-strong` or a redundant cue (fill
+  delta plus label, icon, or state mark). `--line` and
+  `--line-whisper` stay legal as decorative or redundant edges,
+  including input beds where label, placeholder, and focus ring
+  jointly identify the field. Check: any new sole-boundary control
+  reviewed against `docs/review-artifacts/contrast-matrix-x1.md` and
+  the Contrast law section before shipping `--line`/`--line-whisper`
+  as its only identifying mark.
 
 ## 3. The PR checklist
 
