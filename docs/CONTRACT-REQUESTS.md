@@ -67,6 +67,7 @@ the details below carry only what is still actionable.
 | CR-038 | Community and Vault five-bucket type filter grouping | Community and Vault type filters present a five-bucket display grouping (Characters, Worlds, Looks, Stories, Adventures) over the backend's raw creation types; the frontend owns this mapping today in display code | open | Nick | dev awareness only; presentation-layer mapping, no backend change required unless dev prefers to serve grouped types; ruled by Brian 11 Aug 2026 |
 | CR-039 | STORYLINE display name is Adventure platform-wide | Ruled by Brian 11 Aug 2026: the user-facing name for STORYLINE is Adventure everywhere on the platform, implemented as display mapping via the terminology module | open | Nick | non-blocking; does not duplicate CR-025, which already carries the backend rename request; see CR-025 |
 | CR-041 | Long-form field character limits | The frontend now enforces two display-layer character-limit classes on every long-form field in the advanced editor: 600 for short long-form (a line or short paragraph), 2,000 for deep long-form (extended writing), per the mapping in `SharedFields.jsx` and its consuming sections | open | Nick | non-blocking; display-layer ruling pending Nick's confirmation against the backend data model, not a backend change request |
+| CR-042 | Server-side filter, sort, and search for list pages | Every list page filters/sorts one full in-memory fixture array client-side; needs server-side filter, sort, and search so the client keeps only the current slice resident and load-more requests the next slice by the same params | open | Nick | non-blocking; the true scale ceiling per Scale Review H finding B2, not a regression, the known shape of the pre-parity fixture-driven build |
 
 ## Details
 
@@ -565,6 +566,40 @@ blocking. Needed from Nick: confirm these two ceilings are compatible
 with each field's stored column, and flag any field whose column
 cannot hold 2,000 characters or whose real backend limit is lower
 than what the frontend now allows.
+
+### CR-042, Server-side filter, sort, and search for list pages
+
+Filed 12 Aug 2026 (Sprint H, the cc4 scale-fixes pass, per
+`docs/reviews/SCALE-REVIEW-H.md` finding B2). Every list page below
+holds one full array (a fixture today, presumably a full fetched
+collection once live) and runs `.filter()`/`.sort()` over it inside a
+`useMemo`, re-executed on every search keystroke, filter toggle, and
+sort change:
+
+- `app/studio/v2/stories/StoriesV2Mockup.jsx`
+- `app/studio/v2/vault/VaultV2Mockup.jsx`
+- `app/studio/v2/community/CommunityV2Mockup.jsx`
+- `app/studio/v2/images/ImagesV2Mockup.jsx`
+- `app/studio/v2/creators/CreatorsV2Mockup.jsx`
+- `app/studio/v2/lore/lore/useLoreViewModel.js`
+- `app/studio/v2/adventures/adventures/useAdventuresViewModel.js`
+- `components/studio/my-creations/image-library/hooks/useCreationImageLibraryViewModel.js`
+
+This architecture requires the entire catalog to already be resident
+in the browser before any filter, sort, or search can apply. At
+thousands of items this is the first thing to break: initial payload
+size, memory, and per-keystroke recompute cost all scale with total
+catalog size rather than with what is on screen. No fix is available
+at the component layer; this is an architectural constraint, not a
+rendering bug.
+
+Needed from the backend: server-side filter, sort, and search
+endpoints for each page above, so the client keeps only the current
+page's slice resident and its existing load-more control requests the
+next slice by the same filter/sort/search params, rather than
+re-deriving from a full local array. Non-blocking; flagged as the
+true scale ceiling underneath every other Scale Review H finding, not
+a regression introduced by any recent change.
 
 ## Closed
 

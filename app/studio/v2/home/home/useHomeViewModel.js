@@ -38,6 +38,15 @@ const BOTTOM_BANNER = {
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 };
 
+// Rail item cap, RULED (Scale Review H, finding B1): each rail caps
+// its mounted items at a fixed length rather than rendering an
+// unbounded source array; KitRailView has no windowing or
+// virtualization, so an uncapped source mounts every card at once.
+// "View all" is the sanctioned overflow path to the full paginated
+// page. KitRail itself is unchanged; only its caller's input is
+// capped, here.
+const RAIL_ITEM_CAP = 12;
+
 export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {}) {
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
@@ -139,7 +148,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
       label: "Top rated",
       viewAllLabel: "View all",
       onViewAll: () => navigateOrStub(null, "Top rated"),
-      items: (railItemSource ?? HOME_TOP_RATED_ITEMS).map(decorate),
+      items: (railItemSource ?? HOME_TOP_RATED_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
     }),
     [railItemSource, likedIds, savedIds]
   );
@@ -149,7 +158,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
       label: "Recently added",
       viewAllLabel: "View all",
       onViewAll: () => navigateOrStub(null, "Recently added"),
-      items: (railItemSource ?? HOME_RECENTLY_ADDED_ITEMS).map(decorate),
+      items: (railItemSource ?? HOME_RECENTLY_ADDED_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
     }),
     [railItemSource, likedIds, savedIds]
   );
@@ -159,7 +168,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
       label: "From the community",
       viewAllLabel: "View all",
       onViewAll: () => navigateOrStub("/studio/v2/community", "From the community"),
-      items: (railItemSource ?? HOME_FROM_THE_COMMUNITY_ITEMS).map(decorate),
+      items: (railItemSource ?? HOME_FROM_THE_COMMUNITY_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
     }),
     [railItemSource, likedIds, savedIds]
   );
@@ -169,7 +178,7 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
       label: "Creators to follow",
       viewAllLabel: "View all",
       onViewAll: () => navigateOrStub("/studio/v2/creators", "Creators to follow"),
-      items: (railItemSource ?? HOME_CREATORS_TO_FOLLOW_ITEMS).map(decorate),
+      items: (railItemSource ?? HOME_CREATORS_TO_FOLLOW_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
     }),
     [railItemSource, followingIds]
   );

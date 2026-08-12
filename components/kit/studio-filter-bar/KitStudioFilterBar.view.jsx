@@ -60,10 +60,19 @@
 // steps. Page content no longer carries its own padded column (the
 // `studio-page` kit package owns the one content width); this bar is
 // simply the first consumer of the shared padding.
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import KitDropdownView from "../dropdown/KitDropdown.view";
+
+// Search debounce, RULED (Scale Review H, finding D1): every
+// consuming page's filter chain re-runs over its full dataset on
+// each keystroke (B2). One short keystroke buffer here serves every
+// consumer at once rather than fanning the fix out per page. The
+// field itself stays responsive (local state updates immediately);
+// only the upstream onChange call, and the expensive re-filter it
+// triggers, is buffered.
+const SEARCH_DEBOUNCE_MS = 200;
 
 function SearchField({ value, placeholder, onChange }) {
   // Focus law, RULED final 10 Aug 2026 (kit polish 3 pass, amends
@@ -90,9 +99,45 @@ function SearchField({ value, placeholder, onChange }) {
   // ::-webkit-search-cancel-button rule) and replaced with a
   // component-owned icon in the same muted token that colors the
   // placeholder, `--ink-faint`.
-  const hasValue = Boolean(value);
+  const [localValue, setLocalValue] = useState(value);
+  const lastEmittedRef = useRef(value);
+  const debounceRef = useRef(null);
+  const hasValue = Boolean(localValue);
   const [keyboardFocused, setKeyboardFocused] = useState(false);
   const pointerDownRef = useRef(false);
+
+  // Sync from the caller only on a genuine external change (a filter
+  // reset, a cleared query from elsewhere), not the echo of our own
+  // debounced emit landing back through the controlled `value` prop.
+  useEffect(() => {
+    if (value !== lastEmittedRef.current) {
+      lastEmittedRef.current = value;
+      setLocalValue(value);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  function emitChange(next) {
+    lastEmittedRef.current = next;
+    onChange?.(next);
+  }
+
+  function handleInputChange(next) {
+    setLocalValue(next);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => emitChange(next), SEARCH_DEBOUNCE_MS);
+  }
+
+  function handleClear() {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setLocalValue("");
+    emitChange("");
+  }
 
   function handlePointerDown() {
     pointerDownRef.current = true;
@@ -116,8 +161,8 @@ function SearchField({ value, placeholder, onChange }) {
       <input
         type="search"
         name="kit-studio-filter-bar-search"
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
+        value={localValue}
+        onChange={(event) => handleInputChange(event.target.value)}
         onFocus={handleFocus}
         onBlur={handleBlur}
         placeholder={placeholder}
@@ -127,7 +172,7 @@ function SearchField({ value, placeholder, onChange }) {
       {hasValue && (
         <button
           type="button"
-          onClick={() => onChange?.("")}
+          onClick={handleClear}
           aria-label="Clear search"
           className="kit-focus flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
         >
