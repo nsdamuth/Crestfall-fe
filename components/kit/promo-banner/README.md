@@ -97,12 +97,20 @@ Home.view.jsx`), routing to `/studio/v2/stories`.
 part of the `KitPromoBannerView` contract (a different shape, list
 row rather than banner/hero, no version number of its own). Small art
 thumbnail left, title, "Last played" line, Continue button right,
-full content width, list-density height. Pairs with the continue
-banner: only the most recent in-progress item renders as the full
-banner, every other in-progress item renders as this row instead of a
-second stacked banner. First consumer: Stories
-(`app/studio/v2/stories/StoriesV2Mockup.jsx`); Home may reuse it
-later for its own continue surface.
+full content width, list-density height.
+
+**Stories is rows-only, RULED 11 Aug 2026 (retires the hero continue
+banner).** The hero continue banner is RETIRED on Stories, superseding
+the same-day banner-plus-rows treatment this section originally
+described. Stories renders up to three most-recent in-progress items
+as `KitContinueRow` rows (`CONTINUE_VISIBLE_CAP = 3`), capped, with a
+"Show all in progress (N)" control revealing the rest; Stories carries
+no continue banner at all, full or otherwise. Home is the only page in
+the nine-page set that carries a continue banner (its top banner, both
+cold-start and filled/continue states, see the `v1.2.0` section
+above); Home does not consume `KitContinueRow`. First and only
+consumer of `KitContinueRow`: Stories
+(`app/studio/v2/stories/StoriesV2Mockup.jsx`).
 
 ## Package assets
 
