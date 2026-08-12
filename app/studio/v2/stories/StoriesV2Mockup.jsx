@@ -548,6 +548,13 @@ export default function StoriesV2Mockup() {
             line=""
             ctaLabel="Browse Adventures"
             imageSrc={encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png")}
+            // Per-image anchor, RULED 11 Aug 2026 (banner-anchor
+            // ruling): this scene's subject (the ship, the figure at
+            // the waterline) sits mid-frame, not near the top; the
+            // ruled 10% default would crop to mostly the cave arch
+            // above it. Overridden per the ruling's own carve-out (see
+            // docs/reviews/BANNER-AUDIT.md).
+            imageAnchor="center 45%"
             onCtaClick={() =>
               setActionNotice({
                 label: "Browse Adventures",

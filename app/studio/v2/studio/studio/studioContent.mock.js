@@ -202,11 +202,21 @@ export const STUDIO_GUIDED_BUILD_SOON = {
   body: "Gathering your assets into a Story and playing it tonight is coming; there is no Story builder to hand this level to yet.",
 };
 
+// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5 banner-audit
+// sitting): Djuna Smith.png, reassigned off
+// lilith-lux-eden-confrontation.png so Studio does not share a banner
+// with Home (one click apart) and, thematically, sells the Image
+// Studio destination with a finished character render. Selena
+// Velvet.png was tried first and rendered checked at 1440: her pose
+// (bent over a console, face turned down) reads as a bare hair-bun
+// with no visible face under the ruled default anchor, so it was
+// swapped for a forward-facing portrait instead (see
+// docs/reviews/BANNER-AUDIT.md).
 export const STUDIO_BOTTOM_BANNER = {
   eyebrow: "Give them a face",
   title: "See your characters in full color.",
   line: "The Image Studio turns any character, outfit, or scene into finished art in moments.",
   ctaLabel: "Open the Image Studio",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Djuna Smith.png"),
   route: "/studio/v2/images",
 };

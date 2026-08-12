@@ -13,11 +13,14 @@ function decorate(item) {
   return { ...item, liked: false, bookmarked: false, onOpenAssetDetail: noop, onLike: noop, onBookmark: noop };
 }
 
+// Banner art mirrors useAdventuresViewModel.js, RULED 11 Aug 2026
+// (banner-anchor ruling, CC5 banner-audit sitting): see that file's
+// banner comments and docs/reviews/BANNER-AUDIT.md.
 const TOP_BANNER = {
   eyebrow: "Adventures",
   title: "Seasons worth committing to.",
   ctaLabel: "Build an Adventure",
-  imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Saeha Veyrune.png"),
   onCtaClick: noop,
 };
 
@@ -25,7 +28,7 @@ const BOTTOM_BANNER = {
   eyebrow: "Create",
   title: "Every Adventure starts in Studio.",
   ctaLabel: "Open Studio",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lux.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Enox Nix.png"),
   onCtaClick: noop,
 };
 

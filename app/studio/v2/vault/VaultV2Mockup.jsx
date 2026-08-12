@@ -360,7 +360,12 @@ export default function VaultV2Mockup() {
           title="See what the rest of the realm has released."
           line=""
           ctaLabel="Browse the Community"
-          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
+          // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+          // banner-audit sitting): Jax Riker.png, reassigned off
+          // Lilith.png so Vault does not share a banner with Creators,
+          // Creator Profile, Creator Connections, and Community, all
+          // one click apart (see docs/reviews/BANNER-AUDIT.md).
+          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Jax Riker.png")}
           onCtaClick={() =>
             setActionNotice({
               label: "Browse the Community",

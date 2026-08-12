@@ -13,6 +13,7 @@ export function useKitPromoBannerViewModel(props) {
     line: typeof props?.line === "string" ? props.line : "",
     ctaLabel: typeof props?.ctaLabel === "string" ? props.ctaLabel : "",
     imageSrc: typeof props?.imageSrc === "string" ? props.imageSrc : null,
+    imageAnchor: typeof props?.imageAnchor === "string" ? props.imageAnchor : "center 10%",
     onCtaClick: typeof props?.onCtaClick === "function" ? props.onCtaClick : null,
   };
 }

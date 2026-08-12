@@ -37,11 +37,15 @@ const TOP_BANNER = {
   ctaLabel: "Write lore",
 };
 
+// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+// banner-audit sitting): Dalethia.png, reassigned off
+// athelgard-ampitheater-profile.png so Lore does not share a banner
+// with Home (one click apart, see docs/reviews/BANNER-AUDIT.md).
 const BOTTOM_BANNER = {
   eyebrow: "Loop",
   title: "Back to where every session starts.",
   ctaLabel: "Return to Home",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Dalethia.png"),
 };
 
 function recencyTier(daysAgo) {
@@ -236,9 +240,14 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     onLoadMore: () => setVisibleCommunityCount((current) => current + PAGE_SIZE),
   };
 
+  // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+  // banner-audit sitting): The Seer.png, reassigned off
+  // lilith-lux-eden-confrontation.png so Lore does not share a banner
+  // with Home and Studio (see docs/reviews/BANNER-AUDIT.md); the
+  // oracle character also reads well against "Write into the world."
   const topBanner = {
     ...TOP_BANNER,
-    imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
+    imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/The Seer.png"),
     onCtaClick: () => setIsCreateModalOpen(true),
   };
 

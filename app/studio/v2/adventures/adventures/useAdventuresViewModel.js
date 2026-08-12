@@ -20,11 +20,17 @@ const TOP_BANNER = {
   ctaLabel: "Build an Adventure",
 };
 
+// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5 banner-audit
+// sitting): Enox Nix.png, reassigned off Lux.png. Lux.png doubled as
+// this banner's art and Studio's door art in the same session; the
+// portrait also crops narrow in the widest desktop treatment. Enox
+// Nix.png is otherwise unused across every banner slot (see
+// docs/reviews/BANNER-AUDIT.md).
 const BOTTOM_BANNER = {
   eyebrow: "Create",
   title: "Every Adventure starts in Studio.",
   ctaLabel: "Open Studio",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lux.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Enox Nix.png"),
 };
 
 function sortItems(items, sortValue) {
@@ -138,9 +144,15 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
     onLoadMore: () => setVisibleCount((current) => current + PAGE_SIZE),
   };
 
+  // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+  // banner-audit sitting): Saeha Veyrune.png, reassigned off
+  // whiteviolin.png. whiteviolin.png doubled as this banner's art and
+  // Studio's door art in the same session; Saeha Veyrune.png is
+  // otherwise unused across every banner slot and reads as an
+  // adventurer, fitting the copy (see docs/reviews/BANNER-AUDIT.md).
   const topBanner = {
     ...TOP_BANNER,
-    imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png"),
+    imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Saeha Veyrune.png"),
     onCtaClick: () => setIsBuilderOpen(true),
   };
 
