@@ -109,10 +109,10 @@ const SORT_OPTIONS = [
 
 const FIXTURE_MODES = {
   default: "Default",
-  // Continue group density (RULED 11 Aug 2026): a dedicated one-item
-  // state proves the banner-only shape (no compact rows, no Show all
-  // control) as distinctly as the default four-item state proves
-  // banner-plus-compact-rows.
+  // Continue group density, RULED 11 Aug 2026, SUPERSEDING the
+  // earlier banner-plus-rows treatment: a dedicated one-item state
+  // proves the single-row shape (no Show all control) as distinctly
+  // as the default four-item state proves three rows plus Show all.
   singleContinue: "1 in progress",
   empty: "Empty",
   loading: "Loading",
@@ -213,20 +213,6 @@ function SectionLabel({ children }) {
       </p>
       <div className="h-px w-[var(--space-8)] flex-none bg-[var(--gold-ornament)]" />
     </div>
-  );
-}
-
-function ContinueCard({ item, onContinue }) {
-  return (
-    <KitPromoBannerView
-      treatment="card"
-      eyebrow="Continue"
-      title={item.title}
-      line={`Last played ${item.lastPlayed} · ${KIND_LABELS[item.kind]}`}
-      ctaLabel="Continue"
-      imageSrc={item.imageSrc}
-      onCtaClick={onContinue}
-    />
   );
 }
 
@@ -556,37 +542,28 @@ export default function StoriesV2Mockup() {
 
         {fixtureMode !== "loading" && fixtureMode !== "error" && continueItems.length > 0 && (
           <div className="flex flex-col gap-[var(--space-4)]">
-            {/* Continue group density, RULED 11 Aug 2026: only the
-                most recent in-progress item renders as the full
-                banner; every other in-progress item renders as a
-                compact row instead of a second stacked banner. */}
-            <ContinueCard
-              item={visibleContinueItems[0]}
-              onContinue={() =>
-                setActionNotice({
-                  label: "Continue",
-                  message: `Resuming "${visibleContinueItems[0].title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
-                })
-              }
-            />
-            {visibleContinueItems.length > 1 && (
-              <div className="flex flex-col gap-[var(--space-2)]">
-                {visibleContinueItems.slice(1).map((item) => (
-                  <KitContinueRowView
-                    key={item.id}
-                    title={item.title}
-                    lastPlayedLabel={`Last played ${item.lastPlayed} · ${KIND_LABELS[item.kind]}`}
-                    imageSrc={item.imageSrc}
-                    onContinue={() =>
-                      setActionNotice({
-                        label: "Continue",
-                        message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
-                      })
-                    }
-                  />
-                ))}
-              </div>
-            )}
+            {/* Continue group density, RULED 11 Aug 2026, SUPERSEDING
+                the earlier banner-plus-rows treatment: no hero
+                continue banner on this page, every in-progress item
+                renders as a compact row, most recent first, capped at
+                three with Show all revealing the rest. */}
+            <SectionLabel>Continue</SectionLabel>
+            <div className="flex flex-col gap-[var(--space-2)]">
+              {visibleContinueItems.map((item) => (
+                <KitContinueRowView
+                  key={item.id}
+                  title={item.title}
+                  lastPlayedLabel={`Last played ${item.lastPlayed} · ${KIND_LABELS[item.kind]}`}
+                  imageSrc={item.imageSrc}
+                  onContinue={() =>
+                    setActionNotice({
+                      label: "Continue",
+                      message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
+                    })
+                  }
+                />
+              ))}
+            </div>
             {!continueExpanded && continueItems.length > CONTINUE_VISIBLE_CAP && (
               <button
                 type="button"
