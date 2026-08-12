@@ -279,7 +279,8 @@ edit tree (68), image-library (22).
   (Your Tags, mobile density toggle, Create New, load-error banner,
   Set default PC, Start chat, Generate image), 97 DELIBERATELY
   EXCLUDED citing CR-007/CR-008 and the build-order hold. Confirmed
-  still accurate.
+  still accurate at the time this section was written (10 Aug 2026).
+  **RESOLVED 11 Aug 2026, see section 15.**
 - The audit's headline: the original hub's type/status tab set is 27
   buckets (All, Characters, Player Characters, Scenarios, Locations,
   Outfits, Wardrobes, Poses, Narrators, Image Presets, Stories, Item
@@ -399,10 +400,11 @@ Each is one decision. None is decided here.
    equivalent (carousel caps at four). Rule whether the popup's
    catalogue destination (recorded later-wiring) absorbs this or a
    detail surface returns.
-7. **Card-face quick actions Start Chat and Generate image.** The
-   exactly-three card law cites share/download/delete as living in
-   the open destination but never places chat or generate; Play made
-   it into the popup, Generate exists nowhere.
+7. **CLOSED 11 Aug 2026, see section 15.** ~~Card-face quick actions
+   Start Chat and Generate image.~~ Creation-card contract 3.2.0 rules
+   the third overlay icon contextual: Play on Story/Adventure-kind
+   cards, Generate on Image-kind cards, Expand as the universal
+   fallback.
 8. **Lore creation scope.** The v2 Write-lore modal carries one of the
    original builder's 18 rows; visibility, rating, description, Save
    Draft, and the whole document editor have no v2 surface and no
@@ -563,3 +565,49 @@ not touched.
   untouched; see section 13 for why the rollup was not hand-regenerated.
 - No component, contract, or fixture file edited. This session was the
   only session writing shared docs this pass, per the session brief.
+
+## 15. Update, 11 Aug 2026 (branch design/h-docs-close)
+
+Two standing holds this document tracked are closed today, both ruled
+and already implemented in code before this pass, verified against
+the tree.
+
+**Item 36 (mute control placement, CR-028) CLOSED.** Recorded open in
+`docs/CRESTFALL-DESIGN-CONTEXT.md`'s rail rulings section ("Item 36
+... stays open, settled at render once the Creators profile-detail
+page exists") and in `docs/BUILD-BLUEPRINT.md` 2.18. The profile-
+detail page now exists (`/studio/v2/creators/[handle]`, contract
+1.2.0) and its engagement row carries the mute control, exact label
+"Mute content" ("Muted" when active),
+`CreatorProfile.view.jsx:259,371`; contract note
+`CreatorProfile.contract.js:23`, "v1.1.0, RULED 11 Aug 2026 (item 36,
+CR-028, closed)".
+
+**CR-007/CR-008 hold RESOLVED**, per
+`docs/VAULT-EDIT-TREE-CLASSIFICATION.md` (written this same day,
+branch `design/vault-edit-tree`, cut at e7fdc39): the 97 rows this
+document's section 7 held as DELIBERATELY EXCLUDED are reclassified
+72 COVERED, 15 GAP (all built this pass), 9 DEFERRED, 1 RETIRED. The
+edit tree, most of the preview tree, and the image-library are now
+reachable from Vault via the new `/studio/v2/editor/[id]` route
+(Editor contract 1.2.0) and its `/studio/v2/editor/[id]/image-library`
+child (contract 1.0.0). See that document for the full per-control
+breakdown and citations; `docs/PARITY-ECHO-FULL.md`'s Vault section
+carries the re-disposed echo.
+
+Candidate 7 (card-face Start Chat and Generate image, section 10) is
+also closed by Creation-card contract 3.2.0, unrelated to CR-007/
+CR-008 but ruled the same day; see that section's strike-through
+entry.
+
+Not touched by this update: candidate 1 (the Vault/Community type-
+facet question) is partially answered by CR-038's five-bucket set
+(Characters, Worlds, Looks, Stories, Adventures) but the status-facet
+half (Drafts, In Review) remains unruled; every other section-10
+candidate and the standing open items list stand as recorded 10 Aug
+2026.
+
+Verification for this update: production build exit 0 on
+`design/h-docs-close` (per that branch's own report); zero em dashes
+in this file; no component, contract, or fixture file edited by this
+pass, documentation only.

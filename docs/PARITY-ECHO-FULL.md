@@ -1,4 +1,15 @@
-# PARITY-ECHO-FULL v1.0.0, 11 Aug 2026, branch design/community-parity
+# PARITY-ECHO-FULL v1.1.0, 11 Aug 2026, branch design/h-docs-close
+
+**Update, v1.1.0, same day.** Two sections below are re-disposed against
+code shipped later on 11 Aug 2026, read live on this branch (cut from
+origin/design/sprint-h-final at c2c6d1d): the Creators profile-detail
+and connections pages (both now built, superseding the "unbuilt"
+finding this document opened with), and the Vault edit tree, preview
+tree, and image-library, re-disposed per
+`docs/VAULT-EDIT-TREE-CLASSIFICATION.md`'s four-bucket read (72
+COVERED, 15 GAP now built in this same pass, 9 DEFERRED, 1 RETIRED).
+Every other page section below is unchanged from the same-day v1.0.0
+pass and not re-verified in this update.
 
 Read-only, per-page parity echo for every v2 page against
 `docs/APP-FUNCTION-MAP.csv` (the canonical inventory), run against
@@ -157,7 +168,7 @@ characterize row by row.
 | 600 | Rating select | Present | CR-027, ruled final. |
 | 601 | Rendering select | Present | Restored "as-is"; per-item value is deterministic, not real data (CR-034), control itself functional. |
 | 604-610 (7 rows) | Creation card grid, Like, Save, Expand, Load N More | Present | |
-| 607, 608 | Start Chat / Generate image on the card | Flagged | Candidate 7, still open. |
+| 607, 608 | Start Chat / Generate image on the card | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** Creation-card contract 3.2.0 resolves candidate 7 for the card face. Story/Adventure-kind creations wire `onPlay` ("Start Chat"), `CommunityV2Mockup.jsx:486-490`. Row 522's popup-internal Generate link (below) is a separate, still-open control. |
 | 617 | Load-error banner | Present | |
 | 520 | Route resolution (creation vs lore) | Flagged | Popup handles one asset shape only, no branch for lore-type creations. |
 | 521, 523 | Chat (renamed Play), Share | Present | |
@@ -170,8 +181,11 @@ characterize row by row.
 | 534 | Per-asset load-error banner | Flagged | Popup has no independent fetch/error state; the page-level banner (617) is a coarser, different control. |
 | 535 | Lore publication branch in the popup | Flagged | Acknowledged, carried-forward gap; no lore-type rendering path exists in the shared popup. |
 
-**Community summary:** 20 Present, 10 Flagged, 11 Deliberately
-excluded. Both of this session's Stage 1 restorations verified real
+**Community summary:** 22 Present, 8 Flagged, 11 Deliberately
+excluded. **Re-disposed 11 Aug 2026 (v1.1.0):** the card face's Start
+Chat / Generate image row flips to Present per Creation-card contract
+3.2.0; the popup-internal Generate link (row 522) stays a separate,
+still-open Flagged control. Both of this session's Stage 1 restorations verified real
 in the live code. Most impactful gap: the media library restoration
 gave back browsing chrome (tabs, sort, search) with none of its
 interactivity, no per-media like/bookmark, no pagination, no
@@ -182,18 +196,21 @@ lightbox from a tile.
 | CSV line | control | disposition | note |
 |---|---|---|---|
 | 23-25 (3 rows) | `/studio/profile` (own-profile) shell: Edit Soon, tab bar, featured grid | Flagged | Entire route is a disabled, non-live placeholder in the original; no equivalent self-profile view exists on Creators (a browse grid, not a detail page). |
-| 796-801 (6 rows) | Profile-detail hero, back button, stat tiles, follower/following links, like/bookmark creator | Flagged | Belongs to the unbuilt profile-detail page. |
-| 802 | Follow creator button | Present | Matches `KitCreatorCardView`'s Follow/Following toggle. |
-| 803-807 (5 rows) | Donate button + modal (amount, message, anonymous) + Share | Flagged | The one original modal in scope for this page and it is absent; no share affordance at the card level either. |
-| 808-813 (6 rows) | Creations/Activity/Badges tabs, public creation grid, activity feed, badge grid, profile load-error banner | Flagged | All profile-detail-page-only content. The page's own top-level error state is a different control (the grid's load error, not a per-profile fetch error). |
-| 814-817 (4 rows) | Connections sub-page (back link, tabs, connection list, per-connection profile link) | Flagged | Sub-page of the unbuilt profile-detail page. |
-| 818 | Follow / Following (per connection) | Present | Same disposition as row 802. |
+| 796-801 (6 rows) | Profile-detail hero, back button, stat tiles, follower/following links, like/bookmark creator | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** the profile-detail page is now built at `/studio/v2/creators/[handle]` (contract 1.2.0). Back button (`CreatorProfile.view.jsx:272`); avatar/bio identity block (309-323); Followers/Following stat tiles are clickable links to the connections page (327-338); Like/Save toggles on the profile itself (358-369). |
+| 802 | Follow creator button | Present | Matches `KitCreatorCardView`'s Follow/Following toggle; also present again on the profile-detail page's own engagement row. |
+| 803-807 (5 rows) | Donate button + modal (amount, message, anonymous) + Share | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** Donate opens a modal with Amount (number input, error slot), Message (optional textarea), a Donate anonymously checkbox, Send donation, and Cancel (`CreatorProfile.view.jsx:162-229,352-357`). Share renders icon plus the word "Share" per Ruling 6 (`CreatorProfile.view.jsx:370`). |
+| 808-813 (6 rows) | Creations/Activity/Badges tabs, public creation grid, activity feed, badge grid, profile load-error banner | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** the creation grid (376-389), activity feed (392-407), and badge grid (409-412) are all present, each with its own load-more; a page-level load-error banner replaces the content area on `errorMessage` (`KitAlertStripView`, 293-294). One drift from the original CSV wording: the three sections render as stacked blocks, not a tab switcher; a presentation change, not a missing control. |
+| 814-817 (4 rows) | Connections sub-page (back link, tabs, connection list, per-connection profile link) | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** built at `/studio/v2/creators/[handle]/connections` (contract 1.0.0). Back (158); Followers/Following `TabSwitcher` tabs, rendered "{count} {label}" (189-194, labels 40/47); connection rows link to that connection's own profile (110-121). |
+| 818 | Follow / Following (per connection) | Present | Same disposition as row 802; per-row `FollowButton` (`CreatorConnections.view.jsx:91`). |
 
-**Creators summary:** 2 Present, 24 Flagged, 0 Deliberately excluded.
-Nothing has drifted since the 10 Aug audit. Most impactful gap: the
-entire profile-detail page. "View profile" only opens a fixture
-notice today, so none of the 24 Flagged rows, including the donation
-flow, has anywhere to route to.
+**Creators summary:** 23 Present, 3 Flagged, 0 Deliberately excluded.
+**Re-disposed 11 Aug 2026 (v1.1.0):** the profile-detail page and its
+connections sub-page shipped this same day, flipping 21 of the 24
+previously Flagged rows to Present. Only the 3-row `/studio/profile`
+own-profile placeholder (rows 23-25, a different, unbuilt route) stays
+Flagged; no equivalent surface is ruled for it. This closes item 22 on
+the ranked remaining-parity list below and the single largest Flagged
+block in this document's original headline numbers.
 
 ## Vault (/studio/v2/vault)
 
@@ -206,18 +223,35 @@ flow, has anywhere to route to.
 | 705 | Mobile density toggle | Flagged | Only the desktop grid/list toggle exists. |
 | 706 | Create New (link) | Flagged | No control inside the filter bar; the promo-banner/empty-state action opens only a fixture notice. |
 | 707 | Load-error banner | Flagged | Renders, but as static copy with no interpolated live error message. |
-| 711-713 (3 rows) | Set default PC, Start chat, Generate image (card overlay) | Flagged | None wired; candidate 7 again, same gap as Community. |
-| 717-784 (68 rows, grouped by section) | The full edit tree (shell chrome, media panel, featured-image picker, mechanics quick nav, overview, publishing, sticky action bar, danger, identity, appearance, body, behavior, advanced, visual references, actor mechanics profile, runtime mechanics modules, mechanics module picker) | Deliberately excluded (CR-007/CR-008 partial hold) | Page's own scope comment: "no edit, delete, or bulk affordance appears anywhere on this page." |
-| 838-844 (7 rows) | Preview tree (Lore preview surface) | Deliberately excluded (CR-007/CR-008 partial hold) | Same hold. |
-| 409-430 (22 rows) | Image-library (refresh, back-to-editor, featured slots, slot assignment, hide/show/delete, lightbox management set) | Deliberately excluded (CR-007/CR-008 partial hold) | Same hold; `KitImageOverlay` substitutes single-image viewing only, not library management. |
+| 712, 713 (2 rows) | Start chat, Generate image (card overlay) | Present | **Re-disposed 11 Aug 2026 (v1.1.0):** Creation-card contract 3.2.0 resolves candidate 7. Story/Adventure-kind cards wire `onPlay` ("Start Chat"), `VaultV2Mockup.jsx:428-432`; Vault's grid is not image-kind, so Generate is not reached here, matching Images' own page-scoped wiring. |
+| 711 | Set default PC (card overlay) | Flagged | Not wired on the card overlay itself; distinct from the Editor's own "Set Default PC" control (COVERED per `docs/VAULT-EDIT-TREE-CLASSIFICATION.md` row 717), which is a different surface. |
+| 717-784 (68 rows) | The full edit tree (shell chrome, media panel, featured-image picker, mechanics quick nav, overview, publishing, sticky action bar, danger, identity, appearance, body, behavior, advanced, visual references, actor mechanics profile, runtime mechanics modules, mechanics module picker) | Present | **Re-disposed 11 Aug 2026 (v1.1.0), citing `docs/VAULT-EDIT-TREE-CLASSIFICATION.md` Group A.** CR-007/CR-008 resolved: all 68 rows COVERED, reached at `/studio/v2/editor/[id]` (Editor contract 1.2.0), which composes the exact same unmodified legacy edit-tree components (`CreationEditSectionContent.jsx` and kin). |
+| 838, 840, 842-844 (5 rows) | Preview tree: Lore document renderer, copy-link, character/location chips, dev preview banner | Present | Re-disposed, classification doc Group B: 4 COVERED. |
+| 839 | Preview tree: owner-only draft preview badge | Present | Re-disposed, classification doc Group B GAP, built this pass: "Owner-only draft preview" badge, `Editor.view.jsx:168-170`, driven by `isLoreDraftPreview` (`Editor.jsx:64,82`). |
+| 838 | Preview tree: "Back to Lore editor" link | Deliberately excluded (classification doc Group B, RETIRED) | Superseded by the tab-based navigation model; the Public Preview is a section tab inside the editor itself, so a dedicated "back to editor" link has nothing to return from. |
+| 841 | Preview tree: Contents (table of contents) | Deliberately excluded (classification doc Group B, DEFERRED) | Suppressed by the hardcoded `compact` prop inside the forbidden-to-edit `CreationEditSectionContent.jsx`; a one-line fix outside this brief's file boundary. |
+| 409-421, 430 (14 rows) | Image-library: refresh, back-to-editor, featured slots, eligibility filter, sort, image grid, slot assignment, hide/show/delete, like/bookmark quick actions, expand-to-lightbox, share | Present | **Re-disposed 11 Aug 2026 (v1.1.0), classification doc Group C.** Built at `/studio/v2/editor/[id]/image-library` (contract 1.0.0), composing the unmodified legacy `CreationImageLibraryPage` package. |
+| 422-429 except 430 (8 rows) | Image-library lightbox management set (Generate Variant, Download, Details, Report + subfields, Remix/Reference/More Soon, Delete) | Deliberately excluded (OPEN item 28, viewer reconciliation) | Same standing hold as Community's and Images' own lightbox, per classification doc Group C; not lifted for Vault alone. |
 
-**Vault summary:** 8 Present, 7 Flagged, 97 Deliberately excluded
-(across 3 grouped ranges, 112 rows total). Candidate 1 (the type
-facet) is now resolved for Vault. Most impactful gap by a wide
-margin: the 97-row edit/preview/image-library surface held under
-CR-007/CR-008, a creator cannot edit, preview, or manage images for
-anything they see in this grid. This is the single largest
-structural item in this whole document (see the ranked list below).
+**Vault summary:** 97 Present, 5 Flagged, 10 Deliberately excluded
+(112 rows total: 10 Present / 5 Flagged hub rows, up from 8/7 in the
+v1.0.0 pass now that Start chat and Generate image are wired via
+Creation-card contract 3.2.0, plus the 97-row CR-007/CR-008 hold now
+re-disposed 87 Present / 0 Flagged / 10 Deliberately excluded per
+`docs/VAULT-EDIT-TREE-CLASSIFICATION.md`, all 15 of its GAP rows,
+including row 839's badge, confirmed built this pass). **Re-disposed
+11 Aug 2026 (v1.1.0):** CR-007/CR-008 is resolved; the edit tree, the
+preview tree (bar one retired and one deferred row), and the
+image-library are all built and reachable from `/studio/v2/vault` via
+the new `/studio/v2/editor/[id]` route. The remaining excluded rows
+sit under the separate, standing OPEN item 28 (viewer reconciliation,
+unchanged by this ruling) plus the one RETIRED preview-page link. The
+5 remaining Flagged hub rows (Your Tags, mobile density toggle, Create
+New, load-error banner interpolation, Set default PC) are unrelated to
+CR-007/CR-008 and untouched by this pass. This closes item 23 and item
+18's Vault half on the ranked remaining-parity list below, the
+second-largest structural item in this document's original headline
+numbers.
 
 ## Images (/studio/v2/images)
 
@@ -242,23 +276,26 @@ image from inside the viewer.
 
 ## Studio and the editor route
 
-`/studio/v2/studio` and `/studio/v2/editor/[id]` (the two surfaces
-named in the brief as "studio" and "the editor route") **do not exist
-on this branch**. `find app/studio/v2/studio` and `find
-app/studio/v2/editor` both return no such directory on
-`design/community-parity`. They were built on a separate branch
-lineage (`design/studio`, briefs S1 and S3, 10 to 11 Aug 2026) that
-has not been merged into `design/h-restore` or this branch. Per the
-standing rule against fabricating application state, this document
-does not audit code that is not present in the tree being audited;
-doing so from memory of a different branch would misrepresent this
-branch's actual state. Once `design/studio` merges into this
-lineage, both pages need their own read-only parity echo pass added
-here. This absence is itself the top item in the ranked list below,
-since a large share of every other page's largest gap (the
-CR-007/CR-008 hold, candidate 6's remaining pieces, Adventures' and
-Stories' missing edit-entry rows) resolves the moment that merge
-happens and the hold lifts.
+**Update, v1.1.0, 11 Aug 2026:** both surfaces named in this section's
+original heading now exist on this branch (`design/h-docs-close`, cut
+from `origin/design/sprint-h-final` at c2c6d1d). `/studio/v2/editor/[id]`
+exists: `app/studio/v2/editor/` composes the unmodified legacy edit
+tree behind Editor contract 1.2.0, with
+`app/studio/v2/editor/[id]/image-library/` (contract 1.0.0) alongside
+it; its disposition is folded into the Vault section above, since the
+editor is the Vault-reached destination the CR-007/CR-008 hold was
+blocking on, not a page with its own CSV-assigned destination in the
+nine-page model. **Correction:** `/studio/v2/studio` (the Studio hub
+page itself, distinct from the editor) also already exists on this
+branch, contrary to this document's original v1.0.0 finding:
+`app/studio/v2/studio/page.jsx`, `Studio.jsx`, contract 1.0.0, shipped
+by commit `fb75b60` ("Brief S1, ladder layout with Character quick
+create"), an ancestor of this branch's own HEAD, so it was not merged
+today, it was simply misread as absent by the earlier same-day pass.
+This document has never run a parity echo against the Studio hub's own
+code; that pass, plus a correction of the "Studio" destination tile
+row above (Home row 988, still described as stubbed pending this
+route), is still owed and not performed in this update.
 
 ## Headline numbers
 
@@ -266,13 +303,15 @@ Across the 8 pages that exist on this branch (Home, Stories,
 Adventures, Lore, Community, Creators, Vault, Images), 407 echo rows
 disposed (some rows represent grouped CSV-line ranges sharing one
 disposition and citation, cited by their real line count above, not
-one physical CSV row each):
+one physical CSV row each). **Updated 11 Aug 2026 (v1.1.0)** for the
+Creators and Vault re-dispositions above; every other page's count is
+unchanged from the same-day v1.0.0 pass.
 
 | Disposition | Count |
 |---|---|
-| Present | 173 |
-| Flagged | 54 |
-| Deliberately excluded (ruling cited) | 180 |
+| Present | 285 |
+| Flagged | 29 |
+| Deliberately excluded (ruling cited) | 93 |
 
 By page (Present / Flagged / Deliberately excluded):
 
@@ -282,17 +321,22 @@ By page (Present / Flagged / Deliberately excluded):
 | Stories | 40 | 4 | 1 (45 rows) |
 | Adventures | 22 | 6 | 2 |
 | Lore | 17 | 1 | 20 |
-| Community | 20 | 10 | 11 |
-| Creators | 2 | 24 | 0 |
-| Vault | 8 | 7 | 97 (3 groups) |
+| Community | 22 | 8 | 11 |
+| Creators | 23 | 3 | 0 |
+| Vault | 97 | 5 | 10 (2 groups) |
 | Images | 38 | 0 | 42 |
-| Studio / editor | not present on this branch, not counted | | |
+| Studio / editor | editor folded into Vault above; Studio hub exists on this branch (correction, see that section) but has never had its own parity echo pass, not counted | | |
 
-Two pages carry the entire document's structural weight: Creators
-(24 of 26 rows Flagged, because the profile-detail page the ruling
-set assumed would exist by now does not) and Vault (97 of 112 rows
-excluded under one hold). Every other page's Flagged count is a
-handful of specific, individually fixable controls.
+The two pages that carried this document's entire structural weight
+are both mostly closed by this update: Creators (was 24 of 26 rows
+Flagged because the profile-detail page did not exist; now 3, the
+unrelated own-profile placeholder only) and Vault (was 97 of 112 rows
+excluded under the CR-007/CR-008 hold; now 87 of those 97 are Present,
+9 remain excluded under the separate, unrelated OPEN item 28 viewer-
+reconciliation hold plus 1 RETIRED, and 2 more hub rows flip Present
+via the same-day card-law ruling). Community's card face also gains 2
+Present rows under the same ruling. Every remaining page's Flagged
+count is a handful of specific, individually fixable controls.
 
 ## Ranked remaining-parity list, shortest path first
 
@@ -361,48 +405,54 @@ then a new page, then a cross-branch merge come last.
     the exact Type-facet value set (candidate 1, shared with Vault,
     "flagged for veto" by h-restore itself) need a product ruling,
     not more engineering.** Blocked on Brian, not on build time.
-18. **Community and Vault: card-face Start Chat / Generate image
-    actions (candidate 7).** Both pages hit the same standing
-    card-law conflict (exactly three overlay actions; share/download/
-    delete already live in the open destination, chat/generate have
-    no assigned home). Needs a ruling before either page can add the
-    control.
+18. **CLOSED 11 Aug 2026 (v1.1.0).** ~~Community and Vault: card-face
+    Start Chat / Generate image actions (candidate 7).~~ Creation-card
+    contract 3.2.0 resolves both: the third overlay icon is contextual
+    (Play on Story/Adventure-kind cards, Generate on Image-kind cards,
+    Expand as the universal fallback).
 19. **Community: the popup has no lore-type rendering branch**, so a
     Lore creation opened from Community's grid has nowhere honest to
     land inside the shared `KitAssetDetailPopup`. Needs either a
     lore-specific popup layout or a ruled redirect to the Lore page's
     own detail surface.
-20. **Vault, Images: the two Sprint E 1.1-deferred library-management
-    surfaces** (selection mode, bulk delete, cursor pagination on
-    Images; the same machinery implied for Vault's own image-library)
-    are recorded as landing at live wiring, meaning they need real
-    backend endpoints before they can be honestly built, not just
-    more frontend time.
+20. **Images: the Sprint E 1.1-deferred library-management surface**
+    (selection mode, bulk delete, cursor pagination) is recorded as
+    landing at live wiring, needing real backend endpoints before it
+    can be honestly built. **Narrowed 11 Aug 2026 (v1.1.0):** Vault's
+    own image-library is now built (`/studio/v2/editor/[id]/image-
+    library`, contract 1.0.0), and its control set per
+    `docs/VAULT-EDIT-TREE-CLASSIFICATION.md` Group C does not include
+    selection mode, bulk delete, or cursor pagination either, so this
+    item's scope was correctly wider than "Vault's page does not exist
+    yet"; both pages carry the same specific gap now.
 21. **Images, Vault: OPEN item 28 (viewer reconciliation)** holds back
     9 of the image lightbox's 13 original controls (Download, Details,
     Report and its sub-fields, Generate Variant, Delete, thumbnail
-    rail, three Soon stubs) on both pages identically. A single
-    viewer-reconciliation pass would close this everywhere it appears
-    at once, the single highest-leverage fix on this list after the
-    Studio/editor merge below.
-22. **Creators: the entire profile-detail page (24 of this page's 26
-    CSV rows) does not exist.** Hero, tabs, donation modal and its
-    three fields, like/bookmark, share, activity, badges, and the
-    connections sub-page all need a net-new page built from
-    scratch, the largest single-page build item in this document.
-23. **Vault and Images: the CR-007/CR-008 partial hold excludes 97 of
-    Vault's 112 rows and 19 of Images' remaining rows (edit tree,
-    preview tree, image-library editing).** This is not a missing
-    control, it is an entire missing surface, deliberately held back
-    pending the advanced editor.
-24. **The `design/studio` branch (Studio hub and the advanced editor,
-    briefs S1 and S3) is not merged into this lineage.** This is the
-    root cause of item 23 above and of Adventures' and Stories' own
-    "no edit entry from the catalog" gaps: the editor those briefs
-    built is the ruled destination for exactly this hold. Merging it
-    does not by itself close CR-007/CR-008 (the hold is a build-order
-    ruling, not purely a missing-page problem, and CR-031's real
-    read/update-in-place path is still fixture-first even on that
-    branch), but it removes the single largest structural blocker
-    sitting underneath the largest gaps on four of the eight pages
-    audited here.
+    rail, three Soon stubs) on both pages identically, now including
+    Vault's own newly built image-library lightbox (same shared
+    `MediaLightbox`, same standing hold). A single viewer-
+    reconciliation pass would close this everywhere it appears at
+    once, the single highest-leverage fix remaining on this list.
+22. **CLOSED 11 Aug 2026 (v1.1.0).** ~~Creators: the entire
+    profile-detail page does not exist.~~ Built at
+    `/studio/v2/creators/[handle]` (contract 1.2.0) with its
+    connections sub-page (contract 1.0.0); 21 of the 24 previously
+    Flagged rows flip Present, see the Creators section above.
+23. **Images: the CR-007/CR-008 hold's remaining 19 rows (image-
+    library editing surface) are excluded on the Images page itself.**
+    **Narrowed 11 Aug 2026 (v1.1.0):** Vault's own 97-row share of this
+    hold is resolved (see the Vault section above); the Images page
+    does not compose the new editor's image-library route and still
+    has no in-page path to featured-slot management, so its own 19
+    rows stay excluded under the same citation. Not a missing control,
+    a missing composition on this one page.
+24. **CLOSED as a merge blocker, still open as an audit gap.** The
+    advanced editor (`/studio/v2/editor/[id]`, contract 1.2.0) and the
+    Studio hub page (`/studio/v2/studio`, contract 1.0.0, Brief S1) are
+    both present on this branch, resolving CR-007/CR-008 for Vault per
+    item 22's closure above and the Vault section. **Still open:**
+    neither surface has ever had its own read-only parity echo pass in
+    this document; that pass is owed. Adventures' and Stories' own "no
+    edit entry from the catalog" gaps (rows flagged in those sections
+    above) are unaffected by the editor's arrival, since neither page's
+    card grid routes to it yet.
