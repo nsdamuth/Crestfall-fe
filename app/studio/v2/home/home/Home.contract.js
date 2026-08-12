@@ -1,4 +1,4 @@
-export const HOME_VIEW_CONTRACT_VERSION = "2.1.0";
+export const HOME_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the Home page View
@@ -33,12 +33,20 @@ export const HOME_VIEW_CONTRACT_VERSION = "2.1.0";
  * data, all routing (every onX callback), all local state that is
  * not presentation-only. The View fetches nothing.
  *
+ * 2.1.0 to 2.2.0, RULED 11 Aug 2026 (Home top banner empty state):
+ * `HomeBannerProps` gains optional `secondaryCtaLabel`/
+ * `onSecondaryCtaClick`, additive. `topBanner` uses them for the
+ * cold-start ghost CTA ("See what others made"); `bottomBanner` is
+ * unaffected and may omit them.
+ *
  * @typedef {Object} HomeBannerProps
  * @property {string} eyebrow
  * @property {string} title
  * @property {string} ctaLabel
  * @property {string|null} imageSrc
  * @property {(() => void)|null} onCtaClick
+ * @property {string} [secondaryCtaLabel] optional (2.2.0), quiet ghost CTA beside the primary
+ * @property {(() => void)|null} [onSecondaryCtaClick] optional (2.2.0)
  *
  * @typedef {Object} HomeContinueItem
  * @property {string} id

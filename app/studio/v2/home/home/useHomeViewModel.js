@@ -19,10 +19,15 @@ import {
   HOME_TOP_RATED_ITEMS,
 } from "./homeContent.mock";
 
+// Cold-start hero, RULED 11 Aug 2026 (Home top banner empty state):
+// with nothing in progress the top banner is the cold-start
+// invitation, not a hidden surface, per Continue's existing
+// fallback-not-placeholder law.
 const TOP_BANNER = {
   eyebrow: "Crestfall Chronicles",
-  title: "The realm under one sky.",
-  ctaLabel: "Start exploring",
+  title: "Start something worth finishing.",
+  ctaLabel: "Browse stories",
+  secondaryCtaLabel: "See what others made",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
 };
 
@@ -177,8 +182,8 @@ export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {
 
   const topBanner = {
     ...TOP_BANNER,
-    onCtaClick: () =>
-      openNotice(TOP_BANNER.ctaLabel, "This banner routes into the journey loop when live wiring lands. Nothing was opened in this preview."),
+    onCtaClick: () => navigateOrStub("/studio/v2/stories", TOP_BANNER.ctaLabel),
+    onSecondaryCtaClick: () => navigateOrStub("/studio/v2/community", TOP_BANNER.secondaryCtaLabel),
   };
 
   const bottomBanner = {
