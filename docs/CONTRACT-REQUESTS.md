@@ -529,6 +529,20 @@ not duplicate CR-025, which already carries that backend-rename
 request and its detail; see CR-025 for the standing display-mapping
 detail and the rename request itself.
 
+### CR-040, creator Plays stat: aggregate play count by creator
+
+Filed 11 Aug 2026 (Sprint H render review, item 6). The creator
+profile page (`/studio/v2/creators/[handle]`) shows a Plays stat tile
+alongside Followers, Following, and Works. Followers and Following
+route to the connections page; Works scrolls to the same page's
+Creations grid. Plays has no honest destination to route to: there is
+no backend aggregate that sums play counts across every work a given
+creator has published. Needed from the backend: a query returning
+total plays across a creator's published works, by creator id or
+handle. Until this lands, the Plays tile opens an honest stub notice
+on tap (`useCreatorProfileViewModel.js`, `onOpenPlays`) rather than
+routing anywhere fake.
+
 ## Closed
 
 None this pass. Every previously open CR re-checked against current

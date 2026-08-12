@@ -1,4 +1,4 @@
-export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.2.0";
+export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the Creators profile-detail page
@@ -40,6 +40,17 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.2.0";
  * both optional; when absent the tiles render exactly as before
  * (non-interactive). Plays and Works stay non-interactive, no prop
  * added for either.
+ *
+ * v1.3.0, RULED 11 Aug 2026 (Sprint H render review, item 6): the
+ * ruling is all-or-nothing, ALL FOUR stat tiles interactive. Works
+ * routes nowhere (`onOpenWorks` was NOT added): it scrolls to this
+ * same page's Creations grid, a View-local behavior needing no
+ * Chassis callback. Plays gets the new optional `onOpenPlays`; no
+ * Plays destination exists anywhere in the app yet, so it opens the
+ * honest stub notice (no backend aggregate exists to build a real one
+ * against; CR-040 filed, docs/CONTRACT-REQUESTS.md). Additive minor
+ * bump: absent `onOpenPlays` renders the Plays tile non-interactive,
+ * same backward-compatible shape as v1.2.0's two tiles.
  *
  * @typedef {Object} CreatorProfileStats
  * @property {number|null} followers
@@ -106,6 +117,7 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {CreatorProfileStats} stats
  * @property {(() => void)|null} [onOpenFollowers] Routes the Followers stat tile to the connections page (tab=followers). Tile is non-interactive when absent.
  * @property {(() => void)|null} [onOpenFollowing] Routes the Following stat tile to the connections page (tab=following). Tile is non-interactive when absent.
+ * @property {(() => void)|null} [onOpenPlays] Opens the Plays stat tile's honest stub notice (v1.3.0); no live destination exists yet. Tile is non-interactive when absent.
  * @property {CreatorProfileEngagement} engagement
  * @property {CreatorProfileWorkItem[]} workItems
  * @property {string|null} worksEmptyMessage

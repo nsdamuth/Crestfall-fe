@@ -1,4 +1,4 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.2.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.3.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
@@ -90,6 +90,22 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.2.0";
  *   default null; the contextual third face action for `assetKind`
  *   "image" only. Icon plus accessible label "Generate". An "image"
  *   card with no `onGenerate` renders the expand fallback instead.
+ *
+ * v3.2.1, RULED 11 Aug 2026 (Sprint H render review, item 5): the
+ * no-art fallback (both layouts) swaps the generic "No image" icon
+ * and caption for the shared KitArtPlaceholder camellia mark. No
+ * prop change.
+ *
+ * v3.3.0, RULED 11 Aug 2026 (Sprint H render review, item 1):
+ * additive new optional `onContinue`. When supplied it overrides
+ * every kind-based contextual-action branch (onPlay, onGenerate,
+ * expand fallback), rendering the third face action as "Continue"
+ * (Play icon) regardless of `assetKind`. Used by the Stories page
+ * Continue group, now rendered as normal cards in the same grid/list
+ * collection rather than the retired compact-row treatment.
+ * @property {(() => void)|null} [onContinue] optional (v3.3.0),
+ *   default null; overrides onPlay/onGenerate/expand, label
+ *   "Continue".
  */
 
 export {};

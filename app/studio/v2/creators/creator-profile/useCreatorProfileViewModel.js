@@ -193,6 +193,17 @@ export function useCreatorProfileViewModel({
       }
       openNotice("Following", "This tile opens the connections page once it is live. Nothing was opened in this preview.");
     },
+    // RULED 11 Aug 2026 (Sprint H render review, item 6): no Plays
+    // destination exists anywhere in the app yet, and surfacing one
+    // needs an aggregate play-count-by-creator query the backend does
+    // not expose today. Honest stub notice, same shape as every other
+    // R4 not-yet-wired control on this page. CR-040 filed
+    // (docs/CONTRACT-REQUESTS.md) for the needed backend support.
+    onOpenPlays: () =>
+      openNotice(
+        "Plays",
+        "A dedicated Plays view is not built yet; it needs a backend aggregate this creator's plays across every published work. CR-040 requests it. Nothing was opened in this preview."
+      ),
     workItems,
     worksEmptyMessage,
     worksLoadMore,

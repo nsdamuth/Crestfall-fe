@@ -27,6 +27,7 @@
 import { Bookmark, Heart, Maximize2, Play, Users, Wand2 } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
+import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -46,7 +47,16 @@ function resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail) {
 // including any card whose caller passes no handler for its
 // contextual action. Expand is the universal fallback; a card never
 // renders a dead third icon.
-function resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen }) {
+//
+// v3.3.0 addition, RULED 11 Aug 2026 (Sprint H render review, item 1):
+// onContinue overrides every kind-based branch above when supplied,
+// for in-progress items rendered as normal cards (Stories page
+// Continue group). Label "Continue", same Play icon as the story/
+// adventure branch since both resume a session.
+function resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen, onContinue }) {
+  if (onContinue) {
+    return { label: "Continue", Icon: Play, onClick: onContinue };
+  }
   if ((assetKind === "story" || assetKind === "adventure") && onPlay) {
     return { label: "Start Chat", Icon: Play, onClick: onPlay };
   }
@@ -184,11 +194,8 @@ function GridCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
-          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-10)] w-[var(--space-10)] text-[var(--ink-faint)]">
-            <use href="/assets/icons/icons-v7.svg#i-59" />
-          </svg>
-          <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
+        <div className="absolute inset-0">
+          <KitArtPlaceholderView size="md" />
         </div>
       )}
 
@@ -273,11 +280,8 @@ function ListCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[var(--space-2)] bg-[var(--surface-2)]">
-          <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-10)] w-[var(--space-10)] text-[var(--ink-faint)]">
-            <use href="/assets/icons/icons-v7.svg#i-59" />
-          </svg>
-          <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
+        <div className="absolute inset-0">
+          <KitArtPlaceholderView size="md" />
         </div>
       )}
 
@@ -334,10 +338,11 @@ export default function KitCreationCardView({
   onBookmark = null,
   onPlay = null,
   onGenerate = null,
+  onContinue = null,
 }) {
   const isList = layout === "list";
   const onOpen = resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail);
-  const contextualAction = resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen });
+  const contextualAction = resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen, onContinue });
 
   const disabledClasses = isDisabled
     ? "pointer-events-none opacity-[var(--state-disabled-opacity)]"

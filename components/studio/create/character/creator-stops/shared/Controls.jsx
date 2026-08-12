@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 
 import InfoTip from "../InfoTip";
 import GlobalEyebrow from "@/components/ui/Eyebrow";
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 
 // One shared style for every field label across all seven stops, sized
 // below its field's value in the type hierarchy. Change it here, never
@@ -12,8 +13,17 @@ import GlobalEyebrow from "@/components/ui/Eyebrow";
 const FIELD_LABEL_CLASS =
   "mb-[var(--space-1)] flex items-baseline justify-between gap-[var(--space-3)] text-[10px] font-medium uppercase leading-[0.9rem] tracking-[0.14em] text-[var(--gold-ornament)]";
 
+// RULED 11 Aug 2026 (Sprint H render review, item 2): every section
+// label in quick-create adopts the standard v2 eyebrow recipe (gold
+// uppercase, trailing --grad-rule mark), the same component the nine
+// v2 page headers use, in place of the old plain-text FIELD_LABEL_CLASS
+// treatment.
 export function SectionLabel({ children }) {
-  return <p className={FIELD_LABEL_CLASS}>{children}</p>;
+  return (
+    <div className="mb-[var(--space-1)]">
+      <GlobalEyebrow>{children}</GlobalEyebrow>
+    </div>
+  );
 }
 
 export function FieldLabel({ children, count, max }) {
@@ -80,10 +90,6 @@ export function SwatchGrid({ options, value, onChange }) {
   );
 }
 
-// Photographic tile art was retired; every tile in the creator falls
-// back to this geometric circle mark.
-const TILE_ART_FALLBACK = "/tmp-creator-tiles/logo-mark.svg";
-
 // "top": pins art to the top of the frame so a face stays visible rather
 // than being cropped through the middle (character/species tiles).
 // "contain": keeps the whole figure in frame, never cropped, since the
@@ -111,19 +117,18 @@ export function TileGrid({ options, value, onChange, imagePosition = "top" }) {
               onClick={() => onChange?.(active ? "" : option.value)}
               className="block w-full text-left"
             >
-              <div
-                className={`h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-no-repeat ${
-                  option.imageUrl
-                    ? isContain
-                      ? "bg-contain bg-center"
-                      : "bg-cover bg-top"
-                    : "bg-center bg-[var(--fill)]"
-                }`}
-                style={{
-                  backgroundImage: `url(${option.imageUrl || TILE_ART_FALLBACK})`,
-                  backgroundSize: option.imageUrl ? undefined : "34%",
-                }}
-              />
+              {option.imageUrl ? (
+                <div
+                  className={`h-16 w-full rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-no-repeat ${
+                    isContain ? "bg-contain bg-center" : "bg-cover bg-top"
+                  }`}
+                  style={{ backgroundImage: `url(${option.imageUrl})` }}
+                />
+              ) : (
+                <div className="h-16 w-full overflow-hidden rounded-[var(--radius-sm)] border border-[var(--line-whisper)]">
+                  <KitArtPlaceholderView size="sm" />
+                </div>
+              )}
               <p className="mt-[var(--space-2)] pr-[var(--space-5)] text-xs text-[var(--ink)]">
                 {option.label}
               </p>

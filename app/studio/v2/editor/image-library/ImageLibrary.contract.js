@@ -1,22 +1,22 @@
-export const IMAGE_LIBRARY_VIEW_CONTRACT_VERSION = "1.0.0";
+export const IMAGE_LIBRARY_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * New this pass (docs/VAULT-EDIT-TREE-CLASSIFICATION.md Group C, CSV
  * rows 409-421 and 430, 14 of the 97 CR-007/CR-008 held rows). A thin
- * v2-native wrapper around the already-portable, read-only
+ * v2-native wrapper around the already-portable
  * `components/studio/my-creations/image-library/CreationImageLibraryPage`
- * package (contract v1.0.0 of its own, untouched here). Build address
- * `/studio/v2/editor/[id]/image-library`.
+ * package. Build address `/studio/v2/editor/[id]/image-library`.
  *
- * The wrapper exists because the composed legacy page's own internal
- * "Back to editor" link and header chrome route to the legacy
- * `/studio/my-creations/[id]/edit` address (hardcoded inside its own
- * Chassis hook, out of this brief's file boundary to change). This
- * View adds a correct v2 "Back to editor" control routing to
- * `/studio/v2/editor/[id]`; the legacy page's own internal back link
- * is unchanged and still points at the old address, a composed-around
- * limitation recorded in `../editor/README.md` and the classification
- * doc, not fixed here.
+ * v1.1.0, RULED 11 Aug 2026 (Sprint H render review, item 4, FIXES
+ * the double-back-control gap this contract previously recorded as
+ * composed-around, not fixed): the Binding Shell (`../ImageLibrary.jsx`)
+ * now passes `showBackLink={false}` into `CreationImageLibraryPage`,
+ * an additive optional prop on that package (default true, unchanged
+ * for its own legacy `/studio/my-creations/[id]/image-library`
+ * caller). The composed legacy page's own internal "Back to editor"
+ * control no longer renders; this View's own origin-aware "Back to
+ * editor" (routing to `/studio/v2/editor/[id]`) is the only back path
+ * on this page. No prop change to this View's own contract.
  *
  * @typedef {Object} ImageLibraryViewProps
  * @property {string} creationId

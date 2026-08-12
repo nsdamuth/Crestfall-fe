@@ -132,7 +132,7 @@ export function normalizeCreationLibraryImage(image, index = 0) {
   };
 }
 
-export function useCreationImageLibraryPageViewModel({ creationId }) {
+export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -492,6 +492,14 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
     backHref: creationId
       ? `/studio/my-creations/${encodeURIComponent(creationId)}/edit`
       : "/studio/my-creations",
+    // RULED 11 Aug 2026 (Sprint H render review, item 4): the v2 editor
+    // composition (app/studio/v2/editor/ImageLibrary.jsx) already
+    // renders its own origin-aware Back; passing showBackLink={false}
+    // there removes this legacy control so only one back path exists.
+    // Defaults true, unchanged for the legacy
+    // /studio/my-creations/[id]/image-library caller, which has no
+    // outer back control of its own.
+    showBackLink,
     imageStudioHref,
     loadStatus,
     loadMessage,

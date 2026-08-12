@@ -14,6 +14,7 @@ import {
 export default function CreationImageLibraryPageView({
   title = "Image Library",
   backHref = "/studio/my-creations",
+  showBackLink = true,
   loadStatus = "idle",
   loadMessage = "",
   isLoading = false,
@@ -76,7 +77,7 @@ export default function CreationImageLibraryPageView({
               Refresh
             </button>
 
-            {BackLink ? (
+            {BackLink && showBackLink ? (
               <BackLink
                 href={backHref}
                 className="cf-btn cf-btn--secondary"
