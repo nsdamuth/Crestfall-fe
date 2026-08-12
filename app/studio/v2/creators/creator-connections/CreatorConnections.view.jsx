@@ -125,9 +125,14 @@ function ConnectionRow({ item }) {
   );
 }
 
+// Two-up list treatment, RULED (11 Aug list-density law, extended 12
+// Aug): full-width single-column rows with large blank middles are
+// banned where the two-up law applies. Same grid Community's own list
+// layout uses (CommunityV2Mockup.jsx), single column below 1100px,
+// two columns at 1100px and up.
 function ConnectionList({ items }) {
   return (
-    <ul className="flex flex-col gap-[var(--space-2)]">
+    <ul className="grid grid-cols-1 gap-[var(--space-3)] min-[1100px]:grid-cols-2">
       {items.map((item) => (
         <ConnectionRow key={item.id} item={item} />
       ))}
