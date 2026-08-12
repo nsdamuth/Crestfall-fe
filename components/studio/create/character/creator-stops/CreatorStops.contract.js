@@ -31,7 +31,7 @@
 // cases. No removal, no rename, no handler signature change on any
 // existing prop.
 //
-// v3 to v4 (this pass, world-quick-create fixes, RULED): additive
+// v3 to v4 (world-quick-create fixes, RULED): additive
 // only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
 // gains four entries for the Worlds quick create's non-"name" stop
 // ids: premise (BookOpen), setting (Compass), tone (Palette), look
@@ -43,7 +43,7 @@
 // silhouette, heart, seal, payoff) are unchanged. No prop added,
 // removed, or renamed on CreatorStopsView itself.
 //
-// v4 to v5 (this pass, look-quick-create brief, RULED): additive
+// v4 to v5 (look-quick-create brief, RULED): additive
 // only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
 // gains three entries for the Looks quick create's non-"name",
 // non-"look" stop ids: vibe (Sparkles), garments (Shirt), palette
@@ -52,7 +52,7 @@
 // Character's and World's existing icon entries are unchanged. No
 // prop added, removed, or renamed on CreatorStopsView itself.
 //
-// v5 to v6 (this pass, story-quick-create brief, RULED): additive
+// v5 to v6 (story-quick-create brief, RULED): additive
 // only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
 // gains two entries for the Stories quick create's non-"name",
 // non-"setting" stop ids: cast (Users), cover (ImageIcon, reused from

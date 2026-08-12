@@ -8,11 +8,11 @@ import { useRouter } from "next/navigation";
 // dialog, and save-and-reaccess loop footer the Character, World, and
 // Look quick creates use (contract creator-stops.view.v6).
 import CreatorStopsView from "@/components/studio/create/character/creator-stops/CreatorStops.view";
-// The picker pattern, RULED (this pass): KitPickerModal, the kit's
-// existing branded, fixture-fed selection modal, reused unmodified
-// for both cast (multi-select) and setting (single-select). See
-// StoryCreatorStops.contract.js for why this was chosen over
-// inventing a new pattern.
+// The picker pattern, RULED (the Q3 story quick-create brief):
+// KitPickerModal, the kit's existing branded, fixture-fed selection
+// modal, reused unmodified for both cast (multi-select) and setting
+// (single-select). See StoryCreatorStops.contract.js for why this was
+// chosen over inventing a new pattern.
 import KitPickerModalView from "@/components/kit/picker-modal/KitPickerModal.view";
 import { useKitPickerModalViewModel } from "@/components/kit/picker-modal/useKitPickerModalViewModel";
 import {

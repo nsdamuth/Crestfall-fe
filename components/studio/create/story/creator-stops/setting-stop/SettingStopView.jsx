@@ -4,12 +4,12 @@ import { X } from "lucide-react";
 
 import { Eyebrow, SectionLabel } from "../shared/Controls";
 
-// Picker pattern, RULED (this pass): setting is single-select, picked
-// from the person's existing locations via KitPickerModal
-// (components/kit/picker-modal/), the same branded selection modal
-// the cast stop uses. Single-select confirms and closes on the first
-// tap (KitPickerModal's own behavior); this stop only shows the
-// current selection and the trigger to open it.
+// Picker pattern, RULED (the Q3 story quick-create brief): setting is
+// single-select, picked from the person's existing locations via
+// KitPickerModal (components/kit/picker-modal/), the same branded
+// selection modal the cast stop uses. Single-select confirms and
+// closes on the first tap (KitPickerModal's own behavior); this stop
+// only shows the current selection and the trigger to open it.
 export default function SettingStopView({
   selectedLocation = null,
   onOpenSettingPicker = null,

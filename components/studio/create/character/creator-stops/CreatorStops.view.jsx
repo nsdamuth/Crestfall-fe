@@ -34,13 +34,13 @@ const STOP_ICONS = {
   setting: Compass,
   tone: Palette,
   look: ImageIcon,
-  // Additive, RULED (this pass, look-quick-create brief): the Looks
+  // Additive, RULED (look-quick-create brief): the Looks
   // quick create's non-"name", non-"look" stop ids. World's and
   // Character's icons above are unchanged.
   vibe: Sparkles,
   garments: Shirt,
   palette: Palette,
-  // Additive, RULED (this pass, story-quick-create brief): the
+  // Additive, RULED (story-quick-create brief): the
   // Stories quick create's non-"name" stop ids. "setting" already
   // resolves to Compass above (shared with World's setting stop); no
   // change needed there. Every prior package's icons are unchanged.

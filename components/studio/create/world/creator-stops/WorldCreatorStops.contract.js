@@ -1,19 +1,14 @@
-// The Worlds quick create, v1.1.0 (v1.0.0 to v1.1.0, this pass, RULED
-// fixes): additive-and-corrective. New package this pass (RULED, the
-// Q1 world quick-create brief). Strict template of the Character quick
-// create (components/studio/create/character/creator-stops/): same
-// modal shell, same stop/step composition, same save-and-reaccess
-// loop, only the field list differs.
+// The Worlds quick create, v1.1.0 (v1.0.0 to v1.1.0, the world-quick-
+// create fixes pass, RULED): additive-and-corrective. New package in
+// the Q1 world quick-create brief (RULED). Strict template of the
+// Character quick create (components/studio/create/character/
+// creator-stops/): same modal shell, same stop/step composition, same
+// save-and-reaccess loop, only the field list differs.
 //
-// v1.0.0 to v1.1.0, three ruled fixes:
-// - Field naming: the "essence" stop and every user-facing label,
-//   helper line, and contract reference for it is renamed "premise"
-//   (id, WORLD_FIELD_LIMITS key, WORLD_STOPS entry). No field was
-//   added or removed; this is a rename, not a shape change.
-// - Preview CTA separator corrected back to the house middot,
-//   "Generate preview · X tokens", matching the Character quick
-//   create's string character for character. The prior pass's comma
-//   was an error, now withdrawn.
+// v1.0.0 to v1.1.0, two ruled fixes:
+// - Preview CTA separator: the house middot, "Generate preview ·
+//   X tokens", matching the Character quick create's string character
+//   for character.
 // - Stepper icons: the shared CreatorStopsView STOP_ICONS map
 //   (components/studio/create/character/creator-stops/CreatorStops.view.jsx)
 //   gains entries for World's non-"name" stop ids (premise, setting,
@@ -37,8 +32,8 @@
 //
 // Save-and-reaccess loop: this package renders CreatorStopsView
 // (components/studio/create/character/creator-stops/CreatorStops.view,
-// contract creator-stops.view.v6, comment corrected this pass per the
-// Q3 story-quick-create brief's stale-comment fix, no behavior
+// contract creator-stops.view.v6, comment corrected in the Q3
+// story-quick-create brief's stale-comment fix, no behavior
 // change) directly, unmodified and unforked, per the brief's explicit
 // instruction. WorldCreatorModal supplies isLastStop (true only on
 // "look"), so the two-tier post-save state applies automatically: a
@@ -60,9 +55,10 @@ export const WORLD_STOPS = Object.freeze([
 
 export const WORLD_STOP_IDS = Object.freeze(WORLD_STOPS.map((stop) => stop.id));
 
-// Character limits per field, RULED (this pass, package-local until a
-// backend schema rules otherwise): visible on every folding and
-// non-folding text field via FieldLabel's counter slot.
+// Character limits per field, RULED (the Q1 world quick-create brief,
+// package-local until a backend schema rules otherwise): visible on
+// every folding and non-folding text field via FieldLabel's counter
+// slot.
 export const WORLD_FIELD_LIMITS = Object.freeze({
   name: 80,
   premise: 500,

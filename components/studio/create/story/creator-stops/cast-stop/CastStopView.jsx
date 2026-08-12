@@ -4,13 +4,13 @@ import { X } from "lucide-react";
 
 import { Eyebrow, SectionLabel } from "../shared/Controls";
 
-// Picker pattern, RULED (this pass): cast is multi-select, picked from
-// the person's existing characters via KitPickerModal
-// (components/kit/picker-modal/), the kit's existing branded,
-// fixture-fed selection modal. The picker itself is owned and opened
-// by StoryCreatorModal (it renders as its own stacked modal, not a
-// CreatorStopsView secondaryPanel takeover); this stop only shows the
-// current selection and the trigger to open it.
+// Picker pattern, RULED (the Q3 story quick-create brief): cast is
+// multi-select, picked from the person's existing characters via
+// KitPickerModal (components/kit/picker-modal/), the kit's existing
+// branded, fixture-fed selection modal. The picker itself is owned
+// and opened by StoryCreatorModal (it renders as its own stacked
+// modal, not a CreatorStopsView secondaryPanel takeover); this stop
+// only shows the current selection and the trigger to open it.
 export default function CastStopView({
   selectedCharacters = [],
   onOpenCastPicker = null,

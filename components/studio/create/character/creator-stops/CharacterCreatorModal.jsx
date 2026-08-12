@@ -185,9 +185,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
     onClose?.();
   }
 
-  // Shared by the footer Save and Finish and save actions. Guards
-  // against a duplicate record: the first successful save records a
-  // creationId, and every save after that updates that same record.
+  // Shared by the footer Save, Finish and save, and Save and open
+  // editor actions. Guards against a duplicate record: the first
+  // successful save records a creationId, and every save after that
+  // updates that same record.
   async function persistCreation() {
     if (saveInFlightRef.current) return null;
     saveInFlightRef.current = true;
@@ -312,7 +313,7 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
               description:
                 "Putting a saved character into a story is coming soon.",
               body: (
-                <EmptyStateCard message="Story selection is not built in this pass. Once it exists, this will place this character into a story you pick, resumable from any device." />
+                <EmptyStateCard message="Story selection is not built yet. Once it exists, this will place this character into a story you pick, resumable from any device." />
               ),
               onCancel: () => setSecondaryPanel(null),
             }

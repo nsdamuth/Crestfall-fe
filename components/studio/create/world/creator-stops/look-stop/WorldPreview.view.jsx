@@ -7,10 +7,9 @@ import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceh
 // Mirrors CharacterPreviewView (components/studio/create/character/
 // character-preview/CharacterPreview.view.jsx): empty art slots render
 // the shared camellia mark, never a blank box; preview generation
-// never fires without a tap. CTA separator, RULED correction (this
-// pass, withdraws the prior comma): the house middot, matching
-// Character's own string character for character, "Generate preview
-// · X tokens".
+// never fires without a tap. CTA separator: the house middot, matching
+// CharacterPreviewView's own string character for character (same
+// file, around line 46), "Generate preview · X tokens".
 export default function WorldPreviewView({
   displayInitial = "W",
   worldName = "Unnamed World",

@@ -132,7 +132,7 @@ export default function SilhouetteStopView({
                 message={
                   hasClothingSelection
                     ? `Selected outfit: ${defaultOutfitTitle}`
-                    : "No outfit selected. The outfit browser is not built in this pass."
+                    : "No outfit selected. The outfit browser is not built yet."
                 }
                 actions={[{ label: "Select outfit", onClick: onOpenOutfitPicker }]}
               />
@@ -145,7 +145,7 @@ export default function SilhouetteStopView({
                 message={
                   hasClothingSelection
                     ? `Selected wardrobe: ${defaultWardrobeTitle}`
-                    : "No wardrobe selected. The wardrobe browser is not built in this pass."
+                    : "No wardrobe selected. The wardrobe browser is not built yet."
                 }
                 actions={[
                   { label: "Select wardrobe", onClick: onOpenWardrobePicker },
