@@ -51,7 +51,17 @@
 // deliberately since this stop is literally a color palette).
 // Character's and World's existing icon entries are unchanged. No
 // prop added, removed, or renamed on CreatorStopsView itself.
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v5";
+//
+// v5 to v6 (this pass, story-quick-create brief, RULED): additive
+// only. The package-private STOP_ICONS map (CreatorStops.view.jsx)
+// gains two entries for the Stories quick create's non-"name",
+// non-"setting" stop ids: cast (Users), cover (ImageIcon, reused from
+// "payoff" and "look", since this is also a preview/art stop).
+// "setting" already resolved to Compass from the World entry; no new
+// entry needed there, reused as-is. Every prior package's icon
+// entries are unchanged. No prop added, removed, or renamed on
+// CreatorStopsView itself.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v6";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),

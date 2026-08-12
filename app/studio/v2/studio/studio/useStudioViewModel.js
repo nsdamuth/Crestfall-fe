@@ -5,13 +5,14 @@
 // level and the R4 fixture-action notice. Routing is not owned here:
 // the Shell passes onNavigate (real Next.js navigation, used only for
 // the bottom banner's built /studio/v2/images destination),
-// onOpenCharacterCreator, onOpenWorldCreator, and onOpenLookCreator
-// (the Shell's own state, since CharacterCreatorModal,
-// WorldCreatorModal, and LookCreatorModal are all live-wired, not
-// fixture data). Every other control (every Soon door, every Soon
-// tool card, the Story bridge action) opens the honest R4 stub
-// notice: none of those destinations exist yet (docs/STUDIO-SPEC.md
-// section 9, items 2 and 3).
+// onOpenCharacterCreator, onOpenWorldCreator, onOpenLookCreator, and
+// onOpenStoryCreator (the Shell's own state, since
+// CharacterCreatorModal, WorldCreatorModal, LookCreatorModal, and
+// StoryCreatorModal are all live-wired, not fixture data). Every
+// other control (every Soon door, every Soon tool card, the Story
+// bridge action) opens the honest R4 stub notice: none of those
+// destinations exist yet (docs/STUDIO-SPEC.md section 9, items 2 and
+// 3).
 import { useMemo, useState } from "react";
 
 import {
@@ -32,6 +33,7 @@ const DOOR_OPENER_PROP_BY_ID = {
   character: "onOpenCharacterCreator",
   location: "onOpenWorldCreator",
   outfit: "onOpenLookCreator",
+  story: "onOpenStoryCreator",
 };
 
 // docs/STUDIO-SPEC.md section 8.1 names three fixture states (default,
@@ -42,7 +44,7 @@ const DOOR_OPENER_PROP_BY_ID = {
 // empty -> Guided Build (the quietest pane, no doors or cards, one
 // placeholder message), longestContent -> Full Studio (the
 // densest pane, every tool group and card rendered at once).
-export function useStudioViewModel({ fixtureMode = "default", onNavigate = null, onOpenCharacterCreator = null, onOpenWorldCreator = null, onOpenLookCreator = null } = {}) {
+export function useStudioViewModel({ fixtureMode = "default", onNavigate = null, onOpenCharacterCreator = null, onOpenWorldCreator = null, onOpenLookCreator = null, onOpenStoryCreator = null } = {}) {
   const initialLevel = fixtureMode === "empty" ? "guidedBuild" : fixtureMode === "longestContent" ? "fullStudio" : "quickStart";
   const [activeLevelId, setActiveLevelId] = useState(initialLevel);
   const [notice, setNotice] = useState(null);
@@ -62,6 +64,7 @@ export function useStudioViewModel({ fixtureMode = "default", onNavigate = null,
       onOpenCharacterCreator,
       onOpenWorldCreator,
       onOpenLookCreator,
+      onOpenStoryCreator,
     };
 
     return STUDIO_DOORS.map((door) => {
@@ -72,7 +75,7 @@ export function useStudioViewModel({ fixtureMode = "default", onNavigate = null,
       const opener = openerByPropName[DOOR_OPENER_PROP_BY_ID[door.id]];
       return { ...door, onOpen: () => opener?.() };
     });
-  }, [onOpenCharacterCreator, onOpenWorldCreator, onOpenLookCreator]);
+  }, [onOpenCharacterCreator, onOpenWorldCreator, onOpenLookCreator, onOpenStoryCreator]);
 
   const toolGroups = useMemo(
     () =>

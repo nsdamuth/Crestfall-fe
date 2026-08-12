@@ -15,7 +15,17 @@
 // (Studio.jsx) gains onOpenLookCreator alongside
 // onOpenCharacterCreator and onOpenWorldCreator, mirroring the
 // existing pattern exactly.
-export const STUDIO_VIEW_CONTRACT_VERSION = "1.2.0";
+//
+// 1.2.0 to 1.3.0 (this pass, the Q3 story quick-create brief):
+// additive only. A fourth, new door (id "story", no existing door to
+// relabel, unlike Worlds and Looks) goes live, labeled "Stories" and
+// mapped onto the existing ROOM_TEMPLATE creation type, opening
+// StoryCreatorModal the same way the other three doors open their own
+// creators. StudioDoor's isLive is no longer "Character, Worlds, and
+// Looks only"; no shape change to StudioDoor or any other typedef,
+// and the Shell (Studio.jsx) gains onOpenStoryCreator alongside the
+// three existing openers, mirroring the existing pattern exactly.
+export const STUDIO_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the Studio hub page View
@@ -38,9 +48,11 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.2.0";
  *     CharacterCreatorModal with fieldScope="quick"; Worlds live
  *     (door id "location", labeled "Worlds"), opening
  *     WorldCreatorModal; Looks live (door id "outfit", labeled
- *     "Looks"), opening LookCreatorModal; every other type's door
- *     quiet with the standing Soon treatment) plus the Story bridge
- *     strip (KitAlertStrip neutral, same .stripinfo lineage).
+ *     "Looks"), opening LookCreatorModal; Stories live (door id
+ *     "story", labeled "Stories"), opening StoryCreatorModal; every
+ *     other type's door quiet with the standing Soon treatment) plus
+ *     the Story bridge strip (KitAlertStrip neutral, same .stripinfo
+ *     lineage).
  *   - Guided Build: no allocation exists yet for Story assembly
  *     (docs/STUDIO-SPEC.md section 9, item 2), so this pane renders
  *     the same quiet Soon treatment as a door, not fabricated
@@ -61,14 +73,14 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.2.0";
  * therefore owned by the ViewModel per the fixture-mode harness
  * convention, not hardcoded in the View). The View fetches nothing.
  *
- * CharacterCreatorModal, WorldCreatorModal, and LookCreatorModal are
- * all mounted by the Shell (Studio.jsx), not the View: each is a
- * real, live-wired component (existing save path through
- * creationClient), not a fixture-shaped prop, and the Shell is the
- * LOOM layer that owns real integration per
+ * CharacterCreatorModal, WorldCreatorModal, LookCreatorModal, and
+ * StoryCreatorModal are all mounted by the Shell (Studio.jsx), not
+ * the View: each is a real, live-wired component (existing save path
+ * through creationClient), not a fixture-shaped prop, and the Shell
+ * is the LOOM layer that owns real integration per
  * docs/CRESTFALL-DESIGN-CONTEXT.md. The View only reports intent,
- * through onOpenCharacterCreator, onOpenWorldCreator, and
- * onOpenLookCreator respectively.
+ * through onOpenCharacterCreator, onOpenWorldCreator,
+ * onOpenLookCreator, and onOpenStoryCreator respectively.
  *
  * @typedef {Object} StudioLevel
  * @property {string} id
@@ -83,7 +95,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {string} eyebrow
  * @property {string} description
  * @property {string|null} imageSrc
- * @property {boolean} isLive Character, Worlds (door id "location"), and Looks (door id "outfit") only; every other door is Soon.
+ * @property {boolean} isLive Character, Worlds (door id "location"), Looks (door id "outfit"), and Stories (door id "story") only; every other door is Soon.
  * @property {(() => void)|null} onOpen
  *
  * @typedef {Object} StudioToolCard

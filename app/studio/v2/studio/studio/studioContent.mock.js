@@ -31,10 +31,10 @@ export const STUDIO_LEVELS = [
 ];
 
 // Quick Start doors, asset-first (docs/_legacy-reference proof,
-// docs/STUDIO-SPEC.md section 3.1). Character, Worlds, and Looks are
-// the three live doors (docs/STUDIO-SPEC.md section 3.2 for
-// Character; the Worlds and Looks quick creates are their own
-// briefs). Every other type has no allocation yet
+// docs/STUDIO-SPEC.md section 3.1). Character, Worlds, Looks, and
+// Stories are the four live doors (docs/STUDIO-SPEC.md section 3.2
+// for Character; the Worlds, Looks, and Stories quick creates are
+// their own briefs). Every other type has no allocation yet
 // (docs/STUDIO-SPEC.md section 9, item 2) and renders the standing
 // Soon treatment.
 export const STUDIO_DOORS = [
@@ -75,6 +75,19 @@ export const STUDIO_DOORS = [
     eyebrow: "Visual asset",
     description: "Reusable clothing, armor, uniforms, costumes, and outfit presets for characters.",
     imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png"),
+    isLive: true,
+  },
+  {
+    // New door this pass (RULED, the Q3 story quick-create brief):
+    // no existing door to relabel, unlike Worlds (location) and Looks
+    // (outfit). Mapped onto the existing ROOM_TEMPLATE creation type
+    // (label "Story"), opening StoryCreatorModal. Art reused from the
+    // existing bottom-banner image, no new art acquired this wave.
+    id: "story",
+    label: "Stories",
+    eyebrow: "Gathered together",
+    description: "Gather characters, a setting, and a premise into a Story, then play it.",
+    imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
     isLive: true,
   },
 ];

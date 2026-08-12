@@ -13,6 +13,7 @@ import {
   SmilePlus,
   Sparkles,
   User,
+  Users,
   X,
 } from "lucide-react";
 
@@ -39,6 +40,12 @@ const STOP_ICONS = {
   vibe: Sparkles,
   garments: Shirt,
   palette: Palette,
+  // Additive, RULED (this pass, story-quick-create brief): the
+  // Stories quick create's non-"name" stop ids. "setting" already
+  // resolves to Compass above (shared with World's setting stop); no
+  // change needed there. Every prior package's icons are unchanged.
+  cast: Users,
+  cover: ImageIcon,
 };
 
 export default function CreatorStopsView({

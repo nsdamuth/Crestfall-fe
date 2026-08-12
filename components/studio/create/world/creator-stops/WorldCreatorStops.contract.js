@@ -37,12 +37,13 @@
 //
 // Save-and-reaccess loop: this package renders CreatorStopsView
 // (components/studio/create/character/creator-stops/CreatorStops.view,
-// contract creator-stops.view.v4 after this pass) directly, unmodified
-// and unforked, per the brief's explicit instruction. WorldCreatorModal
-// supplies isLastStop (true only on "look"), so the two-tier post-save
-// state applies automatically: a save on any earlier stop shows the
-// Saved confirmation only; a save on "look" additionally swaps the
-// footer to Keep editing / Done.
+// contract creator-stops.view.v6, comment corrected this pass per the
+// Q3 story-quick-create brief's stale-comment fix, no behavior
+// change) directly, unmodified and unforked, per the brief's explicit
+// instruction. WorldCreatorModal supplies isLastStop (true only on
+// "look"), so the two-tier post-save state applies automatically: a
+// save on any earlier stop shows the Saved confirmation only; a save
+// on "look" additionally swaps the footer to Keep editing / Done.
 //
 // Backend creation type: "LOCATION" (lib/shared/creations/
 // creationTypePolicy.js), the existing type this app's data model
