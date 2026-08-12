@@ -1,5 +1,7 @@
 import { Camera, Library, MessageCircle, UserRound } from "lucide-react";
 
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
+
 export default function CreationEditMediaPanelView({
   creationTitle = "",
   fallbackInitial = "C",
@@ -26,12 +28,10 @@ export default function CreationEditMediaPanelView({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <div className="text-center">
-              <p className="font-display text-5xl text-[var(--gold-ornament)]">
-                {fallbackInitial}
-              </p>
-              <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
+          <div className="relative flex h-full w-full items-center justify-center">
+            <KitArtPlaceholderView size="lg" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-4 text-center">
+              <p className="text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
                 Featured Media Slot
               </p>
               <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -48,6 +48,7 @@ export default function CreationEditMediaPanelView({
             key={media.id}
             type="button"
             onClick={() => onSelectFeaturedSlot?.(media.index)}
+            aria-label={media.label}
             className={`aspect-square overflow-hidden rounded-xl border text-[10px] uppercase tracking-[0.12em] transition ${
               media.isActive
                 ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
@@ -61,9 +62,7 @@ export default function CreationEditMediaPanelView({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center p-2 text-center">
-                {media.label}
-              </span>
+              <KitArtPlaceholderView size="sm" />
             )}
           </button>
         ))}

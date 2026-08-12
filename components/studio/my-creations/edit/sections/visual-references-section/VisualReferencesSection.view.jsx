@@ -1,5 +1,7 @@
 import { Image as ImageIcon, RefreshCw, X } from "lucide-react";
 
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
+
 function ReferenceCard({ card = {} }) {
   return (
     <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
@@ -35,16 +37,11 @@ function ReferenceCard({ card = {} }) {
             className="aspect-[3/4] w-full object-cover"
           />
         ) : (
-          <div className="flex aspect-[3/4] items-center justify-center p-6 text-center">
-            <div>
-              <ImageIcon
-                size={30}
-                className="mx-auto text-[var(--gold-ornament)]"
-              />
-              <p className="mt-3 text-sm text-[var(--ink-dim)]">
-                {card.emptyMessage}
-              </p>
-            </div>
+          <div className="relative flex aspect-[3/4] items-center justify-center p-6 text-center">
+            <KitArtPlaceholderView size="lg" />
+            <p className="pointer-events-none absolute bottom-4 left-4 right-4 text-sm text-[var(--ink-dim)]">
+              {card.emptyMessage}
+            </p>
           </div>
         )}
       </div>
@@ -85,7 +82,7 @@ export default function VisualReferencesSectionView({
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {sectionEyebrow}
           </p>
           <h3 className="mt-2 font-display text-3xl">{sectionTitle}</h3>

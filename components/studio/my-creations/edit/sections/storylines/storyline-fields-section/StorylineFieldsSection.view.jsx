@@ -29,7 +29,7 @@ export default function StorylineFieldsSectionView({
 function SectionHeader({ eyebrow, title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {eyebrow}
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
