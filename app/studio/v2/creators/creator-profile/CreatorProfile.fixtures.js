@@ -30,11 +30,14 @@ function decorateWork(item) {
   };
 }
 
+// Banner art mirrors useCreatorProfileViewModel.js, RULED 11 Aug 2026
+// (banner-anchor ruling, CC5 banner-audit sitting): see that file's
+// banner comment and docs/reviews/BANNER-AUDIT.md.
 const BOTTOM_BANNER = {
   eyebrow: "Next stop",
   title: "Read the world this creator is writing into.",
   ctaLabel: "Read the lore",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Crash Santosa.png"),
   onCtaClick: noop,
 };
 

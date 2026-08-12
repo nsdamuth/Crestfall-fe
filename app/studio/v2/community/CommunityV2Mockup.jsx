@@ -411,12 +411,14 @@ export default function CommunityV2Mockup() {
           title="Follow the creators behind every world you love."
           line=""
           ctaLabel="Browse creators"
-          // Banner art, RULED 10 Aug 2026 (kit polish 3 pass): Lilith.png
-          // replaces the portrait-oriented Serapha Veyloria.png, the only
-          // genuinely wide, single-subject draft asset in the set (see
-          // KitPromoBanner.fixtures.js for the full survey and reasoning).
+          // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+          // banner-audit sitting): Charlotte Steele.png, reassigned off
+          // Lilith.png so Community does not share a banner with
+          // Creators, Creator Profile, and Creator Connections, all one
+          // click apart (see docs/reviews/BANNER-AUDIT.md for the full
+          // survey and reasoning).
           imageSrc={encodeURI(
-            "/tmp-mockup-images/canon-character-images/Lilith.png"
+            "/tmp-mockup-images/canon-character-images/Charlotte Steele.png"
           )}
           onCtaClick={() =>
             setActionNotice({

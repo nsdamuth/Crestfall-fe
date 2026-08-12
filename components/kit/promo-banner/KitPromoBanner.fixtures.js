@@ -17,18 +17,20 @@ function previewSvg(stopA, stopB) {
 // Draft-asset fixture art (public/tmp-mockup-images/, gitignored
 // interim art); the SVG stays as the synthetic fallback generator.
 //
-// Banner art, RULED 10 Aug 2026 (kit polish 3 pass): every draft
-// asset was measured for orientation (canon-character-images and
-// alpha-test-creator-images, 71 files). Exactly one is a genuinely
-// wide, single-subject composition, Lilith.png at 2560x1441 (1.78:1);
-// the only other landscape file, sassy.png at 2352x1426, is an
-// eight-panel reference sheet (mood board with overlaid labels), not
-// a scene, and does not compose at any crop. Lilith.png replaces the
-// portrait-oriented Serapha Veyloria.png used through kit polish 2;
-// its subject sits close enough to center that it survives every
+// Banner art, RULED 10 Aug 2026 (kit polish 3 pass), dimension claim
+// corrected 11 Aug 2026 (CC5 banner-audit sitting): the 10 Aug pass
+// measured Lilith.png as 2560x1441 and sassy.png as 2352x1426; both
+// figures were wrong. The files as committed are Lilith.png at
+// 640x360 (1.78:1) and sassy.png at 640x388 (1.65:1). The
+// orientation finding stands regardless: Lilith.png is a genuinely
+// wide, single-subject composition; sassy.png is an eight-panel
+// reference sheet (mood board with overlaid labels), not a scene,
+// and does not compose at any crop. Lilith.png replaces the
+// portrait-oriented Serapha Veyloria.png used through kit polish 2.
+// Its subject sits close enough to center that it survives every
 // banner crop this pass uses (mobile 5/3 through desktop 35/12)
-// without cutting into the face, verified against each treatment's
-// aspect ratio.
+// under the ruled default anchor (see KitPromoBanner.view.jsx and
+// docs/reviews/BANNER-AUDIT.md).
 const BANNER_IMAGE = encodeURI(
   "/tmp-mockup-images/canon-character-images/Lilith.png"
 );
@@ -89,6 +91,13 @@ export const kitPromoBannerNoImageFixture = {
 export const kitPromoBannerNoCtaFixture = {
   ...kitPromoBannerTopFixture,
   ctaLabel: "",
+};
+
+export const kitPromoBannerCustomAnchorFixture = {
+  ...kitPromoBannerTopFixture,
+  eyebrow: "Explore",
+  title: "A scene that reads better centered, not top-pinned.",
+  imageAnchor: "center 45%",
 };
 
 export const kitPromoBannerGalaxyTopFixture = {

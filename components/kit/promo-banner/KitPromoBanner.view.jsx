@@ -8,11 +8,14 @@
 // (kit polish 2 pass): each aspect ratio's height term is the prior
 // term times 0.8 (4/3 -> 5/3, 21/9 -> 35/12, 16/9 -> 20/9), so the
 // banner is meaningfully shorter without an arbitrary round number.
-// Art anchor, RULED 10 Aug 2026 (kit polish 3 pass): banner art
-// crops at object-[center_35%], the face-safe anchor measured
-// against the chosen wide draft asset (KitPromoBanner.fixtures.js),
-// the same face-safe-anchor practice the card template already uses
-// at a different measured value.
+// Art anchor, RULED 11 Aug 2026 (banner-anchor ruling, supersedes the
+// 10 Aug kit polish 3 pass measurement): banner art pins toward the
+// top of its frame with roughly a 10% downward bias by default, so
+// faces and subjects stay visible across the whole draft pool, not
+// just the one wide asset the 10 Aug pass measured against. The
+// default lives in the imageAnchor prop below; a caller overrides it
+// per image where the ruled default does not read well (see
+// docs/reviews/BANNER-AUDIT.md for the per-slot survey).
 const TREATMENT_CONFIG = {
   top: {
     radius: "rounded-[var(--radius-lg)]",
@@ -58,6 +61,7 @@ export default function KitPromoBannerView({
   line = "",
   ctaLabel = "",
   imageSrc = null,
+  imageAnchor = "center 10%",
   onCtaClick = null,
   secondaryCtaLabel = "",
   onSecondaryCtaClick = null,
@@ -76,7 +80,8 @@ export default function KitPromoBannerView({
           src={imageSrc}
           alt=""
           loading={treatment === "bottom" ? "lazy" : "eager"}
-          className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ objectPosition: imageAnchor }}
         />
       ) : (
         <div

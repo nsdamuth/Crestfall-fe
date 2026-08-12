@@ -1,4 +1,4 @@
-export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.2.0";
+export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the shared promo banner kit piece
@@ -32,6 +32,17 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.2.0";
  * `cf-btn`'s default `--control-md` height (44px), the mobile law
  * floor.
  *
+ * v1.3.0, RULED 11 Aug 2026 (banner-anchor ruling): optional
+ * `imageAnchor` ADDED, additive. An object-position string applied to
+ * the art layer, default `"center 10%"` (banner art pins toward the
+ * top of its frame with roughly a 10% downward bias so faces and
+ * subjects stay visible), supersedes the 10 Aug kit polish 3 pass's
+ * fixed `object-[center_35%]` crop. A caller overrides it per image
+ * only where the ruled default does not read well; see
+ * docs/reviews/BANNER-AUDIT.md for the per-slot survey. Omitted
+ * entirely on every existing consumer, defaults to the ruled anchor,
+ * pixel-stable elsewhere.
+ *
  * @typedef {Object} KitPromoBannerViewProps
  * @property {"top"|"card"|"bottom"} treatment
  * @property {"uniform"|"bottom-fade"} bottomVariant only read when treatment is "bottom"
@@ -41,6 +52,8 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {string} line
  * @property {string} ctaLabel
  * @property {string|null} imageSrc
+ * @property {string} [imageAnchor] optional (v1.3.0), default
+ *   "center 10%", an object-position string for the art layer
  * @property {(() => void)|null} onCtaClick
  * @property {string} [secondaryCtaLabel] optional (v1.2.0), default
  *   "", renders a quiet ghost button beside the primary CTA when set

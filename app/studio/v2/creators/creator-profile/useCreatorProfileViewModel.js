@@ -19,11 +19,19 @@ const PAGE_SIZE = 4;
 const ACTIVITY_PAGE_SIZE = 5;
 const DONATE_FIELDS_INITIAL = { amount: "", message: "", isAnonymous: false };
 
+// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+// banner-audit sitting): Crash Santosa.png, reassigned off Lilith.png
+// so Creator Profile does not share a banner with Creators, Creator
+// Connections, Community, and Vault, all one click apart. Rachel
+// Sentry.png was tried first and rendered checked at 1440: her
+// downward gaze crops out at the eyes under the ruled default anchor,
+// leaving only chin and jewelry visible, so it was swapped for a
+// forward-facing portrait instead (see docs/reviews/BANNER-AUDIT.md).
 const BOTTOM_BANNER = {
   eyebrow: "Next stop",
   title: "Read the world this creator is writing into.",
   ctaLabel: "Read the lore",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Crash Santosa.png"),
 };
 
 export function useCreatorProfileViewModel({

@@ -40,11 +40,14 @@ function decorate(item, { showApprovalBadge }) {
   };
 }
 
+// Banner art mirrors useLoreViewModel.js, RULED 11 Aug 2026
+// (banner-anchor ruling, CC5 banner-audit sitting): see that file's
+// banner comments and docs/reviews/BANNER-AUDIT.md.
 const TOP_BANNER = {
   eyebrow: "Lore",
   title: "Write into the world.",
   ctaLabel: "Write lore",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/The Seer.png"),
   onCtaClick: noop,
 };
 
@@ -52,7 +55,7 @@ const BOTTOM_BANNER = {
   eyebrow: "Loop",
   title: "Back to where every session starts.",
   ctaLabel: "Return to Home",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Dalethia.png"),
   onCtaClick: noop,
 };
 

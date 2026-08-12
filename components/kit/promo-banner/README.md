@@ -1,6 +1,6 @@
 # Kit Promo Banner LOOM Package
 
-**Contract:** `KitPromoBanner.contract.js` (v1.2.0)
+**Contract:** `KitPromoBanner.contract.js` (v1.3.0)
 
 ## Hierarchy law (9 Aug 2026, kit revision)
 
@@ -90,6 +90,21 @@ banner still holds. Both buttons resolve to `cf-btn`'s default
 on every existing consumer, pixel-stable. First consumer: Home's top
 continue banner, filled state only (`app/studio/v2/home/home/
 Home.view.jsx`), routing to `/studio/v2/stories`.
+
+## v1.3.0, RULED 11 Aug 2026 (banner-anchor ruling)
+
+Optional `imageAnchor` ADDED, additive. An object-position string
+applied to the art layer, default `"center 10%"`: banner art pins
+toward the top of its frame with roughly a 10% downward bias so faces
+and subjects stay visible, superseding the 10 Aug kit polish 3 pass's
+fixed `object-[center_35%]` crop (measured against one asset whose
+claimed dimensions turned out to be wrong; see
+`KitPromoBanner.fixtures.js`). A caller overrides the anchor per image
+only where the ruled default does not read well, for example a scene
+image whose subject sits at mid-frame rather than near the top
+(`kitPromoBannerCustomAnchorFixture`). Omitted entirely on every
+existing consumer, defaults to the ruled anchor, pixel-stable
+elsewhere. Full 14-slot survey: `docs/reviews/BANNER-AUDIT.md`.
 
 ## Compact continue row, RULED 11 Aug 2026 (Stories continue group density)
 

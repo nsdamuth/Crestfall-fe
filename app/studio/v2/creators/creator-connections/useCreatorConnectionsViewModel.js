@@ -12,11 +12,16 @@ import { resolveCreatorConnections } from "./creatorConnectionsContent.mock";
 
 const PAGE_SIZE = 6;
 
+// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
+// banner-audit sitting): Maya Chen.png, reassigned off Lilith.png so
+// Creator Connections does not share a banner with Creators, Creator
+// Profile, Community, and Vault, all one click apart (see
+// docs/reviews/BANNER-AUDIT.md).
 const BOTTOM_BANNER = {
   eyebrow: "Next stop",
   title: "Read the world this creator is writing into.",
   ctaLabel: "Read the lore",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png"),
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Maya Chen.png"),
 };
 
 export function useCreatorConnectionsViewModel({
