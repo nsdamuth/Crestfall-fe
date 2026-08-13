@@ -17,7 +17,9 @@
 //
 // Deleted whole, and this comment with it, when CR-031 lands the real
 // full-field read and update-in-place path for `/studio/v2/editor/[id]`.
-import { EDITOR_FIXTURE_STATES } from "./Editor.fixtures";
+import { OWNED_CREATIONS_PICKER_MOCK } from "@/components/studio/creation-picker/creation-picker/ownedCreationsPicker.mock";
+
+import { EDITOR_FIXTURE_STATES, featuredMedia } from "./Editor.fixtures";
 
 export const MOCK_SAVED_CREATION_IDS = Object.freeze({
   characterDefault: EDITOR_FIXTURE_STATES.characterDefault.creation.id,
@@ -44,7 +46,62 @@ const REGISTRY = Object.freeze({
     EDITOR_FIXTURE_STATES.longestContent.creation,
 });
 
+// ED1B live-route fix: the SW1 creation picker's own mock
+// (ownedCreationsPicker.mock.js, pending CR-050) hands the editor ids
+// of the form `owned-<type>`, one per product type. Those ids were
+// not in REGISTRY, so on the live /studio/v2/editor/[id] route every
+// picker selection fell through to the real fetchOwnedCreation call,
+// failed, and rendered the load-error state. Every picker id now
+// resolves fixture-first here, built from the picker entry itself
+// (same title, visibility, canon flag, and art the picker showed)
+// over a same-type editor fixture where one exists, or a minimal
+// saved-creation shell otherwise. Both registries are deleted whole
+// when CR-031/CR-050 land the real reads.
+const OWNED_BASE_FIXTURE_BY_TYPE = {
+  CHARACTER: EDITOR_FIXTURE_STATES.characterDefault.creation,
+  PLAYER_CHARACTER: EDITOR_FIXTURE_STATES.characterDefault.creation,
+  ROOM_TEMPLATE: EDITOR_FIXTURE_STATES.story.creation,
+  LOCATION: EDITOR_FIXTURE_STATES.location.creation,
+  NPC_REGISTRY: EDITOR_FIXTURE_STATES.npcRegistry.creation,
+  LORE: EDITOR_FIXTURE_STATES.nonCharacterType.creation,
+};
+
+function buildOwnedFixture(entry) {
+  const base = OWNED_BASE_FIXTURE_BY_TYPE[entry.type] || {
+    ownerId: "mock-owner",
+    updatedAt: "2026-08-13T00:00:00.000Z",
+    contentRating: "SFW",
+    status: "DRAFT",
+    reviewStatus: "DRAFT",
+    description: "",
+    chatDisplayMedia: null,
+    data: {},
+  };
+
+  return {
+    ...base,
+    id: entry.id,
+    title: entry.title,
+    type: entry.type,
+    visibility: entry.visibility,
+    canonStatus: entry.isCanon ? "OFFICIAL" : "NONE",
+    featuredMedia: featuredMedia(entry.imageSrc || null),
+    // Keep the identity field in step with the picker title so the
+    // header and the name input agree.
+    data:
+      base.data && base.data.name !== undefined
+        ? { ...base.data, name: entry.title }
+        : base.data || {},
+  };
+}
+
+const OWNED_REGISTRY = Object.freeze(
+  Object.fromEntries(
+    OWNED_CREATIONS_PICKER_MOCK.map((entry) => [entry.id, buildOwnedFixture(entry)])
+  )
+);
+
 export function resolveMockSavedCreation(creationId) {
   if (!creationId) return null;
-  return REGISTRY[creationId] || null;
+  return REGISTRY[creationId] || OWNED_REGISTRY[creationId] || null;
 }

@@ -23,6 +23,14 @@ const FIXTURE_OPTIONS = [
   { id: MOCK_SAVED_CREATION_IDS.emptySections, label: "Empty sections" },
   { id: MOCK_SAVED_CREATION_IDS.longestContent, label: "Longest content" },
   { id: "__empty-index__", label: "Empty index" },
+  // Picker-owned ids (ownedCreationsPicker.mock.js): the exact ids
+  // the SW1 switcher hands the live route. These prove the
+  // fixture-first resolution the live route runs for a picker
+  // selection, id for id.
+  { id: "owned-character", label: "Picker: Character" },
+  { id: "owned-room_template", label: "Picker: Story" },
+  { id: "owned-location", label: "Picker: Location" },
+  { id: "owned-npc_registry", label: "Picker: NPC Registry" },
 ];
 
 // Origin states, RULED 11 Aug 2026: the three doors the back control

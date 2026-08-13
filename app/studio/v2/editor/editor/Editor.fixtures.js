@@ -12,7 +12,9 @@
 // content.
 import { DEFAULT_CREATION_IMAGE } from "@/lib/shared/creations/creationMedia";
 
-function featuredMedia(primaryUrl = null) {
+// Exported for editorSavedCreations.mock.js, which builds featured
+// slots for the picker-owned creation set from the same shape.
+export function featuredMedia(primaryUrl = null) {
   return [
     {
       id: "slot-1",
