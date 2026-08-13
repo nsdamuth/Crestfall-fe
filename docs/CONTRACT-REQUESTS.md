@@ -42,7 +42,7 @@ the details below carry only what is still actionable.
 | CR-013 | duplicate drawer nav tree retirement | `StudioMobileNav` and `StudioSidebar` still render separate nav-tree copies | open | Nick | one-element merge agreed in shape, not landed |
 | CR-014 | visibility four-state enum data-model shape | Ruled `private \| internal \| public \| canon` shape not yet in the live data model | open | Nick | migration path and publish-field question still open |
 | CR-015 | lore pipeline confirmation | Confirms an already-ruled pipeline (visual builder authoritative, JSON import validate-and-apply, scanning gate before publish) | open | Nick | verify with Nick: a `lore-validation` API route now exists in this repo that did not when this CR was filed |
-| CR-016 | chat_palette preference field | Per-character preference resolving to CSS-variable color-role overrides, never touching image generation | open | Nick | verify with Nick: a 13-entry seasonal palette catalog and `character_color_palette_id` field now exist, but only feed a picker modal, not confirmed applied as display-side CSS overrides anywhere |
+| CR-016 | chat_palette preference field | Per-character preference resolving to CSS-variable color-role overrides, never touching image generation | open | Nick | updated 13 Aug 2026 (wave C6): the display side now exists in chat, fixture-gated only; see Details |
 | CR-017 | notifications feed shape | Bell and panels are real and interactive, fully fixture-driven; no real notification source exists anywhere in this repo | open | Nick | frontend complete, blocked only on data; full dev handoff in Details |
 | CR-018 | backend copy alignment for Sessions vs Stories | Old "Storys" session-history naming and the new Story object need to stop sharing a label | open | Nick | backend copy fix |
 | CR-019 | chat control intent confirmation | Confirm the real function of two renamed chat controls ("Describe the scene", "Reading face: Serif/Sans") | open | Nick | dedicated chat-surface sitting, excluded from mechanical sweeps |
@@ -68,6 +68,10 @@ the details below carry only what is still actionable.
 | CR-039 | STORYLINE display name is Adventure platform-wide | Ruled by Brian 11 Aug 2026: the user-facing name for STORYLINE is Adventure everywhere on the platform, implemented as display mapping via the terminology module | open | Nick | non-blocking; does not duplicate CR-025, which already carries the backend rename request; see CR-025 |
 | CR-041 | Long-form field character limits | The frontend now enforces two display-layer character-limit classes on every long-form field in the advanced editor: 600 for short long-form (a line or short paragraph), 2,000 for deep long-form (extended writing), per the mapping in `SharedFields.jsx` and its consuming sections. Reach extended Sprint H (CC1 through CC4, SF1) to every advanced-editor package; six fields keep a real contract-validated limit above their tier, flagged for reconciliation | open | Nick | non-blocking; display-layer ruling pending Nick's confirmation against the backend data model, not a backend change request |
 | CR-042 | Server-side filter, sort, and search for list pages | Every list page filters/sorts one full in-memory fixture array client-side; needs server-side filter, sort, and search so the client keeps only the current slice resident and load-more requests the next slice by the same params | open | Nick | non-blocking; the true scale ceiling per Scale Review H finding B2, not a regression, the known shape of the pre-parity fixture-driven build |
+| CR-043 | Chat API catch-up | The new chat page (`app/studio/v2/stories/[id]`) needs the crestfall-main baseline's 8+ missing routes and 13 missing client functions (message actions, `/summary`, transcript export, temporary/persistent share), plus a decision on the orphaned engine-module bindings | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6; fixture-first per the CR-017 mock-module pattern, mock module named in its own header comment |
+| CR-044 | Streaming transport for chat | SSE or streaming contract for `POST /messages`; the frontend's chat-message and chat-composer contracts are already streaming-ready (`isStreaming`, `generationCursorLabel`, `onStopGenerating`) per ruling O9, so the surface upgrades without a contract change once transport lands | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O9 |
+| CR-045 | Story room rename | No rename path exists anywhere in the crestfall-main baseline or this repo's chat surface; a product gap, not a design decision this wave makes | open | Nick/Brian | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6; needs a product decision on whether rename ships at all before any UI is designed |
+| CR-046 | Chat monetization data | Real coin balance, entitlements, and gated-action pricing for the chat header's coin chip and the Library Pass upsell sheet, both fixture-fed today | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O6 |
 
 ## Details
 
@@ -234,6 +238,24 @@ swatches; no code applies it as CSS variable overrides anywhere a
 character is actually displayed or chatted with. Substantial partial
 build; worth Nick confirming whether the remaining display-side wiring
 is still wanted before this CR is rewritten to scope just that gap.
+
+Update, 13 Aug 2026 (Fable design gate wave C1, ruling O7). The
+missing display-side half this CR flagged now exists, gated: the new
+`chat-message` LOOM package (`components/studio/chat/chat-message/`)
+carries `enableFixturePaletteDemo`/`paletteRoleOverrides` on its View
+contract (`ChatMessage.contract.js`), applying a palette as scoped
+CSS-variable role overrides to segments, the speaker label, the
+avatar ring, and the card border. The ratified `--chat-*` token
+family this display path resolves through is proposed, not yet
+locked, in `docs/DESIGN-TOKENS.md`; per the O7 ruling, every product
+render path keeps the gate off until that family is ratified. Two
+fixtures demonstrate both states
+(`chatMessagePaletteDemoOnFixture`/`chatMessagePaletteDemoOffFixture`,
+`ChatMessage.fixtures.js`). What remains open for Nick: whether the
+live `character_color_palette_id` field and the 13-entry catalog in
+`constants/characterColorPalettes.js` (crestfall-main) feed this
+display path once the token family locks, or whether this repo grows
+its own equivalent field.
 
 ### CR-017, notifications feed shape
 
@@ -624,6 +646,83 @@ next slice by the same filter/sort/search params, rather than
 re-deriving from a full local array. Non-blocking; flagged as the
 true scale ceiling underneath every other Scale Review H finding, not
 a regression introduced by any recent change.
+
+### CR-043, Chat API catch-up
+
+Filed 13 Aug 2026 by the Fable design gate wave C6
+(`docs/plans/FABLE-GATE-PLAN.md`), after the wave C1-C5 chat build and
+the wave C6 parity echo (`docs/reviews/CHAT-PARITY-ECHO-C6.md`) walked
+the crestfall-main baseline item by item. The new chat page
+(`app/studio/v2/stories/[id]`) is built fixture-first against a mock
+snapshot (`app/studio/v2/stories/[id]/chatV2StoryMock.js`, header
+comment: mock, pending this CR) standing in for the baseline's full
+API surface: 20 client functions in `storyRoomClient.js` (create/
+fetch/delete room, from-template, messages, message actions, summary,
+player-character, registry NPCs x3, random-liked, transcript-export,
+temporary/persistent share create+revoke, engine-module bindings x3)
+and 8+ backend routes behind them (message actions, `/summary`,
+transcript export, temporary/persistent share, at minimum).
+
+Also needed as part of this catch-up, not a separate decision: what
+happens to the orphaned Runtime Mechanics Panel engine-module
+bindings crestfall-main itself unmounted from chat in `dc8e89d`
+("updating chat menu + various fixes") but never removed from the
+client. Whether those bindings get a new home, get removed, or stay
+orphaned pending a later mechanics-surface decision is Nick's call.
+
+What is faked versus real until this lands: the chat-shell package,
+its composed C1-C4 packages, and every fixture are real frontend; the
+send loop in `useChatV2StoryPageViewModel.js` optimistically appends
+messages and returns one canned reply after a simulated delay, honest
+about not calling a real engine. When this CR lands, the mock module
+is a single deletion and the page reads through a real chat client.
+
+### CR-044, Streaming transport for chat
+
+Filed 13 Aug 2026 by the Fable design gate wave C6. Ruling O9
+(ratified): the frontend ships streaming-ready contracts now rather
+than waiting on transport. `chat-message`'s `isStreaming`/
+`generationCursorLabel` (`ChatMessage.contract.js`) and
+`chat-composer`'s `streamingSupported`/`isStreaming`/
+`onStopGenerating` (`ChatComposer.contract.js`) exist and have
+fixtures (`chatMessageStreamingFixture`, `chatComposerStreamingFixture`)
+today, with `streamingSupported: false` everywhere real data flows, so
+the stop-generation seat stays honestly absent until this lands. Needed
+from the backend: an SSE or streaming contract for `POST /messages`
+(or whichever transport Nick prefers) that the frontend can flip
+`streamingSupported` on against without a contract change on either
+side.
+
+### CR-045, Story room rename
+
+Filed 13 Aug 2026 by the Fable design gate wave C6, surfaced by the
+wave C6 parity echo. No rename path exists anywhere: not in the
+crestfall-main baseline (confirmed absent in the C1 crawl,
+`docs/plans/FABLE-GATE-PLAN.md` research section C1), not in this
+repo's legacy story-rooms tree, not in the new wave C5 chat surface.
+This is a product gap the parity echo logged rather than a design
+decision either build made by omission. Needs Brian's decision on
+whether room rename ships at all before any UI is designed for it;
+Nick's input needed on what a rename would touch (title field only,
+or anything else keyed to the room's original title).
+
+### CR-046, Chat monetization data
+
+Filed 13 Aug 2026 by the Fable design gate wave C6. Ruling O6
+(ratified): the chat header seats a coin chip and gated-action upsell
+sheets are seated on Scene Image (composer, wave C2) and Library Pass
+moments (chat-shell, wave C5), all fixture-fed today
+(`ChatShell.contract.js`'s `coinChip`/`libraryPassUpsell`,
+`ChatComposer.contract.js`'s `sceneImageSeat`). Needed from the
+backend: the real coin balance (the chat header composes
+`StudioEconomyWidgetView`, which elsewhere reads live balance through
+`StudioAccountProvider`, not wired to chat context in this wave),
+real Library Pass entitlement state per account, and real gated-action
+pricing (Scene Image's "40 coins" is a placeholder cost label today).
+When this lands, the mock coin/entitlement data in
+`chatV2StoryMock.js` and `ChatShell.fixtures.js`'s
+`chatShellInsufficientCoinsFixture` fold into the same account context
+the sidebar's coin chip already reads.
 
 ## Closed
 
