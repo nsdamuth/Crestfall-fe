@@ -1,29 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, ImageOff, List } from "lucide-react";
 
 import KitBadge from "@/components/kit/KitBadge";
 
-function ArtThumb({ imageSrc, title }) {
+function ArtFrame({ imageSrc, typeIcon: TypeIcon }) {
   if (imageSrc) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={imageSrc}
         alt=""
-        className="h-14 w-14 flex-none rounded-[var(--radius-md)] object-cover"
+        className="aspect-[3/4] w-[72px] flex-none rounded-[var(--radius-md)] border border-[var(--line)] object-cover sm:w-[132px]"
       />
     );
   }
 
+  const Icon = TypeIcon || ImageOff;
+
   return (
     <div
-      aria-label={title}
-      className="flex h-14 w-14 flex-none items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]"
+      aria-hidden="true"
+      className="flex aspect-[3/4] w-[72px] flex-none items-center justify-center rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-faint)] sm:w-[132px]"
     >
-      No art
+      <Icon size={24} />
     </div>
+  );
+}
+
+function SwitcherButton({ label, onActivate, className = "" }) {
+  return (
+    <button
+      type="button"
+      onClick={onActivate}
+      className={`kit-focus items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition hover:border-[var(--gold-action)] min-h-[var(--control-md)] ${className}`}
+    >
+      {label}
+      <ChevronsUpDown size={14} aria-hidden="true" />
+    </button>
   );
 }
 
@@ -31,11 +46,14 @@ export default function EditorHeaderView({
   imageSrc = null,
   title = "Untitled Creation",
   typeLabel = "",
+  typeIcon = null,
   visibilityLabel = "",
   visibilityVariant = "status",
   hasUnsavedChanges = false,
   switcherLabel = "Switch creation",
   onOpenSwitcher = null,
+  onOpenSections = null,
+  actions = null,
 }) {
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
 
@@ -48,32 +66,58 @@ export default function EditorHeaderView({
   }
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-3)] p-[var(--space-4)] sm:p-[var(--space-6)]">
-      <div className="flex flex-wrap items-center gap-[var(--space-4)]">
-        <ArtThumb imageSrc={imageSrc} title={title} />
+    <header>
+      <div className="flex items-start gap-[var(--space-4)] sm:gap-[var(--space-5)]">
+        <ArtFrame imageSrc={imageSrc} typeIcon={typeIcon} />
 
         <div className="min-w-0 flex-1">
-          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-            {typeLabel}
-          </p>
-          <h1 className="mt-[var(--space-1)] truncate font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+          {typeLabel ? (
+            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+              {typeLabel}
+            </p>
+          ) : null}
+          <h1 className="mt-[var(--space-1)] line-clamp-2 font-display text-[length:var(--text-title-m)] leading-[var(--lh-title-m)] text-[var(--ink)] [text-wrap:balance] sm:text-[length:var(--text-title)] sm:leading-[var(--lh-title)]">
             {title}
           </h1>
-          {visibilityLabel ? (
-            <div className="mt-[var(--space-2)]">
+          <div className="mt-[var(--space-2)] flex flex-wrap items-center gap-[var(--space-2)]">
+            {visibilityLabel ? (
               <KitBadge label={visibilityLabel} variant={visibilityVariant} surface="canvas" />
-            </div>
-          ) : null}
+            ) : null}
+            {actions}
+          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={activateSwitcher}
-          className="kit-focus flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
-        >
-          {switcherLabel}
-          <ChevronsUpDown size={14} />
-        </button>
+        <div className="hidden flex-none items-center gap-[var(--space-2)] sm:flex">
+          {onOpenSections ? (
+            <button
+              type="button"
+              onClick={() => onOpenSections?.()}
+              className="kit-focus hidden min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition hover:border-[var(--gold-action)] sm:flex lg:hidden"
+            >
+              <List size={14} aria-hidden="true" />
+              Sections
+            </button>
+          ) : null}
+          <SwitcherButton label={switcherLabel} onActivate={activateSwitcher} className="flex" />
+        </div>
+      </div>
+
+      <div
+        className={`mt-[var(--space-3)] grid gap-[var(--space-2)] sm:hidden ${
+          onOpenSections ? "grid-cols-2" : "grid-cols-1"
+        }`}
+      >
+        <SwitcherButton label={switcherLabel} onActivate={activateSwitcher} className="flex" />
+        {onOpenSections ? (
+          <button
+            type="button"
+            onClick={() => onOpenSections?.()}
+            className="kit-focus flex min-h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition hover:border-[var(--gold-action)]"
+          >
+            <List size={14} aria-hidden="true" />
+            Sections
+          </button>
+        ) : null}
       </div>
 
       {confirmingSwitch ? (
@@ -102,6 +146,6 @@ export default function EditorHeaderView({
           </div>
         </div>
       ) : null}
-    </div>
+    </header>
   );
 }

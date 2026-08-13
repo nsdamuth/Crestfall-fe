@@ -1,17 +1,19 @@
 "use client";
 
 // Binding Shell (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape): owns
-// Crestfall-specific integration. Next.js navigation (useRouter,
-// Link) is one piece; the other is the read-only creation-edit-shell
-// lineage (components/studio/my-creations/**), which this file
-// imports and composes into ReactNode slots. ED1
-// (docs/plans/FABLE-GATE-2-STUDIO.md) authorized changes: the
-// section registry inside useCreationEditShellViewModel.js and
-// CreationEditSectionContent.jsx moved from an if-chain to data (see
-// those files' own comments); everything else in the lineage is
-// unmodified.
+// Crestfall-specific integration. Next.js navigation (useRouter) is
+// one piece; the other is the read-only creation-edit-shell lineage
+// (components/studio/my-creations/**), which this file imports and
+// composes into ReactNode slots. ED1B
+// (docs/plans/ED1B-EDITOR-PAGE-SPEC.md) authorized changes: the page
+// composition only; `useCreationEditViewModel`,
+// `useCreationEditShellViewModel`, `CreationEditSectionContent`, and
+// every section component are consumed unmodified. Multi-section
+// rendering mounts `CreationEditSectionContent` once per section id
+// with `activeSection` overridden per instance.
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { UserRound } from "lucide-react";
 
 import CreationEditMediaPanel from "@/components/studio/my-creations/CreationEditMediaPanel";
 import CreationFeaturedImagePickerModal from "@/components/studio/my-creations/image-library/CreationFeaturedImagePickerModal";
@@ -26,11 +28,9 @@ import { useEditorViewModel } from "./editor/useEditorViewModel";
 
 // Origin tracking, RULED 11 Aug 2026: the back control returns to the
 // surface that opened the editor. A `?origin=` query param is the
-// mechanism (the pattern this repo already uses to carry navigation
-// context across a hard page boundary, e.g. FilterableIndex's
-// query-string-driven state), read here at the Binding Shell so the
-// portable View stays presentation only. Falls back to the Vault
-// when no origin is present (direct link, cold load, refresh).
+// mechanism, read here at the Binding Shell so the portable View
+// stays presentation only. Falls back to the Vault when no origin is
+// present (direct link, cold load, refresh).
 const ORIGIN_BACK_HREFS = {
   studio: "/studio/v2/studio",
   vault: "/studio/v2/vault",
@@ -43,15 +43,17 @@ export default function Editor({
   originOverride,
   previewLoadingOverride,
   previewLoadErrorOverride,
+  previewDirtyOverride,
 }) {
-  // Discard, ED1: useCreationEditViewModel (the existing hydration
-  // authority, not touched by this brief) exposes no "revert form"
-  // capability. Remounting the whole live-data subtree re-runs its
-  // hydration effect from the same creationId/creation snapshot,
-  // which is the only safe way to discard unsaved edits without
-  // editing that read-only hook. discardKey lives on the OUTER
-  // component so the remount below never resets the counter driving
-  // it.
+  // Discard, ED1 (carried into ED1B): useCreationEditViewModel (the
+  // existing hydration authority, not touched by this brief) exposes
+  // no "revert form" capability. Remounting the whole live-data
+  // subtree re-runs its hydration effect from the same
+  // creationId/creation snapshot, which is the only safe way to
+  // discard unsaved edits without editing that read-only hook. The
+  // same remount is the "Try again" action on the load-error state.
+  // discardKey lives on the OUTER component so the remount below
+  // never resets the counter driving it.
   const [discardKey, setDiscardKey] = useState(0);
 
   return (
@@ -62,8 +64,35 @@ export default function Editor({
       originOverride={originOverride}
       previewLoadingOverride={previewLoadingOverride}
       previewLoadErrorOverride={previewLoadErrorOverride}
+      previewDirtyOverride={previewDirtyOverride}
       onDiscard={() => setDiscardKey((current) => current + 1)}
     />
+  );
+}
+
+function DefaultPcActions({ settingDefaultPc, onSetDefaultPc, status, error }) {
+  return (
+    <span className="flex flex-wrap items-center gap-[var(--space-2)]">
+      <button
+        type="button"
+        onClick={() => onSetDefaultPc?.()}
+        disabled={settingDefaultPc}
+        className="cf-btn cf-btn--secondary"
+      >
+        <UserRound size={14} aria-hidden="true" />
+        {settingDefaultPc ? "Setting..." : "Set default PC"}
+      </button>
+      {status ? (
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
+          {status}
+        </span>
+      ) : null}
+      {error ? (
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+          {error}
+        </span>
+      ) : null}
+    </span>
   );
 }
 
@@ -73,6 +102,7 @@ function EditorInner({
   originOverride,
   previewLoadingOverride,
   previewLoadErrorOverride,
+  previewDirtyOverride,
   onDiscard,
 }) {
   const router = useRouter();
@@ -94,10 +124,18 @@ function EditorInner({
     featuredImagePickerProps,
     defaultPcStatus,
     defaultPcError,
-    mobileNavOpen,
-    onToggleMobileNav,
+    canSetDefaultPc,
+    settingDefaultPc,
+    onSetDefaultPc,
+    showMechanicsQuickNav,
+    isLore,
     loadError,
-  } = useEditorViewModel({ creationId, previewLoadingOverride, previewLoadErrorOverride });
+  } = useEditorViewModel({
+    creationId,
+    previewLoadingOverride,
+    previewLoadErrorOverride,
+    previewDirtyOverride,
+  });
 
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
 
@@ -110,49 +148,84 @@ function EditorInner({
     );
   }
 
-  // Vault-edit-tree pass, 11 Aug 2026: two rows (CSV 839, 409-421 +
-  // 430) close by composing already-built read-only surfaces rather
-  // than editing the forbidden creation-edit-shell lineage. Both
-  // derive from data the Shell already has (sectionContentProps.isLore
-  // and the [id] itself); the View stays a pure function of props.
-  const isLoreDraftPreview =
-    Boolean(sectionContentProps?.isLore) &&
-    sectionContentProps?.activeSection === "preview";
   const imageLibraryHref = creationId
     ? `/studio/v2/editor/${encodeURIComponent(creationId)}/image-library${
         origin ? `?origin=${encodeURIComponent(origin)}` : ""
       }`
     : null;
 
+  // One mounted section body per section id in the page grammar.
+  // CreationEditSectionContent is a pure dispatch on
+  // (creationType, activeSection); overriding activeSection per
+  // instance renders every section on the one scrolling surface.
+  const sectionNodes = {};
+  const sectionBadges = {};
+  for (const group of viewProps.groups || []) {
+    for (const section of group.sections || []) {
+      sectionNodes[section.id] = (
+        <CreationEditSectionContent
+          {...sectionContentProps}
+          activeSection={section.id}
+        />
+      );
+    }
+  }
+
+  if (isLore && sectionNodes.preview) {
+    sectionBadges.preview = (
+      <p className="mb-[var(--space-3)] inline-flex items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]">
+        Owner-only draft preview
+      </p>
+    );
+  }
+
+  const sectionLeads = showMechanicsQuickNav
+    ? {
+        fields: (
+          <div className="mb-[var(--space-4)]">
+            <CreationEditMechanicsRuntimeQuickNav {...mechanicsQuickNavProps} />
+          </div>
+        ),
+      }
+    : {};
+
   return (
     <EditorView
       {...viewProps}
       loadError={loadError}
-      defaultPcStatus={defaultPcStatus}
-      defaultPcError={defaultPcError}
-      mobileNavOpen={mobileNavOpen}
-      onToggleMobileNav={onToggleMobileNav}
+      onRetryLoad={onDiscard}
+      onOpenPickerFromError={() => setIsSwitcherOpen(true)}
       backLabel="Back"
       onBack={() => router.push(backHref)}
-      isLoreDraftPreview={isLoreDraftPreview}
       imageLibraryHref={imageLibraryHref}
       header={
         <EditorHeader
           {...headerProps}
           onOpenSwitcher={() => setIsSwitcherOpen(true)}
+          actions={
+            canSetDefaultPc ? (
+              <DefaultPcActions
+                settingDefaultPc={settingDefaultPc}
+                onSetDefaultPc={onSetDefaultPc}
+                status={defaultPcStatus}
+                error={defaultPcError}
+              />
+            ) : null
+          }
         />
       }
       saveBar={<EditorSaveBar {...saveBarProps} onDiscard={onDiscard} />}
       mediaPanel={<CreationEditMediaPanel {...mediaPanelProps} />}
-      mechanicsQuickNav={
-        <CreationEditMechanicsRuntimeQuickNav {...mechanicsQuickNavProps} />
-      }
-      sectionContent={<CreationEditSectionContent {...sectionContentProps} />}
-      seats={{
-        // Named, no placeholder UI. A future brief (S4) fills these.
-        bodyDetail: null,
-        behaviorDetail: null,
-        advancedPrompting: null,
+      sectionNodes={sectionNodes}
+      sectionLeads={sectionLeads}
+      sectionBadges={sectionBadges}
+      sectionSeats={{
+        // Named absorption seats, re-keyed by section id (was
+        // seats.bodyDetail / behaviorDetail / advancedPrompting).
+        // Null this pass; a future brief fills them.
+        body: null,
+        behavior: null,
+        advanced: null,
       }}
       featuredImagePicker={
         featuredImagePickerProps ? (

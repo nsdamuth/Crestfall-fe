@@ -4,8 +4,9 @@ import { Loader2, Save } from "lucide-react";
 
 function statusWord(saveStatus, saveMessage) {
   if (saveStatus === "saving") return "Saving...";
-  if (saveStatus === "saved") return saveMessage || "Saved.";
-  if (saveStatus === "error") return saveMessage || "Could not save.";
+  if (saveStatus === "error") {
+    return saveMessage || "Your changes could not be saved. Please try again.";
+  }
   return "Unsaved changes";
 }
 
@@ -16,14 +17,15 @@ export default function EditorSaveBarView({
   onSave = null,
   onDiscard = null,
 }) {
-  const isVisible = hasUnsavedChanges || saveStatus !== "idle";
-  if (!isVisible) return null;
-
+  // Visibility law, ED1B (contract 2.0.0): dirty, saving, or a
+  // failed save. A clean form after a successful save hides the bar.
   const isSaving = saveStatus === "saving";
   const isError = saveStatus === "error";
+  const isVisible = hasUnsavedChanges || isSaving || isError;
+  if (!isVisible) return null;
 
   return (
-    <div className="sticky top-[var(--space-2)] z-20 mb-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-4)] py-[var(--space-3)] shadow-[var(--shadow-popover)]">
+    <div className="sticky top-[var(--topbar-h)] z-20 mb-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-4)] py-[var(--space-3)] shadow-[var(--shadow-popover)]">
       <span
         role={isError ? "alert" : undefined}
         aria-live="polite"

@@ -8,11 +8,14 @@ export const editorHeaderDefaultFixture = {
   imageSrc: CANON_ART,
   title: "Vermillion Ashgrove",
   typeLabel: "Character",
+  typeIcon: null,
   visibilityLabel: "Private",
   visibilityVariant: "status",
   hasUnsavedChanges: false,
   switcherLabel: "Switch creation",
   onOpenSwitcher: noop,
+  onOpenSections: noop,
+  actions: null,
 };
 
 export const editorHeaderNoArtFixture = {
@@ -20,6 +23,11 @@ export const editorHeaderNoArtFixture = {
   imageSrc: null,
   title: "Coldwater Vigil",
   typeLabel: "Story",
+};
+
+export const editorHeaderNoSectionsTriggerFixture = {
+  ...editorHeaderDefaultFixture,
+  onOpenSections: null,
 };
 
 export const editorHeaderCanonFixture = {

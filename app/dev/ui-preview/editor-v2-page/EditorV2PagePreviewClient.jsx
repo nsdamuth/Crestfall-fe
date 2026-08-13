@@ -7,6 +7,7 @@ import StudioSidebarView from "@/components/studio/studio-sidebar/StudioSidebar.
 import { studioSidebarPreviewFixture } from "@/components/studio/studio-sidebar/StudioSidebar.fixtures";
 import StudioTopBar from "@/components/studio/StudioTopBar";
 import Editor from "@/app/studio/v2/editor/Editor";
+import EditorIndexClient from "@/app/studio/v2/editor/EditorIndexClient";
 import { MOCK_SAVED_CREATION_IDS } from "@/app/studio/v2/editor/editor/editorSavedCreations.mock";
 
 // Client wrapper so the mirror can carry the one piece of state the
@@ -21,6 +22,7 @@ const FIXTURE_OPTIONS = [
   { id: MOCK_SAVED_CREATION_IDS.npcRegistry, label: "NPC Registry" },
   { id: MOCK_SAVED_CREATION_IDS.emptySections, label: "Empty sections" },
   { id: MOCK_SAVED_CREATION_IDS.longestContent, label: "Longest content" },
+  { id: "__empty-index__", label: "Empty index" },
 ];
 
 // Origin states, RULED 11 Aug 2026: the three doors the back control
@@ -33,13 +35,15 @@ const ORIGIN_OPTIONS = [
   { id: null, label: "No origin (fallback)" },
 ];
 
-// Loading / load-error harness, ED1: same precedent as
-// `originOverride`, a preview-only simulation of two states the
+// Loading / load-error / dirty harness, ED1B: same precedent as
+// `originOverride`, preview-only simulation of states the
 // fixture-first mock resolver never produces on its own (resolution
-// is synchronous; a real async gap only exists on the unmodified live
-// fallback path).
+// is synchronous and read-only; a real async gap only exists on the
+// unmodified live fallback path). "Dirty" forces the contextual
+// save bar visible and arms the header's switch confirm.
 const LOAD_STATE_OPTIONS = [
   { id: "ready", label: "Ready" },
+  { id: "dirty", label: "Dirty (unsaved changes)" },
   { id: "loading", label: "Loading" },
   { id: "loadError", label: "Load error" },
 ];
@@ -122,7 +126,7 @@ export default function EditorV2PagePreviewClient() {
         </button>
       ))}
       <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">
-        Mobile: resize under 1024px to see the Sections sheet trigger.
+        Mobile: emulate 390 to see the compact header and the Sections trigger.
       </span>
     </div>
   );
@@ -137,23 +141,33 @@ export default function EditorV2PagePreviewClient() {
       }
       topBarSlot={<StudioTopBar />}
     >
-      <Editor
-        creationId={creationId}
-        originOverride={origin}
-        previewLoadingOverride={loadState === "loading"}
-        previewLoadErrorOverride={
-          loadState === "loadError"
-            ? { label: "Load error", message: "This creation could not be loaded." }
-            : null
-        }
-        harnessSlot={
-          <div className="flex flex-col gap-[var(--space-2)]">
-            {harnessSlot}
-            {originHarnessSlot}
-            {loadStateHarnessSlot}
+      {creationId === "__empty-index__" ? (
+        <div>
+          <div className="mx-auto w-full max-w-3xl px-[var(--space-4)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
+            <div className="flex flex-col gap-[var(--space-2)]">{harnessSlot}</div>
           </div>
-        }
-      />
+          <EditorIndexClient />
+        </div>
+      ) : (
+        <Editor
+          creationId={creationId}
+          originOverride={origin}
+          previewLoadingOverride={loadState === "loading"}
+          previewLoadErrorOverride={
+            loadState === "loadError"
+              ? { label: "Load error", message: "This creation could not be loaded." }
+              : null
+          }
+          previewDirtyOverride={loadState === "dirty"}
+          harnessSlot={
+            <div className="flex flex-col gap-[var(--space-2)]">
+              {harnessSlot}
+              {originHarnessSlot}
+              {loadStateHarnessSlot}
+            </div>
+          }
+        />
+      )}
     </StudioShellView>
   );
 }

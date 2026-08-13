@@ -546,6 +546,159 @@ const CREATION_TYPE_SECTIONS = {
   IMAGE_PRESET: IMAGE_PRESET_EDIT_SECTIONS,
 };
 
+// ED1B page grammar (docs/plans/ED1B-EDITOR-PAGE-SPEC.md section 5),
+// additive alongside the ED1 tab grammar above (which the legacy
+// consumers may still read): one scrolling document per creation.
+// The FIRST group of each list is the open essentials group (the
+// quick-create fields, rendered without accordion chrome); the rest
+// are collapsible in order; Publishing always closes. `hostsMedia`
+// marks the group that hosts the media panel and the image-library
+// link; per ruling N5 registries, profiles, mechanics modules, and
+// the rules codex carry no media group. Every section id of the
+// type's own section array appears in exactly one group.
+const CHARACTER_EDITOR_PAGE_GROUPS = [
+  { id: "identity", label: "Identity", sectionIds: ["overview", "identity", "appearance"] },
+  { id: "bodyBehavior", label: "Body & Behavior", sectionIds: ["body", "behavior"] },
+  { id: "media", label: "Artwork & Media", sectionIds: ["visualReferences"], hostsMedia: true },
+  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules", "advanced"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
+  CHARACTER: CHARACTER_EDITOR_PAGE_GROUPS,
+  PLAYER_CHARACTER: CHARACTER_EDITOR_PAGE_GROUPS,
+  ROOM_TEMPLATE: [
+    { id: "story", label: "Story", sectionIds: ["overview", "room", "opening"] },
+    { id: "castWorld", label: "Cast & World", sectionIds: ["package", "multiplayer"] },
+    { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  LOCATION: [
+    { id: "place", label: "Place", sectionIds: ["overview", "location", "visual"] },
+    { id: "sceneGuidance", label: "Scene & Guidance", sectionIds: ["atmosphere", "prompt"] },
+    { id: "runtime", label: "Runtime", sectionIds: ["runtimeModules"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  NPC_REGISTRY: [
+    { id: "entries", label: "Entries", sectionIds: ["overview", "entries"] },
+    { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["relationships", "knowledge", "aliases"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  ITEM_REGISTRY: [
+    { id: "entries", label: "Entries", sectionIds: ["overview", "entries"] },
+    { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["associations", "tracking", "prompt", "media"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  LOCATION_REGISTRY: [
+    { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "presence"] },
+    { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["connections", "weather", "runtime"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  FACTION_REGISTRY: STRUCTURED_REGISTRY_PAGE_GROUPS(),
+  ORGANIZATION_REGISTRY: STRUCTURED_REGISTRY_PAGE_GROUPS(),
+  EVENT_REGISTRY: STRUCTURED_REGISTRY_PAGE_GROUPS(),
+  QUEST_REGISTRY: STRUCTURED_REGISTRY_PAGE_GROUPS(),
+  OUTFIT: [
+    { id: "look", label: "Look", sectionIds: ["overview", "outfit", "garment"] },
+    { id: "materialsGuidance", label: "Materials & Guidance", sectionIds: ["materials", "prompt"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  WARDROBE: [
+    { id: "wardrobe", label: "Wardrobe", sectionIds: ["overview", "entries"] },
+    { id: "rules", label: "Selection Rules", sectionIds: ["rules"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  POSE: [
+    { id: "pose", label: "Pose", sectionIds: ["overview", "pose", "bodyPosition"] },
+    { id: "stagingGuidance", label: "Staging & Guidance", sectionIds: ["staging", "prompt"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  IMAGE_PRESET: [
+    { id: "preset", label: "Preset", sectionIds: ["overview", "preset", "style"] },
+    { id: "renderingPrompt", label: "Rendering & Prompt", sectionIds: ["rendering", "prompt"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  SCENARIO: [
+    { id: "scenario", label: "Scenario", sectionIds: ["overview", "scenario", "storyCircle"] },
+    { id: "castRuntime", label: "Cast & Runtime", sectionIds: ["cast", "middleware", "runtime", "runtimeModules"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  NARRATOR: [
+    { id: "narrator", label: "Narrator", sectionIds: ["overview", "narrator", "guidance"] },
+    { id: "systems", label: "Systems", sectionIds: ["modules", "runtimeModules"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  STORYLINE: [
+    { id: "storyline", label: "Storyline", sectionIds: ["overview", "sequence"] },
+    { id: "flow", label: "Flow", sectionIds: ["transitions", "openWorld"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  CHARACTER_TEMPLATE: [
+    { id: "template", label: "Template", sectionIds: ["overview", "template", "identity"] },
+    { id: "defaults", label: "Defaults", sectionIds: ["appearance", "body", "behavior"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  MECHANICS_MODULE: [
+    { id: "module", label: "Module", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["fields"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  RULES_CODEX: [
+    { id: "codex", label: "Codex", sectionIds: ["overview", "codex"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  LORE: [
+    { id: "lore", label: "Lore", sectionIds: ["overview", "document"] },
+    { id: "preview", label: "Public Preview", sectionIds: ["preview"] },
+    { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  ACTOR_MECHANICS_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["profile"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  STATS_POOLS_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["statsPools"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  PROGRESSION_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["progression"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+};
+
+// Shared structured-registry page grammar, one instance per type so
+// no two types alias the same array object.
+function STRUCTURED_REGISTRY_PAGE_GROUPS() {
+  return [
+    { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "review"] },
+    { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["relationships", "rules", "prompt"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ];
+}
+
+// ED1B resolver: unlisted types fall back to the Character grammar,
+// matching resolveCreationEditSections's own default.
+function resolveEditorPageGroups(creationType) {
+  return (
+    CREATION_TYPE_EDITOR_PAGE_GROUPS[creationType] ||
+    CREATION_TYPE_EDITOR_PAGE_GROUPS.CHARACTER
+  );
+}
+
 export {
   CHARACTER_EDIT_SECTIONS,
   OUTFIT_EDIT_SECTIONS,
@@ -575,4 +728,6 @@ export {
   typeMeta,
   CREATION_TYPE_SECTIONS,
   CREATION_TYPE_SECTION_GROUPS,
+  CREATION_TYPE_EDITOR_PAGE_GROUPS,
+  resolveEditorPageGroups,
 };

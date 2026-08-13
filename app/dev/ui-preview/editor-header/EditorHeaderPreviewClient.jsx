@@ -9,6 +9,7 @@ import {
   editorHeaderDirtySwitchConfirmFixture,
   editorHeaderLongestFixture,
   editorHeaderNoArtFixture,
+  editorHeaderNoSectionsTriggerFixture,
 } from "@/components/studio/my-creations/editor-header/EditorHeader.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -19,6 +20,10 @@ const STATES = {
   dirtySwitch: {
     label: "Dirty switch confirm (click switcher)",
     props: editorHeaderDirtySwitchConfirmFixture,
+  },
+  noSections: {
+    label: "No Sections trigger",
+    props: editorHeaderNoSectionsTriggerFixture,
   },
   longest: { label: "Longest", props: editorHeaderLongestFixture },
 };
@@ -31,7 +36,7 @@ export default function EditorHeaderPreviewClient() {
   return (
     <KitPreviewShell
       title="Editor Header"
-      description="Asset art thumb, title, type eyebrow, visibility chip, and the switcher trigger. The dirty-switch state arms a Keep editing / Discard and switch confirm on the switcher's own click, not on load."
+      description="Featured artwork (compact at phone widths), type eyebrow, title, visibility chip, the switcher beside the art, and the mobile Sections trigger. The dirty-switch state arms a Keep editing / Discard and switch confirm on the switcher's own click, not on load."
       states={Object.entries(STATES).map(([key, state]) => ({ key, label: state.label }))}
       activeKey={activeKey}
       onSelectState={setActiveKey}

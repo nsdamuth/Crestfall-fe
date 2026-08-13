@@ -28,7 +28,7 @@ export default function EditorSaveBarPreviewClient() {
   return (
     <KitPreviewShell
       title="Editor Save Bar"
-      description="N2: top-docked contextual save bar, visible only when dirty or mid-save-status. Save, Discard, status word."
+      description="N2 as amended by ED1B (contract 2.0.0): contextual save bar docked under the top bar, visible only when dirty, saving, or a save failed. A clean form after a successful save renders nothing."
       states={Object.entries(STATES).map(([key, state]) => ({ key, label: state.label }))}
       activeKey={activeKey}
       onSelectState={setActiveKey}
@@ -43,9 +43,10 @@ export default function EditorSaveBarPreviewClient() {
           onSave={() => setNote("Save fired.")}
           onDiscard={() => setNote("Discard fired.")}
         />
-        {activeKey === "hidden" ? (
+        {activeKey === "hidden" || activeKey === "saved" ? (
           <p className="text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-            (Bar renders nothing in this state, by design.)
+            (Bar renders nothing in this state, by design: the bar
+            disappearing is the save confirmation.)
           </p>
         ) : null}
       </div>

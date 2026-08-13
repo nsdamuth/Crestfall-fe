@@ -30,7 +30,21 @@ const CANON_ART = encodeURI(
   "/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"
 );
 
+// ED1B root-cause fix (docs/plans/ED1B-EDITOR-PAGE-SPEC.md section
+// 1): every fixture carries `ownerId` and `updatedAt` so it passes
+// the read-only hook's `hasUsableCreation` check. Without them the
+// seeded creation was rejected, the form fell back to the CHARACTER
+// fallback (type identity never reached the render), and the
+// hydrate effect fired a live `fetchOwnedCreation` with the fixture
+// id, whose failure rendered a raw error. These two fields are
+// harness data only and never render.
+const FIXTURE_PROVENANCE = {
+  ownerId: "mock-owner",
+  updatedAt: "2026-08-13T00:00:00.000Z",
+};
+
 export const EDITOR_CHARACTER_DEFAULT_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-character-default",
   title: "Vermillion Ashgrove",
   type: "CHARACTER",
@@ -92,6 +106,7 @@ export const EDITOR_CHARACTER_DEFAULT_FIXTURE = {
 };
 
 export const EDITOR_LORE_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-lore-default",
   title: "The Black Crown Accord",
   type: "LORE",
@@ -141,6 +156,7 @@ export const EDITOR_LORE_FIXTURE = {
 };
 
 export const EDITOR_STORY_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-story-default",
   title: "Coldwater Vigil",
   type: "ROOM_TEMPLATE",
@@ -159,6 +175,7 @@ export const EDITOR_STORY_FIXTURE = {
 };
 
 export const EDITOR_LOCATION_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-location-default",
   title: "The Vermillion Coast Tavern",
   type: "LOCATION",
@@ -177,6 +194,7 @@ export const EDITOR_LOCATION_FIXTURE = {
 };
 
 export const EDITOR_NPC_REGISTRY_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-npc-registry-default",
   title: "Coastal NPC Roster",
   type: "NPC_REGISTRY",
@@ -194,6 +212,7 @@ export const EDITOR_NPC_REGISTRY_FIXTURE = {
 };
 
 export const EDITOR_EMPTY_SECTIONS_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-character-empty",
   title: "Untitled Creation",
   type: "CHARACTER",
@@ -217,6 +236,7 @@ const LONG_PARAGRAPH =
   );
 
 export const EDITOR_LONGEST_CONTENT_FIXTURE = {
+  ...FIXTURE_PROVENANCE,
   id: "mock-editor-character-longest",
   title:
     "Vermillion Ashgrove-Highcourt, Third Archivist of the Wandering Table, Keeper of the Sundered Ledgers",

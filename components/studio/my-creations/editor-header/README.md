@@ -1,17 +1,21 @@
 # Editor Header LOOM package
 
-**Contract:** `EditorHeader.contract.js`, 1.0.0
+**Contract:** `EditorHeader.contract.js`, 2.0.0
 
 ## Purpose
 
-The advanced editor's identity header (`docs/plans/FABLE-GATE-2-STUDIO.md`
-wave ED1, ruling N1 option A): asset art thumb, display-name title,
-type eyebrow (from `lib/shared/presentation/terminology.js`), a
-visibility status chip (composes `KitBadge`), and the switcher
-trigger that opens the creation picker (`components/studio/creation-picker/`,
-wave SW1). Mounted by `app/studio/v2/editor/editor/Editor.view.jsx`
-above the section navigation, replacing the identity block that used
-to live inline in that file.
+The advanced editor's identity header
+(`docs/plans/ED1B-EDITOR-PAGE-SPEC.md` section 3.2, wave ED1B):
+featured artwork (3:4 frame, 132px from sm, compact 72px at phone
+widths), type eyebrow (from `lib/shared/presentation/terminology.js`,
+the type identity surface), display-name title, a visibility chip
+(composes `KitBadge`), an `actions` meta-row seat, the creation
+switcher beside the artwork (`components/studio/creation-picker/`,
+wave SW1), and the mobile Sections trigger for the O11 sheet.
+Mounted by `app/studio/v2/editor/editor/Editor.view.jsx` at the top
+of the single-surface editor page. The header paints no card of its
+own: it sits on the canvas and the page composition owns the
+closing rule.
 
 ## Boundary
 

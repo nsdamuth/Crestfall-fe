@@ -1,15 +1,18 @@
 # Editor Save Bar LOOM package
 
-**Contract:** `EditorSaveBar.contract.js`, 1.0.0
+**Contract:** `EditorSaveBar.contract.js`, 2.0.0
 
 ## Purpose
 
 N2 (ruling, ratified option A, 12 Aug 2026,
-`docs/plans/FABLE-GATE-2-STUDIO.md`): a top-docked contextual save
-bar sitting directly under the editor header, appearing only when
-there is something to say about save state (unsaved changes, or a
-save in flight / just finished / errored). Save, Discard, and a
-status word; no visibility, review, or canon controls. Replaces the
+`docs/plans/FABLE-GATE-2-STUDIO.md`) as amended by ED1B
+(`docs/plans/ED1B-EDITOR-PAGE-SPEC.md` section 3.3): a contextual
+save bar docked under the sticky top bar
+(`sticky top-[var(--topbar-h)]`), appearing only when something
+changed, a save is in flight, or the last save failed. Save,
+Discard, and a status word; no visibility, review, or canon
+controls. `saveMessage` is plain language supplied by the caller's
+ViewModel; a raw client `error.message` never renders here. Replaces the
 floating bottom sticky action bar
 (`edit/creation-edit-sticky-action-bar`) for the v2 editor page only;
 that package is retired for this route and unchanged for the legacy
@@ -37,12 +40,15 @@ saved snapshot, since no client-side "revert form" capability exists
 in the read-only `useCreationEditViewModel` hook this wave does not
 touch).
 
-## Visibility rule
+## Visibility rule (contract 2.0.0)
 
-Hidden when `!hasUnsavedChanges && saveStatus === "idle"`. Visible
-otherwise: dirty (status word "Unsaved changes"), saving (spinner +
-"Saving..."), saved (status word, Save/Discard both settle since the
-form is clean again), error (`--status-danger` word, `role="alert"`).
+Visible when and only when `hasUnsavedChanges`, or `saveStatus` is
+`"saving"`, or `saveStatus` is `"error"`. Hidden at rest AND hidden
+after a successful save once the form is clean again: the bar
+disappearing is the confirmation, no persistent "Saved" chrome.
+States: dirty (status word "Unsaved changes"), saving (spinner +
+"Saving...", Save disabled), error (`--status-danger` plain words,
+`role="alert"`, Save re-enabled).
 
 ## Preview
 

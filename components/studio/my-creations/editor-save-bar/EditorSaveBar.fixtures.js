@@ -13,10 +13,13 @@ export const editorSaveBarSavingFixture = {
   saveStatus: "saving",
 };
 
+// Contract 2.0.0 visibility law: a clean form after a successful
+// save renders NOTHING. This fixture proves the hidden-after-save
+// state alongside editorSaveBarHiddenFixture (hidden at rest).
 export const editorSaveBarSavedFixture = {
   hasUnsavedChanges: false,
   saveStatus: "saved",
-  saveMessage: "Saved.",
+  saveMessage: "",
   onSave: noop,
   onDiscard: noop,
 };
@@ -24,7 +27,7 @@ export const editorSaveBarSavedFixture = {
 export const editorSaveBarErrorFixture = {
   ...editorSaveBarIdleFixture,
   saveStatus: "error",
-  saveMessage: "Could not save. Try again.",
+  saveMessage: "Your changes could not be saved. Please try again.",
 };
 
 export const editorSaveBarHiddenFixture = {

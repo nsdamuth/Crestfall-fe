@@ -1,26 +1,32 @@
-export const EDITOR_SAVE_BAR_VIEW_CONTRACT_VERSION = "1.0.0";
+export const EDITOR_SAVE_BAR_VIEW_CONTRACT_VERSION = "2.0.0";
+
+// Version note, 1.0.0 -> 2.0.0 (BREAKING behavior, ED1B,
+// docs/plans/ED1B-EDITOR-PAGE-SPEC.md section 3.3): the visibility
+// law changes. The bar is visible when and only when there is
+// something to act on or to read: `hasUnsavedChanges` is true, a
+// save is in flight (`saveStatus` "saving"), or the last save
+// failed (`saveStatus` "error"). A successful save no longer pins
+// the bar: at `saveStatus` "saved" with a clean form the bar is
+// HIDDEN (the bar disappearing is the confirmation). Prop shapes
+// are unchanged; the meaning change is the break. `saveMessage` is
+// plain language supplied by the caller's ViewModel; a raw client
+// `error.message` must never be passed here.
 
 /**
  * Stable portable UI boundary for the editor's save treatment,
- * ruling N2 option A (docs/plans/FABLE-GATE-2-STUDIO.md wave ED1):
- * a top-docked contextual save bar sitting directly under the editor
- * header, appearing only when there is something to say about save
- * state. Replaces the floating bottom sticky action bar
- * (`edit/creation-edit-sticky-action-bar`, retired for the v2 editor,
- * recorded in its own README) for the v2 editor page only.
- * Publishing controls (visibility, review, canon, unlist) do not
- * live here; they moved into the Publishing group
- * (`creation-publishing-section`).
- *
- * Visible whenever `hasUnsavedChanges` is true, or while `saveStatus`
- * is anything other than "idle" (a brief "Saved" or error word after
- * a save even once the form is clean again). Fixture-fed, portable:
- * no Creation client, no persistence.
+ * ruling N2 option A as amended by ED1B
+ * (docs/plans/ED1B-EDITOR-PAGE-SPEC.md section 3.3): a contextual
+ * save bar docked directly under the sticky top bar
+ * (`sticky top-[var(--topbar-h)]`), appearing only when something
+ * changed, is saving, or failed to save. Publishing controls
+ * (visibility, review, canon, unlist) do not live here; they are in
+ * the Publishing group (`creation-publishing-section`). Fixture-fed,
+ * portable: no Creation client, no persistence.
  *
  * @typedef {Object} EditorSaveBarViewProps
  * @property {boolean} hasUnsavedChanges
  * @property {"idle"|"saving"|"saved"|"error"} saveStatus
- * @property {string} [saveMessage]
+ * @property {string} [saveMessage] Plain language only.
  * @property {(() => void)|null} onSave
  * @property {(() => void)|null} onDiscard
  */
