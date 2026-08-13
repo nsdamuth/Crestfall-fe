@@ -1,76 +1,69 @@
 # Roadmap
 
-This file updates in the same commit as the work it records.
+Standing rule: every wave-close brief checks its own boxes in this file
+in the same commit that closes the wave. A wave is not done until its
+box here is checked; an unchecked box after a wave-close commit is a
+process error, not a style preference.
 
-## Now
+## Phase 1, Foundations
 
-14 held-out packages await a Brian ruling before they can convert. Plain
-language in `docs/NICK-SWEEP-NOTES.md`, full detail in
-`docs/BATCH-TWO-ORDER.md`'s flagged list.
+- [x] K1, kit fields
+- [x] E1, SharedFields
+- [x] F0, fold
+- [x] X1, contrast law
+- [x] SW1, creation picker
+- [x] Gate plans 1 and 2, ratified
+- [x] Repo hygiene audit report
 
-Roughly 81 packages of mechanical-only findings remain open in
-`docs/CLOSING-INVENTORY.md`, scoped for a dedicated follow-up pass.
+## Phase 2, Chat
 
-## Next
+- [x] C1, message and transcript
+- [x] C2, composer
+- [x] C3, panels
+- [x] C4, dialogs
+- [x] C5, shell and page
+- [x] C6, parity echo and CR filings
+- [ ] Chat render sitting
+- [ ] Ultrareview pass 1
 
-Fix the 14 held-out packages once Brian rules on each. Fix the two
-pre-existing broken routes found during the render pass
-(`/chronicle/[...slug]`, `/stories/[...slug]`, both empty page files,
-confirmed still broken as of this run).
+## Phase 3, Advanced editor
 
-Close the remaining ~85 mechanical-only packages in
-`docs/CLOSING-INVENTORY.md`. Run the full render-pass gallery (every
-`/dev/ui-preview/*` route), not the 4-surface spot-check this run did.
+- [ ] ED1b, rebuild render sitting
+- [ ] Ultrareview pass 2
+- [ ] ED2, media rail
+- [ ] ED3 through ED8, family sweeps
+- [ ] ED9, plus K2 JSON consolidation
 
-## Done
+## Phase 4, Studio journey
 
-Unattended run, 6 Aug 2026, `design/creator-stops`: fixed the shared
-creator-stops eyebrow (all seven stops used the tag-and-meta type scale
-instead of the ruled global eyebrow scale; now `--text-eyebrow`/
-`--lh-eyebrow`/`--track-eyebrow` and the `--grad-rule` token). Converted
-4 account-family packages against `docs/CLOSING-INVENTORY.md`'s open
-mechanical backlog (`default-player-character-picker`,
-`studio-account-coins`, `studio-account-metrics`,
-`studio-account-profile`): off-scale `rounded-xl` panels to
-`--radius-md`, two floating dialogs from `--radius-md` up to
-`--radius-lg` per the corners final ruling, one dialog scrim from
-`bg-black/70` to `--scrim-strong`, and raw red/emerald status colors to
-the `--status-danger`/`--status-success` token pairs. All four verified
-at 390 and 1440 in `/dev/ui-preview`, zero new console errors, build
-exit 0. This run's brief pointed at `docs/BATCH-TWO-SCOPE.md` for the
-next block, but that file's own scope (179/179 packages) is already
-fully converted per this doc's "Done" section above; the actual open
-mechanical backlog lives in `docs/CLOSING-INVENTORY.md` per its own
-superseding note, so this run worked from there instead and logged the
-substitution rather than guessing or stalling. Roughly 81 packages of
-`CLOSING-INVENTORY.md`'s mechanical-only backlog remain after this run.
+- [ ] S1, retier
+- [ ] S2, Build a Story
+- [ ] S3, Player Character quick create
+- [ ] Studio render sitting
 
-Batch one, 20 packages, on `design/global-sweep`.
+## Phase 5, Remaining surfaces
 
-Docs governance restructure.
+- [ ] Q1 to Q3, quick-create restyle
+- [ ] P1, asset popup
+- [ ] IM1, images landing
+- [ ] CL1, gate close
 
-Batch two, 172 packages converted (9 app-shell, 10 pre-approved, 153
-component), 179 of 179 in-scope packages verified PASS, zero circuit
-breakers, zero frozen packages. Holistic browser review of all 67 app
-routes at 390 and 1440 widths, zero restyle regressions found. See
-`docs/SWEEP-REPORT.md`.
+## Phase 6, Cleanup and polish
 
-Overnight closing pass, 4-5 Aug 2026: fresh 222-package inventory
-derived from the codebase (`docs/CLOSING-INVENTORY.md`, 652 findings),
-63 packages converted across dialog corners, delete controls, and a
-bounded slice of the remaining inventory, creator-card banner fixed.
-See `docs/CLOSING-REPORT.md`.
+- [ ] Repo hygiene waves 1 to 9
+- [ ] Sidebar finalization
+- [ ] Banner art pass
+- [ ] Spacing and stray-text sweep
+- [ ] Copywriting pass
+- [ ] Delight animations
 
-## Blocked on Brian
+## Phase 7, Cutover
 
-Wash value ruling.
-
-14 held-out packages (`docs/NICK-SWEEP-NOTES.md`).
-
-Creator card phone-width name truncation, renders in
-`docs/review-artifacts/` from this run.
-
-## Gates
-
-Holistic browser review after batch two lands: done, see
-`docs/SWEEP-REPORT.md`.
+- [ ] Full parity check against APP-FUNCTION-MAP.csv
+- [ ] Ultrareview pass 3 on the integration line
+- [ ] Consolidated Nick update with all CRs
+- [ ] Nick review and sign-off
+- [ ] Freeze and merge Nick's work
+- [ ] Stage
+- [ ] Final tests
+- [ ] Go live
