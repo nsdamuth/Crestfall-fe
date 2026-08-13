@@ -1,6 +1,16 @@
 # Editor LOOM package
 
-**Contract:** `Editor.contract.js` (v1.2.0)
+**Contract:** `Editor.contract.js` (v2.0.0, BREAKING, ED1,
+docs/plans/FABLE-GATE-2-STUDIO.md, rulings N1/N2/N5/N6/N7 and
+standing O11, ratified option A: the editor shell redesign. See the
+contract file's own version note for the full breaking/additive
+list. Summary: the `stickyActionBar` slot is replaced by `header`
+(new `editor-header` package) and `saveBar` (new `editor-save-bar`
+package, N2); section nav is grouped
+(`activeSectionGroups`/`activeGroupId`/`onSelectGroup`, ruling N1);
+`isLoreDocumentSection` dead field removed; `creationPicker` slot,
+`isLoading`, `overviewDescription`/`overviewContentRating` added; the
+mobile bottom-sheet section picker (standing O11) is wired for real.)
 
 ## Purpose
 
@@ -12,42 +22,91 @@ Character alone (the ruling amendment). Build address
 standalone editor's full function by consuming the existing
 `components/studio/my-creations/**` edit-section components and
 ViewModels read-only, inside a new v2-optimized, mobile-first shell.
+New this wave (ED1): `/studio/v2/editor` (no `[id]`) is the index,
+rendering "Select a creation to edit" with the SW1 picker call to
+action (`app/studio/v2/editor/EditorIndexClient.jsx`); `[id]` stays
+the deep-linkable address this README otherwise documents.
 
 ## Boundary
 
 ```text
 Editor.jsx (Shell, ../Editor.jsx)
-  -> owns Next.js router (useRouter), passes onNavigateBack
-  -> owns the dev-only fixture-id harness state (preview mirror only)
+  -> outer: owns discardKey (remount-driven Discard, see below)
+  -> inner (EditorInner): owns Next.js router, the switcher/picker
+     open state, the dev-only fixture-id harness state (preview only)
   -> useEditorViewModel.js
       -> resolves [id] fixture-first via editorSavedCreations.mock.js
       -> composes the READ-ONLY useCreationEditShellViewModel
-         (components/studio/my-creations/creation-edit-shell/**)
+         (components/studio/my-creations/creation-edit-shell/**),
+         which itself now resolves both the flat section list AND
+         the group grammar as data (ED1, see that file's own
+         comments) instead of a nested ternary
+      -> derives header identity (art, title, type eyebrow via
+         terminology.js, visibility/canon chip) from the same form
+         data the shell already returns
       -> owns mobile section-nav open/close (presentation-only)
   -> builds ReactNode slots from the READ-ONLY creation-edit-shell
      lineage:
        - CreationEditMediaPanel (components/studio/my-creations/)
-       - CreationEditSectionContent (creation-edit-shell/)
-       - CreationEditStickyActionBar (components/studio/my-creations/edit/)
+       - CreationEditSectionContent (creation-edit-shell/, now a
+         registry-as-data dispatch, see creationEditSectionComponentMap.js)
        - CreationEditMechanicsRuntimeQuickNav (creation-edit-shell/)
        - CreationFeaturedImagePickerModal (my-creations/image-library/)
+     plus two new ED1 packages, composed the same way:
+       - EditorHeader (components/studio/my-creations/editor-header/)
+       - EditorSaveBar (components/studio/my-creations/editor-save-bar/)
+     and the SW1 creation picker when the switcher opens:
+       - CreationPicker (components/studio/creation-picker/)
   -> Editor.view.jsx
-      -> header (identity, Set Default PC, back action)
-      -> section navigation (thumb-reachable horizontal scroll at 390)
+      -> header slot, save bar slot (top-docked, directly under header)
+      -> Set Default PC / Sections (mobile) / Back utility row
+      -> group tabs + in-group section flow (thumb-reachable
+         horizontal scroll at 390), plus the O11 bottom-sheet section
+         picker on phone
       -> media rail + section content (single column at <lg, two
-         columns at lg+)
+         columns at lg+), led by the overview summary card on the
+         first group's overview section
       -> named absorption seats (bodyDetail, behaviorDetail,
          advancedPrompting), always null this pass
-      -> sticky action bar, featured image picker
+      -> featured image picker, creation picker (switcher)
 
 editor/
   Editor.view.jsx       Portable Skin
   useEditorViewModel.js Chassis / orchestration adapter
   Editor.contract.js
-  Editor.fixtures.js    four saved-creation fixtures
+  Editor.fixtures.js    seven saved-creation fixtures
   editorSavedCreations.mock.js  the named [id] mock resolver (item 3)
   README.md
 ```
+
+## Discard, ED1
+
+`useCreationEditViewModel` (the existing hydration authority, not
+touched by this brief) exposes no "revert form" capability. `../Editor.jsx`
+splits into an outer component holding a `discardKey` counter and an
+inner component keyed on it (`key={creationId-discardKey}`); Discard
+increments the counter, remounting the inner component and every hook
+inside it, which re-runs hydration from the same `creationId`/`creation`
+snapshot. This is the only way to discard unsaved edits without
+editing the read-only hook.
+
+## Section navigation, ED1: registry-as-data
+
+Two files changed inside the read-only `creation-edit-shell` lineage,
+both authorized by this wave's escalation:
+
+- `useCreationEditShellViewModel.js`: `resolveCreationEditSections`
+  (a nested ternary) now looks up `CREATION_TYPE_SECTIONS`
+  (`creationEditConstants.js`), byte-for-byte the same resolution.
+  `resolveCreationEditSectionGroups` (new) resolves each type's group
+  grammar the same way from `CREATION_TYPE_SECTION_GROUPS`.
+- `CreationEditSectionContent.jsx`: the 42-guard if-chain is now a
+  lookup into `SECTION_COMPONENT_REGISTRY`
+  (`creationEditSectionComponentMap.js`), one entry per
+  (creationType, sectionId) pair, mechanically transcribed from the
+  old chain (same Component, same props, same condition). "publishing"
+  and "danger" stay explicit (universal across every type; publishing
+  carries the one real branch, Lore's rehosted readiness surface).
 
 `Editor.view.jsx` imports nothing from `components/studio/my-creations/**`,
 `next/navigation`, or any Creation client. Every functional surface
@@ -72,8 +131,10 @@ The Shell (`../Editor.jsx`) instantiates the same combined,
 already-production-wired components the legacy
 `/studio/my-creations/[id]/edit` page uses today
 (`components/studio/my-creations/CreationEditShell.jsx` is the proof
-of this exact pairing, read for precedent, not modified):
-`CreationEditMediaPanel`, `CreationEditStickyActionBar`,
+of this exact pairing, read for precedent, not modified), EXCEPT the
+sticky action bar: ED1 retires `CreationEditStickyActionBar` for this
+route (recorded in its own README), replaced by `EditorHeader` +
+`EditorSaveBar`. Still consumed unmodified: `CreationEditMediaPanel`,
 `CreationEditMechanicsRuntimeQuickNav`,
 `CreationFeaturedImagePickerModal`, and `CreationEditSectionContent`
 (which itself composes every type's edit-section package: Character,
@@ -190,17 +251,34 @@ adds no new generation surface.
 
 ## Fixture states
 
-`Editor.fixtures.js` exports four full saved-creation fixtures:
+`Editor.fixtures.js` exports seven full saved-creation fixtures, five
+of them the "per-type nav" set (ED1, at least Character and Story):
 
-- **Character (default):** a complete CHARACTER creation carrying
-  every quick and advanced field the rehosted sections read.
+- **Character (default):** a complete CHARACTER creation, the
+  Identity / Body & Behavior / Systems / Publishing group grammar.
 - **Lore (non-Character):** a LORE creation with a populated
   `lore_document`, exercising the rehosted structured authoring
-  surface end to end.
+  surface end to end, the default Content / Systems / Publishing
+  grammar.
+- **Story:** a ROOM_TEMPLATE creation, the Story / Cast & World /
+  Runtime / Publishing group grammar.
+- **Location:** a LOCATION creation, the Place / Runtime / Publishing
+  group grammar.
+- **NPC Registry:** an NPC_REGISTRY creation, the Entries / Rules &
+  Prompt / Publishing group grammar.
 - **Empty sections:** a CHARACTER creation with an empty `data`
   payload, exercising every section's own empty state.
 - **Longest content:** a CHARACTER creation with maximal-length text
   in every long-form field, exercising overflow containment at 390.
+
+Loading and load-error are demonstrated by a preview-only harness
+override on `Editor.jsx` (`previewLoadingOverride`/
+`previewLoadErrorOverride`, same precedent as `originOverride`): the
+fixture-first mock resolver is synchronous and never produces a real
+async gap on its own. Dirty-switch confirm and the mobile sections
+sheet are live-interactive states, not fixture objects: edit any
+field then open the switcher for the former; resize under 1024px and
+tap Sections for the latter.
 
 ## Preview
 
@@ -210,7 +288,8 @@ Auth-free, development only:
 /dev/ui-preview/editor-v2-page
 ```
 
-Switches among the four fixture ids above via the dev-only harness;
+Switches among the seven fixture ids above, plus origin and load-state
+harnesses, via the dev-only harness;
 mounts the same `Editor.jsx` Binding Shell used at
 `/studio/v2/editor/[id]`, so the preview exercises the real rehosted
 sections and the real save/review/archive/delete client calls stay

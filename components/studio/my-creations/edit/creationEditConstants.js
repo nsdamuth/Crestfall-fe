@@ -356,6 +356,196 @@ const PROGRESSION_PROFILE_EDIT_SECTIONS = [
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
+// Editor group grammar, ED1 (docs/plans/FABLE-GATE-2-STUDIO.md,
+// ruling N1 option A): each type's flat section list regroups into
+// at most five named groups, schema-as-data replacing a hand-built
+// layout. Named grammar per the plan: Story / Cast & World / Runtime
+// / Publishing (ROOM_TEMPLATE); Identity / Body & Behavior / Systems
+// / Publishing (CHARACTER, PLAYER_CHARACTER); Place / Runtime /
+// Publishing (LOCATION); Entries / Rules & Prompt / Publishing
+// (every *_REGISTRY type). Default rule for every remaining type:
+// Content / Systems / Publishing, Systems present only when the type
+// carries a mechanics-flavored section.
+const CHARACTER_SECTION_GROUPS = [
+  { id: "identity", label: "Identity", sectionIds: ["overview", "identity", "appearance", "visualReferences"] },
+  { id: "bodyBehavior", label: "Body & Behavior", sectionIds: ["body", "behavior"] },
+  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules", "advanced"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const ROOM_TEMPLATE_SECTION_GROUPS = [
+  { id: "story", label: "Story", sectionIds: ["overview", "room", "opening"] },
+  { id: "castWorld", label: "Cast & World", sectionIds: ["package", "multiplayer"] },
+  { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const LOCATION_SECTION_GROUPS = [
+  { id: "place", label: "Place", sectionIds: ["overview", "location", "visual", "atmosphere", "prompt"] },
+  { id: "runtime", label: "Runtime", sectionIds: ["runtimeModules"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const NPC_REGISTRY_SECTION_GROUPS = [
+  { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "aliases"] },
+  { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["relationships", "knowledge"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const ITEM_REGISTRY_SECTION_GROUPS = [
+  { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "media"] },
+  { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["associations", "tracking", "prompt"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const LOCATION_REGISTRY_SECTION_GROUPS = [
+  { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "presence"] },
+  { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["connections", "weather", "runtime"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const STRUCTURED_REGISTRY_SECTION_GROUPS = [
+  { id: "entries", label: "Entries", sectionIds: ["overview", "entries", "review"] },
+  { id: "rulesPrompt", label: "Rules & Prompt", sectionIds: ["relationships", "rules", "prompt"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const OUTFIT_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "outfit", "garment", "materials", "prompt"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const WARDROBE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "entries", "rules"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const POSE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "pose", "bodyPosition", "staging", "prompt"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const IMAGE_PRESET_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "preset", "style", "rendering", "prompt"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const SCENARIO_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "scenario", "storyCircle", "cast", "middleware", "runtime"] },
+  { id: "systems", label: "Systems", sectionIds: ["runtimeModules"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const NARRATOR_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "narrator", "guidance"] },
+  { id: "systems", label: "Systems", sectionIds: ["modules", "runtimeModules"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const STORYLINE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "sequence", "transitions", "openWorld"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const CHARACTER_TEMPLATE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "template", "identity", "appearance", "body", "behavior"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const MECHANICS_MODULE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["fields"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const RULES_CODEX_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "codex"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const LORE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview", "document", "preview"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const ACTOR_MECHANICS_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["profile"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const STATS_POOLS_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["statsPools"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const PROGRESSION_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["progression"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const CREATION_TYPE_SECTION_GROUPS = {
+  CHARACTER: CHARACTER_SECTION_GROUPS,
+  PLAYER_CHARACTER: CHARACTER_SECTION_GROUPS,
+  ROOM_TEMPLATE: ROOM_TEMPLATE_SECTION_GROUPS,
+  LOCATION: LOCATION_SECTION_GROUPS,
+  NPC_REGISTRY: NPC_REGISTRY_SECTION_GROUPS,
+  ITEM_REGISTRY: ITEM_REGISTRY_SECTION_GROUPS,
+  LOCATION_REGISTRY: LOCATION_REGISTRY_SECTION_GROUPS,
+  FACTION_REGISTRY: STRUCTURED_REGISTRY_SECTION_GROUPS,
+  ORGANIZATION_REGISTRY: STRUCTURED_REGISTRY_SECTION_GROUPS,
+  EVENT_REGISTRY: STRUCTURED_REGISTRY_SECTION_GROUPS,
+  QUEST_REGISTRY: STRUCTURED_REGISTRY_SECTION_GROUPS,
+  OUTFIT: OUTFIT_SECTION_GROUPS,
+  WARDROBE: WARDROBE_SECTION_GROUPS,
+  POSE: POSE_SECTION_GROUPS,
+  IMAGE_PRESET: IMAGE_PRESET_SECTION_GROUPS,
+  SCENARIO: SCENARIO_SECTION_GROUPS,
+  NARRATOR: NARRATOR_SECTION_GROUPS,
+  STORYLINE: STORYLINE_SECTION_GROUPS,
+  CHARACTER_TEMPLATE: CHARACTER_TEMPLATE_SECTION_GROUPS,
+  MECHANICS_MODULE: MECHANICS_MODULE_SECTION_GROUPS,
+  RULES_CODEX: RULES_CODEX_SECTION_GROUPS,
+  LORE: LORE_SECTION_GROUPS,
+  ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_SECTION_GROUPS,
+  STATS_POOLS_PROFILE: STATS_POOLS_PROFILE_SECTION_GROUPS,
+  PROGRESSION_PROFILE: PROGRESSION_PROFILE_SECTION_GROUPS,
+};
+
+// Registry-as-data, ED1: replaces the nested ternary
+// (`resolveCreationEditSections`) in creation-edit-shell/
+// useCreationEditShellViewModel.js. Every type that had its own arm
+// keeps its own array unchanged; PLAYER_CHARACTER and any unlisted
+// type still fall through to `sections` (CHARACTER_EDIT_SECTIONS),
+// matching the ternary's own final default exactly.
+const CREATION_TYPE_SECTIONS = {
+  PROGRESSION_PROFILE: PROGRESSION_PROFILE_EDIT_SECTIONS,
+  STATS_POOLS_PROFILE: STATS_POOLS_PROFILE_EDIT_SECTIONS,
+  ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,
+  LORE: LORE_EDIT_SECTIONS,
+  RULES_CODEX: RULES_CODEX_EDIT_SECTIONS,
+  MECHANICS_MODULE: MECHANICS_MODULE_EDIT_SECTIONS,
+  LOCATION_REGISTRY: LOCATION_REGISTRY_EDIT_SECTIONS,
+  FACTION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
+  ORGANIZATION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
+  EVENT_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
+  QUEST_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
+  NPC_REGISTRY: NPC_REGISTRY_EDIT_SECTIONS,
+  ITEM_REGISTRY: ITEM_REGISTRY_EDIT_SECTIONS,
+  CHARACTER_TEMPLATE: CHARACTER_TEMPLATE_EDIT_SECTIONS,
+  STORYLINE: STORYLINE_EDIT_SECTIONS,
+  ROOM_TEMPLATE: ROOM_TEMPLATE_EDIT_SECTIONS,
+  NARRATOR: NARRATOR_EDIT_SECTIONS,
+  SCENARIO: SCENARIO_EDIT_SECTIONS,
+  OUTFIT: OUTFIT_EDIT_SECTIONS,
+  WARDROBE: WARDROBE_EDIT_SECTIONS,
+  LOCATION: LOCATION_EDIT_SECTIONS,
+  POSE: POSE_EDIT_SECTIONS,
+  IMAGE_PRESET: IMAGE_PRESET_EDIT_SECTIONS,
+};
+
 export {
   CHARACTER_EDIT_SECTIONS,
   OUTFIT_EDIT_SECTIONS,
@@ -383,4 +573,6 @@ export {
   sections,
   tabs,
   typeMeta,
+  CREATION_TYPE_SECTIONS,
+  CREATION_TYPE_SECTION_GROUPS,
 };

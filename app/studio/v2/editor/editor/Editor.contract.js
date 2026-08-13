@@ -1,5 +1,48 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "1.2.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "2.0.0";
 
+// Version note, 1.2.0 -> 2.0.0 (BREAKING, ED1, wave X of
+// docs/plans/FABLE-GATE-2-STUDIO.md, rulings N1/N2/N5/N6/N7 and
+// standing O11, all ratified option A): the editor shell redesign.
+//
+// Breaking:
+// - `stickyActionBar` ReactNode slot REMOVED. Replaced by two new
+//   required slots, `header` (the new editor-header package: art
+//   thumb, title, type eyebrow, visibility chip, switcher trigger)
+//   and `saveBar` (the new editor-save-bar package, N2: top-docked,
+//   visible only when dirty, Save + Discard + status word). The
+//   inert emerald Public toggle that lived on the sticky bar is
+//   retired with it; status now reads through the header's
+//   visibility chip and the Publishing group.
+// - Section nav model changed: flat `activeSections` pill row is now
+//   ALSO grouped. New required props `activeSectionGroups` (per-type
+//   groups of at most five, schema-as-data,
+//   creationEditConstants.js), `activeGroupId`, `onSelectGroup`.
+//   `activeSections` stays (now scoped to in-group section flow
+//   under the active group) and `onSelectSection` is unchanged.
+// - Dead `isLoreDocumentSection` typedef field removed (never wired
+//   to any real prop).
+//
+// Additive:
+// - `creationPicker` ReactNode slot: the SW1 creation picker, opened
+//   by the header's switcher trigger, rendered as an overlay when
+//   present.
+// - `isLoading` (boolean, default false): a loading skeleton state,
+//   product-inert today (the fixture-first mock resolver never has a
+//   real async gap); the preview mirror exercises it via a harness
+//   override, same precedent as `originOverride`.
+// - `mobileNavOpen` / `onToggleMobileNav`: wired for real this pass
+//   (O11 option A, standing ruling). Were passed by the Binding Shell
+//   before this wave but silently dropped by the View; now open the
+//   bottom-sheet section picker (KitModalFrame `variant="sheet"`),
+//   listing every group and section, alongside the unchanged
+//   horizontally-scrolling group tabs.
+// - `overviewDescription` / `overviewContentRating`: feed the
+//   per-type overview summary card that leads the first group.
+//
+// Unsaved-changes confirm on switch lives in the `header` slot's own
+// package (editor-header), not this contract: the switcher trigger
+// arms a local confirm before firing its `onOpenSwitcher`.
+//
 // Version note, 1.1.0 -> 1.2.0 (additive, vault-edit-tree pass, 11 Aug
 // 2026): two optional props close two CR-007/CR-008 held rows the
 // classification found buildable. `isLoreDraftPreview` (boolean,
@@ -25,67 +68,64 @@ export const EDITOR_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the advanced editor page View
- * (docs/STUDIO-SPEC.md sections 1, 4, 6, 8.3; Sprint H OPEN item 40,
- * option A). New page this pass, contract authorized none to 1.0.0 at
- * this gate. Build address `/studio/v2/editor/[id]` (route law,
- * cutover sequence per docs/STUDIO-SPEC.md 4.1). Mobile-first at 390:
- * single column, thumb-reachable section navigation, no horizontal
- * overflow, sticky action bar inside the R4 grammar; fully functional
- * at 1440.
+ * (docs/STUDIO-SPEC.md sections 1, 4, 6, 8.3; docs/plans/
+ * FABLE-GATE-2-STUDIO.md wave ED1). Build address
+ * `/studio/v2/editor/[id]` (deep-linkable); `/studio/v2/editor` (new
+ * index, this wave) renders the empty "Select a creation to edit"
+ * state with the picker call to action. Mobile-first at 390: single
+ * column, thumb-reachable group tabs plus in-group section flow, no
+ * horizontal overflow, the O11 bottom-sheet section picker, fully
+ * functional at 1440.
  *
  * Composition, rehost then seat (docs/STUDIO-SPEC.md 4.2, the ruling
- * amendment on Lore): editor header (creation id, title, type,
- * template flag, Set Default PC, back action) -> the section
- * navigation (Nick's real order per creationEditConstants.js,
- * resolved per creation type by the read-only
- * `resolveCreationEditSections` helper in
- * `creation-edit-shell/useCreationEditShellViewModel.js`) -> the
- * two-slot body: media panel (+ Mechanics quick nav when the
- * Mechanics Fields section is active) and the section content panel
- * -> named absorption seats (`seats.bodyDetail`, `seats.behaviorDetail`,
- * `seats.advancedPrompting`), always null this pass, no placeholder UI
- * -> the sticky action bar -> the featured image picker modal, when
- * open.
+ * amendment on Lore): editor header (identity, switcher) -> save bar
+ * (N2, visible only when dirty) -> group tabs + in-group section flow
+ * (resolved per creation type by the read-only
+ * `resolveCreationEditSections`/`resolveCreationEditSectionGroups`
+ * helpers in `creation-edit-shell/useCreationEditShellViewModel.js`)
+ * -> the two-slot body: media panel (+ Mechanics quick nav when the
+ * Mechanics Fields section is active) and the section content panel,
+ * led by the overview summary card on the first group's overview
+ * section -> named absorption seats (`seats.bodyDetail`,
+ * `seats.behaviorDetail`, `seats.advancedPrompting`), always null
+ * this pass, no placeholder UI -> the featured image picker modal and
+ * the creation picker (switcher), each when open.
  *
  * The View never imports a Creation client, Next.js, or any
  * `components/studio/my-creations/**` package. Every section body,
- * every media/quick-nav/action-bar surface, and the featured image
- * picker arrive as already-composed `ReactNode` slots built by the
- * Binding Shell (`../Editor.jsx`) from the read-only
- * `creation-edit-shell` lineage (`useCreationEditShellViewModel`,
- * `CreationEditSectionContent`, `CreationEditMediaPanel`,
- * `CreationEditStickyActionBar`, `CreationEditMechanicsRuntimeQuickNav`,
- * `CreationFeaturedImagePickerModal`), none of which this brief edits.
+ * every media/quick-nav/header/save-bar surface, and the featured
+ * image picker / creation picker arrive as already-composed
+ * `ReactNode` slots built by the Binding Shell (`../Editor.jsx`).
  *
  * @typedef {Object} EditorSectionTab
  * @property {string} id
  * @property {string} label
  * @property {import("react").ComponentType<{size?: number}>} [icon]
  *
+ * @typedef {Object} EditorSectionGroup
+ * @property {string} id
+ * @property {string} label
+ * @property {string[]} sectionIds
+ *
  * @typedef {Object} EditorSeats
  * @property {import("react").ReactNode} [bodyDetail] Mounts under the
  *   "body" section, beside the existing rehosted Body section. Seated
- *   for a future brief's Body detail absorption section (Kibbe
- *   identity, Body Type, Height, Build, Proportions). Null this pass.
+ *   for a future brief's Body detail absorption section. Null this
+ *   pass.
  * @property {import("react").ReactNode} [behaviorDetail] Mounts under
- *   the "behavior" section, beside the existing rehosted Behavior
- *   section. Seated for a future brief's Behavior detail absorption
- *   section (Outward/Internal Personality, Speech/Movement Style,
- *   Interests, MBTI, Western and East Asian zodiac, Voice Modules).
- *   Null this pass.
+ *   the "behavior" section. Null this pass.
  * @property {import("react").ReactNode} [advancedPrompting] Mounts
- *   under the "advanced" section, beside the existing rehosted
- *   Advanced section. Seated for a future brief's Advanced Prompting
- *   section (enable toggle, nine guidance sections, per-section
- *   counters, 32,000-character combined budget). Null this pass.
+ *   under the "advanced" section. Null this pass.
  *
  * @typedef {Object} EditorViewProps
  * @property {string} creationId
- * @property {string} creationType
  * @property {string} title
  * @property {boolean} isTemplate
  * @property {string} activeSection
  * @property {EditorSectionTab[]} activeSections
+ * @property {EditorSectionGroup[]} activeSectionGroups
+ * @property {string} activeGroupId
+ * @property {(groupId: string) => void} onSelectGroup
  * @property {(sectionId: string) => void} onSelectSection
  * @property {boolean} canSetDefaultPc
  * @property {boolean} settingDefaultPc
@@ -93,25 +133,23 @@ export const EDITOR_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {string|null} defaultPcStatus
  * @property {string|null} defaultPcError
  * @property {boolean} showMechanicsQuickNav
- * @property {boolean} isLoreDocumentSection} Whether the active section
- *   is Lore's rehosted structured authoring surface (the ruling's
- *   ADDITIONAL item). Used only to widen the content panel; the
- *   authoring surface itself is part of `sectionContent`.
  * @property {string} backLabel
  * @property {() => void} onBack
  * @property {boolean} [isLoreDraftPreview] Shows the owner-only draft
- *   preview badge above the section content panel. Set by the
- *   Binding Shell when `sectionContentProps.isLore` and the active
- *   section is Lore's Public Preview. Default false.
+ *   preview badge above the section content panel.
  * @property {string|null} [imageLibraryHref] When set, renders a
- *   "Manage image library" link beside the media panel routing to
- *   `/studio/v2/editor/[id]/image-library`. Default null (hidden).
+ *   "Manage image library" link beside the media panel.
+ * @property {boolean} [isLoading] default false.
+ * @property {string|null} [overviewDescription]
+ * @property {string|null} [overviewContentRating]
+ * @property {import("react").ReactNode} header
+ * @property {import("react").ReactNode} saveBar
  * @property {import("react").ReactNode} mediaPanel
  * @property {import("react").ReactNode} mechanicsQuickNav
  * @property {import("react").ReactNode} sectionContent
  * @property {EditorSeats} seats
- * @property {import("react").ReactNode} stickyActionBar
  * @property {import("react").ReactNode} featuredImagePicker
+ * @property {import("react").ReactNode} [creationPicker]
  * @property {boolean} mobileNavOpen
  * @property {() => void} onToggleMobileNav
  * @property {{label: string, message: string}|null} loadError R4

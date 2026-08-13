@@ -4,18 +4,22 @@
 // Crestfall-specific integration. Next.js navigation (useRouter,
 // Link) is one piece; the other is the read-only creation-edit-shell
 // lineage (components/studio/my-creations/**), which this file
-// imports and composes into ReactNode slots exactly the way the
-// existing, unmodified `components/studio/my-creations/CreationEditShell.jsx`
-// does for the legacy `/studio/my-creations/[id]/edit` page (read for
-// precedent, never edited). Nothing in `components/studio/my-creations/**`
-// is changed by this brief.
+// imports and composes into ReactNode slots. ED1
+// (docs/plans/FABLE-GATE-2-STUDIO.md) authorized changes: the
+// section registry inside useCreationEditShellViewModel.js and
+// CreationEditSectionContent.jsx moved from an if-chain to data (see
+// those files' own comments); everything else in the lineage is
+// unmodified.
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import CreationEditMediaPanel from "@/components/studio/my-creations/CreationEditMediaPanel";
-import CreationEditStickyActionBar from "@/components/studio/my-creations/edit/CreationEditStickyActionBar";
 import CreationFeaturedImagePickerModal from "@/components/studio/my-creations/image-library/CreationFeaturedImagePickerModal";
 import CreationEditSectionContent from "@/components/studio/my-creations/creation-edit-shell/CreationEditSectionContent";
 import CreationEditMechanicsRuntimeQuickNav from "@/components/studio/my-creations/creation-edit-shell/CreationEditMechanicsRuntimeQuickNav";
+import EditorHeader from "@/components/studio/my-creations/EditorHeader";
+import EditorSaveBar from "@/components/studio/my-creations/EditorSaveBar";
+import CreationPicker from "@/components/studio/creation-picker/CreationPicker";
 
 import EditorView from "./editor/Editor.view";
 import { useEditorViewModel } from "./editor/useEditorViewModel";
@@ -33,7 +37,44 @@ const ORIGIN_BACK_HREFS = {
 };
 const FALLBACK_BACK_HREF = "/studio/v2/vault";
 
-export default function Editor({ creationId, harnessSlot = null, originOverride }) {
+export default function Editor({
+  creationId,
+  harnessSlot = null,
+  originOverride,
+  previewLoadingOverride,
+  previewLoadErrorOverride,
+}) {
+  // Discard, ED1: useCreationEditViewModel (the existing hydration
+  // authority, not touched by this brief) exposes no "revert form"
+  // capability. Remounting the whole live-data subtree re-runs its
+  // hydration effect from the same creationId/creation snapshot,
+  // which is the only safe way to discard unsaved edits without
+  // editing that read-only hook. discardKey lives on the OUTER
+  // component so the remount below never resets the counter driving
+  // it.
+  const [discardKey, setDiscardKey] = useState(0);
+
+  return (
+    <EditorInner
+      key={`${creationId || "none"}-${discardKey}`}
+      creationId={creationId}
+      harnessSlot={harnessSlot}
+      originOverride={originOverride}
+      previewLoadingOverride={previewLoadingOverride}
+      previewLoadErrorOverride={previewLoadErrorOverride}
+      onDiscard={() => setDiscardKey((current) => current + 1)}
+    />
+  );
+}
+
+function EditorInner({
+  creationId,
+  harnessSlot,
+  originOverride,
+  previewLoadingOverride,
+  previewLoadErrorOverride,
+  onDiscard,
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   // originOverride lets the auth-free preview mirror
@@ -45,16 +86,29 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
 
   const {
     viewProps,
+    headerProps,
+    saveBarProps,
     mediaPanelProps,
     mechanicsQuickNavProps,
     sectionContentProps,
-    stickyActionBarProps,
     featuredImagePickerProps,
     defaultPcStatus,
     defaultPcError,
     mobileNavOpen,
     onToggleMobileNav,
-  } = useEditorViewModel({ creationId });
+    loadError,
+  } = useEditorViewModel({ creationId, previewLoadingOverride, previewLoadErrorOverride });
+
+  const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
+
+  function openSwitcherTo(nextCreationId) {
+    setIsSwitcherOpen(false);
+    router.push(
+      `/studio/v2/editor/${encodeURIComponent(nextCreationId)}${
+        origin ? `?origin=${encodeURIComponent(origin)}` : ""
+      }`
+    );
+  }
 
   // Vault-edit-tree pass, 11 Aug 2026: two rows (CSV 839, 409-421 +
   // 430) close by composing already-built read-only surfaces rather
@@ -73,6 +127,7 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
   return (
     <EditorView
       {...viewProps}
+      loadError={loadError}
       defaultPcStatus={defaultPcStatus}
       defaultPcError={defaultPcError}
       mobileNavOpen={mobileNavOpen}
@@ -81,6 +136,13 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
       onBack={() => router.push(backHref)}
       isLoreDraftPreview={isLoreDraftPreview}
       imageLibraryHref={imageLibraryHref}
+      header={
+        <EditorHeader
+          {...headerProps}
+          onOpenSwitcher={() => setIsSwitcherOpen(true)}
+        />
+      }
+      saveBar={<EditorSaveBar {...saveBarProps} onDiscard={onDiscard} />}
       mediaPanel={<CreationEditMediaPanel {...mediaPanelProps} />}
       mechanicsQuickNav={
         <CreationEditMechanicsRuntimeQuickNav {...mechanicsQuickNavProps} />
@@ -92,10 +154,18 @@ export default function Editor({ creationId, harnessSlot = null, originOverride 
         behaviorDetail: null,
         advancedPrompting: null,
       }}
-      stickyActionBar={<CreationEditStickyActionBar {...stickyActionBarProps} />}
       featuredImagePicker={
         featuredImagePickerProps ? (
           <CreationFeaturedImagePickerModal {...featuredImagePickerProps} />
+        ) : null
+      }
+      creationPicker={
+        isSwitcherOpen ? (
+          <CreationPicker
+            title="Switch creation"
+            onSelect={(creation) => creation?.id && openSwitcherTo(creation.id)}
+            onClose={() => setIsSwitcherOpen(false)}
+          />
         ) : null
       }
       harnessSlot={harnessSlot}

@@ -140,6 +140,59 @@ export const EDITOR_LORE_FIXTURE = {
   },
 };
 
+export const EDITOR_STORY_FIXTURE = {
+  id: "mock-editor-story-default",
+  title: "Coldwater Vigil",
+  type: "ROOM_TEMPLATE",
+  visibility: "UNLISTED",
+  contentRating: "SFW",
+  status: "DRAFT",
+  reviewStatus: "DRAFT",
+  canonStatus: "NONE",
+  description: "A quiet vigil kept over the coldwater docks through the last night of the accord.",
+  featuredMedia: featuredMedia(CANON_ART),
+  chatDisplayMedia: null,
+  data: {
+    title: "Coldwater Vigil",
+    premise: "The delegation waits out the storm in the harbor watch-house.",
+  },
+};
+
+export const EDITOR_LOCATION_FIXTURE = {
+  id: "mock-editor-location-default",
+  title: "The Vermillion Coast Tavern",
+  type: "LOCATION",
+  visibility: "PRIVATE",
+  contentRating: "SFW",
+  status: "DRAFT",
+  reviewStatus: "DRAFT",
+  canonStatus: "NONE",
+  description: "A weatherbeaten tavern at the edge of the Vermillion Coast, favored by dockworkers and archivists alike.",
+  featuredMedia: featuredMedia(null),
+  chatDisplayMedia: null,
+  data: {
+    name: "The Vermillion Coast Tavern",
+    visualDescription: "Low ceilings, salt-warped timber, a hearth that never quite goes out.",
+  },
+};
+
+export const EDITOR_NPC_REGISTRY_FIXTURE = {
+  id: "mock-editor-npc-registry-default",
+  title: "Coastal NPC Roster",
+  type: "NPC_REGISTRY",
+  visibility: "PRIVATE",
+  contentRating: "SFW",
+  status: "DRAFT",
+  reviewStatus: "DRAFT",
+  canonStatus: "NONE",
+  description: "The recurring cast of dockworkers, archivists, and court officials along the Vermillion Coast.",
+  featuredMedia: featuredMedia(null),
+  chatDisplayMedia: null,
+  data: {
+    entries: [],
+  },
+};
+
 export const EDITOR_EMPTY_SECTIONS_FIXTURE = {
   id: "mock-editor-character-empty",
   title: "Untitled Creation",
@@ -249,6 +302,21 @@ export const EDITOR_FIXTURE_STATES = Object.freeze({
     id: "nonCharacterType",
     label: "Lore (non-Character)",
     creation: EDITOR_LORE_FIXTURE,
+  },
+  story: {
+    id: "story",
+    label: "Story",
+    creation: EDITOR_STORY_FIXTURE,
+  },
+  location: {
+    id: "location",
+    label: "Location",
+    creation: EDITOR_LOCATION_FIXTURE,
+  },
+  npcRegistry: {
+    id: "npcRegistry",
+    label: "NPC Registry",
+    creation: EDITOR_NPC_REGISTRY_FIXTURE,
   },
   emptySections: {
     id: "emptySections",

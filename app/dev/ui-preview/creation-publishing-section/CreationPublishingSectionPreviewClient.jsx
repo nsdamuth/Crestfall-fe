@@ -12,6 +12,7 @@ import {
   creationPublishingSectionOfficialCanonFixture,
   creationPublishingSectionSavingFixture,
   creationPublishingSectionTemplateFixture,
+  creationPublishingSectionUnlistableFixture,
 } from "@/components/studio/my-creations/edit/sections/creation-publishing-section/CreationPublishingSection.fixtures";
 
 const PREVIEW_STATES = {
@@ -23,6 +24,10 @@ const PREVIEW_STATES = {
   inReview: {
     label: "In Review",
     props: creationPublishingSectionInReviewFixture,
+  },
+  unlistable: {
+    label: "Unlistable (Public)",
+    props: creationPublishingSectionUnlistableFixture,
   },
   officialCanon: {
     label: "Official Canon",
@@ -134,6 +139,16 @@ export default function CreationPublishingSectionPreviewClient() {
               onSubmitCanonReview={
                 callbacksEnabled
                   ? () => setFeedback("Canon review callback invoked.")
+                  : null
+              }
+              onUnlistForEditing={
+                callbacksEnabled
+                  ? () => setFeedback("Unlist for editing callback invoked.")
+                  : null
+              }
+              onCancelReview={
+                callbacksEnabled
+                  ? () => setFeedback("Cancel review callback invoked.")
                   : null
               }
             />

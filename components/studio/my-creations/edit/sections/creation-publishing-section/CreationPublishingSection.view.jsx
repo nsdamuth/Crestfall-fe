@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ActionPanel,
@@ -10,6 +12,98 @@ function getTemplateActionClassName(emphasis) {
   }
 
   return "cf-btn cf-btn--secondary";
+}
+
+// Confirm step, ED1 (docs/plans/FABLE-GATE-2-STUDIO.md): a quiet
+// trigger arms into an inline Confirm/Cancel pair on first tap, no
+// window.confirm, matching the destructive-law shape for
+// consequential (not destructive) actions. Wraps the existing
+// ActionPanel unmodified: the panel's own button becomes the arm
+// trigger, and a small Confirm/Cancel row replaces it once armed.
+function ConfirmableActionPanel({ title, body, button, disabled, onConfirm }) {
+  const [armed, setArmed] = useState(false);
+
+  if (armed) {
+    return (
+      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-5">
+        <h3 className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
+          {title}
+        </h3>
+        <p className="mt-2 leading-7 text-[var(--ink-dim)]">
+          Are you sure? This confirms: {button}
+        </p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            className="cf-btn cf-btn--primary"
+            onClick={() => {
+              setArmed(false);
+              onConfirm?.();
+            }}
+          >
+            Confirm
+          </button>
+          <button
+            type="button"
+            className="cf-btn cf-btn--secondary"
+            onClick={() => setArmed(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <ActionPanel
+      title={title}
+      body={body}
+      button={button}
+      disabled={disabled}
+      onClick={() => setArmed(true)}
+    />
+  );
+}
+
+function ConfirmableGhostAction({ label, disabled = false, onConfirm }) {
+  const [armed, setArmed] = useState(false);
+
+  if (armed) {
+    return (
+      <span className="inline-flex flex-wrap items-center gap-3 text-sm">
+        <span className="text-[var(--ink-dim)]">Are you sure?</span>
+        <button
+          type="button"
+          className="cf-btn cf-btn--secondary"
+          onClick={() => {
+            setArmed(false);
+            onConfirm?.();
+          }}
+        >
+          Confirm
+        </button>
+        <button
+          type="button"
+          className="cf-btn cf-btn--secondary"
+          onClick={() => setArmed(false)}
+        >
+          Cancel
+        </button>
+      </span>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={() => setArmed(true)}
+      className="text-sm text-[var(--status-danger)] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-45"
+    >
+      {label}
+    </button>
+  );
 }
 
 export default function CreationPublishingSectionView({
@@ -40,6 +134,16 @@ export default function CreationPublishingSectionView({
   onSelectContentRating = null,
   onSubmitPublicReview = null,
   onSubmitCanonReview = null,
+  unlistTitle = "Unlist for Editing",
+  unlistDescription = "",
+  showUnlist = false,
+  unlistButtonLabel = "Unlist for editing",
+  unlistDisabled = false,
+  onUnlistForEditing = null,
+  showCancelReview = false,
+  cancelReviewButtonLabel = "Cancel review",
+  cancelReviewDisabled = false,
+  onCancelReview = null,
 }) {
   return (
     <div>
@@ -91,33 +195,53 @@ export default function CreationPublishingSectionView({
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
-        <ActionPanel
+        <ConfirmableActionPanel
           title={publicReviewTitle}
           body={publicReviewDescription}
           button={publicReviewButtonLabel}
           disabled={publicReviewDisabled}
-          onClick={() => onSubmitPublicReview?.()}
+          onConfirm={() => onSubmitPublicReview?.()}
         />
 
-        <ActionPanel
+        <ConfirmableActionPanel
           title={canonReviewTitle}
           body={canonReviewDescription}
           button={canonReviewButtonLabel}
           disabled={canonReviewDisabled}
-          onClick={() => onSubmitCanonReview?.()}
+          onConfirm={() => onSubmitCanonReview?.()}
         />
 
-        {reviewMessage ? (
-          <p
-            className={`md:col-span-2 text-sm ${
-              reviewMessageTone === "error"
-                ? "text-red-200"
-                : "text-emerald-200"
-            }`}
-          >
-            {reviewMessage}
-          </p>
+        {showUnlist ? (
+          <ConfirmableActionPanel
+            title={unlistTitle}
+            body={unlistDescription}
+            button={unlistButtonLabel}
+            disabled={unlistDisabled}
+            onConfirm={() => onUnlistForEditing?.()}
+          />
         ) : null}
+
+        <div className="md:col-span-2 flex flex-wrap items-center gap-4">
+          {reviewMessage ? (
+            <p
+              className={`text-sm ${
+                reviewMessageTone === "error"
+                  ? "text-red-200"
+                  : "text-emerald-200"
+              }`}
+            >
+              {reviewMessage}
+            </p>
+          ) : null}
+
+          {showCancelReview ? (
+            <ConfirmableGhostAction
+              label={cancelReviewButtonLabel}
+              disabled={cancelReviewDisabled}
+              onConfirm={() => onCancelReview?.()}
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );
