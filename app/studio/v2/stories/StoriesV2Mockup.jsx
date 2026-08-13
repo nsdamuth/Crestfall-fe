@@ -7,6 +7,7 @@
 // standing sweep-scope ruling (blueprint 3.1 row 4). No live data, no
 // API calls, no real navigation.
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -33,7 +34,14 @@ import FixtureActionNotice from "../FixtureActionNotice";
 // reveal control are gone. Every in-progress item renders; volume is
 // governed by the same load-more pagination pattern the startable
 // shelf below already uses (KitLoadMoreView, PAGE_SIZE batches).
-export const STORIES_PAGE_CONTRACT_VERSION = "1.1.0";
+//
+// v1.2.0, wave C5 (docs/plans/FABLE-GATE-PLAN.md manifest item 4): the
+// Continue group's onContinue and the startable shelf's onPlay now
+// route to the new chat surface at /studio/v2/stories/[id] (real
+// navigation, chat room [id] no longer excluded now that its own
+// dedicated sitting has landed). Every other control on this page
+// stays fixture-driven, presentation only, no live data.
+export const STORIES_PAGE_CONTRACT_VERSION = "1.2.0";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -233,6 +241,7 @@ function SectionLabel({ children }) {
 }
 
 export default function StoriesV2Mockup() {
+  const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayoutState] = useState("grid");
 
@@ -468,20 +477,14 @@ export default function StoriesV2Mockup() {
   }
 
   function handleContinue(item) {
-    setActionNotice({
-      label: "Continue",
-      message: `Resuming "${item.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`,
-    });
+    router.push(`/studio/v2/stories/${item.id}`);
   }
 
   // Shared with the card grid's new contextual third face action
   // (RULED 11 Aug 2026): the card's play icon routes to the same
   // destination as the opened popup's own Play primary action.
   function handlePlay(item) {
-    setActionNotice({
-      label: "Play",
-      message: `Playing "${item.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
-    });
+    router.push(`/studio/v2/stories/${item.id}`);
   }
 
   return (
