@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 // ED1C dropdown law: the local native-select PolicySelect is replaced
@@ -22,27 +24,27 @@ function PolicySelect({
   );
 }
 
+// K1 folding field pattern (SharedFields.jsx TextAreaField), ED1d
+// Defect 2: this local textarea bypassed it entirely (no fold, no
+// counter). `rows` drops since TextAreaField owns its own resting/
+// expanded heights.
 function GuidanceField({
   label = "",
   value = "",
   placeholder = "",
-  rows = 4,
   className = "",
   onChange = null,
 }) {
   return (
-    <label className={`block ${className}`.trim()}>
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <textarea
-        rows={rows}
+    <div className={className}>
+      <TextAreaField
+        label={label}
         value={value}
-        onChange={(event) => onChange?.(event.target.value)}
+        onChange={(nextValue) => onChange?.(nextValue)}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
-    </label>
+    </div>
   );
 }
 

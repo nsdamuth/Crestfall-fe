@@ -46,8 +46,14 @@ export const DEEP_LONGFORM_MAX_LENGTH = 2000;
 const LABEL_CLASS =
   "text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]";
 
+// Focus law, RULED 9 Aug 2026 (kit polish pass, docs/BUILD-BLUEPRINT.md
+// 2.16(e), app/design-system.css ".kit-focus:focus-visible"): the
+// single subtle border-brightening mark, never the app-wide gold ring
+// (--focus-ring). `kit-focus` after `cf-field` mirrors
+// components/kit/form-field/KitFormField.view.jsx's own
+// `inputBedClass` exactly, so it wins the cascade the same way there.
 const FIELD_BED_CLASS =
-  "cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
+  "kit-focus cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -273,7 +279,7 @@ export function TextAreaField({
         rows={1}
         maxLength={maxLength || undefined}
         disabled={disabled}
-        className={`mt-2 w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] focus-visible:outline-none focus-visible:border-[var(--gold-action)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+        className={`kit-focus cf-field mt-2 w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
           mono ? " font-mono" : ""
         }`}
         style={{

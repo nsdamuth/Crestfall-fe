@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Plus, Shirt, Trash2 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import { SHORT_LONGFORM_MAX_LENGTH } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function WardrobeFieldsSectionView({
   activeSection = "overview",
@@ -427,12 +429,59 @@ function TextInput(props) {
   );
 }
 
-function TextArea(props) {
+// K1 folding field pattern (SharedFields.jsx TextAreaField), ED1d
+// Defect 2: every long-form field here was a bare textarea with no
+// fold and no counter. Reimplemented inline (rather than delegating
+// to TextAreaField) because every call site already owns its label
+// via the `Field` wrapper above; a second label would double up.
+// `maxLength` defaults to the SHORT_LONGFORM ruling for call sites
+// that do not pass their own (e.g. the 2,000-char prompt fields do).
+function TextArea({
+  value = "",
+  onChange = () => {},
+  placeholder,
+  maxLength = SHORT_LONGFORM_MAX_LENGTH,
+  rows: _rows, // superseded by the fold's own resting/expanded heights
+  ...rest
+}) {
+  const [isFocused, setIsFocused] = useState(false);
+  const [hasExpanded, setHasExpanded] = useState(false);
+  const isExpanded = hasExpanded || Boolean(String(value).trim());
+  const atLimit = maxLength && value.length >= maxLength;
+  const pastThreshold = maxLength && value.length >= maxLength * 0.8;
+  const showCounter = maxLength && (isFocused || pastThreshold);
+
   return (
-    <textarea
-      {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
-    />
+    <div>
+      <textarea
+        {...rest}
+        value={value}
+        onChange={(event) => onChange(event)}
+        onFocus={(event) => {
+          setIsFocused(true);
+          setHasExpanded(true);
+          rest.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setIsFocused(false);
+          rest.onBlur?.(event);
+        }}
+        placeholder={placeholder}
+        maxLength={maxLength || undefined}
+        className="w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+        style={{ height: isExpanded ? undefined : "3rem", maxHeight: "320px" }}
+      />
+      {showCounter ? (
+        <span
+          className={`mt-1 block text-right text-[length:var(--text-label)] tabular-nums ${
+            atLimit ? "text-[var(--status-danger)]" : "text-[var(--ink-faint)]"
+          }`}
+        >
+          {value.length}/{maxLength}
+          {atLimit ? " limit" : ""}
+        </span>
+      ) : null}
+    </div>
   );
 }
 

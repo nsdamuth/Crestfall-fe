@@ -20,6 +20,7 @@ const FIXTURE_OPTIONS = [
   { id: MOCK_SAVED_CREATION_IDS.story, label: "Story" },
   { id: MOCK_SAVED_CREATION_IDS.location, label: "Location" },
   { id: MOCK_SAVED_CREATION_IDS.npcRegistry, label: "NPC Registry" },
+  { id: MOCK_SAVED_CREATION_IDS.characterTemplate, label: "Character Template" },
   { id: MOCK_SAVED_CREATION_IDS.emptySections, label: "Empty sections" },
   { id: MOCK_SAVED_CREATION_IDS.longestContent, label: "Longest content" },
   { id: "__empty-index__", label: "Empty index" },
@@ -31,6 +32,7 @@ const FIXTURE_OPTIONS = [
   { id: "owned-room_template", label: "Picker: Story" },
   { id: "owned-location", label: "Picker: Location" },
   { id: "owned-npc_registry", label: "Picker: NPC Registry" },
+  { id: "owned-character_template", label: "Picker: Character Template" },
 ];
 
 // Origin states, RULED 11 Aug 2026: the three doors the back control

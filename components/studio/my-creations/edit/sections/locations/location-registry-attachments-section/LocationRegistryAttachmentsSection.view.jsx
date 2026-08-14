@@ -1,6 +1,10 @@
 import { Link2, X } from "lucide-react";
 
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function LocationRegistryAttachmentsSectionView({
   sectionEyebrow = "Location Runtime Context",
@@ -117,12 +121,12 @@ function RegistryAttachmentCard({ link, onRemove, onNotesChange }) {
           </p>
         ) : null}
 
-        <textarea
-          rows={2}
+        <TextAreaField
+          label="Attachment Notes"
           value={link.notes || ""}
-          onChange={(event) => onNotesChange?.(event.target.value)}
+          onChange={(value) => onNotesChange?.(value)}
           placeholder="Optional attachment notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

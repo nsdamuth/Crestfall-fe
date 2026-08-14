@@ -24,9 +24,18 @@ export default function CreationFeaturedImagePickerModalView({
   // ED1C: composes the branded KitModalFrame (veil, panel anatomy,
   // circular close control, R4 full-screen under 700px) instead of a
   // hand-rolled fixed overlay. Content and callbacks are unchanged.
+  // ED1d Defect 5: sizing now matches the ruled standard KitModalFrame
+  // size (StorylineReferencePickerModal.view.jsx's own
+  // `max-w-4xl` + `max-h-[100dvh] ... min-[700px]:max-h-[92dvh]`
+  // pattern), replacing the one-off 64rem/90vw/88vh sizing this modal
+  // had instead grown on its own.
   return (
-    <KitModalFrame onClose={onClose} ariaLabel="Select featured image">
-      <div className="flex max-h-[88vh] w-full flex-col sm:w-[min(64rem,90vw)]">
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabel="Select featured image"
+      panelClassName="w-full max-w-4xl"
+    >
+      <div className="flex max-h-[100dvh] w-full flex-col min-[700px]:max-h-[92dvh]">
         <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] p-5 pr-16">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">

@@ -27,6 +27,7 @@ export const MOCK_SAVED_CREATION_IDS = Object.freeze({
   story: EDITOR_FIXTURE_STATES.story.creation.id,
   location: EDITOR_FIXTURE_STATES.location.creation.id,
   npcRegistry: EDITOR_FIXTURE_STATES.npcRegistry.creation.id,
+  characterTemplate: EDITOR_FIXTURE_STATES.characterTemplate.creation.id,
   emptySections: EDITOR_FIXTURE_STATES.emptySections.creation.id,
   longestContent: EDITOR_FIXTURE_STATES.longestContent.creation.id,
 });
@@ -40,6 +41,8 @@ const REGISTRY = Object.freeze({
   [MOCK_SAVED_CREATION_IDS.location]: EDITOR_FIXTURE_STATES.location.creation,
   [MOCK_SAVED_CREATION_IDS.npcRegistry]:
     EDITOR_FIXTURE_STATES.npcRegistry.creation,
+  [MOCK_SAVED_CREATION_IDS.characterTemplate]:
+    EDITOR_FIXTURE_STATES.characterTemplate.creation,
   [MOCK_SAVED_CREATION_IDS.emptySections]:
     EDITOR_FIXTURE_STATES.emptySections.creation,
   [MOCK_SAVED_CREATION_IDS.longestContent]:
@@ -64,6 +67,7 @@ const OWNED_BASE_FIXTURE_BY_TYPE = {
   LOCATION: EDITOR_FIXTURE_STATES.location.creation,
   NPC_REGISTRY: EDITOR_FIXTURE_STATES.npcRegistry.creation,
   LORE: EDITOR_FIXTURE_STATES.nonCharacterType.creation,
+  CHARACTER_TEMPLATE: EDITOR_FIXTURE_STATES.characterTemplate.creation,
 };
 
 function buildOwnedFixture(entry) {

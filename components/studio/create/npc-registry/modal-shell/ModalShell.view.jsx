@@ -1,33 +1,33 @@
-import { X } from "lucide-react";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
+// ED1d Defect 5: migrated off a hand-rolled fixed overlay onto
+// KitModalFrame at the ruled standard size (StorylineReferencePickerModal.view.jsx's
+// `max-w-4xl` + `max-h-[100dvh] ... min-[700px]:max-h-[92dvh]`
+// pattern), which also gains the ruled full-screen-under-700px
+// maximize this shell previously had no mobile behavior for at all.
+// Shared by every NPC Registry entry/relationship/knowledge/alias
+// modal; content below is unchanged.
 export default function ModalShellView({
   title = "NPC Registry",
   onClose = null,
   children = null,
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-              NPC Registry
-            </p>
-            <h2 className="mt-2 font-display text-4xl">{title}</h2>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-            aria-label="Close modal"
-          >
-            <X size={18} />
-          </button>
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabel={title}
+      panelClassName="w-full max-w-4xl"
+    >
+      <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
+        <div className="border-b border-white/10 p-5 pr-16">
+          <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+            NPC Registry
+          </p>
+          <h2 className="mt-2 font-display text-4xl">{title}</h2>
         </div>
 
-        <div className="max-h-[75vh] overflow-y-auto p-5">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }
