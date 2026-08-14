@@ -1,92 +1,241 @@
 "use client";
 
 // Portable Skin (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape),
-// rebuilt by ED1B (docs/plans/ED1B-EDITOR-PAGE-SPEC.md): ONE
-// scrolling document per creation on the canvas, no stacked floating
-// panels. Layout and presentation only: no Creation client, no
-// Next.js, no components/studio/my-creations/** import. Every
-// functional surface (header, save bar, every section body, media
-// panel, pickers) arrives pre-composed as a ReactNode slot from the
-// Binding Shell (../Editor.jsx). Mobile-first at 390: compact header
-// art, single column, the O11 bottom-sheet group/section jump list,
-// no horizontal overflow; the same column widens to max-w-3xl and
-// stays a single document at 1440.
-import { ChevronDown } from "lucide-react";
+// rebuilt by ED1C (docs/plans/ED1B-EDITOR-PAGE-SPEC.md): artwork
+// hero, one-section-at-a-time accordion of section boxes, sticky
+// right ToC rail (switcher + always-visible save state + per-section
+// marks) on desktop, sticky bottom control bar + bottom sheet (the
+// O11 seat) on mobile. Layout and presentation only: no Creation
+// client, no Next.js, no components/studio/my-creations/** import;
+// every section body arrives pre-composed in `sectionNodes`.
+import { Check, ChevronDown, ChevronsUpDown, List, Loader2, Save } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import { useState } from "react";
 
-// Anchors sit under two sticky layers (top bar + save bar); the
-// scroll margin keeps a jumped-to group heading visible below them.
-const ANCHOR_SCROLL_CLASS =
-  "scroll-mt-[calc(var(--topbar-h)+var(--space-14))]";
+// Anchors sit under the sticky top bar; the scroll margin keeps a
+// jumped-to box header visible below it.
+const ANCHOR_SCROLL_CLASS = "scroll-mt-[calc(var(--topbar-h)+var(--space-4))]";
 
-function sectionCountWord(count) {
-  return count === 1 ? "1 section" : `${count} sections`;
-}
-
-function scrollToAnchor(anchorId) {
+function scrollToSection(sectionId) {
   if (typeof document === "undefined") return;
-  // Two frames: the first lets a just-expanded group commit to the
-  // DOM before the section anchor inside it is looked up.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       document
-        .getElementById(anchorId)
+        .getElementById(`editor-section-box-${sectionId}`)
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }
 
-// No subhead row of its own: every rehosted section component
-// renders its own heading, and a second label above it read as
-// duplicate chrome on the ED1B render. The section label still
-// appears in the O11 sheet.
-function SectionBlock({
-  section,
-  node,
-  lead = null,
-  badge = null,
-  seat = null,
-}) {
+// Per-section state mark: a subtle gold dot for unsaved edits, a
+// success check once those edits are saved. The words ride along for
+// assistive tech per the status-color law.
+function StateMark({ mark }) {
+  if (mark === "dirty") {
+    return (
+      <span className="flex flex-none items-center" aria-hidden="false">
+        <span className="h-[6px] w-[6px] rounded-[var(--radius-full)] bg-[var(--gold-action)]" />
+        <span className="sr-only">unsaved changes</span>
+      </span>
+    );
+  }
+  if (mark === "saved") {
+    return (
+      <span className="flex flex-none items-center text-[var(--status-success)]">
+        <Check size={14} aria-hidden="true" />
+        <span className="sr-only">saved</span>
+      </span>
+    );
+  }
+  return null;
+}
+
+function SwitcherBlock({ isDirty, onOpenSwitcher, compact = false }) {
+  const [confirming, setConfirming] = useState(false);
+
+  function activate() {
+    if (isDirty) {
+      setConfirming(true);
+      return;
+    }
+    onOpenSwitcher?.();
+  }
+
   return (
-    <div id={`editor-section-${section?.id}`} className={ANCHOR_SCROLL_CLASS}>
-      {badge}
-      {lead}
-      <div className="min-w-0 overflow-x-auto">{node}</div>
-      {seat}
+    <div>
+      <button
+        type="button"
+        onClick={activate}
+        className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition hover:border-[var(--gold-action)]"
+      >
+        Switch creation
+        <ChevronsUpDown size={14} aria-hidden="true" />
+      </button>
+
+      {confirming ? (
+        <div
+          className={`mt-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)] ${
+            compact ? "" : ""
+          }`}
+        >
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
+            You have unsaved changes. Switch creations anyway?
+          </p>
+          <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              Keep editing
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setConfirming(false);
+                onOpenSwitcher?.();
+              }}
+              className="cf-btn cf-btn--primary cf-btn--sm"
+            >
+              Discard and switch
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function GroupBody({
-  group,
-  sectionNodes,
-  sectionLeads,
-  sectionBadges,
-  seats,
-  mediaPanel,
-  imageLibraryLink,
-}) {
+function saveStateWord({ isDirty, saveStatus, saveErrorCopy }) {
+  if (saveStatus === "saving") return "Saving...";
+  if (saveStatus === "error") {
+    return saveErrorCopy || "Your changes could not be saved. Please try again.";
+  }
+  if (isDirty) return "Unsaved changes";
+  return "All changes saved";
+}
+
+// The always-visible save block (rail and sheet). Clean state is a
+// quiet check + words; dirty shows Save and Discard; saving and
+// error carry their own words.
+function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
+  const isSaving = saveStatus === "saving";
+  const isError = saveStatus === "error";
+  const word = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
+
   return (
-    <div className="space-y-[var(--space-8)]">
-      {group?.hostsMedia ? (
-        // The media panel was designed for a narrow rail; bounded
-        // here so the featured art never balloons to column width.
-        <div className="max-w-sm space-y-[var(--space-4)]">
-          {mediaPanel}
-          {imageLibraryLink}
+    <div>
+      <p
+        role={isError ? "alert" : undefined}
+        aria-live="polite"
+        className={`flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+          isError
+            ? "text-[var(--status-danger)]"
+            : isDirty || isSaving
+              ? "text-[var(--ink)]"
+              : "text-[var(--ink-dim)]"
+        }`}
+      >
+        {isSaving ? (
+          <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+        ) : !isDirty && !isError ? (
+          <Check size={14} className="text-[var(--status-success)]" aria-hidden="true" />
+        ) : null}
+        {word}
+      </p>
+
+      {isDirty || isError ? (
+        <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={() => onSave?.()}
+            className="kit-focus cf-btn cf-btn--primary"
+          >
+            <Save size={14} aria-hidden="true" />
+            {isSaving ? "Saving..." : "Save"}
+          </button>
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={() => onDiscard?.()}
+            className="kit-focus cf-btn cf-btn--secondary"
+          >
+            Discard
+          </button>
         </div>
       ) : null}
-      {(group?.sections || []).map((section) => (
-        <SectionBlock
-          key={section.id}
-          section={section}
-          node={sectionNodes?.[section.id] || null}
-          lead={sectionLeads?.[section.id] || null}
-          badge={sectionBadges?.[section.id] || null}
-          seat={seats?.[section.id] || null}
-        />
+    </div>
+  );
+}
+
+function TocList({ groups, openSectionId, sectionMarks, onSelect }) {
+  return (
+    <nav aria-label="Editor sections" className="flex flex-col gap-[var(--space-3)]">
+      {(groups || []).map((group) => (
+        <div key={group.id}>
+          <p className="px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+            {group.label}
+          </p>
+          <div className="mt-[var(--space-1)] flex flex-col">
+            {(group.sections || []).map((section) => {
+              const active = openSectionId === section.id;
+              return (
+                <button
+                  key={section.id}
+                  type="button"
+                  aria-current={active ? "true" : undefined}
+                  onClick={() => onSelect?.(section.id)}
+                  className={`kit-focus flex min-h-[var(--control-md)] items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+                    active
+                      ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+                  }`}
+                >
+                  <span className="min-w-0 truncate">{section.label}</span>
+                  <StateMark mark={sectionMarks?.[section.id]} />
+                </button>
+              );
+            })}
+          </div>
+        </div>
       ))}
+    </nav>
+  );
+}
+
+function SectionBox({ section, mark, isOpen, onToggle, children }) {
+  return (
+    <div
+      id={`editor-section-box-${section.id}`}
+      className={`rounded-[var(--radius-lg)] border bg-[var(--surface-2)] transition-colors ${ANCHOR_SCROLL_CLASS} ${
+        isOpen ? "border-[var(--line)]" : "border-[var(--line-whisper)]"
+      }`}
+    >
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+        className="kit-focus flex min-h-[var(--control-lg)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-2)] text-left"
+      >
+        <span className="flex min-w-0 items-center gap-[var(--space-3)]">
+          <span className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
+            {section.label}
+          </span>
+          <StateMark mark={mark} />
+        </span>
+        <ChevronDown
+          size={16}
+          aria-hidden="true"
+          className={`flex-none text-[var(--ink-dim)] transition-transform motion-reduce:transition-none ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      {isOpen ? (
+        <div className="px-[var(--space-5)] pb-[var(--space-6)]">{children}</div>
+      ) : null}
     </div>
   );
 }
@@ -116,198 +265,187 @@ function LoadErrorState({ onRetry, onOpenPicker }) {
   );
 }
 
-function SectionsSheet({ groups, onJump, onClose }) {
-  return (
-    <KitModalFrame variant="sheet" onClose={onClose} ariaLabel="Editor sections">
-      <div className="max-h-[75vh] overflow-y-auto p-[var(--space-4)]">
-        {(groups || []).map((group) => (
-          <div key={group.id} className="mb-[var(--space-4)]">
-            <button
-              type="button"
-              onClick={() => onJump?.(group.id, null)}
-              className="kit-focus flex min-h-[var(--control-md)] w-full items-center rounded-[var(--radius-md)] px-[var(--space-3)] text-left font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)] transition hover:bg-[var(--state-hover-fill)]"
-            >
-              {group.label}
-            </button>
-            <div className="mt-[var(--space-1)] flex flex-col gap-[var(--space-1)]">
-              {(group.sections || []).map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => onJump?.(group.id, section.id)}
-                  className="kit-focus flex min-h-[var(--control-md)] items-center rounded-[var(--radius-md)] px-[var(--space-3)] pl-[var(--space-6)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
-                >
-                  {section.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </KitModalFrame>
-  );
-}
-
 export default function EditorView({
   groups = [],
-  openGroupIds = [],
-  onToggleGroup,
-  onJumpToGroup,
+  openSectionId = null,
+  onOpenSection,
+  sectionMarks = {},
+  isDirty = false,
+  saveStatus = "idle",
+  saveErrorCopy = "",
+  onSave = null,
+  onDiscard = null,
+  onOpenSwitcher = null,
   sectionNodes = {},
   sectionLeads = {},
   sectionBadges = {},
   sectionSeats = {},
-  mediaPanel = null,
-  imageLibraryHref = null,
   backLabel = "Back",
   onBack,
-  header = null,
-  saveBar = null,
+  hero = null,
   featuredImagePicker = null,
   creationPicker = null,
   loadError = null,
   onRetryLoad,
   onOpenPickerFromError,
-  harnessSlot = null,
   isLoading = false,
   mobileNavOpen = false,
   onToggleMobileNav,
+  harnessSlot = null,
 }) {
-  const essentialsGroup = groups[0] || null;
-  const advancedGroups = groups.slice(1);
-
-  const imageLibraryLink = imageLibraryHref ? (
-    <a
-      href={imageLibraryHref}
-      className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--gold-action)] hover:text-[var(--ink)]"
-    >
-      Manage image library
-    </a>
-  ) : null;
-
-  function handleJump(groupId, sectionId) {
-    onJumpToGroup?.(groupId);
-    scrollToAnchor(sectionId ? `editor-section-${sectionId}` : `editor-group-${groupId}`);
+  function handleSelect(sectionId) {
+    onOpenSection?.(sectionId);
+    scrollToSection(sectionId);
   }
 
+  function handleSheetSelect(sectionId) {
+    onToggleMobileNav?.();
+    onOpenSection?.(sectionId);
+    scrollToSection(sectionId);
+  }
+
+  const statusWord = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
+
   return (
-    <section className="mx-auto w-full max-w-3xl px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
+    <section className="mx-auto w-full max-w-5xl px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
       {harnessSlot ? <div className="mb-[var(--space-4)]">{harnessSlot}</div> : null}
 
       {isLoading ? (
         <div className="animate-pulse space-y-[var(--space-4)]">
-          <div className="h-40 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
-          <div className="h-24 rounded-[var(--radius-md)] bg-[var(--surface-2)]" />
-          <div className="h-24 rounded-[var(--radius-md)] bg-[var(--surface-2)]" />
-          <div className="h-24 rounded-[var(--radius-md)] bg-[var(--surface-2)]" />
+          <div className="h-64 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
         </div>
       ) : loadError ? (
         <LoadErrorState onRetry={onRetryLoad} onOpenPicker={onOpenPickerFromError} />
       ) : (
-        <>
-          {onBack ? (
-            <button
-              type="button"
-              onClick={onBack}
-              className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-            >
-              ← {backLabel}
-            </button>
-          ) : null}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)]">
+          <div className="min-w-0 pb-[var(--space-14)] lg:pb-0">
+            {onBack ? (
+              <button
+                type="button"
+                onClick={onBack}
+                className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+              >
+                ← {backLabel}
+              </button>
+            ) : null}
 
-          <div className="mt-[var(--space-3)]">{header}</div>
-          <div
-            className="mb-[var(--space-4)] mt-[var(--space-5)] border-b border-[var(--line)]"
-            aria-hidden="true"
-          />
+            <div className="mt-[var(--space-3)]">{hero}</div>
 
-          {/* Rendered directly in the tall column: sticky positioning
-              travels the whole page, not a bar-height wrapper. */}
-          {saveBar}
+            <div className="mt-[var(--space-6)] flex flex-col gap-[var(--space-6)]">
+              {groups.map((group) => (
+                <div key={group.id}>
+                  <p className="mb-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+                    {group.label}
+                  </p>
+                  <div className="flex flex-col gap-[var(--space-3)]">
+                    {(group.sections || []).map((section) => {
+                      const isOpen = openSectionId === section.id;
+                      return (
+                        <SectionBox
+                          key={section.id}
+                          section={section}
+                          mark={sectionMarks?.[section.id]}
+                          isOpen={isOpen}
+                          onToggle={() => onOpenSection?.(isOpen ? null : section.id)}
+                        >
+                          {sectionBadges?.[section.id]}
+                          {sectionLeads?.[section.id]}
+                          <div className="min-w-0">{sectionNodes?.[section.id]}</div>
+                          {sectionSeats?.[section.id]}
+                        </SectionBox>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {essentialsGroup ? (
-            <div
-              id={`editor-group-${essentialsGroup.id}`}
-              className={`mt-[var(--space-5)] ${ANCHOR_SCROLL_CLASS}`}
-            >
-              <h2 className="font-display text-[length:var(--text-subhead-m)] leading-[var(--lh-subhead-m)] text-[var(--ink)] sm:text-[length:var(--text-subhead)] sm:leading-[var(--lh-subhead)]">
-                {essentialsGroup.label}
-              </h2>
-              <div className="mt-[var(--space-4)]">
-                <GroupBody
-                  group={essentialsGroup}
-                  sectionNodes={sectionNodes}
-                  sectionLeads={sectionLeads}
-                  sectionBadges={sectionBadges}
-                  seats={sectionSeats}
-                  mediaPanel={mediaPanel}
-                  imageLibraryLink={imageLibraryLink}
+          <aside className="hidden lg:block">
+            <div className="sticky top-[calc(var(--topbar-h)+var(--space-4))] flex max-h-[calc(100vh-var(--topbar-h)-var(--space-8))] flex-col gap-[var(--space-4)] overflow-y-auto pb-[var(--space-4)]">
+              <SwitcherBlock isDirty={isDirty} onOpenSwitcher={onOpenSwitcher} />
+              <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
+                <SaveBlock
+                  isDirty={isDirty}
+                  saveStatus={saveStatus}
+                  saveErrorCopy={saveErrorCopy}
+                  onSave={onSave}
+                  onDiscard={onDiscard}
                 />
               </div>
+              <TocList
+                groups={groups}
+                openSectionId={openSectionId}
+                sectionMarks={sectionMarks}
+                onSelect={handleSelect}
+              />
             </div>
-          ) : null}
-
-          {advancedGroups.length ? (
-            <div className="mt-[var(--space-6)]">
-              {advancedGroups.map((group) => {
-                const isOpen = openGroupIds.includes(group.id);
-                return (
-                  <div
-                    key={group.id}
-                    id={`editor-group-${group.id}`}
-                    className={`border-t border-[var(--line)] ${ANCHOR_SCROLL_CLASS}`}
-                  >
-                    <button
-                      type="button"
-                      aria-expanded={isOpen}
-                      onClick={() => onToggleGroup?.(group.id)}
-                      className="kit-focus flex min-h-[var(--control-lg)] w-full items-center justify-between gap-[var(--space-3)] py-[var(--space-2)] text-left"
-                    >
-                      <span className="flex min-w-0 flex-wrap items-baseline gap-x-[var(--space-3)] gap-y-0">
-                        <span className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
-                          {group.label}
-                        </span>
-                        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-                          {sectionCountWord(
-                            (group.sections?.length || 0) + (group.hostsMedia ? 1 : 0)
-                          )}
-                        </span>
-                      </span>
-                      <ChevronDown
-                        size={16}
-                        aria-hidden="true"
-                        className={`flex-none text-[var(--ink-dim)] transition-transform motion-reduce:transition-none ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {isOpen ? (
-                      <div className="pb-[var(--space-8)] pt-[var(--space-4)]">
-                        <GroupBody
-                          group={group}
-                          sectionNodes={sectionNodes}
-                          sectionLeads={sectionLeads}
-                          sectionBadges={sectionBadges}
-                          seats={sectionSeats}
-                          mediaPanel={mediaPanel}
-                          imageLibraryLink={imageLibraryLink}
-                        />
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-          ) : null}
-        </>
+          </aside>
+        </div>
       )}
 
+      {!isLoading && !loadError ? (
+        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-4)] py-[var(--space-2)] lg:hidden">
+          <button
+            type="button"
+            onClick={() => onToggleMobileNav?.()}
+            className="kit-focus flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
+          >
+            <List size={14} aria-hidden="true" />
+            Sections
+          </button>
+          <p
+            aria-live="polite"
+            className={`min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+              saveStatus === "error"
+                ? "text-[var(--status-danger)]"
+                : isDirty
+                  ? "text-[var(--ink)]"
+                  : "text-[var(--ink-dim)]"
+            }`}
+          >
+            {statusWord}
+          </p>
+          {isDirty || saveStatus === "error" ? (
+            <button
+              type="button"
+              disabled={saveStatus === "saving"}
+              onClick={() => onSave?.()}
+              className="kit-focus cf-btn cf-btn--primary flex-none"
+            >
+              <Save size={14} aria-hidden="true" />
+              Save
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
       {mobileNavOpen ? (
-        <SectionsSheet
-          groups={groups}
-          onJump={(groupId, sectionId) => handleJump(groupId, sectionId)}
-          onClose={() => onToggleMobileNav?.()}
-        />
+        <KitModalFrame variant="sheet" onClose={() => onToggleMobileNav?.()} ariaLabel="Editor sections">
+          <div className="max-h-[75vh] overflow-y-auto p-[var(--space-4)]">
+            <SwitcherBlock isDirty={isDirty} onOpenSwitcher={onOpenSwitcher} compact />
+            <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
+              <SaveBlock
+                isDirty={isDirty}
+                saveStatus={saveStatus}
+                saveErrorCopy={saveErrorCopy}
+                onSave={onSave}
+                onDiscard={onDiscard}
+              />
+            </div>
+            <div className="mt-[var(--space-4)]">
+              <TocList
+                groups={groups}
+                openSectionId={openSectionId}
+                sectionMarks={sectionMarks}
+                onSelect={handleSheetSelect}
+              />
+            </div>
+          </div>
+        </KitModalFrame>
       ) : null}
 
       {featuredImagePicker}

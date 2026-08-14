@@ -3,6 +3,7 @@ import { MapPin, X } from "lucide-react";
 import {
   ReadOnlyField,
   SectionTitle,
+  SelectField as SharedSelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -153,6 +154,9 @@ export default function LocationIdentitySectionView({
   );
 }
 
+// ED1C dropdown law: the local native-select helper delegates to the
+// SharedFields SelectField (branded kit dropdown grammar). Same
+// props, same onChange(value) intent.
 function SelectField({
   label,
   value = "",
@@ -160,23 +164,12 @@ function SelectField({
   onChange = null,
 }) {
   return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-      >
-        {options.map((option) => (
-          <option key={option.value || "empty"} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <SharedSelectField
+      label={label}
+      value={value}
+      options={options}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 

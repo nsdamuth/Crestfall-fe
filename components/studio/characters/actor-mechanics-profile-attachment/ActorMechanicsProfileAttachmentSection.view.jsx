@@ -1,5 +1,7 @@
 import { Activity, Link2, ShieldCheck, X } from "lucide-react";
 
+import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+
 export default function ActorMechanicsProfileAttachmentSectionView({
   eyebrow = "Actor Mechanics",
   title = "Actor Mechanics Profile",
@@ -20,15 +22,10 @@ export default function ActorMechanicsProfileAttachmentSectionView({
   return (
     <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-            {eyebrow}
-          </p>
-          <h3 className="mt-2 font-display text-3xl">{title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
-            {body}
-          </p>
-        </div>
+        {/* ED1C: same suppression as SharedFields SectionTitle; the
+            v2 editor shell's section box carries the one header. The
+            attach action stays either way. */}
+        <SectionTitle eyebrow={eyebrow} title={title} body={body} />
 
         <button
           type="button"

@@ -1,41 +1,39 @@
 "use client";
 
 // Binding Shell (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape): owns
-// Crestfall-specific integration. Next.js navigation (useRouter) is
-// one piece; the other is the read-only creation-edit-shell lineage
-// (components/studio/my-creations/**), which this file imports and
-// composes into ReactNode slots. ED1B
+// Crestfall-specific integration. ED1C
 // (docs/plans/ED1B-EDITOR-PAGE-SPEC.md) authorized changes: the page
-// composition only; `useCreationEditViewModel`,
+// composition, the artwork hero, the accordion + rail model, and the
+// section chrome suppression context; `useCreationEditViewModel`,
 // `useCreationEditShellViewModel`, `CreationEditSectionContent`, and
-// every section component are consumed unmodified. Multi-section
-// rendering mounts `CreationEditSectionContent` once per section id
-// with `activeSection` overridden per instance.
+// the section components' data flow are consumed unmodified.
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserRound } from "lucide-react";
 
-import CreationEditMediaPanel from "@/components/studio/my-creations/CreationEditMediaPanel";
 import CreationFeaturedImagePickerModal from "@/components/studio/my-creations/image-library/CreationFeaturedImagePickerModal";
 import CreationEditSectionContent from "@/components/studio/my-creations/creation-edit-shell/CreationEditSectionContent";
 import CreationEditMechanicsRuntimeQuickNav from "@/components/studio/my-creations/creation-edit-shell/CreationEditMechanicsRuntimeQuickNav";
 import EditorHeader from "@/components/studio/my-creations/EditorHeader";
-import EditorSaveBar from "@/components/studio/my-creations/EditorSaveBar";
 import CreationPicker from "@/components/studio/creation-picker/CreationPicker";
+import { EditorSectionChromeContext } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 import EditorView from "./editor/Editor.view";
 import { useEditorViewModel } from "./editor/useEditorViewModel";
 
 // Origin tracking, RULED 11 Aug 2026: the back control returns to the
-// surface that opened the editor. A `?origin=` query param is the
-// mechanism, read here at the Binding Shell so the portable View
-// stays presentation only. Falls back to the Vault when no origin is
-// present (direct link, cold load, refresh).
+// surface that opened the editor via `?origin=`, Vault fallback.
 const ORIGIN_BACK_HREFS = {
   studio: "/studio/v2/studio",
   vault: "/studio/v2/vault",
 };
 const FALLBACK_BACK_HREF = "/studio/v2/vault";
+
+// ED1C section chrome suppression: every mounted section body sits
+// under this provider so the shared SectionTitle (and the converted
+// hand-rolled header stacks) render nothing; the section box carries
+// the one header.
+const SECTION_CHROME = { suppressSectionTitle: true };
 
 export default function Editor({
   creationId,
@@ -45,15 +43,11 @@ export default function Editor({
   previewLoadErrorOverride,
   previewDirtyOverride,
 }) {
-  // Discard, ED1 (carried into ED1B): useCreationEditViewModel (the
-  // existing hydration authority, not touched by this brief) exposes
-  // no "revert form" capability. Remounting the whole live-data
-  // subtree re-runs its hydration effect from the same
-  // creationId/creation snapshot, which is the only safe way to
-  // discard unsaved edits without editing that read-only hook. The
-  // same remount is the "Try again" action on the load-error state.
-  // discardKey lives on the OUTER component so the remount below
-  // never resets the counter driving it.
+  // Discard (carried from ED1): the read-only hydration hook exposes
+  // no revert capability; remounting the subtree re-runs hydration
+  // from the creationId/creation snapshot (which, after a fixture
+  // save, is the mock overlay's saved form). Also the load-error
+  // "Try again" action.
   const [discardKey, setDiscardKey] = useState(0);
 
   return (
@@ -77,7 +71,7 @@ function DefaultPcActions({ settingDefaultPc, onSetDefaultPc, status, error }) {
         type="button"
         onClick={() => onSetDefaultPc?.()}
         disabled={settingDefaultPc}
-        className="cf-btn cf-btn--secondary"
+        className="cf-btn cf-btn--secondary cf-btn--sm"
       >
         <UserRound size={14} aria-hidden="true" />
         {settingDefaultPc ? "Setting..." : "Set default PC"}
@@ -107,20 +101,14 @@ function EditorInner({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // originOverride lets the auth-free preview mirror
-  // (/dev/ui-preview/editor-v2-page) simulate every origin state
-  // without real navigation; product always resolves origin from the
-  // URL.
   const origin = originOverride !== undefined ? originOverride : searchParams.get("origin");
   const backHref = ORIGIN_BACK_HREFS[origin] || FALLBACK_BACK_HREF;
 
   const {
     viewProps,
-    headerProps,
-    saveBarProps,
-    mediaPanelProps,
+    heroProps,
+    sectionContentPropsFor,
     mechanicsQuickNavProps,
-    sectionContentProps,
     featuredImagePickerProps,
     defaultPcStatus,
     defaultPcError,
@@ -154,19 +142,17 @@ function EditorInner({
       }`
     : null;
 
-  // One mounted section body per section id in the page grammar.
-  // CreationEditSectionContent is a pure dispatch on
-  // (creationType, activeSection); overriding activeSection per
-  // instance renders every section on the one scrolling surface.
+  // One mounted section body per section id, each under the chrome
+  // suppression provider with per-section-wrapped update callbacks
+  // (the per-section dirty marks).
   const sectionNodes = {};
   const sectionBadges = {};
   for (const group of viewProps.groups || []) {
     for (const section of group.sections || []) {
       sectionNodes[section.id] = (
-        <CreationEditSectionContent
-          {...sectionContentProps}
-          activeSection={section.id}
-        />
+        <EditorSectionChromeContext.Provider value={SECTION_CHROME}>
+          <CreationEditSectionContent {...sectionContentPropsFor(section.id)} />
+        </EditorSectionChromeContext.Provider>
       );
     }
   }
@@ -195,13 +181,14 @@ function EditorInner({
       loadError={loadError}
       onRetryLoad={onDiscard}
       onOpenPickerFromError={() => setIsSwitcherOpen(true)}
+      onOpenSwitcher={() => setIsSwitcherOpen(true)}
+      onDiscard={onDiscard}
       backLabel="Back"
       onBack={() => router.push(backHref)}
-      imageLibraryHref={imageLibraryHref}
-      header={
+      hero={
         <EditorHeader
-          {...headerProps}
-          onOpenSwitcher={() => setIsSwitcherOpen(true)}
+          {...heroProps}
+          imageLibraryHref={imageLibraryHref}
           actions={
             canSetDefaultPc ? (
               <DefaultPcActions
@@ -214,15 +201,12 @@ function EditorInner({
           }
         />
       }
-      saveBar={<EditorSaveBar {...saveBarProps} onDiscard={onDiscard} />}
-      mediaPanel={<CreationEditMediaPanel {...mediaPanelProps} />}
       sectionNodes={sectionNodes}
       sectionLeads={sectionLeads}
       sectionBadges={sectionBadges}
       sectionSeats={{
-        // Named absorption seats, re-keyed by section id (was
-        // seats.bodyDetail / behaviorDetail / advancedPrompting).
-        // Null this pass; a future brief fills them.
+        // Named absorption seats, keyed by section id. Null this
+        // pass; a future brief fills them.
         body: null,
         behavior: null,
         advanced: null,

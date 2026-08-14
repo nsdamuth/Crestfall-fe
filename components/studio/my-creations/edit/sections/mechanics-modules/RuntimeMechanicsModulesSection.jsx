@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { Activity, Link2, Plus, X } from "lucide-react";
 
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 import MechanicsModulePickerModal from "@/components/studio/my-creations/edit/sections/mechanics-modules/MechanicsModulePickerModal";
 
 const TRACKERS_MODULE_ID = "core.trackers.v1";
@@ -318,42 +321,41 @@ export default function RuntimeMechanicsModulesSection({
                         />
                       </label>
 
-                      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                        <span>Inheritance Mode</span>
-                        <select
-                          value={binding.inheritanceMode || defaultInheritanceMode}
-                          onChange={(event) =>
-                            patchMechanicsModuleBinding(moduleCreationId, {
-                              inheritanceMode: event.target.value,
-                            })
-                          }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                        >
-                          <option value="LOCAL_ONLY">Local only</option>
-                          <option value="INHERITABLE">Inheritable</option>
-                          <option value="OVERRIDE">Override</option>
-                        </select>
-                      </label>
+                      {/* ED1C dropdown law: branded kit dropdown grammar. */}
+                      <SelectField
+                        label="Inheritance Mode"
+                        value={binding.inheritanceMode || defaultInheritanceMode}
+                        onChange={(value) =>
+                          patchMechanicsModuleBinding(moduleCreationId, {
+                            inheritanceMode: value,
+                          })
+                        }
+                        options={[
+                          { value: "LOCAL_ONLY", label: "Local only" },
+                          { value: "INHERITABLE", label: "Inheritable" },
+                          { value: "OVERRIDE", label: "Override" },
+                        ]}
+                      />
 
-                      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                        <span>Mechanics Scope</span>
-                        <select
-                          value={scopeMode}
-                          onChange={(event) =>
-                            patchMechanicsModuleBinding(moduleCreationId, {
-                              mechanicsScopeMode: event.target.value,
-                            })
-                          }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                        >
-                          <option value="BINDING_OWNER">
-                            BINDING_OWNER · scoped to this asset
-                          </option>
-                          <option value="STORY_ROOM">
-                            STORY_ROOM · root room mechanics
-                          </option>
-                        </select>
-                      </label>
+                      <SelectField
+                        label="Mechanics Scope"
+                        value={scopeMode}
+                        onChange={(value) =>
+                          patchMechanicsModuleBinding(moduleCreationId, {
+                            mechanicsScopeMode: value,
+                          })
+                        }
+                        options={[
+                          {
+                            value: "BINDING_OWNER",
+                            label: "BINDING_OWNER · scoped to this asset",
+                          },
+                          {
+                            value: "STORY_ROOM",
+                            label: "STORY_ROOM · root room mechanics",
+                          },
+                        ]}
+                      />
                     </div>
 
                     <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">

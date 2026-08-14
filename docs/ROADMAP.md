@@ -4,6 +4,14 @@ This file updates in the same commit as the work it records.
 
 ## Now
 
+- [ ] Advanced editor page rebuild (ED1b, then ED1c to Brian's 13 Aug
+  direction) on `design/ed1b-editor-page`: built and verified in the
+  preview mirror at 390 and 1440; Brian's render sitting still owed
+  before this line can close. (This line did not exist before the
+  ED1c pass; the roadmap had no editor entry to keep unchecked, so
+  the entry is recorded here unchecked, per this file's own header
+  rule.)
+
 14 held-out packages await a Brian ruling before they can convert. Plain
 language in `docs/NICK-SWEEP-NOTES.md`, full detail in
 `docs/BATCH-TWO-ORDER.md`'s flagged list.

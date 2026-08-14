@@ -6,10 +6,9 @@ import EditorHeaderView from "@/components/studio/my-creations/editor-header/Edi
 import {
   editorHeaderCanonFixture,
   editorHeaderDefaultFixture,
-  editorHeaderDirtySwitchConfirmFixture,
   editorHeaderLongestFixture,
+  editorHeaderNoActionsFixture,
   editorHeaderNoArtFixture,
-  editorHeaderNoSectionsTriggerFixture,
 } from "@/components/studio/my-creations/editor-header/EditorHeader.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -17,14 +16,7 @@ const STATES = {
   default: { label: "Default", props: editorHeaderDefaultFixture },
   noArt: { label: "No art", props: editorHeaderNoArtFixture },
   canon: { label: "Canon", props: editorHeaderCanonFixture },
-  dirtySwitch: {
-    label: "Dirty switch confirm (click switcher)",
-    props: editorHeaderDirtySwitchConfirmFixture,
-  },
-  noSections: {
-    label: "No Sections trigger",
-    props: editorHeaderNoSectionsTriggerFixture,
-  },
+  noActions: { label: "No actions", props: editorHeaderNoActionsFixture },
   longest: { label: "Longest", props: editorHeaderLongestFixture },
 };
 
@@ -35,8 +27,8 @@ export default function EditorHeaderPreviewClient() {
 
   return (
     <KitPreviewShell
-      title="Editor Header"
-      description="Featured artwork (compact at phone widths), type eyebrow, title, visibility chip, the switcher beside the art, and the mobile Sections trigger. The dirty-switch state arms a Keep editing / Discard and switch confirm on the switcher's own click, not on load."
+      title="Editor Artwork Hero"
+      description="ED1C (contract 3.0.0): the artwork hero. Primary art large, the other featured slots beside it, type eyebrow, title, visibility chip, and the Replace / Generate more / Image library actions. The switcher and save state live in the page's ToC rail, not here."
       states={Object.entries(STATES).map(([key, state]) => ({ key, label: state.label }))}
       activeKey={activeKey}
       onSelectState={setActiveKey}
@@ -44,7 +36,12 @@ export default function EditorHeaderPreviewClient() {
     >
       <EditorHeaderView
         {...active.props}
-        onOpenSwitcher={() => setNote("Switcher opened (would mount CreationPicker).")}
+        onSelectSlot={(index) => setNote(`Slot ${index + 1} selected as primary.`)}
+        onReplaceActiveSlot={
+          active.props.onReplaceActiveSlot
+            ? () => setNote("Replace image fired (would open the featured image picker).")
+            : null
+        }
       />
     </KitPreviewShell>
   );

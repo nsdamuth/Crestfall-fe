@@ -1,6 +1,9 @@
 import { Clock, CloudSun, Settings } from "lucide-react";
 
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function SlotFallback({ children }) {
   return (
@@ -170,23 +173,22 @@ export default function LocationRuntimeModulesSectionView({
             </label>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{inheritanceModeLabel}</span>
-                <select
-                  value={inheritanceMode}
-                  onChange={(event) =>
-                    onChangeInheritanceMode(event.target.value)
-                  }
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                >
-                  <option value="INHERITABLE">
-                    Inheritable / Parent authority can win
-                  </option>
-                  <option value="OVERRIDE">
-                    Local override / This location wins
-                  </option>
-                </select>
-              </label>
+              {/* ED1C dropdown law: branded kit dropdown grammar. */}
+              <SelectField
+                label={inheritanceModeLabel}
+                value={inheritanceMode}
+                onChange={(value) => onChangeInheritanceMode(value)}
+                options={[
+                  {
+                    value: "INHERITABLE",
+                    label: "Inheritable / Parent authority can win",
+                  },
+                  {
+                    value: "OVERRIDE",
+                    label: "Local override / This location wins",
+                  },
+                ]}
+              />
 
               <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                 <span>{turnAdvanceLabel}</span>

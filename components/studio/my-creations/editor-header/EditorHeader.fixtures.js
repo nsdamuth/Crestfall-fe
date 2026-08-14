@@ -4,30 +4,36 @@ const CANON_ART = encodeURI(
   "/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"
 );
 
+function slots(primaryUrl = null) {
+  return [
+    { id: "slot-1", index: 0, label: "Primary", imageSrc: primaryUrl, isActive: true },
+    { id: "slot-2", index: 1, label: "Alt 1", imageSrc: null, isActive: false },
+    { id: "slot-3", index: 2, label: "Alt 2", imageSrc: null, isActive: false },
+    { id: "slot-4", index: 3, label: "Alt 3", imageSrc: null, isActive: false },
+  ];
+}
+
 export const editorHeaderDefaultFixture = {
-  imageSrc: CANON_ART,
+  primaryImageSrc: CANON_ART,
+  slots: slots(CANON_ART),
+  onSelectSlot: noop,
+  onReplaceActiveSlot: noop,
+  generateHref: "/studio/v2/images",
+  imageLibraryHref: "#library",
   title: "Vermillion Ashgrove",
   typeLabel: "Character",
   typeIcon: null,
   visibilityLabel: "Private",
   visibilityVariant: "status",
-  hasUnsavedChanges: false,
-  switcherLabel: "Switch creation",
-  onOpenSwitcher: noop,
-  onOpenSections: noop,
   actions: null,
 };
 
 export const editorHeaderNoArtFixture = {
   ...editorHeaderDefaultFixture,
-  imageSrc: null,
+  primaryImageSrc: null,
+  slots: slots(null),
   title: "Coldwater Vigil",
   typeLabel: "Story",
-};
-
-export const editorHeaderNoSectionsTriggerFixture = {
-  ...editorHeaderDefaultFixture,
-  onOpenSections: null,
 };
 
 export const editorHeaderCanonFixture = {
@@ -36,10 +42,11 @@ export const editorHeaderCanonFixture = {
   visibilityVariant: "canon",
 };
 
-export const editorHeaderDirtySwitchConfirmFixture = {
+export const editorHeaderNoActionsFixture = {
   ...editorHeaderDefaultFixture,
-  title: "Vermillion Ashgrove-Highcourt, Third Archivist of the Wandering Table",
-  hasUnsavedChanges: true,
+  onReplaceActiveSlot: null,
+  generateHref: null,
+  imageLibraryHref: null,
 };
 
 export const editorHeaderLongestFixture = {

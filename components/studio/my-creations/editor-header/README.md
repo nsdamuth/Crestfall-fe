@@ -1,21 +1,27 @@
-# Editor Header LOOM package
+# Editor Artwork Hero LOOM package (editor-header)
 
-**Contract:** `EditorHeader.contract.js`, 2.0.0
+**Contract:** `EditorHeader.contract.js`, 3.0.0
 
 ## Purpose
 
-The advanced editor's identity header
-(`docs/plans/ED1B-EDITOR-PAGE-SPEC.md` section 3.2, wave ED1B):
-featured artwork (3:4 frame, 132px from sm, compact 72px at phone
-widths), type eyebrow (from `lib/shared/presentation/terminology.js`,
-the type identity surface), display-name title, a visibility chip
-(composes `KitBadge`), an `actions` meta-row seat, the creation
-switcher beside the artwork (`components/studio/creation-picker/`,
-wave SW1), and the mobile Sections trigger for the O11 sheet.
-Mounted by `app/studio/v2/editor/editor/Editor.view.jsx` at the top
-of the single-surface editor page. The header paints no card of its
-own: it sits on the canvas and the page composition owns the
-closing rule.
+The advanced editor's artwork hero
+(`docs/plans/ED1B-EDITOR-PAGE-SPEC.md` section 3.2, ED1C): the
+primary featured art large (the ACTIVE slot; 232px wide from sm,
+148px at phone widths), the other featured slots as a thumb rail
+beside it (tap to make a slot the displayed primary), the type
+eyebrow (from `lib/shared/presentation/terminology.js`, the type
+identity surface), title, visibility chip (composes `KitBadge`), an
+`actions` meta-row seat, and the artwork actions: Replace image
+(opens the featured image picker, which composes KitModalFrame),
+Generate more (routes to the Images generation surface), and Image
+library. Mounted by `app/studio/v2/editor/editor/Editor.view.jsx`
+as the `hero` slot at the top of the page, so switching creations
+immediately shows what is being worked on.
+
+The creation switcher, the unsaved-changes confirm, and the save
+state left this package at 3.0.0: they live in the page's ToC rail
+and mobile bottom bar (Editor contract 4.0.0). This package knows
+nothing about save state or navigation.
 
 ## Boundary
 
@@ -29,19 +35,11 @@ editor-header/
   EditorHeader.fixtures.js
 ```
 
-Fixture-fed, owns no data, matching kit-batch practice for a
-presentation-only piece (`components/kit/KitPickerModal.jsx` is the
-same shape). The advanced editor's own `Editor.jsx` composes it with
-values it already has (creation type, title, visibility, art) plus
-the `CreationPicker` it opens as a ReactNode when the switcher fires.
-
-## Unsaved-changes confirm on switch
-
-When `hasUnsavedChanges` is true, activating the switcher trigger
-arms a local "You have unsaved changes. Switch creations anyway?"
-step (Keep editing / Discard and switch) before `onOpenSwitcher`
-fires; when false, the trigger fires `onOpenSwitcher` immediately.
-UI-only state, no extra props.
+Fixture-fed, owns no data. The editor's `Editor.jsx` composes it
+with slot data derived from the creation's `featuredMedia`, the
+active-slot state the read-only shell ViewModel already tracks, and
+hrefs it owns (origin-preserving image-library route, the Images
+page).
 
 ## Preview
 

@@ -101,7 +101,26 @@ const OWNED_REGISTRY = Object.freeze(
   )
 );
 
+// ED1C fixture save (docs/plans/ED1B-EDITOR-PAGE-SPEC.md section
+// 3.8): Save on a fixture id persists the edited form HERE, never
+// through the live client. The overlay wins over both static
+// registries, so Discard, remount, and switch-away-and-back all
+// rehydrate the saved edits for the rest of the session. Module
+// scope is deliberate: this is the mock's own storage, deleted whole
+// with the file when CR-031/CR-050 land the real reads and writes.
+const SAVED_OVERLAY = new Map();
+
+export function saveMockCreation(creationId, form) {
+  if (!creationId || !form) return;
+  SAVED_OVERLAY.set(creationId, { ...form, id: creationId });
+}
+
 export function resolveMockSavedCreation(creationId) {
   if (!creationId) return null;
-  return REGISTRY[creationId] || OWNED_REGISTRY[creationId] || null;
+  return (
+    SAVED_OVERLAY.get(creationId) ||
+    REGISTRY[creationId] ||
+    OWNED_REGISTRY[creationId] ||
+    null
+  );
 }

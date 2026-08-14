@@ -1,76 +1,60 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "3.0.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "4.0.0";
 
-// Version note, 2.0.0 -> 3.0.0 (BREAKING, ED1B,
-// docs/plans/ED1B-EDITOR-PAGE-SPEC.md): the tab model is retired
-// after Brian's NO on the ED1 render. The page becomes ONE scrolling
-// document per creation: identity header (featured artwork +
-// switcher), contextual save bar, the quick-create fields first and
-// open (the essentials group), then the advanced fields in named
-// collapsible groups per type. Rulings N1 (substance: type-aware
-// schema-as-data grouping, at most five groups, type identity in the
-// header), N2, N5, N6, N7 and O11 stand; the 13 Aug binding
-// experience description governs presentation.
+// Version note, 3.0.0 -> 4.0.0 (BREAKING, ED1C,
+// docs/plans/ED1B-EDITOR-PAGE-SPEC.md, Brian's 13 Aug direction):
+// the single-surface document becomes the hero + accordion + rail
+// architecture.
 //
 // Breaking:
-// - Tab-model props REMOVED: `activeSection`, `activeSections`,
-//   `activeSectionGroups`, `activeGroupId`, `onSelectGroup`,
-//   `onSelectSection`, `sectionContent` (single active node),
-//   `showMechanicsQuickNav`/`mechanicsQuickNav` (now a section
-//   lead), `seats` (renamed and re-keyed, below),
-//   `overviewDescription`/`overviewContentRating` (the overview
-//   summary card is redundant on a surface where the overview
-//   section itself is visible), `creationId`/`title`/`isTemplate`
-//   (identity renders only through the `header` slot; internal ids
-//   never render), `isLoreDraftPreview` (now a section badge),
-//   `canSetDefaultPc`/`settingDefaultPc`/`onSetDefaultPc`/
-//   `defaultPcStatus`/`defaultPcError` (the Set Default PC control
-//   moves into the header's `actions` seat, composed by the Binding
-//   Shell).
-// - New grouped-document props: `groups` (ED1B grammar joined with
-//   section metadata; first entry renders open as the essentials
-//   region, the rest as collapsible disclosure rows),
-//   `openGroupIds`, `onToggleGroup`, `onJumpToGroup` (the O11 sheet
-//   and anchor scrolling), `sectionNodes` (sectionId -> composed
-//   section body), `sectionLeads` (sectionId -> node rendered above
-//   the section body, e.g. the Mechanics quick nav above "fields"),
-//   `sectionBadges` (sectionId -> badge node, e.g. the Lore
-//   owner-only draft preview badge above "preview"), `sectionSeats`
-//   (sectionId -> absorption seat node, the old `seats` re-keyed by
-//   section id), `mediaPanel` + `imageLibraryHref` (rendered inside
-//   the group whose grammar entry carries `hostsMedia`; media-less
-//   types per ruling N5 simply have no such group).
-// - `loadError` becomes a friendly full-surface state: fixed plain
-//   copy plus `onRetryLoad` and `onOpenPickerFromError` callbacks.
-//   Raw client error strings never reach this View.
+// - `header`/`saveBar` slots REMOVED. The artwork hero arrives as
+//   the `hero` slot (editor-header 3.0.0); the save controls are no
+//   longer a slot at all: the View renders them itself in the
+//   desktop ToC rail and the mobile bottom bar from the new
+//   save-state props (`isDirty`, `saveStatus`, `saveErrorCopy`,
+//   `onSave`, `onDiscard`). editor-save-bar is RETIRED for this
+//   route (recorded in its README).
+// - Accordion model replaces open-groups: `openSectionId` (single,
+//   null legal) + `onOpenSection` replace `openGroupIds`/
+//   `onToggleGroup`/`onJumpToGroup`. Exactly one section box is
+//   open at a time; each section is one distinct box opened from
+//   its own header or the ToC.
+// - New `sectionMarks` ({sectionId: "dirty"|"saved"}) drive the
+//   per-section state marks in the ToC and on box headers.
+// - New switcher props on the View (`onOpenSwitcher`): the creation
+//   switcher moved into the rail/sheet, with the unsaved-changes
+//   confirm armed inline there (presentation-local state).
+// - `groups` no longer carries `hostsMedia`: artwork moved into the
+//   hero; the media group is gone from the page grammar (the ED1C
+//   resolver strips it).
+// - `mobileNavOpen`/`onToggleMobileNav` now open the ED1C bottom
+//   sheet (switcher + save block + ToC), the O11 seat.
 //
-// Carried forward: `header` and `saveBar` slots, `backLabel`/
-// `onBack` (origin behavior unchanged), `featuredImagePicker`,
-// `creationPicker`, `isLoading`, `mobileNavOpen`/
-// `onToggleMobileNav` (O11: now a group/section JUMP list, not a
-// section switcher), `harnessSlot`.
+// Carried forward: `backLabel`/`onBack`, `sectionNodes`/
+// `sectionLeads`/`sectionBadges`/`sectionSeats`, `loadError` +
+// `onRetryLoad`/`onOpenPickerFromError`, `isLoading`,
+// `featuredImagePicker`, `creationPicker`, `harnessSlot`,
+// `imageLibraryHref` (consumed by the hero via the Binding Shell,
+// no longer rendered by this View).
 
 /**
  * Stable portable UI boundary for the advanced editor page View
- * (docs/plans/ED1B-EDITOR-PAGE-SPEC.md). Build addresses:
- * `/studio/v2/editor/[id]` (deep-linkable) and `/studio/v2/editor`
- * (index, the "Select a creation to edit" state). Mobile-first at
- * 390: compact header art, single column, the O11 bottom-sheet jump
- * list, no horizontal overflow; the same single document at 1440 in
- * a centered max-w-3xl column.
+ * (docs/plans/ED1B-EDITOR-PAGE-SPEC.md, ED1C revision). Build
+ * addresses: `/studio/v2/editor/[id]` (deep-linkable) and
+ * `/studio/v2/editor` (index). Desktop (lg+): content column +
+ * sticky right rail (switcher, always-visible save block, ToC with
+ * per-section marks). Mobile-first at 390: hero compact, single
+ * column, sticky bottom control bar (Sections + save state + Save)
+ * opening the bottom sheet.
  *
- * Composition, top to bottom: Back link -> `header` (editor-header
- * 2.0.0: featured artwork, type eyebrow, title, visibility chip,
- * switcher, mobile Sections trigger) -> closing hairline rule ->
- * `saveBar` (editor-save-bar 2.0.0: dirty/saving/save-error only)
- * -> essentials region (first group, open: the quick-create fields)
- * -> collapsible advanced groups in order, Publishing always last ->
- * the featured image picker and creation picker overlays when open.
+ * Composition, top to bottom: Back link -> `hero` slot (artwork
+ * hero) -> section boxes in grammar order (quick-create groups
+ * first; quiet group separators; ONE box open at a time; every
+ * section body wrapped by the Binding Shell in
+ * EditorSectionChromeContext so internal header stacks suppress) ->
+ * rail (desktop) / bottom bar + sheet (mobile) -> overlays.
  *
  * The View never imports a Creation client, Next.js, or any
- * `components/studio/my-creations/**` package. Every section body
- * arrives pre-composed in `sectionNodes`, built by the Binding Shell
- * (`../Editor.jsx`) by mounting the read-only
- * `CreationEditSectionContent` once per section id.
+ * `components/studio/my-creations/**` package.
  *
  * @typedef {Object} EditorPageSection
  * @property {string} id
@@ -80,40 +64,39 @@ export const EDITOR_VIEW_CONTRACT_VERSION = "3.0.0";
  * @typedef {Object} EditorPageGroup
  * @property {string} id
  * @property {string} label
- * @property {boolean} [hostsMedia] This group hosts the media panel
- *   and the image-library link above its sections.
  * @property {EditorPageSection[]} sections
  *
  * @typedef {Object} EditorViewProps
- * @property {EditorPageGroup[]} groups First entry is the open
- *   essentials region; the rest render as collapsible rows.
- * @property {string[]} openGroupIds
- * @property {(groupId: string) => void} onToggleGroup
- * @property {(groupId: string) => void} onJumpToGroup Opens the
- *   group (no toggle-off) and closes the mobile sheet; the View
- *   scrolls the anchor.
+ * @property {EditorPageGroup[]} groups Quick-create groups first.
+ * @property {string|null} openSectionId Single open box; null = all
+ *   closed. The ViewModel defaults it to the first section.
+ * @property {(sectionId: string|null) => void} onOpenSection
+ *   Opening a section closes every other; passing the open id (or
+ *   null) closes it.
+ * @property {Object<string, "dirty"|"saved">} [sectionMarks]
+ * @property {boolean} isDirty
+ * @property {"idle"|"saving"|"saved"|"error"} saveStatus
+ * @property {string} [saveErrorCopy] Plain language only.
+ * @property {(() => void)|null} onSave
+ * @property {(() => void)|null} onDiscard
+ * @property {(() => void)|null} onOpenSwitcher Fires after the
+ *   inline unsaved-changes confirm when dirty.
  * @property {Object<string, import("react").ReactNode>} sectionNodes
  * @property {Object<string, import("react").ReactNode>} [sectionLeads]
  * @property {Object<string, import("react").ReactNode>} [sectionBadges]
  * @property {Object<string, import("react").ReactNode>} [sectionSeats]
- * @property {import("react").ReactNode} [mediaPanel]
- * @property {string|null} [imageLibraryHref]
  * @property {string} backLabel
  * @property {() => void} onBack
- * @property {import("react").ReactNode} header
- * @property {import("react").ReactNode} saveBar
+ * @property {import("react").ReactNode} hero
  * @property {import("react").ReactNode} [featuredImagePicker]
  * @property {import("react").ReactNode} [creationPicker]
- * @property {{message?: string}|null} loadError Truthy renders the
- *   friendly full-surface load-error state (fixed plain copy; the
- *   message value itself is not rendered).
+ * @property {{message?: string}|null} loadError
  * @property {() => void} [onRetryLoad]
  * @property {() => void} [onOpenPickerFromError]
- * @property {boolean} [isLoading] default false.
+ * @property {boolean} [isLoading]
  * @property {boolean} mobileNavOpen
  * @property {() => void} onToggleMobileNav
- * @property {import("react").ReactNode} [harnessSlot] Dev-only
- *   fixture switcher, never product.
+ * @property {import("react").ReactNode} [harnessSlot]
  */
 
 export {};

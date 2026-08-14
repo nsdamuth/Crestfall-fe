@@ -1,6 +1,16 @@
 # Editor Save Bar LOOM package
 
-**Contract:** `EditorSaveBar.contract.js`, 2.0.0
+**RETIRED, ED1C (13 Aug 2026,
+`docs/plans/ED1B-EDITOR-PAGE-SPEC.md`).** The v2 editor page no
+longer composes a save bar: save state, Save, and Discard moved into
+the page's ToC rail (desktop) and sticky bottom control bar +
+bottom sheet (mobile), rendered by `Editor.view.jsx` itself so save
+state is always visible without scrolling. This package has no
+consumer on the v2 route; it is recorded here rather than deleted,
+the same precedent as `edit/creation-edit-sticky-action-bar`. The
+preview route remains as a historical reference.
+
+**Contract:** `EditorSaveBar.contract.js`, 2.0.0 (final)
 
 ## Purpose
 

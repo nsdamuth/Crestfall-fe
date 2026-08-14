@@ -1,6 +1,7 @@
 import { Image as ImageIcon, RefreshCw, X } from "lucide-react";
 
 import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
+import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function ReferenceCard({ card = {} }) {
   return (
@@ -81,15 +82,14 @@ export default function VisualReferencesSectionView({
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-            {sectionEyebrow}
-          </p>
-          <h3 className="mt-2 font-display text-3xl">{sectionTitle}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-            {sectionDescription}
-          </p>
-        </div>
+        {/* ED1C: same suppression as SharedFields SectionTitle; the
+            v2 editor shell's section box carries the one header. The
+            refresh action stays either way. */}
+        <SectionTitle
+          eyebrow={sectionEyebrow}
+          title={sectionTitle}
+          body={sectionDescription}
+        />
 
         <button
           type="button"

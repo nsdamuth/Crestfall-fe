@@ -1,5 +1,11 @@
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
+// ED1C dropdown law: the local native-select PolicySelect is replaced
+// by the SharedFields SelectField (branded kit dropdown grammar).
+// Same props, same onChange(value) intent.
 function PolicySelect({
   label = "",
   value = "",
@@ -7,22 +13,12 @@ function PolicySelect({
   onChange = null,
 }) {
   return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <SelectField
+      label={label}
+      value={value}
+      options={options}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 

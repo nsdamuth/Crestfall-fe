@@ -2,31 +2,34 @@
 
 // Thin pass-through ViewModel, matching kit-batch practice: the View
 // is fixture-fed and owns no data. Identity resolution (terminology
-// lookup, visibility/canon labeling) is the caller's job.
+// lookup, visibility/canon labeling) and slot derivation are the
+// caller's job.
 export function useEditorHeaderViewModel({
-  imageSrc = null,
+  primaryImageSrc = null,
+  slots = [],
+  onSelectSlot = null,
+  onReplaceActiveSlot = null,
+  generateHref = null,
+  imageLibraryHref = null,
   title = "Untitled Creation",
   typeLabel = "",
   typeIcon = null,
   visibilityLabel = "",
   visibilityVariant = "status",
-  hasUnsavedChanges = false,
-  switcherLabel = "Switch creation",
-  onOpenSwitcher = null,
-  onOpenSections = null,
   actions = null,
 } = {}) {
   return {
-    imageSrc,
+    primaryImageSrc,
+    slots: Array.isArray(slots) ? slots : [],
+    onSelectSlot,
+    onReplaceActiveSlot,
+    generateHref,
+    imageLibraryHref,
     title,
     typeLabel,
     typeIcon,
     visibilityLabel,
     visibilityVariant,
-    hasUnsavedChanges: Boolean(hasUnsavedChanges),
-    switcherLabel,
-    onOpenSwitcher,
-    onOpenSections,
     actions,
   };
 }
