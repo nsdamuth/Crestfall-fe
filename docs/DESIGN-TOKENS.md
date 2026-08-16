@@ -446,6 +446,7 @@ to `--gold-deep`, whose ruled role is already "pressed states".
 | `--blood` `#4b1018`, `--deep-green` `#0f1d16` (today raw in `app/globals.css`) | Marketing body atmosphere | Queue item T4 |
 | Art-tile scrim (the recurring raw `rgba(6,5,4,.82)` art-label fade in the proof files) | Tile label legibility fade | Log occurrences; needs a ruling before minting |
 | `--veil-screen`, `--surface-modal` | Named in legacy N14; `--veil-screen` exists only in the proof (`proof.css:431`) as an alias of `--scrim-strong` | Superseded in practice by `--scrim-strong` and `--surface-4`; mint nothing without a ruling |
+| Chat-scoped palette role family: `--chat-msg-dialogue`, `--chat-msg-narration`, `--chat-msg-emphasis`, `--chat-msg-strong`, `--chat-msg-whisper`, `--chat-msg-speaker`, `--chat-msg-border` (per message, scoped CSS-variable overrides carrying a character's seasonal palette into the chat body, closing CR-016's display side) | O7 option A (`docs/plans/FABLE-GATE-PLAN.md`), wave C1's `components/studio/chat/chat-message` package. Neutral tokens (`--ink`, `--gold-ornament`, etc.) render the shipped body today; this family is the proposed override layer, wired only behind a fixture-only demo flag (never true in product code) until ratified | Brian's ruling on this family's names and values; the story-room-message golds in the Debt map above are the closest existing evidence, log only, no value invented |
 
 ## Debt map: raw value to token
 
