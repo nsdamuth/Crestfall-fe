@@ -1,3 +1,5 @@
+SUPERSEDED 15 Aug 2026 by FE-REVIEW-01: Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 # Crestfall Story Transcript FE Absorption Target List
 ## Supplemental LOOM Migration Handoff
 

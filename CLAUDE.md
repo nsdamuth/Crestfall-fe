@@ -60,6 +60,11 @@ Not law, kept current as living reference material:
 touched, every finished-task report echoes the brief's manifest part
 by part as DONE or STOPPED.
 
+## Standing rule, FE-REVIEW-01
+
+Chassis routes and application logic remain in Crestfall; Crestfall-fe
+is Views, Kit, tokens, fixtures, and page composition only.
+
 ## When a decision is not written down
 
 Stop and report which ruling or queue item is missing. Do not

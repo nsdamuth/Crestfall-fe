@@ -974,6 +974,8 @@ Pending
 
 ---
 
+SUPERSEDED 15 Aug 2026 by FE-REVIEW-01: Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 # PART 3 — FINAL LOOM FRONTEND ABSORPTION HANDOFF
 
 This section must be completed after implementation is finished.

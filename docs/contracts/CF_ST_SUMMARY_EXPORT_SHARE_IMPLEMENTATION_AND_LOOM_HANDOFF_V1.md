@@ -468,6 +468,8 @@ The portable View must not inspect raw DB records, call APIs, run safety checks,
 
 ---
 
+SUPERSEDED 15 Aug 2026 by FE-REVIEW-01: Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 ## 5.2 Existing FE Composition
 
 Primary Story Room integration flows through:

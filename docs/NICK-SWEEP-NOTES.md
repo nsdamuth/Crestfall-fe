@@ -96,6 +96,8 @@ of them were caused by it. Flagging them here so they don't get lost.
 Bug 1 above, the two empty-page routes, is still broken. Confirmed
 zero-byte, not touched.
 
+SUPERSEDED 15 Aug 2026 by FE-REVIEW-01: Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 Absorption gap check, read-only: the presentation shells for the Story
 transcript work are already ahead of schedule. `StoryRoomStatePanel`,
 `StoryRoomMessage`, `StoryRoomTranscript` and their ViewModels,

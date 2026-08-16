@@ -137,6 +137,8 @@ five-minute grep, not a wiring job, and is the right first step for
 whoever picks up "read live data instead of fixtures": confirm which
 FE API routes still return local mocks and only wire those.
 
+SUPERSEDED 15 Aug 2026 by FE-REVIEW-01: Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 *7.3, absorption gap.* Checked Nick's absorption target list
 (`docs/contracts/CF_ST_FE_ABSORPTION_TARGET_LIST_SUPPLEMENT_V1.md`)
 against what exists in this repo. The presentation layer is already
