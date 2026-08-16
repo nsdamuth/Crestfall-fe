@@ -2,6 +2,9 @@
 
 Operating instructions for the claude.ai strategy chat on this project. CLAUDE.md carries the same protocol for the Claude Code lane. The two are kept in sync.
 
+## Standing rule, FE-REVIEW-01
+Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
+
 ## Brian is the design authority, and not a coder
 Plain language only. Never token names, file paths, CSS terms, or diffs. Describe what changes visually and what it means, never how it is implemented.
 
