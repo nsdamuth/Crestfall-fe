@@ -1,6 +1,11 @@
 "use client";
 
 import React from "react";
+
+import {
+  EditorSectionChromeContext,
+  SelectField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 import {
   AlertTriangle,
   ArrowDown,
@@ -475,22 +480,17 @@ function BlockFields({
           />
         </Field>
         <Field label="Level">
-          <select
-            className={inputClass}
-            value={block.level}
-            onChange={(event) =>
-              onUpdate?.(
-                chapterId,
-                sectionId,
-                block.id,
-                "level",
-                Number(event.target.value)
-              )
+          <SelectField
+            label=""
+            value={String(block.level)}
+            onChange={(value) =>
+              onUpdate?.(chapterId, sectionId, block.id, "level", Number(value))
             }
-          >
-            <option value={2}>Section heading</option>
-            <option value={3}>Subheading</option>
-          </select>
+            options={[
+              { value: "2", label: "Section heading" },
+              { value: "3", label: "Subheading" },
+            ]}
+          />
         </Field>
       </div>
     );
@@ -906,34 +906,24 @@ function BlockFields({
             />
           </Field>
           <Field label="Size">
-            <select
-              className={inputClass}
+            <SelectField
+              label=""
               value={block.size}
-              onChange={(event) =>
-                onUpdate?.(chapterId, sectionId, block.id, "size", event.target.value)
+              onChange={(value) =>
+                onUpdate?.(chapterId, sectionId, block.id, "size", value)
               }
-            >
-              {imageSizeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={imageSizeOptions}
+            />
           </Field>
           <Field label="Alignment">
-            <select
-              className={inputClass}
+            <SelectField
+              label=""
               value={block.align}
-              onChange={(event) =>
-                onUpdate?.(chapterId, sectionId, block.id, "align", event.target.value)
+              onChange={(value) =>
+                onUpdate?.(chapterId, sectionId, block.id, "align", value)
               }
-            >
-              {imageAlignOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={imageAlignOptions}
+            />
           </Field>
         </div>
       </div>
@@ -1214,6 +1204,7 @@ export default function LoreEditorView({
   onSelectImageCharacter,
   onChooseImage,
 }) {
+  const { suppressSectionTitle } = React.useContext(EditorSectionChromeContext);
   const errors = issues.filter((item) => item.severity !== "WARNING");
   const warnings = issues.filter((item) => item.severity === "WARNING");
   const [blockPicker, setBlockPicker] = React.useState(null);
@@ -1231,22 +1222,26 @@ export default function LoreEditorView({
   return (
     <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
-            <BookOpenText size={18} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-              Lore Document
+        {/* ED1C: suppressed under the v2 editor shell, whose section
+            box carries the one header; unchanged everywhere else. */}
+        {suppressSectionTitle ? null : (
+          <div>
+            <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
+              <BookOpenText size={18} />
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                Lore Document
+              </p>
+            </div>
+            <h2 className="mt-3 font-display text-3xl sm:text-4xl">
+              Chapters, sections & sourcebook blocks
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+              Character and Location tags are structured relationships for presentation
+              and future release workflows. Character tags also control image eligibility;
+              neither tag type grants engine knowledge by itself.
             </p>
           </div>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl">
-            Chapters, sections & sourcebook blocks
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-            Character and Location tags are structured relationships for presentation
-            and future release workflows. Character tags also control image eligibility;
-            neither tag type grants engine knowledge by itself.
-          </p>
-        </div>
+        )}
         <div className="grid gap-3">
           <div className="grid gap-2 text-center text-xs sm:grid-cols-3">
             {[

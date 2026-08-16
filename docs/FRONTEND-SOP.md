@@ -109,14 +109,29 @@ UIUX-repo AGENTS.md, preview-harness rules, carried forward here).
   the work routes around it. Source: every prior instruction set,
   unanimous on this one point.
 - Contrast law (X1, `docs/DESIGN-TOKENS.md` "Contrast law" section,
-  Ruling N6 12 Aug 2026). Normal-size meaningful text meets 4.5:1
-  against its surface, large text meets 3:1; placeholders are not
-  exempt. `--ink-faint` is illegal for normal-size meaningful text on
-  `--surface-4`; use `--ink-dim` there instead. `--ink-faint` stays
-  legal on `--surface-1`/`--surface-2` and for large text anywhere.
+  Ruling N6 12 Aug 2026, extended same-session 12 Aug 2026). Normal-
+  size meaningful text meets 4.5:1 against its surface, large text
+  meets 3:1; placeholders are not exempt. `--ink-faint` is illegal
+  for normal-size meaningful text on `--surface-3` AND `--surface-4`;
+  use `--ink-dim` there instead. `--ink-faint` stays legal on
+  `--surface-1`/`--surface-2` and for large text anywhere.
   Check: `grep -rn 'ink-faint' components/ --include='*.view.jsx'`
-  hits reviewed against `--surface-4` consumers (modal, menu,
-  popover); any normal-size text hit is out of contract.
+  hits reviewed against `--surface-3`/`--surface-4` consumers
+  (topbar/sidebar/sticky chrome; modal, menu, popover); any normal-
+  size text hit is out of contract.
+- `--gold-deep` is legal for ornament and large display text on any
+  surface; illegal for normal-size meaningful text on every surface
+  but `--canvas`. Check: `grep -rn 'gold-deep' components/
+  --include='*.view.jsx'` hits reviewed for normal-size text off
+  `--canvas`; any such hit is out of contract.
+- Status colors as normal-size text on `--surface-2`/`--surface-3`/
+  `--surface-4`: BLOCKED, not legal, pending a named brighter ladder
+  step that does not yet exist for `--success`/`--warning`/`--danger`
+  (`docs/DESIGN-TOKENS.md` "Contrast law" section). Do not invent a
+  step or a literal to work around this; STOP and report if a design
+  needs status text at normal size on one of those three surfaces.
+  Every status use still ships with its word beside it regardless of
+  size or surface, per standing law.
 - Sole-identifier boundaries meet 3:1 (1.4.11): a control identified
   ONLY by its border uses `--line-strong` or a redundant cue (fill
   delta plus label, icon, or state mark). `--line` and

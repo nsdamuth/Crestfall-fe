@@ -2,8 +2,9 @@ import {
   Image as ImageIcon,
   Loader2,
   RefreshCw,
-  X,
 } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function CreationFeaturedImagePickerModalView({
   slotLabel = "Featured Slot",
@@ -20,12 +21,24 @@ export default function CreationFeaturedImagePickerModalView({
   onLoadMore = null,
   onChooseImage = null,
 }) {
+  // ED1C: composes the branded KitModalFrame (veil, panel anatomy,
+  // circular close control, R4 full-screen under 700px) instead of a
+  // hand-rolled fixed overlay. Content and callbacks are unchanged.
+  // ED1d Defect 5: sizing now matches the ruled standard KitModalFrame
+  // size (StorylineReferencePickerModal.view.jsx's own
+  // `max-w-4xl` + `max-h-[100dvh] ... min-[700px]:max-h-[92dvh]`
+  // pattern), replacing the one-off 64rem/90vw/88vh sizing this modal
+  // had instead grown on its own.
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabel="Select featured image"
+      panelClassName="w-full max-w-4xl"
+    >
+      <div className="flex max-h-[100dvh] w-full flex-col min-[700px]:max-h-[92dvh]">
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] p-5 pr-16">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Select Featured Image
             </p>
             <h2 className="mt-2 font-display text-4xl">{slotLabel}</h2>
@@ -35,26 +48,15 @@ export default function CreationFeaturedImagePickerModalView({
             </p>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => onRefresh?.()}
-              disabled={refreshDisabled}
-              className="cf-btn cf-btn--secondary cf-btn--sm"
-            >
-              <RefreshCw size={14} />
-              Refresh
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onClose?.()}
-              className="rounded-xl border border-white/10 bg-black/25 p-3 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-              aria-label="Close image picker"
-            >
-              <X size={18} />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onRefresh?.()}
+            disabled={refreshDisabled}
+            className="cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            <RefreshCw size={14} />
+            Refresh
+          </button>
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
@@ -150,6 +152,6 @@ export default function CreationFeaturedImagePickerModalView({
           ) : null}
         </div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }

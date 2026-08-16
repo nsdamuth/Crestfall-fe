@@ -1,125 +1,102 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "1.2.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "4.0.0";
 
-// Version note, 1.1.0 -> 1.2.0 (additive, vault-edit-tree pass, 11 Aug
-// 2026): two optional props close two CR-007/CR-008 held rows the
-// classification found buildable. `isLoreDraftPreview` (boolean,
-// default false) shows an "Owner-only draft preview" badge above the
-// section content panel when the Binding Shell resolves the active
-// section to Lore's rehosted Public Preview (CSV row 839; the
-// standalone preview page's badge has no v2 equivalent otherwise).
-// `imageLibraryHref` (string|null, default null) renders a "Manage
-// image library" link beside the media panel, routing to the new
-// `/studio/v2/editor/[id]/image-library` page (CSV rows 409-421, 430).
-// Both are additive; every existing consumer is unaffected when
-// unset.
+// Version note, 3.0.0 -> 4.0.0 (BREAKING, ED1C,
+// docs/plans/ED1B-EDITOR-PAGE-SPEC.md, Brian's 13 Aug direction):
+// the single-surface document becomes the hero + accordion + rail
+// architecture.
 //
-// Version note, 1.0.0 -> 1.1.0 (additive, RULED 11 Aug 2026): the back
-// control returns to the surface that opened the editor (Studio hub
-// quick-create, Vault popup edit), falling back to /studio/v2/vault
-// when no origin is known. Origin resolution is the Binding Shell's
-// business (`../Editor.jsx`), never the View's; the View swaps the
-// old `backAction` ReactNode slot for a plain `backLabel` string and
-// `onBack` callback so it stays presentation only. The visible label
-// is now the neutral "Back" (it previously named a fixed destination,
-// "← Vault").
+// Breaking:
+// - `header`/`saveBar` slots REMOVED. The artwork hero arrives as
+//   the `hero` slot (editor-header 3.0.0); the save controls are no
+//   longer a slot at all: the View renders them itself in the
+//   desktop ToC rail and the mobile bottom bar from the new
+//   save-state props (`isDirty`, `saveStatus`, `saveErrorCopy`,
+//   `onSave`, `onDiscard`). editor-save-bar is RETIRED for this
+//   route (recorded in its README).
+// - Accordion model replaces open-groups: `openSectionId` (single,
+//   null legal) + `onOpenSection` replace `openGroupIds`/
+//   `onToggleGroup`/`onJumpToGroup`. Exactly one section box is
+//   open at a time; each section is one distinct box opened from
+//   its own header or the ToC.
+// - New `sectionMarks` ({sectionId: "dirty"|"saved"}) drive the
+//   per-section state marks in the ToC and on box headers.
+// - New switcher props on the View (`onOpenSwitcher`): the creation
+//   switcher moved into the rail/sheet, with the unsaved-changes
+//   confirm armed inline there (presentation-local state).
+// - `groups` no longer carries `hostsMedia`: artwork moved into the
+//   hero; the media group is gone from the page grammar (the ED1C
+//   resolver strips it).
+// - `mobileNavOpen`/`onToggleMobileNav` now open the ED1C bottom
+//   sheet (switcher + save block + ToC), the O11 seat.
+//
+// Carried forward: `backLabel`/`onBack`, `sectionNodes`/
+// `sectionLeads`/`sectionBadges`/`sectionSeats`, `loadError` +
+// `onRetryLoad`/`onOpenPickerFromError`, `isLoading`,
+// `featuredImagePicker`, `creationPicker`, `harnessSlot`,
+// `imageLibraryHref` (consumed by the hero via the Binding Shell,
+// no longer rendered by this View).
 
 /**
  * Stable portable UI boundary for the advanced editor page View
- * (docs/STUDIO-SPEC.md sections 1, 4, 6, 8.3; Sprint H OPEN item 40,
- * option A). New page this pass, contract authorized none to 1.0.0 at
- * this gate. Build address `/studio/v2/editor/[id]` (route law,
- * cutover sequence per docs/STUDIO-SPEC.md 4.1). Mobile-first at 390:
- * single column, thumb-reachable section navigation, no horizontal
- * overflow, sticky action bar inside the R4 grammar; fully functional
- * at 1440.
+ * (docs/plans/ED1B-EDITOR-PAGE-SPEC.md, ED1C revision). Build
+ * addresses: `/studio/v2/editor/[id]` (deep-linkable) and
+ * `/studio/v2/editor` (index). Desktop (lg+): content column +
+ * sticky right rail (switcher, always-visible save block, ToC with
+ * per-section marks). Mobile-first at 390: hero compact, single
+ * column, sticky bottom control bar (Sections + save state + Save)
+ * opening the bottom sheet.
  *
- * Composition, rehost then seat (docs/STUDIO-SPEC.md 4.2, the ruling
- * amendment on Lore): editor header (creation id, title, type,
- * template flag, Set Default PC, back action) -> the section
- * navigation (Nick's real order per creationEditConstants.js,
- * resolved per creation type by the read-only
- * `resolveCreationEditSections` helper in
- * `creation-edit-shell/useCreationEditShellViewModel.js`) -> the
- * two-slot body: media panel (+ Mechanics quick nav when the
- * Mechanics Fields section is active) and the section content panel
- * -> named absorption seats (`seats.bodyDetail`, `seats.behaviorDetail`,
- * `seats.advancedPrompting`), always null this pass, no placeholder UI
- * -> the sticky action bar -> the featured image picker modal, when
- * open.
+ * Composition, top to bottom: Back link -> `hero` slot (artwork
+ * hero) -> section boxes in grammar order (quick-create groups
+ * first; quiet group separators; ONE box open at a time; every
+ * section body wrapped by the Binding Shell in
+ * EditorSectionChromeContext so internal header stacks suppress) ->
+ * rail (desktop) / bottom bar + sheet (mobile) -> overlays.
  *
  * The View never imports a Creation client, Next.js, or any
- * `components/studio/my-creations/**` package. Every section body,
- * every media/quick-nav/action-bar surface, and the featured image
- * picker arrive as already-composed `ReactNode` slots built by the
- * Binding Shell (`../Editor.jsx`) from the read-only
- * `creation-edit-shell` lineage (`useCreationEditShellViewModel`,
- * `CreationEditSectionContent`, `CreationEditMediaPanel`,
- * `CreationEditStickyActionBar`, `CreationEditMechanicsRuntimeQuickNav`,
- * `CreationFeaturedImagePickerModal`), none of which this brief edits.
+ * `components/studio/my-creations/**` package.
  *
- * @typedef {Object} EditorSectionTab
+ * @typedef {Object} EditorPageSection
  * @property {string} id
  * @property {string} label
  * @property {import("react").ComponentType<{size?: number}>} [icon]
  *
- * @typedef {Object} EditorSeats
- * @property {import("react").ReactNode} [bodyDetail] Mounts under the
- *   "body" section, beside the existing rehosted Body section. Seated
- *   for a future brief's Body detail absorption section (Kibbe
- *   identity, Body Type, Height, Build, Proportions). Null this pass.
- * @property {import("react").ReactNode} [behaviorDetail] Mounts under
- *   the "behavior" section, beside the existing rehosted Behavior
- *   section. Seated for a future brief's Behavior detail absorption
- *   section (Outward/Internal Personality, Speech/Movement Style,
- *   Interests, MBTI, Western and East Asian zodiac, Voice Modules).
- *   Null this pass.
- * @property {import("react").ReactNode} [advancedPrompting] Mounts
- *   under the "advanced" section, beside the existing rehosted
- *   Advanced section. Seated for a future brief's Advanced Prompting
- *   section (enable toggle, nine guidance sections, per-section
- *   counters, 32,000-character combined budget). Null this pass.
+ * @typedef {Object} EditorPageGroup
+ * @property {string} id
+ * @property {string} label
+ * @property {EditorPageSection[]} sections
  *
  * @typedef {Object} EditorViewProps
- * @property {string} creationId
- * @property {string} creationType
- * @property {string} title
- * @property {boolean} isTemplate
- * @property {string} activeSection
- * @property {EditorSectionTab[]} activeSections
- * @property {(sectionId: string) => void} onSelectSection
- * @property {boolean} canSetDefaultPc
- * @property {boolean} settingDefaultPc
- * @property {() => void} onSetDefaultPc
- * @property {string|null} defaultPcStatus
- * @property {string|null} defaultPcError
- * @property {boolean} showMechanicsQuickNav
- * @property {boolean} isLoreDocumentSection} Whether the active section
- *   is Lore's rehosted structured authoring surface (the ruling's
- *   ADDITIONAL item). Used only to widen the content panel; the
- *   authoring surface itself is part of `sectionContent`.
+ * @property {EditorPageGroup[]} groups Quick-create groups first.
+ * @property {string|null} openSectionId Single open box; null = all
+ *   closed. The ViewModel defaults it to the first section.
+ * @property {(sectionId: string|null) => void} onOpenSection
+ *   Opening a section closes every other; passing the open id (or
+ *   null) closes it.
+ * @property {Object<string, "dirty"|"saved">} [sectionMarks]
+ * @property {boolean} isDirty
+ * @property {"idle"|"saving"|"saved"|"error"} saveStatus
+ * @property {string} [saveErrorCopy] Plain language only.
+ * @property {(() => void)|null} onSave
+ * @property {(() => void)|null} onDiscard
+ * @property {(() => void)|null} onOpenSwitcher Fires after the
+ *   inline unsaved-changes confirm when dirty.
+ * @property {Object<string, import("react").ReactNode>} sectionNodes
+ * @property {Object<string, import("react").ReactNode>} [sectionLeads]
+ * @property {Object<string, import("react").ReactNode>} [sectionBadges]
+ * @property {Object<string, import("react").ReactNode>} [sectionSeats]
  * @property {string} backLabel
  * @property {() => void} onBack
- * @property {boolean} [isLoreDraftPreview] Shows the owner-only draft
- *   preview badge above the section content panel. Set by the
- *   Binding Shell when `sectionContentProps.isLore` and the active
- *   section is Lore's Public Preview. Default false.
- * @property {string|null} [imageLibraryHref] When set, renders a
- *   "Manage image library" link beside the media panel routing to
- *   `/studio/v2/editor/[id]/image-library`. Default null (hidden).
- * @property {import("react").ReactNode} mediaPanel
- * @property {import("react").ReactNode} mechanicsQuickNav
- * @property {import("react").ReactNode} sectionContent
- * @property {EditorSeats} seats
- * @property {import("react").ReactNode} stickyActionBar
- * @property {import("react").ReactNode} featuredImagePicker
+ * @property {import("react").ReactNode} hero
+ * @property {import("react").ReactNode} [featuredImagePicker]
+ * @property {import("react").ReactNode} [creationPicker]
+ * @property {{message?: string}|null} loadError
+ * @property {() => void} [onRetryLoad]
+ * @property {() => void} [onOpenPickerFromError]
+ * @property {boolean} [isLoading]
  * @property {boolean} mobileNavOpen
  * @property {() => void} onToggleMobileNav
- * @property {{label: string, message: string}|null} loadError R4
- *   honest-stub notice for the resolved-[id] load path, rendered when
- *   the mock module has no fixture for this id and the live client
- *   call fails.
- * @property {import("react").ReactNode} [harnessSlot] Dev-only
- *   fixture-id switcher, never product.
+ * @property {import("react").ReactNode} [harnessSlot]
  */
 
 export {};

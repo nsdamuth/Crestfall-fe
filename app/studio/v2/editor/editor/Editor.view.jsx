@@ -1,184 +1,455 @@
 "use client";
 
-// Portable Skin (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape). Layout
-// and presentation only: no Creation client, no Next.js, no
-// components/studio/my-creations/** import. Every functional surface
-// arrives pre-composed as a ReactNode slot from the Binding Shell
-// (../Editor.jsx). Mobile-first at 390 (docs/STUDIO-SPEC.md 4.2,
-// brief S3 item 2): single column, thumb-reachable (44px floor)
-// horizontally-scrolling section navigation, no horizontal overflow,
-// sticky action bar inside the R4 grammar (full-bleed, no clipping).
-// Widens to the two-column rail at the xl breakpoint; the same
-// wrapping applies uniformly to every section including the
-// rehosted Lore document surface (the ruling's ADDITIONAL item),
-// which gets no lower-quality or desktop-only treatment.
-import { UserRound } from "lucide-react";
+// Portable Skin (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape),
+// rebuilt by ED1C (docs/plans/ED1B-EDITOR-PAGE-SPEC.md): artwork
+// hero, one-section-at-a-time accordion of section boxes, sticky
+// right ToC rail (switcher + always-visible save state + per-section
+// marks) on desktop, sticky bottom control bar + bottom sheet (the
+// O11 seat) on mobile. Layout and presentation only: no Creation
+// client, no Next.js, no components/studio/my-creations/** import;
+// every section body arrives pre-composed in `sectionNodes`.
+import { Check, ChevronDown, ChevronsUpDown, List, Loader2, Save } from "lucide-react";
 
-export default function EditorView({
-  creationId,
-  creationType = "",
-  title = "Untitled Creation",
-  isTemplate = false,
-  activeSection = "overview",
-  activeSections = [],
-  onSelectSection,
-  canSetDefaultPc = false,
-  settingDefaultPc = false,
-  onSetDefaultPc,
-  defaultPcStatus = null,
-  defaultPcError = null,
-  showMechanicsQuickNav = false,
-  backLabel = "Back",
-  onBack,
-  mediaPanel = null,
-  mechanicsQuickNav = null,
-  sectionContent = null,
-  seats = {},
-  stickyActionBar = null,
-  featuredImagePicker = null,
-  loadError = null,
-  harnessSlot = null,
-  isLoreDraftPreview = false,
-  imageLibraryHref = null,
-}) {
-  const activeTab = activeSections.find((section) => section.id === activeSection);
-  const seatSlot =
-    activeSection === "body"
-      ? seats.bodyDetail
-      : activeSection === "behavior"
-        ? seats.behaviorDetail
-        : activeSection === "advanced"
-          ? seats.advancedPrompting
-          : null;
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import { useState } from "react";
+
+// Anchors sit under the sticky top bar; the scroll margin keeps a
+// jumped-to box header visible below it.
+const ANCHOR_SCROLL_CLASS = "scroll-mt-[calc(var(--topbar-h)+var(--space-4))]";
+
+function scrollToSection(sectionId) {
+  if (typeof document === "undefined") return;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`editor-section-box-${sectionId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+}
+
+// Per-section state mark: a subtle gold dot for unsaved edits, a
+// success check once those edits are saved. The words ride along for
+// assistive tech per the status-color law.
+function StateMark({ mark }) {
+  if (mark === "dirty") {
+    return (
+      <span className="flex flex-none items-center" aria-hidden="false">
+        <span className="h-[6px] w-[6px] rounded-[var(--radius-full)] bg-[var(--gold-action)]" />
+        <span className="sr-only">unsaved changes</span>
+      </span>
+    );
+  }
+  if (mark === "saved") {
+    return (
+      <span className="flex flex-none items-center text-[var(--status-success)]">
+        <Check size={14} aria-hidden="true" />
+        <span className="sr-only">saved</span>
+      </span>
+    );
+  }
+  return null;
+}
+
+function SwitcherBlock({ isDirty, onOpenSwitcher, compact = false }) {
+  const [confirming, setConfirming] = useState(false);
+
+  function activate() {
+    if (isDirty) {
+      setConfirming(true);
+      return;
+    }
+    onOpenSwitcher?.();
+  }
 
   return (
-    <section className="mx-auto w-full max-w-[var(--container)] px-[var(--space-4)] pb-32 pt-[var(--space-4)] sm:px-[var(--space-6)] lg:pb-28">
-      {harnessSlot ? <div className="mb-[var(--space-4)]">{harnessSlot}</div> : null}
+    <div>
+      <button
+        type="button"
+        onClick={activate}
+        className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition hover:border-[var(--gold-action)]"
+      >
+        Switch creation
+        <ChevronsUpDown size={14} aria-hidden="true" />
+      </button>
 
-      {loadError ? (
-        <div className="mb-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] p-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)]">
-          {loadError.message}
+      {confirming ? (
+        <div
+          className={`mt-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)] ${
+            compact ? "" : ""
+          }`}
+        >
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
+            You have unsaved changes. Switch creations anyway?
+          </p>
+          <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
+            <button
+              type="button"
+              onClick={() => setConfirming(false)}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              Keep editing
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setConfirming(false);
+                onOpenSwitcher?.();
+              }}
+              className="cf-btn cf-btn--primary cf-btn--sm"
+            >
+              Discard and switch
+            </button>
+          </div>
         </div>
       ) : null}
+    </div>
+  );
+}
 
-      {/* Editor header: identity, back action, Set Default PC */}
-      <header className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-3)] p-[var(--space-4)] sm:p-[var(--space-6)]">
-        <div className="flex flex-col gap-[var(--space-4)] sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0">
-            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              {isTemplate ? "Editing Template" : "Editing"}
-              {creationType ? ` · ${creationType.replaceAll("_", " ")}` : ""}
-            </p>
-            <h1 className="mt-[var(--space-2)] truncate font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
-              {title}
-            </h1>
-            <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
-              Creation ID: <span className="text-[var(--ink-dim)]">{creationId}</span>
-            </p>
+function saveStateWord({ isDirty, saveStatus, saveErrorCopy }) {
+  if (saveStatus === "saving") return "Saving...";
+  if (saveStatus === "error") {
+    return saveErrorCopy || "Your changes could not be saved. Please try again.";
+  }
+  if (isDirty) return "Unsaved changes";
+  return "All changes saved";
+}
+
+// The always-visible save block (rail and sheet). Clean state is a
+// quiet check + words; dirty shows Save and Discard; saving and
+// error carry their own words.
+function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
+  const isSaving = saveStatus === "saving";
+  const isError = saveStatus === "error";
+  const word = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
+
+  return (
+    <div>
+      <p
+        role={isError ? "alert" : undefined}
+        aria-live="polite"
+        className={`flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+          isError
+            ? "text-[var(--status-danger)]"
+            : isDirty || isSaving
+              ? "text-[var(--ink)]"
+              : "text-[var(--ink-dim)]"
+        }`}
+      >
+        {isSaving ? (
+          <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+        ) : !isDirty && !isError ? (
+          <Check size={14} className="text-[var(--status-success)]" aria-hidden="true" />
+        ) : null}
+        {word}
+      </p>
+
+      {isDirty || isError ? (
+        <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={() => onSave?.()}
+            className="kit-focus cf-btn cf-btn--primary"
+          >
+            <Save size={14} aria-hidden="true" />
+            {isSaving ? "Saving..." : "Save"}
+          </button>
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={() => onDiscard?.()}
+            className="kit-focus cf-btn cf-btn--secondary"
+          >
+            Discard
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function TocList({ groups, openSectionId, sectionMarks, onSelect }) {
+  return (
+    <nav aria-label="Editor sections" className="flex flex-col gap-[var(--space-3)]">
+      {(groups || []).map((group) => (
+        <div key={group.id}>
+          <p className="px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+            {group.label}
+          </p>
+          <div className="mt-[var(--space-1)] flex flex-col">
+            {(group.sections || []).map((section) => {
+              const active = openSectionId === section.id;
+              return (
+                <button
+                  key={section.id}
+                  type="button"
+                  aria-current={active ? "true" : undefined}
+                  onClick={() => onSelect?.(section.id)}
+                  className={`kit-focus flex min-h-[var(--control-md)] items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+                    active
+                      ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+                  }`}
+                >
+                  <span className="min-w-0 truncate">{section.label}</span>
+                  <StateMark mark={sectionMarks?.[section.id]} />
+                </button>
+              );
+            })}
           </div>
+        </div>
+      ))}
+    </nav>
+  );
+}
 
-          <div className="flex flex-wrap items-center gap-[var(--space-2)]">
-            {canSetDefaultPc ? (
-              <button
-                type="button"
-                onClick={() => onSetDefaultPc?.()}
-                disabled={settingDefaultPc}
-                className="cf-btn cf-btn--secondary"
-              >
-                <UserRound size={14} />
-                {settingDefaultPc ? "Setting..." : "Set default PC"}
-              </button>
-            ) : null}
+function SectionBox({ section, mark, isOpen, onToggle, children }) {
+  return (
+    <div
+      id={`editor-section-box-${section.id}`}
+      className={`rounded-[var(--radius-lg)] border bg-[var(--surface-2)] transition-colors ${ANCHOR_SCROLL_CLASS} ${
+        isOpen ? "border-[var(--line)]" : "border-[var(--line-whisper)]"
+      }`}
+    >
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+        className="kit-focus flex min-h-[var(--control-lg)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-2)] text-left"
+      >
+        <span className="flex min-w-0 items-center gap-[var(--space-3)]">
+          <span className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
+            {section.label}
+          </span>
+          <StateMark mark={mark} />
+        </span>
+        <ChevronDown
+          size={16}
+          aria-hidden="true"
+          className={`flex-none text-[var(--ink-dim)] transition-transform motion-reduce:transition-none ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      {isOpen ? (
+        <div className="px-[var(--space-5)] pb-[var(--space-6)]">{children}</div>
+      ) : null}
+    </div>
+  );
+}
 
+function LoadErrorState({ onRetry, onOpenPicker }) {
+  return (
+    <div className="flex flex-col items-center gap-[var(--space-3)] py-[var(--space-16)] text-center">
+      <h1 className="font-display text-[length:var(--text-subhead-m)] leading-[var(--lh-subhead-m)] text-[var(--ink)] sm:text-[length:var(--text-subhead)] sm:leading-[var(--lh-subhead)]">
+        This creation could not be loaded.
+      </h1>
+      <p className="max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        It may have been removed, or you may not have access to it.
+      </p>
+      <div className="mt-[var(--space-2)] flex flex-wrap justify-center gap-[var(--space-2)]">
+        {onRetry ? (
+          <button type="button" onClick={() => onRetry?.()} className="cf-btn cf-btn--secondary">
+            Try again
+          </button>
+        ) : null}
+        {onOpenPicker ? (
+          <button type="button" onClick={() => onOpenPicker?.()} className="cf-btn cf-btn--primary">
+            Pick another creation
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export default function EditorView({
+  groups = [],
+  openSectionId = null,
+  onOpenSection,
+  sectionMarks = {},
+  isDirty = false,
+  saveStatus = "idle",
+  saveErrorCopy = "",
+  onSave = null,
+  onDiscard = null,
+  onOpenSwitcher = null,
+  sectionNodes = {},
+  sectionLeads = {},
+  sectionBadges = {},
+  sectionSeats = {},
+  backLabel = "Back",
+  onBack,
+  hero = null,
+  featuredImagePicker = null,
+  creationPicker = null,
+  loadError = null,
+  onRetryLoad,
+  onOpenPickerFromError,
+  isLoading = false,
+  mobileNavOpen = false,
+  onToggleMobileNav,
+  harnessSlot = null,
+}) {
+  function handleSelect(sectionId) {
+    onOpenSection?.(sectionId);
+    scrollToSection(sectionId);
+  }
+
+  function handleSheetSelect(sectionId) {
+    onToggleMobileNav?.();
+    onOpenSection?.(sectionId);
+    scrollToSection(sectionId);
+  }
+
+  const statusWord = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
+
+  return (
+    <section className="mx-auto w-full max-w-5xl px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
+      {harnessSlot ? <div className="mb-[var(--space-4)]">{harnessSlot}</div> : null}
+
+      {isLoading ? (
+        <div className="animate-pulse space-y-[var(--space-4)]">
+          <div className="h-64 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+          <div className="h-16 rounded-[var(--radius-lg)] bg-[var(--surface-2)]" />
+        </div>
+      ) : loadError ? (
+        <LoadErrorState onRetry={onRetryLoad} onOpenPicker={onOpenPickerFromError} />
+      ) : (
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)]">
+          <div className="min-w-0 pb-[var(--space-14)] lg:pb-0">
             {onBack ? (
               <button
                 type="button"
                 onClick={onBack}
-                className="cf-btn cf-btn--secondary"
+                className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
               >
                 ← {backLabel}
               </button>
             ) : null}
+
+            <div className="mt-[var(--space-3)]">{hero}</div>
+
+            <div className="mt-[var(--space-6)] flex flex-col gap-[var(--space-6)]">
+              {groups.map((group) => (
+                <div key={group.id}>
+                  <p className="mb-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+                    {group.label}
+                  </p>
+                  <div className="flex flex-col gap-[var(--space-3)]">
+                    {(group.sections || []).map((section) => {
+                      const isOpen = openSectionId === section.id;
+                      return (
+                        <SectionBox
+                          key={section.id}
+                          section={section}
+                          mark={sectionMarks?.[section.id]}
+                          isOpen={isOpen}
+                          onToggle={() => onOpenSection?.(isOpen ? null : section.id)}
+                        >
+                          {sectionBadges?.[section.id]}
+                          {sectionLeads?.[section.id]}
+                          <div className="min-w-0">{sectionNodes?.[section.id]}</div>
+                          {sectionSeats?.[section.id]}
+                        </SectionBox>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          <aside className="hidden lg:block">
+            <div className="sticky top-[calc(var(--topbar-h)+var(--space-4))] flex max-h-[calc(100vh-var(--topbar-h)-var(--space-8))] flex-col gap-[var(--space-4)] overflow-y-auto pb-[var(--space-4)]">
+              <SwitcherBlock isDirty={isDirty} onOpenSwitcher={onOpenSwitcher} />
+              <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
+                <SaveBlock
+                  isDirty={isDirty}
+                  saveStatus={saveStatus}
+                  saveErrorCopy={saveErrorCopy}
+                  onSave={onSave}
+                  onDiscard={onDiscard}
+                />
+              </div>
+              <TocList
+                groups={groups}
+                openSectionId={openSectionId}
+                sectionMarks={sectionMarks}
+                onSelect={handleSelect}
+              />
+            </div>
+          </aside>
         </div>
+      )}
 
-        {defaultPcStatus ? (
-          <p className="mt-[var(--space-2)] text-[length:var(--text-label)] text-[var(--status-success)]">
-            {defaultPcStatus}
+      {!isLoading && !loadError ? (
+        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-4)] py-[var(--space-2)] lg:hidden">
+          <button
+            type="button"
+            onClick={() => onToggleMobileNav?.()}
+            className="kit-focus flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
+          >
+            <List size={14} aria-hidden="true" />
+            Sections
+          </button>
+          <p
+            aria-live="polite"
+            className={`min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+              saveStatus === "error"
+                ? "text-[var(--status-danger)]"
+                : isDirty
+                  ? "text-[var(--ink)]"
+                  : "text-[var(--ink-dim)]"
+            }`}
+          >
+            {statusWord}
           </p>
-        ) : null}
-        {defaultPcError ? (
-          <p className="mt-[var(--space-2)] text-[length:var(--text-label)] text-[var(--status-danger)]">
-            {defaultPcError}
-          </p>
-        ) : null}
-
-        {/* Section navigation: horizontally scrolling pill row, 44px
-            thumb floor, no wrap-induced overflow at 390. */}
-        <nav
-          aria-label="Editor sections"
-          className="mt-[var(--space-4)] -mx-[var(--space-4)] flex gap-[var(--space-2)] overflow-x-auto px-[var(--space-4)] pb-[var(--space-1)] [scrollbar-width:thin] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-        >
-          {activeSections.map((section) => {
-            const Icon = section.icon;
-            const active = activeSection === section.id;
-
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => onSelectSection?.(section.id)}
-                aria-pressed={active}
-                className={`kit-focus inline-flex min-h-[var(--control-md)] shrink-0 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                  active
-                    ? "border-[var(--gold-action)] bg-[var(--fill)] text-[var(--gold-bright)]"
-                    : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-                }`}
-              >
-                {Icon ? <Icon size={14} /> : null}
-                {section.label}
-              </button>
-            );
-          })}
-        </nav>
-      </header>
-
-      {/* Body: single column at <lg, media rail + content at lg+. */}
-      <div className="mt-[var(--space-5)] grid gap-[var(--space-5)] lg:grid-cols-[minmax(0,0.4fr)_minmax(0,1fr)]">
-        <div className="min-w-0 space-y-[var(--space-4)] lg:self-start">
-          {mediaPanel}
-          {imageLibraryHref ? (
-            <a
-              href={imageLibraryHref}
-              className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
+          {isDirty || saveStatus === "error" ? (
+            <button
+              type="button"
+              disabled={saveStatus === "saving"}
+              onClick={() => onSave?.()}
+              className="kit-focus cf-btn cf-btn--primary flex-none"
             >
-              Manage image library
-            </a>
+              <Save size={14} aria-hidden="true" />
+              Save
+            </button>
           ) : null}
-          {showMechanicsQuickNav ? mechanicsQuickNav : null}
         </div>
+      ) : null}
 
-        <div className="min-w-0 space-y-[var(--space-4)]">
-          <div className="min-w-0 overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-3)] p-[var(--space-4)] sm:p-[var(--space-6)]">
-            {activeTab ? (
-              <p className="mb-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-                {activeTab.label}
-              </p>
-            ) : null}
-            {isLoreDraftPreview ? (
-              <p className="mb-[var(--space-4)] inline-flex items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]">
-                Owner-only draft preview
-              </p>
-            ) : null}
-            {sectionContent}
+      {mobileNavOpen ? (
+        <KitModalFrame variant="sheet" onClose={() => onToggleMobileNav?.()} ariaLabel="Editor sections">
+          <div className="max-h-[75vh] overflow-y-auto p-[var(--space-4)]">
+            <SwitcherBlock isDirty={isDirty} onOpenSwitcher={onOpenSwitcher} compact />
+            <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
+              <SaveBlock
+                isDirty={isDirty}
+                saveStatus={saveStatus}
+                saveErrorCopy={saveErrorCopy}
+                onSave={onSave}
+                onDiscard={onDiscard}
+              />
+            </div>
+            <div className="mt-[var(--space-4)]">
+              <TocList
+                groups={groups}
+                openSectionId={openSectionId}
+                sectionMarks={sectionMarks}
+                onSelect={handleSheetSelect}
+              />
+            </div>
           </div>
+        </KitModalFrame>
+      ) : null}
 
-          {seatSlot}
-        </div>
-      </div>
-
-      {stickyActionBar}
       {featuredImagePicker}
+      {creationPicker}
     </section>
   );
 }

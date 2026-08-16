@@ -1,10 +1,34 @@
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { Sparkles } from "lucide-react";
+
+import KitFormField from "@/components/kit/KitFormField";
 
 // Version, added E1 (wave E1, docs/plans/FABLE-GATE-PLAN.md). Bump on
 // any prop-shape change to an existing export; additions to the file
 // (new primitives, new optional props) do not require a bump.
-export const SHARED_FIELDS_VERSION = "1.0.0";
+//
+// 1.1.0 (ED1C, docs/plans/ED1B-EDITOR-PAGE-SPEC.md sections 3.6 and
+// 3.7). No prop-shape change to any export; two behavior changes:
+// - EditorSectionChromeContext (new export): the v2 editor shell
+//   provides { suppressSectionTitle: true } around every mounted
+//   section, and SectionTitle renders nothing under it (the shell's
+//   section box carries the one header). Without a provider every
+//   consumer renders exactly as 1.0.0.
+// - SelectField now renders the branded kit dropdown grammar
+//   (delegating to KitFormField variant="select", which composes
+//   KitDropdown) instead of a native <select>. Same props, same
+//   onChange(value) intent; the native select is illegal on the v2
+//   editor page per the ED1C dropdown law.
+export const SHARED_FIELDS_VERSION = "1.1.0";
+
+// ED1C section chrome context: the v2 editor page shell renders one
+// header per section box and suppresses the sections' own internal
+// eyebrow + title + description stacks through this context. Default
+// is suppress nothing, so every consumer outside that shell (the
+// legacy edit route included) is untouched.
+export const EditorSectionChromeContext = createContext({
+  suppressSectionTitle: false,
+});
 
 // Long-form field character limits, RULED (a1 advanced-creator pass,
 // docs/CONTRACT-REQUESTS.md "Long-form field character limits"): two
@@ -22,8 +46,14 @@ export const DEEP_LONGFORM_MAX_LENGTH = 2000;
 const LABEL_CLASS =
   "text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]";
 
+// Focus law, RULED 9 Aug 2026 (kit polish pass, docs/BUILD-BLUEPRINT.md
+// 2.16(e), app/design-system.css ".kit-focus:focus-visible"): the
+// single subtle border-brightening mark, never the app-wide gold ring
+// (--focus-ring). `kit-focus` after `cf-field` mirrors
+// components/kit/form-field/KitFormField.view.jsx's own
+// `inputBedClass` exactly, so it wins the cascade the same way there.
 const FIELD_BED_CLASS =
-  "cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
+  "kit-focus cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -68,6 +98,9 @@ function LabelRow({ label, length, maxLength, isFocused }) {
 // hand-rolled resolves down to the same locked heading step the rest
 // of the kit uses, with the mobile pair for 390.
 export function SectionTitle({ eyebrow, title, body }) {
+  const { suppressSectionTitle } = useContext(EditorSectionChromeContext);
+  if (suppressSectionTitle) return null;
+
   return (
     <div>
       <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -126,6 +159,10 @@ export function TextField({
 // same field bed and label anatomy, for the ~66 hand-rolled selects
 // the gate found across the editor-reachable tree (finding B3).
 // `options` accepts either plain strings or `{ value, label }` pairs.
+// ED1C (1.1.0): the native <select> is replaced by the branded kit
+// dropdown grammar via KitFormField variant="select" (which composes
+// KitDropdown: popover at 700px and up, KitModalFrame sheet under
+// it). Props and the onChange(value) intent are unchanged.
 export function SelectField({
   label,
   value = "",
@@ -135,34 +172,23 @@ export function SelectField({
   helperText,
   disabled = false,
 }) {
+  const normalizedOptions = options.map((option) =>
+    typeof option === "object" && option !== null
+      ? option
+      : { value: option, label: option }
+  );
+
   return (
-    <label className="block">
-      <span className={LABEL_CLASS}>{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        disabled={disabled}
-        className={`mt-2 ${FIELD_BED_CLASS} appearance-none`}
-      >
-        {placeholder ? (
-          <option value="" disabled={value !== ""}>
-            {placeholder}
-          </option>
-        ) : null}
-        {options.map((option) => {
-          const optionValue =
-            typeof option === "object" && option !== null ? option.value : option;
-          const optionLabel =
-            typeof option === "object" && option !== null ? option.label : option;
-          return (
-            <option key={optionValue} value={optionValue}>
-              {optionLabel}
-            </option>
-          );
-        })}
-      </select>
-      {helperText ? <span className={`mt-1 block ${HELPER_CLASS}`}>{helperText}</span> : null}
-    </label>
+    <KitFormField
+      variant="select"
+      label={label}
+      value={value}
+      options={normalizedOptions}
+      onSelect={(nextValue) => onChange(nextValue)}
+      placeholder={placeholder}
+      helper={helperText}
+      isDisabled={disabled}
+    />
   );
 }
 
@@ -253,7 +279,7 @@ export function TextAreaField({
         rows={1}
         maxLength={maxLength || undefined}
         disabled={disabled}
-        className={`mt-2 w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] focus-visible:outline-none focus-visible:border-[var(--gold-action)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+        className={`kit-focus cf-field mt-2 w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
           mono ? " font-mono" : ""
         }`}
         style={{

@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Activity, Search, X } from "lucide-react";
+import { Activity, Search } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -133,10 +135,21 @@ export default function MechanicsModulePickerModalView({
     );
   }, [activeSource, query]);
 
+  // ED1d Defect 5: migrated off a hand-rolled fixed overlay (was
+  // max-w-6xl, near-full-screen on most laptop widths) onto
+  // KitModalFrame at the ruled standard size (StorylineReferencePickerModal.view.jsx's
+  // `max-w-4xl` + `max-h-[100dvh] ... min-[700px]:max-h-[92dvh]`
+  // pattern). Content below (source tabs, search, card grid) is
+  // unchanged; the hand-rolled close button is gone, KitModalFrame
+  // supplies its own circular close control.
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <div className="max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabel={title}
+      panelClassName="w-full max-w-4xl"
+    >
+      <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)] pr-16">
           <div>
             <p className={EYEBROW_CLASS}>
               {eyebrow}
@@ -148,16 +161,6 @@ export default function MechanicsModulePickerModalView({
               {description}
             </p>
           </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/40 hover:text-[var(--ink)]"
-            title="Close"
-            aria-label="Close mechanics module picker"
-          >
-            <X size={18} />
-          </button>
         </div>
 
         <div className="border-b border-white/10 p-6">
@@ -196,7 +199,7 @@ export default function MechanicsModulePickerModalView({
           </label>
         </div>
 
-        <div className="max-h-[54vh] overflow-y-auto p-6">
+        <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {loadStatus === "loading" ? (
             <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--ink-dim)]">
               Loading mechanics modules...
@@ -229,6 +232,6 @@ export default function MechanicsModulePickerModalView({
           ) : null}
         </div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }

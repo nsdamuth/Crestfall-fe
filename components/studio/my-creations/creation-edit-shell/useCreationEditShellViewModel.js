@@ -3,26 +3,8 @@
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  LOCATION_EDIT_SECTIONS,
-  LOCATION_REGISTRY_EDIT_SECTIONS,
-  OUTFIT_EDIT_SECTIONS,
-  WARDROBE_EDIT_SECTIONS,
-  POSE_EDIT_SECTIONS,
-  IMAGE_PRESET_EDIT_SECTIONS,
-  SCENARIO_EDIT_SECTIONS,
-  NARRATOR_EDIT_SECTIONS,
-  ROOM_TEMPLATE_EDIT_SECTIONS,
-  STORYLINE_EDIT_SECTIONS,
-  CHARACTER_TEMPLATE_EDIT_SECTIONS,
-  NPC_REGISTRY_EDIT_SECTIONS,
-  ITEM_REGISTRY_EDIT_SECTIONS,
-  STRUCTURED_REGISTRY_EDIT_SECTIONS,
-  MECHANICS_MODULE_EDIT_SECTIONS,
-  RULES_CODEX_EDIT_SECTIONS,
-  LORE_EDIT_SECTIONS,
-  ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,
-  STATS_POOLS_PROFILE_EDIT_SECTIONS,
-  PROGRESSION_PROFILE_EDIT_SECTIONS,
+  CREATION_TYPE_SECTIONS,
+  CREATION_TYPE_SECTION_GROUPS,
   sections,
 } from "@/components/studio/my-creations/edit/creationEditConstants";
 import { useCreationEditViewModel } from "@/components/studio/my-creations/edit/hooks/useCreationEditViewModel";
@@ -76,48 +58,30 @@ export function buildCreationEditTypeFlags({ form = {}, creationId = "" } = {}) 
   };
 }
 
+// Registry-as-data, ED1 (docs/plans/FABLE-GATE-2-STUDIO.md, ruling
+// N1 option A): replaces the nested ternary this function used to be.
+// CREATION_TYPE_SECTIONS carries every type's own array unchanged;
+// PLAYER_CHARACTER and any unlisted type fall through to `sections`
+// (CHARACTER_EDIT_SECTIONS), matching the ternary's own final default
+// exactly, byte for byte the same resolution the old chain produced.
 export function resolveCreationEditSections(flags = {}) {
-  return flags.isProgressionProfile
-    ? PROGRESSION_PROFILE_EDIT_SECTIONS
-    : flags.isStatsPoolsProfile
-      ? STATS_POOLS_PROFILE_EDIT_SECTIONS
-      : flags.isActorMechanicsProfile
-        ? ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS
-        : flags.isLore
-          ? LORE_EDIT_SECTIONS
-          : flags.isRulesCodex
-            ? RULES_CODEX_EDIT_SECTIONS
-            : flags.isMechanicsModule
-              ? MECHANICS_MODULE_EDIT_SECTIONS
-              : flags.isLocationRegistry
-                ? LOCATION_REGISTRY_EDIT_SECTIONS
-                : flags.isStructuredRegistry
-                  ? STRUCTURED_REGISTRY_EDIT_SECTIONS
-                  : flags.isNpcRegistry
-                    ? NPC_REGISTRY_EDIT_SECTIONS
-                    : flags.isItemRegistry
-                      ? ITEM_REGISTRY_EDIT_SECTIONS
-                      : flags.isCharacterTemplate
-                        ? CHARACTER_TEMPLATE_EDIT_SECTIONS
-                        : flags.isStoryline
-                          ? STORYLINE_EDIT_SECTIONS
-                          : flags.isRoomTemplate
-                            ? ROOM_TEMPLATE_EDIT_SECTIONS
-                            : flags.isNarrator
-                              ? NARRATOR_EDIT_SECTIONS
-                              : flags.isScenario
-                                ? SCENARIO_EDIT_SECTIONS
-                                : flags.isOutfit
-                                  ? OUTFIT_EDIT_SECTIONS
-                                  : flags.isWardrobe
-                                    ? WARDROBE_EDIT_SECTIONS
-                                    : flags.isLocation
-                                      ? LOCATION_EDIT_SECTIONS
-                                      : flags.isPose
-                                        ? POSE_EDIT_SECTIONS
-                                        : flags.isImagePreset
-                                          ? IMAGE_PRESET_EDIT_SECTIONS
-                                          : sections;
+  return CREATION_TYPE_SECTIONS[flags.creationType] || sections;
+}
+
+// Group grammar resolver, ED1: schema-as-data section grouping. Falls
+// back to the Character grammar for PLAYER_CHARACTER and any type
+// without a named grouping, mirroring resolveCreationEditSections's
+// own default.
+export function resolveCreationEditSectionGroups(flags = {}) {
+  return (
+    CREATION_TYPE_SECTION_GROUPS[flags.creationType] ||
+    CREATION_TYPE_SECTION_GROUPS.CHARACTER
+  );
+}
+
+function groupIdForSection(groups, sectionId) {
+  const match = groups.find((group) => group.sectionIds.includes(sectionId));
+  return match ? match.id : groups[0]?.id || null;
 }
 
 export function useCreationEditShellViewModel({ creationId, creation } = {}) {
@@ -142,6 +106,25 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
   const activeSections = useMemo(
     () => resolveCreationEditSections(flags),
     [flags]
+  );
+
+  const activeSectionGroups = useMemo(
+    () => resolveCreationEditSectionGroups(flags),
+    [flags]
+  );
+
+  const activeGroupId = useMemo(
+    () => groupIdForSection(activeSectionGroups, edit.activeSection),
+    [activeSectionGroups, edit.activeSection]
+  );
+
+  const handleSelectGroup = useCallback(
+    (groupId) => {
+      const group = activeSectionGroups.find((entry) => entry.id === groupId);
+      const firstSectionId = group?.sectionIds?.[0];
+      if (firstSectionId) edit.setActiveSection(firstSectionId);
+    },
+    [activeSectionGroups, edit]
   );
 
   const handleSetDefaultPc = useCallback(async () => {
@@ -219,6 +202,8 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
     deleteStatus: edit.deleteStatus,
     deleteMessage: edit.deleteMessage,
     handleDelete: edit.handleDelete,
+    onUnlistForEditing: edit.handleUnlistForEditing,
+    onCancelReview: edit.handleCancelReview,
   };
 
   return {
@@ -228,6 +213,9 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
       isTemplate: flags.isTemplate,
       activeSection: edit.activeSection,
       activeSections,
+      activeSectionGroups,
+      activeGroupId,
+      onSelectGroup: handleSelectGroup,
       canSetDefaultPc: flags.canSetDefaultPc,
       settingDefaultPc,
       onSetDefaultPc: handleSetDefaultPc,
@@ -257,6 +245,12 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
       onUnlistForEditing: edit.handleUnlistForEditing,
       onCancelReview: edit.handleCancelReview,
       reviewStatus: edit.reviewStatus,
+    },
+    saveBarProps: {
+      hasUnsavedChanges: edit.hasUnsavedChanges,
+      onSave: edit.handleSave,
+      saveStatus: edit.saveStatus,
+      saveMessage: edit.saveMessage,
     },
     featuredImagePickerProps: activeSlotPickerKey
       ? {
