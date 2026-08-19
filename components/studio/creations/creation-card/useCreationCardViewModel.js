@@ -6,7 +6,10 @@ import { useCreationStatusBadgesViewModel } from "@/components/studio/creations/
 import buildModalCreationFromPreviewGraph from "@/components/studio/creations/buildModalCreationFromPreviewGraph";
 import { fetchCreationPreview } from "@/lib/client/studio/creations/creationClient";
 import { setDefaultPlayerCharacter } from "@/lib/client/studio/profile/defaultPlayerCharacterClient";
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import {
+  getStoryOpeningLocationStartConfig,
+  startStoryFromCreation,
+} from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { getCreationCreator } from "@/lib/shared/creations/creationAttribution";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 
@@ -127,7 +130,37 @@ export function useCreationCardViewModel({
     setStartingChat(true);
 
     try {
-      const data = await startStoryFromCreation(creation);
+      let storyCreation = creation;
+
+      if (
+        String(creation?.type || "").toUpperCase() === "ROOM_TEMPLATE" &&
+        creationId
+      ) {
+        try {
+          const previewGraph = await fetchCreationPreview(creationId);
+          storyCreation = buildModalCreationFromPreviewGraph({
+            previewGraph,
+            fallbackCreation: creation,
+            editHref,
+            chatHref,
+            imageHref,
+            catalogueHref,
+          });
+        } catch {
+          storyCreation = fallbackModalCreation;
+        }
+
+        const openingLocation =
+          getStoryOpeningLocationStartConfig(storyCreation);
+        if (openingLocation.selectionRequired) {
+          setPreviewCreation(storyCreation);
+          setIsPreviewOpen(true);
+          setStartingChat(false);
+          return;
+        }
+      }
+
+      const data = await startStoryFromCreation(storyCreation);
       const roomId = data?.room?.id;
 
       if (!roomId) {

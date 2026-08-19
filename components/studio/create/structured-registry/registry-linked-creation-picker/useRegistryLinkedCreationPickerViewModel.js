@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 import { getDefaultCreationImageForType } from "@/lib/shared/creations/creationMedia";
+import { createLinkedCreationReferenceKey } from "@/components/studio/registries/structuredRegistryUtils";
+import { isStructuredRegistryType } from "@/components/studio/registries/structuredRegistryConfigs";
 
 function normalizeString(value) {
   return typeof value === "string" ? value.trim() : "";
@@ -103,9 +105,47 @@ async function fetchCreationsForTypes(allowedTypes = []) {
   return [...byId.values()];
 }
 
-function matchesSearchQuery(creation, normalizedQuery) {
+function getRegistryEntries(creation) {
+  return normalizeArray(creation?.data?.entries).filter((entry) =>
+    normalizeString(entry?.id || entry?.key || entry?.slug)
+  );
+}
+
+function createPickerSelections(creations = [], selectionMode = "WHOLE_CREATION") {
+  return normalizeArray(creations).flatMap((creation) => {
+    const creationType = normalizeString(creation?.type).toUpperCase();
+
+    if (
+      selectionMode !== "REGISTRY_ENTRY" ||
+      !isStructuredRegistryType(creationType)
+    ) {
+      return [
+        {
+          selectionId: createLinkedCreationReferenceKey({
+            creationId: creation?.id,
+          }),
+          creation,
+          registryEntry: null,
+        },
+      ];
+    }
+
+    return getRegistryEntries(creation).map((registryEntry) => ({
+      selectionId: createLinkedCreationReferenceKey({
+        registryCreationId: creation?.id,
+        registryEntryId: registryEntry?.id || registryEntry?.key || registryEntry?.slug,
+      }),
+      creation,
+      registryEntry,
+    }));
+  });
+}
+
+function matchesSearchQuery(selection, normalizedQuery) {
   if (!normalizedQuery) return true;
 
+  const creation = selection?.creation || {};
+  const registryEntry = selection?.registryEntry || {};
   const data = creation?.data || {};
   const haystack = [
     creation?.title,
@@ -119,6 +159,13 @@ function matchesSearchQuery(creation, normalizedQuery) {
     data.location_scale,
     data.space_type,
     data.spaceType,
+    registryEntry?.name,
+    registryEntry?.title,
+    registryEntry?.label,
+    registryEntry?.category,
+    registryEntry?.summary,
+    registryEntry?.publicDescription,
+    ...normalizeArray(registryEntry?.aliases),
   ]
     .filter(Boolean)
     .join(" ")
@@ -127,17 +174,33 @@ function matchesSearchQuery(creation, normalizedQuery) {
   return haystack.includes(normalizedQuery);
 }
 
-function toViewCreation(creation, selectedSet) {
-  const title = getCreationTitle(creation);
+function toViewCreation(selection, selectedSet) {
+  const creation = selection?.creation || {};
+  const registryEntry = selection?.registryEntry || null;
+  const registryEntryTitle = normalizeString(
+    registryEntry?.name || registryEntry?.title || registryEntry?.label
+  );
+  const title = registryEntryTitle || getCreationTitle(creation);
+  const registrySummary = normalizeString(
+    registryEntry?.summary ||
+      registryEntry?.publicDescription ||
+      registryEntry?.public_description
+  );
+  const subtitle = registryEntry
+    ? [creation?.title, creation?.type, registryEntry?.category, registrySummary]
+        .map(normalizeString)
+        .filter(Boolean)
+        .join(" · ")
+    : getCreationSubtitle(creation);
 
   return {
-    id: creation?.id || "",
+    id: selection?.selectionId || "",
     title,
-    subtitle: getCreationSubtitle(creation),
-    typeLabel: creation?.type || "Creation",
+    subtitle: subtitle || "Registry entry",
+    typeLabel: registryEntry ? `${creation?.type || "REGISTRY"} ENTRY` : creation?.type || "Creation",
     displayImageUrl: getFeaturedImageUrl(creation),
     imageAltText: `${title} creation image`,
-    isSelected: selectedSet.has(creation?.id),
+    isSelected: selectedSet.has(selection?.selectionId),
   };
 }
 
@@ -145,10 +208,20 @@ export function useRegistryLinkedCreationPickerViewModel({
   title = "Link Creation",
   body = "Choose a creation to link to this registry entry.",
   allowedTypes = [],
+  excludedReferenceKeys = [],
+  selectedReferenceKeys,
   selectedCreationIds = [],
+  selectionMode = "",
   onClose,
   onSelect,
 }) {
+  const resolvedSelectionMode =
+    selectionMode === "REGISTRY_ENTRY" || selectionMode === "WHOLE_CREATION"
+      ? selectionMode
+      : Array.isArray(selectedReferenceKeys)
+        ? "REGISTRY_ENTRY"
+        : "WHOLE_CREATION";
+
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("loading");
@@ -166,7 +239,7 @@ export function useRegistryLinkedCreationPickerViewModel({
 
         if (cancelled) return;
 
-        setItems(results);
+        setItems(createPickerSelections(results, resolvedSelectionMode));
         setStatus("loaded");
       } catch (error) {
         if (cancelled) return;
@@ -181,30 +254,53 @@ export function useRegistryLinkedCreationPickerViewModel({
     return () => {
       cancelled = true;
     };
-  }, [allowedTypes]);
+  }, [allowedTypes, resolvedSelectionMode]);
 
   const selectedSet = useMemo(
-    () => new Set(normalizeArray(selectedCreationIds)),
-    [selectedCreationIds]
+    () =>
+      new Set([
+        ...normalizeArray(selectedReferenceKeys),
+        ...normalizeArray(selectedCreationIds).map((creationId) =>
+          createLinkedCreationReferenceKey({ creationId })
+        ),
+      ]),
+    [selectedCreationIds, selectedReferenceKeys]
+  );
+
+  const excludedSet = useMemo(
+    () => new Set(normalizeArray(excludedReferenceKeys)),
+    [excludedReferenceKeys]
   );
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return items.filter((item) => matchesSearchQuery(item, normalizedQuery));
-  }, [items, query]);
+    return items.filter(
+      (item) =>
+        !excludedSet.has(item?.selectionId) &&
+        matchesSearchQuery(item, normalizedQuery)
+    );
+  }, [excludedSet, items, query]);
 
   const creations = useMemo(
     () => filteredItems.map((item) => toViewCreation(item, selectedSet)),
     [filteredItems, selectedSet]
   );
 
-  function chooseCreation(creationId) {
-    const selectedCreation = items.find((item) => item?.id === creationId);
+  function chooseCreation(selectionId) {
+    const selected = items.find((item) => item?.selectionId === selectionId);
 
-    if (!selectedCreation) return;
+    if (!selected) return;
 
-    onSelect?.(selectedCreation);
+    if (resolvedSelectionMode === "REGISTRY_ENTRY") {
+      onSelect?.({
+        creation: selected.creation,
+        registryEntry: selected.registryEntry,
+      });
+      return;
+    }
+
+    onSelect?.(selected.creation);
   }
 
   return {

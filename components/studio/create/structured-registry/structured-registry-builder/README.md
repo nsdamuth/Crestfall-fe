@@ -41,3 +41,11 @@ http://localhost:3000/dev/ui-preview/structured-registry-builder
 ```
 
 The preview is development-only and uses fixture data without an API or linked-creation catalogue.
+
+## W8 precise linked-reference wiring
+
+The Structured Registry core hook, Builder application ViewModel, shared utilities, and linked-Creation picker ViewModel in the independently deployed FE app are deployment mirrors of authoritative `Crestfall` behavior.
+
+Structured Registry targets select exact entries using `registryCreationId + registryEntryId`; ordinary targets remain whole-Creation links. Direct self-references are excluded, same-Registry sibling references remain valid, and stored references hydrate to current display metadata.
+
+The FE Builder View remains presentation authority and now shows Registry title plus degraded reference states without adopting Chassis source styling.

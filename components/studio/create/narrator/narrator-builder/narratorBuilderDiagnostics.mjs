@@ -36,6 +36,14 @@ test("Narrator Builder ViewModel owns state, payload mapping, and creation orche
   assert.match(viewModel, /type: "NARRATOR"/);
   assert.match(viewModel, /selected_modules/);
   assert.match(viewModel, /response_direction/);
+  assert.doesNotMatch(
+    viewModel,
+    /pacing:\s*selectedModules\.pacing/
+  );
+  assert.doesNotMatch(
+    viewModel,
+    /detail_level:\s*selectedModules\.detail_level/
+  );
   assert.match(viewModel, /createNarratorDraft/);
   assert.match(viewModel, /router\.push/);
   assert.doesNotMatch(viewModel, /\bfetch\s*\(|<\w+/);
@@ -58,6 +66,12 @@ test("Narrator Builder contract and fixtures cover key states", () => {
   );
 
   assert.match(contract, /NARRATOR_BUILDER_VIEW_CONTRACT_VERSION/);
+  assert.match(
+    contract,
+    /prose_style:\s*"cinematic"[\s\S]*detail_level:\s*"balanced"[\s\S]*pacing:\s*"balanced"[\s\S]*atmosphere:\s*"adventurous"/
+  );
+  assert.doesNotMatch(contract, /dialogue_style/);
+  assert.doesNotMatch(contract, /knowledge_behavior/);
   assert.match(fixtures, /narratorBuilderDefaultFixture/);
   assert.match(fixtures, /narratorBuilderEmptyFixture/);
   assert.match(fixtures, /narratorBuilderSavingFixture/);

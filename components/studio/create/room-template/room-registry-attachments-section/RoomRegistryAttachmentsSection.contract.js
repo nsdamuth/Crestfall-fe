@@ -1,4 +1,4 @@
-export const ROOM_REGISTRY_ATTACHMENTS_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const ROOM_REGISTRY_ATTACHMENTS_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * @typedef {Object} RoomRegistryAttachmentViewItem
@@ -8,6 +8,10 @@ export const ROOM_REGISTRY_ATTACHMENTS_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} description
  * @property {string} imageUrl
  * @property {string} notes
+ * @property {"LIVE_CREATION"|"STORED_REFERENCE"} hydrationSource
+ * @property {string} hydrationSourceLabel
+ * @property {"LIVE"|"FALLBACK"} hydrationSourceTone
+ * @property {string} hydrationMessage
  * @property {string} removeAriaLabel
  */
 

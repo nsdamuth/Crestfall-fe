@@ -38,18 +38,61 @@ test("Location Registry Builder View is API and persistence free", () => {
   assert.doesNotMatch(view, /locationRegistryUtils/);
   assert.doesNotMatch(view, /getDistanceModeDisplay/);
   assert.match(view, /connection\.distanceModeDisplay/);
+  assert.match(view, /characterOptions/);
+  assert.match(view, /characterLoadError/);
+  assert.match(view, /onApplyCharacter/);
+  assert.match(view, /selectedCharacterId/);
+  assert.match(view, /selectedNpcEntryId/);
+  assert.match(view, /disabledCharacterIds/);
+  assert.match(view, /disabledNpcEntryIds/);
+  assert.match(view, /Character selection required/);
+  assert.match(view, /Legacy NPC Registry reference unavailable/);
+  assert.match(view, /NPC Registry entry unavailable/);
+  assert.match(view, /Linked Character unavailable/);
+  assert.match(view, /crossRegistry = \{\}/);
+  assert.match(view, /onSelectConnectionEndpointRegistry/);
+  assert.match(view, /onSelectConnectionEndpointLocation/);
+  assert.match(view, /label="From Registry"/);
+  assert.match(view, /label="To Registry"/);
+  assert.match(view, /blankLabel="This Registry"/);
+  assert.match(view, /connection\.fromLocationDisplay/);
+  assert.match(view, /connection\.toLocationDisplay/);
+  assert.match(view, /Cross-Registry Boundary: yes/);
+  assert.match(view, /Save this Location Registry before authoring cross-Registry/);
+  assert.match(view, /reference identity is preserved/);
+  assert.match(view, /splitPreview = \{\}/);
+  assert.match(view, /onOpenSplitPreview/);
+  assert.match(view, /onToggleSplitCandidate/);
+  assert.match(view, /onPrepareSplitPlan/);
+  assert.match(view, /onChangeSplitCreatorConfirmation/);
+  assert.match(view, /onCommitSplitPlan/);
+  assert.match(view, /Analyze Split/);
+  assert.match(view, /Split Registry Preview/);
+  assert.match(view, /Source integrity issues must be corrected before any split can proceed/);
+  assert.match(view, /Select for server validation/);
+  assert.match(view, /Validate Selected Split/);
+  assert.match(view, /Refresh Server Plan/);
+  assert.match(view, /Confirm & Execute Split/);
+  assert.match(view, /Applying Atomic Split/);
 });
 
-test("Location Registry Builder ViewModel owns application adaptation", () => {
+test("Location Registry Builder ViewModel owns the wired application foundation", () => {
   const viewModel = readFeature("useLocationRegistryBuilderViewModel.js");
 
   assert.match(viewModel, /useLocationRegistryBuilder/);
-  assert.match(viewModel, /normalizeListText/);
+  assert.match(viewModel, /analyzeLocationRegistrySplit/);
+  assert.match(viewModel, /planLocationRegistrySplit/);
+  assert.match(viewModel, /commitLocationRegistrySplit/);
+  assert.match(viewModel, /currentCreationId/);
   assert.match(viewModel, /withEntryPresentation/);
+  assert.match(viewModel, /withEntryListPresentation/);
   assert.match(viewModel, /withConnectionPresentation/);
-  assert.match(viewModel, /withConnectionListPresentation/);
-  assert.match(viewModel, /distanceModeDisplay/);
+  assert.match(viewModel, /withConnectionListCrossRegistryPresentation/);
   assert.match(viewModel, /withPresencePresentation/);
+  assert.match(viewModel, /characterOptions/);
+  assert.match(viewModel, /registryOptions/);
+  assert.match(viewModel, /crossRegistry/);
+  assert.match(viewModel, /splitPreview/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
@@ -64,7 +107,40 @@ test("Location Registry Builder contract and fixtures cover core states", () => 
   assert.match(fixtures, /locationRegistryBuilderEntriesFixture/);
   assert.match(fixtures, /locationRegistryBuilderConnectionsFixture/);
   assert.match(fixtures, /locationRegistryBuilderPresenceFixture/);
+  assert.match(fixtures, /locationRegistryBuilderPresenceDirectCharacterFixture/);
+  assert.match(fixtures, /locationRegistryBuilderPresenceUnavailableFixture/);
+  assert.match(fixtures, /locationRegistryBuilderCrossRegistryConnectionFixture/);
+  assert.match(fixtures, /locationRegistryBuilderCrossRegistryDegradedFixture/);
+  assert.match(fixtures, /locationRegistryBuilderSplitPreviewFixture/);
+  assert.match(fixtures, /locationRegistryBuilderSplitBlockedFixture/);
+  assert.match(fixtures, /locationRegistryBuilderSplitCommitReadyFixture/);
   assert.match(fixtures, /locationRegistryBuilderEditFixture/);
+});
+
+test("Location Registry shared application modules expose split, presence, hierarchy, and cross-registry foundations", () => {
+  const utils = readRepo("components/studio/registries/locationRegistryUtils.js");
+  const hook = readRepo("components/studio/registries/hooks/useLocationRegistryBuilder.js");
+  const registryClient = readRepo("lib/client/studio/registries/registryClient.js");
+  const splitClient = readRepo("lib/client/studio/registries/locationRegistrySplitClient.js");
+  const splitAnalysis = readRepo("components/studio/registries/locationRegistrySplitAnalysis.mjs");
+  const endpointSelection = readRepo("components/studio/registries/locationRegistryConnectionEndpointSelection.mjs");
+
+  assert.match(utils, /LOCATION_REGISTRY_VERSION = "1\.4"/);
+  assert.match(utils, /LOCATION_REGISTRY_HIERARCHY_CONTRACT_VERSION/);
+  assert.match(utils, /LOCATION_REGISTRY_CROSS_REGISTRY_LOCATION_CONTRACT_VERSION/);
+  assert.match(utils, /normalizeLocationRegistryCharacterOptions/);
+  assert.match(utils, /hydrateLocationRegistryPresenceBindings/);
+  assert.match(utils, /normalizeLocationConnectionEndpoint/);
+  assert.match(hook, /fetchLocationRegistryCharacterOptions/);
+  assert.match(hook, /fetchLocationRegistryRegistryOptions/);
+  assert.match(hook, /fetchLocationRegistryById/);
+  assert.match(hook, /resolveLocationConnectionEndpointSelection/);
+  assert.match(registryClient, /fetchLocationRegistryCharacterOptions/);
+  assert.match(registryClient, /fetchLocationRegistryRegistryOptions/);
+  assert.match(splitClient, /planLocationRegistrySplit/);
+  assert.match(splitClient, /commitLocationRegistrySplit/);
+  assert.match(splitAnalysis, /analyzeLocationRegistrySplit/);
+  assert.match(endpointSelection, /resolveLocationConnectionEndpointSelection/);
 });
 
 test("Location Registry Builder preview is development-only", () => {

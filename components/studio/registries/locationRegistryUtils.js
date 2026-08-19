@@ -5,7 +5,15 @@ import {
 } from "@/lib/shared/creations/creationMedia";
 
 export const LOCATION_REGISTRY_KIND = "LOCATION_REGISTRY";
-export const LOCATION_REGISTRY_VERSION = "1.1";
+export const LOCATION_REGISTRY_VERSION = "1.4";
+export const LOCATION_REGISTRY_HIERARCHY_CONTRACT_VERSION =
+  "location_registry_hierarchy_v1";
+export const LOCATION_REGISTRY_CROSS_REGISTRY_LOCATION_CONTRACT_VERSION =
+  "location_registry_cross_registry_location_v1";
+
+export const LOCATION_REGISTRY_CHILD_LOAD_POLICY_OPTIONS = [
+  "LOCATION_SCOPED",
+];
 
 export const LOCATION_CATEGORY_OPTIONS = [
   "General",
@@ -418,6 +426,67 @@ export function getWeatherScopeName(scopes = [], scopeId) {
   );
 }
 
+export function createEmptyLocationParentRef() {
+  return {
+    registryCreationId: "",
+    locationEntryId: "",
+    locationCreationId: "",
+  };
+}
+
+export function normalizeLocationParentRef(reference = {}) {
+  const source = normalizeObject(reference);
+
+  return {
+    registryCreationId: normalizeString(
+      source.registryCreationId || source.registry_creation_id
+    ),
+    locationEntryId: normalizeString(
+      source.locationEntryId || source.location_entry_id
+    ),
+    locationCreationId: normalizeString(
+      source.locationCreationId || source.location_creation_id
+    ),
+  };
+}
+
+export function serializeLocationParentRef(reference = {}) {
+  const normalized = normalizeLocationParentRef(reference);
+
+  return {
+    registryCreationId: normalized.registryCreationId,
+    locationEntryId: normalized.locationEntryId,
+    locationCreationId: normalized.locationCreationId,
+  };
+}
+
+export function createLocationConnectionEndpoint(locationEntryId = "") {
+  return {
+    registryCreationId: "",
+    locationEntryId: normalizeString(locationEntryId),
+    locationCreationId: "",
+  };
+}
+
+export function normalizeLocationConnectionEndpoint(
+  endpoint = {},
+  fallbackLocationEntryId = ""
+) {
+  const source = normalizeObject(endpoint);
+
+  return {
+    registryCreationId: normalizeString(
+      source.registryCreationId || source.registry_creation_id
+    ),
+    locationEntryId:
+      normalizeString(source.locationEntryId || source.location_entry_id) ||
+      normalizeString(fallbackLocationEntryId),
+    locationCreationId: normalizeString(
+      source.locationCreationId || source.location_creation_id
+    ),
+  };
+}
+
 export function createEmptyLocationEntry() {
   return {
     id: createRegistryId("loc"),
@@ -431,6 +500,7 @@ export function createEmptyLocationEntry() {
     spaceType: "MIXED",
 
     parentLocationId: "",
+    parentLocationRef: createEmptyLocationParentRef(),
     region: "",
     weatherScopeId: "",
 
@@ -464,14 +534,22 @@ export function createEmptyPresenceBinding(entries = []) {
     id: createRegistryId("presence"),
     locationEntryId: entries[0]?.id || "",
     person: {
-      kind: "NPC_REGISTRY_ENTRY",
+      kind: "CREATION_REF",
       registryCreationId: "",
       registryEntryId: "",
-      creationId: "",
-      creationType: "",
-      entryKind: "",
-      displayName: "",
       registryTitle: "",
+      entryKind: "",
+      creationId: "",
+      creationType: "CHARACTER",
+      displayName: "",
+      description: "",
+      imageUrl: "",
+      contentRating: "",
+      visibility: "",
+      status: "",
+      aliases: [],
+      referenceStatus: "UNRESOLVED",
+      legacyReference: null,
     },
     relationshipRole: "COMMON_OCCUPANT",
     frequency: "USUALLY",
@@ -495,6 +573,10 @@ export function createEmptyLocationConnection(entries = []) {
     id: createRegistryId("conn"),
     fromLocationId: entries[0]?.id || "",
     toLocationId: entries[1]?.id || entries[0]?.id || "",
+    from: createLocationConnectionEndpoint(entries[0]?.id || ""),
+    to: createLocationConnectionEndpoint(
+      entries[1]?.id || entries[0]?.id || ""
+    ),
     relation: "CONNECTED_TO",
     bidirectional: true,
 
@@ -530,11 +612,58 @@ export function createEmptyWeatherScope() {
   };
 }
 
+export function createEmptyLocationRegistryChildRef() {
+  return {
+    creationId: "",
+    scopeLocationEntryId: "",
+    scopeLocationCreationId: "",
+    loadPolicy: "LOCATION_SCOPED",
+  };
+}
+
+export function normalizeLocationRegistryChildRef(reference = {}) {
+  const base = createEmptyLocationRegistryChildRef();
+  const source = normalizeObject(reference);
+  const loadPolicy = normalizeString(
+    source.loadPolicy || source.load_policy
+  ).toUpperCase();
+
+  return {
+    creationId: normalizeString(
+      source.creationId || source.creation_id
+    ),
+    scopeLocationEntryId: normalizeString(
+      source.scopeLocationEntryId || source.scope_location_entry_id
+    ),
+    scopeLocationCreationId: normalizeString(
+      source.scopeLocationCreationId || source.scope_location_creation_id
+    ),
+    loadPolicy: LOCATION_REGISTRY_CHILD_LOAD_POLICY_OPTIONS.includes(loadPolicy)
+      ? loadPolicy
+      : base.loadPolicy,
+  };
+}
+
+export function serializeLocationRegistryChildRef(reference = {}) {
+  const normalized = normalizeLocationRegistryChildRef(reference);
+
+  return {
+    creationId: normalized.creationId,
+    scopeLocationEntryId: normalized.scopeLocationEntryId,
+    scopeLocationCreationId: normalized.scopeLocationCreationId,
+    loadPolicy: normalized.loadPolicy,
+  };
+}
+
 export function createStarterLocationRegistry() {
   return {
     title: "",
     scope: "",
     description: "",
+    parentRegistryId: "",
+    scopeLocationEntryId: "",
+    scopeLocationCreationId: "",
+    childRegistryRefs: [],
     entries: [],
     connections: [],
     presenceBindings: [],
@@ -593,7 +722,10 @@ export function normalizeLocationEntry(entry = {}) {
         source.parent_location_id ||
         source.parentId ||
         source.parent_id ||
-        source.parent
+        (typeof source.parent === "string" ? source.parent : "")
+    ),
+    parentLocationRef: normalizeLocationParentRef(
+      source.parentLocationRef || source.parent_location_ref
     ),
     region: normalizeString(source.region),
     weatherScopeId: normalizeString(
@@ -640,8 +772,13 @@ export function normalizeLocationEntry(entry = {}) {
 export function normalizePresenceBinding(binding = {}) {
   const source = normalizeObject(binding);
   const base = createEmptyPresenceBinding();
-  const personSource = normalizeObject(source.person || source.npc || source.character);
+  const personSource = normalizeObject(
+    source.person || source.npc || source.character
+  );
   const conditionsSource = normalizeObject(source.conditions);
+  const legacySource = normalizeObject(
+    personSource.legacyReference || personSource.legacy_reference
+  );
 
   const cooldownTurns = Number.parseInt(
     source.cooldownTurns ?? source.cooldown_turns ?? base.cooldownTurns,
@@ -654,6 +791,54 @@ export function normalizePresenceBinding(binding = {}) {
     10
   );
 
+  const creationId = normalizeString(
+    personSource.creationId ||
+      personSource.creation_id ||
+      source.creationId ||
+      source.creation_id
+  );
+  const requestedCreationType = normalizeString(
+    personSource.creationType ||
+      personSource.creation_type ||
+      source.creationType ||
+      source.creation_type
+  ).toUpperCase();
+  const registryCreationId = normalizeString(
+    legacySource.registryCreationId ||
+      legacySource.registry_creation_id ||
+      personSource.registryCreationId ||
+      personSource.registry_creation_id ||
+      source.registryCreationId ||
+      source.registry_creation_id
+  );
+  const registryEntryId = normalizeString(
+    legacySource.registryEntryId ||
+      legacySource.registry_entry_id ||
+      personSource.registryEntryId ||
+      personSource.registry_entry_id ||
+      source.registryEntryId ||
+      source.registry_entry_id
+  );
+  const entryKind = normalizeString(
+    legacySource.entryKind ||
+      legacySource.entry_kind ||
+      personSource.entryKind ||
+      personSource.entry_kind
+  ).toUpperCase();
+  const suppliedKind = normalizeString(personSource.kind).toUpperCase();
+  const hasRegistryReference = Boolean(registryCreationId || registryEntryId);
+  const isLegacyReference =
+    suppliedKind === "LEGACY_NPC_REGISTRY_ENTRY" ||
+    Boolean(
+      legacySource.registryCreationId ||
+        legacySource.registry_creation_id ||
+        legacySource.registryEntryId ||
+        legacySource.registry_entry_id
+    );
+  const suppliedReferenceStatus = normalizeString(
+    personSource.referenceStatus || personSource.reference_status
+  ).toUpperCase();
+
   return {
     ...base,
     ...source,
@@ -663,38 +848,59 @@ export function normalizePresenceBinding(binding = {}) {
     ),
     person: {
       ...base.person,
-      ...personSource,
-      kind: "NPC_REGISTRY_ENTRY",
-      registryCreationId: normalizeString(
-        personSource.registryCreationId ||
-          personSource.registry_creation_id ||
-          source.registryCreationId ||
-          source.registry_creation_id
+      kind: hasRegistryReference
+        ? isLegacyReference && suppliedReferenceStatus !== "RESOLVED"
+          ? "LEGACY_NPC_REGISTRY_ENTRY"
+          : "NPC_REGISTRY_ENTRY"
+        : "CREATION_REF",
+      registryCreationId,
+      registryEntryId,
+      registryTitle: normalizeString(
+        personSource.registryTitle || personSource.registry_title
       ),
-      registryEntryId: normalizeString(
-        personSource.registryEntryId ||
-          personSource.registry_entry_id ||
-          source.registryEntryId ||
-          source.registry_entry_id
-      ),
-      creationId: normalizeString(
-        personSource.creationId || personSource.creation_id
-      ),
-      creationType: normalizeString(
-        personSource.creationType || personSource.creation_type
-      ).toUpperCase(),
-      entryKind: normalizeString(
-        personSource.entryKind || personSource.entry_kind
-      ).toUpperCase(),
+      entryKind,
+      creationId,
+      creationType: hasRegistryReference
+        ? requestedCreationType
+        : creationId
+          ? "CHARACTER"
+          : requestedCreationType === "CHARACTER"
+            ? "CHARACTER"
+            : "",
       displayName: normalizeString(
         personSource.displayName ||
           personSource.display_name ||
           personSource.name ||
           source.personName
       ),
-      registryTitle: normalizeString(
-        personSource.registryTitle || personSource.registry_title
+      description: normalizeString(
+        personSource.description || personSource.summary
       ),
+      imageUrl: normalizeString(
+        personSource.imageUrl ||
+          personSource.image_url ||
+          personSource.avatarUrl ||
+          personSource.avatar_url
+      ),
+      contentRating: normalizeString(
+        personSource.contentRating || personSource.content_rating
+      ).toUpperCase(),
+      visibility: normalizeString(personSource.visibility).toUpperCase(),
+      status: normalizeString(personSource.status).toUpperCase(),
+      aliases: normalizeArray(personSource.aliases),
+      referenceStatus: hasRegistryReference
+        ? suppliedReferenceStatus ||
+          (isLegacyReference ? "LEGACY_UNRESOLVED" : "UNRESOLVED")
+        : creationId
+          ? suppliedReferenceStatus || "UNRESOLVED"
+          : suppliedReferenceStatus || "UNRESOLVED",
+      legacyReference: isLegacyReference
+        ? {
+            registryCreationId,
+            registryEntryId,
+            entryKind,
+          }
+        : null,
     },
     relationshipRole: (() => {
       const value = normalizeString(
@@ -781,22 +987,35 @@ export function normalizeLocationConnection(connection = {}) {
     DEFAULT_DISTANCE_MODE_BY_RELATION[relation] || base.distanceMode
   );
 
+  const legacyFromLocationId = normalizeString(
+    source.fromLocationId ||
+      source.from_location_id ||
+      (typeof source.from === "string" ? source.from : "") ||
+      source.sourceLocationId
+  );
+  const legacyToLocationId = normalizeString(
+    source.toLocationId ||
+      source.to_location_id ||
+      (typeof source.to === "string" ? source.to : "") ||
+      source.targetLocationId
+  );
+  const from = normalizeLocationConnectionEndpoint(
+    source.from,
+    legacyFromLocationId
+  );
+  const to = normalizeLocationConnectionEndpoint(
+    source.to,
+    legacyToLocationId
+  );
+
   return {
     ...base,
     ...source,
     id: normalizeString(source.id) || createRegistryId("conn"),
-    fromLocationId: normalizeString(
-      source.fromLocationId ||
-        source.from_location_id ||
-        source.from ||
-        source.sourceLocationId
-    ),
-    toLocationId: normalizeString(
-      source.toLocationId ||
-        source.to_location_id ||
-        source.to ||
-        source.targetLocationId
-    ),
+    fromLocationId: legacyFromLocationId || from.locationEntryId,
+    toLocationId: legacyToLocationId || to.locationEntryId,
+    from,
+    to,
     relation,
     bidirectional: normalizeBoolean(source.bidirectional, true),
 
@@ -820,6 +1039,7 @@ export function normalizeLocationConnection(connection = {}) {
     notes: normalizeString(source.notes),
   };
 }
+
 
 export function normalizeWeatherScope(scope = {}) {
   const base = createEmptyWeatherScope();
@@ -850,6 +1070,18 @@ export function normalizeLocationRegistry(registry = {}) {
     title: normalizeString(source.title) || base.title,
     scope: normalizeString(source.scope),
     description: normalizeString(source.description),
+    parentRegistryId: normalizeString(
+      source.parentRegistryId || source.parent_registry_id
+    ),
+    scopeLocationEntryId: normalizeString(
+      source.scopeLocationEntryId || source.scope_location_entry_id
+    ),
+    scopeLocationCreationId: normalizeString(
+      source.scopeLocationCreationId || source.scope_location_creation_id
+    ),
+    childRegistryRefs: normalizeArray(
+      source.childRegistryRefs || source.child_registry_refs
+    ).map(normalizeLocationRegistryChildRef),
     entries: normalizeArray(source.entries).map(normalizeLocationEntry),
     connections: normalizeArray(source.connections).map(
       normalizeLocationConnection
@@ -875,6 +1107,306 @@ export function normalizeLocationRegistry(registry = {}) {
   };
 }
 
+
+export function serializeLocationRegistryEntry(entry = {}) {
+  const normalized = normalizeLocationEntry(entry);
+
+  if (normalized.kind === "CREATION_REF") {
+    return {
+      id: normalized.id,
+      kind: "CREATION_REF",
+      creationId: normalized.creationId,
+      creationType: normalized.creationType || "LOCATION",
+      parentLocationId: normalized.parentLocationId,
+      ...(normalized.parentLocationRef.registryCreationId ||
+      normalized.parentLocationRef.locationEntryId
+        ? {
+            parentLocationRef: serializeLocationParentRef(
+              normalized.parentLocationRef
+            ),
+          }
+        : {}),
+      weatherScopeId: normalized.weatherScopeId,
+      region: normalized.region,
+      commonOccupants: normalized.commonOccupants,
+      ownershipNotes: normalized.ownershipNotes,
+      accessRules: normalized.accessRules,
+      knowledgeRules: normalized.knowledgeRules,
+      rulesNotes: normalized.rulesNotes,
+      promptGuidance: normalized.promptGuidance,
+      negativePromptNotes: normalized.negativePromptNotes,
+    };
+  }
+
+  return {
+    ...normalized,
+    parentLocationRef: serializeLocationParentRef(
+      normalized.parentLocationRef
+    ),
+  };
+}
+
+export function serializeLocationConnection(connection = {}) {
+  const normalized = normalizeLocationConnection(connection);
+  const from = normalizeLocationConnectionEndpoint(normalized.from);
+  const to = normalizeLocationConnectionEndpoint(normalized.to);
+  const crossRegistry = Boolean(
+    from.registryCreationId || to.registryCreationId
+  );
+  const shared = {
+    id: normalized.id,
+    relation: normalized.relation,
+    bidirectional: normalized.bidirectional,
+    availableRouteTypes: normalized.availableRouteTypes,
+    defaultRouteType: normalized.defaultRouteType,
+    routeType: normalized.routeType,
+    distanceMode: normalized.distanceMode,
+    distanceMeters: normalized.distanceMeters,
+    travelTimeMinutes: normalized.travelTimeMinutes,
+    accessRules: normalized.accessRules,
+    notes: normalized.notes,
+  };
+
+  if (!crossRegistry) {
+    return {
+      ...shared,
+      fromLocationId: from.locationEntryId || normalized.fromLocationId,
+      toLocationId: to.locationEntryId || normalized.toLocationId,
+    };
+  }
+
+  return {
+    ...shared,
+    from,
+    to,
+  };
+}
+
+export function serializeLocationPresenceBinding(binding = {}) {
+  const normalized = normalizePresenceBinding(binding);
+  const person = normalizeObject(normalized.person);
+  const legacyReference = normalizeObject(person.legacyReference);
+  const registryCreationId =
+    normalizeString(person.registryCreationId) ||
+    normalizeString(legacyReference.registryCreationId);
+  const registryEntryId =
+    normalizeString(person.registryEntryId) ||
+    normalizeString(legacyReference.registryEntryId);
+  const hasRegistryReference = Boolean(
+    registryCreationId || registryEntryId
+  );
+  const keepLegacyUnresolved =
+    person.kind === "LEGACY_NPC_REGISTRY_ENTRY" &&
+    person.referenceStatus !== "RESOLVED";
+
+  return {
+    id: normalized.id,
+    locationEntryId: normalized.locationEntryId,
+    person: hasRegistryReference
+      ? {
+          kind: keepLegacyUnresolved
+            ? "LEGACY_NPC_REGISTRY_ENTRY"
+            : "NPC_REGISTRY_ENTRY",
+          registryCreationId,
+          registryEntryId,
+          ...(keepLegacyUnresolved
+            ? {
+                entryKind: normalizeString(
+                  person.entryKind || legacyReference.entryKind
+                ),
+              }
+            : {}),
+        }
+      : person.creationId
+        ? {
+            kind: "CREATION_REF",
+            creationId: person.creationId,
+            creationType: "CHARACTER",
+          }
+        : {
+            kind: "CREATION_REF",
+            creationId: "",
+            creationType: "CHARACTER",
+          },
+    relationshipRole: normalized.relationshipRole,
+    frequency: normalized.frequency,
+    automaticPresence: normalized.automaticPresence,
+    opportunityTriggers: normalized.opportunityTriggers,
+    cooldownTurns: normalized.cooldownTurns,
+    minimumAbsentTurns: normalized.minimumAbsentTurns,
+    guidance: normalized.guidance,
+    conditions: normalized.conditions,
+  };
+}
+
+export function hydrateLocationRegistryReferenceEntries(registry = {}, options = []) {
+  const optionById = new Map(
+    normalizeArray(options)
+      .filter((option) => option?.id)
+      .map((option) => [option.id, option])
+  );
+
+  return {
+    ...registry,
+    entries: normalizeArray(registry.entries).map((entry) => {
+      const normalized = normalizeLocationEntry(entry);
+      if (normalized.kind !== "CREATION_REF" || !normalized.creationId) {
+        return normalized;
+      }
+
+      const option = optionById.get(normalized.creationId);
+      if (!option) return normalized;
+
+      return {
+        ...normalized,
+        name: option.title || normalized.name,
+        summary: option.description || option.subtitle || normalized.summary,
+        publicDescription: option.description || normalized.publicDescription,
+        creationType: option.type || normalized.creationType || "LOCATION",
+      };
+    }),
+  };
+}
+
+export function hydrateLocationRegistryPresenceBindings(
+  registry = {},
+  characterOptions = [],
+  npcEntryOptions = []
+) {
+  const characterById = new Map(
+    normalizeArray(characterOptions)
+      .filter((option) => option?.id)
+      .map((option) => [String(option.id), option])
+  );
+  const npcEntryById = new Map(
+    normalizeArray(npcEntryOptions)
+      .filter((option) => option?.id)
+      .map((option) => [String(option.id), option])
+  );
+
+  return {
+    ...registry,
+    presenceBindings: normalizeArray(
+      registry.presenceBindings || registry.presence_bindings
+    ).map((binding) => {
+      const normalized = normalizePresenceBinding(binding);
+      const person = normalizeObject(normalized.person);
+      const legacyReference = normalizeObject(person.legacyReference);
+      const registryCreationId =
+        normalizeString(person.registryCreationId) ||
+        normalizeString(legacyReference.registryCreationId);
+      const registryEntryId =
+        normalizeString(person.registryEntryId) ||
+        normalizeString(legacyReference.registryEntryId);
+
+      if (registryCreationId || registryEntryId) {
+        const option = npcEntryById.get(
+          `${registryCreationId}:${registryEntryId}`
+        );
+
+        if (!option) {
+          return {
+            ...normalized,
+            person: {
+              ...person,
+              kind:
+                person.kind === "LEGACY_NPC_REGISTRY_ENTRY"
+                  ? "LEGACY_NPC_REGISTRY_ENTRY"
+                  : "NPC_REGISTRY_ENTRY",
+              registryCreationId,
+              registryEntryId,
+              displayName:
+                person.displayName ||
+                (person.kind === "LEGACY_NPC_REGISTRY_ENTRY"
+                  ? "Legacy NPC Registry reference unavailable"
+                  : "NPC Registry entry unavailable"),
+              referenceStatus:
+                person.kind === "LEGACY_NPC_REGISTRY_ENTRY"
+                  ? "LEGACY_UNRESOLVED"
+                  : "UNAVAILABLE",
+            },
+          };
+        }
+
+        return {
+          ...normalized,
+          person: {
+            ...person,
+            kind: "NPC_REGISTRY_ENTRY",
+            registryCreationId: option.registryCreationId,
+            registryEntryId: option.registryEntryId,
+            registryTitle: option.registryTitle || "NPC Registry",
+            entryKind: option.entryKind || "AD_HOC",
+            creationId: option.creationId || "",
+            creationType: option.creationType || "",
+            displayName:
+              option.displayName || option.title || "Linked NPC Registry entry",
+            description: option.description || "",
+            imageUrl: option.imageUrl || "",
+            contentRating: option.contentRating || "SFW",
+            aliases: normalizeArray(option.aliases),
+            referenceStatus: "RESOLVED",
+            legacyReference: null,
+          },
+        };
+      }
+
+      const creationId = normalizeString(person.creationId);
+
+      if (!creationId) {
+        return {
+          ...normalized,
+          person: {
+            ...person,
+            displayName: person.displayName || "Character selection required",
+            description: "",
+            imageUrl: "",
+            referenceStatus: "UNRESOLVED",
+          },
+        };
+      }
+
+      const option = characterById.get(creationId);
+
+      if (!option) {
+        return {
+          ...normalized,
+          person: {
+            ...person,
+            displayName: "Linked Character unavailable",
+            description: "",
+            imageUrl: "",
+            referenceStatus: "UNAVAILABLE",
+          },
+        };
+      }
+
+      return {
+        ...normalized,
+        person: {
+          ...person,
+          kind: "CREATION_REF",
+          registryCreationId: "",
+          registryEntryId: "",
+          registryTitle: "",
+          entryKind: "",
+          creationId,
+          creationType: "CHARACTER",
+          displayName: option.title || "Linked Character",
+          description: option.description || option.subtitle || "",
+          imageUrl: option.imageUrl || "",
+          contentRating: option.contentRating || "SFW",
+          visibility: option.visibility || "PRIVATE",
+          status: option.status || "DRAFT",
+          aliases: [],
+          referenceStatus: "RESOLVED",
+          legacyReference: null,
+        },
+      };
+    }),
+  };
+}
+
 export function buildLocationRegistryData(registry = {}) {
   const normalized = normalizeLocationRegistry(registry);
 
@@ -882,9 +1414,15 @@ export function buildLocationRegistryData(registry = {}) {
     registry_kind: LOCATION_REGISTRY_KIND,
     registry_version: LOCATION_REGISTRY_VERSION,
     scope: normalized.scope,
-    entries: normalized.entries,
-    connections: normalized.connections,
-    presence_bindings: normalized.presenceBindings,
+    parent_registry_id: normalized.parentRegistryId,
+    scope_location_entry_id: normalized.scopeLocationEntryId,
+    scope_location_creation_id: normalized.scopeLocationCreationId,
+    child_registry_refs: normalized.childRegistryRefs.map(
+      serializeLocationRegistryChildRef
+    ),
+    entries: normalized.entries.map(serializeLocationRegistryEntry),
+    connections: normalized.connections.map(serializeLocationConnection),
+    presence_bindings: normalized.presenceBindings.map(serializeLocationPresenceBinding),
     weather_scopes: normalized.weatherScopes,
     prompt_guidance: {
       summary: normalizeString(normalized.promptGuidance.summary),
@@ -908,7 +1446,7 @@ export function buildLocationRegistryData(registry = {}) {
         normalized.middlewareHints.allowRuntimeMutation !== false,
     },
     builder: "LOCATION_REGISTRY_BUILDER",
-    builder_version: "1.1",
+    builder_version: LOCATION_REGISTRY_VERSION,
   };
 }
 
@@ -926,6 +1464,62 @@ export function buildLocationRegistryCreationPayload(registry = {}) {
     data: buildLocationRegistryData(normalized),
   };
 }
+export function normalizeLocationRegistryRegistryOptions(
+  creations = [],
+  { excludeCreationId = "" } = {}
+) {
+  const excludedId = normalizeString(excludeCreationId);
+
+  return normalizeArray(creations)
+    .filter((creation) => creation?.id)
+    .filter(
+      (creation) =>
+        String(creation.type || "").toUpperCase() === LOCATION_REGISTRY_KIND
+    )
+    .filter((creation) => normalizeString(creation.id) !== excludedId)
+    .map((creation) => ({
+      id: normalizeString(creation.id),
+      type: LOCATION_REGISTRY_KIND,
+      title: normalizeString(creation.title) || "Untitled Location Registry",
+      description: normalizeString(creation.description),
+      parentRegistryId: normalizeString(
+        creation.data?.parent_registry_id || creation.data?.parentRegistryId
+      ),
+      scopeLocationEntryId: normalizeString(
+        creation.data?.scope_location_entry_id ||
+          creation.data?.scopeLocationEntryId
+      ),
+      scopeLocationCreationId: normalizeString(
+        creation.data?.scope_location_creation_id ||
+          creation.data?.scopeLocationCreationId
+      ),
+    }))
+    .sort((left, right) => left.title.localeCompare(right.title));
+}
+
+export function buildLocationRegistryScopeLocationOptions(
+  registry = {},
+  locationOptions = []
+) {
+  const hydrated = hydrateLocationRegistryReferenceEntries(
+    normalizeLocationRegistry(registry),
+    locationOptions
+  );
+
+  return hydrated.entries.map((entry) => ({
+    id: entry.id,
+    value: entry.id,
+    label: entry.name || entry.id || "Unnamed Location",
+    creationId:
+      entry.kind === "CREATION_REF" ? normalizeString(entry.creationId) : "",
+    creationType:
+      entry.kind === "CREATION_REF"
+        ? normalizeString(entry.creationType) || "LOCATION"
+        : "",
+    kind: entry.kind,
+  }));
+}
+
 export function normalizeLocationRegistryLocationOptions(creations = []) {
   return creations
     .filter((creation) => creation?.id)
@@ -968,6 +1562,57 @@ export function normalizeLocationRegistryLocationOptions(creations = []) {
     });
 }
 
+export function normalizeLocationRegistryCharacterOptions(creations = []) {
+  const source = Array.isArray(creations)
+    ? creations
+    : normalizeArray(
+        creations?.creations || creations?.data?.creations || creations?.items
+      );
+
+  return source
+    .filter((creation) => creation?.id)
+    .filter(
+      (creation) => String(creation.type || "").toUpperCase() === "CHARACTER"
+    )
+    .map((creation) => {
+      const featuredMedia = buildFeaturedMedia({
+        row: creation,
+        data: creation.data,
+        title: creation.title,
+        max: 1,
+      });
+      const fallbackImage = getDefaultCreationImageForType("CHARACTER");
+
+      return {
+        id: creation.id,
+        type: "CHARACTER",
+        title:
+          creation.title ||
+          creation.data?.name ||
+          creation.name ||
+          "Untitled Character",
+        subtitle:
+          creation.data?.short_concept ||
+          creation.data?.class ||
+          creation.data?.role_archetype ||
+          "Character",
+        description:
+          creation.description ||
+          creation.data?.summary ||
+          creation.data?.personality_summary ||
+          "",
+        imageUrl: getFirstCreationImageUrl(featuredMedia, fallbackImage),
+        contentRating:
+          creation.contentRating || creation.content_rating || "SFW",
+        visibility: creation.visibility || "PRIVATE",
+        status: creation.status || "DRAFT",
+        creationId: creation.id,
+        creationType: "CHARACTER",
+      };
+    })
+    .sort((left, right) => left.title.localeCompare(right.title));
+}
+
 export function normalizeLocationRegistryNpcEntryOptions(creations = []) {
   const source = Array.isArray(creations)
     ? creations
@@ -978,12 +1623,15 @@ export function normalizeLocationRegistryNpcEntryOptions(creations = []) {
   return source
     .filter((creation) => creation?.id)
     .filter(
-      (creation) => String(creation.type || "").toUpperCase() === "NPC_REGISTRY"
+      (creation) =>
+        String(creation.type || "").toUpperCase() === "NPC_REGISTRY"
     )
     .flatMap((registryCreation) => {
       const data = normalizeObject(registryCreation.data);
       const entries = normalizeArray(data.entries);
       const aliases = normalizeArray(data.aliases || data.alias_rules);
+      const registryTitle =
+        normalizeString(registryCreation.title) || "NPC Registry";
 
       return entries
         .filter((entry) => entry?.id)
@@ -1019,22 +1667,25 @@ export function normalizeLocationRegistryNpcEntryOptions(creations = []) {
           const creationType = normalizeString(
             entry.creationType || entry.creation_type
           ).toUpperCase();
-          const registryTitle =
-            normalizeString(registryCreation.title) || "NPC Registry";
 
           return {
             id: `${registryCreation.id}:${entryId}`,
             type:
               entryKind === "CREATION_REF"
                 ? creationType || "CHARACTER"
-                : "CUSTOM NPC",
+                : "LIGHTWEIGHT_NPC",
             title: name,
             subtitle: `${registryTitle} · ${
-              entryKind === "CREATION_REF" ? "Linked Character" : "Custom NPC"
+              entryKind === "CREATION_REF"
+                ? "Linked Character"
+                : "Lightweight NPC"
             }`,
             description: normalizeString(entry.notes || entry.description),
             imageUrl: normalizeString(
-              entry.imageUrl || entry.image_url || entry.avatarUrl || entry.avatar_url
+              entry.imageUrl ||
+                entry.image_url ||
+                entry.avatarUrl ||
+                entry.avatar_url
             ),
             contentRating:
               registryCreation.contentRating ||
@@ -1055,8 +1706,16 @@ export function normalizeLocationRegistryNpcEntryOptions(creations = []) {
 }
 
 export function getPresenceBindingPersonName(binding = {}) {
+  const person = normalizeObject(binding?.person);
+
   return (
-    normalizeString(binding?.person?.displayName) ||
-    "Unknown NPC Registry Entry"
+    normalizeString(person.displayName) ||
+    (person.referenceStatus === "LEGACY_UNRESOLVED"
+      ? "Legacy NPC Registry reference unavailable"
+      : person.referenceStatus === "UNAVAILABLE"
+        ? person.kind === "NPC_REGISTRY_ENTRY"
+          ? "NPC Registry entry unavailable"
+          : "Linked Character unavailable"
+        : "Unknown Person")
   );
 }

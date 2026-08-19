@@ -1,15 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchStoryRoom,
   fetchStoryRoomRegistryNpcs,
   loadStoryRoomRegistryNpc,
   loadRandomLikedStoryRoomCharacter,
   sendStoryRoomMessage,
+  runStoryRoomMessageAction,
   setStoryRoomPlayerCharacter,
+  summarizeStoryRoomCurrentBoundary,
   unloadStoryRoomRegistryNpc,
 } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { resolveStoryRoomWorldLocationTitle } from "./storyRoomWorldStateProjection.js";
 
 function normalizeMessages(snapshot) {
   return (Array.isArray(snapshot?.messages) ? snapshot.messages : []).filter(
@@ -233,17 +236,10 @@ function buildRoomViewModel(snapshot, roomId) {
     stateData.narrator?.title ||
     (room.narratorId ? "Narrator Attached" : "Default Crestfall Narrator");
 
-  const npcMobilitySceneFocus =
-    stateData.npcMobility?.sceneFocus &&
-    typeof stateData.npcMobility.sceneFocus === "object"
-      ? stateData.npcMobility.sceneFocus
-      : null;
-
-  const locationTitle =
-    npcMobilitySceneFocus?.title ||
-    npcMobilitySceneFocus?.location?.canonicalName ||
-    stateData.location?.title ||
-    (room.locationId ? "Location Attached" : "Unspecified Location");
+  const locationTitle = resolveStoryRoomWorldLocationTitle({
+    stateData,
+    room,
+  });
 
   const roomModeRaw =
     roomData.roomMode ||
@@ -294,6 +290,10 @@ function buildRoomViewModel(snapshot, roomId) {
 
   return {
     title: room.title || "Private Story",
+    openingHeroImage:
+      roomData.openingHeroImage && typeof roomData.openingHeroImage === "object"
+        ? roomData.openingHeroImage
+        : null,
     scenario: scenarioTitle,
     narrator: narratorTitle,
     location: locationTitle,
@@ -509,6 +509,7 @@ export default function useStoryRoomChat(roomId) {
   const [snapshot, setSnapshot] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [summaryPending, setSummaryPending] = useState(false);
   const [error, setError] = useState(null);
   const [settingPlayerCharacter, setSettingPlayerCharacter] = useState(false);
   const [setPlayerCharacterError, setSetPlayerCharacterError] = useState("");
@@ -520,6 +521,9 @@ export default function useStoryRoomChat(roomId) {
   const [registryNpcError, setRegistryNpcError] = useState("");
   const [randomLikedLoading, setRandomLikedLoading] = useState(false);
   const [randomLikedError, setRandomLikedError] = useState("");
+  const [messageActionState, setMessageActionState] = useState({});
+  const summaryRequestActiveRef = useRef(false);
+  const activeMessageActionRequestsRef = useRef(new Map());
 
   const reload = useCallback(async () => {
     if (!roomId) return;
@@ -556,6 +560,13 @@ export default function useStoryRoomChat(roomId) {
   useEffect(() => {
     reload();
   }, [reload]);
+
+  useEffect(() => {
+    activeMessageActionRequestsRef.current.clear();
+    summaryRequestActiveRef.current = false;
+    setSummaryPending(false);
+    setMessageActionState({});
+  }, [roomId]);
 
 const sendMessage = useCallback(
   async ({
@@ -808,6 +819,258 @@ const sendMessage = useCallback(
     },
     [roomId, settingPlayerCharacter]
   );
+  const beginMessageAction = useCallback((messageId, actionType) => {
+    const normalizedMessageId = String(messageId || "");
+
+    if (!normalizedMessageId || activeMessageActionRequestsRef.current.has(normalizedMessageId)) {
+      return null;
+    }
+
+    const requestId = crypto.randomUUID();
+    activeMessageActionRequestsRef.current.set(normalizedMessageId, requestId);
+
+    setMessageActionState((current) => ({
+      ...current,
+      [normalizedMessageId]: {
+        ...(current[normalizedMessageId] || {}),
+        pending: true,
+        pendingAction: actionType,
+        activeRequestId: requestId,
+        errorAction: "",
+        error: "",
+      },
+    }));
+
+    return requestId;
+  }, []);
+
+  const isCurrentMessageActionRequest = useCallback((messageId, requestId) => {
+    return (
+      activeMessageActionRequestsRef.current.get(String(messageId || "")) ===
+      requestId
+    );
+  }, []);
+
+  const finishMessageAction = useCallback(
+    (messageId, requestId, nextState) => {
+      const normalizedMessageId = String(messageId || "");
+
+      if (!isCurrentMessageActionRequest(normalizedMessageId, requestId)) {
+        return false;
+      }
+
+      activeMessageActionRequestsRef.current.delete(normalizedMessageId);
+      setMessageActionState((current) => ({
+        ...current,
+        [normalizedMessageId]: {
+          ...(current[normalizedMessageId] || {}),
+          pending: false,
+          pendingAction: "",
+          activeRequestId: "",
+          ...nextState,
+        },
+      }));
+
+      return true;
+    },
+    [isCurrentMessageActionRequest]
+  );
+
+  const replaceMessageFromAction = useCallback(
+    (messageId, requestId, updatedMessage) => {
+      if (
+        !updatedMessage ||
+        !isCurrentMessageActionRequest(messageId, requestId)
+      ) {
+        return;
+      }
+
+      setSnapshot((current) => {
+        if (!isCurrentMessageActionRequest(messageId, requestId)) {
+          return current;
+        }
+
+        const currentMessages = Array.isArray(current?.messages)
+          ? current.messages
+          : [];
+        const updatedMessageId = String(updatedMessage.id || messageId || "");
+        const targetIndex = currentMessages.findIndex(
+          (message) => String(message?.id || "") === updatedMessageId
+        );
+
+        if (targetIndex < 0) {
+          return current;
+        }
+
+        return {
+          ...(current || {}),
+          messages: currentMessages.map((message, index) =>
+            index === targetIndex
+              ? {
+                  ...message,
+                  ...updatedMessage,
+                  id: message.id,
+                }
+              : message
+          ),
+        };
+      });
+    },
+    [isCurrentMessageActionRequest]
+  );
+
+  const regenerateMessage = useCallback(
+    async (messageId) => {
+      if (!roomId || !messageId) return null;
+
+      const messageActionRequestId = beginMessageAction(
+        messageId,
+        "REGENERATE_RESPONSE"
+      );
+
+      if (!messageActionRequestId) return null;
+
+      try {
+        const data = await runStoryRoomMessageAction(roomId, messageId, {
+          actionType: "REGENERATE_RESPONSE",
+          messageActionRequestId,
+        });
+
+        replaceMessageFromAction(
+          messageId,
+          messageActionRequestId,
+          data?.message
+        );
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "",
+          error: "",
+        });
+
+        return data || null;
+      } catch (actionError) {
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "REGENERATE_RESPONSE",
+          error: actionError?.message || "Response could not be regenerated.",
+        });
+        return null;
+      }
+    },
+    [beginMessageAction, finishMessageAction, replaceMessageFromAction, roomId]
+  );
+
+  const continueMessage = useCallback(
+    async (messageId) => {
+      if (!roomId || !messageId) return null;
+
+      const messageActionRequestId = beginMessageAction(
+        messageId,
+        "CONTINUE_RESPONSE"
+      );
+
+      if (!messageActionRequestId) return null;
+
+      try {
+        const data = await runStoryRoomMessageAction(roomId, messageId, {
+          actionType: "CONTINUE_RESPONSE",
+          messageActionRequestId,
+        });
+
+        replaceMessageFromAction(
+          messageId,
+          messageActionRequestId,
+          data?.message
+        );
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "",
+          error: "",
+        });
+
+        return data || null;
+      } catch (actionError) {
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "CONTINUE_RESPONSE",
+          error: actionError?.message || "Response could not be continued.",
+        });
+        return null;
+      }
+    },
+    [beginMessageAction, finishMessageAction, replaceMessageFromAction, roomId]
+  );
+
+  const reportMessage = useCallback(
+    async (messageId, { reasonCode, comment = "" } = {}) => {
+      if (!roomId || !messageId) return null;
+
+      const messageActionRequestId = beginMessageAction(
+        messageId,
+        "REPORT_MESSAGE"
+      );
+
+      if (!messageActionRequestId) return null;
+
+      try {
+        const data = await runStoryRoomMessageAction(roomId, messageId, {
+          actionType: "REPORT_MESSAGE",
+          messageActionRequestId,
+          reasonCode,
+          comment,
+        });
+
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "",
+          error: "",
+          reported: true,
+        });
+
+        return data || null;
+      } catch (actionError) {
+        finishMessageAction(messageId, messageActionRequestId, {
+          errorAction: "REPORT_MESSAGE",
+          error: actionError?.message || "Message could not be reported.",
+        });
+        return null;
+      }
+    },
+    [beginMessageAction, finishMessageAction, roomId]
+  );
+
+  const summarizeCurrentBoundary = useCallback(async () => {
+    if (!roomId || summaryRequestActiveRef.current) return null;
+    summaryRequestActiveRef.current = true;
+    setSummaryPending(true);
+    setError(null);
+
+    try {
+      const data = await summarizeStoryRoomCurrentBoundary(roomId);
+      const recapMessage = data?.message;
+
+      if (recapMessage?.id) {
+        setSnapshot((current) => {
+          if (!current) return current;
+          const messages = Array.isArray(current.messages) ? current.messages : [];
+          if (
+            messages.some(
+              (message) => String(message?.id) === String(recapMessage.id)
+            )
+          ) {
+            return current;
+          }
+          return { ...current, messages: [...messages, recapMessage] };
+        });
+      }
+
+      return data || null;
+    } catch (summaryError) {
+      setError(
+        summaryError?.message || "Current scene summary could not be generated."
+      );
+      return null;
+    } finally {
+      summaryRequestActiveRef.current = false;
+      setSummaryPending(false);
+    }
+  }, [roomId]);
+
   const room = useMemo(
     () => buildRoomViewModel(snapshot, roomId),
     [snapshot, roomId]
@@ -831,9 +1094,15 @@ const sendMessage = useCallback(
     locationMentionOptions,
     loading,
     sending,
+    summaryPending,
     error,
     reload,
     sendMessage,
+    regenerateMessage,
+    continueMessage,
+    reportMessage,
+    messageActionState,
+    summarizeCurrentBoundary,
     canSetPlayerCharacter,
     settingPlayerCharacter,
     setPlayerCharacterError,

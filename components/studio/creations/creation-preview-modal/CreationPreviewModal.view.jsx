@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import Eyebrow from "@/components/ui/Eyebrow";
+import StoryStartOpeningLocationPickerView from "@/components/studio/story-rooms/story-start-opening-location/StoryStartOpeningLocationPicker.view";
 
 const ICON_BUTTON_CLASS =
   "flex items-center justify-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] shadow-[var(--shadow-popover)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]";
@@ -218,6 +219,7 @@ export default function CreationPreviewModalView({
   chatError = "",
   defaultPcError = "",
   defaultPcStatus = "",
+  openingLocationPicker = null,
   onClose,
   onToggleDescription,
   onSelectMedia,
@@ -413,28 +415,36 @@ export default function CreationPreviewModalView({
           ) : null}
 
           <div className="mt-8">
-            <PreviewActions
-              context={context}
-              editHref={editHref}
-              catalogueHref={catalogueHref}
-              supportsChat={supportsChat}
-              canSetDefaultPc={canSetDefaultPc}
-              isShareable={isShareable}
-              liked={liked}
-              bookmarked={bookmarked}
-              canLike={canLike}
-              canBookmark={canBookmark}
-              startingChat={startingChat}
-              settingDefaultPc={settingDefaultPc}
-              onToggleLike={onToggleLike}
-              onToggleBookmark={onToggleBookmark}
-              onStartStory={onStartStory}
-              onSetDefaultPc={onSetDefaultPc}
-              LinkComponent={LinkComponent}
-              ShareButtonComponent={ShareButtonComponent}
-            />
+            {openingLocationPicker ? (
+              <StoryStartOpeningLocationPickerView
+                {...openingLocationPicker}
+              />
+            ) : null}
 
-            {chatError ? (
+            <div className={openingLocationPicker?.open ? "mt-4" : ""}>
+              <PreviewActions
+                context={context}
+                editHref={editHref}
+                catalogueHref={catalogueHref}
+                supportsChat={supportsChat}
+                canSetDefaultPc={canSetDefaultPc}
+                isShareable={isShareable}
+                liked={liked}
+                bookmarked={bookmarked}
+                canLike={canLike}
+                canBookmark={canBookmark}
+                startingChat={startingChat}
+                settingDefaultPc={settingDefaultPc}
+                onToggleLike={onToggleLike}
+                onToggleBookmark={onToggleBookmark}
+                onStartStory={onStartStory}
+                onSetDefaultPc={onSetDefaultPc}
+                LinkComponent={LinkComponent}
+                ShareButtonComponent={ShareButtonComponent}
+              />
+            </div>
+
+            {chatError && !openingLocationPicker?.open ? (
               <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs text-[var(--status-danger)]">
                 {chatError}
               </p>

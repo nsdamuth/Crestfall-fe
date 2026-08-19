@@ -22,6 +22,7 @@ import SelectionCardView from "@/components/studio/room-templates/selection-card
 import ScenarioRecommendationsPanelView from "@/components/studio/room-templates/scenario-recommendations-panel/ScenarioRecommendationsPanel.view";
 import InvitedPlayersPanelView from "@/components/studio/room-templates/invited-players-panel/InvitedPlayersPanel.view";
 import OpeningMessageCardView from "@/components/studio/room-templates/opening-message-card/OpeningMessageCard.view";
+import StoryOpeningLocationAuthoringPanelView from "@/components/studio/room-templates/story-opening-location-authoring/StoryOpeningLocationAuthoringPanel.view";
 
 export default function RoomTemplateBuilderView({
   form = {},
@@ -34,6 +35,7 @@ export default function RoomTemplateBuilderView({
   selectedScenario = null,
   selectedNarrator = null,
   selectedLocation = null,
+  openingLocationAuthoringProps = {},
   showScenarioRecommendations = false,
   summaryProps = {},
   selectedCharactersPanelProps = {},
@@ -179,6 +181,10 @@ export default function RoomTemplateBuilderView({
               <p className="text-sm text-red-200">{referenceLoadError}</p>
             ) : null}
 
+            <StoryOpeningLocationAuthoringPanelView
+              {...openingLocationAuthoringProps}
+            />
+
             {showScenarioRecommendations ? (
               <ScenarioRecommendationsPanelView
                 {...scenarioRecommendationsPanelProps}
@@ -202,13 +208,15 @@ export default function RoomTemplateBuilderView({
                 onOpen={onOpenNarratorPicker}
               />
 
-              <SelectionCardView
-                label="Location / Scene"
-                icon={Sparkles}
-                value={selectedLocation}
-                placeholder="Optional Location"
-                onOpen={onOpenLocationPicker}
-              />
+              {openingLocationAuthoringProps.mode !== "PLAYER_SELECT" ? (
+                <SelectionCardView
+                  label="Location / Scene"
+                  icon={Sparkles}
+                  value={selectedLocation}
+                  placeholder="Optional Location"
+                  onOpen={onOpenLocationPicker}
+                />
+              ) : null}
             </div>
           </div>
         </BuilderSection>

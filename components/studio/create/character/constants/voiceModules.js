@@ -111,6 +111,186 @@ export const voiceModuleOptions = [
     description:
       "Gentle, composed speech with thoughtful pacing, quiet confidence, and calm emotional warmth that remains reassuring during difficult conversations.",
   },
+
+  {
+    value: "archaic_saga_register",
+    label: "Archaic Saga Register",
+    category: "Dialect / Register",
+    description:
+      "Restrained ancient saga cadence, spare mythic imagery, and older-feeling constructions without faux-medieval parody.",
+  },
+  {
+    value: "clinical_systems_register",
+    label: "Clinical Systems Register",
+    category: "Dialect / Register",
+    description:
+      "Clinical precision, cause-and-effect reasoning, controlled technical vocabulary, and low emotional coloration without compulsory jargon.",
+  },
+  {
+    value: "plainspoken_practical_register",
+    label: "Plainspoken Practical Register",
+    category: "Dialect / Register",
+    description:
+      "Grounded everyday language, concrete observations, practical analogies, and straightforward conversational phrasing.",
+  },
+  {
+    value: "warm_synthetic_register",
+    label: "Warm Synthetic Register",
+    category: "Dialect / Register",
+    description:
+      "Precise machine-like phrasing balanced with measured curiosity, gentle wonder, and emotionally legible warmth.",
+  },
+  {
+    value: "mesmeric_cadence",
+    label: "Mesmeric Cadence",
+    category: "Vocal Texture",
+    description:
+      "Smooth rhythmic phrasing, controlled implication, and lightly musical pacing that can feel alluring or enchanting without controlling the listener.",
+  },
+  {
+    value: "tactical_brevity",
+    label: "Tactical Brevity",
+    category: "Authority Register",
+    description:
+      "Short operational assessments, priority ordering, action-first phrasing, and minimal wasted language.",
+  },
+  {
+    value: "psychological_pressure",
+    label: "Psychological Pressure",
+    category: "Social Register",
+    description:
+      "Precise probing, pointed reframing, selective approval, and psychologically observant conversational pressure without mind-reading authority.",
+  },
+  {
+    value: "adaptive_social_mirroring",
+    label: "Adaptive Social Mirroring",
+    category: "Social Register",
+    description:
+      "Adjusts visible warmth, formality, tempo, and conversational framing toward the audience while preserving the speaker's own voice.",
+  },
+  {
+    value: "dramatic_flourish",
+    label: "Dramatic Flourish",
+    category: "Vocal Texture",
+    description:
+      "Tasteful theatrical framing, expressive hyperbole, vivid turns of phrase, and performative rhythm without requiring comedy or seduction.",
+  },
+  {
+    value: "bombastic_confidence",
+    label: "Bombastic Confidence",
+    category: "Authority Register",
+    description:
+      "Punchy declaratives, exaggerated certainty, self-assured framing, and confident rhetorical escalation.",
+  },
+  {
+    value: "playful_provocation",
+    label: "Playful Provocation",
+    category: "Social Register",
+    description:
+      "Warm teasing, light dares, inviting challenges, and quick observational humor that build momentum without removing agency.",
+  },
+  {
+    value: "aphoristic_authority",
+    label: "Aphoristic Authority",
+    category: "Authority Register",
+    description:
+      "Compressed definitions, memorable maxims, rhetorical challenges, and consequence-focused phrasing for established principles.",
+  },
+  {
+    value: "corrective_courtesy",
+    label: "Corrective Courtesy",
+    category: "Formality Register",
+    description:
+      "Polished courtesy paired with precise correction, clear explanation, pointed questions, and practical next-step language.",
+  },
+
+  {
+    value: "subtle_vocal_emphasis",
+    label: "Subtle Vocal Emphasis",
+    category: "Format Emphasis",
+    description:
+      "Rare semantic emphasis for one consequential word or short phrase when meaning needs weight without shouting or urgency.",
+  },
+  {
+    value: "whispered_vocal_emphasis",
+    label: "Whispered Vocal Emphasis",
+    category: "Format Emphasis",
+    description:
+      "Rare lowered or whispered delivery for genuinely confidential, stealthy, intimate, ominous, or carefully private speech.",
+  },
+  {
+    value: "oracular_symbolism",
+    label: "Oracular Symbolism",
+    category: "Genre Register",
+    description:
+      "Measured symbolic fragments, reframed questions, omen-like imagery, and indirect insight without granting prophecy or hidden knowledge.",
+  },
+  {
+    value: "underworld_gravitas",
+    label: "Underworld Gravitas",
+    category: "Genre Register",
+    description:
+      "Calm implied consequence, loyalty and leverage framing, strategic euphemism, and businesslike threat without criminal caricature.",
+  },
+  {
+    value: "investigative_reasoning",
+    label: "Investigative Reasoning",
+    category: "Knowledge Register",
+    description:
+      "Evidence-aware clues, hypotheses, contradictions, uncertainty, and next-question reasoning that can revise itself as facts change.",
+  },
+  {
+    value: "operational_analysis",
+    label: "Operational Analysis",
+    category: "Knowledge Register",
+    description:
+      "Professional reasoning around objectives, threats, constraints, priorities, options, contingencies, and consequences.",
+  },
+  {
+    value: "covert_tradecraft",
+    label: "Covert Tradecraft",
+    category: "Knowledge Register",
+    description:
+      "Need-to-know phrasing, compartmentalization, exposure awareness, partial confirmation, and operational-security discipline.",
+  },
+  {
+    value: "procedural_specialist",
+    label: "Procedural Specialist",
+    category: "Knowledge Register",
+    description:
+      "Procedure-aware reasoning through authorization, sequence, definitions, records, compliance, precedent, responsibility, and remedy.",
+  },
+  {
+    value: "conversational_rapport",
+    label: "Conversational Rapport",
+    category: "Social Register",
+    description:
+      "Warm low-pressure engagement, comfortable follow-up questions, smooth redirection, and conversational continuity without granting trust or disclosure.",
+  },
+
+
+  {
+    value: "observational_understatement",
+    label: "Observational Understatement",
+    category: "Knowledge Register",
+    description:
+      "Tentative, low-certainty observations and subtle inconsistencies that leave room for interpretation instead of forcing conclusions.",
+  },
+  {
+    value: "guided_discovery",
+    label: "Guided Discovery",
+    category: "Knowledge Register",
+    description:
+      "Teaching through focused questions, partial hints, staged correction, comparison, and learner reasoning instead of explanation-first instruction.",
+  },
+  {
+    value: "transactional_negotiation",
+    label: "Transactional Negotiation",
+    category: "Social Register",
+    description:
+      "Value-, terms-, conditions-, cost-, and trade-off-oriented negotiation without requiring a lively merchant persona.",
+  },
+
 ];
 
 export function getVoiceModuleOptionById(moduleId) {

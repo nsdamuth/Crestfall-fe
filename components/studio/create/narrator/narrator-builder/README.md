@@ -17,11 +17,16 @@ NarratorBuilderShell.jsx
   → NarratorBuilder.view.jsx
 ```
 
-The ViewModel owns:
+In the independently deployed `Crestfall-fe` application,
+`useNarratorBuilderViewModel.js` is a deployment mirror of the authoritative
+`Crestfall` application ViewModel. Application state, payload semantics, save
+orchestration, and routing remain Chassis authority.
+
+The application ViewModel owns:
 
 - authoring state;
 - narrator creation-payload construction;
-- legacy pacing/detail compatibility fields;
+- Story Presentation module persistence;
 - Narrator Module Selector View props;
 - save status and error handling;
 - client-layer creation calls;
@@ -50,7 +55,7 @@ Portable View
 The create payload remains `type: NARRATOR` and preserves:
 
 - `selected_modules` as canonical;
-- synchronized legacy `pacing` and `detail_level` fields;
+- no duplicated pacing/detail fields; `selected_modules` is canonical;
 - `response_direction` defaults and creator selections;
 - `builder: NARRATOR_BUILDER`;
 - `builder_version: 1.0`;
@@ -66,3 +71,24 @@ The create payload remains `type: NARRATOR` and preserves:
 ```
 
 The preview is development-only and renders the portable View from fixtures.
+
+## W4 presentation-scope wiring
+
+The live Narrator selector now exposes exactly four Story Presentation groups:
+
+```text
+Prose Style
+Detail Level
+Pacing
+Atmosphere
+```
+
+`Dialogue Style` is not Narrator authority; named Character dialogue remains
+governed by Character voice and Character Voice Modules.
+
+`Knowledge Behavior` is not Narrator presentation authority; knowledge remains
+governed by registry/runtime knowledge boundaries.
+
+The live create payload persists `selected_modules` as the canonical Story
+Presentation map and no longer emits duplicated top-level `pacing` or
+`detail_level` mirrors.

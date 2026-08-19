@@ -61,3 +61,17 @@ being exercised.
 
 Mechanics Module field decomposition remains deferred until the final
 cumulative LOOM reassessment.
+
+## W20 Image Reassignment
+
+The shared lightbox now supports the accepted Image Reassignment flow when the
+application consumer marks an image as reassignment-eligible.
+
+The ViewModel loads owned destination assets and submits the authoritative
+reassignment mutation. Presentation is projected through the accepted
+`media_lightbox_image_reassignment_binding_v1` contract.
+
+The View shows the Coin cost, destination selector, move-not-copy semantics,
+source-reference clearing warning, and loading/success/error states.
+
+The portable View contract is now `1.1.0`.

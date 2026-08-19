@@ -23,7 +23,7 @@ export const ROOM_TEMPLATE_PICKER_MODAL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} eyebrow
  * @property {string} title
  * @property {string} description
- * @property {"characters"|"scenario"|"narrator"|"location"|"reference"} iconName
+ * @property {"characters"|"scenario"|"narrator"|"location"|"openingLocations"|"reference"} iconName
  * @property {RoomTemplatePickerViewItem[]} items
  * @property {string[]} selectedIds
  * @property {string[]} recommendedIds

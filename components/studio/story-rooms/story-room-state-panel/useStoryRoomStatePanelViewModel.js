@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  projectStoryRoomWorldStatePresentation,
+} from "../story-room-world-state-projection/StoryRoomWorldStateProjection.contract.js";
+import {
+  projectStoryRoomStatePanelWorldStateBinding,
+} from "./world-state-binding/StoryRoomStatePanelWorldStateBinding.contract.js";
+
 function displayValue(value, fallback = "") {
   if (value === null || value === undefined || value === "") {
     return fallback;
@@ -95,8 +102,12 @@ function buildActions() {
   ];
 }
 
-export function useStoryRoomStatePanelViewModel({ room, onClose } = {}) {
-  return {
+export function useStoryRoomStatePanelViewModel({
+  room,
+  snapshot = null,
+  onClose,
+} = {}) {
+  const basePanel = {
     eyebrow: "Chronicle State",
     title: "Story Data",
     sections: buildSections(room),
@@ -104,4 +115,26 @@ export function useStoryRoomStatePanelViewModel({ room, onClose } = {}) {
     showCloseControl: typeof onClose === "function",
     onClosePanel: typeof onClose === "function" ? onClose : null,
   };
+
+  const hasAuthoritativeSnapshot = Boolean(
+    snapshot &&
+      typeof snapshot === "object" &&
+      (
+        snapshot.room ||
+        snapshot.state ||
+        Array.isArray(snapshot.messages)
+      )
+  );
+
+  const worldStatePresentation =
+    hasAuthoritativeSnapshot
+      ? projectStoryRoomWorldStatePresentation({
+          snapshot,
+        })
+      : null;
+
+  return projectStoryRoomStatePanelWorldStateBinding({
+    basePanel,
+    worldStatePresentation,
+  }).storyRoomStatePanelProps;
 }

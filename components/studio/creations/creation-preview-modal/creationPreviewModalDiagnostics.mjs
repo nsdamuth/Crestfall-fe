@@ -55,7 +55,10 @@ test("ViewModel owns story and default Player Character mutations", () => {
     "components/studio/creations/creation-preview-modal/useCreationPreviewModalViewModel.js"
   );
 
-  assert.match(vm, /startStoryFromCreation\(creation\)/);
+  assert.match(vm, /getStoryOpeningLocationStartConfig/);
+  assert.match(vm, /projectStoryStartOpeningLocationPresentation/);
+  assert.match(vm, /startStoryFromCreation\(creation,\s*\{/);
+  assert.match(vm, /openingLocationPicker/);
   assert.match(vm, /setDefaultPlayerCharacter\(creation\.id\)/);
   assert.match(vm, /Story was created without a room id\./);
   assert.match(vm, /Story could not be started\./);
@@ -74,6 +77,8 @@ test("portable View receives display-ready state and semantic callbacks", () => 
   assert.match(view, /onPreviousMedia/);
   assert.match(view, /onNextMedia/);
   assert.match(view, /onSetDefaultPc/);
+  assert.match(view, /openingLocationPicker/);
+  assert.match(view, /StoryStartOpeningLocationPickerView/);
   assert.match(view, /LinkComponent/);
   assert.match(view, /ShareButtonComponent/);
   assert.doesNotMatch(
@@ -93,9 +98,9 @@ test("owner, public, picker, carousel, and empty-media behavior remain present",
 
   assert.match(view, /context === "owner"/);
   assert.match(view, /context === "picker"/);
-  assert.match(view, /Set Default PC/);
-  assert.match(view, /Image Library/);
-  assert.match(view, /Select Soon/);
+  assert.match(view, /Set default PC/);
+  assert.match(view, /Image library/);
+  assert.match(view, /Select soon/);
   assert.match(view, /Preview Pending/);
   assert.match(view, /Want to see more\?/);
   assert.match(vm, /isShareable/);
@@ -117,11 +122,14 @@ test("contract, fixtures, and preview cover all modal contexts", () => {
 
   assert.match(contract, /CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /CreationPreviewModalViewProps/);
+  assert.match(contract, /CreationPreviewOpeningLocationPicker/);
+  assert.match(contract, /openingLocationPicker/);
   assert.match(contract, /ownsStoryAndDefaultPlayerCharacterMutations: "ViewModel"/);
   assert.match(fixtures, /creationPreviewOwnerFixture/);
   assert.match(fixtures, /creationPreviewPublicFixture/);
   assert.match(fixtures, /creationPreviewPickerFixture/);
   assert.match(fixtures, /creationPreviewMissingMediaFixture/);
+  assert.match(fixtures, /creationPreviewPlayerSelectOpeningLocationFixture/);
   assert.match(page, /process\.env\.NODE_ENV === "production"/);
   assert.match(page, /notFound\(\)/);
   assert.match(preview, /getCreationPreviewViewProps/);

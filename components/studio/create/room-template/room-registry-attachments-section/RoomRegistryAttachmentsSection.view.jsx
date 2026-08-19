@@ -1,4 +1,4 @@
-import { Link2, X } from "lucide-react";
+import { CircleAlert, Link2, RefreshCw, X } from "lucide-react";
 
 export default function RoomRegistryAttachmentsSectionView({
   eyebrow = "Story Registries",
@@ -115,6 +115,23 @@ function RegistryAttachmentCard({
           <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {attachment?.typeLabel || "Registry"}
           </p>
+
+          {attachment?.hydrationSourceLabel ? (
+            <span
+              className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.12em] ${
+                attachment.hydrationSourceTone === "FALLBACK"
+                  ? "border-amber-400/25 bg-amber-400/10 text-amber-100"
+                  : "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+              }`}
+            >
+              {attachment.hydrationSourceTone === "FALLBACK" ? (
+                <CircleAlert size={11} />
+              ) : (
+                <RefreshCw size={11} />
+              )}
+              {attachment.hydrationSourceLabel}
+            </span>
+          ) : null}
         </div>
 
         <button
@@ -131,6 +148,16 @@ function RegistryAttachmentCard({
       </div>
 
       <div className="p-4">
+        {attachment?.hydrationSourceTone === "FALLBACK" &&
+        attachment?.hydrationMessage ? (
+          <p
+            className="mb-3 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100"
+            role="status"
+          >
+            {attachment.hydrationMessage}
+          </p>
+        ) : null}
+
         {attachment?.description ? (
           <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {attachment.description}

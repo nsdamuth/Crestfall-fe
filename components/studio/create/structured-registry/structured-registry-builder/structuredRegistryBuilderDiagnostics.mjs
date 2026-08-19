@@ -34,6 +34,10 @@ test("Structured Registry Builder View is API and persistence free", () => {
   assert.doesNotMatch(view, /supabase|PostGraphile|createCreationDraft|useRouter/);
   assert.doesNotMatch(view, /RegistryLinkedCreationPickerModal/);
   assert.doesNotMatch(view, /useStructuredRegistryBuilder/);
+  assert.match(view, /link\.registryTitle/);
+  assert.match(view, /LEGACY_REGISTRY_REFERENCE/);
+  assert.match(view, /REGISTRY_ENTRY_NOT_FOUND/);
+  assert.match(view, /Linked creation is unavailable/);
 });
 
 test("Structured Registry Builder ViewModel owns registry adaptation and linked creation orchestration", () => {
@@ -41,8 +45,14 @@ test("Structured Registry Builder ViewModel owns registry adaptation and linked 
 
   assert.match(viewModel, /useStructuredRegistryBuilder/);
   assert.match(viewModel, /createLinkedCreationLink/);
-  assert.match(viewModel, /normalizeListText/);
-  assert.match(viewModel, /selectedCreationIds/);
+  assert.match(viewModel, /createLinkedCreationReferenceKey/);
+  assert.match(viewModel, /isDirectStructuredRegistrySelfReference/);
+  assert.match(viewModel, /fetchOwnedCreations/);
+  assert.match(viewModel, /hydrateLinkedCreation/);
+  assert.match(viewModel, /selectedReferenceKeys/);
+  assert.match(viewModel, /excludedReferenceKeys/);
+  assert.match(viewModel, /registryEntryId/);
+  assert.match(viewModel, /currentRegistryCreationId/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 

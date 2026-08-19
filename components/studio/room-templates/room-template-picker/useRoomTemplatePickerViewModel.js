@@ -41,6 +41,15 @@ const PICKER_CONFIGS = {
     searchPlaceholder: "Search locations...",
     emptyMessage: "No locations found.",
   },
+  openingLocations: {
+    eyebrow: "Opening Location Picker",
+    title: "Select Allowed Starting Locations",
+    description:
+      "Choose every Location the player may select before this Story begins.",
+    iconName: "location",
+    searchPlaceholder: "Search locations...",
+    emptyMessage: "No locations found.",
+  },
   reference: {
     eyebrow: "Story Picker",
     title: "Select Reference",
@@ -70,7 +79,7 @@ function getOptionsForPicker({
   if (picker === "characters") return normalizeArray(characterOptions);
   if (picker === "scenario") return normalizeArray(scenarioOptions);
   if (picker === "narrator") return normalizeArray(narratorOptions);
-  if (picker === "location") return normalizeArray(locationOptions);
+  if (picker === "location" || picker === "openingLocations") return normalizeArray(locationOptions);
 
   return [];
 }
@@ -81,6 +90,7 @@ function getSelectedIds({
   selectedScenario,
   selectedNarrator,
   selectedLocation,
+  selectedOpeningLocations,
 }) {
   if (picker === "characters") {
     return normalizeArray(selectedCharacters)
@@ -98,6 +108,12 @@ function getSelectedIds({
 
   if (picker === "location") {
     return selectedLocation?.id ? [selectedLocation.id] : [];
+  }
+
+  if (picker === "openingLocations") {
+    return normalizeArray(selectedOpeningLocations)
+      .map((location) => location?.id)
+      .filter(Boolean);
   }
 
   return [];
@@ -137,6 +153,7 @@ export function useRoomTemplatePickerViewModel({
   selectedScenario = null,
   selectedNarrator = null,
   selectedLocation = null,
+  selectedOpeningLocations = [],
   characterOptions = [],
   scenarioOptions = [],
   narratorOptions = [],
@@ -147,6 +164,7 @@ export function useRoomTemplatePickerViewModel({
   onSelectScenario,
   onSelectNarrator,
   onSelectLocation,
+  onToggleOpeningLocation,
 }) {
   const normalizedPicker = PICKER_CONFIGS[picker] ? picker : "reference";
   const config = PICKER_CONFIGS[normalizedPicker];
@@ -189,11 +207,13 @@ export function useRoomTemplatePickerViewModel({
         selectedScenario,
         selectedNarrator,
         selectedLocation,
+        selectedOpeningLocations,
       }),
     [
       normalizedPicker,
       selectedCharacters,
       selectedLocation,
+      selectedOpeningLocations,
       selectedNarrator,
       selectedScenario,
     ]
@@ -226,6 +246,11 @@ export function useRoomTemplatePickerViewModel({
 
     if (normalizedPicker === "location") {
       onSelectLocation?.(selectedItem);
+      return;
+    }
+
+    if (normalizedPicker === "openingLocations") {
+      onToggleOpeningLocation?.(selectedItem);
     }
   }
 

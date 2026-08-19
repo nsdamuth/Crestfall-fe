@@ -1,5 +1,5 @@
 export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
-  "creation-profile-page.view.v1";
+  "creation-profile-page.view.v2";
 
 /**
  * Portable Creation Profile Page contract.
@@ -19,6 +19,11 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {boolean} hasMoreMedia
  * @property {boolean} startingChat
  * @property {string} chatError
+ * @property {Object|null=} openingLocationPicker
+ * @property {Object|null} libraryPassPanel
+ * @property {Object|null} libraryPassModal
+ * @property {string} libraryPassMessage
+ * @property {string} libraryPassMessageTone
  * @property {import("react").ReactNode} statusBadgesSlot
  * @property {import("react").ReactNode} statsSlot
  * @property {import("react").ReactNode} creatorLinkSlot
@@ -27,12 +32,17 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {import("react").ReactNode} sortControlSlot
  * @property {Record<string, import("react").ReactNode>} mediaActionSlots
  * @property {import("react").ReactNode} lightboxSlot
+ * @property {Function|null} onOpenLibraryPassPurchase
+ * @property {Function|null} onCloseLibraryPassPurchase
+ * @property {Function|null} onConfirmLibraryPassPurchase
  */
 
 export const CREATION_PROFILE_PAGE_LAYER_OWNERSHIP = Object.freeze({
   rawCreationAndMediaNormalization: "ViewModel",
   mediaFilteringAndPagination: "ViewModel",
   reactionsAndStoryStart: "ViewModel",
+  libraryPassStatePurchaseAndAccess: "ViewModel",
+  accountBalanceContext: "ViewModel",
   nextNavigationAndApplicationComponents: "Binding Shell",
   visualComposition: "Portable View",
 });

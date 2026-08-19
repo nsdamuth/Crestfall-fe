@@ -1,4 +1,4 @@
-export const SELECTED_CHARACTERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const SELECTED_CHARACTERS_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Display-ready character supplied to the portable Selected Characters Panel.
@@ -8,6 +8,7 @@ export const SELECTED_CHARACTERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} title
  * @property {string} subtitle
  * @property {string} initial
+ * @property {string} lifecycleKind
  */
 
 /**
@@ -19,8 +20,10 @@ export const SELECTED_CHARACTERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} SelectedCharactersPanelViewProps
  * @property {SelectedCharacterViewItem[]} characters
+ * @property {Array<{value:string,label:string,description:string}>} lifecycleOptions
  * @property {(() => void)|null} onOpenCharacterPicker
  * @property {((characterId: string) => void)|null} onRemoveCharacter
+ * @property {((characterId: string, lifecycleKind: string) => void)|null} onChangeCharacterLifecycle
  */
 
 export {};

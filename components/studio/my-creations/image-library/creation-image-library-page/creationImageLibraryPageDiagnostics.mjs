@@ -36,6 +36,12 @@ test("ViewModel composes the existing image-library Chassis", () => {
   assert.match(viewModel, /showImage/);
   assert.match(viewModel, /filteredVisibleImages/);
   assert.match(viewModel, /pagedVisibleImages/);
+  assert.match(viewModel, /useCreationLibraryPassOwnerViewModel/);
+  assert.match(viewModel, /projectCreationImageLibraryLibraryPassOwnerBinding/);
+  assert.match(viewModel, /libraryPassBinding/);
+  assert.match(viewModel, /handleRefresh/);
+  assert.match(viewModel, /libraryPassPanel/);
+  assert.match(viewModel, /onToggleLibraryPassSales/);
 });
 
 test("ViewModel owns aliases, reactions, and destructive orchestration", () => {
@@ -52,6 +58,11 @@ test("ViewModel owns aliases, reactions, and destructive orchestration", () => {
   assert.match(viewModel, /deleteImageOutput/);
   assert.match(viewModel, /owner_deleted_from_character_library/);
   assert.match(viewModel, /window\.confirm/);
+  assert.match(viewModel, /useStudioAccount/);
+  assert.match(viewModel, /setCoinBalanceFromServer/);
+  assert.match(viewModel, /canReassign/);
+  assert.match(viewModel, /onReassignItem/);
+  assert.match(viewModel, /reassignmentMessage/);
 });
 
 test("portable View renders library states without Crestfall clients", () => {
@@ -63,6 +74,13 @@ test("portable View renders library states without Crestfall clients", () => {
   assert.match(view, /Visible Library/);
   assert.match(view, /Hidden From Character Library/);
   assert.match(view, /No matching images/);
+  assert.match(view, /LibraryPassOwnerPanel/);
+  assert.match(view, /panel\.heading/);
+  assert.match(view, /panel\.metrics/);
+  assert.match(view, /panel\.actionLabel/);
+  assert.match(view, /panel\.tierSummary/);
+  assert.match(view, /panel\.publicLiveWarning/);
+  assert.match(view, /reassignmentMessage/);
   assert.match(view, /renderQuickActions/);
   assert.match(view, /renderLightbox/);
   assert.doesNotMatch(view, /mediaReactionClient|imageOutputClient/);
@@ -93,8 +111,11 @@ test("contract, fixtures, and protected preview are explicit", () => {
     "app/dev/ui-preview/creation-image-library-page/CreationImageLibraryPagePreviewClient.jsx"
   );
 
-  assert.match(contract, /CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION/);
+  assert.match(contract, /CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1\.2\.0"/);
   assert.match(contract, /CreationImageLibraryPageViewProps/);
+  assert.match(contract, /reassignmentMessage/);
+  assert.match(contract, /libraryPassPanel/);
+  assert.match(contract, /onToggleLibraryPassSales/);
   assert.match(fixtures, /creationImageLibraryFixtureImages/);
   assert.match(fixtures, /library-entry-blocked/);
   assert.match(page, /process\.env\.NODE_ENV === "production"/);

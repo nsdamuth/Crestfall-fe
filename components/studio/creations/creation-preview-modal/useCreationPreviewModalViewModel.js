@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import {
+  getStoryOpeningLocationStartConfig,
+  startStoryFromCreation,
+} from "@/lib/client/studio/story-rooms/storyRoomClient";
+
+import {
+  projectStoryStartOpeningLocationPresentation,
+} from "@/components/studio/story-rooms/story-start-opening-location/StoryStartOpeningLocationPresentation.contract.js";
 import { setDefaultPlayerCharacter } from "@/lib/client/studio/profile/defaultPlayerCharacterClient";
 import {
   getCreationCreator,
@@ -228,6 +235,9 @@ export function useCreationPreviewModalViewModel({
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [openingLocationPickerOpen, setOpeningLocationPickerOpen] =
+    useState(false);
+  const [openingLocationId, setOpeningLocationId] = useState("");
   const [settingDefaultPc, setSettingDefaultPc] = useState(false);
   const [defaultPcStatus, setDefaultPcStatus] = useState("");
   const [defaultPcError, setDefaultPcError] = useState("");
@@ -249,6 +259,14 @@ export function useCreationPreviewModalViewModel({
     canLike: typeof onToggleLike === "function",
     canBookmark: typeof onToggleBookmark === "function",
   });
+
+  const openingLocationConfig =
+    getStoryOpeningLocationStartConfig(creation);
+
+  const effectiveOpeningLocationId =
+    openingLocationConfig.allowedLocationIds.includes(openingLocationId)
+      ? openingLocationId
+      : "";
 
   if (!viewProps) return null;
 
@@ -283,14 +301,34 @@ export function useCreationPreviewModalViewModel({
     );
   }
 
-  async function startStory() {
+  async function startStory({ forceSelection = false } = {}) {
     if (!viewProps.supportsChat || startingChat) return;
+
+    if (
+      openingLocationConfig.selectionRequired &&
+      !effectiveOpeningLocationId &&
+      !forceSelection
+    ) {
+      setOpeningLocationPickerOpen(true);
+      setChatError("");
+      return;
+    }
+
+    if (
+      openingLocationConfig.selectionRequired &&
+      !effectiveOpeningLocationId
+    ) {
+      setChatError("Choose one of the allowed starting Locations.");
+      return;
+    }
 
     setChatError("");
     setStartingChat(true);
 
     try {
-      const data = await startStoryFromCreation(creation);
+      const data = await startStoryFromCreation(creation, {
+        openingLocationId: effectiveOpeningLocationId || null,
+      });
       const roomId = data?.room?.id;
 
       if (!roomId) {
@@ -339,7 +377,27 @@ export function useCreationPreviewModalViewModel({
       typeof onToggleBookmark === "function"
         ? () => onToggleBookmark(creation)
         : undefined,
-    onStartStory: startStory,
+
+    openingLocationPicker: openingLocationConfig.selectionRequired
+      ? projectStoryStartOpeningLocationPresentation({
+          selectionRequired: true,
+          open: openingLocationPickerOpen,
+          options: openingLocationConfig.options,
+          selectedLocationId: effectiveOpeningLocationId,
+          pending: startingChat,
+          error: chatError,
+          callbacks: {
+            onSelect: setOpeningLocationId,
+            onCancel: () => {
+              setOpeningLocationPickerOpen(false);
+              setChatError("");
+            },
+            onConfirm: () => startStory({ forceSelection: true }),
+          },
+        })
+      : null,
+
+    onStartStory: () => startStory(),
     onSetDefaultPc: setAsDefaultPlayerCharacter,
   };
 }

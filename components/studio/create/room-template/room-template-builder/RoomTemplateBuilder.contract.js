@@ -17,6 +17,7 @@ export const ROOM_TEMPLATE_BUILDER_PICKER_TYPES = Object.freeze([
   "scenario",
   "narrator",
   "location",
+  "openingLocations",
   "players",
 ]);
 

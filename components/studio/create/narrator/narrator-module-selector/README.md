@@ -60,3 +60,34 @@ components/studio/create/narrator/NarratorBuilderShell.jsx
 components/studio/my-creations/edit/sections/narrators/
   NarratorModulesSection.jsx
 ```
+
+## W4 live Story Presentation scope
+
+The FE-owned presentation catalog now exposes the canonical four groups:
+
+```text
+Prose Style
+Detail Level
+Pacing
+Atmosphere
+```
+
+The existing portable `NarratorModuleSelector.view.jsx` did not require a
+visual rewrite. It already renders display-ready groups supplied by its
+presentation ViewModel.
+
+The deprecated Narrator-level controls:
+
+```text
+Dialogue Style
+Knowledge Behavior
+```
+
+are no longer present in the live module catalog.
+
+Response Direction remains a separate control surface and preserves:
+
+```text
+Adaptive Cast / Narrator Primary
+Scene Narration Only — Default / Ensemble Narration — Opt In
+```

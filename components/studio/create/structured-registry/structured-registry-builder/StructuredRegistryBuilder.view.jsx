@@ -627,6 +627,12 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
           <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {link.type || "Creation"}
           </p>
+
+          {link.registryTitle ? (
+            <p className="mt-1 truncate text-[10px] text-[var(--ink-dim)]">
+              {link.registryTitle}
+            </p>
+          ) : null}
         </div>
 
         <button
@@ -644,6 +650,22 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
         {link.description ? (
           <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {link.description}
+          </p>
+        ) : null}
+
+        {link.referenceStatus &&
+        !["CREATION_RESOLVED", "REGISTRY_ENTRY_RESOLVED"].includes(
+          link.referenceStatus
+        ) ? (
+          <p
+            className="mb-3 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-amber-200"
+            role="status"
+          >
+            {link.referenceStatus === "LEGACY_REGISTRY_REFERENCE"
+              ? "Legacy registry-level reference — relink to a specific entry"
+              : link.referenceStatus === "REGISTRY_ENTRY_NOT_FOUND"
+                ? "Referenced registry entry no longer exists"
+                : "Linked creation is unavailable"}
           </p>
         ) : null}
 

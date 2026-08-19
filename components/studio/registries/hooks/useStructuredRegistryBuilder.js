@@ -15,6 +15,7 @@ import {
 export function useStructuredRegistryBuilder({
   registryType,
   mode = "create",
+  currentRegistryCreationId = "",
   initialTitle = "",
   initialDescription = "",
   initialData = null,
@@ -30,7 +31,9 @@ export function useStructuredRegistryBuilder({
   );
   const [data, setDataState] = useState(() =>
     initialData
-      ? normalizeStructuredRegistryData(initialData, registryType)
+      ? normalizeStructuredRegistryData(initialData, registryType, {
+          currentRegistryCreationId,
+        })
       : createEmptyStructuredRegistryData(registryType)
   );
 
@@ -41,8 +44,11 @@ export function useStructuredRegistryBuilder({
   const [savedCreationId, setSavedCreationId] = useState(null);
 
   const registryData = useMemo(
-    () => normalizeStructuredRegistryData(data, registryType),
-    [data, registryType]
+    () =>
+      normalizeStructuredRegistryData(data, registryType, {
+        currentRegistryCreationId,
+      }),
+    [currentRegistryCreationId, data, registryType]
   );
 
   const activeEntry = activeEntryId
@@ -59,7 +65,9 @@ export function useStructuredRegistryBuilder({
     onChange({
       title: nextTitle,
       description: nextDescription,
-      data: normalizeStructuredRegistryData(nextData, registryType),
+      data: normalizeStructuredRegistryData(nextData, registryType, {
+        currentRegistryCreationId,
+      }),
     });
   }
 
@@ -76,7 +84,8 @@ export function useStructuredRegistryBuilder({
   function commitData(nextData) {
     const normalizedData = normalizeStructuredRegistryData(
       nextData,
-      registryType
+      registryType,
+      { currentRegistryCreationId }
     );
 
     setDataState(normalizedData);
@@ -122,7 +131,8 @@ export function useStructuredRegistryBuilder({
                 ...entry,
                 ...updates,
               },
-              registryType
+              registryType,
+              { currentRegistryCreationId }
             )
           : entry
       ),
@@ -160,6 +170,7 @@ export function useStructuredRegistryBuilder({
         title,
         description,
         data: registryData,
+        currentRegistryCreationId,
       });
 
       const response = await createCreationDraft(

@@ -39,7 +39,11 @@ components/studio/create/room-template/room-registry-attachments-section/
   useRoomRegistryAttachmentsSectionViewModel.js
 ```
 
-The ViewModel owns:
+In the independently deployed `Crestfall-fe` app,
+`useRoomRegistryAttachmentsSectionViewModel.js` is a deployment mirror of the
+authoritative `Crestfall` application ViewModel.
+
+The application ViewModel owns:
 
 - the seven Story registry groups;
 - current bound-registry and mirrored-link normalization;
@@ -48,6 +52,11 @@ The ViewModel owns:
 - selected-creation IDs;
 - linked-creation normalization;
 - duplicate prevention;
+- live attached-Registry hydration through the Chassis creation client;
+- independent fetch settlement so one unavailable Registry does not discard
+  other live metadata;
+- live title/type/description/image overlay;
+- stored attachment fallback when live hydration is unavailable;
 - attachment removal;
 - attachment-note updates;
 - paired `boundRegistries` and `boundRegistryLinks` field updates.
@@ -70,3 +79,13 @@ components/studio/create/room-template/RoomTemplateBuilderShell.jsx
 components/studio/my-creations/edit/sections/room-templates/
   RoomTemplateRuntimeSection.jsx
 ```
+
+## W6 live Registry hydration
+
+The existing portable attachment View required no functional change.
+
+Current Registry metadata now refreshes through the application ViewModel while
+Story-local attachment notes remain attached to the Story.
+
+Source/FE View differences remain presentation-only and were deliberately not
+copied from the Chassis repository.

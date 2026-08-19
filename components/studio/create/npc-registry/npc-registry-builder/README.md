@@ -22,10 +22,17 @@ payloads, call the creation API, navigate, or import Crestfall modal Shells.
 
 ## Application ownership
 
-The ViewModel owns:
+In the independently deployed `Crestfall-fe` app,
+`useNpcRegistryBuilderViewModel.js` and the serializer/hydrator behavior in
+`npcRegistryUtils.js` are deployment mirrors of authoritative `Crestfall`
+application behavior.
+
+The application ViewModel owns:
 
 - starter-registry normalization;
+- canonical linked-Character entry serialization;
 - Character and Player Character option loading;
+- linked-Character display hydration;
 - entry, relationship, knowledge, and alias draft state;
 - reference cleanup when an entry is deleted;
 - creation-payload construction;
@@ -50,3 +57,15 @@ Portable View
 
 The saved data shape and existing `NPC_REGISTRY_BUILDER` metadata remain
 unchanged.
+
+## W7 linked-Character authority wiring
+
+A linked Character entry persists stable identity + Registry-local notes and
+hydrates from the current Character Creation for editor display.
+
+A lightweight `AD_HOC` NPC remains Registry-owned and may keep its own Actor
+Mechanics Profile attachment.
+
+The portable FE View renders hydrated Character detail and an explicit
+unavailable-reference recovery state using the existing FE styling rather than
+copying the Chassis source View.

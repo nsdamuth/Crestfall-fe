@@ -42,6 +42,15 @@ const SECTION_DEFINITIONS = [
     actionKind: "LOAD",
     requiresRegistry: true,
   },
+  {
+    id: "unavailable",
+    status: "UNAVAILABLE",
+    title: "Unavailable References",
+    emptyMessage: "No linked Character references are unavailable.",
+    actionIconKey: "unavailable",
+    actionLabel: "",
+    actionKind: "NONE",
+  },
 ];
 
 function normalizeArray(value) {
@@ -68,8 +77,15 @@ function getActionKey(entry, actionKind) {
   return `load:${entry?.registryId || ""}:${entry?.entryId || ""}`;
 }
 
-function buildParticipantManagerState({ registryNpcs, loading, actionKey, error }) {
-  const entries = normalizeArray(registryNpcs?.entries);
+export function buildStoryRoomNpcParticipantManagerState({
+  registryNpcs,
+  loading,
+  actionKey,
+  error,
+} = {}) {
+  const entries = normalizeArray(registryNpcs?.entries).filter(
+    (entry) => displayText(entry?.kind).toUpperCase() === "CREATION_REF"
+  );
   const normalizedActionKey = displayText(actionKey);
   const actionRecords = new Map();
 
@@ -78,7 +94,10 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
       .filter((entry) => entry?.status === definition.status)
       .map((entry, index) => {
         const actionId = `${definition.id}:${index}`;
-        const expectedActionKey = getActionKey(entry, definition.actionKind);
+        const hasAction = definition.actionKind !== "NONE";
+        const expectedActionKey = hasAction
+          ? getActionKey(entry, definition.actionKind)
+          : "";
         const registryUnavailable =
           Boolean(definition.requiresRegistry) && !entry?.registryAvailable;
         const arrivalPending =
@@ -86,13 +105,15 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
           "PENDING_ARRIVAL";
         const disabled = Boolean(normalizedActionKey) || registryUnavailable;
 
-        actionRecords.set(actionId, {
-          actionKind: definition.actionKind,
-          registryId: entry?.registryId,
-          entryId: entry?.entryId,
-          participantId: entry?.participantId,
-          disabled: registryUnavailable,
-        });
+        if (hasAction) {
+          actionRecords.set(actionId, {
+            actionKind: definition.actionKind,
+            registryId: entry?.registryId,
+            entryId: entry?.entryId,
+            participantId: entry?.participantId,
+            disabled: registryUnavailable,
+          });
+        }
 
         return {
           actionId,
@@ -103,10 +124,21 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
           fallbackInitial: displayText(entry?.name, "N")
             .slice(0, 1)
             .toUpperCase(),
-          statusLabel: arrivalPending ? "Arriving" : "",
-          statusDetail: arrivalPending
-            ? "Will enter the scene on their first turn and has no knowledge of earlier scene events."
-            : "",
+          statusLabel:
+            definition.status === "UNAVAILABLE"
+              ? "Unavailable"
+              : arrivalPending
+                ? "Arriving"
+                : "",
+          statusDetail:
+            definition.status === "UNAVAILABLE"
+              ? displayText(
+                  entry?.unavailableReason,
+                  "The linked Character could not be resolved from the authoritative creation graph."
+                )
+              : arrivalPending
+                ? "Will enter the scene on their first turn and has no knowledge of earlier scene events."
+                : "",
           pendingReason:
             definition.status === "PENDING"
               ? displayText(entry?.automaticLifecycle?.pendingDriver?.reason)
@@ -114,10 +146,11 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
           actionLabel: definition.actionLabel,
           busyLabel: `${definition.actionLabel}ing...`,
           busy: normalizedActionKey === expectedActionKey,
-          disabled,
+          disabled: disabled || !hasAction,
           actionTitle: registryUnavailable
             ? "The source NPC Registry is no longer available in this Story."
             : definition.actionLabel,
+          hasAction,
         };
       });
 
@@ -138,6 +171,9 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
   const presentCount = Math.max(0, loadedEntries.length - arrivingCount);
   const pendingCount = sections.find((section) => section.id === "pending")
     ?.entries.length || 0;
+  const unavailableCount = sections.find(
+    (section) => section.id === "unavailable"
+  )?.entries.length || 0;
   const registryCount = Number(registryNpcs?.registryCount || 0);
 
   let registryNotice = "";
@@ -154,7 +190,9 @@ function buildParticipantManagerState({ registryNpcs, loading, actionKey, error 
     title: "Manage Registry NPCs",
     summaryText: `${presentCount} present${
       arrivingCount ? ` · ${arrivingCount} arriving` : ""
-    }${pendingCount ? ` · ${pendingCount} pending` : ""}`,
+    }${pendingCount ? ` · ${pendingCount} pending` : ""}${
+      unavailableCount ? ` · ${unavailableCount} unavailable` : ""
+    }`,
     loadingNotice: loading ? "Loading attached NPC Registries..." : "",
     registryNotice,
     errorMessage: displayText(error),
@@ -175,7 +213,7 @@ export function useStoryRoomNpcParticipantManagerViewModel({
 
   const state = useMemo(
     () =>
-      buildParticipantManagerState({
+      buildStoryRoomNpcParticipantManagerState({
         registryNpcs,
         loading,
         actionKey,

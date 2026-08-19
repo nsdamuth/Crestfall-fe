@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
+import { fetchOwnedCreation } from "@/lib/client/studio/creations/creationClient";
 
 const REGISTRY_GROUPS = [
   {
@@ -188,7 +189,11 @@ function findGroupLink({
   );
 }
 
-function getDisplayGroups({ boundRegistries, boundRegistryLinks }) {
+function getDisplayGroups({
+  boundRegistries,
+  boundRegistryLinks,
+  liveRegistryCreationsById = {},
+}) {
   return REGISTRY_GROUPS.map((group) => ({
     id: group.id,
     label: group.label,
@@ -199,15 +204,33 @@ function getDisplayGroups({ boundRegistries, boundRegistryLinks }) {
       group,
       boundRegistries,
       boundRegistryLinks,
-    }).map((link, index) => ({
-      id: getAttachmentId(link, index),
-      title: link?.title || "Attached Registry",
-      typeLabel: link?.type || "Registry",
-      description: link?.description || "",
-      imageUrl: link?.imageUrl || "",
-      notes: link?.notes || "",
-      removeAriaLabel: "Remove attached registry",
-    })),
+    }).map((link, index) => {
+      const liveCreation =
+        liveRegistryCreationsById?.[link?.creationId] || null;
+
+      return {
+        id: getAttachmentId(link, index),
+        title:
+          liveCreation?.title ||
+          link?.title ||
+          "Attached Registry",
+        typeLabel:
+          liveCreation?.type ||
+          link?.type ||
+          "Registry",
+        description:
+          liveCreation?.description ??
+          link?.description ??
+          "",
+        imageUrl:
+          liveCreation?.imageUrl ||
+          liveCreation?.image_url ||
+          link?.imageUrl ||
+          "",
+        notes: link?.notes || "",
+        removeAriaLabel: "Remove attached registry",
+      };
+    }),
   }));
 }
 
@@ -220,12 +243,71 @@ export function useRoomRegistryAttachmentsSectionViewModel({
     "Attach registries directly to this Story. Story registries take priority over inherited Location registries of the same kind.",
 } = {}) {
   const [activePickerId, setActivePickerId] = useState(null);
+  const [liveRegistryCreationsById, setLiveRegistryCreationsById] =
+    useState({});
   const safeData = normalizeObject(data);
   const boundRegistries = normalizeBoundRegistries(safeData.boundRegistries);
   const boundRegistryLinks = normalizeBoundRegistryLinks(
     safeData.boundRegistryLinks
   );
   const activePicker = getGroupById(activePickerId);
+  const attachedRegistryCreationIds = dedupeIds(
+    REGISTRY_GROUPS.flatMap((group) =>
+      getGroupLinks({
+        group,
+        boundRegistries,
+        boundRegistryLinks,
+      })
+        .map((link) => link?.creationId)
+        .filter(Boolean)
+    )
+  );
+  const attachedRegistryCreationIdsKey =
+    [...attachedRegistryCreationIds].sort().join("|");
+
+  useEffect(() => {
+    let cancelled = false;
+    const creationIds = attachedRegistryCreationIdsKey
+      ? attachedRegistryCreationIdsKey.split("|")
+      : [];
+
+    if (!creationIds.length) {
+      setLiveRegistryCreationsById({});
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    async function hydrateAttachedRegistries() {
+      const results = await Promise.allSettled(
+        creationIds.map((creationId) =>
+          fetchOwnedCreation(
+            creationId,
+            "Attached registry could not be loaded."
+          )
+        )
+      );
+
+      if (cancelled) return;
+
+      const next = {};
+      results.forEach((result, index) => {
+        if (
+          result.status === "fulfilled" &&
+          result.value?.id
+        ) {
+          next[creationIds[index]] = result.value;
+        }
+      });
+      setLiveRegistryCreationsById(next);
+    }
+
+    hydrateAttachedRegistries();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [attachedRegistryCreationIdsKey]);
 
   const pickerLinks = useMemo(() => {
     if (!activePicker) return [];
@@ -262,6 +344,12 @@ export function useRoomRegistryAttachmentsSectionViewModel({
     }
 
     const nextLink = createLinkedCreationLink(creation);
+
+    setLiveRegistryCreationsById((current) => ({
+      ...current,
+      [creation.id]: creation,
+    }));
+
     const nextBoundRegistries = {
       ...boundRegistries,
       [activePicker.idsField]: dedupeIds([
@@ -363,10 +451,19 @@ export function useRoomRegistryAttachmentsSectionViewModel({
       eyebrow,
       title,
       body,
-      groups: getDisplayGroups({ boundRegistries, boundRegistryLinks }),
+      groups: getDisplayGroups({
+        boundRegistries,
+        boundRegistryLinks,
+        liveRegistryCreationsById,
+      }),
       onOpenRegistryPicker: (groupId) => setActivePickerId(groupId),
       onRemoveRegistry: removeRegistry,
       onChangeRegistryNotes: changeRegistryNotes,
+    },
+    hydrationBindingInput: {
+      boundRegistries,
+      boundRegistryLinks,
+      liveRegistryCreationsById,
     },
     pickerProps,
   };

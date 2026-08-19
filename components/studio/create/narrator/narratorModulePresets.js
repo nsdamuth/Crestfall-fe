@@ -2,147 +2,96 @@ export const narratorModuleGroups = [
   {
     id: "prose_style",
     label: "Prose Style",
-    description: "Controls the narrator’s sentence style and descriptive voice.",
+    description:
+      "Shapes story-wide non-dialogue narration, action, environment, and staging without replacing Character voice.",
     modules: [
       {
         id: "cinematic",
         title: "Cinematic",
-        body: "Scene-forward, visual, dramatic, and composed like a film sequence.",
+        body: "Scene-forward, visual, dramatic, and composed through clear spatial beats.",
       },
       {
         id: "literary",
         title: "Literary",
-        body: "Elegant, reflective, and prose-rich without becoming purple.",
+        body: "Elegant, reflective, and prose-rich while remaining readable and interactive.",
       },
       {
         id: "sensory_rich",
         title: "Sensory Rich",
-        body: "Leans into scent, texture, sound, light, atmosphere, and physical sensation.",
+        body: "Leans into selective scent, texture, sound, light, atmosphere, and physical sensation.",
       },
       {
         id: "direct",
         title: "Direct",
-        body: "Clear, clean, efficient narration with minimal ornament.",
+        body: "Clear, clean, efficient scene prose with minimal ornament.",
       },
     ],
   },
   {
     id: "detail_level",
     label: "Detail Level",
-    description: "Controls how much detail the narrator tends to include.",
+    description:
+      "Guides descriptive density for actions, environment, sensory detail, posture, reactions, and staging. It is not a word-count target and does not control how much a Character speaks.",
     modules: [
       {
         id: "minimal",
         title: "Minimal",
-        body: "Short, light narration that leaves more room for dialogue and player action.",
+        body: "Uses essential physical and environmental detail while leaving most elaboration to dialogue and player action.",
       },
       {
         id: "balanced",
         title: "Balanced",
-        body: "Moderate detail with enough description to ground scenes without slowing play.",
+        body: "Provides enough descriptive grounding to make scenes clear and immersive without regularly lingering.",
       },
       {
         id: "rich",
         title: "Rich",
-        body: "More descriptive texture, emotional detail, and environmental grounding.",
+        body: "Adds more sensory, physical, environmental, and visible-reaction detail when it helps the scene.",
       },
       {
         id: "lavish",
         title: "Lavish",
-        body: "Highly detailed, atmospheric narration for slower, more immersive scenes.",
+        body: "Favors highly textured scene rendering and layered sensory or environmental detail when useful material is present.",
       },
     ],
   },
   {
     id: "pacing",
     label: "Pacing",
-    description: "Controls how quickly scenes move and how much the narrator lingers.",
+    description:
+      "Guides how much forward-motion or lingering pressure the Composer applies inside each authorized post. It never overrides Scenario, Storywheel, beats, phases, mechanics, or deterministic progression.",
     modules: [
       {
         id: "fast",
         title: "Fast",
-        body: "Moves quickly through setup and keeps scenes action-forward.",
+        body: "Favors prompt reactions, economical staging, and quicker movement through material already authorized for the current beat.",
       },
       {
         id: "balanced",
         title: "Balanced",
-        body: "Keeps scenes moving while allowing room for atmosphere and character beats.",
+        body: "Balances forward movement with room for atmosphere, reactions, and Character beats inside the current authorized moment.",
       },
       {
         id: "slow_burn",
         title: "Slow Burn",
-        body: "Lingers on tension, mood, gradual reveals, and emotional build-up.",
+        body: "Lets tension, uncertainty, anticipation, and incremental reactions breathe without creating or delaying story-state transitions.",
       },
       {
         id: "scene_heavy",
         title: "Scene Heavy",
-        body: "Prioritizes environment, staging, and moment-to-moment scene texture.",
-      },
-    ],
-  },
-  {
-    id: "dialogue_style",
-    label: "Dialogue Style",
-    description: "Controls how dialogue is framed and supported.",
-    modules: [
-      {
-        id: "naturalistic",
-        title: "Naturalistic",
-        body: "Dialogue sounds grounded, conversational, and character-driven.",
-      },
-      {
-        id: "dramatic",
-        title: "Dramatic",
-        body: "Dialogue carries stronger emotional weight, tension, and theatrical timing.",
-      },
-      {
-        id: "subtle",
-        title: "Subtle",
-        body: "Uses implication, pauses, indirect meaning, and social pressure.",
-      },
-      {
-        id: "banter",
-        title: "Banter",
-        body: "Supports playful exchanges, teasing, wit, and quick back-and-forth.",
-      },
-    ],
-  },
-  {
-    id: "knowledge_behavior",
-    label: "Knowledge Behavior",
-    description: "Controls how much the narrator protects mystery and NPC knowledge limits.",
-    modules: [
-      {
-        id: "loose",
-        title: "Loose",
-        body: "Allows easier exposition and smoother explanation when useful.",
-      },
-      {
-        id: "moderate",
-        title: "Moderate",
-        body: "Balances clarity with mystery and character-limited knowledge.",
-      },
-      {
-        id: "strict",
-        title: "Strict",
-        body: "NPCs should only know what they could reasonably know or witness.",
-      },
-      {
-        id: "mystery_preserving",
-        title: "Mystery Preserving",
-        body: "Truth emerges through fragments, contradiction, implication, and discovery.",
+        body: "Spends more compositional attention on immediate staging, physicality, environment, and moment-to-moment scene texture.",
       },
     ],
   },
   {
     id: "atmosphere",
     label: "Atmosphere",
-    description: "Controls the emotional and genre flavor of scenes.",
+    description: "Controls the story-wide emotional and genre flavor of scenes.",
     modules: [
       {
         id: "adventurous",
         title: "Adventurous",
-        body: "Wonder, danger, travel, discovery, and forward motion.",
+        body: "Wonder, danger, travel, discovery, and forward possibility.",
       },
       {
         id: "dark_fairytale",
@@ -236,7 +185,7 @@ export const narratorResponseDirectionGroups = [
           "SCENE_ONLY",
 
         title:
-          "Scene Narration Only · Default",
+          "Scene Narration Only — Default",
 
         body:
           "Narrates environments, transitions, consequences, arrivals, and passive continuity. Named Characters retain their own dialogue and meaningful actions.",
@@ -246,7 +195,7 @@ export const narratorResponseDirectionGroups = [
           "ENSEMBLE",
 
         title:
-          "Ensemble Narration · Opt In",
+          "Ensemble Narration — Opt In",
 
         body:
           "Allows the Narrator to portray dialogue and meaningful actions for a bounded number of active Scene Cast Characters.",

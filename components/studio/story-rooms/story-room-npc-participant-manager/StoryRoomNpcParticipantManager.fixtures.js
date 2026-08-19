@@ -11,6 +11,7 @@ function npc({
   busy = false,
   disabled = false,
   actionTitle = "",
+  hasAction = true,
 } = {}) {
   return {
     actionId,
@@ -27,6 +28,7 @@ function npc({
     busy,
     disabled,
     actionTitle: actionTitle || actionLabel,
+    hasAction,
   };
 }
 
@@ -96,6 +98,13 @@ const COMPLETE_SECTIONS = [
       }),
     ]
   ),
+  section(
+    "unavailable",
+    "Unavailable References",
+    "No linked Character references are unavailable.",
+    "unavailable",
+    []
+  ),
 ];
 
 export const storyRoomNpcParticipantClosedFixture = {
@@ -155,22 +164,23 @@ export const storyRoomNpcParticipantBusyFixture = {
 
 export const storyRoomNpcParticipantUnavailableFixture = {
   ...storyRoomNpcParticipantCompleteFixture,
-  summaryText: "0 present · 1 pending",
+  summaryText: "0 present · 1 unavailable",
   sections: COMPLETE_SECTIONS.map((item) => ({
     ...item,
     entries:
-      item.id === "pending"
+      item.id === "unavailable"
         ? [
             npc({
-              actionId: "pending:0",
-              name: "Former Registry Target",
-              title: "Unavailable Source",
-              pendingReason:
-                "This character is still referenced by the story, but the source NPC Registry is no longer attached.",
-              actionLabel: "Load Now",
+              actionId: "unavailable:0",
+              name: "Linked Character unavailable",
+              title: "Linked Character",
+              statusLabel: "Unavailable",
+              statusDetail:
+                "The linked Character could not be resolved from the authoritative creation graph.",
+              actionLabel: "",
               disabled: true,
-              actionTitle:
-                "The source NPC Registry is no longer available in this Story.",
+              actionTitle: "",
+              hasAction: false,
             }),
           ]
         : [],

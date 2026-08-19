@@ -3,12 +3,23 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import {
+  getStoryOpeningLocationStartConfig,
+  startStoryFromCreation,
+} from "@/lib/client/studio/story-rooms/storyRoomClient";
+
+import {
+  projectStoryStartOpeningLocationPresentation,
+} from "@/components/studio/story-rooms/story-start-opening-location/StoryStartOpeningLocationPresentation.contract.js";
 import {
   fetchMediaReactions,
   setMediaBookmark,
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
+import {
+  projectCreationProfileLibraryPassAccess,
+  useCreationLibraryPassPublicViewModel,
+} from "./useCreationLibraryPassPublicViewModel";
 
 export const CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12;
 export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
@@ -190,6 +201,9 @@ export function useCreationProfilePageViewModel({
     () => normalizeCreationProfileMedia(media),
     [media]
   );
+  const libraryPass = useCreationLibraryPassPublicViewModel({
+    creationId: normalizedCreation?.id,
+  });
 
   const [activeTab, setActiveTab] = useState("IMAGES");
   const [sort, setSort] = useState("NEWEST");
@@ -204,6 +218,21 @@ export function useCreationProfilePageViewModel({
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [openingLocationPickerOpen, setOpeningLocationPickerOpen] =
+    useState(false);
+  const [openingLocationId, setOpeningLocationId] = useState("");
+
+  const openingLocationConfig =
+    getStoryOpeningLocationStartConfig(
+      normalizedCreation?.raw || {}
+    );
+
+  const effectiveOpeningLocationId =
+    openingLocationConfig.allowedLocationIds.includes(
+      openingLocationId
+    )
+      ? openingLocationId
+      : "";
 
   useEffect(() => {
     const imageOutputIds = [
@@ -276,15 +305,41 @@ export function useCreationProfilePageViewModel({
     [mediaWithLocalReactions, activeTab, query, sort]
   );
 
-  const visibleMedia = filteredMedia
+  const accessControlledMedia = useMemo(
+    () =>
+      projectCreationProfileLibraryPassAccess({
+        media: filteredMedia,
+        libraryPassState: libraryPass.state,
+        loadStatus: libraryPass.loadStatus,
+      }),
+    [
+      filteredMedia,
+      libraryPass.loadStatus,
+      libraryPass.state,
+    ]
+  );
+
+  const visibleMedia = accessControlledMedia
     .slice(0, visibleCount)
     .map((item, index) => ({
       ...item,
-      priority: index < CREATION_PROFILE_EAGER_MEDIA_COUNT,
+      priority:
+        !item.locked &&
+        index < CREATION_PROFILE_EAGER_MEDIA_COUNT,
     }));
+  const lightboxMedia =
+    accessControlledMedia.filter(
+      (item) => !item.locked
+    );
   const activePreviewItem = activePreviewId
-    ? filteredMedia.find((item) => item.id === activePreviewId) || null
+    ? lightboxMedia.find(
+        (item) => item.id === activePreviewId
+      ) || null
     : null;
+  const lockedMediaCount =
+    accessControlledMedia.filter(
+      (item) => item.locked
+    ).length;
 
   function resetVisibleCount() {
     setVisibleCount(CREATION_PROFILE_INITIAL_VISIBLE_MEDIA);
@@ -347,13 +402,48 @@ export function useCreationProfilePageViewModel({
     }
   }
 
-  async function startChat() {
+  function openMedia(itemId) {
+    const item =
+      accessControlledMedia.find(
+        (candidate) =>
+          candidate.id === itemId
+      );
+
+    if (item?.locked) {
+      libraryPass.onOpenPurchase();
+      return;
+    }
+
+    setActivePreviewId(itemId || null);
+  }
+
+  async function startChat({ forceSelection = false } = {}) {
     if (!normalizedCreation?.supportsChat || startingChat) return;
+
+    if (
+      openingLocationConfig.selectionRequired &&
+      !effectiveOpeningLocationId &&
+      !forceSelection
+    ) {
+      setOpeningLocationPickerOpen(true);
+      setChatError("");
+      return;
+    }
+
+    if (
+      openingLocationConfig.selectionRequired &&
+      !effectiveOpeningLocationId
+    ) {
+      setChatError("Choose one of the allowed starting Locations.");
+      return;
+    }
 
     setChatError("");
     setStartingChat(true);
     try {
-      const data = await startStoryFromCreation(normalizedCreation.raw);
+      const data = await startStoryFromCreation(normalizedCreation.raw, {
+        openingLocationId: effectiveOpeningLocationId || null,
+      });
       const roomId = data?.room?.id;
       if (!roomId) throw new Error("Story was created without a room id.");
       navigate?.(`/studio/story-rooms/${roomId}`);
@@ -381,13 +471,52 @@ export function useCreationProfilePageViewModel({
     sort,
     query,
     visibleMedia,
-    filteredMedia,
+    filteredMedia: accessControlledMedia,
+    lightboxMedia,
     activePreviewItem,
     activePreviewId,
-    hasMoreMedia: visibleCount < filteredMedia.length,
+    hasMoreMedia:
+      visibleCount < accessControlledMedia.length,
     reactionMessage,
     startingChat,
     chatError,
+
+    openingLocationPicker: openingLocationConfig.selectionRequired
+      ? projectStoryStartOpeningLocationPresentation({
+          selectionRequired: true,
+          open: openingLocationPickerOpen,
+          options: openingLocationConfig.options,
+          selectedLocationId: effectiveOpeningLocationId,
+          pending: startingChat,
+          error: chatError,
+          callbacks: {
+            onSelect: setOpeningLocationId,
+            onCancel: () => {
+              setOpeningLocationPickerOpen(false);
+              setChatError("");
+            },
+            onConfirm: () => startChat({ forceSelection: true }),
+          },
+        })
+      : null,
+
+    libraryPassPanel: {
+      ...libraryPass.panel,
+      shouldShow:
+        libraryPass.panel.shouldShow ||
+        (
+          libraryPass.loadStatus !== "loaded" &&
+          accessControlledMedia.length >
+            libraryPass.previewCount
+        ),
+      lockedMediaCount,
+    },
+    libraryPassModal: libraryPass.modal,
+    libraryPassMessage:
+      libraryPass.message,
+    libraryPassMessageTone:
+      libraryPass.messageTone,
+
     onSelectTab: selectTab,
     onSortChange: changeSort,
     onQueryChange: changeQuery,
@@ -395,7 +524,7 @@ export function useCreationProfilePageViewModel({
       setVisibleCount(
         (current) => current + CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT
       ),
-    onOpenMedia: (itemId) => setActivePreviewId(itemId || null),
+    onOpenMedia: openMedia,
     onCloseMedia: () => setActivePreviewId(null),
     onSelectPreviewItem: (item) => setActivePreviewId(item?.id || null),
     onToggleLike: toggleLikedMedia,
@@ -410,6 +539,12 @@ export function useCreationProfilePageViewModel({
       ),
     onToggleDescription: () =>
       setDescriptionExpanded((current) => !current),
-    onStartChat: startChat,
+    onStartChat: () => startChat(),
+    onOpenLibraryPassPurchase:
+      libraryPass.onOpenPurchase,
+    onCloseLibraryPassPurchase:
+      libraryPass.onClosePurchase,
+    onConfirmLibraryPassPurchase:
+      libraryPass.onConfirmPurchase,
   };
 }

@@ -45,9 +45,37 @@ test("Creation Card ViewModel owns application behavior without JSX or fetch", (
   );
 
   assert.match(viewModel, /fetchCreationPreview/);
+  assert.match(viewModel, /getStoryOpeningLocationStartConfig/);
   assert.match(viewModel, /startStoryFromCreation/);
   assert.match(viewModel, /setDefaultPlayerCharacter/);
   assert.match(viewModel, /buildModalCreationFromPreviewGraph/);
+  assert.match(
+    viewModel,
+    /String\(creation\?\.type \|\| ""\)\.toUpperCase\(\) === "ROOM_TEMPLATE"/
+  );
+  assert.match(
+    viewModel,
+    /storyCreation = buildModalCreationFromPreviewGraph\(\{/
+  );
+  assert.match(
+    viewModel,
+    /storyCreation = fallbackModalCreation/
+  );
+  assert.match(
+    viewModel,
+    /getStoryOpeningLocationStartConfig\(storyCreation\)/
+  );
+  assert.match(
+    viewModel,
+    /if \(openingLocation\.selectionRequired\)/
+  );
+  assert.match(viewModel, /setPreviewCreation\(storyCreation\)/);
+  assert.match(viewModel, /setIsPreviewOpen\(true\)/);
+  assert.match(viewModel, /setStartingChat\(false\)/);
+  assert.match(
+    viewModel,
+    /startStoryFromCreation\(storyCreation\)/
+  );
   assert.match(viewModel, /useCreationStatusBadgesViewModel/);
   assert.match(viewModel, /useCreationStatsRowViewModel/);
   assert.doesNotMatch(viewModel, /\bfetch\s*\(|<\w+/);

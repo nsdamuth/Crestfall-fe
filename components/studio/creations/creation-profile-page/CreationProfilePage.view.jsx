@@ -1,12 +1,18 @@
 import {
   Bookmark,
   Camera,
+  Coins,
   Film,
   Heart,
   Image as ImageIcon,
+  Loader2,
+  LockKeyhole,
   MessageCircle,
   Search,
+  X,
 } from "lucide-react";
+
+import StoryStartOpeningLocationPickerView from "@/components/studio/story-rooms/story-start-opening-location/StoryStartOpeningLocationPicker.view";
 
 const TAB_ICONS = {
   IMAGE: ImageIcon,
@@ -26,6 +32,11 @@ export default function CreationProfilePageView({
   hasMoreMedia = false,
   startingChat = false,
   chatError = "",
+  openingLocationPicker = null,
+  libraryPassPanel = null,
+  libraryPassModal = null,
+  libraryPassMessage = "",
+  libraryPassMessageTone = "",
   statusBadgesSlot = null,
   statsSlot = null,
   creatorLinkSlot = null,
@@ -40,6 +51,9 @@ export default function CreationProfilePageView({
   onOpenMedia = null,
   onToggleDescription = null,
   onStartChat = null,
+  onOpenLibraryPassPurchase = null,
+  onCloseLibraryPassPurchase = null,
+  onConfirmLibraryPassPurchase = null,
 }) {
   if (!shouldRender) return null;
 
@@ -145,13 +159,21 @@ export default function CreationProfilePageView({
               </span>
             )}
             {shareButtonSlot}
-            {chatError ? (
+            {chatError && !openingLocationPicker?.open ? (
               <p className="max-w-[14rem] text-xs leading-5 text-red-200">
                 {chatError}
               </p>
             ) : null}
           </div>
         </div>
+
+        {openingLocationPicker ? (
+          <div className="mt-5">
+            <StoryStartOpeningLocationPickerView
+              {...openingLocationPicker}
+            />
+          </div>
+        ) : null}
       </header>
 
       <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
@@ -184,6 +206,24 @@ export default function CreationProfilePageView({
           />
         </div>
 
+        {libraryPassPanel?.shouldShow ? (
+          <LibraryPassPanel
+            panel={libraryPassPanel}
+            onOpenPurchase={onOpenLibraryPassPurchase}
+          />
+        ) : null}
+
+        {libraryPassMessage ? (
+          <p
+            className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+              libraryPassMessageTone === "SUCCESS"
+                ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                : "border-red-400/25 bg-red-400/10 text-red-100"
+            }`}
+          >
+            {libraryPassMessage}
+          </p>
+        ) : null}
 
         {!visibleMedia.length ? (
           <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
@@ -222,6 +262,14 @@ export default function CreationProfilePageView({
         ) : null}
       </div>
 
+      {libraryPassModal?.isOpen ? (
+        <LibraryPassPurchaseDialog
+          modal={libraryPassModal}
+          onClose={onCloseLibraryPassPurchase}
+          onConfirm={onConfirmLibraryPassPurchase}
+        />
+      ) : null}
+
       {lightboxSlot}
     </section>
   );
@@ -243,8 +291,245 @@ function FilterButton({ active, onClick, children }) {
   );
 }
 
+
+function LibraryPassPanel({ panel, onOpenPurchase }) {
+  if (panel.loading) {
+    return (
+      <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/[0.06] p-5">
+        <div className="flex items-center gap-3 text-sm text-[var(--ink-dim)]">
+          <Loader2 size={16} className="animate-spin text-[var(--gold-ornament)]" />
+          Checking Library Pass access...
+        </div>
+      </div>
+    );
+  }
+
+  if (panel.loadError) {
+    return (
+      <div className="mt-5 rounded-[var(--radius-md)] border border-red-400/25 bg-red-400/10 p-5">
+        <p className="text-xs uppercase tracking-[0.2em] text-red-200">
+          Library Pass Unavailable
+        </p>
+        <p className="mt-2 text-sm leading-6 text-red-100">
+          {panel.loadError} Extended media is temporarily limited to the public previews.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/[0.06] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-5">
+        <div className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Extended Image Library
+            </p>
+            <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+              {panel.statusLabel}
+            </span>
+          </div>
+
+          <h2 className="mt-2 font-display text-3xl">
+            {panel.hasFullAccess
+              ? "Complete library access is active"
+              : `${panel.lockedMediaCount} extended ${
+                  panel.lockedMediaCount === 1 ? "image" : "images"
+                } available`}
+          </h2>
+
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+            The {panel.publicPreviewCount} most recent eligible results remain visible to everyone.
+            A Library Pass unlocks the complete eligible library
+            {panel.includesFutureAdditions ? " and future additions" : ""}.
+          </p>
+
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[var(--ink-dim)]">
+            <span>{panel.eligibleImageCount} eligible images</span>
+            <span>{panel.publicPreviewCount} public previews</span>
+            {!panel.hasFullAccess ? <span>{panel.priceLabel}</span> : null}
+          </div>
+        </div>
+
+        {panel.showAction ? (
+          <button
+            type="button"
+            onClick={() => onOpenPurchase?.()}
+            disabled={panel.actionDisabled}
+            className="cf-btn cf-btn--secondary"
+          >
+            <Coins size={15} />
+            {panel.actionLabel}
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function LibraryPassPurchaseDialog({ modal, onClose, onConfirm }) {
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-label={modal.title}
+        className="w-full max-w-lg rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#0b0a08] p-5 shadow-2xl"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Library Pass
+            </p>
+            <h3 className="mt-1 font-display text-3xl">{modal.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+              Unlock all {modal.eligibleImageCount} currently eligible images
+              {modal.includesFutureAdditions
+                ? " and every eligible image added later"
+                : ""}.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            disabled={modal.isBusy}
+            aria-label="Close Library Pass dialog"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+          >
+            <X size={17} />
+          </button>
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
+              Pass Price
+            </p>
+            <p className="mt-2 font-display text-2xl text-[var(--gold-ornament)]">
+              {modal.priceLabel}
+            </p>
+          </div>
+
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
+              Your Balance
+            </p>
+            <p className="mt-2 font-display text-2xl">{modal.balanceLabel}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p>{modal.publicPreviewCount} recent results remain publicly visible.</p>
+          <p className="mt-2">This is a one-time purchase for this creation.</p>
+          {modal.includesFutureAdditions ? (
+            <p className="mt-2">
+              Future eligible additions are included automatically.
+            </p>
+          ) : null}
+        </div>
+
+        {modal.unavailableMessage ? (
+          <p className="mt-4 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+            {modal.unavailableMessage}
+          </p>
+        ) : null}
+
+        {modal.statusMessage ? (
+          <p
+            className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+              modal.statusTone === "SUCCESS"
+                ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                : "border-red-400/25 bg-red-400/10 text-red-100"
+            }`}
+          >
+            {modal.statusMessage}
+          </p>
+        ) : null}
+
+        <div className="mt-5 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            disabled={modal.isBusy}
+            className="cf-btn cf-btn--secondary"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onConfirm?.()}
+            disabled={!modal.canConfirm}
+            className="cf-btn cf-btn--primary"
+          >
+            {modal.isBusy ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <Coins size={14} />
+            )}
+            {modal.confirmLabel}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function MediaTile({ item, actionsSlot, onOpen }) {
-  if (!item.imageUrl) {
+  const hasImage = Boolean(item.imageUrl);
+
+  if (item.locked) {
+    return (
+      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 text-left">
+        {hasImage ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.imageUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+            style={{
+              filter:
+                "blur(14px) brightness(0.62) contrast(0.85) saturate(0.75)",
+              transform: "scale(1.08)",
+            }}
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-black via-black/85 to-[var(--gold-ornament)]/10" />
+        )}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-[var(--gold-ornament)]/5"
+          style={{
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+          }}
+        />
+
+        <button
+          type="button"
+          onClick={onOpen}
+          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center bg-black/20 p-5 text-center"
+          aria-label="Unlock this extended library image"
+        >
+          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--gold-ornament)]/35 bg-black/65 text-[var(--gold-ornament)] transition group-hover:scale-105 group-hover:bg-black/80">
+            <LockKeyhole size={21} />
+          </span>
+          <span className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            Library Pass
+          </span>
+          <span className="mt-2 text-sm text-[var(--ink)]">
+            Unlock extended media
+          </span>
+        </button>
+      </article>
+    );
+  }
+
+  if (!hasImage) {
     return (
       <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">

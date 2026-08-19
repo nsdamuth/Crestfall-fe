@@ -59,12 +59,7 @@ export function buildNarratorCreationPayload({
       title,
       tags,
 
-      /*
-       * selected_modules is canonical. These legacy fields stay synchronized
-       * for older runtime consumers and older creations.
-       */
-      pacing: selectedModules.pacing,
-      detail_level: selectedModules.detail_level,
+      // Story Presentation modules are canonical and independently scoped.
       selected_modules: selectedModules,
       response_direction: {
         ...narratorResponseDirectionDefaults,

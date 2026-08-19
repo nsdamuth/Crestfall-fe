@@ -32,7 +32,12 @@ application-owned modal.
 creation-card/useCreationCardViewModel.js
 ```
 
-The ViewModel owns:
+This file is a deployment mirror of the authoritative `Crestfall` application
+ViewModel. Application behavior remains Chassis-owned; the FE repository keeps
+the mirror synchronized so the independently deployed Skin app can bind the
+portable Card View and existing Preview modal.
+
+The application ViewModel owns:
 
 - raw creation normalization;
 - owner, community, and public context interpretation;
@@ -146,3 +151,54 @@ The Binding Shell owns `next/link` and injects it as `LinkComponent`. The
 portable View defaults to a native anchor for direct fixtures and extracted UI
 package rendering. Destinations, click handlers, classes, targets, and labels
 remain part of the existing display-ready View contract.
+
+## Story start preflight wiring
+
+W3 wires the accepted Creation Card Story-start preflight into the live card
+application path.
+
+For a saved:
+
+```text
+ROOM_TEMPLATE
+```
+
+the existing **Start chat** card action first hydrates the current Creation
+Preview graph.
+
+If the hydrated Story resolves to:
+
+```text
+PLAYER_SELECT
+```
+
+for its opening Location, the card does **not** create a Story Room. Instead it
+opens the existing `CreationPreviewModal` using that hydrated Story Creation.
+
+The W1 Preview wiring then presents the single shared:
+
+```text
+StoryStartOpeningLocationPicker.view.jsx
+```
+
+and completes the selected-Location start flow.
+
+For a fixed opening Location, or for other chat-capable Creation types, the
+existing direct Story-start behavior remains intact.
+
+If preview hydration fails in an owner/private context, the existing fallback
+Creation is retained and evaluated rather than making the Card View responsible
+for recovery.
+
+No new Card View slot or visual control is required.
+
+`Crestfall` remains authoritative for:
+
+- preview preflight behavior;
+- preview graph normalization;
+- opening-Location interpretation;
+- Story Room creation;
+- navigation.
+
+`Crestfall-fe` continues to own only the Card presentation and the shared
+opening-Location picker presentation used by the Preview.

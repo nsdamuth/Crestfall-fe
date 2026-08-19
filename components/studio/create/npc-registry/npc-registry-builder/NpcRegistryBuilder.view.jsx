@@ -278,9 +278,59 @@ function EntriesTab({ entries, onAdd, onEdit, onDelete }) {
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
-                {entry.notes || "No notes yet."}
-              </p>
+              {entry.kind === "CREATION_REF" ? (
+                <>
+                  {entry.referenceStatus === "UNAVAILABLE" ? (
+                    <div
+                      className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-3"
+                      role="status"
+                    >
+                      <p className="text-sm font-medium text-[var(--status-danger)]">
+                        Linked Character unavailable
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
+                        The stored Character reference is preserved. Relink or remove
+                        this entry deliberately instead of replacing it with stale
+                        copied Character data.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="mt-3 max-w-4xl leading-7 text-[var(--ink-dim)]">
+                        {entry.hydratedCharacter?.description ||
+                          entry.hydratedCharacter?.subtitle ||
+                          "Linked Character details are unavailable."}
+                      </p>
+
+                      {entry.hydratedCharacter ? (
+                        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+                          {[
+                            entry.creationType || "CHARACTER",
+                            entry.hydratedCharacter.status,
+                            entry.hydratedCharacter.visibility,
+                            entry.hydratedCharacter.contentRating,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      ) : null}
+                    </>
+                  )}
+
+                  {entry.notes ? (
+                    <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
+                      <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+                        Registry Notes
+                      </span>
+                      <span className="mt-1 block">{entry.notes}</span>
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="mt-3 leading-7 text-[var(--ink-dim)]">
+                  {entry.notes || "No notes yet."}
+                </p>
+              )}
 
               <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
                 {entry.kind === "CREATION_REF"

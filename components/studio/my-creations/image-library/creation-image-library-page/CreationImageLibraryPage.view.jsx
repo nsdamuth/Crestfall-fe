@@ -2,9 +2,13 @@
 
 import {
   ArrowLeft,
+  Coins,
   Eye,
   EyeOff,
   Image as ImageIcon,
+  Loader2,
+  PauseCircle,
+  PlayCircle,
   RefreshCw,
   ShieldCheck,
   Star,
@@ -20,6 +24,8 @@ export default function CreationImageLibraryPageView({
   isLoading = false,
   reactionMessage = "",
   deleteMessage = "",
+  reassignmentMessage = "",
+  libraryPassPanel = null,
   featuredSlotCards = [],
   visibleImages = [],
   hiddenImages = [],
@@ -34,6 +40,7 @@ export default function CreationImageLibraryPageView({
   lightboxProps = null,
   eagerImageCount = 4,
   onRefresh,
+  onToggleLibraryPassSales,
   onSetEligibilityFilter,
   onSetSortMode,
   onLoadMoreVisibleImages,
@@ -106,7 +113,20 @@ export default function CreationImageLibraryPageView({
             {deleteMessage}
           </p>
         ) : null}
+
+        {reassignmentMessage ? (
+          <p className="mt-4 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+            {reassignmentMessage}
+          </p>
+        ) : null}
       </div>
+
+      {libraryPassPanel ? (
+        <LibraryPassOwnerPanel
+          panel={libraryPassPanel}
+          onToggleSales={onToggleLibraryPassSales}
+        />
+      ) : null}
 
       <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex items-center gap-3">
@@ -263,6 +283,140 @@ export default function CreationImageLibraryPageView({
       ) : null}
 
       {lightboxProps && renderLightbox ? renderLightbox(lightboxProps) : null}
+    </section>
+  );
+}
+
+
+function LibraryPassOwnerPanel({ panel, onToggleSales }) {
+  const ActionIcon =
+    panel.actionIntent === "PAUSE_NEW_SALES"
+      ? PauseCircle
+      : PlayCircle;
+
+  return (
+    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-5">
+        <div className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+              {panel.eyebrow}
+            </p>
+
+            {panel.loadStatus === "ready" ? (
+              <span
+                className={`rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.16em] ${
+                  panel.salesEnabled
+                    ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                    : "border-amber-400/25 bg-amber-400/10 text-amber-100"
+                }`}
+              >
+                {panel.statusLabel}
+              </span>
+            ) : null}
+          </div>
+
+          <h3 className="mt-2 font-display text-3xl">
+            {panel.heading}
+          </h3>
+
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+            {panel.helper}
+          </p>
+        </div>
+
+        {panel.loadStatus === "ready" ? (
+          <button
+            type="button"
+            onClick={() => onToggleSales?.()}
+            disabled={panel.actionDisabled}
+            className={
+              panel.actionTone === "CAUTION"
+                ? "cf-btn cf-btn--secondary"
+                : "cf-btn cf-btn--primary"
+            }
+          >
+            {panel.isBusy ? (
+              <Loader2 size={15} className="animate-spin" />
+            ) : (
+              <ActionIcon size={15} />
+            )}
+            {panel.actionLabel}
+          </button>
+        ) : null}
+      </div>
+
+      {panel.loadingMessage ? (
+        <div className="mt-4 flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <Loader2
+            size={15}
+            className="animate-spin text-[var(--gold-ornament)]"
+          />
+          {panel.loadingMessage}
+        </div>
+      ) : null}
+
+      {panel.message ? (
+        <p
+          className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+            panel.messageTone === "success"
+              ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+              : panel.messageTone === "error"
+                ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]"
+                : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
+          }`}
+        >
+          {panel.message}
+        </p>
+      ) : null}
+
+      {panel.metrics?.length ? (
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {panel.metrics.map((metric) => (
+            <div
+              key={metric.id}
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+            >
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+                {metric.label}
+              </p>
+              <p className="mt-2 font-display text-2xl">
+                {metric.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {panel.tierSummary ? (
+        <div className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-3">
+          <Coins
+            size={15}
+            className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
+          />
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
+            {panel.tierSummary}
+          </p>
+        </div>
+      ) : null}
+
+      {panel.expandedTierMessage ? (
+        <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
+          {panel.expandedTierMessage}
+        </p>
+      ) : null}
+
+      {panel.salesPausedMessage ? (
+        <p className="mt-3 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+          {panel.salesPausedMessage}
+        </p>
+      ) : null}
+
+      {panel.publicLiveWarning ? (
+        <p className="mt-3 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+          {panel.publicLiveWarning}
+        </p>
+      ) : null}
     </section>
   );
 }

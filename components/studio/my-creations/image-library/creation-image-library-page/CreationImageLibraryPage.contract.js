@@ -1,4 +1,4 @@
-export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Portable presentation contract for a Creation-owned image library.
@@ -11,6 +11,9 @@ export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @typedef {Object} CreationImageLibraryPageViewProps
  * @property {string} title
  * @property {string} backHref
+ * @property {string} reassignmentMessage
+ * @property {Object|null} libraryPassPanel
+ * @property {()=>void} onToggleLibraryPassSales
  * @property {Array<Object>} featuredSlotCards
  * @property {Array<Object>} visibleImages
  * @property {Array<Object>} hiddenImages

@@ -1,4 +1,4 @@
-export const STORY_ROOM_NPC_PARTICIPANT_MANAGER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_NPC_PARTICIPANT_MANAGER_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Display-ready NPC entry supplied to the portable View.
@@ -18,6 +18,7 @@ export const STORY_ROOM_NPC_PARTICIPANT_MANAGER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} busy
  * @property {boolean} disabled
  * @property {string} actionTitle
+ * @property {boolean} hasAction
  */
 
 /**
@@ -27,7 +28,7 @@ export const STORY_ROOM_NPC_PARTICIPANT_MANAGER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} id
  * @property {string} title
  * @property {string} emptyMessage
- * @property {"unload"|"target"|"load"|"reload"} actionIconKey
+ * @property {"unload"|"target"|"load"|"reload"|"unavailable"} actionIconKey
  * @property {StoryRoomNpcParticipantViewItem[]} entries
  */
 

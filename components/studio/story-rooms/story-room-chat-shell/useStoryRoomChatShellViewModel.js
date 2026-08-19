@@ -6,6 +6,7 @@ import { deleteStoryRoom } from "@/lib/client/studio/story-rooms/storyRoomClient
 import {
   STORY_ROOM_COMMANDS,
   resolveLocalStoryRoomCommand,
+  resolveRemoteStoryRoomCommand,
 } from "@/components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry";
 
 export const STORY_ROOM_DELETE_CONFIRMATION = [
@@ -52,15 +53,22 @@ export function useStoryRoomChatShellViewModel({
   const safeChat = normalizeChat(chat);
   const {
     room = {},
+    snapshot = null,
     cast = [],
     messages = [],
     speakerOptions = [],
     locationMentionOptions = [],
     loading = false,
     sending = false,
+    summaryPending = false,
     error = null,
     reload: reloadStoryRoom,
     sendMessage: sendStoryMessage,
+    regenerateMessage,
+    continueMessage,
+    reportMessage,
+    messageActionState = {},
+    summarizeCurrentBoundary,
     canSetPlayerCharacter = false,
     settingPlayerCharacter = false,
     setPlayerCharacterError = "",
@@ -166,17 +174,28 @@ export function useStoryRoomChatShellViewModel({
         "PLAYER_YIELD_TO_AUTO",
       ].includes(actionType);
 
-      if ((!body && !isYieldTurn) || sending) return;
+      if ((!body && !isYieldTurn) || sending || summaryPending) return;
 
       const localCommand = isYieldTurn
         ? null
         : resolveLocalStoryRoomCommand(body);
+      const remoteCommand = isYieldTurn
+        ? null
+        : resolveRemoteStoryRoomCommand(body);
 
       if (localCommand) {
         setComposerHelpPanel(localCommand.panel);
         setDraft("");
         setParticipantMentions([]);
         setLocationMentions([]);
+        return;
+      }
+
+      if (remoteCommand?.action === "SUMMARIZE_CURRENT_BOUNDARY") {
+        setDraft("");
+        setParticipantMentions([]);
+        setLocationMentions([]);
+        await summarizeCurrentBoundary?.();
         return;
       }
 
@@ -212,6 +231,8 @@ export function useStoryRoomChatShellViewModel({
       participantMentions,
       sendStoryMessage,
       sending,
+      summaryPending,
+      summarizeCurrentBoundary,
     ]
   );
 
@@ -223,6 +244,7 @@ export function useStoryRoomChatShellViewModel({
 
   const castPanelProps = {
     room,
+    snapshot,
     cast,
     roomId,
     onClose: () => setLeftOpen(false),
@@ -270,10 +292,16 @@ export function useStoryRoomChatShellViewModel({
     castPanelProps,
     mobileCastPanelProps,
     transcriptProps: {
+      openingHeroImage: room.openingHeroImage || null,
       messages,
       loading,
       sending,
+      summaryPending,
       error,
+      onRegenerateMessage: regenerateMessage,
+      onContinueMessage: continueMessage,
+      onReportMessage: reportMessage,
+      messageActionState,
     },
     composerProps: {
       inputMode,
@@ -292,15 +320,17 @@ export function useStoryRoomChatShellViewModel({
       onSend: sendMessage,
       onOpenCast: () => setMobilePanel("cast"),
       onOpenState: () => setMobilePanel("state"),
-      isSending: sending,
+      isSending: sending || summaryPending,
       disabled: loading || Boolean(error),
     },
     desktopStatePanelProps: {
       room,
+      snapshot,
       onClose: () => setRightOpen(false),
     },
     mobileStatePanelProps: {
       room,
+      snapshot,
     },
     runtimeMechanicsPanelProps,
     onToggleLeftPanel: () => setLeftOpen((current) => !current),

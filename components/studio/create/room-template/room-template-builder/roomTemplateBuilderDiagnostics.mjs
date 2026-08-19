@@ -40,6 +40,9 @@ test("Room Template Builder View composes portable child Views", () => {
   assert.match(view, /ScenarioRecommendationsPanelView/);
   assert.match(view, /InvitedPlayersPanelView/);
   assert.match(view, /OpeningMessageCardView/);
+  assert.match(view, /StoryOpeningLocationAuthoringPanelView/);
+  assert.match(view, /openingLocationAuthoringProps/);
+  assert.match(view, /PLAYER_SELECT/);
   assert.doesNotMatch(view, /from "@\/components\/studio\/room-templates\/(RoomTemplateSummary|SelectedCharactersPanel|ScenarioRecommendationsPanel|InvitedPlayersPanel|OpeningMessageCard)"/);
 });
 
@@ -50,6 +53,11 @@ test("Room Template Builder ViewModel owns state, payload, and creation", () => 
   assert.match(viewModel, /createRoomTemplateDraft/);
   assert.match(viewModel, /router\.push\(`\/studio\/my-creations\/\$\{creation\.id\}\/edit`\)/);
   assert.match(viewModel, /mergeScenarioNpcRegistryRecommendations/);
+  assert.match(viewModel, /normalizeStoryOpeningLocationAuthoring/);
+  assert.match(viewModel, /buildPlayerSelectableOpeningLocationConfig/);
+  assert.match(viewModel, /patchStoryCharacterLifecycleSelection/);
+  assert.match(viewModel, /Player-selectable Stories require at least one allowed starting Location/);
+  assert.match(viewModel, /onChangeCharacterLifecycle/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 

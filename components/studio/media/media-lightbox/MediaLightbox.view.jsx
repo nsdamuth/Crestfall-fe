@@ -1,5 +1,7 @@
 import {
+  ArrowRightLeft,
   Bookmark,
+  Coins,
   Download,
   Flag,
   Heart,
@@ -23,11 +25,14 @@ export default function MediaLightboxView({
   allowDownload = false,
   showStudioActions = true,
   showDeleteAction = false,
+  showReassignAction = false,
   isLiked = false,
   isBookmarked = false,
   shareMessage = "",
   reportReasonOptions = [],
   detailsDialog = {},
+  reassignDialog = {},
+  reassignmentPresentation = {},
   reportDialog = {},
   onSelectMedia = null,
   onClose = null,
@@ -35,6 +40,10 @@ export default function MediaLightboxView({
   onBookmark = null,
   onShare = null,
   onDelete = null,
+  onOpenReassign = null,
+  onCloseReassign = null,
+  onReassignDestinationChange = null,
+  onSubmitReassign = null,
   onOpenDetails = null,
   onCloseDetails = null,
   onOpenReport = null,
@@ -179,6 +188,14 @@ export default function MediaLightboxView({
                   Details
                 </LightboxActionButton>
 
+                {showReassignAction ? (
+                  <LightboxActionButton onClick={onOpenReassign}>
+                    <ArrowRightLeft size={14} />
+                    {reassignmentPresentation.actionLabel ||
+                      "Reassign Asset"}
+                  </LightboxActionButton>
+                ) : null}
+
                 <LightboxActionButton onClick={onOpenReport} danger>
                   <Flag size={14} />
                   Report
@@ -237,6 +254,16 @@ export default function MediaLightboxView({
 
       {detailsDialog.open ? (
         <DetailsDialog {...detailsDialog} onClose={onCloseDetails} />
+      ) : null}
+
+      {reassignDialog.open ? (
+        <ReassignDialog
+          {...reassignDialog}
+          presentation={reassignmentPresentation}
+          onDestinationChange={onReassignDestinationChange}
+          onSubmit={onSubmitReassign}
+          onClose={onCloseReassign}
+        />
       ) : null}
 
       {reportDialog.open ? (
@@ -322,6 +349,219 @@ function StubToolbarButton({ children }) {
     >
       {children}
     </button>
+  );
+}
+
+
+function ReassignDialog({
+  status = "idle",
+  message = "",
+  coinCost = 1,
+  sourceCreation = null,
+  targets = [],
+  destinationCreationId = "",
+  presentation = {},
+  onDestinationChange,
+  onSubmit,
+  onClose,
+}) {
+  const isLoading =
+    presentation.isLoading ??
+    status === "loading";
+  const isSubmitting =
+    presentation.isSubmitting ??
+    status === "submitting";
+  const isSuccess =
+    presentation.isSuccess ??
+    status === "success";
+  const canSubmit =
+    presentation.canSubmit ??
+    (
+      !isLoading &&
+      !isSubmitting &&
+      !isSuccess &&
+      Boolean(destinationCreationId) &&
+      targets.length > 0
+    );
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[var(--blur-panel)]">
+      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-white/10 bg-zinc-950 p-5 shadow-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Reassign Image
+            </p>
+            <h3 className="mt-1 font-display text-3xl">
+              Move to another asset
+            </h3>
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+              {presentation.ownershipMessage ||
+                "Only images you created can be moved, and both the current and destination assets must belong to you."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-md)] border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-60"
+            aria-label="Close image reassignment"
+          >
+            <X size={17} />
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 text-sm text-[var(--ink-dim)]">
+            <Loader2
+              className="mr-2 inline animate-spin"
+              size={16}
+            />
+            {presentation.statusLabel ||
+              "Loading your eligible assets..."}
+          </div>
+        ) : null}
+
+        {!isLoading && sourceCreation ? (
+          <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">
+              Current asset
+            </p>
+            <p className="mt-1 text-sm text-[var(--ink)]">
+              {sourceCreation.title}
+              {sourceCreation.type ? (
+                <span className="ml-2 text-xs text-[var(--ink-dim)]">
+                  {sourceCreation.type}
+                </span>
+              ) : null}
+            </p>
+          </div>
+        ) : null}
+
+        {!isLoading && !isSuccess ? (
+          <form
+            onSubmit={onSubmit}
+            className="mt-4 space-y-4"
+          >
+            <label className="block">
+              <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                Destination asset
+              </span>
+              <select
+                value={destinationCreationId}
+                onChange={(event) =>
+                  onDestinationChange?.(
+                    event.target.value
+                  )
+                }
+                disabled={
+                  isSubmitting ||
+                  !targets.length
+                }
+                className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/50 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {!targets.length ? (
+                  <option value="">
+                    {presentation.emptyTargetLabel ||
+                      "No other owned assets available"}
+                  </option>
+                ) : null}
+                {targets.map((target) => (
+                  <option
+                    key={target.id}
+                    value={target.id}
+                  >
+                    {target.title} — {target.type}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div className="flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
+              <Coins size={16} />
+              {presentation.costLabel ||
+                `Cost: ${coinCost} ${
+                  coinCost === 1
+                    ? "Coin"
+                    : "Coins"
+                }`}
+            </div>
+
+            <p className="text-xs leading-5 text-[var(--ink-dim)]">
+              {presentation.moveSemanticsMessage ||
+                "Reassignment moves the same image. It does not duplicate the file. If this image is featured or selected as a visual reference on the current asset, those source references are cleared automatically."}
+            </p>
+
+            {message ? (
+              <p
+                className={`rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+                  presentation.statusTone === "ERROR"
+                    ? "border-red-500/30 bg-red-500/10 text-red-200"
+                    : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                }`}
+              >
+                {message}
+              </p>
+            ) : null}
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="cf-btn cf-btn--secondary"
+              >
+                {presentation.closeLabel ||
+                  "Cancel"}
+              </button>
+
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="cf-btn cf-btn--primary"
+              >
+                {isSubmitting ? (
+                  <Loader2
+                    size={14}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <ArrowRightLeft size={14} />
+                )}
+                {presentation.submitLabel ||
+                  `Reassign for ${coinCost} ${
+                    coinCost === 1
+                      ? "Coin"
+                      : "Coins"
+                  }`}
+              </button>
+            </div>
+          </form>
+        ) : null}
+
+        {isSuccess ? (
+          <div className="mt-5">
+            <p className="rounded-[var(--radius-md)] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100">
+              {message ||
+                presentation.statusLabel ||
+                "Image reassigned."}
+            </p>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="cf-btn cf-btn--primary"
+              >
+                {presentation.closeLabel ||
+                  "Close"}
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </section>
+    </div>
   );
 }
 

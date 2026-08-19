@@ -8,6 +8,14 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     panel: "HELP",
   }),
   Object.freeze({
+    name: "summary",
+    aliases: Object.freeze(["recap"]),
+    description: "Summarize the current story beat or scene without advancing the story.",
+    usage: "/summary",
+    handling: "REMOTE_UI",
+    action: "SUMMARIZE_CURRENT_BOUNDARY",
+  }),
+  Object.freeze({
     name: "commands",
     aliases: Object.freeze([]),
     description: "Show every command currently available in this Story Room.",
@@ -68,4 +76,11 @@ export function resolveLocalStoryRoomCommand(draft) {
   const command = findStoryRoomCommand(match[1]);
 
   return command?.handling === "LOCAL_UI" ? command : null;
+}
+
+export function resolveRemoteStoryRoomCommand(draft) {
+  const match = /^\/([^\s]+)\s*$/u.exec(String(draft || "").trim());
+  if (!match) return null;
+  const command = findStoryRoomCommand(match[1]);
+  return command?.handling === "REMOTE_UI" ? command : null;
 }

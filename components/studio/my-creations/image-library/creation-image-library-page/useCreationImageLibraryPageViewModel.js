@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationImageLibraryViewModel } from "@/components/studio/my-creations/image-library/hooks/useCreationImageLibraryViewModel";
 import {
   fetchMediaReactions,
@@ -9,6 +10,11 @@ import {
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
 import { deleteImageOutput } from "@/lib/client/studio/media/imageOutputClient";
+
+import {
+  projectCreationImageLibraryLibraryPassOwnerBinding,
+} from "./library-pass-owner-binding/CreationImageLibraryLibraryPassOwnerBinding.contract.js";
+import { useCreationLibraryPassOwnerViewModel } from "./useCreationLibraryPassOwnerViewModel";
 
 export const FEATURED_SLOT_ORDER = ["primary", "alt1", "alt2", "alt3"];
 export const FEATURED_SLOT_LABELS = {
@@ -133,6 +139,7 @@ export function normalizeCreationLibraryImage(image, index = 0) {
 }
 
 export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
+  const { setCoinBalanceFromServer } = useStudioAccount();
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -158,15 +165,55 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     eligibilityFilterOptions,
   } = libraryState;
 
+  const libraryPassOwner = useCreationLibraryPassOwnerViewModel({
+    creationId,
+    publicPreviewFallback: EAGER_IMAGE_COUNT,
+  });
+
+  const libraryPassBinding = useMemo(
+    () =>
+      projectCreationImageLibraryLibraryPassOwnerBinding({
+        libraryPassState:
+          libraryPassOwner.panel,
+        loadStatus:
+          libraryPassOwner.panel.loadStatus,
+        message:
+          libraryPassOwner.panel.message,
+        messageTone:
+          libraryPassOwner.panel.messageTone,
+        actionBusy:
+          libraryPassOwner.panel.isBusy,
+        callbacks: {
+          onToggleLibraryPassSales:
+            libraryPassOwner.onToggleSales,
+        },
+      }),
+    [
+      libraryPassOwner.onToggleSales,
+      libraryPassOwner.panel,
+    ]
+  );
+
   const [activePreviewId, setActivePreviewId] = useState(null);
   const [likedImageIds, setLikedImageIds] = useState(() => new Set());
   const [bookmarkedImageIds, setBookmarkedImageIds] = useState(() => new Set());
   const [reactionMessage, setReactionMessage] = useState("");
   const [deleteMessage, setDeleteMessage] = useState("");
+  const [reassignmentMessage, setReassignmentMessage] = useState("");
   const [deletingImageOutputId, setDeletingImageOutputId] = useState("");
   const [deletedImageOutputIds, setDeletedImageOutputIds] = useState(
     () => new Set()
   );
+
+  const handleRefresh = useCallback(async () => {
+    await Promise.allSettled([
+      Promise.resolve(reload?.()),
+      libraryPassOwner.reload(),
+    ]);
+  }, [
+    libraryPassOwner,
+    reload,
+  ]);
 
   const isLocallyDeletedImage = useCallback(
     (image) =>
@@ -208,10 +255,54 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     [pagedVisibleImages, isLocallyDeletedImage]
   );
 
-  const lightboxImages = useMemo(
-    () => [...libraryImages, ...hiddenLibraryImages],
-    [libraryImages, hiddenLibraryImages]
-  );
+  const lightboxImages = useMemo(() => {
+    const creationOwnerId = String(
+      creation?.ownerId ||
+        creation?.owner_id ||
+        ""
+    ).trim();
+    const currentCreationId = String(
+      creationId ||
+        creation?.id ||
+        ""
+    ).trim();
+
+    return [
+      ...libraryImages,
+      ...hiddenLibraryImages,
+    ].map((image) => {
+      const imageOwnerId = String(
+        image?.ownerId ||
+          image?.owner_id ||
+          ""
+      ).trim();
+      const imageCreationId = String(
+        image?.creationId ||
+          image?.creation_id ||
+          ""
+      ).trim();
+
+      return {
+        ...image,
+        canReassign: Boolean(
+          creationOwnerId &&
+            currentCreationId &&
+            imageOwnerId ===
+              creationOwnerId &&
+            imageCreationId ===
+              currentCreationId &&
+            getCreationLibraryImageOutputId(
+              image
+            )
+        ),
+      };
+    });
+  }, [
+    creation,
+    creationId,
+    libraryImages,
+    hiddenLibraryImages,
+  ]);
 
   const rawImageById = useMemo(() => {
     const map = new Map();
@@ -483,6 +574,27 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
         onToggleLike: toggleLikedImage,
         onToggleBookmark: toggleBookmarkedImage,
         onDeleteItem: handleDeleteImage,
+        onReassignItem: async (
+          _item,
+          result
+        ) => {
+          if (
+            result?.coinBalance !==
+            undefined
+          ) {
+            setCoinBalanceFromServer?.(
+              result.coinBalance
+            );
+          }
+
+          setReassignmentMessage(
+            result?.destinationTitle
+              ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
+              : "Image reassigned. 1 Coin used."
+          );
+          setActivePreviewId(null);
+          await handleRefresh();
+        },
       }
     : null;
 
@@ -506,6 +618,9 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     isLoading: loadStatus === "idle" || loadStatus === "loading",
     reactionMessage,
     deleteMessage,
+    reassignmentMessage,
+    libraryPassPanel:
+      libraryPassBinding.creationImageLibraryProps.libraryPassPanel,
     featuredSlotCards,
     visibleImages: normalizedVisibleImages,
     hiddenImages: normalizedHiddenImages,
@@ -527,7 +642,9 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     hasMoreVisibleImages: Boolean(hasMoreVisibleImages),
     lightboxProps,
     eagerImageCount: EAGER_IMAGE_COUNT,
-    onRefresh: reload,
+    onRefresh: handleRefresh,
+    onToggleLibraryPassSales:
+      libraryPassBinding.creationImageLibraryProps.onToggleLibraryPassSales,
     onSetEligibilityFilter: setEligibilityFilter,
     onSetSortMode: setSortMode,
     onLoadMoreVisibleImages: loadMoreVisibleImages,

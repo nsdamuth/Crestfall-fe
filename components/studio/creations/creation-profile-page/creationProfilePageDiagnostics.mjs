@@ -68,9 +68,23 @@ test("ViewModel owns reactions and Story Room orchestration", () => {
   assert.match(vm, /fetchMediaReactions\(imageOutputIds\)/);
   assert.match(vm, /setMediaLike\(imageOutputId, nextActive\)/);
   assert.match(vm, /setMediaBookmark\(imageOutputId, nextActive\)/);
-  assert.match(vm, /startStoryFromCreation\(normalizedCreation\.raw\)/);
+  assert.match(vm, /getStoryOpeningLocationStartConfig/);
+  assert.match(vm, /projectStoryStartOpeningLocationPresentation/);
+  assert.match(vm, /openingLocationPickerOpen/);
+  assert.match(vm, /openingLocationId/);
+  assert.match(vm, /startStoryFromCreation\(normalizedCreation\.raw, \{/);
+  assert.match(vm, /openingLocationId: effectiveOpeningLocationId \|\| null/);
   assert.match(vm, /Story was created without a room id\./);
   assert.match(vm, /navigate\?\.\(`\/studio\/story-rooms\/\$\{roomId\}`\)/);
+  assert.match(vm, /useCreationLibraryPassPublicViewModel/);
+  assert.match(vm, /projectCreationProfileLibraryPassAccess/);
+  assert.match(vm, /accessControlledMedia/);
+  assert.match(vm, /lightboxMedia/);
+  assert.match(vm, /lockedMediaCount/);
+  assert.match(vm, /if \(item\?\.locked\)/);
+  assert.match(vm, /libraryPass\.onOpenPurchase\(\)/);
+  assert.match(vm, /libraryPassPanel/);
+  assert.match(vm, /libraryPassModal/);
 });
 
 test("portable View consumes display-ready state and semantic slots", () => {
@@ -86,6 +100,15 @@ test("portable View consumes display-ready state and semantic slots", () => {
     "shareButtonSlot",
     "sortControlSlot",
     "mediaActionSlots",
+    "openingLocationPicker",
+    "StoryStartOpeningLocationPickerView",
+    "libraryPassPanel",
+    "libraryPassModal",
+    "libraryPassMessage",
+    "LibraryPassPanel",
+    "LibraryPassPurchaseDialog",
+    "item.locked",
+    "LockKeyhole",
     "lightboxSlot",
     "description?.visibleText",
     "mediaTabs.map",
@@ -109,7 +132,7 @@ test("legacy catalogue behavior and fallback states remain present", () => {
 
   assert.match(view, /No public media yet/);
   assert.match(view, /Search this creation's media/);
-  assert.match(view, /Load More/);
+  assert.match(view, /Load more/);
   assert.match(view, /Starting\.\.\./);
   assert.match(vm, /CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420/);
   assert.match(vm, /No description has been added yet\./);
@@ -131,11 +154,18 @@ test("contract, fixtures, and protected preview are included", () => {
 
   assert.match(contract, /CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /CreationProfilePageViewProps/);
+  assert.match(contract, /creation-profile-page\.view\.v2/);
+  assert.match(contract, /openingLocationPicker/);
+  assert.match(contract, /libraryPassPanel/);
+  assert.match(contract, /libraryPassModal/);
+  assert.match(contract, /onConfirmLibraryPassPurchase/);
   assert.match(contract, /reactionsAndStoryStart: "ViewModel"/);
+  assert.match(contract, /libraryPassStatePurchaseAndAccess: "ViewModel"/);
   assert.match(fixtures, /creationProfileFixture/);
   assert.match(fixtures, /creationProfileMediaFixture/);
   assert.match(fixtures, /creationProfileEmptyMediaFixture/);
   assert.match(fixtures, /creationProfileLoadErrorFixture/);
+  assert.match(fixtures, /creationProfilePlayerSelectStoryFixture/);
   assert.match(page, /process\.env\.NODE_ENV === "production"/);
   assert.match(page, /notFound\(\)/);
   assert.match(preview, /POPULATED/);

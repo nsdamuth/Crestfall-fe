@@ -3,6 +3,7 @@
 import {
   ChevronDown,
   ChevronUp,
+  CircleAlert,
   RotateCcw,
   Search,
   UserMinus,
@@ -15,6 +16,7 @@ const ACTION_ICONS = {
   target: Search,
   load: UserPlus,
   reload: RotateCcw,
+  unavailable: CircleAlert,
 };
 
 export default function StoryRoomNpcParticipantManagerView({
@@ -124,18 +126,20 @@ function NpcSection({ section, onActivateNpc }) {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => onActivateNpc?.(entry.actionId)}
-                disabled={entry.disabled}
-                className={`cf-btn cf-btn--sm mt-3 w-full ${
-                  isUnloadAction ? "cf-btn--danger" : "cf-btn--secondary"
-                }`}
-                title={entry.actionTitle || entry.actionLabel}
-              >
-                <ActionIcon size={13} />
-                {entry.busy ? entry.busyLabel : entry.actionLabel}
-              </button>
+              {entry.hasAction !== false ? (
+                <button
+                  type="button"
+                  onClick={() => onActivateNpc?.(entry.actionId)}
+                  disabled={entry.disabled}
+                  className={`cf-btn cf-btn--sm mt-3 w-full ${
+                    isUnloadAction ? "cf-btn--danger" : "cf-btn--secondary"
+                  }`}
+                  title={entry.actionTitle || entry.actionLabel}
+                >
+                  <ActionIcon size={13} />
+                  {entry.busy ? entry.busyLabel : entry.actionLabel}
+                </button>
+              ) : null}
             </article>
           ))
         ) : (

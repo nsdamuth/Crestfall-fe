@@ -3,6 +3,12 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { useStoryRoomNpcParticipantManagerViewModel } from "@/components/studio/story-rooms/story-room-npc-participant-manager/useStoryRoomNpcParticipantManagerViewModel";
+import {
+  projectStoryCharacterLifecycleRuntimePresentation,
+} from "../story-character-lifecycle-runtime/StoryCharacterLifecycleRuntimePresentation.contract.js";
+import {
+  projectStoryRoomCastLifecycleBinding,
+} from "./lifecycle-binding/StoryRoomCastLifecycleBinding.contract.js";
 
 function displayText(value, fallback = "") {
   if (value === null || value === undefined || value === "") {
@@ -134,6 +140,7 @@ function buildCastPanelState({
 
 export function useStoryRoomCastPanelViewModel({
   room,
+  snapshot = null,
   cast,
   roomId,
   onClose,
@@ -210,6 +217,28 @@ export function useStoryRoomCastPanelViewModel({
     ]
   );
 
+  const lifecycleRuntimePresentation = useMemo(
+    () =>
+      projectStoryCharacterLifecycleRuntimePresentation({
+        participants: Array.isArray(snapshot?.participants)
+          ? snapshot.participants
+          : [],
+      }),
+    [snapshot]
+  );
+
+  const lifecycleCastBinding = useMemo(
+    () =>
+      projectStoryRoomCastLifecycleBinding({
+        castMembers: state.castMembers,
+        lifecycleRuntimePresentation,
+      }),
+    [
+      lifecycleRuntimePresentation,
+      state.castMembers,
+    ]
+  );
+
   const onOpenPlayerCharacterPicker = useCallback(() => {
     setPlayerCharacterPickerOpen(true);
   }, []);
@@ -246,6 +275,10 @@ export function useStoryRoomCastPanelViewModel({
   return {
     viewProps: {
       ...state,
+      castMembers:
+        lifecycleCastBinding.castMembers,
+      lifecycleSummary:
+        lifecycleCastBinding.summary,
       npcParticipantManager,
       onClosePanel: onClose,
       onSelectCastMember,

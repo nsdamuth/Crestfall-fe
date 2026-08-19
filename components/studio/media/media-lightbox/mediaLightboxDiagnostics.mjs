@@ -44,6 +44,11 @@ test("ViewModel owns details, reporting, sharing, and deletion orchestration", (
   assert.match(viewModel, /navigator\.clipboard\.writeText/);
   assert.match(viewModel, /window\.confirm/);
   assert.match(viewModel, /confirmed: true/);
+  assert.match(viewModel, /fetchImageReassignmentContext/);
+  assert.match(viewModel, /reassignImageOutput/);
+  assert.match(viewModel, /projectMediaLightboxImageReassignmentBinding/);
+  assert.match(viewModel, /reassignSourceOverride/);
+  assert.match(viewModel, /onReassignItem/);
 });
 
 test("portable View owns presentation without importing Crestfall clients", () => {
@@ -52,8 +57,12 @@ test("portable View owns presentation without importing Crestfall clients", () =
   );
 
   assert.match(view, /desktop|ThumbnailButton|DetailsDialog|ReportDialog/i);
-  assert.match(view, /Generate Variant/);
-  assert.match(view, /Delete Image/);
+  assert.match(view, /Generate variant/i);
+  assert.match(view, /Delete image/i);
+  assert.match(view, /Reassign Asset/);
+  assert.match(view, /ReassignDialog/);
+  assert.match(view, /reassignmentPresentation/);
+  assert.match(view, /Destination asset/);
   assert.match(view, /LinkComponent/);
   assert.doesNotMatch(view, /imageDetailsClient|mediaReportClient/);
   assert.doesNotMatch(view, /fetch\(|navigator|window\.confirm|next\/link/);
@@ -87,8 +96,11 @@ test("contract, fixtures, and development preview are explicit", () => {
     "app/dev/ui-preview/media-lightbox/MediaLightboxPreviewClient.jsx"
   );
 
-  assert.match(contract, /MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION/);
+  assert.match(contract, /MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "1\.1\.0"/);
   assert.match(contract, /MediaLightboxViewProps/);
+  assert.match(contract, /showReassignAction/);
+  assert.match(contract, /reassignDialog/);
+  assert.match(contract, /reassignmentPresentation/);
   assert.match(fixtures, /mediaLightboxFixtureItems/);
   assert.match(fixtures, /image_output_id/);
   assert.match(page, /process\.env\.NODE_ENV === "production"/);

@@ -65,13 +65,23 @@ export default function LocationRegistryBuilderView({
   weatherScopeDraft = null,
   locationOptions = [],
   locationLoadError = "",
+  characterOptions = [],
+  characterLoadError = "",
   npcEntryOptions = [],
   npcEntryLoadError = "",
+  crossRegistry = {},
+  splitPreview = {},
   optionSets = {},
   onSelectTab = () => {},
   onUpdateField = () => {},
   onUpdatePromptGuidance = () => {},
   onUpdateRuntimeGuidance = () => {},
+  onOpenSplitPreview = () => {},
+  onCloseSplitPreview = () => {},
+  onToggleSplitCandidate = () => {},
+  onPrepareSplitPlan = () => {},
+  onChangeSplitCreatorConfirmation = () => {},
+  onCommitSplitPlan = () => {},
   onSave = () => {},
   onOpenNewEntry = () => {},
   onOpenEditEntry = () => {},
@@ -86,6 +96,8 @@ export default function LocationRegistryBuilderView({
   onOpenEditConnection = () => {},
   onCloseConnection = () => {},
   onUpdateConnectionField = () => {},
+  onSelectConnectionEndpointRegistry = () => {},
+  onSelectConnectionEndpointLocation = () => {},
   onSaveConnection = () => {},
   onDeleteConnection = () => {},
   onOpenNewPresenceBinding = () => {},
@@ -93,6 +105,7 @@ export default function LocationRegistryBuilderView({
   onClosePresenceBinding = () => {},
   onUpdatePresenceBindingField = () => {},
   onUpdatePresenceConditionListText = () => {},
+  onApplyCharacter = () => {},
   onApplyNpcEntry = () => {},
   onSavePresenceBinding = () => {},
   onDeletePresenceBinding = () => {},
@@ -230,9 +243,23 @@ export default function LocationRegistryBuilderView({
         </div>
 
         {mode === "edit" ? (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-            Use the page Save button to persist changes.
-          </p>
+          <div className="mt-5 grid gap-3">
+            <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              Use the page Save button to persist changes.
+            </p>
+
+            {splitPreview.available ? (
+              <button
+                type="button"
+                onClick={onOpenSplitPreview}
+                disabled={Boolean(splitPreview.busy)}
+                className="cf-btn cf-btn--secondary w-full"
+              >
+                <Network size={15} />
+                Analyze Split
+              </button>
+            ) : null}
+          </div>
         ) : (
           <button
             type="button"
@@ -297,9 +324,12 @@ export default function LocationRegistryBuilderView({
         <LocationConnectionModal
           draft={connectionDraft}
           entries={registry.entries}
+          crossRegistry={crossRegistry}
           optionSets={optionSets}
           onClose={onCloseConnection}
           onChange={onUpdateConnectionField}
+          onSelectEndpointRegistry={onSelectConnectionEndpointRegistry}
+          onSelectEndpointLocation={onSelectConnectionEndpointLocation}
           onSave={onSaveConnection}
         />
       ) : null}
@@ -309,12 +339,15 @@ export default function LocationRegistryBuilderView({
           draft={presenceBindingDraft}
           entries={registry.entries}
           bindings={registry.presenceBindings}
+          characterOptions={characterOptions}
+          characterLoadError={characterLoadError}
           npcEntryOptions={npcEntryOptions}
           npcEntryLoadError={npcEntryLoadError}
           onClose={onClosePresenceBinding}
           onChange={onUpdatePresenceBindingField}
           onConditionListTextChange={onUpdatePresenceConditionListText}
           optionSets={optionSets}
+          onApplyCharacter={onApplyCharacter}
           onApplyNpcEntry={onApplyNpcEntry}
           onSave={onSavePresenceBinding}
         />
@@ -328,7 +361,395 @@ export default function LocationRegistryBuilderView({
           onSave={onSaveWeatherScope}
         />
       ) : null}
+
+      {splitPreview.open ? (
+        <SplitRegistryAnalysisModal
+          analysis={splitPreview.analysis}
+          execution={splitPreview}
+          onClose={onCloseSplitPreview}
+          onToggleCandidate={onToggleSplitCandidate}
+          onPreparePlan={onPrepareSplitPlan}
+          onChangeCreatorConfirmation={onChangeSplitCreatorConfirmation}
+          onCommitPlan={onCommitSplitPlan}
+        />
+      ) : null}
     </section>
+  );
+}
+
+function SplitRegistryAnalysisModal({
+  analysis = {},
+  execution = {},
+  onClose = () => {},
+  onToggleCandidate = () => {},
+  onPreparePlan = () => {},
+  onChangeCreatorConfirmation = () => {},
+  onCommitPlan = () => {},
+}) {
+  const source = analysis.source || {};
+  const candidates = Array.isArray(analysis.candidates)
+    ? analysis.candidates
+    : [];
+  const issues = Array.isArray(analysis.issues) ? analysis.issues : [];
+  const blocked = analysis.status === "BLOCKED_SOURCE_INTEGRITY";
+  const selectedCandidateIds = Array.isArray(execution.selectedCandidateIds)
+    ? execution.selectedCandidateIds
+    : [];
+  const selectedIds = new Set(selectedCandidateIds);
+  const planStatus = execution.planStatus || "idle";
+  const serverPlan = execution.serverPlan || null;
+  const serverBlockers = Array.isArray(serverPlan?.executionGate?.blockers)
+    ? serverPlan.executionGate.blockers
+    : [];
+  const commitReady = Boolean(serverPlan?.executionGate?.commitReady);
+  const busy = Boolean(execution.busy);
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4">
+      <div
+        className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[#0b0907] shadow-2xl"
+        style={{ backgroundColor: "#0b0907" }}
+      >
+        <div
+          className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-white/10 bg-[#0b0907] px-6 py-5"
+          style={{ backgroundColor: "#0b0907" }}
+        >
+          <div>
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Creator-Confirmed Split
+            </p>
+            <h2 className="mt-2 font-display text-3xl">Split Registry Preview</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+              Deterministic candidates are derived only from authored local
+              parent/child containment. Selection is validated again by the authoritative server before an
+              atomic split can be confirmed.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={planStatus === "committing"}
+            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Close split analysis"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="grid gap-6 p-6">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <SummaryPill label="Locations" value={source.entryCount || 0} />
+            <SummaryPill
+              label="Connections"
+              value={source.connectionCount || 0}
+            />
+            <SummaryPill
+              label="People & Presence"
+              value={source.presenceBindingCount || 0}
+            />
+            <SummaryPill
+              label="Candidates"
+              value={analysis.previewReadyCount || 0}
+            />
+          </div>
+
+          <div
+            className={`rounded-xl border px-4 py-4 text-sm leading-6 ${
+              blocked
+                ? "border-red-400/30 bg-red-400/10 text-red-100"
+                : "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+            }`}
+          >
+            {blocked
+              ? "Source integrity issues must be corrected before any split can proceed."
+              : "Local source integrity passed. Select one or more non-overlapping scopes, then request a fresh server-authoritative plan before confirmation."}
+          </div>
+
+          {issues.length ? (
+            <div className="rounded-xl border border-red-400/25 bg-red-400/5 p-4">
+              <p className="text-xs uppercase tracking-[0.18em] text-red-200">
+                Source Issues
+              </p>
+              <div className="mt-3 grid gap-2">
+                {issues.map((issue, index) => (
+                  <p
+                    key={`${issue.code || "issue"}:${issue.referenceId || index}`}
+                    className="text-sm leading-6 text-red-100"
+                  >
+                    <span className="font-semibold">{issue.code || "ISSUE"}</span>
+                    {" — "}
+                    {issue.message || "Unknown split-analysis issue."}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  Authored Containment Candidates
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+                  A candidate keeps its scope Location in this Registry and
+                  proposes moving only that scope's descendants into a future
+                  child Registry. Overlapping candidates are not auto-selected.
+                </p>
+              </div>
+            </div>
+
+            {candidates.length ? (
+              <div className="mt-4 grid gap-4">
+                {candidates.map((candidate) => (
+                  <div
+                    key={candidate.id}
+                    className="rounded-xl border border-white/10 bg-black/30 p-5"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+                          Retain Scope Location
+                        </p>
+                        <h3 className="mt-1 text-lg font-semibold text-[var(--ink)]">
+                          {candidate.scopeName}
+                        </h3>
+                        <p className="mt-1 text-sm text-[var(--ink-dim)]">
+                          Proposed child: {candidate.suggestedChildTitle}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.14em] ${
+                          candidate.status === "PREVIEW_READY"
+                            ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                            : "border-amber-400/25 bg-amber-400/10 text-amber-100"
+                        }`}
+                      >
+                        {candidate.status === "PREVIEW_READY"
+                          ? "Preview Ready"
+                          : "Existing Child Scope"}
+                      </span>
+
+                      {candidate.status === "PREVIEW_READY" ? (
+                        <label className="flex items-center gap-2 text-xs text-[var(--ink)]">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(candidate.id)}
+                            disabled={
+                              busy ||
+                              (!selectedIds.has(candidate.id) &&
+                                (candidate.overlappingCandidateIds || []).some(
+                                  (id) => selectedIds.has(id)
+                                ))
+                            }
+                            onChange={() => onToggleCandidate(candidate.id)}
+                            className="h-4 w-4 accent-[var(--gold-ornament)]"
+                          />
+                          Select for server validation
+                        </label>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                      <SummaryPill label="Move Locations" value={candidate.entryCount} />
+                      <SummaryPill
+                        label="Internal Connections"
+                        value={candidate.internalConnectionCount}
+                      />
+                      <SummaryPill
+                        label="Boundary Rewrites"
+                        value={candidate.boundaryConnectionCount}
+                      />
+                      <SummaryPill
+                        label="Presence Bindings"
+                        value={candidate.presenceBindingCount}
+                      />
+                      <SummaryPill
+                        label="Nested Child Refs"
+                        value={candidate.nestedChildReferenceRewriteCount}
+                      />
+                    </div>
+
+                    <div className="mt-4 rounded-lg border border-white/10 bg-black/20 p-3">
+                      <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+                        Stable Location IDs Preserved
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-[var(--ink)]">
+                        {candidate.movedEntryNames.slice(0, 8).join(", ") ||
+                          "No descendant Locations."}
+                        {candidate.movedEntryNames.length > 8
+                          ? ` +${candidate.movedEntryNames.length - 8} more`
+                          : ""}
+                      </p>
+                    </div>
+
+                    {candidate.overlapCount ? (
+                      <p className="mt-3 text-xs leading-5 text-amber-100">
+                        This candidate overlaps {candidate.overlapCount} other
+                        containment candidate{candidate.overlapCount === 1 ? "" : "s"}.
+                        Execution requires an explicit non-overlapping creator selection.
+                      </p>
+                    ) : null}
+
+                    {candidate.existingChildRegistryCreationId ? (
+                      <p className="mt-3 text-xs leading-5 text-amber-100">
+                        This scope already has a child Registry reference and is
+                        therefore blocked from a new split proposal.
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+                No deterministic split candidate can be derived from authored
+                local containment. Add or correct Location parent relationships
+                before using Split Registry tooling; this analyzer will not guess
+                a world partition from names, prose, or AI inference.
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                  Server Validation & Execution Gate
+                </p>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+                  The server reloads the saved Registry, rebuilds the selected
+                  split plan, inventories inbound references, validates stable-ID
+                  preservation, and issues source/plan fingerprints. Nothing is
+                  written until you explicitly confirm a commit-ready plan.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={onPreparePlan}
+                disabled={
+                  blocked || busy || selectedCandidateIds.length === 0
+                }
+                className="rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/15 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {planStatus === "planning"
+                  ? "Validating..."
+                  : serverPlan
+                    ? "Refresh Server Plan"
+                    : "Validate Selected Split"}
+              </button>
+            </div>
+
+            {execution.planMessage ? (
+              <p
+                className={`mt-4 rounded-lg border px-3 py-3 text-sm leading-6 ${
+                  planStatus === "error" || planStatus === "blocked"
+                    ? "border-red-400/25 bg-red-400/10 text-red-100"
+                    : planStatus === "ready" || planStatus === "applied"
+                      ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                      : "border-white/10 bg-black/20 text-[var(--ink-dim)]"
+                }`}
+              >
+                {execution.planMessage}
+              </p>
+            ) : null}
+
+            {serverPlan ? (
+              <div className="mt-4 grid gap-4">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <SummaryPill
+                    label="Integrity"
+                    value={serverPlan.integrity?.status || "UNKNOWN"}
+                  />
+                  <SummaryPill
+                    label="Selected Scopes"
+                    value={serverPlan.selection?.length || 0}
+                  />
+                  <SummaryPill
+                    label="Plan"
+                    value={commitReady ? "COMMIT READY" : "BLOCKED"}
+                  />
+                  <SummaryPill
+                    label="Fingerprint"
+                    value={`${String(serverPlan.planFingerprint || "").slice(0, 10)}…`}
+                  />
+                </div>
+
+                {serverPlan.integrity?.before && serverPlan.integrity?.after ? (
+                  <p className="text-xs leading-5 text-[var(--ink-dim)]">
+                    Preservation check: {serverPlan.integrity.before.entries} → {serverPlan.integrity.after.entries} Locations; {serverPlan.integrity.before.connections} → {serverPlan.integrity.after.connections} connections; {serverPlan.integrity.before.presenceBindings} → {serverPlan.integrity.after.presenceBindings} People & Presence bindings.
+                  </p>
+                ) : null}
+
+                {serverBlockers.length ? (
+                  <div className="rounded-lg border border-red-400/25 bg-red-400/5 p-3">
+                    <p className="text-xs uppercase tracking-[0.16em] text-red-200">
+                      Commit Blockers
+                    </p>
+                    <div className="mt-2 grid gap-2">
+                      {serverBlockers.map((blocker, index) => (
+                        <p
+                          key={`${blocker.code || "blocker"}:${index}`}
+                          className="text-sm leading-6 text-red-100"
+                        >
+                          <span className="font-semibold">
+                            {blocker.code || "BLOCKED"}
+                          </span>
+                          {" — "}
+                          {blocker.message || "The plan cannot be committed."}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {commitReady ? (
+                  <div className="rounded-xl border border-amber-400/25 bg-amber-400/5 p-4">
+                    <label className="flex items-start gap-3 text-sm leading-6 text-amber-50">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(execution.creatorConfirmed)}
+                        disabled={busy}
+                        onChange={(event) =>
+                          onChangeCreatorConfirmation(event.target.checked)
+                        }
+                        className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
+                      />
+                      <span>
+                        I confirm this reviewed split. Crestfall may create the
+                        selected child Location Registries and rewrite the source
+                        relationships using the validated atomic transaction. If
+                        the saved source or plan has changed, the commit must fail
+                        without partial changes.
+                      </span>
+                    </label>
+
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={onCommitPlan}
+                        disabled={
+                          busy ||
+                          !execution.creatorConfirmed ||
+                          !commitReady
+                        }
+                        className="rounded-lg border border-red-300/35 bg-red-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-red-100 transition hover:bg-red-400/15 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        {planStatus === "committing"
+                          ? "Applying Atomic Split..."
+                          : "Confirm & Execute Split"}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -489,16 +910,16 @@ function ConnectionsTab({
       <button
         type="button"
         onClick={onAdd}
-        disabled={entries.length < 2}
+        disabled={entries.length < 1}
         className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
         Add connection
       </button>
 
-      {entries.length < 2 ? (
+      {entries.length < 1 ? (
         <p className="text-sm text-[var(--ink-dim)]">
-          Add at least two locations before creating connections.
+          Add at least one local Location before creating connections.
         </p>
       ) : null}
 
@@ -515,8 +936,10 @@ function ConnectionsTab({
                     {connection.relation} · {connection.defaultRouteType || connection.routeType}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
-                    {findLocationName(entries, connection.fromLocationId)} →{" "}
-                    {findLocationName(entries, connection.toLocationId)}
+                    {connection.fromLocationDisplay ||
+                      findLocationName(entries, connection.fromLocationId)} →{" "}
+                    {connection.toLocationDisplay ||
+                      findLocationName(entries, connection.toLocationId)}
                   </h3>
                 </div>
 
@@ -532,6 +955,10 @@ function ConnectionsTab({
                 <p>
                   Distance Estimate: {connection.distanceModeDisplay || "Unknown / Unset"}
                 </p>
+
+                {connection.crossRegistry ? (
+                  <p>Cross-Registry Boundary: yes</p>
+                ) : null}
 
                 <p>
                   Available Methods: {Array.isArray(connection.availableRouteTypes) &&
@@ -1034,15 +1461,72 @@ function LocationEntryModal({
 function LocationConnectionModal({
   draft,
   entries,
+  crossRegistry = {},
   optionSets = {},
   onClose,
   onChange,
+  onSelectEndpointRegistry,
+  onSelectEndpointLocation,
   onSave,
 }) {
-  const locationOptions = entries.map((entry) => ({
+  const localLocationOptions = entries.map((entry) => ({
     value: entry.id,
     label: entry.name || "Untitled Location",
   }));
+  const fromLocationOptions = draft.from?.registryCreationId
+    ? crossRegistry.connectionFromLocationOptions || []
+    : localLocationOptions;
+  const toLocationOptions = draft.to?.registryCreationId
+    ? crossRegistry.connectionToLocationOptions || []
+    : localLocationOptions;
+
+  const fromLocationId =
+    draft.from?.locationEntryId || draft.fromLocationId || "";
+  const toLocationId =
+    draft.to?.locationEntryId || draft.toLocationId || "";
+
+  const fromSelectedOption = fromLocationOptions.find(
+    (option) => option.value === fromLocationId
+  );
+  const toSelectedOption = toLocationOptions.find(
+    (option) => option.value === toLocationId
+  );
+
+  const fromDegraded =
+    Boolean(fromLocationId) && !fromSelectedOption;
+  const toDegraded =
+    Boolean(toLocationId) && !toSelectedOption;
+
+  function getRegistryTitle(registryCreationId) {
+    if (!registryCreationId) return "This Registry";
+
+    return (
+      (crossRegistry.registryOptions || []).find(
+        (option) => option.value === registryCreationId
+      )?.label || "Linked Location Registry"
+    );
+  }
+
+  function getDegradedEndpointMessage(side) {
+    const endpoint =
+      side === "from"
+        ? draft.from || {}
+        : draft.to || {};
+    const locationEntryId =
+      side === "from" ? fromLocationId : toLocationId;
+    const externalRegistryId =
+      endpoint.registryCreationId || "";
+
+    if (!locationEntryId) return "";
+
+    if (externalRegistryId) {
+      return `${getRegistryTitle(
+        externalRegistryId
+      )} · ${locationEntryId} is not present in the currently loaded linked Registry options. Its stored reference identity is preserved.`;
+    }
+
+    return `${locationEntryId} is not present in this Registry's current Location entries. Its stored reference identity is preserved.`;
+  }
 
   const availableRouteTypes = Array.isArray(draft.availableRouteTypes)
     ? draft.availableRouteTypes
@@ -1076,21 +1560,49 @@ function LocationConnectionModal({
       <div className="grid gap-5">
         <div className="grid gap-4 md:grid-cols-2">
           <SelectInput
+            label="From Registry"
+            value={draft.from?.registryCreationId || ""}
+            options={crossRegistry.registryOptions || []}
+            includeBlank
+            blankLabel="This Registry"
+            disabled={!crossRegistry.authoringAvailable}
+            onChange={(value) =>
+              onSelectEndpointRegistry("from", value)
+            }
+          />
+
+          <SelectInput
+            label="To Registry"
+            value={draft.to?.registryCreationId || ""}
+            options={crossRegistry.registryOptions || []}
+            includeBlank
+            blankLabel="This Registry"
+            disabled={!crossRegistry.authoringAvailable}
+            onChange={(value) =>
+              onSelectEndpointRegistry("to", value)
+            }
+          />
+
+          <SelectInput
             label="From Location"
-            value={draft.fromLocationId}
-            options={locationOptions}
+            value={fromLocationId}
+            options={fromLocationOptions}
             includeBlank
             blankLabel="Select source"
-            onChange={(value) => onChange("fromLocationId", value)}
+            onChange={(value) =>
+              onSelectEndpointLocation("from", value)
+            }
           />
 
           <SelectInput
             label="To Location"
-            value={draft.toLocationId}
-            options={locationOptions}
+            value={toLocationId}
+            options={toLocationOptions}
             includeBlank
             blankLabel="Select target"
-            onChange={(value) => onChange("toLocationId", value)}
+            onChange={(value) =>
+              onSelectEndpointLocation("to", value)
+            }
           />
 
           <SelectInput
@@ -1106,6 +1618,48 @@ function LocationConnectionModal({
             options={optionSets.distanceModeOptions || []}
             onChange={(value) => onChange("distanceMode", value)}
           />
+        </div>
+
+        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-sm leading-6 text-[var(--ink-dim)]">
+          <p>
+            Leave an endpoint Registry as{" "}
+            <span className="text-[var(--gold-ornament)]">
+              This Registry
+            </span>{" "}
+            for an ordinary local edge. Select another Location Registry only
+            for a boundary edge.
+          </p>
+
+          {!crossRegistry.authoringAvailable ? (
+            <p className="mt-2 text-amber-200">
+              Save this Location Registry before authoring cross-Registry
+              connections.
+            </p>
+          ) : null}
+
+          {crossRegistry.referenceRegistryLoadError ? (
+            <p className="mt-2 text-red-200">
+              {crossRegistry.referenceRegistryLoadError}
+            </p>
+          ) : null}
+
+          {fromDegraded ? (
+            <p
+              className="mt-2 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-amber-200"
+              role="status"
+            >
+              From endpoint: {getDegradedEndpointMessage("from")}
+            </p>
+          ) : null}
+
+          {toDegraded ? (
+            <p
+              className="mt-2 rounded-[var(--radius-md)] border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-amber-200"
+              role="status"
+            >
+              To endpoint: {getDegradedEndpointMessage("to")}
+            </p>
+          ) : null}
         </div>
 
         <RouteTypeMultiSelect
@@ -1198,12 +1752,15 @@ function PresenceBindingModal({
   draft,
   entries,
   bindings,
+  characterOptions,
+  characterLoadError,
   npcEntryOptions,
   npcEntryLoadError,
   onClose,
   onChange,
   onConditionListTextChange,
   optionSets = {},
+  onApplyCharacter,
   onApplyNpcEntry,
   onSave,
 }) {
@@ -1211,20 +1768,67 @@ function PresenceBindingModal({
     value: entry.id,
     label: entry.name || "Untitled Location",
   }));
-  const selectedPersonId =
+  const selectedCharacterId =
+    draft.person?.kind === "CREATION_REF"
+      ? draft.person?.creationId || ""
+      : "";
+  const selectedNpcEntryId =
     draft.person?.registryCreationId && draft.person?.registryEntryId
       ? `${draft.person.registryCreationId}:${draft.person.registryEntryId}`
       : "";
-  const disabledPersonIds = bindings
+  const disabledCharacterIds = bindings
+    .filter(
+      (binding) =>
+        binding.id !== draft.id &&
+        binding.locationEntryId === draft.locationEntryId &&
+        binding.person?.kind === "CREATION_REF"
+    )
+    .map((binding) => binding.person?.creationId)
+    .filter(Boolean);
+  const disabledNpcEntryIds = bindings
     .filter(
       (binding) =>
         binding.id !== draft.id &&
         binding.locationEntryId === draft.locationEntryId
     )
-    .map(
-      (binding) =>
-        `${binding.person.registryCreationId}:${binding.person.registryEntryId}`
-    );
+    .map((binding) =>
+      binding.person?.registryCreationId && binding.person?.registryEntryId
+        ? `${binding.person.registryCreationId}:${binding.person.registryEntryId}`
+        : ""
+    )
+    .filter(Boolean);
+  const selectedIsRegistryEntry =
+    draft.person?.kind === "NPC_REGISTRY_ENTRY" ||
+    draft.person?.kind === "LEGACY_NPC_REGISTRY_ENTRY";
+  const referenceStatus = String(
+    draft.person?.referenceStatus || ""
+  ).trim().toUpperCase();
+  const recovery =
+    referenceStatus === "LEGACY_UNRESOLVED"
+      ? {
+          tone: "warning",
+          title: "Legacy NPC Registry reference unavailable",
+          message:
+            "The stored legacy NPC Registry reference is preserved. Select a current Character or NPC Registry entry to repair the binding when appropriate.",
+        }
+      : referenceStatus === "UNAVAILABLE"
+        ? {
+            tone: "error",
+            title: selectedIsRegistryEntry
+              ? "NPC Registry entry unavailable"
+              : "Linked Character unavailable",
+            message: selectedIsRegistryEntry
+              ? "The stored NPC Registry entry identity is preserved, but the referenced entry is not currently available."
+              : "The stored Character UUID is preserved, but the referenced Character is not currently available.",
+          }
+        : referenceStatus === "UNRESOLVED"
+          ? {
+              tone: "neutral",
+              title: "Character selection required",
+              message:
+                "Choose either a full Character or a stable NPC Registry entry for this presence rule.",
+            }
+          : null;
 
   return (
     <ModalShell title="People & Presence Binding" onClose={onClose}>
@@ -1260,40 +1864,97 @@ function PresenceBindingModal({
           />
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-            NPC Registry Person
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-            Select a linked Character or custom NPC entry from one of your NPC Registries. Location Registries store only the stable reference and presence rule.
-          </p>
-
-          {npcEntryLoadError ? (
-            <p className="mt-3 text-sm text-red-200">{npcEntryLoadError}</p>
-          ) : null}
-
-          <div className="mt-4">
-            <CreationPickerPanelView
-              items={npcEntryOptions}
-              selectedIds={selectedPersonId ? [selectedPersonId] : []}
-              disabledIds={disabledPersonIds}
-              searchPlaceholder="Search NPC Registry entries..."
-              emptyMessage="No usable NPC Registry entries were found."
-              gridClassName="max-h-[38vh] sm:grid-cols-2 lg:grid-cols-3"
-              onSelect={onApplyNpcEntry}
-            />
-          </div>
-        </div>
-
-        {draft.person?.displayName ? (
+        {draft.person?.displayName ||
+        selectedCharacterId ||
+        selectedNpcEntryId ? (
           <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">Selected Person</p>
-            <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
-            <p className="mt-1 text-sm text-[var(--ink-dim)]">
-              {draft.person.registryTitle || "NPC Registry"} · {formatRegistryOption(draft.person.entryKind || "NPC")}
+            <p className="mt-2 font-display text-2xl">
+              {draft.person?.displayName ||
+                (selectedIsRegistryEntry
+                  ? "NPC Registry entry unavailable"
+                  : "Linked Character unavailable")}
             </p>
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
+              {selectedIsRegistryEntry
+                ? `${draft.person?.registryTitle || "NPC Registry"} · ${
+                    draft.person?.entryKind === "AD_HOC"
+                      ? "Lightweight NPC"
+                      : "Linked Character Entry"
+                  }`
+                : formatRegistryOption(draft.person?.creationType || "CHARACTER")}
+              {draft.person?.status ? ` · ${draft.person.status}` : ""}
+              {draft.person?.visibility ? ` · ${draft.person.visibility}` : ""}
+              {draft.person?.contentRating ? ` · ${draft.person.contentRating}` : ""}
+            </p>
+            {recovery ? (
+              <div className={`mt-3 rounded-[var(--radius-md)] border px-3 py-3 ${
+                recovery.tone === "error"
+                  ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)]"
+                  : recovery.tone === "warning"
+                    ? "border-amber-400/25 bg-amber-400/10"
+                    : "border-[var(--line)] bg-[var(--surface-2)]"
+              }`} role="status">
+                <p className={`text-sm font-medium ${
+                  recovery.tone === "error"
+                    ? "text-[var(--status-danger)]"
+                    : recovery.tone === "warning"
+                      ? "text-amber-200"
+                      : "text-[var(--ink)]"
+                }`}>{recovery.title}</p>
+                <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">{recovery.message}</p>
+              </div>
+            ) : null}
           </div>
         ) : null}
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">Character</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">Select a full Character directly. The Location Registry stores the Character UUID and the authored presence rule.</p>
+              </div>
+              <p className="rounded-full border border-[var(--line)] bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">12 per page</p>
+            </div>
+            {characterLoadError ? <p className="mt-3 text-sm text-red-200">{characterLoadError}</p> : null}
+            <div className="mt-4">
+              <CreationPickerPanelView
+                items={characterOptions}
+                selectedIds={selectedCharacterId ? [selectedCharacterId] : []}
+                disabledIds={disabledCharacterIds}
+                searchPlaceholder="Search Character creations..."
+                emptyMessage="No Character creations were found."
+                gridClassName="sm:grid-cols-2"
+                pageSize={12}
+                onSelect={onApplyCharacter}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">NPC Registry</p>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">Select a stable NPC Registry entry. Lightweight / ad-hoc NPCs stay registry-owned and do not need to become Character creations.</p>
+              </div>
+              <p className="rounded-full border border-[var(--line)] bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">12 per page</p>
+            </div>
+            {npcEntryLoadError ? <p className="mt-3 text-sm text-red-200">{npcEntryLoadError}</p> : null}
+            <div className="mt-4">
+              <CreationPickerPanelView
+                items={npcEntryOptions}
+                selectedIds={selectedNpcEntryId ? [selectedNpcEntryId] : []}
+                disabledIds={disabledNpcEntryIds}
+                searchPlaceholder="Search NPC Registry entries..."
+                emptyMessage="No NPC Registry entries were found."
+                gridClassName="sm:grid-cols-2"
+                pageSize={12}
+                onSelect={onApplyNpcEntry}
+              />
+            </div>
+          </div>
+        </div>
 
         <OptionMultiSelect
           label="Eligible Arrival Opportunities"

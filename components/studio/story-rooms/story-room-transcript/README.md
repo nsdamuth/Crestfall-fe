@@ -60,3 +60,26 @@ portable View.
 
 The preview renders the portable transcript View directly from contract-shaped
 fixtures. It does not load a Story Room or send a message.
+
+## W16 auto-event media wiring
+
+The transcript ViewModel now uses the accepted Auto-Event Media binding before
+mapping rows to the portable Story Room Message View.
+
+This makes authoritative Location/Character event images visible in transcript
+order without changing ordinary text-message presentation.
+
+The transcript also renders the authoritative opening hero at the true beginning
+of the loaded Story.
+
+No protected `components/studio/chat/**` surface is touched.
+
+## W17 message actions and Scene Recap
+
+The W16 media binding remains the single transcript ordering/media authority.
+
+Ordinary text rows now expose local bindings for Copy, Regenerate, Continue, and Report. Regenerate/Continue are available only on the latest Character/Narrator response. Report uses the Chassis message-action endpoint through a presentation-only reason/comment dialog.
+
+`/summary` and `/recap` are live remote Story Room commands. While a recap is running, the transcript shows the accessible Scene Recap pending card.
+
+The protected C1-C6 chat package remains untouched.

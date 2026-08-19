@@ -17,8 +17,11 @@ import {
   createEmptyRelationship,
   createStarterNpcRegistry,
   extractNpcRegistryFromApiResponse,
+  hydrateNpcRegistryEntries,
   normalizeNpcRegistryCharacterOptions,
   removeEntryReferences,
+  serializeNpcRegistryEntry,
+  serializeNpcRegistryEntries,
   upsertById,
 } from "@/components/studio/registries/npcRegistryUtils";
 
@@ -30,7 +33,7 @@ function cloneRegistry(initialRegistry) {
   return {
     ...starter,
     ...source,
-    entries: Array.isArray(source.entries) ? [...source.entries] : [],
+    entries: serializeNpcRegistryEntries(source.entries),
     relationships: Array.isArray(source.relationships)
       ? [...source.relationships]
       : [],
@@ -101,6 +104,14 @@ export function useNpcRegistryBuilderViewModel({
     [registry]
   );
 
+  const hydratedRegistry = useMemo(
+    () => ({
+      ...registry,
+      entries: hydrateNpcRegistryEntries(registry.entries, characterOptions),
+    }),
+    [registry, characterOptions]
+  );
+
   const linkedCreationIds = useMemo(
     () =>
       registry.entries
@@ -127,7 +138,7 @@ export function useNpcRegistryBuilderViewModel({
   }
 
   function openEditEntry(entry) {
-    setEntryDraft({ ...entry });
+    setEntryDraft(serializeNpcRegistryEntry(entry));
   }
 
   function closeEntryModal() {
@@ -160,25 +171,25 @@ export function useNpcRegistryBuilderViewModel({
     if (!character?.id) return;
 
     setEntryDraft((current) =>
-      clearNpcRegistryEntryActorMechanicsProfileAttachment({
-        ...current,
-        kind: "CREATION_REF",
-        creationId: character.id,
-        creationType: character.type || "CHARACTER",
-        name: character.title,
-        notes: current.notes || character.description || "",
-      })
+      serializeNpcRegistryEntry(
+        clearNpcRegistryEntryActorMechanicsProfileAttachment({
+          ...current,
+          kind: "CREATION_REF",
+          creationId: character.id,
+          creationType: character.type || "CHARACTER",
+          notes: current.notes || "",
+        })
+      )
     );
   }
 
   function saveEntryDraft() {
-    if (!entryDraft?.name?.trim()) return;
+    if (!entryDraft) return;
 
-    const nextEntry = {
-      ...entryDraft,
-      name: entryDraft.name.trim(),
-      notes: entryDraft.notes.trim(),
-    };
+    if (entryDraft.kind === "CREATION_REF" && !entryDraft.creationId) return;
+    if (entryDraft.kind !== "CREATION_REF" && !entryDraft.name?.trim()) return;
+
+    const nextEntry = serializeNpcRegistryEntry(entryDraft);
 
     setRegistry((current) => ({
       ...current,
@@ -371,7 +382,7 @@ export function useNpcRegistryBuilderViewModel({
 
   const viewProps = {
     activeTab,
-    registry,
+    registry: hydratedRegistry,
     saveStatus,
     saveMessage,
     characterLoadError,

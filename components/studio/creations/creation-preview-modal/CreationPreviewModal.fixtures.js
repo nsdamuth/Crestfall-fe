@@ -103,3 +103,64 @@ export const creationPreviewMissingMediaFixture = Object.freeze({
   },
   context: "owner",
 });
+
+export const creationPreviewPlayerSelectOpeningLocationFixture =
+  Object.freeze({
+    ...creationPreviewOwnerFixture,
+    title: "Crossroads at Dawn",
+    supportsChat: true,
+    startingChat: false,
+    chatError: "",
+    openingLocationPicker: {
+      contractVersion:
+        "story_start_opening_location.presentation.v1",
+      mode: "PLAYER_SELECT",
+      selectionRequired: true,
+      open: true,
+      pending: false,
+      eyebrow: "Choose Starting Location",
+      description:
+        "This Story lets the player choose where the opening hard state begins. Only the creator-authored Locations below are valid.",
+      options: [
+        {
+          id: "loc-deepcross",
+          title: "Deepcross",
+          subtitle: "Fogbound market district",
+          imageUrl: null,
+          selected: false,
+          disabled: false,
+          ariaPressed: false,
+        },
+        {
+          id: "loc-sunreach",
+          title: "Sunreach",
+          subtitle: "High terraces above the eastern gate",
+          imageUrl: null,
+          selected: true,
+          disabled: false,
+          ariaPressed: true,
+        },
+      ],
+      selectedLocationId: "loc-sunreach",
+      selectedOption: {
+        id: "loc-sunreach",
+        title: "Sunreach",
+        subtitle: "High terraces above the eastern gate",
+        imageUrl: null,
+      },
+      emptyState: null,
+      errorMessage: "",
+      actions: {
+        cancelLabel: "Cancel",
+        confirmLabel: "Start Here",
+        cancelDisabled: false,
+        confirmDisabled: false,
+        canConfirm: true,
+      },
+      callbacks: {
+        onSelect: null,
+        onCancel: null,
+        onConfirm: null,
+      },
+    },
+  });

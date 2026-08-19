@@ -4,8 +4,6 @@ export const NARRATOR_BUILDER_DEFAULT_MODULES = Object.freeze({
   prose_style: "cinematic",
   detail_level: "balanced",
   pacing: "balanced",
-  dialogue_style: "naturalistic",
-  knowledge_behavior: "moderate",
   atmosphere: "adventurous",
 });
 

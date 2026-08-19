@@ -17,6 +17,37 @@ export const CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION =
  */
 
 /**
+ * @typedef {Object} CreationPreviewOpeningLocationPicker
+ * @property {boolean} open
+ * @property {string} eyebrow
+ * @property {string} description
+ * @property {Array<{
+ *   id: string,
+ *   title: string,
+ *   subtitle: string,
+ *   imageUrl: string|null,
+ *   selected: boolean,
+ *   disabled: boolean,
+ *   ariaPressed: boolean
+ * }>} options
+ * @property {string} selectedLocationId
+ * @property {{title: string, message: string}|null} emptyState
+ * @property {string} errorMessage
+ * @property {{
+ *   cancelLabel: string,
+ *   confirmLabel: string,
+ *   cancelDisabled: boolean,
+ *   confirmDisabled: boolean,
+ *   canConfirm: boolean
+ * }} actions
+ * @property {{
+ *   onSelect: Function|null,
+ *   onCancel: Function|null,
+ *   onConfirm: Function|null
+ * }} callbacks
+ */
+
+/**
  * @typedef {Object} CreationPreviewModalViewProps
  * @property {string} title
  * @property {string} subtitle
@@ -46,6 +77,7 @@ export const CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION =
  * @property {string} chatError
  * @property {string} defaultPcError
  * @property {string} defaultPcStatus
+ * @property {CreationPreviewOpeningLocationPicker|null=} openingLocationPicker
  * @property {Function} onClose
  * @property {Function} onToggleDescription
  * @property {Function} onSelectMedia

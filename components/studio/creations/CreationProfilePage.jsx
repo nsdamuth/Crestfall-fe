@@ -26,17 +26,19 @@ function StandardCreationProfilePage(props) {
 
   const creation = viewModel.creation;
   const mediaActionSlots = Object.fromEntries(
-    viewModel.visibleMedia.map((item) => [
-      item.id,
-      <MediaTileQuickActions
-        key={`actions-${item.id}`}
-        liked={item.liked}
-        bookmarked={item.bookmarked}
-        onToggleLike={() => viewModel.onToggleLike(item)}
-        onToggleBookmark={() => viewModel.onToggleBookmark(item)}
-        onExpand={() => viewModel.onOpenMedia(item.id)}
-      />,
-    ])
+    viewModel.visibleMedia
+      .filter((item) => !item.locked)
+      .map((item) => [
+        item.id,
+        <MediaTileQuickActions
+          key={`actions-${item.id}`}
+          liked={item.liked}
+          bookmarked={item.bookmarked}
+          onToggleLike={() => viewModel.onToggleLike(item)}
+          onToggleBookmark={() => viewModel.onToggleBookmark(item)}
+          onExpand={() => viewModel.onOpenMedia(item.id)}
+        />,
+      ])
   );
 
   return (
@@ -84,7 +86,7 @@ function StandardCreationProfilePage(props) {
       lightboxSlot={
         viewModel.activePreviewItem && creation ? (
           <MediaLightbox
-            items={viewModel.filteredMedia}
+            items={viewModel.lightboxMedia}
             activeItemId={viewModel.activePreviewItem.id}
             onSelectItem={viewModel.onSelectPreviewItem}
             onClose={viewModel.onCloseMedia}

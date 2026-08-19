@@ -35,6 +35,11 @@ test("NPC Registry Builder View is API, persistence, and application-Shell free"
   assert.match(view, /relationshipModalContent/);
   assert.match(view, /knowledgeModalContent/);
   assert.match(view, /aliasModalContent/);
+  assert.match(view, /hydratedCharacter/);
+  assert.match(view, /referenceStatus === "UNAVAILABLE"/);
+  assert.match(view, /Linked Character unavailable/);
+  assert.match(view, /Registry Notes/);
+  assert.match(view, /Mechanics follow the linked Character creation\./);
 });
 
 test("NPC Registry Builder ViewModel owns loading, drafts, payload, save, and navigation", () => {
@@ -42,11 +47,41 @@ test("NPC Registry Builder ViewModel owns loading, drafts, payload, save, and na
     "components/studio/create/npc-registry/npc-registry-builder/useNpcRegistryBuilderViewModel.js"
   );
   assert.match(viewModel, /fetchNpcRegistryCharacterOptions/);
+  assert.match(viewModel, /serializeNpcRegistryEntry/);
+  assert.match(viewModel, /serializeNpcRegistryEntries/);
+  assert.match(viewModel, /hydrateNpcRegistryEntries/);
+  assert.match(viewModel, /hydratedRegistry/);
+  assert.match(viewModel, /registry: hydratedRegistry/);
   assert.match(viewModel, /buildNpcRegistryCreationPayload/);
   assert.match(viewModel, /createNpcRegistryDraft/);
   assert.match(viewModel, /removeEntryReferences/);
   assert.match(viewModel, /router\.push\("\/studio\/my-creations"\)/);
   assert.doesNotMatch(viewModel, /\bfetch\s*\(|<\w+/);
+});
+
+test("NPC Registry utility layer canonicalizes linked Character persistence", () => {
+  const utils = read(
+    "components/studio/registries/npcRegistryUtils.js"
+  );
+  assert.match(utils, /serializeNpcRegistryEntry/);
+  assert.match(utils, /serializeNpcRegistryEntries/);
+  assert.match(utils, /hydrateNpcRegistryEntries/);
+  assert.match(
+    utils,
+    /serializeNpcRegistryEntries\(registry\.entries\)/
+  );
+  assert.match(
+    utils,
+    /name: "Linked Character unavailable"/
+  );
+  assert.match(
+    utils,
+    /referenceStatus: "UNAVAILABLE"/
+  );
+  assert.match(
+    utils,
+    /referenceStatus: "RESOLVED"/
+  );
 });
 
 test("Legacy NPC Registry Builder hook delegates to the LOOM ViewModel", () => {

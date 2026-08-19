@@ -13,6 +13,19 @@ import {
 } from "../constants";
 import { useRoomTemplateReferenceData } from "@/components/studio/room-templates/hooks/useRoomTemplateReferenceData";
 import { useMutualPlayers } from "@/components/studio/room-templates/hooks/useMutualPlayers";
+import {
+  STORY_OPENING_LOCATION_MODES,
+  STORY_OPENING_LOCATION_MODE_OPTIONS,
+  buildFixedOpeningLocationConfig,
+  buildPlayerSelectableOpeningLocationConfig,
+  normalizeStoryOpeningLocationAuthoring,
+  toggleOpeningLocationReference,
+} from "@/components/studio/room-templates/storyOpeningLocationAuthoring";
+import {
+  STORY_CHARACTER_LIFECYCLE_AUTHORING_OPTIONS,
+  normalizeStoryCharacterLifecycleAuthoringKind,
+  patchStoryCharacterLifecycleSelection,
+} from "@/components/studio/room-templates/storyCharacterLifecycleAuthoring";
 import { createRoomTemplateDraft } from "@/lib/client/studio/room-templates/roomTemplateClient";
 import {
   addUniqueReferences,
@@ -63,6 +76,7 @@ function normalizeSelectedCharacter(character) {
     title,
     subtitle: String(character?.subtitle || ""),
     initial: title.trim().slice(0, 1).toUpperCase() || "?",
+    lifecycleKind: normalizeStoryCharacterLifecycleAuthoringKind(character),
   };
 }
 
@@ -82,6 +96,8 @@ function buildSummaryProps({
   selectedScenario,
   selectedNarrator,
   selectedLocation,
+  openingLocationMode,
+  allowedOpeningLocationCount,
 }) {
   return {
     eyebrow: "Story",
@@ -103,8 +119,13 @@ function buildSummaryProps({
       },
       {
         id: "location",
-        label: "Location",
-        value: selectedLocation?.title || "Optional",
+        label: "Opening Location",
+        value:
+          openingLocationMode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT
+            ? allowedOpeningLocationCount
+              ? `Player selects from ${allowedOpeningLocationCount}`
+              : "Player selection needs locations"
+            : selectedLocation?.title || "Optional",
       },
     ],
   };
@@ -236,6 +257,12 @@ export function useRoomTemplateBuilderViewModel({
   const selectedLocation = locationOptions.find(
     (location) => location.id === form.location_id
   );
+  const openingLocationConfig = normalizeStoryOpeningLocationAuthoring(
+    form,
+    locationOptions
+  );
+  const openingLocationMode = openingLocationConfig.mode;
+  const selectedOpeningLocations = openingLocationConfig.allowedLocations;
 
   const scenarioRecommendations = useMemo(
     () => getScenarioRecommendationData(selectedScenario, referenceOptions),
@@ -270,6 +297,82 @@ export function useRoomTemplateBuilderViewModel({
     }));
   }
 
+  function setOpeningLocationMode(nextMode) {
+    const normalizedMode = String(nextMode || "").toUpperCase();
+
+    setForm((current) => {
+      const currentConfig = normalizeStoryOpeningLocationAuthoring(
+        current,
+        locationOptions
+      );
+      const fixedLocation = locationOptions.find(
+        (location) => location.id === current.location_id
+      );
+
+      if (normalizedMode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT) {
+        const seedLocations = currentConfig.allowedLocations.length
+          ? currentConfig.allowedLocations
+          : fixedLocation
+            ? [fixedLocation]
+            : [];
+
+        return {
+          ...current,
+          opening_location:
+            buildPlayerSelectableOpeningLocationConfig(seedLocations),
+        };
+      }
+
+      const fallbackFixedLocation =
+        fixedLocation || currentConfig.allowedLocations[0] || null;
+
+      return {
+        ...current,
+        location_id: fallbackFixedLocation?.id || current.location_id || "",
+        opening_location: buildFixedOpeningLocationConfig(
+          fallbackFixedLocation || { id: current.location_id || "" }
+        ),
+      };
+    });
+  }
+
+  function toggleOpeningLocation(location) {
+    setForm((current) => {
+      const currentConfig = normalizeStoryOpeningLocationAuthoring(
+        current,
+        locationOptions
+      );
+      const nextLocations = toggleOpeningLocationReference(
+        currentConfig.allowedLocations,
+        location
+      );
+
+      return {
+        ...current,
+        opening_location:
+          buildPlayerSelectableOpeningLocationConfig(nextLocations),
+      };
+    });
+  }
+
+  function removeOpeningLocation(locationId) {
+    setForm((current) => {
+      const currentConfig = normalizeStoryOpeningLocationAuthoring(
+        current,
+        locationOptions
+      );
+      const nextLocations = currentConfig.allowedLocations.filter(
+        (location) => location.id !== locationId
+      );
+
+      return {
+        ...current,
+        opening_location:
+          buildPlayerSelectableOpeningLocationConfig(nextLocations),
+      };
+    });
+  }
+
   function toggleCharacter(character) {
     setSelectedCharacters((current) => {
       const exists = current.some((item) => item.id === character.id);
@@ -286,7 +389,27 @@ export function useRoomTemplateBuilderViewModel({
     );
   }
 
+  function changeCharacterLifecycle(characterId, lifecycleKind) {
+    setSelectedCharacters((current) =>
+      current.map((item) =>
+        item?.id === characterId
+          ? patchStoryCharacterLifecycleSelection(item, lifecycleKind)
+          : item
+      )
+    );
+  }
+
   function setSingleSelection(field, item) {
+    if (field === "location_id") {
+      setForm((current) => ({
+        ...current,
+        location_id: item.id,
+        opening_location: buildFixedOpeningLocationConfig(item),
+      }));
+      setPicker(null);
+      return;
+    }
+
     updateField(field, item.id);
 
     if (field === "scenario_id") {
@@ -337,7 +460,21 @@ export function useRoomTemplateBuilderViewModel({
   }
 
   function applyRecommendedLocation(location) {
-    if (location?.id) updateField("location_id", location.id);
+    if (!location?.id) return;
+
+    if (openingLocationMode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT) {
+      const exists = selectedOpeningLocations.some(
+        (item) => item.id === location.id
+      );
+      if (!exists) toggleOpeningLocation(location);
+      return;
+    }
+
+    setForm((current) => ({
+      ...current,
+      location_id: location.id,
+      opening_location: buildFixedOpeningLocationConfig(location),
+    }));
   }
 
   function applyRecommendedNarrator(narrator) {
@@ -387,6 +524,20 @@ export function useRoomTemplateBuilderViewModel({
     setSaveMessage("");
 
     try {
+      const currentOpeningLocation = normalizeStoryOpeningLocationAuthoring(
+        form,
+        locationOptions
+      );
+      if (
+        currentOpeningLocation.mode ===
+          STORY_OPENING_LOCATION_MODES.PLAYER_SELECT &&
+        currentOpeningLocation.allowedLocationIds.length === 0
+      ) {
+        throw new Error(
+          "Player-selectable Stories require at least one allowed starting Location."
+        );
+      }
+
       const creationPayload = buildRoomTemplateCreationPayload({
         form,
         selectedCharacters,
@@ -426,8 +577,10 @@ export function useRoomTemplateBuilderViewModel({
     characters: selectedCharacters
       .filter((character) => character?.id)
       .map(normalizeSelectedCharacter),
+    lifecycleOptions: STORY_CHARACTER_LIFECYCLE_AUTHORING_OPTIONS,
     onOpenCharacterPicker: () => setPicker("characters"),
     onRemoveCharacter: removeCharacter,
+    onChangeCharacterLifecycle: changeCharacterLifecycle,
   };
 
   const invitedPlayersPanelProps = {
@@ -474,6 +627,7 @@ export function useRoomTemplateBuilderViewModel({
         selectedScenario,
         selectedNarrator,
         selectedLocation,
+        selectedOpeningLocations,
         characterOptions,
         scenarioOptions,
         narratorOptions,
@@ -487,6 +641,7 @@ export function useRoomTemplateBuilderViewModel({
         onSelectScenario: (item) => setSingleSelection("scenario_id", item),
         onSelectNarrator: (item) => setSingleSelection("narrator_id", item),
         onSelectLocation: (item) => setSingleSelection("location_id", item),
+        onToggleOpeningLocation: toggleOpeningLocation,
       }
     : null;
 
@@ -504,6 +659,19 @@ export function useRoomTemplateBuilderViewModel({
       selectedScenario,
       selectedNarrator,
       selectedLocation,
+      openingLocationAuthoringProps: {
+        mode: openingLocationMode,
+        modeOptions: STORY_OPENING_LOCATION_MODE_OPTIONS,
+        allowedLocations: selectedOpeningLocations,
+        validationMessage:
+          openingLocationMode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT &&
+          selectedOpeningLocations.length === 0
+            ? "Select at least one allowed starting Location before saving."
+            : "",
+        onModeChange: setOpeningLocationMode,
+        onOpenLocationPicker: () => setPicker("openingLocations"),
+        onRemoveAllowedLocation: removeOpeningLocation,
+      },
       showScenarioRecommendations:
         Boolean(selectedScenario) &&
         scenarioRecommendations.hasAny &&
@@ -513,6 +681,8 @@ export function useRoomTemplateBuilderViewModel({
         selectedScenario,
         selectedNarrator,
         selectedLocation,
+        openingLocationMode,
+        allowedOpeningLocationCount: selectedOpeningLocations.length,
       }),
       selectedCharactersPanelProps,
       scenarioRecommendationsPanelProps,
@@ -560,6 +730,9 @@ export function useRoomTemplateBuilderViewModel({
       toggleCharacter,
       removeCharacter,
       setSingleSelection,
+      setOpeningLocationMode,
+      toggleOpeningLocation,
+      removeOpeningLocation,
       dismissScenarioRecommendations,
       updateOpeningMessage,
       addOpeningMessage,

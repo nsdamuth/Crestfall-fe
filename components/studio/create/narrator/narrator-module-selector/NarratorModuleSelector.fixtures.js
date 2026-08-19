@@ -27,13 +27,13 @@ const RESPONSE_GROUPS = [
       {
         id: "SCENE_ONLY",
         value: "SCENE_ONLY",
-        title: "Scene Narration Only · Default",
+        title: "Scene Narration Only — Default",
         body: "Narrates environments, transitions, consequences, arrivals, and passive continuity.",
       },
       {
         id: "ENSEMBLE",
         value: "ENSEMBLE",
-        title: "Ensemble Narration · Opt In",
+        title: "Ensemble Narration — Opt In",
         body: "Allows the Narrator to portray a bounded number of active Scene Cast Characters.",
       },
     ],
@@ -44,82 +44,47 @@ const MODULE_GROUPS = [
   {
     id: "prose_style",
     label: "Prose Style",
-    description: "Controls the narrator's sentence style and descriptive voice.",
+    description: "Shapes story-wide non-dialogue narration and staging.",
     modules: [
-      {
-        id: "cinematic",
-        title: "Cinematic",
-        body: "Scene-forward, visual, dramatic, and composed like a film sequence.",
-      },
-      {
-        id: "literary",
-        title: "Literary",
-        body: "Elegant, reflective, and prose-rich without becoming purple.",
-      },
-      {
-        id: "sensory_rich",
-        title: "Sensory Rich",
-        body: "Leans into scent, texture, sound, light, atmosphere, and physical sensation.",
-      },
-      {
-        id: "direct",
-        title: "Direct",
-        body: "Clear, clean, efficient narration with minimal ornament.",
-      },
+      { id: "cinematic", title: "Cinematic", body: "Scene-forward and visual." },
+      { id: "literary", title: "Literary", body: "Reflective and prose-rich." },
+      { id: "sensory_rich", title: "Sensory Rich", body: "Selective sensory texture." },
+      { id: "direct", title: "Direct", body: "Clear and economical." },
     ],
   },
   {
     id: "detail_level",
     label: "Detail Level",
-    description: "Controls how much detail the narrator tends to include.",
+    description: "Guides non-speech descriptive density without setting a word count.",
     modules: [
-      {
-        id: "minimal",
-        title: "Minimal",
-        body: "Short narration that leaves more room for dialogue and player action.",
-      },
-      {
-        id: "balanced",
-        title: "Balanced",
-        body: "Moderate detail that grounds scenes without slowing play.",
-      },
-      {
-        id: "rich",
-        title: "Rich",
-        body: "More descriptive texture, emotional detail, and environmental grounding.",
-      },
-      {
-        id: "lavish",
-        title: "Lavish",
-        body: "Highly detailed, atmospheric narration for slower scenes.",
-      },
+      { id: "minimal", title: "Minimal", body: "Essential scene detail." },
+      { id: "balanced", title: "Balanced", body: "Moderate scene grounding." },
+      { id: "rich", title: "Rich", body: "More useful descriptive texture." },
+      { id: "lavish", title: "Lavish", body: "Layered immersive scene detail." },
+    ],
+  },
+  {
+    id: "pacing",
+    label: "Pacing",
+    description: "Guides flow pressure within the current authorized beat only.",
+    modules: [
+      { id: "fast", title: "Fast", body: "Economical, action-forward composition." },
+      { id: "balanced", title: "Balanced", body: "Normal movement and breathing room." },
+      { id: "slow_burn", title: "Slow Burn", body: "Allows tension and anticipation to breathe." },
+      { id: "scene_heavy", title: "Scene Heavy", body: "Emphasizes staging and moment-to-moment texture." },
     ],
   },
   {
     id: "atmosphere",
     label: "Atmosphere",
-    description: "Controls the emotional and genre flavor of scenes.",
+    description: "Controls the story-wide emotional and genre flavor of scenes.",
     modules: [
-      {
-        id: "adventurous",
-        title: "Adventurous",
-        body: "Wonder, danger, travel, discovery, and forward motion.",
-      },
-      {
-        id: "dark_fairytale",
-        title: "Dark Fairytale",
-        body: "Beautiful, strange, dangerous, symbolic, and slightly uncanny.",
-      },
-      {
-        id: "noir",
-        title: "Noir",
-        body: "Suspicion, leverage, secrets, debts, shadows, and social pressure.",
-      },
-      {
-        id: "romantic",
-        title: "Romantic",
-        body: "Emotional tension, intimacy, longing, attention, and charged closeness.",
-      },
+      { id: "adventurous", title: "Adventurous", body: "Wonder, danger, travel, discovery, and forward possibility." },
+      { id: "dark_fairytale", title: "Dark Fairytale", body: "Beautiful, strange, dangerous, symbolic, and slightly uncanny." },
+      { id: "noir", title: "Noir", body: "Suspicion, leverage, secrets, debts, shadows, and social pressure." },
+      { id: "romantic", title: "Romantic", body: "Emotional tension, intimacy, longing, attention, and charged closeness." },
+      { id: "horror", title: "Horror", body: "Dread, unease, vulnerability, threat, and controlled fear." },
+      { id: "whimsical", title: "Whimsical", body: "Playful strangeness, charm, surprise, and light magical oddity." },
     ],
   },
 ];
@@ -155,6 +120,7 @@ function buildFixture({
   selectedModules = {
     prose_style: "cinematic",
     detail_level: "balanced",
+    pacing: "balanced",
     atmosphere: "adventurous",
   },
   overrides = {},
@@ -199,6 +165,7 @@ export const narratorModuleSelectorNarratorPrimaryFixture = buildFixture({
   selectedModules: {
     prose_style: "literary",
     detail_level: "rich",
+    pacing: "slow_burn",
     atmosphere: "noir",
   },
 });
@@ -209,6 +176,7 @@ export const narratorModuleSelectorEnsembleFixture = buildFixture({
   selectedModules: {
     prose_style: "sensory_rich",
     detail_level: "lavish",
+    pacing: "scene_heavy",
     atmosphere: "dark_fairytale",
   },
 });

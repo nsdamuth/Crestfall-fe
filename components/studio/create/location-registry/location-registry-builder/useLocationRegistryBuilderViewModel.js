@@ -1,8 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useLocationRegistryBuilder } from "@/components/studio/registries/hooks/useLocationRegistryBuilder";
+import { analyzeLocationRegistrySplit } from "@/components/studio/registries/locationRegistrySplitAnalysis.mjs";
+import {
+  commitLocationRegistrySplit,
+  planLocationRegistrySplit,
+} from "@/lib/client/studio/registries/locationRegistrySplitClient";
 import {
   CONNECTION_RELATION_OPTIONS,
   DEFAULT_DISTANCE_MODE_BY_RELATION,
@@ -74,6 +79,49 @@ function withEntryPresentation(draft) {
   };
 }
 
+function buildRegistryTitleById(registryOptions = []) {
+  return new Map(
+    registryOptions.map((option) => [option.id, option.title])
+  );
+}
+
+function resolveLocationReferenceDisplay({
+  reference = {},
+  fallbackLocationEntryId = "",
+  currentCreationId = "",
+  currentEntries = [],
+  registryLocationOptionsById = {},
+  registryTitleById = new Map(),
+}) {
+  const registryCreationId = String(
+    reference?.registryCreationId || ""
+  ).trim();
+  const effectiveRegistryId = registryCreationId || currentCreationId;
+  const locationEntryId = String(
+    reference?.locationEntryId || fallbackLocationEntryId || ""
+  ).trim();
+  const options = registryLocationOptionsById[effectiveRegistryId] || [];
+  const localEntry = currentEntries.find((entry) => entry.id === locationEntryId);
+  const option = options.find((entry) => entry.id === locationEntryId);
+  const locationName =
+    option?.label || localEntry?.name || locationEntryId || "Unknown Location";
+  const registryTitle =
+    registryCreationId && registryCreationId !== currentCreationId
+      ? registryTitleById.get(registryCreationId) || "Linked Location Registry"
+      : "This Registry";
+
+  return {
+    registryCreationId: effectiveRegistryId,
+    locationEntryId,
+    locationName,
+    registryTitle,
+    label:
+      registryCreationId && registryCreationId !== currentCreationId
+        ? `${registryTitle} · ${locationName}`
+        : locationName,
+  };
+}
+
 function withConnectionPresentation(draft) {
   if (!draft) return null;
 
@@ -113,6 +161,74 @@ function withConnectionListPresentation(connection) {
   };
 }
 
+function withEntryListPresentation(
+  entry,
+  {
+    currentCreationId,
+    currentEntries,
+    registryLocationOptionsById,
+    registryTitleById,
+  }
+) {
+  if (!entry) return entry;
+
+  const parentReference = resolveLocationReferenceDisplay({
+    reference: entry.parentLocationRef,
+    fallbackLocationEntryId: entry.parentLocationId,
+    currentCreationId,
+    currentEntries,
+    registryLocationOptionsById,
+    registryTitleById,
+  });
+
+  return {
+    ...entry,
+    parentLocationDisplay:
+      entry.parentLocationId || entry.parentLocationRef?.locationEntryId
+        ? parentReference.label
+        : "",
+  };
+}
+
+function withConnectionListCrossRegistryPresentation(
+  connection,
+  {
+    currentCreationId,
+    currentEntries,
+    registryLocationOptionsById,
+    registryTitleById,
+  }
+) {
+  const presented = withConnectionListPresentation(connection);
+  if (!presented) return presented;
+
+  const from = resolveLocationReferenceDisplay({
+    reference: presented.from,
+    fallbackLocationEntryId: presented.fromLocationId,
+    currentCreationId,
+    currentEntries,
+    registryLocationOptionsById,
+    registryTitleById,
+  });
+  const to = resolveLocationReferenceDisplay({
+    reference: presented.to,
+    fallbackLocationEntryId: presented.toLocationId,
+    currentCreationId,
+    currentEntries,
+    registryLocationOptionsById,
+    registryTitleById,
+  });
+
+  return {
+    ...presented,
+    fromLocationDisplay: from.label,
+    toLocationDisplay: to.label,
+    crossRegistry:
+      Boolean(presented.from?.registryCreationId) ||
+      Boolean(presented.to?.registryCreationId),
+  };
+}
+
 function withPresencePresentation(draft) {
   if (!draft) return null;
 
@@ -131,20 +247,194 @@ function withPresencePresentation(draft) {
 
 export function useLocationRegistryBuilderViewModel({
   mode = "create",
+  currentCreationId = "",
   initialTitle = "",
   initialDescription = "",
   initialData = null,
   activeTab: controlledActiveTab = null,
   hideTabs = false,
   onChange,
+  onSplitCommitted,
 } = {}) {
   const registry = useLocationRegistryBuilder({
     mode,
+    currentCreationId,
     initialTitle,
     initialDescription,
     initialData,
     onChange,
   });
+  const [splitAnalysisOpen, setSplitAnalysisOpen] = useState(false);
+  const [selectedSplitCandidateIds, setSelectedSplitCandidateIds] = useState([]);
+  const [splitPlanStatus, setSplitPlanStatus] = useState("idle");
+  const [splitPlanMessage, setSplitPlanMessage] = useState("");
+  const [splitServerPlan, setSplitServerPlan] = useState(null);
+  const [splitCreatorConfirmed, setSplitCreatorConfirmed] = useState(false);
+
+  const splitAnalysis = useMemo(
+    () =>
+      analyzeLocationRegistrySplit({
+        registry: {
+          ...registry.registry,
+          childRegistryRefs: registry.childRegistryRefs,
+        },
+        currentCreationId,
+      }),
+    [currentCreationId, registry.childRegistryRefs, registry.registry]
+  );
+
+  useEffect(() => {
+    setSelectedSplitCandidateIds([]);
+    setSplitPlanStatus("idle");
+    setSplitPlanMessage("");
+    setSplitServerPlan(null);
+    setSplitCreatorConfirmed(false);
+  }, [currentCreationId, splitAnalysis]);
+
+  const selectedSplitCandidates = useMemo(() => {
+    const selectedIds = new Set(selectedSplitCandidateIds);
+    return (Array.isArray(splitAnalysis.candidates)
+      ? splitAnalysis.candidates
+      : []
+    ).filter((candidate) => selectedIds.has(candidate.id));
+  }, [selectedSplitCandidateIds, splitAnalysis.candidates]);
+
+  function resetSplitServerState() {
+    setSplitPlanStatus("idle");
+    setSplitPlanMessage("");
+    setSplitServerPlan(null);
+    setSplitCreatorConfirmed(false);
+  }
+
+  function buildSelectedSplitGroups() {
+    return selectedSplitCandidates.map((candidate) => ({
+      scopeLocationEntryId: candidate.scopeEntryId,
+      title: candidate.suggestedChildTitle,
+    }));
+  }
+
+  function openSplitPreview() {
+    setSelectedSplitCandidateIds([]);
+    resetSplitServerState();
+    setSplitAnalysisOpen(true);
+  }
+
+  function closeSplitPreview() {
+    if (splitPlanStatus === "committing") return;
+    setSplitAnalysisOpen(false);
+    setSelectedSplitCandidateIds([]);
+    resetSplitServerState();
+  }
+
+  function toggleSplitCandidate(candidateId) {
+    const candidate = (splitAnalysis.candidates || []).find(
+      (item) => item.id === candidateId
+    );
+    if (!candidate || candidate.status !== "PREVIEW_READY") return;
+
+    const alreadySelected = selectedSplitCandidateIds.includes(candidateId);
+    if (!alreadySelected) {
+      const overlapsSelected = (candidate.overlappingCandidateIds || []).some(
+        (id) => selectedSplitCandidateIds.includes(id)
+      );
+      if (overlapsSelected) {
+        setSplitPlanStatus("error");
+        setSplitPlanMessage(
+          "Selected split scopes overlap. Deselect the conflicting scope before continuing."
+        );
+        return;
+      }
+    }
+
+    setSelectedSplitCandidateIds((current) =>
+      alreadySelected
+        ? current.filter((id) => id !== candidateId)
+        : [...current, candidateId]
+    );
+    resetSplitServerState();
+  }
+
+  async function prepareSplitPlan() {
+    const groups = buildSelectedSplitGroups();
+    if (!currentCreationId || groups.length === 0) {
+      setSplitPlanStatus("error");
+      setSplitPlanMessage(
+        "Select at least one non-overlapping authored containment scope first."
+      );
+      return;
+    }
+
+    setSplitPlanStatus("planning");
+    setSplitPlanMessage("Validating the selected split against the saved Registry...");
+    setSplitServerPlan(null);
+    setSplitCreatorConfirmed(false);
+
+    try {
+      const plan = await planLocationRegistrySplit(currentCreationId, { groups });
+      if (!plan?.planFingerprint || !plan?.source?.sourceFingerprint) {
+        throw new Error(
+          "The server did not return a complete split execution plan."
+        );
+      }
+
+      setSplitServerPlan(plan);
+      if (plan.executionGate?.commitReady) {
+        setSplitPlanStatus("ready");
+        setSplitPlanMessage(
+          "Server validation passed. Review the preservation checks and confirm only if this is the split you intend to apply."
+        );
+      } else {
+        setSplitPlanStatus("blocked");
+        setSplitPlanMessage(
+          "The server-authoritative plan has blockers and cannot be committed."
+        );
+      }
+    } catch (error) {
+      setSplitPlanStatus("error");
+      setSplitPlanMessage(
+        error?.message || "Split validation could not be completed."
+      );
+      setSplitServerPlan(null);
+    }
+  }
+
+  async function commitSplitPlan() {
+    if (
+      !splitServerPlan?.executionGate?.commitReady ||
+      !splitCreatorConfirmed
+    ) {
+      return;
+    }
+
+    const groups = buildSelectedSplitGroups();
+    setSplitPlanStatus("committing");
+    setSplitPlanMessage(
+      "Applying the confirmed split as one atomic transaction..."
+    );
+
+    try {
+      const result = await commitLocationRegistrySplit(currentCreationId, {
+        groups,
+        creatorConfirmed: true,
+        expectedSourceFingerprint:
+          splitServerPlan.source.sourceFingerprint,
+        expectedPlanFingerprint: splitServerPlan.planFingerprint,
+      });
+
+      setSplitPlanStatus("applied");
+      setSplitPlanMessage(
+        "Split applied successfully. Reloading the Registry from authoritative storage..."
+      );
+      await onSplitCommitted?.(result);
+    } catch (error) {
+      setSplitPlanStatus("error");
+      setSplitPlanMessage(
+        error?.message ||
+          "The split was not applied. No partial Registry changes should have been committed."
+      );
+      setSplitCreatorConfirmed(false);
+    }
+  }
 
   const currentTab = controlledActiveTab || registry.activeTab;
   const tabs = useMemo(
@@ -168,6 +458,25 @@ export function useLocationRegistryBuilderViewModel({
     []
   );
 
+  const registryTitleById = useMemo(
+    () => buildRegistryTitleById(registry.registryOptions),
+    [registry.registryOptions]
+  );
+  const presentationContext = useMemo(
+    () => ({
+      currentCreationId,
+      currentEntries: registry.registry.entries,
+      registryLocationOptionsById: registry.registryLocationOptionsById,
+      registryTitleById,
+    }),
+    [
+      currentCreationId,
+      registry.registry.entries,
+      registry.registryLocationOptionsById,
+      registryTitleById,
+    ]
+  );
+
   function updateEntryListText(field, value) {
     registry.updateEntryDraftField(field, normalizeListText(value));
   }
@@ -187,8 +496,14 @@ export function useLocationRegistryBuilderViewModel({
     tabs,
     registry: {
       ...registry.registry,
-      connections: registry.registry.connections.map(
-        withConnectionListPresentation
+      entries: registry.registry.entries.map((entry) =>
+        withEntryListPresentation(entry, presentationContext)
+      ),
+      connections: registry.registry.connections.map((connection) =>
+        withConnectionListCrossRegistryPresentation(
+          connection,
+          presentationContext
+        )
       ),
     },
     saveStatus: registry.saveStatus,
@@ -201,18 +516,85 @@ export function useLocationRegistryBuilderViewModel({
     weatherScopeDraft: registry.weatherScopeDraft,
     locationOptions: registry.locationOptions,
     locationLoadError: registry.locationLoadError,
+    characterOptions: registry.characterOptions,
+    characterLoadError: registry.characterLoadError,
     npcEntryOptions: registry.npcEntryOptions,
     npcEntryLoadError: registry.npcEntryLoadError,
+    splitPreview: {
+      available: mode === "edit" && Boolean(String(currentCreationId || "").trim()),
+      open: splitAnalysisOpen,
+      analysis: splitAnalysis,
+      selectedCandidateIds: selectedSplitCandidateIds,
+      selectedCount: selectedSplitCandidateIds.length,
+      planStatus: splitPlanStatus,
+      planMessage: splitPlanMessage,
+      serverPlan: splitServerPlan,
+      creatorConfirmed: splitCreatorConfirmed,
+      busy: splitPlanStatus === "planning" || splitPlanStatus === "committing",
+    },
+    hierarchy: {
+      status: registry.hierarchyStatus,
+      registryOptions: registry.registryOptions.map((option) => ({
+        value: option.id,
+        label: option.title,
+      })),
+      registryLoadError: registry.registryLoadError,
+      parentLocationOptions: registry.parentLocationOptions.map((option) => ({
+        ...option,
+        value: option.id,
+        label: option.label,
+      })),
+      parentRegistryLoadError: registry.parentRegistryLoadError,
+      trail: registry.hierarchyTrail,
+      childRegistryRefs: registry.childRegistryRefs,
+    },
+    crossRegistry: {
+      authoringAvailable: registry.crossRegistryAuthoringAvailable,
+      registryOptions: registry.registryOptions.map((option) => ({
+        value: option.id,
+        label: option.title,
+      })),
+      referenceRegistryLoadError: registry.referenceRegistryLoadError,
+      entryParentLocationOptions:
+        registry.entryCrossRegistryParentLocationOptions.map((option) => ({
+          ...option,
+          value: option.id,
+          label: option.label,
+        })),
+      connectionFromLocationOptions:
+        registry.connectionFromLocationOptions.map((option) => ({
+          ...option,
+          value: option.id,
+          label: option.label,
+        })),
+      connectionToLocationOptions:
+        registry.connectionToLocationOptions.map((option) => ({
+          ...option,
+          value: option.id,
+          label: option.label,
+        })),
+    },
     optionSets,
     onSelectTab: registry.setActiveTab,
     onUpdateField: registry.updateField,
+    onSelectParentRegistry: registry.selectParentRegistry,
+    onSelectParentScopeLocation: registry.selectParentScopeLocation,
+    onOpenHierarchyRegistry: registry.openHierarchyRegistry,
     onUpdatePromptGuidance: registry.updatePromptGuidance,
     onUpdateRuntimeGuidance: registry.updateRuntimeGuidance,
+    onOpenSplitPreview: openSplitPreview,
+    onCloseSplitPreview: closeSplitPreview,
+    onToggleSplitCandidate: toggleSplitCandidate,
+    onPrepareSplitPlan: prepareSplitPlan,
+    onChangeSplitCreatorConfirmation: setSplitCreatorConfirmed,
+    onCommitSplitPlan: commitSplitPlan,
     onSave: registry.saveRegistry,
     onOpenNewEntry: registry.openNewEntry,
     onOpenEditEntry: registry.openEditEntry,
     onCloseEntry: registry.closeEntryModal,
     onUpdateEntryField: registry.updateEntryDraftField,
+    onSelectEntryParentRegistry: registry.selectEntryParentRegistry,
+    onSelectEntryParentLocation: registry.selectEntryParentLocation,
     onUpdateEntryListText: updateEntryListText,
     onSetEntryKind: registry.setEntryKind,
     onApplyLocation: registry.applyLocationToEntryDraft,
@@ -222,6 +604,10 @@ export function useLocationRegistryBuilderViewModel({
     onOpenEditConnection: registry.openEditConnection,
     onCloseConnection: registry.closeConnectionModal,
     onUpdateConnectionField: registry.updateConnectionDraftField,
+    onSelectConnectionEndpointRegistry:
+      registry.selectConnectionEndpointRegistry,
+    onSelectConnectionEndpointLocation:
+      registry.selectConnectionEndpointLocation,
     onSaveConnection: registry.saveConnectionDraft,
     onDeleteConnection: registry.deleteConnection,
     onOpenNewPresenceBinding: registry.openNewPresenceBinding,
@@ -230,6 +616,7 @@ export function useLocationRegistryBuilderViewModel({
     onUpdatePresenceBindingField:
       registry.updatePresenceBindingDraftField,
     onUpdatePresenceConditionListText: updatePresenceConditionListText,
+    onApplyCharacter: registry.applyCharacterToPresenceBindingDraft,
     onApplyNpcEntry: registry.applyNpcEntryToPresenceBindingDraft,
     onSavePresenceBinding: registry.savePresenceBindingDraft,
     onDeletePresenceBinding: registry.deletePresenceBinding,

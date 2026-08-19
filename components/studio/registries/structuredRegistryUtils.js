@@ -29,6 +29,49 @@ function normalizeObject(value) {
     : {};
 }
 
+export function createLinkedCreationReferenceKey({
+  creationId,
+  registryCreationId,
+  registryEntryId,
+} = {}) {
+  const safeCreationId = normalizeString(registryCreationId || creationId);
+  const safeRegistryEntryId = normalizeString(registryEntryId);
+
+  return [safeCreationId, safeRegistryEntryId].join("::");
+}
+
+export function isDirectStructuredRegistrySelfReference(
+  link,
+  {
+    currentRegistryCreationId = "",
+    currentRegistryEntryId = "",
+  } = {}
+) {
+  const sourceRegistryCreationId = normalizeString(currentRegistryCreationId);
+  const sourceRegistryEntryId = normalizeString(currentRegistryEntryId);
+
+  if (!sourceRegistryCreationId || !sourceRegistryEntryId) return false;
+
+  const target = normalizeObject(link);
+  const targetRegistryCreationId = normalizeString(
+    target.registryCreationId ||
+      target.registry_creation_id ||
+      target.creationId ||
+      target.creation_id
+  );
+  const targetRegistryEntryId = normalizeString(
+    target.registryEntryId ||
+      target.registry_entry_id ||
+      target.targetEntryId ||
+      target.target_entry_id
+  );
+
+  return (
+    targetRegistryCreationId === sourceRegistryCreationId &&
+    targetRegistryEntryId === sourceRegistryEntryId
+  );
+}
+
 export function normalizeListText(value) {
   return String(value || "")
     .split("\n")
@@ -40,73 +83,40 @@ export function listToText(value) {
   return Array.isArray(value) ? value.join("\n") : "";
 }
 
-function getFeaturedImageUrl(creation) {
-  const data = normalizeObject(creation?.data);
-  const featuredMedia =
-    creation?.featuredMedia ||
-    creation?.featured_media ||
-    data.featuredMedia ||
-    data.featured_media ||
-    [];
-
-  const firstMedia = Array.isArray(featuredMedia) ? featuredMedia[0] : null;
-
-  return (
-    firstMedia?.thumbnailUrl ||
-    firstMedia?.thumbnail_url ||
-    firstMedia?.imageUrl ||
-    firstMedia?.image_url ||
-    firstMedia?.url ||
-    firstMedia?.displayUrl ||
-    firstMedia?.display_url ||
-    creation?.thumbnailUrl ||
-    creation?.thumbnail_url ||
-    creation?.imageUrl ||
-    creation?.image_url ||
-    creation?.coverImageUrl ||
-    creation?.cover_image_url ||
-    data.thumbnailUrl ||
-    data.thumbnail_url ||
-    data.imageUrl ||
-    data.image_url ||
-    data.coverImageUrl ||
-    data.cover_image_url ||
-    data.avatarUrl ||
-    data.avatar_url ||
-    ""
+export function createLinkedCreationLink(creation = {}, registryEntry = null) {
+  const creationId = normalizeString(creation.id || creation.creationId);
+  const creationType = normalizeString(
+    creation.type || creation.creationType || "CREATION"
+  ).toUpperCase();
+  const registryEntryId = normalizeString(
+    registryEntry?.id || registryEntry?.registryEntryId
   );
-}
 
-export function createLinkedCreationLink(creation = {}) {
   return {
     id: createRegistryId("link"),
-    creationId: creation.id || creation.creationId || null,
-    title:
-      creation.title ||
-      creation.name ||
-      creation.data?.name ||
-      "Untitled Creation",
-    type: String(creation.type || creation.creationType || "CREATION").toUpperCase(),
-    description: creation.description || "",
-    imageUrl: getFeaturedImageUrl(creation),
+    creationId: creationId || null,
+    creationType,
+    ...(isStructuredRegistryType(creationType) && registryEntryId
+      ? {
+          registryCreationId: creationId,
+          registryEntryId,
+        }
+      : {}),
     notes: "",
   };
 }
 
 export function normalizeLinkedCreationLink(value = {}) {
   if (typeof value === "string") {
-    const title = normalizeString(value);
+    const legacyLabel = normalizeString(value);
 
-    if (!title) return null;
+    if (!legacyLabel) return null;
 
     return {
       id: createRegistryId("link"),
       creationId: null,
-      title,
-      type: "LEGACY_TEXT",
-      description: "",
-      imageUrl: "",
-      notes: "",
+      creationType: "LEGACY_TEXT",
+      notes: legacyLabel,
     };
   }
 
@@ -115,36 +125,41 @@ export function normalizeLinkedCreationLink(value = {}) {
   const creationId = normalizeString(
     source.creationId ||
       source.creation_id ||
+      source.registryCreationId ||
+      source.registry_creation_id ||
       (!rawId.startsWith("link_") ? rawId : "")
   );
 
-  const title = normalizeString(
-    source.title ||
-      source.name ||
-      source.label ||
-      source.displayName ||
-      source.display_name
-  );
+  if (!creationId) return null;
 
-  if (!creationId && !title) return null;
+  const creationType = normalizeString(
+    source.creationType ||
+      source.creation_type ||
+      source.type ||
+      "CREATION"
+  ).toUpperCase();
+  const registryCreationId = normalizeString(
+    source.registryCreationId ||
+      source.registry_creation_id ||
+      (isStructuredRegistryType(creationType) ? creationId : "")
+  );
+  const registryEntryId = normalizeString(
+    source.registryEntryId ||
+      source.registry_entry_id ||
+      source.targetEntryId ||
+      source.target_entry_id
+  );
 
   return {
     id: rawId.startsWith("link_") ? rawId : createRegistryId("link"),
-    creationId: creationId || null,
-    title: title || "Untitled Creation",
-    type: normalizeString(source.type || source.creationType || source.creation_type || "CREATION").toUpperCase(),
-    description: normalizeString(source.description),
-    imageUrl:
-    normalizeString(
-      source.imageUrl ||
-        source.image_url ||
-        source.thumbnailUrl ||
-        source.thumbnail_url ||
-        source.avatarUrl ||
-        source.avatar_url ||
-        source.coverImageUrl ||
-        source.cover_image_url
-    ) || "",
+    creationId,
+    creationType,
+    ...(isStructuredRegistryType(creationType) && registryEntryId
+      ? {
+          registryCreationId: registryCreationId || creationId,
+          registryEntryId,
+        }
+      : {}),
     notes: normalizeString(source.notes),
   };
 }
@@ -161,6 +176,48 @@ export function normalizeLinkedCreationLinks(value) {
   }
 
   return [];
+}
+
+function dedupeLinkedCreationLinks(links = []) {
+  const byKey = new Map();
+
+  links.forEach((link) => {
+    if (!link) return;
+    const key = [
+      createLinkedCreationReferenceKey(link),
+      normalizeString(link.id),
+    ].join("::");
+
+    if (!byKey.has(key)) byKey.set(key, link);
+  });
+
+  return [...byKey.values()];
+}
+
+function normalizeOrganizationFactionLinkBuckets(entry = {}) {
+  const organizationLinks = normalizeLinkedCreationLinks(
+    entry.linkedOrganizations
+  );
+  const factionLinks = normalizeLinkedCreationLinks(entry.linkedFactions);
+
+  return {
+    linkedOrganizations: dedupeLinkedCreationLinks([
+      ...organizationLinks.filter(
+        (link) => link.creationType !== "FACTION_REGISTRY"
+      ),
+      ...factionLinks.filter(
+        (link) => link.creationType === "ORGANIZATION_REGISTRY"
+      ),
+    ]),
+    linkedFactions: dedupeLinkedCreationLinks([
+      ...factionLinks.filter(
+        (link) => link.creationType !== "ORGANIZATION_REGISTRY"
+      ),
+      ...organizationLinks.filter(
+        (link) => link.creationType === "FACTION_REGISTRY"
+      ),
+    ]),
+  };
 }
 
 export function createEmptyStructuredRegistryEntry(registryType) {
@@ -221,29 +278,83 @@ export function createEmptyStructuredRegistryData(registryType) {
   };
 }
 
-export function normalizeStructuredRegistryEntry(entry = {}, registryType) {
+function removeDirectStructuredRegistrySelfReferences(
+  links,
+  {
+    currentRegistryCreationId = "",
+    currentRegistryEntryId = "",
+  } = {}
+) {
+  return normalizeLinkedCreationLinks(links).filter(
+    (link) =>
+      !isDirectStructuredRegistrySelfReference(link, {
+        currentRegistryCreationId,
+        currentRegistryEntryId,
+      })
+  );
+}
+
+export function normalizeStructuredRegistryEntry(
+  entry = {},
+  registryType,
+  { currentRegistryCreationId = "" } = {}
+) {
   const base = createEmptyStructuredRegistryEntry(registryType);
   const merged = {
     ...base,
     ...entry,
   };
 
+  const entryId = entry.id || createRegistryId("entry");
+
+  const organizationFactionLinks =
+    normalizeOrganizationFactionLinkBuckets(merged);
+  const selfReferenceContext = {
+    currentRegistryCreationId,
+    currentRegistryEntryId: entryId,
+  };
+
   return {
     ...merged,
-    id: entry.id || createRegistryId("entry"),
+    id: entryId,
     aliases: Array.isArray(merged.aliases) ? merged.aliases : [],
 
-    linkedCharacters: normalizeLinkedCreationLinks(merged.linkedCharacters),
-    linkedLocations: normalizeLinkedCreationLinks(merged.linkedLocations),
-    linkedOrganizations: normalizeLinkedCreationLinks(merged.linkedOrganizations),
-    linkedFactions: normalizeLinkedCreationLinks(merged.linkedFactions),
-    linkedItems: normalizeLinkedCreationLinks(merged.linkedItems),
-    linkedEvents: normalizeLinkedCreationLinks(merged.linkedEvents),
-    linkedQuests: normalizeLinkedCreationLinks(merged.linkedQuests),
+    linkedCharacters: removeDirectStructuredRegistrySelfReferences(
+      merged.linkedCharacters,
+      selfReferenceContext
+    ),
+    linkedLocations: removeDirectStructuredRegistrySelfReferences(
+      merged.linkedLocations,
+      selfReferenceContext
+    ),
+    linkedOrganizations: removeDirectStructuredRegistrySelfReferences(
+      organizationFactionLinks.linkedOrganizations,
+      selfReferenceContext
+    ),
+    linkedFactions: removeDirectStructuredRegistrySelfReferences(
+      organizationFactionLinks.linkedFactions,
+      selfReferenceContext
+    ),
+    linkedItems: removeDirectStructuredRegistrySelfReferences(
+      merged.linkedItems,
+      selfReferenceContext
+    ),
+    linkedEvents: removeDirectStructuredRegistrySelfReferences(
+      merged.linkedEvents,
+      selfReferenceContext
+    ),
+    linkedQuests: removeDirectStructuredRegistrySelfReferences(
+      merged.linkedQuests,
+      selfReferenceContext
+    ),
   };
 }
 
-export function normalizeStructuredRegistryData(data = {}, registryType) {
+export function normalizeStructuredRegistryData(
+  data = {},
+  registryType,
+  { currentRegistryCreationId = "" } = {}
+) {
   const base = createEmptyStructuredRegistryData(registryType);
   const safeRegistryKind =
     data.registry_kind && isStructuredRegistryType(data.registry_kind)
@@ -257,7 +368,9 @@ export function normalizeStructuredRegistryData(data = {}, registryType) {
     registry_version: data.registry_version || STRUCTURED_REGISTRY_VERSION,
     entries: Array.isArray(data.entries)
       ? data.entries.map((entry) =>
-          normalizeStructuredRegistryEntry(entry, safeRegistryKind)
+          normalizeStructuredRegistryEntry(entry, safeRegistryKind, {
+            currentRegistryCreationId,
+          })
         )
       : [],
     relationships: Array.isArray(data.relationships)
@@ -279,6 +392,7 @@ export function buildStructuredRegistryCreationPayload({
   title,
   description,
   data,
+  currentRegistryCreationId = "",
 }) {
   const config = getStructuredRegistryConfig(registryType);
 
@@ -290,6 +404,8 @@ export function buildStructuredRegistryCreationPayload({
     status: "DRAFT",
     contentRating: "SFW",
     canonStatus: "NONE",
-    data: normalizeStructuredRegistryData(data, registryType),
+    data: normalizeStructuredRegistryData(data, registryType, {
+      currentRegistryCreationId,
+    }),
   };
 }

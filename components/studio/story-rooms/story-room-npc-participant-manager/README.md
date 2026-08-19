@@ -29,7 +29,8 @@ components/studio/story-rooms/story-room-npc-participant-manager/
 The ViewModel owns:
 
 - Story Room NPC lifecycle response normalization;
-- loaded, pending, available, and inactive grouping;
+- authoritative `CREATION_REF` filtering;
+- loaded, pending, available, inactive, and unavailable grouping;
 - action-key construction and busy-state matching;
 - source-registry availability guards;
 - raw registry, entry, and participant identifier retention;
@@ -65,3 +66,20 @@ components/studio/story-rooms/StoryRoomCastPanel.jsx
 ```
 
 The caller and its public prop contract remain unchanged.
+
+## W15 Registry graph authority wiring
+
+The live ViewModel is now an exact deployment mirror of current Chassis
+graph-authority behavior.
+
+Only linked-Character `CREATION_REF` entries appear in this manager.
+Registry-owned `AD_HOC` entries remain outside this participant lifecycle.
+
+The portable View contract is `1.2.0` and supports an `Unavailable References`
+section whose cards can explicitly declare `hasAction = false`.
+
+Unavailable linked Characters remain visible with their authoritative failure
+reason but do not receive a load/reload button.
+
+The View keeps the existing FE styling; only the semantic icon/no-action support
+was added.

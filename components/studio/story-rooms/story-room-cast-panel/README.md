@@ -53,3 +53,22 @@ The Binding Shell owns `next/link` and injects it as `LinkComponent`. The
 portable View defaults to a native anchor for direct fixtures and extracted UI
 package rendering. Destinations, click handlers, classes, targets, and labels
 remain part of the existing display-ready View contract.
+
+## W14 typed Story Character lifecycle wiring
+
+The Cast panel application/presentation ViewModel now receives the authoritative
+Story snapshot and projects typed Story Character lifecycle metadata through:
+
+```text
+story_character_lifecycle_runtime.presentation.v1
+story_room_cast_lifecycle_binding_v1
+```
+
+Existing Cast cards display lifecycle through their current semantic `state` and
+`note` fields; the portable View itself is unchanged.
+
+Responder selection and participant activity remain exactly as supplied by
+Chassis. The FE does not infer release eligibility.
+
+Registry-managed NPC lifecycle stays separate in the existing NPC Participant
+Manager.

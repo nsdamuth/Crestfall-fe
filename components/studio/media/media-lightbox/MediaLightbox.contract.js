@@ -1,4 +1,4 @@
-export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "1.0.0";
+export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Portable presentation contract for the shared full-screen media viewer.
@@ -17,12 +17,19 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} allowDownload
  * @property {boolean} showStudioActions
  * @property {boolean} showDeleteAction
+ * @property {boolean} showReassignAction
  * @property {boolean} isLiked
  * @property {boolean} isBookmarked
  * @property {string} shareMessage
  * @property {Array<{value:string,label:string}>} reportReasonOptions
  * @property {Object} detailsDialog
+ * @property {Object} reassignDialog
+ * @property {Object} reassignmentPresentation
  * @property {Object} reportDialog
+ * @property {Function|null} onOpenReassign
+ * @property {Function|null} onCloseReassign
+ * @property {Function|null} onReassignDestinationChange
+ * @property {Function|null} onSubmitReassign
  * @property {import("react").ElementType} LinkComponent
  */
 

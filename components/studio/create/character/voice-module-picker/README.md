@@ -33,3 +33,25 @@ Development-only route:
 `/dev/ui-preview/voice-module-picker`
 
 The preview uses fixtures only and never reads or writes a character.
+
+## W5 live catalog wiring
+
+The picker now consumes the complete current 41-option Character Voice Module
+catalog directly from:
+
+```text
+../constants/voiceModules.js
+```
+
+No picker View or ViewModel rewrite was required.
+
+The existing presentation ViewModel already:
+
+- imports the live catalog;
+- groups options by category;
+- resolves selected labels;
+- preserves unknown selected IDs;
+- returns selected IDs through the parent-owned `onChange` callback.
+
+The portable picker View remains FE presentation authority and was deliberately
+not replaced with the stylistically different Chassis source View.

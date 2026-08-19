@@ -46,3 +46,82 @@ export const creationProfileEmptyMediaFixture = [];
 
 export const creationProfileLoadErrorFixture =
   "Public media request failed in the preview fixture.";
+
+
+export const creationProfilePlayerSelectStoryFixture =
+  Object.freeze({
+    id: "story-profile-preview-1",
+    type: "ROOM_TEMPLATE",
+    title: "Crossroads at Dawn",
+    subtitle: "Choose where the Story begins",
+    description:
+      "A Story whose creator allows the player to choose one of two authored opening Locations.",
+    imageUrl: "/assets/covers/crestfall-compass-cover.png",
+    creatorHandle: "@Crestfall",
+    creatorProfileHref: "/studio/profile/crestfall",
+    visibility: "PUBLIC",
+    status: "APPROVED",
+    contentRating: "SFW",
+    canonStatus: "CANON",
+    tags: ["Story", "Opening Location"],
+    stats: {
+      likes: 24,
+      bookmarks: 9,
+      messages: 118,
+    },
+    supportsChat: true,
+    startingChat: false,
+    chatError: "",
+    openingLocationPicker: {
+      contractVersion:
+        "story_start_opening_location.presentation.v1",
+      mode: "PLAYER_SELECT",
+      selectionRequired: true,
+      open: true,
+      pending: false,
+      eyebrow: "Choose Starting Location",
+      description:
+        "This Story lets the player choose where the opening hard state begins. Only the creator-authored Locations below are valid.",
+      options: [
+        {
+          id: "loc-deepcross",
+          title: "Deepcross",
+          subtitle: "Fogbound market district",
+          imageUrl: null,
+          selected: true,
+          disabled: false,
+          ariaPressed: true,
+        },
+        {
+          id: "loc-sunreach",
+          title: "Sunreach",
+          subtitle: "High terraces above the eastern gate",
+          imageUrl: null,
+          selected: false,
+          disabled: false,
+          ariaPressed: false,
+        },
+      ],
+      selectedLocationId: "loc-deepcross",
+      selectedOption: {
+        id: "loc-deepcross",
+        title: "Deepcross",
+        subtitle: "Fogbound market district",
+        imageUrl: null,
+      },
+      emptyState: null,
+      errorMessage: "",
+      actions: {
+        cancelLabel: "Cancel",
+        confirmLabel: "Start Here",
+        cancelDisabled: false,
+        confirmDisabled: false,
+        canConfirm: true,
+      },
+      callbacks: {
+        onSelect: null,
+        onCancel: null,
+        onConfirm: null,
+      },
+    },
+  });

@@ -25,3 +25,34 @@ npm run diagnostics:loom:creation-image-library-page
 
 Mechanics Module field decomposition remains deferred until the final
 cumulative reassessment.
+
+## W19 Library Pass owner wiring
+
+The Image Library now composes the exact Chassis owner Library Pass ViewModel
+through the accepted owner binding.
+
+Creators can see current pricing/tier/reward/public-preview metrics and pause or
+resume new Library Pass sales when Chassis eligibility rules allow it.
+
+Refresh reloads both image-library state and owner Library Pass state.
+
+The portable View remains FE-owned and the contract is now `1.1.0`.
+
+The separate image-reassignment functionality present in current Chassis remains
+outside W19 so its coin mutation/reassignment semantics can be reconciled
+through the accepted reassignment binding independently.
+
+## W20 Image Reassignment
+
+Creation-owned images are marked reassignment-eligible only when the current
+Creation and image ownership identities agree and the image has an authoritative
+output ID.
+
+The Image Library passes reassignment through the shared Media Lightbox. After a
+successful move it reconciles the returned server Coin balance into the Studio
+Account, closes the current preview, refreshes both image-library and Library
+Pass owner state, and presents a success message.
+
+W19 Library Pass owner composition and `showBackLink` behavior remain intact.
+
+The Image Library portable View contract is now `1.2.0`.
