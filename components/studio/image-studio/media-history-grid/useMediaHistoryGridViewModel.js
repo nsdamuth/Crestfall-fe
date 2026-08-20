@@ -243,6 +243,8 @@ export function useMediaHistoryGridViewModel({
   hasMoreHistory = false,
   isLoadingMoreHistory = false,
   onLoadMoreHistory,
+  onCoinBalanceChange,
+  onImageReassigned,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -557,6 +559,17 @@ export function useMediaHistoryGridViewModel({
         onToggleLike: toggleLikedMedia,
         onToggleBookmark: toggleBookmarkedMedia,
         onDeleteItem: handleDeleteMedia,
+        onReassignItem: async (item, result) => {
+          if (result?.coinBalance !== undefined) {
+            onCoinBalanceChange?.(result.coinBalance);
+          }
+
+          onImageReassigned?.({
+            imageOutputId:
+              result?.imageOutputId || getMediaHistoryImageOutputId(item),
+            destinationCreationId: result?.destinationCreationId || null,
+          });
+        },
       }
     : null;
 

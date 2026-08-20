@@ -7,23 +7,32 @@ const DEFAULT_MODULES = Object.freeze({
   prose_style: "cinematic",
   detail_level: "balanced",
   pacing: "balanced",
-  dialogue_style: "naturalistic",
-  knowledge_behavior: "moderate",
   atmosphere: "adventurous",
 });
+
+const STORY_PRESENTATION_MODULE_FIELDS = Object.freeze([
+  "prose_style",
+  "detail_level",
+  "pacing",
+  "atmosphere",
+]);
 
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Narrator Editor",
   sectionTitle: "Narrator Modules",
   sectionDescription:
-    "Edit the official starter modules that shape this narrator's prose, pacing, dialogue, knowledge behavior, and atmosphere.",
+    "Edit the Story Presentation modules that shape prose, descriptive density, intra-beat pacing pressure, and atmosphere across Composer responses.",
 });
 
 function resolveSelectedModules(data) {
-  return {
-    ...DEFAULT_MODULES,
-    ...(data?.selected_modules || data?.selectedModules || {}),
-  };
+  const authored = data?.selected_modules || data?.selectedModules || {};
+
+  return Object.fromEntries(
+    STORY_PRESENTATION_MODULE_FIELDS.map((field) => [
+      field,
+      authored?.[field] || DEFAULT_MODULES[field],
+    ])
+  );
 }
 
 function resolveResponseDirection(data) {

@@ -35,7 +35,7 @@ import {
 } from "../mechanics-guards/mechanicsGuardsNormalization.js";
 
 export const MECHANICS_JSON_EDITOR_VALIDATION_VERSION =
-  "mechanics_json_editor_validation_v1";
+  "mechanics_json_editor_validation_v1_2";
 
 export const MECHANICS_MODULE_ID = "core.trackers.v1";
 export const MECHANICS_INSTANCE_DATA_VERSION =
@@ -185,6 +185,8 @@ const DOMAIN_ACTION_TYPES = new Set([
   "LOCATION_TRAVEL_OPERATION",
   "PARTICIPANT_CONDITION_APPLY",
   "PARTICIPANT_CONDITION_REMOVE",
+  "ABILITY_SPELL_KNOWLEDGE_SET",
+  "ABILITY_SPELL_USE_REQUEST",
 ]);
 
 const ITEM_HELD_ACTIONS = new Set([
@@ -215,6 +217,18 @@ const TRAVEL_OPERATIONS = new Set([
   "RESUME",
   "APPROACH",
   "ARRIVE",
+]);
+
+const ABILITY_SPELL_KNOWLEDGE_STATES = new Set([
+  "KEEP",
+  "KNOWN",
+  "UNKNOWN",
+]);
+
+const ABILITY_SPELL_UNLOCK_STATES = new Set([
+  "KEEP",
+  "UNLOCKED",
+  "LOCKED",
 ]);
 
 const COMPOSITION_PHASES = new Set(["ATTEMPT", "OUTCOME"]);
@@ -265,6 +279,8 @@ const DOMAIN_LANE_BY_TYPE = Object.freeze({
   LOCATION_TRAVEL_OPERATION: "LOCATION_RUNTIME",
   PARTICIPANT_CONDITION_APPLY: "SENSORY_RUNTIME",
   PARTICIPANT_CONDITION_REMOVE: "SENSORY_RUNTIME",
+  ABILITY_SPELL_KNOWLEDGE_SET: "ABILITY_SPELL_ACTOR_STATE",
+  ABILITY_SPELL_USE_REQUEST: "ABILITY_SPELL_EXECUTION",
 });
 
 function isObject(value) {
@@ -1219,6 +1235,88 @@ function requireArgumentType({
   }
 }
 
+function validateDomainQuery(
+  rawQuery,
+  path,
+  errors,
+  argumentTypes
+) {
+  if (rawQuery === undefined || rawQuery === null) {
+    return { enabled: false };
+  }
+  if (!validatePlainObject(rawQuery, path, errors)) {
+    return { enabled: false };
+  }
+
+  const version = normalizeString(rawQuery.version);
+  if (version && version !== "mechanics_command_domain_query_v1") {
+    addIssue(
+      errors,
+      `${path}.version`,
+      `Unsupported domain query version "${version}".`
+    );
+  }
+
+  const domain = normalizeUpper(
+    rawQuery.domain || rawQuery.domainId || rawQuery.domain_id
+  );
+  const operation = normalizeUpper(
+    rawQuery.operation || rawQuery.operationId || rawQuery.operation_id
+  );
+  const enabled = normalizeBoolean(
+    rawQuery.enabled,
+    Boolean(domain && operation)
+  );
+
+  if (!enabled) return { enabled: false, domain, operation };
+
+  if (!domain) {
+    addIssue(errors, `${path}.domain`, "Enabled domain query requires a domain identifier.");
+  }
+  if (!operation) {
+    addIssue(errors, `${path}.operation`, "Enabled domain query requires an operation identifier.");
+  }
+
+  const bindings = asArray(
+    rawQuery.argumentBindings ||
+      rawQuery.argument_bindings ||
+      rawQuery.arguments ||
+      rawQuery.bindings
+  );
+  const seenParameters = new Set();
+
+  bindings.forEach((binding, index) => {
+    const bindingPath = `${path}.argumentBindings[${index}]`;
+    if (!validatePlainObject(binding, bindingPath, errors)) return;
+    const parameter = normalizeIdentifier(
+      binding.parameter || binding.parameterName || binding.parameter_name
+    );
+    const sourceArgumentName = normalizeIdentifier(
+      binding.sourceArgumentName ||
+        binding.source_argument_name ||
+        binding.argumentName ||
+        binding.argument_name
+    );
+
+    if (!parameter) {
+      addIssue(errors, `${bindingPath}.parameter`, "Domain query binding requires a parameter name.");
+    } else if (seenParameters.has(parameter)) {
+      addIssue(errors, `${bindingPath}.parameter`, `Duplicate domain query parameter "${parameter}".`);
+    } else {
+      seenParameters.add(parameter);
+    }
+
+    if (!sourceArgumentName) {
+      addIssue(errors, `${bindingPath}.sourceArgumentName`, "Domain query binding requires a command argument.");
+    } else if (!argumentTypes.has(sourceArgumentName)) {
+      addIssue(errors, `${bindingPath}.sourceArgumentName`, `Unknown command argument "${sourceArgumentName}".`);
+    }
+  });
+
+
+  return { enabled: true, domain, operation };
+}
+
 function validateDomainAction(
   rawAction,
   path,
@@ -1383,6 +1481,101 @@ function validateDomainAction(
       argumentTypes,
       errors,
     });
+  }
+
+
+  if (type === "ABILITY_SPELL_USE_REQUEST") {
+    const actionVersion = normalizeString(rawAction.version);
+    if (actionVersion !== "mechanics_command_domain_action_v3") {
+      addIssue(
+        errors,
+        `${path}.version`,
+        "ABILITY_SPELL_USE_REQUEST requires mechanics_command_domain_action_v3."
+      );
+    }
+
+    requireArgumentType({
+      action: rawAction,
+      field: "actorArgumentName",
+      expectedTypes: ["PLAYER_CHARACTER"],
+      path,
+      argumentTypes,
+      errors,
+    });
+    requireArgumentType({
+      action: rawAction,
+      field: "abilityArgumentName",
+      expectedTypes: ["TEXT"],
+      path,
+      argumentTypes,
+      errors,
+    });
+    requireArgumentType({
+      action: rawAction,
+      field: "targetArgumentName",
+      expectedTypes: ["CHARACTER_PRESENT"],
+      path,
+      argumentTypes,
+      errors,
+      optional: true,
+    });
+  }
+
+  if (type === "ABILITY_SPELL_KNOWLEDGE_SET") {
+    const actionVersion = normalizeString(rawAction.version);
+    if (actionVersion !== "mechanics_command_domain_action_v2") {
+      addIssue(
+        errors,
+        `${path}.version`,
+        "ABILITY_SPELL_KNOWLEDGE_SET requires mechanics_command_domain_action_v2."
+      );
+    }
+
+    requireArgumentType({
+      action: rawAction,
+      field: "actorArgumentName",
+      expectedTypes: ["PLAYER_CHARACTER", "CHARACTER_PRESENT"],
+      path,
+      argumentTypes,
+      errors,
+    });
+    requireArgumentType({
+      action: rawAction,
+      field: "abilityArgumentName",
+      expectedTypes: ["TEXT"],
+      path,
+      argumentTypes,
+      errors,
+    });
+
+    const knowledgeState = normalizeUpper(
+      rawAction.knowledgeState || rawAction.knowledge_state || "KEEP"
+    );
+    const unlockState = normalizeUpper(
+      rawAction.unlockState || rawAction.unlock_state || "KEEP"
+    );
+
+    if (!ABILITY_SPELL_KNOWLEDGE_STATES.has(knowledgeState)) {
+      addIssue(
+        errors,
+        `${path}.knowledgeState`,
+        `Unsupported Ability/Spell knowledge state "${knowledgeState || "(missing)"}".`
+      );
+    }
+    if (!ABILITY_SPELL_UNLOCK_STATES.has(unlockState)) {
+      addIssue(
+        errors,
+        `${path}.unlockState`,
+        `Unsupported Ability/Spell unlock state "${unlockState || "(missing)"}".`
+      );
+    }
+    if (knowledgeState === "KEEP" && unlockState === "KEEP") {
+      addIssue(
+        errors,
+        path,
+        "Ability/Spell Knowledge Set must change known state, unlock state, or both."
+      );
+    }
   }
 
   return {
@@ -2097,6 +2290,14 @@ function validateCommand(
     );
   });
 
+  const domainQueryValidation = validateDomainQuery(
+    command.domainQuery ||
+      command.domain_query,
+    `${path}.domainQuery`,
+    errors,
+    argumentTypes
+  );
+
   const legacyAction = validateDomainAction(
     command.domainAction ||
       command.domain_action || {
@@ -2107,6 +2308,44 @@ function validateCommand(
     errors,
     argumentTypes
   );
+
+  if (domainQueryValidation?.enabled) {
+    const outcomeEffectCount = [...OUTCOMES].reduce(
+      (total, outcome) =>
+        total + asArray(asObject(outcomes[outcome]).effects).length,
+      0
+    );
+    const compositionSource = asObject(
+      command.composition ||
+        command.commandComposition ||
+        command.executionComposition
+    );
+    const compositionMechanicsMutation = asArray(
+      compositionSource.mechanicsSteps || compositionSource.mechanics_steps
+    ).some((step) => asArray(asObject(step).effects).length > 0);
+    const compositionDomainMutation = asArray(
+      compositionSource.domainSteps || compositionSource.domain_steps
+    ).some((step) => {
+      const action = asObject(asObject(step).action);
+      const actionType = normalizeUpper(action.type);
+      return action.enabled !== false && Boolean(actionType) && actionType !== "NONE";
+    });
+    const hasMutationBehavior =
+      asArray(command.attemptEffects || command.attempt_effects).length > 0 ||
+      asArray(command.effects).length > 0 ||
+      outcomeEffectCount > 0 ||
+      legacyAction?.enabled === true ||
+      compositionMechanicsMutation ||
+      compositionDomainMutation;
+
+    if (hasMutationBehavior) {
+      addIssue(
+        errors,
+        `${path}.domainQuery`,
+        "Domain query commands are read-only and cannot include Mechanics effects or mutating domain actions."
+      );
+    }
+  }
 
   validateComposition(
     command.composition ||
@@ -2304,6 +2543,53 @@ function canonicalizeMechanicsStep(step, index) {
   };
 }
 
+function canonicalizeDomainQuery(value = {}) {
+  const source = asObject(value);
+  const domain = normalizeUpper(
+    source.domain || source.domainId || source.domain_id
+  );
+  const operation = normalizeUpper(
+    source.operation || source.operationId || source.operation_id
+  );
+  const enabled = normalizeBoolean(
+    source.enabled,
+    Boolean(domain && operation)
+  ) && Boolean(domain && operation);
+  const seenParameters = new Set();
+  const argumentBindings = asArray(
+    source.argumentBindings ||
+      source.argument_bindings ||
+      source.arguments ||
+      source.bindings
+  )
+    .slice(0, 12)
+    .map((binding) => {
+      const entry = asObject(binding);
+      const parameter = normalizeIdentifier(
+        entry.parameter || entry.parameterName || entry.parameter_name
+      );
+      const sourceArgumentName = normalizeIdentifier(
+        entry.sourceArgumentName ||
+          entry.source_argument_name ||
+          entry.argumentName ||
+          entry.argument_name
+      );
+      if (!parameter || !sourceArgumentName || seenParameters.has(parameter)) return null;
+      seenParameters.add(parameter);
+      return { ...entry, parameter, sourceArgumentName };
+    })
+    .filter(Boolean);
+
+  return {
+    ...source,
+    version: normalizeString(source.version) || "mechanics_command_domain_query_v1",
+    enabled,
+    domain,
+    operation,
+    argumentBindings,
+  };
+}
+
 function canonicalizeDomainAction(action = {}) {
   const source = asObject(action);
   const type = normalizeUpper(
@@ -2463,6 +2749,10 @@ function canonicalizeCommand(command, index) {
     domainAction: canonicalizeDomainAction(
       source.domainAction ||
         source.domain_action
+    ),
+    domainQuery: canonicalizeDomainQuery(
+      source.domainQuery ||
+        source.domain_query
     ),
     presentation: {
       ...asObject(source.presentation),

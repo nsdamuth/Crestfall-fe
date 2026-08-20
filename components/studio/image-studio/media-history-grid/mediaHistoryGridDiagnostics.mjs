@@ -58,8 +58,8 @@ test("portable View owns masonry and presentation without Crestfall clients", ()
 
   assert.match(view, /ResizeObserver/);
   assert.match(view, /gridRowEnd/);
-  assert.match(view, /Select All Visible/);
-  assert.match(view, /Delete Selected/);
+  assert.match(view, /Select all visible/i);
+  assert.match(view, /Delete selected/i);
   assert.match(view, /renderQuickActions/);
   assert.match(view, /renderLightbox/);
   assert.doesNotMatch(view, /mediaReactionClient|imageOutputClient/);

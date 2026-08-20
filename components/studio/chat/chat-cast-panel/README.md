@@ -1,6 +1,6 @@
 # Chat Cast Panel LOOM Package
 
-**Contract:** `ChatCastPanel.contract.js` (v1.0.0)
+**Contract:** `ChatCastPanel.contract.js` (v1.1.0)
 
 Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
 `components/studio/story-rooms/story-room-cast-panel` tree is a stale
@@ -76,3 +76,8 @@ the mobile sheet open, and a longest-content case.
 - `ChatCastPanel.fixtures.js`
 - `useChatCastPanelViewModel.js`
 - `/dev/ui-preview/chat-cast-panel`
+
+
+## W40 live mobile coordination
+
+`mobileOpen` / `onMobileOpenChange` optionally let the top-level Chat Shell coordinate this package's mobile sheet with the composer's Cast action. Uncontrolled fixture/preview behavior remains unchanged.

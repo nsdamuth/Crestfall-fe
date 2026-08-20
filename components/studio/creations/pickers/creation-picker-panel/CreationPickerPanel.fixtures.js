@@ -51,6 +51,7 @@ export const creationPickerPanelDefaultFixture = {
   emptyMessage: "No creations found.",
   actions: null,
   gridClassName: "max-h-[46vh] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  pageSize: 0,
   onSelect: null,
 };
 
@@ -123,4 +124,21 @@ export const creationPickerPanelLongContentFixture = {
 export const creationPickerPanelCustomGridFixture = {
   ...creationPickerPanelDefaultFixture,
   gridClassName: "max-h-[38vh] sm:grid-cols-2 lg:grid-cols-3",
+};
+
+
+export const creationPickerPanelPaginationFixture = {
+  ...creationPickerPanelSearchStressFixture,
+  items: Array.from({ length: 25 }, (_, index) =>
+    item({
+      id: `fixture-paged-${index + 1}`,
+      title: `Paged Creation ${index + 1}`,
+      subtitle: "Synthetic item for presentation-only pagination validation.",
+      type: index % 2 === 0 ? "CHARACTER" : "LOCATION",
+    })
+  ),
+  selectedIds: [],
+  disabledIds: [],
+  recommendedIds: [],
+  pageSize: 12,
 };

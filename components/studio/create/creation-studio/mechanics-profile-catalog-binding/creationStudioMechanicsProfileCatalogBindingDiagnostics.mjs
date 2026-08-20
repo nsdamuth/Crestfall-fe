@@ -85,7 +85,7 @@ const currentRules =
 
 assert.equal(
   currentRules.steps.length,
-  5
+  8
 );
 
 assert.deepEqual(
@@ -96,6 +96,9 @@ assert.deepEqual(
   [
     "STATS_POOLS_PROFILE",
     "PROGRESSION_PROFILE",
+    "SKILLS_PROFILE",
+    "ABILITY_SPELL_PROFILE",
+    "WALLET_PROFILE",
     "MECHANICS_MODULE",
     "ACTOR_MECHANICS_PROFILE",
     "RULES_CODEX",
@@ -114,6 +117,9 @@ assert.deepEqual(
   [
     "Stats & Pools Profile",
     "Progression Profile",
+    "Skills Profile",
+    "Ability & Spell Profile",
+    "Wallet Profile",
     "Mechanics Module",
     "Actor Mechanics Profile",
     "Rules Codex",
@@ -342,8 +348,12 @@ assert.deepEqual(
 );
 
 assert.equal(
+  allRoutes.visualExtensionStatus.catalogSemantics,
+  "WIRED"
+);
+assert.equal(
   allRoutes.visualExtensionStatus.liveCatalogExposure,
-  "READY_FOR_FE_WIRING"
+  "WIRED"
 );
 
 const partialRoutes =
@@ -467,6 +477,11 @@ for (const forbidden of [
   );
 }
 
+const staleFeWiringMarker = ["READY", "FOR", "FE", "WIRING"].join("_");
+const staleChassisBindingMarker = ["READY", "FOR", "CHASSIS", "BINDING"].join("_");
+assert.equal(source.includes(staleFeWiringMarker), false);
+assert.equal(source.includes(staleChassisBindingMarker), false);
+
 console.log(JSON.stringify({
   diagnostic:
     "creation_studio_mechanics_profile_catalog_binding_fe_semantic_contract_v1",
@@ -486,8 +501,8 @@ console.log(JSON.stringify({
   sourceCatalogCopyCovered: true,
   chassisSuppliedRouteTargetsCovered: true,
   missingRouteDeadLinkProtectionCovered: true,
-  existingCreationStudioContractUnmodified: true,
-  existingCreationStudioViewUnmodified: true,
-  existingCreationStudioViewModelUnmodified: true,
-  chassisRoutingCountsStartupExcluded: true,
+  creationStudioContractNowIncludesLiveCatalog: true,
+  existingCreationStudioViewPreserved: true,
+  creationStudioViewModelUsesAcceptedCatalogBinding: true,
+  confirmedChassisRoutesConsumedByLiveCatalog: true,
 }, null, 2));

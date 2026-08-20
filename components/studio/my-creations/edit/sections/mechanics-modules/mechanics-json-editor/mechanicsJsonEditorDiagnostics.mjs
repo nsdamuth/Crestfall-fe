@@ -36,6 +36,10 @@ const CREATION_SHELL_PATH = path.join(
   ROOT,
   "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
 );
+const CREATION_SECTION_COMPONENT_MAP_PATH = path.join(
+  ROOT,
+  "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
+);
 const RESOLUTION_BUILDER_PATH = path.join(
   ROOT,
   "components/studio/my-creations/edit/sections/mechanics-modules/mechanicsCommandResolutionBuilder.js"
@@ -314,10 +318,10 @@ const validMechanicsData = {
   },
 };
 
-test("Validation contract starts at v1", () => {
+test("Validation contract advances additively to v1.2", () => {
   assert(
     MECHANICS_JSON_EDITOR_VALIDATION_VERSION ===
-      "mechanics_json_editor_validation_v1",
+      "mechanics_json_editor_validation_v1_2",
     "Unexpected validation version."
   );
 });
@@ -343,6 +347,70 @@ test("Representative MC6 Mechanics data validates", () => {
 
   assert(result.valid, JSON.stringify(result.errors));
   assert(result.errors.length === 0, "Unexpected errors.");
+});
+
+test("Ability/Spell knowledge requires the additive domain action v2 contract", () => {
+  const value = clone(validMechanicsData);
+  const command = value.instanceData.commands[0];
+  command.invocation.arguments.push(
+    { name: "actor", label: "Actor", type: "PLAYER_CHARACTER", required: true },
+    { name: "ability", label: "Ability", type: "TEXT", required: true }
+  );
+  command.domainAction = {
+    version: "mechanics_command_domain_action_v2",
+    enabled: true,
+    type: "ABILITY_SPELL_KNOWLEDGE_SET",
+    actorArgumentName: "actor",
+    abilityArgumentName: "ability",
+    knowledgeState: "KNOWN",
+    unlockState: "UNLOCKED",
+    applyOnOutcomes: ["SUCCESS"],
+  };
+
+  const valid = validateMechanicsModuleData(value);
+  assert(valid.valid, JSON.stringify(valid.errors));
+
+  command.domainAction.version = "mechanics_command_domain_action_v1";
+  const legacy = validateMechanicsModuleData(value);
+  assert(!legacy.valid, "V1 must fail closed for the V2-only action.");
+  assert(
+    legacy.errors.some((entry) => entry.path.endsWith(".domainAction.version")),
+    "Expected explicit V2 contract error."
+  );
+});
+
+test("Ability/Spell use authorization requires the additive domain action v3 contract", () => {
+  const value = clone(validMechanicsData);
+  const command = value.instanceData.commands[0];
+  const targetArgument = command.invocation.arguments.find(
+    (argument) => argument.name === "target"
+  );
+  assert(targetArgument, "Expected the shared fixture to expose a target argument.");
+  targetArgument.required = false;
+  command.invocation.arguments.push(
+    { name: "actor", label: "Actor", type: "PLAYER_CHARACTER", required: false },
+    { name: "ability", label: "Ability", type: "TEXT", required: true }
+  );
+  command.domainAction = {
+    version: "mechanics_command_domain_action_v3",
+    enabled: true,
+    type: "ABILITY_SPELL_USE_REQUEST",
+    actorArgumentName: "actor",
+    abilityArgumentName: "ability",
+    targetArgumentName: "target",
+    applyOnOutcomes: ["SUCCESS"],
+  };
+
+  const valid = validateMechanicsModuleData(value);
+  assert(valid.valid, JSON.stringify(valid.errors));
+
+  command.domainAction.version = "mechanics_command_domain_action_v2";
+  const legacy = validateMechanicsModuleData(value);
+  assert(!legacy.valid, "V2 must fail closed for the V3-only action.");
+  assert(
+    legacy.errors.some((entry) => entry.path.endsWith(".domainAction.version")),
+    "Expected explicit V3 contract error."
+  );
 });
 
 test("Valid text returns canonical formatted JSON", () => {
@@ -665,18 +733,21 @@ test("Mechanics builder exposes the JSON Editor action", () => {
   assert(
     assemblyShell.includes("MechanicsDocumentOrchestrationControls") &&
       source.includes("replaceData(normalizeMechanicsDocument(nextData))") &&
-      orchestrationView.includes("JSON Editor") &&
+      /JSON editor/i.test(orchestrationView) &&
       orchestrationShell.includes("<MechanicsJsonEditorModal"),
     "Mechanics builder integration is incomplete."
   );
 });
 
-test("Creation edit shell replaces form.data atomically", () => {
-  const source = read(CREATION_SHELL_PATH);
+test("Creation edit registry replaces form.data atomically", () => {
+  const shell = read(CREATION_SHELL_PATH);
+  const registry = read(CREATION_SECTION_COMPONENT_MAP_PATH);
 
   assert(
-    source.includes('updateField("data", nextData)'),
-    "Creation shell must replace the complete data object through updateField."
+    shell.includes("SECTION_COMPONENT_REGISTRY") &&
+      registry.includes("MECHANICS_MODULE") &&
+      registry.includes('replaceData: (nextData) => ctx.updateField("data", nextData)'),
+    "Creation edit registry must replace the complete Mechanics data object through updateField."
   );
 });
 
@@ -700,10 +771,10 @@ test("Feature README documents the persistence boundary", () => {
 });
 
 
-test("AI authoring guide contract starts at v1", () => {
+test("AI authoring guide contract advances additively to v1.2", () => {
   assert(
     MECHANICS_JSON_AI_AUTHORING_GUIDE_VERSION ===
-      "mechanics_json_ai_authoring_guide_v1",
+      "mechanics_json_ai_authoring_guide_v1_2",
     "Unexpected AI authoring guide version."
   );
   assert(
@@ -807,8 +878,8 @@ test("Portable View exposes the AI guide download action", () => {
   assert(
     source.includes("Download") &&
       source.includes("onDownloadAiGuide") &&
-      source.includes("Download AI Guide") &&
-      source.includes("Guide Downloaded"),
+      source.includes("Download AI guide") &&
+      source.includes("Guide downloaded"),
     "Portable View is missing the AI guide download action."
   );
 });

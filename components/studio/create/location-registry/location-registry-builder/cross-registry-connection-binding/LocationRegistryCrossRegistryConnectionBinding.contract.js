@@ -401,7 +401,7 @@ export function projectLocationRegistryCrossRegistryConnectionBinding({
       referencedRegistryHydration: "WIRED",
       endpointSelectionMutation: "WIRED",
       endpointIdentityResolution: "WIRED",
-      editCreationIdBridge: "PENDING_PROTECTED_EDITOR_WIRING",
+      editCreationIdBridge: "WIRED",
     },
 
     visualExtensionStatus: {

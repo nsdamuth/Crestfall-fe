@@ -1,215 +1,65 @@
 # Wallet Profile authoring presentation binding
 
-Status: additive FE presentation binding only.
+Status: **WIRED — W35 legacy presentation**.
 
-This package is the next step after the accepted Wallet Profile semantic
-migration.
+This binding remains the accepted display/semantic seam for the Wallet Profile
+editor. W35 does not replace it with a second model; it wires the current working
+Crestfall editor and JSON Editor & AI Guide into FE and updates the binding status
+to describe the live branch state.
 
-The semantic contract is already present in the FE lane:
+The semantic contract remains:
 
 ```text
 wallet_profile_contract_v0
 ```
 
-The binding consumes Chassis-normalized:
+The binding consumes normalized `profile / errors / warnings / metrics` and carries:
+
+- Wallet Profile title/description/tags/enabled state;
+- VALID / WARNING / ERROR presentation;
+- reusable currency identity/title/symbol/description;
+- starting/minimum/maximum balances;
+- tags and metadata boundaries;
+- current limits;
+- the explicit separation between gameplay Wallet currencies and Crestfall Studio Coins.
+
+Actor-owned current Wallet balances remain runtime Story state and are not stored in
+the authored profile.
+
+## Current presentation status
 
 ```text
-profile
-errors
-warnings
-metrics
+profileEditor: WIRED_LEGACY_PRESENTATION
+jsonEditor:    WIRED_LEGACY_PRESENTATION
 ```
 
-and defines the display-ready model for the eventual FE-owned Wallet Profile
-editor.
+The live legacy Wallet form exposes the reusable currency-definition surface. The
+complete JSON Editor & AI Guide is also wired for complete-object authoring and
+validation.
 
-It does not own normalization, validation, mutation, JSON application, save, or
-runtime balance mutation.
+A future FE restyle may normalize these visuals, but presentation redesign is no
+longer a functional synchronization blocker on this branch.
 
-## Current presentation model
+## Builder ESM compatibility
 
-### Header
-
-```text
-Gameplay Wallet Definition
-Wallet Profile
-```
-
-Current boundary copy is preserved:
-
-```text
-Author reusable currencies and their starting and allowed balance bounds.
-Live balances remain isolated actor-owned Story state.
-Crestfall Studio Coins are not part of this profile.
-```
-
-### Profile
-
-The binding carries:
-
-- title
-- description
-- enabled state
-
-### Validation
-
-Presentation states:
-
-```text
-VALID
-WARNING
-ERROR
-```
-
-Current valid copy:
-
-```text
-Wallet Profile definitions are valid.
-```
-
-### Currency Definitions
-
-Per currency:
-
-- typed definition version
-- ID
-- title
-- symbol
-- description
-- enabled state
-- tags
-- starting balance
-- minimum balance
-- maximum balance
-
-Current maximum:
-
-```text
-32 currencies
-```
-
-Balance values remain safe integers.
-
-## Debt-like gameplay values
-
-A negative `minimumBalance` is a supported creator-authored gameplay rule.
-
-The binding presents it explicitly as:
-
-```text
-Debt-like balance allowed
-```
-
-with copy explaining that negative balances are permitted down to the authored
-minimum.
-
-This does **not** turn Wallet into a generic platform economy.
-
-## Economy boundary
-
-The source editor's boundary is preserved:
-
-```text
-A negative minimum balance is allowed when the creator intends a debt-like
-wallet. Purchases, prices, exchange rates, escrow, and reserved funds are
-separate economy layers and are not authored here.
-```
-
-The FE binding additionally makes the already-accepted product boundary explicit:
-
-```text
-Crestfall Studio Coins are not part of this profile.
-```
-
-So the Wallet Profile remains a reusable, creator-authored **gameplay** mechanic.
-
-## Runtime state
-
-The authored profile defines currency rules.
-
-It does not contain:
-
-- current actor balances
-- spent balances
-- account Coin balances
-- purchase history
-- platform wallet state
-
-Those remain runtime/application state.
-
-## JSON Editor & AI Guide
-
-The source provides:
-
-```text
-JSON Editor & AI Guide
-```
-
-The ruled FE version remains:
-
-```text
-PENDING_FE_VISUAL_EXTENSION
-```
-
-while Chassis retains JSON validation/application authority.
-
-## Main editor visual status
-
-The main Wallet editor remains:
-
-```text
-PENDING_FE_VISUAL_BUILD
-```
-
-The semantic and presentation contracts are now ready for FE implementation
-without copying the source legacy editor.
-
-## One-line ESM correction
-
-Like Skills, the accepted Wallet builder contract used an extensionless local
-ESM import.
-
-This patch changes:
-
-```text
-../wallet-profile-editor/WalletProfileEditor.contract
-```
-
-to:
+The FE Wallet builder contract keeps the behavior-neutral explicit `.js` import:
 
 ```text
 ../wallet-profile-editor/WalletProfileEditor.contract.js
 ```
 
-This is behavior-neutral under Next.js and allows the standalone Node diagnostic
-to import the builder contract directly.
+Its public contract/version/options/draft behavior remain semantically identical to
+Chassis while staying directly importable by standalone Node diagnostics.
 
 ## Permanent boundary
 
-Crestfall owns:
+Crestfall remains authority for normalization, validation, editor mutation, JSON
+validation/application, payload construction, persistence, actor-owned Wallet
+balances, runtime Wallet operations, and Studio/account Coin economy policy.
 
-- profile normalization
-- validation
-- currency editor mutation
-- JSON validation/application
-- creation payload
-- save/persistence
-- actor current balances
-- runtime Wallet mutation
-- platform Studio Coin economy
+Crestfall-fe owns editor visual composition and presentation. Mirrored ViewModels in
+this branch are deployment mirrors; they do not move product authority out of
+Crestfall.
 
-Crestfall-fe owns:
-
-- Wallet editor visual composition
-- balance-bound presentation
-- debt-like balance treatment
-- validation presentation
-- future JSON editor visual treatment
-- semantic callbacks back into Chassis
-
-## Protected scopes untouched
-
-- `app/studio/v2/**`
-- `components/studio/my-creations/edit/**`
-- `components/kit/**`
-- `components/studio/chat/**`
+Saved-edit shell registration remains deferred to the dedicated protected edit
+convergence package.

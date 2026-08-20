@@ -3,10 +3,9 @@ import { useState } from "react";
 /**
  * Defensive pass-through ViewModel, wave C5.
  *
- * Owns exactly the local UI disclosure state no sibling package already
- * owns: desktop rail collapse (chat-cast-panel and chat-state-panel each
- * already own their own mobile sheet disclosure internally) and the coin
- * chip's two utility-dialog toggles (mirrored from useStudioEconomyWidget
+ * Owns exactly the local UI disclosure state needed by the composed shell:
+ * desktop rail collapse, coordinated mobile Cast/State sheet disclosure, and
+ * the coin chip's two utility-dialog toggles (mirrored from useStudioEconomyWidget
  * ViewModel's own local state, since this package composes the widget's
  * pure View directly rather than its account-context-reading binding).
  * Every other value is caller-owned and passed through unchanged.
@@ -35,6 +34,7 @@ export function useChatShellViewModel({
   const [rightRailCollapsed, setRightRailCollapsed] = useState(initialRightRailCollapsed);
   const [buyInfoOpen, setBuyInfoOpen] = useState(false);
   const [notificationsInfoOpen, setNotificationsInfoOpen] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState(null);
 
   return {
     backHref,
@@ -60,9 +60,33 @@ export function useChatShellViewModel({
     onToggleLeftRail: () => setLeftRailCollapsed((current) => !current),
     onToggleRightRail: () => setRightRailCollapsed((current) => !current),
     transcript: transcript || {},
-    composer: composer || {},
-    castPanel: castPanel || {},
-    statePanel: statePanel || {},
+    composer: {
+      ...(composer || {}),
+      onOpenCast: () => {
+        composer?.onOpenCast?.();
+        setMobilePanel("cast");
+      },
+      onOpenState: () => {
+        composer?.onOpenState?.();
+        setMobilePanel("state");
+      },
+    },
+    castPanel: {
+      ...(castPanel || {}),
+      mobileOpen: mobilePanel === "cast",
+      onMobileOpenChange: (open) => {
+        castPanel?.onMobileOpenChange?.(open);
+        setMobilePanel(open ? "cast" : null);
+      },
+    },
+    statePanel: {
+      ...(statePanel || {}),
+      mobileOpen: mobilePanel === "state",
+      onMobileOpenChange: (open) => {
+        statePanel?.onMobileOpenChange?.(open);
+        setMobilePanel(open ? "state" : null);
+      },
+    },
     sessionDialogs: sessionDialogs || {},
     libraryPassUpsell: libraryPassUpsell || null,
   };

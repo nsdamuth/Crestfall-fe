@@ -9,6 +9,7 @@ import {
   CONSUMPTION_MODE_OPTIONS,
   createEmptyItemEntry,
   createEmptyItemRegistryData,
+  createRegistryId,
   DEFAULT_PLACEMENT_OPTIONS,
   DURABILITY_MODE_OPTIONS,
   ITEM_CATEGORY_OPTIONS,
@@ -19,7 +20,72 @@ import {
   normalizeListText,
   QUANTITY_MODE_OPTIONS,
 } from "@/components/studio/registries/itemRegistryUtils";
+import {
+  ITEM_EQUIPMENT_MODIFIER_REFERENCE_LIMIT,
+  normalizeItemEquipmentModifierReference,
+} from "@/components/studio/registries/item-equipment-modifier-references/ItemEquipmentModifierReferences.contract";
+import {
+  ITEM_OPERATION_EFFECT_REFERENCE_LIMIT,
+  ITEM_OPERATION_REQUIREMENT_SET_LIMIT,
+  normalizeItemOperationEffectReference,
+  normalizeItemOperationRequirementSet,
+  resolveItemOperationEffectAuthoringOption,
+} from "@/components/studio/registries/item-operation-authoring/ItemOperationAuthoring.contract";
 import { buildItemRegistryBuilderTabs } from "./ItemRegistryBuilder.contract";
+
+function createEmptyItemEquipmentModifierReference() {
+  return normalizeItemEquipmentModifierReference({
+    id: createRegistryId("equipment"),
+    enabled: true,
+    statsPoolsBindingId: "stats",
+    modifierDefinitionId: "",
+    stacks: 1,
+    metadata: {},
+  });
+}
+
+function createEmptyItemOperationRequirementSet() {
+  return normalizeItemOperationRequirementSet({
+    id: createRegistryId("item_requirement"),
+    enabled: true,
+    actionTypes: ["ITEM_USE"],
+    requirementMode: "ALL",
+    requirements: [],
+    metadata: {},
+  });
+}
+
+function createEmptyItemOperationRequirement() {
+  return {
+    id: createRegistryId("requirement"),
+    type: "STATS_POOLS_STAT_CURRENT",
+    bindingId: "stats",
+    targetId: "stat.strength",
+    operator: "GTE",
+    value: 1,
+  };
+}
+
+function createEmptyItemOperationEffectReference() {
+  const catalogEntry = resolveItemOperationEffectAuthoringOption({
+    domain: "STATS_POOLS",
+    operation: "MUTATE_POOL",
+  });
+
+  return normalizeItemOperationEffectReference({
+    id: createRegistryId("item_effect"),
+    enabled: true,
+    actionTypes: ["ITEM_USE"],
+    domain: catalogEntry?.domain || "STATS_POOLS",
+    operation: catalogEntry?.operation || "MUTATE_POOL",
+    version:
+      catalogEntry?.version ||
+      "actor_mechanics_profile.stats_pools.mutate_pool.v0",
+    targetRole: "SOURCE_ACTOR",
+    arguments: { ...(catalogEntry?.defaultArguments || {}) },
+    metadata: {},
+  });
+}
 
 function cloneInitialData(initialData) {
   const source =
@@ -187,6 +253,215 @@ export function useItemRegistryBuilderViewModel({
     });
   }
 
+  function addEntryEquipmentModifierReference(entryId) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.equipmentModifierReferences)
+      ? entry.equipmentModifierReferences
+      : [];
+
+    if (references.length >= ITEM_EQUIPMENT_MODIFIER_REFERENCE_LIMIT) return;
+
+    updateEntry(entryId, {
+      equipmentModifierReferences: [
+        ...references,
+        createEmptyItemEquipmentModifierReference(),
+      ],
+    });
+  }
+
+  function updateEntryEquipmentModifierReference(entryId, index, updates) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.equipmentModifierReferences)
+      ? entry.equipmentModifierReferences
+      : [];
+
+    updateEntry(entryId, {
+      equipmentModifierReferences: references.map((reference, referenceIndex) =>
+        referenceIndex === index
+          ? normalizeItemEquipmentModifierReference(
+              { ...reference, ...updates },
+              referenceIndex
+            )
+          : reference
+      ),
+    });
+  }
+
+  function removeEntryEquipmentModifierReference(entryId, index) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.equipmentModifierReferences)
+      ? entry.equipmentModifierReferences
+      : [];
+
+    updateEntry(entryId, {
+      equipmentModifierReferences: references.filter(
+        (_reference, referenceIndex) => referenceIndex !== index
+      ),
+    });
+  }
+
+  function addEntryOperationRequirementSet(entryId) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+
+    if (sets.length >= ITEM_OPERATION_REQUIREMENT_SET_LIMIT) return;
+
+    updateEntry(entryId, {
+      operationRequirementSets: [
+        ...sets,
+        createEmptyItemOperationRequirementSet(),
+      ],
+    });
+  }
+
+  function updateEntryOperationRequirementSet(entryId, index, updates) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+
+    updateEntry(entryId, {
+      operationRequirementSets: sets.map((set, setIndex) =>
+        setIndex === index
+          ? {
+              ...set,
+              ...normalizeItemOperationRequirementSet(
+                { ...set, ...updates },
+                setIndex
+              ),
+            }
+          : set
+      ),
+    });
+  }
+
+  function removeEntryOperationRequirementSet(entryId, index) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+
+    updateEntry(entryId, {
+      operationRequirementSets: sets.filter(
+        (_set, setIndex) => setIndex !== index
+      ),
+    });
+  }
+
+  function addEntryOperationRequirement(entryId, setIndex) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+    const targetSet = sets[setIndex];
+    if (!targetSet) return;
+
+    const requirements = Array.isArray(targetSet.requirements)
+      ? targetSet.requirements
+      : [];
+
+    updateEntryOperationRequirementSet(entryId, setIndex, {
+      requirements: [...requirements, createEmptyItemOperationRequirement()],
+    });
+  }
+
+  function updateEntryOperationRequirement(
+    entryId,
+    setIndex,
+    requirementIndex,
+    updates
+  ) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+    const targetSet = sets[setIndex];
+    if (!targetSet) return;
+
+    const requirements = Array.isArray(targetSet.requirements)
+      ? targetSet.requirements
+      : [];
+
+    updateEntryOperationRequirementSet(entryId, setIndex, {
+      requirements: requirements.map((requirement, index) =>
+        index === requirementIndex
+          ? { ...requirement, ...updates }
+          : requirement
+      ),
+    });
+  }
+
+  function removeEntryOperationRequirement(entryId, setIndex, requirementIndex) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const sets = Array.isArray(entry?.operationRequirementSets)
+      ? entry.operationRequirementSets
+      : [];
+    const targetSet = sets[setIndex];
+    if (!targetSet) return;
+
+    const requirements = Array.isArray(targetSet.requirements)
+      ? targetSet.requirements
+      : [];
+
+    updateEntryOperationRequirementSet(entryId, setIndex, {
+      requirements: requirements.filter(
+        (_requirement, index) => index !== requirementIndex
+      ),
+    });
+  }
+
+  function addEntryOperationEffectReference(entryId) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.operationEffectReferences)
+      ? entry.operationEffectReferences
+      : [];
+
+    if (references.length >= ITEM_OPERATION_EFFECT_REFERENCE_LIMIT) return;
+
+    updateEntry(entryId, {
+      operationEffectReferences: [
+        ...references,
+        createEmptyItemOperationEffectReference(),
+      ],
+    });
+  }
+
+  function updateEntryOperationEffectReference(entryId, index, updates) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.operationEffectReferences)
+      ? entry.operationEffectReferences
+      : [];
+
+    updateEntry(entryId, {
+      operationEffectReferences: references.map((reference, referenceIndex) =>
+        referenceIndex === index
+          ? {
+              ...reference,
+              ...normalizeItemOperationEffectReference(
+                { ...reference, ...updates },
+                referenceIndex
+              ),
+            }
+          : reference
+      ),
+    });
+  }
+
+  function removeEntryOperationEffectReference(entryId, index) {
+    const entry = registryData.entries.find((item) => item.id === entryId);
+    const references = Array.isArray(entry?.operationEffectReferences)
+      ? entry.operationEffectReferences
+      : [];
+
+    updateEntry(entryId, {
+      operationEffectReferences: references.filter(
+        (_reference, referenceIndex) => referenceIndex !== index
+      ),
+    });
+  }
+
   function deleteEntry(entryId) {
     setData((current) => ({
       ...current,
@@ -264,6 +539,9 @@ export function useItemRegistryBuilderViewModel({
       quantityOptions,
       consumptionOptions,
       durabilityOptions,
+      equipmentModifierReferenceLimit: ITEM_EQUIPMENT_MODIFIER_REFERENCE_LIMIT,
+      operationRequirementSetLimit: ITEM_OPERATION_REQUIREMENT_SET_LIMIT,
+      operationEffectReferenceLimit: ITEM_OPERATION_EFFECT_REFERENCE_LIMIT,
       onTitleChange: setTitle,
       onDescriptionChange: setDescription,
       onScopeChange: (value) => updateDataField("scope", value),
@@ -272,6 +550,18 @@ export function useItemRegistryBuilderViewModel({
       onAddEntry: addEntry,
       onUpdateEntry: updateEntry,
       onUpdateEntryAliases: updateEntryAliases,
+      onAddEquipmentModifierReference: addEntryEquipmentModifierReference,
+      onUpdateEquipmentModifierReference: updateEntryEquipmentModifierReference,
+      onRemoveEquipmentModifierReference: removeEntryEquipmentModifierReference,
+      onAddOperationRequirementSet: addEntryOperationRequirementSet,
+      onUpdateOperationRequirementSet: updateEntryOperationRequirementSet,
+      onRemoveOperationRequirementSet: removeEntryOperationRequirementSet,
+      onAddOperationRequirement: addEntryOperationRequirement,
+      onUpdateOperationRequirement: updateEntryOperationRequirement,
+      onRemoveOperationRequirement: removeEntryOperationRequirement,
+      onAddOperationEffectReference: addEntryOperationEffectReference,
+      onUpdateOperationEffectReference: updateEntryOperationEffectReference,
+      onRemoveOperationEffectReference: removeEntryOperationEffectReference,
       onDeleteEntry: deleteEntry,
       onPromptGuidanceChange: updatePromptGuidance,
       onSave: handleSave,

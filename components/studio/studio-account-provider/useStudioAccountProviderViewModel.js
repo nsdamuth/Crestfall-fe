@@ -44,6 +44,7 @@ export function getStudioAccountSnapshotCoinBalance(snapshot) {
 
 export function useStudioAccountProviderViewModel({
   loadAccount = fetchCurrentStudioAccount,
+  enabled = true,
 } = {}) {
   const [accountProfile, setAccountProfile] = useState(null);
   const [coinBalance, setCoinBalance] = useState(0);
@@ -82,6 +83,14 @@ export function useStudioAccountProviderViewModel({
   }, []);
 
   const refreshAccount = useCallback(async () => {
+    if (!enabled) {
+      setAccountProfile(null);
+      setCoinBalance(0);
+      setAccountStatus("anonymous");
+      setAccountError("");
+      return { profile: null, coinBalance: 0 };
+    }
+
     setAccountStatus("loading");
     setAccountError("");
 
@@ -98,11 +107,19 @@ export function useStudioAccountProviderViewModel({
       setAccountError(error?.message || "Studio account could not be loaded.");
       throw error;
     }
-  }, [loadAccount]);
+  }, [enabled, loadAccount]);
 
   useEffect(() => {
+    if (!enabled) {
+      setAccountProfile(null);
+      setCoinBalance(0);
+      setAccountStatus("anonymous");
+      setAccountError("");
+      return;
+    }
+
     refreshAccount().catch(() => {});
-  }, [refreshAccount]);
+  }, [enabled, refreshAccount]);
 
   return useMemo(
     () => ({

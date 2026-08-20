@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
+  ACTOR_MECHANICS_PROFILE_ABILITY_SPELL_CONTRACT_VERSION,
+  ACTOR_MECHANICS_PROFILE_ABILITY_SPELL_CREATION_TYPE,
+  ACTOR_MECHANICS_PROFILE_WALLET_CONTRACT_VERSION,
+  ACTOR_MECHANICS_PROFILE_WALLET_CREATION_TYPE,
   ACTOR_MECHANICS_PROFILE_ACTIVATION_MODES,
   ACTOR_MECHANICS_PROFILE_ACTIVATION_MODE_OPTIONS,
   ACTOR_MECHANICS_PROFILE_BINDING_MODES,
@@ -18,6 +22,8 @@ import {
   ACTOR_MECHANICS_PROFILE_PRESET_OPTIONS,
   ACTOR_MECHANICS_PROFILE_PROGRESSION_CONTRACT_VERSION,
   ACTOR_MECHANICS_PROFILE_PROGRESSION_CREATION_TYPE,
+  ACTOR_MECHANICS_PROFILE_SKILLS_CONTRACT_VERSION,
+  ACTOR_MECHANICS_PROFILE_SKILLS_CREATION_TYPE,
   ACTOR_MECHANICS_PROFILE_REFERENCE_TYPES,
   ACTOR_MECHANICS_PROFILE_REFERENCE_TYPE_OPTIONS,
   ACTOR_MECHANICS_PROFILE_STATE_ISOLATION,
@@ -795,6 +801,89 @@ function createProgressionProfileReference(creation = {}) {
   });
 }
 
+function getSkillsProfileFromCreation(creation = {}) {
+  const data = normalizeObject(creation.data);
+
+  return normalizeObject(data.skills_profile || data.skillsProfile);
+}
+
+function createSkillsProfileReference(creation = {}) {
+  const profile = getSkillsProfileFromCreation(creation);
+  const contractVersion =
+    normalizeString(profile.contractVersion) ||
+    ACTOR_MECHANICS_PROFILE_SKILLS_CONTRACT_VERSION;
+
+  return normalizeReference({
+    referenceType: "CREATION",
+    sourceId: normalizeString(creation.id),
+    version: contractVersion,
+    title:
+      normalizeString(creation.title) ||
+      normalizeString(profile.title) ||
+      "Skills Profile",
+    metadata: {
+      creationType: ACTOR_MECHANICS_PROFILE_SKILLS_CREATION_TYPE,
+      contractVersion,
+    },
+  });
+}
+
+function getAbilitySpellProfileFromCreation(creation = {}) {
+  const data = normalizeObject(creation.data);
+
+  return normalizeObject(
+    data.ability_spell_profile || data.abilitySpellProfile
+  );
+}
+
+function createAbilitySpellProfileReference(creation = {}) {
+  const profile = getAbilitySpellProfileFromCreation(creation);
+  const contractVersion =
+    normalizeString(profile.contractVersion) ||
+    ACTOR_MECHANICS_PROFILE_ABILITY_SPELL_CONTRACT_VERSION;
+
+  return normalizeReference({
+    referenceType: "CREATION",
+    sourceId: normalizeString(creation.id),
+    version: contractVersion,
+    title:
+      normalizeString(creation.title) ||
+      normalizeString(profile.title) ||
+      "Ability & Spell Profile",
+    metadata: {
+      creationType: ACTOR_MECHANICS_PROFILE_ABILITY_SPELL_CREATION_TYPE,
+      contractVersion,
+    },
+  });
+}
+
+function getWalletProfileFromCreation(creation = {}) {
+  const data = normalizeObject(creation.data);
+
+  return normalizeObject(data.wallet_profile || data.walletProfile);
+}
+
+function createWalletProfileReference(creation = {}) {
+  const profile = getWalletProfileFromCreation(creation);
+  const contractVersion =
+    normalizeString(profile.contractVersion) ||
+    ACTOR_MECHANICS_PROFILE_WALLET_CONTRACT_VERSION;
+
+  return normalizeReference({
+    referenceType: "CREATION",
+    sourceId: normalizeString(creation.id),
+    version: contractVersion,
+    title:
+      normalizeString(creation.title) ||
+      normalizeString(profile.title) ||
+      "Wallet Profile",
+    metadata: {
+      creationType: ACTOR_MECHANICS_PROFILE_WALLET_CREATION_TYPE,
+      contractVersion,
+    },
+  });
+}
+
 export function useActorMechanicsProfileEditorViewModel({
   value,
   onChange,
@@ -817,6 +906,10 @@ export function useActorMechanicsProfileEditorViewModel({
     useState("");
   const [progressionPickerBindingId, setProgressionPickerBindingId] =
     useState("");
+  const [skillsPickerBindingId, setSkillsPickerBindingId] = useState("");
+  const [abilitySpellPickerBindingId, setAbilitySpellPickerBindingId] =
+    useState("");
+  const [walletPickerBindingId, setWalletPickerBindingId] = useState("");
   const [jsonEditorOpen, setJsonEditorOpen] = useState(false);
 
   useEffect(() => {
@@ -1098,6 +1191,9 @@ export function useActorMechanicsProfileEditorViewModel({
     if (!binding || binding.domain !== "STATS") return;
 
     setProgressionPickerBindingId("");
+    setSkillsPickerBindingId("");
+    setAbilitySpellPickerBindingId("");
+    setWalletPickerBindingId("");
     setStatsPoolsPickerBindingId(bindingId);
   }
 
@@ -1140,6 +1236,9 @@ export function useActorMechanicsProfileEditorViewModel({
     if (!binding || binding.domain !== "PROGRESSION") return;
 
     setStatsPoolsPickerBindingId("");
+    setSkillsPickerBindingId("");
+    setAbilitySpellPickerBindingId("");
+    setWalletPickerBindingId("");
     setProgressionPickerBindingId(bindingId);
   }
 
@@ -1174,6 +1273,141 @@ export function useActorMechanicsProfileEditorViewModel({
     setProgressionPickerBindingId("");
   }
 
+  function openSkillsProfilePicker(bindingId) {
+    const binding = normalized.bindings.find(
+      (candidate) => candidate.id === bindingId
+    );
+
+    if (!binding || binding.domain !== "SKILLS") return;
+
+    setStatsPoolsPickerBindingId("");
+    setProgressionPickerBindingId("");
+    setAbilitySpellPickerBindingId("");
+    setWalletPickerBindingId("");
+    setSkillsPickerBindingId(bindingId);
+  }
+
+  function selectSkillsProfile(creation) {
+    const creationId = normalizeString(creation?.id);
+    const bindingId = skillsPickerBindingId;
+
+    if (!creationId || !bindingId) {
+      setSkillsPickerBindingId("");
+      return;
+    }
+
+    const reference = createSkillsProfileReference(creation);
+
+    emit({
+      ...normalized,
+      bindings: normalized.bindings.map((binding) =>
+        binding.id === bindingId && binding.domain === "SKILLS"
+          ? {
+              ...binding,
+              references: [
+                ...binding.references.filter(
+                  (existingReference) =>
+                    existingReference.referenceType !== "CREATION"
+                ),
+                reference,
+              ],
+            }
+          : binding
+      ),
+    });
+    setSkillsPickerBindingId("");
+  }
+
+  function openAbilitySpellProfilePicker(bindingId) {
+    const binding = normalized.bindings.find(
+      (candidate) => candidate.id === bindingId
+    );
+
+    if (!binding || !["MAGIC", "ABILITIES"].includes(binding.domain)) return;
+
+    setStatsPoolsPickerBindingId("");
+    setProgressionPickerBindingId("");
+    setSkillsPickerBindingId("");
+    setWalletPickerBindingId("");
+    setAbilitySpellPickerBindingId(bindingId);
+  }
+
+  function selectAbilitySpellProfile(creation) {
+    const creationId = normalizeString(creation?.id);
+    const bindingId = abilitySpellPickerBindingId;
+
+    if (!creationId || !bindingId) {
+      setAbilitySpellPickerBindingId("");
+      return;
+    }
+
+    const reference = createAbilitySpellProfileReference(creation);
+
+    emit({
+      ...normalized,
+      bindings: normalized.bindings.map((binding) =>
+        binding.id === bindingId && ["MAGIC", "ABILITIES"].includes(binding.domain)
+          ? {
+              ...binding,
+              references: [
+                ...binding.references.filter(
+                  (existingReference) =>
+                    existingReference.referenceType !== "CREATION"
+                ),
+                reference,
+              ],
+            }
+          : binding
+      ),
+    });
+    setAbilitySpellPickerBindingId("");
+  }
+
+  function openWalletProfilePicker(bindingId) {
+    const binding = normalized.bindings.find(
+      (candidate) => candidate.id === bindingId
+    );
+
+    if (!binding || binding.domain !== "WALLET") return;
+
+    setStatsPoolsPickerBindingId("");
+    setProgressionPickerBindingId("");
+    setSkillsPickerBindingId("");
+    setAbilitySpellPickerBindingId("");
+    setWalletPickerBindingId(bindingId);
+  }
+
+  function selectWalletProfile(creation) {
+    const creationId = normalizeString(creation?.id);
+    const bindingId = walletPickerBindingId;
+
+    if (!creationId || !bindingId) {
+      setWalletPickerBindingId("");
+      return;
+    }
+
+    const reference = createWalletProfileReference(creation);
+
+    emit({
+      ...normalized,
+      bindings: normalized.bindings.map((binding) =>
+        binding.id === bindingId && binding.domain === "WALLET"
+          ? {
+              ...binding,
+              references: [
+                ...binding.references.filter(
+                  (existingReference) =>
+                    existingReference.referenceType !== "CREATION"
+                ),
+                reference,
+              ],
+            }
+          : binding
+      ),
+    });
+    setWalletPickerBindingId("");
+  }
+
   const bindingViewItems = normalized.bindings.map((binding, index) => {
     const domain = getDomainDefinition(binding.domain);
 
@@ -1194,7 +1428,13 @@ export function useActorMechanicsProfileEditorViewModel({
           ? "STATS_POOLS_PROFILE"
           : binding.domain === "PROGRESSION"
             ? "PROGRESSION_PROFILE"
-            : "GENERIC",
+            : binding.domain === "SKILLS"
+              ? "SKILLS_PROFILE"
+              : ["MAGIC", "ABILITIES"].includes(binding.domain)
+                ? "ABILITY_SPELL_PROFILE"
+                : binding.domain === "WALLET"
+                  ? "WALLET_PROFILE"
+                  : "GENERIC",
       hasStatsPoolsProfileReference:
         binding.domain === "STATS" &&
         binding.references.some(
@@ -1202,6 +1442,21 @@ export function useActorMechanicsProfileEditorViewModel({
         ),
       hasProgressionProfileReference:
         binding.domain === "PROGRESSION" &&
+        binding.references.some(
+          (reference) => reference.referenceType === "CREATION"
+        ),
+      hasSkillsProfileReference:
+        binding.domain === "SKILLS" &&
+        binding.references.some(
+          (reference) => reference.referenceType === "CREATION"
+        ),
+      hasAbilitySpellProfileReference:
+        ["MAGIC", "ABILITIES"].includes(binding.domain) &&
+        binding.references.some(
+          (reference) => reference.referenceType === "CREATION"
+        ),
+      hasWalletProfileReference:
+        binding.domain === "WALLET" &&
         binding.references.some(
           (reference) => reference.referenceType === "CREATION"
         ),
@@ -1244,6 +1499,39 @@ export function useActorMechanicsProfileEditorViewModel({
   const selectedProgressionCreationIds =
     selectedProgressionBinding?.domain === "PROGRESSION"
       ? selectedProgressionBinding.references
+          .filter((reference) => reference.referenceType === "CREATION")
+          .map((reference) => reference.sourceId)
+          .filter(Boolean)
+      : [];
+
+  const selectedSkillsBinding = normalized.bindings.find(
+    (binding) => binding.id === skillsPickerBindingId
+  );
+  const selectedSkillsCreationIds =
+    selectedSkillsBinding?.domain === "SKILLS"
+      ? selectedSkillsBinding.references
+          .filter((reference) => reference.referenceType === "CREATION")
+          .map((reference) => reference.sourceId)
+          .filter(Boolean)
+      : [];
+
+  const selectedAbilitySpellBinding = normalized.bindings.find(
+    (binding) => binding.id === abilitySpellPickerBindingId
+  );
+  const selectedAbilitySpellCreationIds =
+    ["MAGIC", "ABILITIES"].includes(selectedAbilitySpellBinding?.domain)
+      ? selectedAbilitySpellBinding.references
+          .filter((reference) => reference.referenceType === "CREATION")
+          .map((reference) => reference.sourceId)
+          .filter(Boolean)
+      : [];
+
+  const selectedWalletBinding = normalized.bindings.find(
+    (binding) => binding.id === walletPickerBindingId
+  );
+  const selectedWalletCreationIds =
+    selectedWalletBinding?.domain === "WALLET"
+      ? selectedWalletBinding.references
           .filter((reference) => reference.referenceType === "CREATION")
           .map((reference) => reference.sourceId)
           .filter(Boolean)
@@ -1329,6 +1617,9 @@ export function useActorMechanicsProfileEditorViewModel({
       onUpdateReference: updateReference,
       onOpenStatsPoolsProfilePicker: openStatsPoolsProfilePicker,
       onOpenProgressionProfilePicker: openProgressionProfilePicker,
+      onOpenSkillsProfilePicker: openSkillsProfilePicker,
+      onOpenAbilitySpellProfilePicker: openAbilitySpellProfilePicker,
+      onOpenWalletProfilePicker: openWalletProfilePicker,
     },
     pickerProps: statsPoolsPickerBindingId
       ? {
@@ -1354,6 +1645,42 @@ export function useActorMechanicsProfileEditorViewModel({
             onClose: () => setProgressionPickerBindingId(""),
             onSelect: selectProgressionProfile,
           }
-        : null,
+        : skillsPickerBindingId
+          ? {
+              title: "Select Skills Profile",
+              body:
+                "Choose an owned Skills Profile to provide reusable proficiency and rank definitions for this SKILLS binding. Actor ranks and unspent points are not copied or initialized by this attachment.",
+              allowedTypes: [ACTOR_MECHANICS_PROFILE_SKILLS_CREATION_TYPE],
+              selectedCreationIds: selectedSkillsCreationIds,
+              onClose: () => setSkillsPickerBindingId(""),
+              onSelect: selectSkillsProfile,
+            }
+          : abilitySpellPickerBindingId
+            ? {
+                title: "Select Ability & Spell Profile",
+                body:
+                  selectedAbilitySpellBinding?.domain === "MAGIC"
+                    ? "Choose an owned Ability & Spell Profile to provide reusable spell and magic definitions for this MAGIC binding. Known spells, mastery, cooldowns, charges, and resource state are not copied or initialized by this attachment."
+                    : "Choose an owned Ability & Spell Profile to provide reusable ability, technique, special attack, passive, and spell definitions for this ABILITIES binding. Known abilities, mastery, cooldowns, charges, and resource state are not copied or initialized by this attachment.",
+                allowedTypes: [
+                  ACTOR_MECHANICS_PROFILE_ABILITY_SPELL_CREATION_TYPE,
+                ],
+                selectedCreationIds: selectedAbilitySpellCreationIds,
+                onClose: () => setAbilitySpellPickerBindingId(""),
+                onSelect: selectAbilitySpellProfile,
+              }
+            : walletPickerBindingId
+              ? {
+                  title: "Select Wallet Profile",
+                  body:
+                    "Choose an owned Wallet Profile to provide reusable gameplay currency definitions for this WALLET binding. Live actor balances, revisions, and transaction history are not copied or initialized by this attachment.",
+                  allowedTypes: [
+                    ACTOR_MECHANICS_PROFILE_WALLET_CREATION_TYPE,
+                  ],
+                  selectedCreationIds: selectedWalletCreationIds,
+                  onClose: () => setWalletPickerBindingId(""),
+                  onSelect: selectWalletProfile,
+                }
+              : null,
   };
 }

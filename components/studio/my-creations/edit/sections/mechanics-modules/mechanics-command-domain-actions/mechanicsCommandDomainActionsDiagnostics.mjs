@@ -7,6 +7,8 @@ import { fileURLToPath } from "node:url";
 import {
   COMMAND_DOMAIN_ACTION_OUTCOMES,
   COMMAND_DOMAIN_ACTION_TYPE_VALUES,
+  ABILITY_SPELL_KNOWLEDGE_STATES,
+  ABILITY_SPELL_UNLOCK_STATES,
   LOCATION_TRAVEL_OPERATIONS,
   MECHANICS_COMMAND_DOMAIN_ACTIONS_CONTRACT_VERSION,
 } from "./MechanicsCommandDomainActions.contract.js";
@@ -32,11 +34,15 @@ const fixtures = listMechanicsCommandDomainActionFixtures();
 test("M5C contract freezes domain action, outcome, and travel identifiers", () => {
   assert.equal(
     MECHANICS_COMMAND_DOMAIN_ACTIONS_CONTRACT_VERSION,
-    "crestfall.loom.mechanics-command-domain-actions.v1"
+    "crestfall.loom.mechanics-command-domain-actions.v1_2"
   );
   assert.ok(COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes("ITEM_GIVE"));
   assert.ok(COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes("LOCATION_TRANSITION"));
   assert.ok(COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes("LOCATION_TRAVEL_OPERATION"));
+  assert.ok(COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes("ABILITY_SPELL_KNOWLEDGE_SET"));
+  assert.ok(COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes("ABILITY_SPELL_USE_REQUEST"));
+  assert.deepEqual(ABILITY_SPELL_KNOWLEDGE_STATES, ["KEEP", "KNOWN", "UNKNOWN"]);
+  assert.deepEqual(ABILITY_SPELL_UNLOCK_STATES, ["KEEP", "UNLOCKED", "LOCKED"]);
   assert.deepEqual(COMMAND_DOMAIN_ACTION_OUTCOMES, [
     "CRITICAL_SUCCESS",
     "SUCCESS",
@@ -47,7 +53,7 @@ test("M5C contract freezes domain action, outcome, and travel identifiers", () =
 });
 
 test("fixture inventory covers none, items, participants, locations, legacy, and recovery", () => {
-  assert.equal(fixtures.length, 8);
+  assert.equal(fixtures.length, 10);
   assert.deepEqual(
     fixtures.map((fixture) => fixture.id),
     [
@@ -55,6 +61,8 @@ test("fixture inventory covers none, items, participants, locations, legacy, and
       "item-custody",
       "item-condition",
       "participant-condition",
+      "ability-spell-knowledge",
+      "ability-spell-use",
       "location-transition",
       "active-journey",
       "legacy-aliases",
@@ -89,6 +97,7 @@ test("argument options remain type-specific", () => {
       { name: "visible", type: "ITEM_VISIBLE" },
       { name: "destination", type: "LOCATION_CONNECTED" },
       { name: "target", type: "CHARACTER_PRESENT" },
+      { name: "actor", type: "PLAYER_CHARACTER" },
       { name: "text", type: "TEXT" },
       { name: "number", type: "NUMBER" },
     ],
@@ -99,6 +108,8 @@ test("argument options remain type-specific", () => {
     "destination",
   ]);
   assert.deepEqual(options.presentCharacters.map((item) => item.name), ["target"]);
+  assert.deepEqual(options.abilityActors.map((item) => item.name), ["target", "actor"]);
+  assert.deepEqual(options.abilityUseActors.map((item) => item.name), ["actor"]);
   assert.deepEqual(options.text.map((item) => item.name), ["text"]);
   assert.deepEqual(options.numbers.map((item) => item.name), ["number"]);
 });
@@ -139,6 +150,61 @@ test("participant condition projection reports missing required arguments", () =
   assert.match(projected.missingBindingMessage, /TEXT/);
 });
 
+test("ability spell knowledge projection and type change use typed actor and ability arguments", () => {
+  const fixture = fixtures.find((entry) => entry.id === "ability-spell-knowledge");
+  const normalized = normalizeMechanicsCommandDomainAction(fixture.domainAction);
+  assert.equal(normalized.version, "mechanics_command_domain_action_v2");
+  assert.equal(normalized.actorArgumentName, "actor");
+  assert.equal(normalized.abilityArgumentName, "ability");
+  assert.equal(normalized.knowledgeState, "KNOWN");
+  assert.equal(normalized.unlockState, "UNLOCKED");
+
+  const projected = projectMechanicsCommandDomainAction(
+    normalized,
+    fixture.invocation
+  );
+  assert.equal(projected.missingBindingMessage, "");
+  assert.equal(projected.flags.usesAbilitySpellKnowledge, true);
+
+  const changed = changeMechanicsCommandDomainActionType(
+    {},
+    "ABILITY_SPELL_KNOWLEDGE_SET",
+    fixture.invocation
+  );
+  assert.equal(changed.version, "mechanics_command_domain_action_v2");
+  assert.equal(changed.actorArgumentName, "actor");
+  assert.equal(changed.abilityArgumentName, "ability");
+  assert.equal(changed.knowledgeState, "KNOWN");
+  assert.equal(changed.unlockState, "UNLOCKED");
+});
+
+test("ability spell use projection advances to v3 and keeps target optional", () => {
+  const fixture = fixtures.find((entry) => entry.id === "ability-spell-use");
+  const normalized = normalizeMechanicsCommandDomainAction(fixture.domainAction);
+  assert.equal(normalized.version, "mechanics_command_domain_action_v3");
+  assert.equal(normalized.type, "ABILITY_SPELL_USE_REQUEST");
+  assert.equal(normalized.actorArgumentName, "actor");
+  assert.equal(normalized.abilityArgumentName, "ability");
+  assert.equal(normalized.targetArgumentName, "target");
+
+  const projected = projectMechanicsCommandDomainAction(
+    normalized,
+    fixture.invocation
+  );
+  assert.equal(projected.missingBindingMessage, "");
+  assert.equal(projected.flags.usesAbilitySpellUse, true);
+
+  const changed = changeMechanicsCommandDomainActionType(
+    {},
+    "ABILITY_SPELL_USE_REQUEST",
+    fixture.invocation
+  );
+  assert.equal(changed.version, "mechanics_command_domain_action_v3");
+  assert.equal(changed.actorArgumentName, "actor");
+  assert.equal(changed.abilityArgumentName, "ability");
+  assert.equal(changed.targetArgumentName, "");
+});
+
 test("patch and outcome operations preserve unrelated metadata", () => {
   const original = fixtures.find((fixture) => fixture.id === "item-custody").domainAction;
   const patched = patchMechanicsCommandDomainAction(original, {
@@ -170,6 +236,12 @@ test("the portable View owns domain action presentation without application impo
   assert.match(view, /Domain Adapter/);
   assert.match(view, /Active Journey Operation/);
   assert.match(view, /Apply On Outcomes/);
+  assert.match(view, /ABILITY_SPELL_KNOWLEDGE_SET/);
+  assert.match(view, /ABILITY_SPELL_USE_REQUEST/);
+  assert.match(view, /EXECUTION_AUTHORIZED/);
+  assert.match(view, /does not commit/);
+  assert.match(view, /Known State/);
+  assert.match(view, /Unlock State/);
   assert.doesNotMatch(view, /@\/lib\//);
   assert.doesNotMatch(view, /next\/(?:link|navigation)/);
   assert.doesNotMatch(view, /MechanicsModuleFieldsSection/);

@@ -110,3 +110,13 @@ The fixtures include:
 - `components/studio/my-creations/edit/**`
 - `components/kit/**`
 - `components/studio/chat/**`
+
+## W28/W29 live Create Builder integration
+
+The unprotected Item Registry Create Builder now mounts FE-owned authoring Views for
+Operation Requirement Sets and Operation Effect References. Both consume this
+accepted semantic contract rather than importing the frozen `my-creations/edit/**`
+Mechanics editor family.
+
+`itemOperationAuthoringCatalog.js` is a thin FE adapter over this contract, so the
+nine typed effect definitions continue to have one FE semantic source.

@@ -1,6 +1,6 @@
 # Chat NPC Manager LOOM Package
 
-**Contract:** `ChatNpcManager.contract.js` (v1.0.0)
+**Contract:** `ChatNpcManager.contract.js` (v1.1.0)
 
 Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
 `components/studio/story-rooms/story-room-npc-participant-manager`
@@ -57,3 +57,8 @@ titles, registry titles, and pending reasons across every section).
 - `ChatNpcManager.fixtures.js`
 - `useChatNpcManagerViewModel.js`
 - `/dev/ui-preview/chat-npc-manager`
+
+
+## W40 linked-Character recovery
+
+The live Story Room binding may supply an `unavailable` informational section for graph-authoritative linked Character references that cannot currently resolve. These rows have `hasAction: false`; the View preserves their identity/status text without rendering a fake Load action.

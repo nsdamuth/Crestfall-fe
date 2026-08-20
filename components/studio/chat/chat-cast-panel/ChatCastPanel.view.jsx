@@ -239,10 +239,21 @@ export default function ChatCastPanelView(props) {
   const {
     deleteConfirm,
     initialMobileOpen = false,
+    mobileOpen: controlledMobileOpen = null,
+    onMobileOpenChange = null,
     ...contentProps
   } = props;
 
-  const [mobileOpen, setMobileOpen] = useState(initialMobileOpen);
+  const [localMobileOpen, setLocalMobileOpen] = useState(initialMobileOpen);
+  const mobileControlled = typeof controlledMobileOpen === "boolean";
+  const mobileOpen = mobileControlled ? controlledMobileOpen : localMobileOpen;
+  const setMobileOpen = (nextOpen) => {
+    if (mobileControlled) {
+      onMobileOpenChange?.(Boolean(nextOpen));
+      return;
+    }
+    setLocalMobileOpen(Boolean(nextOpen));
+  };
 
   return (
     <>

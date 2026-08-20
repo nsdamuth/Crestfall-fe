@@ -275,16 +275,16 @@ export function projectWalletProfileAuthoringPresentationBinding({
       actionLabel:
         "JSON Editor & AI Guide",
       visualStatus:
-        "PENDING_FE_VISUAL_EXTENSION",
+        "WIRED_LEGACY_PRESENTATION",
       helper:
-        "The Chassis owns JSON validation/application behavior. The FE lane still needs the ruled JSON Editor & AI Guide presentation.",
+        "The live legacy JSON Editor & AI Guide is wired in FE. Chassis remains authoritative for JSON validation/application behavior.",
     },
 
     visualExtensionStatus: {
       profileEditor:
-        "PENDING_FE_VISUAL_BUILD",
+        "WIRED_LEGACY_PRESENTATION",
       jsonEditor:
-        "PENDING_FE_VISUAL_EXTENSION",
+        "WIRED_LEGACY_PRESENTATION",
     },
 
     callbacks: {

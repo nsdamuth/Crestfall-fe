@@ -335,9 +335,9 @@ export function projectSkillsProfileAuthoringPresentationBinding({
 
     structuredPrerequisiteAuthoring: {
       visualStatus:
-        "JSON_EDITOR_ONLY_IN_CURRENT_V0_UI",
+        "WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION",
       helper:
-        "Advancement-unlock and cross-skill prerequisites remain available through the complete JSON editor so their structured identities are preserved.",
+        "Advancement-unlock and cross-skill prerequisites are authored through the live complete JSON editor in the current legacy UI so their structured identities are preserved.",
     },
 
     jsonEditor: {
@@ -346,18 +346,18 @@ export function projectSkillsProfileAuthoringPresentationBinding({
       actionLabel:
         "JSON Editor & AI Guide",
       visualStatus:
-        "PENDING_FE_VISUAL_EXTENSION",
+        "WIRED_LEGACY_PRESENTATION",
       helper:
-        "The Chassis owns JSON validation/application behavior. The FE lane still needs the ruled JSON Editor & AI Guide presentation.",
+        "The live legacy JSON Editor & AI Guide is wired in FE. Chassis remains authoritative for JSON validation/application behavior.",
     },
 
     visualExtensionStatus: {
       profileEditor:
-        "PENDING_FE_VISUAL_BUILD",
+        "WIRED_LEGACY_PRESENTATION",
       structuredPrerequisites:
-        "PENDING_FE_VISUAL_EXTENSION",
+        "WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION",
       jsonEditor:
-        "PENDING_FE_VISUAL_EXTENSION",
+        "WIRED_LEGACY_PRESENTATION",
     },
 
     callbacks: {

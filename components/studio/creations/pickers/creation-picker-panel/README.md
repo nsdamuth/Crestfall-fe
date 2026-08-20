@@ -7,7 +7,7 @@ components/studio/creations/pickers/CreationPickerPanel.jsx
 ```
 
 The public file preserves the existing import path and re-exports the portable
-View. Its public props remain unchanged:
+View. Its public props remain backward compatible. W51 adds one optional presentation prop:
 
 ```text
 items
@@ -18,14 +18,14 @@ searchPlaceholder
 emptyMessage
 actions
 gridClassName
+pageSize
 onSelect
 ```
 
 ## Why This Shared Surface Has No ViewModel
 
-`CreationPickerPanel` was already API-free and persistence-free. Its only state
-is presentation-local search text, which the Loom rules explicitly allow a
-portable View to own.
+`CreationPickerPanel` was already API-free and persistence-free. Its only state is presentation-local search text and optional render-page state,
+which the Loom rules allow a portable View to own.
 
 Several validated portable Views import this shared component directly. Adding
 a Shell/ViewModel here would make those portable Views indirectly depend on an
@@ -46,9 +46,12 @@ components/studio/creations/pickers/creation-picker-panel/
   CreationPickerPanel.view.jsx
 ```
 
-The View owns search text, presentation filtering, the optional visual action
-slot, card layout, image/fallback display, selected/recommended/disabled badges,
-and the empty state.
+The View owns search text, presentation filtering, optional render pagination,
+the optional visual action slot, card layout, image/fallback display,
+selected/recommended/disabled badges, and the empty state. `pageSize` defaults to
+zero, preserving the legacy unpaginated behavior. Positive integer values paginate
+the filtered result set, reset to page 1 on search changes, and clamp the current
+page when result counts shrink.
 
 It does not know how a selected item is applied, picker ownership, registry
 persistence, Image Studio behavior, APIs, permissions, or storage. Callers may
@@ -69,7 +72,7 @@ components/studio/creations/pickers/creation-picker-panel/
 Current View contract version:
 
 ```text
-CREATION_PICKER_PANEL_VIEW_CONTRACT_VERSION = "1.0.0"
+CREATION_PICKER_PANEL_VIEW_CONTRACT_VERSION = "1.1.0"
 ```
 
 Fixtures are direct View props. They contain synthetic display data and no real
@@ -104,5 +107,14 @@ components/studio/create/location-registry/
 
 Validate Story package selection, Image Studio ingredient selection, NPC entry
 character linking, Location Registry location linking, and Location Registry
-NPC-person linking. Confirm search, selected/recommended/disabled states, image
-fallbacks, and original-object callbacks remain unchanged.
+NPC-person linking. Confirm search, selected/recommended/disabled states, image fallbacks,
+original-object callbacks, and Location Registry 12-item paging remain correct.
+
+
+## W51 pagination convergence
+
+W51 closes `CREATION_PICKER_PAGINATION_CONTRACT`. Location Registry already
+passes `pageSize={12}` for Character and NPC Registry presence pickers. The
+shared FE primitive now honors that presentation contract without moving data
+loading, filtering authority outside the provided item set, selection mutation,
+or persistence into the View.

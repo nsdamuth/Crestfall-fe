@@ -13,6 +13,9 @@ import LoreDocumentRenderer from "@/components/studio/create/lore/LoreDocumentRe
 import ActorMechanicsProfileEditor from "@/components/studio/create/actor-mechanics-profile/ActorMechanicsProfileEditor";
 import StatsPoolsEditor from "@/components/studio/create/stats-pools/StatsPoolsEditor";
 import ProgressionProfileEditor from "@/components/studio/create/progression/ProgressionProfileEditor";
+import SkillsProfileEditor from "@/components/studio/create/skills/SkillsProfileEditor";
+import AbilitySpellProfileEditor from "@/components/studio/create/ability-spell/AbilitySpellProfileEditor";
+import WalletProfileEditor from "@/components/studio/create/wallet/WalletProfileEditor";
 
 import OverviewSection from "@/components/studio/my-creations/edit/sections/OverviewSection";
 import IdentitySection from "@/components/studio/my-creations/edit/sections/IdentitySection";
@@ -325,6 +328,40 @@ export const SECTION_COMPONENT_REGISTRY = {
       buildProps: (ctx) => ({
         value: ctx.form.data?.progression_profile || ctx.form.data?.progressionProfile || {},
         onChange: (nextProfile) => ctx.updateDataField("progression_profile", nextProfile),
+      }),
+    },
+  },
+
+  SKILLS_PROFILE: {
+    skills: {
+      Component: SkillsProfileEditor,
+      buildProps: (ctx) => ({
+        value: ctx.form.data?.skills_profile || ctx.form.data?.skillsProfile || {},
+        onChange: (nextProfile) => ctx.updateDataField("skills_profile", nextProfile),
+      }),
+    },
+  },
+
+  ABILITY_SPELL_PROFILE: {
+    abilitySpell: {
+      Component: AbilitySpellProfileEditor,
+      buildProps: (ctx) => ({
+        value:
+          ctx.form.data?.ability_spell_profile ||
+          ctx.form.data?.abilitySpellProfile ||
+          {},
+        onChange: (nextProfile) =>
+          ctx.updateDataField("ability_spell_profile", nextProfile),
+      }),
+    },
+  },
+
+  WALLET_PROFILE: {
+    wallet: {
+      Component: WalletProfileEditor,
+      buildProps: (ctx) => ({
+        value: ctx.form.data?.wallet_profile || ctx.form.data?.walletProfile || {},
+        onChange: (nextProfile) => ctx.updateDataField("wallet_profile", nextProfile),
       }),
     },
   },

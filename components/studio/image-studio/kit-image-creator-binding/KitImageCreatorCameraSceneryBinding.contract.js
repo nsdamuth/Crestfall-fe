@@ -119,9 +119,21 @@ export function projectKitImageCreatorCameraSceneryBinding({
     kitImageCreatorPanelProps: {
       ...panel,
       optionFields,
+      sceneryHelper: sceneryHelper.visible
+        ? {
+            visible: true,
+            enabled: sceneryHelper.enabled,
+            title: sceneryHelper.title,
+            description: sceneryHelper.description,
+          }
+        : null,
       onChangeOption:
         callbackSource.onChangeOption ||
         panel.onChangeOption ||
+        null,
+      onChangeSceneryOnlyHelper:
+        callbackSource.onChangeSceneryOnlyHelper ||
+        panel.onChangeSceneryOnlyHelper ||
         null,
     },
 
@@ -140,17 +152,16 @@ export function projectKitImageCreatorCameraSceneryBinding({
       ...sceneryHelper,
       onChangeEnabled:
         callbackSource.onChangeSceneryOnlyHelper || null,
-      currentKitContractSupportsControl: false,
-      requiresFeVisualExtension:
-        sceneryHelper.visible,
+      currentKitContractSupportsControl: true,
+      requiresFeVisualExtension: false,
       recommendedPlacement:
         "IMAGE_OPTIONS_NEAR_PROMPT",
     },
 
     integrationStatus: {
       cameraCanBindWithoutKitContractChange: true,
-      sceneryRequiresKitContractExtension: true,
-      protectedKitFilesModified: false,
+      sceneryRequiresKitContractExtension: false,
+      protectedKitFilesModified: true,
       protectedV2FilesModified: false,
     },
 

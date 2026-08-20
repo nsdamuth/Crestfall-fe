@@ -1,54 +1,61 @@
-# Ability and Spell Profile semantic package
+# Ability and Spell Profile FE package
 
-Status: semantic contract and filled fixtures only.
+Status: **LIVE FUNCTIONAL ABSORPTION — W33**.
 
-This package is the first bounded Crestfall to Crestfall-fe functional
-absorption slice for `ABILITY_SPELL_PROFILE`.
+W33 uses the explicit protected-lane unlock for the current integration branch.
+The accepted semantic contracts and fixtures remain intact, while the current
+Crestfall Ability & Spell authoring implementation is now mirrored into FE so
+the live editor can function before a later visual-normalization pass.
 
-It intentionally does not add a production View, page entrypoint, application
-ViewModel, API call, persistence path, or editor-family integration.
-
-The current frontend design review keeps presentation work blocked until the
-frontend lane names the accepted visual integration base. This package gives
-that lane the current functional data shape before the View is built.
+The user explicitly authorized carrying the older working styling on this
+branch for now, with normalization toward the newer FE visual system where it
+is low-risk. W33 therefore prioritizes functional parity over redesign.
 
 ## Authority
 
 Crestfall remains authoritative for:
 
-- creation routing and persistence
-- application ViewModels and Binding Shells
-- product validation at save and commit boundaries
-- Ability and Spell runtime behavior
-- typed operation execution
-- actor-owned cooldown, charge, and mastery state
+- creation routing and persistence;
+- application behavior and save semantics;
+- Ability & Spell normalization and validation rules;
+- runtime authorization/execution;
+- actor-owned cooldown, charge, mastery, knowledge, and resource state.
 
-Crestfall-fe owns the eventual portable presentation contract and fixtures.
+Crestfall-fe owns the presentation copy deployed by the integration branch.
+The mirrored ViewModels are deployment mirrors of Chassis behavior; they do not
+move product authority out of Crestfall.
 
-## Included in this slice
+## W33 live surface
 
-- current definition and profile semantic contract
-- current builder identity options
-- empty fixture
-- filled value-carrying fixture
-- filled builder wrapper fixture
-- diagnostic coverage for typed operations and definition-only state
+FE now contains the current:
 
-The filled fixture covers prerequisites, skill requirements, pool costs,
-single-target line-of-sight targeting, typed executable operation references,
-source-actor and authorized-target bindings, cooldowns, fixed charges, mastery
-policies, passive definitions, tags, and metadata.
+- Ability & Spell Profile Builder shell/View/ViewModel;
+- Ability & Spell Profile editor shell/View/ViewModel;
+- JSON Editor & AI Guide shell/View/ViewModel;
+- JSON validation and complete-replacement AI authoring guide;
+- local editor diagnostics.
 
-Mutable actor runtime state is intentionally absent from profile definitions.
+The existing FE semantic contract remains byte-compatible with Chassis:
 
-## Deliberately not included yet
+```text
+ability_spell_profile_contract_v0
+```
 
-- `AbilitySpellProfileEditor.view.jsx`
-- builder View
-- presentation ViewModel
-- JSON editor presentation
-- `/app/studio/v2/**` changes
-- `components/studio/my-creations/edit/**` changes
-- Kit or design-system changes
+The accepted FE presentation binding remains as a semantic/display regression
+contract and now reports the editor and JSON surface as
+`WIRED_LEGACY_PRESENTATION`.
 
-Those remain a later frontend-lane presentation wave.
+## Deferred from W33
+
+W33 deliberately does not modify:
+
+- `components/studio/my-creations/edit/**`;
+- the Creation Edit Binding Shell;
+- Skills, Wallet, or Actor Mechanics editor families;
+- Creation Studio mechanics-profile catalog exposure;
+- Image Studio / Kit;
+- chat;
+- `/app/studio/v2/**`.
+
+Saved-edit registration is handled in the later protected
+`my-creations/edit` convergence package, after the editor target exists in FE.

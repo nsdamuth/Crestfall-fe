@@ -3,6 +3,7 @@
 import {
   ChevronDown,
   ChevronUp,
+  CircleSlash2,
   RotateCcw,
   Search,
   UserMinus,
@@ -15,6 +16,7 @@ const ACTION_ICONS = {
   target: Search,
   load: UserPlus,
   reload: RotateCcw,
+  unavailable: CircleSlash2,
 };
 
 export default function ChatNpcManagerView({
@@ -120,16 +122,18 @@ function NpcSection({ section, onActivateNpc }) {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => onActivateNpc?.(entry.actionId)}
-                disabled={entry.disabled}
-                title={entry.actionTitle || entry.actionLabel}
-                className="mt-[var(--space-3)] inline-flex min-h-[var(--control-sm)] w-full touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] transition hover:bg-[var(--state-hover-fill)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
-              >
-                <ActionIcon size={13} aria-hidden="true" />
-                {entry.busy ? entry.busyLabel : entry.actionLabel}
-              </button>
+              {entry.hasAction !== false && entry.actionLabel ? (
+                <button
+                  type="button"
+                  onClick={() => onActivateNpc?.(entry.actionId)}
+                  disabled={entry.disabled}
+                  title={entry.actionTitle || entry.actionLabel}
+                  className="mt-[var(--space-3)] inline-flex min-h-[var(--control-sm)] w-full touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] transition hover:bg-[var(--state-hover-fill)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+                >
+                  <ActionIcon size={13} aria-hidden="true" />
+                  {entry.busy ? entry.busyLabel : entry.actionLabel}
+                </button>
+              ) : null}
             </article>
           ))
         ) : (

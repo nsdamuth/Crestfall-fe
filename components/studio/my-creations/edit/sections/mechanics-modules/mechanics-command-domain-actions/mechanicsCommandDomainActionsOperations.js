@@ -1,6 +1,8 @@
 import {
   COMMAND_DOMAIN_ACTION_OUTCOMES,
   COMMAND_DOMAIN_ACTION_TYPE_VALUES,
+  MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V2,
+  MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3,
 } from "./MechanicsCommandDomainActions.contract.js";
 import {
   getMechanicsCommandDomainArgumentOptions,
@@ -37,13 +39,24 @@ export function changeMechanicsCommandDomainActionType(
     : options.heldItems;
   const locationAction = flags.usesLocation;
   const participantConditionAction = flags.usesParticipantCondition;
+  const abilitySpellKnowledgeAction = flags.usesAbilitySpellKnowledge;
+  const abilitySpellUseAction = flags.usesAbilitySpellUse;
+  const abilitySpellAction = abilitySpellKnowledgeAction || abilitySpellUseAction;
 
   return normalizeMechanicsCommandDomainAction({
     ...domainAction,
+    version: abilitySpellUseAction
+      ? MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3
+      : abilitySpellKnowledgeAction
+        ? MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V2
+        : domainAction.version,
     enabled: type !== "NONE",
     type,
     itemArgumentName:
-      type !== "NONE" && !locationAction && !participantConditionAction
+      type !== "NONE" &&
+      !locationAction &&
+      !participantConditionAction &&
+      !abilitySpellAction
         ? retainOrFirst(domainAction.itemArgumentName, nextItemOptions, "item")
         : "",
     destinationArgumentName:
@@ -58,18 +71,6 @@ export function changeMechanicsCommandDomainActionType(
       type === "LOCATION_TRAVEL_OPERATION"
         ? domainAction.travelOperation || "CONTINUE"
         : "",
-    targetArgumentName:
-      type === "ITEM_GIVE"
-        ? domainAction.targetArgumentName ||
-          options.presentCharacters[0]?.name ||
-          "target"
-        : participantConditionAction
-          ? retainOrFirst(
-              domainAction.targetArgumentName,
-              options.presentCharacters,
-              "target"
-            )
-          : "",
     conditionArgumentName: participantConditionAction
       ? retainOrFirst(domainAction.conditionArgumentName, options.text, "condition")
       : "",
@@ -81,6 +82,39 @@ export function changeMechanicsCommandDomainActionType(
     amountArgumentName: flags.requiresAmount
       ? domainAction.amountArgumentName || options.numbers[0]?.name || "amount"
       : "",
+    targetArgumentName: abilitySpellUseAction
+      ? domainAction.targetArgumentName || ""
+      : type === "ITEM_GIVE"
+        ? domainAction.targetArgumentName ||
+          options.presentCharacters[0]?.name ||
+          "target"
+        : participantConditionAction
+          ? retainOrFirst(
+              domainAction.targetArgumentName,
+              options.presentCharacters,
+              "target"
+            )
+          : "",
+    actorArgumentName: abilitySpellAction
+      ? retainOrFirst(
+          domainAction.actorArgumentName,
+          abilitySpellUseAction ? options.abilityUseActors : options.abilityActors,
+          "actor"
+        )
+      : "",
+    abilityArgumentName: abilitySpellAction
+      ? retainOrFirst(domainAction.abilityArgumentName, options.text, "ability")
+      : "",
+    knowledgeState: abilitySpellKnowledgeAction
+      ? domainAction.knowledgeState === "KEEP" && domainAction.unlockState === "KEEP"
+        ? "KNOWN"
+        : domainAction.knowledgeState
+      : "KEEP",
+    unlockState: abilitySpellKnowledgeAction
+      ? domainAction.knowledgeState === "KEEP" && domainAction.unlockState === "KEEP"
+        ? "UNLOCKED"
+        : domainAction.unlockState
+      : "KEEP",
     applyOnOutcomes:
       type !== "NONE"
         ? domainAction.applyOnOutcomes.length

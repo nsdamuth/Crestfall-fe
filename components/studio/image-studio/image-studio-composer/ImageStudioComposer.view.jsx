@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  Camera,
   ChevronDown,
   ChevronUp,
   Film,
@@ -29,9 +30,14 @@ export default function ImageStudioComposerView({
   videoToolsProps = null,
   promptValue = "",
   negativePromptValue = "",
+  showSceneryOnlyHelper = false,
+  sceneryOnlyHelperEnabled = true,
   canGenerateImage = false,
   generationHelpText = "",
   generationError = "",
+  cameraPresetValue = "AUTO",
+  cameraPresetLabel = "Auto / No Camera Filter",
+  cameraPresetDescription = "",
   imageOptionFields = [],
   coinBalanceLabel = "0",
   coinCostLabel = "5",
@@ -39,7 +45,9 @@ export default function ImageStudioComposerView({
   coinError = "",
   onChangeMode = null,
   onChangePrompt = null,
+  onChangeSceneryOnlyHelper = null,
   onChangeNegativePrompt = null,
+  onOpenCameraPresetPicker = null,
   onGenerateImage = null,
 }) {
   const [imageOptionsOpen, setImageOptionsOpen] = useState(false);
@@ -107,7 +115,28 @@ export default function ImageStudioComposerView({
         ) : null
       ) : (
         <>
-          <label className="mt-5 block">
+          {showSceneryOnlyHelper ? (
+            <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3">
+              <input
+                type="checkbox"
+                checked={sceneryOnlyHelperEnabled}
+                onChange={(event) =>
+                  onChangeSceneryOnlyHelper?.(event.target.checked)
+                }
+                className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
+              />
+              <span>
+                <span className="block text-xs uppercase tracking-[0.16em] text-[var(--ink)]">
+                  Optimize for scenery-only image
+                </span>
+                <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
+                  Adds scenic composition guidance and suppresses people.
+                </span>
+              </span>
+            </label>
+          ) : null}
+
+          <label className={showSceneryOnlyHelper ? "mt-4 block" : "mt-5 block"}>
             <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Prompt
             </span>
@@ -155,6 +184,31 @@ export default function ImageStudioComposerView({
 
           {imageOptionsOpen ? (
             <div className="mt-3 grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+              <div>
+                <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                  Camera / Framing
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onOpenCameraPresetPicker?.()}
+                  className="mt-2 flex w-full items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left transition hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
+                    <Camera size={17} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm text-[var(--ink)]">
+                      {cameraPresetLabel}
+                    </span>
+                    <span className="mt-1 block truncate text-xs text-[var(--ink-dim)]">
+                      {cameraPresetValue === "AUTO"
+                        ? "No camera prompt fragment will be added."
+                        : cameraPresetDescription}
+                    </span>
+                  </span>
+                </button>
+              </div>
+
               {imageOptionFields.map((field) => (
                 <CrestfallSelect
                   key={field.id}

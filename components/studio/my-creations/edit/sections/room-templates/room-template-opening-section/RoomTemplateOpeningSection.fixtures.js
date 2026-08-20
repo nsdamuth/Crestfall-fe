@@ -15,6 +15,23 @@ const baseFixture = {
     "The party arrives at the observatory as the final bell begins to ring.",
   publicOpeningContextPlaceholder:
     "Visible setup shown at the start of the room.",
+  openingImageLabel: "Opening Image",
+  openingImageDescription:
+    "Choose one eligible image from an attached character or location. New Story rooms display it once above the opening messages.",
+  chooseOpeningImageLabel: "Choose Image",
+  replaceOpeningImageLabel: "Replace Image",
+  removeOpeningImageLabel: "Remove",
+  closePickerLabel: "Close",
+  openingImageSources: [
+    { id: "character-1", type: "CHARACTER", title: "Captain Vale" },
+    { id: "location-1", type: "LOCATION", title: "Old Observatory" },
+  ],
+  selectedOpeningImage: null,
+  pickerOpen: false,
+  activeSourceId: "",
+  pickerImages: [],
+  pickerLoading: false,
+  pickerError: "",
   speakerLabel: "Speaker",
   speakerOptions,
   messageLabel: "Message",
@@ -32,6 +49,11 @@ const baseFixture = {
   removeMessageLabel: "Remove",
   addMessageLabel: "Add Opening Message",
   onChangePublicOpeningContext: null,
+  onOpenOpeningImagePicker: null,
+  onCloseOpeningImagePicker: null,
+  onSelectOpeningImageSource: null,
+  onSelectOpeningImage: null,
+  onRemoveOpeningImage: null,
   onChangeOpeningMessageSpeaker: null,
   onChangeOpeningMessageBody: null,
   onAddOpeningMessage: null,
@@ -133,4 +155,39 @@ export const roomTemplateOpeningSectionMissingCallbacksFixture = {
   onChangeOpeningMessageBody: null,
   onAddOpeningMessage: null,
   onRemoveOpeningMessage: null,
+};
+
+
+export const roomTemplateOpeningSectionSelectedImageFixture = {
+  ...baseFixture,
+  selectedOpeningImage: {
+    id: "entry-1",
+    sourceEntityType: "LOCATION",
+    sourceCreationId: "location-1",
+    sourceTitle: "Old Observatory",
+    libraryEntryId: "entry-1",
+    imageOutputId: "output-1",
+    displayUrl: "https://example.invalid/opening.webp",
+    thumbnailUrl: "https://example.invalid/opening-thumb.webp",
+    width: 1600,
+    height: 900,
+    contentRating: "SFW",
+  },
+};
+
+export const roomTemplateOpeningSectionPickerFixture = {
+  ...baseFixture,
+  pickerOpen: true,
+  activeSourceId: "location-1",
+  pickerImages: [
+    {
+      id: "entry-1",
+      imageOutputId: "output-1",
+      displayUrl: "https://example.invalid/opening.webp",
+      thumbnailUrl: "https://example.invalid/opening-thumb.webp",
+      width: 1600,
+      height: 900,
+      source: { id: "location-1", type: "LOCATION", title: "Old Observatory" },
+    },
+  ],
 };

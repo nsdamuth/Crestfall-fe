@@ -128,7 +128,7 @@ export function projectLocationRegistryBuilderSplitBinding({
       sharedLocationRegistryFoundation: "WIRED",
       splitAnalysisPlanCommitViewModel: "WIRED",
       splitClientApiProxyPath: "WIRED",
-      editCreationIdBridge: "PENDING_PROTECTED_EDITOR_WIRING",
+      editCreationIdBridge: "WIRED",
       splitVisualComposition: "WIRED",
     },
 

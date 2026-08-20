@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Box, Database, Plus, Trash2 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import ItemEquipmentModifierReferencesEditor from "@/components/studio/registries/item-equipment-modifier-references-editor/ItemEquipmentModifierReferencesEditor";
+import ItemOperationRequirementSetsEditor from "@/components/studio/registries/item-operation-authoring/ItemOperationRequirementSetsEditor";
+import ItemOperationEffectReferencesEditor from "@/components/studio/registries/item-operation-authoring/ItemOperationEffectReferencesEditor";
 import { SHORT_LONGFORM_MAX_LENGTH } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ItemRegistryFieldsSectionView({
@@ -20,6 +23,9 @@ export default function ItemRegistryFieldsSectionView({
   quantityOptions = [],
   consumptionOptions = [],
   durabilityOptions = [],
+  equipmentModifierReferenceLimit = 16,
+  operationRequirementSetLimit = 16,
+  operationEffectReferenceLimit = 32,
   startingAssignmentContentByEntryId = {},
   promptSummaryValue = "",
   promptUsageNotesValue = "",
@@ -74,6 +80,9 @@ export default function ItemRegistryFieldsSectionView({
           categoryOptions={categoryOptions}
           roleOptions={roleOptions}
           placementOptions={placementOptions}
+          equipmentModifierReferenceLimit={equipmentModifierReferenceLimit}
+          operationRequirementSetLimit={operationRequirementSetLimit}
+          operationEffectReferenceLimit={operationEffectReferenceLimit}
           onAddEntry={onAddEntry}
         />
       ) : null}
@@ -167,6 +176,9 @@ function EntriesSection({
   categoryOptions,
   roleOptions,
   placementOptions,
+  equipmentModifierReferenceLimit,
+  operationRequirementSetLimit,
+  operationEffectReferenceLimit,
   onAddEntry,
 }) {
   return (
@@ -215,6 +227,9 @@ function EntriesSection({
             categoryOptions={categoryOptions}
             roleOptions={roleOptions}
             placementOptions={placementOptions}
+            equipmentModifierReferenceLimit={equipmentModifierReferenceLimit}
+            operationRequirementSetLimit={operationRequirementSetLimit}
+            operationEffectReferenceLimit={operationEffectReferenceLimit}
           />
         ) : (
           <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
@@ -487,6 +502,9 @@ function ItemEntryEditor({
   categoryOptions,
   roleOptions,
   placementOptions,
+  equipmentModifierReferenceLimit,
+  operationRequirementSetLimit,
+  operationEffectReferenceLimit,
 }) {
   return (
     <div className="space-y-4">
@@ -575,6 +593,33 @@ function ItemEntryEditor({
           </Field>
         </div>
       </div>
+
+      <ItemEquipmentModifierReferencesEditor
+        references={entry.equipmentModifierReferences || []}
+        maxReferences={equipmentModifierReferenceLimit}
+        onAdd={entry.onAddEquipmentModifierReference}
+        onUpdate={entry.onUpdateEquipmentModifierReference}
+        onRemove={entry.onRemoveEquipmentModifierReference}
+      />
+
+      <ItemOperationRequirementSetsEditor
+        requirementSets={entry.operationRequirementSets || []}
+        maxSets={operationRequirementSetLimit}
+        onAdd={entry.onAddOperationRequirementSet}
+        onUpdate={entry.onUpdateOperationRequirementSet}
+        onRemove={entry.onRemoveOperationRequirementSet}
+        onAddRequirement={entry.onAddOperationRequirement}
+        onUpdateRequirement={entry.onUpdateOperationRequirement}
+        onRemoveRequirement={entry.onRemoveOperationRequirement}
+      />
+
+      <ItemOperationEffectReferencesEditor
+        references={entry.operationEffectReferences || []}
+        maxReferences={operationEffectReferenceLimit}
+        onAdd={entry.onAddOperationEffectReference}
+        onUpdate={entry.onUpdateOperationEffectReference}
+        onRemove={entry.onRemoveOperationEffectReference}
+      />
 
       <button
         type="button"

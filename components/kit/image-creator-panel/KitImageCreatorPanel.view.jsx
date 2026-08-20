@@ -239,6 +239,8 @@ function OptionsExpander({
 }
 
 function GenerateBlock({
+  sceneryHelper,
+  onChangeSceneryOnlyHelper,
   promptValue,
   onChangePrompt,
   coinBalanceLabel,
@@ -257,6 +259,28 @@ function GenerateBlock({
 
   return (
     <div className="flex flex-col gap-[var(--space-4)]">
+      {sceneryHelper?.visible ? (
+        <label className="flex cursor-pointer items-start gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-[var(--space-4)] py-[var(--space-3)]">
+          <input
+            type="checkbox"
+            checked={Boolean(sceneryHelper.enabled)}
+            onChange={(event) =>
+              onChangeSceneryOnlyHelper?.(event.target.checked)
+            }
+            className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
+          />
+          <span>
+            <span className="block text-[length:var(--text-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--ink)]">
+              {sceneryHelper.title || "Optimize for scenery-only image"}
+            </span>
+            <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+              {sceneryHelper.description ||
+                "Adds scenic composition guidance and suppresses people."}
+            </span>
+          </span>
+        </label>
+      ) : null}
+
       <label className="block">
         <FieldCaption>Prompt</FieldCaption>
         <textarea
@@ -369,6 +393,8 @@ export default function KitImageCreatorPanelView({
   onCustomChangeText = null,
   onCustomBackToPresets = null,
   onCustomSavePreset = null,
+  sceneryHelper = null,
+  onChangeSceneryOnlyHelper = null,
   promptValue = "",
   onChangePrompt = null,
   negativePromptValue = "",
@@ -432,6 +458,8 @@ export default function KitImageCreatorPanelView({
         />
       ) : (
         <GenerateBlock
+          sceneryHelper={sceneryHelper}
+          onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
           promptValue={promptValue}
           onChangePrompt={onChangePrompt}
           coinBalanceLabel={coinBalanceLabel}

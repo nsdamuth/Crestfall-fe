@@ -8,8 +8,11 @@ import {
   createEmptyKnowledgeRule,
   createEmptyNpcEntry,
   createEmptyRelationship,
+  hydrateNpcRegistryEntries,
   normalizeNpcRegistryCharacterOptions,
   removeEntryReferences,
+  serializeNpcRegistryEntry,
+  serializeNpcRegistryEntries,
   upsertById,
 } from "@/components/studio/registries/npcRegistryUtils";
 
@@ -20,7 +23,7 @@ function getRegistryFromForm(form) {
     title: form.title || "",
     description: form.description || "",
     scope: data.scope || "",
-    entries: Array.isArray(data.entries) ? data.entries : [],
+    entries: serializeNpcRegistryEntries(data.entries),
     relationships: Array.isArray(data.relationships)
       ? data.relationships
       : [],
@@ -43,6 +46,14 @@ export function useNpcRegistryEditor({ form, updateDataField }) {
   const [relationshipDraft, setRelationshipDraft] = useState(null);
   const [knowledgeDraft, setKnowledgeDraft] = useState(null);
   const [aliasDraft, setAliasDraft] = useState(null);
+
+  const hydratedRegistry = useMemo(
+    () => ({
+      ...registry,
+      entries: hydrateNpcRegistryEntries(registry.entries, characterOptions),
+    }),
+    [registry, characterOptions]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -74,7 +85,10 @@ export function useNpcRegistryEditor({ form, updateDataField }) {
   }, []);
 
   function applyRegistryPatch(nextRegistry) {
-    updateDataField("entries", nextRegistry.entries || []);
+    updateDataField(
+      "entries",
+      serializeNpcRegistryEntries(nextRegistry.entries)
+    );
     updateDataField("relationships", nextRegistry.relationships || []);
     updateDataField("knowledge_rules", nextRegistry.knowledgeRules || []);
     updateDataField("aliases", nextRegistry.aliases || []);
@@ -85,7 +99,7 @@ export function useNpcRegistryEditor({ form, updateDataField }) {
   }
 
   function openEditEntry(entry) {
-    setEntryDraft({ ...entry });
+    setEntryDraft(serializeNpcRegistryEntry(entry));
   }
 
   function closeEntryModal() {
@@ -118,27 +132,30 @@ export function useNpcRegistryEditor({ form, updateDataField }) {
     if (!character?.id) return;
 
     setEntryDraft((current) =>
-      clearNpcRegistryEntryActorMechanicsProfileAttachment({
-        ...current,
-        kind: "CREATION_REF",
-        creationId: character.id,
-        creationType: character.type || "CHARACTER",
-        name: character.title,
-        notes: current.notes || character.description || "",
-      })
+      serializeNpcRegistryEntry(
+        clearNpcRegistryEntryActorMechanicsProfileAttachment({
+          ...current,
+          kind: "CREATION_REF",
+          creationId: character.id,
+          creationType: character.type || "CHARACTER",
+          notes: current.notes || "",
+        })
+      )
     );
   }
 
   function saveEntryDraft() {
-    if (!entryDraft?.name?.trim()) return;
+    if (!entryDraft) return;
 
-    const nextEntry = {
-      ...entryDraft,
-      name: entryDraft.name.trim(),
-      notes: entryDraft.notes.trim(),
-    };
+    if (entryDraft.kind === "CREATION_REF" && !entryDraft.creationId) return;
+    if (entryDraft.kind !== "CREATION_REF" && !entryDraft.name?.trim()) return;
 
-    updateDataField("entries", upsertById(registry.entries, nextEntry));
+    const nextEntry = serializeNpcRegistryEntry(entryDraft);
+
+    updateDataField(
+      "entries",
+      serializeNpcRegistryEntries(upsertById(registry.entries, nextEntry))
+    );
     setEntryDraft(null);
   }
 
@@ -291,7 +308,7 @@ export function useNpcRegistryEditor({ form, updateDataField }) {
   }
 
   return {
-    registry,
+    registry: hydratedRegistry,
     characterOptions,
     characterLoadError,
 

@@ -1,8 +1,8 @@
 export const ACTOR_MECHANICS_PROFILE_ATTACHMENT_VIEW_CONTRACT = Object.freeze({
   id: "actor_mechanics_profile_attachment_section",
-  version: "0.2.0",
+  version: "0.3.0",
   description:
-    "Portable presentation contract for attaching one Actor Mechanics Profile to an actor-scoped relationship, including Character, Player Character, and NPC Registry Entry shells.",
+    "Portable presentation contract for an Actor Mechanics Profile relationship. Character and Player Character persistence is graph-authoritative; lightweight NPC Registry Entries use their separate embedded-entry contract.",
 });
 
 /**

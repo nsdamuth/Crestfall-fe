@@ -55,7 +55,17 @@ test("generation packet preserves all current fields and compatibility mappings"
   assert.match(viewModel, /playerCharacter: makeOptionalIngredient/);
   assert.match(viewModel, /renderingPreset: makeOptionalIngredient/);
   assert.match(viewModel, /promptMode: getPromptMode\(renderStyle\)/);
-  assert.match(viewModel, /shotType: cameraPreset/);
+  assert.match(viewModel, /normalizeCameraPresetValue/);
+  assert.match(viewModel, /getCameraPresetPrompt/);
+  assert.match(viewModel, /getLegacyCameraPresetValue/);
+  assert.match(viewModel, /LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT/);
+  assert.match(viewModel, /appendPromptFragment/);
+  assert.match(viewModel, /userPrompt: resolvedUserPrompt/);
+  assert.match(viewModel, /shotType: normalizedCameraPreset/);
+  assert.match(
+    viewModel,
+    /cameraPreset: getLegacyCameraPresetValue\(normalizedCameraPreset\)/
+  );
   assert.match(viewModel, /referenceInputs: \[\]/);
   assert.match(viewModel, /controlInputs: \[\]/);
   assert.match(viewModel, /renderingStyle: getLegacyRenderingStyle\(renderStyle\)/);

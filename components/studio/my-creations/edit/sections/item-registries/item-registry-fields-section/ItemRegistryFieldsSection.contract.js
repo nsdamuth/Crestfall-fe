@@ -1,4 +1,4 @@
-export const ITEM_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const ITEM_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Item Registry Fields View.
@@ -10,6 +10,11 @@ export const ITEM_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  */
 export const ITEM_REGISTRY_FIELDS_SECTION_APPLICATION_BOUNDARY = Object.freeze({
   applicationOwnedControls: ["ItemStartingAssignmentEditor"],
+  reusableAuthoringControls: [
+    "ItemEquipmentModifierReferencesEditor",
+    "ItemOperationRequirementSetsEditor",
+    "ItemOperationEffectReferencesEditor",
+  ],
   storageFields: ["scope", "entries", "prompt_guidance"],
   sections: [
     "overview",

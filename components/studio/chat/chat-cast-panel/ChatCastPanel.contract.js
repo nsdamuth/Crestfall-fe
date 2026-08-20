@@ -1,4 +1,4 @@
-export const CHAT_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CHAT_CAST_MEMBER_STATES = Object.freeze({
   ARRIVING: "Arriving",
@@ -82,6 +82,8 @@ export const CHAT_CAST_PANEL_DELETE_CONFIRMATION = [
  * @property {string} roomListHref
  * @property {string} roomListLabel
  * @property {boolean} initialMobileOpen Fixture/dev-only seed for the mobile sheet's local disclosure state.
+ * @property {boolean|null} mobileOpen Optional controlled mobile-sheet state supplied by ChatShell so composer Cast actions can open this panel.
+ * @property {((open:boolean)=>void)|null} onMobileOpenChange Controlled mobile-sheet disclosure callback.
  * @property {(() => void)|null} onClosePanel
  * @property {((participantId: string) => void)|null} onSelectCastMember
  * @property {(() => void)|null} onOpenPlayerCharacterPicker

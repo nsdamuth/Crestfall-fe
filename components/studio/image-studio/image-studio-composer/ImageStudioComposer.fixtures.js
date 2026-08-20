@@ -36,17 +36,6 @@ const imageOptionFields = [
     onChange: noop,
   },
   {
-    id: "camera-preset",
-    label: "Camera / Framing",
-    value: "THREE_QUARTER",
-    options: [
-      { value: "AUTO", label: "Auto / No Camera Filter" },
-      { value: "THREE_QUARTER", label: "Three-Quarter Body" },
-      { value: "FULL_BODY", label: "Full Body" },
-    ],
-    onChange: noop,
-  },
-  {
     id: "wardrobe-theme",
     label: "Wardrobe Theme",
     value: "FORMAL",
@@ -140,9 +129,15 @@ const baseFixture = {
   promptValue:
     "A cinematic dark-fantasy portrait in the moonlit upper gallery.",
   negativePromptValue: "low detail, distorted hands, flat lighting",
+  showSceneryOnlyHelper: false,
+  sceneryOnlyHelperEnabled: true,
   canGenerateImage: true,
   generationHelpText: "",
   generationError: "",
+  cameraPresetValue: "MEDIUM_WIDE_SHOT",
+  cameraPresetLabel: "Medium Wide Shot (MWS)",
+  cameraPresetDescription:
+    "Character-focused full-body framing, generally from the knees up.",
   imageOptionFields,
   coinBalanceLabel: "45",
   coinCostLabel: "5",
@@ -150,7 +145,9 @@ const baseFixture = {
   coinError: "",
   onChangeMode: noop,
   onChangePrompt: noop,
+  onChangeSceneryOnlyHelper: noop,
   onChangeNegativePrompt: noop,
+  onOpenCameraPresetPicker: noop,
   onGenerateImage: noop,
 };
 
@@ -206,4 +203,24 @@ export const imageStudioComposerLongContentFixture = {
   negativePromptValue:
     "flat perspective, unreadable architecture, duplicate figures, stiff clothing, incorrect lighting direction, low-detail background, muddy color separation",
   coinBalanceLabel: "1250",
+};
+
+export const imageStudioComposerLocationOnlyFixture = {
+  ...baseFixture,
+  ingredientSlotItems: ingredientSlotItems.map((item) =>
+    item.id === "location"
+      ? {
+          ...item,
+          viewProps: {
+            ...ingredientSlotSelectedFixture,
+            label: "Location / Scene",
+            valueLabel: "The Brasswhisker's Workshop",
+            SlotIcon: MapPin,
+          },
+        }
+      : item
+  ),
+  showSceneryOnlyHelper: true,
+  sceneryOnlyHelperEnabled: true,
+  promptValue: "A brass-edged workshop during a rainstorm",
 };

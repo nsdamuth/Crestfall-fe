@@ -1,8 +1,12 @@
 export const MECHANICS_COMMAND_DOMAIN_ACTIONS_CONTRACT_VERSION =
-  "crestfall.loom.mechanics-command-domain-actions.v1";
+  "crestfall.loom.mechanics-command-domain-actions.v1_2";
 
 export const MECHANICS_COMMAND_DOMAIN_ACTION_VERSION =
   "mechanics_command_domain_action_v1";
+export const MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V2 =
+  "mechanics_command_domain_action_v2";
+export const MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3 =
+  "mechanics_command_domain_action_v3";
 
 export const COMMAND_DOMAIN_ACTION_TYPES = Object.freeze([
   Object.freeze({ value: "NONE", label: "None" }),
@@ -33,6 +37,14 @@ export const COMMAND_DOMAIN_ACTION_TYPES = Object.freeze([
     value: "PARTICIPANT_CONDITION_REMOVE",
     label: "Remove Character Condition",
   }),
+  Object.freeze({
+    value: "ABILITY_SPELL_KNOWLEDGE_SET",
+    label: "Set Ability / Spell Knowledge",
+  }),
+  Object.freeze({
+    value: "ABILITY_SPELL_USE_REQUEST",
+    label: "Authorize Ability / Spell Use",
+  }),
 ]);
 
 export const COMMAND_DOMAIN_ACTION_TYPE_VALUES = Object.freeze(
@@ -62,3 +74,24 @@ export const COMMAND_DOMAIN_ARGUMENT_TYPES = Object.freeze({
   text: "TEXT",
   number: "NUMBER",
 });
+
+export const ABILITY_SPELL_KNOWLEDGE_STATES = Object.freeze([
+  "KEEP",
+  "KNOWN",
+  "UNKNOWN",
+]);
+
+export const ABILITY_SPELL_UNLOCK_STATES = Object.freeze([
+  "KEEP",
+  "UNLOCKED",
+  "LOCKED",
+]);
+
+export const ABILITY_SPELL_ACTOR_ARGUMENT_TYPES = Object.freeze([
+  "PLAYER_CHARACTER",
+  "CHARACTER_PRESENT",
+]);
+
+export const ABILITY_SPELL_USE_ACTOR_ARGUMENT_TYPES = Object.freeze([
+  "PLAYER_CHARACTER",
+]);

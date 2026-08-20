@@ -1,6 +1,6 @@
 # Kit Image Creator ↔ Camera Presets / Scenery binding
 
-Status: additive FE binding contract only.
+Status: **LIVE — W39**.
 
 This package connects two already accepted Image Studio semantic packages to the
 current protected Kit Image Creator contract:
@@ -88,32 +88,24 @@ Optimize for scenery-only image
 Adds scenic composition guidance and suppresses people.
 ```
 
-## Important Kit gap
+## W39 Kit closure
 
-The protected Kit contract currently has no boolean/toggle extension slot for
-this helper.
+W39 uses the explicit protected-lane unlock to extend the Kit Image Creator
+contract from `1.0.0` to `1.1.0` with a caller-supplied `sceneryHelper` and
+`onChangeSceneryOnlyHelper` callback. The helper is now rendered directly above
+the prompt when visible.
 
-This binding therefore does **not** hide the feature in `generationHelpText`,
-and it does not mutate `components/kit/**`.
-
-Instead it exposes an explicit adjunct:
-
-```text
-sceneryHelperExtension
-```
-
-with:
+The binding now reports:
 
 ```text
-currentKitContractSupportsControl: false
-requiresFeVisualExtension: true
+currentKitContractSupportsControl: true
+requiresFeVisualExtension: false
 recommendedPlacement: IMAGE_OPTIONS_NEAR_PROMPT
 ```
 
-when the helper should be visible.
-
-This gives the FE team an exact, bounded contract request rather than silently
-losing functionality or hard-copying the legacy composer markup.
+Camera / Framing still fits the existing option-field grammar and receives the
+full 29-choice catalog. The legacy Image Studio surface additionally uses the
+shared Kit picker modal for the larger camera catalog.
 
 ## Permanent boundary
 
@@ -136,9 +128,8 @@ Crestfall-fe owns:
 - scenery-helper visual composition
 - semantic change callbacks
 
-## Protected scopes untouched
+## W39 scope
 
-- `components/kit/**`
-- `app/studio/v2/**`
-- `components/studio/my-creations/edit/**`
-- `components/studio/chat/**`
+W39 intentionally touches `components/kit/image-creator-panel/**` to close the
+scenery-control contract gap. It does not modify `app/studio/v2/**`, chat, or
+saved-edit product behavior.

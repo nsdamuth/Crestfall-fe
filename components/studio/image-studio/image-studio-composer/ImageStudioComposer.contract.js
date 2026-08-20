@@ -1,4 +1,4 @@
-export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the Image Studio composer panel.
@@ -34,9 +34,14 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {Object|null} videoToolsProps
  * @property {string} promptValue
  * @property {string} negativePromptValue
+ * @property {boolean} showSceneryOnlyHelper
+ * @property {boolean} sceneryOnlyHelperEnabled
  * @property {boolean} canGenerateImage
  * @property {string} generationHelpText
  * @property {string} generationError
+ * @property {string} cameraPresetValue
+ * @property {string} cameraPresetLabel
+ * @property {string} cameraPresetDescription
  * @property {ImageStudioComposerSelectField[]} imageOptionFields
  * @property {string} coinBalanceLabel
  * @property {string} coinCostLabel
@@ -44,7 +49,9 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} coinError
  * @property {(mode: "IMAGE"|"VIDEO") => void} onChangeMode
  * @property {(nextValue: string) => void} onChangePrompt
+ * @property {(nextValue: boolean) => void} onChangeSceneryOnlyHelper
  * @property {(nextValue: string) => void} onChangeNegativePrompt
+ * @property {() => void} onOpenCameraPresetPicker
  * @property {() => void} onGenerateImage
  */
 

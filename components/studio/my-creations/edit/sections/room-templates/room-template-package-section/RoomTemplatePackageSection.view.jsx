@@ -4,6 +4,7 @@ import SelectedCharactersPanelView from "@/components/studio/create/room-templat
 import SelectionCardView from "@/components/studio/create/room-template/selection-card/SelectionCard.view";
 import RoomTemplatePackagePickerModalView from "@/components/studio/create/room-template/room-template-package-picker/RoomTemplatePackagePickerModal.view";
 import ScenarioRecommendationsPanelView from "@/components/studio/room-templates/scenario-recommendations-panel/ScenarioRecommendationsPanel.view";
+import StoryOpeningLocationAuthoringPanelView from "@/components/studio/room-templates/story-opening-location-authoring/StoryOpeningLocationAuthoringPanel.view";
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const SELECTION_ICONS = {
@@ -19,6 +20,7 @@ export default function RoomTemplatePackageSectionView({
   selectedCharactersPanelProps = {},
   showScenarioRecommendations = false,
   scenarioRecommendationsPanelProps = {},
+  openingLocationAuthoringProps = {},
   selectionCards = [],
   referenceLoadError = "",
   pickerViewProps = null,
@@ -39,6 +41,10 @@ export default function RoomTemplatePackageSectionView({
             {...scenarioRecommendationsPanelProps}
           />
         ) : null}
+
+        <StoryOpeningLocationAuthoringPanelView
+          {...openingLocationAuthoringProps}
+        />
 
         <div className="grid gap-4 md:grid-cols-3">
           {selectionCards.map((card) => (

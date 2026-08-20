@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  ACTOR_MECHANICS_COMMAND_REQUIREMENT_TYPES,
   COMMAND_PROGRESSION_ENFORCEMENTS,
   COMMAND_REQUIREMENT_OPERATORS,
   COMMAND_REQUIREMENT_TYPES,
@@ -12,10 +13,13 @@ import {
 } from "./MechanicsCommandRequirements.contract.js";
 import { mechanicsCommandRequirementsFixtures } from "./mechanicsCommandRequirements.fixtures.js";
 import {
+  getDefaultActorMechanicsRequirementBindingId,
   getDefaultCommandRequirementOperator,
+  isActorMechanicsCommandRequirementType,
   isProgressionCommandRequirementType,
   isTargetCommandRequirementType,
   normalizeMechanicsCommandRequirement,
+  normalizeMechanicsRequirementReferenceId,
   normalizeMechanicsCommandRequirements,
   normalizeProgressionRequirementTierIds,
   summarizeMechanicsCommandRequirements,
@@ -54,7 +58,7 @@ test("the requirements contract freezes types, operators, and progression enforc
     MECHANICS_COMMAND_REQUIREMENTS_CONTRACT,
     "crestfall.loom.mechanics-command-requirements.v1"
   );
-  assert.equal(COMMAND_REQUIREMENT_TYPES.length, 11);
+  assert.equal(COMMAND_REQUIREMENT_TYPES.length, 19);
   assert.deepEqual(COMMAND_PROGRESSION_ENFORCEMENTS, ["ADVISORY", "HARD_LOCK"]);
   assert.deepEqual(COMMAND_REQUIREMENT_OPERATORS, [
     "EQ", "NEQ", "GT", "GTE", "LT", "LTE", "TRUTHY", "FALSY",
@@ -116,6 +120,41 @@ test("all five Progression requirement types are classified", () => {
   ]) {
     assert.equal(isProgressionCommandRequirementType(type), true, type);
   }
+});
+
+
+
+test("Actor Mechanics requirement authoring preserves typed definition and binding IDs", () => {
+  assert.equal(ACTOR_MECHANICS_COMMAND_REQUIREMENT_TYPES.length, 8);
+  assert.equal(isActorMechanicsCommandRequirementType("STATS_POOLS_STAT_CURRENT"), true);
+  assert.equal(isActorMechanicsCommandRequirementType("SKILLS_RANK"), true);
+  assert.equal(isProgressionCommandRequirementType("STATS_POOLS_STAT_CURRENT"), false);
+  assert.equal(isProgressionCommandRequirementType("SKILLS_RANK"), false);
+  assert.equal(getDefaultActorMechanicsRequirementBindingId("STATS_POOLS_POOL_CURRENT"), "stats");
+  assert.equal(getDefaultActorMechanicsRequirementBindingId("SKILLS_RANK"), "skills");
+  assert.equal(normalizeMechanicsRequirementReferenceId(" Stat.Strength "), "stat.strength");
+
+  const stat = normalizeMechanicsCommandRequirement({
+    id: "strength",
+    type: "STATS_POOLS_STAT_CURRENT",
+    bindingId: "stats",
+    targetId: "stat.strength",
+    operator: "GTE",
+    value: 40,
+  });
+  assert.equal(stat.targetId, "stat.strength");
+  assert.equal(stat.bindingId, "stats");
+  assert.equal(stat.operator, "GTE");
+  assert.equal(stat.value, 40);
+
+  const condition = normalizeMechanicsCommandRequirement({
+    type: "STATS_POOLS_CONDITION_INACTIVE",
+    targetId: "condition.injured",
+  });
+  assert.equal(condition.bindingId, "stats");
+  assert.equal(condition.targetId, "condition.injured");
+  assert.equal(condition.operator, "EQ");
+  assert.equal(condition.value, true);
 });
 
 test("malformed inputs recover and disabled requirements remain excluded", () => {

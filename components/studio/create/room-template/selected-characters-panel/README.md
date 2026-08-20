@@ -13,6 +13,7 @@ edit workflow:
 selectedCharacters
 onOpen
 onRemove
+onLifecycleChange
 ```
 
 ## Portable View
@@ -25,11 +26,16 @@ The View receives display-ready character items and semantic callbacks. It does
 not know Story package storage, creation/reference payloads, picker state,
 selection mutation rules, or persistence behavior.
 
-The existing edit-flow helper copy remains unchanged:
+W46 extends this portable boundary with the accepted Story Character lifecycle
+authoring contract. Each selected Character receives a normalized lifecycle kind:
 
 ```text
-Select one or more characters for this Story.
+STORY_PINNED
+OPENING_ONLY
 ```
+
+The View emits lifecycle changes semantically; it does not own Story payload
+mutation or persistence.
 
 ## ViewModel
 
@@ -38,8 +44,8 @@ useSelectedCharactersPanelViewModel.js
 ```
 
 The ViewModel normalizes the existing selected-character references into the
-versioned View contract and maps application callback names into semantic View
-callbacks.
+versioned View contract, projects the accepted lifecycle options, and maps
+application callback names into semantic View callbacks.
 
 ## Fixtures and preview
 

@@ -3,6 +3,7 @@ import {
 } from "../mechanicsProgressionRequirementAuthoring.js";
 
 import {
+  ACTOR_MECHANICS_COMMAND_REQUIREMENT_TYPES,
   COMMAND_PROGRESSION_ENFORCEMENTS,
   COMMAND_REQUIREMENT_OPERATORS,
   COMMAND_REQUIREMENT_TYPES,
@@ -46,6 +47,30 @@ export function slugifyMechanicsRequirementId(value, fallback = "requirement") {
   return slug || fallback;
 }
 
+export function normalizeMechanicsRequirementReferenceId(
+  value,
+  fallback = ""
+) {
+  const normalized = normalizeString(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9._:-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return normalized || fallback;
+}
+
+export function isActorMechanicsCommandRequirementType(value) {
+  return ACTOR_MECHANICS_COMMAND_REQUIREMENT_TYPES.includes(
+    normalizeString(value).toUpperCase()
+  );
+}
+
+export function getDefaultActorMechanicsRequirementBindingId(type) {
+  const normalized = normalizeString(type).toUpperCase();
+  if (normalized === "SKILLS_RANK") return "skills";
+  if (normalized.startsWith("STATS_POOLS_")) return "stats";
+  return "";
+}
+
 export function isTargetCommandRequirementType(value) {
   return TARGET_COMMAND_REQUIREMENT_TYPES.includes(
     normalizeString(value).toUpperCase()
@@ -67,6 +92,22 @@ export function getDefaultCommandRequirementOperator(type) {
   if (["PROGRESSION_REQUIRED_TIER", "PROGRESSION_FORBIDDEN_TIER"].includes(type)) {
     return "EQ";
   }
+  if ([
+    "STATS_POOLS_STAT_CURRENT",
+    "STATS_POOLS_POOL_CURRENT",
+    "STATS_POOLS_POOL_MAXIMUM",
+    "SKILLS_RANK",
+  ].includes(type)) {
+    return "GTE";
+  }
+  if ([
+    "STATS_POOLS_CONDITION_ACTIVE",
+    "STATS_POOLS_CONDITION_INACTIVE",
+    "STATS_POOLS_MODIFIER_ACTIVE",
+    "STATS_POOLS_MODIFIER_INACTIVE",
+  ].includes(type)) {
+    return "EQ";
+  }
   return "TRUTHY";
 }
 
@@ -79,6 +120,22 @@ export function getDefaultCommandRequirementValue(type) {
   }
   if (["PROGRESSION_REQUIRED_TIER", "PROGRESSION_FORBIDDEN_TIER"].includes(type)) {
     return [];
+  }
+  if ([
+    "STATS_POOLS_STAT_CURRENT",
+    "STATS_POOLS_POOL_CURRENT",
+    "STATS_POOLS_POOL_MAXIMUM",
+    "SKILLS_RANK",
+  ].includes(type)) {
+    return 1;
+  }
+  if ([
+    "STATS_POOLS_CONDITION_ACTIVE",
+    "STATS_POOLS_CONDITION_INACTIVE",
+    "STATS_POOLS_MODIFIER_ACTIVE",
+    "STATS_POOLS_MODIFIER_INACTIVE",
+  ].includes(type)) {
+    return true;
   }
   return true;
 }
@@ -106,6 +163,8 @@ export function normalizeMechanicsCommandRequirement(requirement, fallbackIndex 
     : getDefaultCommandRequirementOperator(type);
   const targetRequirement = isTargetCommandRequirementType(type);
   const progressionRequirement = isProgressionCommandRequirementType(type);
+  const actorMechanicsRequirement =
+    isActorMechanicsCommandRequirementType(type);
   const rawValue =
     source.value ??
     source.expectedValue ??
@@ -125,6 +184,10 @@ export function normalizeMechanicsCommandRequirement(requirement, fallbackIndex 
       "METER",
       "PROGRESSION_MINIMUM_LEVEL",
       "PROGRESSION_MAXIMUM_LEVEL",
+      "STATS_POOLS_STAT_CURRENT",
+      "STATS_POOLS_POOL_CURRENT",
+      "STATS_POOLS_POOL_MAXIMUM",
+      "SKILLS_RANK",
     ].includes(type)
   ) {
     value = normalizeNumber(value, getDefaultCommandRequirementValue(type));
@@ -132,6 +195,13 @@ export function normalizeMechanicsCommandRequirement(requirement, fallbackIndex 
     ["PROGRESSION_REQUIRED_TIER", "PROGRESSION_FORBIDDEN_TIER"].includes(type)
   ) {
     value = normalizeProgressionRequirementTierIds(value);
+  } else if ([
+    "STATS_POOLS_CONDITION_ACTIVE",
+    "STATS_POOLS_CONDITION_INACTIVE",
+    "STATS_POOLS_MODIFIER_ACTIVE",
+    "STATS_POOLS_MODIFIER_INACTIVE",
+  ].includes(type)) {
+    value = normalizeBoolean(value, true);
   } else if (type === "STAGE") {
     value = normalizeString(value);
   }
@@ -145,16 +215,26 @@ export function normalizeMechanicsCommandRequirement(requirement, fallbackIndex 
     type,
     targetId: targetRequirement
       ? ""
-      : slugifyMechanicsRequirementId(
-          source.targetId ||
-            source.target_id ||
-            source.mechanicsId ||
-            source.mechanics_id ||
-            source.trackerId ||
-            source.tracker_id ||
-            (progressionRequirement ? "progression" : ""),
-          progressionRequirement ? "progression" : ""
-        ),
+      : actorMechanicsRequirement
+        ? normalizeMechanicsRequirementReferenceId(
+            source.targetId || source.target_id || source.definitionId || source.definition_id
+          )
+        : slugifyMechanicsRequirementId(
+            source.targetId ||
+              source.target_id ||
+              source.mechanicsId ||
+              source.mechanics_id ||
+              source.trackerId ||
+              source.tracker_id ||
+              (progressionRequirement ? "progression" : ""),
+            progressionRequirement ? "progression" : ""
+          ),
+    bindingId: actorMechanicsRequirement
+      ? normalizeMechanicsRequirementReferenceId(
+          source.bindingId || source.binding_id,
+          getDefaultActorMechanicsRequirementBindingId(type)
+        )
+      : undefined,
     argumentName: targetRequirement
       ? slugifyMechanicsRequirementId(
           source.argumentName ||

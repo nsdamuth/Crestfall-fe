@@ -39,3 +39,17 @@ Development-only preview:
 ```text
 /dev/ui-preview/item-registry-fields-section
 ```
+
+## W45 saved-edit advanced mechanics convergence
+
+The saved Item Registry editor now exposes the same reusable advanced mechanics
+references already available during create-time authoring:
+
+- Equipment Modifier References (Stats & Pools modifier definition references)
+- Item Operation Requirement Sets (shared Mechanics requirement language)
+- Item Operation Effect References (registered typed operations)
+
+`normalizeItemEntry()` preserves and canonicalizes all three arrays so edits are
+not discarded by the shared Item Registry normalization path. Runtime
+eligibility, mutation, modifier definitions, and Actor Mechanics bindings remain
+outside this View and remain authoritative in their existing Crestfall layers.

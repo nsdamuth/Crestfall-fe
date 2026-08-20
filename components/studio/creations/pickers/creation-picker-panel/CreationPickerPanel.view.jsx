@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 
 export default function CreationPickerPanelView({
@@ -12,9 +12,11 @@ export default function CreationPickerPanelView({
   emptyMessage = "No creations found.",
   actions = null,
   gridClassName = "max-h-[46vh] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  pageSize = 0,
   onSelect,
 }) {
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
 
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const disabledIdSet = useMemo(() => new Set(disabledIds), [disabledIds]);
@@ -43,13 +45,34 @@ export default function CreationPickerPanelView({
     });
   }, [items, query]);
 
+  const normalizedPageSize =
+    Number.isInteger(pageSize) && pageSize > 0 ? pageSize : 0;
+  const pageCount = normalizedPageSize
+    ? Math.max(1, Math.ceil(filteredItems.length / normalizedPageSize))
+    : 1;
+  const visibleItems = normalizedPageSize
+    ? filteredItems.slice(
+        (page - 1) * normalizedPageSize,
+        page * normalizedPageSize
+      )
+    : filteredItems;
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, pageCount));
+  }, [pageCount]);
+
+  function updateQuery(value) {
+    setQuery(value);
+    setPage(1);
+  }
+
   return (
     <div>
       <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
         <Search size={16} className="text-[var(--gold-ornament)]" />
         <input
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => updateQuery(event.target.value)}
           placeholder={searchPlaceholder}
           className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
         />
@@ -59,7 +82,7 @@ export default function CreationPickerPanelView({
 
       <div className={`mt-5 grid gap-3 overflow-y-auto pr-1 ${gridClassName}`}>
         {filteredItems.length ? (
-          filteredItems.map((item) => {
+          visibleItems.map((item) => {
             const selected = selectedIdSet.has(item.id);
             const disabled = disabledIdSet.has(item.id);
             const recommended = recommendedIdSet.has(item.id);
@@ -83,6 +106,38 @@ export default function CreationPickerPanelView({
           </div>
         )}
       </div>
+
+      {normalizedPageSize && filteredItems.length > normalizedPageSize ? (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
+          <p className="text-xs text-[var(--ink-dim)]">
+            Showing {(page - 1) * normalizedPageSize + 1}–
+            {Math.min(page * normalizedPageSize, filteredItems.length)} of {filteredItems.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={page <= 1}
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              className="rounded-lg border border-[var(--line)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <span className="min-w-16 text-center text-xs text-[var(--ink-dim)]">
+              {page} / {pageCount}
+            </span>
+            <button
+              type="button"
+              disabled={page >= pageCount}
+              onClick={() =>
+                setPage((current) => Math.min(pageCount, current + 1))
+              }
+              className="rounded-lg border border-[var(--line)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

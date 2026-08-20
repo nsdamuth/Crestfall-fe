@@ -65,3 +65,25 @@ components/studio/image-studio/ImageStudioWorkbench.jsx
 The preview uses contract-shaped fixtures and local callback state. It does not
 load Image Studio history, open production ingredient pickers, spend coins,
 call the image-generation API, save presets, or persist application data.
+
+## W52 contract alignment
+
+The public View contract is `1.1.0` and declares the Camera/scenery presentation
+surface already made live by W39:
+
+- `showSceneryOnlyHelper`
+- `sceneryOnlyHelperEnabled`
+- `cameraPresetValue`
+- `cameraPresetLabel`
+- `cameraPresetDescription`
+- `onChangeSceneryOnlyHelper`
+- `onOpenCameraPresetPicker`
+
+Camera framing is selected through the grouped Camera Preset Picker modal. The
+composer View only opens the picker and displays the selected summary; tested
+prompt fragments remain in `imageStudioData.js` and are appended by the
+Workbench request composer.
+
+This contract alignment does not move Camera prompt construction, scenery
+prompt expansion, Image Studio state, generation requests, API authority, or
+persistence into the View.

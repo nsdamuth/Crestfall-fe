@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the image creator panel kit piece
@@ -53,6 +53,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onCustomSavePreset
  *   opens the save-preset modal (1.3); only reachable for the four
  *   savable slots (pose, outfit, location, preset)
+ * @property {{visible: boolean, enabled: boolean, title: string, description: string}|null} [sceneryHelper]
+ *   optional Location-only scenery helper presentation, supplied by the caller
+ * @property {((enabled: boolean) => void)|null} [onChangeSceneryOnlyHelper]
  * @property {string} promptValue
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue

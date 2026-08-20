@@ -3,7 +3,8 @@ import { getIngredientSlotViewProps } from "../ingredient-slot/useIngredientSlot
 import { getVideoToolsPanelViewProps } from "../video-tools-panel/useVideoToolsPanelViewModel";
 import {
   aspectRatioOptions,
-  cameraPresetOptions,
+  getCameraPresetDefinition,
+  normalizeCameraPresetValue,
   imageCountOptions,
   ingredientSlots,
   renderStyleOptions,
@@ -29,7 +30,6 @@ const MODE_OPTIONS = Object.freeze([
 ]);
 
 const RENDER_STYLE_OPTIONS = normalizeOptions(renderStyleOptions, "render-style");
-const CAMERA_PRESET_OPTIONS = normalizeOptions(cameraPresetOptions, "camera");
 const WARDROBE_THEME_OPTIONS = normalizeOptions(wardrobeThemeOptions, "wardrobe");
 const ASPECT_RATIO_OPTIONS = normalizeOptions(aspectRatioOptions, "aspect-ratio");
 const IMAGE_COUNT_OPTIONS = normalizeOptions(imageCountOptions, "image-count");
@@ -45,6 +45,9 @@ export function getImageStudioComposerViewProps({
   onSaveCustomIngredient = null,
   prompt = "",
   setPrompt = null,
+  showSceneryOnlyHelper = false,
+  sceneryOnlyHelperEnabled = true,
+  setSceneryOnlyHelperEnabled = null,
   renderStyle = "",
   setRenderStyle = null,
   cameraPreset = "",
@@ -82,6 +85,8 @@ export function getImageStudioComposerViewProps({
     customIngredientPrompts && typeof customIngredientPrompts === "object"
       ? customIngredientPrompts
       : {};
+  const normalizedCameraPreset = normalizeCameraPresetValue(cameraPreset);
+  const cameraPresetDefinition = getCameraPresetDefinition(normalizedCameraPreset);
 
   const ingredientSlotItems = ingredientSlots.map((slot) => ({
     id: String(slot.id),
@@ -132,9 +137,15 @@ export function getImageStudioComposerViewProps({
         : null,
     promptValue: String(prompt || ""),
     negativePromptValue: String(negativePrompt || ""),
+    showSceneryOnlyHelper: Boolean(showSceneryOnlyHelper),
+    sceneryOnlyHelperEnabled: Boolean(sceneryOnlyHelperEnabled),
     canGenerateImage: Boolean(canGenerateImage),
     generationHelpText: String(generationHelpText || ""),
     generationError: String(generationError || ""),
+    cameraPresetValue: normalizedCameraPreset,
+    cameraPresetLabel: String(cameraPresetDefinition.label || "Auto / No Camera Filter"),
+    cameraPresetDescription: String(cameraPresetDefinition.description || ""),
+    onOpenCameraPresetPicker: () => {},
     imageOptionFields: [
       {
         id: "render-style",
@@ -142,13 +153,6 @@ export function getImageStudioComposerViewProps({
         value: String(renderStyle || ""),
         options: RENDER_STYLE_OPTIONS,
         onChange: (nextValue) => setRenderStyle?.(nextValue),
-      },
-      {
-        id: "camera-preset",
-        label: "Camera / Framing",
-        value: String(cameraPreset || ""),
-        options: CAMERA_PRESET_OPTIONS,
-        onChange: (nextValue) => setCameraPreset?.(nextValue),
       },
       {
         id: "wardrobe-theme",
@@ -180,6 +184,8 @@ export function getImageStudioComposerViewProps({
     coinError: String(coinError || ""),
     onChangeMode: (nextMode) => setMode?.(nextMode),
     onChangePrompt: (nextValue) => setPrompt?.(nextValue),
+    onChangeSceneryOnlyHelper: (nextValue) =>
+      setSceneryOnlyHelperEnabled?.(Boolean(nextValue)),
     onChangeNegativePrompt: (nextValue) => setNegativePrompt?.(nextValue),
     onGenerateImage: () => onGenerateImage?.(),
   };

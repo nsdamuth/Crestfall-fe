@@ -25,7 +25,7 @@ const ACTION_ICONS = {
   share: Share2,
 };
 
-function StatePanelContent({ eyebrow, title, sections, actions, showCloseControl, onClosePanel }) {
+function StatePanelContent({ eyebrow, title, sections, actions, supplementalContent = null, showCloseControl, onClosePanel }) {
   const safeSections = Array.isArray(sections) ? sections : [];
   const safeActions = Array.isArray(actions) ? actions : [];
 
@@ -83,13 +83,31 @@ function StatePanelContent({ eyebrow, title, sections, actions, showCloseControl
           })}
         </div>
       ) : null}
+
+      {supplementalContent ? (
+        <div className="mt-[var(--space-6)]">{supplementalContent}</div>
+      ) : null}
     </div>
   );
 }
 
 export default function ChatStatePanelView(props) {
-  const { initialMobileOpen = false, ...contentProps } = props;
-  const [mobileOpen, setMobileOpen] = useState(initialMobileOpen);
+  const {
+    initialMobileOpen = false,
+    mobileOpen: controlledMobileOpen = null,
+    onMobileOpenChange = null,
+    ...contentProps
+  } = props;
+  const [localMobileOpen, setLocalMobileOpen] = useState(initialMobileOpen);
+  const mobileControlled = typeof controlledMobileOpen === "boolean";
+  const mobileOpen = mobileControlled ? controlledMobileOpen : localMobileOpen;
+  const setMobileOpen = (nextOpen) => {
+    if (mobileControlled) {
+      onMobileOpenChange?.(Boolean(nextOpen));
+      return;
+    }
+    setLocalMobileOpen(Boolean(nextOpen));
+  };
 
   return (
     <>

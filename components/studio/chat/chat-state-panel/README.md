@@ -1,6 +1,6 @@
 # Chat State Panel LOOM Package
 
-**Contract:** `ChatStatePanel.contract.js` (v1.0.0)
+**Contract:** `ChatStatePanel.contract.js` (v1.1.0)
 
 Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
 `components/studio/story-rooms/story-room-state-panel` tree is a
@@ -54,3 +54,10 @@ the mobile sheet open, and a longest-content case.
 - `ChatStatePanel.fixtures.js`
 - `useChatStatePanelViewModel.js`
 - `/dev/ui-preview/chat-state-panel`
+
+
+## W40 live Story Room extension
+
+The optional `supplementalContent` slot preserves caller-owned live Runtime Mechanics content beneath the C4 Export/Share actions. The slot is presentation-only; Runtime Mechanics loading, mutation, and API behavior remain outside the chat package.
+
+`mobileOpen` / `onMobileOpenChange` additionally allow the top-level Chat Shell to open the mobile Chronicle State sheet from the composer's State action while preserving uncontrolled preview behavior.

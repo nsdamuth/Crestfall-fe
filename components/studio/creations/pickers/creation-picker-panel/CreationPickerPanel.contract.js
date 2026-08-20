@@ -1,4 +1,4 @@
-export const CREATION_PICKER_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CREATION_PICKER_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Display fields consumed by the portable picker card.
@@ -33,6 +33,7 @@ export const CREATION_PICKER_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} emptyMessage
  * @property {import("react").ReactNode|null} actions
  * @property {string} gridClassName
+ * @property {number} [pageSize] Optional render-page size. Omit/zero for the legacy unpaginated view.
  * @property {((item: CreationPickerPanelItem) => void)|null} onSelect
  */
 

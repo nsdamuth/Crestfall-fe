@@ -1,6 +1,6 @@
 # Kit Image Creator Panel LOOM package
 
-**Contract:** `KitImageCreatorPanel.contract.js` (`1.0.0`)
+**Contract:** `KitImageCreatorPanel.contract.js` (`1.1.0`)
 
 ## Purpose
 
@@ -44,6 +44,12 @@ disabled `Use once` state indicator, and a clear control. Tapping a
 non-custom tile fires `onSlotActivate`; the caller owns opening the
 ingredient picker (1.2, phase 2).
 
+## Location-only scenery helper
+
+Contract `1.1.0` adds an optional caller-supplied scenery helper directly above
+the image prompt. The Kit owns only the toggle presentation; eligibility, state,
+prompt expansion, and generation behavior remain caller/Chassis concerns.
+
 ## Options expander
 
 One control, not two (the live composer's duplicate sliders-icon
@@ -51,9 +57,9 @@ button collapses into this single expander, a presentation change the
 contract permits per FRONTEND-SOP section 13). Opens five KitDropdown
 single-selects (Render Style, Camera / Framing, Wardrobe Theme, Aspect
 Ratio, Output Count, each `ariaLabel`-wired) plus the negative prompt
-textarea. Option lists are exported from `KitImageCreatorPanel.fixtures.js`
-and mirror `imageStudioData.js` verbatim; phase 3's Images page
-integration imports the same constants rather than re-declaring them.
+textarea. The Camera / Framing fixture catalog now carries all 29 current
+choices including Auto; live callers may project the same catalog through the
+accepted Image Studio camera binding.
 
 ## Generate block
 
@@ -76,7 +82,7 @@ the live flow).
 
 `default`, `emptySlots`, `insufficientCoins`, `customIngredient`
 (exercises both the savable and non-savable custom-editor variants in
-one fixture), `videoMode`, `longestContent`.
+one fixture), `sceneryOnly`, `videoMode`, `longestContent`.
 
 ## Package assets
 

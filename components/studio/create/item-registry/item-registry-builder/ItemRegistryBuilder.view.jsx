@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import ItemEquipmentModifierReferencesEditor from "@/components/studio/registries/item-equipment-modifier-references-editor/ItemEquipmentModifierReferencesEditor";
+import ItemOperationRequirementSetsEditor from "@/components/studio/registries/item-operation-authoring/ItemOperationRequirementSetsEditor";
+import ItemOperationEffectReferencesEditor from "@/components/studio/registries/item-operation-authoring/ItemOperationEffectReferencesEditor";
 
 const TAB_ICONS = {
   overview: ClipboardList,
@@ -53,6 +56,9 @@ export default function ItemRegistryBuilderView({
   quantityOptions = [],
   consumptionOptions = [],
   durabilityOptions = [],
+  equipmentModifierReferenceLimit = 16,
+  operationRequirementSetLimit = 16,
+  operationEffectReferenceLimit = 32,
   startingAssignmentContentByEntryId = {},
   onTitleChange = null,
   onDescriptionChange = null,
@@ -62,6 +68,18 @@ export default function ItemRegistryBuilderView({
   onAddEntry = null,
   onUpdateEntry = null,
   onUpdateEntryAliases = null,
+  onAddEquipmentModifierReference = null,
+  onUpdateEquipmentModifierReference = null,
+  onRemoveEquipmentModifierReference = null,
+  onAddOperationRequirementSet = null,
+  onUpdateOperationRequirementSet = null,
+  onRemoveOperationRequirementSet = null,
+  onAddOperationRequirement = null,
+  onUpdateOperationRequirement = null,
+  onRemoveOperationRequirement = null,
+  onAddOperationEffectReference = null,
+  onUpdateOperationEffectReference = null,
+  onRemoveOperationEffectReference = null,
   onDeleteEntry = null,
   onPromptGuidanceChange = null,
   onSave = null,
@@ -166,10 +184,25 @@ export default function ItemRegistryBuilderView({
           categoryOptions={categoryOptions}
           roleOptions={roleOptions}
           placementOptions={placementOptions}
+          equipmentModifierReferenceLimit={equipmentModifierReferenceLimit}
+          operationRequirementSetLimit={operationRequirementSetLimit}
+          operationEffectReferenceLimit={operationEffectReferenceLimit}
           onAddEntry={onAddEntry}
           onSelectEntry={onSelectEntry}
           onUpdateEntry={onUpdateEntry}
           onUpdateEntryAliases={onUpdateEntryAliases}
+          onAddEquipmentModifierReference={onAddEquipmentModifierReference}
+          onUpdateEquipmentModifierReference={onUpdateEquipmentModifierReference}
+          onRemoveEquipmentModifierReference={onRemoveEquipmentModifierReference}
+          onAddOperationRequirementSet={onAddOperationRequirementSet}
+          onUpdateOperationRequirementSet={onUpdateOperationRequirementSet}
+          onRemoveOperationRequirementSet={onRemoveOperationRequirementSet}
+          onAddOperationRequirement={onAddOperationRequirement}
+          onUpdateOperationRequirement={onUpdateOperationRequirement}
+          onRemoveOperationRequirement={onRemoveOperationRequirement}
+          onAddOperationEffectReference={onAddOperationEffectReference}
+          onUpdateOperationEffectReference={onUpdateOperationEffectReference}
+          onRemoveOperationEffectReference={onRemoveOperationEffectReference}
           onDeleteEntry={onDeleteEntry}
         />
       ) : null}
@@ -306,10 +339,25 @@ function EntriesTab({
   categoryOptions,
   roleOptions,
   placementOptions,
+  equipmentModifierReferenceLimit,
+  operationRequirementSetLimit,
+  operationEffectReferenceLimit,
   onAddEntry,
   onSelectEntry,
   onUpdateEntry,
   onUpdateEntryAliases,
+  onAddEquipmentModifierReference,
+  onUpdateEquipmentModifierReference,
+  onRemoveEquipmentModifierReference,
+  onAddOperationRequirementSet,
+  onUpdateOperationRequirementSet,
+  onRemoveOperationRequirementSet,
+  onAddOperationRequirement,
+  onUpdateOperationRequirement,
+  onRemoveOperationRequirement,
+  onAddOperationEffectReference,
+  onUpdateOperationEffectReference,
+  onRemoveOperationEffectReference,
   onDeleteEntry,
 }) {
   return (
@@ -368,9 +416,57 @@ function EntriesTab({
             categoryOptions={categoryOptions}
             roleOptions={roleOptions}
             placementOptions={placementOptions}
+            equipmentModifierReferenceLimit={equipmentModifierReferenceLimit}
+            operationRequirementSetLimit={operationRequirementSetLimit}
+            operationEffectReferenceLimit={operationEffectReferenceLimit}
             onChange={(updates) => onUpdateEntry?.(activeEntry.id, updates)}
             onAliasesChange={(value) =>
               onUpdateEntryAliases?.(activeEntry.id, value)
+            }
+            onAddEquipmentModifierReference={() =>
+              onAddEquipmentModifierReference?.(activeEntry.id)
+            }
+            onUpdateEquipmentModifierReference={(index, updates) =>
+              onUpdateEquipmentModifierReference?.(activeEntry.id, index, updates)
+            }
+            onRemoveEquipmentModifierReference={(index) =>
+              onRemoveEquipmentModifierReference?.(activeEntry.id, index)
+            }
+            onAddOperationRequirementSet={() =>
+              onAddOperationRequirementSet?.(activeEntry.id)
+            }
+            onUpdateOperationRequirementSet={(index, updates) =>
+              onUpdateOperationRequirementSet?.(activeEntry.id, index, updates)
+            }
+            onRemoveOperationRequirementSet={(index) =>
+              onRemoveOperationRequirementSet?.(activeEntry.id, index)
+            }
+            onAddOperationRequirement={(setIndex) =>
+              onAddOperationRequirement?.(activeEntry.id, setIndex)
+            }
+            onUpdateOperationRequirement={(setIndex, requirementIndex, updates) =>
+              onUpdateOperationRequirement?.(
+                activeEntry.id,
+                setIndex,
+                requirementIndex,
+                updates
+              )
+            }
+            onRemoveOperationRequirement={(setIndex, requirementIndex) =>
+              onRemoveOperationRequirement?.(
+                activeEntry.id,
+                setIndex,
+                requirementIndex
+              )
+            }
+            onAddOperationEffectReference={() =>
+              onAddOperationEffectReference?.(activeEntry.id)
+            }
+            onUpdateOperationEffectReference={(index, updates) =>
+              onUpdateOperationEffectReference?.(activeEntry.id, index, updates)
+            }
+            onRemoveOperationEffectReference={(index) =>
+              onRemoveOperationEffectReference?.(activeEntry.id, index)
             }
             onDelete={() => onDeleteEntry?.(activeEntry.id)}
           />
@@ -392,8 +488,23 @@ function ItemEntryEditor({
   categoryOptions,
   roleOptions,
   placementOptions,
+  equipmentModifierReferenceLimit,
+  operationRequirementSetLimit,
+  operationEffectReferenceLimit,
   onChange,
   onAliasesChange,
+  onAddEquipmentModifierReference,
+  onUpdateEquipmentModifierReference,
+  onRemoveEquipmentModifierReference,
+  onAddOperationRequirementSet,
+  onUpdateOperationRequirementSet,
+  onRemoveOperationRequirementSet,
+  onAddOperationRequirement,
+  onUpdateOperationRequirement,
+  onRemoveOperationRequirement,
+  onAddOperationEffectReference,
+  onUpdateOperationEffectReference,
+  onRemoveOperationEffectReference,
   onDelete,
 }) {
   return (
@@ -479,6 +590,33 @@ function ItemEntryEditor({
           </Field>
         </div>
       </div>
+
+      <ItemEquipmentModifierReferencesEditor
+        references={entry.equipmentModifierReferences || []}
+        maxReferences={equipmentModifierReferenceLimit}
+        onAdd={onAddEquipmentModifierReference}
+        onUpdate={onUpdateEquipmentModifierReference}
+        onRemove={onRemoveEquipmentModifierReference}
+      />
+
+      <ItemOperationRequirementSetsEditor
+        requirementSets={entry.operationRequirementSets || []}
+        maxSets={operationRequirementSetLimit}
+        onAdd={onAddOperationRequirementSet}
+        onUpdate={onUpdateOperationRequirementSet}
+        onRemove={onRemoveOperationRequirementSet}
+        onAddRequirement={onAddOperationRequirement}
+        onUpdateRequirement={onUpdateOperationRequirement}
+        onRemoveRequirement={onRemoveOperationRequirement}
+      />
+
+      <ItemOperationEffectReferencesEditor
+        references={entry.operationEffectReferences || []}
+        maxReferences={operationEffectReferenceLimit}
+        onAdd={onAddOperationEffectReference}
+        onUpdate={onUpdateOperationEffectReference}
+        onRemove={onRemoveOperationEffectReference}
+      />
 
       <button
         type="button"

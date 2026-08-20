@@ -50,9 +50,9 @@ Return **one complete JSON object only**. Do not return Markdown fences, comment
 ## Non-negotiable rules
 
 - Preserve all existing content outside the requested changes.
-- Preserve existing binding IDs and exact reference objects unless the creator explicitly asks to remove or replace them.
+- Preserve existing binding IDs. Existing graph-projected CREATION references may be retained by sourceId in the draft, but Crestfall does not persist their copied title/version/type metadata.
 - Do not invent database UUIDs, creation IDs, owner IDs, registry IDs, built-in module IDs, private identifiers, or contract versions.
-- Existing \`owner.ownerId\` and every reference \`sourceId\` may be reused exactly as supplied. New external references must first be selected through Crestfall's visual picker.
+- Existing \`owner.ownerId\` and every reference \`sourceId\` may be reused exactly as supplied. New external references must first be selected through Crestfall's visual picker. Graph-managed CREATION references are relationship intents, not authoritative embedded records.
 - This asset composes reusable definitions, activation policy, capability policy, and references. It does **not** store mutable actor state.
 - Do not add XP, current level, stat values, pool values, wallet balances, inventory contents, active conditions/modifiers, cooldowns, unlocks, state revisions, mutation logs, or provider-authored values.
 - Keep \`statePolicy.isolation\` exactly \`${ACTOR_MECHANICS_PROFILE_STATE_ISOLATION}\`.
@@ -78,8 +78,8 @@ Return **one complete JSON object only**. Do not return Markdown fences, comment
 - Maximum references per binding: ${ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS.maxReferencesPerBinding}
 - Maximum activation domains per binding: ${ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS.maxActivationDomainsPerBinding}
 - Binding IDs must be lowercase stable identifiers. Activation-domain values are uppercase identifiers.
-- A \`CREATION\` reference points to a reusable Crestfall creation. A \`BUILTIN_MODULE\` reference points to a deterministic first-party module. A \`REGISTRY\` reference points to a shared registry/catalog.
-- Do not copy definition contents into the profile. Bindings reference definitions; mutable actor state is created and owned elsewhere.
+- A \`CREATION\` reference points to a reusable Crestfall creation. For STATS, PROGRESSION, SKILLS, MAGIC, ABILITIES, and WALLET bindings, that relationship is persisted in Crestfall's creation graph and rehydrated as a transient reference. A \`BUILTIN_MODULE\` reference points to a deterministic first-party module. A \`REGISTRY\` reference points to a shared registry/catalog.
+- Do not copy definition contents, titles, creation types, or contract metadata into authoritative profile storage. Graph-resolved current target data wins; mutable actor state is created and owned elsewhere.
 
 ## Capability policy
 

@@ -14,6 +14,8 @@ export function useKitImageCreatorPanelViewModel({
   onCustomChangeText = null,
   onCustomBackToPresets = null,
   onCustomSavePreset = null,
+  sceneryHelper = null,
+  onChangeSceneryOnlyHelper = null,
   promptValue = "",
   onChangePrompt = null,
   negativePromptValue = "",
@@ -40,6 +42,16 @@ export function useKitImageCreatorPanelViewModel({
     onCustomChangeText,
     onCustomBackToPresets,
     onCustomSavePreset,
+    sceneryHelper:
+      sceneryHelper && typeof sceneryHelper === "object"
+        ? {
+            visible: Boolean(sceneryHelper.visible),
+            enabled: Boolean(sceneryHelper.enabled),
+            title: String(sceneryHelper.title || ""),
+            description: String(sceneryHelper.description || ""),
+          }
+        : null,
+    onChangeSceneryOnlyHelper,
     promptValue: promptValue || "",
     onChangePrompt,
     negativePromptValue: negativePromptValue || "",

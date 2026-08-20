@@ -10,8 +10,8 @@ actor_mechanics_profile_binding_v0
 ```
 
 The editor authors a controlled Actor Mechanics Profile value. Its Binding
-Shell may open the existing owned-creation picker for a `STATS` binding, but the
-portable View remains API-free and persistence-free.
+Shell may open the existing owned-creation picker for graph-managed definition
+profiles, while the portable View remains API-free and persistence-free.
 
 The editor does not create actor state, execute Advanced Mechanics, hydrate chat
 runtime, or change provider context.
@@ -53,9 +53,10 @@ The ViewModel owns:
 - preset application;
 - actor-owner normalization and optional parent-supplied owner locking;
 - binding and reusable-reference mutations;
-- `STATS` binding picker state;
-- conversion of a selected `STATS_POOLS_PROFILE` creation into a compact
-  reusable-definition reference;
+- graph-managed picker state for `STATS`, `PROGRESSION`, `SKILLS`, `MAGIC`, and
+  `ABILITIES` bindings;
+- conversion of selected creations into transient reusable-definition references
+  for the controlled draft;
 - activation-domain parsing;
 - fixed owner-scoped state policy;
 - Beyond Scale capability-policy compatibility;
@@ -110,22 +111,30 @@ Optional locked owner context:
 }
 ```
 
-## Stats & Pools reference
+## Graph-authoritative creation references
 
-A `STATS` binding may select one owned `STATS_POOLS_PROFILE` creation. The
-editor saves only:
+The following bindings may select one owned reusable definition creation per
+binding:
 
 ```text
-referenceType
-sourceId
-version
-title
-canonical type/version metadata
+STATS        → STATS_POOLS_PROFILE
+PROGRESSION  → PROGRESSION_PROFILE
+SKILLS       → SKILLS_PROFILE
+MAGIC        → ABILITY_SPELL_PROFILE
+ABILITIES    → ABILITY_SPELL_PROFILE
+WALLET       → WALLET_PROFILE
 ```
 
-It does not copy Stats & Pools definitions or create mutable actor values.
-Services-api resolves and validates the actual owned creation during create and
-update writes; client metadata is not authoritative.
+The persisted Actor Mechanics Profile does **not** store those `CREATION`
+reference objects. The authoritative relationship is stored in
+`creation_asset_edges` as `USES_MECHANICS_PROFILE`, keyed by the binding id.
+Services-api resolves the current target creation through PostGraphile and
+projects a transient `CREATION` reference back into the editor/runtime shape so
+existing LOOM controls continue to operate on current titles and contract data.
+
+Non-creation references such as `BUILTIN_MODULE` and `REGISTRY` remain profile
+data because they are not creation-graph relationships. Mutable actor state is
+unchanged and remains outside this asset.
 
 ## State isolation
 
@@ -179,3 +188,20 @@ Development preview:
 ```text
 /dev/ui-preview/actor-mechanics-profile-json-editor
 ```
+
+
+## Ability & Spell Profile references
+
+`MAGIC` and `ABILITIES` bindings may each select one owned `ABILITY_SPELL_PROFILE`.
+The selection is graph-authoritative and the editor receives the current target as
+a transient projection. Selecting a profile does not initialize known/unlocked
+state, mastery, cooldowns, charges, resource balances, or any other actor-owned
+runtime state.
+
+
+## Wallet Profile reference
+
+`WALLET` bindings may select one owned `WALLET_PROFILE` through the dedicated
+Creation picker. The reference stores the reusable
+`wallet_profile_contract_v0` definition only. Live actor balances, revisions,
+and transaction history remain actor-owned runtime state.

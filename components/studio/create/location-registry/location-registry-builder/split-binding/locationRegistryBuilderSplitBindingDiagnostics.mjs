@@ -201,7 +201,7 @@ assert.deepEqual(ready.applicationWiringStatus, {
   sharedLocationRegistryFoundation: "WIRED",
   splitAnalysisPlanCommitViewModel: "WIRED",
   splitClientApiProxyPath: "WIRED",
-  editCreationIdBridge: "PENDING_PROTECTED_EDITOR_WIRING",
+  editCreationIdBridge: "WIRED",
   splitVisualComposition: "WIRED",
 });
 
@@ -271,7 +271,8 @@ console.log(JSON.stringify({
   serverPlanAndFingerprintVisualWired: true,
   destructiveCreatorConfirmationVisualWired: true,
   committingCloseGuardVisualWired: true,
-  editCreationIdBridgePendingProtectedEditorWiring: true,
+  editCreationIdBridgePendingProtectedEditorWiring: false,
+  editCreationIdBridgeWiredByW38: true,
   locationRegistryBuilderViewSemanticallyExtendedWithoutSourceStyleReplacement: true,
   locationRegistryBuilderViewModelWiredToChassisAuthority: true,
   chassisAnalysisPlanCommitExcludedFromBindingContract: true,

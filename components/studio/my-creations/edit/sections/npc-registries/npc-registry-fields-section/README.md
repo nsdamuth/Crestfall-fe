@@ -59,3 +59,17 @@ profile attached to the Character creation.
 
 The portable fields View receives display-ready card metadata only and does not
 read or write Actor Mechanics Profile storage fields.
+
+## W48 linked-Character recovery convergence
+
+Saved-edit linked Character rows now consume the same hydrated registry entries as
+current Crestfall. Hydrated Character title/description/image/status metadata is
+presentation-only: `useNpcRegistryEditor` serializes entries before persistence so
+`hydratedCharacter`, `referenceStatus`, and other display-only recovery state never
+become NPC Registry definition authority.
+
+When a linked Character cannot be loaded through the current creation graph, the
+saved editor keeps the registry entry visible with an explicit unavailable-reference
+warning and the original `creationId`. Registry-local notes remain distinct from the
+linked Character description, and linked Character mechanics continue to follow the
+Character creation rather than a copied NPC mechanics profile.

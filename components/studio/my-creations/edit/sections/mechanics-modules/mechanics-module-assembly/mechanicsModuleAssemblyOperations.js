@@ -11,6 +11,9 @@ import {
   normalizeMechanicsCommandDomainAction,
 } from "../mechanics-command-domain-actions/mechanicsCommandDomainActionsNormalization.js";
 import {
+  normalizeMechanicsCommandDomainQuery,
+} from "../mechanics-command-domain-query/mechanicsCommandDomainQueryNormalization.js";
+import {
   formatMechanicsCommandResolutionSummary,
   normalizeMechanicsCommandResolution,
 } from "../mechanics-command-resolution/mechanicsCommandResolutionNormalization.js";
@@ -100,6 +103,12 @@ export function normalizeMechanicsAssemblyCommand(command, fallbackIndex = 0) {
         source.domainAdapter ||
         source.domain_adapter
     ),
+    domainQuery: normalizeMechanicsCommandDomainQuery(
+      source.domainQuery ||
+        source.domain_query ||
+        source.queryAdapter ||
+        source.query_adapter
+    ),
     composition: normalizeMechanicsCommandCompositionBuilder(
       source.composition ||
         source.commandComposition ||
@@ -147,6 +156,7 @@ export function getMechanicsCommandFoldSummary(command, commandIndex) {
     normalizeEffect: normalizeMechanicsCommandEffect,
   });
   const domainAction = normalizeMechanicsCommandDomainAction(safeCommand.domainAction);
+  const domainQuery = normalizeMechanicsCommandDomainQuery(safeCommand.domainQuery);
   const composition = normalizeMechanicsCommandCompositionBuilder(
     safeCommand.composition
   );
@@ -172,6 +182,7 @@ export function getMechanicsCommandFoldSummary(command, commandIndex) {
     pluralizeMechanicsCount(asMechanicsArray(invocation.arguments).length, "argument"),
     pluralizeMechanicsCount(asMechanicsArray(safeCommand.requirements).length, "requirement"),
     formatMechanicsCommandResolutionSummary(resolution),
+    domainQuery.enabled ? `${domainQuery.domain} / ${domainQuery.operation}` : "",
     domainAction.enabled ? domainAction.type.replaceAll("_", " ") : "",
     attemptEffectCount ? pluralizeMechanicsCount(attemptEffectCount, "attempt effect") : "",
     pluralizeMechanicsCount(asMechanicsArray(safeCommand.effects).length, "base effect"),

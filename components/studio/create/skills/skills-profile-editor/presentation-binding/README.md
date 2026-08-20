@@ -1,113 +1,72 @@
 # Skills Profile authoring presentation binding
 
-Status: additive FE presentation binding only.
+Status: **WIRED — W34 legacy presentation**.
 
-This package is the next step after the accepted Skills Profile semantic
-migration.
+This binding remains the accepted display/semantic seam for the Skills Profile
+editor. W34 does not replace it with a second model; it wires the current working
+Crestfall editor and JSON Editor & AI Guide into FE and updates the binding status
+to describe the live branch state.
 
-The semantic contract is already present in the FE lane:
+The semantic contract remains:
 
 ```text
 skills_profile_contract_v0
 ```
 
-The binding consumes Chassis-normalized `profile / errors / warnings / metrics`
-and defines the display-ready editor model for the eventual FE-owned Skills
-Profile editor.
+The binding consumes normalized `profile / errors / warnings / metrics` and exposes:
 
-It does not own normalization, validation, mutation, JSON application, save, or
-runtime advancement.
-
-## Current presentation model
-
-The binding carries:
-
-- Skills & Proficiencies header/copy
-- profile title/description/tags/default point cost/enabled
-- VALID / WARNING / ERROR states
-- Skill ID/title/category/tags
-- starting and maximum rank
-- Rank title/description/point cost
-- minimum level and tier prerequisites
-- cross-Skill prerequisites
-- typed unlock prerequisites
-- granted tags
-- granted command IDs
-- current limits and unlock-type catalog
+- Skills & Proficiencies header/copy;
+- profile title/description/tags/default point cost/enabled;
+- VALID / WARNING / ERROR states;
+- Skill ID/title/category/tags;
+- starting and maximum rank;
+- Rank title/description/point cost;
+- minimum level and tier prerequisites;
+- cross-Skill prerequisites;
+- typed unlock prerequisites;
+- granted tags and command IDs;
+- current limits and unlock-type catalog.
 
 Actor current ranks and unspent points remain runtime Story state.
 
-## Structured prerequisite gap
+## Current prerequisite presentation
 
-The current source v0 visual editor only directly edits level/tier prerequisites
-and grants.
+The current legacy visual editor directly edits level/tier prerequisites and grants.
+Cross-Skill and typed unlock identities remain structured objects and are authored
+through the now-live complete JSON Editor & AI Guide. They are not flattened or
+dropped.
 
-Cross-Skill and typed unlock identities are preserved in the contract and
-available through the complete JSON editor.
-
-This binding therefore marks them:
-
-```text
-JSON_EDITOR_ONLY_IN_CURRENT_V0_UI
-PENDING_FE_VISUAL_EXTENSION
-```
-
-instead of flattening or dropping them.
-
-## Visual work still pending
+The accepted branch status is therefore:
 
 ```text
-profileEditor:           PENDING_FE_VISUAL_BUILD
-structuredPrerequisites: PENDING_FE_VISUAL_EXTENSION
-jsonEditor:              PENDING_FE_VISUAL_EXTENSION
+profileEditor:           WIRED_LEGACY_PRESENTATION
+structuredPrerequisites: WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION
+jsonEditor:              WIRED_LEGACY_PRESENTATION
 ```
 
-The semantic and presentation contracts are now ready for the FE design pass.
+A future FE restyle may add dedicated visual controls for those structured
+prerequisites, but that is no longer a functional synchronization blocker.
 
-## One-line ESM correction
+## Builder ESM compatibility
 
-This patch also changes the accepted Skills builder contract import from:
-
-```text
-../skills-profile-editor/SkillsProfileEditor.contract
-```
-
-to:
+The FE Skills builder contract keeps the behavior-neutral explicit `.js` import:
 
 ```text
 ../skills-profile-editor/SkillsProfileEditor.contract.js
 ```
 
-This is behavior-neutral under Next.js and makes the contract directly
-importable by the standalone Node diagnostic.
+Its public contract/version/options/draft behavior remain semantically identical to
+Chassis while staying directly importable by standalone Node diagnostics.
 
 ## Permanent boundary
 
-Crestfall owns:
+Crestfall remains authority for normalization, validation, rank expansion/contraction,
+editor mutation, JSON validation/application, payload construction, persistence, actor
+current ranks, progression state, and runtime advancement.
 
-- normalization
-- validation
-- rank expansion/contraction
-- editor mutation
-- JSON validation/application
-- payload construction
-- persistence
-- actor current ranks
-- actor progression/unspent points
-- runtime advancement
+Crestfall-fe owns editor visual composition and presentation. Mirrored ViewModels in
+this branch are deployment mirrors; they do not move product authority out of
+Crestfall.
 
-Crestfall-fe owns:
-
-- editor visual composition
-- Skill/rank layout
-- validation presentation
-- prerequisite visual treatment
-- JSON editor visual treatment
-- semantic callbacks
-
-## Protected scopes untouched
-
-- `app/studio/v2/**`
-- `components/studio/my-creations/edit/**`
-- `components/kit/**`
-- `components/studio/chat/**`
+Saved-edit shell registration remains deferred to the dedicated protected edit
+convergence package.

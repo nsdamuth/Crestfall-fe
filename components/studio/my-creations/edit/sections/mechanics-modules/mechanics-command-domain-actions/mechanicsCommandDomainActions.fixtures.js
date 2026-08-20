@@ -61,6 +61,46 @@ export const MECHANICS_COMMAND_DOMAIN_ACTION_FIXTURES = Object.freeze([
     },
   }),
   Object.freeze({
+    id: "ability-spell-knowledge",
+    label: "Ability / Spell Knowledge",
+    invocation: {
+      arguments: [
+        { name: "actor", label: "Actor", type: "PLAYER_CHARACTER" },
+        { name: "ability", label: "Ability or Spell", type: "TEXT" },
+      ],
+    },
+    domainAction: {
+      version: "mechanics_command_domain_action_v2",
+      enabled: true,
+      type: "ABILITY_SPELL_KNOWLEDGE_SET",
+      actorArgumentName: "actor",
+      abilityArgumentName: "ability",
+      knowledgeState: "KNOWN",
+      unlockState: "UNLOCKED",
+      applyOnOutcomes: ["SUCCESS"],
+    },
+  }),
+  Object.freeze({
+    id: "ability-spell-use",
+    label: "Ability / Spell Use Authorization",
+    invocation: {
+      arguments: [
+        { name: "actor", label: "Actor", type: "PLAYER_CHARACTER" },
+        { name: "ability", label: "Ability or Spell", type: "TEXT" },
+        { name: "target", label: "Target", type: "CHARACTER_PRESENT" },
+      ],
+    },
+    domainAction: {
+      version: "mechanics_command_domain_action_v3",
+      enabled: true,
+      type: "ABILITY_SPELL_USE_REQUEST",
+      actorArgumentName: "actor",
+      abilityArgumentName: "ability",
+      targetArgumentName: "target",
+      applyOnOutcomes: ["SUCCESS"],
+    },
+  }),
+  Object.freeze({
     id: "location-transition",
     label: "Location Transition",
     invocation: {

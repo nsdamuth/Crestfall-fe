@@ -1,4 +1,4 @@
-export const CHAT_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CHAT_STATE_PANEL_SECTION_ICON_KEYS = Object.freeze({
   SCENARIO: "scenario",
@@ -51,5 +51,8 @@ export const CHAT_STATE_PANEL_ACTION_ICON_KEYS = Object.freeze({
  * @property {ChatStatePanelAction[]} actions
  * @property {boolean} showCloseControl
  * @property {boolean} initialMobileOpen Fixture/dev-only seed for the mobile sheet's local disclosure state.
+ * @property {boolean|null} mobileOpen Optional controlled mobile-sheet state supplied by ChatShell so composer State actions can open this panel.
+ * @property {((open:boolean)=>void)|null} onMobileOpenChange Controlled mobile-sheet disclosure callback.
+ * @property {import("react").ReactNode} supplementalContent Optional caller-owned live panel content rendered below session actions; used by the Story Room binding to preserve Runtime Mechanics without moving its application logic into this View.
  * @property {(() => void)|null} onClosePanel
  */

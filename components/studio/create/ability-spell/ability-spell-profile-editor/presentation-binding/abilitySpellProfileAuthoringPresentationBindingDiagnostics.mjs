@@ -363,7 +363,7 @@ assert.equal(
 );
 assert.equal(
   jsonOpen.jsonEditor.visualStatus,
-  "PENDING_FE_VISUAL_EXTENSION"
+  "WIRED_LEGACY_PRESENTATION"
 );
 
 const empty =
@@ -392,9 +392,9 @@ assert.deepEqual(
   valid.visualExtensionStatus,
   {
     profileEditor:
-      "PENDING_FE_VISUAL_BUILD",
+      "WIRED_LEGACY_PRESENTATION",
     jsonEditor:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
   }
 );
 
@@ -482,7 +482,7 @@ console.log(JSON.stringify({
   costAndExecutableOperationProjectionCovered: true,
   cooldownChargeMasteryProjectionCovered: true,
   validationStatesCovered: true,
-  jsonEditorPendingVisualExtensionExplicit: true,
-  profileEditorPendingVisualBuildExplicit: true,
+  jsonEditorLegacyPresentationWiredByW33: true,
+  profileEditorLegacyPresentationWiredByW33: true,
   chassisNormalizationValidationMutationPersistenceExcluded: true,
 }, null, 2));

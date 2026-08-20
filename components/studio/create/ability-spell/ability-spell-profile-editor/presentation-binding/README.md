@@ -1,6 +1,6 @@
 # Ability & Spell Profile authoring presentation binding
 
-Status: additive FE presentation binding only.
+Status: **W33 WIRED — legacy presentation mounted on the integration branch.**
 
 This package is the next step after the accepted Ability & Spell semantic
 migration.
@@ -190,29 +190,29 @@ The current source offers:
 JSON Editor & AI Guide
 ```
 
-That surface has not yet been rebuilt in the ruled FE visual system.
+W33 mirrors that working surface into FE under the explicit protected-branch
+unlock. The current styling is accepted temporarily and can be normalized later.
 
-This binding therefore records:
+This binding now records:
 
 ```text
-PENDING_FE_VISUAL_EXTENSION
+WIRED_LEGACY_PRESENTATION
 ```
 
-The Chassis continues to own JSON validation/application behavior.
+Crestfall continues to own JSON validation/application semantics.
 
 ## Main editor visual status
 
-The FE review previously ruled that the new Ability & Spell Profile should land
-visually after the editor design pass rather than copying the source legacy
-presentation.
-
-Accordingly this package records:
+The current integration branch is explicitly unlocked to carry the existing working
+presentation while protected functional absorption completes. W33 therefore mounts
+the current editor in FE and records:
 
 ```text
-profileEditor: PENDING_FE_VISUAL_BUILD
+profileEditor: WIRED_LEGACY_PRESENTATION
 ```
 
-The semantic and binding contracts are now ready for that FE build.
+A later visual pass may normalize styling without reopening semantic or runtime
+ownership.
 
 ## Permanent boundary
 
@@ -237,7 +237,11 @@ Crestfall-fe owns:
 - future JSON editor visual treatment
 - semantic callbacks back into Chassis
 
-## Protected scopes untouched
+## W33 branch scope
+
+The protected editor-family hold is explicitly unlocked for the current integration
+branch. W33 touches only the Ability & Spell create/editor family. It still leaves
+these other lanes unchanged:
 
 - `app/studio/v2/**`
 - `components/studio/my-creations/edit/**`

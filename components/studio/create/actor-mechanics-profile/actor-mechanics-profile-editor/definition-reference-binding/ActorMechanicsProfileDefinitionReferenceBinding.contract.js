@@ -99,7 +99,7 @@ const REFERENCE_MODE_CONFIG = Object.freeze({
     emptyState:
       "No Skills Profile selected. Choose an owned profile to provide reusable skill and rank definitions for this binding.",
     currentFeVisualStatus:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
     callbackKey:
       "onOpenSkillsProfilePicker",
   }),
@@ -118,7 +118,7 @@ const REFERENCE_MODE_CONFIG = Object.freeze({
     replaceLabel:
       "Replace Ability & Spell Profile",
     currentFeVisualStatus:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
     callbackKey:
       "onOpenAbilitySpellProfilePicker",
   }),
@@ -141,7 +141,7 @@ const REFERENCE_MODE_CONFIG = Object.freeze({
     emptyState:
       "No Wallet Profile selected. Choose an owned profile to provide reusable gameplay currency definitions for this binding.",
     currentFeVisualStatus:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
     callbackKey:
       "onOpenWalletProfilePicker",
   }),
@@ -385,11 +385,13 @@ export function projectActorMechanicsProfileDefinitionReferenceBinding({
   const managedItems =
     items.filter((item) => item.managed);
 
-  const pendingVisualItems =
+  const unresolvedVisualItems =
     managedItems.filter(
       (item) =>
-        item.visualStatus ===
-        "PENDING_FE_VISUAL_EXTENSION"
+        ![
+          "CURRENT_FE_CONTROL_AVAILABLE",
+          "WIRED_LEGACY_PRESENTATION",
+        ].includes(item.visualStatus)
     );
 
   const picker = pickerProps
@@ -435,7 +437,7 @@ export function projectActorMechanicsProfileDefinitionReferenceBinding({
       managedBindingCount:
         managedItems.length,
       pendingFeVisualExtensionCount:
-        pendingVisualItems.length,
+        unresolvedVisualItems.length,
       selectedManagedCreationReferenceCount:
         managedItems.reduce(
           (total, item) =>
@@ -449,30 +451,30 @@ export function projectActorMechanicsProfileDefinitionReferenceBinding({
 
     visualExtensionStatus: {
       skillsProfileControl:
-        pendingVisualItems.some(
+        managedItems.some(
           (item) =>
             item.definitionReferenceMode ===
             "SKILLS_PROFILE"
         )
-          ? "PENDING_FE_VISUAL_EXTENSION"
+          ? "WIRED_LEGACY_PRESENTATION"
           : "NOT_REQUIRED_BY_CURRENT_BINDINGS",
 
       abilitySpellProfileControl:
-        pendingVisualItems.some(
+        managedItems.some(
           (item) =>
             item.definitionReferenceMode ===
             "ABILITY_SPELL_PROFILE"
         )
-          ? "PENDING_FE_VISUAL_EXTENSION"
+          ? "WIRED_LEGACY_PRESENTATION"
           : "NOT_REQUIRED_BY_CURRENT_BINDINGS",
 
       walletProfileControl:
-        pendingVisualItems.some(
+        managedItems.some(
           (item) =>
             item.definitionReferenceMode ===
             "WALLET_PROFILE"
         )
-          ? "PENDING_FE_VISUAL_EXTENSION"
+          ? "WIRED_LEGACY_PRESENTATION"
           : "NOT_REQUIRED_BY_CURRENT_BINDINGS",
     },
 

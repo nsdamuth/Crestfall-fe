@@ -3,46 +3,25 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
-import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
-import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
-import StoryRoomRuntimeMechanicsPanel from "@/components/studio/story-rooms/StoryRoomRuntimeMechanicsPanel";
-import StoryRoomStatePanel from "@/components/studio/story-rooms/StoryRoomStatePanel";
-import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import StoryRoomChatC1C6Binding from "@/components/studio/story-rooms/story-room-chat-c1-c6-binding/StoryRoomChatC1C6Binding";
 import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
-
-import StoryRoomChatShellView from "./story-room-chat-shell/StoryRoomChatShell.view";
-import { useStoryRoomChatShellViewModel } from "./story-room-chat-shell/useStoryRoomChatShellViewModel";
 
 export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
-
-  const confirmDelete = useCallback(
-    (message) => window.confirm(message),
-    []
-  );
+  const { coinBalance } = useStudioAccount();
 
   const onRoomDeleted = useCallback(() => {
     router.push("/studio/story-rooms");
   }, [router]);
 
-  const viewProps = useStoryRoomChatShellViewModel({
-    roomId,
-    chat,
-    confirmDelete,
-    onRoomDeleted,
-  });
-
   return (
-    <StoryRoomChatShellView
-      {...viewProps}
-      CastPanelComponent={StoryRoomCastPanel}
-      ComposerComponent={StoryRoomComposer}
-      MobileDrawerComponent={StoryRoomMobileDrawer}
-      RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
-      StatePanelComponent={StoryRoomStatePanel}
-      TranscriptComponent={StoryRoomTranscript}
+    <StoryRoomChatC1C6Binding
+      roomId={roomId}
+      chat={chat}
+      coinBalance={coinBalance}
+      onRoomDeleted={onRoomDeleted}
     />
   );
 }

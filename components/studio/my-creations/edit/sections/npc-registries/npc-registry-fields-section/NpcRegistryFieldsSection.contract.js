@@ -1,4 +1,4 @@
-export const NPC_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
+export const NPC_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable UI boundary for the portable NPC Registry Fields View.
@@ -23,7 +23,7 @@ export const NPC_REGISTRY_FIELDS_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} primaryActionLabel
  * @property {boolean} primaryActionDisabled
  * @property {string} helperMessage
- * @property {Array<{id:string, eyebrow:string, title:string, body:string, meta:string, onEdit:(Function|null), onDelete:(Function|null)}>} cards
+ * @property {Array<{id:string, eyebrow:string, title:string, body:string, imageUrl:string, registryNotes:string, meta:string, footer:string, referenceWarning:string, onEdit:(Function|null), onDelete:(Function|null)}>} cards
  * @property {string} emptyMessage
  * @property {string} loadError
  * @property {((value: string) => void)|null} onChangeRegistryTitle

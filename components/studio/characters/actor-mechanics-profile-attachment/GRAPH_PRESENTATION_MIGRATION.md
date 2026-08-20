@@ -1,6 +1,6 @@
 # Actor Mechanics Profile Attachment Graph presentation
 
-Status: FE presentation-binding contract and realistic fixtures only.
+Status: LIVE — W50 graph-authoritative application binding + FE presentation contract.
 
 This package reconciles the FE lane with Crestfall's current
 Character / Player Character Actor Mechanics Profile relationship model.

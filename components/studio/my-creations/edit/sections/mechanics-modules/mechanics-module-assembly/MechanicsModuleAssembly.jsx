@@ -42,6 +42,10 @@ import MechanicsCommandDomainActions from "../mechanics-command-domain-actions/M
 import {
   normalizeMechanicsCommandDomainAction,
 } from "../mechanics-command-domain-actions/mechanicsCommandDomainActionsNormalization.js";
+import MechanicsCommandDomainQuery from "../mechanics-command-domain-query/MechanicsCommandDomainQuery";
+import {
+  normalizeMechanicsCommandDomainQuery,
+} from "../mechanics-command-domain-query/mechanicsCommandDomainQueryNormalization.js";
 import MechanicsDefaults from "../mechanics-defaults/MechanicsDefaults";
 import MechanicsStatusBlocks from "../mechanics-status-blocks/MechanicsStatusBlocks";
 import MechanicsGuards from "../mechanics-guards/MechanicsGuards";
@@ -81,6 +85,7 @@ function MechanicsCommandCard({
     normalizeEffect: normalizeMechanicsCommandEffect,
   });
   const domainAction = normalizeMechanicsCommandDomainAction(safeCommand.domainAction);
+  const domainQuery = normalizeMechanicsCommandDomainQuery(safeCommand.domainQuery);
   const composition = normalizeMechanicsCommandCompositionBuilder(
     safeCommand.composition
   );
@@ -111,6 +116,15 @@ function MechanicsCommandCard({
             requirements={requirements}
             commandIndex={commandIndex}
             onPatchCommand={onPatchCommand}
+          />
+        </div>
+        <div className="mt-4">
+          <MechanicsCommandDomainQuery
+            domainQuery={domainQuery}
+            invocation={invocation}
+            onChange={(nextDomainQuery) =>
+              onPatchCommand(commandIndex, { domainQuery: nextDomainQuery })
+            }
           />
         </div>
         <div className="mt-4">

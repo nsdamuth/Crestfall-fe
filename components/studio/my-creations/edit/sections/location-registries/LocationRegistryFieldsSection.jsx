@@ -23,6 +23,7 @@ export default function LocationRegistryFieldsSection({
   return (
     <LocationRegistryBuilder
       mode="edit"
+      currentCreationId={form.id || ""}
       initialTitle={form.title || ""}
       initialDescription={form.description || ""}
       initialData={form.data || {}}

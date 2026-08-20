@@ -4,6 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchStoryRoom,
   fetchStoryRoomRegistryNpcs,
+  exportStoryRoomTranscript,
+  createTemporaryStoryRoomShare,
+  revokeTemporaryStoryRoomShare,
+  createPersistentStoryRoomShare,
+  revokePersistentStoryRoomShare,
   loadStoryRoomRegistryNpc,
   loadRandomLikedStoryRoomCharacter,
   sendStoryRoomMessage,
@@ -1034,6 +1039,92 @@ const sendMessage = useCallback(
     [beginMessageAction, finishMessageAction, roomId]
   );
 
+  const exportTranscript = useCallback(
+    async ({
+      preset = "RECENT_50",
+      startMessageId = null,
+      endMessageId = null,
+      format = "TXT",
+    } = {}) => {
+      if (!roomId) {
+        throw new Error("Story room id is required.");
+      }
+
+      return exportStoryRoomTranscript(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+        format,
+      });
+    },
+    [roomId]
+  );
+
+  const createTemporaryShare = useCallback(
+    async ({
+      preset = "RECENT_50",
+      startMessageId = null,
+      endMessageId = null,
+    } = {}) => {
+      if (!roomId) {
+        throw new Error("Story room id is required.");
+      }
+
+      return createTemporaryStoryRoomShare(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+      });
+    },
+    [roomId]
+  );
+
+  const revokeTemporaryShare = useCallback(
+    async (shareId) => {
+      if (!roomId || !shareId) {
+        throw new Error("Temporary share id is required.");
+      }
+
+      return revokeTemporaryStoryRoomShare(roomId, shareId);
+    },
+    [roomId]
+  );
+
+  const createPersistentShare = useCallback(
+    async ({
+      preset = "RECENT_50",
+      startMessageId = null,
+      endMessageId = null,
+    } = {}) => {
+      if (!roomId) {
+        throw new Error("Story room id is required.");
+      }
+
+      return createPersistentStoryRoomShare(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+      });
+    },
+    [roomId]
+  );
+
+  const revokePersistentShare = useCallback(
+    async (shareId) => {
+      if (!roomId || !shareId) {
+        throw new Error(
+          "Persistent share id is required."
+        );
+      }
+
+      return revokePersistentStoryRoomShare(
+        roomId,
+        shareId
+      );
+    },
+    [roomId]
+  );
+
   const summarizeCurrentBoundary = useCallback(async () => {
     if (!roomId || summaryRequestActiveRef.current) return null;
     summaryRequestActiveRef.current = true;
@@ -1103,6 +1194,11 @@ const sendMessage = useCallback(
     reportMessage,
     messageActionState,
     summarizeCurrentBoundary,
+    exportTranscript,
+    createTemporaryShare,
+    revokeTemporaryShare,
+    createPersistentShare,
+    revokePersistentShare,
     canSetPlayerCharacter,
     settingPlayerCharacter,
     setPlayerCharacterError,

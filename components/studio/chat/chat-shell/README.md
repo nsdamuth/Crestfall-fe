@@ -1,6 +1,6 @@
 # ChatShell LOOM Package
 
-**Contract:** `ChatShell.contract.js` (v1.0.0)
+**Contract:** `ChatShell.contract.js` (v1.1.0)
 
 Wave C5 (`docs/plans/FABLE-GATE-PLAN.md`). Ruling O6 option A ratified 12
 Aug 2026: coin chip in the chat header plus fixture-fed upsell sheets
@@ -99,3 +99,8 @@ own existing fixtures wherever one already fit; nothing was reshaped.
 
 Every value used resolves through an existing locked token; no new token
 was needed for this package.
+
+
+## W40 live Story Room coordination
+
+The shell now coordinates the composer's mobile Cast/State actions with the controlled mobile sheets exposed by C3. Desktop rail disclosure remains unchanged; sibling packages still own their sheet presentation.

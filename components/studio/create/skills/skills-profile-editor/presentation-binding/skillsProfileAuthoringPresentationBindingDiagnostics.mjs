@@ -206,11 +206,11 @@ assert.equal(valid.limits.maxPointCost, 1000000);
 
 assert.equal(
   valid.structuredPrerequisiteAuthoring.visualStatus,
-  "JSON_EDITOR_ONLY_IN_CURRENT_V0_UI"
+  "WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION"
 );
 assert.match(
   valid.structuredPrerequisiteAuthoring.helper,
-  /Advancement-unlock and cross-skill prerequisites remain available through the complete JSON editor/i
+  /authored through the live complete JSON editor/i
 );
 
 const warning =
@@ -246,7 +246,7 @@ assert.equal(
 );
 assert.equal(
   jsonOpen.jsonEditor.visualStatus,
-  "PENDING_FE_VISUAL_EXTENSION"
+  "WIRED_LEGACY_PRESENTATION"
 );
 
 const empty =
@@ -268,11 +268,11 @@ assert.deepEqual(
   valid.visualExtensionStatus,
   {
     profileEditor:
-      "PENDING_FE_VISUAL_BUILD",
+      "WIRED_LEGACY_PRESENTATION",
     structuredPrerequisites:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION",
     jsonEditor:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
   }
 );
 
@@ -353,8 +353,8 @@ console.log(JSON.stringify({
   pointCostTierGrantProjectionCovered: true,
   structuredSkillAndUnlockPrerequisitesCovered: true,
   validationStatesCovered: true,
-  structuredPrerequisitePendingVisualExtensionExplicit: true,
-  jsonEditorPendingVisualExtensionExplicit: true,
-  profileEditorPendingVisualBuildExplicit: true,
+  structuredPrerequisiteLegacyJsonPathWired: true,
+  jsonEditorLegacyPresentationWired: true,
+  profileEditorLegacyPresentationWired: true,
   chassisNormalizationValidationMutationPersistenceExcluded: true,
 }, null, 2));

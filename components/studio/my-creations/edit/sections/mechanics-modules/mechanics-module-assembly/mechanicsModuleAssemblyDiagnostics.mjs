@@ -96,6 +96,7 @@ test("M9 Binding Shell composes every extracted Mechanics domain", () => {
     "MechanicsCommandArgumentsSection",
     "MechanicsCommandTriggersSection",
     "MechanicsCommandRequirements",
+    "MechanicsCommandDomainQuery",
     "MechanicsCommandDomainActions",
     "MechanicsCommandEffects",
     "MechanicsCommandResolution",
@@ -144,9 +145,17 @@ test("create and edit callers still use the same parent shell and atomic callbac
   const edit = read(
     "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
   );
+  const editRegistry = read(
+    "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
+  );
   assert.match(create, /MechanicsModuleFieldsSection/);
   assert.match(createVm, /replaceData:\s*replaceMechanicsData/);
-  assert.match(edit, /replaceData=\{\(nextData\)\s*=>\s*updateField\("data", nextData\)/s);
+  assert.match(edit, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(editRegistry, /MECHANICS_MODULE/);
+  assert.match(
+    editRegistry,
+    /replaceData:\s*\(nextData\)\s*=>\s*ctx\.updateField\("data", nextData\)/s
+  );
 });
 
 test("M9 package contains contract, View, ViewModel, operations, fixtures, README, diagnostics, and protected preview", () => {

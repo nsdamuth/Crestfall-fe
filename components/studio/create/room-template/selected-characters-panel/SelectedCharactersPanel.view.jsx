@@ -5,8 +5,10 @@ import {
 
 export default function SelectedCharactersPanelView({
   characters = [],
+  lifecycleOptions = [],
   onOpenCharacterPicker = null,
   onRemoveCharacter = null,
+  onChangeCharacterLifecycle = null,
 }) {
   const safeCharacters = Array.isArray(characters) ? characters : [];
 
@@ -18,7 +20,7 @@ export default function SelectedCharactersPanelView({
             Characters
           </p>
           <p className="mt-1 text-sm text-[var(--ink-dim)]">
-            Select one or more characters for this Story.
+            Select Story cast and choose whether each Character persists or is opening-only.
           </p>
         </div>
 
@@ -43,12 +45,42 @@ export default function SelectedCharactersPanelView({
                 {character.initial || "?"}
               </div>
 
-              <div>
+              <div className="min-w-[220px] flex-1">
                 <p className="text-sm text-[var(--ink)]">
                   {character.title || "Untitled Character"}
                 </p>
                 <p className="text-xs text-[var(--ink-dim)]">
                   {character.subtitle || ""}
+                </p>
+
+                <label className="mt-2 block text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+                  Story lifecycle
+                  <select
+                    value={character.lifecycleKind || "STORY_PINNED"}
+                    onChange={(event) =>
+                      onChangeCharacterLifecycle?.(
+                        character.id,
+                        event.target.value
+                      )
+                    }
+                    className="mt-1 block w-full rounded-lg border border-white/10 bg-black/40 px-2 py-2 text-xs normal-case tracking-normal text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
+                  >
+                    {(Array.isArray(lifecycleOptions) ? lifecycleOptions : []).map(
+                      (option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </label>
+
+                <p className="mt-1 max-w-sm text-[11px] leading-relaxed text-[var(--ink-dim)]">
+                  {(Array.isArray(lifecycleOptions) ? lifecycleOptions : []).find(
+                    (option) =>
+                      option.value ===
+                      (character.lifecycleKind || "STORY_PINNED")
+                  )?.description || ""}
                 </p>
               </div>
 

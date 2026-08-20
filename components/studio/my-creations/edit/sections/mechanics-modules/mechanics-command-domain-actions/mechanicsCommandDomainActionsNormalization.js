@@ -1,9 +1,15 @@
 import {
+  ABILITY_SPELL_ACTOR_ARGUMENT_TYPES,
+  ABILITY_SPELL_USE_ACTOR_ARGUMENT_TYPES,
+  ABILITY_SPELL_KNOWLEDGE_STATES,
+  ABILITY_SPELL_UNLOCK_STATES,
   COMMAND_DOMAIN_ACTION_OUTCOMES,
   COMMAND_DOMAIN_ACTION_TYPE_VALUES,
   COMMAND_DOMAIN_ARGUMENT_TYPES,
   LOCATION_TRAVEL_OPERATIONS,
   MECHANICS_COMMAND_DOMAIN_ACTION_VERSION,
+  MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V2,
+  MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3,
 } from "./MechanicsCommandDomainActions.contract.js";
 
 function asObject(value) {
@@ -62,6 +68,14 @@ function listArgumentsByType(invocation, type, fallbackLabel) {
     .filter(Boolean);
 }
 
+function listArgumentsByTypes(invocation, types, fallbackLabel) {
+  const allowed = new Set(types);
+  return asArray(asObject(invocation).arguments)
+    .filter((argument) => allowed.has(normalizeString(argument?.type).toUpperCase()))
+    .map((argument) => normalizeArgumentOption(argument, fallbackLabel))
+    .filter(Boolean);
+}
+
 export function getMechanicsCommandDomainArgumentOptions(invocation = {}) {
   return {
     heldItems: listArgumentsByType(
@@ -83,6 +97,16 @@ export function getMechanicsCommandDomainArgumentOptions(invocation = {}) {
       invocation,
       COMMAND_DOMAIN_ARGUMENT_TYPES.presentCharacter,
       "Recipient"
+    ),
+    abilityActors: listArgumentsByTypes(
+      invocation,
+      ABILITY_SPELL_ACTOR_ARGUMENT_TYPES,
+      "Actor"
+    ),
+    abilityUseActors: listArgumentsByTypes(
+      invocation,
+      ABILITY_SPELL_USE_ACTOR_ARGUMENT_TYPES,
+      "Actor"
     ),
     text: listArgumentsByType(
       invocation,
@@ -107,9 +131,21 @@ export function normalizeMechanicsCommandDomainAction(value = {}) {
       source.adapter_type ||
       "NONE"
   ).toUpperCase();
-  const type = COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes(requestedType)
-    ? requestedType
-    : "NONE";
+  const version =
+    normalizeString(source.version) || MECHANICS_COMMAND_DOMAIN_ACTION_VERSION;
+  const typeAllowedByVersion =
+    requestedType === "ABILITY_SPELL_USE_REQUEST"
+      ? version === MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3
+      : requestedType === "ABILITY_SPELL_KNOWLEDGE_SET"
+        ? [
+            MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V2,
+            MECHANICS_COMMAND_DOMAIN_ACTION_VERSION_V3,
+          ].includes(version)
+        : true;
+  const type =
+    typeAllowedByVersion && COMMAND_DOMAIN_ACTION_TYPE_VALUES.includes(requestedType)
+      ? requestedType
+      : "NONE";
   const enabled = type !== "NONE" && normalizeBoolean(source.enabled, true);
   const requestedOutcomes = normalizeStringList(
     source.applyOnOutcomes || source.apply_on_outcomes || source.outcomes
@@ -127,7 +163,7 @@ export function normalizeMechanicsCommandDomainAction(value = {}) {
 
   return {
     ...source,
-    version: normalizeString(source.version) || MECHANICS_COMMAND_DOMAIN_ACTION_VERSION,
+    version,
     enabled,
     type: enabled ? type : "NONE",
     itemArgumentName:
@@ -176,7 +212,15 @@ export function normalizeMechanicsCommandDomainAction(value = {}) {
               source.target_argument,
             "target"
           )
-        : "",
+        : enabled && type === "ABILITY_SPELL_USE_REQUEST"
+          ? slugifyId(
+              source.targetArgumentName ||
+                source.target_argument_name ||
+                source.targetArgument ||
+                source.target_argument,
+              ""
+            )
+          : "",
     conditionArgumentName:
       enabled &&
       ["PARTICIPANT_CONDITION_APPLY", "PARTICIPANT_CONDITION_REMOVE"].includes(
@@ -227,6 +271,48 @@ export function normalizeMechanicsCommandDomainAction(value = {}) {
             "amount"
           )
         : "",
+    actorArgumentName:
+      enabled && ["ABILITY_SPELL_KNOWLEDGE_SET", "ABILITY_SPELL_USE_REQUEST"].includes(type)
+        ? slugifyId(
+            source.actorArgumentName ||
+              source.actor_argument_name ||
+              source.targetArgumentName ||
+              source.target_argument_name,
+            "actor"
+          )
+        : "",
+    abilityArgumentName:
+      enabled && ["ABILITY_SPELL_KNOWLEDGE_SET", "ABILITY_SPELL_USE_REQUEST"].includes(type)
+        ? slugifyId(
+            source.abilityArgumentName ||
+              source.ability_argument_name ||
+              source.subjectArgumentName ||
+              source.subject_argument_name,
+            "ability"
+          )
+        : "",
+    knowledgeState:
+      enabled && type === "ABILITY_SPELL_KNOWLEDGE_SET"
+        ? (() => {
+            const requested = normalizeString(
+              source.knowledgeState || source.knowledge_state || source.knownState || source.known_state || "KEEP"
+            ).toUpperCase();
+            return ABILITY_SPELL_KNOWLEDGE_STATES.includes(requested)
+              ? requested
+              : "KEEP";
+          })()
+        : "KEEP",
+    unlockState:
+      enabled && type === "ABILITY_SPELL_KNOWLEDGE_SET"
+        ? (() => {
+            const requested = normalizeString(
+              source.unlockState || source.unlock_state || "KEEP"
+            ).toUpperCase();
+            return ABILITY_SPELL_UNLOCK_STATES.includes(requested)
+              ? requested
+              : "KEEP";
+          })()
+        : "KEEP",
     applyOnOutcomes: enabled
       ? requestedOutcomes.length
         ? requestedOutcomes
@@ -249,6 +335,8 @@ export function getMechanicsCommandDomainActionFlags(type) {
       "PARTICIPANT_CONDITION_APPLY",
       "PARTICIPANT_CONDITION_REMOVE",
     ].includes(type),
+    usesAbilitySpellKnowledge: type === "ABILITY_SPELL_KNOWLEDGE_SET",
+    usesAbilitySpellUse: type === "ABILITY_SPELL_USE_REQUEST",
     usesVisibleItem: ["ITEM_TAKE", "ITEM_DAMAGE", "ITEM_REPAIR"].includes(type),
   };
 }
@@ -281,6 +369,10 @@ export function getMechanicsCommandDomainActionDescription(type) {
       "Apply Condition creates an UNTIL_REMOVED active condition for the resolved present Character through the existing sensory condition runtime.",
     PARTICIPANT_CONDITION_REMOVE:
       "Remove Condition requires the named condition to be active on the resolved present Character and writes the matching REMOVED condition marker through the existing sensory condition runtime.",
+    ABILITY_SPELL_KNOWLEDGE_SET:
+      "Set Ability / Spell Knowledge mutates authoritative actor-owned known and unlocked state for a definition resolved through the actor’s graph-bound Ability & Spell Profile. It does not cast, spend resources, start cooldowns, or consume charges.",
+    ABILITY_SPELL_USE_REQUEST:
+      "Authorize Ability / Spell Use creates a deterministic pre-commit use transaction only after the existing Ability/Spell authorization envelope returns AUTHORIZED. It does not spend resources, consume charges, start cooldowns, execute operation references, or commit the use.",
     // Preserve the existing parent fallback wording for current Location actions.
     LOCATION_TRANSITION:
       "Remove Condition requires the named condition to be active on the resolved present Character and writes the matching REMOVED condition marker through the existing sensory condition runtime.",
@@ -311,6 +403,22 @@ export function projectMechanicsCommandDomainAction(value, invocation = {}) {
           ? "Apply Character Condition"
           : "Remove Character Condition"
       } requires one CHARACTER_PRESENT argument and one TEXT condition argument.`;
+    }
+  } else if (flags.usesAbilitySpellUse) {
+    if (!options.abilityUseActors.length || !options.text.length) {
+      missingBindingMessage =
+        "Authorize Ability / Spell Use requires one PLAYER_CHARACTER actor argument and one TEXT ability argument.";
+    }
+  } else if (flags.usesAbilitySpellKnowledge) {
+    if (!options.abilityActors.length || !options.text.length) {
+      missingBindingMessage =
+        "Set Ability / Spell Knowledge requires one PLAYER_CHARACTER or CHARACTER_PRESENT actor argument and one TEXT ability argument.";
+    } else if (
+      domainAction.knowledgeState === "KEEP" &&
+      domainAction.unlockState === "KEEP"
+    ) {
+      missingBindingMessage =
+        "Set Ability / Spell Knowledge must change known state, unlock state, or both.";
     }
   } else if (domainAction.type === "ITEM_GIVE") {
     if (!options.heldItems.length || !options.presentCharacters.length) {

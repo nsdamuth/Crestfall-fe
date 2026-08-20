@@ -367,7 +367,7 @@ assert.deepEqual(
     referencedRegistryHydration: "WIRED",
     endpointSelectionMutation: "WIRED",
     endpointIdentityResolution: "WIRED",
-    editCreationIdBridge: "PENDING_PROTECTED_EDITOR_WIRING",
+    editCreationIdBridge: "WIRED",
   }
 );
 
@@ -450,7 +450,8 @@ console.log(JSON.stringify({
   degradedEndpointReferenceRecoveryWired: true,
   sharedLocationRegistryApplicationFoundationWired: true,
   registryHydrationAndEndpointMutationWired: true,
-  editCreationIdBridgePendingProtectedEditorWiring: true,
+  editCreationIdBridgePendingProtectedEditorWiring: false,
+  editCreationIdBridgeWiredByW38: true,
   locationRegistryBuilderViewSemanticallyExtendedWithoutSourceStyleReplacement: true,
   locationRegistryBuilderViewModelWiredToChassisAuthority: true,
   chassisLoadingResolutionMutationSaveAndPersistenceExcludedFromBindingContract: true,

@@ -1,60 +1,67 @@
-# Skills Profile semantic package
+# Skills Profile FE package
 
-Status: semantic contract and filled fixtures only.
+Status: **LIVE FUNCTIONAL ABSORPTION — W34**.
 
-This package is the second bounded Crestfall to Crestfall-fe functional
-absorption slice for `SKILLS_PROFILE`.
+W34 follows the explicit protected-lane unlock for the current integration branch.
+The accepted Skills semantic contracts and richer FE fixtures remain intact, while
+the current Crestfall Skills authoring implementation is mirrored into FE so the
+live editor can function before a later visual-normalization pass.
 
-It intentionally does not add a production View, page entrypoint, application
-ViewModel, API call, persistence path, JSON-editor presentation, or
-editor-family integration.
+The user explicitly authorized carrying the older working styling on this branch
+for now, with normalization where it is low-risk. W34 therefore prioritizes
+functional parity over immediate redesign.
 
 ## Authority
 
 Crestfall remains authoritative for:
 
-- creation routing and persistence
-- application ViewModels and Binding Shells
-- authoritative validation at save and commit boundaries
-- actor-owned live skill ranks and spent progression state
-- mechanics execution and prerequisite evaluation
+- creation routing and persistence;
+- application behavior and save semantics;
+- Skills normalization and validation rules;
+- rank expansion/contraction and editor mutation semantics;
+- actor-owned current ranks and unspent progression state;
+- runtime advancement and prerequisite evaluation.
 
-Crestfall-fe owns the eventual portable presentation contract, presentation
-ViewModel, fixtures, and ruled V2 visual treatment.
+Crestfall-fe owns the presentation copy deployed by the integration branch.
+Mirrored application ViewModels in FE are deployment mirrors of Chassis behavior;
+they do not transfer product authority out of Crestfall.
 
-## Included in this slice
+## W34 live surface
 
-- current Skills Profile semantic contract
-- builder identity/options contract
-- empty fixture
-- filled value-carrying fixture
-- filled builder wrapper fixture
-- semantic diagnostic
+FE now contains the current:
 
-The filled fixture covers:
+- Skills Profile Builder shell/View/ViewModel;
+- Skills Profile editor shell/View/ViewModel;
+- JSON Editor & AI Guide shell/View/ViewModel;
+- JSON validation, fixtures, and complete-replacement AI authoring guide;
+- local editor diagnostics.
 
-- multiple skill categories
-- starting and maximum ranks
-- one definition per rank
-- point costs
-- level and tier prerequisites
-- cross-skill prerequisites
-- typed unlock prerequisites
-- rank grants
-- command grants
-- tags and metadata
+The core Skills Profile editor contract remains byte-compatible with Chassis:
 
-Mutable actor runtime state is intentionally absent from profile definitions.
+```text
+skills_profile_contract_v0
+```
 
-## Deliberately not included yet
+The FE builder contract retains its behavior-neutral explicit `.js` import needed
+by standalone Node diagnostics. Its public constants and draft/title behavior remain
+semantically identical to Chassis.
 
-- `SkillsProfileEditor.view.jsx`
-- builder View
-- presentation ViewModel
-- JSON editor presentation
-- `/app/studio/v2/**` changes
-- `components/studio/my-creations/edit/**` changes
-- Kit or design-system changes
+The accepted FE presentation binding is preserved and now reports the profile and
+JSON surfaces as `WIRED_LEGACY_PRESENTATION`. Cross-Skill and typed-unlock
+prerequisites remain fully authored through the complete JSON editor in the current
+legacy UI and are reported as `WIRED_JSON_EDITOR_ONLY_LEGACY_PRESENTATION`.
 
-Those remain a later frontend-lane presentation wave after the accepted visual
-integration base is named.
+## Deferred from W34
+
+W34 deliberately does not modify:
+
+- `components/studio/my-creations/edit/**`;
+- the Creation Edit Binding Shell;
+- Wallet or Actor Mechanics editor families;
+- Creation Studio mechanics-profile catalog exposure;
+- Image Studio / Kit;
+- chat;
+- `/app/studio/v2/**`.
+
+Saved-edit registration remains in the later protected `my-creations/edit`
+convergence package, after all editor targets exist in FE.

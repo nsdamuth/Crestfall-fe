@@ -76,7 +76,7 @@ assert.deepEqual(
   {
     bindingCount: 7,
     managedBindingCount: 6,
-    pendingFeVisualExtensionCount: 4,
+    pendingFeVisualExtensionCount: 0,
     selectedManagedCreationReferenceCount: 5,
   }
 );
@@ -137,7 +137,7 @@ const skills =
 
 assert.equal(
   skills.visualStatus,
-  "PENDING_FE_VISUAL_EXTENSION"
+  "WIRED_LEGACY_PRESENTATION"
 );
 assert.equal(
   skills.creationType,
@@ -168,7 +168,7 @@ const magic =
 
 assert.equal(
   magic.visualStatus,
-  "PENDING_FE_VISUAL_EXTENSION"
+  "WIRED_LEGACY_PRESENTATION"
 );
 assert.equal(
   magic.creationType,
@@ -215,7 +215,7 @@ const wallet =
 
 assert.equal(
   wallet.visualStatus,
-  "PENDING_FE_VISUAL_EXTENSION"
+  "WIRED_LEGACY_PRESENTATION"
 );
 assert.equal(
   wallet.creationType,
@@ -258,11 +258,11 @@ assert.deepEqual(
   projection.visualExtensionStatus,
   {
     skillsProfileControl:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
     abilitySpellProfileControl:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
     walletProfileControl:
-      "PENDING_FE_VISUAL_EXTENSION",
+      "WIRED_LEGACY_PRESENTATION",
   }
 );
 
@@ -407,6 +407,6 @@ console.log(JSON.stringify({
   genericReferenceEditorPreserved: true,
   chassisPickerAndReferenceMutationExcluded: true,
   runtimeActorStateIsolationCopyCovered: true,
-  existingActorMechanicsEditorViewUnmodified: true,
-  existingActorMechanicsEditorViewModelUnmodified: true,
+  actorMechanicsEditorViewWiredToCurrentChassisReferenceControls: true,
+  actorMechanicsEditorViewModelWiredToCurrentChassisReferenceAuthority: true,
 }, null, 2));

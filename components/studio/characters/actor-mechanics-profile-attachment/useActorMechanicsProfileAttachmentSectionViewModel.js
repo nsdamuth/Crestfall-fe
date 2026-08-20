@@ -2,20 +2,20 @@
 
 import { useMemo, useState } from "react";
 
-import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
-
 export const ACTOR_MECHANICS_PROFILE_ATTACHMENT_CONTRACT_VERSION =
-  "actor_mechanics_profile_attachment_v0";
+  "actor_mechanics_profile_attachment_graph_v0";
+export const ACTOR_MECHANICS_PROFILE_ATTACHMENT_DRAFT_VERSION =
+  "actor_mechanics_profile_attachment_draft_v0";
 
 const DEFAULT_COPY = Object.freeze({
   eyebrow: "Actor Mechanics",
   title: "Actor Mechanics Profile",
   body:
-    "Attach one reusable Actor Mechanics Profile to this actor. The profile defines which mechanics domains belong to the actor while mutable state remains isolated to this actor.",
+    "Attach one reusable Actor Mechanics Profile to this actor. The relationship is stored in Crestfall's creation graph while mutable state remains isolated to this actor.",
   addLabel: "Attach Actor Mechanics Profile",
   emptyLabel: "No Actor Mechanics Profile attached.",
   runtimeNote:
-    "This step saves the actor-to-profile relationship only. Runtime hydration and activation are introduced separately.",
+    "The saved relationship is graph-authoritative. Profile identity, description, ownership policy, and enabled domains are resolved from the linked creation instead of copied into this actor.",
 });
 
 function normalizeObject(value) {
@@ -56,12 +56,12 @@ function getProfileOwner(profile = {}) {
   const owner = normalizeObject(profile.owner);
 
   return {
-    bindingMode: normalizeString(
-      owner.bindingMode || owner.binding_mode
-    ).toUpperCase() || "UNBOUND_TEMPLATE",
-    ownerType: normalizeString(
-      owner.ownerType || owner.owner_type
-    ).toUpperCase() || "CHARACTER",
+    bindingMode:
+      normalizeString(owner.bindingMode || owner.binding_mode).toUpperCase() ||
+      "UNBOUND_TEMPLATE",
+    ownerType:
+      normalizeString(owner.ownerType || owner.owner_type).toUpperCase() ||
+      "CHARACTER",
     ownerId: normalizeString(owner.ownerId || owner.owner_id),
     ownerTitle: normalizeString(owner.ownerTitle || owner.owner_title),
   };
@@ -80,87 +80,106 @@ function getEnabledDomains(profile = {}) {
   ];
 }
 
-function normalizeAttachmentLink(value = {}) {
-  const source = normalizeObject(value);
-  const creationId = normalizeString(
-    source.creationId || source.creation_id || source.id
+function getGraphProjection(data = {}) {
+  const source = normalizeObject(data);
+  const projection = normalizeObject(
+    source.actorMechanicsProfileAttachmentGraph ||
+      source.actor_mechanics_profile_attachment_graph
+  );
+  const profile = normalizeObject(projection.profile);
+  const profileCreationId = normalizeString(
+    projection.profileCreationId ||
+      projection.profile_creation_id ||
+      profile.id
   );
 
-  if (!creationId) return null;
+  if (!profileCreationId) return null;
 
   return {
-    id:
-      normalizeString(source.id) ||
-      `actor_mechanics_profile_${creationId}`,
-    creationId,
-    title: normalizeString(source.title) || creationId,
+    id: `actor_mechanics_profile_${profileCreationId}`,
+    creationId: profileCreationId,
+    title: normalizeString(profile.title) || "Actor Mechanics Profile",
     type: "ACTOR_MECHANICS_PROFILE",
-    description: normalizeString(source.description),
-    imageUrl: normalizeString(source.imageUrl || source.image_url),
-    notes: normalizeString(source.notes),
-    profileContractVersion: normalizeString(
-      source.profileContractVersion || source.profile_contract_version
-    ),
-    presetId: normalizeString(
-      source.presetId || source.preset_id
-    ).toUpperCase(),
-    ownerBindingMode: normalizeString(
-      source.ownerBindingMode || source.owner_binding_mode
-    ).toUpperCase(),
-    ownerType: normalizeString(
-      source.ownerType || source.owner_type
-    ).toUpperCase(),
-    ownerId: normalizeString(source.ownerId || source.owner_id),
-    ownerTitle: normalizeString(
-      source.ownerTitle || source.owner_title
-    ),
+    description: normalizeString(profile.description),
+    imageUrl: "",
+    notes: normalizeString(projection.notes),
+    profileContractVersion: normalizeString(profile.profileContractVersion),
+    presetId: normalizeString(profile.presetId).toUpperCase() || "CUSTOM",
+    ownerBindingMode:
+      normalizeString(profile.ownerBindingMode).toUpperCase() ||
+      "UNBOUND_TEMPLATE",
+    ownerType: normalizeString(profile.ownerType).toUpperCase(),
+    ownerId: normalizeString(profile.ownerId),
+    ownerTitle: normalizeString(profile.ownerTitle),
     enabledDomains: [
       ...new Set(
-        normalizeArray(
-          source.enabledDomains || source.enabled_domains
-        )
+        normalizeArray(profile.enabledDomains)
           .map((domain) => normalizeString(domain).toUpperCase())
           .filter(Boolean)
       ),
     ],
+    authority: normalizeString(projection.authority),
   };
 }
 
-function getAttachment(data = {}) {
+function getDraft(data = {}) {
   const source = normalizeObject(data);
-  const link = normalizeAttachmentLink(
-    source.actorMechanicsProfileLink ||
-      source.actor_mechanics_profile_link
+  const hasDraft =
+    Object.prototype.hasOwnProperty.call(
+      source,
+      "actorMechanicsProfileAttachmentDraft"
+    ) ||
+    Object.prototype.hasOwnProperty.call(
+      source,
+      "actor_mechanics_profile_attachment_draft"
+    );
+
+  if (!hasDraft) return null;
+
+  const draft = normalizeObject(
+    source.actorMechanicsProfileAttachmentDraft ||
+      source.actor_mechanics_profile_attachment_draft
   );
 
-  if (link) return link;
-
-  const creationId = normalizeString(
-    source.actorMechanicsProfileId ||
-      source.actor_mechanics_profile_id
-  );
-
-  return creationId
-    ? normalizeAttachmentLink({ creationId, title: creationId })
-    : null;
+  return {
+    version:
+      normalizeString(draft.version) ||
+      ACTOR_MECHANICS_PROFILE_ATTACHMENT_DRAFT_VERSION,
+    profileCreationId: normalizeString(
+      draft.profileCreationId || draft.profile_creation_id
+    ),
+    notes: normalizeString(draft.notes),
+  };
 }
 
-function buildAttachmentLink(creation = {}) {
+function buildAttachmentFromCreation(creation = {}, notes = "") {
   const profile = getProfileData(creation);
   const owner = getProfileOwner(profile);
-  const base = createLinkedCreationLink(creation);
+  const creationId = normalizeString(creation.id || creation.creationId);
 
-  return normalizeAttachmentLink({
-    ...base,
+  if (!creationId) return null;
+
+  return {
+    id: `actor_mechanics_profile_${creationId}`,
+    creationId,
+    title:
+      normalizeString(creation.title) ||
+      normalizeString(profile.title) ||
+      "Actor Mechanics Profile",
     type: "ACTOR_MECHANICS_PROFILE",
+    description:
+      normalizeString(profile.summary) || normalizeString(creation.description),
+    imageUrl: "",
+    notes: normalizeString(notes),
     profileContractVersion: normalizeString(profile.contractVersion),
-    presetId: normalizeString(profile.presetId).toUpperCase(),
+    presetId: normalizeString(profile.presetId).toUpperCase() || "CUSTOM",
     ownerBindingMode: owner.bindingMode,
     ownerType: owner.ownerType,
     ownerId: owner.ownerId,
     ownerTitle: owner.ownerTitle,
     enabledDomains: getEnabledDomains(profile),
-  });
+    authority: "UNSAVED_PICKER_SELECTION",
+  };
 }
 
 function getCompatibilityError({ creation, actorType, actorId }) {
@@ -184,8 +203,8 @@ function getCompatibilityError({ creation, actorType, actorId }) {
       return "That bound profile does not contain an actor owner reference.";
     }
 
-    if (normalizedActorId && owner.ownerId !== normalizedActorId) {
-      return "That profile is already bound to a different actor.";
+    if (!normalizedActorId || owner.ownerId !== normalizedActorId) {
+      return "That profile is bound to a different actor.";
     }
   }
 
@@ -208,11 +227,19 @@ function toViewAttachment(link) {
     imageUrl: link.imageUrl || "",
     presetLabel: humanize(link.presetId || "CUSTOM"),
     ownerLabel,
-    enabledDomainLabels: link.enabledDomains.map(humanize),
+    enabledDomainLabels: normalizeArray(link.enabledDomains).map(humanize),
     notes: link.notes || "",
     removeAriaLabel: `Remove ${
       link.title || "attached Actor Mechanics Profile"
     }`,
+  };
+}
+
+function buildDraft(profileCreationId = "", notes = "") {
+  return {
+    version: ACTOR_MECHANICS_PROFILE_ATTACHMENT_DRAFT_VERSION,
+    profileCreationId: normalizeString(profileCreationId),
+    notes: normalizeString(notes),
   };
 }
 
@@ -232,25 +259,46 @@ export function useActorMechanicsProfileAttachmentSectionViewModel({
 } = {}) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectionError, setSelectionError] = useState("");
-  const attachment = getAttachment(data);
+  const [pendingProfileCreation, setPendingProfileCreation] = useState(null);
+
+  const graphAttachment = getGraphProjection(data);
+  const draft = getDraft(data);
+  const attachment = draft
+    ? draft.profileCreationId
+      ? pendingProfileCreation
+        ? buildAttachmentFromCreation(pendingProfileCreation, draft.notes)
+        : graphAttachment?.creationId === draft.profileCreationId
+          ? { ...graphAttachment, notes: draft.notes }
+          : {
+              id: `actor_mechanics_profile_${draft.profileCreationId}`,
+              creationId: draft.profileCreationId,
+              title: "Pending Actor Mechanics Profile",
+              type: "ACTOR_MECHANICS_PROFILE",
+              description: "",
+              imageUrl: "",
+              notes: draft.notes,
+              profileContractVersion: "",
+              presetId: "CUSTOM",
+              ownerBindingMode: "UNBOUND_TEMPLATE",
+              ownerType: normalizeString(actorType).toUpperCase(),
+              ownerId: "",
+              ownerTitle: "",
+              enabledDomains: [],
+              authority: "UNSAVED_DRAFT",
+            }
+      : null
+    : graphAttachment;
 
   const selectedCreationIds = useMemo(
     () => (attachment?.creationId ? [attachment.creationId] : []),
     [attachment?.creationId]
   );
 
-  function persist(nextAttachment) {
-    const normalized = normalizeAttachmentLink(nextAttachment);
-
+  function persistDraft(profileCreationId, notes = "") {
     updateDataField?.(
-      "actorMechanicsProfileAttachmentContractVersion",
-      ACTOR_MECHANICS_PROFILE_ATTACHMENT_CONTRACT_VERSION
+      "actorMechanicsProfileAttachmentDraft",
+      buildDraft(profileCreationId, notes)
     );
-    updateDataField?.(
-      "actorMechanicsProfileId",
-      normalized?.creationId || ""
-    );
-    updateDataField?.("actorMechanicsProfileLink", normalized);
   }
 
   function handleSelect(creation) {
@@ -266,23 +314,23 @@ export function useActorMechanicsProfileAttachmentSectionViewModel({
       return;
     }
 
-    persist(buildAttachmentLink(creation));
+    const currentNotes = draft?.notes || graphAttachment?.notes || "";
+    setPendingProfileCreation(creation);
+    persistDraft(creation.id, currentNotes);
     setSelectionError("");
     setIsPickerOpen(false);
   }
 
   function handleRemove() {
-    persist(null);
+    setPendingProfileCreation(null);
+    persistDraft("", "");
     setSelectionError("");
   }
 
   function handleNotesChange(notes) {
-    if (!attachment) return;
+    if (!attachment?.creationId) return;
 
-    persist({
-      ...attachment,
-      notes,
-    });
+    persistDraft(attachment.creationId, notes);
   }
 
   const warningMessage =

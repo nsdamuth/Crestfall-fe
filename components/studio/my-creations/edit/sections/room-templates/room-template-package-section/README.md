@@ -28,6 +28,10 @@ The Shell preserves the existing public API:
 - does not call `/api/creations` directly
 - preserves selected Character, Scenario, Narrator, and Location resolution
 - preserves add/remove/toggle behavior for selected characters
+- W46 adds saved-edit Story Character lifecycle authoring through the accepted
+  `storyCharacterLifecycleAuthoring` helper
+- W46 adds saved-edit fixed/player-select opening Location authoring through the
+  accepted `storyOpeningLocationAuthoring` helper and picker
 - preserves all existing package writes:
   - `selected_characters`
   - `selected_scenario`
@@ -37,12 +41,16 @@ The Shell preserves the existing public API:
   - `selected_location`
   - `location_id`
   - `scenario_recommendations_dismissed_for`
+  - `opening_location`
+  - selected-character lifecycle metadata inside `selected_characters`
   - `boundRegistries`
   - `boundRegistryLinks`
 - preserves scenario recommendation application, dismissal, and NPC Registry
   merging
 - composes the existing child ViewModels for the selected-character panel,
   recommendation panel, and package picker
+- preserves the fixed `selected_location` / `location_id` path while suppressing
+  that single-location card in `PLAYER_SELECT` mode
 
 ### Portable View
 

@@ -5,6 +5,25 @@ import creationAssets from "@/data/creationAssets";
 import registryTypes from "@/data/registryTypes";
 import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 import {
+  projectCreationStudioMechanicsProfileCatalogBinding,
+} from "./mechanics-profile-catalog-binding/CreationStudioMechanicsProfileCatalogBinding.contract.js";
+
+const CREATION_STUDIO_MECHANICS_PROFILE_ROUTE_TARGETS = Object.freeze({
+  skillsProfile: Object.freeze({
+    available: true,
+    href: "/studio/create/skills-profile",
+  }),
+  abilitySpellProfile: Object.freeze({
+    available: true,
+    href: "/studio/create/ability-spell-profile",
+  }),
+  walletProfile: Object.freeze({
+    available: true,
+    href: "/studio/create/wallet-profile",
+  }),
+});
+
+import {
   CREATION_STUDIO_MODE_STORAGE_KEY,
   CREATION_STUDIO_MODES,
   LORE_CREATION_ASSET,
@@ -23,6 +42,14 @@ export function useCreationStudioViewModel() {
   const [creations, setCreations] = useState([]);
   const [isLoadingCounts, setIsLoadingCounts] = useState(true);
   const [countLoadError, setCountLoadError] = useState("");
+
+  const mechanicsProfileCatalog = useMemo(
+    () =>
+      projectCreationStudioMechanicsProfileCatalogBinding({
+        routeTargets: CREATION_STUDIO_MECHANICS_PROFILE_ROUTE_TARGETS,
+      }),
+    []
+  );
 
   useEffect(() => {
     try {
@@ -76,11 +103,22 @@ export function useCreationStudioViewModel() {
 
   const creationAssetsWithLore = useMemo(() => {
     const existingAssets = Array.isArray(creationAssets) ? creationAssets : [];
-
-    return existingAssets.some((asset) => asset?.title === LORE_CREATION_ASSET.title)
+    const withLore = existingAssets.some(
+      (asset) => asset?.title === LORE_CREATION_ASSET.title
+    )
       ? existingAssets
       : [...existingAssets, LORE_CREATION_ASSET];
-  }, []);
+
+    const titles = new Set(withLore.map((asset) => asset?.title));
+    const liveMechanicsAssets = mechanicsProfileCatalog.assetAdditions.filter(
+      (asset) => asset.routeAvailable && !asset.disabled && asset.href
+    );
+
+    return [
+      ...withLore,
+      ...liveMechanicsAssets.filter((asset) => !titles.has(asset.title)),
+    ];
+  }, [mechanicsProfileCatalog.assetAdditions]);
 
   const guidedChapters = useMemo(
     () => buildGuidedChapterStates(creationTypeCounts),

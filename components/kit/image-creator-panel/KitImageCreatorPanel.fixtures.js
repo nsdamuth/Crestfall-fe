@@ -19,13 +19,35 @@ export const RENDER_STYLE_OPTIONS = [
 
 export const CAMERA_OPTIONS = [
   { value: "AUTO", label: "Auto / No Camera Filter" },
-  { value: "FACE_CLOSEUP", label: "Face Close-Up" },
-  { value: "HEAD_SHOULDERS", label: "Head & Shoulders" },
-  { value: "BUST", label: "Bust / Chest-Up" },
-  { value: "WAIST_UP", label: "Waist-Up" },
-  { value: "THREE_QUARTER", label: "Three-Quarter Body" },
-  { value: "FULL_BODY", label: "Full Body" },
-];
+  { value: "EXTREME_WIDE_SHOT", label: "Extreme Wide Shot (EWS)" },
+  { value: "WIDE_SHOT", label: "Wide Shot (WS)" },
+  { value: "MEDIUM_WIDE_SHOT", label: "Medium Wide Shot (MWS)" },
+  { value: "MEDIUM_SHOT", label: "Medium Shot (MS)" },
+  { value: "MEDIUM_CLOSE_UP", label: "Medium Close-Up (MCU)" },
+  { value: "CLOSE_UP", label: "Close-Up (CU)" },
+  { value: "EXTREME_CLOSE_UP", label: "Extreme Close-Up (ECU)" },
+  { value: "LOW_ANGLE_SHOT", label: "Low Angle Shot" },
+  { value: "HIGH_ANGLE_SHOT", label: "High Angle Shot" },
+  { value: "DUTCH_ANGLE", label: "Dutch Angle / Dutch Tilt" },
+  { value: "POINT_OF_VIEW_SHOT", label: "Point of View (POV) Shot" },
+  { value: "OVER_THE_SHOULDER_SHOT", label: "Over-the-Shoulder Shot" },
+  { value: "TRACKING_SHOT", label: "Tracking Shot" },
+  { value: "CRANE_SHOT", label: "Crane Shot" },
+  { value: "HANDHELD_SHOT", label: "Handheld Shot" },
+  { value: "ZOOM_SHOT", label: "Zoom Shot" },
+  { value: "WIDE_ANGLE_LENS", label: "Wide Angle Lens" },
+  { value: "TELEPHOTO_LENS", label: "Telephoto Lens" },
+  { value: "FISH_EYE_LENS", label: "Fish Eye Lens" },
+  { value: "SHALLOW_DEPTH_OF_FIELD", label: "Shallow Depth of Field" },
+  { value: "DEEP_FOCUS", label: "Deep Focus" },
+  { value: "RACK_FOCUS", label: "Rack Focus" },
+  { value: "BACKLIT_SHOT", label: "Backlit Shot" },
+  { value: "SIDE_LIT_SHOT", label: "Side Lit Shot" },
+  { value: "FRONT_LIT_SHOT", label: "Front Lit Shot" },
+  { value: "DUTCH_PAN", label: "Dutch Pan" },
+  { value: "VERTIGO_SHOT", label: "Vertigo Shot / Dolly Zoom" },
+  { value: "THROUGH_VIEWFINDER", label: "Through the Viewfinder" },
+]
 
 export const WARDROBE_THEME_OPTIONS = [
   { value: "AUTO", label: "Auto / Wardrobe Default" },
@@ -112,6 +134,7 @@ const sharedCallbacks = {
   onCustomChangeText: noop,
   onCustomBackToPresets: noop,
   onCustomSavePreset: noop,
+  onChangeSceneryOnlyHelper: noop,
   onChangePrompt: noop,
   onChangeNegativePrompt: noop,
   onChangeOption: noop,
@@ -218,6 +241,34 @@ const customIngredientFixture = {
   },
 };
 
+const sceneryOnlyFixture = {
+  id: "sceneryOnly",
+  label: "Location-only scenery helper",
+  props: {
+    ...sharedCallbacks,
+    mode: "IMAGE",
+    slots: {
+      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location / Scene" }, isCustomMode: false, customText: "" },
+    },
+    sceneryHelper: {
+      visible: true,
+      enabled: true,
+      title: "Optimize for scenery-only image",
+      description: "Adds scenic composition guidance and suppresses people.",
+    },
+    promptValue: "Rain on the harborfront before dawn.",
+    negativePromptValue: "",
+    optionFields: baseOptionFields(),
+    coinBalanceLabel: "40",
+    coinCostLabel: "5",
+    showInsufficientCoins: false,
+    canGenerate: true,
+    generationHelpText: "",
+    videoOptionFields: baseVideoOptionFields(),
+    videoDirectionValue: "",
+  },
+};
+
 const videoModeFixture = {
   id: "videoMode",
   label: "Video mode",
@@ -300,6 +351,7 @@ export const kitImageCreatorPanelFixtures = [
   emptySlotsFixture,
   insufficientCoinsFixture,
   customIngredientFixture,
+  sceneryOnlyFixture,
   videoModeFixture,
   longestContentFixture,
 ];

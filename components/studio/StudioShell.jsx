@@ -16,6 +16,7 @@ import { useStudioShellViewModel } from "./studio-shell/useStudioShellViewModel"
 // other's state, so it lives here, in the Binding Shell that composes
 // both (8 Aug 2026, mobile nav restyle brief item 7).
 export default function StudioShell({ user, children }) {
+  const authenticated = Boolean(user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const viewProps = useStudioShellViewModel({
@@ -34,7 +35,7 @@ export default function StudioShell({ user, children }) {
   });
 
   return (
-    <StudioAccountProvider>
+    <StudioAccountProvider enabled={authenticated}>
       <StudioShellView {...viewProps} />
     </StudioAccountProvider>
   );

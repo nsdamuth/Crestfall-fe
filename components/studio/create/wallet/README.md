@@ -1,83 +1,78 @@
-# Wallet Profile semantic package
+# Wallet Profile FE package
 
-Status: semantic contract and filled fixtures only.
+Status: **LIVE FUNCTIONAL ABSORPTION — W35**.
 
-This package is the third bounded Crestfall to Crestfall-fe functional
-absorption slice for `WALLET_PROFILE`.
+W35 follows the explicit protected-lane unlock for the current integration branch.
+The accepted Wallet semantic contracts and richer FE fixtures remain intact, while
+the current Crestfall Wallet authoring implementation is mirrored into FE so the
+live editor can function before a later visual-normalization pass.
 
-It intentionally does not add a production View, page entrypoint, application
-ViewModel, API call, persistence path, JSON-editor presentation, or
-editor-family integration.
+The user explicitly authorized carrying the older working styling on this branch
+for now, with normalization where it is low-risk. W35 therefore prioritizes
+functional parity over immediate redesign.
 
 ## Product distinction
 
-A Wallet Profile is a reusable **gameplay-currency definition asset** for the
-Actor Mechanics `WALLET` domain.
+A Wallet Profile is a reusable gameplay-currency definition asset for the Actor
+Mechanics `WALLET` domain. It is not Crestfall Studio/account Coins.
 
-It is not Crestfall Studio/account Coins.
-
-Wallet Profiles define creator-authored in-game values such as:
-
-- currency identity
-- title and symbol
-- enabled state
-- starting balance
-- minimum balance
-- maximum balance
-- tags
-- definition metadata
-
-Actor-owned mutable balances are Story runtime state and are never stored in
-the authored Wallet Profile.
-
-Studio/account Coins remain platform economy currency and are never reused as
-gameplay Wallet state.
+Wallet Profiles define creator-authored in-game currency identity, symbol, enabled
+state, starting balance, minimum balance, maximum balance, tags, and metadata.
+Actor-owned mutable balances remain Story runtime state.
 
 ## Authority
 
 Crestfall remains authoritative for:
 
-- creation routing and persistence
-- application ViewModels and Binding Shells
-- authoritative validation at save and commit boundaries
-- actor-owned live Wallet balances
-- mechanics execution and balance mutation
-- Studio/account Coin economy policy
+- creation routing and persistence;
+- application behavior and save semantics;
+- Wallet normalization and validation;
+- reusable currency mutation semantics;
+- actor-owned live Wallet balances;
+- runtime Wallet operations;
+- Studio/account Coin economy policy.
 
-Crestfall-fe owns the eventual portable presentation contract, presentation
-ViewModel, fixtures, and ruled V2 visual treatment.
+Crestfall-fe owns presentation. Mirrored application ViewModels in FE are deployment
+mirrors of Chassis behavior; they do not transfer product authority out of Crestfall.
 
-## Included in this slice
+## W35 live surface
 
-- current Wallet Profile semantic contract
-- builder identity/options contract
-- empty fixture
-- filled value-carrying fixture
-- filled builder wrapper fixture
-- semantic diagnostic
+FE now contains the current:
 
-The filled fixture covers:
+- Wallet Profile Builder shell/View/ViewModel;
+- Wallet Profile editor shell/View/ViewModel;
+- JSON Editor & AI Guide shell/View/ViewModel;
+- JSON validation and complete-replacement AI authoring guide;
+- local editor diagnostics.
 
-- ordinary positive gameplay currency
-- a tightly bounded gameplay value
-- an authored negative/debt floor
-- starting/minimum/maximum balances
-- symbols
-- tags
-- metadata
-- multiple enabled currencies
+The core Wallet Profile editor contract remains byte-compatible with Chassis:
 
-Mutable actor balances and account Coin balances are intentionally absent.
+```text
+wallet_profile_contract_v0
+```
 
-## Deliberately not included yet
+The FE builder contract retains its behavior-neutral explicit `.js` import needed by
+standalone Node diagnostics. Its public constants and draft/title behavior remain
+semantically identical to Chassis.
 
-- `WalletProfileEditor.view.jsx`
-- builder View
-- presentation ViewModel
-- JSON editor presentation
-- `/app/studio/v2/**` changes
-- `components/studio/my-creations/edit/**` changes
-- Kit or design-system changes
+The accepted FE presentation binding is preserved and now reports both the profile
+editor and JSON Editor & AI Guide as:
 
-The user-facing placement/name for this profile type remains a product/FE
-ruling after the editor IA is finalized.
+```text
+WIRED_LEGACY_PRESENTATION
+```
+
+## Deferred from W35
+
+W35 deliberately does not modify:
+
+- `components/studio/my-creations/edit/**`;
+- the Creation Edit Binding Shell;
+- Actor Mechanics editor family;
+- Creation Studio mechanics-profile catalog exposure;
+- Image Studio / Kit;
+- chat;
+- `/app/studio/v2/**`.
+
+Saved-edit registration remains in the later protected `my-creations/edit`
+convergence package, after all editor targets exist in FE.

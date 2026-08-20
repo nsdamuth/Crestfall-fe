@@ -66,28 +66,43 @@ test("existing Creation persistence and featured-media storage remain authoritat
   assert.match(editViewModel, /storagePath/);
 });
 
-test("application section composition preserves editor and legacy aliases", () => {
+test("application section composition preserves registry dispatch, editors, and legacy aliases", () => {
   const content = read(
     "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
   );
+  const componentMap = read(
+    "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
+  );
 
-  assert.match(content, /CharacterTemplateFieldsSection/);
-  assert.match(content, /ItemRegistryFieldsSection/);
-  assert.match(content, /LocationRegistryFieldsSection/);
-  assert.match(content, /VisualReferencesSection/);
-  assert.match(content, /LoreEditor/);
+  assert.match(content, /SECTION_COMPONENT_REGISTRY/);
   assert.match(content, /LoreDocumentRenderer/);
   assert.match(content, /LorePublicationReadiness/);
-  assert.match(content, /MechanicsModuleFieldsSection/);
-  assert.match(content, /RuntimeMechanicsModulesSection/);
-  assert.match(content, /ActorMechanicsProfileAttachmentSection/);
-  assert.match(content, /rules_codex/);
-  assert.match(content, /rulesCodex/);
-  assert.match(content, /lore_document/);
-  assert.match(content, /loreDocument/);
-  assert.match(content, /actor_mechanics_profile/);
-  assert.match(content, /mechanics_loadout/);
-  assert.match(content, /progression_profile/);
+
+  for (const token of [
+    "CharacterTemplateFieldsSection",
+    "ItemRegistryFieldsSection",
+    "LocationRegistryFieldsSection",
+    "VisualReferencesSection",
+    "LoreEditor",
+    "MechanicsModuleFieldsSection",
+    "RuntimeMechanicsModulesSection",
+    "ActorMechanicsProfileAttachmentSection",
+    "SkillsProfileEditor",
+    "AbilitySpellProfileEditor",
+    "WalletProfileEditor",
+    "rules_codex",
+    "rulesCodex",
+    "lore_document",
+    "loreDocument",
+    "actor_mechanics_profile",
+    "mechanics_loadout",
+    "progression_profile",
+    "skills_profile",
+    "ability_spell_profile",
+    "wallet_profile",
+  ]) {
+    assert.equal(componentMap.includes(token), true, `component registry missing ${token}`);
+  }
 });
 
 test("portable View renders frame and slots without Crestfall integrations", () => {
@@ -97,7 +112,7 @@ test("portable View renders frame and slots without Crestfall integrations", () 
 
   assert.match(view, /Editing Template/);
   assert.match(view, /Untitled Creation/);
-  assert.match(view, /Set Default PC/);
+  assert.match(view, /Set default PC/i);
   assert.match(view, /activeSections\.map/);
   assert.match(view, /mediaPanel/);
   assert.match(view, /sectionContent/);

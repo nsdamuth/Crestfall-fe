@@ -1,3 +1,14 @@
+import {
+  ITEM_EQUIPMENT_MODIFIER_REFERENCE_LIMIT,
+  normalizeItemEquipmentModifierReference,
+} from "./item-equipment-modifier-references/ItemEquipmentModifierReferences.contract.js";
+import {
+  ITEM_OPERATION_EFFECT_REFERENCE_LIMIT,
+  ITEM_OPERATION_REQUIREMENT_SET_LIMIT,
+  normalizeItemOperationEffectReference,
+  normalizeItemOperationRequirementSet,
+} from "./item-operation-authoring/ItemOperationAuthoring.contract.js";
+
 export const ITEM_REGISTRY_KIND =
   "ITEM_REGISTRY";
 
@@ -494,6 +505,12 @@ export function createEmptyItemEntry() {
     negativePromptNotes: "",
 
     linkedCreations: [],
+
+    equipmentModifierReferences: [],
+
+    operationRequirementSets: [],
+
+    operationEffectReferences: [],
   };
 }
 
@@ -577,6 +594,32 @@ export function normalizeItemEntry(
         source.linkedCreations ||
           source.linked_creations
       ),
+
+    equipmentModifierReferences:
+      normalizeArray(
+        source.equipmentModifierReferences ||
+          source.equipment_modifier_references ||
+          source.equippedModifierReferences ||
+          source.equipped_modifier_references
+      )
+        .slice(0, ITEM_EQUIPMENT_MODIFIER_REFERENCE_LIMIT)
+        .map(normalizeItemEquipmentModifierReference),
+
+    operationRequirementSets:
+      normalizeArray(
+        source.operationRequirementSets ||
+          source.operation_requirement_sets
+      )
+        .slice(0, ITEM_OPERATION_REQUIREMENT_SET_LIMIT)
+        .map(normalizeItemOperationRequirementSet),
+
+    operationEffectReferences:
+      normalizeArray(
+        source.operationEffectReferences ||
+          source.operation_effect_references
+      )
+        .slice(0, ITEM_OPERATION_EFFECT_REFERENCE_LIMIT)
+        .map(normalizeItemOperationEffectReference),
 
     doNotHallucinateAvailability:
       source

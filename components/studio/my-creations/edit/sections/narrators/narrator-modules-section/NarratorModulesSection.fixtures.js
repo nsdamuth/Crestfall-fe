@@ -12,7 +12,7 @@ const baseFixture = {
   sectionEyebrow: "Narrator Editor",
   sectionTitle: "Narrator Modules",
   sectionDescription:
-    "Edit the official starter modules that shape this narrator's prose, pacing, dialogue, knowledge behavior, and atmosphere.",
+    "Edit the Story Presentation modules that shape prose, descriptive density, intra-beat pacing pressure, and atmosphere across Composer responses.",
   moduleSelector: narratorModuleSelectorDefaultFixture,
 };
 

@@ -1,202 +1,78 @@
 # Actor Mechanics Profile definition-reference binding
 
-Status: additive FE presentation binding only.
+Status: **WIRED on the protected synchronization branch.**
 
-This package reconciles the current Actor Mechanics Profile editor with the
-newer reusable definition-profile references now supported by Crestfall.
+W36 closes the protected Actor Mechanics Profile managed-definition-reference
+presentation gap after the creator explicitly unlocked the protected editor
+lanes for this branch.
 
-It deliberately does **not** replace or edit:
+## Managed reusable definition profiles
 
-```text
-ActorMechanicsProfileEditor.view.jsx
-useActorMechanicsProfileEditorViewModel.js
-ActorMechanicsProfileEditor.contract.js
-```
-
-## Current FE state
-
-The existing FE editor already has dedicated managed-profile controls for:
+The live FE Actor Mechanics Profile editor now carries the current Chassis
+managed reference controls for:
 
 ```text
-STATS       -> Stats & Pools Profile
-PROGRESSION -> Progression Profile
+STATS        -> STATS_POOLS_PROFILE
+PROGRESSION  -> PROGRESSION_PROFILE
+SKILLS       -> SKILLS_PROFILE
+MAGIC        -> ABILITY_SPELL_PROFILE
+ABILITIES    -> ABILITY_SPELL_PROFILE
+WALLET       -> WALLET_PROFILE
 ```
 
-Those remain:
+All six use the existing owned-Creation picker. The application ViewModel owns
+which picker is open, allowed Creation types, selected IDs, Creation-reference
+construction, replacement semantics, and validation.
+
+The portable View owns only the visible select/replace controls, selected
+profile card, empty state, and semantic callback invocation.
+
+For W36 the three formerly deferred controls are accepted with the current
+working Chassis presentation:
 
 ```text
-CURRENT_FE_CONTROL_AVAILABLE
+Skills Profile control           WIRED_LEGACY_PRESENTATION
+Ability & Spell Profile control  WIRED_LEGACY_PRESENTATION
+Wallet Profile control           WIRED_LEGACY_PRESENTATION
 ```
 
-## Newer Chassis reference modes
+Stats & Pools and Progression remain current working controls.
 
-The current Crestfall application ViewModel now also supplies:
+## State isolation
 
-```text
-SKILLS     -> SKILLS_PROFILE
-MAGIC      -> ABILITY_SPELL_PROFILE
-ABILITIES  -> ABILITY_SPELL_PROFILE
-WALLET     -> WALLET_PROFILE
-```
+Selecting a reusable definition never initializes mutable actor state.
 
-This binding carries those display semantics into FE without copying the source
-ViewModel.
+- Stats & Pools values remain actor-owned.
+- Progression XP and level remain actor-owned.
+- Skill ranks and unspent points remain actor-owned.
+- Ability/Spell known state, mastery, cooldowns, charges, and resources remain
+  actor-owned.
+- Wallet balances, revisions, and transaction history remain actor-owned.
 
-The three newer control families are marked:
+## Graph authority
 
-```text
-PENDING_FE_VISUAL_EXTENSION
-```
+Creation-backed managed references are relationship intents. Crestfall persists
+the authoritative relationship in the creation graph and may rehydrate a
+transient `CREATION` reference for editor/runtime compatibility. The editor does
+not make copied title/version/type metadata authoritative.
 
-until the FE lane adds them to its ruled Actor Mechanics Profile editor.
+Non-Creation references such as `BUILTIN_MODULE` and `REGISTRY` remain available
+through the generic reference editor and are not forced into managed profile
+modes.
 
-## Skills Profile attachment
+## Boundary
 
-Current copy is preserved:
+Crestfall remains authority for:
 
-```text
-Choose one owned Skills Profile. Only reusable proficiency and rank definitions
-are saved; actor ranks and unspent points are not copied or initialized.
-```
+- `definitionReferenceMode`;
+- picker state and candidate loading;
+- selected-Creation conversion;
+- graph relationship persistence;
+- validation and persistence;
+- runtime actor state.
 
-Contract:
+Crestfall-fe owns the visible editor composition and semantic callbacks.
 
-```text
-skills_profile_contract_v0
-```
-
-Creation type:
-
-```text
-SKILLS_PROFILE
-```
-
-## Ability & Spell Profile attachment
-
-Both `MAGIC` and `ABILITIES` use:
-
-```text
-ABILITY_SPELL_PROFILE
-ability_spell_profile_contract_v0
-```
-
-The display copy differs by domain.
-
-### MAGIC
-
-Emphasizes reusable spell and magic definitions.
-
-### ABILITIES
-
-Emphasizes reusable abilities, techniques, special attacks, passives, and
-spells.
-
-Both explicitly preserve the state boundary:
-
-- known state is not copied;
-- mastery is not copied;
-- cooldowns are not copied;
-- charges are not copied;
-- resource state is not copied.
-
-## Wallet Profile attachment
-
-Current copy is preserved:
-
-```text
-Choose one owned Wallet Profile for reusable gameplay currency definitions.
-Live balances, revisions, and transaction history remain owner-scoped and are
-not initialized by attachment.
-```
-
-Contract:
-
-```text
-wallet_profile_contract_v0
-```
-
-Creation type:
-
-```text
-WALLET_PROFILE
-```
-
-## Generic references remain available
-
-Bindings not using a managed profile reference mode retain the current generic
-reference editor behavior.
-
-For example:
-
-```text
-INVENTORY -> GENERIC
-```
-
-may continue to use Creation / Built-in Module / Registry references.
-
-This patch does not force all domains into managed profile types.
-
-## Picker boundary
-
-The current Chassis application ViewModel owns:
-
-- which binding's picker is open;
-- candidate loading;
-- allowed type enforcement;
-- selected Creation IDs;
-- Creation -> reference conversion;
-- replacement of the managed Creation reference.
-
-This FE binding may display the Chassis-supplied `pickerProps`, but does not
-reimplement those behaviors.
-
-## Runtime state isolation
-
-Attaching a reusable definition profile never initializes or copies actor
-runtime state.
-
-That boundary is explicitly preserved for:
-
-- Stats/Pools values
-- Progression XP/level
-- Skill ranks/unspent points
-- Ability/Spell known/mastery/cooldown/charges/resources
-- Wallet live balances/revisions/transactions
-
-## Existing Actor Mechanics editor contract version
-
-The current FE snapshot remains on its existing portable editor contract
-version.
-
-This patch does not bump or overwrite that FE-owned contract. The additive
-binding captures the Chassis delta so the FE team can incorporate the new
-controls during its visual/editor reconciliation.
-
-## Permanent boundary
-
-Crestfall owns:
-
-- `definitionReferenceMode`
-- binding state
-- picker open state
-- candidate Creation loading
-- selected IDs
-- Creation reference construction
-- reference replacement/mutation
-- validation
-- persistence
-- runtime actor state
-
-Crestfall-fe owns:
-
-- managed profile control presentation
-- selected profile card/reference display
-- empty states
-- future Skills / Ability & Spell / Wallet picker treatment
-
-## Protected scopes untouched
-
-- `app/studio/v2/**`
-- `components/studio/my-creations/edit/**`
-- `components/kit/**`
-- `components/studio/chat/**`
+W36 does **not** expose Actor Mechanics Profiles from Creation Studio. That is
+kept separate for W37. Saved-edit convergence under `my-creations/edit/**`
+remains the later dedicated protected-edit package.

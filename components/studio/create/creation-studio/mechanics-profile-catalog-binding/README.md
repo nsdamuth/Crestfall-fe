@@ -1,9 +1,9 @@
 # Creation Studio ↔ Mechanics Profile Catalog binding
 
-Status: additive FE presentation/information-architecture binding only.
+Status: **LIVE — W37**.
 
-This package captures the current Creation Studio catalog expansion for the
-three reusable profile types that were added after Progression:
+W37 activates the accepted Creation Studio catalog expansion for the reusable
+profile types added after Progression:
 
 ```text
 Skills Profile
@@ -11,18 +11,14 @@ Ability & Spell Profile
 Wallet Profile
 ```
 
-It deliberately does **not** edit:
+The three Chassis creator routes are now confirmed and the corresponding FE
+editors/builders are present from W33–W35. The previous dead-link guard is no
+longer the active condition on this integration branch.
 
-```text
-CreationStudio.contract.mjs
-CreationStudio.view.jsx
-useCreationStudioViewModel.js
-data/creationAssets.js
-```
+## Live route targets
 
-## Why the live FE catalog is not edited yet
-
-The FE snapshot does not own the three route-entry pages:
+The live Creation Studio ViewModel supplies the confirmed Chassis-owned routes
+to this binding:
 
 ```text
 /studio/create/skills-profile
@@ -30,42 +26,12 @@ The FE snapshot does not own the three route-entry pages:
 /studio/create/wallet-profile
 ```
 
-Routing belongs to the Chassis.
+Crestfall remains routing authority. Crestfall-fe only consumes these confirmed
+navigation targets for catalog presentation.
 
-Directly adding those hrefs to the Skin's live `data/creationAssets.js` before
-the integration shell exposes the Chassis routes could create dead links.
+## Guided Build
 
-This binding therefore accepts route targets from the Chassis:
-
-```text
-routeTargets.skillsProfile
-routeTargets.abilitySpellProfile
-routeTargets.walletProfile
-```
-
-Each route supplies:
-
-```text
-available
-href
-unavailableReason
-```
-
-The FE binding never invents the href.
-
-## Guided Build change
-
-The current FE Rules & Mechanics path has five steps:
-
-```text
-20 Stats & Pools Profile
-21 Progression Profile
-22 Mechanics Module
-23 Actor Mechanics Profile
-24 Rules Codex
-```
-
-The current source dependency order is:
+Rules & Mechanics now follows:
 
 ```text
 20 Stats & Pools Profile
@@ -78,73 +44,12 @@ The current source dependency order is:
 27 Rules Codex
 ```
 
-`Character Template` then becomes step:
+`Character Template` remains milestone 28 and total Guided Build remains 28.
 
-```text
-28
-```
+## Full Studio
 
-The total Guided Build grows from:
-
-```text
-25 -> 28
-```
-
-## New guided steps
-
-### 22 · Skills Profile
-
-```text
-Define Skills & Proficiencies
-```
-
-Why:
-
-```text
-Skills Profiles define reusable skills, proficiency ranks, point costs, and
-Progression prerequisites.
-```
-
-### 23 · Ability & Spell Profile
-
-```text
-Define Abilities & Spells
-```
-
-Why:
-
-```text
-Ability & Spell Profiles define reusable spells, abilities, techniques, special
-attacks, passives, prerequisites, costs, targeting, and use policies.
-```
-
-### 24 · Wallet Profile
-
-```text
-Define Gameplay Currency
-```
-
-Why:
-
-```text
-Wallet Profiles define reusable currencies, starting balances, and authored
-minimum and maximum balance bounds while actor balances remain isolated Story
-state.
-```
-
-## Full Studio change
-
-The Rules & Mechanics section expands from:
-
-```text
-Stats & Pools Profile
-Progression Profile
-Mechanics Module
-Actor Mechanics Profile
-Rules Codex
-```
-
-to:
+The Rules & Mechanics section now includes all five reusable profile-definition
+families before Mechanics Modules and Actor Mechanics Profiles:
 
 ```text
 Stats & Pools Profile
@@ -157,66 +62,30 @@ Actor Mechanics Profile
 Rules Codex
 ```
 
-Its description becomes:
+## Presentation boundary
 
-```text
-Create formal stats, progression, skills, abilities, spells, gameplay wallets,
-meters, commands, effects, guards, and verified interpretation guidance.
-```
+The current FE `CreationStudio.view.jsx` is preserved. W37 does not replace the
+newer FE visual treatment with the older Chassis View.
 
-## Asset cards
+The binding is idempotent against both the old 25-step FE baseline and the live
+28-step contract. Once the live contract already contains the three profile
+steps it does not insert or renumber them again.
 
-The binding also carries the current source card copy for all three profile
-types.
+## Authority
 
-The cards are enabled only when the Chassis says their route is available.
+Crestfall owns route definitions, route mounting, account/creation loading,
+builder startup, persistence, and runtime behavior.
 
-If a route is not available:
+Crestfall-fe owns catalog information architecture and presentation. The
+application ViewModel in FE is a deployment mirror and consumes the confirmed
+Chassis route targets; it does not create route handlers.
 
-```text
-disabled: true
-href: ""
-```
+## Deferred
 
-This prevents the Skin from creating a navigation target it does not own.
+W37 does not modify:
 
-## Accepted profile contracts
-
-The catalog binding references the already accepted semantic versions:
-
-```text
-skills_profile_contract_v0
-ability_spell_profile_contract_v0
-wallet_profile_contract_v0
-```
-
-This keeps the Creation Studio IA aligned with the actual reusable profile
-contracts.
-
-## Permanent boundary
-
-Crestfall owns:
-
-- creator route definitions
-- route availability
-- route mounting through the integration shell
-- owned-Creation count loading
-- builder startup
-- save/persistence
-
-Crestfall-fe owns:
-
-- Creation Studio information architecture
-- guided dependency order
-- Full Studio grouping/copy
-- asset-card visual composition
-- disabled/unavailable route presentation
-
-The existing guided-progress implementation remains unchanged.
-
-## Protected scopes untouched
-
-- `app/studio/v2/**`
-- `components/studio/my-creations/edit/**`
-- `components/kit/**`
-- `components/studio/chat/**`
+- `components/studio/my-creations/edit/**`;
+- Location saved-edit `currentCreationId` convergence;
+- Image Studio / Kit;
+- chat;
+- `/app/studio/v2/**`.

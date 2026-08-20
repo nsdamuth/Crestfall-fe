@@ -1,4 +1,4 @@
-export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CHAT_SHELL_STATUS_PILL_TONES = Object.freeze({
   NEUTRAL: "neutral",

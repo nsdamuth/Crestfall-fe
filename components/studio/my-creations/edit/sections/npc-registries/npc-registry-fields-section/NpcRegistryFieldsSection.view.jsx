@@ -111,15 +111,36 @@ export default function NpcRegistryFieldsSectionView({
   );
 }
 
-function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
+function RegistryCard({
+  eyebrow,
+  title,
+  body,
+  imageUrl = "",
+  meta = "",
+  registryNotes = "",
+  footer = "",
+  referenceWarning = "",
+  onEdit,
+  onDelete,
+}) {
   return (
     <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-            {eyebrow}
-          </p>
-          <h3 className="mt-2 font-display text-3xl">{title}</h3>
+        <div className="flex min-w-0 flex-1 items-start gap-4">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={`${title} Character image`}
+              className="h-20 w-20 shrink-0 rounded-xl border border-[var(--gold-ornament)]/25 object-cover"
+            />
+          ) : null}
+
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+              {eyebrow}
+            </p>
+            <h3 className="mt-2 font-display text-3xl">{title}</h3>
+          </div>
         </div>
 
         <div className="flex gap-2">
@@ -128,10 +149,36 @@ function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
         </div>
       </div>
 
-      <p className="mt-3 leading-7 text-[var(--ink-dim)]">{body}</p>
+      <p className="mt-3 max-w-4xl line-clamp-4 leading-7 text-[var(--ink-dim)]">
+        {body}
+      </p>
+
       {meta ? (
         <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           {meta}
+        </p>
+      ) : null}
+
+      {registryNotes ? (
+        <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-3 py-3">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+            Registry Notes
+          </p>
+          <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
+            {registryNotes}
+          </p>
+        </div>
+      ) : null}
+
+      {referenceWarning ? (
+        <p className="mt-3 rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 text-xs leading-5 text-amber-100">
+          {referenceWarning}
+        </p>
+      ) : null}
+
+      {footer ? (
+        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+          {footer}
         </p>
       ) : null}
     </article>

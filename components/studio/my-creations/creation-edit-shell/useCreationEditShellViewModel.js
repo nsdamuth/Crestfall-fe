@@ -54,6 +54,9 @@ export function buildCreationEditTypeFlags({ form = {}, creationId = "" } = {}) 
     isActorMechanicsProfile: creationType === "ACTOR_MECHANICS_PROFILE",
     isStatsPoolsProfile: creationType === "STATS_POOLS_PROFILE",
     isProgressionProfile: creationType === "PROGRESSION_PROFILE",
+    isSkillsProfile: creationType === "SKILLS_PROFILE",
+    isAbilitySpellProfile: creationType === "ABILITY_SPELL_PROFILE",
+    isWalletProfile: creationType === "WALLET_PROFILE",
     isStructuredRegistry: isStructuredRegistryType(creationType),
   };
 }
@@ -191,6 +194,9 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
     isActorMechanicsProfile: flags.isActorMechanicsProfile,
     isStatsPoolsProfile: flags.isStatsPoolsProfile,
     isProgressionProfile: flags.isProgressionProfile,
+    isSkillsProfile: flags.isSkillsProfile,
+    isAbilitySpellProfile: flags.isAbilitySpellProfile,
+    isWalletProfile: flags.isWalletProfile,
     isStructuredRegistry: flags.isStructuredRegistry,
     reviewStatus: edit.reviewStatus,
     reviewMessage: edit.reviewMessage,

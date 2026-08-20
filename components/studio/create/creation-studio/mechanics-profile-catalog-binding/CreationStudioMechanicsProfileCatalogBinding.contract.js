@@ -186,6 +186,16 @@ function assetProjection(routeTargets, entry) {
   };
 }
 
+function hasLiveCatalogSteps(steps = []) {
+  const ids = new Set(
+    (Array.isArray(steps) ? steps : []).map((step) => step?.id)
+  );
+
+  return CREATION_STUDIO_MECHANICS_PROFILE_CATALOG_ENTRIES.every(
+    (entry) => ids.has(entry.id)
+  );
+}
+
 function augmentedRulesSteps() {
   const rulesChapter =
     GUIDED_BUILD_CHAPTER_DEFINITIONS.find(
@@ -197,6 +207,10 @@ function augmentedRulesSteps() {
     Array.isArray(rulesChapter?.steps)
       ? rulesChapter.steps.map(cloneStep)
       : [];
+
+  if (hasLiveCatalogSteps(currentSteps)) {
+    return currentSteps;
+  }
 
   const beforeInsertion =
     currentSteps.filter(
@@ -264,6 +278,13 @@ export function projectCreationStudioMechanicsProfileCatalogBinding({
       cloneChapter
     );
 
+  const baseCatalogAlreadyLive =
+    hasLiveCatalogSteps(
+      GUIDED_BUILD_CHAPTER_DEFINITIONS.find(
+        (chapter) => chapter.id === "RULES_MECHANICS"
+      )?.steps
+    );
+
   const rulesChapterIndex =
     guidedChapters.findIndex(
       (chapter) =>
@@ -293,6 +314,7 @@ export function projectCreationStudioMechanicsProfileCatalogBinding({
     );
 
   if (
+    !baseCatalogAlreadyLive &&
     reuseChapterIndex >= 0 &&
     guidedChapters[
       reuseChapterIndex
@@ -347,22 +369,29 @@ export function projectCreationStudioMechanicsProfileCatalogBinding({
           entry.assetTitle
       );
 
+    const missingAdditions =
+      additions.filter(
+        (title) => !assetTitles.includes(title)
+      );
+
     const nextAssetTitles =
-      progressionIndex >= 0
-        ? [
-            ...assetTitles.slice(
-              0,
-              progressionIndex + 1
-            ),
-            ...additions,
-            ...assetTitles.slice(
-              progressionIndex + 1
-            ),
-          ]
-        : [
-            ...assetTitles,
-            ...additions,
-          ];
+      missingAdditions.length === 0
+        ? assetTitles
+        : progressionIndex >= 0
+          ? [
+              ...assetTitles.slice(
+                0,
+                progressionIndex + 1
+              ),
+              ...missingAdditions,
+              ...assetTitles.slice(
+                progressionIndex + 1
+              ),
+            ]
+          : [
+              ...assetTitles,
+              ...missingAdditions,
+            ];
 
     fullStudioSections[
       fullRulesIndex
@@ -423,14 +452,13 @@ export function projectCreationStudioMechanicsProfileCatalogBinding({
     },
 
     visualExtensionStatus: {
-      catalogSemantics:
-        "READY_FOR_CHASSIS_BINDING",
+      catalogSemantics: "WIRED",
       liveCatalogExposure:
         assetAdditions.every(
           (asset) =>
             asset.routeAvailable
         )
-          ? "READY_FOR_FE_WIRING"
+          ? "WIRED"
           : "WAITING_FOR_CHASSIS_ROUTE_BINDING",
     },
 

@@ -46,18 +46,58 @@ function buildEntryCards(editor) {
   return editor.registry.entries.map((entry) => {
     const attachment =
       getNpcRegistryEntryActorMechanicsProfileAttachment(entry);
+    const linkedCharacter =
+      entry.kind === "CREATION_REF"
+        ? entry.hydratedCharacter || null
+        : null;
+    const linkedReferenceUnavailable =
+      entry.kind === "CREATION_REF" && entry.referenceStatus === "UNAVAILABLE";
+    const linkedDescription = linkedReferenceUnavailable
+      ? "The linked Character could not be loaded through the current creation graph."
+      : linkedCharacter?.description ||
+        linkedCharacter?.subtitle ||
+        "No Character description has been authored yet.";
+    const linkedMeta = linkedCharacter
+      ? [
+          entry.creationType || "CHARACTER",
+          linkedCharacter.status,
+          linkedCharacter.visibility,
+          linkedCharacter.contentRating,
+        ]
+          .filter(Boolean)
+          .join(" · ")
+      : entry.creationType || "CHARACTER";
 
     return {
       id: entry.id,
       eyebrow:
         entry.kind === "CREATION_REF" ? "Linked Creation" : "Lightweight NPC",
-      title: entry.name,
-      body: entry.notes || "No notes yet.",
-      meta: attachment
-        ? `Actor Mechanics: ${attachment.title}`
-        : entry.kind === "CREATION_REF"
+      title:
+        entry.name ||
+        (entry.kind === "CREATION_REF"
+          ? "Linked Character unavailable"
+          : "Unnamed lightweight NPC"),
+      body:
+        entry.kind === "CREATION_REF"
+          ? linkedDescription
+          : entry.notes || "No notes yet.",
+      imageUrl:
+        entry.kind === "CREATION_REF" ? linkedCharacter?.imageUrl || "" : "",
+      registryNotes:
+        entry.kind === "CREATION_REF" ? entry.notes || "" : "",
+      meta:
+        entry.kind === "CREATION_REF"
+          ? linkedMeta
+          : attachment
+            ? `Actor Mechanics: ${attachment.title}`
+            : "No Actor Mechanics Profile attached.",
+      footer:
+        entry.kind === "CREATION_REF" && !linkedReferenceUnavailable
           ? "Mechanics follow the linked Character creation."
-          : "No Actor Mechanics Profile attached.",
+          : "",
+      referenceWarning: linkedReferenceUnavailable
+        ? `Reference unavailable: ${entry.creationId || "missing Character id"}`
+        : "",
       onEdit: () => editor.openEditEntry(entry),
       onDelete: () => editor.deleteEntry(entry.id),
     };

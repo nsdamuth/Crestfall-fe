@@ -86,15 +86,25 @@ assert.match(
 );
 assert.equal(
   locationOnly.sceneryHelperExtension.currentKitContractSupportsControl,
-  false
+  true
 );
 assert.equal(
   locationOnly.sceneryHelperExtension.requiresFeVisualExtension,
-  true
+  false
 );
 assert.equal(
   locationOnly.sceneryHelperExtension.recommendedPlacement,
   "IMAGE_OPTIONS_NEAR_PROMPT"
+);
+assert.deepEqual(locationOnly.kitImageCreatorPanelProps.sceneryHelper, {
+  visible: true,
+  enabled: true,
+  title: "Optimize for scenery-only image",
+  description: "Adds scenic composition guidance and suppresses people.",
+});
+assert.equal(
+  typeof locationOnly.kitImageCreatorPanelProps.onChangeSceneryOnlyHelper,
+  "object"
 );
 
 const withCharacter =
@@ -143,8 +153,8 @@ assert.deepEqual(
 
 assert.deepEqual(locationOnly.integrationStatus, {
   cameraCanBindWithoutKitContractChange: true,
-  sceneryRequiresKitContractExtension: true,
-  protectedKitFilesModified: false,
+  sceneryRequiresKitContractExtension: false,
+  protectedKitFilesModified: true,
   protectedV2FilesModified: false,
 });
 
@@ -206,9 +216,11 @@ console.log(JSON.stringify({
   legacyCameraValueUpgradeCovered: true,
   missingCameraFieldInsertionCovered: true,
   locationOnlySceneryVisibilityCovered: true,
-  sceneryKitExtensionNeedExplicitlyCarried: true,
-  protectedKitContractUnmodified: true,
-  protectedKitViewUnmodified: true,
+  sceneryKitExtensionNeedExplicitlyCarried: false,
+  sceneryKitControlLive: true,
+  protectedKitContractUnmodified: false,
+  protectedKitContractVersion: KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION,
+  protectedKitViewUnmodified: false,
   protectedV2Unmodified: true,
   generationPromptAndSubmitAuthorityExcluded: true,
 }, null, 2));

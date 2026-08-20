@@ -68,3 +68,21 @@ current markup and behavior behind its own LOOM boundary.
 ```
 
 The preview is development-only and returns `notFound()` in production.
+
+## W47 — saved opening hero image
+
+The saved Room Template opening section also exposes the current Story opening
+hero-image attachment flow through the portable View boundary.
+
+The ViewModel remains application-facing and owns:
+
+- eligible source derivation from selected Characters plus the fixed Location;
+- image-library loading through the existing creation client;
+- `canUseAsFeatured` + `displayUrl` eligibility filtering;
+- `opening_hero_image` projection and removal;
+- picker loading/error/source state.
+
+The View receives display-ready source/image collections and semantic callbacks.
+It does not fetch media, construct API routes, or persist Story data directly.
+The pre-W47 FE message styling and long-form field limits remain presentation
+authority.
