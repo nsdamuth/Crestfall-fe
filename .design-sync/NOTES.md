@@ -112,6 +112,35 @@ gets a real fix (a tiny postbuild copy step, or a
 cp app/theme.css app/token-bridge.css app/design-system.css ds-bundle/tokens/
 ```
 
+## Next re-sync task (from Brian's web-app smoke test, 21 Aug 2026)
+
+The Claude Design self-check reported two token-metadata warnings on
+the pushed project. Both are cosmetic classification nits, not law or
+visual problems — confirmed by Brian, not fixed in this pass, not
+worth a re-sync on their own. Fold into whichever re-sync happens next:
+
+- Tailwind's own internal `space-y-*` utility custom properties (e.g.
+  `--tw-space-y-reverse` and kin, emitted by the compiled styles.css's
+  base/utilities layers) are being picked up by the app's self-check as
+  if they were design tokens, rather than recognized as Tailwind
+  internals. Likely needs an exclusion pattern in whatever reads
+  `tokens/*.css` for its token inventory (either upstream in the
+  claude.ai/design self-check, or by not shipping Tailwind's generated
+  utility CSS under `tokens/` alongside the real token source files —
+  worth checking whether `_ds_bundle.css`/`styles.css` is where these
+  actually belong instead).
+- 38 real tokens (from the copied `tokens/theme.css` /
+  `token-bridge.css` / `design-system.css`) are missing a `@kind`
+  classification comment the self-check wants for its metadata. Since
+  `app/theme.css` is the locked, Brian-owned law file (per
+  `docs/DESIGN-TOKENS.md`), adding `@kind` annotations means either (a)
+  a small config-side mapping this sync's build step injects without
+  touching the real product file, or (b) proposing the annotation
+  convention back to the product repo as a genuine doc change — that's
+  a real decision, not a mechanical fix, and shouldn't be made
+  unilaterally. Surface the 38-token list and both options at the start
+  of the next re-sync rather than guessing which one Brian wants.
+
 ## Re-sync risks
 
 - **`process.env` polyfill is a standing fork, not a config value.**
