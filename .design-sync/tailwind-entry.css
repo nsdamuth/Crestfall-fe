@@ -9,7 +9,7 @@
 @import "../app/token-bridge.css";
 @import "../app/design-system.css";
 
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 
 /* Scoped to exactly what this sync bundles: the shims, the entry
    barrel, and the authored previews. Never docs/, mirroring the
