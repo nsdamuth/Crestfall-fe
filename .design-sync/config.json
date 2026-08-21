@@ -29,16 +29,30 @@
     "ReadOnlyField": "components/studio/my-creations/edit/sections/SharedFields.jsx",
     "SectionTitle": "components/studio/my-creations/edit/sections/SharedFields.jsx",
     "ActionPanel": "components/studio/my-creations/edit/sections/SharedFields.jsx",
-    "ModalShell": "components/ui/ModalShell.jsx"
+    "ModalShell": "components/ui/modal-shell/ModalShell.view.jsx"
+  },
+  "docsMap": {
+    "KitFormField": "components/kit/form-field/README.md",
+    "KitDropdown": "components/kit/dropdown/README.md",
+    "KitModalFrame": "components/kit/modal-frame/README.md",
+    "KitBadge": "components/kit/badge/README.md",
+    "KitFilterChip": "components/kit/filter-chip/README.md",
+    "TextField": "components/studio/my-creations/edit/sections/README.md",
+    "SelectField": "components/studio/my-creations/edit/sections/README.md",
+    "NumberField": "components/studio/my-creations/edit/sections/README.md",
+    "TextAreaField": "components/studio/my-creations/edit/sections/README.md",
+    "ReadOnlyField": "components/studio/my-creations/edit/sections/README.md",
+    "SectionTitle": "components/studio/my-creations/edit/sections/README.md",
+    "ActionPanel": "components/studio/my-creations/edit/sections/README.md"
   },
   "dtsPropsFor": {
     "StudioShell": "sidebarSlot: React.ReactNode;\nmobileNavSlot: React.ReactNode;\ntopBarSlot: React.ReactNode;\nchildren: React.ReactNode;",
     "StudioSidebar": "/** Presentation-only shim over the real Binding Shell (components/studio/StudioSidebar.jsx), which normally wires next/link and usePathname(). Here InternalLinkComponent is fixed to a plain \"a\" and pathname is an explicit prop. economySlot renders a labeled placeholder, not the live coin-balance widget (that widget reads Chassis-owned account context, out of sync scope). */\nuser?: { email?: string };\npathname?: string;",
     "StudioTopBar": "/** Presentation-only shim over components/studio/StudioTopBar.jsx. notifications render from a local demo-state module (studioTopBarNotifications.mock.js), the same fixture data the real wrapper's own demo state uses. */\nuser?: { email?: string };\nonOpenMenu?: () => void;",
     "StudioMobileNav": "/** Presentation-only shim over components/studio/StudioMobileNav.jsx, pathname explicit instead of usePathname(). drawerEconomySlot renders a labeled placeholder (see StudioSidebar). */\nuser?: { email?: string };\nopen: boolean;\nonCloseMenu?: () => void;\npathname?: string;",
-    "Editor": "/** Advanced editor page View (docs/plans/ED1B-EDITOR-PAGE-SPEC.md, ED1C revision, contract 4.0.0). Composition top to bottom: back link -> hero slot -> section boxes (one open at a time) -> sticky rail (desktop) or bottom bar + sheet (mobile) -> overlays. Never imports Next.js or a Creation client. */\n\ninterface EditorPageSection {\n  id: string;\n  label: string;\n  icon?: React.ComponentType<{ size?: number }>;\n}\n\ninterface EditorPageGroup {\n  id: string;\n  label: string;\n  sections: EditorPageSection[];\n}\n\ngroups: EditorPageGroup[];\nopenSectionId: string | null;\nonOpenSection: (sectionId: string | null) => void;\nsectionMarks?: Record<string, \"dirty\" | \"saved\">;\nisDirty: boolean;\nsaveStatus: \"idle\" | \"saving\" | \"saved\" | \"error\";\nsaveErrorCopy?: string;\nonSave: (() => void) | null;\nonDiscard: (() => void) | null;\nonOpenSwitcher: (() => void) | null;\nsectionNodes: Record<string, React.ReactNode>;\nsectionLeads?: Record<string, React.ReactNode>;\nsectionBadges?: Record<string, React.ReactNode>;\nsectionSeats?: Record<string, React.ReactNode>;\nbackLabel: string;\nonBack: () => void;\nhero: React.ReactNode;\nfeaturedImagePicker?: React.ReactNode;\ncreationPicker?: React.ReactNode;\nloadError: { message?: string } | null;\nonRetryLoad?: () => void;\nonOpenPickerFromError?: () => void;\nisLoading?: boolean;\nmobileNavOpen: boolean;\nonToggleMobileNav: () => void;\nharnessSlot?: React.ReactNode;",
-    "KitFormField": "/** Contract 1.1.0. Four slots plus the input: label, input bed, helper line, error line, optional counter; an optional fold turns the field into a disclosure header over a field group. */\nlabel: string;\nvalue: string;\nplaceholder?: string;\nhelper?: string;\nerror?: string;\nsuccess?: string;\nmaxLength?: number | null;\ncount?: number | null;\nisFolded?: boolean;\nonToggleFold?: (() => void) | null;\nchildren?: React.ReactNode;\nisDisabled: boolean;\ntype?: \"text\" | \"search\" | \"email\" | \"password\" | \"number\";\nvariant?: \"text\" | \"textarea\" | \"select\" | \"number\";\nmono?: boolean;\nstartExpanded?: boolean;\noptions?: KitDropdownOption[];\nonSelect?: ((value: string) => void) | null;\nonChange: ((value: string) => void) | null;",
-    "KitDropdown": "/** Contract 1.1.0. One trigger opening one options panel: popover at 700px+, bottom-docked sheet under 700px. */\n\ninterface KitDropdownOption {\n  value: string;\n  label: string;\n  count?: number | null;\n  description?: string;\n  tooltip?: string;\n  isDisabled?: boolean;\n}\n\nlabel: string;\noptions: KitDropdownOption[];\nselectedValues: string[];\nisMultiSelect: boolean;\nisDisabled: boolean;\nonToggleOption: ((value: string) => void) | null;\nariaLabel?: string | null;",
+    "Editor": "/** Advanced editor page View (docs/plans/ED1B-EDITOR-PAGE-SPEC.md, ED1C revision, contract 4.0.0). Composition top to bottom: back link -> hero slot -> section boxes (one open at a time) -> sticky rail (desktop) or bottom bar + sheet (mobile) -> overlays. Never imports Next.js or a Creation client. */\ngroups: Array<{\n  id: string;\n  label: string;\n  sections: Array<{ id: string; label: string; icon?: React.ComponentType<{ size?: number }> }>;\n}>;\nopenSectionId: string | null;\nonOpenSection: (sectionId: string | null) => void;\nsectionMarks?: Record<string, \"dirty\" | \"saved\">;\nisDirty: boolean;\nsaveStatus: \"idle\" | \"saving\" | \"saved\" | \"error\";\nsaveErrorCopy?: string;\nonSave: (() => void) | null;\nonDiscard: (() => void) | null;\nonOpenSwitcher: (() => void) | null;\nsectionNodes: Record<string, React.ReactNode>;\nsectionLeads?: Record<string, React.ReactNode>;\nsectionBadges?: Record<string, React.ReactNode>;\nsectionSeats?: Record<string, React.ReactNode>;\nbackLabel: string;\nonBack: () => void;\nhero: React.ReactNode;\nfeaturedImagePicker?: React.ReactNode;\ncreationPicker?: React.ReactNode;\nloadError: { message?: string } | null;\nonRetryLoad?: () => void;\nonOpenPickerFromError?: () => void;\nisLoading?: boolean;\nmobileNavOpen: boolean;\nonToggleMobileNav: () => void;\nharnessSlot?: React.ReactNode;",
+    "KitFormField": "/** Contract 1.1.0. Four slots plus the input: label, input bed, helper line, error line, optional counter; an optional fold turns the field into a disclosure header over a field group. */\nlabel: string;\nvalue: string;\nplaceholder?: string;\nhelper?: string;\nerror?: string;\nsuccess?: string;\nmaxLength?: number | null;\ncount?: number | null;\nisFolded?: boolean;\nonToggleFold?: (() => void) | null;\nchildren?: React.ReactNode;\nisDisabled: boolean;\ntype?: \"text\" | \"search\" | \"email\" | \"password\" | \"number\";\nvariant?: \"text\" | \"textarea\" | \"select\" | \"number\";\nmono?: boolean;\nstartExpanded?: boolean;\nonSelect?: ((value: string) => void) | null;\nonChange: ((value: string) => void) | null;\n/** \"select\" variant only: passed through to KitDropdown unchanged. */\noptions?: Array<{ value: string; label: string; count?: number | null; description?: string; tooltip?: string; isDisabled?: boolean }>;",
+    "KitDropdown": "/** Contract 1.1.0. One trigger opening one options panel: popover at 700px+, bottom-docked sheet under 700px. Each option: { value: string; label: string; count?: number | null; description?: string; tooltip?: string; isDisabled?: boolean }. */\nlabel: string;\noptions: Array<{\n  value: string;\n  label: string;\n  count?: number | null;\n  description?: string;\n  tooltip?: string;\n  isDisabled?: boolean;\n}>;\nselectedValues: string[];\nisMultiSelect: boolean;\nisDisabled: boolean;\nonToggleOption: ((value: string) => void) | null;\nariaLabel?: string | null;",
     "KitModalFrame": "/** Presentation-only wrapper over the ruled panel anatomy (contract 1.1.0) on top of ModalShell's behavioral primitive. No isOpen prop: renders when mounted. */\nchildren: React.ReactNode;\nonClose: (() => void) | null;\ncloseOnBackdrop?: boolean;\ncloseOnEscape?: boolean;\nvariant?: \"modal\" | \"sheet\" | \"viewer\";\npanelClassName?: string;\nariaLabelledBy?: string;\nariaDescribedBy?: string;\nariaLabel?: string;",
     "KitBadge": "/** Contract 1.0.0. Non-interactive label; a clickable badge is a chip (KitFilterChip), not a badge. */\nlabel: string;\nvariant: \"canon\" | \"status\" | \"meta\";\nsurface: \"canvas\" | \"art\";",
     "KitFilterChip": "/** Contract 1.0.0. */\nlabel: string;\ncount: number | null;\nisSelected: boolean;\nvariant: \"default\" | \"sort\" | \"toggle\" | \"dropdown\";\nisDisabled: boolean;\nonToggle: (() => void) | null;",
@@ -52,9 +66,36 @@
     "ModalShell": "/** Shared floating-modal behavioral primitive (components/ui/ModalShell.jsx): fixed overlay, scrim, blur, backdrop dismiss, Escape, body-scroll lock. KitModalFrame is the ruled panel anatomy built on top of this. */\nchildren: React.ReactNode;\nonClose?: () => void;\ncloseOnBackdrop?: boolean;\ncloseOnEscape?: boolean;\nclassName?: string;\nveilClassName?: string;\npanelClassName?: string;\nariaLabelledBy?: string;\nariaDescribedBy?: string;"
   },
   "overrides": {
-    "KitModalFrame": { "cardMode": "single", "viewport": "480x640" },
-    "KitDropdown": { "cardMode": "single", "viewport": "420x480" }
+    "KitModalFrame": {
+      "cardMode": "single",
+      "viewport": "480x640"
+    },
+    "KitDropdown": {
+      "cardMode": "single",
+      "viewport": "420x480"
+    },
+    "Editor": {
+      "cardMode": "single",
+      "primaryStory": "Rest"
+    },
+    "ModalShell": {
+      "cardMode": "single",
+      "viewport": "480x640"
+    },
+    "StudioShell": {
+      "cardMode": "single",
+      "viewport": "1280x800"
+    },
+    "StudioSidebar": {
+      "cardMode": "single",
+      "viewport": "280x700"
+    },
+    "StudioMobileNav": {
+      "cardMode": "single",
+      "viewport": "390x700"
+    }
   },
   "libOverrides": {},
-  "buildCmd": "npx @tailwindcss/cli -i .design-sync/tailwind-entry.css -o .design-sync/.cache/compiled.css"
+  "buildCmd": "npx @tailwindcss/cli -i .design-sync/tailwind-entry.css -o .design-sync/.cache/compiled.css",
+  "readmeHeader": ".design-sync/conventions.md"
 }

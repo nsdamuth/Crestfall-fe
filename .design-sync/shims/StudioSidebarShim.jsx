@@ -7,6 +7,7 @@
 // defaults to a plain "a" instead of next/link's Link, and pathname
 // arrives as an explicit prop instead of usePathname(). No behavior
 // invented; see components/studio/StudioSidebar.jsx for the original.
+import "./processPolyfill";
 import StudioSidebarView from "@/components/studio/studio-sidebar/StudioSidebar.view";
 import { useStudioSidebarViewModel } from "@/components/studio/studio-sidebar/useStudioSidebarViewModel";
 
