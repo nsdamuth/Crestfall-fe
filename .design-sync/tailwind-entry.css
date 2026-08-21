@@ -1,0 +1,27 @@
+/* Compiled to .design-sync/.cache/compiled.css by the repo's own
+   Tailwind v4 CLI (see config.json buildCmd). Cascade order mirrors
+   app/globals.css exactly: fonts, then the three law files in their
+   real order, then Tailwind itself scoped to only the synced files. */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap");
+
+@import "../app/theme.css";
+@import "../app/token-bridge.css";
+@import "../app/design-system.css";
+
+@import "tailwindcss";
+
+/* Scoped to exactly what this sync bundles: the shims, the entry
+   barrel, and the authored previews. Never docs/, mirroring the
+   scanner guard in app/globals.css. */
+@source "./shims/**/*.jsx";
+@source "./entry.jsx";
+@source "./previews/**/*.tsx";
+@source "../components/kit/**/*.jsx";
+@source "../components/ui/modal-shell/**/*.jsx";
+@source "../components/studio/studio-shell/**/*.jsx";
+@source "../components/studio/studio-sidebar/**/*.jsx";
+@source "../components/studio/studio-top-bar/**/*.jsx";
+@source "../components/studio/studio-mobile-nav/**/*.jsx";
+@source "../app/studio/v2/editor/editor/**/*.jsx";
+@source "../components/studio/my-creations/edit/sections/SharedFields.jsx";
