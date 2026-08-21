@@ -93,5 +93,10 @@
   "libOverrides": {},
   "buildCmd": "npx @tailwindcss/cli -i .design-sync/tailwind-entry.css -o .design-sync/.cache/compiled.css",
   "readmeHeader": ".design-sync/conventions.md",
-  "projectId": "1e49c5d8-6ad8-4426-911d-2462c6e73642"
+  "projectId": "1e49c5d8-6ad8-4426-911d-2462c6e73642",
+  "guidelinesGlob": [
+    "docs/DESIGN-TOKENS.md",
+    "docs/plans/ED1E-EDITOR-DESIGN-STANDARD.md",
+    "docs/plans/ED1B-EDITOR-PAGE-SPEC.md"
+  ]
 }
