@@ -86,6 +86,32 @@ guard in app/globals.css.
   `"error"` in the live web-app smoke test to visually confirm the rail
   copy at desktop width and the bottom-bar copy at mobile width.
 
+## Manual step every rebuild: copy the raw token files into ds-bundle/tokens/
+
+`cfg.tokensGlob`/`cfg.tokensPkg` (lib/css.mjs copyTokens) only fire when
+`tokensPkg` names a sibling node_modules PACKAGE; they no-op entirely for
+plain repo files like ours (theme.css/token-bridge.css/design-system.css
+sit directly in `app/`, not in a tokens package), so `ds-bundle/tokens/`
+comes out of package-build.mjs EMPTY every time — this was caught only
+by checking the output directory by hand, not by any validator warning.
+The token VALUES still ship correctly regardless (they're fully baked
+into the compiled `styles.css`/`_ds_bundle.css` via
+`.design-sync/tailwind-entry.css`'s `@import`s, confirmed by
+package-validate.mjs's "tokens: N defined, M referenced" line), so
+rendering is never wrong; what's missing without this step is the
+raw, commented source files for the design agent to read directly per
+the conventions header's "where the truth lives" pointer.
+
+Removed `tokensGlob` from config.json (it was silently inert) rather
+than leave a config key that implies automatic handling. Until this
+gets a real fix (a tiny postbuild copy step, or a
+`.design-sync/overrides/` script), run this after every
+`package-build.mjs` and before any upload:
+
+```sh
+cp app/theme.css app/token-bridge.css app/design-system.css ds-bundle/tokens/
+```
+
 ## Re-sync risks
 
 - **`process.env` polyfill is a standing fork, not a config value.**
