@@ -72,6 +72,13 @@ the details below carry only what is still actionable.
 | CR-044 | Streaming transport for chat | SSE or streaming contract for `POST /messages`; the frontend's chat-message and chat-composer contracts are already streaming-ready (`isStreaming`, `generationCursorLabel`, `onStopGenerating`) per ruling O9, so the surface upgrades without a contract change once transport lands | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O9 |
 | CR-045 | Story room rename | No rename path exists anywhere in the crestfall-main baseline or this repo's chat surface; a product gap, not a design decision this wave makes | open | Nick/Brian | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6; needs a product decision on whether rename ships at all before any UI is designed |
 | CR-046 | Chat monetization data | Real coin balance, entitlements, and gated-action pricing for the chat header's coin chip and the Library Pass upsell sheet, both fixture-fed today | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O6 |
+| CR-047 | Tooltip component | No tooltip component exists anywhere in the shipped editor tree; Gate 1's field grammar requires one for helper-text disclosure | open | Brian | non-blocking; Gate 1 requires a design for this pass regardless, per Brian's ruling; contract to follow once designed |
+| CR-048 | Chrome blur tokens | Gate 1 design-time exploration permits blur on nav-adjacent surfaces with no existing token for it | open | Brian | non-blocking; pending which surfaces and what blur radius/opacity Brian rules in Gate 2 or a later sitting |
+| CR-049 | Bottom save bar vs. saved-pill | Two competing treatments for the mobile save affordance; ruling explicitly deferred to Gate 2 | open | Brian | non-blocking; deferred by Brian's own Gate 1 ruling, not an oversight |
+| CR-050 | The "+1" save bloom | A subtle gamified micro-animation on save, permitted under the design-time-exploration ruling, not yet designed or ruled | open | Brian | non-blocking; flagged "new device" per the ruling update, needs its own sitting |
+| CR-051 | Saved-state success-hue adjustment | The current green-check-on-brown treatment is the specific case the contrast law's status-on-mid-surface gap already blocks; Gate 1 asked for real specimens to rule it | open | Brian | non-blocking; intersects the standing BLOCKED status-color escalation in `docs/DESIGN-TOKENS.md` contrast law; one ruling closes both |
+| CR-052 | Sidebar deviations bundle | Six deviations from the shipped sidebar surfaced during Gate 1 ground-truth review: ink lift, top-bar wash, Legacy section hidden, Community Links removed, footer re-order, and the economy widget's fixture treatment | open | Brian | non-blocking; bundle, not a single change; see Details for the per-item breakdown |
+| CR-053 | Token candidates from Gate 1 | Four values ratified in Gate 1's spec list with no existing token match: Inter 300 weight, cf-btn secondary 5% screen fill, control heights 38 (already `--control-filter`, confirm broadened use) and 28 (genuinely new), gradient card surfaces | open | Brian | non-blocking; full mapping and every candidate's exact value recorded in `docs/plans/ED1F-DESIGN-DELTAS.md` |
 
 ## Details
 
@@ -723,6 +730,106 @@ When this lands, the mock coin/entitlement data in
 `chatV2StoryMock.js` and `ChatShell.fixtures.js`'s
 `chatShellInsufficientCoinsFixture` fold into the same account context
 the sidebar's coin chip already reads.
+
+### CR-047, Tooltip component
+
+Filed 21 Aug 2026, Gate 1 (Claude Design, Crestfall Editor DS
+project). No tooltip pattern exists anywhere in the v2 editor's real
+render tree today (`KitDropdown`'s `tooltip` option field renders via
+the native `title` attribute as a documented interim, per its own
+`.d.ts`, not a designed component). Gate 1's field grammar names a
+tap-friendly tooltip icon as the vehicle for helper text under the
+progressive-disclosure binding rule. Needed from Brian: the ruled
+visual design (Gate 1 or a following sitting). Needed from Nick: none
+yet; this is design-only until a component exists. Until this lands,
+helper text stays in whatever interim form each field grammar variant
+used during Gate 1 review, never a fabricated tooltip lookalike.
+
+### CR-048, Chrome blur tokens
+
+Filed 21 Aug 2026. The ruling that opened Gate 1's design-time
+exploration explicitly permits "blur on nav-adjacent surfaces" as a
+proposal, flagged "new device, law update or CR required." No blur
+token exists in `app/theme.css` today. Needed from Brian: which
+surfaces (top bar, rail, sidebar, all three) and the blur radius/
+backdrop-opacity pairing, ruled from real specimens, not assumed.
+Until ruled, no shipped surface uses blur; any exploratory render
+showing it is exploration only, not applied.
+
+### CR-049, Bottom save bar vs. saved-pill
+
+Filed 21 Aug 2026. Two candidate treatments for the mobile save
+affordance surfaced during Gate 1 review; Brian's own ruling explicitly
+deferred the choice to Gate 2 (hero architecture), since the mobile
+save surface's shape depends on how the hero and rail collapse on
+mobile. Needed from Brian: the Gate 2 ruling. Until then, the current
+ED1E-era bottom control bar (Sections trigger + save state + Save,
+per `Editor.view.jsx`) stays the shipped behavior; nothing changes on
+this pass.
+
+### CR-050, The "+1" save bloom
+
+Filed 21 Aug 2026. A subtle gamified micro-animation on a successful
+save, named directly in the ruling that opened Gate 1's design-time
+exploration ("a subtle gamified micro-animation, e.g. a '+1' bloom"),
+flagged "new device, law update or CR required." Not yet designed or
+ruled; the guardrail from that same ruling applies: nothing may
+distract from the act of creating, subtle is the bar. Needed from
+Brian: a ruled animation spec (duration, easing, trigger, and whether
+it ties to any real progression/XP system or is purely decorative)
+before this enters any contract. Until ruled, the current instant
+"All changes saved" text-only confirmation ships unchanged.
+
+### CR-051, Saved-state success-hue adjustment
+
+Filed 21 Aug 2026, carried from ED1E law-gap escalation 1
+(`docs/plans/ED1E-EDITOR-DESIGN-STANDARD.md` section 10) and Gate 1's
+explicit ask to "rethink the current green-check-on-brown treatment."
+This is the same root gap the contrast law already flags as BLOCKED,
+not ruled (`docs/DESIGN-TOKENS.md`: status colors at normal text size
+on `--surface-2/3/4` have no named brighter ladder step). Needed from
+Brian: which ladder step (or a new one) to fill, ruled from real
+rendered specimens at the blocked surface depths, per the contrast
+law's own standing instruction. One ruling here closes both this CR
+and the ED1E escalation; they are the same gap, not two.
+
+### CR-052, Sidebar deviations bundle
+
+Filed 21 Aug 2026, surfaced during the Gate 1 ground-truth fidelity
+pass (comparing Claude Design exploration renders against real
+`localhost:3001` captures of the shipped `StudioSidebar`). Six
+deviations from the shipped sidebar, none yet ruled as intentional
+redesign or accidental drift:
+- **Ink lift:** exploration renders show a brighter overall ink value across sidebar text than the shipped `--ink-dim`/`--ink-faint` pairing produces.
+- **Top-bar wash:** a background treatment on the top bar not present in the shipped `StudioTopBar.view.jsx`.
+- **Legacy section hidden:** a standing shell ruling (recorded in `ground-truth/GROUND-TRUTH.md`) that the sidebar's collapsible "Legacy" disclosure is hidden entirely, not merely collapsed; needs a real contract-level decision on whether `StudioSidebar` gains a prop for this or the Binding Shell simply stops passing legacy data.
+- **Community Links removed:** the shipped sidebar's "Community Links" disclosure does not appear in exploration renders; needs confirmation this is a ruled removal, not an omission.
+- **Footer re-order:** the signed-in footer's internal ordering differs from the shipped recipe.
+- **Economy fixture:** whether the coin-balance widget stays the honest out-of-scope stub (`.design-sync/shims/EconomySlotStub.jsx`) or gets a fixture-fed real `StudioEconomyWidget` (see `ground-truth/GROUND-TRUTH.md`'s coverage-check note).
+
+Needed from Brian: a ruling on each of the six, which of them are
+intentional Gate-driven redesign (and therefore propagate) versus
+which are unintended drift (and therefore get corrected back to
+shipped behavior) before propagation. Until ruled, the shipped
+`StudioSidebar` behavior is authoritative for anything not explicitly
+called out as a ruled Gate delta elsewhere in `docs/plans/ED1F-DESIGN-DELTAS.md`.
+
+### CR-053, Token candidates from Gate 1
+
+Filed 21 Aug 2026. Four values named directly by Brian as token
+candidates from the ratified Gate 1 spec list, cross-checked against
+`app/theme.css` in `docs/plans/ED1F-DESIGN-DELTAS.md`:
+- **Inter 300 weight:** no token below `--weight-regular` (400) exists today.
+- **`cf-btn` secondary, 5% screen fill:** not confirmed against `--state-hover-fill`/`--fill-whisper`'s actual values in this pass; either a match (cite the existing token) or a genuinely new opacity step.
+- **Control heights 38 and 28:** 38 already matches `--control-filter` exactly (this Gate broadens its legal use to field-grammar controls generally, not a new token); 28 has no match below `--control-sm` (32) and is genuinely new.
+- **Gradient card surfaces:** the hero/section-card/rail gradient (`#1a1610` to `#14110c` per Gate 1's ratified spec) matches no existing surface token; explicitly permitted as a new device under the design-time-exploration ruling.
+
+Needed from Brian: naming and ratifying each candidate (or rejecting
+it) so it can enter `app/theme.css` through the standard ruling path,
+per the amendment law, "a new TOKEN enters `app/theme.css` only through
+a Brian ruling." None of these four write into product code until
+ruled. Full per-value detail and honest token-vs-candidate mapping for
+every Gate 1 spec line lives in `docs/plans/ED1F-DESIGN-DELTAS.md`.
 
 ## Closed
 
