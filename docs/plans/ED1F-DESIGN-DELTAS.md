@@ -242,3 +242,405 @@ family), rather than an unboxed full-bleed block.
 14. Fading sidebar-separator hairline, 6% to 13% (DD-08).
 
 Plus one standing law conflict this gate's ruling deepens rather than resolves: **the focus treatment (DD-04)**, now a four-way conflict across the global focus ring, the kit-focus law, ED1E's quiet-field-ring, and this gate's gold-ornament-glow recipe. Needs one reconciling ruling before any of the four ships broadly.
+
+## Gate 2 ruling
+
+Brian ruled a direct pick: **2a, "Boxed Plate."** 2b and 2c rejected. No
+reasons recorded for the rejected options beyond the pick itself, same
+as Gate 1. Source: `explorations/gate1/GATE-LOG.md`'s Gate 2 section
+and `explorations/HANDOFF.md`, both read from the Crestfall Editor DS
+Claude Design project. The save surface was amended during the
+following device-ruling pass (DD-11), and a full device-ruling queue
+and a 12-row token table were closed the same day; every entry below
+is checked against `app/theme.css` directly, same discipline as Gate 1.
+
+## DD-10, Gate 2 architecture: Boxed Plate hero
+
+**Family:** editor page architecture, depends on DD-01.
+
+**Ruling basis:** Brian, direct pick, 21 Aug 2026, Gate 2 three-way ("Boxed Plate" / 2b / 2c). File: `explorations/gate2/Hero Architecture.html`.
+
+**The change:** the hero renders as a floating boxed plate inside the
+form column, using DD-01's own panel treatment (bordered/surfaced card,
+same recipe as a section box). This is the winning Gate 2 option; 2b
+and 2c are rejected outright.
+
+**Checkable conditions:**
+- The hero renders as a bordered/surfaced panel (see DD-01, DD-08), never full-bleed or unboxed.
+
+**Token mapping:** none new; this ratifies DD-01's own hero-panel
+condition as the winning Gate 2 option rather than introducing new
+values.
+
+**Contract impact:** confirms DD-01's contract flag (`EDITOR_VIEW_CONTRACT_VERSION` rail/hero relationship) rather than adding a new one.
+
+**Propagation targets:** `Editor.view.jsx` (hero), `editor-header/`.
+
+## DD-11, Save surface amendment: rail-anchored block, bottom bar retired
+
+**Family:** editor page architecture, cross-cutting with mobile. Closes CR-049.
+
+**Ruling basis:** Brian, ruled during the chrome-blur device ruling, 21
+Aug 2026 (amends the Gate 2 hero ruling). Exhibit: `explorations/gate2/Device Ruling - Chrome Blur.html`; verified at both widths in
+`explorations/gate2/Device Ruling - Saved State.html` and
+`explorations/gate2/Device Ruling - Mobile Save - Bloom.html`.
+
+**The change:** the unsaved-state pill plus Discard/Save controls
+anchor the bottom of the sections rail, not a separate full-width
+bottom bar. The existing ED1E-era bottom control bar (Sections trigger
+plus save state plus Save, per `Editor.view.jsx`) is retired. At 390
+the same save block survives as a thumb-zone row (44px floor per
+DD-07) rather than being dropped or redesigned separately for mobile.
+
+**Checkable conditions:**
+- The unsaved-state pill and Discard/Save controls render inside the rail's own bottom edge, not in a page-level fixed bottom bar.
+- No standalone bottom control bar remains in the desktop render.
+- At 390, the same rail-bottom save block renders as a thumb-reachable row, controls at the 44px mobile floor.
+
+**Token mapping:** none new; layout/placement change only.
+
+**Contract impact:** `EDITOR_VIEW_CONTRACT_VERSION` needs review alongside DD-01/DD-09: the save/discard affordance moves from a page-level slot to a rail-owned slot. Bundle with the DD-01/DD-06/DD-09 contract review rather than versioning separately.
+
+**Propagation targets:** `Editor.view.jsx` (rail, retire the bottom bar), `Editor.contract.js`.
+
+## DD-12, Chrome blur ruled in
+
+**Family:** cross-cutting chrome (sticky nav, panels, tooltips). Closes CR-048.
+
+**Ruling basis:** Brian, direct ruling, 21 Aug 2026, device ruling 1. Exhibit: `explorations/gate2/Device Ruling - Chrome Blur.html`.
+
+**The change:** the editor's sticky nav and the mobile save row (DD-11)
+carry a dark translucent wash with a 12px backdrop blur. Floating
+panels keep the existing 2px panel blur. Tooltip glass (see CR-047)
+uses the 12px chrome strength, not the 2px panel strength.
+
+**Checkable conditions:**
+- Sticky nav background is a near-black translucent wash at approximately 62% opacity, with a 12px backdrop blur behind it.
+- The mobile save row (DD-11) carries the same wash and blur treatment.
+- Floating panels (modals, menus, popovers) keep the existing 2px blur, unchanged.
+- Tooltip glass renders at 12px blur, not 2px.
+
+**Token mapping:**
+- 12px chrome blur: matches `--blur-chrome` exactly, existing locked token (minted 8 Aug 2026 at the create-hub topbar value). This ruling extends its documented scope ("persistent chrome only, sticky top bars") to the editor's sticky nav and, new, to the mobile save row. Broadened usage, not a new token.
+- 2px panel blur: matches `--blur-panel` exactly, existing locked token, confirms current scope (floating panels).
+- Dark wash at approximately 62%: **TOKEN CANDIDATE.** `rgba(6,4,2,.62)` does not match `--scrim` (`rgba(0,0,0,.40)`) or `--scrim-strong` (`rgba(0,0,0,.70)`): different base color (a near-canvas warm black, not pure black) and a distinct alpha from both. Record as a candidate, `--chrome-wash`.
+- Tooltip glass at 12px: **FLAG, not resolved here.** `app/theme.css`'s own comment on `--blur-chrome` reads "never a floating panel." A tooltip is a floating surface. Applying the chrome strength there either means tooltip glass is a deliberate, documented exception, or `--blur-chrome`'s law needs rewriting to permit it. The ruling itself defers this ("folded into the blur-law update"); this entry records the conflict rather than resolving it.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (`--chrome-wash` candidate, `--blur-chrome` scope note), `Editor.view.jsx` (sticky nav, mobile save row), tooltip component once built (CR-047).
+
+## DD-13, Saved state: synchronized P2 morph, sage success hue
+
+**Family:** cross-cutting (save affordance). Closes CR-051 and the ED1E law-gap escalation (`docs/plans/ED1E-EDITOR-DESIGN-STANDARD.md` section 10).
+
+**Ruling basis:** Brian, direct ruling, 21 Aug 2026, device ruling. Exhibit: `explorations/gate2/Device Ruling - Saved State.html` (P1 to P3 at both widths).
+
+**The change:** on save, the pill and the Save button resolve together
+in one synchronized morph beat (P2), not staggered. The success hue,
+across this and every other status-success use, becomes a warm sage,
+replacing the green-check-on-brown treatment the contrast law already
+flagged as blocked.
+
+**Checkable conditions:**
+- The saved-state pill and the Save button's own state both change on the same animation beat, no visible lag between them.
+- Every status-success use (not only the saved pill) renders the new sage value, not the prior `#7D9B6A`.
+
+**Token mapping:**
+- `--status-success` revised value: `oklch(.76 .08 135)`. This is a revision to an EXISTING locked token's literal value (`#7D9B6A` today), not a new candidate. Per the amendment law this needs the standard token-update path in `app/theme.css`, converting the OKLCH value to the project's sRGB hex convention before it enters the file.
+- Synchronized-morph timing: no new duration token implied by the ruling as recorded; if a specific ms value was set in the exhibit's own animation, it is an implementation detail of `Editor.view.jsx`'s save-state component, not a token candidate here.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (`--status-success` value update), every consumer of `--status-success` (status chips, saved-state pill, `docs/DESIGN-TOKENS.md`'s contrast-law entry for status colors, which this ruling closes).
+
+## DD-14, Increment bloom pattern: approved as a device, rejected for save
+
+**Family:** cross-cutting motion device. Updates CR-050.
+
+**Ruling basis:** Brian, direct ruling, 21 Aug 2026, device ruling. Exhibit: `explorations/gate2/Device Ruling - Mobile Save - Bloom.html`.
+
+**The change:** the "+1" increment-bloom pattern is ratified as a
+reusable device, reserved for values that genuinely increment (coins
+earned, completion counts, progression). Its placement on the Save
+action is rejected: a save is not a score, and save feedback stays the
+saved-state treatment (DD-13) only, with no bloom.
+
+**Checkable conditions:**
+- No increment-bloom animation appears anywhere in the save flow.
+- Any future use of the increment-bloom pattern is on a genuinely incrementing value (a counter, a coin balance, a completion count), never a binary or state-change action like save.
+
+**Token mapping:** none named in the ruling as recorded (the pattern is
+approved at the device level, not yet given a duration/easing token).
+Flag for a follow-up sitting if and when a real incrementing surface
+adopts it (e.g. the StudioEconomyWidget, itself still open per DD-15).
+
+**Contract impact:** none; this rules out a save-flow behavior rather than adding one.
+
+**Propagation targets:** none for this pass (no shipped surface currently has a qualifying incrementing value); CR-050 stays open, narrowed to future placement only.
+
+## DD-15, Sidebar batch: all six kept
+
+**Family:** cross-cutting (`StudioSidebar`). Closes five of six items in CR-052; the sixth (economy fixture) stays open.
+
+**Ruling basis:** Brian, direct ruling, 21 Aug 2026, device ruling, batch B ("proposed") kept wholesale over batch A ("shipped"). Exhibit: `explorations/gate2/Device Ruling - Sidebar Batch.html`.
+
+**The change:** all six sidebar deviations surfaced during Gate 1's
+ground-truth review are ruled intentional and propagate as designed,
+not corrected back to shipped behavior:
+
+1. Ink lift: a brighter overall ink value across sidebar text than shipped `--ink-dim`/`--ink-faint` produce today. RULED IN.
+2. Top-bar wash: a background treatment on the top bar, absent from shipped `StudioTopBar.view.jsx` today. RULED IN.
+3. Legacy section hidden entirely (not merely collapsed). RULED IN; still needs the contract-level decision CR-052 named (a `StudioSidebar` prop, versus the Binding Shell simply not passing legacy data), not resolved by this ruling alone.
+4. Community Links disclosure removed. RULED IN as a deliberate removal, not an omission.
+5. Footer re-order: the signed-in footer's internal ordering changes from the shipped recipe. RULED IN.
+6. Economy fixture: **STILL FLAGGED, not ruled by this pass.** Whether `StudioEconomyWidget` stays the honest out-of-scope stub (`.design-sync/shims/EconomySlotStub.jsx`) or gets fixture-fed real data is still pending the ground-truth scope decision noted in `explorations/HANDOFF.md`.
+
+**Checkable conditions:**
+- Sidebar text ink values match the exploration's brighter step, not shipped `--ink-dim`/`--ink-faint`, once a token exists for it (see below).
+- `StudioTopBar` carries the wash treatment shown in the exploration.
+- The Legacy disclosure does not render at all (not collapsed, absent).
+- No Community Links disclosure renders.
+- The signed-in footer's item order matches the exploration render.
+- The economy widget's data source is NOT changed by this ruling; it remains open.
+
+**Token mapping:** the "ink lift" step has no named token yet; if it is
+a genuinely new ink value distinct from `--ink`/`--ink-dim`/`--ink-faint`,
+it needs its own candidate, not a silent reuse of `--ink`. Flag for the
+propagation pass to pin the exact exploration value against
+`app/theme.css`'s ink ramp.
+
+**Contract impact:** item 3 (Legacy hidden) is a real contract-level decision per CR-052, not propagation-only; needs its own ruling on the mechanism (prop vs. data omission) before it ships.
+
+**Propagation targets:** `StudioSidebar.view.jsx` (ink values, Legacy removal, Community Links removal, footer order), `StudioTopBar.view.jsx` (wash treatment), `ground-truth/GROUND-TRUTH.md` (update once shipped to match).
+
+## DD-16, Field bed sizing and deep-bed shadow ratified
+
+**Family:** field grammar, depends on and resolves part of DD-03. Advances CR-053.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 1 and 8).
+
+**The change:** field bed typed and placeholder text is set at a named
+size/leading pair, distinct from every existing type-scale step. The
+deep bed background and its inset shadow, both flagged by DD-03 as
+unresolved (the shadow explicitly as a law conflict), are now ratified
+with names and exact values.
+
+**Checkable conditions:**
+- Field bed text (typed and placeholder) renders at the new `--text-input` / `--lh-input` pair, not `--text-ui` or `--text-body`.
+- Field bed background is `--bed-deep`, matching DD-03's `#0d0b08` exactly.
+- Field bed shadow is `--shadow-bed`, an inset shadow, not a border-only edge.
+
+**Token mapping:**
+- `--text-input`: 14px. **TOKEN CANDIDATE**, genuinely new: `--text-ui` is 13px (`0.8125rem`), `--text-body` is 16px (`1rem`); 14px sits between both and matches neither.
+- `--lh-input`: 22px. **TOKEN CANDIDATE**, genuinely new: `--lh-ui` is 20px, `--lh-body` is 24px; 22px sits between both.
+- `--bed-deep`: `#0d0b08`. Confirms DD-03's candidate exactly; ratified with this name.
+- `--shadow-bed`: `inset 0 1px 2px rgba(0,0,0,.25)`. Confirms DD-03's candidate exactly; ratified with this name.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (four new tokens), `SharedFields.jsx` (`FIELD_BED_CLASS`), `KitFormField.view.jsx` (input bed).
+
+**Escalation carried forward, resolved in part:** DD-03 flagged the
+inset shadow as a NEW DEVICE contradicting the standing elevation law
+("in-flow surfaces separate by border only, never by shadow"). Ratifying
+`--shadow-bed` as named law is the reconciling ruling DD-03 asked for,
+but the elevation law's own text in `app/theme.css` (the ELEVATION
+comment block) still needs an explicit amendment noting the field-bed
+exception, not just a new token sitting beside unchanged prose that
+contradicts it.
+
+## DD-17, Typed ink and weight 300 ratified
+
+**Family:** field grammar, resolves two DD-03 candidates. Advances CR-053.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" row 2).
+
+**The change:** typed field values render in Inter weight 300 at a
+softened ink value, both now named and entered into the font/ink
+system rather than sitting as unresolved candidates.
+
+**Checkable conditions:**
+- Typed field text renders at font-weight 300.
+- Typed field text ink is `--ink-typed`, not `--ink`, `--ink-dim`, or `--ink-faint`.
+- Weight 300 is available in the font pipeline wherever Inter is loaded (not only inline in one exhibit).
+
+**Token mapping:**
+- `--ink-typed`: `#d9d3c6`. Confirms DD-03's candidate exactly; ratified with this name.
+- Weight 300: no locked weight below `--weight-regular` (400) existed before this ruling (DD-03 flagged it as "never ruled before"). Ratified as a real weight now added to the font pipeline. Whether this needs its own `--weight-light` token alongside `--weight-regular`/`--weight-medium`/`--weight-bold`, or stays a literal 300 used only via `--ink-typed`'s paired declaration, is a naming decision for the propagation pass; DD-18 raises a second consumer of weight 300 (ghost button text) that bears on this same naming decision.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** wherever `next/font` loads Inter (weight 300 must be requested), `SharedFields.jsx` / `KitFormField.view.jsx` (input bed).
+
+## DD-18, Ghost fill and button weight recipe, WITH A LAW CONFLICT
+
+**Family:** cross-cutting (buttons, chips). Advances CR-053; flags a conflict inside the same ruling set.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 3 and 5).
+
+**The change:** the 5%-opacity gold screen fill DD-07 named for ghost
+buttons and interactive chips is ratified with a name. Separately, the
+`.cf-btn` recipe is restated as primary weight 500, ghost weight 300.
+
+**Checkable conditions:**
+- Ghost buttons, trait chips, and quiet interactive surfaces at rest use `--fill-ghost`, not `--fill-whisper` or `--fill`.
+- Primary CTA text renders at `--weight-medium` (500).
+- Ghost button text renders at the weight this entry's conflict (below) resolves to, once resolved.
+
+**Token mapping:**
+- `--fill-ghost`: `rgba(242,209,148,.05)`. Genuinely distinct from `--fill-whisper` (`rgba(242,209,148,.06)`) despite sitting only one point of alpha apart; do not treat these as interchangeable or as the same token under two names. Confirms and names DD-07's candidate.
+- Primary weight 500: matches `--weight-medium` exactly, existing locked token, confirmed.
+
+**CONFLICT, not resolved by this capture:** Gate 1's own ratified
+grammar (this file's DD-07, and the Gate 1 GATE-LOG's own summary
+line) states ghost button text weight is `--weight-regular` (400). The
+Gate 2 TOKEN LAW table, in the same ruling session, states the
+`.cf-btn` ghost recipe is weight 300, the same new weight DD-17 just
+added for field text. These cannot both be law. Per the standing rule
+that a law conflict is a bug, never resolved locally, this needs a
+single reconciling ruling (400, unifying with DD-07 as recorded, or
+300, unifying with DD-17's new weight) before either value propagates
+into `.cf-btn--secondary`.
+
+**Contract impact:** none structural, pending the conflict above.
+
+**Propagation targets:** `app/design-system.css` (`.cf-btn` family; its base rule reads `--weight-bold` today, itself superseded by DD-07/this entry regardless of which ghost weight wins), `KitFilterChip.view.jsx`, `SharedFields.jsx` field-adjacent controls.
+
+## DD-19, Editor control heights ratified
+
+**Family:** cross-cutting (control sizing). Advances CR-053.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" row 4).
+
+**The change:** DD-07's two desktop control heights (38 and 28) are
+named as editor-scoped tokens; the 44px mobile thumb floor is
+reaffirmed unchanged.
+
+**Checkable conditions:**
+- Editor CTA controls at the larger desktop step resolve to `--control-editor-md`.
+- Editor CTA controls at the smaller desktop step resolve to `--control-editor-sm`.
+- Any of these controls reachable by touch on mobile still resolves to 44px (`--control-md`), unchanged.
+
+**Token mapping:**
+- `--control-editor-md`: 38px. Matches `--control-filter` (`2.375rem`) exactly. Confirms DD-07's citation; this is an editor-scoped alias name for the same locked value, not a second, competing token at the same size. Propagation should alias, not duplicate.
+- `--control-editor-sm`: 28px. **TOKEN CANDIDATE**, genuinely new: no existing control token below `--control-sm` (32px) matches. Ratified with this name.
+
+**Contract impact:** none structural; a control at the new 28px step may need a `size` prop added where none exists today, per DD-07's own flag.
+
+**Propagation targets:** `app/design-system.css` (`.cf-btn` family), any editor-scoped control component consuming these heights.
+
+## DD-20, Card, hero, and rail gradients, rail split out
+
+**Family:** page-level surfaces, extends DD-08. Advances CR-053.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" row 7).
+
+**The change:** DD-08's single card/hero/rail gradient pair is
+confirmed exactly for cards and the hero plate, and named
+`--grad-card`. The rail gets its OWN distinct gradient, `--grad-rail`,
+not the same pair. This narrows DD-08's original claim that all three
+surfaces shared one family.
+
+**Checkable conditions:**
+- Section cards and the hero plate (DD-10) render the `--grad-card` gradient.
+- The rail panel renders the separate `--grad-rail` gradient, visibly distinct from card/hero.
+
+**Token mapping:**
+- `--grad-card`: `#1a1610` to `#14110c`. Exact match to DD-08's candidate; ratified with this name, no change in value.
+- `--grad-rail`: `#16130d` to `#100d09`. **TOKEN CANDIDATE**, genuinely new: neither hex matches any existing surface or gradient token in `app/theme.css`.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (both gradient pairs), `Editor.view.jsx` (hero, section box, rail surfaces).
+
+## DD-21, Fading hairline ratified, scope broadened
+
+**Family:** page-level surfaces, resolves a DD-08 candidate.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" row 9).
+
+**The change:** DD-08's fading sidebar-separator hairline is ratified
+with a name and used more broadly than originally scoped: sidebar
+groups, card-header rules, and rail progress rules all now carry it,
+not sidebar separators alone.
+
+**Checkable conditions:**
+- Sidebar group dividers fade out along their length, not a flat opacity.
+- Card headers' own rule lines use the same fading treatment.
+- Rail progress rules use the same fading treatment.
+
+**Token mapping:**
+- `--line-fade`: 1px, fading to a 13% gold peak. Distinct from `--line-whisper` (flat 3%), `--line` (flat 10%), and `--line-strong` (flat 20%); none of the three flat hairline tokens are a gradient, so this remains a genuinely new device as DD-08 flagged, now named.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (new token), `StudioSidebar.view.jsx` (separators), `Editor.view.jsx` (card headers, rail progress rules).
+
+## DD-22, Chrome wash and panel glass named; editor focus ring scoped
+
+**Family:** cross-cutting chrome and focus, extends DD-04 and DD-12.
+
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 10, 11, and 12).
+
+**The change:** the chrome-wash and glass-panel background values DD-12
+left as candidates are named. The focus glow DD-04 flagged as
+unspecified now has a concrete value, scoped explicitly to the editor
+rather than replacing the global focus ring.
+
+**Checkable conditions:**
+- Sticky chrome and the mobile save row (DD-11, DD-12) use `--chrome-wash` as their background.
+- Glass-style floating panels use `--panel-glass` as their background, paired with `--blur-panel`.
+- A focused field bed's border is `--gold-ornament` with an added glow at `0 0 0 3px rgba(224,171,94,.10)`.
+
+**Token mapping:**
+- `--chrome-wash`: `rgba(6,4,2,.62)`. Confirms DD-12's candidate exactly; ratified with this name.
+- `--panel-glass`: `rgba(36,32,25,.85)`. **TOKEN CANDIDATE**, genuinely new: closest existing value is `--surface-4` (`#2c271e`, i.e. `rgb(44,39,30)`), which this does not match (different rgb triplet, and this one is a translucent overlay value, not a flat surface color).
+- `--focus-ring-editor`: border `--gold-ornament` plus glow `0 0 0 3px rgba(224,171,94,.10)`. Note the glow color is `rgba(224,171,94)`, which is `--gold-action`'s rgb triplet, not `--gold-ornament`'s (`201,168,106`): the border and the glow are two different golds layered together, not one color at two opacities. Record precisely, do not simplify to a single gold.
+
+**Contract impact:** none structural.
+
+**Propagation targets:** `app/theme.css` (three tokens), `Editor.view.jsx` (sticky nav, save row), `SharedFields.jsx` / `KitFormField.view.jsx` (focus state).
+
+**Escalation status update, not closed:** DD-04 flagged a four-way
+conflict across the global `--focus-ring`, the kit-focus law, ED1E's
+quiet-field-ring, and Gate 1's own gold-ornament-glow recipe, and asked
+for one reconciling ruling before propagation. Naming this pass's value
+`--focus-ring-editor` (an editor-scoped token, distinct from the global
+name) reads as an attempt to scope the conflict away rather than
+resolve it: it does not state whether the kit-focus law and ED1E's
+quiet-field-ring still apply anywhere inside the editor now that
+`--focus-ring-editor` exists, or whether `--focus-ring-editor`
+supersedes both of them wherever it is used. Still needs the single
+reconciling ruling DD-04 asked for; this entry narrows the question
+(which of four wins inside the editor specifically) without answering
+it.
+
+## Summary: Gate 2 and device-ruling additions
+
+Candidates from the Gate 1 summary list above now ratified with names
+(DD-16 through DD-22): items 2, 3, 4, 5 (in part, see the DD-18
+conflict), 9, 10, 12, 13, 14.
+
+New token candidates raised by Gate 2 and the device rulings (not yet
+in `app/theme.css`):
+
+15. Field input text size and leading, `--text-input` 14px / `--lh-input` 22px (DD-16).
+16. Editor-scoped small control height, `--control-editor-sm` 28px, alias of DD-07's candidate 12 (DD-19).
+17. Rail-specific gradient, `--grad-rail`, `#16130d` to `#100d09`, split from the card/hero gradient (DD-20).
+18. Chrome wash, `--chrome-wash`, `rgba(6,4,2,.62)` (DD-12, DD-22).
+19. Glass panel background, `--panel-glass`, `rgba(36,32,25,.85)` (DD-22).
+
+One existing locked token flagged for a REVISED value, not a new
+candidate: `--status-success`, from `#7D9B6A` to `oklch(.76 .08 135)`
+(DD-13, closes CR-051).
+
+Escalations open at the close of this capture pass:
+
+- **DD-04's four-way focus conflict**, narrowed but not resolved by `--focus-ring-editor` (DD-22).
+- **New conflict, DD-18:** Gate 1's ratified ghost-button weight (400, DD-07) contradicts the Gate 2 token-law table's restated recipe (300). One reconciling ruling needed before `.cf-btn--secondary` changes.
+- **DD-12's tooltip-blur scope:** using `--blur-chrome`'s 12px strength for tooltip glass sits against that token's own documented law ("never a floating panel"); the ruling itself defers this to "the blur-law update," not yet written.
+- **DD-16's elevation-law text:** `--shadow-bed` is now named law, but `app/theme.css`'s ELEVATION comment block still reads as a blanket border-only rule with no stated field-bed exception.
+- **DD-15 item 3 (Legacy section hidden):** still needs its own contract-level mechanism decision (prop vs. data omission), not just a keep/revert call.
+- **DD-15 item 6 (economy fixture):** still open, pending the StudioEconomyWidget ground-truth scope decision.
+- **CR-050 (increment bloom):** narrowed to future placement only; no shipped surface adopts it in this pass.
