@@ -169,6 +169,18 @@
   box-shadow: var(--focus-ring);
 }
 
+/* --- FOCUS ON GOLD, .goldring ----------------------------------
+   B10, ratified 22 Aug 2026 (app/theme.css --focus-ring-ongold).
+   The ruled hook for the narrower on-gold focus recipe: any
+   gold-filled interactive surface (cf-btn--primary and other
+   gold-filled CTAs) opts in with this class so its focus-visible
+   state renders the ongold recipe instead of falling through to
+   the global --focus-ring above, which reads poorly against a
+   solid gold fill. Not a replacement for --focus-ring elsewhere. */
+.goldring:focus-visible {
+  box-shadow: var(--focus-ring-ongold);
+}
+
 /* cf-field (quiet 1px gold field ring), kit-focus (border-brightening
    opt-in), and the kit-search-input suppression rule all retired
    22 Aug 2026 (A3, Fable law review, docs/BUILD-BLUEPRINT.md 2.16(e)
