@@ -3,6 +3,36 @@
 Repo-specific gotchas and known warns for the Crestfall Editor DS sync
 (design/ds1-claude-design-sync). Read this before any re-sync.
 
+## Session close, 21 Aug 2026
+
+Gate 1 (Field Grammar) is closed: Brian ruled a direct pick, 1b "Tall
+Rail" (Etched Ledger field anatomy, sections rail risen to hero top,
+hero boxed into the form column as a floating panel; 1a and 1c
+rejected). The ruled grammar is captured as nine DD-NN entries in
+`docs/plans/ED1F-DESIGN-DELTAS.md`, and CR-047 through CR-053 are
+filed in `docs/CONTRACT-REQUESTS.md` (tooltip component, chrome blur
+tokens, bottom save bar vs. saved-pill deferred to Gate 2, the "+1"
+save bloom, the saved-state success-hue adjustment, the sidebar
+deviations bundle, and the four Gate 1 token candidates), both
+committed at `539cdad`. Ground truth (real brand/icon assets, 12
+live-app screenshots, and `GROUND-TRUTH.md`) is pushed into the
+"Crestfall Editor DS" Claude Design project (projectId
+`1e49c5d8-6ad8-4426-911d-2462c6e73642`). Gate 2 (hero architecture) is
+open in that project awaiting Brian's ruling; nothing has been
+proposed for it yet.
+
+Branch: `design/ds1-claude-design-sync`, commit `539cdad`, working
+tree clean, not pushed to any remote.
+
+**Next action for a successor session:** once Brian rules Gate 2,
+capture that ruling as the next wave of DD-NN entries in
+`docs/plans/ED1F-DESIGN-DELTAS.md` (same format: family, ruling basis,
+checkable conditions, token mapping against `app/theme.css` directly,
+contract impact, propagation targets), following the same discipline
+used for Gate 1: cite an existing locked token wherever one matches,
+record a token candidate wherever none does, and never write a ruled
+value as a silent literal.
+
 ## Shape
 
 No Storybook. No standalone design-system package (no dist, no .d.ts).
@@ -11,7 +41,7 @@ This is a Next.js app; the scoped components are plain JSX under
 `app/studio/v2/editor/editor/`. Converter runs in synth-entry mode
 against `.design-sync/entry.jsx`. `.d.ts` props are hand-written in
 `config.json` `dtsPropsFor`, transcribed strictly from each real
-`*.contract.js` file (a JSDoc `@typedef`, not TypeScript) — nothing
+`*.contract.js` file (a JSDoc `@typedef`, not TypeScript); nothing
 invented.
 
 ## Scope (Project 1, per Brian's ruling)
@@ -20,7 +50,7 @@ Frame: StudioShell, StudioSidebar, StudioTopBar, StudioMobileNav (via
 shims replacing Next bindings with `InternalLinkComponent="a"` and a
 static `economySlot`/`drawerEconomySlot`).
 Editor: `app/studio/v2/editor/editor/Editor.view.jsx`, exported as
-`Editor`. Its fixtures are creation records, not view props — the
+`Editor`. Its fixtures are creation records, not view props: the
 Editor previews hand-compose `EditorViewProps` from the real
 `resolveEditorPageGroups`/`typeMeta` shape and SharedFields/KitFormField
 primitives, not the fixtures module directly.
@@ -33,7 +63,7 @@ Deferred (do not sync, logged with reason): data-coupled section
 containers (CharacterIdentitySection etc.), character modals
 (EyeColorModal, HairModal, TraitModal, etc.), the legacy
 CreationEditShell view, StudioPageHeader. No tooltip component exists
-anywhere in the v2 editor's real render tree — this is a genuine gap,
+anywhere in the v2 editor's real render tree; this is a genuine gap,
 not an oversight; Claude Design designs one from scratch and it is
 logged as CR-047.
 
@@ -53,7 +83,7 @@ produced by running the app's own `@tailwindcss/cli` against
 `.design-sync/tailwind-entry.css`, which @imports app/theme.css,
 app/token-bridge.css, app/design-system.css (exact globals.css cascade
 order) then `@import "tailwindcss"` with `@source` scoped to only the
-synced component files — never docs/, mirroring the app's own scanner
+synced component files, never docs/, mirroring the app's own scanner
 guard in app/globals.css.
 
 ## Known render warns
@@ -92,7 +122,7 @@ guard in app/globals.css.
 `tokensPkg` names a sibling node_modules PACKAGE; they no-op entirely for
 plain repo files like ours (theme.css/token-bridge.css/design-system.css
 sit directly in `app/`, not in a tokens package), so `ds-bundle/tokens/`
-comes out of package-build.mjs EMPTY every time — this was caught only
+comes out of package-build.mjs EMPTY every time; this was caught only
 by checking the output directory by hand, not by any validator warning.
 The token VALUES still ship correctly regardless (they're fully baked
 into the compiled `styles.css`/`_ds_bundle.css` via
@@ -116,7 +146,7 @@ cp app/theme.css app/token-bridge.css app/design-system.css ds-bundle/tokens/
 
 The Claude Design self-check reported two token-metadata warnings on
 the pushed project. Both are cosmetic classification nits, not law or
-visual problems — confirmed by Brian, not fixed in this pass, not
+visual problems, confirmed by Brian, not fixed in this pass, not
 worth a re-sync on their own. Fold into whichever re-sync happens next:
 
 - Tailwind's own internal `space-y-*` utility custom properties (e.g.
@@ -126,7 +156,7 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   internals. Likely needs an exclusion pattern in whatever reads
   `tokens/*.css` for its token inventory (either upstream in the
   claude.ai/design self-check, or by not shipping Tailwind's generated
-  utility CSS under `tokens/` alongside the real token source files —
+  utility CSS under `tokens/` alongside the real token source files;
   worth checking whether `_ds_bundle.css`/`styles.css` is where these
   actually belong instead).
 - 38 real tokens (from the copied `tokens/theme.css` /
@@ -136,7 +166,7 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   `docs/DESIGN-TOKENS.md`), adding `@kind` annotations means either (a)
   a small config-side mapping this sync's build step injects without
   touching the real product file, or (b) proposing the annotation
-  convention back to the product repo as a genuine doc change — that's
+  convention back to the product repo as a genuine doc change, that's
   a real decision, not a mechanical fix, and shouldn't be made
   unilaterally. Surface the 38-token list and both options at the start
   of the next re-sync rather than guessing which one Brian wants.
@@ -150,8 +180,8 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   doesn't throw `process is not defined` outside Next.js. If the repo
   ever adds a SECOND `process.env.*` reader reachable from this sync's
   scope, it needs the same treatment (esbuild's define only covers the
-  literal keys package-build.mjs's bundle.mjs sets, `process.env.NODE_ENV`
-  — anything else throws at the point it's actually read, not at build
+  literal keys package-build.mjs's bundle.mjs sets, `process.env.NODE_ENV`;
+  anything else throws at the point it's actually read, not at build
   time, so a re-sync's clean build does not prove this is safe; only the
   render check catching a fresh `ReferenceError` does).
 - **The Editor preview's `groups`/`sectionNodes` are hand-composed, not
@@ -168,11 +198,11 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   `slug("badge") !== slug("KitBadge")`). If any of those README.md files
   move or get renamed, the docsMap entry silently stops resolving
   (falls through to a synthesized `.prompt.md` from the `.d.ts` alone,
-  no error) — worth a periodic `ls` check against the docsMap paths.
+  no error); worth a periodic `ls` check against the docsMap paths.
 - **`@types/react` is not installed** anywhere `--node-modules` can see,
   so `[DTS_REACT]` fires on every build. Harmless here only because
   every one of the 18 components has an explicit `dtsPropsFor` override
-  (never relies on ts-morph's own prop extraction) — if a future
+  (never relies on ts-morph's own prop extraction); if a future
   component is added WITHOUT a `dtsPropsFor` entry, its `.d.ts` will
   emit an empty body silently unless this is fixed first
   (`npm i -D @types/react` in `.ds-sync/`, or a dedicated `--node-modules`
@@ -181,6 +211,6 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   (TextField, SelectField, NumberField, TextAreaField, ReadOnlyField,
   ActionPanel, KitFilterChip, StudioTopBar). All render cleanly via
   smartDefaultProps (not literal floor cards, `fallbackCard: false` for
-  all eight) — genuinely usable, just generic. Authoring real previews
+  all eight), genuinely usable, just generic. Authoring real previews
   for these is the natural next incremental pass; they carry forward at
   zero cost until then.
