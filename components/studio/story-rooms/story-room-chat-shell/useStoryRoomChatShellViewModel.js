@@ -8,7 +8,7 @@ import {
   resolveLocalStoryRoomCommand,
 } from "@/components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry";
 
-export const STORY_ROOM_DELETE_CONFIRMATION = [
+export const STORY_ROOM_DELETE_CONFIRMATION_LINES = [
   "Delete this Story?",
   "",
   "This permanently deletes this chat session and all messages.",
@@ -16,7 +16,7 @@ export const STORY_ROOM_DELETE_CONFIRMATION = [
   "Interaction totals will remain.",
   "",
   "This cannot be undone.",
-].join("\n");
+];
 
 export function buildNextSpeakerOptions(speakerOptions = []) {
   return [
@@ -46,7 +46,6 @@ function normalizeChat(chat) {
 export function useStoryRoomChatShellViewModel({
   roomId,
   chat,
-  confirmDelete,
   onRoomDeleted,
 } = {}) {
   const safeChat = normalizeChat(chat);
@@ -90,6 +89,7 @@ export function useStoryRoomChatShellViewModel({
   const [mobilePanel, setMobilePanel] = useState(null);
   const [deletingRoom, setDeletingRoom] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [isConfirmingDeleteRoom, setIsConfirmingDeleteRoom] = useState(false);
   const [composerHelpPanel, setComposerHelpPanel] = useState(null);
 
   const nextSpeakerOptions = useMemo(
@@ -134,16 +134,19 @@ export function useStoryRoomChatShellViewModel({
     [safeSpeakerOptions]
   );
 
-  const handleDeleteRoom = useCallback(async () => {
+  const requestDeleteRoom = useCallback(() => {
+    if (deletingRoom || !roomId) return;
+    setIsConfirmingDeleteRoom(true);
+  }, [deletingRoom, roomId]);
+
+  const cancelDeleteRoom = useCallback(() => {
+    setIsConfirmingDeleteRoom(false);
+  }, []);
+
+  const confirmDeleteRoom = useCallback(async () => {
     if (deletingRoom || !roomId) return;
 
-    const confirmed =
-      typeof confirmDelete === "function"
-        ? confirmDelete(STORY_ROOM_DELETE_CONFIRMATION)
-        : false;
-
-    if (!confirmed) return;
-
+    setIsConfirmingDeleteRoom(false);
     setDeletingRoom(true);
     setDeleteError("");
 
@@ -156,7 +159,7 @@ export function useStoryRoomChatShellViewModel({
       );
       setDeletingRoom(false);
     }
-  }, [confirmDelete, deletingRoom, onRoomDeleted, roomId]);
+  }, [deletingRoom, onRoomDeleted, roomId]);
 
   const sendMessage = useCallback(
     async ({ requestedSpeakerId = nextSpeaker, actionType = "MESSAGE" } = {}) => {
@@ -226,7 +229,7 @@ export function useStoryRoomChatShellViewModel({
     cast,
     roomId,
     onClose: () => setLeftOpen(false),
-    onDeleteRoom: handleDeleteRoom,
+    onDeleteRoom: requestDeleteRoom,
     isDeletingRoom: deletingRoom,
     deleteError,
     canSetPlayerCharacter,
@@ -309,5 +312,8 @@ export function useStoryRoomChatShellViewModel({
     onShowRightPanel: () => setRightOpen(true),
     onCloseMobilePanel: closeMobilePanel,
     onCloseComposerHelpPanel: closeComposerHelpPanel,
+    isConfirmingDeleteRoom,
+    onCancelDeleteRoom: cancelDeleteRoom,
+    onConfirmDeleteRoom: confirmDeleteRoom,
   };
 }
