@@ -99,7 +99,7 @@ function CountGrid({ title, counts }) {
             <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {label}
             </p>
-            <p className="mt-1 text-lg text-[var(--ink)]">{value ?? 0}</p>
+            <p className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{value ?? 0}</p>
           </div>
         ))}
       </div>

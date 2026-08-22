@@ -114,7 +114,7 @@ export default function MechanicsDocumentCoreView({
                     <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                       {label}
                     </p>
-                    <p className="mt-1 text-lg text-[var(--ink)]">
+                    <p className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                       {value}
                     </p>
                   </div>
