@@ -11,6 +11,7 @@ import { Check, Loader2, Search } from "lucide-react";
 import KitModalFrame from "../KitModalFrame";
 import KitFilterChip from "../KitFilterChip";
 import KitLoadMore from "../KitLoadMore";
+import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
 
 const COUNT_WORDS = [
   "no",
@@ -79,8 +80,8 @@ function Thumbnail({ item }) {
   }
 
   return (
-    <div className="flex aspect-square w-full flex-none items-center justify-center rounded-[var(--radius-sm)] bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-      No image
+    <div className="aspect-square w-full flex-none overflow-hidden rounded-[var(--radius-sm)]">
+      <KitArtPlaceholderView size="sm" />
     </div>
   );
 }
@@ -254,7 +255,12 @@ export default function KitPickerModalView({
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-6)] py-[var(--space-4)]">
+        <div className="px-[var(--space-6)] pt-[var(--space-4)]">
+          {/* B1 fade divider, never edge-to-edge; B8 footer alignment
+              to the fade line's own ends. */}
+          <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+        </div>
+        <div className="flex items-center justify-between gap-[var(--space-3)] px-[var(--space-6)] pb-[var(--space-4)] pt-[var(--space-4)]">
           <span className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {isMultiSelect ? describeSelection(selectedIds.length) : ""}
           </span>

@@ -45,6 +45,11 @@ export default function HairModalView({
               </button>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             {sections.map((section) =>
               section?.layout === "swatches" ? (
                 <ColorSection
@@ -107,8 +112,8 @@ function ColorSection({
               onClick={() => onChooseOption?.(section?.id, option?.id || "")}
               className={`rounded-xl border p-2 transition ${
                 active
-                  ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15"
-                  : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/35"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)]"
+                  : "border-white/10 bg-[var(--fill-option-rest)] hover:border-[var(--gold-ornament)]/35"
               }`}
               title={option?.label || "Not chosen"}
             >
@@ -169,8 +174,8 @@ function OptionSection({
               onClick={() => onChooseOption?.(section?.id, option?.id || "")}
               className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
                 active
-                  ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                  : "border-white/10 bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {option?.label || "Not chosen"}

@@ -138,3 +138,28 @@ export const kitCreationCardGenerateActionFixture = {
   ...kitCreationCardImageFixture,
   onGenerate: noop,
 };
+
+// Character card gains the "Start Chat" contextual action, RULED 22
+// Aug 2026 (NEW LAW A widens the face-action resolver's assetKind
+// scope to include character).
+export const kitCreationCardCharacterPlayActionFixture = {
+  ...kitCreationCardCharacterFixture,
+  onPlay: noop,
+};
+
+// Viewer-owned kebab menu, RULED 22 Aug 2026 (NEW LAW A): every new
+// visible state gets a filled fixture per the contract law.
+export const kitCreationCardOwnerKebabFixture = {
+  ...kitCreationCardOwnWorkFixture,
+  isOwner: true,
+  onEdit: noop,
+  onGenerateImage: noop,
+  onShare: noop,
+  onArchive: noop,
+  onDelete: noop,
+};
+
+export const kitCreationCardOwnerKebabListFixture = {
+  ...kitCreationCardOwnerKebabFixture,
+  layout: "list",
+};

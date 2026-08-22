@@ -27,8 +27,8 @@ function PalettePreviewCard({ palette = {}, selected = false, onSelect = null })
       onClick={() => onSelect?.()}
       className={`relative rounded-[var(--radius-md)] border p-4 text-left transition hover:-translate-y-0.5 ${
         selected
-          ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/10"
-          : "border-white/10 bg-black/30 hover:border-white/25"
+          ? "border-[var(--gold-ornament)]/70 bg-[var(--fill-whisper)]"
+          : "border-white/10 bg-[var(--fill-option-rest)] hover:border-white/25"
       }`}
       style={{ boxShadow: selected ? `0 0 0 1px ${colors.border}` : undefined }}
     >
@@ -141,6 +141,11 @@ export default function CharacterColorPaletteModalView({
                 <X size={18} />
               </button>
             </div>
+
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
 
             {paletteFamilies.length > 0 ? (
               <div className="mt-7 space-y-7">

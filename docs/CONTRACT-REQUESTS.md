@@ -72,6 +72,16 @@ the details below carry only what is still actionable.
 | CR-044 | Streaming transport for chat | SSE or streaming contract for `POST /messages`; the frontend's chat-message and chat-composer contracts are already streaming-ready (`isStreaming`, `generationCursorLabel`, `onStopGenerating`) per ruling O9, so the surface upgrades without a contract change once transport lands | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O9 |
 | CR-045 | Story room rename | No rename path exists anywhere in the crestfall-main baseline or this repo's chat surface; a product gap, not a design decision this wave makes | open | Nick/Brian | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6; needs a product decision on whether rename ships at all before any UI is designed |
 | CR-046 | Chat monetization data | Real coin balance, entitlements, and gated-action pricing for the chat header's coin chip and the Library Pass upsell sheet, both fixture-fed today | open | Nick | non-blocking; filed 13 Aug 2026 by the Fable design gate wave C6, ruling O6 |
+| CR-047 | Tooltip component | No tooltip component exists anywhere in the shipped editor tree; Gate 1's field grammar requires one for helper-text disclosure | open | Brian | non-blocking; the glass treatment is now ratified 22 Aug 2026 (`--blur-glass` 12px, tooltips only); the tooltip component design itself is still open for Brian |
+| CR-048 | Chrome blur tokens | Gate 1 design-time exploration permits blur on nav-adjacent surfaces with no existing token for it | done | Brian | closed 22 Aug 2026; the blur triad (`--blur-chrome`, `--blur-panel`, `--blur-glass`) plus the Gate 2 chrome-blur ruling answer it, both surfaces and radius/opacity ruled |
+| CR-049 | Bottom save bar vs. saved-pill | Two competing treatments for the mobile save affordance; ruling explicitly deferred to Gate 2 | done | Brian | closed 22 Aug 2026; the Gate 2 save-surface amendment retired the bottom bar, the rail-bottom unsaved-state pill plus Discard/Save is the ruling |
+| CR-050 | The "+1" save bloom | A subtle gamified micro-animation on save, permitted under the design-time-exploration ruling, not yet designed or ruled | open | Brian | non-blocking; the bloom pattern is GO as a reusable "increment bloom" (21 Aug 2026); placement on Save is NO; placement of the pattern elsewhere stays open |
+| CR-051 | Saved-state success-hue adjustment | The current green-check-on-brown treatment is the specific case the contrast law's status-on-mid-surface gap already blocks; Gate 1 asked for real specimens to rule it | done | Brian | closed 22 Aug 2026; sage (`oklch(.76 .08 135)`) ruled the success hue everywhere, Gate 2 token law row 6 |
+| CR-052 | Sidebar deviations bundle | Six deviations from the shipped sidebar surfaced during Gate 1 ground-truth review: ink lift, top-bar wash, Legacy section hidden, Community Links removed, footer re-order, and the economy widget's fixture treatment | open | Brian | updated 22 Aug 2026: all six deviations RULED KEPT (option B wholesale, 21 Aug 2026); the economy-fixture sub-item stays open pending the StudioEconomyWidget scope decision |
+| CR-053 | Token candidates from Gate 1 | Four values ratified in Gate 1's spec list with no existing token match: Inter 300 weight, cf-btn secondary 5% screen fill, control heights 38 (already `--control-filter`, confirm broadened use) and 28 (genuinely new), gradient card surfaces | done | Brian | closed 22 Aug 2026; ratified in full by the Gate 2 twelve-row token law |
+| CR-054 | Soft-delete recovery window | Renumbered 22 Aug 2026 from GATE-LOG.md's colliding "CR-052" use (that number already named the sidebar deviations bundle above); window is 7 to 30 days, not yet ruled to a single number | open | Nick | non-blocking; confirm copy carries a "[X] days" placeholder until Nick rules the number |
+| CR-055 | Reassign Asset backend operation | Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final); the code and package READMEs cited this number on landing but the ledger row was never entered, backfilled here 22 Aug 2026 by the G4 pass. No backend operation exists for Reassign Asset on `KitImageOverlay` or `MediaLightbox`; both render the action permanently disabled | open | Brian | non-blocking; presentation-only stub, both consumers already ship this way |
+| CR-056 | Creation card Archive operation | Filed 22 Aug 2026 by the G4 propagation pass (NEW LAW A, card actions, Final Ruling Render item 1). `KitCreationCard`'s viewer-owned kebab menu adds an Archive item alongside Edit, Generate Image, Share, and Delete; Archive has no `APP-FUNCTION-MAP` row, no prior contract entry, and no endpoint. Ships as an honest, permanently disabled stub, same treatment as CR-055's Reassign Asset | open | Brian | non-blocking; presentation-only stub pending an endpoint ruling |
 
 ## Details
 
@@ -724,11 +734,168 @@ When this lands, the mock coin/entitlement data in
 `chatShellInsufficientCoinsFixture` fold into the same account context
 the sidebar's coin chip already reads.
 
+### CR-047, Tooltip component
+
+Filed 21 Aug 2026, Gate 1 (Claude Design, Crestfall Editor DS
+project). No tooltip pattern exists anywhere in the v2 editor's real
+render tree today (`KitDropdown`'s `tooltip` option field renders via
+the native `title` attribute as a documented interim, per its own
+`.d.ts`, not a designed component). Gate 1's field grammar names a
+tap-friendly tooltip icon as the vehicle for helper text under the
+progressive-disclosure binding rule. **Updated 22 Aug 2026 (Fable law
+review):** the glass treatment is now ratified (`--blur-glass` 12px,
+tooltips only, minted in `app/theme.css`; no other surface may
+consume it). Still needed from Brian: the ruled visual design of the
+tooltip component itself. Needed from Nick: none yet; this is
+design-only until a component exists. Until the component lands,
+helper text stays in whatever interim form each field grammar variant
+used during Gate 1 review, never a fabricated tooltip lookalike.
+
+### CR-048, Chrome blur tokens
+
+Filed 21 Aug 2026. The ruling that opened Gate 1's design-time
+exploration explicitly permits "blur on nav-adjacent surfaces" as a
+proposal, flagged "new device, law update or CR required." No blur
+token existed in `app/theme.css` at filing time. **CLOSED 22 Aug
+2026 (Fable law review):** the blur triad is ratified and minted,
+`--blur-chrome` (12px, sticky nav and editor chrome, scope extended
+to the editor sticky nav and mobile save row), `--blur-panel` (2px,
+overlay panels and the image viewer veil), `--blur-glass` (12px NEW,
+tooltips only), none cross-borrowing another's scope. Both surfaces
+and blur radius/opacity are now ruled.
+
+### CR-049, Bottom save bar vs. saved-pill
+
+Filed 21 Aug 2026. Two candidate treatments for the mobile save
+affordance surfaced during Gate 1 review; Brian's own ruling explicitly
+deferred the choice to Gate 2 (hero architecture), since the mobile
+save surface's shape depends on how the hero and rail collapse on
+mobile. **CLOSED 22 Aug 2026:** the Gate 2 save-surface amendment
+retired the bottom bar; the unsaved-state pill plus Discard/Save
+anchors the bottom of the sections rail instead. This is a layout
+ruling, not a token change; the ED1E-era bottom control bar is
+superseded.
+
+### CR-050, The "+1" save bloom
+
+Filed 21 Aug 2026. A subtle gamified micro-animation on a successful
+save, named directly in the ruling that opened Gate 1's design-time
+exploration ("a subtle gamified micro-animation, e.g. a '+1' bloom"),
+flagged "new device, law update or CR required." **Updated 21 Aug
+2026 (Gate 2 bloom ruling):** the pattern is GO as a reusable
+"increment bloom," reserved for genuinely incrementing values (coins
+earned, completion counts, progression). Placement on Save is NO
+("+1" implies score; save feedback stays the saved-state treatment
+only, P1 to P3). Placement of the pattern elsewhere in the product
+stays open. Needed from Brian: where else, if anywhere, the bloom
+lands; the animation spec itself (duration, easing, trigger) still
+needs a ruling before any placement enters a contract.
+
+### CR-051, Saved-state success-hue adjustment
+
+Filed 21 Aug 2026, carried from ED1E law-gap escalation 1
+(`docs/plans/ED1E-EDITOR-DESIGN-STANDARD.md` section 10) and Gate 1's
+explicit ask to "rethink the current green-check-on-brown treatment."
+This is the same root gap the contrast law already flags as BLOCKED,
+not ruled (`docs/DESIGN-TOKENS.md`: status colors at normal text size
+on `--surface-2/3/4` have no named brighter ladder step). **CLOSED
+22 Aug 2026 (Gate 2 token law row 6, closes the ED1E escalation in
+the same ruling):** sage, `oklch(.76 .08 135)`, ruled the success hue
+everywhere, replacing the prior `#7D9B6A`. `--status-success` in
+`app/theme.css` carries the revised value; `docs/DESIGN-TOKENS.md`'s
+status colors table and contrast law both note the regeneration
+trigger for `docs/review-artifacts/contrast-matrix-x1.md`.
+
+### CR-052, Sidebar deviations bundle
+
+Filed 21 Aug 2026, surfaced during the Gate 1 ground-truth fidelity
+pass (comparing Claude Design exploration renders against real
+`localhost:3001` captures of the shipped `StudioSidebar`). Six
+deviations from the shipped sidebar, none yet ruled as intentional
+redesign or accidental drift:
+- **Ink lift:** exploration renders show a brighter overall ink value across sidebar text than the shipped `--ink-dim`/`--ink-faint` pairing produces.
+- **Top-bar wash:** a background treatment on the top bar not present in the shipped `StudioTopBar.view.jsx`.
+- **Legacy section hidden:** a standing shell ruling (recorded in `ground-truth/GROUND-TRUTH.md`) that the sidebar's collapsible "Legacy" disclosure is hidden entirely, not merely collapsed; needs a real contract-level decision on whether `StudioSidebar` gains a prop for this or the Binding Shell simply stops passing legacy data.
+- **Community Links removed:** the shipped sidebar's "Community Links" disclosure does not appear in exploration renders; needs confirmation this is a ruled removal, not an omission.
+- **Footer re-order:** the signed-in footer's internal ordering differs from the shipped recipe.
+- **Economy fixture:** whether the coin-balance widget stays the honest out-of-scope stub (`.design-sync/shims/EconomySlotStub.jsx`) or gets a fixture-fed real `StudioEconomyWidget` (see `ground-truth/GROUND-TRUTH.md`'s coverage-check note).
+
+**Updated 22 Aug 2026 (sidebar batch ruling, 21 Aug 2026, executed at
+the Fable law review):** all six deviations RULED KEPT, option B
+wholesale (ink lift, top-bar wash, Legacy section hidden, Community
+Links removed, footer re-order, economy fixture). This CR stays open
+only for the economy-fixture sub-item: whether the coin-balance
+widget stays the honest out-of-scope stub or gets a fixture-fed real
+`StudioEconomyWidget`, still pending its own scope decision. The
+other five items are ruled and propagate; the shipped `StudioSidebar`
+behavior is no longer authoritative for those five.
+
+### CR-053, Token candidates from Gate 1
+
+Filed 21 Aug 2026. Four values named directly by Brian as token
+candidates from the ratified Gate 1 spec list, cross-checked against
+`app/theme.css` in `docs/plans/ED1F-DESIGN-DELTAS.md`:
+- **Inter 300 weight:** no token below `--weight-regular` (400) exists today.
+- **`cf-btn` secondary, 5% screen fill:** not confirmed against `--state-hover-fill`/`--fill-whisper`'s actual values in this pass; either a match (cite the existing token) or a genuinely new opacity step.
+- **Control heights 38 and 28:** 38 already matches `--control-filter` exactly (this Gate broadens its legal use to field-grammar controls generally, not a new token); 28 has no match below `--control-sm` (32) and is genuinely new.
+- **Gradient card surfaces:** the hero/section-card/rail gradient (`#1a1610` to `#14110c` per Gate 1's ratified spec) matches no existing surface token; explicitly permitted as a new device under the design-time-exploration ruling.
+
+**CLOSED 22 Aug 2026:** ratified in full by the Gate 2 twelve-row
+token law. `--weight-light` (300) minted; the secondary-button fill
+resolved to a genuinely new opacity step, `--fill-ghost`
+(`rgba(242,209,148,.05)`), distinct from `--fill-whisper`; `--control-
+editor-md` aliases `--control-filter` (38, broadened-use note landed
+in `docs/DESIGN-TOKENS.md`'s sizing section) and `--control-editor-sm`
+mints 28 as genuinely new; the gradient card surfaces minted as
+`--grad-card` and `--grad-rail`. All four now write into product code
+via `app/theme.css`.
+
+### CR-054, Soft-delete recovery window
+
+Filed 22 Aug 2026 by the G1 propagation pass, per Brian's 22 Aug 2026
+law-review ruling. GATE-LOG.md's "MODAL FAMILY, CLOSED" section used
+"CR-052" for this item, colliding with the existing CR-052 (sidebar
+deviations bundle, filed 21 Aug 2026, above); per Brian's ruling this
+item takes the next free number in this ledger, CR-054 (CR-053 is the
+Gate 1 token-candidates entry). The delete-confirmation danger recipe
+(B5) is ratified and propagates independent of this CR; only the
+recovery window's exact day count is blocked here. Needed from Nick:
+the number, 7 to 30 days. Until ruled, confirm copy carries a literal
+"[X] days" placeholder, never a guessed number.
+
+### CR-055, Reassign Asset backend operation
+
+Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final,
+docs/plans/ED1F-PROPAGATION-PLAN.md group G3): the B7 bottom bar's
+Reassign Asset action has no backend operation, so both
+`KitImageOverlay` and `MediaLightbox` render it as a permanently
+disabled honest stub. The number was cited throughout the G3 commit,
+code comments, and package READMEs on landing, but this ledger row
+was never entered; backfilled here 22 Aug 2026 by the G4 pass with no
+change to the ruling itself.
+
+### CR-056, Creation card Archive operation
+
+Filed 22 Aug 2026 by the G4 propagation pass (NEW LAW A, card actions,
+Final Ruling Render item 1, `explorations/gate1/GATE-LOG.md`).
+`KitCreationCard`'s viewer-owned kebab menu is ratified with exactly
+five items: Edit, Generate Image, Share, Archive, Delete. Edit,
+Generate Image, Share, and Delete route to existing destination
+behavior through caller-supplied callbacks; Archive is a new
+operation with no `docs/APP-FUNCTION-MAP.csv` row, no prior contract
+entry, and no endpoint. Same honest-stub treatment as CR-055: the menu
+item renders permanently disabled until an endpoint exists.
+
 ## Closed
 
-None this pass. Every previously open CR re-checked against current
-repo state 9 Aug 2026 is either still accurately open or was already
-marked done/cleared before this pass (CR-004, CR-006, CR-010, all kept
-in the table above with `status: done` for traceability, not moved
-here). Uncertain-relevance items are flagged "verify with Nick" in the
-table rather than removed; see CR-005, CR-011, CR-015, CR-016, CR-022.
+CR-048, CR-049, CR-051, and CR-053 close this pass (22 Aug 2026, ED1F
+propagation G1), each kept in the table above with `status: done` for
+traceability, not moved here, matching the CR-004/CR-006/CR-010
+convention. CR-047 and CR-052 are updated, not closed: CR-047's glass
+treatment ratifies while the component design stays open; CR-052's
+five sidebar items rule while the economy-fixture sub-item stays
+open. CR-054 is a new filing this pass. Every previously open CR
+re-checked against current repo state 9 Aug 2026 is either still
+accurately open or was already marked done/cleared before that pass.
+Uncertain-relevance items are flagged "verify with Nick" in the table
+rather than removed; see CR-005, CR-011, CR-015, CR-016, CR-022.

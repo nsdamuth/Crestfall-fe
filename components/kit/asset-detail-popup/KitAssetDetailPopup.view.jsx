@@ -260,11 +260,10 @@ function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
 
 function NoMediaFallback() {
   return (
-    <div className="relative flex aspect-[5/3] w-full flex-col items-center justify-center gap-[var(--space-2)] overflow-hidden rounded-t-[var(--radius-lg)] bg-[var(--surface-2)]">
-      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
+    <div className="relative flex aspect-[5/3] w-full items-center justify-center overflow-hidden rounded-t-[var(--radius-lg)] bg-[var(--surface-2)]">
+      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-16)] w-[var(--space-16)] text-[var(--ink-faint)]">
         <use href="/assets/icons/icons-v7.svg#i-59" />
       </svg>
-      <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
     </div>
   );
 }
@@ -519,7 +518,7 @@ export default function KitAssetDetailPopupView({
             onClick={() => onLike?.()}
             className={`kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isLiked ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
           >
-            <Heart size={16} aria-hidden="true" fill={isLiked ? "currentColor" : "none"} />
+            <Heart size={16} className="shrink-0" aria-hidden="true" fill={isLiked ? "currentColor" : "none"} />
             {isLiked ? "Liked" : "Like"}
           </button>
           <button
@@ -528,7 +527,7 @@ export default function KitAssetDetailPopupView({
             onClick={() => onSave?.()}
             className={`kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isSaved ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
           >
-            <Bookmark size={16} aria-hidden="true" fill={isSaved ? "currentColor" : "none"} />
+            <Bookmark size={16} className="shrink-0" aria-hidden="true" fill={isSaved ? "currentColor" : "none"} />
             {isSaved ? "Saved" : "Save"}
           </button>
           <button
@@ -536,7 +535,7 @@ export default function KitAssetDetailPopupView({
             onClick={() => onShare?.()}
             className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
           >
-            <Share2 size={16} aria-hidden="true" />
+            <Share2 size={16} className="shrink-0" aria-hidden="true" />
             Share
           </button>
           {hasEdit ? (
@@ -545,7 +544,7 @@ export default function KitAssetDetailPopupView({
               onClick={() => onEdit?.()}
               className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
             >
-              <Pencil size={16} aria-hidden="true" />
+              <Pencil size={16} className="shrink-0" aria-hidden="true" />
               Edit
             </button>
           ) : null}
@@ -554,7 +553,7 @@ export default function KitAssetDetailPopupView({
             onClick={() => onPrimaryAction?.()}
             className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--primary"
           >
-            <Play size={16} aria-hidden="true" />
+            <Play size={16} className="shrink-0" aria-hidden="true" />
             {primaryActionLabel}
           </button>
         </div>

@@ -80,3 +80,11 @@ docs/_legacy-reference/
 !/public/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png
 !/public/tmp-mockup-images/alpha-test-creator-images/whiteviolin-2.png
 !/public/tmp-mockup-images/alpha-test-creator-images/yagirltee.png
+
+# Claude Design sync (design/ds1-claude-design-sync)
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+.design-sync/refs/

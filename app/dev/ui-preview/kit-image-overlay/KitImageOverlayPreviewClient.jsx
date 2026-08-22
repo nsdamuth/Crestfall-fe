@@ -44,7 +44,7 @@ export default function KitImageOverlayPreviewClient() {
   return (
     <KitPreviewShell
       title="Kit Image Overlay"
-      description="Full image, love, save, share, composed on the unified modal frame (KitModalFrame). Backdrop click, Escape, and the close control all dismiss."
+      description="Full image, the B7 six-icon header row, and the B7 bottom bar, composed on the unified modal frame (KitModalFrame). Backdrop click, Escape, and the close control all dismiss."
       states={Object.entries(STATES).map(([key, state]) => ({
         key,
         label: state.label,
@@ -76,6 +76,11 @@ export default function KitImageOverlayPreviewClient() {
             setLocalProps((current) => ({ ...current, isSaved: !current.isSaved }))
           }
           onShare={() => setLastAction("Shared (local preview only).")}
+          onDelete={() => setLastAction("Deleted, past the confirm step (local preview only).")}
+          onReport={() => setLastAction("Reported (local preview only).")}
+          onDetails={() => setLastAction("Opened details (local preview only).")}
+          onDownload={() => setLastAction("Downloaded (local preview only).")}
+          onGenerateVariant={() => setLastAction("Generate Variant (local preview only).")}
           onClose={() => {
             setOpenKey(null);
             setLastAction("Closed (local preview only).");

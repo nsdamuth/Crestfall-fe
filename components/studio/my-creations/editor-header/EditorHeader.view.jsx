@@ -23,7 +23,7 @@ function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
       aria-hidden="true"
       className="flex aspect-[3/4] w-[148px] flex-none items-center justify-center rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-faint)] sm:w-[232px]"
     >
-      <Icon size={28} />
+      <Icon size={48} />
     </div>
   );
 }
@@ -51,7 +51,7 @@ function SlotRail({ slots, onSelectSlot }) {
             <img src={slot.imageSrc} alt="" className="h-full w-full object-cover" />
           ) : (
             <span className="flex h-full w-full items-center justify-center bg-[var(--surface-1)] text-[var(--ink-faint)]">
-              <ImageOff size={14} aria-hidden="true" />
+              <ImageOff size={20} aria-hidden="true" />
             </span>
           )}
         </button>

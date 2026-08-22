@@ -279,7 +279,7 @@ same everywhere and can be tuned in one line.
 | `--state-pressed-fill` | `var(--fill)` | pressed bed (matches `cf-nav-link:active`) |
 | `--state-pressed-gold` | `var(--gold-deep)` | pressed state of gold-filled controls (`--gold-deep`'s ruled role is already "pressed states") |
 | `--state-disabled-opacity` | `0.5` | disabled dimming (matches `cf-btn:disabled` opacity .5) |
-| `--state-focus-ring` | `var(--focus-ring)` | focus; pure alias so kit specs can name one state family. `--focus-ring` remains the law and the only declaring token |
+| `--state-focus-ring` | `var(--focus-ring)` | focus; pure alias so kit specs can name one state family. `--focus-ring` remains the law and the only declaring token for the app-wide default ring; amended 22 Aug 2026 (A3, Fable law review) to admit one sibling, `--focus-ring-ongold`, gold-fill scope only. The `--state-focus-ring` alias itself is unchanged, it still names `--focus-ring` |
 
 Rest is the component's own idle recipe and needs no token. Gold-filled
 pressed treatment RULED 9 Aug 2026: pressed swaps the fill to
@@ -615,15 +615,20 @@ in `app/design-system.css`, and the ruled ModalShell/StudioShell carve
 (T9, Sprint 3 item 1.7, the first work of Phase 1).
 
 - Anatomy: veil `--scrim-strong` with `blur(var(--blur-panel))`; frame
-  `--surface-4`, `1px --line` border, `--radius-lg`, `--shadow-modal`;
-  phone maximizes to the full screen, vertically and horizontally,
-  with internal thumb scrolling (R4, 10 Aug 2026), 700px and up
+  `--grad-panel-lift` (superseded from `--surface-4`, 22 Aug 2026,
+  B3), `1px --line` border, `--radius-lg`, `--shadow-modal`; under
+  700px the panel is bottom-anchored at its content's own height per
+  the mobile modal law (2.16(p), superseded 22 Aug 2026, A4; the
+  prior phone full-screen-maximize behavior is retired), 700px and up
   centers; sheets keep the bottom dock and carry a structural close
   header row (R7); circular close control (`--control-md`,
-  `--radius-full`, `--surface-2` fill, `--line-whisper` border); X,
-  veil click, and Escape all close in place keeping work; per-layer
-  scroll locks stay separate (Ruling 1). Width/height stay
-  per-surface, not unified.
+  `--radius-full`, `--surface-2` fill, `--line-whisper` border); a
+  `--line-fade` divider (never edge-to-edge, B1) separates footer
+  content from body, and a two-button footer aligns Cancel and the
+  primary CTA to the two ends of that divider (B8); X, veil click,
+  and Escape all close in place keeping work; per-layer scroll locks
+  stay separate (Ruling 1). Width/height stay per-surface, not
+  unified.
 - States: the frame is REST only; close control carries all five.
   Content states (loading, error, empty) belong to the content the
   consumer slots in.
@@ -1063,26 +1068,35 @@ ratings off card faces, register: badges). The badge package (2.10)
 is unchanged; this governs WHEN a badge renders, enforced by the
 data each surface passes.
 
-**(d) Mobile law at 390.** Every component fully functional and
-comfortable at 390. Search takes its own full-width row inside the
-sticky filter block (ruled: a deliberate second row beats the legacy
-bar's accidental flex wrap, and an always-visible field beats a
-two-tap icon-expand for the page's highest-frequency control); the
-dropdown line scrolls horizontally without clipping. Dropdown panels
-dock to the bottom edge as sheets under 700px per the modal law
-(veil `--scrim-strong` + `--blur-panel`, top corners `--radius-lg`,
-safe-area padding); at 700px and up they are popovers below the
-trigger. Nothing overflows; no critical text truncates.
+**(d) Mobile law at 390, dropdown sheet clause refined 22 Aug 2026
+(A4).** Every component fully functional and comfortable at 390.
+Search takes its own full-width row inside the sticky filter block
+(ruled: a deliberate second row beats the legacy bar's accidental
+flex wrap, and an always-visible field beats a two-tap icon-expand
+for the page's highest-frequency control); the dropdown line scrolls
+horizontally without clipping. Dropdown panels dock to the bottom
+edge as sheets under 700px per the mobile modal law (2.16(p)): veil
+`--scrim-strong` + `--blur-panel`, top corners `--radius-lg`,
+safe-area padding, panel bottom-anchored at its content's own height
+(not maximized full-screen); at 700px and up they are popovers below
+the trigger. Nothing overflows; no critical text truncates.
 
-**(e) Focus law, amended 9 Aug 2026 (kit polish pass).** Keyboard
-focus (`:focus-visible`) keeps one subtle indicator for
+**(e) Focus law, SUPERSEDED IN FULL 22 Aug 2026 (A3, Fable law
+review).** The kit-focus border-brightening pattern below is
+retired. Every focusable control app-wide, not only field beds,
+resolves through the single global `--focus-ring` (revised recipe,
+same token name) or its gold-fill-scope sibling
+`--focus-ring-ongold` (B10). This is the kit-focus law A3 retires by
+name. The 9 Aug wording is struck below and kept only for lineage.
+
+~~Keyboard focus (`:focus-visible`) keeps one subtle indicator for
 accessibility: a slight border brightening (`--line-strong`), never a
 gold box. Pointer interaction shows no focus ring at all. This
 replaces the prior all-pointer `--focus-ring` gold box on the search
 field and kit controls; the original wording is struck below and
 kept only for lineage.
 
-~~A focused search control outlines the FULL
+A focused search control outlines the FULL
 control border, never the inner field: the wrapper carries
 `--focus-ring` via focus-within and the inner input suppresses the
 per-element ring. This matches the proof's own focus history
@@ -1181,26 +1195,58 @@ pass, R7).**
   Renders in both collapsed and expanded states; the label itself
   stays expanded-only.
 
-**(p) Mobile modal law (R4), RULED 10 Aug 2026.** On mobile, popup
+**(p) Mobile modal law, RULED 22 Aug 2026 (modal family close),
+supersedes R4 under 700px.** Under 700px: the page behind a modal
+stays visible through the lawful blurred veil, never fully obscured;
+modal panels anchor to the bottom edge at their content's own height,
+never maximized full screen and never small floating cards;
+dismissing a modal with unsaved state routes through a confirm step,
+never a silent discard; every touch target inside a mobile modal
+holds the 44px floor; the mobile modal drawer inherits all six ruled
+sidebar deviations (economy fixture still pending its own scope
+decision). At 700px and up modals center per 2.5, unchanged. The
+image viewer keeps its own ruled mobile treatment per (r) as amended
+by B7; it is a chromeless surface, not a bottom-anchored panel.
+Breakpoint confirmation: R4's own text said "on mobile" with no
+number; the 1.11 grid law already rules the phone tier as up to
+699px, so 700px is the app's one mobile boundary and this
+supersession is FULL for R4's mobile scope, not partial.
+`KitModalFrame` is the propagation target; a behavior-only change
+needs no contract bump (section 5 rules), a prop addition bumps
+minor either way, and the package README records the ruling. The
+10 Aug wording is struck below and kept only for lineage.
+
+~~On mobile, popup
 modals maximize the screen vertically and horizontally with thumb
 scrolling inside; never anchored to the bottom edge, never small
 floating cards. Applies to the asset detail popup, the credits
 modal, the image viewer, and the modal frame's mobile default, so
-every future modal inherits it.
+every future modal inherits it.~~
 
 **(q) Sheet header law (R7), RULED 10 Aug 2026.** On mobile filter,
 sort, and settings sheets, the close control sits in its own header
 row above the content, never overlapping option rows; the row is
 frame anatomy so every sheet inherits it.
 
-**(r) Image viewer law (R2, R5), RULED 10 Aug 2026.** The image
-viewer is its own surface, never a panel with an image inside it.
-Gold hairline snapped to the image's own edges, never around empty
-space. Surround is the sticky nav treatment (canvas 88 percent mix
-plus `--blur-chrome`). Action shelf snaps to the image's width. No
-creator handle on the viewer. Zoom by wheel, double-click, and pinch;
-pan by drag while zoomed; sensible ceiling; reset on close. On mobile
-the image takes the maximum available space.
+**(r) Image viewer law (R2, R5), RULED 10 Aug 2026, surround/header/
+close/action-shelf clauses SUPERSEDED 22 Aug 2026 (B7, modal family
+close).** The image viewer is its own surface, never a panel with an
+image inside it. Gold hairline snapped to the image's own edges,
+never around empty space. Surround is now the lawful 2px veil at the
+`--chrome-wash` color (`--blur-panel`, no glass extension; R2's prior
+chrome-frost exception is reversed, see the DESIGN-TOKENS `--blur-
+chrome` row). Header is a two-line glass surface (`--panel-glass`),
+title centered, icon row delete/report/details/download/bookmark/
+like in quiet ink. Close control sits outside top-right on desktop
+and as a floating 44px glass control bottom-right at 390. Action
+shelf is a bottom bar, Generate Variant / Reassign Asset / Share, in
+`--gold-action` ink with `--gold-bright` hover, width-matched to the
+header (Reassign Asset ships as an honest stub pending CR-055, filed
+when this wave builds). No creator handle on the viewer. Zoom by
+wheel, double-click, and pinch; pan by drag while zoomed; sensible
+ceiling; reset on close; these zoom/pan/reset clauses and the
+mobile-max-image clause stand, unchanged by B7. On mobile the image
+takes the maximum available space.
 
 **(s) Credits collapse law (R1), RULED 10 Aug 2026.** The asset
 detail popup shows only the first credit plus a View all credits
@@ -1309,13 +1355,73 @@ a banner image where the draft pool allowed otherwise, and the false
 Lilith.png/sassy.png dimension claim in
 `components/kit/promo-banner/KitPromoBanner.fixtures.js` is corrected.
 
+**(aa) Card kebab menu, RULED 22 Aug 2026 (Fable law review, Final
+Ruling Render close, NEW LAW A), amends (a) and (v).** The three-icon
+face law at (a) stands unamended: like, save, contextual third
+(Play/"Start Chat" now also on Character kind cards, per this same
+ruling, alongside Story and Adventure; Generate on Image kind cards;
+Expand the universal fallback). A separate, owner-only kebab menu is
+added: on viewer-owned cards only (caller-gated, `isOwner`), a fourth
+control, not a face icon, opens a menu with exactly five items, in
+order: Edit, Generate Image, Share, Archive, then a fade divider,
+then Delete (the sole danger item). Non-owned cards render no kebab
+at all. The menu surface is `--panel-glass` at `--blur-panel` (2px),
+per NEW LAW B below. Archive is a new operation with no
+`docs/APP-FUNCTION-MAP.csv` row, no prior contract entry, and no
+endpoint; it ships as an honest, permanently disabled stub, CR-056.
+`KitCreationCard` contract bumps minor for the new optional props
+(`isOwner`, `onEdit`, `onGenerateImage`, `onShare`, `onArchive`,
+`onDelete`), additive only, every existing consumer unaffected.
+
+**(ab) Glass menu and popover scope, RULED 22 Aug 2026 (Fable law
+review, Final Ruling Render close, NEW LAW B), closes F3.** Every
+menu and popover app-wide moves to the `--panel-glass` background at
+`--blur-panel` (2px blur), no box-shadow, matching the ratified glass
+recipe. The `--surface-4` plus `--shadow-popover` popover recipe is
+retired for this surface class; `--surface-4` keeps no floating-panel
+legal-on (modal panels already moved to `--grad-panel-lift` at B3).
+Selection modals (the picker modal, the sort modal) are unaffected:
+their own centered modal-panel treatment is not a menu or popover and
+keeps the panel-lift-gradient surface. `components/kit/dropdown/`
+(the 2.17 package below) and every other floating menu/popover
+surface in the repo, including the new card kebab at (aa), inherit
+this recipe.
+
+**(ac) Missing-image placeholder law, RULED 22 Aug 2026 (Fable law
+review, Final Ruling Render close, NEW LAW C, viewer B7 item 4).**
+Every missing-image / no-art placeholder instance app-wide, including
+the editor hero plate, renders icon-only: no caption text, the icon
+dead-centered on both axes, larger than any prior instance's icon
+size. This supersedes any placeholder rendering a caption string
+(e.g. "No image") anywhere in `components/kit/` or
+`components/studio/`. The shared `KitArtPlaceholder` piece already
+conforms (camellia mark, no caption, ruled 11 Aug 2026, Sprint H
+render review item 5); this ruling extends the same treatment to
+every package-local placeholder that does not yet route through it.
+
+**(ad) Viewer close control, mobile repositioning, RULED 22 Aug 2026
+(Fable law review, Final Ruling Render close, NEW LAW D), closes the
+G3 BLOCKED item.** `KitModalFrame`'s close control, viewer variant
+scope only, renders outside top-right on desktop (`700px` and up,
+unchanged from the frame's existing single recipe) and as a floating
+44px glass control in the thumb zone (bottom-right) under `700px`.
+The modal and sheet variants are unaffected, unchanged by this
+ruling; only the viewer variant's close control gains the
+width-dependent placement. No contract change: `KitModalFrame` takes
+no new prop for this, the repositioning is internal to the existing
+`variant="viewer"` composition.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9
-menu-popover recipe (`--surface-4`, `1px --line`, `--radius-md`,
+menu-popover recipe, REVISED 22 Aug 2026 (NEW LAW B, ab above):
+`--panel-glass` at `--blur-panel` (2px), no box-shadow, `1px
+--line-whisper`, `--radius-md`, `--space-2` padding, min 13rem, max
+19rem scrolling. Supersedes the 9 Aug 2026 recipe, struck and kept
+for lineage: ~~`--surface-4`, `1px --line`, `--radius-md`,
 `--shadow-popover`, `--space-2` padding, min 13rem, max 19rem
-scrolling) with the legacy trigger grammar (category label, gold
-value or count, chevron). Selected rows: `--gold-bright` text with a
+scrolling~~. Legacy trigger grammar (category label, gold value or
+count, chevron) unchanged. Selected rows: `--gold-bright` text with a
 leading check (the legacy trailing check yields the trailing slot to
 counts). Disabled rows read the word "Soon". Phone: bottom-docked
 sheet per (d). Open/closed is sanctioned presentation-only local
@@ -1787,6 +1893,34 @@ this document was updated.
 1. List density extension (LD1): Creator Connections' list adopts the
    same two-up-at-1100px grid the (g) list-density law already named
    for Community, closing a gap the law bans. Folded into 2.16(g).
+
+# Rulings log, 22 Aug 2026, Final Ruling Render close
+
+Four rulings folded into chapter 2 section 2.16 as (aa) through (ad),
+propagated by the G4 pass (`docs/plans/ED1F-PROPAGATION-PLAN.md`).
+Source: `explorations/gate1/GATE-LOG.md`'s "FINAL RULING RENDER"
+section, exhibit `explorations/conformance/Final Ruling Render.html`.
+
+1. Card kebab menu (CARD SCOPE, GO 1A): three-icon face law app-wide
+   unamended, Start Chat now also on Character kind cards; a
+   viewer-owned-only kebab menu adds Edit, Generate Image, Share,
+   Archive, Delete. Folded into 2.16(aa), amends (a) and (v).
+2. Glass menu and popover scope (GLASS SCOPE, GO 2B), closes F3:
+   `--panel-glass` on every menu and popover app-wide;
+   `--surface-4`/`--shadow-popover` retired for this surface class;
+   selection modals unaffected. Folded into 2.16(ab), amends 2.17.
+3. Missing-image placeholder law (VIEWER B7 item 4): icon-only, dead-
+   centered, larger icon, no caption text, every instance app-wide
+   including the editor hero plate. Folded into 2.16(ac).
+4. Viewer close control (closes the G3 BLOCKED item): `KitModalFrame`
+   viewer-variant close control renders outside top-right on desktop,
+   floating 44px glass control in the thumb zone under 700px. Folded
+   into 2.16(ad).
+
+Quick-create step indicators and the story modal ruling from the same
+FINAL RULING RENDER close (items 3 and 5) are not propagated this
+pass: both are new-surface work pending a live capture reconcile, out
+of the G4 file fence.
 
 ---
 

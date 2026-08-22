@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -25,22 +25,36 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {boolean} closeOnEscape default true, pass-through to
  *   ModalShell behavior
  * @property {"modal"|"sheet"|"viewer"} variant default "modal". "modal"
- *   is the ruled responsive frame: full-screen maximize under 700px
- *   (R4, 10 Aug 2026), centered floating surface at 700px and up.
- *   "sheet" is bottom-docked at every width, for sheet-only consumers
- *   that gate their own mounting by viewport (the dropdown under
- *   700px), and carries a structural close header row (R7, 10 Aug
- *   2026) so the close control never overlaps sheet content. "viewer"
- *   (added 1.1.0, 10 Aug 2026) is the chromeless image-viewer surface
- *   (R2/R5): no panel background, border, shadow, or radius, sticky
- *   nav veil treatment, full-screen maximize under 700px identical to
- *   modal. Its panel is click-transparent (pointer-events none, R3
- *   review-gate fix, 10 Aug 2026) so backdrop clicks reach the veil
- *   and dismiss; viewer content re-enables pointer events on each
- *   interactive box (presentation behavior, not a prop change).
+ *   is the ruled responsive frame: at 700px and up a centered floating
+ *   surface, unchanged. Under 700px (1.2.0, 22 Aug 2026, mobile modal
+ *   law, supersedes R4): bottom-anchored at the panel's own content
+ *   height, capped at 92dvh with internal scroll, never maximized
+ *   full-screen. "sheet" is bottom-docked at every width, for
+ *   sheet-only consumers that gate their own mounting by viewport (the
+ *   dropdown under 700px), and carries a structural close header row
+ *   (R7, 10 Aug 2026) so the close control never overlaps sheet
+ *   content; the header row now ends in the ratified fade divider
+ *   (B1). "viewer" (added 1.1.0, 10 Aug 2026) is the chromeless
+ *   image-viewer surface (R2/R5): no panel background, border, shadow,
+ *   or radius, sticky nav veil treatment, full-screen maximize under
+ *   700px identical to modal's prior R4 behavior (B7 keeps the viewer
+ *   out of the mobile modal law's bottom-anchor scope; it is a
+ *   chromeless surface, not a bottom-anchored panel). Its panel is
+ *   click-transparent (pointer-events none, R3 review-gate fix, 10 Aug
+ *   2026) so backdrop clicks reach the veil and dismiss; viewer
+ *   content re-enables pointer events on each interactive box
+ *   (presentation behavior, not a prop change).
  * @property {string} panelClassName per-surface WIDTH and HEIGHT caps
  *   only (e.g. `max-w-lg`); never surface, border, radius, shadow, or
  *   dismissal overrides
+ * @property {boolean} [hasUnsavedChanges] added 1.2.0, 22 Aug 2026
+ *   (mobile modal law, checkable condition 3). Default false. The
+ *   frame owns no form state of its own; when the caller reports
+ *   unsaved state, all three dismissal paths (backdrop click, Escape,
+ *   close control) are intercepted into an in-frame confirm step
+ *   ("Discard changes?", Keep editing / Discard, B5 danger-fill
+ *   recipe on the destructive action) instead of closing immediately.
+ *   With the default false, dismissal behavior is unchanged.
  * @property {string} [ariaLabelledBy] forwarded to the dialog, same
  *   as ModalShell
  * @property {string} [ariaDescribedBy] forwarded to the dialog

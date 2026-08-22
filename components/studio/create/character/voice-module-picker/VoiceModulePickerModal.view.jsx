@@ -92,6 +92,11 @@ export default function VoiceModulePickerModalView({
               </button>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             <div className="mt-5 min-h-0 overflow-y-auto pr-1">
               {safeOptionGroups.length ? (
                 <div className="space-y-6">
@@ -120,8 +125,8 @@ export default function VoiceModulePickerModalView({
                                 onClick={() => onToggleModule?.(optionId)}
                                 className={`rounded-xl border px-4 py-3 text-left transition ${
                                   active
-                                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                                    : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+                                    ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                                    : "border-white/10 bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                                 }`}
                               >
                                 <span className="flex items-start justify-between gap-3">

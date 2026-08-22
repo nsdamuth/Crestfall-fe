@@ -22,7 +22,7 @@ export default function CharacterTemplateModalView({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
       <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {eyebrow}
@@ -42,6 +42,11 @@ export default function CharacterTemplateModalView({
             <X size={18} />
           </button>
         </div>
+
+        <div
+          aria-hidden="true"
+          className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+        />
 
         <div className="p-5">
           <div className="flex flex-wrap gap-2">

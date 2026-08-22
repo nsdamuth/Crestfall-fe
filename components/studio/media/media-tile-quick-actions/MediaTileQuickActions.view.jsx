@@ -1,3 +1,8 @@
+// ED1F propagation plan group G3 (viewer family): raw literal colors
+// (white/10, black/60, pink-400) replaced with the ratified token set,
+// the same active/quiet recipe KitImageOverlay and MediaLightbox use
+// for their own icon rows, so hover controls read as one family with
+// the surfaces they open.
 import { Bookmark, Heart, Maximize2 } from "lucide-react";
 
 function stopAndRun(event, handler) {
@@ -18,10 +23,10 @@ function QuickActionButton({
       onClick={(event) => stopAndRun(event, onClick)}
       title={label}
       aria-label={label}
-      className={`flex h-9 w-9 items-center justify-center rounded-[var(--radius-full)] border transition ${
+      className={`flex h-9 w-9 items-center justify-center rounded-[var(--radius-full)] border transition-colors ${
         active
-          ? "border-pink-400/50 bg-pink-400/20 text-pink-200"
-          : "border-white/10 bg-black/60 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+          ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+          : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--ink)]"
       }`}
     >
       {children}

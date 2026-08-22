@@ -22,18 +22,22 @@ export default function KitCreditsModalView({
     // (review-gate find N-4). At 700px and up the centered panel is
     // content-sized and the 80dvh cap bounds the scroll region.
     <div className="flex h-full flex-col min-[700px]:h-auto min-[700px]:max-h-[80dvh]">
-      <div className="flex flex-none items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] p-[var(--space-4)]">
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="kit-focus cf-btn cf-btn--secondary cf-btn--sm inline-flex items-center gap-[var(--space-1)]"
-        >
-          <ChevronLeft size={16} aria-hidden="true" />
-          Back
-        </button>
-        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          Credits
-        </p>
+      <div className="flex flex-none flex-col">
+        <div className="flex items-center gap-[var(--space-3)] p-[var(--space-4)]">
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="kit-focus cf-btn cf-btn--secondary cf-btn--sm inline-flex items-center gap-[var(--space-1)]"
+          >
+            <ChevronLeft size={16} aria-hidden="true" />
+            Back
+          </button>
+          <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Credits
+          </p>
+        </div>
+        {/* B1 fade divider, never edge-to-edge. */}
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-[var(--space-4)]">
         <KitCreditsView credits={credits} LinkComponent={LinkComponent} />

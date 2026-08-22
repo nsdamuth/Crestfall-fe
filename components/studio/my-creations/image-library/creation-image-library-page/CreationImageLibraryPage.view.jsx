@@ -304,12 +304,7 @@ function FeaturedSlotCard({
           </div>
         ) : (
           <div className="flex h-full w-full items-center justify-center p-4 text-center">
-            <div>
-              <ImageIcon size={24} className="mx-auto text-[var(--gold-ornament)]" />
-              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
-                No image selected
-              </p>
-            </div>
+            <ImageIcon size={40} className="text-[var(--gold-ornament)]" />
           </div>
         )}
       </div>
@@ -481,12 +476,7 @@ function ImagePreview({
         </>
       ) : (
         <div className="flex h-full w-full items-center justify-center p-4 text-center">
-          <div>
-            <ImageIcon size={24} className="mx-auto text-[var(--gold-ornament)]" />
-            <p className="mt-3 break-all text-xs leading-5 text-[var(--ink-dim)]">
-              {image.label}
-            </p>
-          </div>
+          <ImageIcon size={40} className="text-[var(--gold-ornament)]" />
         </div>
       )}
     </div>

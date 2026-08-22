@@ -19,12 +19,15 @@ export default function ModalShellView({
       panelClassName="w-full max-w-4xl"
     >
       <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
-        <div className="border-b border-white/10 p-5 pr-16">
+        <div className="p-5 pr-16">
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             NPC Registry
           </p>
           <h2 className="mt-2 font-display text-4xl">{title}</h2>
         </div>
+        {/* B1 fade divider, never edge-to-edge; replaces the prior
+            hardcoded border-white/10 literal. */}
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">{children}</div>
       </div>

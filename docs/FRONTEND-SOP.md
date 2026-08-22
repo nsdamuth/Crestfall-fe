@@ -76,9 +76,11 @@ UIUX-repo AGENTS.md, preview-harness rules, carried forward here).
   clipped UI, popovers fully inside the viewport, readable without
   zoom. Check: rendered at 390 before 1440, every fixture state.
 - Focus is visible everywhere. Check: no `outline-none` without the
-  global `--focus-ring` rule or the sanctioned `cf-field` variant
-  applying; `grep -rn 'focus:outline-none' components/` hits are
-  reviewed against `app/design-system.css:165-176`.
+  global `--focus-ring` rule or its gold-fill-scope sibling
+  `--focus-ring-ongold` applying (the `cf-field` quieter variant
+  retired 22 Aug 2026, A3, Fable law review); `grep -rn
+  'focus:outline-none' components/` hits are reviewed against
+  `app/design-system.css:167-170`.
 - Reduced motion respected. Check: any new `animation:` or long
   `transition:` ships a `prefers-reduced-motion` rule.
 - No em dashes in code or docs. Check: `grep -rn $'\xe2\x80\x94' docs/ components/ app/ --include='*.md' --include='*.jsx' --include='*.js'`

@@ -1,6 +1,25 @@
 # Kit Creation Card LOOM Package
 
-**Contract:** `KitCreationCard.contract.js` (v3.2.0)
+**Contract:** `KitCreationCard.contract.js` (v3.4.0)
+
+## Kebab menu, RULED 22 Aug 2026 (Fable law review, Final Ruling Render close, ED1F propagation plan NEW LAW A)
+
+A separate, owner-gated control, not a fourth face icon: the three-icon
+face law below is unchanged. Renders only when the caller passes
+`isOwner`; non-owned cards render no kebab at all. Contents are
+exactly Edit, Generate Image, Share, Archive, Delete, with a fade
+divider (`--line-fade`) before the sole danger item (Delete), on the
+ratified glass surface (NEW LAW B: `--panel-glass` at `--blur-panel`,
+2px, the same surface every menu and popover in the app moves to).
+Archive ships as an honest disabled stub, CR-056 (no endpoint exists
+yet); its callback prop is still wired so a caller may supply one once
+that CR resolves, no further contract bump needed for that alone.
+
+The contextual third face action (slot three: like, save, contextual)
+also widens this pass: `assetKind: "character"` cards with an `onPlay`
+handler now render "Start Chat" too, alongside the existing story and
+adventure branches. Image keeps "Generate"; every other card, or any
+card with no handler for its kind, keeps the "Expand" fallback.
 
 ## Purpose
 
@@ -42,8 +61,9 @@ Slots one and two are always like and save, unchanged everywhere.
 Slot three, RULED 11 Aug 2026 (v3.2.0), is contextual by
 `assetKind`:
 
-- `"story"` and `"adventure"` with an `onPlay` handler: a play action,
-  icon plus accessible label "Start Chat".
+- `"character"`, `"story"`, and `"adventure"` with an `onPlay` handler
+  (character added 22 Aug 2026, NEW LAW A): a play action, icon plus
+  accessible label "Start Chat".
 - `"image"` with an `onGenerate` handler: a generate action, icon plus
   accessible label "Generate".
 - Every other card type, and any card whose caller passes no handler

@@ -7,6 +7,7 @@ import {
   kitCreationCardAdventureFixture,
   kitCreationCardCanonOverArtFixture,
   kitCreationCardCharacterFixture,
+  kitCreationCardCharacterPlayActionFixture,
   kitCreationCardDisabledFixture,
   kitCreationCardGenerateActionFixture,
   kitCreationCardImageFixture,
@@ -15,6 +16,8 @@ import {
   kitCreationCardListNoImageFixture,
   kitCreationCardLongestTitleFixture,
   kitCreationCardNoImageFixture,
+  kitCreationCardOwnerKebabFixture,
+  kitCreationCardOwnerKebabListFixture,
   kitCreationCardOwnWorkFixture,
   kitCreationCardPlayActionFixture,
   kitCreationCardStoryFixture,
@@ -32,10 +35,19 @@ const STATES = {
   longest: { label: "Grid, longest title", props: kitCreationCardLongestTitleFixture },
   disabled: { label: "Grid, disabled", props: kitCreationCardDisabledFixture },
   playAction: { label: "Grid, story (play action)", props: kitCreationCardPlayActionFixture },
+  characterPlayAction: {
+    label: "Grid, character (Start Chat, NEW LAW A)",
+    props: kitCreationCardCharacterPlayActionFixture,
+  },
   generateAction: { label: "Grid, image (generate action)", props: kitCreationCardGenerateActionFixture },
+  ownerKebab: { label: "Grid, owner kebab menu (NEW LAW A)", props: kitCreationCardOwnerKebabFixture },
   listDefault: { label: "List, default", props: kitCreationCardListDefaultFixture },
   listNoImage: { label: "List, no image", props: kitCreationCardListNoImageFixture },
   listDisabled: { label: "List, disabled", props: kitCreationCardListDisabledFixture },
+  listOwnerKebab: {
+    label: "List, owner kebab menu (NEW LAW A)",
+    props: kitCreationCardOwnerKebabListFixture,
+  },
 };
 
 export default function KitCreationCardPreviewClient() {
@@ -80,6 +92,19 @@ export default function KitCreationCardPreviewClient() {
       : {}),
   };
 
+  // Owner kebab menu (NEW LAW A, 22 Aug 2026): only wired when the
+  // active fixture is owner-gated, same pattern as the contextual
+  // callbacks above.
+  const kebabCallbacks = localProps.isOwner
+    ? {
+        onEdit: () => setLastAction("Edit fired (local preview only)."),
+        onGenerateImage: () => setLastAction("Generate Image fired (local preview only)."),
+        onShare: () => setLastAction("Share fired (local preview only)."),
+        onArchive: () => setLastAction("Archive is not wired yet (CR-056)."),
+        onDelete: () => setLastAction("Delete fired (local preview only)."),
+      }
+    : {};
+
   return (
     <KitPreviewShell
       title="Kit Creation Card"
@@ -94,11 +119,21 @@ export default function KitCreationCardPreviewClient() {
     >
       {isGrid ? (
         <div className="mx-auto max-w-sm">
-          <KitCreationCardView {...localProps} {...sharedCallbacks} {...contextualCallbacks} />
+          <KitCreationCardView
+            {...localProps}
+            {...sharedCallbacks}
+            {...contextualCallbacks}
+            {...kebabCallbacks}
+          />
         </div>
       ) : (
         <div className="mx-auto max-w-3xl">
-          <KitCreationCardView {...localProps} {...sharedCallbacks} {...contextualCallbacks} />
+          <KitCreationCardView
+            {...localProps}
+            {...sharedCallbacks}
+            {...contextualCallbacks}
+            {...kebabCallbacks}
+          />
         </div>
       )}
     </KitPreviewShell>

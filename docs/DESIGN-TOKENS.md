@@ -49,13 +49,18 @@ Only locked tokens may be written by an execution run.
 | `--surface-1` | `#16130f` | `#f0e9d8` | Quiet sections, inset wells, inputs | Wells, input beds, quiet chips | Floating panels | locked |
 | `--surface-2` | `#1d1a15` | `#f4eee0` | Cards, list rows, icon-button fills | In-flow cards and rows, circular chrome controls | Modals | locked |
 | `--surface-3` | `#24211a` | `#f8f3e7` | Topbar, sidebar, sticky chrome | Persistent chrome | Content panels | locked |
-| `--surface-4` | `#2c271e` | `#fcf8ee` | Modals, menus, popovers | Every floating surface (see `.cf-modal-frame`, `.cf-dropdown` in `app/design-system.css`) | In-flow content | locked |
+| `--surface-4` | `#2c271e` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
 | `--surface-footer` | `#1a120b` | same | Marketing footer only, deliberate ramp exception | The site footer | Anything else | locked |
 
 Surfaces are opaque and flip with the theme. Panels are never built from
 translucent black fills: `bg-black/NN` panel chrome cannot flip themes
 and is out of contract (see Debt map and queue items T2 and T5). Black
-translucency is legal only in the wash family below, over artwork.
+translucency is legal only in the wash family below, over artwork, and
+in one scoped exception ratified 22 Aug 2026 (B4, Fable law review):
+`--fill-option-rest` (`rgba(0,0,0,.22)`), legal on the rest state of an
+option card only, never any other surface. The selected fill is an
+exact match to the already-locked `--fill-whisper` and carries no new
+token.
 
 ## Ink
 
@@ -96,20 +101,25 @@ no mass gold swap is authorized.
 
 | Token | Value (both themes) | Role | Status |
 |---|---|---|---|
-| `--status-success` | `#7D9B6A` | Success state text/icon | locked |
+| `--status-success` | `oklch(.76 .08 135)` | Success state text/icon; revised 22 Aug 2026 (Gate 2 token law row 6, closes CR-051), prior value `#7D9B6A` struck for lineage | locked |
 | `--status-warning` | `#C97B35` | Warning state text/icon, reserved, kept away from gold | locked |
 | `--status-danger` | `#C2634D` | Danger state text/icon; the ONE red, including the danger button | locked |
 | `--status-success-bed` / `-border` | `rgba(125,155,106,.14)` / `rgba(125,155,106,.40)` | Quiet chip bed / border | locked |
 | `--status-warning-bed` / `-border` | `rgba(201,123,53,.14)` / `rgba(201,123,53,.40)` | Quiet chip bed / border | locked |
 | `--status-danger-bed` / `-border` | `rgba(194,99,77,.14)` / `rgba(194,99,77,.40)` | Quiet chip bed / border | locked |
+| `--status-danger-fill` | `rgba(194,99,77,.06)` | Modal-confirm danger CTA fill (B5, 22 Aug 2026), distinct from the 14 percent `-bed` chip step | locked |
 
 Usage law: state only, never decoration. Every use ships with a word
 beside it. There is deliberately NO info color: informational copy uses
 the ink family, and any sky-blue info state is removed, not converted.
 Destructive controls: the in-page trigger is a quiet ghost with
-`--status-danger` TEXT; the filled `--status-danger` button appears in
-exactly one place, the confirming button inside a confirm step
-(`cf-btn--danger` / `cf-btn--danger-filled` in `app/design-system.css`).
+`--status-danger` TEXT (`cf-btn--danger` in `app/design-system.css`,
+untouched by this pass); the confirming button inside a confirm step
+(`cf-btn--danger-filled`) is now the B5 recipe, RULED 22 Aug 2026
+(Fable law review): border AND ink AND fill, all `--status-danger`,
+the fill at the new `--status-danger-fill` step (6 percent, distinct
+from the 14 percent `--status-danger-bed` chip step). This supersedes
+the prior solid-`--status-danger`-fill-with-`--ink`-text recipe.
 
 ## Contrast law
 
@@ -169,14 +179,24 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
   where label, placeholder, and focus ring jointly identify the
   field; a sweep never "fixes" an input bed's `--line-whisper` edge
   on boundary-contrast grounds.
-- The focus indicator (`--focus-ring`, `--gold-ornament` on
-  `--canvas`) passes 3:1 and is the one sanctioned focus mechanism;
-  1.4.11 exempts disabled controls from all of the above.
+- The focus indicator (`--focus-ring`, `--gold-ornament` border plus
+  a `--gold-action`-rgb 10 percent glow, revised 22 Aug 2026, A3)
+  passes 3:1 and is the one sanctioned focus mechanism, alongside its
+  narrower gold-fill-scope sibling `--focus-ring-ongold` (B10); 1.4.11
+  exempts disabled controls from all of the above. Propagation
+  requirement carried by A3: the ring must be verified legible on
+  every surface depth it can land on, not only field beds, buttons,
+  chips, nav rows, and cards at their real rendered surfaces
+  (`--surface-1` through `--surface-4`, plus the gradient card and
+  rail surfaces), each needing a contrast check during propagation,
+  not an assumption that the field-bed check covers every case.
 - The full generated matrix, every locked ink/gold/status token over
   every locked surface with computed ratio and PASS/FAIL at 4.5 and
   at 3, lives at `docs/review-artifacts/contrast-matrix-x1.md`. It is
   a generated artifact, not hand-maintained; regenerate it if a
-  locked surface, ink, gold, or status value ever changes. The
+  locked surface, ink, gold, or status value ever changes, INCLUDING
+  this pass's `--focus-ring` recipe revision and `--status-success`
+  value revision, both regeneration triggers. The
   `--ink-faint` and `--gold-deep` FAILs the matrix surfaced are now
   resolved by the pairing rules above (zero token changes); the
   status-color FAILs on the deeper surfaces remain open, blocked on a
@@ -196,29 +216,40 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
 | `--line-whisper` | `rgba(242,209,148,.03)` | `rgba(96,74,34,.07)` | Card edges, input borders, inset hairline dividers | Quiet borders | n/a | locked |
 | `--line` | `rgba(242,209,148,.10)` | `rgba(96,74,34,.17)` | Art frames, panel borders, hover borders | Modal frames, art frames | n/a | locked |
 | `--line-strong` | `rgba(242,209,148,.20)` | `rgba(96,74,34,.36)` | Dividers, active borders, scrollbar thumbs | Ghost-button borders, dividers | n/a | locked |
-| `--fill-whisper` | `rgba(242,209,148,.06)` | `rgba(96,74,34,.05)` | Quietest gold wash | Nav hover, panel gradients | Whole large surfaces | locked |
+| `--fill-whisper` | `rgba(242,209,148,.06)` | `rgba(96,74,34,.05)` | Quietest gold wash | Nav hover, panel gradients, option-card SELECTED fill (B4, 22 Aug 2026, exact match) | Whole large surfaces | locked |
 | `--fill` | `rgba(242,209,148,.12)` | `rgba(96,74,34,.10)` | Standard gold wash; the canvas tag bed | Nav active, tag beds on canvas | Paired with a line-family border (they collide) | locked |
 | `--fill-strong` | `rgba(242,209,148,.20)` | `rgba(96,74,34,.16)` | Strongest gold wash | Small accents | Large surfaces | locked |
 | `--scrim` | `rgba(0,0,0,.40)` | same | The lighter wash over artwork UNDER a tag that carries its own bed | Artwork under tag beds | Panel chrome | locked (Ruling 7, 7 Aug 2026, closes queue item T7: .40 is settled, not provisional. Brian may adjust the value after viewing it live; that option survives only if code references the token, never the literal) |
 | `--scrim-strong` | `rgba(0,0,0,.70)` | same | The heavy screen: floating-panel scrims, full banner covers | Modal/picker/sheet veils, banner treatment (a) | Panel fills | locked |
 | `--tag-bed-art` | `var(--scrim-strong)` | follows referent | Tag bed over artwork, with 1px `--line` border and `--ink` text | Tags over art | Tags on canvas | locked |
 | `--tag-bed-canvas` | `var(--fill)` | follows referent | Tag bed on canvas, no border, `--gold-bright` text | Tags on surfaces | Tags over art | locked |
-| `--blur-panel` | `2px` | same | Floating panels only, paired with `--scrim-strong` | Modal/sheet/picker veils | Tile art, banners, tag beds, persistent chrome | locked |
-| `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; the image viewer veil (R2, 10 Aug 2026, Brian's ruling; the one floating surface that carries chrome frost instead of the scrim-plus-`--blur-panel` pair) | Sticky top bars and other persistent (non-floating) chrome; the image viewer veil (`KitModalFrame` `variant="viewer"`) | Other floating panels (use `--blur-panel`), tile art, banners, tag beds | locked |
+| `--blur-panel` | `2px` | same | Floating panels only, paired with `--scrim-strong`; ALSO the image viewer veil, at the `--chrome-wash` color (B7, reverses R2 below) | Modal/sheet/picker veils, the image viewer veil | Tile art, banners, tag beds, persistent chrome | locked |
+| `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; scope extended 22 Aug 2026 (Gate 2 token law row 10) to the editor sticky nav and the mobile save row | Sticky top bars and other persistent (non-floating) chrome, the editor sticky nav, the mobile save row | Any floating panel (use `--blur-panel`), the image viewer veil, tile art, banners, tag beds | locked |
+| `--blur-glass` | `12px` | same | Tooltip glass only. Third blur token, no cross-borrowing with the two above (A2, ratified narrow, 22 Aug 2026): every glass-chrome surface actually built (kebab menus, the viewer header, the viewer's 390 close control) resolves through `--panel-glass` at `--blur-panel` (2px), not this token | Tooltips (pending the CR-047 component) | Any other surface, including glass-chrome menus and headers | locked |
+| `--chrome-wash` | `rgba(6,4,2,.62)` | same, interim (F1) | The near-black wash paired with `--blur-chrome`; ALSO the image viewer veil color, paired with `--blur-panel` per B7 | Sticky chrome, editor sticky nav, mobile save row, image viewer veil | Any surface not paired with `--blur-chrome` or the viewer's `--blur-panel` veil | locked |
+| `--panel-glass` | `rgba(36,32,25,.85)` | same, interim (F1) | Glass-panel background, paired with `--blur-panel` (2px), never `--blur-glass`. Scope widened 22 Aug 2026 (NEW LAW B, F3 closed GO 2B, Final Ruling Render): every menu and popover app-wide, not only kebab menus | Kebab menus (B6), the `KitCreationCard` viewer-owned kebab menu (NEW LAW A), `KitDropdown` and every other menu/popover surface app-wide, the viewer's two-line header (B7); selection modals (picker, sort) keep their own panel-lift-gradient modal surface, unchanged by this widening | Tooltip surfaces (use `--blur-glass`) | locked |
 
 Scrims do not flip with the theme because the artwork under them does
-not flip. `--blur-panel` and `--blur-chrome` are separate strengths by
-role, not by preference: `--blur-panel` is always paired with
-`--scrim-strong` on a floating veil; `--blur-chrome` never pairs with a
-scrim and applies only to chrome that stays in the document flow, with
-the one named exception of the image viewer veil (R2, 10 Aug 2026): a
-floating surface ruled to carry the chrome-frost treatment
-(`bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)]` plus
-`backdrop-blur-[var(--blur-chrome)]`, the same recipe as
-`StudioTopBar` and `KitStudioFilterBar`) instead of `--scrim-strong`
-plus `--blur-panel`. No token value changes; no new token is minted.
-A meta tag's `blur(4px)` is a third, unrelated mechanism and is not
-governed by either token.
+not flip. `--blur-panel`, `--blur-chrome`, and `--blur-glass` are
+three separate strengths by role, none borrowing another's scope
+(A2, ratified 22 Aug 2026, Fable law review, resolved narrow):
+`--blur-panel` is always paired with `--scrim-strong` on a floating
+veil, or with `--chrome-wash` on the image viewer veil specifically
+(below); `--blur-chrome` never pairs with a scrim and applies only to
+persistent, non-floating chrome (sticky top bars, the editor sticky
+nav, the mobile save row); `--blur-glass` is tooltips only, never a
+floating panel, menu, or header.
+
+**R2 REVERSED, 22 Aug 2026 (B7, Fable law review):** the image viewer
+veil no longer carries the chrome-frost treatment. It is now a
+lawful 2px veil at the `--chrome-wash` color, paired with
+`--blur-panel`, the same 2px strength every other floating veil
+uses ("lawful 2px veil, no glass extension"). The prior R2 exception
+recipe (`bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)]` plus
+`backdrop-blur-[var(--blur-chrome)]`) is superseded; `KitModalFrame`
+`variant="viewer"` no longer carries chrome frost. A meta tag's
+`blur(4px)` is a fourth, unrelated mechanism and is not governed by
+any of these tokens.
 
 ## Over-art ink
 
@@ -236,12 +267,16 @@ artwork. The flipping ink family is illegal there.
 | Token | Dark | Light | Role | Status |
 |---|---|---|---|---|
 | `--shadow-modal` | `0 10px 28px rgba(0,0,0,.62), 0 2px 6px rgba(0,0,0,.44)` | warm brown variant | Modals, sheets, pickers, drawers | locked |
-| `--shadow-popover` | `0 4px 12px rgba(0,0,0,.52), 0 1px 3px rgba(0,0,0,.38)` | warm brown variant | Menus, dropdowns, small floats | locked |
+| `--shadow-popover` | `0 4px 12px rgba(0,0,0,.52), 0 1px 3px rgba(0,0,0,.38)` | warm brown variant | Small floats not on the glass recipe. Menus and dropdowns moved 22 Aug 2026 (NEW LAW B) to the borderless `--panel-glass` recipe (background plus `--blur-panel`, no box-shadow, matching the ratified exhibit), so this token is reserved rather than paired with them going forward | locked |
 | `--edge-top` | `inset 0 1px 0 rgba(255,240,210,.02)` | `inset 0 1px 0 rgba(255,255,255,.60)` | Inset top-edge highlight on elevated surfaces | locked |
 
 In-flow surfaces separate by border, never by shadow. Floating surfaces
 separate by scrim plus shadow. Exactly two floating shadow tokens exist;
-Tailwind default shadows are out of contract (see below).
+Tailwind default shadows are out of contract (see below). `--shadow-bed`
+(new, 22 Aug 2026, Gate 2 token law row 8) is an INSET bed shadow, a
+distinct third case from the two floating tokens: it separates a field
+bed from the surface it sits in, never a floating panel from the page
+behind it. The exactly-two-floating-shadows ruling is untouched.
 
 ## Type
 
@@ -267,7 +302,11 @@ Scale (all locked; ratio 1.2 from 16px, leadings on the 4px grid):
 | `--text-hero` / `--lh-hero` | fluid | Hero only, never product UI |
 
 Weights `--weight-regular/medium/bold` (400/500/700; 800 and 900 are
-banned). Tracking `--track-label` (.18em, uppercase labels),
+banned), joined 22 Aug 2026 by `--weight-light` (300, A1, Fable law
+review): ghost buttons (`.cf-btn--secondary` and any other
+ghost-styled button or chip) render text at this weight, never 400 or
+`--weight-regular`; also the weight of `--ink-typed` field values.
+Tracking `--track-label` (.18em, uppercase labels),
 `--track-tight` (-.01em, 28px and up), `--track-normal`. All locked.
 
 Tailwind default text sizes (`text-xs` 12, `text-sm` 14, `text-lg` 18,
@@ -317,10 +356,16 @@ layer can measure the first. Locked.
 
 `--ease`, `--ease-hover`, `--dur-fast/base/slow/hover/ambient`,
 `--anim-galaxy`, `--anim-twinkle`: locked.
-`--focus-ring` (`0 0 0 2px var(--canvas), 0 0 0 4px var(--gold-ornament)`):
-locked, the ONLY focus token, wired globally in
-`app/design-system.css:165-168`; `cf-field` carries the sanctioned
-quieter 1px variant for dense modal field grids.
+`--focus-ring` (`0 0 0 1px var(--gold-ornament), 0 0 0 3px
+rgba(224,171,94,.10)`, revised 22 Aug 2026, A3, Fable law review):
+locked, wired globally in `app/design-system.css:167-170`. It admits
+exactly one sibling, `--focus-ring-ongold` (`0 0 0 2px var(--canvas),
+0 0 0 3px var(--gold-ornament), 0 0 0 6px rgba(224,171,94,.10)`),
+locked, gold-fill scope only (B10): a narrower recipe layered on
+gold-filled surfaces, not a replacement for the global ring and not
+in conflict with it. The `cf-field` quieter 1px variant is RETIRED
+by this same ruling: every focusable control app-wide, not only
+field beds, now resolves through the one global ring.
 
 Known gap: the global `prefers-reduced-motion` kill-switch that existed
 in both ancestor theme files is absent from this repo; only three
@@ -332,11 +377,52 @@ Sprint 3 Phase 1 task.
 Sanctioned gradients, all locked, nothing outside this list is legal:
 `--grad-gold`, `--grad-gold-deep`, `--grad-track`, `--grad-sheen`,
 `--grad-panel`, `--grad-nav-active`, `--grad-rule`, `--grad-rule-soft`,
-`--cat-canon`, `--cat-compatible`, `--cat-sandbox`.
+`--cat-canon`, `--cat-compatible`, `--cat-sandbox`. Joined 22 Aug 2026
+(Gate 2 token law row 7 and the modal-family close, Fable law review):
+`--grad-card` (`#1a1610` to `#14110c`, section cards, hero plate,
+rail panel), `--grad-rail` (`#16130d` to `#100d09`, rail panel),
+`--grad-panel-lift` (`#332d22` to `#2a251d`, B3, modal panel surface,
+interim in both themes per F1), `--grad-creation-card` (`#241f16` to
+`#1b1711`, B6, value only, application scope held for F2).
 Glows: `--glow-ambient`, `--glow-hover`, locked.
 Atmosphere: `--atm-hearth`, `--atm-vault`, `--atm-veil`,
 `--atm-constellation`, locked, applied as positioned layers, never baked
 into a surface color.
+
+## New tokens, ED1F propagation, RULED 22 Aug 2026
+
+Gate 2 twelve-row token law (`explorations/gate1/GATE-LOG.md`, Crestfall
+Editor DS Claude Design project) plus the modal-family close candidates,
+ratified at the Fable law review on branch `design/ds1-claude-design-sync`.
+Row 12 of the token law, `--focus-ring-editor`, is not a row here: its
+recipe is ABSORBED into the global `--focus-ring` above under the
+existing name, the editor-scoped name is never minted. Tokens already
+given a row elsewhere in this document (`--status-success` revision,
+`--status-danger-fill`, `--grad-card`, `--grad-rail`,
+`--grad-panel-lift`, `--grad-creation-card`, `--chrome-wash`,
+`--panel-glass`, `--blur-glass`, `--focus-ring-ongold`,
+`--fill-option-rest`, the `--fill-whisper` legal-on addition) are not
+repeated here.
+
+| Token | Dark | Light | Role | Legal on | Never on | Status |
+|---|---|---|---|---|---|---|
+| `--text-input` | `0.875rem` (14) | same | Field bed type size, typed and placeholder | Every field bed | n/a | locked |
+| `--lh-input` | `1.375rem` (22) | same | Field bed line height, pairs with `--text-input` | Every field bed | n/a | locked |
+| `--ink-typed` | `#d9d3c6` | same, interim (F1) | Field VALUE text at `--weight-light` (Inter 300); distinct from the flipping `--ink` role token | Typed field values | Placeholders (use `--ink-faint`), body copy | locked |
+| `--fill-ghost` | `rgba(242,209,148,.05)` | same, interim (F1) | Ghost-button and quiet-interactive-surface bed | `.cf-btn--secondary`, trait chips, quiet interactive surfaces | Whole large surfaces | locked |
+| `--control-editor-md` | `var(--control-filter)` (38) | same | Editor CTA height, desktop only; aliases `--control-filter` rather than re-minting the same literal (CR-053) | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
+| `--control-editor-sm` | `1.75rem` (28) | same | Editor CTA height, desktop only, genuinely new value | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
+| `--bed-deep` | `#0d0b08` | same, interim (F1) | Deepest field-bed fill | Field beds | Any surface already on the `--surface-1..4` ramp | locked |
+| `--shadow-bed` | `inset 0 1px 2px rgba(0,0,0,.25)` | same | Inset field-bed shadow, paired with `--bed-deep` | Field beds | Floating surfaces (use `--shadow-modal` / `--shadow-popover`) | locked |
+| `--line-fade` | `linear-gradient(90deg,transparent,rgba(242,209,148,.13) 12%,rgba(242,209,148,.13) 88%,transparent)` | same | 1px fade-out-ends divider, never edge-to-edge | Sidebar groups, card-header rules, rail progress rules; scope broadened 22 Aug 2026 (B1) to every modal-family divider, with a `.tight` compact-margin variant in dense contexts (picker, sort) | Edge-to-edge dividers | locked |
+| `--weight-light` | `300` | same | Ghost-button and typed-field-value weight | `.cf-btn--secondary` and other ghost-styled buttons/chips, `--ink-typed` field values | Body copy, headings | locked |
+
+F1, held for a Brian ruling: every row above marked "interim (F1)"
+declares the same value in both themes today; real light-theme values
+need a render sitting (the panel-lift gradient, creation-card
+gradient, `--fill-option-rest`, `--panel-glass`, `--bed-deep`,
+`--grad-card`, `--grad-rail`, `--chrome-wash`, `--ink-typed`,
+`--fill-ghost`).
 
 ## Ladder and state primitives, RULED 9 Aug 2026
 

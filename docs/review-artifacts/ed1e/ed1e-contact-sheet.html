@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ED1e Editor Design Review</title>
+<style>
+  body { background: #090805; color: #ece7dc; font-family: system-ui, sans-serif; margin: 0; padding: 32px; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 16px; font-weight: 500; margin-top: 48px; color: #C9A86A; text-transform: uppercase; letter-spacing: .12em; }
+  p { color: #a9a294; max-width: 64ch; line-height: 1.5; }
+  .row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; margin-top: 16px; }
+  figure { margin: 0; }
+  figcaption { font-size: 13px; color: #a9a294; padding: 8px 2px; max-width: 340px; }
+  figcaption b { color: #ece7dc; font-weight: 600; }
+  .rec figcaption b { color: #f2d194; }
+  img { display: block; border: 1px solid rgba(242,209,148,.15); border-radius: 8px; }
+  .m img { width: 300px; }
+  .d img { width: 660px; }
+</style>
+</head>
+<body>
+<h1>ED1e: the advanced editor, redesigned</h1>
+<p>Phone view first, desktop after, per house law. Choice 1 is the only
+question to answer first: which field style should every editor use?
+Choice 2 (the artwork area) comes after choice 1 is settled. Everything
+else shown is the recommendation already applied.</p>
+
+<h2>Choice 1: field style (rule on this first)</h2>
+<div class="row">
+  <figure class="m rec">
+    <img src="ed1e-render-390-exemplar-a-fields.png" alt="">
+    <figcaption><b>Option A: Quiet (recommended)</b>. Labels stay small
+    and muted; gold appears only on section markers and the active
+    field. Calmest to scan at 60+ fields, and closest to the pages
+    that already look right.</figcaption>
+  </figure>
+  <figure class="m">
+    <img src="ed1e-render-390-exemplar-b-fields.png" alt="">
+    <figcaption><b>Option B: Gilded</b>. Every label is gold like the
+    quick-create windows. Why not: with dozens of fields the gold
+    stops pointing at anything and the page shimmers.</figcaption>
+  </figure>
+  <figure class="m">
+    <img src="ed1e-render-390-exemplar-c-fields.png" alt="">
+    <figcaption><b>Option C: Blended</b>. Muted labels, but the field
+    you are typing in turns its label gold. Why not: labels that
+    change color read as a state change that is not there.</figcaption>
+  </figure>
+</div>
+<div class="row">
+  <figure class="d rec"><img src="ed1e-render-1440-exemplar-a-hero.png" alt="">
+    <figcaption><b>Option A at desktop</b>, whole page: artwork and
+    actions, section list, and the sticky right rail with the save
+    state always on top.</figcaption></figure>
+</div>
+<div class="row">
+  <figure class="d"><img src="ed1e-render-1440-exemplar-b-fields.png" alt="">
+    <figcaption>Option B at desktop.</figcaption></figure>
+  <figure class="d"><img src="ed1e-render-1440-exemplar-c-fields.png" alt="">
+    <figcaption>Option C at desktop.</figcaption></figure>
+</div>
+
+<h2>Choice 2: the artwork area (rule after choice 1)</h2>
+<div class="row">
+  <figure class="m rec">
+    <img src="ed1e-render-390-exemplar-a-hero.png" alt="">
+    <figcaption><b>Option A: side art, cleaned (recommended)</b>. Art
+    with a small filmstrip of real images under it, one add tile, no
+    broken-image boxes, actions in one tidy row. Keeps the editing
+    work close to the top of the screen.</figcaption>
+  </figure>
+  <figure class="m">
+    <img src="ed1e-render-390-hero-b.png" alt="">
+    <figcaption><b>Option B: full-width banner</b>. The art becomes a
+    wide banner with the name over it. Why not: on a phone it costs a
+    full screen before the first field, and tall portrait art crops
+    badly to a wide band.</figcaption>
+  </figure>
+  <figure class="m">
+    <img src="ed1e-render-390-hero-c.png" alt="">
+    <figcaption><b>Option C: art backdrop</b>. The art becomes a
+    blurred backdrop behind the name. Why not: it adds a hazy layer
+    the house style avoids, and it competes with the fields.</figcaption>
+  </figure>
+</div>
+<div class="row">
+  <figure class="d"><img src="ed1e-render-1440-hero-b.png" alt="">
+    <figcaption>Option B at desktop.</figcaption></figure>
+  <figure class="d"><img src="ed1e-render-1440-hero-c.png" alt="">
+    <figcaption>Option C at desktop.</figcaption></figure>
+</div>
+
+<h2>Every field, every state</h2>
+<p>The standard sheet: short text, long notes that fold to one line
+and open when tapped, dropdowns, dialog-backed choices, read-only
+lines, toggles, disabled controls, and the counter behavior. Two
+cells wait on a color ruling and are labeled on the sheet.</p>
+<div class="row">
+  <figure class="m"><img src="ed1e-render-390-specimen-1.png" alt=""><figcaption>Phone, part 1.</figcaption></figure>
+  <figure class="m"><img src="ed1e-render-390-specimen-2.png" alt=""><figcaption>Phone, part 2.</figcaption></figure>
+  <figure class="m"><img src="ed1e-render-390-specimen-3.png" alt=""><figcaption>Phone, part 3.</figcaption></figure>
+</div>
+<div class="row">
+  <figure class="d"><img src="ed1e-render-1440-specimen-1.png" alt=""><figcaption>Desktop, part 1.</figcaption></figure>
+  <figure class="d"><img src="ed1e-render-1440-specimen-2.png" alt=""><figcaption>Desktop, part 2.</figcaption></figure>
+</div>
+
+<h2>Dialogs, the danger area, and the phone section list</h2>
+<div class="row">
+  <figure class="m"><img src="ed1e-render-390-modal.png" alt="">
+    <figcaption>The standard dialog: one size for choice dialogs,
+    calm tiles instead of giant color pills, a single quiet outline
+    on the selected tile, no doubled borders.</figcaption></figure>
+  <figure class="d"><img src="ed1e-render-1440-modal.png" alt="">
+    <figcaption>The same dialog at desktop.</figcaption></figure>
+</div>
+<div class="row">
+  <figure class="m"><img src="ed1e-render-390-exemplar-a-danger.png" alt="">
+    <figcaption>The danger area at rest is quiet words; the red
+    filled button only appears after you arm the confirm step (shown
+    armed here).</figcaption></figure>
+  <figure class="m"><img src="ed1e-render-390-sheet.png" alt="">
+    <figcaption>The phone section list: titled, with the save state
+    and the same section list as desktop.</figcaption></figure>
+</div>
+
+<h2>What it looks like today (before)</h2>
+<div class="row">
+  <figure class="m"><img src="ed1e-diag-390-identity-defaults-open.png" alt=""><figcaption>Three different field styles in one box.</figcaption></figure>
+  <figure class="m"><img src="ed1e-diag-390-behavior-defaults-open-1.png" alt=""><figcaption>Boxes inside boxes inside boxes.</figcaption></figure>
+  <figure class="m"><img src="ed1e-diag-390-danger-zone-open.png" alt=""><figcaption>Red billboards at rest.</figcaption></figure>
+  <figure class="m"><img src="ed1e-diag-390-trait-modal-skin-tone.png" alt=""><figcaption>Off-style dialog, heavy double border, banned gradient.</figcaption></figure>
+  <figure class="m"><img src="ed1e-diag-390-hero-rest.png" alt=""><figcaption>Duplicated art, broken-image wells, ragged buttons.</figcaption></figure>
+  <figure class="d"><img src="ed1e-diag-1440x700-rail-inner-scroll.png" alt=""><figcaption>The rail scrolls inside itself and the save state scrolls away.</figcaption></figure>
+</div>
+</body>
+</html>
