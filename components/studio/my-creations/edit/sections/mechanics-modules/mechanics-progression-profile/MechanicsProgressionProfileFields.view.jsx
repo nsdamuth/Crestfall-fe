@@ -2,7 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
-import { SelectField as SharedSelectField } from "../../SharedFields";
+import { CheckboxField, SelectField as SharedSelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -317,15 +317,11 @@ export default function MechanicsProgressionProfileFieldsView({
         />
       </div>
 
-      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--ink-dim)]">
-        <input
-          type="checkbox"
-          checked={profile.allowRankDecrease === true}
-          onChange={(event) => patchProfile({ allowRankDecrease: event.target.checked })}
-          className="h-4 w-4 accent-[var(--gold-ornament)]"
-        />
-        Allow reconciliation to reduce an existing rank
-      </label>
+      <CheckboxField
+        label="Allow reconciliation to reduce an existing rank"
+        checked={profile.allowRankDecrease === true}
+        onChange={(checked) => patchProfile({ allowRankDecrease: checked })}
+      />
 
       {profile.mode === "EXPLICIT_TABLE" ? (
         <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">

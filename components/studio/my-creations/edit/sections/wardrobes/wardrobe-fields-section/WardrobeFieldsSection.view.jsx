@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Check, Plus, Shirt, Trash2 } from "lucide-react";
+import { Plus, Shirt, Trash2 } from "lucide-react";
 
 import {
+  CheckboxField,
   SectionTitle,
   SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -294,11 +295,10 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
       </div>
 
       <CheckboxField
+        label="This outfit entry is enabled for future default wardrobe selection."
         checked={entry.enabledChecked}
         onChange={(checked) => entry.onChangeEnabled?.(checked)}
-      >
-        This outfit entry is enabled for future default wardrobe selection.
-      </CheckboxField>
+      />
 
       <button
         type="button"
@@ -339,11 +339,10 @@ function RulesSection({
       />
 
       <CheckboxField
+        label="Allow random selection among matching enabled outfits later."
         checked={allowRandomChecked}
         onChange={(checked) => onChangeAllowRandom?.(checked)}
-      >
-        Allow random selection among matching enabled outfits later.
-      </CheckboxField>
+      />
 
       <div className="lg:col-span-2">
         <Field label="Summary">
@@ -395,41 +394,6 @@ function RulesSection({
         </Field>
       </div>
     </div>
-  );
-}
-
-// Ruling 2 (checkbox grammar, 22 Aug 2026): checked renders a gold
-// check mark on a light gold wash; unchecked is a quiet bordered
-// square at the control-size floor (--control-sm). Local to this
-// file because SharedFields.jsx has no checkbox export yet.
-function CheckboxField({ checked, onChange, children }) {
-  return (
-    <label className="flex cursor-pointer items-start gap-[var(--space-3)]">
-      <span
-        className={`relative mt-[2px] inline-flex h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 items-center justify-center rounded-[var(--radius-sm)] border transition-colors ${
-          checked
-            ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
-            : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={(event) => onChange?.(event.target.checked)}
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-        />
-        <Check
-          size={16}
-          aria-hidden="true"
-          className={`pointer-events-none text-[var(--gold-action)] transition-opacity ${
-            checked ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      </span>
-      <span className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-        {children}
-      </span>
-    </label>
   );
 }
 

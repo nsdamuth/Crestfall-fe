@@ -9,6 +9,7 @@ import {
   COMMAND_RESULT_VISIBILITIES,
 } from "./MechanicsCommandCore.contract.js";
 import {
+  CheckboxField,
   SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
@@ -245,28 +246,16 @@ export function MechanicsCommandInvocationView({ model }) {
             label: visibility,
           }))}
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.continueNarrative}
-            onChange={(event) =>
-              model.patchPresentation({ continueNarrative: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Continue the fictional scene after execution
-        </label>
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.advanceTime}
-            onChange={(event) =>
-              model.patchPresentation({ advanceTime: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Allow normal turn-time advancement
-        </label>
+        <CheckboxField
+          label="Continue the fictional scene after execution"
+          checked={model.presentation.continueNarrative}
+          onChange={(checked) => model.patchPresentation({ continueNarrative: checked })}
+        />
+        <CheckboxField
+          label="Allow normal turn-time advancement"
+          checked={model.presentation.advanceTime}
+          onChange={(checked) => model.patchPresentation({ advanceTime: checked })}
+        />
       </div>
     </>
   );
@@ -398,51 +387,33 @@ export function MechanicsCommandArgumentsView({ model }) {
               </>
             ) : null}
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.required !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    required: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Required
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.consumeRemaining === true}
-                disabled={
-                  model.isImplicitTargetArgumentType(argument.type) ||
-                  argumentIndex !== model.lastPositionalArgumentIndex
-                }
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    consumeRemaining: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Consume remaining text
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.allowQuoted !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    allowQuoted: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Allow quoted values
-            </label>
+            <CheckboxField
+              label="Required"
+              checked={argument.required !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { required: checked })
+              }
+            />
+            <CheckboxField
+              label="Consume remaining text"
+              checked={argument.consumeRemaining === true}
+              disabled={
+                model.isImplicitTargetArgumentType(argument.type) ||
+                argumentIndex !== model.lastPositionalArgumentIndex
+              }
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { consumeRemaining: checked })
+              }
+            />
+            <CheckboxField
+              label="Allow quoted values"
+              checked={argument.allowQuoted !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { allowQuoted: checked })
+              }
+            />
           </div>
         </div>
       ))}

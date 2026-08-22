@@ -8,6 +8,7 @@ import {
   MECHANICS_STATUS_BLOCK_VISIBILITIES,
 } from "./MechanicsStatusBlocks.contract.js";
 import {
+  CheckboxField,
   SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
@@ -156,17 +157,11 @@ function StatusBlockCard({
               }))}
             />
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={block.required}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { required: event.target.checked })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Required
-            </label>
+            <CheckboxField
+              label="Required"
+              checked={block.required}
+              onChange={(checked) => patchBlock(blockIndex, { required: checked })}
+            />
           </div>
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">

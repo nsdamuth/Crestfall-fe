@@ -2,7 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
-import { SelectField } from "../../SharedFields";
+import { CheckboxField, SelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -623,33 +623,21 @@ export default function MechanicsCommandResolutionView({
                 />
               ) : null}
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                <input
-                  type="checkbox"
-                  checked={resolution.criticalOnNaturalMax}
-                  onChange={(event) =>
-                    patchResolution({
-                      criticalOnNaturalMax: event.target.checked,
-                    })
-                  }
-                  className="h-4 w-4 accent-[var(--gold-ornament)]"
-                />
-                Actor natural maximum is a Critical Success
-              </label>
+              <CheckboxField
+                label="Actor natural maximum is a Critical Success"
+                checked={resolution.criticalOnNaturalMax}
+                onChange={(checked) =>
+                  patchResolution({ criticalOnNaturalMax: checked })
+                }
+              />
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                <input
-                  type="checkbox"
-                  checked={resolution.fumbleOnNaturalMin}
-                  onChange={(event) =>
-                    patchResolution({
-                      fumbleOnNaturalMin: event.target.checked,
-                    })
-                  }
-                  className="h-4 w-4 accent-[var(--gold-ornament)]"
-                />
-                Actor natural minimum is a Fumble
-              </label>
+              <CheckboxField
+                label="Actor natural minimum is a Fumble"
+                checked={resolution.fumbleOnNaturalMin}
+                onChange={(checked) =>
+                  patchResolution({ fumbleOnNaturalMin: checked })
+                }
+              />
             </div>
           </div>
 
@@ -741,34 +729,20 @@ export default function MechanicsCommandResolutionView({
                 />
 
                 <div className="grid gap-3">
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                    <input
-                      type="checkbox"
-                      checked={
-                        resolution.opposed?.criticalOnNaturalMax !== false
-                      }
-                      onChange={(event) =>
-                        patchOpposed({
-                          criticalOnNaturalMax: event.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
-                    Opposition natural maximum is critical
-                  </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                    <input
-                      type="checkbox"
-                      checked={resolution.opposed?.fumbleOnNaturalMin !== false}
-                      onChange={(event) =>
-                        patchOpposed({
-                          fumbleOnNaturalMin: event.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
-                    Opposition natural minimum is a fumble
-                  </label>
+                  <CheckboxField
+                    label="Opposition natural maximum is critical"
+                    checked={resolution.opposed?.criticalOnNaturalMax !== false}
+                    onChange={(checked) =>
+                      patchOpposed({ criticalOnNaturalMax: checked })
+                    }
+                  />
+                  <CheckboxField
+                    label="Opposition natural minimum is a fumble"
+                    checked={resolution.opposed?.fumbleOnNaturalMin !== false}
+                    onChange={(checked) =>
+                      patchOpposed({ fumbleOnNaturalMin: checked })
+                    }
+                  />
                 </div>
               </div>
 
@@ -805,22 +779,18 @@ export default function MechanicsCommandResolutionView({
           ) : null}
 
           <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <label className="flex items-center gap-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={resolution.degreeOfSuccess?.enabled === true}
-                onChange={(event) =>
-                  patchResolution({
-                    degreeOfSuccess: {
-                      ...asObject(resolution.degreeOfSuccess),
-                      enabled: event.target.checked,
-                    },
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Enable degree-of-success margin bands
-            </label>
+            <CheckboxField
+              label="Enable degree-of-success margin bands"
+              checked={resolution.degreeOfSuccess?.enabled === true}
+              onChange={(checked) =>
+                patchResolution({
+                  degreeOfSuccess: {
+                    ...asObject(resolution.degreeOfSuccess),
+                    enabled: checked,
+                  },
+                })
+              }
+            />
 
             {resolution.degreeOfSuccess?.enabled ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2">

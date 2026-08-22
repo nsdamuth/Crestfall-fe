@@ -495,14 +495,22 @@ export default function MechanicsPresetApplicationModalView({
 
                 {confirmationRequired ? (
                   <label className="flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-500/10 p-4 text-amber-100">
-                    <input
-                      type="checkbox"
-                      checked={replacementConfirmed}
-                      onChange={(event) =>
-                        onToggleReplacementConfirmation?.(event.target.checked)
-                      }
-                      className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
+                    <span className="relative mt-0.5 inline-flex h-[var(--control-editor-sm)] w-[var(--control-editor-sm)] flex-none items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={replacementConfirmed}
+                        onChange={(event) =>
+                          onToggleReplacementConfirmation?.(event.target.checked)
+                        }
+                        className="peer absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-[var(--radius-sm)] border border-[var(--line)] bg-transparent outline-none transition-colors checked:border-[var(--gold-action)] checked:bg-[var(--fill-whisper)]"
+                      />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                        className="pointer-events-none relative text-[var(--gold-action)] opacity-0 transition-opacity peer-checked:opacity-100"
+                      />
+                    </span>
                     <span>
                       <span className="block text-xs uppercase tracking-[0.16em]">
                         Confirm Replacement Boundary

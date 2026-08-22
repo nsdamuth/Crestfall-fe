@@ -12,7 +12,7 @@ import {
   normalizeMechanicsEffectValueBindingBuilder,
   supportsMechanicsEffectValueBinding,
 } from "../mechanicsEffectValueBindingBuilder.js";
-import { SelectField as SharedSelectField } from "../../SharedFields";
+import { CheckboxField, SelectField as SharedSelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -65,18 +65,12 @@ function OutcomeChecks({ options, selected, onToggle }) {
   return (
     <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
       {options.map((outcome) => (
-        <label
+        <CheckboxField
           key={outcome}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
-        >
-          <input
-            type="checkbox"
-            checked={selected.includes(outcome)}
-            onChange={(event) => onToggle?.(outcome, event.target.checked)}
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          {outcome.replaceAll("_", " ")}
-        </label>
+          label={outcome.replaceAll("_", " ")}
+          checked={selected.includes(outcome)}
+          onChange={(checked) => onToggle?.(outcome, checked)}
+        />
       ))}
     </div>
   );
@@ -94,27 +88,23 @@ function DependencyChecks({ options, selected, onToggle }) {
   return (
     <div className="grid gap-2 sm:grid-cols-2">
       {options.map((option) => (
-        <label
+        <CheckboxField
           key={option.id}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
-        >
-          <input
-            type="checkbox"
-            checked={selected.includes(option.id)}
-            onChange={(event) => onToggle?.(option.id, event.target.checked)}
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          <span className="min-w-0">
-            <span className="block truncate text-[var(--ink)]">
-              {option.label}
-            </span>
-            {option.group ? (
-              <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-                {option.group}
+          checked={selected.includes(option.id)}
+          onChange={(checked) => onToggle?.(option.id, checked)}
+          label={
+            <span className="min-w-0">
+              <span className="block truncate text-[var(--ink)]">
+                {option.label}
               </span>
-            ) : null}
-          </span>
-        </label>
+              {option.group ? (
+                <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                  {option.group}
+                </span>
+              ) : null}
+            </span>
+          }
+        />
       ))}
     </div>
   );
@@ -746,17 +736,13 @@ function MechanicsStepCard({
             onPatchMechanicsStep?.(step.id, { conditionMode: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={step.enabled !== false}
-            onChange={(event) =>
-              onPatchMechanicsStep?.(step.id, { enabled: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Step enabled
-        </label>
+        <CheckboxField
+          label="Step enabled"
+          checked={step.enabled !== false}
+          onChange={(checked) =>
+            onPatchMechanicsStep?.(step.id, { enabled: checked })
+          }
+        />
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
@@ -1094,17 +1080,13 @@ function DomainStepCard({
             onPatchDomainStep?.(step.id, { failurePolicy: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={step.enabled !== false}
-            onChange={(event) =>
-              onPatchDomainStep?.(step.id, { enabled: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Step enabled
-        </label>
+        <CheckboxField
+          label="Step enabled"
+          checked={step.enabled !== false}
+          onChange={(checked) =>
+            onPatchDomainStep?.(step.id, { enabled: checked })
+          }
+        />
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
