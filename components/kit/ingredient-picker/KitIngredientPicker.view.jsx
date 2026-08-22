@@ -8,6 +8,7 @@
 import { BookOpen, ChevronLeft, Plus, Search } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
+import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
 
 function SearchField({ value, placeholder, onChange }) {
   return (
@@ -44,8 +45,8 @@ function IngredientCard({ item, onChoose }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={item.imageSrc} alt="" className="aspect-[4/3] w-full object-cover" />
       ) : (
-        <div className="flex aspect-[4/3] w-full items-center justify-center bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-          No image
+        <div className="aspect-[4/3] w-full">
+          <KitArtPlaceholderView size="md" />
         </div>
       )}
       <div className="p-[var(--space-3)]">

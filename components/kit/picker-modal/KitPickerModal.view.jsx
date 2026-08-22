@@ -11,6 +11,7 @@ import { Check, Loader2, Search } from "lucide-react";
 import KitModalFrame from "../KitModalFrame";
 import KitFilterChip from "../KitFilterChip";
 import KitLoadMore from "../KitLoadMore";
+import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
 
 const COUNT_WORDS = [
   "no",
@@ -79,8 +80,8 @@ function Thumbnail({ item }) {
   }
 
   return (
-    <div className="flex aspect-square w-full flex-none items-center justify-center rounded-[var(--radius-sm)] bg-[var(--surface-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-      No image
+    <div className="aspect-square w-full flex-none overflow-hidden rounded-[var(--radius-sm)]">
+      <KitArtPlaceholderView size="sm" />
     </div>
   );
 }

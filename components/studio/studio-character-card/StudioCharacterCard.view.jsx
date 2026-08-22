@@ -1,3 +1,4 @@
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 
 export default function StudioCharacterCardView({
   imageSrc = "",
@@ -20,9 +21,7 @@ export default function StudioCharacterCardView({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center px-[var(--space-4)] text-center text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-            No image available
-          </div>
+          <KitArtPlaceholderView size="md" />
         )}
       </div>
 
