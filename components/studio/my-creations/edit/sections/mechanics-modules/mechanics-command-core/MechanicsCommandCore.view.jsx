@@ -29,7 +29,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -134,7 +134,7 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
           <p className={EYEBROW_CLASS}>
             Command
           </p>
-          <h4 className="mt-1 text-xl text-[var(--ink)]">
+          <h4 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {model.safeCommand.label ||
               model.safeCommand.id ||
               `Command ${model.commandIndex + 1}`}
@@ -470,7 +470,7 @@ export function MechanicsCommandTriggersView({ model }) {
             }
           }}
           placeholder="/settled"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <SmallActionButton onClick={submitTrigger}>
           <Plus size={14} />

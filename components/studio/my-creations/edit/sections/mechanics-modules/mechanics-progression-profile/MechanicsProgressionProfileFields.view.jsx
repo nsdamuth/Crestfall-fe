@@ -24,7 +24,7 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -184,7 +184,7 @@ function DerivedValueCard({
       </div>
 
       {rule.method === "EXPLICIT_TABLE" ? (
-        <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="mt-4 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit derived-value tables remain available through the JSON Editor.
           Generated interval and linear rules are the compact visual-authoring paths.
         </p>
@@ -324,7 +324,7 @@ export default function MechanicsProgressionProfileFieldsView({
       />
 
       {profile.mode === "EXPLICIT_TABLE" ? (
-        <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit threshold tables remain supported for total manual control and
           can be edited in the JSON Editor. Generated curves are the compact visual path.
         </p>
