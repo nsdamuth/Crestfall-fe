@@ -9,7 +9,7 @@ STATE
 CONTRACT VERSION BUMPS (all additive, minor)
 - KitModalFrame 1.1.0 to 1.2.0: new hasUnsavedChanges prop, dismiss-confirm flow.
 - KitImageOverlay 1.0.0 to 1.1.0: B7 viewer chrome, new action callbacks.
-- MediaLightbox 1.0.0 to 1.1.0: onDelete replaced by onRequestDelete / onCancelDelete / onConfirmDelete; Reassign Asset callback added.
+- MediaLightbox 1.0.0 to 1.1.0: onDelete replaced by onRequestDelete / onCancelDelete / onConfirmDelete. Correction (ED1G review, 22 Aug 2026): no onReassignAsset prop exists on this contract; the CR-055 Reassign Asset stub is render-only.
 
 NEW AND UPDATED CRS
 - CR-054: soft-delete recovery window, 7 to 30 days, your ruling. UI copy ships with "[X] days" placeholder.

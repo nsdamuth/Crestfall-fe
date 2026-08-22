@@ -75,9 +75,10 @@ always visible regardless of focus, unaffected by O4.
 
 ## States
 
-Input: rest, hover (`--state-hover-line` border), focus (global ring,
-or the sanctioned `cf-field` 1px variant inside dense modal grids),
-disabled (`--state-disabled-opacity`, label stays `--ink-faint`).
+Input: rest, hover (`--state-hover-line` border), focus (global
+`--focus-ring`; the `cf-field` 1px variant is RETIRED, 22 Aug 2026,
+A3, dense modal grids included), disabled (`--state-disabled-opacity`,
+label stays `--ink-faint`).
 Pressed is n/a for the text input; select/toggle-shaped fields built
 on this anatomy carry it themselves. The fold header carries all five
 states as a button. `select` and `textarea`'s collapsed preview carry

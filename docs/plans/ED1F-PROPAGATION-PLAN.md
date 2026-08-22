@@ -304,7 +304,11 @@ KitModalFrame; verify inheritance, edit only if it overrides).
 - Verification: preview routes for each package at 390 and 1440,
   every fixture state, plus the stacked-picker-over-modal lock case.
 
-### G3. Viewer family (first follow-on if it misses today)
+### G3. Viewer family
+
+Executed and landed (commits b2b4096, 3b2310d, bumps ruled 22 Aug
+2026); this section is kept for its design record, it no longer
+describes deferred or follow-on work.
 
 Files: `components/kit/image-overlay/`,
 `components/studio/media/media-lightbox/`,
@@ -390,7 +394,7 @@ standing T4/T2 queue items, out of scope here.
 | `components/studio/media/media-lightbox` | YES | B7 action set reconciled |
 | `components/kit/modal-frame` | Only if a prop is added | A4 is behavior-first |
 | `components/ui/modal-shell` | Only if a prop is added | Same |
-| `components/kit/creation-card` | Gated on F2 | Kebab/Save-toggle would add props including an un-contracted Archive |
+| `components/kit/creation-card` | YES, 3.4.0 | Resolved by NEW LAW A (22 Aug 2026, BUILD-BLUEPRINT 2.16(aa)), superseding the F2 gate; Archive shipped as an honest disabled stub, CR-056 filed |
 
 ### Honesty rule: the cut line for today
 
@@ -455,17 +459,20 @@ touches the same file.
    value in both themes, explicitly marked interim in its
    DESIGN-TOKENS row, per the scrims-do-not-flip precedent; real
    light values need a render sitting.
-2. **Creation-card ruling scope (B6)**: does the lighter gradient,
-   on-card Save toggle, and glass kebab menu (Share, Archive, then
-   Delete) apply to `KitCreationCard` app-wide, superseding card law
-   2.16(a) and (v) (exactly three overlay icons; share and delete
-   live inside the open destination), or is it scoped to the editor's
-   creation cards? Also: Archive is a new operation with no
-   APP-FUNCTION-MAP row, no contract entry, and no endpoint;
-   propagating it requires a CR before any card wires it.
-3. **Glass menu scope**: do all menus and popovers app-wide move from
-   `--surface-4` plus `--shadow-popover` to `--panel-glass` with the
-   2px blur, or only the kebab menus the ruling demonstrated?
+2. **Creation-card ruling scope (B6)**: RESOLVED by NEW LAW A (22 Aug
+   2026, BUILD-BLUEPRINT 2.16(aa)); this question is kept for its
+   design record. The lighter gradient, on-card Save toggle, and
+   glass kebab menu (Share, Archive, then Delete) apply to
+   `KitCreationCard` app-wide, superseding card law 2.16(a) and (v)
+   (exactly three overlay icons; share and delete live inside the
+   open destination). Archive shipped as an honest disabled stub
+   (CR-056 filed).
+3. **Glass menu scope**: RESOLVED by the Final Ruling Render (GO 2B),
+   landed in `docs/DESIGN-TOKENS.md:230` and `KitDropdown`; this
+   question is kept for its design record. All menus and popovers
+   app-wide moved from `--surface-4` plus `--shadow-popover` to
+   `--panel-glass` with the 2px blur, not only the kebab menus the
+   ruling demonstrated.
 
 Standing open items restated for completeness, no action this pass:
 the economy-fixture sub-item of CR-052; the tooltip component design

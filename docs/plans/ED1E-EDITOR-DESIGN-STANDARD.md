@@ -57,7 +57,7 @@ Evidence files are `docs/review-artifacts/ed1e/ed1e-diag-<name>.png`.
 | D19 | Disabled controls ("Preview Soon", "Duplicate Template Soon") read as enabled gold buttons with the word Soon baked into the label | 390-overview-open, 390-publishing-open | No composed disabled recipe exists in law | Sections 4.7, 10 |
 | D20 | Off-token values across the family: `max-w-5xl` page container, 264px rail, raw `p-5`/`mt-6`, skeleton `h-64`, `bg-[#080706]`, `shadow-2xl`, raw `red-*` | grep evidence in section 11 | Legacy code predates token law | Section 11 sweep |
 | D21 | Counter formats disagree: `73/600` vs `15 / 240` | 390-textarea-focused-expanded, 390-trait-modal-skin-tone | Two counter implementations | Section 4.3 |
-| D22 | Native selects: 30 instances in the mechanics-modules subtree (off the exemplar path, illegal on this page by ED1C 3.7) | grep evidence | Legacy mechanics views | Section 11 audit item |
+| D22 | Native selects: 30 instances recorded in the mechanics-modules subtree (off the exemplar path, illegal on this page by ED1C 3.7). Corrected count at the ED1G review: the subtree actually carried 47 before SW4/SW5/SW6 ran; as of this ED1G burn-down (SW11), SW4 has landed the conversion and only 2 native selects remain, both in `MechanicsCommandDomainActions.view.jsx` | grep evidence | Legacy mechanics views | Section 11 audit item |
 
 ## 3. Type hierarchy
 
@@ -93,9 +93,12 @@ Every field is: label row, bed, helper line, in that order, spaced
 at `--space-4`; two-column pairing from `sm:` uses the existing
 `FieldPair` grid recipe. All beds: `--radius-md`, `min-h` `--control-md`,
 `bg-[var(--surface-1)]`, border `--line-whisper`, hover border `--line`,
-focus per the sanctioned quiet field ring (1px `--gold-action`, the
-`cf-field` recipe), text `--text-body` `--ink`, placeholder `--ink-faint`.
-Never a heavy or doubled border in any state.
+focus per the global `--focus-ring`, text `--text-body` `--ink`,
+placeholder `--ink-faint`. Never a heavy or doubled border in any
+state. Superseded 22 Aug 2026 (A3): the quiet field ring (1px
+`--gold-action`, the `cf-field` recipe) named above is RETIRED; the
+global `--focus-ring` is the only focus mechanism, including inside
+dense modal field grids.
 
 ### 4.1 Label row
 Label left (tier 5). Counter right (tier 8), same baseline, present

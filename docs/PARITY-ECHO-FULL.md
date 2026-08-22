@@ -177,7 +177,7 @@ characterize row by row.
 | 525-530 (6 rows) | Description toggle, status badges/stats, media tabs, media sort, media search, media tile grid | Present | Media tabs restored per h-restore ruling 5; tags row (a separate control from this list, see below) **restored this session**, control real, honestly data-empty pending CR-037. Videos/Liked/Bookmarked tabs render honest empty states pending CR-035. |
 | 531 | Media tile Like/Bookmark quick actions | Flagged | No per-media control exists at all (not just data-empty); CR-035 covers the data, not the missing UI. |
 | 532 | Load More (media) | Flagged | No pagination on the restored media grid; no citation covers the omission. |
-| 533 | Media lightbox from a tile | Deliberately excluded (OPEN item 28) | |
+| 533 | Media lightbox from a tile | Deliberately excluded (OPEN item 28) | Reconciled (ED1G review, 22 Aug 2026): ranked item 10 above previously listed this same control as an open FE fix; Deliberately excluded governs both references. |
 | 534 | Per-asset load-error banner | Flagged | Popup has no independent fetch/error state; the page-level banner (617) is a coarser, different control. |
 | 535 | Lore publication branch in the popup | Flagged | Acknowledged, carried-forward gap; no lore-type rendering path exists in the shared popup. |
 
@@ -373,9 +373,13 @@ then a new page, then a cross-branch merge come last.
 9. **Stories: "Open Latest Room" toolbar CTA missing.** One button;
    its destination (the excluded chat surface) is already ruled, so
    this is presentation only, not a new destination.
-10. **Community: media tile lightbox (open from a tile) missing.**
-    `KitImageOverlay` already exists and is used elsewhere on this
-    same page for other art; wire the media grid's tiles to it.
+10. **Community: media tile lightbox, reconciled to Deliberately
+    excluded (ED1G review, 22 Aug 2026).** Previously listed here as
+    an open FE fix while row 533 (OPEN item 28) marked the same
+    control Deliberately excluded; the two dispositions conflicted.
+    Deliberately excluded now governs both references as the more
+    specific, more recently reasoned entry; this list item is kept
+    only for the reconciliation record, not as an open fix.
 11. **Community: media tile Like/Bookmark quick actions missing.**
     Needs the CR-035 per-media data shape decided first (a small
     schema addition), then a UI control matching the main card's

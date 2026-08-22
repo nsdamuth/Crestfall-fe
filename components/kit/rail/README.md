@@ -94,21 +94,22 @@ card's own controls in card order. No roving tabindex. Arrow keys are
 not intercepted; the scrollport carries no tabindex. The browser
 scrolls a focused element into a scroll container natively, and
 `scroll-padding-inline` insets that scroll target from the clip edge
-so the 1px kit-focus mark always sits in open space.
+so the global `--focus-ring` always sits in open space.
 
 ## Focus law
 
-`:focus-visible` brightens the border only (the kit-focus 1px
-line-strong mark, 2.16(e)); no gold box, no pointer focus ring.
+`:focus-visible` renders the global `--focus-ring`; no doubled
+treatment. The `kit-focus` 1px line-strong border mark (2.16(e)) is
+RETIRED, 22 Aug 2026, A3: the global ring is the only focus mechanism.
 
 ## New tokens
 
 None. The head uses `--gold-ornament`, `--text-label`,
 `--track-label`, `--space-3`, `--space-8`. The link and arrows use
 `--gold-action`, `--icon-md`, `--control-sm` with the
-`[@media(pointer:coarse)]:min-h-[var(--control-md)]` bump,
-`--state-disabled-opacity`, and `kit-focus`. Cell gutters and the
-scroll-padding inset are `--space-3/4/5`.
+`[@media(pointer:coarse)]:min-h-[var(--control-md)]` bump, and
+`--state-disabled-opacity`. Cell gutters and the scroll-padding inset
+are `--space-3/4/5`.
 
 ## Card sizing
 
