@@ -39,9 +39,9 @@ const VARIANT_ALIGNMENT = {
 // used, not a full-screen maximize.
 const PANEL_RECIPE = {
   modal:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
   // its own surface, never a panel with an image inside it. No
   // background, border, shadow, or radius anywhere; a transparent

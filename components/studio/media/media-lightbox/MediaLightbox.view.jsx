@@ -408,7 +408,7 @@ function DetailsDialog({
 }) {
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
-      <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex items-start justify-between gap-[var(--space-4)]">
           <div>
             <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -508,7 +508,7 @@ function ReportDialog({
 
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
-      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]">
+      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-[var(--space-4)]">
           <div>
             <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--status-danger)]">

@@ -19,7 +19,7 @@ export default function CreationReferenceImagePickerModalView({
 }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[var(--grad-panel-lift)] shadow-2xl">
+      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[image:var(--grad-panel-lift)] shadow-2xl">
         <div className="flex items-start justify-between gap-4 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
