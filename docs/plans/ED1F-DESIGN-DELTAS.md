@@ -12,9 +12,13 @@ not assumed: a value that already matches a locked token is cited as
 that token; a value with no match is recorded as a token candidate.
 Docs-only capture pass, no component, token, or CSS files touched.
 
-Where GATE-LOG.md's own text conflicts with the ruling manifest this
-doc was written from, both are recorded and marked CONFLICT, not
-resolved here.
+Where GATE-LOG.md's own text conflicted with the ruling manifest this
+doc was written from, both readings were recorded and marked CONFLICT.
+The one such conflict (A2, blur scope) was resolved by Brian at the
+22 Aug 2026 law review; no CONFLICT marker remains in this file.
+Section C now records that review's rulings on every candidate; the
+full law-document edit list and app-wide propagation checklist live
+in `docs/plans/ED1F-PROPAGATION-PLAN.md`.
 
 ## A. New laws ratified this pass
 
@@ -43,30 +47,26 @@ chrome, scope unchanged), `--blur-panel` (2px, existing locked token,
 overlay panels, scope unchanged), and `--blur-glass` (NEW, 12px,
 tooltips). The law is that none of the three borrows another's scope.
 
-**Sourcing and a CONFLICT:** GATE-LOG.md's MODAL FAMILY section states
-the scope plainly: "blur triad no-cross-borrow (--blur-glass 12px NEW,
-tooltips only)." The ruling manifest this doc was written from states
-a broader scope: "--blur-glass (12px, tooltips and glass chrome
-only)." These two sources disagree on whether `--blur-glass` covers
-glass chrome surfaces (modal headers, kebab menus, close controls)
-beyond tooltips, or tooltips alone. **Recording both, marked
-CONFLICT, not resolved here.**
+**Sourcing, conflict RESOLVED (Brian, 22 Aug 2026 law review):** the
+two source texts disagreed on whether `--blur-glass` covers glass
+chrome surfaces beyond tooltips. Brian's ruling closes it on the
+narrower reading: three blur tokens stand as ruled, no
+cross-borrowing. Nav and top-bar chrome uses `--blur-chrome`. Panels
+and the viewer veil use `--blur-panel` at 2px. `--blur-glass` at 12px
+is tooltips only. The prior CONFLICT marker is cleared.
 
-The rendered exhibits themselves support the narrower reading, for
-what it is worth: every glass-chrome surface actually built in `Modal
-Family v2.html`, the viewer's veil, its two-line header, its 390 close
-control, and the creation card's kebab menu, uses a shared `.glass`
-class at `background: rgba(36,32,25,.85); backdrop-filter:
-blur(var(--blur-panel))`, i.e. the existing 2px panel blur, not
-`--blur-glass`. `--blur-glass` at 12px appears nowhere in either
-exhibit except the tooltip demonstration in `Conformance Sheet.html`.
-So nothing built in this pass actually demonstrates a "glass chrome"
-use of `--blur-glass`; the conflict is between the two texts, not
-evidenced in the rendered work.
+The rendered exhibits agree with the ruling: every glass-chrome
+surface actually built in `Modal Family v2.html`, the viewer's veil,
+its two-line header, its 390 close control, and the creation card's
+kebab menu, uses a shared `.glass` class at `background:
+rgba(36,32,25,.85); backdrop-filter: blur(var(--blur-panel))`, i.e.
+the existing 2px panel blur, not `--blur-glass`. `--blur-glass` at
+12px appears nowhere in either exhibit except the tooltip
+demonstration in `Conformance Sheet.html`.
 
 **Checkable conditions:**
-- `--blur-chrome` (12px) and `--blur-panel` (2px) keep their existing legal scopes, unchanged by this pass.
-- `--blur-glass` exists as a new 12px token; whether it may legally apply beyond tooltips is unresolved (see CONFLICT above), so no component should be built against the broader reading until Brian rules on it directly.
+- `--blur-chrome` (12px) and `--blur-panel` (2px) keep their existing legal scopes, unchanged by this pass (plus the Gate 2 token-law row 10 scope extension of `--blur-chrome` to the editor sticky nav and mobile save row).
+- `--blur-glass` exists as a new 12px token, legal on tooltips only, never on any other surface. No cross-borrowing between the three blur tokens.
 
 **Token mapping:** `--blur-glass`: 12px. Genuinely new, no existing
 token at this value scoped to tooltips (`--blur-chrome` is also 12px
@@ -259,9 +259,13 @@ hover-only control as the phrase "on-card" might otherwise suggest.
 positioned (`.kebab`), opens `.kmenu.glass` with items Share, Archive,
 then the `.fdiv` fade divider, then the danger "Delete..." item. The
 glass treatment is `background: rgba(36,32,25,.85); backdrop-filter:
-blur(var(--blur-panel))`, i.e. 2px, not `--blur-glass` (see A2's
-CONFLICT note). `rgba(36,32,25,.85)` matches no existing surface
-token; **TOKEN CANDIDATE** for this glass-panel background value.
+blur(var(--blur-panel))`, i.e. 2px, not `--blur-glass` (consistent
+with A2's resolved ruling). **Corrected at the 22 Aug 2026 law
+review: `rgba(36,32,25,.85)` is NOT a new candidate. It is an exact
+match to `--panel-glass`, ratified in the Gate 2 token law (row 11)
+at exactly this value with the 2px `--blur-panel` pairing. Cite
+`--panel-glass` directly, the same class of correction as B4's
+`--fill-whisper` find.**
 
 ### B7, Viewer final
 
@@ -336,9 +340,11 @@ rgba(224,171,94,.10)`. Gold-fill scope only.
 across canvas, `--grad-card`, and small/mobile sizes, confirming the
 "gold-fill scope only" restriction. Note: the exhibit's own annotation
 prose miscounts this recipe as "1px ornament" in one place; the
-literal CSS and GATE-LOG.md's own text both say 3px. This is an
-internal typo in the exhibit's annotation, not a law conflict, flagged
-so nobody codes off the wrong number.
+literal CSS and GATE-LOG.md's own text both say 3px. **Ruled at the
+22 Aug 2026 law review (Brian, pre-resolved): the "1px ornament"
+annotation is a documentation typo, not a competing value. The law
+value is 3px ornament. The exhibit annotation is flagged for
+correction; nobody codes off the wrong number.**
 
 **Status note, same as B9:** GATE-LOG.md and this pass both treat the
 design as closed (GO) while listing the token itself as a propagation
@@ -350,44 +356,53 @@ gold ring is `rgba(224,171,94,.10)`, `--gold-action`'s rgb triplet at
 10 percent, the same glow color used in A3's global `--focus-ring`
 recipe. **CANDIDATE** name, not yet in `app/theme.css`.
 
-## C. Token and recipe candidates for the Fable law review
+## C. Token and recipe candidates, RULED at the Fable law review (22 Aug 2026)
 
-Listed as candidates, not law, per the manifest's instruction. Cross-checked
-against GATE-LOG.md's own "NEW TOKEN/RECIPE CANDIDATES for propagation" line,
-which names SEVEN items, one more than the six named directly in the ruling
-manifest this doc was written from:
+Cross-checked against GATE-LOG.md's own "NEW TOKEN/RECIPE CANDIDATES
+for propagation" line, which names SEVEN items, one more than the six
+named directly in the ruling manifest this doc was written from. Every
+ruling below is recorded in full, with the law-document edit list and
+the app-wide checklist, in `docs/plans/ED1F-PROPAGATION-PLAN.md`.
 
-1. `--focus-ring-ongold` (B10).
-2. `--blur-glass` (A2; scope disputed, see the CONFLICT in A2).
-3. `cf-btn--danger` recipe (B5).
-4. Panel lift gradient, `#332d22` to `#2a251d` (B3).
-5. Primary hover recipe, `filter: brightness(1.08)` plus `--glow-hover` (B9).
-6. Fade-divider modal scope (B1), the existing `--line-fade` device's scope extended to the modal family.
-7. **The seventh candidate, named in GATE-LOG.md but not in the ruling manifest:** option-card fills, rest `rgba(0,0,0,.22)` and selected `rgba(242,209,148,.06)` (B4). Per B4's cross-check, the SELECTED half of this pair is not actually a new candidate: it matches the existing locked token `--fill-whisper` exactly. Only the REST (unselected) fill, `rgba(0,0,0,.22)`, is genuinely new.
+1. `--focus-ring-ongold` (B10): **RATIFIED.** Recipe as written, gold-fill scope only. DESIGN-TOKENS' "ONLY focus token" clause is amended to admit it.
+2. `--blur-glass` (A2): **RATIFIED, tooltips only** (conflict resolved by Brian, see A2). No consumer exists until the tooltip component (CR-047) is designed; the token lands so the law is complete.
+3. `cf-btn--danger` recipe (B5): **RATIFIED** as a new modal-confirm CTA recipe (`--status-danger` border and ink, new 6 percent danger-fill token). The in-page quiet-ghost danger trigger law is untouched; `.cf-btn--danger-filled` is superseded by this recipe.
+4. Panel lift gradient, `#332d22` to `#2a251d` (B3): **RATIFIED** as a new surface-gradient token for modal panels, propagated through `KitModalFrame`; supersedes `--surface-4` as the modal panel surface. Name minted at propagation, avoiding the existing `--grad-panel`.
+5. Primary hover recipe (B9): **RATIFIED.** `filter: brightness(1.08)` plus `--glow-hover`; the brightness literal stays a recipe literal unless propagation finds a second consumer.
+6. Fade-divider modal scope (B1): **RATIFIED.** `--line-fade` (Gate 2 token law row 9, not yet minted in `app/theme.css`) enters with its full scope including modal dividers; B8's footer-alignment law rides with it.
+7. Option-card fills (B4): **PARTIAL RATIFY.** The selected fill is an exact duplicate of locked `--fill-whisper`; cite that token, no candidate. Only the REST fill `rgba(0,0,0,.22)` is ratified as a new token, a ruled scoped exception to the translucent-black-fill ban, legal on option-card rest state only.
 
-Two further values surfaced during cross-checking that belong in this
-same review, both flagged inline above rather than repeated here in
-full: the creation card's own gradient (`#241f16` to `#1b1711`, B6) and
-its kebab menu's glass-panel background (`rgba(36,32,25,.85)`, B6).
+Two further values surfaced during cross-checking, both ruled inline
+above: the creation card's own gradient (`#241f16` to `#1b1711`, B6)
+is **RATIFIED as a token value** with its application scope still
+needing a Brian ruling (it conflicts with card law 2.16(a)/(v); see
+the propagation plan's item F2); the kebab menu's glass-panel
+background is **not a candidate**, it is the ratified `--panel-glass`
+(corrected in B6 above).
+
+Still needing a Brian ruling, held out of propagation (full detail in
+the propagation plan's section F): light-theme values for the new
+dark-only tokens; the creation-card ruling's scope plus its Archive
+action (no contract or endpoint exists); glass-menu scope beyond the
+kebab menus.
 
 ## D. Open and parked items
 
-### CR-052, soft-delete recovery window
+### CR-054, soft-delete recovery window (renumbered 22 Aug 2026)
 
 Parked. Window is 7 to 30 days, not yet ruled to a single number;
 confirm copy carries a "[X] days" placeholder until it is. Nick's
 lane, per GATE-LOG.md: "CR-052 FILED: soft-delete recovery window 7 to
 30 days; confirm copy carries [X] days."
 
-**Numbering flag, not a GATE-LOG-vs-manifest conflict, still worth
-recording:** `docs/CONTRACT-REQUESTS.md` already has a CR-052, filed
-21 Aug 2026, for the sidebar deviations bundle (ink lift, top-bar
-wash, Legacy hidden, Community Links removed, footer re-order, economy
-fixture). GATE-LOG.md's own new use of "CR-052" for the soft-delete
-window collides with that existing number. This capture doc does not
-assign or resolve CR numbers; flagging so whoever files this into
-`docs/CONTRACT-REQUESTS.md` next gives the soft-delete item its own,
-unused number rather than double-booking CR-052.
+**Numbering collision RESOLVED (Brian, 22 Aug 2026 law review):**
+GATE-LOG.md's use of "CR-052" for this item collided with the
+existing CR-052 sidebar deviations bundle (filed 21 Aug 2026 in
+`docs/CONTRACT-REQUESTS.md`). Per Brian's ruling the soft-delete item
+takes the next free number in that ledger, which is **CR-054**
+(CR-053 is the Gate 1 token-candidates entry). The G1 propagation
+pass files CR-054 into `docs/CONTRACT-REQUESTS.md` under that number;
+the sidebar bundle keeps CR-052 unchanged.
 
 ### Captures still wanted, non-blocking
 
