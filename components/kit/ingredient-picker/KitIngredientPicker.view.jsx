@@ -36,7 +36,7 @@ function IngredientCard({ item, onChoose }) {
       type="button"
       onClick={() => onChoose?.(item.id)}
       aria-pressed={Boolean(item.isSelected)}
-      className={`kit-focus overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
+      className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
         item.isSelected
           ? "border-[var(--line-whisper)] bg-[var(--fill)]"
           : "border-[var(--line)] hover:border-[var(--line-strong)]"
@@ -71,7 +71,7 @@ function ActionCard({ icon: Icon, eyebrow, title, body, onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="kit-focus rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-4)] text-left transition-colors hover:border-[var(--line)]"
+      className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-4)] text-left transition-colors hover:border-[var(--line)]"
     >
       <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         <Icon size={14} aria-hidden="true" />
@@ -123,7 +123,7 @@ export default function KitIngredientPickerView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)]"
+            className="inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)]"
           >
             <ChevronLeft size={16} aria-hidden="true" />
             {backLabel}

@@ -46,7 +46,7 @@ function RailArrowButton({ direction, label, disabled = false, onClick = null })
       aria-label={label}
       disabled={disabled}
       onClick={() => onClick?.()}
-      className={`kit-focus hidden h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] text-[var(--gold-action)] transition-colors min-[700px]:flex [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+      className={`hidden h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] text-[var(--gold-action)] transition-colors min-[700px]:flex [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
         disabled
           ? "pointer-events-none opacity-[var(--state-disabled-opacity)]"
           : "hover:border-[var(--gold-action)]"
@@ -116,7 +116,7 @@ export default function KitRailView({
           <button
             type="button"
             onClick={() => onViewAll()}
-            className="kit-focus ml-auto inline-flex flex-none items-center rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline min-[700px]:ml-0 [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+            className="ml-auto inline-flex flex-none items-center rounded-[var(--radius-xs)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] hover:underline min-[700px]:ml-0 [@media(pointer:coarse)]:min-h-[var(--control-md)]"
           >
             {viewAllLabel}
           </button>

@@ -39,7 +39,7 @@ export default function StorylineReferencePickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus flex w-fit items-center gap-2 rounded-[var(--radius-md)] text-[length:var(--text-label)] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+            className="flex w-fit items-center gap-2 rounded-[var(--radius-md)] text-[length:var(--text-label)] uppercase tracking-[0.16em] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
           >
             <ArrowLeft size={14} aria-hidden="true" />
             {backLabel}

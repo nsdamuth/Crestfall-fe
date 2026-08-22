@@ -68,7 +68,7 @@ export default function KitAlertStripView({
           <button
             type="button"
             onClick={() => onAction?.()}
-            className={`kit-focus mt-[var(--space-2)] inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-sm)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] underline underline-offset-4 transition-colors hover:text-[var(--gold-bright)] active:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${classes.title}`}
+            className={`mt-[var(--space-2)] inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-sm)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] underline underline-offset-4 transition-colors hover:text-[var(--gold-bright)] active:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${classes.title}`}
           >
             {actionLabel}
           </button>
@@ -80,7 +80,7 @@ export default function KitAlertStripView({
           type="button"
           aria-label="Dismiss"
           onClick={() => onDismiss?.()}
-          className="kit-focus flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-faint)] transition-colors hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+          className="flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-faint)] transition-colors hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
         >
           <X size={16} aria-hidden="true" />
         </button>

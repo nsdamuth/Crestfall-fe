@@ -52,7 +52,7 @@ export default function ViewModeToggleView({
             aria-label={option.label}
             title={option.label}
             onClick={() => onChange?.(option.id)}
-            className={`kit-focus flex aspect-square h-full items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] ${
+            className={`flex aspect-square h-full items-center justify-center rounded-[var(--radius-full)] border border-transparent transition-colors duration-[var(--dur-hover)] ${
               active
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"

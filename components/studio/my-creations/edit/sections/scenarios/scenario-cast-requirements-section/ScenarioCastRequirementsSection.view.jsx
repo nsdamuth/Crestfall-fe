@@ -50,7 +50,7 @@ function ReferenceSelectorField({
       <button
         type="button"
         onClick={onOpen}
-        className="kit-focus relative mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] py-[var(--space-3)] pl-[var(--space-4)] pr-[calc(var(--space-4)+1.25rem)] text-left transition-colors hover:border-[var(--state-hover-line)]"
+        className="relative mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] py-[var(--space-3)] pl-[var(--space-4)] pr-[calc(var(--space-4)+1.25rem)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
         <ExternalLink
           size={14}

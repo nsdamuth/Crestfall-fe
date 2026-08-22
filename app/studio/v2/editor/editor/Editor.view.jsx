@@ -150,7 +150,7 @@ function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
             type="button"
             disabled={isSaving}
             onClick={() => onSave?.()}
-            className="kit-focus cf-btn cf-btn--primary"
+            className="cf-btn cf-btn--primary"
           >
             <Save size={14} aria-hidden="true" />
             {isSaving ? "Saving" : "Save"}
@@ -159,7 +159,7 @@ function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
             type="button"
             disabled={isSaving}
             onClick={() => onDiscard?.()}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Discard
           </button>
@@ -188,7 +188,7 @@ function TocList({ groups, openSectionId, sectionMarks, onSelect }) {
                   type="button"
                   aria-current={active ? "true" : undefined}
                   onClick={() => onSelect?.(section.id)}
-                  className={`kit-focus flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] py-[var(--space-1)] pl-[var(--space-5)] pr-[var(--space-3)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+                  className={`flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-sm)] py-[var(--space-1)] pl-[var(--space-5)] pr-[var(--space-3)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
                     active
                       ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                       : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
@@ -218,7 +218,7 @@ function SectionBox({ section, mark, isOpen, onToggle, children }) {
         type="button"
         aria-expanded={isOpen}
         onClick={onToggle}
-        className="kit-focus flex min-h-[var(--control-lg)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-2)] text-left"
+        className="flex min-h-[var(--control-lg)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-2)] text-left"
       >
         <span className="flex min-w-0 items-center gap-[var(--space-3)]">
           <span className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
@@ -327,7 +327,7 @@ export default function EditorView({
               <button
                 type="button"
                 onClick={onBack}
-                className="kit-focus inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+                className="inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
               >
                 ← {backLabel}
               </button>
@@ -399,7 +399,7 @@ export default function EditorView({
           <button
             type="button"
             onClick={() => onToggleMobileNav?.()}
-            className="kit-focus flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
+            className="flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
           >
             <List size={14} aria-hidden="true" />
             Sections
@@ -421,7 +421,7 @@ export default function EditorView({
               type="button"
               disabled={saveStatus === "saving"}
               onClick={() => onSave?.()}
-              className="kit-focus cf-btn cf-btn--primary flex-none"
+              className="cf-btn cf-btn--primary flex-none"
             >
               <Save size={14} aria-hidden="true" />
               Save

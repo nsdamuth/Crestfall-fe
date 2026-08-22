@@ -92,7 +92,7 @@ function LoreCreateModal({
         <button
           type="button"
           onClick={() => onOpenAdvancedEditor?.()}
-          className="kit-focus self-start text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+          className="self-start text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
         >
           Need chapters, tags, or images? Open the advanced lore editor
         </button>
@@ -128,15 +128,15 @@ function LoreCreateModal({
             onChange={(event) => onContentChange?.(event.target.value)}
             placeholder="Write into the world..."
             rows={8}
-            className="kit-focus cf-field min-h-[10rem] resize-y rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
+            className="min-h-[10rem] resize-y rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
           />
         </div>
 
         <div className="flex items-center justify-end gap-[var(--space-2)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-          <button type="button" onClick={() => onClose?.()} className="kit-focus cf-btn cf-btn--secondary">
+          <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary">
             Cancel
           </button>
-          <button type="button" onClick={() => onSubmit?.()} className="kit-focus cf-btn cf-btn--primary">
+          <button type="button" onClick={() => onSubmit?.()} className="cf-btn cf-btn--primary">
             Submit for review
           </button>
         </div>

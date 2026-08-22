@@ -693,7 +693,7 @@ export default function StoriesV2Mockup() {
                         "This opens the room-template builder when live wiring lands. Nothing was opened in this preview.",
                     })
                   }
-                  className="kit-focus cf-btn cf-btn--secondary"
+                  className="cf-btn cf-btn--secondary"
                 >
                   New Template
                 </button>
@@ -701,7 +701,7 @@ export default function StoriesV2Mockup() {
                   type="button"
                   aria-pressed={manageMode}
                   onClick={toggleManageMode}
-                  className={`kit-focus cf-btn ${manageMode ? "cf-btn--danger" : "cf-btn--secondary"}`}
+                  className={`cf-btn ${manageMode ? "cf-btn--danger" : "cf-btn--secondary"}`}
                 >
                   {manageMode ? "Cancel manage" : "Manage"}
                 </button>
@@ -710,7 +710,7 @@ export default function StoriesV2Mockup() {
                     type="button"
                     disabled={selectedIds.length === 0}
                     onClick={deleteSelected}
-                    className="kit-focus cf-btn cf-btn--danger disabled:opacity-50"
+                    className="cf-btn cf-btn--danger disabled:opacity-50"
                   >
                     {selectedIds.length > 0 ? `Delete selected (${selectedIds.length})` : "Delete selected"}
                   </button>
@@ -737,7 +737,7 @@ export default function StoriesV2Mockup() {
                           aria-pressed={selectedIds.includes(item.id)}
                           aria-label={selectedIds.includes(item.id) ? "Deselect Story" : "Select Story"}
                           onClick={() => toggleSelected(item.id)}
-                          className="kit-focus absolute left-[var(--space-2)] top-[var(--space-2)] z-[3] flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-bright)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+                          className="absolute left-[var(--space-2)] top-[var(--space-2)] z-[3] flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-bright)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
                         >
                           {selectedIds.includes(item.id) ? (
                             <CheckSquare size={16} aria-hidden="true" />

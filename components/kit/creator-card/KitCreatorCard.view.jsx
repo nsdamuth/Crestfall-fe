@@ -35,7 +35,7 @@ function RectButton({ label, tone = "ghost", onClick = null }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className={`kit-focus inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
+      className={`inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
     >
       {label}
     </button>
@@ -88,7 +88,7 @@ export default function KitCreatorCardView({
               type="button"
               onClick={() => onThumbnailOpen?.(thumbnail.id)}
               aria-label={`Open ${thumbnail.alt || "recent work"}`}
-              className="kit-focus aspect-square overflow-hidden rounded-[var(--radius-sm)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
+              className="aspect-square overflow-hidden rounded-[var(--radius-sm)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

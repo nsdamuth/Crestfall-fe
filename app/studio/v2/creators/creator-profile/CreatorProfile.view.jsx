@@ -62,7 +62,7 @@ function StatTile({ label, value, onClick = null, accessibleName = "" }) {
         type="button"
         onClick={() => onClick()}
         aria-label={accessibleName || label}
-        className="kit-focus flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center transition-colors hover:border-[var(--state-hover-line)]"
+        className="flex min-w-0 flex-col items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-3)] text-center transition-colors hover:border-[var(--state-hover-line)]"
       >
         {content}
       </button>
@@ -90,7 +90,7 @@ function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onCl
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className={`kit-focus inline-flex min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
+      className={`inline-flex min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
     >
       {Icon && <Icon size={16} aria-hidden="true" />}
       {label}
@@ -107,7 +107,7 @@ function QuietAction({ label, icon: Icon, isPressed = false, onClick = null }) {
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className="kit-focus inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+      className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
     >
       {Icon && <Icon size={16} aria-hidden="true" />}
       {label}
@@ -201,11 +201,11 @@ function DonateModal({
             onChange={(event) => onMessageChange?.(event.target.value)}
             placeholder="Say something kind (optional)"
             rows={3}
-            className="kit-focus cf-field min-h-[6rem] resize-y rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
+            className="min-h-[6rem] resize-y rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
           />
         </div>
 
-        <label className="kit-focus flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        <label className="flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           <input
             type="checkbox"
             checked={isAnonymous}
@@ -216,10 +216,10 @@ function DonateModal({
         </label>
 
         <div className="flex items-center justify-end gap-[var(--space-2)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-          <button type="button" onClick={() => onClose?.()} className="kit-focus cf-btn cf-btn--secondary">
+          <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary">
             Cancel
           </button>
-          <button type="button" onClick={() => onSubmit?.()} className="kit-focus cf-btn cf-btn--primary">
+          <button type="button" onClick={() => onSubmit?.()} className="cf-btn cf-btn--primary">
             Send donation
           </button>
         </div>

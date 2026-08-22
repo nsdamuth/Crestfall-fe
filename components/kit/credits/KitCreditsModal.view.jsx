@@ -28,7 +28,7 @@ export default function KitCreditsModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)] inline-flex items-center gap-[var(--space-1)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)] inline-flex items-center gap-[var(--space-1)]"
           >
             <ChevronLeft size={16} aria-hidden="true" />
             Back

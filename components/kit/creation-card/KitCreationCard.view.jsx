@@ -96,7 +96,7 @@ function IconActionButton({ label, active = false, onClick = null, children }) {
       aria-label={label}
       aria-pressed={active}
       onClick={(event) => stopAndRun(event, onClick)}
-      className={`kit-focus relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+      className={`relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
         active
           ? "text-[var(--gold-bright)]"
           : "text-[var(--art-ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)]"
@@ -179,7 +179,7 @@ function KebabMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={(event) => stopAndRun(event, onToggle)}
-        className="kit-focus relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] text-[var(--art-ink-dim)] transition-colors hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+        className="relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] text-[var(--art-ink-dim)] transition-colors hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
       >
         <span aria-hidden="true" className="absolute inset-0 bg-[var(--tag-bed-art)]" />
         <MoreVertical size={16} aria-hidden="true" className="relative" />
@@ -326,7 +326,7 @@ function GridCard({
         type="button"
         onClick={(event) => stopAndRun(event, onOpen)}
         aria-label={`Open ${title || "creation"}`}
-        className="kit-focus absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
+        className="absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
       >
         <span className="sr-only">Open {title || "creation"}</span>
       </button>
@@ -431,7 +431,7 @@ function ListCard({
         type="button"
         onClick={(event) => stopAndRun(event, onOpen)}
         aria-label={`Open ${title || "creation"}`}
-        className="kit-focus absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
+        className="absolute inset-0 z-[1] block w-full rounded-[var(--radius-md)] border border-transparent"
       >
         <span className="sr-only">Open {title || "creation"}</span>
       </button>

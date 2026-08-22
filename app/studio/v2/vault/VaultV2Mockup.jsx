@@ -149,7 +149,7 @@ function EmptyState({ onStartCreating }) {
       <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
         Create something, or save work you love from the Community.
       </p>
-      <button type="button" onClick={onStartCreating} className="kit-focus cf-btn cf-btn--secondary mt-[var(--space-2)]">
+      <button type="button" onClick={onStartCreating} className="cf-btn cf-btn--secondary mt-[var(--space-2)]">
         Start Creating
       </button>
     </div>

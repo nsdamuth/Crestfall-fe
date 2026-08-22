@@ -172,7 +172,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
               key={link.id}
               type="button"
               onClick={() => navigate(link.id)}
-              className={`kit-focus flex items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+              className={`flex items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                 active
                   ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                   : "text-[var(--ink-dim)] hover:text-[var(--ink)]"

@@ -48,7 +48,7 @@ function SlotRail({ slots, onSelectSlot }) {
           onClick={() => onSelectSlot?.(slot.index)}
           aria-label={`Show ${slot.label || `slot ${slot.index + 1}`}`}
           aria-pressed={Boolean(slot.isActive)}
-          className={`kit-focus aspect-[3/4] w-[56px] overflow-hidden rounded-[var(--radius-sm)] border transition sm:w-[64px] ${
+          className={`aspect-[3/4] w-[56px] overflow-hidden rounded-[var(--radius-sm)] border transition sm:w-[64px] ${
             slot.isActive
               ? "border-[var(--gold-action)]"
               : "border-[var(--line-whisper)] hover:border-[var(--line-strong)]"
@@ -63,7 +63,7 @@ function SlotRail({ slots, onSelectSlot }) {
           type="button"
           onClick={() => onSelectSlot?.(nextEmptySlot.index)}
           aria-label={`Add ${nextEmptySlot.label || `slot ${nextEmptySlot.index + 1}`}`}
-          className="kit-focus flex aspect-[3/4] w-[56px] items-center justify-center rounded-[var(--radius-sm)] border border-dashed border-[var(--line-whisper)] text-[var(--ink-faint)] transition hover:border-[var(--line-strong)] hover:text-[var(--ink-dim)] sm:w-[64px]"
+          className="flex aspect-[3/4] w-[56px] items-center justify-center rounded-[var(--radius-sm)] border border-dashed border-[var(--line-whisper)] text-[var(--ink-faint)] transition hover:border-[var(--line-strong)] hover:text-[var(--ink-dim)] sm:w-[64px]"
         >
           <Plus size={18} aria-hidden="true" />
         </button>

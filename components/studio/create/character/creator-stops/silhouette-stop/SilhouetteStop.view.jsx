@@ -114,7 +114,7 @@ export default function SilhouetteStopView({
               value={clothingStyle}
               onChange={(event) => onChangeClothingStyle?.(event.target.value)}
               placeholder="Describe their general clothing style"
-              className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+              className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
             />
           </div>
 

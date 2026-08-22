@@ -63,12 +63,9 @@ const LABEL_CLASS =
 // retired; the single global --focus-ring rule
 // (app/design-system.css, ":focus-visible" section) is the only
 // focus treatment on every focusable element app-wide, this field
-// bed included. The `kit-focus`/`cf-field` class strings below are
-// dead (harmless no-op selectors now) and are swept in the dedicated
-// ED1G dead-class pass across every file that still carries them, not
-// removed piecemeal here.
+// bed included.
 const FIELD_BED_CLASS =
-  "kit-focus cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
+  "w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -298,7 +295,7 @@ export function TextAreaField({
     setIsFocused(false);
   }
 
-  const bedClass = `kit-focus cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+  const bedClass = `w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
     mono ? " font-mono" : ""
   }`;
 

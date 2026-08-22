@@ -59,7 +59,7 @@ export default function KitCreditsPreviewClient() {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="kit-focus cf-btn cf-btn--secondary mt-[var(--space-3)]"
+          className="cf-btn cf-btn--secondary mt-[var(--space-3)]"
         >
           Open credits modal
         </button>

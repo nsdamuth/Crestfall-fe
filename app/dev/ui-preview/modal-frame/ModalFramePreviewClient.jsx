@@ -47,7 +47,7 @@ export default function ModalFramePreviewClient() {
               setStackedOpen(false);
               setLastAction(`Opened the ${fixture.label} fixture.`);
             }}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Open {fixture.label}
           </button>

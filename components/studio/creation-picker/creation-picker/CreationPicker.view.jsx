@@ -17,7 +17,7 @@ function EmptyVaultState({ title, emptyCreateLabel, onCreateNew, onClose }) {
         <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Nothing here yet.
         </p>
-        <button type="button" onClick={() => onCreateNew?.()} className="kit-focus cf-btn cf-btn--primary">
+        <button type="button" onClick={() => onCreateNew?.()} className="cf-btn cf-btn--primary">
           {emptyCreateLabel}
         </button>
       </div>

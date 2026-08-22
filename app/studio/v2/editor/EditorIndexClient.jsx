@@ -27,7 +27,7 @@ export default function EditorIndexClient() {
       <button
         type="button"
         onClick={() => setIsPickerOpen(true)}
-        className="kit-focus cf-btn cf-btn--primary"
+        className="cf-btn cf-btn--primary"
       >
         Open the picker
       </button>

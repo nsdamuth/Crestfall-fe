@@ -161,7 +161,7 @@ function ReportDialog({
               rows={4}
               maxLength={maxLength}
               placeholder="Describe what should be reviewed."
-              className={`kit-focus min-h-[calc(var(--control-md)*2)] resize-none rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${
+              className={`min-h-[calc(var(--control-md)*2)] resize-none rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${
                 atLimit
                   ? "border-[var(--status-danger-border)] hover:border-[var(--status-danger-border)]"
                   : "border-[var(--line-whisper)] hover:border-[var(--state-hover-line)]"

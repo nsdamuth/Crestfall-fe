@@ -42,7 +42,7 @@ export default function EditorSaveBarView({
           <button
             type="button"
             onClick={() => onDiscard?.()}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Discard
           </button>
@@ -51,7 +51,7 @@ export default function EditorSaveBarView({
           type="button"
           disabled={!hasUnsavedChanges || isSaving}
           onClick={() => onSave?.()}
-          className="kit-focus cf-btn cf-btn--primary"
+          className="cf-btn cf-btn--primary"
         >
           <Save size={14} />
           {isSaving ? "Saving..." : "Save"}

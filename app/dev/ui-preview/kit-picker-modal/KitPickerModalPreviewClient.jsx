@@ -73,7 +73,7 @@ export default function KitPickerModalPreviewClient() {
             key={key}
             type="button"
             onClick={() => openState(key)}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Open {state.label}
           </button>

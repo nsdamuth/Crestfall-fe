@@ -31,7 +31,7 @@ export default function KitDestinationTileView({
       type="button"
       onClick={(event) => stopAndRun(event, onOpen)}
       aria-label={label || "Destination"}
-      className="kit-focus group relative block aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] text-left transition-[transform,box-shadow] duration-[var(--dur-hover)] hover:-translate-y-[2px] hover:shadow-[var(--glow-hover)]"
+      className="group relative block aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] text-left transition-[transform,box-shadow] duration-[var(--dur-hover)] hover:-translate-y-[2px] hover:shadow-[var(--glow-hover)]"
     >
       {hasImage ? (
         <>

@@ -669,7 +669,7 @@ export default function ImagesV2Mockup() {
       <button
         type="button"
         onClick={() => setIsMobileCreatorOpen(true)}
-        className="kit-focus fixed bottom-[calc(var(--space-4)+env(safe-area-inset-bottom))] right-[var(--space-4)] z-30 cf-btn cf-btn--primary min-[1100px]:hidden"
+        className="fixed bottom-[calc(var(--space-4)+env(safe-area-inset-bottom))] right-[var(--space-4)] z-30 cf-btn cf-btn--primary min-[1100px]:hidden"
       >
         Create image
       </button>
