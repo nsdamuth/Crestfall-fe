@@ -138,9 +138,7 @@ export function useCreationEditShellViewModel({ creationId, creation } = {}) {
       await setDefaultPlayerCharacter(creationId);
       setDefaultPcStatus("Default Player Character set.");
     } catch (error) {
-      setDefaultPcError(
-        error?.message || "Default Player Character could not be saved."
-      );
+      setDefaultPcError("Default Player Character could not be saved.");
     } finally {
       setSettingDefaultPc(false);
     }

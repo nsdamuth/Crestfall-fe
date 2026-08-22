@@ -61,7 +61,7 @@ editor/
   Editor.view.jsx       Portable Skin
   useEditorViewModel.js Chassis / orchestration adapter
   Editor.contract.js
-  Editor.fixtures.js    seven saved-creation fixtures
+  Editor.fixtures.js    eight saved-creation fixtures
   editorSavedCreations.mock.js  [id] resolver + fixture save overlay
   README.md
 ```
@@ -93,8 +93,9 @@ README records it).
 
 ## Fixture states
 
-Seven full saved-creation fixtures (Character default, Lore, Story,
-Location, NPC Registry, empty sections, longest content) plus the
+Eight full saved-creation fixtures (Character default, Lore, Story,
+Location, NPC Registry, Character Template, empty sections, longest
+content) plus the
 picker-owned id set, each exercising its own grammar and identity.
 Loading / load-error / dirty are preview overrides on `Editor.jsx`
 (`previewLoadingOverride`, `previewLoadErrorOverride`,

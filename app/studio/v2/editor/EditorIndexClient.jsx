@@ -18,7 +18,7 @@ export default function EditorIndexClient() {
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         Editor
       </p>
-      <h1 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+      <h1 className="font-display text-[length:var(--text-title-m)] leading-[var(--lh-title-m)] text-[var(--ink)] sm:text-[length:var(--text-title)] sm:leading-[var(--lh-title)]">
         Select a creation to edit
       </h1>
       <p className="max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">

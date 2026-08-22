@@ -144,27 +144,25 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
   }
 
   return (
-    <nav
-      aria-label="Runtime Fields quick links"
-      className="relative z-20 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black p-4 xl:sticky xl:top-6"
-    >
-      <div className="flex items-center gap-3">
-        <List
-          size={16}
-          className="text-[var(--gold-ornament)]"
-        />
+    // Section 5: no second bordered depth inside the section box this
+    // nav mounts inside (D2). Inset-hairline sub-group, same pattern
+    // as Personality Frameworks/Template Operations: no border, no
+    // background, tier 4 label plus one helper line, then content.
+    <nav aria-label="Runtime Fields quick links" className="relative z-20 xl:sticky xl:top-6">
+      <div className="flex items-center gap-[var(--space-3)]">
+        <List size={16} className="flex-none text-[var(--gold-ornament)]" aria-hidden="true" />
 
-        <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        <div className="min-w-0">
+          <p className="flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
             Runtime Fields
           </p>
-          <p className="mt-1 text-xs text-[var(--ink-dim)]">
+          <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             Jump to a section
           </p>
         </div>
       </div>
 
-      <div className="mt-4 grid gap-1.5">
+      <div className="mt-[var(--space-3)] grid gap-[var(--space-1)]">
         {MECHANICS_RUNTIME_QUICK_LINKS.map((link) => {
           const active = activeSectionId === link.id;
           const count = counts[link.key];
@@ -174,16 +172,16 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
               key={link.id}
               type="button"
               onClick={() => navigate(link.id)}
-              className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-left text-xs transition ${
+              className={`kit-focus flex items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                 active
-                  ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10 text-[var(--ink)]"
-                  : "border-transparent text-[var(--ink-dim)] hover:border-white/10 hover:bg-white/[0.025] hover:text-[var(--ink)]"
+                  ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
               }`}
             >
               <span>{link.label}</span>
 
               {count !== null ? (
-                <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
+                <span className="tabular-nums text-[length:var(--text-label)] text-[var(--ink-faint)]">
                   {count}
                 </span>
               ) : null}
@@ -192,7 +190,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         })}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 border-t border-white/10 pt-4">
+      <div className="mt-[var(--space-4)] grid grid-cols-2 gap-[var(--space-2)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
         <button
           type="button"
           onClick={() => setAllExpanded(false)}

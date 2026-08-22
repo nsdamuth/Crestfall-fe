@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, ImageOff, Library, Sparkles } from "lucide-react";
+import { Camera, ImageOff, Library, Plus, Sparkles } from "lucide-react";
 
 import KitBadge from "@/components/kit/KitBadge";
 
@@ -28,12 +28,20 @@ function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
   );
 }
 
+// Section 6, D10: the thumb strip shows FILLED slots plus exactly
+// one add tile; empty slots never render a broken-image well. The
+// active slot is marked on its own filled thumb (gold border), a
+// smaller filmstrip entry beside the primary art, never a second
+// copy at the same size.
 function SlotRail({ slots, onSelectSlot }) {
-  if (!slots?.length) return null;
+  const filledSlots = (slots || []).filter((slot) => slot.imageSrc);
+  const nextEmptySlot = (slots || []).find((slot) => !slot.imageSrc);
+
+  if (!filledSlots.length && !nextEmptySlot) return null;
 
   return (
     <div className="flex flex-none flex-col gap-[var(--space-2)]">
-      {slots.map((slot) => (
+      {filledSlots.map((slot) => (
         <button
           key={slot.id || slot.index}
           type="button"
@@ -46,16 +54,20 @@ function SlotRail({ slots, onSelectSlot }) {
               : "border-[var(--line-whisper)] hover:border-[var(--line-strong)]"
           }`}
         >
-          {slot.imageSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={slot.imageSrc} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center bg-[var(--surface-1)] text-[var(--ink-faint)]">
-              <ImageOff size={20} aria-hidden="true" />
-            </span>
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={slot.imageSrc} alt="" className="h-full w-full object-cover" />
         </button>
       ))}
+      {nextEmptySlot ? (
+        <button
+          type="button"
+          onClick={() => onSelectSlot?.(nextEmptySlot.index)}
+          aria-label={`Add ${nextEmptySlot.label || `slot ${nextEmptySlot.index + 1}`}`}
+          className="kit-focus flex aspect-[3/4] w-[56px] items-center justify-center rounded-[var(--radius-sm)] border border-dashed border-[var(--line-whisper)] text-[var(--ink-faint)] transition hover:border-[var(--line-strong)] hover:text-[var(--ink-dim)] sm:w-[64px]"
+        >
+          <Plus size={18} aria-hidden="true" />
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -83,7 +95,7 @@ export default function EditorHeaderView({
 
       <div className="min-w-0 flex-1 basis-[240px]">
         {typeLabel ? (
-          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {typeLabel}
           </p>
         ) : null}
@@ -97,25 +109,27 @@ export default function EditorHeaderView({
           {actions}
         </div>
 
-        <div className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-2)]">
+        {/* Section 6, D11: one seated row of equal secondary buttons;
+            at 390 they stack as a full-width row each, equal width. */}
+        <div className="mt-[var(--space-4)] flex flex-col gap-[var(--space-2)] sm:flex-row sm:flex-wrap">
           {onReplaceActiveSlot ? (
             <button
               type="button"
               onClick={() => onReplaceActiveSlot?.()}
-              className="cf-btn cf-btn--secondary"
+              className="cf-btn cf-btn--secondary w-full sm:w-auto"
             >
               <Library size={14} aria-hidden="true" />
               Replace image
             </button>
           ) : null}
           {generateHref ? (
-            <a href={generateHref} className="cf-btn cf-btn--secondary">
+            <a href={generateHref} className="cf-btn cf-btn--secondary w-full sm:w-auto">
               <Sparkles size={14} aria-hidden="true" />
               Generate more
             </a>
           ) : null}
           {imageLibraryHref ? (
-            <a href={imageLibraryHref} className="cf-btn cf-btn--secondary">
+            <a href={imageLibraryHref} className="cf-btn cf-btn--secondary w-full sm:w-auto">
               <Camera size={14} aria-hidden="true" />
               Image library
             </a>

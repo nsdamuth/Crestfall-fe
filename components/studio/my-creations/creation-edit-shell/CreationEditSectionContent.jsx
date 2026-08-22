@@ -106,8 +106,8 @@ export default function CreationEditSectionContent(ctx) {
 function CreationEditLorePreviewRow({ creationId, children }) {
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm leading-6 text-[var(--ink-dim)]">
+      <div className="mb-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+        <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           The full owner preview uses the last saved draft. Save changes
           before opening it.
         </p>
