@@ -5,6 +5,7 @@ STATE
 - design/sprint-h-final is now the design-complete frontend at merge commit 16b6d0e (parents ad8e586 and 0336b47). Production build exit 0. All nine v2 pages, editor family, chat surfaces, kit packages, and every modal render the ratified ED1F design system, dark theme only at launch (light theme deferred, tokens carry interim values, marked in DESIGN-TOKENS.md).
 - Review status: all surfaces carry the ratified system and passed build and render verification. Chat and the deep advanced-editor tree have not yet had a human taste review; that refinement runs in review mode with Brian and Nick post-merge, per the standing chat render-sitting rule. Design law is not expected to change from it.
 - Law of record: docs/DESIGN-TOKENS.md, docs/BUILD-BLUEPRINT.md, docs/FRONTEND-SOP.md, docs/CONTRACT-REQUESTS.md, all updated in the merge. Working plans: docs/plans/ED1F-DESIGN-DELTAS.md and docs/plans/ED1F-PROPAGATION-PLAN.md.
+- Post-handoff addendum: a full-scale review (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md) catalogued remaining deep-tree defects; fix lanes executed same day, ledger updated in place, open items marked for the Chassis lane.
 
 CONTRACT VERSION BUMPS (all additive, minor)
 - KitModalFrame 1.1.0 to 1.2.0: new hasUnsavedChanges prop, dismiss-confirm flow.
