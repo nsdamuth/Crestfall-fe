@@ -77,8 +77,8 @@
   --status-warning:        #C97B35;  /* burnt amber */
   --status-danger:         #C2634D;  /* brick red   */
 
-  --status-success-bed:    rgba(125, 155, 106, .14);
-  --status-success-border: rgba(125, 155, 106, .40);
+  --status-success-bed:    rgba(155, 189, 138, .14);
+  --status-success-border: rgba(155, 189, 138, .40);
   --status-warning-bed:    rgba(201, 123, 53, .14);
   --status-warning-border: rgba(201, 123, 53, .40);
   --status-danger-bed:     rgba(194, 99, 77, .14);

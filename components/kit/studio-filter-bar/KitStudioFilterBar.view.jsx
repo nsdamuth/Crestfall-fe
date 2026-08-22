@@ -75,23 +75,12 @@ import KitDropdownView from "../dropdown/KitDropdown.view";
 const SEARCH_DEBOUNCE_MS = 200;
 
 function SearchField({ value, placeholder, onChange }) {
-  // Focus law, RULED final 10 Aug 2026 (kit polish 3 pass, amends
-  // BUILD-BLUEPRINT.md 2.16(e)): no gold treatment in any state.
-  // Pointer interaction shows nothing; keyboard focus-visible keeps
-  // one subtle indicator (a slight border brightening to
-  // --line-strong), never a gold box.
-  //
-  // This is tracked in local state, not CSS :focus-visible: Chromium
-  // treats a text input as eligible for :focus-visible on ANY focus,
-  // pointer or keyboard, since a text field always needs to show
-  // where typing lands (measured this pass; the prior comment here
-  // claiming the has-* variant alone kept pointer clicks silent was
-  // wrong). A pointerdown on the wrapper is recorded before the
-  // resulting focus event fires, so the handler can tell a pointer-
-  // caused focus from a keyboard-caused one and only light the
-  // border for the latter. `.kit-search-input` (app/design-system.css)
-  // still suppresses the app-wide gold ring on the input itself so
-  // nothing doubles up inside the wrapper's own border regardless.
+  // Focus law, RULED 22 Aug 2026 (Fable law review, A3,
+  // docs/BUILD-BLUEPRINT.md 2.16(e) struck): the wrapper's own
+  // JS-driven border-brightening treatment is retired. The single
+  // global --focus-ring rule (app/design-system.css, ":focus-visible"
+  // section) already applies to the input itself; that is the only
+  // focus treatment this field shows, no doubled rendering.
   //
   // Clear control, RULED 10 Aug 2026 (kit polish 3 pass): the native
   // type=search cancel button renders in the browser's own blue/gray,
@@ -103,8 +92,6 @@ function SearchField({ value, placeholder, onChange }) {
   const lastEmittedRef = useRef(value);
   const debounceRef = useRef(null);
   const hasValue = Boolean(localValue);
-  const [keyboardFocused, setKeyboardFocused] = useState(false);
-  const pointerDownRef = useRef(false);
 
   // Sync from the caller only on a genuine external change (a filter
   // reset, a cleared query from elsewhere), not the echo of our own
@@ -139,23 +126,9 @@ function SearchField({ value, placeholder, onChange }) {
     emitChange("");
   }
 
-  function handlePointerDown() {
-    pointerDownRef.current = true;
-  }
-  function handleFocus() {
-    if (!pointerDownRef.current) setKeyboardFocused(true);
-  }
-  function handleBlur() {
-    setKeyboardFocused(false);
-    pointerDownRef.current = false;
-  }
-
   return (
     <div
-      onPointerDown={handlePointerDown}
-      className={`flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1 ${
-        keyboardFocused ? "border-[var(--line-strong)]" : "border-[var(--line-whisper)]"
-      }`}
+      className="flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1"
     >
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
@@ -163,8 +136,6 @@ function SearchField({ value, placeholder, onChange }) {
         name="kit-studio-filter-bar-search"
         value={localValue}
         onChange={(event) => handleInputChange(event.target.value)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         placeholder={placeholder}
         aria-label={placeholder}
         className="kit-search-input w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none [@media(pointer:coarse)]:text-[length:var(--text-body)]"

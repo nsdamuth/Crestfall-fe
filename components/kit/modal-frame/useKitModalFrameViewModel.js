@@ -102,7 +102,12 @@ export function useKitModalFrameViewModel({
 
   const guardedOnClose = useCallback(() => {
     if (!onCloseCallback) return;
-    if (hasUnsavedChanges && !isConfirmingDismiss) {
+    // While the discard-confirm panel is showing, every dismissal path
+    // (backdrop, Escape, close control) that routes through here is a
+    // no-op: only the explicit Discard button (onConfirmDiscard) may
+    // close the frame at that point.
+    if (isConfirmingDismiss) return;
+    if (hasUnsavedChanges) {
       setIsConfirmingDismiss(true);
       return;
     }

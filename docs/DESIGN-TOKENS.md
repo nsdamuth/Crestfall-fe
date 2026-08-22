@@ -104,7 +104,7 @@ no mass gold swap is authorized.
 | `--status-success` | `oklch(.76 .08 135)` | Success state text/icon; revised 22 Aug 2026 (Gate 2 token law row 6, closes CR-051), prior value `#7D9B6A` struck for lineage | locked |
 | `--status-warning` | `#C97B35` | Warning state text/icon, reserved, kept away from gold | locked |
 | `--status-danger` | `#C2634D` | Danger state text/icon; the ONE red, including the danger button | locked |
-| `--status-success-bed` / `-border` | `rgba(125,155,106,.14)` / `rgba(125,155,106,.40)` | Quiet chip bed / border | locked |
+| `--status-success-bed` / `-border` | `rgba(155,189,138,.14)` / `rgba(155,189,138,.40)` | Quiet chip bed / border; re-derived 22 Aug 2026 from the revised `--status-success` sage, prior derivative `rgba(125,155,106,*)` (from struck `#7D9B6A`) retired | locked |
 | `--status-warning-bed` / `-border` | `rgba(201,123,53,.14)` / `rgba(201,123,53,.40)` | Quiet chip bed / border | locked |
 | `--status-danger-bed` / `-border` | `rgba(194,99,77,.14)` / `rgba(194,99,77,.40)` | Quiet chip bed / border | locked |
 | `--status-danger-fill` | `rgba(194,99,77,.06)` | Modal-confirm danger CTA fill (B5, 22 Aug 2026), distinct from the 14 percent `-bed` chip step | locked |

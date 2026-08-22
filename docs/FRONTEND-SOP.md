@@ -83,7 +83,7 @@ UIUX-repo AGENTS.md, preview-harness rules, carried forward here).
   `app/design-system.css:167-170`.
 - Reduced motion respected. Check: any new `animation:` or long
   `transition:` ships a `prefers-reduced-motion` rule.
-- No em dashes in code or docs. Check: `grep -rn $'\xe2\x80\x94' docs/ components/ app/ --include='*.md' --include='*.jsx' --include='*.js'`
+- No em dashes in code or docs. Check: `grep -rn $'\xe2\x80\x94' docs/ components/ app/ .design-sync/ --include='*.md' --include='*.jsx' --include='*.js' --include='*.tsx'`
   returns nothing outside `docs/_legacy-reference/` and generated audit
   artifacts.
 - Anti-slop list (source: design-system CLAUDE.md, carried forward):

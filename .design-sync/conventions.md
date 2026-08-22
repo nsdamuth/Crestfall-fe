@@ -19,7 +19,7 @@ Key families (see `tokens/theme.css` for the full, authoritative list):
   box is `--surface-2`; a field bed inside it is `--surface-1`. Never
   nest a second bordered panel inside a section box.
 - Ink: `--ink` (entered values), `--ink-dim` / `--ink-faint` (labels,
-  helper text, placeholders — never for a value the user typed).
+  helper text, placeholders, never for a value the user typed).
 - Gold: `--gold-ornament` (decoration: eyebrows, dividers), `--gold-action`
   (interactive: focus rings, selected states), `--gold-bright` (the
   brightest accent, used sparingly for a selected value).
@@ -37,7 +37,7 @@ Key families (see `tokens/theme.css` for the full, authoritative list):
   is the touch-target floor, `--control-md`).
 - Fonts: `--font-display` (Cormorant Garamond, headings), `--font-sans`
   (Inter, everything else), `--font-logo` (Cinzel, brand only). Loaded via
-  a Google Fonts `@import` in `styles.css` — no local font files ship.
+  a Google Fonts `@import` in `styles.css`; no local font files ship.
 
 ### Field grammar
 
@@ -47,7 +47,7 @@ and an optional fold (disclosure header over a nested field group). Pick a
 `variant` ("text" | "textarea" | "select" | "number") rather than composing
 raw `<input>`/`<select>` elements. The "select" variant composes
 `KitDropdown` internally (a popover at 700px and up, a bottom sheet below
-it) — never build a custom dropdown.
+it); never build a custom dropdown.
 
 The `TextField` / `SelectField` / `NumberField` / `TextAreaField` /
 `ReadOnlyField` primitives are the same grammar pre-wired for the advanced
@@ -55,7 +55,7 @@ editor's own voice (they're thin wrappers most of which delegate straight
 to `KitFormField`). Use these when composing an editor-style section;
 use `KitFormField` directly for anything outside that context.
 
-`ReadOnlyField` has no bed at all — a bed always means "editable"; its
+`ReadOnlyField` has no bed at all: a bed always means "editable"; its
 absence always means "read-only." Never fake a read-only field with a
 disabled input.
 
@@ -66,7 +66,7 @@ disabled input.
 the creation switcher + always-visible save block + table of contents,
 collapsing to a bottom bar and sheet on mobile). Compose a new page inside
 it by supplying `groups` (id/label/sections) and `sectionNodes` (one
-ReactNode per section id) — never rebuild the accordion/rail chrome by
+ReactNode per section id); never rebuild the accordion/rail chrome by
 hand.
 
 `StudioShell` / `StudioSidebar` / `StudioTopBar` / `StudioMobileNav` are
@@ -75,20 +75,20 @@ mobile drawer + bottom dock). Compose a new studio page inside
 `StudioShell`'s children slot; never rebuild sidebar/top-bar navigation
 from scratch.
 
-`KitModalFrame` is the one modal/sheet/viewer frame in the system —
+`KitModalFrame` is the one modal/sheet/viewer frame in the system,
 three variants (`"modal"`, `"sheet"`, `"viewer"`), picking the smallest
 tier that fits the content. `ModalShell` underneath it is the raw
 behavioral primitive (overlay, scrim, escape, scroll lock); build new
 overlays on `KitModalFrame`, not directly on `ModalShell`.
 
 `KitBadge` is a non-interactive label (canon/status/meta on canvas/art).
-`KitFilterChip` is the interactive, clickable equivalent — a badge is
+`KitFilterChip` is the interactive, clickable equivalent: a badge is
 never clickable; a chip always can be.
 
 ### Where the truth lives
 
 Read `tokens/theme.css`, `tokens/token-bridge.css`, and
-`tokens/design-system.css` directly before styling anything new — they are
+`tokens/design-system.css` directly before styling anything new; they are
 the complete, real token law this bundle ships against, copied verbatim.
 Each component's own `.d.ts` and `.prompt.md` (in its `components/<group>/
 <Name>/` folder) documents its real prop contract.
@@ -129,5 +129,5 @@ Each component's own `.d.ts` and `.prompt.md` (in its `components/<group>/
   its own `.d.ts`), not a designed tooltip pattern. Logged as CR-047 in
   `docs/CONTRACT-REQUESTS.md`.
 - Buttons are the `.cf-btn` / `.cf-btn--primary` / `.cf-btn--secondary`
-  CSS utility family in `tokens/design-system.css`, not a JS component —
+  CSS utility family in `tokens/design-system.css`, not a JS component,
   compose them as plain `<button className="cf-btn cf-btn--primary">`.

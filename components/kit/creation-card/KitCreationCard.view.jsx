@@ -24,7 +24,8 @@
 // overlay-top everywhere. The scrim-row alternative (icons bottom-right
 // beside the title) is retired; icons top-right over the art, clear of
 // the title block, is the only placement now.
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Archive,
   Bookmark,
@@ -150,9 +151,28 @@ function KebabMenu({
   onArchive,
   onDelete,
 }) {
+  // Card portal fix (ED1G): the card article is overflow-hidden (art
+  // scale-on-hover, rounded corners), which clipped this menu's panel
+  // at narrow list widths. Portaled to document.body and positioned
+  // from the trigger's measured rect, the same escape-the-ancestor
+  // pattern KitModalFrame already uses, so the panel is never
+  // constrained by the card's own overflow.
+  const triggerRef = useRef(null);
+  const [menuPosition, setMenuPosition] = useState(null);
+
+  useLayoutEffect(() => {
+    if (!open || typeof window === "undefined" || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setMenuPosition({
+      top: rect.bottom + 4,
+      right: window.innerWidth - rect.right,
+    });
+  }, [open]);
+
   return (
     <div className="relative">
       <button
+        ref={triggerRef}
         type="button"
         title="More"
         aria-label="More actions"
@@ -165,52 +185,56 @@ function KebabMenu({
         <MoreVertical size={16} aria-hidden="true" className="relative" />
       </button>
 
-      {open ? (
-        <>
-          {/* Full-viewport click catcher, closes the menu on outside
-              click; sits under the panel (z-[2] vs the panel's
-              z-[3]), the same click-transparent-backdrop pattern the
-              viewer veil uses. */}
-          <div
-            aria-hidden="true"
-            className="fixed inset-0 z-[2]"
-            onClick={(event) => stopAndRun(event, onClose)}
-          />
-          <div
-            role="menu"
-            className="absolute right-0 top-[calc(var(--control-sm)+var(--space-1))] z-[3] w-[12rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]"
-          >
-            <KebabMenuItem label="Edit" Icon={Pencil} onClick={() => { onEdit?.(); onClose?.(); }} />
-            <KebabMenuItem
-              label="Generate Image"
-              Icon={ImageIcon}
-              onClick={() => { onGenerateImage?.(); onClose?.(); }}
-            />
-            <KebabMenuItem label="Share" Icon={Share2} onClick={() => { onShare?.(); onClose?.(); }} />
-            {/* Honest stub, CR-056 (filed by this build, ED1F
-                propagation plan section G4/NEW LAW A): no Archive
-                endpoint exists yet, so the action renders disabled
-                rather than pretending to work. */}
-            <KebabMenuItem
-              label="Archive"
-              Icon={Archive}
-              disabled
-              title="Archive is not wired yet (CR-056)"
-              onClick={() => { onArchive?.(); onClose?.(); }}
-            />
-            <div
-              aria-hidden="true"
-              className="mx-[var(--space-3)] my-[var(--space-1)] h-px bg-[image:var(--line-fade)]"
-            />
-            <KebabMenuItem
-              label="Delete"
-              Icon={Trash2}
-              danger
-              onClick={() => { onDelete?.(); onClose?.(); }}
-            />
-          </div>
-        </>
-      ) : null}
+      {open && menuPosition && typeof document !== "undefined"
+        ? createPortal(
+            <>
+              {/* Full-viewport click catcher, closes the menu on outside
+                  click; sits under the panel (z-[2] vs the panel's
+                  z-[3]), the same click-transparent-backdrop pattern the
+                  viewer veil uses. */}
+              <div
+                aria-hidden="true"
+                className="fixed inset-0 z-[2]"
+                onClick={(event) => stopAndRun(event, onClose)}
+              />
+              <div
+                role="menu"
+                style={{ top: menuPosition.top, right: menuPosition.right }}
+                className="fixed z-[3] w-[12rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]"
+              >
+                <KebabMenuItem label="Edit" Icon={Pencil} onClick={() => { onEdit?.(); onClose?.(); }} />
+                <KebabMenuItem
+                  label="Generate Image"
+                  Icon={ImageIcon}
+                  onClick={() => { onGenerateImage?.(); onClose?.(); }}
+                />
+                <KebabMenuItem label="Share" Icon={Share2} onClick={() => { onShare?.(); onClose?.(); }} />
+                {/* Honest stub, CR-056 (filed by this build, ED1F
+                    propagation plan section G4/NEW LAW A): no Archive
+                    endpoint exists yet, so the action renders disabled
+                    rather than pretending to work. */}
+                <KebabMenuItem
+                  label="Archive"
+                  Icon={Archive}
+                  disabled
+                  title="Archive is not wired yet (CR-056)"
+                  onClick={() => { onArchive?.(); onClose?.(); }}
+                />
+                <div
+                  aria-hidden="true"
+                  className="mx-[var(--space-3)] my-[var(--space-1)] h-px bg-[image:var(--line-fade)]"
+                />
+                <KebabMenuItem
+                  label="Delete"
+                  Icon={Trash2}
+                  danger
+                  onClick={() => { onDelete?.(); onClose?.(); }}
+                />
+              </div>
+            </>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
