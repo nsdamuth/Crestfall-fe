@@ -137,7 +137,7 @@ export default function ChatTranscriptView({
             ) : null}
 
             {summaryPending ? (
-              <StatusCard icon={Loader2} spin tone="quiet">
+              <StatusCard icon={Loader2} spin>
                 Crestfall Engine is preparing the current scene recap
               </StatusCard>
             ) : null}
@@ -165,14 +165,13 @@ export default function ChatTranscriptView({
   );
 }
 
-function StatusCard({ icon: Icon, spin = false, tone = "default", children }) {
+// tone prop RULED removed (ED1G chat family pass, CLEANUP): its only
+// value, "quiet", rendered byte-identical classes to the default
+// branch; dead parameter, no visible distinction ever shipped.
+function StatusCard({ icon: Icon, spin = false, children }) {
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-dashed p-[var(--space-5)] text-center ${
-        tone === "quiet"
-          ? "border-[var(--line-whisper)] bg-[var(--surface-1)]"
-          : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
-      }`}
+      className="rounded-[var(--radius-lg)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-5)] text-center"
       role="status"
       aria-live="polite"
     >

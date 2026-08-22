@@ -123,4 +123,9 @@ export const CHAT_COMPOSER_DRAFT_SOFT_LIMIT = 2000;
  * @property {(options?: Object) => void} onSend
  * @property {() => void} onOpenCast
  * @property {() => void} onOpenState
+ * @property {boolean} [initialToolsOpen] doc-only addition (ED1G chat
+ *   family pass): consumed by MobileComposer's initial disclosure
+ *   state and ChatComposer.fixtures.js; was already read by the View
+ *   and fixtures but undeclared here. Default false, no prop-surface
+ *   change, so no version bump.
  */

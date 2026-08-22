@@ -18,6 +18,18 @@ import ChatCastPanelView from "../chat-cast-panel/ChatCastPanel.view";
 import ChatStatePanelView from "../chat-state-panel/ChatStatePanel.view";
 import ChatSessionDialogsView from "../chat-session-dialogs/ChatSessionDialogs.view";
 
+// B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
+// to every modal-family divider: 1px, fades to transparent at both
+// ends, never edge-to-edge. B8: footer buttons align to its ends.
+function FadeDivider({ className = "" }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`h-px bg-[image:var(--line-fade)] ${className}`}
+    />
+  );
+}
+
 function StatusPill({ pill }) {
   const safePill = pill || {};
   const toneClass =
@@ -102,11 +114,12 @@ function LibraryPassUpsellSheet({
           </div>
         ) : null}
 
-        <div className="mt-[var(--space-5)] flex flex-wrap justify-end gap-[var(--space-2)]">
+        <FadeDivider className="mt-[var(--space-5)]" />
+        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
           <button type="button" onClick={() => onDismiss?.()} className="cf-btn cf-btn--secondary">
             Not now
           </button>
-          <button type="button" onClick={() => onOpenLibrary?.()} className="cf-btn cf-btn--primary">
+          <button type="button" onClick={() => onOpenLibrary?.()} className="goldring cf-btn cf-btn--primary">
             View Library Passes
           </button>
         </div>
@@ -322,7 +335,15 @@ export default function ChatShellView({
         </div>
       </div>
 
-      <ChatSessionDialogsView {...sessionDialogs} />
+      {/* summaryPending intentionally withheld here (RULED, ED1G chat
+          family pass): ChatTranscriptView already renders its own
+          inline summaryPending StatusCard above, so passing it
+          through to ChatSessionDialogsView too produced a duplicate
+          indicator, the second one landing below the fold on this
+          page. ChatSessionDialogsView's summary-pending composition
+          stays available as documented for standalone callers that
+          do not already compose a transcript. */}
+      <ChatSessionDialogsView activeDialog={sessionDialogs?.activeDialog} />
 
       {libraryPassUpsell?.open ? <LibraryPassUpsellSheet {...libraryPassUpsell} /> : null}
     </div>

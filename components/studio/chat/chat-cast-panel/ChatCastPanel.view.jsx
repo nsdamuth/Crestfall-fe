@@ -13,6 +13,7 @@ import {
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import ChatNpcManagerView from "../chat-npc-manager/ChatNpcManager.view";
+import { DeleteConfirmSheet } from "../chat-session-dialogs/ChatSessionDialogs.view";
 
 function CastPanelContent({
   eyebrow,
@@ -192,48 +193,11 @@ function CastPanelContent({
   );
 }
 
-function DeleteConfirmSheet({ message = "", pending = false, error = "", onConfirm, onCancel }) {
-  const lines = String(message || "").split("\n");
-
-  return (
-    <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm delete Story">
-      <div className="p-[var(--space-5)]">
-        {lines.map((line, index) =>
-          line ? (
-            <p
-              key={`delete-line-${index}`}
-              className={
-                index === 0
-                  ? "font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
-                  : "mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]"
-              }
-            >
-              {line}
-            </p>
-          ) : (
-            <div key={`delete-gap-${index}`} className="h-[var(--space-2)]" />
-          )
-        )}
-
-        {error ? <ErrorLine>{error}</ErrorLine> : null}
-
-        <div className="mt-[var(--space-5)] flex justify-end gap-[var(--space-2)]">
-          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => onConfirm?.()}
-            className="cf-btn cf-btn--danger-filled"
-            disabled={pending}
-          >
-            {pending ? "Deleting" : "Delete Story"}
-          </button>
-        </div>
-      </div>
-    </KitModalFrame>
-  );
-}
+// DeleteConfirmSheet, RULED (ED1G chat family pass, CLEANUP): this
+// package's confirm sheet was a near-verbatim duplicate of
+// chat-session-dialogs' DeleteConfirmDialog; both now compose the one
+// portable component exported from ChatSessionDialogs.view (imported
+// above), which also carries the BLOCKER B5/B8 footer fix.
 
 export default function ChatCastPanelView(props) {
   const {
@@ -246,7 +210,7 @@ export default function ChatCastPanelView(props) {
 
   return (
     <>
-      <aside className="hidden min-w-0 overflow-hidden self-start rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] p-[var(--space-5)] xl:sticky xl:top-24 xl:block">
+      <aside className="hidden min-w-0 overflow-hidden self-start rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] p-[var(--space-5)] xl:sticky xl:top-[var(--topbar-h)] xl:block">
         <CastPanelContent {...contentProps} />
       </aside>
 

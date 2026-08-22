@@ -17,6 +17,7 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 import { CheckSquare, Square } from "lucide-react";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
@@ -240,6 +241,56 @@ function SectionLabel({ children }) {
   );
 }
 
+// B5 destructive-action modal confirm, RULED (ED1G chat family pass,
+// BLOCKER propagation): replaces deleteSelected's prior window.confirm.
+// Same B1 fade-divider-plus-ends-alignment (B8) footer recipe as the
+// chat family's own delete confirms (KitModalFrame.view.jsx's
+// UnsavedDismissConfirm, chat-session-dialogs' DeleteConfirmSheet).
+function DeleteSelectedConfirmSheet({ count = 0, onConfirm, onCancel }) {
+  const lines = [
+    "Delete selected Storys?",
+    "",
+    "This permanently deletes the selected chat sessions and their messages.",
+    "Underlying characters, templates, scenarios, narrators, and locations are not deleted.",
+    "Interaction totals will remain.",
+    "",
+    "This cannot be undone.",
+  ];
+
+  return (
+    <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm delete selected Storys">
+      <div className="p-[var(--space-5)]">
+        {lines.map((line, index) =>
+          line ? (
+            <p
+              key={`delete-selected-line-${index}`}
+              className={
+                index === 0
+                  ? "font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
+                  : "mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]"
+              }
+            >
+              {line}
+            </p>
+          ) : (
+            <div key={`delete-selected-gap-${index}`} className="h-[var(--space-2)]" />
+          )
+        )}
+
+        <div aria-hidden="true" className="mt-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
+        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
+            Cancel
+          </button>
+          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
+            {`Delete ${count} ${count === 1 ? "Story" : "Storys"}`}
+          </button>
+        </div>
+      </div>
+    </KitModalFrame>
+  );
+}
+
 export default function StoriesV2Mockup() {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
@@ -278,6 +329,11 @@ export default function StoriesV2Mockup() {
   const [manageMode, setManageMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [deletedIds, setDeletedIds] = useState([]);
+  // B5 destructive-action law, RULED (ED1G chat family pass, BLOCKER
+  // propagation): deleteSelected routed through window.confirm; the
+  // modal confirm recipe (KitModalFrame sheet, fade divider, ends
+  // aligned Cancel / danger-filled CTA) replaces it.
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
@@ -444,21 +500,13 @@ export default function StoriesV2Mockup() {
   // (components/studio/story-rooms/story-rooms-hub/useStoryRoomsHubViewModel.js
   // confirmStoryRoomDeletion), per ruling 5.
   function deleteSelected() {
-    if (typeof window === "undefined") return;
-    const confirmed = window.confirm(
-      [
-        "Delete selected Storys?",
-        "",
-        "This permanently deletes the selected chat sessions and their messages.",
-        "Underlying characters, templates, scenarios, narrators, and locations are not deleted.",
-        "Interaction totals will remain.",
-        "",
-        "This cannot be undone.",
-      ].join("\n")
-    );
-    if (!confirmed) return;
+    setDeleteConfirmOpen(true);
+  }
+
+  function confirmDeleteSelected() {
     setDeletedIds((current) => [...current, ...selectedIds]);
     setSelectedIds([]);
+    setDeleteConfirmOpen(false);
   }
 
   // Badges follow the own-work context (plan 3.2): visibility badges
@@ -779,6 +827,14 @@ export default function StoriesV2Mockup() {
       })()}
 
       <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
+
+      {deleteConfirmOpen ? (
+        <DeleteSelectedConfirmSheet
+          count={selectedIds.length}
+          onConfirm={confirmDeleteSelected}
+          onCancel={() => setDeleteConfirmOpen(false)}
+        />
+      ) : null}
     </>
   );
 }

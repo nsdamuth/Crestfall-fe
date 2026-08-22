@@ -188,7 +188,7 @@ function SemanticMessageBody({
           return (
             <div
               key={`presentation-paragraph-${paragraphIndex}`}
-              className="whitespace-pre-wrap leading-7"
+              className="whitespace-pre-wrap leading-[var(--lh-body)]"
             >
               {paragraph.map((segment, segmentIndex) => (
                 <span
@@ -409,7 +409,7 @@ export default function ChatMessageView({
               generationCursorLabel={generationCursorLabel}
             />
           ) : (
-            <div className="whitespace-pre-wrap leading-7">
+            <div className="whitespace-pre-wrap leading-[var(--lh-body)]">
               <LegacyMessageBody
                 body={legacyBody}
                 allowAutomaticSpacing={allowAutomaticSpacing}

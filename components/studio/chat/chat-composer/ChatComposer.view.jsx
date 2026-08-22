@@ -148,7 +148,7 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, disabled = fa
             : "inline-flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] rounded-[var(--radius-full)] px-[var(--space-3)]"
         } touch-manipulation border text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] ${
           active
-            ? "border-[var(--gold-action)]/70 bg-[var(--fill)] text-[var(--gold-bright)] ring-2 ring-[var(--gold-action)]/20"
+            ? "border-[var(--gold-action)]/70 bg-[var(--fill)] text-[var(--gold-bright)]"
             : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
         }`}
       >
@@ -224,7 +224,7 @@ function SubmitButton({
       className={
         compact
           ? "flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--gold-action)]/45 bg-[var(--fill)] text-[var(--gold-bright)] transition hover:bg-[var(--fill-strong)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
-          : "cf-btn cf-btn--primary"
+          : "goldring cf-btn cf-btn--primary"
       }
       title={isSending ? submitPendingLabel : submitLabel}
       aria-label={isSending ? submitPendingLabel : submitLabel}
@@ -281,6 +281,18 @@ function SceneToolButtons({ sceneImageSeat, useCurrentSceneSeat, compact = false
   );
 }
 
+// B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
+// to every modal-family divider: 1px, fades to transparent at both
+// ends, never edge-to-edge. B8: footer buttons align to its ends.
+function FadeDivider({ className = "" }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`h-px bg-[image:var(--line-fade)] ${className}`}
+    />
+  );
+}
+
 function SceneImageConfirmSheet({ costLabel = "", pending = false, error = "", onConfirm, onCancel }) {
   return (
     <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm scene image generation">
@@ -302,11 +314,12 @@ function SceneImageConfirmSheet({ costLabel = "", pending = false, error = "", o
           </p>
         ) : null}
 
-        <div className="mt-[var(--space-5)] flex justify-end gap-[var(--space-2)]">
+        <FadeDivider className="mt-[var(--space-5)]" />
+        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
           <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
             Cancel
           </button>
-          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--primary" disabled={pending}>
+          <button type="button" onClick={() => onConfirm?.()} className="goldring cf-btn cf-btn--primary" disabled={pending}>
             {pending ? "Generating" : `Generate (${costLabel})`}
           </button>
         </div>
@@ -393,7 +406,7 @@ function DesktopComposer({
               disabled={textareaDisabled}
               placeholder={placeholder}
               rows={2}
-              className="mt-[var(--space-2)] max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)] focus:border-[var(--gold-action)]/50"
+              className="mt-[var(--space-2)] max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]"
               onChangeDraft={onChangeDraft}
               onUpdateSuggestionQueries={onUpdateSuggestionQueries}
               onMoveMentionHighlight={onMoveMentionHighlight}
@@ -517,7 +530,7 @@ function MobileComposer({
         disabled={textareaDisabled}
         placeholder={placeholder}
         rows={1}
-        className="max-h-[220px] min-h-[var(--control-lg)] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)] focus:border-[var(--gold-action)]/50"
+        className="max-h-[220px] min-h-[var(--control-lg)] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]"
         onChangeDraft={onChangeDraft}
         onUpdateSuggestionQueries={onUpdateSuggestionQueries}
         onMoveMentionHighlight={onMoveMentionHighlight}
@@ -650,6 +663,8 @@ function MobileToolsSheet({
   );
 }
 
+// 4.7/D19: an honest disabled stub carries the word "Soon" beside the
+// control, never baked into the label.
 function DisabledToolButton({ icon: Icon, label }) {
   return (
     <button
@@ -659,6 +674,7 @@ function DisabledToolButton({ icon: Icon, label }) {
     >
       <Icon size={14} aria-hidden="true" />
       {label}
+      <span className="normal-case tracking-normal text-[var(--ink-faint)]">Soon</span>
     </button>
   );
 }
