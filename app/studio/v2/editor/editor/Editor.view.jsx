@@ -130,7 +130,7 @@ function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
         aria-live="polite"
         className={`flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
           isError
-            ? "text-[var(--status-danger)]"
+            ? "text-[var(--status-danger-text)]"
             : isDirty || isSaving
               ? "text-[var(--ink)]"
               : "text-[var(--ink-dim)]"
@@ -408,7 +408,7 @@ export default function EditorView({
             aria-live="polite"
             className={`min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
               saveStatus === "error"
-                ? "text-[var(--status-danger)]"
+                ? "text-[var(--status-danger-text)]"
                 : isDirty
                   ? "text-[var(--ink)]"
                   : "text-[var(--ink-dim)]"

@@ -78,12 +78,12 @@ function DefaultPcActions({ settingDefaultPc, onSetDefaultPc, status, error }) {
         {settingDefaultPc ? "Setting..." : "Set default PC"}
       </button>
       {status ? (
-        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success-text)]">
           {status}
         </span>
       ) : null}
       {error ? (
-        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
           {error}
         </span>
       ) : null}

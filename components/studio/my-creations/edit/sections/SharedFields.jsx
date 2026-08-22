@@ -75,8 +75,10 @@ const HELPER_CLASS =
 
 // Counter, RULED (Fable Gate O4, option A): renders only on focus and
 // whenever the value is past 80% of the limit; silent otherwise. At
-// the limit it takes --status-danger plus the word, matching the
-// ruled form-field anatomy (docs/BUILD-BLUEPRINT.md 2.8).
+// the limit it takes --status-danger-text plus the word, matching the
+// ruled form-field anatomy (docs/BUILD-BLUEPRINT.md 2.8). Brian
+// ruling 1, 22 Aug 2026: running text at normal size uses the
+// brighter -text tier, not the base --status-danger chip/badge color.
 function Counter({ length, maxLength, isFocused }) {
   if (!maxLength) return null;
   const atLimit = length >= maxLength;
@@ -86,7 +88,7 @@ function Counter({ length, maxLength, isFocused }) {
   return (
     <span
       className={`flex-none tabular-nums text-[length:var(--text-label)] ${
-        atLimit ? "text-[var(--status-danger)]" : "text-[var(--ink-faint)]"
+        atLimit ? "text-[var(--status-danger-text)]" : "text-[var(--ink-faint)]"
       }`}
     >
       {length}/{maxLength}
