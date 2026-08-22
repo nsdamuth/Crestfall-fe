@@ -23,6 +23,7 @@ import { Bookmark, ChevronLeft, ChevronRight, Heart, Pencil, Play, Search, Share
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitCreditsModal from "../KitCreditsModal";
+import KitDropdownView from "../dropdown/KitDropdown.view";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -248,7 +249,7 @@ function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
           <button
             type="button"
             onClick={() => onViewCatalogue?.()}
-            className="kit-focus cf-btn cf-btn--primary mt-[var(--space-4)]"
+            className="kit-focus goldring cf-btn cf-btn--primary mt-[var(--space-4)]"
           >
             View catalogue
           </button>
@@ -397,17 +398,13 @@ function MediaLibrary({ media, isLiked, isSaved }) {
           />
         </label>
 
-        <select
-          value={sort}
-          onChange={(event) => setSort(event.target.value)}
-          className="kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] text-[length:var(--text-label)] text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
-        >
-          {MEDIA_SORTS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <KitDropdownView
+          label="Sort"
+          options={MEDIA_SORTS}
+          selectedValues={[sort]}
+          isMultiSelect={false}
+          onToggleOption={(value) => setSort(value)}
+        />
       </div>
 
       {visible.length === 0 ? (
@@ -551,7 +548,7 @@ export default function KitAssetDetailPopupView({
           <button
             type="button"
             onClick={() => onPrimaryAction?.()}
-            className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--primary"
+            className="kit-focus goldring flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--primary"
           >
             <Play size={16} className="shrink-0" aria-hidden="true" />
             {primaryActionLabel}

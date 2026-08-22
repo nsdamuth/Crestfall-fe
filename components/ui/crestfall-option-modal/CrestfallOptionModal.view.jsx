@@ -41,7 +41,7 @@ export default function CrestfallOptionModalView({
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)] focus:border-[var(--gold-action)]"
+        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)]"
       >
         <span className="block text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {triggerLabel}
@@ -52,8 +52,8 @@ export default function CrestfallOptionModalView({
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] md:items-center md:p-4">
-          <div className="w-full max-w-4xl rounded-t-[var(--radius-lg)] border border-b-0 border-[var(--line)] bg-[var(--surface-4)] p-5 shadow-[var(--shadow-modal)] md:rounded-[var(--radius-lg)] md:border-b">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)] min-[700px]:items-center min-[700px]:p-4">
+          <div className="w-full max-w-4xl rounded-t-[var(--radius-lg)] border border-b-0 border-[var(--line)] bg-[image:var(--grad-panel-lift)] p-5 shadow-[var(--shadow-modal)] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b">
             <div className="flex items-center justify-between gap-4">
               <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] tabular-nums">
                 {title}
@@ -123,7 +123,7 @@ export default function CrestfallOptionModalView({
                   <button
                     type="button"
                     onClick={() => onUseCustom?.()}
-                    className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]"
+                    className="goldring inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]"
                   >
                     Use Custom
                   </button>

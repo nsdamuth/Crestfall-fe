@@ -10,11 +10,15 @@ import { Check, ChevronLeft, Loader2, Save } from "lucide-react";
 import KitModalFrame from "../KitModalFrame";
 
 const FIELD_RECIPE =
-  "cf-field mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
+  "cf-field mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
 
+// Gate 1 Quiet field grammar (ED1E-EDITOR-DESIGN-STANDARD.md section
+// 3, tier 5): field labels stay small, uppercase, and muted
+// (--ink-faint), not a gold eyebrow; gold appears only at section
+// level and on active states.
 function FieldCaption({ children }) {
   return (
-    <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+    <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
       {children}
     </span>
   );
@@ -60,7 +64,7 @@ export default function KitSaveIngredientPresetView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm"
+            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)]"
           >
             <ChevronLeft size={16} aria-hidden="true" />
             {backLabel}
@@ -162,7 +166,7 @@ export default function KitSaveIngredientPresetView({
             type="button"
             onClick={() => onUseOnce?.()}
             disabled={isSaving}
-            className="kit-focus cf-btn cf-btn--primary"
+            className="kit-focus goldring cf-btn cf-btn--primary"
           >
             <Check size={14} aria-hidden="true" />
             Use once

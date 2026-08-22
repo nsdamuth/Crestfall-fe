@@ -1,10 +1,10 @@
 const BASE_CLASSES =
-  "kit-focus inline-flex items-center gap-[var(--space-1)] min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[.45]";
+  "kit-focus inline-flex items-center gap-[var(--space-1)] min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
 
 function getVariantClasses(variant, isSelected) {
   if (variant === "toggle") {
     return isSelected
-      ? "border border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
+      ? "goldring border border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
       : "border border-dashed border-[var(--line)] bg-transparent text-[var(--ink-dim)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]";
   }
 

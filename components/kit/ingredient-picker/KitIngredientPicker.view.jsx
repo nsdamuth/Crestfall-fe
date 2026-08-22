@@ -3,8 +3,9 @@
 // Fixture-driven mirror of the live ingredient picker's function
 // (docs/SPRINT-E-PLAN.md section 1.2, R6), never its code
 // (components/studio/image-studio/ingredient-picker/, READ ONLY
-// reference). Standing on KitModalFrame variant="modal" (full-screen
-// at 390 per R4). Tokens only; no fetch anywhere.
+// reference). Standing on KitModalFrame variant="modal" (bottom-
+// anchored at content height under 700px per A4). Tokens only; no
+// fetch anywhere.
 import { BookOpen, ChevronLeft, Plus, Search } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
@@ -113,7 +114,7 @@ export default function KitIngredientPickerView({
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-5xl"
+      panelClassName="w-full max-w-4xl"
       onClose={onClose}
       ariaLabel={`Select ${slotLabel}`}
     >
@@ -122,7 +123,7 @@ export default function KitIngredientPickerView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm"
+            className="kit-focus inline-flex w-fit items-center gap-[var(--space-1)] cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)]"
           >
             <ChevronLeft size={16} aria-hidden="true" />
             {backLabel}

@@ -232,8 +232,8 @@ export default function KitPickerModalView({
             <div
               className={
                 layout === "grid"
-                  ? "grid grid-cols-2 gap-[var(--space-3)] pb-[var(--space-4)] min-[700px]:grid-cols-3"
-                  : "flex flex-col gap-[var(--space-1)] pb-[var(--space-4)]"
+                  ? "grid grid-cols-2 gap-[var(--space-3)] pb-[var(--space-6)] min-[700px]:grid-cols-3"
+                  : "flex flex-col gap-[var(--space-1)] pb-[var(--space-6)]"
               }
             >
               {items.map((item) => (
@@ -249,7 +249,7 @@ export default function KitPickerModalView({
           )}
 
           {!errorMessage && !isSearching && items.length > 0 && (hasMore || isLoading) && (
-            <div className="pb-[var(--space-4)]">
+            <div className="pb-[var(--space-6)]">
               <KitLoadMore isLoading={isLoading} hasMore={hasMore} remainingCount={null} onLoadMore={onLoadMore} />
             </div>
           )}
@@ -269,7 +269,7 @@ export default function KitPickerModalView({
               Cancel
             </button>
             {isMultiSelect && (
-              <button type="button" onClick={() => onConfirm?.()} className="kit-focus cf-btn cf-btn--primary">
+              <button type="button" onClick={() => onConfirm?.()} className="kit-focus goldring cf-btn cf-btn--primary">
                 Confirm
               </button>
             )}
