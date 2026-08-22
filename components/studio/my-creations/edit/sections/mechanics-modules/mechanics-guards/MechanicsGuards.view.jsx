@@ -12,6 +12,7 @@ import {
   MECHANICS_GUARD_PUBLIC_VISIBILITIES,
 } from "./MechanicsGuards.contract.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -78,22 +79,15 @@ function GuardConditionCard({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Condition Type</span>
-          <select
-            value={condition.conditionType}
-            onChange={(event) =>
-              patchCondition({ conditionType: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {MECHANICS_GUARD_CONDITION_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Condition Type"
+          value={condition.conditionType}
+          onChange={(value) => patchCondition({ conditionType: value })}
+          options={MECHANICS_GUARD_CONDITION_TYPES.map((type) => ({
+            value: type,
+            label: type,
+          }))}
+        />
 
         <TextField
           label="Target ID"
@@ -109,20 +103,15 @@ function GuardConditionCard({
           placeholder="value"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Operator</span>
-          <select
-            value={condition.operator}
-            onChange={(event) => patchCondition({ operator: event.target.value })}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {MECHANICS_GUARD_OPERATORS.map((operator) => (
-              <option key={operator} value={operator}>
-                {operator}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Operator"
+          value={condition.operator}
+          onChange={(value) => patchCondition({ operator: value })}
+          options={MECHANICS_GUARD_OPERATORS.map((operator) => ({
+            value: operator,
+            label: operator,
+          }))}
+        />
 
         <TextField
           label="Value"
@@ -213,75 +202,47 @@ function GuardCard({
               placeholder="Boundary Warning Lock"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Enforcement</span>
-              <select
-                value={guard.enforcement}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { enforcement: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_GUARD_ENFORCEMENTS.map((enforcement) => (
-                  <option key={enforcement} value={enforcement}>
-                    {enforcement}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Enforcement"
+              value={guard.enforcement}
+              onChange={(value) => patchGuard(guardIndex, { enforcement: value })}
+              options={MECHANICS_GUARD_ENFORCEMENTS.map((enforcement) => ({
+                value: enforcement,
+                label: enforcement,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Condition Mode</span>
-              <select
-                value={guard.mode}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { mode: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_GUARD_MODES.map((mode) => (
-                  <option key={mode} value={mode}>
-                    {mode}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Condition Mode"
+              value={guard.mode}
+              onChange={(value) => patchGuard(guardIndex, { mode: value })}
+              options={MECHANICS_GUARD_MODES.map((mode) => ({
+                value: mode,
+                label: mode,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Composer Visibility</span>
-              <select
-                value={guard.composerVisibility}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    composerVisibility: event.target.value,
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_GUARD_COMPOSER_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Composer Visibility"
+              value={guard.composerVisibility}
+              onChange={(value) =>
+                patchGuard(guardIndex, { composerVisibility: value })
+              }
+              options={MECHANICS_GUARD_COMPOSER_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Public Visibility</span>
-              <select
-                value={guard.publicVisibility}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { publicVisibility: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_GUARD_PUBLIC_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Public Visibility"
+              value={guard.publicVisibility}
+              onChange={(value) => patchGuard(guardIndex, { publicVisibility: value })}
+              options={MECHANICS_GUARD_PUBLIC_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
           </div>
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">

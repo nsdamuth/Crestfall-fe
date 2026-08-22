@@ -3,6 +3,7 @@ import {
   COMMAND_DOMAIN_ACTION_TYPES,
   LOCATION_TRAVEL_OPERATIONS,
 } from "./MechanicsCommandDomainActions.contract.js";
+import { SelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -17,24 +18,19 @@ function ArgumentSelect({
   className = "",
 }) {
   return (
-    <label className={`grid gap-2 text-sm text-[var(--ink-dim)] ${className}`}>
-      <span>{label}</span>
-      <select
+    <div className={className}>
+      <SelectField
+        label={label}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-      >
-        <option value="">{placeholder}</option>
-        {options.map((argument) => (
-          <option key={argument.name} value={argument.name}>
-            {argument.label}
-          </option>
-        ))}
-      </select>
-      {help ? (
-        <span className="text-[11px] leading-5 text-[var(--ink-dim)]">{help}</span>
-      ) : null}
-    </label>
+        placeholder={placeholder}
+        onChange={(nextValue) => onChange(nextValue)}
+        options={options.map((argument) => ({
+          value: argument.name,
+          label: argument.label,
+        }))}
+        helperText={help}
+      />
+    </div>
   );
 }
 

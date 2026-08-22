@@ -8,6 +8,7 @@ import {
   MECHANICS_STATUS_BLOCK_VISIBILITIES,
 } from "./MechanicsStatusBlocks.contract.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -135,39 +136,25 @@ function StatusBlockCard({
               placeholder="main_footer"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Placement</span>
-              <select
-                value={block.placement}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { placement: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_STATUS_BLOCK_PLACEMENTS.map((placement) => (
-                  <option key={placement} value={placement}>
-                    {placement}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Placement"
+              value={block.placement}
+              onChange={(value) => patchBlock(blockIndex, { placement: value })}
+              options={MECHANICS_STATUS_BLOCK_PLACEMENTS.map((placement) => ({
+                value: placement,
+                label: placement,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Visibility</span>
-              <select
-                value={block.visibility}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { visibility: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {MECHANICS_STATUS_BLOCK_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Visibility"
+              value={block.visibility}
+              onChange={(value) => patchBlock(blockIndex, { visibility: value })}
+              options={MECHANICS_STATUS_BLOCK_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
 
             <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
               <input

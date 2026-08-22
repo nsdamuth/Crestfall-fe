@@ -11,6 +11,7 @@ import {
   slugifyTrackerId,
 } from "./mechanicsTrackersNormalization.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -312,18 +313,12 @@ function TrackerCard({ entry, handlers }) {
           }
           placeholder="Trust"
         />
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Kind</span>
-          <select
-            value={tracker.kind}
-            onChange={(event) =>
-              handlers.patchTracker(trackerIndex, { kind: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            <option value="meter">meter</option>
-          </select>
-        </label>
+        <SelectField
+          label="Kind"
+          value={tracker.kind}
+          onChange={(value) => handlers.patchTracker(trackerIndex, { kind: value })}
+          options={[{ value: "meter", label: "meter" }]}
+        />
         <TextField
           label="Initial Value"
           type="number"

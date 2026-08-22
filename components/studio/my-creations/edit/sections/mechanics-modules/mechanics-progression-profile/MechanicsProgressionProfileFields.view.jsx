@@ -2,6 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+import { SelectField as SharedSelectField } from "../../SharedFields";
+
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
@@ -28,28 +30,26 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
   );
 }
 
+// 4.4: native select retired in favor of the branded kit dropdown
+// grammar. This wrapper keeps its own id-based option shape (every
+// call site in this file already uses it) and translates to
+// SharedFields.SelectField's value-based shape underneath.
 function SelectField({ label, value, options = [], onChange }) {
-  return (
-    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-      <FieldLabel>{label}</FieldLabel>
-      <select
-        value={value ?? ""}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-      >
-        {options.map((option) => {
-          const item = typeof option === "string"
-            ? { id: option, label: option.replaceAll("_", " ") }
-            : option;
+  const normalizedOptions = options.map((option) => {
+    const item =
+      typeof option === "string"
+        ? { id: option, label: option.replaceAll("_", " ") }
+        : option;
+    return { value: item.id, label: item.label, isDisabled: item.disabled === true };
+  });
 
-          return (
-            <option key={item.id} value={item.id} disabled={item.disabled === true}>
-              {item.label}
-            </option>
-          );
-        })}
-      </select>
-    </label>
+  return (
+    <SharedSelectField
+      label={label}
+      value={value ?? ""}
+      options={normalizedOptions}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 

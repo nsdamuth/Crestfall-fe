@@ -12,6 +12,7 @@ import {
   normalizeMechanicsEffectValueBindingBuilder,
   supportsMechanicsEffectValueBinding,
 } from "../mechanicsEffectValueBindingBuilder.js";
+import { SelectField as SharedSelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -31,37 +32,32 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
   );
 }
 
+// 4.4: native select retired for the branded kit dropdown grammar.
+// This wrapper keeps its own id-based option shape (every call site
+// in this file already uses it, including the disabled-with-reason
+// suffix) and translates to SharedFields.SelectField underneath.
 function SelectField({ label, value, options = [], onChange, disabled = false }) {
-  return (
-    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-      <span>{label}</span>
-      <select
-        value={value ?? ""}
-        disabled={disabled}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {options.map((option) => {
-          const normalized =
-            typeof option === "string"
-              ? { id: option, label: option.replaceAll("_", " ") }
-              : option;
+  const normalizedOptions = options.map((option) => {
+    const normalized =
+      typeof option === "string"
+        ? { id: option, label: option.replaceAll("_", " ") }
+        : option;
+    const optionLabel =
+      normalized.disabled && normalized.reason
+        ? `${normalized.label} · ${normalized.reason}`
+        : normalized.label;
 
-          return (
-            <option
-              key={normalized.id}
-              value={normalized.id}
-              disabled={normalized.disabled === true}
-            >
-              {normalized.label}
-              {normalized.disabled && normalized.reason
-                ? ` · ${normalized.reason}`
-                : ""}
-            </option>
-          );
-        })}
-      </select>
-    </label>
+    return { value: normalized.id, label: optionLabel, isDisabled: normalized.disabled === true };
+  });
+
+  return (
+    <SharedSelectField
+      label={label}
+      value={value ?? ""}
+      disabled={disabled}
+      options={normalizedOptions}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
@@ -1241,23 +1237,20 @@ export default function MechanicsCompositionBuilderView({
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Applying a reference replaces only this command&apos;s composition block. Resolution, requirements, legacy effects, outcomes, arguments, and legacy Domain Adapter remain unchanged.
         </p>
-        <div className="mt-4 flex flex-col gap-3 lg:flex-row">
-          <select
-            value={referenceId}
-            onChange={(event) => onChooseReference?.(event.target.value)}
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            <option value="">Select a reference composition</option>
-            {referenceOptions.map((reference) => (
-              <option
-                key={reference.id}
-                value={reference.id}
-                disabled={!reference.available}
-              >
-                {reference.label} · {reference.available ? reference.description : reference.unavailableReason}
-              </option>
-            ))}
-          </select>
+        <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-end">
+          <div className="min-w-0 flex-1">
+            <SharedSelectField
+              label="Reference composition"
+              value={referenceId}
+              placeholder="Select a reference composition"
+              onChange={(nextValue) => onChooseReference?.(nextValue)}
+              options={referenceOptions.map((reference) => ({
+                value: reference.id,
+                label: `${reference.label} · ${reference.available ? reference.description : reference.unavailableReason}`,
+                isDisabled: !reference.available,
+              }))}
+            />
+          </div>
           <button
             type="button"
             disabled={!referenceId || selectedReference?.available === false}

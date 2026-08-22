@@ -18,6 +18,7 @@ import {
   MECHANICS_EFFECT_VALUE_BINDING_ROUNDING,
 } from "../mechanicsEffectValueBindingBuilder.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -50,57 +51,51 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
 
   return (
     <>
-      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-        <span>Apply Mechanics State To</span>
-        <select
-          value={binding.mode}
-          onChange={(event) => {
-            const mode = event.target.value;
-            onPatch({
-              targetBinding: normalizeMechanicsEffectTargetBinding({
-                ...binding,
-                mode,
-                argumentName:
-                  mode === "ARGUMENT"
-                    ? binding.argumentName || safeOptions[0]?.name || ""
-                    : "",
-              }),
-            });
-          }}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-        >
-          <option value="FIXED">Command / Module Scope</option>
-          <option value="ARGUMENT" disabled={!safeOptions.length}>
-            Resolved Command Argument
-          </option>
-        </select>
-      </label>
+      <SelectField
+        label="Apply Mechanics State To"
+        value={binding.mode}
+        onChange={(mode) => {
+          onPatch({
+            targetBinding: normalizeMechanicsEffectTargetBinding({
+              ...binding,
+              mode,
+              argumentName:
+                mode === "ARGUMENT"
+                  ? binding.argumentName || safeOptions[0]?.name || ""
+                  : "",
+            }),
+          });
+        }}
+        options={[
+          { value: "FIXED", label: "Command / Module Scope" },
+          {
+            value: "ARGUMENT",
+            label: "Resolved Command Argument",
+            isDisabled: !safeOptions.length,
+          },
+        ]}
+      />
 
       {binding.mode === "ARGUMENT" ? (
         safeOptions.length ? (
-          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-            <span>Resolved Argument</span>
-            <select
-              value={binding.argumentName}
-              onChange={(event) =>
-                onPatch({
-                  targetBinding: normalizeMechanicsEffectTargetBinding({
-                    ...binding,
-                    mode: "ARGUMENT",
-                    argumentName: event.target.value,
-                  }),
-                })
-              }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-            >
-              <option value="">Select an argument</option>
-              {safeOptions.map((argument) => (
-                <option key={argument.name} value={argument.name}>
-                  {argument.label} · {argument.type}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Resolved Argument"
+            value={binding.argumentName}
+            placeholder="Select an argument"
+            onChange={(value) =>
+              onPatch({
+                targetBinding: normalizeMechanicsEffectTargetBinding({
+                  ...binding,
+                  mode: "ARGUMENT",
+                  argumentName: value,
+                }),
+              })
+            }
+            options={safeOptions.map((argument) => ({
+              value: argument.name,
+              label: `${argument.label} · ${argument.type}`,
+            }))}
+          />
         ) : (
           <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100 md:col-span-2">
             Add a Character, Item, or Location command argument before binding an effect to a resolved target.
@@ -145,17 +140,15 @@ function EffectValueFields({
 
   if (effect.type === "FLAG_SET") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-        <span>Value</span>
-        <select
-          value={effect.value === false ? "false" : "true"}
-          onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-        >
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
-      </label>
+      <SelectField
+        label="Value"
+        value={effect.value === false ? "false" : "true"}
+        onChange={(value) => onPatch({ value: value === "true" })}
+        options={[
+          { value: "true", label: "true" },
+          { value: "false", label: "false" },
+        ]}
+      />
     );
   }
 
@@ -229,54 +222,38 @@ function EffectValueFields({
   return (
     <div className="grid gap-4 rounded-xl border border-white/10 bg-black/20 p-4 md:col-span-2">
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Numeric Value Source</span>
-          <select
-            value={valueBinding.mode}
-            onChange={(event) => {
-              const mode = event.target.value;
-              patchValueBinding({
-                mode,
-                argumentName:
-                  mode === "ARGUMENT"
-                    ? valueBinding.argumentName || options[0]?.name || ""
-                    : "",
-              });
-            }}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {MECHANICS_EFFECT_VALUE_BINDING_MODES.map((mode) => (
-              <option
-                key={mode}
-                value={mode}
-                disabled={mode === "ARGUMENT" && !options.length}
-              >
-                {mode === "FIXED" ? "Fixed Authored Value" : "NUMBER Command Argument"}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Numeric Value Source"
+          value={valueBinding.mode}
+          onChange={(mode) => {
+            patchValueBinding({
+              mode,
+              argumentName:
+                mode === "ARGUMENT"
+                  ? valueBinding.argumentName || options[0]?.name || ""
+                  : "",
+            });
+          }}
+          options={MECHANICS_EFFECT_VALUE_BINDING_MODES.map((mode) => ({
+            value: mode,
+            label: mode === "FIXED" ? "Fixed Authored Value" : "NUMBER Command Argument",
+            isDisabled: mode === "ARGUMENT" && !options.length,
+          }))}
+        />
 
         {valueBinding.mode === "FIXED" ? (
           fixedValueField()
         ) : (
-          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-            <span>NUMBER Argument</span>
-            <select
-              value={valueBinding.argumentName}
-              onChange={(event) =>
-                patchValueBinding({ argumentName: event.target.value })
-              }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-            >
-              <option value="">Select a NUMBER argument</option>
-              {options.map((argument) => (
-                <option key={argument.name} value={argument.name}>
-                  {argument.label} · NUMBER
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="NUMBER Argument"
+            value={valueBinding.argumentName}
+            placeholder="Select a NUMBER argument"
+            onChange={(value) => patchValueBinding({ argumentName: value })}
+            options={options.map((argument) => ({
+              value: argument.name,
+              label: `${argument.label} · NUMBER`,
+            }))}
+          />
         )}
       </div>
 
@@ -291,23 +268,29 @@ function EffectValueFields({
             <TextField label="Multiplier" type="number" value={String(valueBinding.multiplier)} onChange={(value) => patchValueBinding({ multiplier: normalizeNumber(value, 1) })} placeholder="1" />
             <TextField label="Divisor" type="number" value={String(valueBinding.divisor)} onChange={(value) => patchValueBinding({ divisor: normalizeNumber(value, 1) || 1 })} placeholder="1" />
             <TextField label="Offset" type="number" value={String(valueBinding.offset)} onChange={(value) => patchValueBinding({ offset: normalizeNumber(value, 0) })} placeholder="0" />
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Rounding</span>
-              <select value={valueBinding.rounding} onChange={(event) => patchValueBinding({ rounding: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
-                {MECHANICS_EFFECT_VALUE_BINDING_ROUNDING.map((rounding) => <option key={rounding} value={rounding}>{rounding}</option>)}
-              </select>
-            </label>
+            <SelectField
+              label="Rounding"
+              value={valueBinding.rounding}
+              onChange={(value) => patchValueBinding({ rounding: value })}
+              options={MECHANICS_EFFECT_VALUE_BINDING_ROUNDING.map((rounding) => ({
+                value: rounding,
+                label: rounding,
+              }))}
+            />
             <TextField label="Minimum Bound Value" type="number" value={valueBinding.minValue ?? ""} onChange={(value) => patchValueBinding({ minValue: value === "" ? null : normalizeNumber(value, 0) })} placeholder="Optional" />
             <TextField label="Maximum Bound Value" type="number" value={valueBinding.maxValue ?? ""} onChange={(value) => patchValueBinding({ maxValue: value === "" ? null : normalizeNumber(value, 0) })} placeholder="Optional" />
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-3">
-              <span>Missing Argument Policy</span>
-              <select value={valueBinding.missingPolicy} onChange={(event) => patchValueBinding({ missingPolicy: event.target.value })} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
-                {MECHANICS_EFFECT_VALUE_BINDING_MISSING_POLICIES.map((policy) => <option key={policy} value={policy}>{policy}</option>)}
-              </select>
-              <span className="text-[11px] leading-5 text-[var(--ink-dim)]">
-                REJECT blocks the command before rolling. IGNORE keeps the authored fixed value as a fallback.
-              </span>
-            </label>
+            <div className="md:col-span-3">
+              <SelectField
+                label="Missing Argument Policy"
+                value={valueBinding.missingPolicy}
+                onChange={(value) => patchValueBinding({ missingPolicy: value })}
+                options={MECHANICS_EFFECT_VALUE_BINDING_MISSING_POLICIES.map((policy) => ({
+                  value: policy,
+                  label: policy,
+                }))}
+                helperText="REJECT blocks the command before rolling. IGNORE keeps the authored fixed value as a fallback."
+              />
+            </div>
           </div>
         </>
       ) : null}
@@ -341,12 +324,15 @@ export default function MechanicsCommandEffectCardView({
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <TextField label="Effect ID" value={safeEffect.id} onChange={(value) => patchEffect({ id: normalizeMechanicsEffectIdentifier(value, `effect_${effectIndex + 1}`) })} placeholder="set_player_settled" />
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Effect Type</span>
-          <select value={safeEffect.type} onChange={(event) => patchEffect(normalizeMechanicsCommandEffect({ ...safeEffect, type: event.target.value }, event.target.value))} className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]">
-            {MECHANICS_COMMAND_EFFECT_TYPES.map((effectType) => <option key={effectType} value={effectType}>{effectType}</option>)}
-          </select>
-        </label>
+        <SelectField
+          label="Effect Type"
+          value={safeEffect.type}
+          onChange={(value) => patchEffect(normalizeMechanicsCommandEffect({ ...safeEffect, type: value }, value))}
+          options={MECHANICS_COMMAND_EFFECT_TYPES.map((effectType) => ({
+            value: effectType,
+            label: effectType,
+          }))}
+        />
         <TextField label="Mechanics State ID" value={safeEffect.targetId} onChange={(value) => patchEffect({ targetId: normalizeMechanicsEffectIdentifier(value, value) })} placeholder="player_settled" />
         <EffectTargetBindingFields effect={safeEffect} argumentOptions={argumentOptions} onPatch={patchEffect} />
         <EffectValueFields effect={safeEffect} numericArgumentOptions={numericArgumentOptions} onPatch={patchEffect} ProgressionProfileFieldsComponent={ProgressionProfileFieldsComponent} />

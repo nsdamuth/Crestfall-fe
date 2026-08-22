@@ -9,6 +9,7 @@ import {
   COMMAND_RESULT_VISIBILITIES,
 } from "./MechanicsCommandCore.contract.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -226,34 +227,24 @@ export function MechanicsCommandInvocationView({ model }) {
           normalizeToken={model.normalizeCommandName}
           placeholder="Type an alias, then press Enter"
         />
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Command Mode</span>
-          <select
-            value={model.presentation.mode}
-            onChange={(event) =>
-              model.patchPresentation({ mode: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_PRESENTATION_MODES.map((mode) => (
-              <option key={mode} value={mode}>{mode}</option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Result Visibility</span>
-          <select
-            value={model.presentation.resultVisibility}
-            onChange={(event) =>
-              model.patchPresentation({ resultVisibility: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_RESULT_VISIBILITIES.map((visibility) => (
-              <option key={visibility} value={visibility}>{visibility}</option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Command Mode"
+          value={model.presentation.mode}
+          onChange={(value) => model.patchPresentation({ mode: value })}
+          options={COMMAND_PRESENTATION_MODES.map((mode) => ({
+            value: mode,
+            label: mode,
+          }))}
+        />
+        <SelectField
+          label="Result Visibility"
+          value={model.presentation.resultVisibility}
+          onChange={(value) => model.patchPresentation({ resultVisibility: value })}
+          options={COMMAND_RESULT_VISIBILITIES.map((visibility) => ({
+            value: visibility,
+            label: visibility,
+          }))}
+        />
         <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
           <input
             type="checkbox"
@@ -327,40 +318,34 @@ export function MechanicsCommandArgumentsView({ model }) {
               }
               placeholder="Target"
             />
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Type</span>
-              <select
-                value={argument.type}
-                onChange={(event) => {
-                  const nextType = event.target.value;
-                  const nextIsImplicit =
-                    model.isImplicitTargetArgumentType(nextType);
-                  const currentIsImplicit =
-                    model.isImplicitTargetArgumentType(argument.type);
-                  model.patchArgument(argumentIndex, {
-                    type: nextType,
-                    ...(nextIsImplicit
-                      ? { required: false, consumeRemaining: false, allowQuoted: false }
-                      : currentIsImplicit
-                        ? {
-                            required: true,
-                            consumeRemaining:
-                              argumentIndex ===
-                              model.invocation.arguments.length - 1,
-                            allowQuoted: true,
-                          }
-                        : {}),
-                  });
-                }}
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {COMMAND_ARGUMENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Type"
+              value={argument.type}
+              onChange={(nextType) => {
+                const nextIsImplicit =
+                  model.isImplicitTargetArgumentType(nextType);
+                const currentIsImplicit =
+                  model.isImplicitTargetArgumentType(argument.type);
+                model.patchArgument(argumentIndex, {
+                  type: nextType,
+                  ...(nextIsImplicit
+                    ? { required: false, consumeRemaining: false, allowQuoted: false }
+                    : currentIsImplicit
+                      ? {
+                          required: true,
+                          consumeRemaining:
+                            argumentIndex ===
+                            model.invocation.arguments.length - 1,
+                          allowQuoted: true,
+                        }
+                      : {}),
+                });
+              }}
+              options={COMMAND_ARGUMENT_TYPES.map((type) => ({
+                value: type,
+                label: type,
+              }))}
+            />
 
             {model.isImplicitTargetArgumentType(argument.type) ? (
               <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-3">
