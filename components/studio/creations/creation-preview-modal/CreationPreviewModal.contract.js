@@ -55,6 +55,14 @@ export const CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION =
  * @property {Function=} onToggleBookmark
  * @property {Function} onStartStory
  * @property {Function} onSetDefaultPc
+ * @property {import("react").ElementType} [LinkComponent] doc-only addition (ED1G sw12), no version bump.
+ * @property {Object} [statusBadgesProps] doc-only addition (ED1G sw12), no version bump.
+ * @property {Object} [statsRowProps] doc-only addition (ED1G sw12), no version bump.
+ * @property {string} [moreSlideBackgroundImage] doc-only addition (ED1G sw12), no version bump.
+ * @property {import("react").ElementType} [StatusBadgesComponent] doc-only addition (ED1G sw12): injected subcomponent, no version bump.
+ * @property {import("react").ElementType} [StatsRowComponent] doc-only addition (ED1G sw12): injected subcomponent, no version bump.
+ * @property {import("react").ElementType} [CreditsComponent] doc-only addition (ED1G sw12): injected subcomponent, no version bump.
+ * @property {import("react").ElementType} [ShareButtonComponent] doc-only addition (ED1G sw12): injected subcomponent, no version bump.
  */
 
 export const creationPreviewModalOwnership = Object.freeze({

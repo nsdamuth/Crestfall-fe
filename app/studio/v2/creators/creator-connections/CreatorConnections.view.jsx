@@ -61,7 +61,7 @@ function TabButton({ id, label, count, isActive, onClick }) {
       id={`creator-connections-tab-${id}`}
       aria-selected={isActive}
       onClick={onClick}
-      className={`kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-sm)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] tabular-nums transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+      className={`min-h-[var(--control-sm)] rounded-[var(--radius-sm)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] tabular-nums transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
         isActive
           ? "bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
           : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
@@ -86,7 +86,7 @@ function FollowButton({ isFollowing, onClick }) {
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isFollowing}
-      className={`kit-focus inline-flex min-h-[var(--control-sm)] flex-none items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
+      className={`inline-flex min-h-[var(--control-sm)] flex-none items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
     >
       {isFollowing ? "Following" : "Follow"}
     </button>
@@ -110,7 +110,7 @@ function ConnectionRow({ item }) {
       <button
         type="button"
         onClick={() => item.onOpenProfile?.()}
-        className="kit-focus min-w-0 flex-1 text-left"
+        className="min-w-0 flex-1 text-left"
       >
         <p className="truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] text-[var(--ink)]">
           {item.displayName || "Unknown creator"}

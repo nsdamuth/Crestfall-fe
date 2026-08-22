@@ -21,7 +21,7 @@ function CircularCloseButton({ onClose = null, className = "" }) {
       type="button"
       onClick={() => onClose?.()}
       aria-label="Close"
-      className={`kit-focus pointer-events-auto flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] ${className}`}
+      className={`pointer-events-auto flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)] ${className}`}
     >
       <X size={18} aria-hidden="true" />
     </button>
@@ -102,14 +102,14 @@ function UnsavedDismissConfirm({ onKeepEditing = null, onConfirmDiscard = null }
         <button
           type="button"
           onClick={() => onKeepEditing?.()}
-          className="kit-focus cf-btn cf-btn--secondary"
+          className="cf-btn cf-btn--secondary"
         >
           Keep editing
         </button>
         <button
           type="button"
           onClick={() => onConfirmDiscard?.()}
-          className="kit-focus cf-btn cf-btn--danger-filled"
+          className="cf-btn cf-btn--danger-filled"
         >
           Discard
         </button>

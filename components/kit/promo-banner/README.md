@@ -123,9 +123,10 @@ as `KitContinueRow` rows (`CONTINUE_VISIBLE_CAP = 3`), capped, with a
 no continue banner at all, full or otherwise. Home is the only page in
 the nine-page set that carries a continue banner (its top banner, both
 cold-start and filled/continue states, see the `v1.2.0` section
-above); Home does not consume `KitContinueRow`. First and only
-consumer of `KitContinueRow`: Stories
-(`app/studio/v2/stories/StoriesV2Mockup.jsx`).
+above); Home does not consume `KitContinueRow`. Superseded (ED1G
+review, 22 Aug 2026): Stories has since migrated to
+`KitCreationCard`'s `onContinue` prop; `KitContinueRow` is now an
+orphaned view with zero consumers.
 
 ## Package assets
 

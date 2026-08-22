@@ -24,7 +24,7 @@ const hairColorOptions = [
   {
     value: "CUSTOM",
     label: "Custom",
-    color: "linear-gradient(135deg, #111111, #dc2626, #f5f5f5)",
+    color: "var(--surface-1)",
   },
 ];
 
@@ -141,12 +141,12 @@ function getCustomInputValue(options, value) {
   return String(value);
 }
 
+// ED1E section 8: no gradient swatches, ever. Every option renders as
+// a flat radius-md tile.
 function toSwatchStyle(color) {
   if (!color) return {};
 
-  return color.includes("gradient")
-    ? { backgroundImage: color }
-    : { backgroundColor: color };
+  return { backgroundColor: color };
 }
 
 function toViewOption(option, layout) {

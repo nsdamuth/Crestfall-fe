@@ -2,6 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+import { CheckboxField, SelectField as SharedSelectField } from "../../SharedFields";
+
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
@@ -22,34 +24,32 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
 }
 
+// 4.4: native select retired in favor of the branded kit dropdown
+// grammar. This wrapper keeps its own id-based option shape (every
+// call site in this file already uses it) and translates to
+// SharedFields.SelectField's value-based shape underneath.
 function SelectField({ label, value, options = [], onChange }) {
-  return (
-    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-      <FieldLabel>{label}</FieldLabel>
-      <select
-        value={value ?? ""}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-      >
-        {options.map((option) => {
-          const item = typeof option === "string"
-            ? { id: option, label: option.replaceAll("_", " ") }
-            : option;
+  const normalizedOptions = options.map((option) => {
+    const item =
+      typeof option === "string"
+        ? { id: option, label: option.replaceAll("_", " ") }
+        : option;
+    return { value: item.id, label: item.label, isDisabled: item.disabled === true };
+  });
 
-          return (
-            <option key={item.id} value={item.id} disabled={item.disabled === true}>
-              {item.label}
-            </option>
-          );
-        })}
-      </select>
-    </label>
+  return (
+    <SharedSelectField
+      label={label}
+      value={value ?? ""}
+      options={normalizedOptions}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
@@ -184,7 +184,7 @@ function DerivedValueCard({
       </div>
 
       {rule.method === "EXPLICIT_TABLE" ? (
-        <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="mt-4 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit derived-value tables remain available through the JSON Editor.
           Generated interval and linear rules are the compact visual-authoring paths.
         </p>
@@ -317,18 +317,14 @@ export default function MechanicsProgressionProfileFieldsView({
         />
       </div>
 
-      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--ink-dim)]">
-        <input
-          type="checkbox"
-          checked={profile.allowRankDecrease === true}
-          onChange={(event) => patchProfile({ allowRankDecrease: event.target.checked })}
-          className="h-4 w-4 accent-[var(--gold-ornament)]"
-        />
-        Allow reconciliation to reduce an existing rank
-      </label>
+      <CheckboxField
+        label="Allow reconciliation to reduce an existing rank"
+        checked={profile.allowRankDecrease === true}
+        onChange={(checked) => patchProfile({ allowRankDecrease: checked })}
+      />
 
       {profile.mode === "EXPLICIT_TABLE" ? (
-        <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit threshold tables remain supported for total manual control and
           can be edited in the JSON Editor. Generated curves are the compact visual path.
         </p>

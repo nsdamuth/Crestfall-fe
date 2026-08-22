@@ -94,7 +94,7 @@ function RowItem({ item, isSelected, isMultiSelect, onActivate }) {
       aria-checked={isMultiSelect ? isSelected : undefined}
       aria-selected={!isMultiSelect ? isSelected : undefined}
       onClick={() => onActivate?.(item.id)}
-      className={`kit-focus flex w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors ${
+      className={`flex w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors ${
         isSelected
           ? "border-[var(--gold-action)] bg-[var(--fill)]"
           : "border-transparent hover:bg-[var(--state-hover-fill)] active:bg-[var(--state-pressed-fill)]"
@@ -137,7 +137,7 @@ function TileItem({ item, isSelected, isMultiSelect, onActivate }) {
       aria-checked={isMultiSelect ? isSelected : undefined}
       aria-selected={!isMultiSelect ? isSelected : undefined}
       onClick={() => onActivate?.(item.id)}
-      className={`kit-focus overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
+      className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
         isSelected ? "border-[var(--gold-action)] bg-[var(--fill)]" : "border-[var(--line)] hover:border-[var(--line-strong)]"
       }`}
     >
@@ -232,8 +232,8 @@ export default function KitPickerModalView({
             <div
               className={
                 layout === "grid"
-                  ? "grid grid-cols-2 gap-[var(--space-3)] pb-[var(--space-4)] min-[700px]:grid-cols-3"
-                  : "flex flex-col gap-[var(--space-1)] pb-[var(--space-4)]"
+                  ? "grid grid-cols-2 gap-[var(--space-3)] pb-[var(--space-6)] min-[700px]:grid-cols-3"
+                  : "flex flex-col gap-[var(--space-1)] pb-[var(--space-6)]"
               }
             >
               {items.map((item) => (
@@ -249,7 +249,7 @@ export default function KitPickerModalView({
           )}
 
           {!errorMessage && !isSearching && items.length > 0 && (hasMore || isLoading) && (
-            <div className="pb-[var(--space-4)]">
+            <div className="pb-[var(--space-6)]">
               <KitLoadMore isLoading={isLoading} hasMore={hasMore} remainingCount={null} onLoadMore={onLoadMore} />
             </div>
           )}
@@ -265,11 +265,11 @@ export default function KitPickerModalView({
             {isMultiSelect ? describeSelection(selectedIds.length) : ""}
           </span>
           <div className="flex items-center gap-[var(--space-2)]">
-            <button type="button" onClick={() => onClose?.()} className="kit-focus cf-btn cf-btn--secondary">
+            <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary">
               Cancel
             </button>
             {isMultiSelect && (
-              <button type="button" onClick={() => onConfirm?.()} className="kit-focus cf-btn cf-btn--primary">
+              <button type="button" onClick={() => onConfirm?.()} className="goldring cf-btn cf-btn--primary">
                 Confirm
               </button>
             )}

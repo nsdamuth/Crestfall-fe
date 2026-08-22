@@ -72,7 +72,7 @@ export default function KitAssetDetailPopupPreviewClient() {
               setIsSaved(Boolean(state.props.isSaved));
               setLastAction(`Opened the ${state.label} fixture.`);
             }}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Open {state.label}
           </button>

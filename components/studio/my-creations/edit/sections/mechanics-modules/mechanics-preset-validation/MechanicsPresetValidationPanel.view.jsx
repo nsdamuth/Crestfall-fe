@@ -27,17 +27,17 @@ export default function MechanicsPresetValidationPanelView({
   onDismiss = null,
 }) {
   return (
-    <section className="overflow-hidden rounded-[var(--radius-md)] border border-emerald-300/20 bg-emerald-500/[0.045]">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 p-5">
+    <section className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--status-success-border)] bg-[var(--status-success-bed)]">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--line-whisper)] p-5">
         <div className="min-w-0">
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-emerald-100">
+          <p className="inline-flex items-center gap-2 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-success-text)]">
             <Beaker size={15} />
             {eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl text-[var(--ink)]">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {title}
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="mt-2 max-w-3xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function MechanicsPresetValidationPanelView({
       <div className="grid gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.55fr)]">
         <div className="grid content-start gap-4">
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full border border-emerald-300/20 bg-emerald-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-100">
+            <span className="rounded-full border border-[var(--status-success-border)] bg-[var(--status-success-bed)] px-3 py-1 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-success-text)]">
               {statusLabel}
             </span>
             {expectedOutcomeLabel ? (

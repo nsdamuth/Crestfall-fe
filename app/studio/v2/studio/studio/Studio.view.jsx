@@ -34,7 +34,7 @@ function LevelSelector({ levels, activeLevelId, onSelectLevel }) {
             role="tab"
             aria-selected={selected}
             onClick={() => onSelectLevel?.(level.id)}
-            className={`kit-focus flex flex-col gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-5)] py-[var(--space-4)] text-left transition-colors ${
+            className={`flex flex-col gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-5)] py-[var(--space-4)] text-left transition-colors ${
               selected
                 ? "border-[var(--gold-action)] shadow-[inset_0_0_0_1px_var(--gold-action)] bg-[var(--surface-1)]"
                 : "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)]"
@@ -76,7 +76,7 @@ function Door({ label, eyebrow, description, imageSrc, isLive, onOpen }) {
       type="button"
       onClick={() => onOpen?.()}
       aria-disabled={!isLive}
-      className={`kit-focus group relative flex min-h-[17rem] items-center justify-center overflow-hidden rounded-[var(--radius-lg)] text-center transition-[box-shadow,transform] duration-[var(--dur-hover)] ${
+      className={`group relative flex min-h-[17rem] items-center justify-center overflow-hidden rounded-[var(--radius-lg)] text-center transition-[box-shadow,transform] duration-[var(--dur-hover)] ${
         isLive ? "hover:-translate-y-[2px] hover:shadow-[var(--glow-hover)]" : ""
       }`}
     >
@@ -114,7 +114,7 @@ function ToolCard({ title, description, isLive, onOpen }) {
       type="button"
       onClick={() => onOpen?.()}
       aria-disabled={!isLive}
-      className="kit-focus flex min-w-0 flex-col gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-5)] text-left transition-[border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line-strong)] hover:shadow-[var(--glow-hover)]"
+      className="flex min-w-0 flex-col gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-5)] text-left transition-[border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line-strong)] hover:shadow-[var(--glow-hover)]"
     >
       <h3 className="font-[family-name:var(--font-display)] text-[length:var(--text-lead)] leading-[var(--lh-lead)] font-medium text-[var(--ink)]">
         {title}

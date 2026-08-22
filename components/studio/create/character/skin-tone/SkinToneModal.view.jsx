@@ -1,6 +1,8 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function SkinToneModalView({
   open = false,
@@ -20,98 +22,105 @@ export default function SkinToneModalView({
   onChooseOption = null,
   onChangeCustomValue = null,
 }) {
+  const hasValue = Boolean(triggerSummary) && triggerSummary !== "Not chosen";
+
   return (
     <div>
+      <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        {triggerLabel}
+      </span>
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm transition hover:border-[var(--gold-ornament)]/35"
+        className="mt-[var(--space-1)] flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
-        <span className="block text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-          {triggerLabel}
-        </span>
-        <span className="mt-1 block text-[var(--ink)]">
+        <span
+          className={`truncate text-[length:var(--text-body)] leading-[var(--lh-body)] ${hasValue ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}`}
+        >
           {triggerSummary || "Not chosen"}
         </span>
+        <ChevronRight
+          size={16}
+          className="shrink-0 text-[var(--ink-faint)]"
+          aria-hidden="true"
+        />
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="font-display text-3xl">{modalTitle}</h2>
-
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-2xl"
+          onClose={onClose}
+          ariaLabel={modalTitle}
+        >
+          <div className="flex max-h-[92dvh] flex-col p-[var(--space-6)] pt-[var(--space-8)]">
+            <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+              {modalTitle}
+            </h2>
 
             <div
               aria-hidden="true"
               className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
             />
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {options.map((option) => {
-                const active = option?.isCustom
-                  ? customActive
-                  : !customActive && option?.id === selectedOptionId;
+            <div className="min-h-0 flex-1 overflow-y-auto pb-[var(--space-2)] pr-1">
+              <div className="grid gap-[var(--space-3)] sm:grid-cols-2 lg:grid-cols-4">
+                {options.map((option) => {
+                  const active = option?.isCustom
+                    ? customActive
+                    : !customActive && option?.id === selectedOptionId;
 
-                return (
-                  <button
-                    key={option?.id || "none"}
-                    type="button"
-                    onClick={() => onChooseOption?.(option?.id || "")}
-                    className={`rounded-xl border p-3 text-left transition ${
-                      active
-                        ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)]"
-                        : "border-white/10 bg-[var(--fill-option-rest)] hover:border-[var(--gold-ornament)]/35"
-                    }`}
-                  >
-                    <div
-                      className="h-14 rounded-lg border border-white/10"
-                      style={option?.swatchStyle || {}}
+                  return (
+                    <button
+                      key={option?.id || "none"}
+                      type="button"
+                      onClick={() => onChooseOption?.(option?.id || "")}
+                      className={`rounded-[var(--radius-md)] border p-[var(--space-3)] text-left transition-colors ${
+                        active
+                          ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)]"
+                          : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] hover:border-[var(--gold-ornament)]/35"
+                      }`}
+                    >
+                      <div
+                        className="h-14 rounded-[var(--radius-md)] border border-[var(--line-whisper)]"
+                        style={option?.swatchStyle || {}}
+                      />
+                      <p className="mt-[var(--space-3)] text-[length:var(--text-body)] text-[var(--ink)]">
+                        {option?.label || "Not chosen"}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {customActive ? (
+                <div className="mt-[var(--space-5)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-4)]">
+                  <label className="block">
+                    <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                      {customInputTitle}
+                    </span>
+                    <input
+                      autoFocus
+                      maxLength={customValueMaxLength}
+                      value={customValue}
+                      onChange={(event) =>
+                        onChangeCustomValue?.(event.target.value)
+                      }
+                      placeholder={customPlaceholder}
+                      className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)]"
                     />
-                    <p className="mt-3 text-sm text-[var(--ink)]">
-                      {option?.label || "Not chosen"}
-                    </p>
-                  </button>
-                );
-              })}
+                  </label>
+                  <div className="mt-[var(--space-2)] flex items-start justify-between gap-[var(--space-4)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                    <p>{customHelperText}</p>
+                    <span className="shrink-0 tabular-nums">
+                      {String(customValue || "").length} / {customValueMaxLength}
+                    </span>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            {customActive ? (
-              <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/25 bg-black/30 p-4">
-                <label className="block">
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                    {customInputTitle}
-                  </span>
-                  <input
-                    autoFocus
-                    maxLength={customValueMaxLength}
-                    value={customValue}
-                    onChange={(event) =>
-                      onChangeCustomValue?.(event.target.value)
-                    }
-                    placeholder={customPlaceholder}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-                  />
-                </label>
-                <div className="mt-2 flex items-start justify-between gap-4 text-xs leading-5 text-[var(--ink-dim)]">
-                  <p>{customHelperText}</p>
-                  <span className="shrink-0 tabular-nums">
-                    {String(customValue || "").length} / {customValueMaxLength}
-                  </span>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="mt-6 flex justify-end">
+            <div className="mt-[var(--space-5)] flex justify-end">
               <button
                 type="button"
                 onClick={() => onClose?.()}
@@ -121,7 +130,7 @@ export default function SkinToneModalView({
               </button>
             </div>
           </div>
-        </div>
+        </KitModalFrame>
       ) : null}
     </div>
   );

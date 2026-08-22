@@ -84,6 +84,15 @@
   --status-danger-bed:     rgba(194, 99, 77, .14);
   --status-danger-border:  rgba(194, 99, 77, .40);
 
+  /* Brian ruling 1, 22 Aug 2026 (ED1G burn-down, closes ED1E section
+     10 item 1): brighter text-tier variants for status-colored
+     RUNNING TEXT on dark panels only, e.g. the at-limit field
+     counter, a save-error line. Chips and badges keep the base
+     --status-* colors above; never swap a chip/badge to these. */
+  --status-success-text: oklch(.86 .09 135);
+  --status-warning-text: oklch(.80 .13 60);
+  --status-danger-text:  oklch(.78 .12 32);
+
   /* --- LINES ------------------------------------------------
      Bright gold at low alpha, never antique. At these
      opacities antique reads as a brown smudge; bright reads

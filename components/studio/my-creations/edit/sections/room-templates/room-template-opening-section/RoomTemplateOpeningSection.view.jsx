@@ -1,10 +1,10 @@
 import { Plus, X } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
-  SectionTitle,
-  TextAreaField,
   DEEP_LONGFORM_MAX_LENGTH,
+  SectionTitle,
+  SelectField,
+  TextAreaField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function RoomTemplateOpeningSectionView({
@@ -35,7 +35,7 @@ export default function RoomTemplateOpeningSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-5)]">
         <TextAreaField
           label={publicOpeningContextLabel}
           value={publicOpeningContextValue}
@@ -44,14 +44,18 @@ export default function RoomTemplateOpeningSectionView({
           maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
-        <div className="grid gap-4">
+        <div className="grid gap-[var(--space-4)]">
           {openingMessages.map((message) => (
+            // Opening message rows are repeatable list items, kept
+            // with their own list-item border (same allowance the
+            // sibling card lists use), but the eyebrow moves off the
+            // gold-panel-header recipe to the tier 4 group label.
             <div
               key={message.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5"
+              className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-5)]"
             >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+                <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                   {message.messageLabel}
                 </p>
 
@@ -66,8 +70,8 @@ export default function RoomTemplateOpeningSectionView({
                 </button>
               </div>
 
-              <div className="mt-4 grid gap-4">
-                <CrestfallSelect
+              <div className="mt-[var(--space-4)] grid gap-[var(--space-4)]">
+                <SelectField
                   label={speakerLabel}
                   value={message.speakerValue}
                   onChange={(value) =>

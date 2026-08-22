@@ -9,6 +9,7 @@ import {
   getCommandOutcomeEffectModeDescription,
 } from "./mechanicsCommandOutcomesNormalization.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -79,24 +80,15 @@ export default function MechanicsCommandOutcomesView({
               </div>
 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
-                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                  <span>Effect Mode</span>
-                  <select
-                    value={branch.effectMode}
-                    onChange={(event) =>
-                      patchOutcome(outcome, {
-                        effectMode: event.target.value,
-                      })
-                    }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                  >
-                    {COMMAND_OUTCOME_EFFECT_MODES.map((mode) => (
-                      <option key={mode} value={mode}>
-                        {mode}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <SelectField
+                  label="Effect Mode"
+                  value={branch.effectMode}
+                  onChange={(value) => patchOutcome(outcome, { effectMode: value })}
+                  options={COMMAND_OUTCOME_EFFECT_MODES.map((mode) => ({
+                    value: mode,
+                    label: mode,
+                  }))}
+                />
 
                 <TextAreaField
                   label="Outcome Summary"

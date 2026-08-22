@@ -24,7 +24,7 @@ export default function KitLoadMoreView({
         disabled={isLoading}
         aria-busy={isLoading}
         onClick={() => onLoadMore?.()}
-        className="kit-focus cf-btn cf-btn--secondary active:bg-[var(--state-pressed-fill)]"
+        className="cf-btn cf-btn--secondary active:bg-[var(--state-pressed-fill)]"
       >
         {isLoading ? (
           <>

@@ -13,36 +13,33 @@ function SelectedClothingCard({
   onClearDefaultClothing = null,
 }) {
   return (
-    <div className="md:col-span-2">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+    <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {clothingLabel}
       </p>
 
-      <div className="mt-2 rounded-2xl border border-white/10 bg-black/35 p-4">
+      <div className="mt-[var(--space-3)]">
         {selectedClothing.hasSelection ? (
-          <div className="flex flex-wrap items-start gap-4">
+          <div className="flex flex-wrap items-start gap-[var(--space-4)]">
             <div
-              className="h-24 w-24 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+              className="h-24 w-24 shrink-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-cover bg-center"
               style={{
                 backgroundImage: `url(${selectedClothing.imageUrl})`,
               }}
             />
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
                 {selectedClothing.label}
               </p>
-              <h4 className="mt-1 font-display text-3xl">
+              {/* Tier 6 (ED1E section 3): an entry value never renders
+                  at display size or family. */}
+              <p className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                 {selectedClothing.title || selectedClothingFallbackTitle}
-              </h4>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
+              </p>
+              <p className="mt-[var(--space-2)] line-clamp-2 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                 {selectedClothing.description || noDescriptionLabel}
               </p>
-              {selectedClothing.id ? (
-                <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
-                  {selectedClothing.id}
-                </p>
-              ) : null}
             </div>
 
             <button
@@ -56,12 +53,12 @@ function SelectedClothingCard({
             </button>
           </div>
         ) : (
-          <p className="text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {emptyClothingDescription}
           </p>
         )}
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-3)]">
           <button
             type="button"
             onClick={() => onPickOutfit?.()}
@@ -110,7 +107,7 @@ export default function CharacterAppearanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {skinToneControl}
         {eyeColorControl}
         {hairControl}

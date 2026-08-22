@@ -34,7 +34,11 @@ during a transition).
   field. Counter follows the O4 ruling: hidden at rest, appears on
   textarea focus or once past 80% of the limit, turns
   `--status-danger` with the word "limit" at the ceiling. Composed on
-  `KitModalFrame variant="modal"` (R4 full-screen at 390).
+  `KitModalFrame variant="modal"` (R4 full-screen at 390 is superseded
+  under 700px by A4, the mobile modal law RULED 22 Aug 2026,
+  BUILD-BLUEPRINT 2.16(p); `KitModalFrame` implements the bottom-
+  anchored A4 behavior, never a full-screen panel, below that
+  boundary).
 - **Export** (`EXPORT`): range preset (`CHAT_EXPORT_RANGE_PRESETS`:
   current beat, current scene, recent 25, recent 50, custom start/
   stop) and format (`CHAT_EXPORT_FORMAT_OPTIONS`: TXT, Markdown).

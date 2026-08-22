@@ -1,6 +1,8 @@
 "use client";
 
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function VoiceModulePickerModalView({
   open = false,
@@ -67,29 +69,20 @@ export default function VoiceModulePickerModalView({
       )}
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={modalAriaLabel}
-            className="flex max-h-[88vh] w-full max-w-5xl flex-col rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl">{modalTitle}</h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-                  {modalDescription}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-4xl"
+          onClose={onClose}
+          ariaLabel={modalAriaLabel}
+        >
+          <div className="flex max-h-[92dvh] flex-col p-[var(--space-6)] pt-[var(--space-8)]">
+            <div>
+              <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+                {modalTitle}
+              </h2>
+              <p className="mt-[var(--space-2)] max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {modalDescription}
+              </p>
             </div>
 
             <div
@@ -97,7 +90,7 @@ export default function VoiceModulePickerModalView({
               className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
             />
 
-            <div className="mt-5 min-h-0 overflow-y-auto pr-1">
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1">
               {safeOptionGroups.length ? (
                 <div className="space-y-6">
                   {safeOptionGroups.map((group) => {
@@ -161,7 +154,7 @@ export default function VoiceModulePickerModalView({
               )}
             </div>
 
-            <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-white/10 pt-4">
+            <div className="mt-[var(--space-5)] flex flex-wrap justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
               <button
                 type="button"
                 onClick={() => onClearAll?.()}
@@ -180,7 +173,7 @@ export default function VoiceModulePickerModalView({
               </button>
             </div>
           </div>
-        </div>
+        </KitModalFrame>
       ) : null}
     </div>
   );

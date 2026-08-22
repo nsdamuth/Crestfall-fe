@@ -83,18 +83,21 @@ function getCanonReviewButtonLabel({
   return "Submit for Canon Review";
 }
 
+// 4.7 composed disabled recipe (D19): the word "Soon" is a tier 8
+// meta word the View renders beside a disabled control, never part
+// of the label itself.
 function getTemplateActions(isTemplate) {
   if (isTemplate) {
     return [
       {
         id: "duplicate-template",
-        label: "Duplicate Template Soon",
+        label: "Duplicate Template",
         disabled: true,
         emphasis: "secondary",
       },
       {
         id: "use-template",
-        label: "Use Template Soon",
+        label: "Use Template",
         disabled: true,
         emphasis: "secondary",
       },
@@ -104,7 +107,7 @@ function getTemplateActions(isTemplate) {
   return [
     {
       id: "convert-to-template",
-      label: "Convert To Template Soon",
+      label: "Convert To Template",
       disabled: true,
       emphasis: "primary",
     },

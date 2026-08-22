@@ -1,6 +1,6 @@
 # Kit Ingredient Picker LOOM package
 
-**Contract:** `KitIngredientPicker.contract.js` (`1.0.0`)
+**Contract:** `KitIngredientPicker.contract.js` (`1.1.0`)
 
 ## Purpose
 
@@ -38,6 +38,13 @@ live rule: pose, outfit, location, preset).
 Selected cards follow the selection-state law
 (`docs/BUILD-BLUEPRINT.md` 2.16(i)): `--fill` wash plus `--gold-bright`
 title text, never a bold border change.
+
+## Nested modal back label
+
+`backLabel` (`string|null`, added 1.1.0, additive): NESTED MODAL LAW
+(the R1 pattern, this picker opened from another modal under 700px).
+When non-null, the caller passes a labeled back affordance so the
+return path reads correctly instead of a bare close.
 
 ## Fixture states
 

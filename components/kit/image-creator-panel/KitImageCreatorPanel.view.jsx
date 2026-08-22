@@ -38,7 +38,7 @@ const SLOT_DEFS = [
 const EMPTY_SLOT_STATE = { selection: null, isCustomMode: false, customText: "" };
 
 const FIELD_RECIPE =
-  "cf-field mt-[var(--space-2)] w-full resize-none rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
+  "mt-[var(--space-2)] w-full resize-none rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
 
 function FieldCaption({ children }) {
   return (
@@ -62,7 +62,7 @@ function ModeToggle({ mode, onChangeMode }) {
             type="button"
             aria-pressed={isActive}
             onClick={() => onChangeMode?.(option.id)}
-            className={`kit-focus flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] uppercase tracking-[var(--track-label)] transition-colors ${
+            className={`flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] uppercase tracking-[var(--track-label)] transition-colors ${
               isActive
                 ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -85,7 +85,7 @@ function ClearButton({ label, onClick }) {
         event.stopPropagation();
         onClick?.();
       }}
-      className="kit-focus flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+      className="flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
     >
       <X size={14} aria-hidden="true" />
     </button>
@@ -114,7 +114,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
         <button
           type="button"
           onClick={() => onActivate?.(def.id)}
-          className="kit-focus min-h-[var(--control-md)] flex-1 truncate rounded-[var(--radius-sm)] border border-transparent px-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors hover:text-[var(--ink)]"
+          className="min-h-[var(--control-md)] flex-1 truncate rounded-[var(--radius-sm)] border border-transparent px-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors hover:text-[var(--ink)]"
         >
           <span className={hasSelection ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}>
             {hasSelection ? state.selection.title : "Select..."}
@@ -159,7 +159,7 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
         <button
           type="button"
           onClick={() => onBackToPresets?.(def.id)}
-          className="kit-focus cf-btn cf-btn--secondary cf-btn--sm"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <Library size={14} aria-hidden="true" />
           Back to presets
@@ -168,7 +168,7 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
           <button
             type="button"
             onClick={() => onSavePreset?.(def.id)}
-            className="kit-focus cf-btn cf-btn--secondary cf-btn--sm"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <Save size={14} aria-hidden="true" />
             Save as preset
@@ -198,7 +198,7 @@ function OptionsExpander({
         type="button"
         aria-expanded={isOpen}
         onClick={onToggle}
-        className="kit-focus flex min-h-[var(--control-md)] w-full items-center justify-between rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] transition-colors hover:border-[var(--line)]"
+        className="flex min-h-[var(--control-md)] w-full items-center justify-between rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] transition-colors hover:border-[var(--line)]"
       >
         Options
         {isOpen ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
@@ -301,7 +301,7 @@ function GenerateBlock({
         type="button"
         onClick={() => onGenerate?.()}
         disabled={!canGenerate}
-        className="kit-focus cf-btn cf-btn--primary w-full"
+        className="cf-btn cf-btn--primary w-full"
       >
         <Wand2 size={15} aria-hidden="true" />
         Generate image

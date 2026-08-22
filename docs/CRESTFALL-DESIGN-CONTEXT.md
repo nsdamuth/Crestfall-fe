@@ -359,7 +359,10 @@ both are queued for the Gate close and law-gap rulings above.
   beside the one primary. An optional `imageAnchor` prop (default
   `"center 10%"`) positions the art layer's crop per instance.
 - **Compact continue row.** `KitContinueRow`, a package sibling to
-  `promo-banner`. Stories is its only consumer.
+  `promo-banner`. Stories was its only consumer; Stories has since
+  migrated to `KitCreationCard`'s `onContinue` prop (ED1G review, 22
+  Aug 2026), so `KitContinueRow` is now an orphaned view with zero
+  consumers.
 - **List density.** Two-up list rows permitted at desktop widths
   where whitespace allows; Community and Creator Connections both
   render list two-up at 1100px and up.
@@ -433,9 +436,11 @@ by this pass; see the 12 Aug 2026 table for the full package-by-
 package contract list, expected, verify current versions against
 each package's own README before propagating ED1e.
 
-Not yet built as kit packages: global search, form field (ad hoc
-`cf-field` recipes still cover this), picker-modal/menu-popover beyond
-the ingredient picker, alert-strip.
+Not yet built as kit packages: global search, picker-modal/menu-popover
+beyond the ingredient picker, alert-strip. Form field previously ran on
+ad hoc `cf-field` recipes; those are RETIRED (22 Aug 2026, A3) and the
+`form-field` kit package now covers this, focused through the global
+`--focus-ring`.
 
 ## Where the build stands
 

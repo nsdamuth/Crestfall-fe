@@ -157,7 +157,7 @@ tuning without new ad hoc literals.
 
 | Family | Step 5 anchor | Steps 1 to 4, 6 to 10 |
 |---|---|---|
-| `--success-1..10` | `#7D9B6A` at `--success-5` (= `--status-success`) | unset |
+| `--success-1..10` | `#7D9B6A` at `--success-5` (historical; `--status-success` was revised 22 Aug 2026 to `oklch(.76 .08 135)`, `#7D9B6A` struck for lineage) | unset |
 | `--warning-1..10` | `#C97B35` at `--warning-5` (= `--status-warning`) | unset |
 | `--danger-1..10` | `#C2634D` at `--danger-5` (= `--status-danger`) | unset |
 
@@ -456,9 +456,10 @@ logged, not silently left.
   FRONTEND-SOP section 14).
 
 State shorthand used below: REST / HOVER / FOCUS / PRESSED / DISABLED.
-FOCUS is always `--state-focus-ring` (or the sanctioned quieter
-`cf-field` variant inside dense modal field grids) and is not repeated
-in every row.
+FOCUS is always `--state-focus-ring` and is not repeated in every row.
+The `cf-field` quieter 1px variant named in earlier sprint prose is
+RETIRED (22 Aug 2026, A3): the global `--focus-ring` is the only
+focus mechanism, dense modal field grids included.
 
 ## 2.1 Sticky filter bar (`studio-filter-bar`)
 
@@ -512,7 +513,11 @@ no endpoint to wire to (CSV row 17; CR-012).
   value `--ink` (Ruling 3, the Lilith defect fix); results surface is a
   popover panel on `--surface-4` with `--shadow-popover`
   (`cf-dropdown` recipe), rich rows per 2.9, grouped by type using the
-  display names in `lib/shared/presentation/terminology.js`.
+  display names in `lib/shared/presentation/terminology.js`. Superseded
+  22 Aug 2026 (NEW LAW B, GO 2B, Final Ruling Render): menus and
+  popovers moved off `--surface-4`/`--shadow-popover` to the
+  borderless `--panel-glass` recipe (DESIGN-TOKENS.md:52, :270);
+  this anatomy needs the same glass-menu treatment as 2.9.
 - States: input REST (surface-1 bed, `--line-whisper` border), HOVER
   (`--state-hover-line`), FOCUS, PRESSED (n/a for text input; the
   clear affordance is an icon button with all five), DISABLED
@@ -904,10 +909,10 @@ creator's Advanced Creator Guidance and Advanced Prompting (CSV rows
   exactly as the creator does today; the budget line is a counter slot
   at group level.
 - States on the input: REST, HOVER (`--state-hover-line` border),
-  FOCUS (global ring, or the sanctioned 1px `cf-field` variant inside
-  dense modal grids), PRESSED n/a for text (applies to
-  select/toggle-shaped fields), DISABLED (`--state-disabled-opacity`,
-  label stays `--ink-faint`).
+  FOCUS (global `--focus-ring`; the `cf-field` 1px variant is RETIRED,
+  22 Aug 2026, A3, dense modal grids included), PRESSED n/a for text
+  (applies to select/toggle-shaped fields), DISABLED
+  (`--state-disabled-opacity`, label stays `--ink-faint`).
 - LOOM: `FormField.jsx` shell; `form-field/` View, contract (`label`,
   `helper`, `error`, `success`, `value`, `placeholder`, `maxLength`,
   `count`, `isFolded`/`onToggleFold` optional, semantic `onChange`),
@@ -929,7 +934,10 @@ exists yet; this kit piece is that component.
 - Menu popover anatomy: `--surface-4`, `1px --line`, `--radius-md`,
   `--shadow-popover`, `--space-2` padding, min 13rem, max 19rem
   scrolling; section label rows `--text-label` uppercase `--ink-faint`;
-  rows `--control-sm` min height, `--radius-sm`.
+  rows `--control-sm` min height, `--radius-sm`. Superseded 22 Aug 2026
+  (NEW LAW B, GO 2B, Final Ruling Render, same supersession as 2.6):
+  menus and popovers moved off `--surface-4`/`--shadow-popover` to the
+  borderless `--panel-glass` recipe (DESIGN-TOKENS.md:52, :270).
 - Menu row states: REST `--ink-dim`; HOVER `--fill-whisper` bed, ink
   text; FOCUS; SELECTED `--gold-bright` text with a check mark from
   the icon sprite (symbols-by-job ruling: functional marks come from
@@ -1314,14 +1322,17 @@ shape: list row, not banner/hero; no version number of its own).
 Small art thumbnail left, title, "Last played" line, Continue button
 right, full content width, list-density height. **Stories-only usage,
 RULED 11 Aug 2026 (retires the same-day banner-plus-rows treatment):**
-Stories renders up to three most-recent in-progress items as
+Stories rendered up to three most-recent in-progress items as
 `KitContinueRow` rows, capped, with a "Show all in progress (N)"
-control revealing the rest; Stories carries no hero continue banner at
+control revealing the rest; Stories carried no hero continue banner at
 all. Home is the only page in the nine-page set that carries a
 continue banner; Home does not consume `KitContinueRow`. This
-supersedes 3.1 row 4's earlier "continue-card usage of promo-banner
+superseded 3.1 row 4's earlier "continue-card usage of promo-banner
 treatment (b)" line for Stories, which described the retired
-banner-plus-rows shape.
+banner-plus-rows shape. **Superseded again (ED1G review, 22 Aug
+2026):** Stories has since migrated to `KitCreationCard`'s
+`onContinue` prop; `KitContinueRow` is now an orphaned view with zero
+consumers and no contract coverage of its own.
 
 **(y) Five-bucket type filter, RULED 11 Aug 2026, amends (b) and CR-038.**
 Community and Vault share one five-bucket type filter set at the
@@ -1515,7 +1526,9 @@ its right, View all beside the label, never at the end of the scroll.
   no tabindex so arrow keys keep their native page meaning. The
   browser scrolls a focused element into a scroll container natively,
   and `scroll-padding-inline` insets that target from the clip edge
-  so the 1px kit-focus mark always sits in open space.
+  so the global `--focus-ring` always sits in open space. The
+  `kit-focus` 1px mark named in earlier sprint prose is RETIRED (22
+  Aug 2026, A3); the global ring is the only focus mechanism here.
 - **Reduced motion.** Arrow clicks choose the scroll behavior at
   event time: `smooth` normally, `auto` (an instant jump) when
   `matchMedia("(prefers-reduced-motion: reduce)")` matches. No CSS

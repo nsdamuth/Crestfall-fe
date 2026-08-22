@@ -6,10 +6,9 @@ import {
   Download,
   RotateCcw,
   WandSparkles,
-  X,
 } from "lucide-react";
 
-import ModalShell from "@/components/ui/ModalShell";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -23,8 +22,8 @@ function IssueList({
 
   const toneClassName =
     tone === "warning"
-      ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
-      : "border-red-300/20 bg-red-500/10 text-red-100";
+      ? "border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] text-[var(--status-warning-text)]"
+      : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]";
 
   return (
     <section
@@ -95,19 +94,20 @@ export default function MechanicsJsonEditorModalView({
   onValidateAndApply = null,
 }) {
   return (
-    <ModalShell
+    <KitModalFrame
       onClose={onClose}
-      closeOnBackdrop={false}
-      panelClassName="max-h-[94vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl"
+      ariaLabel={title}
+      hasUnsavedChanges={hasDraftChanges}
+      panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
         <div>
           <p className={EYEBROW_CLASS}>
             <Braces size={15} />
             Loom Authoring Tool
           </p>
 
-          <h2 className="mt-2 font-display text-4xl">
+          <h2 className="mt-2 font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
             {title}
           </h2>
 
@@ -115,18 +115,9 @@ export default function MechanicsJsonEditorModalView({
             {description}
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="flex min-h-[var(--control-md)] min-w-[var(--control-md)] items-center justify-center rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-          aria-label="Close Mechanics JSON Editor"
-        >
-          <X size={18} />
-        </button>
       </div>
 
-      <div className="grid max-h-[calc(94vh-10rem)] gap-4 overflow-y-auto p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -184,7 +175,7 @@ export default function MechanicsJsonEditorModalView({
             }
             spellCheck={false}
             aria-label="Mechanics Module JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
           />
         </section>
 
@@ -228,7 +219,7 @@ export default function MechanicsJsonEditorModalView({
           />
 
           {!errors.length && !warnings.length ? (
-            <section className="rounded-xl border border-emerald-300/15 bg-emerald-500/5 p-4 text-emerald-100">
+            <section className="rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4 text-[var(--status-success-text)]">
               <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
                 <Check size={14} />
                 Ready to Validate
@@ -241,7 +232,7 @@ export default function MechanicsJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open builder. The normal page Save action still
           controls persistence.
@@ -267,6 +258,6 @@ export default function MechanicsJsonEditorModalView({
           </button>
         </div>
       </div>
-    </ModalShell>
+    </KitModalFrame>
   );
 }

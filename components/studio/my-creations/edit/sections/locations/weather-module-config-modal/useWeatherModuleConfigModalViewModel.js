@@ -421,6 +421,7 @@ export function useWeatherModuleConfigModalViewModel({
   const moduleInstanceId = weatherBinding?.moduleInstanceId || "";
   const [instance, setInstance] = useState(null);
   const [form, setForm] = useState(null);
+  const [initialFormSnapshot, setInitialFormSnapshot] = useState(null);
   const [status, setStatus] = useState(moduleInstanceId ? "loading" : "loaded");
   const [message, setMessage] = useState("");
   const [selectedPresetId, setSelectedPresetId] = useState(
@@ -433,7 +434,7 @@ export function useWeatherModuleConfigModalViewModel({
     async function loadModuleInstance() {
       if (!moduleInstanceId) {
         setInstance(null);
-        setForm(buildInitialForm({ instance: null, locationTitle }));
+        applyForm(buildInitialForm({ instance: null, locationTitle }));
         setStatus("loaded");
         return;
       }
@@ -448,7 +449,7 @@ export function useWeatherModuleConfigModalViewModel({
         if (cancelled) return;
 
         setInstance(loadedInstance);
-        setForm(buildInitialForm({ instance: loadedInstance, locationTitle }));
+        applyForm(buildInitialForm({ instance: loadedInstance, locationTitle }));
         setStatus("loaded");
       } catch (error) {
         if (cancelled) return;
@@ -459,7 +460,7 @@ export function useWeatherModuleConfigModalViewModel({
             "Weather module instance could not be loaded. You can create a new one by saving."
         );
         setInstance(null);
-        setForm(buildInitialForm({ instance: null, locationTitle }));
+        applyForm(buildInitialForm({ instance: null, locationTitle }));
       }
     }
 
@@ -469,6 +470,11 @@ export function useWeatherModuleConfigModalViewModel({
       cancelled = true;
     };
   }, [moduleInstanceId, locationTitle]);
+
+  function applyForm(nextForm) {
+    setForm(nextForm);
+    setInitialFormSnapshot(JSON.stringify(nextForm));
+  }
 
   const existingInstanceData = useMemo(
     () => getInstanceData(instance),
@@ -726,7 +732,7 @@ export function useWeatherModuleConfigModalViewModel({
       }
 
       setInstance(savedInstance);
-      setForm(buildInitialForm({ instance: savedInstance, locationTitle }));
+      applyForm(buildInitialForm({ instance: savedInstance, locationTitle }));
       setStatus("loaded");
       setMessage("Weather module saved. Remember to save the Location to persist the binding.");
 
@@ -860,6 +866,9 @@ export function useWeatherModuleConfigModalViewModel({
     title: "Configure In-World Weather",
     description:
       "Choose recommended weather conditions, control which conditions are available here, and tune how strongly weather appears in the scene.",
+    hasUnsavedChanges: Boolean(
+      initialFormSnapshot && JSON.stringify(form) !== initialFormSnapshot
+    ),
     message,
     moduleTitle: form.title,
     priority: form.priority,

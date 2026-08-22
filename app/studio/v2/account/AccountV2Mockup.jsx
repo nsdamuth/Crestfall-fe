@@ -19,8 +19,8 @@
 // (b) stat duplication: ONE stats block, fetched once in the live
 //     page's terms (here, fixture-fed once); the coins panel never
 //     carries its own separate all-zero stat grid;
-// (c) raw controls: every control resolves through cf-field, cf-btn,
-//     KitDropdown, KitModalFrame, or the kit-search-input recipe.
+// (c) raw controls: every control resolves through cf-btn, KitDropdown,
+//     KitModalFrame, or the kit-search-input recipe.
 import { useState } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, UserRound } from "lucide-react";
@@ -143,7 +143,7 @@ function FieldLabel({ label, count, countId }) {
 }
 
 const FIELD_RECIPE =
-  "cf-field mt-[var(--space-2)] min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]";
+  "mt-[var(--space-2)] min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]";
 
 function fieldName(label) {
   return label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -260,7 +260,7 @@ function AgeGateModal({ requestedLabel, onClose }) {
         <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           For now, your account remains set to Everyone.
         </p>
-        <button type="button" onClick={onClose} className="kit-focus cf-btn cf-btn--primary mt-[var(--space-5)] w-full">
+        <button type="button" onClick={onClose} className="cf-btn cf-btn--primary mt-[var(--space-5)] w-full">
           OK
         </button>
       </div>
@@ -281,7 +281,7 @@ function BuyCoinsModal({ onClose }) {
         <p className="mt-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Coin purchases are coming later. For private testing, an admin can manually add coins to your account.
         </p>
-        <button type="button" onClick={onClose} className="kit-focus cf-btn cf-btn--primary mt-[var(--space-5)] w-full">
+        <button type="button" onClick={onClose} className="cf-btn cf-btn--primary mt-[var(--space-5)] w-full">
           Got it
         </button>
       </div>
@@ -335,7 +335,7 @@ function DefaultPcPickerModal({ selectedId, onClose, onSelect, onClear }) {
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => onSelect(pc.id)}
-                  className={`kit-focus overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
                     isSelected ? "border-[var(--gold-ornament)]" : "border-[var(--line)] hover:border-[var(--line-strong)]"
                   }`}
                 >
@@ -362,7 +362,7 @@ function DefaultPcPickerModal({ selectedId, onClose, onSelect, onClear }) {
         )}
 
         {selectedId && (
-          <button type="button" onClick={onClear} className="kit-focus cf-btn cf-btn--danger mt-[var(--space-5)]">
+          <button type="button" onClick={onClear} className="cf-btn cf-btn--danger mt-[var(--space-5)]">
             Clear default
           </button>
         )}
@@ -480,7 +480,7 @@ export default function AccountV2Mockup() {
               </div>
               <div className="flex flex-wrap gap-[var(--space-3)]">
                 {hasPublicProfile && (
-                  <Link href={`/studio/profile/${username}`} className="kit-focus cf-btn cf-btn--secondary">
+                  <Link href={`/studio/profile/${username}`} className="cf-btn cf-btn--secondary">
                     View public profile
                   </Link>
                 )}
@@ -493,7 +493,7 @@ export default function AccountV2Mockup() {
                         "Saving is wired when the page goes live. Your edits live only in this preview and nothing was stored.",
                     })
                   }
-                  className="kit-focus cf-btn cf-btn--primary"
+                  className="cf-btn cf-btn--primary"
                 >
                   Save profile
                 </button>
@@ -539,7 +539,7 @@ export default function AccountV2Mockup() {
               <button
                 type="button"
                 onClick={() => setIsBuyCoinsOpen(true)}
-                className="kit-focus cf-btn cf-btn--secondary inline-flex items-center gap-[var(--space-1)]"
+                className="cf-btn cf-btn--secondary inline-flex items-center gap-[var(--space-1)]"
               >
                 <ShoppingBag size={14} aria-hidden="true" />
                 Buy coins soon
@@ -616,14 +616,14 @@ export default function AccountV2Mockup() {
             )}
 
             <div className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-3)]">
-              <button type="button" onClick={() => setIsPcPickerOpen(true)} className="kit-focus cf-btn cf-btn--secondary">
+              <button type="button" onClick={() => setIsPcPickerOpen(true)} className="cf-btn cf-btn--secondary">
                 Choose
               </button>
               {defaultPlayerCharacter && (
                 <button
                   type="button"
                   onClick={() => setDefaultPlayerCharacterId(null)}
-                  className="kit-focus cf-btn cf-btn--danger"
+                  className="cf-btn cf-btn--danger"
                 >
                   Clear
                 </button>
@@ -649,7 +649,7 @@ export default function AccountV2Mockup() {
                 <Link
                   key={row.title}
                   href={row.href}
-                  className="kit-focus group rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] transition-colors hover:border-[var(--line-strong)]"
+                  className="group rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] transition-colors hover:border-[var(--line-strong)]"
                 >
                   <div className="flex items-start justify-between gap-[var(--space-3)]">
                     <div>
@@ -681,7 +681,7 @@ export default function AccountV2Mockup() {
                     "Signing out is wired when the page goes live. Nothing happened to your session in this preview.",
                 })
               }
-              className="kit-focus cf-btn cf-btn--secondary"
+              className="cf-btn cf-btn--secondary"
             >
               Sign Out
             </button>

@@ -131,3 +131,22 @@ export const weatherModuleConfigLoadingFixture = Object.freeze({
   isInitializing: true,
   loadingMessage: "Loading weather module...",
 });
+
+// Fresh-create variant (DOC-DRIFT fix, ED1G SW6): no existing module
+// instance yet, the module is created on save.
+export const weatherModuleConfigFreshCreateFixture = Object.freeze({
+  ...weatherModuleConfigExistingFixture,
+  message: "",
+  moduleTitle: "Location Weather Rules",
+  moduleDescription: "Configurable weather module instance for this location.",
+  moduleStatusLabel: "Will be created on save",
+  hasUnsavedChanges: false,
+});
+
+// Error messageTone variant (DOC-DRIFT fix, ED1G SW6): exercises the
+// --status-danger chip path the existing fixture never reached.
+export const weatherModuleConfigErrorFixture = Object.freeze({
+  ...weatherModuleConfigExistingFixture,
+  message: "Weather module instance could not be loaded. You can create a new one by saving.",
+  messageTone: "error",
+});

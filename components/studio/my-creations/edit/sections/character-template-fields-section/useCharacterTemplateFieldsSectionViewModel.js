@@ -79,6 +79,15 @@ function normalizeObject(value) {
     : {};
 }
 
+// Terminology map (4.6, D8/F2): a raw data-layer enum never surfaces
+// to the screen. CHARACTER_TEMPLATE is this section's own value; the
+// sibling CHARACTER mapping mirrors the same map in
+// character-identity-section/useCharacterIdentitySectionViewModel.js.
+const CREATION_TYPE_LABELS = Object.freeze({
+  CHARACTER: "Character",
+  CHARACTER_TEMPLATE: "Character Template",
+});
+
 export function formatCharacterTemplateTags(value) {
   if (Array.isArray(value)) return value.join(", ");
   return String(value || "");
@@ -152,7 +161,7 @@ export function getCharacterTemplateFieldsSectionModel({
       shortDescriptionPlaceholder:
         "A short creator-facing summary of what this template helps create.",
       tagsValue: formatCharacterTemplateTags(data.template_tags),
-      creationTypeValue: form?.type || "",
+      creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
       appliesToValue: "New characters only",
       defaultNameValue: templateFields.name || "",
       defaultTitleValue: templateFields.title || "",

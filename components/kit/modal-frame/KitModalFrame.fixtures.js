@@ -58,7 +58,7 @@ const sheetContent = (
         <button
           key={label}
           type="button"
-          className="kit-focus flex min-h-[var(--control-md)] items-center rounded-[var(--radius-sm)] px-[var(--space-3)] text-left text-[length:var(--text-ui)] text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+          className="flex min-h-[var(--control-md)] items-center rounded-[var(--radius-sm)] px-[var(--space-3)] text-left text-[length:var(--text-ui)] text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
         >
           {label}
         </button>

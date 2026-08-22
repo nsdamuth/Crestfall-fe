@@ -41,7 +41,7 @@ export default function KitContinueRowView({
       <button
         type="button"
         onClick={() => onContinue?.()}
-        className="kit-focus cf-btn cf-btn--secondary flex-none"
+        className="cf-btn cf-btn--secondary flex-none"
       >
         Continue
       </button>

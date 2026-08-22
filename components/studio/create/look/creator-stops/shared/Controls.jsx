@@ -53,7 +53,7 @@ export function TextField({ label, value, onChange, placeholder, maxLength }) {
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={maxLength}
         placeholder={placeholder}
-        className="cf-field min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        className="min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
       />
     </div>
   );
@@ -94,7 +94,7 @@ export function FoldingTextField({ label, value, onChange, placeholder, maxLengt
         maxLength={maxLength}
         placeholder={placeholder}
         rows={1}
-        className="cf-field w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        className="w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
         style={{
           height: isExpanded ? undefined : "var(--control-md)",
           maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px`,

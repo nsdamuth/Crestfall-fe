@@ -36,6 +36,10 @@ export const CREATOR_LIST_ROW_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} canonContributor
  * @property {CreatorListRowStat[]} stats
  * @property {CreatorListRowEngagementActions} engagementActions
+ * @property {import("react").ElementType} [LinkComponent] doc-only addition
+ *   (ED1G sw12): link/anchor component injected by the host, defaults to
+ *   "a" in the View. Already read by the View, undeclared here. No
+ *   version bump.
  */
 
 export {};

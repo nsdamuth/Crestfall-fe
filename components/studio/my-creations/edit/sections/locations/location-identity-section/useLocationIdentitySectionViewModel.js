@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 
+// Terminology map (4.6, D8/F2, ED1G): a raw data-layer enum never
+// surfaces to the screen. Matches the same map pattern in
+// character-identity-section/useCharacterIdentitySectionViewModel.js.
+const CREATION_TYPE_LABELS = Object.freeze({
+  LOCATION: "Location",
+});
+
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Location Editor",
   sectionTitle: "Location Identity",
@@ -154,7 +161,7 @@ export function useLocationIdentitySectionViewModel({
       parentImageFallbackUrl: "/images/placeholder-card.jpg",
       intendedUseValue: data.intended_use || "",
       tagsValue: formatLocationIdentityTags(data.tags),
-      creationTypeValue: form?.type || "",
+      creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
       inheritanceItems: LOCATION_INHERITANCE_ITEMS.map((item) => ({
         ...item,
         checked: inheritance[item.key],

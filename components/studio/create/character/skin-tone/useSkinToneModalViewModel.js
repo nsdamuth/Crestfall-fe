@@ -27,14 +27,17 @@ const skinToneOptions = [
   {
     value: "CUSTOM",
     label: "Custom",
-    color: "linear-gradient(135deg, #f4a7c7, #8b6bd6, #0a7eac)",
+    color: "var(--surface-1)",
   },
 ];
 
+// ED1E section 8: no gradient swatches, ever. Every option renders as
+// a flat radius-md tile; the CUSTOM entry is the neutral surface-1
+// tile the law names explicitly, not a mixed-color preview (the
+// banned purple-to-cyan #8b6bd6-to-#0a7eac gradient this used to
+// carry).
 function toSwatchStyle(color) {
-  return color?.includes("gradient")
-    ? { backgroundImage: color }
-    : { backgroundColor: color };
+  return { backgroundColor: color };
 }
 
 function isPresetValue(options, value) {

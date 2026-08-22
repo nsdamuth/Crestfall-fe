@@ -2,6 +2,8 @@ export const COMMUNITY_HUB_VIEW_CONTRACT_VERSION = "community-hub.view.v1";
 
 /**
  * @typedef {Object} CommunityHubViewProps
+ * @property {string} [eyebrow] doc-only addition (ED1G sw12), no version bump.
+ * @property {import("react").ReactNode} [filterBody] doc-only addition (ED1G sw12), no version bump.
  * @property {"CREATIONS"|"CREATORS"} mode
  * @property {string} query
  * @property {string} queryPlaceholder

@@ -52,7 +52,7 @@ export default function KitIngredientPickerPreviewClient() {
               setOpenId(fixture.id);
               setNote(`Opened the ${fixture.label} fixture.`);
             }}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Open {fixture.label}
           </button>

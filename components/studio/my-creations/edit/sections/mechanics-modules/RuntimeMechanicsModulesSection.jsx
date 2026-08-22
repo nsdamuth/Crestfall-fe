@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Activity, Link2, Plus, X } from "lucide-react";
 
 import {
+  CheckboxField,
   SectionTitle,
   SelectField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
@@ -192,7 +193,7 @@ export default function RuntimeMechanicsModulesSection({
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Mechanics Modules
               </p>
-              <h3 className="mt-2 font-display text-3xl">
+              <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
                 Attached Runtime Mechanics
               </h3>
               <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
@@ -262,7 +263,7 @@ export default function RuntimeMechanicsModulesSection({
                           Mechanics Module
                         </p>
 
-                        <h4 className="mt-1 text-lg text-[var(--ink)]">
+                        <h4 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                           {binding.moduleInstanceTitle ||
                             "Untitled Mechanics Module"}
                         </h4>
@@ -285,19 +286,15 @@ export default function RuntimeMechanicsModulesSection({
                     </div>
 
                     <div className="mt-4 grid gap-3 md:grid-cols-2">
-                      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                        <input
-                          type="checkbox"
-                          checked={binding.enabled !== false}
-                          onChange={(event) =>
-                            patchMechanicsModuleBinding(moduleCreationId, {
-                              enabled: Boolean(event.target.checked),
-                            })
-                          }
-                          className="h-4 w-4 accent-[var(--gold-ornament)]"
-                        />
-                        <span>Enabled</span>
-                      </label>
+                      <CheckboxField
+                        label="Enabled"
+                        checked={binding.enabled !== false}
+                        onChange={(checked) =>
+                          patchMechanicsModuleBinding(moduleCreationId, {
+                            enabled: checked,
+                          })
+                        }
+                      />
 
                       <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
                         <span>Priority</span>
@@ -317,7 +314,7 @@ export default function RuntimeMechanicsModulesSection({
                                 : 65,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
+                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition"
                         />
                       </label>
 

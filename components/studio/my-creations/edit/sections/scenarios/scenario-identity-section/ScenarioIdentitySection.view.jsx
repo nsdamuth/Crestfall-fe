@@ -1,7 +1,7 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ReadOnlyField,
   SectionTitle,
+  SelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -31,15 +31,15 @@ export default function ScenarioIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <CrestfallSelect
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] md:grid-cols-2">
+        <SelectField
           label={toneLabel}
           value={toneValue}
           onChange={(value) => onSelectTone?.(value)}
           options={toneOptions}
         />
 
-        <CrestfallSelect
+        <SelectField
           label={participantModeLabel}
           value={participantModeValue}
           onChange={(value) => onSelectParticipantMode?.(value)}

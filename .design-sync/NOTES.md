@@ -170,6 +170,11 @@ worth a re-sync on their own. Fold into whichever re-sync happens next:
   a real decision, not a mechanical fix, and shouldn't be made
   unilaterally. Surface the 38-token list and both options at the start
   of the next re-sync rather than guessing which one Brian wants.
+  Count discrepancy noted at the ED1G review, 22 Aug 2026:
+  `docs/plans/ED1F-DESIGN-DELTAS.md` records 33 pending `@kind`
+  additions, this file records 38. Neither figure is corrected here;
+  a source-of-truth recount against the live token files is needed
+  before either number is treated as authoritative.
 
 ## Re-sync risks
 

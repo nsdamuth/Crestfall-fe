@@ -1,6 +1,6 @@
 # Kit Destination Tile LOOM Package
 
-**Contract:** `KitDestinationTile.contract.js` (v1.0.0)
+**Contract:** `KitDestinationTile.contract.js` (v1.0.1)
 
 ## Purpose
 
@@ -63,8 +63,9 @@ render gate, this is a one-line change confined to this package.
 
 None. Uses `--surface-2`, `--line`, `--radius-md`, `--art-ink`,
 `--art-ink-dim`, `--text-lead`/`--lh-lead`, `--text-label`/`--lh-label`,
-`--space-1/2/3/8`, `--glow-hover`, `--dur-hover`, and `kit-focus`, all
-already locked.
+`--space-1/2/3/8`, `--glow-hover`, `--dur-hover`, and the global
+`--focus-ring`, all already locked. The `kit-focus` class named in
+earlier prose is RETIRED, 22 Aug 2026, A3.
 
 ## Package assets
 

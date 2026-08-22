@@ -3,16 +3,22 @@ import { Image as ImageIcon, RefreshCw, X } from "lucide-react";
 import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
+// A card list item keeps its own border (repeatable list item, the
+// same allowance the mechanics-modules sibling card lists use); the
+// media well loses its own inner border (a second nested border) and
+// clips through the card's own radius instead.
 function ReferenceCard({ card = {} }) {
   return (
-    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
-      <div className="flex items-start justify-between gap-4">
+    <article className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+      <div className="flex items-start justify-between gap-[var(--space-4)]">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {card.eyebrow}
           </p>
-          <h4 className="mt-2 font-display text-2xl">{card.label}</h4>
-          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+          <h4 className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+            {card.label}
+          </h4>
+          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {card.description}
           </p>
         </div>
@@ -30,7 +36,7 @@ function ReferenceCard({ card = {} }) {
         ) : null}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-black/45">
+      <div className="mt-[var(--space-4)] overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-2)]">
         {card.imageUrl ? (
           <img
             src={card.imageUrl}
@@ -38,9 +44,9 @@ function ReferenceCard({ card = {} }) {
             className="aspect-[3/4] w-full object-cover"
           />
         ) : (
-          <div className="relative flex aspect-[3/4] items-center justify-center p-6 text-center">
+          <div className="relative flex aspect-[3/4] items-center justify-center p-[var(--space-6)] text-center">
             <KitArtPlaceholderView size="lg" />
-            <p className="pointer-events-none absolute bottom-4 left-4 right-4 text-sm text-[var(--ink-dim)]">
+            <p className="pointer-events-none absolute bottom-[var(--space-4)] left-[var(--space-4)] right-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
               {card.emptyMessage}
             </p>
           </div>
@@ -48,7 +54,7 @@ function ReferenceCard({ card = {} }) {
       </div>
 
       {card.imageOutputId ? (
-        <p className="mt-3 break-all text-xs text-[var(--ink-dim)]">
+        <p className="mt-[var(--space-3)] break-all text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
           Image output ID:{" "}
           <span className="text-[var(--ink)]">
             {card.imageOutputId}
@@ -59,7 +65,7 @@ function ReferenceCard({ card = {} }) {
       <button
         type="button"
         onClick={() => card.onChoose?.()}
-        className="cf-btn cf-btn--primary mt-4"
+        className="cf-btn cf-btn--primary mt-[var(--space-4)]"
       >
         <ImageIcon size={14} />
         {card.chooseLabel}
@@ -102,12 +108,12 @@ export default function VisualReferencesSectionView({
       </div>
 
       {loadStatus === "error" ? (
-        <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <p className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--status-danger)]">
           {loadErrorMessage}
         </p>
       ) : null}
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] lg:grid-cols-2">
         {referenceCards.map((card) => (
           <ReferenceCard key={card.key} card={card} />
         ))}

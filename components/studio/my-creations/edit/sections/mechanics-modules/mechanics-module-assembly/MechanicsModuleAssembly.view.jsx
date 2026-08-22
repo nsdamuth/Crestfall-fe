@@ -17,7 +17,7 @@ function MechanicsTextField({ label, value, onChange, placeholder, type = "text"
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -65,7 +65,7 @@ export function MechanicsRuntimeFoldSection({
             {eyebrow}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-3">
-            <h3 className="font-display text-3xl text-[var(--ink)]">{title}</h3>
+            <h3 className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{title}</h3>
             {badge ? (
               <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                 {badge}
@@ -126,7 +126,7 @@ export function MechanicsFoldableItemShell({
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--ink)]">{title}</h4>
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{title}</h4>
               {summary ? (
                 <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{summary}</p>
               ) : null}
@@ -177,7 +177,7 @@ export function MechanicsCommandsAssemblyView({
           <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">Commands</h3>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Commands</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define slash commands and deterministic effects without editing raw JSON.
             These save into instanceData.commands.
@@ -257,7 +257,7 @@ export default function MechanicsModuleAssemblyView({
           <p className={EYEBROW_CLASS}>
             Mechanics Module
           </p>
-          <h3 className="mt-2 font-display text-3xl">Runtime Fields</h3>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Runtime Fields</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable tracker fields, guard rules, status blocks, and command
             mappings for the core tracker runtime. Live values remain room/session state.

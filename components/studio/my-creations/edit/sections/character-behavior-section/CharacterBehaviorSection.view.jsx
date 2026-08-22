@@ -1,6 +1,6 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   SectionTitle,
+  SelectField,
   TextAreaField,
   DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
@@ -38,19 +38,20 @@ export default function CharacterBehaviorSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {outwardPersonalityControl}
         {internalPersonalityControl}
 
-        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        {/* Section 5: no second bordered depth inside a box. */}
+        <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {personalityFrameworksEyebrow}
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {personalityFrameworksDescription}
           </p>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <div className="mt-[var(--space-4)] grid gap-[var(--space-4)] md:grid-cols-3">
             {mbtiControl}
             {westernZodiacControl}
             {eastAsianZodiacControl}
@@ -61,12 +62,12 @@ export default function CharacterBehaviorSectionView({
         {movementStyleControl}
         {voiceModulesControl}
 
-        <CrestfallSelect
+        <SelectField
           label={verbosityLabel}
           value={verbosityValue}
           onChange={(value) => onSelectVerbosity?.(value)}
           options={verbosityOptions}
-          description={verbosityDescription}
+          helperText={verbosityDescription}
         />
 
         {interestsControl}

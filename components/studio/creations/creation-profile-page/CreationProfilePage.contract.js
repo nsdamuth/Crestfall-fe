@@ -27,6 +27,12 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {import("react").ReactNode} sortControlSlot
  * @property {Record<string, import("react").ReactNode>} mediaActionSlots
  * @property {import("react").ReactNode} lightboxSlot
+ * @property {((tabId:string) => void)|null} [onSelectTab] doc-only addition (ED1G sw12), no version bump.
+ * @property {((value:string) => void)|null} [onQueryChange] doc-only addition (ED1G sw12), no version bump.
+ * @property {(() => void)|null} [onLoadMore] doc-only addition (ED1G sw12), no version bump.
+ * @property {((media:Object) => void)|null} [onOpenMedia] doc-only addition (ED1G sw12), no version bump.
+ * @property {(() => void)|null} [onToggleDescription] doc-only addition (ED1G sw12), no version bump.
+ * @property {(() => void)|null} [onStartChat] doc-only addition (ED1G sw12), no version bump.
  */
 
 export const CREATION_PROFILE_PAGE_LAYER_OWNERSHIP = Object.freeze({

@@ -11,6 +11,7 @@ import {
   slugifyTrackerId,
 } from "./mechanicsTrackersNormalization.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -37,7 +38,7 @@ function TextField({ label, value, onChange, placeholder = "", type = "text" }) 
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -70,7 +71,7 @@ function FoldableTracker({
           <p className={EYEBROW_CLASS}>Tracker / Meter</p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--ink)]">{title}</h4>
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{title}</h4>
               <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{summary}</p>
             </div>
             <ChevronDown
@@ -281,7 +282,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             }
           }}
           placeholder={placeholder}
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <ActionButton onClick={add}>
           <Plus size={14} />
@@ -312,18 +313,12 @@ function TrackerCard({ entry, handlers }) {
           }
           placeholder="Trust"
         />
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Kind</span>
-          <select
-            value={tracker.kind}
-            onChange={(event) =>
-              handlers.patchTracker(trackerIndex, { kind: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            <option value="meter">meter</option>
-          </select>
-        </label>
+        <SelectField
+          label="Kind"
+          value={tracker.kind}
+          onChange={(value) => handlers.patchTracker(trackerIndex, { kind: value })}
+          options={[{ value: "meter", label: "meter" }]}
+        />
         <TextField
           label="Initial Value"
           type="number"
@@ -446,7 +441,7 @@ export default function MechanicsTrackersSectionView({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>Visual Builder</p>
-          <h3 className="mt-2 font-display text-3xl">Trackers / Meters</h3>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Trackers / Meters</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable meter fields, display phases, and mutation hints.
             These save into instanceData.trackers.

@@ -1,7 +1,7 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ReadOnlyField,
   SectionTitle,
+  SelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -30,7 +30,7 @@ export default function NarratorIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] md:grid-cols-2">
         <TextField
           label={nameLabel}
           value={nameValue}
@@ -43,7 +43,7 @@ export default function NarratorIdentitySectionView({
           onChange={(value) => onChangeTags?.(value)}
         />
 
-        <CrestfallSelect
+        <SelectField
           label={toneLabel}
           value={toneValue}
           onChange={(value) => onSelectTone?.(value)}

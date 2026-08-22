@@ -16,18 +16,19 @@ export default function KitCreditsModalView({
   onClose = null,
 }) {
   return (
-    // Under 700px the frame's panel is the full screen (R4), so the
-    // column fills it (h-full); the 92dvh cap was a leftover from the
-    // pre-R4 bottom dock and left an empty band under the list
-    // (review-gate find N-4). At 700px and up the centered panel is
-    // content-sized and the 80dvh cap bounds the scroll region.
+    // Under 700px the frame's panel bottom-anchors at content height
+    // (A4), so the column fills it (h-full); the 92dvh cap was a
+    // leftover from the pre-A4 bottom dock and left an empty band
+    // under the list (review-gate find N-4). At 700px and up the
+    // centered panel is content-sized and the 80dvh cap bounds the
+    // scroll region.
     <div className="flex h-full flex-col min-[700px]:h-auto min-[700px]:max-h-[80dvh]">
       <div className="flex flex-none flex-col">
         <div className="flex items-center gap-[var(--space-3)] p-[var(--space-4)]">
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus cf-btn cf-btn--secondary cf-btn--sm inline-flex items-center gap-[var(--space-1)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm max-[699.98px]:min-h-[var(--control-md)] inline-flex items-center gap-[var(--space-1)]"
           >
             <ChevronLeft size={16} aria-hidden="true" />
             Back
@@ -39,7 +40,7 @@ export default function KitCreditsModalView({
         {/* B1 fade divider, never edge-to-edge. */}
         <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-[var(--space-4)]">
+      <div className="min-h-0 flex-1 overflow-y-auto px-[var(--space-4)] pt-[var(--space-4)] pb-[var(--space-6)]">
         <KitCreditsView credits={credits} LinkComponent={LinkComponent} />
       </div>
     </div>

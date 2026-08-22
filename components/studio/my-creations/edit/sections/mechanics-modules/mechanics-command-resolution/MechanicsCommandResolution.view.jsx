@@ -2,6 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+import { CheckboxField, SelectField } from "../../SharedFields";
+
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
@@ -29,7 +31,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -191,63 +193,39 @@ function ModifierSourceCard({
           placeholder="Actor Skill"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Source Type</span>
-          <select
-            value={source.type}
-            onChange={(event) =>
-              onPatch(side, sourceIndex, { type: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {sourceTypes.map((type) => (
-              <option key={type} value={type}>
-                {type.replaceAll("_", " ")}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Source Type"
+          value={source.type}
+          onChange={(value) => onPatch(side, sourceIndex, { type: value })}
+          options={sourceTypes.map((type) => ({
+            value: type,
+            label: type.replaceAll("_", " "),
+          }))}
+        />
 
         {targetSource ? (
-          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-            <span>Resolved Argument</span>
-            <select
-              value={source.argumentName}
-              onChange={(event) =>
-                onPatch(side, sourceIndex, {
-                  argumentName: event.target.value,
-                })
-              }
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-            >
-              <option value="">Select an argument</option>
-              {argumentOptions.map((argument) => (
-                <option key={argument.name} value={argument.name}>
-                  {argument.label} · {argument.type}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Resolved Argument"
+            value={source.argumentName}
+            placeholder="Select an argument"
+            onChange={(value) =>
+              onPatch(side, sourceIndex, { argumentName: value })
+            }
+            options={argumentOptions.map((argument) => ({
+              value: argument.name,
+              label: `${argument.label} · ${argument.type}`,
+            }))}
+          />
         ) : null}
 
         {mechanicsSource ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Mechanics Bucket</span>
-              <select
-                value={source.bucket}
-                onChange={(event) =>
-                  onPatch(side, sourceIndex, { bucket: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {buckets.map((bucket) => (
-                  <option key={bucket} value={bucket}>
-                    {bucket}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Mechanics Bucket"
+              value={source.bucket}
+              onChange={(value) => onPatch(side, sourceIndex, { bucket: value })}
+              options={buckets.map((bucket) => ({ value: bucket, label: bucket }))}
+            />
             <TextField
               label="Mechanics State ID"
               value={source.mechanicsId}
@@ -261,24 +239,17 @@ function ModifierSourceCard({
 
         {source.type === "MECHANICS_VALUE" ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Mechanics Scope</span>
-              <select
-                value={source.scopeMode}
-                onChange={(event) =>
-                  onPatch(side, sourceIndex, {
-                    scopeMode: event.target.value,
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {scopeModes.map((mode) => (
-                  <option key={mode} value={mode}>
-                    {mode.replaceAll("_", " ")}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Mechanics Scope"
+              value={source.scopeMode}
+              onChange={(value) =>
+                onPatch(side, sourceIndex, { scopeMode: value })
+              }
+              options={scopeModes.map((mode) => ({
+                value: mode,
+                label: mode.replaceAll("_", " "),
+              }))}
+            />
             {source.scopeMode === "EXPLICIT" ? (
               <TextField
                 label="Explicit Scope Key"
@@ -294,42 +265,31 @@ function ModifierSourceCard({
 
         {targetProperty ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Target Property</span>
-              <select
-                value={source.property}
-                onChange={(event) =>
-                  onPatch(side, sourceIndex, {
-                    property: event.target.value,
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {targetProperties.map((property) => (
-                  <option key={property} value={property}>
-                    {property.replaceAll("_", " ")}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Target Property"
+              value={source.property}
+              onChange={(value) =>
+                onPatch(side, sourceIndex, { property: value })
+              }
+              options={targetProperties.map((property) => ({
+                value: property,
+                label: property.replaceAll("_", " "),
+              }))}
+            />
 
             {booleanProperty ? (
               <>
-                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                  <span>Expected Property Value</span>
-                  <select
-                    value={source.expected ? "true" : "false"}
-                    onChange={(event) =>
-                      onPatch(side, sourceIndex, {
-                        expected: event.target.value === "true",
-                      })
-                    }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                  >
-                    <option value="true">true</option>
-                    <option value="false">false</option>
-                  </select>
-                </label>
+                <SelectField
+                  label="Expected Property Value"
+                  value={source.expected ? "true" : "false"}
+                  onChange={(value) =>
+                    onPatch(side, sourceIndex, { expected: value === "true" })
+                  }
+                  options={[
+                    { value: "true", label: "true" },
+                    { value: "false", label: "false" },
+                  ]}
+                />
                 <TextField
                   label="Modifier When Matched"
                   type="number"
@@ -399,24 +359,15 @@ function ModifierSourceCard({
               }
               placeholder="0"
             />
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Rounding</span>
-              <select
-                value={source.rounding}
-                onChange={(event) =>
-                  onPatch(side, sourceIndex, {
-                    rounding: event.target.value,
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {roundingModes.map((rounding) => (
-                  <option key={rounding} value={rounding}>
-                    {rounding}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Rounding"
+              value={source.rounding}
+              onChange={(value) => onPatch(side, sourceIndex, { rounding: value })}
+              options={roundingModes.map((rounding) => ({
+                value: rounding,
+                label: rounding,
+              }))}
+            />
             <TextField
               label="Minimum Modifier"
               type="number"
@@ -442,27 +393,20 @@ function ModifierSourceCard({
           </div>
         </div>
 
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-2">
-          <span>Missing Evidence Policy</span>
-          <select
+        <div className="md:col-span-2">
+          <SelectField
+            label="Missing Evidence Policy"
             value={source.missingPolicy}
-            onChange={(event) =>
-              onPatch(side, sourceIndex, {
-                missingPolicy: event.target.value,
-              })
+            onChange={(value) =>
+              onPatch(side, sourceIndex, { missingPolicy: value })
             }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {missingPolicies.map((policy) => (
-              <option key={policy} value={policy}>
-                {policy}
-              </option>
-            ))}
-          </select>
-          <span className="text-[11px] leading-5 text-[var(--ink-dim)]">
-            IGNORE records unavailable evidence without a modifier. REJECT blocks the command before any roll.
-          </span>
-        </label>
+            options={missingPolicies.map((policy) => ({
+              value: policy,
+              label: policy,
+            }))}
+            helperText="IGNORE records unavailable evidence without a modifier. REJECT blocks the command before any roll."
+          />
+        </div>
       </div>
     </div>
   );
@@ -581,19 +525,19 @@ export default function MechanicsCommandResolutionView({
           Apply a safe starter configuration. This replaces only this command’s Resolution block; arguments, requirements, effects, outcomes, and domain actions remain unchanged.
         </p>
 
-        <div className="mt-4 flex flex-col gap-3 md:flex-row">
-          <select
-            value={referenceId}
-            onChange={(event) => setReferenceId(event.target.value)}
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            <option value="">Select a reference configuration</option>
-            {referenceConfigurations.map((reference) => (
-              <option key={reference.id} value={reference.id}>
-                {reference.label} · {reference.description}
-              </option>
-            ))}
-          </select>
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end">
+          <div className="min-w-0 flex-1">
+            <SelectField
+              label="Reference configuration"
+              value={referenceId}
+              placeholder="Select a reference configuration"
+              onChange={(value) => setReferenceId(value)}
+              options={referenceConfigurations.map((reference) => ({
+                value: reference.id,
+                label: `${reference.label} · ${reference.description}`,
+              }))}
+            />
+          </div>
 
           <ActionButton onClick={applyReference} disabled={!referenceId}>
             Apply reference
@@ -602,20 +546,15 @@ export default function MechanicsCommandResolutionView({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Resolution Mode</span>
-          <select
-            value={resolution.mode}
-            onChange={(event) => patchResolution({ mode: event.target.value })}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {resolutionModes.map((mode) => (
-              <option key={mode} value={mode}>
-                {mode.replaceAll("_", " ")}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Resolution Mode"
+          value={resolution.mode}
+          onChange={(value) => patchResolution({ mode: value })}
+          options={resolutionModes.map((mode) => ({
+            value: mode,
+            label: mode.replaceAll("_", " "),
+          }))}
+        />
 
         <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
           {resolution.mode === "THRESHOLD_DIE"
@@ -663,22 +602,12 @@ export default function MechanicsCommandResolutionView({
                 placeholder="20"
               />
 
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>Roll Policy</span>
-                <select
-                  value={resolution.rollMode}
-                  onChange={(event) =>
-                    patchResolution({ rollMode: event.target.value })
-                  }
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                >
-                  {rollModes.map((mode) => (
-                    <option key={mode} value={mode}>
-                      {mode}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SelectField
+                label="Roll Policy"
+                value={resolution.rollMode}
+                onChange={(value) => patchResolution({ rollMode: value })}
+                options={rollModes.map((mode) => ({ value: mode, label: mode }))}
+              />
 
               {resolution.mode === "THRESHOLD_DIE" ? (
                 <TextField
@@ -694,33 +623,21 @@ export default function MechanicsCommandResolutionView({
                 />
               ) : null}
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                <input
-                  type="checkbox"
-                  checked={resolution.criticalOnNaturalMax}
-                  onChange={(event) =>
-                    patchResolution({
-                      criticalOnNaturalMax: event.target.checked,
-                    })
-                  }
-                  className="h-4 w-4 accent-[var(--gold-ornament)]"
-                />
-                Actor natural maximum is a Critical Success
-              </label>
+              <CheckboxField
+                label="Actor natural maximum is a Critical Success"
+                checked={resolution.criticalOnNaturalMax}
+                onChange={(checked) =>
+                  patchResolution({ criticalOnNaturalMax: checked })
+                }
+              />
 
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                <input
-                  type="checkbox"
-                  checked={resolution.fumbleOnNaturalMin}
-                  onChange={(event) =>
-                    patchResolution({
-                      fumbleOnNaturalMin: event.target.checked,
-                    })
-                  }
-                  className="h-4 w-4 accent-[var(--gold-ornament)]"
-                />
-                Actor natural minimum is a Fumble
-              </label>
+              <CheckboxField
+                label="Actor natural minimum is a Fumble"
+                checked={resolution.fumbleOnNaturalMin}
+                onChange={(checked) =>
+                  patchResolution({ fumbleOnNaturalMin: checked })
+                }
+              />
             </div>
           </div>
 
@@ -794,71 +711,38 @@ export default function MechanicsCommandResolutionView({
                   placeholder="20"
                 />
 
-                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                  <span>Roll Policy</span>
-                  <select
-                    value={resolution.opposed?.rollMode || "NORMAL"}
-                    onChange={(event) =>
-                      patchOpposed({ rollMode: event.target.value })
-                    }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                  >
-                    {rollModes.map((mode) => (
-                      <option key={mode} value={mode}>
-                        {mode}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <SelectField
+                  label="Roll Policy"
+                  value={resolution.opposed?.rollMode || "NORMAL"}
+                  onChange={(value) => patchOpposed({ rollMode: value })}
+                  options={rollModes.map((mode) => ({ value: mode, label: mode }))}
+                />
 
-                <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                  <span>Tie Policy</span>
-                  <select
-                    value={
-                      resolution.opposed?.tiePolicy || "OPPOSITION_WINS"
-                    }
-                    onChange={(event) =>
-                      patchOpposed({ tiePolicy: event.target.value })
-                    }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                  >
-                    {tiePolicies.map((policy) => (
-                      <option key={policy} value={policy}>
-                        {policy.replaceAll("_", " ")}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <SelectField
+                  label="Tie Policy"
+                  value={resolution.opposed?.tiePolicy || "OPPOSITION_WINS"}
+                  onChange={(value) => patchOpposed({ tiePolicy: value })}
+                  options={tiePolicies.map((policy) => ({
+                    value: policy,
+                    label: policy.replaceAll("_", " "),
+                  }))}
+                />
 
                 <div className="grid gap-3">
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                    <input
-                      type="checkbox"
-                      checked={
-                        resolution.opposed?.criticalOnNaturalMax !== false
-                      }
-                      onChange={(event) =>
-                        patchOpposed({
-                          criticalOnNaturalMax: event.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
-                    Opposition natural maximum is critical
-                  </label>
-                  <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                    <input
-                      type="checkbox"
-                      checked={resolution.opposed?.fumbleOnNaturalMin !== false}
-                      onChange={(event) =>
-                        patchOpposed({
-                          fumbleOnNaturalMin: event.target.checked,
-                        })
-                      }
-                      className="h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
-                    Opposition natural minimum is a fumble
-                  </label>
+                  <CheckboxField
+                    label="Opposition natural maximum is critical"
+                    checked={resolution.opposed?.criticalOnNaturalMax !== false}
+                    onChange={(checked) =>
+                      patchOpposed({ criticalOnNaturalMax: checked })
+                    }
+                  />
+                  <CheckboxField
+                    label="Opposition natural minimum is a fumble"
+                    checked={resolution.opposed?.fumbleOnNaturalMin !== false}
+                    onChange={(checked) =>
+                      patchOpposed({ fumbleOnNaturalMin: checked })
+                    }
+                  />
                 </div>
               </div>
 
@@ -895,22 +779,18 @@ export default function MechanicsCommandResolutionView({
           ) : null}
 
           <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <label className="flex items-center gap-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={resolution.degreeOfSuccess?.enabled === true}
-                onChange={(event) =>
-                  patchResolution({
-                    degreeOfSuccess: {
-                      ...asObject(resolution.degreeOfSuccess),
-                      enabled: event.target.checked,
-                    },
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Enable degree-of-success margin bands
-            </label>
+            <CheckboxField
+              label="Enable degree-of-success margin bands"
+              checked={resolution.degreeOfSuccess?.enabled === true}
+              onChange={(checked) =>
+                patchResolution({
+                  degreeOfSuccess: {
+                    ...asObject(resolution.degreeOfSuccess),
+                    enabled: checked,
+                  },
+                })
+              }
+            />
 
             {resolution.degreeOfSuccess?.enabled ? (
               <div className="mt-4 grid gap-4 md:grid-cols-2">

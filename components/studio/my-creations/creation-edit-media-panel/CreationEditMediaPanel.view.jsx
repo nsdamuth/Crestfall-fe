@@ -93,8 +93,24 @@ export default function CreationEditMediaPanelView({
       </p>
 
       {supportsChatMedia ? (
-        <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-          ...
+        <section className="mt-6 flex flex-col gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+          <ChatMediaSlot
+            label="Chat Avatar"
+            description="Shown beside this character's messages in chat."
+            imageUrl={activeMedia?.imageUrl}
+            fallback={fallbackInitial}
+            icon={UserRound}
+            buttonLabel="Manage in image library"
+          />
+          <ChatMediaSlot
+            label="Chat Media"
+            description="Additional chat-context media. Not yet wired to a picker."
+            imageUrl={null}
+            fallback={fallbackInitial}
+            icon={MessageCircle}
+            compact
+            buttonLabel="Coming soon"
+          />
         </section>
       ) : (
         <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">

@@ -47,6 +47,10 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {()=>void} onOpenPlayerCharacterPicker
  * @property {()=>void} onLoadRandomLiked
  * @property {()=>void} onDeleteRoom
+ * @property {import("react").ElementType} [LinkComponent] doc-only addition
+ *   (ED1G sw12): link/anchor component injected by the host, defaults to
+ *   "a" in the View. Already read by the View, undeclared here. No
+ *   version bump.
  */
 
 export {};

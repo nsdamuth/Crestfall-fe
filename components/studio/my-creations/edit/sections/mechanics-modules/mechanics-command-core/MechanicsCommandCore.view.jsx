@@ -9,6 +9,8 @@ import {
   COMMAND_RESULT_VISIBILITIES,
 } from "./MechanicsCommandCore.contract.js";
 import {
+  CheckboxField,
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -27,7 +29,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -132,7 +134,7 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
           <p className={EYEBROW_CLASS}>
             Command
           </p>
-          <h4 className="mt-1 text-xl text-[var(--ink)]">
+          <h4 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {model.safeCommand.label ||
               model.safeCommand.id ||
               `Command ${model.commandIndex + 1}`}
@@ -226,56 +228,34 @@ export function MechanicsCommandInvocationView({ model }) {
           normalizeToken={model.normalizeCommandName}
           placeholder="Type an alias, then press Enter"
         />
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Command Mode</span>
-          <select
-            value={model.presentation.mode}
-            onChange={(event) =>
-              model.patchPresentation({ mode: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_PRESENTATION_MODES.map((mode) => (
-              <option key={mode} value={mode}>{mode}</option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Result Visibility</span>
-          <select
-            value={model.presentation.resultVisibility}
-            onChange={(event) =>
-              model.patchPresentation({ resultVisibility: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_RESULT_VISIBILITIES.map((visibility) => (
-              <option key={visibility} value={visibility}>{visibility}</option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.continueNarrative}
-            onChange={(event) =>
-              model.patchPresentation({ continueNarrative: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Continue the fictional scene after execution
-        </label>
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.advanceTime}
-            onChange={(event) =>
-              model.patchPresentation({ advanceTime: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Allow normal turn-time advancement
-        </label>
+        <SelectField
+          label="Command Mode"
+          value={model.presentation.mode}
+          onChange={(value) => model.patchPresentation({ mode: value })}
+          options={COMMAND_PRESENTATION_MODES.map((mode) => ({
+            value: mode,
+            label: mode,
+          }))}
+        />
+        <SelectField
+          label="Result Visibility"
+          value={model.presentation.resultVisibility}
+          onChange={(value) => model.patchPresentation({ resultVisibility: value })}
+          options={COMMAND_RESULT_VISIBILITIES.map((visibility) => ({
+            value: visibility,
+            label: visibility,
+          }))}
+        />
+        <CheckboxField
+          label="Continue the fictional scene after execution"
+          checked={model.presentation.continueNarrative}
+          onChange={(checked) => model.patchPresentation({ continueNarrative: checked })}
+        />
+        <CheckboxField
+          label="Allow normal turn-time advancement"
+          checked={model.presentation.advanceTime}
+          onChange={(checked) => model.patchPresentation({ advanceTime: checked })}
+        />
       </div>
     </>
   );
@@ -327,40 +307,34 @@ export function MechanicsCommandArgumentsView({ model }) {
               }
               placeholder="Target"
             />
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Type</span>
-              <select
-                value={argument.type}
-                onChange={(event) => {
-                  const nextType = event.target.value;
-                  const nextIsImplicit =
-                    model.isImplicitTargetArgumentType(nextType);
-                  const currentIsImplicit =
-                    model.isImplicitTargetArgumentType(argument.type);
-                  model.patchArgument(argumentIndex, {
-                    type: nextType,
-                    ...(nextIsImplicit
-                      ? { required: false, consumeRemaining: false, allowQuoted: false }
-                      : currentIsImplicit
-                        ? {
-                            required: true,
-                            consumeRemaining:
-                              argumentIndex ===
-                              model.invocation.arguments.length - 1,
-                            allowQuoted: true,
-                          }
-                        : {}),
-                  });
-                }}
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {COMMAND_ARGUMENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Type"
+              value={argument.type}
+              onChange={(nextType) => {
+                const nextIsImplicit =
+                  model.isImplicitTargetArgumentType(nextType);
+                const currentIsImplicit =
+                  model.isImplicitTargetArgumentType(argument.type);
+                model.patchArgument(argumentIndex, {
+                  type: nextType,
+                  ...(nextIsImplicit
+                    ? { required: false, consumeRemaining: false, allowQuoted: false }
+                    : currentIsImplicit
+                      ? {
+                          required: true,
+                          consumeRemaining:
+                            argumentIndex ===
+                            model.invocation.arguments.length - 1,
+                          allowQuoted: true,
+                        }
+                      : {}),
+                });
+              }}
+              options={COMMAND_ARGUMENT_TYPES.map((type) => ({
+                value: type,
+                label: type,
+              }))}
+            />
 
             {model.isImplicitTargetArgumentType(argument.type) ? (
               <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-3">
@@ -413,51 +387,33 @@ export function MechanicsCommandArgumentsView({ model }) {
               </>
             ) : null}
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.required !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    required: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Required
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.consumeRemaining === true}
-                disabled={
-                  model.isImplicitTargetArgumentType(argument.type) ||
-                  argumentIndex !== model.lastPositionalArgumentIndex
-                }
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    consumeRemaining: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Consume remaining text
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={argument.allowQuoted !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    allowQuoted: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              Allow quoted values
-            </label>
+            <CheckboxField
+              label="Required"
+              checked={argument.required !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { required: checked })
+              }
+            />
+            <CheckboxField
+              label="Consume remaining text"
+              checked={argument.consumeRemaining === true}
+              disabled={
+                model.isImplicitTargetArgumentType(argument.type) ||
+                argumentIndex !== model.lastPositionalArgumentIndex
+              }
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { consumeRemaining: checked })
+              }
+            />
+            <CheckboxField
+              label="Allow quoted values"
+              checked={argument.allowQuoted !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { allowQuoted: checked })
+              }
+            />
           </div>
         </div>
       ))}
@@ -514,7 +470,7 @@ export function MechanicsCommandTriggersView({ model }) {
             }
           }}
           placeholder="/settled"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <SmallActionButton onClick={submitTrigger}>
           <Plus size={14} />

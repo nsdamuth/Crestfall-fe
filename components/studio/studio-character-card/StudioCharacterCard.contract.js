@@ -16,6 +16,10 @@ export const STUDIO_CHARACTER_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} eyebrow Optional display-ready character eyebrow.
  * @property {string} description Display-ready card summary.
  * @property {string} detailsHref Resolved character-details route.
+ * @property {import("react").ElementType} [LinkComponent] doc-only addition
+ *   (ED1G sw12): link/anchor component injected by the host, defaults to
+ *   "a" in the View. Already read by the View, undeclared here. No
+ *   version bump.
  */
 
 export {};

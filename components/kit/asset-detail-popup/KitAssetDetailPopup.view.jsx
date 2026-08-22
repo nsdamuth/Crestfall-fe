@@ -23,6 +23,7 @@ import { Bookmark, ChevronLeft, ChevronRight, Heart, Pencil, Play, Search, Share
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitCreditsModal from "../KitCreditsModal";
+import KitDropdownView from "../dropdown/KitDropdown.view";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -73,7 +74,7 @@ function DescriptionBlock({ description }) {
         <button
           type="button"
           onClick={() => setExpanded((current) => !current)}
-          className="kit-focus mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+          className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
         >
           {expanded ? "See less" : "See more"}
         </button>
@@ -115,7 +116,7 @@ function CollapsedCreditsBlock({ credits, LinkComponent, onOpenCreditsModal }) {
         <button
           type="button"
           onClick={() => onOpenCreditsModal?.()}
-          className="kit-focus -mx-[var(--space-2)] mt-[var(--space-1)] flex min-h-[var(--control-md)] items-center px-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
+          className="-mx-[var(--space-2)] mt-[var(--space-1)] flex min-h-[var(--control-md)] items-center px-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
         >
           View all credits ({credits.length})
         </button>
@@ -176,7 +177,7 @@ function CarouselArrow({ direction, onClick }) {
       type="button"
       onClick={onClick}
       aria-label={direction === "previous" ? "Previous image" : "Next image"}
-      className={`kit-focus absolute top-1/2 z-[2] flex h-[var(--control-md)] w-[var(--control-md)] -translate-y-1/2 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink)] shadow-[var(--shadow-popover)] ${
+      className={`absolute top-1/2 z-[2] flex h-[var(--control-md)] w-[var(--control-md)] -translate-y-1/2 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink)] shadow-[var(--shadow-popover)] ${
         direction === "previous" ? "left-[var(--space-3)]" : "right-[var(--space-3)]"
       }`}
     >
@@ -248,7 +249,7 @@ function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
           <button
             type="button"
             onClick={() => onViewCatalogue?.()}
-            className="kit-focus cf-btn cf-btn--primary mt-[var(--space-4)]"
+            className="goldring cf-btn cf-btn--primary mt-[var(--space-4)]"
           >
             View catalogue
           </button>
@@ -374,7 +375,7 @@ function MediaLibrary({ media, isLiked, isSaved }) {
               type="button"
               aria-pressed={tab === option.value}
               onClick={() => setTab(option.value)}
-              className={`kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
                 tab === option.value
                   ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
                   : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
@@ -397,17 +398,13 @@ function MediaLibrary({ media, isLiked, isSaved }) {
           />
         </label>
 
-        <select
-          value={sort}
-          onChange={(event) => setSort(event.target.value)}
-          className="kit-focus min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] text-[length:var(--text-label)] text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
-        >
-          {MEDIA_SORTS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <KitDropdownView
+          label="Sort"
+          options={MEDIA_SORTS}
+          selectedValues={[sort]}
+          isMultiSelect={false}
+          onToggleOption={(value) => setSort(value)}
+        />
       </div>
 
       {visible.length === 0 ? (
@@ -516,7 +513,7 @@ export default function KitAssetDetailPopupView({
             type="button"
             aria-pressed={isLiked}
             onClick={() => onLike?.()}
-            className={`kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isLiked ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
+            className={`flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isLiked ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
           >
             <Heart size={16} className="shrink-0" aria-hidden="true" fill={isLiked ? "currentColor" : "none"} />
             {isLiked ? "Liked" : "Like"}
@@ -525,7 +522,7 @@ export default function KitAssetDetailPopupView({
             type="button"
             aria-pressed={isSaved}
             onClick={() => onSave?.()}
-            className={`kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isSaved ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
+            className={`flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary ${isSaved ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]" : ""}`}
           >
             <Bookmark size={16} className="shrink-0" aria-hidden="true" fill={isSaved ? "currentColor" : "none"} />
             {isSaved ? "Saved" : "Save"}
@@ -533,7 +530,7 @@ export default function KitAssetDetailPopupView({
           <button
             type="button"
             onClick={() => onShare?.()}
-            className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
+            className="flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
           >
             <Share2 size={16} className="shrink-0" aria-hidden="true" />
             Share
@@ -542,7 +539,7 @@ export default function KitAssetDetailPopupView({
             <button
               type="button"
               onClick={() => onEdit?.()}
-              className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
+              className="flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--secondary"
             >
               <Pencil size={16} className="shrink-0" aria-hidden="true" />
               Edit
@@ -551,7 +548,7 @@ export default function KitAssetDetailPopupView({
           <button
             type="button"
             onClick={() => onPrimaryAction?.()}
-            className="kit-focus flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--primary"
+            className="goldring flex w-full items-center justify-center gap-[var(--space-1)] whitespace-nowrap cf-btn cf-btn--primary"
           >
             <Play size={16} className="shrink-0" aria-hidden="true" />
             {primaryActionLabel}

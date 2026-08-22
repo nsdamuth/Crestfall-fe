@@ -1,6 +1,6 @@
 # Kit Save Ingredient Preset LOOM package
 
-**Contract:** `KitSaveIngredientPreset.contract.js` (`1.0.0`)
+**Contract:** `KitSaveIngredientPreset.contract.js` (`1.1.0`)
 
 ## Purpose
 
@@ -36,6 +36,13 @@ This package has no separate prop for that: the caller passes
 null-safe dismissal makes backdrop click, Escape, and the close
 control all no-ops while saving (the `saving` fixture demonstrates
 this by shipping `onClose: null`).
+
+## Nested modal back label
+
+`backLabel` (`string|null`, added 1.1.0, additive): NESTED MODAL LAW
+(the R1 pattern, this piece opened from another modal under 700px).
+When non-null, the caller passes a labeled back affordance so the
+return path reads correctly instead of a bare close.
 
 ## Fixture states
 

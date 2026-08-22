@@ -6,10 +6,9 @@ import {
   Download,
   RotateCcw,
   WandSparkles,
-  X,
 } from "lucide-react";
 
-import ModalShell from "@/components/ui/ModalShell";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function IssueList({ title, issues = [], tone = "error" }) {
@@ -82,12 +81,13 @@ export default function ProgressionJsonEditorModalView({
   onValidateAndApply = null,
 }) {
   return (
-    <ModalShell
+    <KitModalFrame
       onClose={onClose}
-      closeOnBackdrop={false}
-      panelClassName="max-h-[94vh] w-full max-w-7xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl"
+      ariaLabel={title}
+      hasUnsavedChanges={hasDraftChanges}
+      panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
         <div>
           <SectionTitle
             eyebrow={
@@ -100,18 +100,9 @@ export default function ProgressionJsonEditorModalView({
             body={description}
           />
         </div>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-          aria-label="Close Progression Profile JSON Editor"
-        >
-          <X size={18} />
-        </button>
       </div>
 
-      <div className="grid max-h-[calc(94vh-10rem)] gap-4 overflow-y-auto p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -222,7 +213,7 @@ export default function ProgressionJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open Progression Profile editor. The normal page
           Save action still controls persistence.
@@ -248,6 +239,6 @@ export default function ProgressionJsonEditorModalView({
           </button>
         </div>
       </div>
-    </ModalShell>
+    </KitModalFrame>
   );
 }

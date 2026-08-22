@@ -4,8 +4,37 @@ import { useState } from "react";
 import { Copy, Download, Flag, Loader2, Share2, Sparkles, Trash2 } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitFormField from "@/components/kit/KitFormField";
 
 const COUNTER_WARN_RATIO = 0.8;
+
+// B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
+// to every modal-family divider: 1px, fades to transparent at both
+// ends, never edge-to-edge. Local copy of KitModalFrame's own recipe
+// (components/kit/modal-frame/KitModalFrame.view.jsx), since these
+// dialog footers sit inside the frame's children, not the frame
+// itself.
+function FadeDivider({ className = "" }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`h-px bg-[image:var(--line-fade)] ${className}`}
+    />
+  );
+}
+
+// B8: footer buttons align to the ends of the fade divider (Cancel at
+// the start, the CTA at the end), never justify-end.
+function DialogFooter({ children }) {
+  return (
+    <>
+      <FadeDivider className="mt-[var(--space-5)]" />
+      <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+        {children}
+      </div>
+    </>
+  );
+}
 
 function ErrorLine({ children }) {
   return (
@@ -18,13 +47,17 @@ function ErrorLine({ children }) {
   );
 }
 
+// DialogHeading, RULED (ED1G chat family pass): in-panel headers cap
+// at --text-lead per the ladder; this heading previously rendered at
+// --text-heading, one of three inconsistent header sizes across the
+// dialog family.
 function DialogHeading({ eyebrow, title, description }) {
   return (
     <div>
       <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
-      <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--ink)]">
+      <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
         {title}
       </h2>
       {description ? (
@@ -36,25 +69,28 @@ function DialogHeading({ eyebrow, title, description }) {
   );
 }
 
+// SelectField, RULED (ED1G chat family pass, BLOCKER): the native
+// <select> rendered every field in this package; the branded
+// KitDropdown grammar (composed here via KitFormField variant="select"
+// per components/studio/my-creations/edit/sections/SharedFields.jsx's
+// SelectField, same recipe) replaces it. `options` accepts either
+// plain strings or `{ id|value, label }` pairs.
 function SelectField({ label, value, onChange, options = [], disabled = false }) {
+  const normalizedOptions = options.map((option) =>
+    typeof option === "object" && option !== null
+      ? { value: option.id ?? option.value, label: option.label }
+      : { value: option, label: option }
+  );
+
   return (
-    <label className="flex flex-col gap-[var(--space-2)]">
-      <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        disabled={disabled}
-        className="kit-focus min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]"
-      >
-        {options.map((option) => (
-          <option key={option.id || option.value} value={option.id || option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <KitFormField
+      variant="select"
+      label={label}
+      value={value}
+      options={normalizedOptions}
+      onSelect={(nextValue) => onChange?.(nextValue)}
+      isDisabled={disabled}
+    />
   );
 }
 
@@ -77,7 +113,13 @@ function ReportDialog({
   const showCounter = commentFocused || count >= maxLength * COUNTER_WARN_RATIO;
 
   return (
-    <KitModalFrame variant="modal" onClose={onClose} ariaLabel={`Report ${speaker}`} panelClassName="max-w-lg">
+    <KitModalFrame
+      variant="modal"
+      onClose={onClose}
+      ariaLabel={`Report ${speaker}`}
+      panelClassName="max-w-lg"
+      hasUnsavedChanges={Boolean(comment) && !pending}
+    >
       <div className="p-[var(--space-5)]">
         <DialogHeading
           eyebrow="Message Report"
@@ -119,31 +161,36 @@ function ReportDialog({
               rows={4}
               maxLength={maxLength}
               placeholder="Describe what should be reviewed."
-              className={`kit-focus min-h-[calc(var(--control-md)*2)] resize-none rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${
+              className={`min-h-[calc(var(--control-md)*2)] resize-none rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${
                 atLimit
-                  ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)]"
+                  ? "border-[var(--status-danger-border)] hover:border-[var(--status-danger-border)]"
                   : "border-[var(--line-whisper)] hover:border-[var(--state-hover-line)]"
               }`}
             />
+            {atLimit ? (
+              <p className="text-[length:var(--text-label)] text-[var(--status-danger)]">
+                2,000 character limit reached.
+              </p>
+            ) : null}
           </label>
         </div>
 
         {error ? <div className="mt-[var(--space-4)]"><ErrorLine>{error}</ErrorLine></div> : null}
 
-        <div className="mt-[var(--space-5)] flex flex-wrap justify-end gap-[var(--space-2)]">
+        <DialogFooter>
           <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
             Cancel
           </button>
           <button
             type="button"
             onClick={() => onSubmit?.()}
-            className="cf-btn cf-btn--primary"
+            className="goldring cf-btn cf-btn--primary"
             disabled={pending}
           >
             {pending ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Flag size={14} aria-hidden="true" />}
             {pending ? "Submitting" : "Submit report"}
           </button>
-        </div>
+        </DialogFooter>
       </div>
     </KitModalFrame>
   );
@@ -203,15 +250,15 @@ function ExportDialog({
 
         {error ? <div className="mt-[var(--space-4)]"><ErrorLine>{error}</ErrorLine></div> : null}
 
-        <div className="mt-[var(--space-5)] flex flex-wrap justify-end gap-[var(--space-2)]">
+        <DialogFooter>
           <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
             Cancel
           </button>
-          <button type="button" onClick={() => onSubmit?.()} className="cf-btn cf-btn--primary" disabled={pending}>
+          <button type="button" onClick={() => onSubmit?.()} className="goldring cf-btn cf-btn--primary" disabled={pending}>
             {pending ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Download size={14} aria-hidden="true" />}
             {pending ? "Preparing" : "Download"}
           </button>
-        </div>
+        </DialogFooter>
       </div>
     </KitModalFrame>
   );
@@ -276,14 +323,14 @@ function RevokeConfirmSheet({ pending = false, error = "", onConfirm, onCancel }
 
         {error ? <div className="mt-[var(--space-4)]"><ErrorLine>{error}</ErrorLine></div> : null}
 
-        <div className="mt-[var(--space-5)] flex justify-end gap-[var(--space-2)]">
+        <DialogFooter>
           <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
             Cancel
           </button>
           <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled" disabled={pending}>
             {pending ? "Revoking" : "Revoke Link"}
           </button>
-        </div>
+        </DialogFooter>
       </div>
     </KitModalFrame>
   );
@@ -372,13 +419,13 @@ function ShareDialog({
 
           {error ? <div className="mt-[var(--space-4)]"><ErrorLine>{error}</ErrorLine></div> : null}
 
-          <div className="mt-[var(--space-5)] flex flex-wrap justify-end gap-[var(--space-2)]">
+          <DialogFooter>
             <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
               Done
             </button>
 
             {!result ? (
-              <button type="button" onClick={() => onSubmit?.()} className="cf-btn cf-btn--primary" disabled={pending}>
+              <button type="button" onClick={() => onSubmit?.()} className="goldring cf-btn cf-btn--primary" disabled={pending}>
                 {pending ? (
                   <Loader2 size={14} className="animate-spin" aria-hidden="true" />
                 ) : (
@@ -397,7 +444,7 @@ function ShareDialog({
                 Revoke
               </button>
             ) : null}
-          </div>
+          </DialogFooter>
         </div>
       </KitModalFrame>
 
@@ -408,7 +455,13 @@ function ShareDialog({
   );
 }
 
-function DeleteConfirmDialog({ message = "", pending = false, error = "", onConfirm, onCancel }) {
+// DeleteConfirmDialog, RULED (ED1G chat family pass, BLOCKER B5/B8):
+// footer now ends-aligned against a fade divider, matching
+// KitModalFrame's own UnsavedDismissConfirm (KitModalFrame.view.jsx).
+// Exported as DeleteConfirmSheet too so chat-cast-panel's byte-near
+// duplicate (ChatCastPanel.view.jsx) can compose this one portable
+// component instead of carrying its own copy.
+export function DeleteConfirmSheet({ message = "", pending = false, error = "", onConfirm, onCancel }) {
   const lines = String(message || "").split("\n");
 
   return (
@@ -433,17 +486,21 @@ function DeleteConfirmDialog({ message = "", pending = false, error = "", onConf
 
         {error ? <div className="mt-[var(--space-4)]"><ErrorLine>{error}</ErrorLine></div> : null}
 
-        <div className="mt-[var(--space-5)] flex justify-end gap-[var(--space-2)]">
+        <DialogFooter>
           <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary" disabled={pending}>
             Cancel
           </button>
           <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled" disabled={pending}>
             {pending ? "Deleting" : "Delete Story"}
           </button>
-        </div>
+        </DialogFooter>
       </div>
     </KitModalFrame>
   );
+}
+
+function DeleteConfirmDialog(props) {
+  return <DeleteConfirmSheet {...props} />;
 }
 
 function SummaryPendingCard({ visible = false, eyebrow = "Scene Recap", message = "" }) {

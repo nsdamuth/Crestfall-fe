@@ -145,7 +145,7 @@ function SearchField({ value, placeholder, onChange }) {
           type="button"
           onClick={handleClear}
           aria-label="Clear search"
-          className="kit-focus flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
+          className="flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
         >
           <X size={14} aria-hidden="true" />
         </button>

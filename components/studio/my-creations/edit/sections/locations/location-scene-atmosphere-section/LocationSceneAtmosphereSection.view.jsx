@@ -42,7 +42,7 @@ export default function LocationSceneAtmosphereSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] md:grid-cols-2">
         <TextField
           label={moodLabel}
           value={moodValue}
@@ -90,11 +90,14 @@ export default function LocationSceneAtmosphereSectionView({
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-[var(--space-6)]">
         {sensoryEnvironmentSlot || (
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+          // CLEANUP fix: SlotFallback panel retired for plain helper
+          // text (matches the same helper's fix in
+          // location-runtime-modules-section).
+          <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {sensoryEnvironmentFallbackText}
-          </div>
+          </p>
         )}
       </div>
     </div>

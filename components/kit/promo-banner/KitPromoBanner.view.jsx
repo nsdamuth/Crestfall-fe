@@ -128,7 +128,7 @@ export default function KitPromoBannerView({
               <button
                 type="button"
                 onClick={() => onCtaClick?.()}
-                className={`kit-focus cf-btn cf-btn--primary w-fit ${
+                className={`cf-btn cf-btn--primary w-fit ${
                   treatment === "bottom" ? "cf-btn--banner-cta-compact" : ""
                 }`}
               >
@@ -139,7 +139,7 @@ export default function KitPromoBannerView({
               <button
                 type="button"
                 onClick={() => onSecondaryCtaClick?.()}
-                className="kit-focus cf-btn cf-btn--secondary w-fit"
+                className="cf-btn cf-btn--secondary w-fit"
               >
                 {secondaryCtaLabel}
               </button>

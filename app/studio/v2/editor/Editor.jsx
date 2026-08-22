@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserRound } from "lucide-react";
 
+import KitBadge from "@/components/kit/KitBadge";
 import CreationFeaturedImagePickerModal from "@/components/studio/my-creations/image-library/CreationFeaturedImagePickerModal";
 import CreationEditSectionContent from "@/components/studio/my-creations/creation-edit-shell/CreationEditSectionContent";
 import CreationEditMechanicsRuntimeQuickNav from "@/components/studio/my-creations/creation-edit-shell/CreationEditMechanicsRuntimeQuickNav";
@@ -77,12 +78,12 @@ function DefaultPcActions({ settingDefaultPc, onSetDefaultPc, status, error }) {
         {settingDefaultPc ? "Setting..." : "Set default PC"}
       </button>
       {status ? (
-        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success-text)]">
           {status}
         </span>
       ) : null}
       {error ? (
-        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
           {error}
         </span>
       ) : null}
@@ -159,9 +160,9 @@ function EditorInner({
 
   if (isLore && sectionNodes.preview) {
     sectionBadges.preview = (
-      <p className="mb-[var(--space-3)] inline-flex items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]">
-        Owner-only draft preview
-      </p>
+      <div className="mb-[var(--space-3)]">
+        <KitBadge label="Owner-only draft preview" variant="status" surface="canvas" />
+      </div>
     );
   }
 

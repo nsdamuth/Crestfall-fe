@@ -7,11 +7,10 @@ import {
   Theater,
   User,
   Users,
-  X,
 } from "lucide-react";
 
 import CreationPickerPanel from "@/components/studio/creations/pickers/CreationPickerPanel";
-import ModalShell from "@/components/ui/ModalShell";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const ICON_BY_NAME = Object.freeze({
   users: Users,
@@ -40,11 +39,8 @@ export default function IngredientPickerModalView({
   const HeaderIcon = ICON_BY_NAME[headerIconName] || Sparkles;
 
   return (
-    <ModalShell
-      onClose={onClose}
-      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl"
-    >
-      <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <KitModalFrame onClose={onClose} ariaLabel={ingredientLabel} panelClassName="max-w-4xl">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
         <div>
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             <HeaderIcon size={15} />
@@ -61,15 +57,6 @@ export default function IngredientPickerModalView({
               : "."}
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-          aria-label="Close picker"
-        >
-          <X size={18} />
-        </button>
       </div>
 
       <div className="p-5">
@@ -139,6 +126,6 @@ export default function IngredientPickerModalView({
           }
         />
       </div>
-    </ModalShell>
+    </KitModalFrame>
   );
 }

@@ -11,6 +11,9 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function CreationImageLibraryPageView({
   title = "Image Library",
   backHref = "/studio/my-creations",
@@ -33,6 +36,8 @@ export default function CreationImageLibraryPageView({
   hasMoreVisibleImages = false,
   lightboxProps = null,
   eagerImageCount = 4,
+  deleteConfirmOpen = false,
+  deleteConfirmIsFeatured = false,
   onRefresh,
   onSetEligibilityFilter,
   onSetSortMode,
@@ -44,6 +49,8 @@ export default function CreationImageLibraryPageView({
   onHideImage,
   onShowImage,
   onDeleteImage,
+  onCancelDeleteImage,
+  onConfirmDeleteImage,
   BackLinkComponent,
   renderQuickActions,
   renderLightbox,
@@ -90,19 +97,19 @@ export default function CreationImageLibraryPageView({
         </div>
 
         {loadStatus === "error" ? (
-          <p className="mt-4 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
             {loadMessage || "Image library could not be loaded."}
           </p>
         ) : null}
 
         {reactionMessage ? (
-          <p className="mt-4 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
             {reactionMessage}
           </p>
         ) : null}
 
         {deleteMessage ? (
-          <p className="mt-4 rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--gold-ornament)]">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill)] px-4 py-3 text-sm text-[var(--gold-ornament)]">
             {deleteMessage}
           </p>
         ) : null}
@@ -169,17 +176,14 @@ export default function CreationImageLibraryPageView({
             );
           })}
 
-          <select
-            value={sortMode}
-            onChange={(event) => onSetSortMode?.(event.target.value)}
-            className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)] outline-none transition hover:border-[var(--gold-action)]"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <KitDropdownView
+            label="Sort"
+            ariaLabel="Sort library images"
+            options={sortOptions}
+            selectedValues={sortMode ? [sortMode] : []}
+            isMultiSelect={false}
+            onToggleOption={(value) => onSetSortMode?.(value)}
+          />
         </div>
 
         {isLoading ? (
@@ -189,7 +193,7 @@ export default function CreationImageLibraryPageView({
         {!isLoading && !hasImages ? <EmptyLibraryState /> : null}
 
         {!isLoading && noMatchingImages ? (
-          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-1)] p-8 text-center">
             <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No matching images</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
@@ -263,7 +267,49 @@ export default function CreationImageLibraryPageView({
       ) : null}
 
       {lightboxProps && renderLightbox ? renderLightbox(lightboxProps) : null}
+
+      {deleteConfirmOpen ? (
+        <DeleteConfirmModal
+          isFeatured={deleteConfirmIsFeatured}
+          onCancel={onCancelDeleteImage}
+          onConfirm={onConfirmDeleteImage}
+        />
+      ) : null}
     </section>
+  );
+}
+
+// B5 danger-confirm recipe, CR-054 placeholder copy: the recovery
+// window is not yet ruled to a single number, so the copy carries the
+// literal "[X] days" placeholder rather than a guessed figure.
+// Replaces the browser's native confirm() dialog
+// (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md section 2.5). Type-aware:
+// a featured-slot image warns that deleting it also clears that slot.
+function DeleteConfirmModal({ isFeatured = false, onCancel = null, onConfirm = null }) {
+  return (
+    <KitModalFrame onClose={onCancel} ariaLabel="Delete this image?" panelClassName="w-full max-w-[26rem]">
+      <div className="p-[var(--space-6)]">
+        <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+          Delete this image?
+        </h2>
+        <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+          It moves to a recovery window for [X] days before it is gone for
+          good.{" "}
+          {isFeatured
+            ? "This also clears it from its featured slot and hides it from public catalogues."
+            : "This also hides it from public catalogues."}
+        </p>
+        <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
+        <div className="flex items-center justify-between gap-[var(--space-3)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
+            Keep image
+          </button>
+          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
+            Delete
+          </button>
+        </div>
+      </div>
+    </KitModalFrame>
   );
 }
 
@@ -277,7 +323,7 @@ function FeaturedSlotCard({
   const image = slot.image;
   return (
     <article className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3">
-      <div className="aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-black/40">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
         {image?.thumbnailUrl ? (
           <div className="group relative h-full w-full">
             <button
@@ -354,7 +400,7 @@ function LibraryImageCard({
       </div>
 
       {!image.canUseAsFeatured ? (
-        <p className="mt-3 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
+        <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
           This image cannot be used as a featured image until it is cleared or
           approved.
         </p>
@@ -454,7 +500,7 @@ function ImagePreview({
   return (
     <div
       style={{ aspectRatio: image.aspectRatio }}
-      className={`group relative w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 text-left ${
+      className={`group relative w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-left ${
         imageUrl
           ? "transition hover:border-[var(--gold-ornament)]/35"
           : "cursor-default"
@@ -512,7 +558,7 @@ function StatusPill({ label, muted = false }) {
 
 function EmptyLibraryState() {
   return (
-    <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-1)] p-8 text-center">
       <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
       <p className="mt-4 font-display text-3xl">No images yet</p>
       <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">

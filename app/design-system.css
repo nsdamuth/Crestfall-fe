@@ -169,14 +169,27 @@
   box-shadow: var(--focus-ring);
 }
 
-/* cf-field (quiet 1px gold field ring), kit-focus (border-brightening
-   opt-in), and the kit-search-input suppression rule all retired
-   22 Aug 2026 (A3, Fable law review, docs/BUILD-BLUEPRINT.md 2.16(e)
-   struck): the Gate 1 gold-ornament-border-plus-glow recipe ships as
-   the single global --focus-ring above, and every focusable control
-   app-wide, not only field beds, resolves through it. The dead
-   cf-field/kit-focus class attributes still present in JSX are
-   harmless and are swept in a later cleanup, not this pass. */
+/* --- FOCUS ON GOLD, .goldring ----------------------------------
+   B10, ratified 22 Aug 2026 (app/theme.css --focus-ring-ongold).
+   cf-btn--primary is the app's one gold-filled button recipe and
+   gets the ongold ring unconditionally, so every current and future
+   gold CTA is covered with no per-instance opt-in required. .goldring
+   remains as an explicit hook for any other gold-filled surface that
+   is not a cf-btn--primary. Neither replaces --focus-ring elsewhere. */
+.cf-btn--primary:focus-visible,
+.goldring:focus-visible {
+  box-shadow: var(--focus-ring-ongold);
+}
+
+/* cf-field (quiet 1px gold field ring) and kit-focus (border-
+   brightening opt-in) retired 22 Aug 2026 (A3, Fable law review,
+   docs/BUILD-BLUEPRINT.md 2.16(e) struck): the Gate 1 gold-ornament-
+   border-plus-glow recipe ships as the single global --focus-ring
+   above, and every focusable control app-wide, not only field beds,
+   resolves through it. Both dead class attributes were swept from
+   every JSX file in the ED1G dead-class pass (sw13); the
+   kit-search-input suppression rule below is a different, still-live
+   recipe. */
 
 /* The native type=search cancel/clear icon renders in the browser's
    own color (Chromium and Edge both draw it outside token law); it

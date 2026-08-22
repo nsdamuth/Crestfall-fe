@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Beaker,
@@ -11,8 +11,10 @@ import {
   LibraryBig,
   Search,
   ShieldCheck,
-  X,
 } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import { SelectField } from "../../SharedFields";
 
 const PRESET_FOLDER_DEFINITIONS = Object.freeze([
   {
@@ -47,7 +49,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
 
   const className =
     tone === "warning"
-      ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
+      ? "border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] text-[var(--status-warning-text)]"
       : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]";
 
   return (
@@ -97,7 +99,7 @@ function CountGrid({ title, counts }) {
             <p className="text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {label}
             </p>
-            <p className="mt-1 text-lg text-[var(--ink)]">{value ?? 0}</p>
+            <p className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{value ?? 0}</p>
           </div>
         ))}
       </div>
@@ -199,7 +201,7 @@ function PresetFolder({
                     {!preset.available ? (
                       <AlertTriangle
                         size={13}
-                        className="mt-0.5 text-amber-200"
+                        className="mt-0.5 text-[var(--status-warning-text)]"
                       />
                     ) : null}
                   </span>
@@ -220,76 +222,23 @@ function PresetFolder({
 }
 
 
+// Section 8 (ED1E modal standard): every modal composes KitModalFrame;
+// LARGE tier (max-w-4xl) is legal here because this picker's content
+// is genuinely two-pane (folder rail plus preset detail), exactly the
+// case section 8 names. KitModalFrame owns escape, backdrop, scroll
+// lock, and the 92dvh cap; the header and footer stay pinned via
+// position:sticky inside that one scroll container rather than a
+// second nested scroll region.
 function PresetLibraryModalFrame({ children, onClose }) {
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-
-    function handleKeyDown(event) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose?.();
-      }
-    }
-
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[var(--scrim-strong)] p-2 backdrop-blur-[2px] sm:p-4"
-      role="presentation"
+    <KitModalFrame
+      variant="modal"
+      onClose={onClose}
+      ariaLabelledBy="mechanics-preset-library-title"
+      panelClassName="w-full max-w-4xl"
     >
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="mechanics-preset-library-title"
-        className="grid min-h-0 w-[min(96vw,72rem)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]"
-        style={{
-          height: "min(88dvh, 48rem)",
-          maxHeight: "calc(100dvh - 1rem)",
-          gridTemplateRows: "auto minmax(0, 1fr) auto",
-        }}
-      >
-        {children}
-      </section>
-
-      <style jsx global>{`
-        .crestfall-preset-library-scroll {
-          scrollbar-width: auto !important;
-          scrollbar-color: rgba(199, 164, 89, 0.8) rgba(255, 255, 255, 0.06) !important;
-        }
-
-        .crestfall-preset-library-scroll::-webkit-scrollbar {
-          display: block !important;
-          width: 12px !important;
-          height: 12px !important;
-        }
-
-        .crestfall-preset-library-scroll::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05) !important;
-          border-left: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .crestfall-preset-library-scroll::-webkit-scrollbar-thumb {
-          min-height: 44px;
-          border: 3px solid transparent;
-          border-radius: 999px;
-          background: rgba(199, 164, 89, 0.72) !important;
-          background-clip: padding-box !important;
-        }
-
-        .crestfall-preset-library-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(199, 164, 89, 0.95) !important;
-          background-clip: padding-box !important;
-        }
-      `}</style>
-    </div>
+      {children}
+    </KitModalFrame>
   );
 }
 
@@ -335,43 +284,23 @@ export default function MechanicsPresetApplicationModalView({
 
   return (
     <PresetLibraryModalFrame onClose={onClose}>
-      <div className="flex shrink-0 items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
-        <div>
-          <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
-            <LibraryBig size={15} />
-            Loom Preset Workflow
-          </p>
-          <h2
-            id="mechanics-preset-library-title"
-            className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]"
-          >
-            {title}
-          </h2>
-          <p className="mt-[var(--space-2)] max-w-3xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-            {description}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="flex h-[var(--control-md)] w-[var(--control-md)] flex-shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
-          aria-label="Close Mechanics Preset Library"
+      <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
+        <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+          <LibraryBig size={15} />
+          Loom Preset Workflow
+        </p>
+        <h2
+          id="mechanics-preset-library-title"
+          className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]"
         >
-          <X size={18} />
-        </button>
+          {title}
+        </h2>
+        <p className="mt-[var(--space-2)] max-w-3xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          {description}
+        </p>
       </div>
 
-      <div
-        className="crestfall-preset-library-scroll min-h-0 overflow-y-scroll overscroll-contain"
-        style={{
-          minHeight: 0,
-          overflowY: "scroll",
-          overscrollBehavior: "contain",
-          scrollbarGutter: "stable",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
+      <div className="min-w-0">
         <div className="grid min-w-0 gap-4 p-4 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
           <aside className="min-w-0">
             <label className="block">
@@ -450,7 +379,7 @@ export default function MechanicsPresetApplicationModalView({
                   <p className={EYEBROW_CLASS}>
                     {selectedPreset.eyebrow}
                   </p>
-                  <h3 className="mt-2 font-display text-3xl">
+                  <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
                     {selectedPreset.label}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
@@ -508,23 +437,16 @@ export default function MechanicsPresetApplicationModalView({
                 </div>
 
                 {requiresCommandTarget ? (
-                  <label className="block rounded-xl border border-white/10 bg-black/25 p-4">
-                    <span className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-                      Target Command
-                    </span>
-                    <select
-                      value={selectedCommandId}
-                      onChange={(event) => onChooseCommand?.(event.target.value)}
-                      className="mt-3 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-                    >
-                      <option value="">Select a command</option>
-                      {commandTargets.map((command) => (
-                        <option key={command.id} value={command.id}>
-                          {command.label} · {command.invocationLabel}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                  <SelectField
+                    label="Target Command"
+                    value={selectedCommandId}
+                    placeholder="Select a command"
+                    onChange={(value) => onChooseCommand?.(value)}
+                    options={commandTargets.map((command) => ({
+                      value: command.id,
+                      label: `${command.label} · ${command.invocationLabel}`,
+                    }))}
+                  />
                 ) : null}
 
                 <section className="rounded-xl border border-white/10 bg-black/25 p-4">
@@ -572,15 +494,23 @@ export default function MechanicsPresetApplicationModalView({
                 </div>
 
                 {confirmationRequired ? (
-                  <label className="flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-500/10 p-4 text-amber-100">
-                    <input
-                      type="checkbox"
-                      checked={replacementConfirmed}
-                      onChange={(event) =>
-                        onToggleReplacementConfirmation?.(event.target.checked)
-                      }
-                      className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
+                  <label className="flex items-start gap-3 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] p-4 text-[var(--status-warning-text)]">
+                    <span className="relative mt-0.5 inline-flex h-[var(--control-editor-sm)] w-[var(--control-editor-sm)] flex-none items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={replacementConfirmed}
+                        onChange={(event) =>
+                          onToggleReplacementConfirmation?.(event.target.checked)
+                        }
+                        className="peer absolute inset-0 h-full w-full cursor-pointer appearance-none rounded-[var(--radius-sm)] border border-[var(--line)] bg-transparent outline-none transition-colors checked:border-[var(--gold-action)] checked:bg-[var(--fill-whisper)]"
+                      />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                        className="pointer-events-none relative text-[var(--gold-action)] opacity-0 transition-opacity peer-checked:opacity-100"
+                      />
+                    </span>
                     <span>
                       <span className="block text-xs uppercase tracking-[0.16em]">
                         Confirm Replacement Boundary
@@ -660,7 +590,7 @@ export default function MechanicsPresetApplicationModalView({
                   size={24}
                   className="mx-auto text-[var(--gold-ornament)]"
                 />
-                <h3 className="mt-3 font-display text-3xl">Choose a Preset</h3>
+                <h3 className="mt-3 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Choose a Preset</h3>
                 <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--ink-dim)]">
                   Open a preset folder, then select a preset to inspect its boundary, target, application mode, and compliance preview.
                 </p>
@@ -671,11 +601,11 @@ export default function MechanicsPresetApplicationModalView({
         </div>
       </div>
 
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-white/10 p-4">
-        <p className="text-xs leading-5 text-[var(--ink-dim)]">
+      <div className="sticky bottom-0 z-[1] flex flex-wrap items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-4)]">
+        <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Applying updates the current builder only. Use the normal page Save action to persist the result.
         </p>
-        <div className="flex flex-wrap justify-end gap-3">
+        <div className="flex flex-wrap justify-end gap-[var(--space-3)]">
           <button
             type="button"
             onClick={() => onClose?.()}

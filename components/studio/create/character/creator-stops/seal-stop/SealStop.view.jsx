@@ -89,7 +89,7 @@ export default function SealStopView({
           onChange={(event) => onChangeAge?.(event.target.value)}
           onBlur={(event) => onChangeAge?.(normalizeAdultAge(event.target.value))}
           placeholder="18+"
-          className="cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+          className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
         />
         <p className="mt-[var(--space-2)] text-xs text-[var(--ink-faint)]">
           Every character on Crestfall is an adult. Ages under 18 are raised

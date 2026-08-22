@@ -12,6 +12,7 @@ import {
   normalizeMechanicsEffectValueBindingBuilder,
   supportsMechanicsEffectValueBinding,
 } from "../mechanicsEffectValueBindingBuilder.js";
+import { CheckboxField, SelectField as SharedSelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -25,43 +26,38 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
 }
 
+// 4.4: native select retired for the branded kit dropdown grammar.
+// This wrapper keeps its own id-based option shape (every call site
+// in this file already uses it, including the disabled-with-reason
+// suffix) and translates to SharedFields.SelectField underneath.
 function SelectField({ label, value, options = [], onChange, disabled = false }) {
-  return (
-    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-      <span>{label}</span>
-      <select
-        value={value ?? ""}
-        disabled={disabled}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {options.map((option) => {
-          const normalized =
-            typeof option === "string"
-              ? { id: option, label: option.replaceAll("_", " ") }
-              : option;
+  const normalizedOptions = options.map((option) => {
+    const normalized =
+      typeof option === "string"
+        ? { id: option, label: option.replaceAll("_", " ") }
+        : option;
+    const optionLabel =
+      normalized.disabled && normalized.reason
+        ? `${normalized.label} · ${normalized.reason}`
+        : normalized.label;
 
-          return (
-            <option
-              key={normalized.id}
-              value={normalized.id}
-              disabled={normalized.disabled === true}
-            >
-              {normalized.label}
-              {normalized.disabled && normalized.reason
-                ? ` · ${normalized.reason}`
-                : ""}
-            </option>
-          );
-        })}
-      </select>
-    </label>
+    return { value: normalized.id, label: optionLabel, isDisabled: normalized.disabled === true };
+  });
+
+  return (
+    <SharedSelectField
+      label={label}
+      value={value ?? ""}
+      disabled={disabled}
+      options={normalizedOptions}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
@@ -69,18 +65,12 @@ function OutcomeChecks({ options, selected, onToggle }) {
   return (
     <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
       {options.map((outcome) => (
-        <label
+        <CheckboxField
           key={outcome}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
-        >
-          <input
-            type="checkbox"
-            checked={selected.includes(outcome)}
-            onChange={(event) => onToggle?.(outcome, event.target.checked)}
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          {outcome.replaceAll("_", " ")}
-        </label>
+          label={outcome.replaceAll("_", " ")}
+          checked={selected.includes(outcome)}
+          onChange={(checked) => onToggle?.(outcome, checked)}
+        />
       ))}
     </div>
   );
@@ -98,27 +88,23 @@ function DependencyChecks({ options, selected, onToggle }) {
   return (
     <div className="grid gap-2 sm:grid-cols-2">
       {options.map((option) => (
-        <label
+        <CheckboxField
           key={option.id}
-          className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]"
-        >
-          <input
-            type="checkbox"
-            checked={selected.includes(option.id)}
-            onChange={(event) => onToggle?.(option.id, event.target.checked)}
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          <span className="min-w-0">
-            <span className="block truncate text-[var(--ink)]">
-              {option.label}
-            </span>
-            {option.group ? (
-              <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-                {option.group}
+          checked={selected.includes(option.id)}
+          onChange={(checked) => onToggle?.(option.id, checked)}
+          label={
+            <span className="min-w-0">
+              <span className="block truncate text-[var(--ink)]">
+                {option.label}
               </span>
-            ) : null}
-          </span>
-        </label>
+              {option.group ? (
+                <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                  {option.group}
+                </span>
+              ) : null}
+            </span>
+          }
+        />
       ))}
     </div>
   );
@@ -702,7 +688,7 @@ function MechanicsStepCard({
           <p className={EYEBROW_CLASS}>
             Mechanics Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--ink)]">
+          <h5 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {step.label || step.id}
           </h5>
         </div>
@@ -750,17 +736,13 @@ function MechanicsStepCard({
             onPatchMechanicsStep?.(step.id, { conditionMode: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={step.enabled !== false}
-            onChange={(event) =>
-              onPatchMechanicsStep?.(step.id, { enabled: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Step enabled
-        </label>
+        <CheckboxField
+          label="Step enabled"
+          checked={step.enabled !== false}
+          onChange={(checked) =>
+            onPatchMechanicsStep?.(step.id, { enabled: checked })
+          }
+        />
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
@@ -1059,7 +1041,7 @@ function DomainStepCard({
           <p className={EYEBROW_CLASS}>
             Domain Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--ink)]">
+          <h5 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {step.label || step.id}
           </h5>
           {step.lane ? (
@@ -1098,17 +1080,13 @@ function DomainStepCard({
             onPatchDomainStep?.(step.id, { failurePolicy: value })
           }
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          <input
-            type="checkbox"
-            checked={step.enabled !== false}
-            onChange={(event) =>
-              onPatchDomainStep?.(step.id, { enabled: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--gold-ornament)]"
-          />
-          Step enabled
-        </label>
+        <CheckboxField
+          label="Step enabled"
+          checked={step.enabled !== false}
+          onChange={(checked) =>
+            onPatchDomainStep?.(step.id, { enabled: checked })
+          }
+        />
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
@@ -1208,7 +1186,7 @@ export default function MechanicsCompositionBuilderView({
             <Workflow size={15} />
             Command Composition
           </p>
-          <h4 className="mt-2 font-display text-3xl text-[var(--ink)]">
+          <h4 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {title}
           </h4>
           {description ? (
@@ -1220,13 +1198,13 @@ export default function MechanicsCompositionBuilderView({
 
         <div className="grid min-w-[240px] md:grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--ink)]">
+            <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledMechanicsStepCount ?? 0}
             </span>
             Mechanics Steps
           </div>
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--ink)]">
+            <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledDomainStepCount ?? 0}
             </span>
             Domain Steps
@@ -1241,23 +1219,20 @@ export default function MechanicsCompositionBuilderView({
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Applying a reference replaces only this command&apos;s composition block. Resolution, requirements, legacy effects, outcomes, arguments, and legacy Domain Adapter remain unchanged.
         </p>
-        <div className="mt-4 flex flex-col gap-3 lg:flex-row">
-          <select
-            value={referenceId}
-            onChange={(event) => onChooseReference?.(event.target.value)}
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            <option value="">Select a reference composition</option>
-            {referenceOptions.map((reference) => (
-              <option
-                key={reference.id}
-                value={reference.id}
-                disabled={!reference.available}
-              >
-                {reference.label} · {reference.available ? reference.description : reference.unavailableReason}
-              </option>
-            ))}
-          </select>
+        <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-end">
+          <div className="min-w-0 flex-1">
+            <SharedSelectField
+              label="Reference composition"
+              value={referenceId}
+              placeholder="Select a reference composition"
+              onChange={(nextValue) => onChooseReference?.(nextValue)}
+              options={referenceOptions.map((reference) => ({
+                value: reference.id,
+                label: `${reference.label} · ${reference.available ? reference.description : reference.unavailableReason}`,
+                isDisabled: !reference.available,
+              }))}
+            />
+          </div>
           <button
             type="button"
             disabled={!referenceId || selectedReference?.available === false}
@@ -1270,8 +1245,8 @@ export default function MechanicsCompositionBuilderView({
       </div>
 
       {validationMessages.length ? (
-        <div className="mt-5 rounded-xl border border-amber-300/20 bg-amber-500/10 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-amber-100">
+        <div className="mt-5 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--status-warning-text)]">
             Composition Review
           </p>
           <div className="mt-3 grid gap-2">
@@ -1280,8 +1255,8 @@ export default function MechanicsCompositionBuilderView({
                 key={`${message.path}-${index}`}
                 className={`rounded-lg border px-3 py-2 text-xs leading-5 ${
                   message.level === "error"
-                    ? "border-red-300/20 bg-red-500/10 text-red-100"
-                    : "border-amber-300/15 bg-black/20 text-amber-100"
+                    ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]"
+                    : "border-[var(--status-warning-border)] bg-black/20 text-[var(--status-warning-text)]"
                 }`}
               >
                 <span className="font-mono text-[10px] text-[var(--ink-dim)]">

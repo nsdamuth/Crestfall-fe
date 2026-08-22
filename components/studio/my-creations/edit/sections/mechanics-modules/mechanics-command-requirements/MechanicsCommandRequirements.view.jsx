@@ -16,6 +16,7 @@ import {
   slugifyMechanicsRequirementId,
 } from "./mechanicsCommandRequirementsNormalization.js";
 import {
+  SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
@@ -34,7 +35,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -56,33 +57,29 @@ function RequirementValueField({ requirement, onPatch }) {
 
   if (requirement.type === "PROGRESSION_AT_MAXIMUM_LEVEL") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-        <span>Expected Maximum-Level State</span>
-        <select
-          value={requirement.value === false ? "false" : "true"}
-          onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-        >
-          <option value="true">At maximum level</option>
-          <option value="false">Not at maximum level</option>
-        </select>
-      </label>
+      <SelectField
+        label="Expected Maximum-Level State"
+        value={requirement.value === false ? "false" : "true"}
+        onChange={(value) => onPatch({ value: value === "true" })}
+        options={[
+          { value: "true", label: "At maximum level" },
+          { value: "false", label: "Not at maximum level" },
+        ]}
+      />
     );
   }
 
   if (requirement.type === "FLAG") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-        <span>Expected Value</span>
-        <select
-          value={requirement.value === false ? "false" : "true"}
-          onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-        >
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
-      </label>
+      <SelectField
+        label="Expected Value"
+        value={requirement.value === false ? "false" : "true"}
+        onChange={(value) => onPatch({ value: value === "true" })}
+        options={[
+          { value: "true", label: "true" },
+          { value: "false", label: "false" },
+        ]}
+      />
     );
   }
 
@@ -164,43 +161,37 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
           placeholder="mana_available"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Requirement Type</span>
-          <select
-            value={requirement.type}
-            onChange={(event) => {
-              const nextType = event.target.value;
-              const nextTargetRequirement = isTargetCommandRequirementType(nextType);
-              const nextProgressionRequirement =
-                isProgressionCommandRequirementType(nextType);
-              onPatch({
-                type: nextType,
-                operator: getDefaultCommandRequirementOperator(nextType),
-                value: getDefaultCommandRequirementValue(nextType),
-                targetId: nextTargetRequirement
-                  ? ""
-                  : nextProgressionRequirement
-                    ? requirement.targetId || "progression"
-                    : requirement.targetId,
-                argumentName: nextTargetRequirement
-                  ? requirement.argumentName || "target"
-                  : "",
-                enforcement: nextProgressionRequirement
-                  ? normalizeProgressionCommandRequirementEnforcement(
-                      requirement.enforcement
-                    )
-                  : undefined,
-              });
-            }}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_REQUIREMENT_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Requirement Type"
+          value={requirement.type}
+          onChange={(nextType) => {
+            const nextTargetRequirement = isTargetCommandRequirementType(nextType);
+            const nextProgressionRequirement =
+              isProgressionCommandRequirementType(nextType);
+            onPatch({
+              type: nextType,
+              operator: getDefaultCommandRequirementOperator(nextType),
+              value: getDefaultCommandRequirementValue(nextType),
+              targetId: nextTargetRequirement
+                ? ""
+                : nextProgressionRequirement
+                  ? requirement.targetId || "progression"
+                  : requirement.targetId,
+              argumentName: nextTargetRequirement
+                ? requirement.argumentName || "target"
+                : "",
+              enforcement: nextProgressionRequirement
+                ? normalizeProgressionCommandRequirementEnforcement(
+                    requirement.enforcement
+                  )
+                : undefined,
+            });
+          }}
+          options={COMMAND_REQUIREMENT_TYPES.map((type) => ({
+            value: type,
+            label: type,
+          }))}
+        />
 
         {targetRequirement ? null : (
           <TextField
@@ -224,46 +215,34 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         )}
 
         {targetRequirement || progressionRequirement ? null : (
-          <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-            <span>Operator</span>
-            <select
-              value={requirement.operator}
-              onChange={(event) => onPatch({ operator: event.target.value })}
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-            >
-              {COMMAND_REQUIREMENT_OPERATORS.map((operator) => (
-                <option key={operator} value={operator}>
-                  {operator}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Operator"
+            value={requirement.operator}
+            onChange={(value) => onPatch({ operator: value })}
+            options={COMMAND_REQUIREMENT_OPERATORS.map((operator) => ({
+              value: operator,
+              label: operator,
+            }))}
+          />
         )}
 
         <RequirementValueField requirement={requirement} onPatch={onPatch} />
 
         {progressionRequirement ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-              <span>Enforcement Policy</span>
-              <select
-                value={requirement.enforcement}
-                onChange={(event) =>
-                  onPatch({
-                    enforcement: normalizeProgressionCommandRequirementEnforcement(
-                      event.target.value
-                    ),
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-              >
-                {COMMAND_PROGRESSION_ENFORCEMENTS.map((enforcement) => (
-                  <option key={enforcement} value={enforcement}>
-                    {enforcement}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Enforcement Policy"
+              value={requirement.enforcement}
+              onChange={(value) =>
+                onPatch({
+                  enforcement: normalizeProgressionCommandRequirementEnforcement(value),
+                })
+              }
+              options={COMMAND_PROGRESSION_ENFORCEMENTS.map((enforcement) => ({
+                value: enforcement,
+                label: enforcement,
+              }))}
+            />
             <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
               {requirement.enforcement === "HARD_LOCK"
                 ? "HARD_LOCK blocks this recognized command before attempt effects, resolution, outcome effects, and domain actions when the deterministic Progression requirement is not met."

@@ -126,7 +126,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
         setForm(createFallbackForm(creationId));
         setHasUnsavedChanges(false);
         setSaveStatus("error");
-        setSaveMessage(error.message || "Creation could not be loaded.");
+        setSaveMessage("Creation could not be loaded.");
       }
     }
 
@@ -254,7 +254,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       setSaveMessage("Saved.");
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(error.message || "Creation could not be saved.");
+      setSaveMessage("Creation could not be saved.");
     }
   }
 
@@ -276,7 +276,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setReviewStatus("error");
-      setReviewMessage(error.message || "Review could not be cancelled.");
+      setReviewMessage("Review could not be cancelled.");
     }
   }
 
@@ -295,9 +295,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(
-        error.message || "Creation could not be moved to internal editing."
-      );
+      setSaveMessage("Creation could not be moved to internal editing.");
     }
   }
 
@@ -328,12 +326,20 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setReviewStatus("error");
-      setReviewMessage(error.message || "Creation could not be submitted.");
+      setReviewMessage("Creation could not be submitted.");
     } finally {
       setReviewAction(null);
     }
   }
 
+  // In-place arming (ED1E 5.4), RULED 22 Aug 2026 (ED1G SW1, amended
+  // SW2): no window.confirm. handleArchive/handleDelete are plain
+  // executors; the row-level swap-to-Confirm/Cancel UI lives entirely
+  // in the caller (CreationDangerSection.view.jsx), the same local-
+  // arm-then-call-once pattern CreationPublishingSection's
+  // ConfirmableActionPanel already uses, so calling this function
+  // once always performs the action, never merely arms a second
+  // click.
   async function handleArchive() {
     setArchiveStatus("saving");
     setArchiveMessage("");
@@ -349,31 +355,26 @@ export function useCreationEditViewModel({ creationId, creation }) {
       setArchiveMessage("Archived.");
     } catch (error) {
       setArchiveStatus("error");
-      setArchiveMessage(error.message || "Creation could not be archived.");
+      setArchiveMessage("Creation could not be archived.");
     }
   }
-    async function handleDelete() {
-    const confirmed = window.confirm(
-        "Permanently delete this creation? This is only allowed for non-canon draft or archived creations."
-    );
 
-    if (!confirmed) return;
-
+  async function handleDelete() {
     setDeleteStatus("saving");
     setDeleteMessage("");
 
     try {
-        await deleteCreation(creationId);
+      await deleteCreation(creationId);
 
-        setDeleteStatus("deleted");
-        setDeleteMessage("Deleted.");
+      setDeleteStatus("deleted");
+      setDeleteMessage("Deleted.");
 
-        window.location.assign("/studio/my-creations");
+      window.location.assign("/studio/my-creations");
     } catch (error) {
-        setDeleteStatus("error");
-        setDeleteMessage(error.message || "Creation could not be deleted.");
+      setDeleteStatus("error");
+      setDeleteMessage("Creation could not be deleted.");
     }
-}
+  }
   return {
     activeSection,
     setActiveSection,

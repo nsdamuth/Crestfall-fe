@@ -108,6 +108,14 @@ no mass gold swap is authorized.
 | `--status-warning-bed` / `-border` | `rgba(201,123,53,.14)` / `rgba(201,123,53,.40)` | Quiet chip bed / border | locked |
 | `--status-danger-bed` / `-border` | `rgba(194,99,77,.14)` / `rgba(194,99,77,.40)` | Quiet chip bed / border | locked |
 | `--status-danger-fill` | `rgba(194,99,77,.06)` | Modal-confirm danger CTA fill (B5, 22 Aug 2026), distinct from the 14 percent `-bed` chip step | locked |
+| `--status-success-text` | `oklch(.86 .09 135)` | Brian ruling 1, 22 Aug 2026 (ED1G burn-down, closes ED1E section 10 item 1): brighter text-tier variant for status-colored RUNNING TEXT on dark panels only | locked |
+| `--status-warning-text` | `oklch(.80 .13 60)` | Same ruling, warning running text | locked |
+| `--status-danger-text` | `oklch(.78 .12 32)` | Same ruling, danger running text; used by the at-limit field counter and editor save-error words | locked |
+
+Ruling 1 usage law: the `-text` tier is for status-colored running text
+at normal size on dark panels only (field counters, inline error and
+warning lines). Chips and badges keep the base `--status-*` colors
+above; never swap a chip or badge to a `-text` token.
 
 Usage law: state only, never decoration. Every use ships with a word
 beside it. There is deliberately NO info color: informational copy uses

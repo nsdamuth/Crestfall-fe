@@ -78,6 +78,9 @@ function StatePanelContent({ eyebrow, title, sections, actions, showCloseControl
               >
                 <ActionIcon size={14} aria-hidden="true" />
                 {action.label}
+                {action.disabled ? (
+                  <span className="normal-case tracking-normal text-[var(--ink-faint)]">Soon</span>
+                ) : null}
               </button>
             );
           })}

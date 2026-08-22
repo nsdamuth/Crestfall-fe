@@ -33,7 +33,7 @@ export default function FixtureActionNotice({ notice = null, onClose = null }) {
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="kit-focus cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary"
           >
             Close
           </button>

@@ -45,6 +45,16 @@ the blur (`--blur-panel`), and the panel slot (`panelClassName`,
 `children`). It does not own disclosure state, escape handling, or
 scroll locking.
 
+## Mobile modal law, RULED 22 Aug 2026 (modal family close)
+
+`docs/BUILD-BLUEPRINT.md` 2.16(p) supersedes R4 under 700px app-wide.
+`KitModalFrame` is the propagation target for the ruling's bottom-anchored,
+confirm-on-dismiss, 44px-floor behavior; `ModalShell` itself is
+unchanged by it (it keeps centering at 700px and up per 2.5, and
+carries no bottom-anchor behavior of its own). No prop was added here,
+so no version bump: this section records the ruling per the plan's
+README instruction even though the bump was correctly skipped.
+
 ## Public contract
 
 Unchanged from the pre-carve component: `children`, `onClose`,

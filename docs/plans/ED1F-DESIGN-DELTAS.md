@@ -414,4 +414,8 @@ are designed or ruled yet, nothing to capture until they are.
 
 The Tailwind `.space-y-*` scan-exclusion fix and the 33 `@kind`
 comment additions stay in the `/design-sync` HANDOFF note, not this
-file, per the manifest's own instruction.
+file, per the manifest's own instruction. Count discrepancy noted at
+the ED1G review, 22 Aug 2026: this document records 33 pending
+`@kind` additions, `.design-sync/NOTES.md` records 38. Neither figure
+is corrected here; a source-of-truth recount against the live token
+files is needed before either number is treated as authoritative.

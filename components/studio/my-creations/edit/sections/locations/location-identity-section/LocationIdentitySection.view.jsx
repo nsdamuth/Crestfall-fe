@@ -1,11 +1,13 @@
-import { MapPin, X } from "lucide-react";
+import { ExternalLink, MapPin, X } from "lucide-react";
 
 import {
+  CheckboxField,
   ReadOnlyField,
   SectionTitle,
   SelectField as SharedSelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitBadge from "@/components/kit/KitBadge";
 
 export default function LocationIdentitySectionView({
   sectionEyebrow = "Location Editor",
@@ -59,7 +61,7 @@ export default function LocationIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] md:grid-cols-2">
         <TextField
           label={locationNameLabel}
           value={locationNameValue}
@@ -86,12 +88,20 @@ export default function LocationIdentitySectionView({
           onChange={onChangeLocationScale}
         />
 
-        <div className="md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+        {/* 4.5 picker field: label row, standard bed, a right-edge
+            "opens a dialog" affordance glyph, no bordered panel box. */}
+        <div className="md:col-span-2 block">
+          <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             {parentLocationLabel}
           </span>
 
-          <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+          <div className="relative mt-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+            <ExternalLink
+              size={14}
+              aria-hidden="true"
+              className="absolute right-[var(--space-4)] top-[var(--space-4)] text-[var(--ink-faint)]"
+            />
+
             {hasParentLocation ? (
               <SelectedParentLocation
                 parentLocation={parentLocation}
@@ -128,18 +138,20 @@ export default function LocationIdentitySectionView({
         <ReadOnlyField label={creationTypeLabel} value={creationTypeValue} />
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+      {/* Section 5 de-nesting: inset hairline, tier 4 label, no
+          bordered/backgrounded panel. */}
+      <div className="mt-[var(--space-6)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           {inheritanceEyebrow}
         </p>
 
         {inheritanceDescription ? (
-          <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
+          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {inheritanceDescription}
           </p>
         ) : null}
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
+        <div className="mt-[var(--space-4)] grid gap-[var(--space-3)] md:grid-cols-2">
           {inheritanceItems.map((item) => (
             <CheckboxField
               key={item.key}
@@ -173,20 +185,6 @@ function SelectField({
   );
 }
 
-function CheckboxField({ label, checked, onChange }) {
-  return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-      <input
-        type="checkbox"
-        checked={Boolean(checked)}
-        onChange={(event) => onChange?.(event.target.checked)}
-        className="h-4 w-4 accent-[var(--gold-ornament)]"
-      />
-      <span>{label}</span>
-    </label>
-  );
-}
-
 function SelectedParentLocation({
   parentLocation,
   parentImageFallbackUrl,
@@ -197,9 +195,9 @@ function SelectedParentLocation({
   onClearParentLocation,
 }) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-[var(--space-4)] sm:flex-row sm:items-center">
       <div
-        className="h-20 w-20 shrink-0 rounded-xl border border-white/10 bg-black/40 bg-cover bg-center"
+        className="h-20 w-20 shrink-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] bg-cover bg-center"
         style={{
           backgroundImage: `url(${
             parentLocation.imageUrl || parentImageFallbackUrl
@@ -208,26 +206,25 @@ function SelectedParentLocation({
       />
 
       <div className="min-w-0 flex-1">
-        <p className="font-display text-2xl">
+        <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
           {parentLocation.title || selectedParentFallbackTitle}
         </p>
 
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
           {parentLocation.scale ? (
-            <MetadataBadge value={parentLocation.scale} />
+            <KitBadge label={parentLocation.scale} variant="meta" surface="canvas" />
           ) : null}
-
           {parentLocation.spaceType ? (
-            <MetadataBadge value={parentLocation.spaceType} />
+            <KitBadge label={parentLocation.spaceType} variant="meta" surface="canvas" />
           ) : null}
         </div>
 
-        <p className="mt-2 break-all text-xs text-[var(--ink-dim)]">
+        <p className="mt-[var(--space-2)] break-all text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
           {parentLocation.id}
         </p>
       </div>
 
-      <div className="flex shrink-0 flex-wrap gap-2">
+      <div className="flex shrink-0 flex-wrap gap-[var(--space-2)]">
         <button
           type="button"
           onClick={() => onOpenParentPicker?.()}
@@ -257,11 +254,13 @@ function EmptyParentLocation({
   onOpenParentPicker,
 }) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-[var(--space-4)] sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="font-display text-2xl">{title}</p>
+        <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-faint)]">
+          {title}
+        </p>
         {description ? (
-          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {description}
           </p>
         ) : null}
@@ -276,13 +275,5 @@ function EmptyParentLocation({
         {selectParentLabel}
       </button>
     </div>
-  );
-}
-
-function MetadataBadge({ value }) {
-  return (
-    <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-      {value}
-    </span>
   );
 }

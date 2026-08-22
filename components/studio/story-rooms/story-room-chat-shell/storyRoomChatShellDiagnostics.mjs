@@ -20,7 +20,7 @@ test("Story Room Chat Shell stays thin and owns app bindings", () => {
   assert.match(shell, /StoryRoomChatShellView/);
   assert.match(shell, /CastPanelComponent=\{StoryRoomCastPanel\}/);
   assert.match(shell, /RuntimeMechanicsPanelComponent=\{StoryRoomRuntimeMechanicsPanel\}/);
-  assert.match(shell, /window\.confirm/);
+  assert.doesNotMatch(shell, /window\.confirm/);
   assert.match(shell, /router\.push\("\/studio\/story-rooms"\)/);
   assert.doesNotMatch(shell, /useState|deleteStoryRoom|resolveLocalStoryRoomCommand/);
 });
@@ -88,7 +88,7 @@ test("portable View owns responsive layout and uses injected children only", () 
   assert.match(view, /Quick Help/);
   assert.doesNotMatch(
     view,
-    /useStoryRoomChat|storyRoomClient|useRouter|next\/navigation|StoryRoomCastPanel from/
+    /useStoryRoomChat\(|storyRoomClient|useRouter|next\/navigation|StoryRoomCastPanel from/
   );
 });
 
@@ -117,7 +117,7 @@ test("delete wording and navigation behavior remain explicit", () => {
   assert.match(viewModel, /permanently deletes this chat session and all messages/);
   assert.match(viewModel, /Interaction totals will remain/);
   assert.match(viewModel, /This cannot be undone/);
-  assert.match(viewModel, /confirmDelete\(STORY_ROOM_DELETE_CONFIRMATION\)/);
+  assert.match(viewModel, /isConfirmingDeleteRoom/);
   assert.match(viewModel, /await deleteStoryRoom\(roomId\)/);
   assert.match(viewModel, /onRoomDeleted\?\.\(\)/);
   assert.match(shell, /\/studio\/story-rooms/);

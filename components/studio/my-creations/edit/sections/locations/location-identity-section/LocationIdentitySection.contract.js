@@ -23,6 +23,52 @@ export const LOCATION_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} key
  * @property {string} label
  * @property {boolean} checked
+ *
+ * Doc-only correction (ED1G sw12), no version bump: 39 view props
+ * already read by the View were undeclared here (no
+ * LocationIdentitySectionViewProps typedef existed at all).
+ *
+ * @typedef {Object} LocationIdentitySectionViewProps
+ * @property {string} [sectionEyebrow]
+ * @property {string} [sectionTitle]
+ * @property {string} [sectionDescription]
+ * @property {string} [locationNameLabel]
+ * @property {string} [locationNameValue]
+ * @property {string} [locationCategoryLabel]
+ * @property {string} [locationCategoryValue]
+ * @property {string} [spaceTypeLabel]
+ * @property {string} [spaceTypeValue]
+ * @property {LocationIdentityOption[]} [spaceTypeOptions]
+ * @property {string} [locationScaleLabel]
+ * @property {string} [locationScaleValue]
+ * @property {LocationIdentityOption[]} [locationScaleOptions]
+ * @property {string} [parentLocationLabel]
+ * @property {LocationParentMetadata} [parentLocation]
+ * @property {string} [parentImageFallbackUrl]
+ * @property {string} [selectedParentFallbackTitle]
+ * @property {string} [noParentTitle]
+ * @property {string} [noParentDescription]
+ * @property {string} [selectParentLabel]
+ * @property {string} [changeParentLabel]
+ * @property {string} [clearParentLabel]
+ * @property {string} [intendedUseLabel]
+ * @property {string} [intendedUseValue]
+ * @property {string} [tagsLabel]
+ * @property {string} [tagsValue]
+ * @property {string} [creationTypeLabel]
+ * @property {string} [creationTypeValue]
+ * @property {string} [inheritanceEyebrow]
+ * @property {string} [inheritanceDescription]
+ * @property {LocationInheritanceItem[]} [inheritanceItems]
+ * @property {((value:string) => void)|null} [onChangeLocationName]
+ * @property {((value:string) => void)|null} [onChangeLocationCategory]
+ * @property {((value:string) => void)|null} [onChangeSpaceType]
+ * @property {((value:string) => void)|null} [onChangeLocationScale]
+ * @property {(() => void)|null} [onOpenParentPicker]
+ * @property {(() => void)|null} [onClearParentLocation]
+ * @property {((value:string) => void)|null} [onChangeIntendedUse]
+ * @property {((value:string) => void)|null} [onChangeTags]
+ * @property {((key:string, checked:boolean) => void)|null} [onChangeInheritance]
  */
 export const LOCATION_IDENTITY_SECTION_APPLICATION_BOUNDARY = Object.freeze({
   applicationOwnedControls: ["LocationParentPickerModal"],

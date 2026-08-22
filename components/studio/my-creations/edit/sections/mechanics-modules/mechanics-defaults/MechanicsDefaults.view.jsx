@@ -2,6 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+import { SelectField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
@@ -16,7 +18,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -37,19 +39,15 @@ function SmallActionButton({ children, onClick }) {
 function DefaultValueField({ bucketKey, entry, onPatch }) {
   if (bucketKey === "flags") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-        <span>Initial Value</span>
-        <select
-          value={entry.initial ? "true" : "false"}
-          onChange={(event) =>
-            onPatch({ initial: event.target.value === "true" })
-          }
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-        >
-          <option value="false">false</option>
-          <option value="true">true</option>
-        </select>
-      </label>
+      <SelectField
+        label="Initial Value"
+        value={entry.initial ? "true" : "false"}
+        onChange={(value) => onPatch({ initial: value === "true" })}
+        options={[
+          { value: "false", label: "false" },
+          { value: "true", label: "true" },
+        ]}
+      />
     );
   }
 
@@ -165,7 +163,7 @@ export default function MechanicsDefaultsView({
           <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
             Defaults: Flags, Counters, and Stages
           </h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">

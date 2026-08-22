@@ -323,7 +323,7 @@ export default function StudioSidebarView({
               itself destructive. */}
           <a
             href={logoutHref}
-            className="kit-focus inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
+            className="inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
           >
             <LogOut size={14} aria-hidden="true" />
             {logoutLabel}

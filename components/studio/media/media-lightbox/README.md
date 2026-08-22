@@ -7,9 +7,18 @@ Studio history, and Creation image libraries while separating media identity,
 browser orchestration, details/report clients, and deletion rules from the
 portable Skin.
 
+## BREAKING CHANGE, v2.0.0, RULED 22 Aug 2026 (ED1G sw12, Brian ruling 4)
+
+v1.1.0 shipped a prop removal (`onDelete`) as an additive minor bump;
+SOP section 5 classes removals as breaking. Reissued honestly as
+2.0.0 with no further prop-surface change from 1.1.0. Any consumer
+still passing `onDelete` must migrate to `onRequestDelete` /
+`onCancelDelete` / `onConfirmDelete`.
+
 ## B7 viewer final, RULED 22 Aug 2026 (Fable law review, ED1F propagation plan group G3)
 
-Contract bump 1.0.0 to 1.1.0. Supersedes the prior two-sidebar layout
+Contract bump 1.0.0 to 1.1.0 (superseded by the 2.0.0 breaking
+reissue above). Supersedes the prior two-sidebar layout
 (a left thumbnail rail plus a right "Actions" panel) with the B7
 column shared with `KitImageOverlay` (`components/kit/image-overlay`):
 a lawful 2px veil at `--chrome-wash`, a two-line glass header
