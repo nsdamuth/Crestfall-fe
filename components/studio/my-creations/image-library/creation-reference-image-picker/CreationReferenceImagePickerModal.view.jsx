@@ -19,8 +19,8 @@ export default function CreationReferenceImagePickerModalView({
 }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+      <div className="flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[var(--grad-panel-lift)] shadow-2xl">
+        <div className="flex items-start justify-between gap-4 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Select Visual Reference
@@ -53,6 +53,8 @@ export default function CreationReferenceImagePickerModalView({
             </button>
           </div>
         </div>
+
+        <div aria-hidden="true" className="mx-5 h-px bg-[image:var(--line-fade)]" />
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {loadErrorMessage ? (
