@@ -26,7 +26,7 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -688,7 +688,7 @@ function MechanicsStepCard({
           <p className={EYEBROW_CLASS}>
             Mechanics Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--ink)]">
+          <h5 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {step.label || step.id}
           </h5>
         </div>
@@ -1041,7 +1041,7 @@ function DomainStepCard({
           <p className={EYEBROW_CLASS}>
             Domain Step {step.index + 1}
           </p>
-          <h5 className="mt-1 text-xl text-[var(--ink)]">
+          <h5 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {step.label || step.id}
           </h5>
           {step.lane ? (
@@ -1186,7 +1186,7 @@ export default function MechanicsCompositionBuilderView({
             <Workflow size={15} />
             Command Composition
           </p>
-          <h4 className="mt-2 font-display text-3xl text-[var(--ink)]">
+          <h4 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {title}
           </h4>
           {description ? (
@@ -1198,13 +1198,13 @@ export default function MechanicsCompositionBuilderView({
 
         <div className="grid min-w-[240px] md:grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--ink)]">
+            <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledMechanicsStepCount ?? 0}
             </span>
             Mechanics Steps
           </div>
           <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <span className="block text-lg text-[var(--ink)]">
+            <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledDomainStepCount ?? 0}
             </span>
             Domain Steps
@@ -1245,8 +1245,8 @@ export default function MechanicsCompositionBuilderView({
       </div>
 
       {validationMessages.length ? (
-        <div className="mt-5 rounded-xl border border-amber-300/20 bg-amber-500/10 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-amber-100">
+        <div className="mt-5 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--status-warning-text)]">
             Composition Review
           </p>
           <div className="mt-3 grid gap-2">
@@ -1255,8 +1255,8 @@ export default function MechanicsCompositionBuilderView({
                 key={`${message.path}-${index}`}
                 className={`rounded-lg border px-3 py-2 text-xs leading-5 ${
                   message.level === "error"
-                    ? "border-red-300/20 bg-red-500/10 text-red-100"
-                    : "border-amber-300/15 bg-black/20 text-amber-100"
+                    ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]"
+                    : "border-[var(--status-warning-border)] bg-black/20 text-[var(--status-warning-text)]"
                 }`}
               >
                 <span className="font-mono text-[10px] text-[var(--ink-dim)]">
