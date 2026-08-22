@@ -3,7 +3,7 @@ import {
   COMMAND_DOMAIN_ACTION_TYPES,
   LOCATION_TRAVEL_OPERATIONS,
 } from "./MechanicsCommandDomainActions.contract.js";
-import { SelectField } from "../../SharedFields";
+import { CheckboxField, SelectField } from "../../SharedFields";
 
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
@@ -61,20 +61,12 @@ export default function MechanicsCommandDomainActionsView({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-          <span>Domain Action</span>
-          <select
-            value={domainAction.type}
-            onChange={(event) => changeType(event.target.value)}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-          >
-            {COMMAND_DOMAIN_ACTION_TYPES.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Domain Action"
+          value={domainAction.type}
+          options={COMMAND_DOMAIN_ACTION_TYPES}
+          onChange={(value) => changeType(value)}
+        />
 
         {domainAction.type !== "NONE" ? (
           <>
@@ -143,31 +135,24 @@ export default function MechanicsCommandDomainActionsView({
                 className="md:col-span-2"
               />
             ) : (
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-2">
-                <span>Active Journey Operation</span>
-                <select
+              <div className="md:col-span-2">
+                <SelectField
+                  label="Active Journey Operation"
                   value={domainAction.travelOperation || "CONTINUE"}
-                  onChange={(event) =>
+                  options={LOCATION_TRAVEL_OPERATIONS.map((operation) => ({
+                    value: operation,
+                    label: operation.replaceAll("_", " "),
+                  }))}
+                  onChange={(travelOperation) =>
                     patchDomainAction({
                       enabled: true,
                       type: "LOCATION_TRAVEL_OPERATION",
-                      travelOperation: event.target.value,
+                      travelOperation,
                     })
                   }
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                >
-                  {LOCATION_TRAVEL_OPERATIONS.map((operation) => (
-                    <option key={operation} value={operation}>
-                      {operation.replaceAll("_", " ")}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-[11px] leading-5 text-[var(--ink-dim)]">
-                  Requires an active journey. The command is converted into canonical travel wording
-                  and passed through the existing active-travel resolver and Location applicator. It
-                  never assigns a phase or activates a destination directly.
-                </span>
-              </label>
+                  helperText="Requires an active journey. The command is converted into canonical travel wording and passed through the existing active-travel resolver and Location applicator. It never assigns a phase or activates a destination directly."
+                />
+              </div>
             )}
 
             {domainAction.type === "ITEM_GIVE" ? (
@@ -243,18 +228,12 @@ export default function MechanicsCommandDomainActionsView({
               </p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {COMMAND_DOMAIN_ACTION_OUTCOMES.map((outcome) => (
-                  <label
+                  <CheckboxField
                     key={outcome}
-                    className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-xs text-[var(--ink-dim)]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={domainAction.applyOnOutcomes.includes(outcome)}
-                      onChange={(event) => toggleOutcome(outcome, event.target.checked)}
-                      className="h-4 w-4 accent-[var(--gold-ornament)]"
-                    />
-                    {outcome.replaceAll("_", " ")}
-                  </label>
+                    label={outcome.replaceAll("_", " ")}
+                    checked={domainAction.applyOnOutcomes.includes(outcome)}
+                    onChange={(checked) => toggleOutcome(outcome, checked)}
+                  />
                 ))}
               </div>
             </div>
