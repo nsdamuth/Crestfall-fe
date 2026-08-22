@@ -1,6 +1,7 @@
 import { Activity, Plus, Save, Shield, SlidersHorizontal, Trash2, Zap } from "lucide-react";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import {
+  CheckboxField,
   NumberField,
   ReadOnlyField,
   SelectField,
@@ -8,7 +9,6 @@ import {
   TextAreaField,
   TextField,
 } from "../../SharedFields";
-import LocationsCheckboxField from "../LocationsCheckboxField";
 import {
   composerVisibilityOptions,
   effectTypeOptions,
@@ -116,7 +116,7 @@ export default function TrackersModuleConfigModalView({
           <div className="grid gap-[var(--space-6)]">
             <Group title="Module Settings">
               <div className="grid gap-[var(--space-4)] md:grid-cols-3">
-                <LocationsCheckboxField
+                <CheckboxField
                   label="Enable mechanics module"
                   checked={form.enabled}
                   onChange={onToggleEnabled}
@@ -487,7 +487,7 @@ function HintCard({ hint, hintIndex, targetOptions, onUpdate, onRemove, onAddEff
           placeholder="optional"
         />
 
-        <LocationsCheckboxField
+        <CheckboxField
           label="Allow repeat"
           checked={hint.constraints.allowRepeat}
           onChange={(value) => onUpdate({ constraints: { allowRepeat: value } })}

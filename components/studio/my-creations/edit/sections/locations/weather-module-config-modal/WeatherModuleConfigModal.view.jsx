@@ -2,11 +2,11 @@ import { Loader2, Plus, Save, Trash2 } from "lucide-react";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitFormField from "@/components/kit/KitFormField";
 import {
+  CheckboxField,
   ReadOnlyField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../SharedFields";
-import LocationsCheckboxField from "../LocationsCheckboxField";
 
 // Ruling 3 (ED1G): hand-rolled fixed-inset overlay retired onto
 // KitModalFrame (A4 mobile bottom-anchor law, B5/B8 unsaved-dismiss
@@ -241,19 +241,19 @@ export default function WeatherModuleConfigModalView({
               </div>
 
               <div className="mt-[var(--space-5)] grid gap-[var(--space-3)] md:grid-cols-3">
-                <LocationsCheckboxField
+                <CheckboxField
                   label="Surface Sensory Notes"
                   checked={surfaceSensoryNotes}
                   onChange={onSurfaceSensoryNotesChange}
                 />
 
-                <LocationsCheckboxField
+                <CheckboxField
                   label="Allow Weather Complications"
                   checked={allowWeatherComplications}
                   onChange={onAllowWeatherComplicationsChange}
                 />
 
-                <LocationsCheckboxField
+                <CheckboxField
                   label="Respect Indoor / Outdoor Logic"
                   checked={respectIndoorOutdoorLogic}
                   onChange={onRespectIndoorOutdoorLogicChange}
@@ -376,19 +376,19 @@ function WeatherConditionCard({ condition }) {
       </div>
 
       <div className="mt-[var(--space-3)] grid gap-[var(--space-3)] md:grid-cols-3">
-        <LocationsCheckboxField
+        <CheckboxField
           label="Available Here"
           checked={condition.allowed}
           onChange={condition.onAllowedChange}
         />
 
-        <LocationsCheckboxField
+        <CheckboxField
           label="Blocked Here"
           checked={condition.blocked}
           onChange={condition.onBlockedChange}
         />
 
-        <LocationsCheckboxField
+        <CheckboxField
           label="Can Affect Interiors"
           checked={condition.allowedIndoors}
           onChange={condition.onAllowedIndoorsChange}

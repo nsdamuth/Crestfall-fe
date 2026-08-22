@@ -1,13 +1,13 @@
 import { ExternalLink, MapPin, X } from "lucide-react";
 
 import {
+  CheckboxField,
   ReadOnlyField,
   SectionTitle,
   SelectField as SharedSelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 import KitBadge from "@/components/kit/KitBadge";
-import LocationsCheckboxField from "../LocationsCheckboxField";
 
 export default function LocationIdentitySectionView({
   sectionEyebrow = "Location Editor",
@@ -153,7 +153,7 @@ export default function LocationIdentitySectionView({
 
         <div className="mt-[var(--space-4)] grid gap-[var(--space-3)] md:grid-cols-2">
           {inheritanceItems.map((item) => (
-            <LocationsCheckboxField
+            <CheckboxField
               key={item.key}
               label={item.label}
               checked={item.checked}

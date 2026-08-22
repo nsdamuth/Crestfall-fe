@@ -18,8 +18,7 @@ package shape every sibling in this directory already follows (see
   -> useTrackersModuleConfigModalViewModel.js
   -> TrackersModuleConfigModal.view.jsx
      -> KitModalFrame (components/kit/KitModalFrame)
-     -> SharedFields (TextField, NumberField, SelectField, TextAreaField, ReadOnlyField)
-     -> LocationsCheckboxField (../LocationsCheckboxField)
+     -> SharedFields (TextField, NumberField, SelectField, TextAreaField, ReadOnlyField, CheckboxField)
 ```
 
 ## ED1G law pass
@@ -31,7 +30,9 @@ package shape every sibling in this directory already follows (see
 - Native selects converted to the branded dropdown grammar via
   SharedFields.SelectField (KitFormField variant="select").
 - Ruling 2 checkbox grammar applied to "Enable mechanics module" and
-  "Allow repeat" via `LocationsCheckboxField`.
+  "Allow repeat" via `SharedFields.CheckboxField` (relocated from the
+  locations-local `LocationsCheckboxField` so mechanics-modules can
+  reuse the same recipe without duplication).
 - Section 5 de-nesting: the outer `EditorPanel` bordered/backgrounded
   boxes are retired for the inset-hairline `Group` sub-group pattern.
   `TrackerCard` and `GuardCard` keep their own border/background
