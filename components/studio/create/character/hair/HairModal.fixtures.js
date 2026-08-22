@@ -30,11 +30,7 @@ const hairColorOptions = [
   toSwatchOption("BLUE", "Blue", "#3b82f6"),
   toSwatchOption("GREEN", "Green", "#22c55e"),
   toSwatchOption("PURPLE", "Purple", "#8b5cf6"),
-  toSwatchOption(
-    "CUSTOM",
-    "Custom",
-    "linear-gradient(135deg, #111111, #dc2626, #f5f5f5)"
-  ),
+  toSwatchOption("CUSTOM", "Custom", "var(--surface-1)"),
 ];
 
 const hairLengthOptions = [

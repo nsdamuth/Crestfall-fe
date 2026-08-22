@@ -24,25 +24,25 @@ const eyeColorOptions = [
   {
     value: "GLOWING",
     label: "Glowing",
-    color: "linear-gradient(135deg, #ffffff, #60a5fa, #a78bfa)",
+    color: "#93c5fd",
   },
   {
     value: "HETEROCHROMIA",
     label: "Heterochromia",
-    color:
-      "linear-gradient(135deg, #3b82f6 0%, #3b82f6 50%, #facc15 50%, #facc15 100%)",
+    color: "#3b82f6",
   },
   {
     value: "CUSTOM",
     label: "Custom",
-    color: "linear-gradient(135deg, #ec4899, #8b5cf6, #22c55e)",
+    color: "var(--surface-1)",
   },
 ];
 
+// ED1E section 8: no gradient swatches, ever. Every option renders as
+// a flat radius-md tile; the CUSTOM entry is the neutral surface-1
+// tile the law names explicitly, not a mixed-color preview.
 function toSwatchStyle(color) {
-  return color?.includes("gradient")
-    ? { backgroundImage: color }
-    : { backgroundColor: color };
+  return { backgroundColor: color };
 }
 
 function isPresetValue(options, value) {

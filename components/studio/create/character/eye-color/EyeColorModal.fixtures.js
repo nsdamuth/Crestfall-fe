@@ -1,9 +1,7 @@
 const noop = () => {};
 
 function toSwatchStyle(color) {
-  return color.includes("gradient")
-    ? { backgroundImage: color }
-    : { backgroundColor: color };
+  return { backgroundColor: color };
 }
 
 function toOption(id, label, color) {
@@ -30,21 +28,9 @@ const options = [
   toOption("ORANGE", "Orange", "#f97316"),
   toOption("PINK", "Pink", "#ec4899"),
   toOption("VIOLET", "Violet", "#8b5cf6"),
-  toOption(
-    "GLOWING",
-    "Glowing",
-    "linear-gradient(135deg, #ffffff, #60a5fa, #a78bfa)"
-  ),
-  toOption(
-    "HETEROCHROMIA",
-    "Heterochromia",
-    "linear-gradient(135deg, #3b82f6 0%, #3b82f6 50%, #facc15 50%, #facc15 100%)"
-  ),
-  toOption(
-    "CUSTOM",
-    "Custom",
-    "linear-gradient(135deg, #ec4899, #8b5cf6, #22c55e)"
-  ),
+  toOption("GLOWING", "Glowing", "#93c5fd"),
+  toOption("HETEROCHROMIA", "Heterochromia", "#3b82f6"),
+  toOption("CUSTOM", "Custom", "var(--surface-1)"),
 ];
 
 const baseFixture = {
