@@ -388,7 +388,7 @@ export default function EditorView({
       )}
 
       {!isLoading && !loadError ? (
-        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-4)] py-[var(--space-2)] lg:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[var(--chrome-wash)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-4)] py-[var(--space-2)] lg:hidden">
           <button
             type="button"
             onClick={() => onToggleMobileNav?.()}

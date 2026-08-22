@@ -1,5 +1,5 @@
-// Editor previews. Editor.view.jsx is a pure, data-agnostic View — it never
-// imports a Creation client or Next.js — so these stories hand-compose real
+// Editor previews. Editor.view.jsx is a pure, data-agnostic View: it never
+// imports a Creation client or Next.js, so these stories hand-compose real
 // EditorViewProps rather than reusing Editor.fixtures.js (which holds
 // creation RECORDS, not view props; see .design-sync/NOTES.md). `groups`
 // comes from the REAL resolver (resolveEditorPageGroups, creationEditConstants.js,
@@ -10,7 +10,7 @@
 // ED1e-voice fixture content standing in for the live character sections
 // (CharacterIdentitySection and kin), which are data-coupled and out of
 // this sync's scope. SectionBox, TocList, SaveBlock, and SwitcherBlock are
-// module-internal to Editor.view.jsx — not separately exported — so they
+// module-internal to Editor.view.jsx, not separately exported, so they
 // are covered as labeled regions of these stories, not faked as standalone
 // components.
 import { useState } from "react";

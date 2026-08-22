@@ -90,7 +90,7 @@ function SheetHeaderRow({ onClose = null }) {
 // destructive path and carries the ratified B5 danger-fill recipe.
 function UnsavedDismissConfirm({ onKeepEditing = null, onConfirmDiscard = null }) {
   return (
-    <div className="p-[var(--space-6)]">
+    <div className="p-[var(--space-6)]" data-testid="unsaved-dismiss-confirm">
       <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
         Discard changes?
       </h2>

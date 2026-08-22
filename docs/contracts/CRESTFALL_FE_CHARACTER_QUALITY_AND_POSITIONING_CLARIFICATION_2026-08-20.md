@@ -1,4 +1,4 @@
-# Crestfall — Character Quality, World Pressure, and Positioning Clarification for the FE Team
+# Crestfall: Character Quality, World Pressure, and Positioning Clarification for the FE Team
 
 **Date:** August 20, 2026  
 **Audience:** Crestfall FE / Design Team  
