@@ -27,7 +27,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -84,7 +84,7 @@ function StatusBlockCard({
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--ink)]">
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                 {block.label || block.id || `Status Block ${blockIndex + 1}`}
               </h4>
               <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
@@ -185,7 +185,7 @@ function StatusBlockCard({
                 }
               }}
               placeholder="[❤️ Affection: {{trackers.affection.value}}/100]"
-              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
             />
 
             {block.lines.length ? (
@@ -247,7 +247,7 @@ export default function MechanicsStatusBlocksView({
           <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">Status Blocks</h3>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Status Blocks</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic footer/status lines. These save into
             instanceData.statusBlocks and are appended by services-api, not the

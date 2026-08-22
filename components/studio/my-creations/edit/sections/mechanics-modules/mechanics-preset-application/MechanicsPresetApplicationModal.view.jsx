@@ -49,7 +49,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
 
   const className =
     tone === "warning"
-      ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
+      ? "border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] text-[var(--status-warning-text)]"
       : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]";
 
   return (
@@ -201,7 +201,7 @@ function PresetFolder({
                     {!preset.available ? (
                       <AlertTriangle
                         size={13}
-                        className="mt-0.5 text-amber-200"
+                        className="mt-0.5 text-[var(--status-warning-text)]"
                       />
                     ) : null}
                   </span>
@@ -379,7 +379,7 @@ export default function MechanicsPresetApplicationModalView({
                   <p className={EYEBROW_CLASS}>
                     {selectedPreset.eyebrow}
                   </p>
-                  <h3 className="mt-2 font-display text-3xl">
+                  <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
                     {selectedPreset.label}
                   </h3>
                   <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
@@ -494,7 +494,7 @@ export default function MechanicsPresetApplicationModalView({
                 </div>
 
                 {confirmationRequired ? (
-                  <label className="flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-500/10 p-4 text-amber-100">
+                  <label className="flex items-start gap-3 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] p-4 text-[var(--status-warning-text)]">
                     <span className="relative mt-0.5 inline-flex h-[var(--control-editor-sm)] w-[var(--control-editor-sm)] flex-none items-center justify-center">
                       <input
                         type="checkbox"
@@ -590,7 +590,7 @@ export default function MechanicsPresetApplicationModalView({
                   size={24}
                   className="mx-auto text-[var(--gold-ornament)]"
                 />
-                <h3 className="mt-3 font-display text-3xl">Choose a Preset</h3>
+                <h3 className="mt-3 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Choose a Preset</h3>
                 <p className="mt-2 max-w-lg text-sm leading-6 text-[var(--ink-dim)]">
                   Open a preset folder, then select a preset to inspect its boundary, target, application mode, and compliance preview.
                 </p>

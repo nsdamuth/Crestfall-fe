@@ -239,7 +239,7 @@ export default function MechanicsCommandDomainActionsView({
             </div>
 
             {missingBindingMessage ? (
-              <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100 md:col-span-2">
+              <p className="rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)] md:col-span-2">
                 {missingBindingMessage} Crestfall validates every binding before any roll occurs.
               </p>
             ) : null}

@@ -22,8 +22,8 @@ function IssueList({
 
   const toneClassName =
     tone === "warning"
-      ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
-      : "border-red-300/20 bg-red-500/10 text-red-100";
+      ? "border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] text-[var(--status-warning-text)]"
+      : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]";
 
   return (
     <section
@@ -107,7 +107,7 @@ export default function MechanicsJsonEditorModalView({
             Loom Authoring Tool
           </p>
 
-          <h2 className="mt-2 font-display text-4xl">
+          <h2 className="mt-2 font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
             {title}
           </h2>
 
@@ -175,7 +175,7 @@ export default function MechanicsJsonEditorModalView({
             }
             spellCheck={false}
             aria-label="Mechanics Module JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
           />
         </section>
 
@@ -219,7 +219,7 @@ export default function MechanicsJsonEditorModalView({
           />
 
           {!errors.length && !warnings.length ? (
-            <section className="rounded-xl border border-emerald-300/15 bg-emerald-500/5 p-4 text-emerald-100">
+            <section className="rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4 text-[var(--status-success-text)]">
               <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
                 <Check size={14} />
                 Ready to Validate
