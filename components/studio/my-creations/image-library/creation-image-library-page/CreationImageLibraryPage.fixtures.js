@@ -98,4 +98,14 @@ export const creationImageLibraryViewFixture = {
   onHideImage: noop,
   onShowImage: noop,
   onDeleteImage: noop,
+  deleteConfirmOpen: false,
+  deleteConfirmIsFeatured: false,
+  onCancelDeleteImage: noop,
+  onConfirmDeleteImage: noop,
+};
+
+export const creationImageLibraryDeleteConfirmFixture = {
+  ...creationImageLibraryViewFixture,
+  deleteConfirmOpen: true,
+  deleteConfirmIsFeatured: true,
 };

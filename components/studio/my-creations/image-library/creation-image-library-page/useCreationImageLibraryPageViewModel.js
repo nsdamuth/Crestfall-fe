@@ -167,6 +167,13 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
   const [deletedImageOutputIds, setDeletedImageOutputIds] = useState(
     () => new Set()
   );
+  // B5 danger-confirm recipe (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md
+  // section 2.5): the grid delete controls now route through this
+  // modal confirm step instead of window.confirm. The lightbox's own
+  // delete action keeps its separate, already-B5 confirm flow
+  // (MediaLightbox owns "deletion confirmation" for itself); this
+  // state is scoped to the card grid only.
+  const [deleteConfirmImageId, setDeleteConfirmImageId] = useState("");
 
   const isLocallyDeletedImage = useCallback(
     (image) =>
@@ -326,11 +333,6 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
       return;
     }
 
-    const confirmed = window.confirm(
-      "Delete this image from your Image Studio and character libraries? This will remove it from featured slots and hide it from public catalogues."
-    );
-    if (!confirmed) return;
-
     setDeleteMessage("");
     setDeletingImageOutputId(imageOutputId);
 
@@ -372,7 +374,18 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
   }
 
   function onDeleteImage(imageId) {
-    const image = findRawImage(imageId);
+    if (!imageId) return;
+    setDeleteMessage("");
+    setDeleteConfirmImageId(String(imageId));
+  }
+
+  function onCancelDeleteImage() {
+    setDeleteConfirmImageId("");
+  }
+
+  function onConfirmDeleteImage() {
+    const image = findRawImage(deleteConfirmImageId);
+    setDeleteConfirmImageId("");
     if (image) handleDeleteImage(image);
   }
 
@@ -451,6 +464,20 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
         };
       }),
     [featuredSlots, isLocallyDeletedImage, likedImageIds, bookmarkedImageIds]
+  );
+
+  // Type-aware copy input for the B5 delete-confirm modal: whether the
+  // pending image currently fills one of the four featured slots, so
+  // the confirm copy can warn that deleting it also clears that slot.
+  const deleteConfirmIsFeatured = useMemo(
+    () =>
+      Boolean(
+        deleteConfirmImageId &&
+          featuredSlotCards.some(
+            (slot) => slot.image?.id === deleteConfirmImageId
+          )
+      ),
+    [deleteConfirmImageId, featuredSlotCards]
   );
 
   const activePreviewItem = activePreviewId
@@ -538,5 +565,9 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     onHideImage: hideImage,
     onShowImage: showImage,
     onDeleteImage,
+    deleteConfirmOpen: Boolean(deleteConfirmImageId),
+    deleteConfirmIsFeatured,
+    onCancelDeleteImage,
+    onConfirmDeleteImage,
   };
 }
