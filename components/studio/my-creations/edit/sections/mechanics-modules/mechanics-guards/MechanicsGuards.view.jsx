@@ -36,7 +36,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -155,7 +155,7 @@ function GuardCard({
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--ink)]">
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                 {guard.label || guard.id || `Guard ${guardIndex + 1}`}
               </h4>
               <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
@@ -339,7 +339,7 @@ export default function MechanicsGuardsView({
           <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">Guards</h3>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Guards</h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic lock and guidance rules. Guards save into
             instanceData.guards and are evaluated by middleware before the

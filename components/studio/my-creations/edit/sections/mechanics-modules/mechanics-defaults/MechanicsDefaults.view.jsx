@@ -18,7 +18,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -163,7 +163,7 @@ export default function MechanicsDefaultsView({
           <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
             Defaults: Flags, Counters, and Stages
           </h3>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">

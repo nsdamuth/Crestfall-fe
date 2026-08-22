@@ -32,10 +32,10 @@ export default function MechanicsDocumentCoreView({
         <p className={EYEBROW_CLASS}>
           Mechanics {phase}
         </p>
-        <h2 className="mt-2 font-display text-4xl">
+        <h2 className="mt-2 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)]">
           Shared Document Compatibility
         </h2>
-        <p className="mt-3 max-w-4xl text-sm leading-7 text-[var(--ink-dim)]">
+        <p className="mt-3 max-w-4xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
           Development-only proof of canonical root normalization, legacy alias
           recovery, malformed-input recovery, unknown-field preservation, and
           domain replacement. Nothing here persists a Mechanics Module.
@@ -96,7 +96,7 @@ export default function MechanicsDocumentCoreView({
                 <p className={EYEBROW_CLASS}>
                   Selected document
                 </p>
-                <h3 className="mt-2 font-display text-3xl">
+                <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
                   {selectedFixture?.label || "None"}
                 </h3>
               </div>

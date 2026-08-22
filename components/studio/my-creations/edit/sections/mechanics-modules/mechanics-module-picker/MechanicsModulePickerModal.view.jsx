@@ -25,7 +25,7 @@ function MechanicsModuleCard({ item, onChooseModule }) {
             {item?.sourceLabel || "Mechanics Module"}
           </p>
 
-          <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {item?.title || "Untitled Mechanics Module"}
           </h3>
 

@@ -18,8 +18,8 @@ export default function MechanicsCompatibilityBaselineView({
     <section className="grid gap-6">
       <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-6">
         <p className={EYEBROW_CLASS}>Mechanics M0</p>
-        <h2 className="mt-2 font-display text-4xl">Compatibility Baseline</h2>
-        <p className="mt-3 max-w-4xl text-sm leading-7 text-[var(--ink-dim)]">
+        <h2 className="mt-2 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)]">Compatibility Baseline</h2>
+        <p className="mt-3 max-w-4xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
           Development-only inventory of the document shapes and atomic replacement boundaries frozen before domain extraction. It does not edit or persist a Mechanics Module.
         </p>
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -49,7 +49,7 @@ export default function MechanicsCompatibilityBaselineView({
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className={EYEBROW_CLASS}>Selected fixture</p>
-              <h3 className="mt-2 font-display text-3xl">{selectedFixture?.label || "None"}</h3>
+              <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">{selectedFixture?.label || "None"}</h3>
               <p className="mt-2 text-xs text-[var(--ink-dim)]">{selectedFixture?.id}</p>
             </div>
             <span className="rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">{selectedFixture?.classification || "UNAVAILABLE"}</span>
