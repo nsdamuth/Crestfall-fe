@@ -166,4 +166,15 @@ export const kitModalFrameFixtures = [
       children: viewerContent,
     },
   },
+  {
+    id: "unsavedDismiss",
+    label: "Unsaved dismiss confirm (mobile modal law, condition 3)",
+    props: {
+      variant: "modal",
+      panelClassName: "max-w-lg",
+      ariaLabelledBy: "kit-modal-frame-default-title",
+      hasUnsavedChanges: true,
+      children: standardContent,
+    },
+  },
 ];

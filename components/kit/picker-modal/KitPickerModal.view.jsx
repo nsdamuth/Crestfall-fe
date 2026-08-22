@@ -254,7 +254,12 @@ export default function KitPickerModalView({
           )}
         </div>
 
-        <div className="flex items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-6)] py-[var(--space-4)]">
+        <div className="px-[var(--space-6)] pt-[var(--space-4)]">
+          {/* B1 fade divider, never edge-to-edge; B8 footer alignment
+              to the fade line's own ends. */}
+          <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+        </div>
+        <div className="flex items-center justify-between gap-[var(--space-3)] px-[var(--space-6)] pb-[var(--space-4)] pt-[var(--space-4)]">
           <span className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {isMultiSelect ? describeSelection(selectedIds.length) : ""}
           </span>

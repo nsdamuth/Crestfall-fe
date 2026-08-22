@@ -2,14 +2,20 @@
 
 Generated 12 Aug 2026 for the Fable Gate 2 Contrast Law
 (`docs/plans/FABLE-GATE-2-STUDIO.md`, ruling N6, ratified option A).
-Every locked ink, gold, and status token in `docs/DESIGN-TOKENS.md`
-computed as WCAG 2 relative-luminance contrast against every locked
-surface token, dark theme (the theme the draft Contrast Law and
-ruling N6 were computed against). Method: sRGB relative luminance per
-`app/theme.css` hex values, contrast = (L1+0.05)/(L2+0.05), no
-rounding before the PASS/FAIL cut (a computed 4.497:1 is FAIL at
-4.5, not a rounding pass). Generated artifact, not hand-maintained;
-regenerate from `app/theme.css` if a locked value ever changes.
+Regenerated 22 Aug 2026 per the ED1F propagation plan (G1 verification
+requirement, `docs/plans/ED1F-PROPAGATION-PLAN.md` section E1): the
+`--status-success` revision (CR-051, oklch(.76 .08 135)) and the
+`--focus-ring` recipe revision (A3) are the matrix's own regeneration
+trigger. Every locked ink, gold, and status token in
+`docs/DESIGN-TOKENS.md` computed as WCAG 2 relative-luminance contrast
+against every locked surface token, dark theme (the theme the draft
+Contrast Law and ruling N6 were computed against). Method: sRGB
+relative luminance per `app/theme.css` hex values (oklch values
+converted to sRGB via the standard OKLab transform first), contrast =
+(L1+0.05)/(L2+0.05), no rounding before the PASS/FAIL cut (a computed
+4.497:1 is FAIL at 4.5, not a rounding pass). Generated artifact, not
+hand-maintained; regenerate from `app/theme.css` if a locked value
+ever changes.
 
 `--tag-fill-ink` is included for completeness because it is a locked
 ink-family token, but its ruled role (`docs/DESIGN-TOKENS.md`) is
@@ -69,12 +75,12 @@ product defect.
 | `--tag-fill-ink` | `--surface-3` | 1.13:1 | FAIL | FAIL |
 | `--tag-fill-ink` | `--surface-4` | 1.23:1 | FAIL | FAIL |
 | `--tag-fill-ink` | `--surface-footer` | 1.02:1 | FAIL | FAIL |
-| `--status-success` | `--canvas` | 6.46:1 | PASS | PASS |
-| `--status-success` | `--surface-1` | 5.97:1 | PASS | PASS |
-| `--status-success` | `--surface-2` | 5.59:1 | PASS | PASS |
-| `--status-success` | `--surface-3` | 5.18:1 | PASS | PASS |
-| `--status-success` | `--surface-4` | 4.78:1 | PASS | PASS |
-| `--status-success` | `--surface-footer` | 5.96:1 | PASS | PASS |
+| `--status-success` (revised, oklch(.76 .08 135)) | `--canvas` | 9.57:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-1` | 8.85:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-2` | 8.29:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-3` | 7.68:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-4` | 7.09:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-footer` | 8.84:1 | PASS | PASS |
 | `--status-warning` | `--canvas` | 6.07:1 | PASS | PASS |
 | `--status-warning` | `--surface-1` | 5.61:1 | PASS | PASS |
 | `--status-warning` | `--surface-2` | 5.26:1 | PASS | PASS |
@@ -87,6 +93,33 @@ product defect.
 | `--status-danger` | `--surface-3` | 3.97:1 | FAIL | PASS |
 | `--status-danger` | `--surface-4` | 3.66:1 | FAIL | PASS |
 | `--status-danger` | `--surface-footer` | 4.57:1 | PASS | PASS |
+
+## Focus ring legibility, A3
+
+`--focus-ring`'s revised recipe (`app/theme.css:373`, ratified A3) is
+a 1px `--gold-ornament` ring plus a 3px 10 percent `--gold-action`
+glow. The glow is a low-opacity wash, not depended on for the
+boundary itself; the checkable UI-component-boundary threshold is
+3:1, and the ring's own `--gold-ornament` color already has a full
+row above against every surface token. Restated here plus the two new
+gradient surfaces the propagation plan names (surface depth, not only
+field beds):
+
+| Ring color | Surface | Ratio | 3:1 |
+|---|---|---|---|
+| `--gold-ornament` | `--canvas` | 8.86:1 | PASS |
+| `--gold-ornament` | `--surface-1` | 8.19:1 | PASS |
+| `--gold-ornament` | `--surface-2` | 7.67:1 | PASS |
+| `--gold-ornament` | `--surface-3` | 7.11:1 | PASS |
+| `--gold-ornament` | `--surface-4` | 6.56:1 | PASS |
+| `--gold-ornament` | `--grad-panel-lift` (top stop, `#332d22`) | 6.04:1 | PASS |
+| `--gold-ornament` | `--grad-panel-lift` (bottom stop, `#2a251d`) | 6.73:1 | PASS |
+| `--gold-ornament` | `--grad-card` (top stop, `#1a1610`) | 7.97:1 | PASS |
+| `--gold-ornament` | `--grad-card` (bottom stop, `#14110c`) | 8.33:1 | PASS |
+
+Legible at every surface depth the ring can land on, including the
+new panel-lift and card gradient surfaces the ring can render against
+inside `KitModalFrame` and card components. No FAIL.
 
 ## Findings summary
 

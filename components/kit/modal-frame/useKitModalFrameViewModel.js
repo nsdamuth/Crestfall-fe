@@ -5,17 +5,19 @@
 // contract v1.0.0 and every current caller are untouched; this hook
 // only merges its behavior with the frame's own alignment and panel
 // anatomy.
-import { useId } from "react";
+import { useCallback, useId, useState } from "react";
 
 import { useModalShellViewModel } from "@/components/ui/modal-shell/useModalShellViewModel";
 
-// R4 (10 Aug 2026, kit polish 3 pass, plan section 1.1): popup modals
-// (variant modal, variant viewer) maximize the screen under 700px
-// instead of docking to the bottom edge. The sheet variant is not
-// named by R4 and keeps the bottom dock (subject of R7 instead).
+// Mobile modal law, RULED 22 Aug 2026 (modal family close), supersedes
+// R4 under 700px (docs/plans/ED1F-PROPAGATION-PLAN.md section C). The
+// popup modal (variant modal) no longer maximizes under 700px: it
+// bottom-anchors at its own content height, same alignment the sheet
+// variant already used. The viewer variant keeps its own chromeless
+// R2/R5 treatment (B7), never a bottom-anchored panel, so it is not
+// touched by this supersession.
 const VARIANT_ALIGNMENT = {
-  modal:
-    "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
+  modal: "items-end p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
   sheet: "items-end p-0",
   viewer:
     "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
@@ -27,11 +29,19 @@ const VARIANT_ALIGNMENT = {
 // phase 1), so "no chrome" for the viewer variant is built by never
 // emitting the chrome classes at all, rather than trying to zero them
 // out after the fact.
+//
+// modal and sheet panels: --surface-4 superseded by the ratified
+// panel lift gradient (B3, docs/plans/ED1F-PROPAGATION-PLAN.md
+// section A item 7), propagated once here for every caller. Under
+// 700px the modal panel is sized to its own content height and capped
+// at 92dvh with internal scroll, never forced to h-[100dvh]; that cap
+// is the same content-height treatment the sheet variant already
+// used, not a full-screen maximize.
 const PANEL_RECIPE = {
   modal:
-    "relative w-full h-[100dvh] max-h-[100dvh] overflow-y-auto bg-[var(--surface-4)] border-0 shadow-[var(--shadow-modal)] rounded-none pb-[env(safe-area-inset-bottom)] min-[700px]:h-auto min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:border min-[700px]:border-[var(--line)] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:pb-0",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--surface-4)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
   // its own surface, never a panel with an image inside it. No
   // background, border, shadow, or radius anywhere; a transparent
@@ -61,6 +71,13 @@ function toCallback(value) {
   return typeof value === "function" ? value : null;
 }
 
+// Mobile modal law, RULED 22 Aug 2026, checkable condition 3
+// (docs/plans/ED1F-DESIGN-DELTAS.md section A4): dismissing a modal
+// with unsaved state routes through a confirm step, never a silent
+// discard. hasUnsavedChanges is caller-reported (the frame owns no
+// form state of its own); when true, every one of the three
+// dismissal paths (backdrop, Escape, close control) is intercepted
+// into a confirm step instead of closing immediately.
 export function useKitModalFrameViewModel({
   children = null,
   onClose = null,
@@ -68,6 +85,7 @@ export function useKitModalFrameViewModel({
   closeOnEscape = true,
   variant = "modal",
   panelClassName = "",
+  hasUnsavedChanges = false,
   ariaLabelledBy,
   ariaDescribedBy,
   ariaLabel,
@@ -75,9 +93,19 @@ export function useKitModalFrameViewModel({
   const resolvedVariant =
     variant === "sheet" ? "sheet" : variant === "viewer" ? "viewer" : "modal";
   const onCloseCallback = toCallback(onClose);
+  const [isConfirmingDismiss, setIsConfirmingDismiss] = useState(false);
+
+  const guardedOnClose = useCallback(() => {
+    if (!onCloseCallback) return;
+    if (hasUnsavedChanges && !isConfirmingDismiss) {
+      setIsConfirmingDismiss(true);
+      return;
+    }
+    onCloseCallback();
+  }, [onCloseCallback, hasUnsavedChanges, isConfirmingDismiss]);
 
   const shellProps = useModalShellViewModel({
-    onClose: onCloseCallback,
+    onClose: guardedOnClose,
     closeOnBackdrop,
     closeOnEscape,
   });
@@ -93,7 +121,7 @@ export function useKitModalFrameViewModel({
 
   return {
     ...shellProps,
-    onClose: onCloseCallback,
+    onClose: guardedOnClose,
     variant: resolvedVariant,
     className: VARIANT_ALIGNMENT[resolvedVariant],
     veilClassName: VARIANT_VEIL[resolvedVariant],
@@ -108,6 +136,12 @@ export function useKitModalFrameViewModel({
     ariaDescribedBy,
     generatedLabelId: needsGeneratedLabel ? generatedLabelId : null,
     ariaLabel: needsGeneratedLabel ? ariaLabel : null,
+    isConfirmingDismiss,
+    onKeepEditing: () => setIsConfirmingDismiss(false),
+    onConfirmDiscard: () => {
+      setIsConfirmingDismiss(false);
+      onCloseCallback?.();
+    },
     children,
   };
 }

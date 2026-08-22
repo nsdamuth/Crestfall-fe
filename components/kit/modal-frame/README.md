@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.1.0`)
+**Contract:** `KitModalFrame.contract.js` (`1.2.0`)
 
 ## Purpose
 
@@ -29,17 +29,27 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
 ## Anatomy
 
 - Veil `--scrim-strong` with `blur(var(--blur-panel))`.
-- Panel `--surface-4`, `1px --line` border, `--radius-lg`,
+- Panel `--grad-panel-lift` (B3, 22 Aug 2026, supersedes `--surface-4`
+  as the modal panel surface), `1px --line` border, `--radius-lg`,
   `--shadow-modal`.
-- `variant="modal"` (default): full-screen maximize under 700px (R4,
-  10 Aug 2026: `items-stretch p-0` veil, `h-[100dvh]` panel, no
-  corners, no outer border, internal scroll), centered floating
-  surface at 700px and up (corners all around, `--space-4` gutters).
+- `variant="modal"` (default): mobile modal law (RULED 22 Aug 2026,
+  supersedes R4 under 700px): `items-end p-0` veil, panel bottom-
+  anchored at its own content height, capped `max-h-[92dvh]` with
+  internal scroll, never maximized full-screen; centered floating
+  surface at 700px and up, unchanged (corners all around, `--space-4`
+  gutters).
 - `variant="sheet"`: bottom-docked at every width, for sheet-only
   consumers that gate their own mounting by viewport (the dropdown
   under 700px). Gains a structural close header row (R7, 10 Aug
-  2026): full-width band, close control static inside it, content
-  renders below.
+  2026): full-width band, close control static inside it, a fade
+  divider (B1) closing the row, content renders below.
+- Fade dividers (B1, 22 Aug 2026): 1px, `--line-fade`, never edge-to-
+  edge. Used on the sheet header row and the unsaved-dismiss confirm
+  step.
+- Unsaved-dismiss confirm (mobile modal law, checkable condition 3):
+  `hasUnsavedChanges` (default false) intercepts all three dismissal
+  paths into an in-frame confirm step, "Keep editing" vs. "Discard"
+  (B5 danger-fill recipe), instead of a silent discard.
 - `variant="viewer"` (added 1.1.0, 10 Aug 2026): the chromeless image
   viewer surface (R2/R5): chrome-frost veil, transparent full-viewport
   panel. The panel is click-transparent (`pointer-events-none`, R3

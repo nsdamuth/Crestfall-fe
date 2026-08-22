@@ -39,12 +39,21 @@ export default function KitSaveIngredientPresetView({
   backLabel = null,
   onClose = null,
 }) {
+  // A4 checkable condition 3: dismissing a modal with unsaved state
+  // routes through a confirm step. Dirty state is whichever of this
+  // form's fields the caller has typed into; presentation-only, the
+  // frame owns no form state of its own.
+  const hasUnsavedChanges = Boolean(
+    nameValue || descriptionValue || promptValue || tagsValue
+  );
+
   return (
     <KitModalFrame
       variant="modal"
       panelClassName="w-full max-w-2xl"
       onClose={onClose}
       ariaLabel={`Save ${presetTypeLabel}`}
+      hasUnsavedChanges={hasUnsavedChanges}
     >
       <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-6)] pt-[var(--space-8)]">
         {backLabel && (
@@ -130,7 +139,11 @@ export default function KitSaveIngredientPresetView({
           </p>
         )}
 
-        <div className="flex flex-wrap justify-end gap-[var(--space-3)]">
+        {/* B1 fade divider, never edge-to-edge; B8 footer alignment
+            to the fade line's own ends. */}
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+
+        <div className="flex flex-wrap justify-between gap-[var(--space-3)]">
           <button
             type="button"
             onClick={() => onSavePreset?.()}
