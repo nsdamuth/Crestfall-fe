@@ -46,5 +46,11 @@ export function useKitCreationCardViewModel(props) {
     onBookmark: toCallback(props?.onBookmark),
     onPlay: toCallback(props?.onPlay),
     onGenerate: toCallback(props?.onGenerate),
+    isOwner: Boolean(props?.isOwner),
+    onEdit: toCallback(props?.onEdit),
+    onGenerateImage: toCallback(props?.onGenerateImage),
+    onShare: toCallback(props?.onShare),
+    onArchive: toCallback(props?.onArchive),
+    onDelete: toCallback(props?.onDelete),
   };
 }

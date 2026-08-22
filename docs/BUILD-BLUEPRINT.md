@@ -1355,13 +1355,73 @@ a banner image where the draft pool allowed otherwise, and the false
 Lilith.png/sassy.png dimension claim in
 `components/kit/promo-banner/KitPromoBanner.fixtures.js` is corrected.
 
+**(aa) Card kebab menu, RULED 22 Aug 2026 (Fable law review, Final
+Ruling Render close, NEW LAW A), amends (a) and (v).** The three-icon
+face law at (a) stands unamended: like, save, contextual third
+(Play/"Start Chat" now also on Character kind cards, per this same
+ruling, alongside Story and Adventure; Generate on Image kind cards;
+Expand the universal fallback). A separate, owner-only kebab menu is
+added: on viewer-owned cards only (caller-gated, `isOwner`), a fourth
+control, not a face icon, opens a menu with exactly five items, in
+order: Edit, Generate Image, Share, Archive, then a fade divider,
+then Delete (the sole danger item). Non-owned cards render no kebab
+at all. The menu surface is `--panel-glass` at `--blur-panel` (2px),
+per NEW LAW B below. Archive is a new operation with no
+`docs/APP-FUNCTION-MAP.csv` row, no prior contract entry, and no
+endpoint; it ships as an honest, permanently disabled stub, CR-056.
+`KitCreationCard` contract bumps minor for the new optional props
+(`isOwner`, `onEdit`, `onGenerateImage`, `onShare`, `onArchive`,
+`onDelete`), additive only, every existing consumer unaffected.
+
+**(ab) Glass menu and popover scope, RULED 22 Aug 2026 (Fable law
+review, Final Ruling Render close, NEW LAW B), closes F3.** Every
+menu and popover app-wide moves to the `--panel-glass` background at
+`--blur-panel` (2px blur), no box-shadow, matching the ratified glass
+recipe. The `--surface-4` plus `--shadow-popover` popover recipe is
+retired for this surface class; `--surface-4` keeps no floating-panel
+legal-on (modal panels already moved to `--grad-panel-lift` at B3).
+Selection modals (the picker modal, the sort modal) are unaffected:
+their own centered modal-panel treatment is not a menu or popover and
+keeps the panel-lift-gradient surface. `components/kit/dropdown/`
+(the 2.17 package below) and every other floating menu/popover
+surface in the repo, including the new card kebab at (aa), inherit
+this recipe.
+
+**(ac) Missing-image placeholder law, RULED 22 Aug 2026 (Fable law
+review, Final Ruling Render close, NEW LAW C, viewer B7 item 4).**
+Every missing-image / no-art placeholder instance app-wide, including
+the editor hero plate, renders icon-only: no caption text, the icon
+dead-centered on both axes, larger than any prior instance's icon
+size. This supersedes any placeholder rendering a caption string
+(e.g. "No image") anywhere in `components/kit/` or
+`components/studio/`. The shared `KitArtPlaceholder` piece already
+conforms (camellia mark, no caption, ruled 11 Aug 2026, Sprint H
+render review item 5); this ruling extends the same treatment to
+every package-local placeholder that does not yet route through it.
+
+**(ad) Viewer close control, mobile repositioning, RULED 22 Aug 2026
+(Fable law review, Final Ruling Render close, NEW LAW D), closes the
+G3 BLOCKED item.** `KitModalFrame`'s close control, viewer variant
+scope only, renders outside top-right on desktop (`700px` and up,
+unchanged from the frame's existing single recipe) and as a floating
+44px glass control in the thumb zone (bottom-right) under `700px`.
+The modal and sheet variants are unaffected, unchanged by this
+ruling; only the viewer variant's close control gains the
+width-dependent placement. No contract change: `KitModalFrame` takes
+no new prop for this, the repositioning is internal to the existing
+`variant="viewer"` composition.
+
 ### 2.17 Branded dropdown (`dropdown`), new package this pass
 
 The one dropdown every filter surface consumes. Anatomy per the 2.9
-menu-popover recipe (`--surface-4`, `1px --line`, `--radius-md`,
+menu-popover recipe, REVISED 22 Aug 2026 (NEW LAW B, ab above):
+`--panel-glass` at `--blur-panel` (2px), no box-shadow, `1px
+--line-whisper`, `--radius-md`, `--space-2` padding, min 13rem, max
+19rem scrolling. Supersedes the 9 Aug 2026 recipe, struck and kept
+for lineage: ~~`--surface-4`, `1px --line`, `--radius-md`,
 `--shadow-popover`, `--space-2` padding, min 13rem, max 19rem
-scrolling) with the legacy trigger grammar (category label, gold
-value or count, chevron). Selected rows: `--gold-bright` text with a
+scrolling~~. Legacy trigger grammar (category label, gold value or
+count, chevron) unchanged. Selected rows: `--gold-bright` text with a
 leading check (the legacy trailing check yields the trailing slot to
 counts). Disabled rows read the word "Soon". Phone: bottom-docked
 sheet per (d). Open/closed is sanctioned presentation-only local
@@ -1833,6 +1893,34 @@ this document was updated.
 1. List density extension (LD1): Creator Connections' list adopts the
    same two-up-at-1100px grid the (g) list-density law already named
    for Community, closing a gap the law bans. Folded into 2.16(g).
+
+# Rulings log, 22 Aug 2026, Final Ruling Render close
+
+Four rulings folded into chapter 2 section 2.16 as (aa) through (ad),
+propagated by the G4 pass (`docs/plans/ED1F-PROPAGATION-PLAN.md`).
+Source: `explorations/gate1/GATE-LOG.md`'s "FINAL RULING RENDER"
+section, exhibit `explorations/conformance/Final Ruling Render.html`.
+
+1. Card kebab menu (CARD SCOPE, GO 1A): three-icon face law app-wide
+   unamended, Start Chat now also on Character kind cards; a
+   viewer-owned-only kebab menu adds Edit, Generate Image, Share,
+   Archive, Delete. Folded into 2.16(aa), amends (a) and (v).
+2. Glass menu and popover scope (GLASS SCOPE, GO 2B), closes F3:
+   `--panel-glass` on every menu and popover app-wide;
+   `--surface-4`/`--shadow-popover` retired for this surface class;
+   selection modals unaffected. Folded into 2.16(ab), amends 2.17.
+3. Missing-image placeholder law (VIEWER B7 item 4): icon-only, dead-
+   centered, larger icon, no caption text, every instance app-wide
+   including the editor hero plate. Folded into 2.16(ac).
+4. Viewer close control (closes the G3 BLOCKED item): `KitModalFrame`
+   viewer-variant close control renders outside top-right on desktop,
+   floating 44px glass control in the thumb zone under 700px. Folded
+   into 2.16(ad).
+
+Quick-create step indicators and the story modal ruling from the same
+FINAL RULING RENDER close (items 3 and 5) are not propagated this
+pass: both are new-surface work pending a live capture reconcile, out
+of the G4 file fence.
 
 ---
 

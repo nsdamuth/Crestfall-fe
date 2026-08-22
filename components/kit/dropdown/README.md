@@ -7,10 +7,15 @@
 The branded dropdown ruled by the filter-line law (9 Aug 2026,
 `docs/BUILD-BLUEPRINT.md` 2.16): every filter and multi-select on a
 filter surface is a dropdown opening below its trigger, with a live
-selection count on the trigger. Panel recipe traces to the legacy
-control-bar menu (`docs/MOCKUP-DECISIONS.md`, dropdown panel entry):
-`--surface-4`, `1px --line`, `--radius-md`, `--shadow-popover`,
-min 13rem, max 19rem scrolling.
+selection count on the trigger. Panel recipe: `--panel-glass` at
+`--blur-panel` (2px), `1px --line`, `--radius-md`, no box-shadow,
+min 13rem, max 19rem scrolling. GLASS SCOPE, RULED 22 Aug 2026 (Fable
+law review, ED1F propagation plan NEW LAW B): the prior `--surface-4`
+plus `--shadow-popover` popover recipe is retired app-wide in favor of
+the ratified glass surface (borderless of box-shadow, matching the
+exhibit) on every menu and popover; this pass moves the desktop
+popover panel, the sheet variant already renders through
+`KitModalFrame`'s own panel recipe and is unaffected.
 
 ## Boundary
 
@@ -39,8 +44,8 @@ unified modal frame's `KitModalFrame` (`variant="sheet"`,
 `--shadow-modal`, `--scrim-strong` veil with `--blur-panel`, safe-area
 padding, and the frame's own circular close control (the sheet's
 former hand-rolled X is deleted). At 700px and up it is the popover
-below the trigger, `--shadow-popover`, no veil, byte-for-byte
-unchanged by the conversion. Rows bump to `--control-md` at coarse
+below the trigger, `--panel-glass` at `--blur-panel`, no box-shadow,
+no veil. Rows bump to `--control-md` at coarse
 pointers.
 
 The chassis choice between the two is a presentation-only

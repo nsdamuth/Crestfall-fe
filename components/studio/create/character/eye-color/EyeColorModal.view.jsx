@@ -51,6 +51,11 @@ export default function EyeColorModalView({
               </button>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             <div className="mt-5 grid gap-2 sm:grid-cols-3 lg:grid-cols-6">
               {options.map((option) => {
                 const active = option?.isCustom
@@ -64,8 +69,8 @@ export default function EyeColorModalView({
                     onClick={() => onChooseOption?.(option?.id || "")}
                     className={`rounded-xl border p-2 transition ${
                       active
-                        ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15"
-                        : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/35"
+                        ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)]"
+                        : "border-white/10 bg-[var(--fill-option-rest)] hover:border-[var(--gold-ornament)]/35"
                     }`}
                     title={option?.label || "Not chosen"}
                   >

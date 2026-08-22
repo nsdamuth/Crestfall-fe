@@ -59,6 +59,11 @@ export default function MultiTraitModalView({
               </button>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             {customActive ? (
               <div className="mt-5 rounded-xl border border-white/10 bg-black/30 p-4">
                 <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -102,8 +107,8 @@ export default function MultiTraitModalView({
                       onClick={() => onChooseOption?.(option?.id || "")}
                       className={`rounded-xl border px-4 py-3 text-left transition ${
                         option?.isSelected
-                          ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                          : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+                          ? "border-[var(--gold-ornament)]/55 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                          : "border-white/10 bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                       }`}
                     >
                       <span className="block text-sm text-[var(--ink)]">

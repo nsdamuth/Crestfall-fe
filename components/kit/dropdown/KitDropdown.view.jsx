@@ -261,13 +261,17 @@ export default function KitDropdownView({
         // default, flipped to right-anchored (measured, see the
         // useLayoutEffect above) when left-anchoring would overflow
         // the viewport's right edge (DROPDOWN OVERFLOW, 10 Aug 2026
-        // defect ruling).
+        // defect ruling). GLASS SCOPE, RULED 22 Aug 2026 (Fable law
+        // review, GATE-LOG.md "FINAL RULING RENDER" item 2, GO 2B):
+        // --panel-glass at --blur-panel replaces the retired
+        // --surface-4 plus --shadow-popover popover recipe on every
+        // menu and popover app-wide.
         <div
           ref={panelRef}
           role="listbox"
           aria-label={ariaLabel || label}
           aria-multiselectable={isMultiSelect}
-          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-2)] shadow-[var(--shadow-popover)] ${
+          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)] ${
             panelAlign === "right" ? "right-0" : "left-0"
           }`}
         >

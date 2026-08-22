@@ -88,7 +88,7 @@ export default function KitPromoBannerView({
           aria-hidden="true"
           className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)]"
         >
-          <svg viewBox="0 0 64 64" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
+          <svg viewBox="0 0 64 64" className="h-[var(--space-16)] w-[var(--space-16)] text-[var(--ink-faint)]">
             <use href="/assets/icons/icons-v7.svg#i-59" />
           </svg>
         </div>

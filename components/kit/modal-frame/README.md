@@ -63,8 +63,15 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
 - Width and height stay per-surface via `panelClassName` (caps only,
   never surface/border/radius/shadow/dismissal overrides).
 - Close control: circular recipe, `absolute` top-right inside the
-  panel for `modal` and `viewer`; static flow content inside the
-  sheet's header row for `sheet` (R7), never overlapping content.
+  panel for `modal`; static flow content inside the sheet's header row
+  for `sheet` (R7), never overlapping content. For `viewer`, NEW LAW D
+  (22 Aug 2026, Fable law review, ED1F propagation plan, closing the
+  G3 BLOCKED item): `absolute` top-right on desktop, unchanged; under
+  700px the control leaves the top-right corner (the glass header
+  band sits there) and floats bottom-right in the thumb zone instead,
+  on the `--panel-glass` surface at `--blur-panel`, same
+  `--control-md` 44px size. Behavior-only, no prop added, no contract
+  bump.
 - Portaled to `document.body`: a `backdrop-filter` ancestor (the
   sticky filter bar, the frosted top bar) becomes the containing block
   for `fixed` descendants, so the frame must escape it.

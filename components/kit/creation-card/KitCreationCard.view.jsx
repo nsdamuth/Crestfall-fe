@@ -24,7 +24,21 @@
 // overlay-top everywhere. The scrim-row alternative (icons bottom-right
 // beside the title) is retired; icons top-right over the art, clear of
 // the title block, is the only placement now.
-import { Bookmark, Heart, Maximize2, Play, Users, Wand2 } from "lucide-react";
+import { useState } from "react";
+import {
+  Archive,
+  Bookmark,
+  Heart,
+  Image as ImageIcon,
+  Maximize2,
+  MoreVertical,
+  Pencil,
+  Play,
+  Share2,
+  Trash2,
+  Users,
+  Wand2,
+} from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
@@ -42,11 +56,12 @@ function resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail) {
   return assetKind === "image" ? onOpenImageOverlay : onOpenAssetDetail;
 }
 
-// Contextual third face action, RULED 11 Aug 2026: play (Story,
-// Adventure), generate (Image asset), expand everywhere else,
-// including any card whose caller passes no handler for its
-// contextual action. Expand is the universal fallback; a card never
-// renders a dead third icon.
+// Contextual third face action, RULED 11 Aug 2026, card scope widened
+// 22 Aug 2026 (Fable law review, Final Ruling Render close, NEW LAW A):
+// play (Character, Story, Adventure), generate (Image asset), expand
+// everywhere else, including any card whose caller passes no handler
+// for its contextual action. Expand is the universal fallback; a card
+// never renders a dead third icon.
 //
 // v3.3.0 addition, RULED 11 Aug 2026 (Sprint H render review, item 1):
 // onContinue overrides every kind-based branch above when supplied,
@@ -57,7 +72,7 @@ function resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen, onCont
   if (onContinue) {
     return { label: "Continue", Icon: Play, onClick: onContinue };
   }
-  if ((assetKind === "story" || assetKind === "adventure") && onPlay) {
+  if ((assetKind === "character" || assetKind === "story" || assetKind === "adventure") && onPlay) {
     return { label: "Start Chat", Icon: Play, onClick: onPlay };
   }
   if (assetKind === "image" && onGenerate) {
@@ -93,6 +108,110 @@ function IconActionButton({ label, active = false, onClick = null, children }) {
       {active && <span aria-hidden="true" className="absolute inset-0 bg-[var(--fill)]" />}
       <span className="relative">{children}</span>
     </button>
+  );
+}
+
+// Viewer-owned kebab menu, RULED 22 Aug 2026 (Fable law review, Final
+// Ruling Render close, NEW LAW A). Non-owned cards render no kebab at
+// all: the caller gates this by passing isOwner. A separate,
+// owner-only control, not a fourth face icon; the three-icon face law
+// above is unchanged. Contents are exactly Edit, Generate Image,
+// Share, Archive, Delete, a fade divider before the sole danger item
+// (Delete), on the ratified glass surface (NEW LAW B: --panel-glass at
+// --blur-panel, 2px, the same surface every menu and popover moves
+// to).
+function KebabMenuItem({ label, Icon, onClick, danger = false, disabled = false, title }) {
+  return (
+    <button
+      type="button"
+      role="menuitem"
+      disabled={disabled}
+      title={title}
+      onClick={(event) => stopAndRun(event, onClick)}
+      className={`flex w-full items-center gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+        danger
+          ? "text-[var(--status-danger)] enabled:hover:bg-[var(--status-danger-fill)]"
+          : "text-[var(--ink)] enabled:hover:bg-[var(--fill-whisper)]"
+      }`}
+    >
+      <Icon size={15} aria-hidden="true" />
+      {label}
+    </button>
+  );
+}
+
+function KebabMenu({
+  open,
+  onToggle,
+  onClose,
+  onEdit,
+  onGenerateImage,
+  onShare,
+  onArchive,
+  onDelete,
+}) {
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        title="More"
+        aria-label="More actions"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={(event) => stopAndRun(event, onToggle)}
+        className="kit-focus relative flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center overflow-hidden rounded-[var(--radius-full)] border border-[var(--line)] text-[var(--art-ink-dim)] transition-colors hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+      >
+        <span aria-hidden="true" className="absolute inset-0 bg-[var(--tag-bed-art)]" />
+        <MoreVertical size={16} aria-hidden="true" className="relative" />
+      </button>
+
+      {open ? (
+        <>
+          {/* Full-viewport click catcher, closes the menu on outside
+              click; sits under the panel (z-[2] vs the panel's
+              z-[3]), the same click-transparent-backdrop pattern the
+              viewer veil uses. */}
+          <div
+            aria-hidden="true"
+            className="fixed inset-0 z-[2]"
+            onClick={(event) => stopAndRun(event, onClose)}
+          />
+          <div
+            role="menu"
+            className="absolute right-0 top-[calc(var(--control-sm)+var(--space-1))] z-[3] w-[12rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]"
+          >
+            <KebabMenuItem label="Edit" Icon={Pencil} onClick={() => { onEdit?.(); onClose?.(); }} />
+            <KebabMenuItem
+              label="Generate Image"
+              Icon={ImageIcon}
+              onClick={() => { onGenerateImage?.(); onClose?.(); }}
+            />
+            <KebabMenuItem label="Share" Icon={Share2} onClick={() => { onShare?.(); onClose?.(); }} />
+            {/* Honest stub, CR-056 (filed by this build, ED1F
+                propagation plan section G4/NEW LAW A): no Archive
+                endpoint exists yet, so the action renders disabled
+                rather than pretending to work. */}
+            <KebabMenuItem
+              label="Archive"
+              Icon={Archive}
+              disabled
+              title="Archive is not wired yet (CR-056)"
+              onClick={() => { onArchive?.(); onClose?.(); }}
+            />
+            <div
+              aria-hidden="true"
+              className="mx-[var(--space-3)] my-[var(--space-1)] h-px bg-[image:var(--line-fade)]"
+            />
+            <KebabMenuItem
+              label="Delete"
+              Icon={Trash2}
+              danger
+              onClick={() => { onDelete?.(); onClose?.(); }}
+            />
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 }
 
@@ -165,6 +284,15 @@ function GridCard({
   onLike,
   onBookmark,
   contextualAction,
+  isOwner,
+  kebabOpen,
+  onToggleKebab,
+  onCloseKebab,
+  onEdit,
+  onGenerateImage,
+  onShare,
+  onArchive,
+  onDelete,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -204,7 +332,19 @@ function GridCard({
           <div className="pointer-events-auto">
             <BadgeRow badges={badges} />
           </div>
-          <div className={`pointer-events-auto flex gap-[var(--space-1)] ${OVERLAY_REVEAL}`}>
+          <div className={`pointer-events-auto flex items-start gap-[var(--space-1)] ${OVERLAY_REVEAL}`}>
+            {isOwner ? (
+              <KebabMenu
+                open={kebabOpen}
+                onToggle={onToggleKebab}
+                onClose={onCloseKebab}
+                onEdit={onEdit}
+                onGenerateImage={onGenerateImage}
+                onShare={onShare}
+                onArchive={onArchive}
+                onDelete={onDelete}
+              />
+            ) : null}
             <OverlayActions
               liked={liked}
               bookmarked={bookmarked}
@@ -249,6 +389,15 @@ function ListCard({
   onLike,
   onBookmark,
   contextualAction,
+  isOwner,
+  kebabOpen,
+  onToggleKebab,
+  onCloseKebab,
+  onEdit,
+  onGenerateImage,
+  onShare,
+  onArchive,
+  onDelete,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -306,8 +455,20 @@ function ListCard({
         </div>
 
         <div
-          className={`pointer-events-auto flex flex-none gap-[var(--space-1)] ${OVERLAY_REVEAL}`}
+          className={`pointer-events-auto flex flex-none items-start gap-[var(--space-1)] ${OVERLAY_REVEAL}`}
         >
+          {isOwner ? (
+            <KebabMenu
+              open={kebabOpen}
+              onToggle={onToggleKebab}
+              onClose={onCloseKebab}
+              onEdit={onEdit}
+              onGenerateImage={onGenerateImage}
+              onShare={onShare}
+              onArchive={onArchive}
+              onDelete={onDelete}
+            />
+          ) : null}
           <OverlayActions
             liked={liked}
             bookmarked={bookmarked}
@@ -339,6 +500,12 @@ export default function KitCreationCardView({
   onPlay = null,
   onGenerate = null,
   onContinue = null,
+  isOwner = false,
+  onEdit = null,
+  onGenerateImage = null,
+  onShare = null,
+  onArchive = null,
+  onDelete = null,
 }) {
   const isList = layout === "list";
   const onOpen = resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail);
@@ -347,6 +514,22 @@ export default function KitCreationCardView({
   const disabledClasses = isDisabled
     ? "pointer-events-none opacity-[var(--state-disabled-opacity)]"
     : "";
+
+  // Kebab open state is presentation-only local UI state, the same
+  // precedent as KitImageOverlay's delete-confirm gating: no product
+  // data, reset by construction whenever the card unmounts.
+  const [kebabOpen, setKebabOpen] = useState(false);
+  const kebabProps = {
+    isOwner,
+    kebabOpen,
+    onToggleKebab: () => setKebabOpen((current) => !current),
+    onCloseKebab: () => setKebabOpen(false),
+    onEdit,
+    onGenerateImage,
+    onShare,
+    onArchive,
+    onDelete,
+  };
 
   return (
     <article
@@ -367,6 +550,7 @@ export default function KitCreationCardView({
           onLike={onLike}
           onBookmark={onBookmark}
           contextualAction={contextualAction}
+          {...kebabProps}
         />
       ) : (
         <GridCard
@@ -381,6 +565,7 @@ export default function KitCreationCardView({
           onLike={onLike}
           onBookmark={onBookmark}
           contextualAction={contextualAction}
+          {...kebabProps}
         />
       )}
     </article>

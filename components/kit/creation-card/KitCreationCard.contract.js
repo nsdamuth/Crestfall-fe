@@ -1,4 +1,4 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.3.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.4.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
@@ -106,6 +106,43 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.3.0";
  * @property {(() => void)|null} [onContinue] optional (v3.3.0),
  *   default null; overrides onPlay/onGenerate/expand, label
  *   "Continue".
+ *
+ * v3.4.0, RULED 22 Aug 2026 (Fable law review, Final Ruling Render
+ * close, ED1F propagation plan NEW LAW A). Two additive changes, both
+ * non-breaking:
+ *
+ * 1. The contextual third face-action slot widens from
+ *    {"story"|"adventure"} to {"character"|"story"|"adventure"}: an
+ *    `assetKind: "character"` card with an `onPlay` handler now also
+ *    renders the "Start Chat" action instead of falling through to
+ *    expand. No prop change, a resolver-scope change only.
+ * 2. A new, separate, owner-gated kebab menu control (not a fourth
+ *    face icon; the three-icon face law is unchanged). Renders only
+ *    when `isOwner` is true. Contents are exactly Edit, Generate
+ *    Image, Share, Archive, Delete, with a fade divider before the
+ *    sole danger item (Delete), on the ratified glass surface
+ *    (`--panel-glass` at `--blur-panel`, 2px, NEW LAW B). Archive
+ *    ships as an honest disabled stub (CR-056: no endpoint exists
+ *    yet); its callback prop still exists so callers may pass one
+ *    once CR-056 resolves without another contract bump.
+ *
+ * @property {boolean} [isOwner] optional (v3.4.0), default false;
+ *   gates the kebab menu's existence. Non-owned cards render no kebab.
+ * @property {(() => void)|null} [onEdit] optional (v3.4.0), default
+ *   null; kebab menu item.
+ * @property {(() => void)|null} [onGenerateImage] optional (v3.4.0),
+ *   default null; kebab menu item, distinct from the face action's
+ *   `onGenerate` (image-kind contextual slot).
+ * @property {(() => void)|null} [onShare] optional (v3.4.0), default
+ *   null; kebab menu item. Distinct re-introduction from the
+ *   v2.0.0-removed face `onShare`; this one lives in the owner-only
+ *   kebab menu, not the face.
+ * @property {(() => void)|null} [onArchive] optional (v3.4.0), default
+ *   null; kebab menu item, renders disabled pending CR-056 (no
+ *   endpoint exists).
+ * @property {(() => void)|null} [onDelete] optional (v3.4.0), default
+ *   null; kebab menu item, the sole danger action, below the fade
+ *   divider.
  */
 
 export {};

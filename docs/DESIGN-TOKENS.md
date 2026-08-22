@@ -49,7 +49,7 @@ Only locked tokens may be written by an execution run.
 | `--surface-1` | `#16130f` | `#f0e9d8` | Quiet sections, inset wells, inputs | Wells, input beds, quiet chips | Floating panels | locked |
 | `--surface-2` | `#1d1a15` | `#f4eee0` | Cards, list rows, icon-button fills | In-flow cards and rows, circular chrome controls | Modals | locked |
 | `--surface-3` | `#24211a` | `#f8f3e7` | Topbar, sidebar, sticky chrome | Persistent chrome | Content panels | locked |
-| `--surface-4` | `#2c271e` | `#fcf8ee` | Menus, popovers; modal panels moved off this token 22 Aug 2026 (B3) to `--grad-panel-lift` | Menus, popovers, `.cf-dropdown` (pending F3 for whether this narrows further) | In-flow content, modal panels | locked |
+| `--surface-4` | `#2c271e` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
 | `--surface-footer` | `#1a120b` | same | Marketing footer only, deliberate ramp exception | The site footer | Anything else | locked |
 
 Surfaces are opaque and flip with the theme. Panels are never built from
@@ -227,7 +227,7 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
 | `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; scope extended 22 Aug 2026 (Gate 2 token law row 10) to the editor sticky nav and the mobile save row | Sticky top bars and other persistent (non-floating) chrome, the editor sticky nav, the mobile save row | Any floating panel (use `--blur-panel`), the image viewer veil, tile art, banners, tag beds | locked |
 | `--blur-glass` | `12px` | same | Tooltip glass only. Third blur token, no cross-borrowing with the two above (A2, ratified narrow, 22 Aug 2026): every glass-chrome surface actually built (kebab menus, the viewer header, the viewer's 390 close control) resolves through `--panel-glass` at `--blur-panel` (2px), not this token | Tooltips (pending the CR-047 component) | Any other surface, including glass-chrome menus and headers | locked |
 | `--chrome-wash` | `rgba(6,4,2,.62)` | same, interim (F1) | The near-black wash paired with `--blur-chrome`; ALSO the image viewer veil color, paired with `--blur-panel` per B7 | Sticky chrome, editor sticky nav, mobile save row, image viewer veil | Any surface not paired with `--blur-chrome` or the viewer's `--blur-panel` veil | locked |
-| `--panel-glass` | `rgba(36,32,25,.85)` | same, interim (F1) | Glass-panel background, paired with `--blur-panel` (2px), never `--blur-glass` | Kebab menus (B6), the viewer's two-line header (B7) | Tooltip surfaces (use `--blur-glass`) | locked |
+| `--panel-glass` | `rgba(36,32,25,.85)` | same, interim (F1) | Glass-panel background, paired with `--blur-panel` (2px), never `--blur-glass`. Scope widened 22 Aug 2026 (NEW LAW B, F3 closed GO 2B, Final Ruling Render): every menu and popover app-wide, not only kebab menus | Kebab menus (B6), the `KitCreationCard` viewer-owned kebab menu (NEW LAW A), `KitDropdown` and every other menu/popover surface app-wide, the viewer's two-line header (B7); selection modals (picker, sort) keep their own panel-lift-gradient modal surface, unchanged by this widening | Tooltip surfaces (use `--blur-glass`) | locked |
 
 Scrims do not flip with the theme because the artwork under them does
 not flip. `--blur-panel`, `--blur-chrome`, and `--blur-glass` are
@@ -267,7 +267,7 @@ artwork. The flipping ink family is illegal there.
 | Token | Dark | Light | Role | Status |
 |---|---|---|---|---|
 | `--shadow-modal` | `0 10px 28px rgba(0,0,0,.62), 0 2px 6px rgba(0,0,0,.44)` | warm brown variant | Modals, sheets, pickers, drawers | locked |
-| `--shadow-popover` | `0 4px 12px rgba(0,0,0,.52), 0 1px 3px rgba(0,0,0,.38)` | warm brown variant | Menus, dropdowns, small floats | locked |
+| `--shadow-popover` | `0 4px 12px rgba(0,0,0,.52), 0 1px 3px rgba(0,0,0,.38)` | warm brown variant | Small floats not on the glass recipe. Menus and dropdowns moved 22 Aug 2026 (NEW LAW B) to the borderless `--panel-glass` recipe (background plus `--blur-panel`, no box-shadow, matching the ratified exhibit), so this token is reserved rather than paired with them going forward | locked |
 | `--edge-top` | `inset 0 1px 0 rgba(255,240,210,.02)` | `inset 0 1px 0 rgba(255,255,255,.60)` | Inset top-edge highlight on elevated surfaces | locked |
 
 In-flow surfaces separate by border, never by shadow. Floating surfaces

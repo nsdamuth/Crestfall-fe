@@ -260,11 +260,10 @@ function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
 
 function NoMediaFallback() {
   return (
-    <div className="relative flex aspect-[5/3] w-full flex-col items-center justify-center gap-[var(--space-2)] overflow-hidden rounded-t-[var(--radius-lg)] bg-[var(--surface-2)]">
-      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-14)] w-[var(--space-14)] text-[var(--ink-faint)]">
+    <div className="relative flex aspect-[5/3] w-full items-center justify-center overflow-hidden rounded-t-[var(--radius-lg)] bg-[var(--surface-2)]">
+      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-[var(--space-16)] w-[var(--space-16)] text-[var(--ink-faint)]">
         <use href="/assets/icons/icons-v7.svg#i-59" />
       </svg>
-      <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">No image</span>
     </div>
   );
 }

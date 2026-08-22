@@ -15,12 +15,15 @@ transparent full-viewport column, not a bounded surface).
 `components/kit/modal-frame/` (`useKitModalFrameViewModel.js`,
 viewer-only `VARIANT_VEIL` entry), outside this package's own files.
 That constant was updated to the B7 recipe (`--chrome-wash` at
-`--blur-panel`, 2px) as part of this pass since it is exclusively
-consumed by this viewer and the change was required to deliver the
-manifest's veil requirement. The close control's desktop-vs-390
-repositioning was left as the frame's existing single top-right
-recipe (BLOCKED, see the G3 execution report) pending a ruling on
-whether that touch belongs to this pass or its own follow-on.
+`--blur-panel`, 2px) as part of the G3 pass since it is exclusively
+consumed by this viewer. The close control's desktop-vs-390
+repositioning, left BLOCKED by G3 pending a ruling, closed under NEW
+LAW D (22 Aug 2026, Fable law review, ED1F propagation plan): also
+owned by `components/kit/modal-frame/` (`KitModalFrame.view.jsx`'s
+`ViewerCloseControl`), outside this package's own files. Desktop keeps
+the single top-right recipe; under 700px the control floats
+bottom-right in the thumb zone on the ratified `--panel-glass` surface
+at `--blur-panel`, still `--control-md` (44px).
 
 The viewer is its own surface, never a panel with an image inside it:
 
@@ -30,7 +33,9 @@ The viewer is its own surface, never a panel with an image inside it:
 - **Panel**: none. No background, border, shadow, or radius anywhere;
   a transparent, full-viewport (`h-[100dvh] w-full`) flex column whose
   only chrome is the frame's close control, absolutely positioned top
-  right. The panel and the figure column are click-transparent
+  right on desktop and floating bottom right on the `--panel-glass`
+  surface under 700px (NEW LAW D). The panel and the figure column are
+  click-transparent
   (`pointer-events-none`, R3 review-gate fix, 10 Aug 2026): only the
   header, the hairline frame, the bottom bar, the delete-confirm
   panel, and the close control accept pointer events, so a click

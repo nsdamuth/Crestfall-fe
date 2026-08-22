@@ -61,6 +61,11 @@ export default function KibbePresetModalView({
               </button>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             <div className="mt-5 grid gap-5 lg:grid-cols-[0.7fr_1.3fr]">
               <div className="grid max-h-[58vh] gap-2 overflow-y-auto pr-1 md:grid-cols-2">
                 {identityOptions.map((option) => {
@@ -73,8 +78,8 @@ export default function KibbePresetModalView({
                       onClick={() => onSelectIdentity?.(option?.value || "")}
                       className={`rounded-xl border px-4 py-3 text-left transition ${
                         active
-                          ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                          : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+                          ? "border-[var(--gold-ornament)]/55 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                          : "border-white/10 bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                       }`}
                     >
                       <span className="block text-sm text-[var(--ink)]">

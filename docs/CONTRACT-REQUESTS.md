@@ -80,6 +80,8 @@ the details below carry only what is still actionable.
 | CR-052 | Sidebar deviations bundle | Six deviations from the shipped sidebar surfaced during Gate 1 ground-truth review: ink lift, top-bar wash, Legacy section hidden, Community Links removed, footer re-order, and the economy widget's fixture treatment | open | Brian | updated 22 Aug 2026: all six deviations RULED KEPT (option B wholesale, 21 Aug 2026); the economy-fixture sub-item stays open pending the StudioEconomyWidget scope decision |
 | CR-053 | Token candidates from Gate 1 | Four values ratified in Gate 1's spec list with no existing token match: Inter 300 weight, cf-btn secondary 5% screen fill, control heights 38 (already `--control-filter`, confirm broadened use) and 28 (genuinely new), gradient card surfaces | done | Brian | closed 22 Aug 2026; ratified in full by the Gate 2 twelve-row token law |
 | CR-054 | Soft-delete recovery window | Renumbered 22 Aug 2026 from GATE-LOG.md's colliding "CR-052" use (that number already named the sidebar deviations bundle above); window is 7 to 30 days, not yet ruled to a single number | open | Nick | non-blocking; confirm copy carries a "[X] days" placeholder until Nick rules the number |
+| CR-055 | Reassign Asset backend operation | Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final); the code and package READMEs cited this number on landing but the ledger row was never entered, backfilled here 22 Aug 2026 by the G4 pass. No backend operation exists for Reassign Asset on `KitImageOverlay` or `MediaLightbox`; both render the action permanently disabled | open | Brian | non-blocking; presentation-only stub, both consumers already ship this way |
+| CR-056 | Creation card Archive operation | Filed 22 Aug 2026 by the G4 propagation pass (NEW LAW A, card actions, Final Ruling Render item 1). `KitCreationCard`'s viewer-owned kebab menu adds an Archive item alongside Edit, Generate Image, Share, and Delete; Archive has no `APP-FUNCTION-MAP` row, no prior contract entry, and no endpoint. Ships as an honest, permanently disabled stub, same treatment as CR-055's Reassign Asset | open | Brian | non-blocking; presentation-only stub pending an endpoint ruling |
 
 ## Details
 
@@ -860,6 +862,29 @@ Gate 1 token-candidates entry). The delete-confirmation danger recipe
 recovery window's exact day count is blocked here. Needed from Nick:
 the number, 7 to 30 days. Until ruled, confirm copy carries a literal
 "[X] days" placeholder, never a guessed number.
+
+### CR-055, Reassign Asset backend operation
+
+Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final,
+docs/plans/ED1F-PROPAGATION-PLAN.md group G3): the B7 bottom bar's
+Reassign Asset action has no backend operation, so both
+`KitImageOverlay` and `MediaLightbox` render it as a permanently
+disabled honest stub. The number was cited throughout the G3 commit,
+code comments, and package READMEs on landing, but this ledger row
+was never entered; backfilled here 22 Aug 2026 by the G4 pass with no
+change to the ruling itself.
+
+### CR-056, Creation card Archive operation
+
+Filed 22 Aug 2026 by the G4 propagation pass (NEW LAW A, card actions,
+Final Ruling Render item 1, `explorations/gate1/GATE-LOG.md`).
+`KitCreationCard`'s viewer-owned kebab menu is ratified with exactly
+five items: Edit, Generate Image, Share, Archive, Delete. Edit,
+Generate Image, Share, and Delete route to existing destination
+behavior through caller-supplied callbacks; Archive is a new
+operation with no `docs/APP-FUNCTION-MAP.csv` row, no prior contract
+entry, and no endpoint. Same honest-stub treatment as CR-055: the menu
+item renders permanently disabled until an endpoint exists.
 
 ## Closed
 
