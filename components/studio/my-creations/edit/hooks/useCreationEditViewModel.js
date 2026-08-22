@@ -88,6 +88,14 @@ export function useCreationEditViewModel({ creationId, creation }) {
 
   const [archiveStatus, setArchiveStatus] = useState("idle");
   const [archiveMessage, setArchiveMessage] = useState("");
+  // In-place arming (ED1E 5.4), RULED 22 Aug 2026 (ED1G SW1): delete
+  // and archive both route through a two-step arm/confirm state
+  // machine instead of window.confirm. The row-level swap UI (Danger
+  // Zone) reads these flags and drives armDelete/cancelDelete and
+  // armArchive/cancelArchive; calling handleDelete/handleArchive a
+  // second time while armed performs the destructive call.
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isConfirmingArchive, setIsConfirmingArchive] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle");
   const [saveMessage, setSaveMessage] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -126,7 +134,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
         setForm(createFallbackForm(creationId));
         setHasUnsavedChanges(false);
         setSaveStatus("error");
-        setSaveMessage(error.message || "Creation could not be loaded.");
+        setSaveMessage("Creation could not be loaded.");
       }
     }
 
@@ -254,7 +262,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       setSaveMessage("Saved.");
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(error.message || "Creation could not be saved.");
+      setSaveMessage("Creation could not be saved.");
     }
   }
 
@@ -276,7 +284,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setReviewStatus("error");
-      setReviewMessage(error.message || "Review could not be cancelled.");
+      setReviewMessage("Review could not be cancelled.");
     }
   }
 
@@ -295,9 +303,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(
-        error.message || "Creation could not be moved to internal editing."
-      );
+      setSaveMessage("Creation could not be moved to internal editing.");
     }
   }
 
@@ -328,13 +334,27 @@ export function useCreationEditViewModel({ creationId, creation }) {
       );
     } catch (error) {
       setReviewStatus("error");
-      setReviewMessage(error.message || "Creation could not be submitted.");
+      setReviewMessage("Creation could not be submitted.");
     } finally {
       setReviewAction(null);
     }
   }
 
+  function armArchive() {
+    setIsConfirmingArchive(true);
+  }
+
+  function cancelArchive() {
+    setIsConfirmingArchive(false);
+  }
+
   async function handleArchive() {
+    if (!isConfirmingArchive) {
+      setIsConfirmingArchive(true);
+      return;
+    }
+
+    setIsConfirmingArchive(false);
     setArchiveStatus("saving");
     setArchiveMessage("");
 
@@ -349,31 +369,40 @@ export function useCreationEditViewModel({ creationId, creation }) {
       setArchiveMessage("Archived.");
     } catch (error) {
       setArchiveStatus("error");
-      setArchiveMessage(error.message || "Creation could not be archived.");
+      setArchiveMessage("Creation could not be archived.");
     }
   }
-    async function handleDelete() {
-    const confirmed = window.confirm(
-        "Permanently delete this creation? This is only allowed for non-canon draft or archived creations."
-    );
 
-    if (!confirmed) return;
+  function armDelete() {
+    setIsConfirmingDelete(true);
+  }
 
+  function cancelDelete() {
+    setIsConfirmingDelete(false);
+  }
+
+  async function handleDelete() {
+    if (!isConfirmingDelete) {
+      setIsConfirmingDelete(true);
+      return;
+    }
+
+    setIsConfirmingDelete(false);
     setDeleteStatus("saving");
     setDeleteMessage("");
 
     try {
-        await deleteCreation(creationId);
+      await deleteCreation(creationId);
 
-        setDeleteStatus("deleted");
-        setDeleteMessage("Deleted.");
+      setDeleteStatus("deleted");
+      setDeleteMessage("Deleted.");
 
-        window.location.assign("/studio/my-creations");
+      window.location.assign("/studio/my-creations");
     } catch (error) {
-        setDeleteStatus("error");
-        setDeleteMessage(error.message || "Creation could not be deleted.");
+      setDeleteStatus("error");
+      setDeleteMessage("Creation could not be deleted.");
     }
-}
+  }
   return {
     activeSection,
     setActiveSection,
@@ -396,8 +425,14 @@ export function useCreationEditViewModel({ creationId, creation }) {
     handleUnlistForEditing,
     handleSubmitReview,
     handleArchive,
+    isConfirmingArchive,
+    armArchive,
+    cancelArchive,
     deleteStatus,
     deleteMessage,
     handleDelete,
+    isConfirmingDelete,
+    armDelete,
+    cancelDelete,
   };
 }

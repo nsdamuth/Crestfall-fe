@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { createContext, useContext, useLayoutEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 import KitFormField from "@/components/kit/KitFormField";
 
@@ -19,7 +19,19 @@ import KitFormField from "@/components/kit/KitFormField";
 //   KitDropdown) instead of a native <select>. Same props, same
 //   onChange(value) intent; the native select is illegal on the v2
 //   editor page per the ED1C dropdown law.
-export const SHARED_FIELDS_VERSION = "1.1.0";
+//
+// 1.2.0 (ED1G, ED1E section 4 propagation, SW1): TextField and
+// NumberField swap their label-to-bed/bed-to-helper spacing onto the
+// ruled --space-1/--space-2 pair (was inverted); TextField overflow
+// fades to an ellipsis instead of a mid-letter hard clip (4.2);
+// NumberField right-aligns with tabular-nums (4.2); TextAreaField's
+// folding now actually collapses to one ellipsized preview line at
+// rest, expands to a real textarea on any focus path, and carries a
+// fold glyph (4.3); ReadOnlyField drops its field bed entirely (4.6);
+// ActionPanel drops its own bordered/icon/display-header chrome for
+// the inset-hairline seated-action-row pattern (section 5). No prop
+// shape changed on any export.
+export const SHARED_FIELDS_VERSION = "1.2.0";
 
 // ED1C section chrome context: the v2 editor page shell renders one
 // header per section box and suppresses the sections' own internal
@@ -46,14 +58,17 @@ export const DEEP_LONGFORM_MAX_LENGTH = 2000;
 const LABEL_CLASS =
   "text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]";
 
-// Focus law, RULED 9 Aug 2026 (kit polish pass, docs/BUILD-BLUEPRINT.md
-// 2.16(e), app/design-system.css ".kit-focus:focus-visible"): the
-// single subtle border-brightening mark, never the app-wide gold ring
-// (--focus-ring). `kit-focus` after `cf-field` mirrors
-// components/kit/form-field/KitFormField.view.jsx's own
-// `inputBedClass` exactly, so it wins the cascade the same way there.
+// Focus law, RULED 22 Aug 2026 (A3, Fable law review): the border-
+// brightening mark this comment used to describe as current is
+// retired; the single global --focus-ring rule
+// (app/design-system.css, ":focus-visible" section) is the only
+// focus treatment on every focusable element app-wide, this field
+// bed included. The `kit-focus`/`cf-field` class strings below are
+// dead (harmless no-op selectors now) and are swept in the dedicated
+// ED1G dead-class pass across every file that still carries them, not
+// removed piecemeal here.
 const FIELD_BED_CLASS =
-  "kit-focus cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]";
+  "kit-focus cf-field w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -148,9 +163,11 @@ export function TextField({
         placeholder={placeholder}
         maxLength={maxLength || undefined}
         disabled={disabled}
-        className={`mt-2 ${FIELD_BED_CLASS}`}
+        className={`mt-[var(--space-1)] ${FIELD_BED_CLASS}`}
       />
-      {helperText ? <span className={`mt-1 block ${HELPER_CLASS}`}>{helperText}</span> : null}
+      {helperText ? (
+        <span className={`mt-[var(--space-2)] block ${HELPER_CLASS}`}>{helperText}</span>
+      ) : null}
     </label>
   );
 }
@@ -220,9 +237,11 @@ export function NumberField({
         max={max}
         step={step}
         disabled={disabled}
-        className={`mt-2 ${FIELD_BED_CLASS}`}
+        className={`mt-[var(--space-1)] text-right tabular-nums ${FIELD_BED_CLASS}`}
       />
-      {helperText ? <span className={`mt-1 block ${HELPER_CLASS}`}>{helperText}</span> : null}
+      {helperText ? (
+        <span className={`mt-[var(--space-2)] block ${HELPER_CLASS}`}>{helperText}</span>
+      ) : null}
     </label>
   );
 }
@@ -234,17 +253,20 @@ export function NumberField({
 // FoldingTextField).
 const TEXTAREA_MAX_HEIGHT_PX = 320;
 
-// Folding long-form field, RULED (Fable Gate O1, option A, wave E1):
-// resting collapsed at one control height (--control-md) showing a
-// preview of the entered value on its own line rather than hiding
-// whether the field is filled (the Baymard never-hide-what-is-filled
-// caveat); expands on focus. Once focused it stays expanded for the
-// rest of the session so a filled-in answer never disappears out from
-// under the person who wrote it, mirroring the W/L/S FoldingTextField
-// interaction so the editor and kit trees read identically. Counter
-// follows O4 (same Counter component as TextField/SelectField).
-// `disabled` and `mono` (RULED, sf1 pass): both additive and
-// optional, default false, no change to any existing consumer.
+// Folding long-form field, RULED (Fable Gate O1, option A, wave E1),
+// REBUILT 22 Aug 2026 (ED1G SW1, ED1E section 4.3): rest, filled
+// shows exactly ONE ellipsized line of preview at --control-md
+// height with a fold glyph at the bed's right edge, never a partial
+// second line; rest, empty is the same height with a placeholder.
+// Expansion happens on focus from ANY path (pointer, keyboard,
+// programmatic), never merely because the value is non-empty at
+// mount, and grows to fit content up to 320px before scrolling
+// internally. Once expanded it stays expanded for the rest of the
+// session so a filled-in answer never disappears out from under the
+// person who wrote it. Counter follows O4 (same Counter component as
+// TextField/SelectField). `disabled` and `mono` (RULED, sf1 pass):
+// both additive and optional, default false, no change to any
+// existing consumer.
 export function TextAreaField({
   label,
   value = "",
@@ -256,8 +278,27 @@ export function TextAreaField({
   mono = false,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [hasExpanded, setHasExpanded] = useState(false);
-  const isExpanded = hasExpanded || Boolean(value.trim());
+  const [isExpanded, setIsExpanded] = useState(false);
+  const textareaRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (isExpanded) {
+      textareaRef.current?.focus();
+    }
+  }, [isExpanded]);
+
+  function expand() {
+    setIsExpanded(true);
+    setIsFocused(true);
+  }
+
+  function collapse() {
+    setIsFocused(false);
+  }
+
+  const bedClass = `kit-focus cf-field w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+    mono ? " font-mono" : ""
+  }`;
 
   return (
     <label className="block">
@@ -267,42 +308,69 @@ export function TextAreaField({
         maxLength={maxLength}
         isFocused={isFocused}
       />
-      <textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        onFocus={() => {
-          setIsFocused(true);
-          setHasExpanded(true);
-        }}
-        onBlur={() => setIsFocused(false)}
-        placeholder={placeholder}
-        rows={1}
-        maxLength={maxLength || undefined}
-        disabled={disabled}
-        className={`kit-focus cf-field mt-2 w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-[height,border-color] placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
-          mono ? " font-mono" : ""
-        }`}
-        style={{
-          height: isExpanded ? undefined : "var(--control-md)",
-          maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px`,
-        }}
-      />
-      {helperText ? <span className={`mt-1 block ${HELPER_CLASS}`}>{helperText}</span> : null}
+      {isExpanded ? (
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={collapse}
+          placeholder={placeholder}
+          maxLength={maxLength || undefined}
+          disabled={disabled}
+          className={`mt-[var(--space-1)] resize-none overflow-y-auto py-[var(--space-2)] ${bedClass}`}
+          style={{
+            minHeight: "var(--control-md)",
+            maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px`,
+          }}
+        />
+      ) : (
+        <button
+          type="button"
+          disabled={disabled}
+          onFocus={expand}
+          onClick={expand}
+          className={`mt-[var(--space-1)] flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] py-[var(--space-2)] text-left ${bedClass}`}
+        >
+          <span
+            className={`min-w-0 flex-1 truncate ${value ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}`}
+          >
+            {value || placeholder || " "}
+          </span>
+          <ChevronDown
+            size={16}
+            aria-hidden="true"
+            className="flex-none text-[var(--ink-faint)]"
+          />
+        </button>
+      )}
+      {helperText ? (
+        <span className={`mt-[var(--space-2)] block ${HELPER_CLASS}`}>{helperText}</span>
+      ) : null}
     </label>
   );
 }
 
+// 4.6: no bed. A bed always means editable; read-only fields carry no
+// border, no background, no box, only the label row plus the value
+// as plain text.
 export function ReadOnlyField({ label, value = "" }) {
   return (
     <div className="block">
       <span className={LABEL_CLASS}>{label}</span>
-      <div className="mt-2 min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)] flex items-center">
+      <p className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
         {value || "Not set"}
-      </div>
+      </p>
     </div>
   );
 }
 
+// Section 5: no second bordered depth inside a box. ActionPanel is
+// the inset-hairline sub-group pattern (the same conversion section 5
+// prescribes for Personality Frameworks and Template Operations): an
+// inset hairline, a tier 4 label, one tier 7 helper line, then a
+// seated action row. No border, no background, no icon, no display
+// header.
 export function ActionPanel({
   title,
   body,
@@ -311,20 +379,21 @@ export function ActionPanel({
   disabled = true,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-5">
-      <Sparkles className="text-[var(--gold-ornament)]" size={20} />
-      <h3 className="mt-3 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
+    <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {title}
-      </h3>
-      <p className="mt-2 leading-7 text-[var(--ink-dim)]">{body}</p>
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={onClick}
-        className="cf-btn cf-btn--secondary mt-5"
-      >
-        {button}
-      </button>
+      </p>
+      <p className={`mt-[var(--space-2)] ${HELPER_CLASS}`}>{body}</p>
+      <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-3)]">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onClick}
+          className="cf-btn cf-btn--secondary"
+        >
+          {button}
+        </button>
+      </div>
     </div>
   );
 }
