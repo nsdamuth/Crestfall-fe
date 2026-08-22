@@ -6,6 +6,10 @@ export const weatherModuleConfigModalViewContract = Object.freeze({
   purpose:
     "Render and edit an In-World Weather module without owning engine-module requests, payload normalization, or Location binding persistence.",
   inputs: Object.freeze({
+    // Doc-only correction (ED1G sw12), no version bump: eyebrow, title,
+    // description, messageTone, footerNote already read by the View,
+    // undeclared here.
+    frame: ["eyebrow", "title", "description", "messageTone", "footerNote"],
     lifecycle: [
       "isInitializing",
       "isSaving",

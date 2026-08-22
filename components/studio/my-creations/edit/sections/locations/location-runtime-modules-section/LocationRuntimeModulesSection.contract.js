@@ -47,6 +47,10 @@ export const locationRuntimeModulesSectionViewContract = Object.freeze({
     compositionSlots: [
       "runtimeMechanicsSlot",
       "registryAttachmentsSlot",
+      // Doc-only correction (ED1G sw12), no version bump: already read
+      // by the View, undeclared here.
+      "runtimeMechanicsFallbackText",
+      "registryAttachmentsFallbackText",
     ],
   }),
   callbacks: Object.freeze([

@@ -124,6 +124,7 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {{isLoading: boolean, hasMore: boolean, remainingCount: number|null, onLoadMore: (() => void)|null}} worksLoadMore
  * @property {CreatorProfileActivityItem[]} activityItems
  * @property {string|null} activityEmptyMessage
+ * @property {{isLoading: boolean, hasMore: boolean, remainingCount: number|null, onLoadMore: (() => void)|null}} activityLoadMore doc-only addition (ED1G sw12): already read by the View, undeclared here. No version bump.
  * @property {CreatorProfileBadgeItem[]} badgeItems
  * @property {string|null} badgesEmptyMessage
  * @property {string|null} errorMessage Profile-level load-error banner, distinct from a section's own empty state.

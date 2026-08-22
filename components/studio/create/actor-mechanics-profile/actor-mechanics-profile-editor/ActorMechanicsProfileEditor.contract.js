@@ -333,7 +333,13 @@ export const EMPTY_ACTOR_MECHANICS_PROFILE_STATE_POLICY = Object.freeze({
  * Supabase, Advanced Mechanics execution, runtime activation, or provider
  * context assembly.
  *
+ * Doc-only correction (ED1G sw12), no version bump: 14 view props
+ * already read by the View were undeclared here (jsonEditorOpen and
+ * the JSON-editor/picker callback set among them).
+ *
  * @typedef {Object} ActorMechanicsProfileEditorViewProps
+ * @property {Object} [profile] doc-only addition (ED1G sw12), no version bump.
+ * @property {Object|null} [ownerContext] doc-only addition (ED1G sw12), no version bump.
  * @property {boolean} enabled
  * @property {string} title
  * @property {string} summary
@@ -356,6 +362,10 @@ export const EMPTY_ACTOR_MECHANICS_PROFILE_STATE_POLICY = Object.freeze({
  * @property {string} opposedResolutionPolicy
  * @property {string} workingModeProfile
  * @property {string} capabilityNotes
+ * @property {number} [capabilityNotesCharacterCount] doc-only addition (ED1G sw12), no version bump.
+ * @property {number} [capabilityNotesCharacterLimit] doc-only addition (ED1G sw12), no version bump.
+ * @property {number} [workingModeProfileCharacterCount] doc-only addition (ED1G sw12), no version bump.
+ * @property {number} [workingModeProfileCharacterLimit] doc-only addition (ED1G sw12), no version bump.
  * @property {Array<string>} capabilityModes
  * @property {Array<string>} opposedResolutionPolicies
  * @property {ActorMechanicsProfileBindingViewItem[]} bindings
@@ -368,6 +378,13 @@ export const EMPTY_ACTOR_MECHANICS_PROFILE_STATE_POLICY = Object.freeze({
  * @property {Array<object>} referenceTypeOptions
  * @property {Array<object>} activationModeOptions
  * @property {Array<{code:string,path:string,message:string,severity:string}>} globalIssues
+ * @property {number} [errorCount] doc-only addition (ED1G sw12), no version bump.
+ * @property {number} [warningCount] doc-only addition (ED1G sw12), no version bump.
+ * @property {number} [referenceLimitPerBinding] doc-only addition (ED1G sw12), no version bump.
+ * @property {boolean} [jsonEditorOpen] doc-only addition (ED1G sw12), no version bump.
+ * @property {(()=>void)|null} [onOpenJsonEditor] doc-only addition (ED1G sw12), no version bump.
+ * @property {(()=>void)|null} [onCloseJsonEditor] doc-only addition (ED1G sw12), no version bump.
+ * @property {((profile:Object)=>void)|null} [onApplyJsonProfile] doc-only addition (ED1G sw12), no version bump.
  * @property {((enabled:boolean)=>void)|null} onSetEnabled
  * @property {((field:"title"|"summary",value:string)=>void)|null} onUpdateIdentity
  * @property {((presetId:string)=>void)|null} onSelectPreset
@@ -382,4 +399,6 @@ export const EMPTY_ACTOR_MECHANICS_PROFILE_STATE_POLICY = Object.freeze({
  * @property {((bindingId:string)=>void)|null} onAddReference
  * @property {((bindingId:string,referenceIndex:number)=>void)|null} onRemoveReference
  * @property {((bindingId:string,referenceIndex:number,field:string,value:string)=>void)|null} onUpdateReference
+ * @property {(()=>void)|null} [onOpenStatsPoolsProfilePicker] doc-only addition (ED1G sw12), no version bump.
+ * @property {(()=>void)|null} [onOpenProgressionProfilePicker] doc-only addition (ED1G sw12), no version bump.
  */

@@ -8,6 +8,9 @@ export const MECHANICS_COMPOSITION_BUILDER_VIEW_CONTRACT_VERSION = "1.0.0";
  * It must not know creation form storage, persistence, services-api calls,
  * room runtime state, or PostGraphile/database details.
  */
+// Doc-only correction (ED1G sw12), no version bump: 10 view props
+// already read by the View were undeclared here (9 option lists plus
+// the injected ProgressionProfileFieldsComponent).
 export const MECHANICS_COMPOSITION_BUILDER_VIEW_CONTRACT = Object.freeze({
   version: MECHANICS_COMPOSITION_BUILDER_VIEW_CONTRACT_VERSION,
   values: [
@@ -18,10 +21,20 @@ export const MECHANICS_COMPOSITION_BUILDER_VIEW_CONTRACT = Object.freeze({
     "referenceOptions",
     "mechanicsSteps",
     "domainSteps",
+    "phaseOptions",
+    "outcomeOptions",
+    "failurePolicyOptions",
+    "conditionModeOptions",
+    "conditionBucketOptions",
+    "conditionScopeOptions",
+    "conditionOperatorOptions",
+    "effectTypeOptions",
+    "travelOperationOptions",
     "canAddMechanicsStep",
     "canAddDomainStep",
     "validationMessages",
   ],
+  applicationSlots: ["ProgressionProfileFieldsComponent"],
   callbacks: [
     "onChooseReference",
     "onApplyReference",

@@ -152,7 +152,12 @@ export const EMPTY_RULES_CODEX_ACTIVATION = Object.freeze({
  * know creation rows, JSONB columns, API routes, persistence payloads,
  * PostGraphile, Supabase, Story attachments, or runtime selection results.
  *
+ * Doc-only correction (ED1G sw12), no version bump: codex,
+ * jsonEditorOpen, and three JSON-editor callbacks were already read
+ * by the View, undeclared here.
+ *
  * @typedef {Object} RulesCodexEditorViewProps
+ * @property {Object} [codex] doc-only addition (ED1G sw12), no version bump.
  * @property {boolean} enabled
  * @property {string} summary
  * @property {number} summaryCharacterCount
@@ -180,4 +185,8 @@ export const EMPTY_RULES_CODEX_ACTIVATION = Object.freeze({
  * @property {((sectionId:string,field:string,value:unknown)=>void)|null} onUpdateSection
  * @property {((sectionId:string,field:string,value:string)=>void)|null} onUpdateActivationInput
  * @property {((sectionId:string)=>void)|null} onClearSection
+ * @property {boolean} [jsonEditorOpen] doc-only addition (ED1G sw12), no version bump.
+ * @property {(()=>void)|null} [onOpenJsonEditor] doc-only addition (ED1G sw12), no version bump.
+ * @property {(()=>void)|null} [onCloseJsonEditor] doc-only addition (ED1G sw12), no version bump.
+ * @property {((codex:Object)=>void)|null} [onApplyJsonCodex] doc-only addition (ED1G sw12), no version bump.
  */

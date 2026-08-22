@@ -22,6 +22,7 @@ export const STUDIO_ACCOUNT_PROFILE_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {Object} fields
  * @property {Object|null} defaultPlayerCharacter
  * @property {boolean} hasDefaultPlayerCharacter
+ * @property {boolean} [hasDefaultPlayerCharacterSelection] doc-only addition (ED1G sw12), no version bump.
  * @property {boolean} isContentPreferenceNoticeOpen
  * @property {string} contentPreferenceNoticeLabel
  * @property {import("react").ReactNode} profileMediaContent
