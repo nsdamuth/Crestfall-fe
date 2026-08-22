@@ -28,10 +28,13 @@ function normalizeNumber(value, fallback = 0) {
   return Number.isFinite(number) ? number : fallback;
 }
 
+// Local TextField, not SharedFields.TextField: this file needs
+// native numeric inputs (type="number") for delta/amount/multiplier
+// and similar values, which SharedFields.TextField does not expose.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -39,7 +42,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -102,7 +105,7 @@ function EffectTargetBindingFields({ effect, argumentOptions, onPatch }) {
           </p>
         )
       ) : (
-        <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+        <p className="text-xs leading-5 text-[var(--ink-faint)]">
           Uses the command’s normal Mechanics scope. Choose a resolved argument to keep separate state for the targeted Character, Item, or Location.
         </p>
       )}
@@ -132,9 +135,9 @@ function EffectValueFields({
 
   if (effect.type === "FLAG_CLEAR") {
     return (
-      <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+      <p className="text-xs leading-5 text-[var(--ink-faint)]">
         FLAG_CLEAR does not need a value. It clears the target flag.
-      </div>
+      </p>
     );
   }
 
@@ -220,7 +223,7 @@ function EffectValueFields({
   if (!supportsBinding) return fixedValueField();
 
   return (
-    <div className="grid gap-4 rounded-xl border border-white/10 bg-black/20 p-4 md:col-span-2">
+    <div className="grid gap-4 border-t border-[var(--line-whisper)] pt-[var(--space-4)] md:col-span-2">
       <div className="grid gap-4 md:grid-cols-2">
         <SelectField
           label="Numeric Value Source"
