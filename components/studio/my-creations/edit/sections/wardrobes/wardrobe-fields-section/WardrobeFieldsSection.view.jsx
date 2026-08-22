@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Plus, Shirt, Trash2 } from "lucide-react";
+import { Check, Plus, Shirt, Trash2 } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
-import { SHORT_LONGFORM_MAX_LENGTH } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function WardrobeFieldsSectionView({
   activeSection = "overview",
@@ -41,7 +44,7 @@ export default function WardrobeFieldsSectionView({
 
   return (
     <div>
-      <SectionHeader
+      <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
@@ -157,13 +160,13 @@ function EntriesSection({
                 key={entry.id}
                 type="button"
                 onClick={() => entry.onSelect?.()}
-                className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   entry.isActive
-                    ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                    ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--line)]"
                 }`}
               >
-                <p className="line-clamp-1 font-display text-xl">
+                <p className="line-clamp-1 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                   {entry.labelDisplay}
                 </p>
                 <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
@@ -172,21 +175,21 @@ function EntriesSection({
               </button>
             ))
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
         </div>
       </div>
 
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
         {activeEntry ? (
           <WardrobeEntryEditor
             entry={activeEntry}
             entryRoleOptions={entryRoleOptions}
           />
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-8 text-center">
             <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
@@ -211,18 +214,20 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
         </Field>
 
         <Field label="Outfit">
-          <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-4">
             {entry.outfitCreationId ? (
               <div className="flex items-start gap-4">
                 {entry.outfitImageUrl ? (
                   <div
-                    className="h-20 w-20 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+                    className="h-20 w-20 shrink-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-cover bg-center"
                     style={{ backgroundImage: `url(${entry.outfitImageUrl})` }}
                   />
                 ) : null}
 
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-2xl">{entry.outfitTitle}</p>
+                  <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+                    {entry.outfitTitle}
+                  </p>
                   <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                     {entry.outfitDescription}
                   </p>
@@ -248,13 +253,12 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
           </div>
         </Field>
 
-        <Field label="Role">
-          <CrestfallSelect
-            value={entry.roleValue}
-            options={entryRoleOptions}
-            onChange={(value) => entry.onChangeRole?.(value)}
-          />
-        </Field>
+        <SelectField
+          label="Role"
+          value={entry.roleValue}
+          options={entryRoleOptions}
+          onChange={(value) => entry.onChangeRole?.(value)}
+        />
 
         <Field label="Priority">
           <TextInput
@@ -289,19 +293,12 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
         </div>
       </div>
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
-        <input
-          type="checkbox"
-          checked={entry.enabledChecked}
-          onChange={(event) =>
-            entry.onChangeEnabled?.(event.target.checked)
-          }
-          className="mt-1"
-        />
-        <span className="text-sm leading-6 text-[var(--ink-dim)]">
-          This outfit entry is enabled for future default wardrobe selection.
-        </span>
-      </label>
+      <CheckboxField
+        checked={entry.enabledChecked}
+        onChange={(checked) => entry.onChangeEnabled?.(checked)}
+      >
+        This outfit entry is enabled for future default wardrobe selection.
+      </CheckboxField>
 
       <button
         type="button"
@@ -334,27 +331,19 @@ function RulesSection({
 }) {
   return (
     <div className="mt-6 grid gap-4 lg:grid-cols-2">
-      <Field label="Fallback mode">
-        <CrestfallSelect
-          value={fallbackModeValue}
-          options={fallbackModeOptions}
-          onChange={(value) => onChangeFallbackMode?.(value)}
-        />
-      </Field>
+      <SelectField
+        label="Fallback mode"
+        value={fallbackModeValue}
+        options={fallbackModeOptions}
+        onChange={(value) => onChangeFallbackMode?.(value)}
+      />
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
-        <input
-          type="checkbox"
-          checked={allowRandomChecked}
-          onChange={(event) =>
-            onChangeAllowRandom?.(event.target.checked)
-          }
-          className="mt-1"
-        />
-        <span className="text-sm leading-6 text-[var(--ink-dim)]">
-          Allow random selection among matching enabled outfits later.
-        </span>
-      </label>
+      <CheckboxField
+        checked={allowRandomChecked}
+        onChange={(checked) => onChangeAllowRandom?.(checked)}
+      >
+        Allow random selection among matching enabled outfits later.
+      </CheckboxField>
 
       <div className="lg:col-span-2">
         <Field label="Summary">
@@ -409,6 +398,41 @@ function RulesSection({
   );
 }
 
+// Ruling 2 (checkbox grammar, 22 Aug 2026): checked renders a gold
+// check mark on a light gold wash; unchecked is a quiet bordered
+// square at the control-size floor (--control-sm). Local to this
+// file because SharedFields.jsx has no checkbox export yet.
+function CheckboxField({ checked, onChange, children }) {
+  return (
+    <label className="flex cursor-pointer items-start gap-[var(--space-3)]">
+      <span
+        className={`relative mt-[2px] inline-flex h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 items-center justify-center rounded-[var(--radius-sm)] border transition-colors ${
+          checked
+            ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
+            : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange?.(event.target.checked)}
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+        />
+        <Check
+          size={16}
+          aria-hidden="true"
+          className={`pointer-events-none text-[var(--gold-action)] transition-opacity ${
+            checked ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </span>
+      <span className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+        {children}
+      </span>
+    </label>
+  );
+}
+
 function Field({ label, children }) {
   return (
     <label className="block">
@@ -424,7 +448,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors hover:border-[var(--line)]"
     />
   );
 }
@@ -468,7 +492,7 @@ function TextArea({
         }}
         placeholder={placeholder}
         maxLength={maxLength || undefined}
-        className="w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+        className="w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--line)]"
         style={{ height: isExpanded ? undefined : "3rem", maxHeight: "320px" }}
       />
       {showCounter ? (
@@ -480,22 +504,6 @@ function TextArea({
           {value.length}/{maxLength}
           {atLimit ? " limit" : ""}
         </span>
-      ) : null}
-    </div>
-  );
-}
-
-function SectionHeader({ eyebrow, title, body }) {
-  return (
-    <div>
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-        {eyebrow}
-      </p>
-      <h3 className="mt-2 font-display text-3xl">{title}</h3>
-      {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-          {body}
-        </p>
       ) : null}
     </div>
   );

@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Box, Database, Plus, Trash2 } from "lucide-react";
+import { Box, Check, Database, Plus, Trash2 } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
-import { SHORT_LONGFORM_MAX_LENGTH } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ItemRegistryFieldsSectionView({
   activeSection = "overview",
@@ -50,7 +53,7 @@ export default function ItemRegistryFieldsSectionView({
 
   return (
     <div>
-      <SectionHeader
+      <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
@@ -188,13 +191,13 @@ function EntriesSection({
                 key={entry.id}
                 type="button"
                 onClick={() => entry.onSelect?.()}
-                className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   entry.isActive
-                    ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                    ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--line)]"
                 }`}
               >
-                <p className="line-clamp-1 font-display text-xl">
+                <p className="line-clamp-1 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                   {entry.nameDisplay}
                 </p>
                 <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
@@ -208,7 +211,7 @@ function EntriesSection({
         </div>
       </div>
 
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
         {activeEntry ? (
           <ItemEntryEditor
             entry={activeEntry}
@@ -217,7 +220,7 @@ function EntriesSection({
             placementOptions={placementOptions}
           />
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-8 text-center">
             <Box size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an object entry or add a new one.
@@ -239,9 +242,11 @@ function AssociationsSection({
         entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4"
           >
-            <p className="font-display text-2xl">{entry.nameDisplay}</p>
+            <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+              {entry.nameDisplay}
+            </p>
 
             {startingAssignmentContentByEntryId[entry.id] || null}
 
@@ -289,18 +294,19 @@ function TrackingSection({
         entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4"
           >
-            <p className="font-display text-2xl">{entry.nameDisplay}</p>
+            <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+              {entry.nameDisplay}
+            </p>
 
             <div className="mt-4 grid gap-4 lg:grid-cols-3">
-              <Field label="Quantity mode">
-                <CrestfallSelect
-                  value={entry.quantityModeValue}
-                  options={quantityOptions}
-                  onChange={(value) => entry.onChangeQuantityMode?.(value)}
-                />
-              </Field>
+              <SelectField
+                label="Quantity mode"
+                value={entry.quantityModeValue}
+                options={quantityOptions}
+                onChange={(value) => entry.onChangeQuantityMode?.(value)}
+              />
 
               <Field label="Starting quantity">
                 <TextInput
@@ -312,21 +318,19 @@ function TrackingSection({
                 />
               </Field>
 
-              <Field label="Consumption">
-                <CrestfallSelect
-                  value={entry.consumptionModeValue}
-                  options={consumptionOptions}
-                  onChange={(value) => entry.onChangeConsumptionMode?.(value)}
-                />
-              </Field>
+              <SelectField
+                label="Consumption"
+                value={entry.consumptionModeValue}
+                options={consumptionOptions}
+                onChange={(value) => entry.onChangeConsumptionMode?.(value)}
+              />
 
-              <Field label="Durability">
-                <CrestfallSelect
-                  value={entry.durabilityModeValue}
-                  options={durabilityOptions}
-                  onChange={(value) => entry.onChangeDurabilityMode?.(value)}
-                />
-              </Field>
+              <SelectField
+                label="Durability"
+                value={entry.durabilityModeValue}
+                options={durabilityOptions}
+                onChange={(value) => entry.onChangeDurabilityMode?.(value)}
+              />
 
               <Field label="Condition percent">
                 <TextInput
@@ -349,22 +353,15 @@ function TrackingSection({
               </Field>
             </div>
 
-            <label className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
-              <input
-                type="checkbox"
-                checked={entry.doNotHallucinateAvailabilityChecked}
-                onChange={(event) =>
-                  entry.onChangeDoNotHallucinateAvailability?.(
-                    event.target.checked
-                  )
-                }
-                className="mt-1"
-              />
-              <span className="text-sm leading-6 text-[var(--ink-dim)]">
-                Runtime systems should not assume this item is available unless
-                state, location, ownership, or story context allows it.
-              </span>
-            </label>
+            <CheckboxField
+              checked={entry.doNotHallucinateAvailabilityChecked}
+              onChange={(checked) =>
+                entry.onChangeDoNotHallucinateAvailability?.(checked)
+              }
+            >
+              Runtime systems should not assume this item is available unless
+              state, location, ownership, or story context allows it.
+            </CheckboxField>
           </div>
         ))
       ) : (
@@ -415,9 +412,11 @@ function PromptSection({
       {entries.map((entry) => (
         <div
           key={entry.id}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+          className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4"
         >
-          <p className="font-display text-2xl">{entry.nameDisplay}</p>
+          <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+            {entry.nameDisplay}
+          </p>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <Field label="Entry prompt guidance">
@@ -455,7 +454,7 @@ function ReviewSection({
 }) {
   return (
     <div className="mt-6 grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4">
         <Database size={24} className="text-[var(--gold-ornament)]" />
         <dl className="mt-4 space-y-3 text-sm">
           <div>
@@ -475,7 +474,7 @@ function ReviewSection({
         </dl>
       </div>
 
-      <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {reviewPayloadText}
       </pre>
     </div>
@@ -499,29 +498,26 @@ function ItemEntryEditor({
           />
         </Field>
 
-        <Field label="Category">
-          <CrestfallSelect
-            value={entry.categoryValue}
-            options={categoryOptions}
-            onChange={(value) => entry.onChangeCategory?.(value)}
-          />
-        </Field>
+        <SelectField
+          label="Category"
+          value={entry.categoryValue}
+          options={categoryOptions}
+          onChange={(value) => entry.onChangeCategory?.(value)}
+        />
 
-        <Field label="Role">
-          <CrestfallSelect
-            value={entry.roleValue}
-            options={roleOptions}
-            onChange={(value) => entry.onChangeRole?.(value)}
-          />
-        </Field>
+        <SelectField
+          label="Role"
+          value={entry.roleValue}
+          options={roleOptions}
+          onChange={(value) => entry.onChangeRole?.(value)}
+        />
 
-        <Field label="Default placement">
-          <CrestfallSelect
-            value={entry.defaultPlacementValue}
-            options={placementOptions}
-            onChange={(value) => entry.onChangeDefaultPlacement?.(value)}
-          />
-        </Field>
+        <SelectField
+          label="Default placement"
+          value={entry.defaultPlacementValue}
+          options={placementOptions}
+          onChange={(value) => entry.onChangeDefaultPlacement?.(value)}
+        />
 
         <div className="lg:col-span-2">
           <Field label="Aliases, one per line">
@@ -588,19 +584,38 @@ function ItemEntryEditor({
   );
 }
 
-function SectionHeader({ eyebrow, title, body }) {
+// Ruling 2 (checkbox grammar, 22 Aug 2026): checked renders a gold
+// check mark on a light gold wash; unchecked is a quiet bordered
+// square at the control-size floor (--control-sm). Local to this
+// file because SharedFields.jsx has no checkbox export yet.
+function CheckboxField({ checked, onChange, children }) {
   return (
-    <div>
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-        {eyebrow}
-      </p>
-      <h3 className="mt-2 font-display text-3xl">{title}</h3>
-      {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
-          {body}
-        </p>
-      ) : null}
-    </div>
+    <label className="flex cursor-pointer items-start gap-[var(--space-3)]">
+      <span
+        className={`relative mt-[2px] inline-flex h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 items-center justify-center rounded-[var(--radius-sm)] border transition-colors ${
+          checked
+            ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
+            : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
+        }`}
+      >
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange?.(event.target.checked)}
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+        />
+        <Check
+          size={16}
+          aria-hidden="true"
+          className={`pointer-events-none text-[var(--gold-action)] transition-opacity ${
+            checked ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </span>
+      <span className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+        {children}
+      </span>
+    </label>
   );
 }
 
@@ -619,7 +634,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors hover:border-[var(--line)]"
     />
   );
 }
@@ -663,7 +678,7 @@ function TextArea({
         }}
         placeholder={placeholder}
         maxLength={maxLength || undefined}
-        className="w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+        className="w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--line)]"
         style={{ height: isExpanded ? undefined : "3rem", maxHeight: "320px" }}
       />
       {showCounter ? (
@@ -682,7 +697,7 @@ function TextArea({
 
 function EmptyPanel({ message }) {
   return (
-    <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+    <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
       {message}
     </p>
   );
