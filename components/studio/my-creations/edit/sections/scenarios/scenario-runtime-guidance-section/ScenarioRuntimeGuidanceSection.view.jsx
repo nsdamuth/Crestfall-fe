@@ -27,7 +27,7 @@ export default function ScenarioRuntimeGuidanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
         <TextAreaField
           label="Opening Scene"
           value={openingScene}
@@ -52,7 +52,7 @@ export default function ScenarioRuntimeGuidanceSectionView({
           maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-[var(--space-4)] md:grid-cols-2">
           <TextAreaField
             label="Drift Fixes"
             value={driftFixes}

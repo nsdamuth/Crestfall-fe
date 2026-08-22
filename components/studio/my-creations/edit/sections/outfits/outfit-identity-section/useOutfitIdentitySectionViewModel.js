@@ -1,3 +1,9 @@
+// Terminology map (4.6, D8/F2, ED1G): a raw data-layer enum never
+// surfaces to the screen.
+const CREATION_TYPE_LABELS = Object.freeze({
+  OUTFIT: "Outfit",
+});
+
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Outfit Editor",
   sectionTitle: "Outfit Identity",
@@ -34,7 +40,7 @@ export function getOutfitIdentitySectionViewProps({
     categoryValue: data.category || data.outfit_type || "",
     intendedUseValue: data.intended_use || "",
     tagsValue: formatOutfitIdentityTags(data.tags),
-    creationTypeValue: form?.type || "",
+    creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
     onChangeName: (value) => updateDataField?.("name", value),
     onChangeCategory: (value) => updateDataField?.("category", value),
     onChangeIntendedUse: (value) =>

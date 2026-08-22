@@ -108,7 +108,6 @@ export default function StoryNarrativeRuntimeSectionView({
         label={completionGuidanceLabel}
         value={completionGuidanceValue}
         placeholder={completionGuidancePlaceholder}
-        rows={3}
         onChange={onChangeCompletionGuidance}
       />
 
@@ -117,31 +116,30 @@ export default function StoryNarrativeRuntimeSectionView({
           <details
             key={phase.id}
             open={phase.initiallyOpen}
-            className="group rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+            className="group rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]"
           >
             <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-[var(--space-4)]">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                  <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                     {phase.phaseEyebrow}
                   </p>
-                  <h3 className="mt-1 font-display text-3xl">
+                  <h3 className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
                     {phase.phaseTitle}
                   </h3>
                 </div>
-                <span className="text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                   <span className="group-open:hidden">{openLabel}</span>
                   <span className="hidden group-open:inline">{closeLabel}</span>
                 </span>
               </div>
             </summary>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-[var(--space-5)] grid gap-[var(--space-4)] md:grid-cols-2">
               <GuidanceField
                 label={phaseObjectiveLabel}
                 value={phase.objectiveValue}
                 placeholder={phaseObjectivePlaceholder}
-                rows={3}
                 className="md:col-span-2"
                 onChange={(value) =>
                   onChangePhaseObjective?.(phase.id, value)

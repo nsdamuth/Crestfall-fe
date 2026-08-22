@@ -6,7 +6,13 @@ export const weatherModuleConfigModalViewContract = Object.freeze({
   purpose:
     "Render and edit an In-World Weather module without owning engine-module requests, payload normalization, or Location binding persistence.",
   inputs: Object.freeze({
-    lifecycle: ["isInitializing", "isSaving", "message", "loadingMessage"],
+    lifecycle: [
+      "isInitializing",
+      "isSaving",
+      "message",
+      "loadingMessage",
+      "hasUnsavedChanges",
+    ],
     identity: [
       "moduleTitle",
       "priority",

@@ -11,6 +11,12 @@ const NARRATOR_TONE_OPTIONS = Object.freeze([
   { value: "NEUTRAL", label: "Neutral" },
 ]);
 
+// Terminology map (4.6, D8/F2, ED1G): a raw data-layer enum never
+// surfaces to the screen.
+const CREATION_TYPE_LABELS = Object.freeze({
+  NARRATOR: "Narrator",
+});
+
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Narrator Editor",
   sectionTitle: "Narrator Identity",
@@ -46,7 +52,7 @@ export function getNarratorIdentitySectionViewProps({
     tagsValue: formatNarratorIdentityTags(data.tags),
     toneValue: data.tone || "",
     toneOptions: NARRATOR_TONE_OPTIONS.map((option) => ({ ...option })),
-    creationTypeValue: form?.type || "",
+    creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
     onChangeName: (value) => updateDataField?.("name", value),
     onChangeTags: (value) =>
       updateDataField?.("tags", parseNarratorIdentityTags(value)),

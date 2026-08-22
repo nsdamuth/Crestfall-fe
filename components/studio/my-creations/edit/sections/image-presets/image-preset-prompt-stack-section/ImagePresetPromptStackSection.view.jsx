@@ -46,7 +46,7 @@ export default function ImagePresetPromptStackSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
         <TextAreaField
           label={promptGuidanceLabel}
           value={promptGuidanceValue}

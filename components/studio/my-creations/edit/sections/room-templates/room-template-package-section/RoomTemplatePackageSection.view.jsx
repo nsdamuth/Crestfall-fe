@@ -54,7 +54,9 @@ export default function RoomTemplatePackageSectionView({
         </div>
 
         {referenceLoadError ? (
-          <p className="text-sm text-red-200">{referenceLoadError}</p>
+          <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--status-danger)]">
+            {referenceLoadError}
+          </p>
         ) : null}
       </div>
 

@@ -1,14 +1,65 @@
 import { Clock, CloudSun, Settings } from "lucide-react";
 
 import {
+  NumberField,
   SectionTitle,
   SelectField,
+  TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
+// CLEANUP fix: SlotFallback drops the bordered/backgrounded panel for
+// plain helper text (the same helper is duplicated at
+// location-scene-atmosphere-section/LocationSceneAtmosphereSection.view.jsx,
+// fixed there too).
 function SlotFallback({ children }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+    <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
       {children}
+    </p>
+  );
+}
+
+// 4.9 toggle: pill track, --control-sm thumb, gold on-state, a state
+// word beside the track. Replaces the native checkbox chip rows for
+// boolean enable toggles in this section (weather enable, calendar
+// enable, exact-clock visibility).
+function Toggle({ checked, onChange, onLabel, offLabel, children }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      aria-pressed={checked}
+      className="flex w-full items-center gap-[var(--space-4)] text-left"
+    >
+      <span
+        className={`relative inline-flex h-[var(--control-sm)] w-[calc(var(--control-sm)*1.8)] flex-none items-center rounded-[var(--radius-full)] border transition-colors ${
+          checked
+            ? "border-[var(--gold-action)] bg-[var(--gold-action)]"
+            : "border-[var(--line)] bg-[var(--surface-1)]"
+        }`}
+      >
+        <span
+          className={`inline-block h-[calc(var(--control-sm)-4px)] w-[calc(var(--control-sm)-4px)] rounded-full bg-[var(--tag-fill-ink)] transition-transform ${
+            checked ? "translate-x-[calc(var(--control-sm)*0.8)]" : "translate-x-[2px]"
+          }`}
+        />
+      </span>
+
+      <span className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+        {children || (checked ? onLabel : offLabel)}
+      </span>
+    </button>
+  );
+}
+
+function RuntimeStatBlock({ rows }) {
+  return (
+    <div className="grid gap-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+      {rows.map((row) => (
+        <p key={row.label}>
+          {row.label}: <span className="text-[var(--ink)]">{row.value}</span>
+        </p>
+      ))}
     </div>
   );
 }
@@ -66,24 +117,26 @@ export default function LocationRuntimeModulesSectionView({
     <div>
       <SectionTitle body={sectionBody} />
 
-      <div className="mt-6 grid gap-4">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
         {runtimeMechanicsSlot || (
           <SlotFallback>{runtimeMechanicsFallbackText}</SlotFallback>
         )}
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
-                <CloudSun size={20} />
-              </div>
+        {/* Section 5 de-nesting: inset hairline, tier 4 label, no
+            bordered/backgrounded panel. */}
+        <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <div className="flex flex-col gap-[var(--space-4)] sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex items-start gap-[var(--space-3)]">
+              <CloudSun size={18} aria-hidden="true" className="mt-[2px] flex-none text-[var(--gold-ornament)]" />
 
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+                <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                   {weatherEyebrow}
                 </p>
-                <h3 className="mt-2 font-display text-3xl">{weatherTitle}</h3>
-                <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
+                <h3 className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+                  {weatherTitle}
+                </h3>
+                <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                   {weatherDescription}
                 </p>
               </div>
@@ -99,206 +152,136 @@ export default function LocationRuntimeModulesSectionView({
             </button>
           </div>
 
-          <div className="mt-5 grid gap-4">
+          <div className="mt-[var(--space-5)] grid gap-[var(--space-4)]">
             {hasWeatherBinding ? (
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-                <input
-                  type="checkbox"
-                  checked={weatherEnabled}
-                  onChange={(event) => onToggleWeather(event.target.checked)}
-                  className="h-4 w-4 accent-[var(--gold-ornament)]"
-                />
-                <span>
-                  {weatherEnabled ? weatherEnableLabel : weatherDisabledLabel}
-                </span>
-              </label>
+              <Toggle
+                checked={weatherEnabled}
+                onChange={onToggleWeather}
+                onLabel={weatherEnableLabel}
+                offLabel={weatherDisabledLabel}
+              />
             ) : (
-              <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
-                No Weather module is attached. Configure Weather to create and attach the location&apos;s
-                in-world weather rules.
-              </div>
+              <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+                No Weather module is attached. Configure Weather to create and attach the
+                location&apos;s in-world weather rules.
+              </p>
             )}
 
-            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
-              <p>
-                Module ID:{" "}
-                <span className="text-[var(--ink)]">
-                  {weatherModuleId}
-                </span>
-              </p>
-              <p>
-                Status:{" "}
-                <span className="text-[var(--ink)]">
-                  {weatherStatusLabel}
-                </span>
-              </p>
-              <p>
-                Bound module:{" "}
-                <span className="text-[var(--ink)]">
-                  {weatherModuleTitle}
-                </span>
-              </p>
-            </div>
+            <RuntimeStatBlock
+              rows={[
+                { label: "Module ID", value: weatherModuleId },
+                { label: "Status", value: weatherStatusLabel },
+                { label: "Bound module", value: weatherModuleTitle },
+              ]}
+            />
           </div>
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
-              <Clock size={20} />
-            </div>
+        <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <div className="flex items-start gap-[var(--space-3)]">
+            <Clock size={18} aria-hidden="true" className="mt-[2px] flex-none text-[var(--gold-ornament)]" />
 
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                 {timeEyebrow}
               </p>
-              <h3 className="mt-2 font-display text-3xl">{timeTitle}</h3>
-              <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
+              <h3 className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+                {timeTitle}
+              </h3>
+              <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                 {timeDescription}
               </p>
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4">
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={timeCalendarEnabled}
-                onChange={(event) =>
-                  onToggleTimeCalendar(event.target.checked)
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
-              />
-              <span>{timeCalendarEnabled ? enabledLabel : enableLabel}</span>
-            </label>
+          <div className="mt-[var(--space-5)] grid gap-[var(--space-4)]">
+            <Toggle
+              checked={timeCalendarEnabled}
+              onChange={onToggleTimeCalendar}
+              onLabel={enabledLabel}
+              offLabel={enableLabel}
+            />
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {/* ED1C dropdown law: branded kit dropdown grammar. */}
+            <div className="grid gap-[var(--space-4)] md:grid-cols-2">
               <SelectField
                 label={inheritanceModeLabel}
                 value={inheritanceMode}
                 onChange={(value) => onChangeInheritanceMode(value)}
                 options={[
-                  {
-                    value: "INHERITABLE",
-                    label: "Inheritable / Parent authority can win",
-                  },
-                  {
-                    value: "OVERRIDE",
-                    label: "Local override / This location wins",
-                  },
+                  { value: "INHERITABLE", label: "Inheritable / Parent authority can win" },
+                  { value: "OVERRIDE", label: "Local override / This location wins" },
                 ]}
               />
 
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{turnAdvanceLabel}</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="240"
-                  value={timeCalendarProfile.defaultTurnAdvanceMinutes}
-                  onChange={(event) => onChangeTurnAdvance(event.target.value)}
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{dayLengthLabel}</span>
-                <input
-                  type="number"
-                  min="60"
-                  max="10080"
-                  value={timeCalendarProfile.dayLengthMinutes}
-                  onChange={(event) => onChangeDayLength(event.target.value)}
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{yearLengthLabel}</span>
-                <input
-                  type="number"
-                  min="1"
-                  max="10000"
-                  value={timeCalendarProfile.yearLengthDays}
-                  onChange={(event) => onChangeYearLength(event.target.value)}
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{startDayLabel}</span>
-                <input
-                  type="number"
-                  min="1"
-                  value={timeCalendarProfile.startDay}
-                  onChange={(event) => onChangeStartDay(event.target.value)}
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
-                <span>{startMinutesLabel}</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="10079"
-                  value={timeCalendarProfile.startMinutes}
-                  onChange={(event) => onChangeStartMinutes(event.target.value)}
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm text-[var(--ink-dim)] md:col-span-2">
-                <span>{dayLabelPrefixLabel}</span>
-                <input
-                  type="text"
-                  value={timeCalendarProfile.dayLabelPrefix}
-                  onChange={(event) =>
-                    onChangeDayLabelPrefix(event.target.value)
-                  }
-                  placeholder="Day"
-                  className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]"
-                />
-              </label>
-            </div>
-
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
-              <input
-                type="checkbox"
-                checked={Boolean(
-                  timeCalendarProfile.showExactClockToComposer
-                )}
-                onChange={(event) =>
-                  onChangeExactClockVisibility(event.target.checked)
-                }
-                className="h-4 w-4 accent-[var(--gold-ornament)]"
+              <NumberField
+                label={turnAdvanceLabel}
+                min={0}
+                max={240}
+                value={timeCalendarProfile.defaultTurnAdvanceMinutes}
+                onChange={onChangeTurnAdvance}
               />
-              <span>{exactClockLabel}</span>
-            </label>
 
-            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
-              <p>
-                Module ID:{" "}
-                <span className="text-[var(--ink)]">{moduleId}</span>
-              </p>
-              <p>
-                Status:{" "}
-                <span className="text-[var(--ink)]">{statusLabel}</span>
-              </p>
-              <p>
-                Runtime behavior:{" "}
-                <span className="text-[var(--ink)]">
-                  {runtimeBehaviorLabel}
-                </span>
-              </p>
-              <p>
-                Current turn pacing:{" "}
-                <span className="text-[var(--ink)]">
-                  {timeCalendarProfile.defaultTurnAdvanceMinutes} minute(s)
-                </span>
-              </p>
+              <NumberField
+                label={dayLengthLabel}
+                min={60}
+                max={10080}
+                value={timeCalendarProfile.dayLengthMinutes}
+                onChange={onChangeDayLength}
+              />
+
+              <NumberField
+                label={yearLengthLabel}
+                min={1}
+                max={10000}
+                value={timeCalendarProfile.yearLengthDays}
+                onChange={onChangeYearLength}
+              />
+
+              <NumberField
+                label={startDayLabel}
+                min={1}
+                value={timeCalendarProfile.startDay}
+                onChange={onChangeStartDay}
+              />
+
+              <NumberField
+                label={startMinutesLabel}
+                min={0}
+                max={10079}
+                value={timeCalendarProfile.startMinutes}
+                onChange={onChangeStartMinutes}
+              />
+
+              <div className="md:col-span-2">
+                <TextField
+                  label={dayLabelPrefixLabel}
+                  value={timeCalendarProfile.dayLabelPrefix}
+                  onChange={onChangeDayLabelPrefix}
+                  placeholder="Day"
+                />
+              </div>
             </div>
+
+            <Toggle
+              checked={Boolean(timeCalendarProfile.showExactClockToComposer)}
+              onChange={onChangeExactClockVisibility}
+              onLabel={exactClockLabel}
+              offLabel={exactClockLabel}
+            >
+              {exactClockLabel}
+            </Toggle>
+
+            <RuntimeStatBlock
+              rows={[
+                { label: "Module ID", value: moduleId },
+                { label: "Status", value: statusLabel },
+                { label: "Runtime behavior", value: runtimeBehaviorLabel },
+                {
+                  label: "Current turn pacing",
+                  value: `${timeCalendarProfile.defaultTurnAdvanceMinutes} minute(s)`,
+                },
+              ]}
+            />
           </div>
         </div>
 
