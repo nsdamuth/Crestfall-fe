@@ -48,7 +48,7 @@ export default function MechanicsCommandDomainActionsView({
   toggleOutcome,
 }) {
   return (
-    <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4">
+    <div>
       <div>
         <p className={EYEBROW_CLASS}>
           Domain Adapter
@@ -222,7 +222,7 @@ export default function MechanicsCommandDomainActionsView({
               />
             ) : null}
 
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2">
+            <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)] md:col-span-2">
               <p className={EYEBROW_CLASS}>
                 Apply On Outcomes
               </p>
@@ -244,12 +244,12 @@ export default function MechanicsCommandDomainActionsView({
               </p>
             ) : null}
 
-            <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
+            <p className="text-xs leading-5 text-[var(--ink-faint)] md:col-span-2">
               {description}
             </p>
           </>
         ) : (
-          <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
+          <p className="text-xs leading-5 text-[var(--ink-faint)] md:col-span-2">
             No cross-domain state mutation is configured. The command may still use ordinary
             Mechanics effects.
           </p>
