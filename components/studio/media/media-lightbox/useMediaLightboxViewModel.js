@@ -160,6 +160,7 @@ export function useMediaLightboxViewModel({
   const [reportReasonText, setReportReasonText] = useState("");
   const [reportStatus, setReportStatus] = useState("idle");
   const [reportMessage, setReportMessage] = useState("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const isLiked =
     typeof isItemLiked === "function"
@@ -185,6 +186,7 @@ export function useMediaLightboxViewModel({
     setReportStatus("idle");
     setReportMessage("");
     setReportReasonText("");
+    setDeleteConfirmOpen(false);
   }, [activeId]);
 
   function handleSelectMedia(media) {
@@ -207,13 +209,23 @@ export function useMediaLightboxViewModel({
     toggleSetItem(setBookmarkedIds, activeId);
   }
 
-  function handleDeleteItem() {
+  // B5 danger-confirm recipe (ED1F propagation plan group G3): the
+  // browser's native confirm() dialog is replaced by the portable
+  // View's own confirm panel. Requesting delete only opens that
+  // panel; the callback fires when the panel's own Delete button
+  // confirms.
+  function handleRequestDelete() {
     if (typeof onDeleteItem !== "function" || !activeOriginalItem) return;
+    setDeleteConfirmOpen(true);
+  }
 
-    const confirmed = window.confirm(
-      "Delete this image from your Image Studio? This will also remove it from any character libraries and featured slots."
-    );
-    if (!confirmed) return;
+  function handleCancelDelete() {
+    setDeleteConfirmOpen(false);
+  }
+
+  function handleConfirmDelete() {
+    setDeleteConfirmOpen(false);
+    if (typeof onDeleteItem !== "function" || !activeOriginalItem) return;
 
     onDeleteItem(
       {
@@ -327,12 +339,15 @@ export function useMediaLightboxViewModel({
       status: reportStatus,
       message: reportMessage,
     },
+    deleteConfirmOpen,
     onSelectMedia: handleSelectMedia,
     onClose,
     onLike: handleToggleLike,
     onBookmark: handleToggleBookmark,
     onShare: handleShare,
-    onDelete: handleDeleteItem,
+    onRequestDelete: handleRequestDelete,
+    onCancelDelete: handleCancelDelete,
+    onConfirmDelete: handleConfirmDelete,
     onOpenDetails: handleOpenDetails,
     onCloseDetails: () => setDetailsOpen(false),
     onOpenReport: handleOpenReport,

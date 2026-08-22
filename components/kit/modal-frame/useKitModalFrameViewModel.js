@@ -56,15 +56,20 @@ const PANEL_RECIPE = {
     "relative flex h-[100dvh] max-h-[100dvh] w-full flex-col items-center justify-center pointer-events-none",
 };
 
-// R2 (plan 1.2): the viewer variant's veil is the sticky nav
-// chrome-frost treatment, never the scrim-plus-blur-panel pair. Modal
-// and sheet keep ModalShellView's own default (undefined here so the
-// View's default parameter applies).
+// B7 viewer final (22 Aug 2026, Fable law review, ED1F propagation
+// plan group G3), REVERSING R2: the viewer variant's veil is now the
+// lawful 2px veil at the --chrome-wash color, paired with
+// --blur-panel, the same strength every other floating veil uses
+// ("lawful 2px veil, no glass extension"; docs/DESIGN-TOKENS.md,
+// "R2 REVERSED" note). This is the only line this file changes for
+// G3: it is exclusively consumed by KitImageOverlay's variant="viewer"
+// composition, so the edit carries no effect on the modal or sheet
+// variants G2 delivered. Modal and sheet keep ModalShellView's own
+// default (undefined here so the View's default parameter applies).
 const VARIANT_VEIL = {
   modal: undefined,
   sheet: undefined,
-  viewer:
-    "bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)]",
+  viewer: "bg-[var(--chrome-wash)] backdrop-blur-[var(--blur-panel)]",
 };
 
 function toCallback(value) {

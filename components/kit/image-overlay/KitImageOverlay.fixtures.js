@@ -31,6 +31,15 @@ export const kitImageOverlayDefaultFixture = {
   onSave: noop,
   onShare: noop,
   onClose: noop,
+  // B7 viewer final: header icon row plus bottom bar callbacks.
+  // onReassignAsset is accepted but the view always renders that
+  // action disabled (CR-055 stub).
+  onDelete: noop,
+  onReport: noop,
+  onDetails: noop,
+  onDownload: noop,
+  onGenerateVariant: noop,
+  onReassignAsset: noop,
 };
 
 export const kitImageOverlayLovedFixture = {
