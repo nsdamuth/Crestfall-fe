@@ -1,8 +1,8 @@
 "use client";
 
-import { Bell, Menu, X } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 
-import ModalShell from "@/components/ui/ModalShell";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const GROUP_LABELS = Object.freeze({
   today: "Today",
@@ -83,16 +83,15 @@ export default function StudioTopBarView({
       </header>
 
       {isCompactOpen ? (
-        <ModalShell
+        <KitModalFrame
           onClose={onCloseNotifications}
           ariaLabelledBy="studio-notif-compact-title"
-          panelClassName="relative flex w-full max-w-[26rem] max-h-[86vh] flex-col overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-5)] shadow-[var(--shadow-modal)]"
+          panelClassName="w-full max-w-[26rem] p-[var(--space-5)]"
         >
           <NotificationsHeader
             titleId="studio-notif-compact-title"
             title={notificationsLabel}
             subtitle="Recent activity"
-            onClose={onCloseNotifications}
           />
 
           {hasNotifications ? (
@@ -127,20 +126,19 @@ export default function StudioTopBarView({
               </button>
             </div>
           ) : null}
-        </ModalShell>
+        </KitModalFrame>
       ) : null}
 
       {isFullOpen ? (
-        <ModalShell
+        <KitModalFrame
           onClose={onCloseNotifications}
           ariaLabelledBy="studio-notif-full-title"
-          panelClassName="relative flex w-full max-w-[30rem] max-h-[42rem] flex-col overflow-y-auto overscroll-contain rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-5)] shadow-[var(--shadow-modal)]"
+          panelClassName="w-full max-w-[30rem] p-[var(--space-5)]"
         >
           <NotificationsHeader
             titleId="studio-notif-full-title"
             title="Notification Center"
             subtitle="Everything, organized by day"
-            onClose={onCloseNotifications}
           />
 
           {hasNotifications ? (
@@ -151,40 +149,24 @@ export default function StudioTopBarView({
           ) : (
             <EmptyNotifications />
           )}
-        </ModalShell>
+        </KitModalFrame>
       ) : null}
     </>
   );
 }
 
-function NotificationsHeader({
-  titleId,
-  title = "",
-  subtitle = "",
-  onClose = () => {},
-}) {
+function NotificationsHeader({ titleId, title = "", subtitle = "" }) {
   return (
-    <div className="mb-[var(--space-4)] flex items-center gap-[var(--space-3)]">
-      <div className="min-w-0">
-        <h2
-          id={titleId}
-          className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
-        >
-          {title}
-        </h2>
-        <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
-          {subtitle}
-        </p>
-      </div>
-
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-        className="ml-auto flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)]"
+    <div className="mb-[var(--space-4)] pr-[var(--space-10)]">
+      <h2
+        id={titleId}
+        className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
       >
-        <X size={16} />
-      </button>
+        {title}
+      </h2>
+      <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
+        {subtitle}
+      </p>
     </div>
   );
 }
