@@ -20,10 +20,13 @@ function numberValue(value, fallback = 0) {
   return Number.isFinite(number) ? number : fallback;
 }
 
+// Local TextField, not SharedFields.TextField: this file needs native
+// numeric inputs (type="number") throughout, which SharedFields.TextField
+// does not expose.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -31,7 +34,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -133,7 +136,7 @@ function ModifierList({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+        <p className="mt-4 text-xs leading-5 text-[var(--ink-faint)]">
           No fixed modifiers. The raw kept roll is used unless an authoritative source contributes a modifier.
         </p>
       )}
@@ -317,7 +320,7 @@ function ModifierSourceCard({
           </>
         ) : null}
 
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2">
+        <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)] md:col-span-2">
           <p className={EYEBROW_CLASS}>
             Numeric Transform
           </p>
@@ -469,7 +472,7 @@ function ModifierSourceList({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+        <p className="mt-4 text-xs leading-5 text-[var(--ink-faint)]">
           No authoritative sources. Add one to derive a bonus or penalty from Mechanics state or a resolved target.
         </p>
       )}
@@ -505,7 +508,7 @@ export default function MechanicsCommandResolutionView({
   isBooleanTargetProperty,
 }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -556,7 +559,7 @@ export default function MechanicsCommandResolutionView({
           }))}
         />
 
-        <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+        <div className="flex items-center text-xs leading-5 text-[var(--ink-faint)]">
           {resolution.mode === "THRESHOLD_DIE"
             ? "Crestfall rolls the actor check on services-api and compares its final total to the target number."
             : resolution.mode === "OPPOSED_DIE"
@@ -670,7 +673,7 @@ export default function MechanicsCommandResolutionView({
           />
 
           {resolution.mode === "OPPOSED_DIE" ? (
-            <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
+            <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
               <p className={EYEBROW_CLASS}>
                 Opposition Check
               </p>
@@ -824,7 +827,7 @@ export default function MechanicsCommandResolutionView({
                   }
                   placeholder="-5"
                 />
-                <p className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
+                <p className="text-xs leading-5 text-[var(--ink-faint)] md:col-span-2">
                   Natural critical/fumble rules and opposed tie policy retain precedence. Margin bands classify non-natural results after final modifiers are applied.
                 </p>
               </div>
@@ -832,6 +835,6 @@ export default function MechanicsCommandResolutionView({
           </div>
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }
