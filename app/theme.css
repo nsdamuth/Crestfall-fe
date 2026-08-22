@@ -69,7 +69,11 @@
      reserved, kept away from gold; --status-danger is the one
      and only red, including the danger button variant.        */
 
-  --status-success:        #7D9B6A;  /* warm sage   */
+  /* --status-success revised 22 Aug 2026, Gate 2 token law row 6,
+     closes CR-051: oklch(.76 .08 135), sage ruled the success hue
+     everywhere. The prior hex value is struck for lineage:
+     #7D9B6A. */
+  --status-success:        oklch(.76 .08 135);  /* warm sage   */
   --status-warning:        #C97B35;  /* burnt amber */
   --status-danger:         #C2634D;  /* brick red   */
 
@@ -351,10 +355,22 @@
 
   /* Softened Sprint 3: the outer ring drops from --gold-bright
      to --gold-ornament. The 2px width and the canvas gap ring
-     stay — visibility is untouched, only the double-gold blaze
+     stay, visibility is untouched, only the double-gold blaze
      comes down. Ornament flips dark on light theme, so the
      ring stays visible on parchment with no extra token.     */
-  --focus-ring:   0 0 0 2px var(--canvas), 0 0 0 4px var(--gold-ornament);
+
+  /* Recipe replaced 22 Aug 2026 (A3, Fable law review): the Gate 1
+     gold-ornament-border-plus-glow recipe becomes the single
+     global ring, ships under this SAME token name (only the
+     recipe changes), and retires the kit-focus border-brightening
+     pattern and the cf-field quiet-field-ring (both deleted from
+     app/design-system.css in the same commit). No canvas gap ring
+     in this recipe; that device stays exclusive to
+     --focus-ring-ongold above, which layers on a gold-filled
+     surface where a gap ring is load-bearing. The prior two-ring
+     value is struck for lineage: 0 0 0 2px var(--canvas), 0 0 0
+     4px var(--gold-ornament). */
+  --focus-ring:   0 0 0 1px var(--gold-ornament), 0 0 0 3px rgba(224, 171, 94, .10);
 }
 
 /* ============================================================
@@ -499,6 +515,133 @@
   --state-pressed-gold:    var(--gold-deep);
   --state-disabled-opacity: 0.5;
   --state-focus-ring:      var(--focus-ring);
+}
+
+/* ============================================================
+   ED1F PROPAGATION, RULED 22 Aug 2026
+   Gate 2 twelve-row token law (explorations/gate1/GATE-LOG.md,
+   "TOKEN LAW" section, Crestfall Editor DS Claude Design project)
+   plus the modal-family close candidates, ratified at the Fable
+   law review on branch design/ds1-claude-design-sync. Row 12,
+   --focus-ring-editor, is not minted here: its recipe is
+   ABSORBED into the global --focus-ring below (docs/plans/
+   ED1F-PROPAGATION-PLAN.md section D item 1).
+   ============================================================ */
+
+:root {
+
+  /* --- WEIGHT, ghost buttons ---------------------------------
+     A1: ghost buttons render at 300, the same literal already
+     entering the pipeline for --ink-typed below. Aliased so both
+     consumers name one token instead of repeating a bare 300 at
+     each call site. */
+  --weight-light: 300;
+
+  /* --- FIELD TYPE, editor beds --------------------------------
+     Gate 2 token law rows 1-2. */
+  --text-input:    0.875rem;  /* 14 */
+  --lh-input:      1.375rem;  /* 22 */
+  --ink-typed:     #d9d3c6;   /* Inter 300, field values only */
+
+  /* --- GHOST FILL ----------------------------------------------
+     Gate 2 token law row 3. .cf-btn--secondary, trait chips,
+     quiet interactive surfaces. */
+  --fill-ghost:    rgba(242, 209, 148, .05);
+
+  /* --- EDITOR CONTROL HEIGHTS ------------------------------------
+     Gate 2 token law row 4. 44px mobile touch floor holds; these
+     are desktop-only editor CTA heights. --control-editor-md is
+     the same literal as --control-filter (38px), aliased rather
+     than re-minted so the two names never drift apart (CR-053). */
+  --control-editor-md: var(--control-filter); /* 38 */
+  --control-editor-sm: 1.75rem;               /* 28, genuinely new */
+
+  /* --- STATUS, success revision ------------------------------------
+     Gate 2 token law row 6. Closes CR-051. Sage, ruled the success
+     hue everywhere. Revises the existing locked value below in
+     the base :root block; not declared twice. */
+
+  /* --- GRADIENTS, editor surfaces ------------------------------------
+     Gate 2 token law row 7. Distinct from the panel-lift and
+     creation-card gradients below (three separate gradient
+     tokens; see the propagation plan section D item 4). */
+  --grad-card: linear-gradient(160deg, #1a1610, #14110c);
+  --grad-rail: linear-gradient(160deg, #16130d, #100d09);
+
+  /* --- FIELD BEDS ----------------------------------------------------
+     Gate 2 token law row 8. */
+  --bed-deep:   #0d0b08;
+  --shadow-bed: inset 0 1px 2px rgba(0, 0, 0, .25);
+
+  /* --- FADE DIVIDER --------------------------------------------------
+     Gate 2 token law row 9, scope broadened to modal dividers by
+     B1 (sidebar groups, card-header rules, rail progress rules,
+     now also every modal-family divider). Recipe from Modal
+     Family v2.html's own .fdiv rule; the 1px height and the
+     .tight compact-margin variant are component concerns, not
+     the token. */
+  --line-fade: linear-gradient(90deg, transparent,
+                 rgba(242, 209, 148, .13) 12%,
+                 rgba(242, 209, 148, .13) 88%, transparent);
+
+  /* --- CHROME WASH -----------------------------------------------------
+     Gate 2 token law row 10. Editor sticky nav and mobile save row
+     join the existing --blur-chrome scope; no change to that
+     token's own value. */
+  --chrome-wash: rgba(6, 4, 2, .62);
+
+  /* --- PANEL GLASS -------------------------------------------------------
+     Gate 2 token law row 11. Pairs with the existing --blur-panel
+     (2px), never --blur-glass. Kebab menus, the viewer's two-line
+     header, and the B6 creation-card kebab all cite this token. */
+  --panel-glass: rgba(36, 32, 25, .85);
+
+  /* --- BLUR, tooltips ----------------------------------------------------
+     A2, ratified narrow: three blur tokens, no cross-borrowing.
+     --blur-chrome (12px) and --blur-panel (2px) keep their
+     existing scopes unchanged; --blur-glass is new, tooltips
+     only, never any other surface. No consumer exists until the
+     tooltip component (CR-047) is designed; the token lands so
+     the law is complete. */
+  --blur-glass: 12px;
+
+  /* --- FOCUS ON GOLD -------------------------------------------------------
+     B10, ratified. A separate, narrower recipe layered on
+     gold-filled surfaces only (confirmed applied to
+     .cf-btn--primary via a .goldring class); not a replacement
+     for the global --focus-ring below and not in conflict with
+     it. The 3px ornament ring is the ruled value; an exhibit
+     annotation elsewhere naming "1px ornament" is a documentation
+     typo, not a competing value (Brian, 22 Aug 2026 law review). */
+  --focus-ring-ongold: 0 0 0 2px var(--canvas),
+                       0 0 0 3px var(--gold-ornament),
+                       0 0 0 6px rgba(224, 171, 94, .10);
+
+  /* --- DANGER FILL, modal confirm -----------------------------------------
+     B5, ratified as a new modal-confirm CTA recipe. Distinct from
+     --status-danger-bed (14 percent, chip use); this is a lighter
+     6 percent step for the confirm-step danger button only. */
+  --status-danger-fill: rgba(194, 99, 77, .06);
+
+  /* --- PANEL LIFT GRADIENT --------------------------------------------------
+     B3, ratified as a new surface-gradient token for modal panels,
+     superseding --surface-4 as the modal panel surface (propagated
+     through KitModalFrame). Name avoids the existing --grad-panel. */
+  --grad-panel-lift: linear-gradient(160deg, #332d22, #2a251d);
+
+  /* --- CREATION CARD GRADIENT ------------------------------------------------
+     B6, ratified as a token value; application scope (KitCreationCard
+     app-wide vs. editor-scoped) is F2, held for a Brian ruling. The
+     value mints here so it exists once F2 lands; no consumer wires
+     it in this pass. */
+  --grad-creation-card: linear-gradient(160deg, #241f16, #1b1711);
+
+  /* --- OPTION CARD REST FILL ---------------------------------------------------
+     B4, ratified as a scoped exception to the translucent-black-fill
+     ban, legal on option-card rest state only. The selected fill is
+     an exact match to the already-locked --fill-whisper and is not
+     duplicated here. */
+  --fill-option-rest: rgba(0, 0, 0, .22);
 }
 
 /* ============================================================
@@ -660,6 +803,23 @@
   --atm-hearth:    radial-gradient(760px 380px at 50% -12%, rgba(138,101,36,.12), transparent 66%);
   --atm-vault:     radial-gradient(120% 100% at 50% 50%, transparent 40%, rgba(72,58,30,.10) 100%);
   --atm-veil:      linear-gradient(180deg, rgba(138,101,36,.06), transparent 45%);
+
+  /* --- ED1F INTERIM LIGHT VALUES, RULED 22 Aug 2026 -------------
+     F1: every new visual token minted this pass declares the
+     same value in both themes until a real light-theme render
+     sitting rules one, the same precedent as the scrims-do-not-
+     flip family. Each row below is ALSO marked interim in its
+     docs/DESIGN-TOKENS.md row. */
+  --ink-typed:          #d9d3c6;
+  --fill-ghost:         rgba(242, 209, 148, .05);
+  --grad-card:          linear-gradient(160deg, #1a1610, #14110c);
+  --grad-rail:          linear-gradient(160deg, #16130d, #100d09);
+  --bed-deep:           #0d0b08;
+  --chrome-wash:        rgba(6, 4, 2, .62);
+  --panel-glass:        rgba(36, 32, 25, .85);
+  --grad-panel-lift:    linear-gradient(160deg, #332d22, #2a251d);
+  --grad-creation-card: linear-gradient(160deg, #241f16, #1b1711);
+  --fill-option-rest:   rgba(0, 0, 0, .22);
 }
 
 /* --- TYPE ASSIGNMENT CORRECTIONS ----------------------------

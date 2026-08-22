@@ -169,39 +169,14 @@
   box-shadow: var(--focus-ring);
 }
 
-/* Creator stops fields: same visible-on-focus law, a quieter mark. A
-   single 1px gold line beats the app-wide 4px ring's weight against the
-   modal's smaller, denser field grid, but never disappears. */
-.cf-field:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--gold-action);
-}
-
-/* Focus law, RULED 9 Aug 2026 (kit polish pass, docs/BUILD-BLUEPRINT.md
-   2.16(e)): the search field and every components/kit control keep a
-   subtler keyboard-only mark, a border brightening, never the
-   app-wide gold box; pointer interaction shows nothing extra. A 1px
-   line-strong outline (box-shadow, not border-color) so the mark
-   still reads against controls whose own border already sits at
-   --line-strong. Opt-in class so the app-wide rule above is
-   untouched everywhere else. */
-.kit-focus:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--line-strong);
-}
-
-/* Search field, RULED final 10 Aug 2026 (kit polish 3 pass): no gold
-   treatment in any state. Pointer interaction shows nothing; keyboard
-   focus-visible shows only the wrapper's own border brightening
-   (KitStudioFilterBar.view.jsx's has-[:focus-visible]:border-line-
-   strong). This class suppresses the app-wide gold ring on the input
-   element itself so nothing doubles up inside the wrapper's border.
-   Higher specificity than the app-wide rule above by design, so load
-   order never matters here. */
-.kit-search-input:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
+/* cf-field (quiet 1px gold field ring), kit-focus (border-brightening
+   opt-in), and the kit-search-input suppression rule all retired
+   22 Aug 2026 (A3, Fable law review, docs/BUILD-BLUEPRINT.md 2.16(e)
+   struck): the Gate 1 gold-ornament-border-plus-glow recipe ships as
+   the single global --focus-ring above, and every focusable control
+   app-wide, not only field beds, resolves through it. The dead
+   cf-field/kit-focus class attributes still present in JSX are
+   harmless and are swept in a later cleanup, not this pass. */
 
 /* The native type=search cancel/clear icon renders in the browser's
    own color (Chromium and Edge both draw it outside token law); it
@@ -372,14 +347,23 @@
   background-repeat: no-repeat;
   color: var(--tag-fill-ink);
 }
+/* Hover recipe RULED 22 Aug 2026 (B9, Fable law review): brightness
+   lift plus the existing glow, exact match to the ratified exhibit
+   recipe. The brightness literal stays a recipe literal per the
+   ruling, unless propagation finds a second consumer. */
 .cf-btn--primary:hover {
+  filter: brightness(1.08);
   box-shadow: var(--glow-hover);
 }
 
+/* Ghost weight 300 and the ghost fill bed RULED 22 Aug 2026 (A1,
+   Gate 2 token law row 3, Fable law review): --weight-light and
+   --fill-ghost replace the prior transparent/bold-inherited recipe. */
 .cf-btn--secondary {
-  background-color: transparent;
+  background-color: var(--fill-ghost);
   border-color: var(--line-strong);
   color: var(--gold-action);
+  font-weight: var(--weight-light);
 }
 .cf-btn--secondary:hover {
   border-color: var(--gold-action);
@@ -411,10 +395,16 @@
   box-shadow: var(--glow-hover);
 }
 
+/* Superseded 22 Aug 2026 (B5, Fable law review): the modal-confirm
+   danger CTA is now border AND fill AND ink, all --status-danger,
+   at the new 6 percent fill step, not a solid --status-danger fill
+   with --ink text. This is a new, modal-scoped recipe under the
+   existing class name; the in-page quiet-ghost danger trigger law
+   on .cf-btn--danger above is untouched. */
 .cf-btn--danger-filled {
-  background-color: var(--status-danger);
-  border-color: transparent;
-  color: var(--ink);
+  background-color: var(--status-danger-fill);
+  border-color: var(--status-danger);
+  color: var(--status-danger);
 }
 .cf-btn--danger-filled:hover {
   box-shadow: var(--glow-hover);
