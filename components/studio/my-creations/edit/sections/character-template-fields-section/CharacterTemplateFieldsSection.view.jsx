@@ -1,7 +1,7 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ReadOnlyField,
   SectionTitle,
+  SelectField,
   TextAreaField,
   TextField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -91,7 +91,7 @@ export default function CharacterTemplateFieldsSectionView({
       />
 
       {activeSection === "template" ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <TextField
             label={templateNameLabel}
             value={templateNameValue}
@@ -128,7 +128,7 @@ export default function CharacterTemplateFieldsSectionView({
       ) : null}
 
       {activeSection === "identity" ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <TextField
             label={defaultNameLabel}
             value={defaultNameValue}
@@ -141,14 +141,14 @@ export default function CharacterTemplateFieldsSectionView({
             onChange={(value) => onChangeDefaultTitle?.(value)}
           />
 
-          <CrestfallSelect
+          <SelectField
             label={speciesLabel}
             value={speciesValue}
             onChange={(value) => onSelectSpecies?.(value)}
             options={speciesOptions}
           />
 
-          <CrestfallSelect
+          <SelectField
             label={genderPresentationLabel}
             value={genderPresentationValue}
             onChange={(value) => onSelectGenderPresentation?.(value)}
@@ -162,7 +162,7 @@ export default function CharacterTemplateFieldsSectionView({
       ) : null}
 
       {activeSection === "appearance" ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {skinToneControl}
           {eyeColorControl}
           {hairColorControl}
@@ -179,7 +179,7 @@ export default function CharacterTemplateFieldsSectionView({
       ) : null}
 
       {activeSection === "body" ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {kibbePresetControl ? (
             <div className="md:col-span-2">{kibbePresetControl}</div>
           ) : null}
@@ -201,21 +201,26 @@ export default function CharacterTemplateFieldsSectionView({
       ) : null}
 
       {activeSection === "behavior" ? (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {outwardPersonalityControl}
           {internalPersonalityControl}
 
-          <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          {/* Section 5: no second bordered depth inside a box. The
+              inset-hairline sub-group pattern (same conversion as
+              Personality Frameworks/Template Operations) replaces
+              the bordered panel: inset hairline, tier 4 label, one
+              tier 7 helper line, then the field grid. */}
+          <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Optional Personality Frameworks
             </p>
-            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               These optional defaults provide soft narrative flavor when the
               composer needs more characterization. Explicit personality choices
               and creator guidance always take priority.
             </p>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div className="mt-[var(--space-4)] grid gap-[var(--space-4)] md:grid-cols-3">
               {mbtiControl}
               {westernZodiacControl}
               {eastAsianZodiacControl}
@@ -225,12 +230,12 @@ export default function CharacterTemplateFieldsSectionView({
           {speechStyleControl}
           {movementStyleControl}
 
-          <CrestfallSelect
+          <SelectField
             label={verbosityLabel}
             value={verbosityValue}
             onChange={(value) => onSelectVerbosity?.(value)}
             options={verbosityOptions}
-            description="Controls how talkative the character should be during scenes."
+            helperText="Controls how talkative the character should be during scenes."
           />
 
           {interestsControl}

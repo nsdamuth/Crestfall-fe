@@ -26,7 +26,7 @@ export default function CharacterBodySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <div className="md:col-span-2">{kibbePresetControl}</div>
 
         {bodyTypeControl}

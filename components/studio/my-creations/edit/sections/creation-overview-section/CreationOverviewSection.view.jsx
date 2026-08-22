@@ -16,7 +16,7 @@ export default function CreationOverviewSectionView({
   descriptionLabel = "Public Description",
   descriptionValue = "",
   descriptionPlaceholder = "",
-  previewButtonLabel = "Preview soon",
+  previewButtonLabel = "Preview",
   previewDisabled = true,
   onChangeTitle = null,
   onChangeDescription = null,
@@ -30,7 +30,7 @@ export default function CreationOverviewSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4">
+      <div className="grid gap-4">
         <TextField
           label={titleLabel}
           value={titleValue}
@@ -46,7 +46,7 @@ export default function CreationOverviewSectionView({
         />
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-[var(--space-4)] flex flex-wrap items-center gap-[var(--space-3)]">
         <button
           type="button"
           disabled={previewDisabled}
@@ -56,6 +56,13 @@ export default function CreationOverviewSectionView({
           <Eye size={14} />
           {previewButtonLabel}
         </button>
+        {/* 4.7 composed disabled recipe: the word "Soon" lives beside
+            the control as tier 8 meta, never baked into the label. */}
+        {previewDisabled ? (
+          <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+            Soon
+          </span>
+        ) : null}
       </div>
     </div>
   );

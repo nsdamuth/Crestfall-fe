@@ -47,7 +47,7 @@ export default function CharacterAdvancedSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="grid gap-[var(--space-4)]">
         <TextAreaField
           label={greetingLabel}
           value={greetingValue}

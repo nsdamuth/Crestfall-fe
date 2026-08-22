@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ActionPanel,
   SectionTitle,
+  SelectField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function getTemplateActionClassName(emphasis) {
@@ -25,14 +25,14 @@ function ConfirmableActionPanel({ title, body, button, disabled, onConfirm }) {
 
   if (armed) {
     return (
-      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-5">
-        <h3 className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">
+      <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           {title}
-        </h3>
-        <p className="mt-2 leading-7 text-[var(--ink-dim)]">
+        </p>
+        <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Are you sure? This confirms: {button}
         </p>
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-3)]">
           <button
             type="button"
             className="cf-btn cf-btn--primary"
@@ -99,7 +99,7 @@ function ConfirmableGhostAction({ label, disabled = false, onConfirm }) {
       type="button"
       disabled={disabled}
       onClick={() => setArmed(true)}
-      className="text-sm text-[var(--status-danger)] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-45"
+      className="cf-btn cf-btn--danger cf-btn--sm disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
     >
       {label}
     </button>
@@ -153,15 +153,15 @@ export default function CreationPublishingSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <CrestfallSelect
+      <div className="grid gap-4 md:grid-cols-2">
+        <SelectField
           label={visibilityLabel}
           value={visibilityValue}
           onChange={(value) => onSelectVisibility?.(value)}
           options={visibilityOptions}
         />
 
-        <CrestfallSelect
+        <SelectField
           label={contentRatingLabel}
           value={contentRatingValue}
           onChange={(value) => onSelectContentRating?.(value)}
@@ -169,32 +169,42 @@ export default function CreationPublishingSectionView({
         />
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-          {templateEyebrow}
+      {/* Section 5, "Template Operations" (D4): inset hairline, ONE
+          tier 4 label, one helper line, seated action row. The
+          separate eyebrow/display-title stack this used to render
+          (outranking the box's own header) collapses to a single
+          label; templateEyebrow stays an accepted prop for callers
+          that still pass it, unrendered here by design. */}
+      <div className="mt-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          {templateTitle}
         </p>
 
-        <h3 className="mt-2 font-display text-3xl">{templateTitle}</h3>
-
-        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
+        <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           {templateDescription}
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="mt-[var(--space-3)] flex flex-wrap items-center gap-[var(--space-3)]">
           {templateActions.map((action) => (
-            <button
-              key={action.id}
-              type="button"
-              disabled={action.disabled}
-              className={getTemplateActionClassName(action.emphasis)}
-            >
-              {action.label}
-            </button>
+            <span key={action.id} className="inline-flex items-center gap-[var(--space-2)]">
+              <button
+                type="button"
+                disabled={action.disabled}
+                className={getTemplateActionClassName(action.emphasis)}
+              >
+                {action.label}
+              </button>
+              {action.disabled ? (
+                <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+                  Soon
+                </span>
+              ) : null}
+            </span>
           ))}
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-4)] grid gap-4 md:grid-cols-2">
         <ConfirmableActionPanel
           title={publicReviewTitle}
           body={publicReviewDescription}
@@ -224,10 +234,10 @@ export default function CreationPublishingSectionView({
         <div className="md:col-span-2 flex flex-wrap items-center gap-4">
           {reviewMessage ? (
             <p
-              className={`text-sm ${
+              className={`text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
                 reviewMessageTone === "error"
-                  ? "text-red-200"
-                  : "text-emerald-200"
+                  ? "text-[var(--status-danger)]"
+                  : "text-[var(--status-success)]"
               }`}
             >
               {reviewMessage}

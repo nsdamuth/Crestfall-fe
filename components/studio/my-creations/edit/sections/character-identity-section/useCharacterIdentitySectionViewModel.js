@@ -38,6 +38,15 @@ export const CHARACTER_ROLE_ARCHETYPE_GROUPS = Object.freeze([
   "Sci-Fi",
 ]);
 
+// Terminology map (4.6, D8/F2): a raw data-layer enum never surfaces
+// to the screen. CHARACTER is this section's own value; the sibling
+// CHARACTER_TEMPLATE mapping mirrors the same map in
+// character-template-fields-section/useCharacterTemplateFieldsSectionViewModel.js.
+const CREATION_TYPE_LABELS = Object.freeze({
+  CHARACTER: "Character",
+  CHARACTER_TEMPLATE: "Character Template",
+});
+
 export function clampAdultCharacterAge(value) {
   if (value === null || value === undefined || value === "") return "";
 
@@ -82,7 +91,7 @@ export function getCharacterIdentitySectionViewProps({
     roleArchetypeOptions,
     roleArchetypeGroups: CHARACTER_ROLE_ARCHETYPE_GROUPS,
     roleArchetypeColumns: 3,
-    creationTypeValue: form?.type || "",
+    creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
     onChangeCharacterName: (value) => updateDataField?.("name", value),
     onChangeCharacterTitle: (value) => updateDataField?.("title", value),
     onSelectSpecies: (value) => updateDataField?.("species", value),

@@ -7,7 +7,7 @@ const DEFAULT_COPY = Object.freeze({
   descriptionLabel: "Public Description",
   descriptionPlaceholder:
     "Describe this creation for public or private viewing.",
-  previewButtonLabel: "Preview Soon",
+  previewButtonLabel: "Preview",
 });
 
 function normalizeText(value) {

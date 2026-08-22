@@ -27,7 +27,7 @@ const sharedCopy = {
   templateActions: [
     {
       id: "convert-to-template",
-      label: "Convert To Template Soon",
+      label: "Convert To Template",
       disabled: true,
       emphasis: "primary",
     },
@@ -67,13 +67,13 @@ export const creationPublishingSectionTemplateFixture = {
   templateActions: [
     {
       id: "duplicate-template",
-      label: "Duplicate Template Soon",
+      label: "Duplicate Template",
       disabled: true,
       emphasis: "secondary",
     },
     {
       id: "use-template",
-      label: "Use Template Soon",
+      label: "Use Template",
       disabled: true,
       emphasis: "secondary",
     },

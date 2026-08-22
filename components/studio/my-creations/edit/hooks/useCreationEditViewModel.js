@@ -88,14 +88,6 @@ export function useCreationEditViewModel({ creationId, creation }) {
 
   const [archiveStatus, setArchiveStatus] = useState("idle");
   const [archiveMessage, setArchiveMessage] = useState("");
-  // In-place arming (ED1E 5.4), RULED 22 Aug 2026 (ED1G SW1): delete
-  // and archive both route through a two-step arm/confirm state
-  // machine instead of window.confirm. The row-level swap UI (Danger
-  // Zone) reads these flags and drives armDelete/cancelDelete and
-  // armArchive/cancelArchive; calling handleDelete/handleArchive a
-  // second time while armed performs the destructive call.
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
-  const [isConfirmingArchive, setIsConfirmingArchive] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle");
   const [saveMessage, setSaveMessage] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -340,21 +332,15 @@ export function useCreationEditViewModel({ creationId, creation }) {
     }
   }
 
-  function armArchive() {
-    setIsConfirmingArchive(true);
-  }
-
-  function cancelArchive() {
-    setIsConfirmingArchive(false);
-  }
-
+  // In-place arming (ED1E 5.4), RULED 22 Aug 2026 (ED1G SW1, amended
+  // SW2): no window.confirm. handleArchive/handleDelete are plain
+  // executors; the row-level swap-to-Confirm/Cancel UI lives entirely
+  // in the caller (CreationDangerSection.view.jsx), the same local-
+  // arm-then-call-once pattern CreationPublishingSection's
+  // ConfirmableActionPanel already uses, so calling this function
+  // once always performs the action, never merely arms a second
+  // click.
   async function handleArchive() {
-    if (!isConfirmingArchive) {
-      setIsConfirmingArchive(true);
-      return;
-    }
-
-    setIsConfirmingArchive(false);
     setArchiveStatus("saving");
     setArchiveMessage("");
 
@@ -373,21 +359,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
     }
   }
 
-  function armDelete() {
-    setIsConfirmingDelete(true);
-  }
-
-  function cancelDelete() {
-    setIsConfirmingDelete(false);
-  }
-
   async function handleDelete() {
-    if (!isConfirmingDelete) {
-      setIsConfirmingDelete(true);
-      return;
-    }
-
-    setIsConfirmingDelete(false);
     setDeleteStatus("saving");
     setDeleteMessage("");
 
@@ -425,14 +397,8 @@ export function useCreationEditViewModel({ creationId, creation }) {
     handleUnlistForEditing,
     handleSubmitReview,
     handleArchive,
-    isConfirmingArchive,
-    armArchive,
-    cancelArchive,
     deleteStatus,
     deleteMessage,
     handleDelete,
-    isConfirmingDelete,
-    armDelete,
-    cancelDelete,
   };
 }
