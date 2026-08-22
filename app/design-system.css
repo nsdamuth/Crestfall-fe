@@ -171,12 +171,12 @@
 
 /* --- FOCUS ON GOLD, .goldring ----------------------------------
    B10, ratified 22 Aug 2026 (app/theme.css --focus-ring-ongold).
-   The ruled hook for the narrower on-gold focus recipe: any
-   gold-filled interactive surface (cf-btn--primary and other
-   gold-filled CTAs) opts in with this class so its focus-visible
-   state renders the ongold recipe instead of falling through to
-   the global --focus-ring above, which reads poorly against a
-   solid gold fill. Not a replacement for --focus-ring elsewhere. */
+   cf-btn--primary is the app's one gold-filled button recipe and
+   gets the ongold ring unconditionally, so every current and future
+   gold CTA is covered with no per-instance opt-in required. .goldring
+   remains as an explicit hook for any other gold-filled surface that
+   is not a cf-btn--primary. Neither replaces --focus-ring elsewhere. */
+.cf-btn--primary:focus-visible,
 .goldring:focus-visible {
   box-shadow: var(--focus-ring-ongold);
 }
