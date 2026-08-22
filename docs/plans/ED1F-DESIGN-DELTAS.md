@@ -88,29 +88,56 @@ family), rather than an unboxed full-bleed block.
 
 **Propagation targets:** `SharedFields.jsx` (`FIELD_BED_CLASS`), `KitFormField.view.jsx` (input bed).
 
-## DD-04, Focus treatment
+## DD-04, Focus treatment, CLOSED as the single global focus recipe
 
-**Family:** field grammar, intersects the standing focus-law conflict.
+**Family:** field grammar, closes the standing four-way focus-law conflict.
 
-**Ruling basis:** Brian, ratified Gate 1 spec list, 21 Aug 2026.
+**Ruling basis:** Brian, ratified Gate 1 spec list, 21 Aug 2026; CLOSED by Brian's conflict ruling, 22 Aug 2026.
 
-**The change:** on focus, the field bed border becomes `--gold-ornament` with a 10% glow (dimmed from the full action-gold treatment), and the label warms (shifts toward a brighter ink/gold value) on focus.
+**The change:** on focus, the field bed border becomes `--gold-ornament`
+with a glow (dimmed from the full action-gold treatment), and the label
+warms (shifts toward a brighter ink/gold value) on focus. Brian's 22
+Aug ruling promotes this recipe from a field-grammar pattern to **the
+single global focus treatment for the entire app**: it replaces the
+existing `--focus-ring` token's own recipe, and retires the kit-focus
+border-brightening pattern. The token NAME stays `--focus-ring`, so
+every surface already wired to it inherits the new recipe with no
+call-site rename; only the value behind the name changes.
 
 **Checkable conditions:**
-- Focused field bed border color is `--gold-ornament`, not `--gold-action`.
-- A glow effect accompanies the border at focus, distinct from the border itself.
-- The label's ink value visibly shifts (warms) when its field is focused, and returns to `--ink-faint` on blur.
+- `--focus-ring` resolves to the `--gold-ornament`-border-plus-glow recipe (exact value below) everywhere it is used, not the prior two-ring box-shadow recipe.
+- Every focusable surface in the app (buttons, chips, nav rows, cards, field beds, not field beds alone) renders this one recipe, with no second focus treatment competing anywhere.
+- The kit-focus law's `--line-strong` border-brightening pattern no longer renders on focus anywhere it previously did.
+- A focused field bed's label ink still visibly warms (shifts toward a brighter ink/gold value) and returns to `--ink-faint` on blur; this label-warm behavior is field-specific and is NOT part of the global ring recipe itself (see the open gap below).
 
 **Token mapping:**
-- Border color `--gold-ornament` (`#C9A86A`): existing locked token, confirmed usage.
-- "10% glow": not confirmed against an existing glow token (`--glow-hover`/`--glow-ambient` values not verified at exactly 10%). **Flag for verification, candidate if unmatched.**
-- "Label warms" target ink value: **not specified** in the ratified spec beyond "warms"; needs a named token (likely `--gold-bright` or `--ink`) before this is checkable in code. **Flag as an open specification gap**, not a candidate yet.
+- `--focus-ring` (revised value): border `--gold-ornament` (`#C9A86A`, existing locked token) plus a glow. DD-22's device ruling supplied a concrete glow value for the same recipe, `0 0 0 3px rgba(224,171,94,.10)` (that rgba triplet is `--gold-action`'s, not `--gold-ornament`'s: border and glow are two different golds layered together, not one color at two opacities). This is a REVISION to an existing locked token's value, same category as DD-13's `--status-success` revision, not a new candidate name.
+- "Label warms" target ink value: still **not specified** beyond "warms"; DD-04's original open specification gap is NOT closed by this ruling, since the 22 Aug ruling addresses the ring/border treatment, not the label's own ink shift. Needs a named token (likely `--gold-bright` or `--ink`) before it is checkable in code.
 
-**This is NOT a standalone new pattern, it is a fourth competing focus treatment on top of three already on file:** the global `--focus-ring` (documented as "the ONLY focus token, wired globally"), the kit-focus law (subtle `--line-strong` border brightening, no gold box), and ED1E's own quiet-field-ring recipe (`cf-field`, 1px `--gold-action`). This entry does not resolve that conflict; it adds a new candidate to it. **Escalate for a single reconciling ruling before propagation**, per the standing rule that a law conflict is a bug, never resolved locally.
+**RESOLVED, closing the four-way conflict:** the 22 Aug ruling states
+plainly "there is one focus language, not two." All three competitors
+this entry originally flagged are superseded: the prior `--focus-ring`
+recipe (value replaced, name kept), the kit-focus border-brightening
+law (retired outright, named explicitly in the ruling), and ED1E's
+quiet-field-ring recipe (`cf-field`, 1px `--gold-action`, not named
+explicitly in the ruling text but covered by "the four-way conflict is
+closed by this ruling" and by "one focus language, not two"). No
+further escalation is open on this entry.
 
 **Contract impact:** none structural.
 
-**Propagation targets:** `SharedFields.jsx`, `KitFormField.view.jsx`, `app/design-system.css` (once the focus-law conflict is reconciled).
+**Propagation requirement, carried forward per the ruling:** the ring
+must be verified legible on every surface depth it can land on, not
+only field beds. The propagation pass must contrast-check the
+`--gold-ornament`-plus-glow recipe against buttons, chips, nav rows,
+and cards at their real rendered surfaces (which span `--surface-1`
+through `--surface-4` and the new gradient card/rail surfaces from
+DD-20), not assume the field-bed check covers every case.
+
+**Propagation targets:** `app/theme.css` (`--focus-ring` value
+revision), every existing consumer of `--focus-ring` app-wide (not
+scoped to the editor), the kit-focus law's own component(s) (removal),
+`SharedFields.jsx`, `KitFormField.view.jsx`.
 
 ## DD-05, Field-level error treatment
 
@@ -176,6 +203,14 @@ family), rather than an unboxed full-bleed block.
 **Contract impact:** none structural; a control at the new 28px step may need a `size` prop added where none exists today; flag per-component during propagation.
 
 **Propagation targets:** button/chip recipes across the kit (`.cf-btn` family in `app/design-system.css`), `KitFilterChip.view.jsx`, `SharedFields.jsx` field-adjacent controls.
+
+**AMENDED by Brian's conflict ruling, 22 Aug 2026:** ghost button text
+weight is **300**, not `--weight-regular` (400) as ratified above.
+Gate 2's token-law table (DD-18) is not a second, unresolved value; it
+supersedes this entry's original 400. The checkable condition and
+token-mapping lines above are superseded by this note, not deleted, to
+keep the ruling history intact; DD-18 carries the resolved value
+forward for propagation.
 
 ## DD-08, Zone and surface treatment
 
@@ -317,18 +352,18 @@ uses the 12px chrome strength, not the 2px panel strength.
 **Checkable conditions:**
 - Sticky nav background is a near-black translucent wash at approximately 62% opacity, with a 12px backdrop blur behind it.
 - The mobile save row (DD-11) carries the same wash and blur treatment.
-- Floating panels (modals, menus, popovers) keep the existing 2px blur, unchanged.
-- Tooltip glass renders at 12px blur, not 2px.
+- Floating panels (modals, menus, popovers) keep the existing 2px blur (`--blur-panel`), unchanged.
+- Tooltip glass renders at 12px blur via its own `--blur-glass` token, never via `--blur-chrome` or `--blur-panel`.
 
 **Token mapping:**
 - 12px chrome blur: matches `--blur-chrome` exactly, existing locked token (minted 8 Aug 2026 at the create-hub topbar value). This ruling extends its documented scope ("persistent chrome only, sticky top bars") to the editor's sticky nav and, new, to the mobile save row. Broadened usage, not a new token.
 - 2px panel blur: matches `--blur-panel` exactly, existing locked token, confirms current scope (floating panels).
 - Dark wash at approximately 62%: **TOKEN CANDIDATE.** `rgba(6,4,2,.62)` does not match `--scrim` (`rgba(0,0,0,.40)`) or `--scrim-strong` (`rgba(0,0,0,.70)`): different base color (a near-canvas warm black, not pure black) and a distinct alpha from both. Record as a candidate, `--chrome-wash`.
-- Tooltip glass at 12px: **FLAG, not resolved here.** `app/theme.css`'s own comment on `--blur-chrome` reads "never a floating panel." A tooltip is a floating surface. Applying the chrome strength there either means tooltip glass is a deliberate, documented exception, or `--blur-chrome`'s law needs rewriting to permit it. The ruling itself defers this ("folded into the blur-law update"); this entry records the conflict rather than resolving it.
+- Tooltip glass at 12px: **RESOLVED by Brian's conflict ruling, 22 Aug 2026.** `--blur-chrome`'s scope is NOT extended to tooltips. A new token, `--blur-glass`, is minted at 12px with a legal scope of tooltips only. The blur law now has three tokens, three scopes, no cross-borrowing: `--blur-chrome` (sticky nav), `--blur-panel` (overlay panels, 2px), `--blur-glass` (tooltips, 12px, new). `app/theme.css`'s "never a floating panel" comment on `--blur-chrome` stays true and unmodified; tooltips get their own name instead of an exception carved into `--blur-chrome`'s law.
 
 **Contract impact:** none structural.
 
-**Propagation targets:** `app/theme.css` (`--chrome-wash` candidate, `--blur-chrome` scope note), `Editor.view.jsx` (sticky nav, mobile save row), tooltip component once built (CR-047).
+**Propagation targets:** `app/theme.css` (`--chrome-wash` candidate, `--blur-glass` new token), `Editor.view.jsx` (sticky nav, mobile save row), tooltip component once built (CR-047, now with a named blur token to build against).
 
 ## DD-13, Saved state: synchronized P2 morph, sage success hue
 
@@ -473,9 +508,9 @@ system rather than sitting as unresolved candidates.
 
 **Propagation targets:** wherever `next/font` loads Inter (weight 300 must be requested), `SharedFields.jsx` / `KitFormField.view.jsx` (input bed).
 
-## DD-18, Ghost fill and button weight recipe, WITH A LAW CONFLICT
+## DD-18, Ghost fill and button weight recipe, CONFLICT RESOLVED
 
-**Family:** cross-cutting (buttons, chips). Advances CR-053; flags a conflict inside the same ruling set.
+**Family:** cross-cutting (buttons, chips). Advances CR-053; the conflict this entry originally flagged is closed.
 
 **Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 3 and 5).
 
@@ -486,24 +521,23 @@ buttons and interactive chips is ratified with a name. Separately, the
 **Checkable conditions:**
 - Ghost buttons, trait chips, and quiet interactive surfaces at rest use `--fill-ghost`, not `--fill-whisper` or `--fill`.
 - Primary CTA text renders at `--weight-medium` (500).
-- Ghost button text renders at the weight this entry's conflict (below) resolves to, once resolved.
+- Ghost button text renders at weight **300**, not `--weight-regular` (400).
 
 **Token mapping:**
 - `--fill-ghost`: `rgba(242,209,148,.05)`. Genuinely distinct from `--fill-whisper` (`rgba(242,209,148,.06)`) despite sitting only one point of alpha apart; do not treat these as interchangeable or as the same token under two names. Confirms and names DD-07's candidate.
 - Primary weight 500: matches `--weight-medium` exactly, existing locked token, confirmed.
+- Ghost weight 300: shares the same literal weight DD-17 added to the font pipeline for typed field text. Whether it gets its own `--weight-light` alias or stays a literal 300 referenced from both call sites is still a naming decision for the propagation pass; the VALUE is no longer in question.
 
-**CONFLICT, not resolved by this capture:** Gate 1's own ratified
-grammar (this file's DD-07, and the Gate 1 GATE-LOG's own summary
-line) states ghost button text weight is `--weight-regular` (400). The
-Gate 2 TOKEN LAW table, in the same ruling session, states the
-`.cf-btn` ghost recipe is weight 300, the same new weight DD-17 just
-added for field text. These cannot both be law. Per the standing rule
-that a law conflict is a bug, never resolved locally, this needs a
-single reconciling ruling (400, unifying with DD-07 as recorded, or
-300, unifying with DD-17's new weight) before either value propagates
-into `.cf-btn--secondary`.
+**RESOLVED by Brian's conflict ruling, 22 Aug 2026:** Gate 1's own
+ratified grammar (this file's DD-07, and the Gate 1 GATE-LOG's own
+summary line) stated ghost button text weight is `--weight-regular`
+(400). Gate 2's TOKEN LAW table, ratified in the same 21 Aug session,
+stated the `.cf-btn` ghost recipe is weight 300. Brian's ruling: **300
+governs.** Gate 2's ratification supersedes Gate 1's 400 outright.
+DD-07 is amended in place to record this; no further reconciliation is
+open on this value.
 
-**Contract impact:** none structural, pending the conflict above.
+**Contract impact:** none structural.
 
 **Propagation targets:** `app/design-system.css` (`.cf-btn` family; its base rule reads `--weight-bold` today, itself superseded by DD-07/this entry regardless of which ghost weight wins), `KitFilterChip.view.jsx`, `SharedFields.jsx` field-adjacent controls.
 
@@ -577,44 +611,43 @@ not sidebar separators alone.
 
 **Propagation targets:** `app/theme.css` (new token), `StudioSidebar.view.jsx` (separators), `Editor.view.jsx` (card headers, rail progress rules).
 
-## DD-22, Chrome wash and panel glass named; editor focus ring scoped
+## DD-22, Chrome wash and panel glass named; focus ring superseded by DD-04
 
 **Family:** cross-cutting chrome and focus, extends DD-04 and DD-12.
 
-**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 10, 11, and 12).
+**Ruling basis:** Brian, ratified token table, 21 Aug 2026, Gate 2 close ("TOKEN LAW" rows 10, 11, and 12); the focus portion (row 12) is SUPERSEDED by Brian's conflict ruling, 22 Aug 2026, see DD-04.
 
 **The change:** the chrome-wash and glass-panel background values DD-12
-left as candidates are named. The focus glow DD-04 flagged as
-unspecified now has a concrete value, scoped explicitly to the editor
-rather than replacing the global focus ring.
+left as candidates are named. The focus glow this pass originally
+named `--focus-ring-editor`, scoped to the editor, is NOT shipped
+under that name: Brian's 22 Aug ruling makes the same gold-ornament
+recipe the single global `--focus-ring`, so a second, editor-scoped
+focus token would contradict "one focus language, not two." The
+recipe itself survives and propagates, under the global name; see
+DD-04 for the closing ruling and the exact revised `--focus-ring`
+value.
 
 **Checkable conditions:**
 - Sticky chrome and the mobile save row (DD-11, DD-12) use `--chrome-wash` as their background.
 - Glass-style floating panels use `--panel-glass` as their background, paired with `--blur-panel`.
-- A focused field bed's border is `--gold-ornament` with an added glow at `0 0 0 3px rgba(224,171,94,.10)`.
+- No `--focus-ring-editor` token exists anywhere in the codebase; focused surfaces everywhere, including field beds, resolve through `--focus-ring` (see DD-04).
 
 **Token mapping:**
 - `--chrome-wash`: `rgba(6,4,2,.62)`. Confirms DD-12's candidate exactly; ratified with this name.
 - `--panel-glass`: `rgba(36,32,25,.85)`. **TOKEN CANDIDATE**, genuinely new: closest existing value is `--surface-4` (`#2c271e`, i.e. `rgb(44,39,30)`), which this does not match (different rgb triplet, and this one is a translucent overlay value, not a flat surface color).
-- `--focus-ring-editor`: border `--gold-ornament` plus glow `0 0 0 3px rgba(224,171,94,.10)`. Note the glow color is `rgba(224,171,94)`, which is `--gold-action`'s rgb triplet, not `--gold-ornament`'s (`201,168,106`): the border and the glow are two different golds layered together, not one color at two opacities. Record precisely, do not simplify to a single gold.
+- Focus recipe (border `--gold-ornament` plus glow `0 0 0 3px rgba(224,171,94,.10)`): retired as a candidate named `--focus-ring-editor` in this entry; carried forward instead as the revised value of the global `--focus-ring` token. See DD-04's token mapping for the full note on the two different golds layered in that recipe.
 
 **Contract impact:** none structural.
 
-**Propagation targets:** `app/theme.css` (three tokens), `Editor.view.jsx` (sticky nav, save row), `SharedFields.jsx` / `KitFormField.view.jsx` (focus state).
+**Propagation targets:** `app/theme.css` (`--chrome-wash`, `--panel-glass`; `--focus-ring`'s value per DD-04, not a third token here), `Editor.view.jsx` (sticky nav, save row).
 
-**Escalation status update, not closed:** DD-04 flagged a four-way
-conflict across the global `--focus-ring`, the kit-focus law, ED1E's
-quiet-field-ring, and Gate 1's own gold-ornament-glow recipe, and asked
-for one reconciling ruling before propagation. Naming this pass's value
-`--focus-ring-editor` (an editor-scoped token, distinct from the global
-name) reads as an attempt to scope the conflict away rather than
-resolve it: it does not state whether the kit-focus law and ED1E's
-quiet-field-ring still apply anywhere inside the editor now that
-`--focus-ring-editor` exists, or whether `--focus-ring-editor`
-supersedes both of them wherever it is used. Still needs the single
-reconciling ruling DD-04 asked for; this entry narrows the question
-(which of four wins inside the editor specifically) without answering
-it.
+**Escalation CLOSED, 22 Aug 2026:** DD-04's four-way focus conflict
+(global `--focus-ring`, kit-focus law, ED1E's quiet-field-ring, and
+this gate's gold-ornament-glow recipe) is resolved by Brian's ruling:
+the gold-ornament recipe wins, ships under the existing `--focus-ring`
+name, and the other three are retired. See DD-04 for the full closing
+note and the propagation-wide contrast-verification requirement that
+comes with it.
 
 ## Summary: Gate 2 and device-ruling additions
 
@@ -630,16 +663,27 @@ in `app/theme.css`):
 17. Rail-specific gradient, `--grad-rail`, `#16130d` to `#100d09`, split from the card/hero gradient (DD-20).
 18. Chrome wash, `--chrome-wash`, `rgba(6,4,2,.62)` (DD-12, DD-22).
 19. Glass panel background, `--panel-glass`, `rgba(36,32,25,.85)` (DD-22).
+20. Tooltip blur, `--blur-glass` = 12px, legal scope tooltips only, RATIFIED not a candidate (DD-12, Brian's 22 Aug conflict ruling). Completes the three-token blur law: `--blur-chrome` (sticky nav), `--blur-panel` (overlay panels, 2px), `--blur-glass` (tooltips).
 
-One existing locked token flagged for a REVISED value, not a new
-candidate: `--status-success`, from `#7D9B6A` to `oklch(.76 .08 135)`
-(DD-13, closes CR-051).
+Two existing locked tokens flagged for a REVISED value, not a new
+candidate:
 
-Escalations open at the close of this capture pass:
+- `--status-success`, from `#7D9B6A` to `oklch(.76 .08 135)` (DD-13, closes CR-051).
+- `--focus-ring`, from the two-ring box-shadow recipe (`0 0 0 2px var(--canvas), 0 0 0 4px var(--gold-ornament)`) to the gold-ornament-border-plus-glow recipe (DD-04, Brian's 22 Aug conflict ruling, closes the four-way focus conflict).
 
-- **DD-04's four-way focus conflict**, narrowed but not resolved by `--focus-ring-editor` (DD-22).
-- **New conflict, DD-18:** Gate 1's ratified ghost-button weight (400, DD-07) contradicts the Gate 2 token-law table's restated recipe (300). One reconciling ruling needed before `.cf-btn--secondary` changes.
-- **DD-12's tooltip-blur scope:** using `--blur-chrome`'s 12px strength for tooltip glass sits against that token's own documented law ("never a floating panel"); the ruling itself defers this to "the blur-law update," not yet written.
+One value resolved without a new token name: ghost button text weight
+is **300**, not the `--weight-regular` (400) this file originally
+ratified in DD-07; Gate 2's ratification supersedes Gate 1's, per
+Brian's 22 Aug ruling (DD-07, DD-18).
+
+Escalations closed by Brian's conflict ruling, 22 Aug 2026:
+
+- **DD-04's four-way focus conflict**, CLOSED: the gold-ornament recipe becomes the single global `--focus-ring`, kit-focus and ED1E's quiet-field-ring retire. Propagation must contrast-verify the new recipe on buttons, chips, nav rows, and cards, not only field beds.
+- **DD-18's ghost-button weight conflict**, CLOSED: 300 governs, DD-07 amended.
+- **DD-12's tooltip-blur scope**, CLOSED: `--blur-glass` minted at 12px, tooltips only, no borrowing from `--blur-chrome`.
+
+Escalations still open at the close of this capture pass:
+
 - **DD-16's elevation-law text:** `--shadow-bed` is now named law, but `app/theme.css`'s ELEVATION comment block still reads as a blanket border-only rule with no stated field-bed exception.
 - **DD-15 item 3 (Legacy section hidden):** still needs its own contract-level mechanism decision (prop vs. data omission), not just a keep/revert call.
 - **DD-15 item 6 (economy fixture):** still open, pending the StudioEconomyWidget ground-truth scope decision.
