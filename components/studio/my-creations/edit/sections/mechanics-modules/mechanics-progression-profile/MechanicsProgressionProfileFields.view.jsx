@@ -184,7 +184,7 @@ function DerivedValueCard({
       </div>
 
       {rule.method === "EXPLICIT_TABLE" ? (
-        <p className="mt-4 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
+        <p className="mt-4 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit derived-value tables remain available through the JSON Editor.
           Generated interval and linear rules are the compact visual-authoring paths.
         </p>
