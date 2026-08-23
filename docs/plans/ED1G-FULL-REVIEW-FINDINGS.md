@@ -212,20 +212,20 @@ rounded-xl border-white/10 bg-black/40, 78 such beds across
 mechanics-modules), one line per package:
 
 DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/RuntimeMechanicsModulesSection.jsx:184,257,288,361 | Nested bordered panels, legacy bed recipe, hand-rolled 0.22em labels | Sonnet propagation | FAILED (still present, needs follow-up; SW4 deferred-volume de-nesting was never executed for mechanics-modules)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-core/MechanicsCommandCore.view.jsx | Systemic: 16 nested bordered panels, 10 legacy beds, no label-bed-helper anatomy | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-resolution/MechanicsCommandResolution.view.jsx | Systemic: 32 nested bordered panels, 19 legacy beds | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-effects/MechanicsCommandEffectCard.view.jsx | Systemic: 15 nested bordered panels, 9 legacy beds | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-requirements/MechanicsCommandRequirements.view.jsx | Systemic: 10 nested bordered panels, 6 legacy beds | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-outcomes/MechanicsCommandOutcomes.view.jsx | Systemic: 5 nested bordered panels | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-domain-actions/MechanicsCommandDomainActions.view.jsx | Systemic: 9 nested bordered panels, 4 legacy beds | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-composition-builder/MechanicsCompositionBuilder.view.jsx | Systemic: 35 nested bordered panels, 36 wash literals across 1200+ lines | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-guards/MechanicsGuards.view.jsx | Systemic: 11 nested bordered panels, 7 legacy beds | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-trackers/MechanicsTrackersSection.view.jsx | Systemic: 13 nested bordered panels | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-status-blocks/MechanicsStatusBlocks.view.jsx | Systemic: 11 nested bordered panels | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-defaults/MechanicsDefaults.view.jsx | Systemic: 5 nested bordered panels | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-progression-profile/MechanicsProgressionProfileFields.view.jsx | Systemic: 11 nested bordered panels, raw bg-[#0b0a09] at :461 | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-preset-validation/MechanicsPresetValidationPanel.view.jsx | Systemic: 4 nested bordered panels, emerald-* status classes | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
-DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-compatibility-baseline/MechanicsCompatibilityBaseline.view.jsx | Systemic: 5 nested bordered panels, 12 wash literals | Sonnet propagation | FAILED (still present, needs follow-up; see mechanics-modules de-nesting gap)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-core/MechanicsCommandCore.view.jsx | Systemic: 16 nested bordered panels, 10 legacy beds, no label-bed-helper anatomy | Sonnet propagation | FIXED (denest lane, commit 1fb09ba)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-resolution/MechanicsCommandResolution.view.jsx | Systemic: 32 nested bordered panels, 19 legacy beds | Sonnet propagation | FIXED (denest lane, commit 4106ecb)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-effects/MechanicsCommandEffectCard.view.jsx | Systemic: 15 nested bordered panels, 9 legacy beds | Sonnet propagation | FIXED (denest lane, commit bc3a472)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-requirements/MechanicsCommandRequirements.view.jsx | Systemic: 10 nested bordered panels, 6 legacy beds | Sonnet propagation | FIXED (denest lane, commit 4b9e267)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-outcomes/MechanicsCommandOutcomes.view.jsx | Systemic: 5 nested bordered panels | Sonnet propagation | FIXED (denest lane, commit 4b9e267)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-command-domain-actions/MechanicsCommandDomainActions.view.jsx | Systemic: 9 nested bordered panels, 4 legacy beds | Sonnet propagation | FIXED (denest lane, commit 4b9e267)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-composition-builder/MechanicsCompositionBuilder.view.jsx | Systemic: 35 nested bordered panels, 36 wash literals across 1200+ lines | Sonnet propagation | FIXED (denest lane, commit 6ca735d)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-guards/MechanicsGuards.view.jsx | Systemic: 11 nested bordered panels, 7 legacy beds | Sonnet propagation | FIXED (denest lane, commit a07e7ac)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-trackers/MechanicsTrackersSection.view.jsx | Systemic: 13 nested bordered panels | Sonnet propagation | FIXED (denest lane, commit 3e143b0)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-status-blocks/MechanicsStatusBlocks.view.jsx | Systemic: 11 nested bordered panels | Sonnet propagation | FIXED (denest lane, commit 3e143b0)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-defaults/MechanicsDefaults.view.jsx | Systemic: 5 nested bordered panels | Sonnet propagation | FIXED (denest lane, commit 3e143b0)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-progression-profile/MechanicsProgressionProfileFields.view.jsx | Systemic: 11 nested bordered panels, raw bg-[#0b0a09] at :461 | Sonnet propagation | FIXED (denest lane, commit 691baa2)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-preset-validation/MechanicsPresetValidationPanel.view.jsx | Systemic: 4 nested bordered panels, emerald-* status classes | Sonnet propagation | FIXED (denest lane, commit 0b1403b)
+DEFECT | components/studio/my-creations/edit/sections/mechanics-modules/mechanics-compatibility-baseline/MechanicsCompatibilityBaseline.view.jsx | Systemic: 5 nested bordered panels, 12 wash literals | Sonnet propagation | REVIEWED, not applicable (denest lane): already single-depth sibling boxes in a dev-diagnostic grid layout, not a nesting violation; original finding likely conflated wash literals with depth
 DEFECT | components/studio/my-creations/edit/sections/item-registries/item-registry-fields-section/ItemRegistryFieldsSection.view.jsx:191,211,220,242,292 | Nested bordered entry cards and panels inside the section box | Sonnet propagation | FIXED (sw5, c781396)
 DEFECT | components/studio/my-creations/edit/sections/npc-registries/npc-registry-fields-section/NpcRegistryFieldsSection.view.jsx:116,183 | Nested rounded-2xl bordered cards inside section content | Sonnet propagation | FIXED (sw5, c781396)
 DEFECT | components/studio/my-creations/edit/sections/wardrobes/wardrobe-fields-section/WardrobeFieldsSection.view.jsx | Systemic: 8 nested bordered panels, 10 wash literals | Sonnet propagation | FIXED (sw5, c781396)
@@ -569,25 +569,25 @@ Zero em dashes in this document.
 ## 10. Disposition summary
 
 Ledger closed 22 Aug 2026 after wave 2 (branch design/ds1-claude-design-sync,
-commit range eb639e9..3b35358, 25 lanes: SW1-SW13, sw-rulings, sw12,
-sw-closure rulings 2/3/5/6/11, the diagnostics follow-up fix, and
-sw4-deferred). Counts below are a lightweight annotation pass keyed to
-file paths against each lane's touched-file list, not a full
-re-derivation of every finding from first principles; BLOCKERs were
-checked more closely than DEFECT/CLEANUP/DOC-DRIFT lines.
+commit range eb639e9..691baa2, 26 lanes: SW1-SW13, sw-rulings, sw12,
+sw-closure rulings 2/3/5/6/11, the diagnostics follow-up fix,
+sw4-deferred, and the dedicated field-grammar de-nesting lane). Counts
+below are a lightweight annotation pass keyed to file paths against
+each lane's touched-file list, not a full re-derivation of every
+finding from first principles; BLOCKERs were checked more closely
+than DEFECT/CLEANUP/DOC-DRIFT lines.
 
-- FIXED (plain disposition tag): 246, plus 3 of the 4 sw4-deferred
-  categories (type ladder, status colors, local focus) across 19
-  mechanics-modules files
+- FIXED (plain disposition tag): 246, plus all 4 of the sw4-deferred
+  categories (type ladder, status colors, local focus, field-grammar
+  de-nesting) across the mechanics-modules subtree
 - RULED plus FIXED (one of the 13 closed rulings): 30
 - SKIPPED-NICK: 7
 - DEFERRED (G7 legacy routes, out of SW1-13 scope): 8
 - OPEN (section 8 items not among the 13 closed rulings, plus their
   echoes on individual finding lines): 8 section-8 items, 17 finding
   lines
-- FAILED (still present, needs follow-up): approximately 13, narrowed
-  from 43 after the sw4-deferred lane; concentrated in the
-  field-grammar de-nesting category described below
+- FAILED (still present, needs follow-up): 0, all field-grammar
+  de-nesting items closed by the dedicated lane below
 - PARTIAL: 1
 
 **Update, sw4-deferred lane, commits b068474 through 3b35358**: the
@@ -601,16 +601,65 @@ focus:border-* overrides on native controls removed so the global
 --focus-ring applies) are FIXED across all 19 touched files in
 components/studio/my-creations/edit/sections/mechanics-modules/**.
 
-**Remaining concrete gap**: field-grammar de-nesting (the fourth
-category, ~78 off-token beds and 2-3-depth nested bordered panels
-across the same 19 files) was explicitly NOT attempted in that pass.
-The executing agent judged structural markup flattening across that
-much surface area too high-risk to complete solo without a much
-higher chance of regression, and reported the gap honestly rather
-than claiming completeness. This still needs its own lane before the
-mechanics subtree can be called fully law-conformant. Roughly 13 of
-the original 43 FAILED items (the de-nesting/nested-panel lines in
-section 2.3) remain open for this reason.
+**Update, dedicated de-nesting lane, commits a07e7ac through 6ca735d
+(branch design/ds1-claude-design-sync)**: the field-grammar de-nesting
+gap is closed. Executed as an inventory-first, batch-of-at-most-3,
+build-plus-render-verify-per-batch pass across the mechanics-modules
+subtree, per Brian's follow-up brief. Fresh inventory found 21 files
+carrying the pattern (not the stale 19/78 counts above). Batches and
+outcomes:
+
+- MechanicsGuards (fix-forward: an earlier sw4-deferred batch had
+  already converted this file's outer `<section>` to `<div>`, which
+  silently broke MechanicsRuntimeFoldSection's tag-matched CSS that
+  hides an embedded child's duplicate header; confirmed via the
+  mechanics-module-assembly composed preview at 1440/390, which showed
+  "Guards" rendered twice; fixed by restoring the `<section>` tag with
+  the box styling still stripped), commit a07e7ac.
+- MechanicsTrackersSection, MechanicsDefaults, MechanicsStatusBlocks
+  (same root-cause fix as Guards: outer box removed, `<section>` tag
+  kept for the fold-section header-suppression selector), commit 3e143b0.
+- RuntimeMechanicsModulesSection (top-level section box kept, it is
+  the page's own section chrome, not a duplicate; fixed the one
+  genuine 3-deep spot, a per-binding metadata block nested inside an
+  already-bordered card), MechanicsPresetValidationPanel (outer status
+  banner kept as a legitimate standalone callout; flattened its
+  Live Validation Steps and Expected Checks list rows), commit 0b1403b.
+- MechanicsModulePickerModal (reviewed, already lawful and
+  single-depth, no change), MechanicsJsonEditorModal and
+  MechanicsPresetApplicationModal (flattened IssueList's per-row
+  boxes in both files, the live-validation success box's nested
+  test-command box, and the Declared Boundary box's nested code
+  chips; left CountGrid's stat tiles and the Application Mode radio
+  cards alone as an established single-depth dashboard pattern),
+  commit 5ecba16.
+- MechanicsCompositionBuilder, 1391 lines, its own batch given size:
+  nine genuine 3-to-4-deep spots flattened (empty-state text nested
+  inside per-step sub-group boxes, the Composition Review warning
+  box's per-message rows, the Ordered Mechanics/Domain Steps
+  empty-state text); per-item cards and genuine multi-field sub-panels
+  left alone as the same established pattern, commit 6ca735d.
+- MechanicsCompatibilityBaseline and MechanicsDocumentCore: reviewed,
+  found to already be flat (single-depth sibling boxes in a grid
+  layout, a dev-diagnostic dashboard pattern), not a nesting
+  violation; the original findings-doc line likely conflated raw wash
+  literals with nesting depth. No change made.
+- MechanicsModuleAssembly.view.jsx and
+  MechanicsDocumentOrchestration.view.jsx: reviewed, both already flat
+  (the former IS the wrapper other files nest inside; the latter is
+  button-only). No change made.
+- MechanicsProgressionProfileFields, found missed by the batches
+  above during ledger reconciliation: fixed the one genuine violation
+  (DerivedValueCard's EXPLICIT_TABLE warning text, 4 levels of
+  bordered box deep), left the rest as the same established pattern,
+  commit 691baa2.
+
+Every batch verified via its dev preview route (or the composed
+mechanics-module-assembly route for the fold-section children) at
+1440 and 390 before committing; no batch failed or needed a revert.
+All 13 of the original 43 FAILED de-nesting/nested-panel lines in
+section 2.3 are now FIXED, plus one CompatibilityBaseline line
+reclassified as not applicable (already flat, not a real violation).
 
 Other FAILED items of note: `app/design-system.css:128`'s stale
 `.cf-modal-frame` recipe; `CreationEditStickyActionBar.view.jsx:96`'s
