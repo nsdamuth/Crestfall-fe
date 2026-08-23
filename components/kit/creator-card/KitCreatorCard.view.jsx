@@ -3,6 +3,48 @@ import { Bookmark, Play, Users } from "lucide-react";
 const STAT_ICONS = { plays: Play, followers: Users, works: Bookmark };
 const STAT_ORDER = ["followers", "plays", "works"];
 
+// Three-slot media strip law, RULED 23 Aug 2026 (build-0823 pass 6),
+// mirroring the KitAssetDetailPopup media strip treatment from
+// commit 16dac8b: exactly three slots always render, real thumbnails
+// fill from the front, remaining slots render the same ratified
+// geometric placeholder (icons-v7.svg#i-59). The strip no longer
+// hides at zero thumbnails.
+const THUMBNAIL_SLOT_COUNT = 3;
+
+function ThumbnailSlotTile({ thumbnail, onThumbnailOpen }) {
+  if (thumbnail) {
+    return (
+      <button
+        type="button"
+        onClick={() => onThumbnailOpen?.(thumbnail.id)}
+        aria-label={`Open ${thumbnail.alt || "recent work"}`}
+        className="aspect-square w-full overflow-hidden rounded-[var(--radius-md)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={thumbnail.imageSrc}
+          alt=""
+          width={300}
+          height={300}
+          loading="lazy"
+          className="h-full w-full object-cover object-[center_18%]"
+        />
+      </button>
+    );
+  }
+
+  return (
+    <div
+      aria-hidden="true"
+      className="flex aspect-square w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)] text-[var(--ink-faint)]"
+    >
+      <svg viewBox="0 0 64 64" className="h-[var(--space-8)] w-[var(--space-8)]">
+        <use href="/assets/icons/icons-v7.svg#i-59" />
+      </svg>
+    </div>
+  );
+}
+
 function StatRow({ stats }) {
   const entries = STAT_ORDER.map((key) => [key, stats?.[key]]).filter(
     ([, value]) => value !== null && value !== undefined
@@ -80,29 +122,15 @@ export default function KitCreatorCardView({
         </div>
       </div>
 
-      {thumbnails.length > 0 && (
-        <div className="grid grid-cols-3 gap-[var(--space-1)]">
-          {thumbnails.map((thumbnail) => (
-            <button
-              key={thumbnail.id}
-              type="button"
-              onClick={() => onThumbnailOpen?.(thumbnail.id)}
-              aria-label={`Open ${thumbnail.alt || "recent work"}`}
-              className="aspect-square overflow-hidden rounded-[var(--radius-sm)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={thumbnail.imageSrc}
-                alt=""
-                width={300}
-                height={300}
-                loading="lazy"
-                className="h-full w-full object-cover object-[center_18%]"
-              />
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-3 gap-[var(--space-2)]">
+        {Array.from({ length: THUMBNAIL_SLOT_COUNT }, (_, index) => (
+          <ThumbnailSlotTile
+            key={thumbnails[index]?.id ?? `empty-${index}`}
+            thumbnail={thumbnails[index] || null}
+            onThumbnailOpen={onThumbnailOpen}
+          />
+        ))}
+      </div>
 
       <div className="flex flex-wrap gap-[var(--space-2)]">
         <RectButton

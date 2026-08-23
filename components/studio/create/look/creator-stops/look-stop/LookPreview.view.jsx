@@ -9,10 +9,12 @@ import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceh
 // CharacterPreviewView (components/studio/create/character/
 // character-preview/CharacterPreview.view.jsx): empty art slots render
 // the shared camellia mark, never a blank box; preview generation
-// never fires without a tap. CTA separator: the house middot, matching
-// CharacterPreviewView's and WorldPreviewView's own string character
-// for character (CharacterPreviewView, around line 46), "Generate
-// preview · X tokens".
+// never fires without a tap. Generate CTA cost note law, RULED 23 Aug
+// 2026 (build-0823 pass 6): the button reads the action only; the
+// cost renders as a quiet note beneath it. The prior font-size
+// override existed only to fit the combined "Generate preview · N
+// tokens" string on the button; it is no longer needed and is
+// removed along with the string.
 export default function LookPreviewView({
   displayInitial = "L",
   lookName = "Unnamed Look",
@@ -41,14 +43,17 @@ export default function LookPreviewView({
           ) : (
             <>
               <KitArtPlaceholderView size="lg" />
-              <div className="absolute inset-x-0 bottom-0 p-3">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[var(--space-1)] p-3">
                 <button
                   type="button"
                   onClick={() => setHasGenerated(true)}
-                  className="cf-btn cf-btn--primary w-full !h-auto !min-h-0 !whitespace-normal !px-[var(--space-2)] !py-[var(--space-2)] text-center !text-[11px] !leading-snug"
+                  className="cf-btn cf-btn--primary w-full text-sm"
                 >
-                  {`Generate preview · ${previewCostLabel} tokens`}
+                  Generate preview
                 </button>
+                <p className="text-center text-[length:var(--text-label)] text-[var(--ink-dim)]">
+                  {`${previewCostLabel} tokens`}
+                </p>
               </div>
             </>
           )}
