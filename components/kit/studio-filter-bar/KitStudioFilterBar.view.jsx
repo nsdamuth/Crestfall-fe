@@ -76,11 +76,12 @@ const SEARCH_DEBOUNCE_MS = 200;
 
 function SearchField({ value, placeholder, onChange }) {
   // Focus law, RULED 22 Aug 2026 (Fable law review, A3,
-  // docs/BUILD-BLUEPRINT.md 2.16(e) struck): the wrapper's own
-  // JS-driven border-brightening treatment is retired. The single
-  // global --focus-ring rule (app/design-system.css, ":focus-visible"
-  // section) already applies to the input itself; that is the only
-  // focus treatment this field shows, no doubled rendering.
+  // docs/BUILD-BLUEPRINT.md 2.16(e) struck), REVERSED by Brian's live
+  // walk (polish item 1): search fields are the one exception to the
+  // inner-input default. The `kit-search-field` wrapper class carries
+  // the ring on `:focus-within` (app/design-system.css, "SEARCH FIELD
+  // FOCUS" section); the inner `.kit-search-input` never shows its
+  // own ring, so exactly one focus treatment renders, on the wrapper.
   //
   // Clear control, RULED 10 Aug 2026 (kit polish 3 pass): the native
   // type=search cancel button renders in the browser's own blue/gray,
@@ -128,7 +129,7 @@ function SearchField({ value, placeholder, onChange }) {
 
   return (
     <div
-      className="flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1"
+      className="kit-search-field flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1"
     >
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input

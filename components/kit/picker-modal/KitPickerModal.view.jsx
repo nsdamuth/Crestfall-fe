@@ -35,7 +35,7 @@ function describeSelection(count) {
 
 function SearchField({ value, placeholder, onChange }) {
   return (
-    <div className="flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
+    <div className="kit-search-field flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"

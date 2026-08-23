@@ -308,7 +308,7 @@ function DefaultPcPickerModal({ selectedId, onClose, onSelect, onClear }) {
           Your preferred player identity for new story rooms. Other users may view public Player Characters, but only you can use your own PCs as playable identities.
         </p>
 
-        <div className="mt-[var(--space-5)] flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
+        <div className="kit-search-field mt-[var(--space-5)] flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
           <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
           <input
             type="search"
