@@ -516,7 +516,11 @@ ruled to exist.
   preview nav on `components/studio/studio-sidebar/StudioSidebar.view.jsx`
   (journey order per `docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 2):
   built destinations route to their live `/studio/v2/*` page, unbuilt
-  destinations render quiet and non-interactive, and today's existing
-  sidebar links collapse into a Legacy group beneath, unchanged.
+  destinations render quiet and non-interactive. SUPERSEDED 23 Aug
+  2026 (build-0823 pass 4, sidebar refinement, RULED): today's
+  existing sidebar links no longer collapse into a Legacy group
+  beneath; preview mode renders only the nine-page model plus lawful
+  supporting entries (utility links, social, the economy slot).
   Flag off renders the sidebar exactly as it did before the flag
-  existed. Full detail: `components/studio/studio-sidebar/README.md`.
+  existed, Legacy group included, untouched by this ruling. Full
+  detail: `components/studio/studio-sidebar/README.md`.

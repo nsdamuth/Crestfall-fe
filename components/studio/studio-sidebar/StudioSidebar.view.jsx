@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Archive,
   BookOpen,
   Castle,
   ChevronDown,
@@ -12,6 +13,7 @@ import {
   Megaphone,
   MessagesSquare,
   ScrollText,
+  Settings,
   ShieldCheck,
   Sparkles,
   User,
@@ -21,6 +23,7 @@ import {
 const PREVIEW_SOON_LABEL = "Soon";
 
 const ICONS = Object.freeze({
+  archive: Archive,
   bookOpen: BookOpen,
   castle: Castle,
   compass: Compass,
@@ -135,8 +138,12 @@ export default function StudioSidebarView({
           {/* Gap opened to the next ladder step up (--space-6 to
               --space-7), RULED 10 Aug 2026 (kit polish 3 pass): the
               logo lockup was crowding the first group header
-              (Play) at the prior --space-6. */}
-          <div className="mt-[var(--space-7)] space-y-[var(--space-3)]">
+              (Play) at the prior --space-6. Legacy group REMOVED
+              from preview mode, RULED 23 Aug 2026 (build-0823 pass
+              4, sidebar refinement): only the nine-page model plus
+              lawful supporting entries render here. Flag-off
+              (production) rendering, below, is untouched. */}
+          <div className="mt-[var(--space-7)] space-y-[var(--space-2)]">
             {previewGroups.map((group) => (
               <PreviewGroup
                 key={group.label}
@@ -147,47 +154,7 @@ export default function StudioSidebarView({
             ))}
           </div>
 
-          <SidebarDivider />
-
-          <section>
-            <button
-              type="button"
-              onClick={onToggleLegacy}
-              className={`flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)] ${collapsed ? "justify-center" : "justify-between"}`}
-              aria-expanded={legacyOpen}
-            >
-              {!collapsed ? <span>{legacyLabel}</span> : null}
-              {legacyOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-            </button>
-
-            {legacyOpen ? (
-              <>
-                <nav className="mt-1 space-y-[var(--space-1)]">
-                  {primaryLinks.map((link) => (
-                    <SidebarInternalLink
-                      key={link.href}
-                      link={link}
-                      collapsed={collapsed}
-                      InternalLinkComponent={InternalLinkComponent}
-                    />
-                  ))}
-                </nav>
-
-                <nav className="mt-1 space-y-[var(--space-1)]">
-                  {utilityLinks.map((link) => (
-                    <SidebarInternalLink
-                      key={link.href}
-                      link={link}
-                      collapsed={collapsed}
-                      InternalLinkComponent={InternalLinkComponent}
-                    />
-                  ))}
-                </nav>
-              </>
-            ) : null}
-          </section>
-
-          <SidebarDivider />
+          <SidebarDivider dense />
         </>
       ) : (
         <>
@@ -222,8 +189,13 @@ export default function StudioSidebarView({
       <SidebarDivider />
 
       {!collapsed ? (
-        <div className="mt-[var(--space-4)] space-y-[var(--space-2)] px-1">
-          <div className="flex items-center gap-[var(--space-3)]">
+        // Signed-in area streamlined, RULED 23 Aug 2026 (build-0823
+        // pass 4, sidebar refinement): Discord and Settings sit
+        // inline on the signed-in row itself (no separate icon row);
+        // Log out is a quiet row directly beneath. No oversized
+        // blocks.
+        <div className="mt-[var(--space-3)] space-y-[var(--space-1)] px-1">
+          <div className="flex items-center gap-[var(--space-2)]">
             <span
               aria-hidden="true"
               className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)]"
@@ -239,9 +211,7 @@ export default function StudioSidebarView({
                 {signedInEmail}
               </p>
             </div>
-          </div>
 
-          <div className="flex items-center gap-[var(--space-2)]">
             {discordLink ? (
               <a
                 href={discordLink.href}
@@ -265,22 +235,10 @@ export default function StudioSidebarView({
             {accountLink ? (
               <InternalLinkComponent
                 href={accountLink.href}
-                aria-label={accountLink.label}
+                aria-label="Settings"
                 className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <use href="/assets/icons/icons-v7.svg#i-12" />
-                </svg>
+                <Settings size={16} aria-hidden="true" />
               </InternalLinkComponent>
             ) : null}
           </div>
@@ -306,8 +264,12 @@ export default function StudioSidebarView({
   );
 }
 
-function SidebarDivider() {
-  return <div className="my-[var(--space-4)] border-t border-[var(--line-strong)]" />;
+function SidebarDivider({ dense = false }) {
+  return (
+    <div
+      className={`${dense ? "my-[var(--space-3)]" : "my-[var(--space-4)]"} border-t border-[var(--line-strong)]`}
+    />
+  );
 }
 
 function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
@@ -336,9 +298,10 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
               link={item}
               collapsed={collapsed}
               InternalLinkComponent={InternalLinkComponent}
+              dense
             />
           ) : (
-            <PreviewQuietRow key={item.label} item={item} collapsed={collapsed} />
+            <PreviewQuietRow key={item.label} item={item} collapsed={collapsed} dense />
           )
         )}
       </nav>
@@ -346,14 +309,18 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
   );
 }
 
-function PreviewQuietRow({ item, collapsed }) {
+function PreviewQuietRow({ item, collapsed, dense = false }) {
   const Icon = resolveIcon(item.iconKey);
 
   return (
     <span
       title={collapsed ? item.label : undefined}
       aria-disabled="true"
-      className={`flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border border-transparent px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${collapsed ? "justify-center px-2" : ""}`}
+      className={`flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${
+        dense
+          ? "min-h-[var(--control-sm)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+          : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
+      } ${collapsed ? "justify-center px-2" : ""}`}
     >
       <Icon size={16} className="shrink-0" />
       {!collapsed ? (
@@ -372,6 +339,7 @@ function SidebarInternalLink({
   link,
   collapsed,
   InternalLinkComponent = "a",
+  dense = false,
 }) {
   const Icon = resolveIcon(link.iconKey);
 
@@ -383,7 +351,12 @@ function SidebarInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border border-transparent px-3 py-2.5 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)]
+        cf-nav-link flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent font-[var(--weight-regular)] tracking-[var(--track-normal)]
+        ${
+          dense
+            ? "min-h-[var(--control-sm)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+            : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
+        }
         ${
           link.variant === "return"
             ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"

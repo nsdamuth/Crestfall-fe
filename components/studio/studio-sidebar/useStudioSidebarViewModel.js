@@ -13,6 +13,10 @@ import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 // All nine destinations are built, RULED 11 Aug 2026: every isBuilt
 // flag moves false to true, so every item routes to its live
 // /studio/v2/<page> route. No hrefs changed, no icon keys changed.
+//
+// Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
+// (build-0823 pass 4, sidebar refinement): the repo's standing
+// archive/vault glyph (witness: KitCreationCard's Archive action).
 export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
@@ -27,7 +31,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     items: Object.freeze([
       Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
-      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: true }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true }),
     ]),
   }),
   Object.freeze({

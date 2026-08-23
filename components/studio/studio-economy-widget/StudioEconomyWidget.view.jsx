@@ -90,28 +90,23 @@ export default function StudioEconomyWidgetView({
     );
   }
 
+  // Notifications REMOVED from the expanded and collapsed modes,
+  // RULED 23 Aug 2026 (build-0823 pass 4, sidebar refinement):
+  // notifications live in the top bar bell only. mobileHeader (above)
+  // keeps its own bell for its own consumers; onOpenNotificationsInfo
+  // / onCloseNotificationsInfo / notificationsInfoOpen stay in the
+  // contract for that mode.
   if (layoutMode === "collapsed") {
     return (
       <>
-        <div className="space-y-1.5">
-          <button
-            type="button"
-            onClick={() => onOpenBuyInfo?.()}
-            title={`Coins: ${balanceLabel}`}
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-          >
-            <Coins size={16} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onOpenNotificationsInfo?.()}
-            title="Notifications"
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-          >
-            <Bell size={16} />
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => onOpenBuyInfo?.()}
+          title={`Coins: ${balanceLabel}`}
+          className="flex w-full items-center justify-center rounded-[var(--radius-md)] px-[var(--space-2)] py-[var(--space-2)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
+        >
+          <Coins size={16} aria-hidden="true" />
+        </button>
 
         {modals}
       </>
@@ -120,38 +115,21 @@ export default function StudioEconomyWidgetView({
 
   return (
     <>
-      <section className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/40 p-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Coins
-            </p>
-            <p className="mt-1 text-sm text-[var(--ink)]">
-              {balanceLabel}
-            </p>
-          </div>
-
-          <Coins className="text-[var(--gold-ornament)]" size={18} />
-        </div>
+      <div className="flex items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
+        <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">
+          <Coins size={16} className="text-[var(--gold-ornament)]" aria-hidden="true" />
+          {balanceLabel}
+        </span>
 
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="cf-btn cf-btn--primary mt-3 w-full"
+          className="inline-flex h-[var(--control-sm)] touch-manipulation items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)]"
         >
-          <ShoppingBag size={14} />
-          Buy coins
+          <ShoppingBag size={13} aria-hidden="true" />
+          Buy Coins
         </button>
-
-        <button
-          type="button"
-          onClick={() => onOpenNotificationsInfo?.()}
-          className="cf-btn cf-btn--secondary mt-2 w-full"
-        >
-          <Bell size={14} />
-          Notifications
-        </button>
-      </section>
+      </div>
 
       {modals}
     </>

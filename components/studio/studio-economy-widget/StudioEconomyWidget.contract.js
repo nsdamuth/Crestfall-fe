@@ -1,4 +1,4 @@
-export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * @typedef {"expanded"|"collapsed"|"mobileHeader"} StudioEconomyWidgetLayoutMode
@@ -20,6 +20,16 @@ export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {(() => void)|null} onCloseBuyInfo
  * @property {(() => void)|null} onOpenNotificationsInfo
  * @property {(() => void)|null} onCloseNotificationsInfo
+ *
+ * 1.1.0, 23 Aug 2026 (build-0823 pass 4, sidebar refinement, RULED):
+ * the "expanded" and "collapsed" layoutMode renderings drop their
+ * Notifications control entirely (notifications live in the top bar
+ * bell only) and the "expanded" mode's coins area becomes one compact
+ * row (coin glyph plus count, a small "Buy Coins" chip) replacing the
+ * boxed section with stacked full-width buttons. No prop removed:
+ * notificationsInfoOpen / onOpenNotificationsInfo /
+ * onCloseNotificationsInfo remain for the "mobileHeader" mode, which
+ * is unchanged.
  */
 
 export {};

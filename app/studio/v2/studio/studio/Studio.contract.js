@@ -1,93 +1,56 @@
-// 1.0.0 to 1.1.0 (the Q1 world quick-create brief): additive only. A
-// second door (id "location", relabeled "Worlds") goes live, opening
-// WorldCreatorModal the same way the Character door opens
-// CharacterCreatorModal. StudioDoor's isLive is no longer "Character
-// only"; no shape change to StudioDoor or any other typedef, and the
-// Shell (Studio.jsx) gains onOpenWorldCreator alongside
-// onOpenCharacterCreator, mirroring the existing pattern exactly.
-//
-// 1.1.0 to 1.2.0 (this pass, the Q2 look quick-create brief):
-// additive only. A third door (id "outfit", relabeled "Looks" from
-// "Outfit / Clothing") goes live, opening LookCreatorModal the same
-// way the Character and Worlds doors open their own creators.
-// StudioDoor's isLive is no longer "Character and Worlds only"; no
-// shape change to StudioDoor or any other typedef, and the Shell
-// (Studio.jsx) gains onOpenLookCreator alongside
-// onOpenCharacterCreator and onOpenWorldCreator, mirroring the
-// existing pattern exactly.
-//
-// 1.2.0 to 1.3.0 (this pass, the Q3 story quick-create brief):
-// additive only. A fourth, new door (id "story", no existing door to
-// relabel, unlike Worlds and Looks) goes live, labeled "Stories" and
-// mapped onto the existing ROOM_TEMPLATE creation type, opening
-// StoryCreatorModal the same way the other three doors open their own
-// creators. StudioDoor's isLive is no longer "Character, Worlds, and
-// Looks only"; no shape change to StudioDoor or any other typedef,
-// and the Shell (Studio.jsx) gains onOpenStoryCreator alongside the
-// three existing openers, mirroring the existing pattern exactly.
-export const STUDIO_VIEW_CONTRACT_VERSION = "1.3.0";
+// 2.0.0, 23 Aug 2026 (build-0823 pass 4, RULED, the Studio hub
+// three-zone ruling): STRUCTURAL. The altitude ladder (levels,
+// activeLevelId, onSelectLevel), the Guided Build pane
+// (guidedBuildSoon), the Story bridge strip (storyBridge), and the
+// Full Studio tool-card grid (toolGroups) are all REMOVED. One calm
+// scroll, three zones in order, plain zone labels: CREATE (the four
+// live quick-create doors plus Player Character's Soon door, plus a
+// quiet line routing to the advanced editor), BUILD (Build a Story,
+// Build an Adventure), PUBLISH (one line routing to the Vault). New
+// props: onOpenAdvancedEditor, onBuildStory, onBuildAdventure,
+// onOpenVault.
+export const STUDIO_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
  * Stable portable UI boundary for the Studio hub page View
  * (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md 4.4; docs/BUILD-BLUEPRINT.md
- * 3.1 row 6; docs/SPRINT-G-PLAN.md section 2; docs/STUDIO-SPEC.md
- * sections 1, 2, 3, 6, 8.1). New page this pass, contract authorized
- * none to 1.0.0 at this gate. Build address /studio/v2/studio (route
- * law, cutover sequence). Fixture-driven only, pre-parity: no fetch,
- * no services-api, no product data, except CharacterCreatorModal's own
- * existing live save wiring, which this page consumes read-only.
+ * 3.1 row 6; docs/STUDIO-SPEC.md sections 1, 2, 3, 6, 8.1). Build
+ * address /studio/v2/studio (route law, cutover sequence).
+ * Fixture-driven only, pre-parity: no fetch, no services-api, no
+ * product data, except the four quick-create modals' own existing
+ * live save wiring, which this page consumes read-only.
  *
  * Ruled composition, top to bottom, exhaustive: page header
  * (StudioPageHeaderView) -> the hub explainer strip (KitAlertStrip
- * neutral, the sanctioned .stripinfo lineage, carrying the
- * submission-hub presentation: Public and Canon submissions begin
- * here, honest fixtures only, CR-014 and CR-027 stay non-blocking) ->
- * the ladder's level selector (three levels: Quick Start, Guided
- * Build, Full Studio) -> the active level's pane:
- *   - Quick Start: asset-first doors (Character live, opening
- *     CharacterCreatorModal with fieldScope="quick"; Worlds live
- *     (door id "location", labeled "Worlds"), opening
- *     WorldCreatorModal; Looks live (door id "outfit", labeled
- *     "Looks"), opening LookCreatorModal; Stories live (door id
- *     "story", labeled "Stories"), opening StoryCreatorModal; every
- *     other type's door quiet with the standing Soon treatment) plus
- *     the Story bridge strip (KitAlertStrip neutral, same .stripinfo
- *     lineage).
- *   - Guided Build: no allocation exists yet for Story assembly
- *     (docs/STUDIO-SPEC.md section 9, item 2), so this pane renders
- *     the same quiet Soon treatment as a door, not fabricated
- *     bucket data.
- *   - Full Studio: tool card groups, pro density, Character live,
- *     every other card Soon.
- * -> bottom promo banner (promo-banner bottom treatment) routing to
- * /studio/v2/images.
+ * neutral, carrying the submission-hub presentation: Public and Canon
+ * submissions begin here) -> CREATE zone (asset-first doors:
+ * Character live, opening CharacterCreatorModal with
+ * fieldScope="quick"; Worlds live (door id "location", labeled
+ * "Worlds"), opening WorldCreatorModal; Looks live (door id "outfit",
+ * labeled "Looks"), opening LookCreatorModal; Stories live (door id
+ * "story", labeled "Stories"), opening StoryCreatorModal; Player
+ * Character quiet with the standing Soon treatment; a quiet line
+ * "Prefer full control? Start in the advanced editor" routing to
+ * /studio/v2/editor) -> BUILD zone ("Build a Story", same handler as
+ * the Stories door; "Build an Adventure", routes to
+ * /studio/v2/adventures) -> PUBLISH zone (one line routing to
+ * /studio/v2/vault) -> bottom promo banner (promo-banner bottom
+ * treatment) routing to /studio/v2/images.
  *
  * What the View renders itself: the section order and every ruled
  * kit composition (KitStudioPage, KitPromoBanner, KitAlertStrip, the
- * page-local level/door/tool-card recipes, none of which exist as
- * kit packages yet and are therefore page-local per LOOM law: a
- * package not yet promoted to components/kit stays where it is used
- * until a second consumer asks for it). What it delegates: all data,
- * all routing (every onX callback), all local state that is not
- * presentation-only (the active level tab IS presentation-only and is
- * therefore owned by the ViewModel per the fixture-mode harness
- * convention, not hardcoded in the View). The View fetches nothing.
+ * page-local Door/BuildRow recipes, page-local per LOOM law until a
+ * second consumer needs them). What it delegates: all data, all
+ * routing (every onX callback), the R4 fixture-action notice's
+ * open/closed state (presentation-only, owned by the ViewModel). The
+ * View fetches nothing.
  *
  * CharacterCreatorModal, WorldCreatorModal, LookCreatorModal, and
  * StoryCreatorModal are all mounted by the Shell (Studio.jsx), not
- * the View: each is a real, live-wired component (existing save path
- * through creationClient), not a fixture-shaped prop, and the Shell
- * is the LOOM layer that owns real integration per
- * docs/CRESTFALL-DESIGN-CONTEXT.md. The View only reports intent,
- * through onOpenCharacterCreator, onOpenWorldCreator,
- * onOpenLookCreator, and onOpenStoryCreator respectively.
- *
- * @typedef {Object} StudioLevel
- * @property {string} id
- * @property {string} numeral
- * @property {string} title
- * @property {string} description
- * @property {number} depth 1, 2, or 3; how many depth-meter segments render filled.
+ * the View. The View only reports intent, through
+ * onOpenCharacterCreator, onOpenWorldCreator, onOpenLookCreator, and
+ * onOpenStoryCreator respectively (folded into `doors[].onOpen` by
+ * the ViewModel), plus onBuildStory for the BUILD zone's own row.
  *
  * @typedef {Object} StudioDoor
  * @property {string} id
@@ -95,21 +58,8 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {string} eyebrow
  * @property {string} description
  * @property {string|null} imageSrc
- * @property {boolean} isLive Character, Worlds (door id "location"), Looks (door id "outfit"), and Stories (door id "story") only; every other door is Soon.
- * @property {(() => void)|null} onOpen
- *
- * @typedef {Object} StudioToolCard
- * @property {string} id
- * @property {string} title
- * @property {string} description
- * @property {boolean} isLive
- * @property {(() => void)|null} onOpen
- *
- * @typedef {Object} StudioToolGroup
- * @property {string} id
- * @property {string} title
- * @property {string} description
- * @property {StudioToolCard[]} cards
+ * @property {boolean} isLive Character, Worlds (door id "location"), Looks (door id "outfit"), and Stories (door id "story") only; Player Character is Soon.
+ * @property {(() => void)|null} onOpen Present only when isLive; the button renders `disabled` when not.
  *
  * @typedef {Object} StudioBanner
  * @property {string} eyebrow
@@ -123,23 +73,15 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {string} title
  * @property {string} body
  *
- * @typedef {Object} StudioStoryBridge
- * @property {string} title
- * @property {string} body
- * @property {string} actionLabel
- * @property {(() => void)|null} onAction
- *
  * @typedef {Object} StudioViewProps
- * @property {StudioLevel[]} levels
- * @property {string} activeLevelId
- * @property {((levelId: string) => void)|null} onSelectLevel
  * @property {StudioExplainer} hubExplainer
- * @property {StudioDoor[]} doors Quick Start pane.
- * @property {StudioStoryBridge} storyBridge Quick Start pane, end of the doors grid.
- * @property {StudioExplainer} guidedBuildSoon Guided Build pane, no allocation yet (section 9, item 2).
- * @property {StudioToolGroup[]} toolGroups Full Studio pane.
+ * @property {StudioDoor[]} doors CREATE zone.
+ * @property {(() => void)|null} onOpenAdvancedEditor CREATE zone's quiet line, routes to /studio/v2/editor.
+ * @property {(() => void)|null} onBuildStory BUILD zone, opens StoryCreatorModal (same handler as the Stories door).
+ * @property {(() => void)|null} onBuildAdventure BUILD zone, routes to /studio/v2/adventures.
+ * @property {(() => void)|null} onOpenVault PUBLISH zone, routes to /studio/v2/vault.
  * @property {StudioBanner} bottomBanner Routes to /studio/v2/images.
- * @property {{label: string, message: string}|null} notice R4 fixture-action notice: non-persisting acknowledgement for any control whose real behavior waits on live wiring (every Soon door and tool card, the Story bridge action). Null renders nothing.
+ * @property {{label: string, message: string}|null} notice R4 fixture-action notice: non-persisting acknowledgement for any control whose real behavior waits on live wiring (the Player Character Soon door). Null renders nothing.
  * @property {(() => void)|null} onCloseNotice
  * @property {import("react").ReactNode} [harnessSlot] Dev-only fixture-state switcher, never product.
  */
