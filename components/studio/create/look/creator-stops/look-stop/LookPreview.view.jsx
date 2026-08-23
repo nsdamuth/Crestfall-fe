@@ -45,7 +45,7 @@ export default function LookPreviewView({
                 <button
                   type="button"
                   onClick={() => setHasGenerated(true)}
-                  className="cf-btn cf-btn--primary w-full text-sm"
+                  className="cf-btn cf-btn--primary w-full !h-auto !min-h-0 !whitespace-normal !px-[var(--space-2)] !py-[var(--space-2)] text-center !text-[11px] !leading-snug"
                 >
                   {`Generate preview · ${previewCostLabel} tokens`}
                 </button>
