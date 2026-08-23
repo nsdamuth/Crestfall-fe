@@ -36,10 +36,7 @@ function IssueList({
 
       <div className="mt-3 grid gap-2">
         {issues.map((issue, index) => (
-          <div
-            key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
-          >
+          <div key={`${issue?.path || "issue"}-${index}`}>
             <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
             </code>
