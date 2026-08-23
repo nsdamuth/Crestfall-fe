@@ -437,7 +437,7 @@ export default function MechanicsTrackersSectionView({
   };
 
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>Visual Builder</p>
@@ -467,10 +467,10 @@ export default function MechanicsTrackersSectionView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
           No trackers defined yet. Add meters such as <span className="text-[var(--ink)]">affection</span>,{" "}
           <span className="text-[var(--ink)]">trust</span>, or <span className="text-[var(--ink)]">health</span>.
-        </div>
+        </p>
       )}
     </section>
   );
