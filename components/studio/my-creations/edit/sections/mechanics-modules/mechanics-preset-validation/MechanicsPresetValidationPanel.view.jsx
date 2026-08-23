@@ -109,7 +109,7 @@ export default function MechanicsPresetValidationPanelView({
                 {steps.map((step, index) => (
                   <li
                     key={`${index}-${step}`}
-                    className="flex gap-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]"
+                    className="flex gap-3 text-xs leading-5 text-[var(--ink-dim)]"
                   >
                     <span className="shrink-0 text-[var(--gold-ornament)]">
                       {index + 1}.
@@ -133,7 +133,7 @@ export default function MechanicsPresetValidationPanelView({
                 {checks.map((check, index) => (
                   <p
                     key={`${index}-${check}`}
-                    className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]"
+                    className="text-xs leading-5 text-[var(--ink-dim)]"
                   >
                     {check}
                   </p>

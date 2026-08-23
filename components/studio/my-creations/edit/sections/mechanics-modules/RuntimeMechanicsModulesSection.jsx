@@ -355,29 +355,29 @@ export default function RuntimeMechanicsModulesSection({
                       />
                     </div>
 
-                    <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
+                    <div className="mt-3 grid gap-1 border-t border-[var(--line-whisper)] pt-[var(--space-3)] text-xs leading-6 text-[var(--ink-faint)]">
                       <p>
                         Module ID:{" "}
-                        <span className="text-[var(--ink)]">
+                        <span className="text-[var(--ink-dim)]">
                           {binding.moduleId || TRACKERS_MODULE_ID}
                         </span>
                       </p>
                       <p>
                         Role:{" "}
-                        <span className="text-[var(--ink)]">
+                        <span className="text-[var(--ink-dim)]">
                           {binding.role || MECHANICS_MODULE_ROLE}
                         </span>
                       </p>
                       <p>
                         Trigger:{" "}
-                        <span className="text-[var(--ink)]">
+                        <span className="text-[var(--ink-dim)]">
                           {binding.operationTriggers?.chatTurnDefault ||
                             "get_tracker_context"}
                         </span>
                       </p>
                       <p>
                         Scope:{" "}
-                        <span className="text-[var(--ink)]">
+                        <span className="text-[var(--ink-dim)]">
                           {scopeMode}
                         </span>
                       </p>
@@ -387,9 +387,9 @@ export default function RuntimeMechanicsModulesSection({
               })}
             </div>
           ) : (
-            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="text-sm leading-6 text-[var(--ink-faint)]">
               No Mechanics Modules attached yet.
-            </div>
+            </p>
           )}
         </div>
       </div>
