@@ -66,10 +66,12 @@ export default function CreatorProfile({ handle = "" }) {
     <CreatorProfileView
       {...viewProps}
       harnessSlot={
-        <FixtureModeHarness
-          fixtureMode={fixtureMode}
-          onChangeFixtureMode={setFixtureMode}
-        />
+        process.env.NODE_ENV === "production" ? null : (
+          <FixtureModeHarness
+            fixtureMode={fixtureMode}
+            onChangeFixtureMode={setFixtureMode}
+          />
+        )
       }
     />
   );
