@@ -80,7 +80,11 @@ export default function Studio() {
     <>
       <StudioView
         {...viewProps}
-        harnessSlot={<FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />}
+        harnessSlot={
+          process.env.NODE_ENV === "production" ? null : (
+            <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
+          )
+        }
       />
 
       {isCharacterCreatorOpen ? (
