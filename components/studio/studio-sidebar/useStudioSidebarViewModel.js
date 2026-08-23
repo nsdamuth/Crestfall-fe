@@ -133,6 +133,14 @@ export function isStudioSidebarPathActive(pathname = "", href = "") {
     : pathname.startsWith(href);
 }
 
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This sidebar renders on every /studio/** route including v2 pages,
+// so the Account item's target depends on which surface is current.
+export function getStudioSidebarAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function normalizeStudioSidebarEmail(user = {}) {
   return typeof user?.email === "string" ? user.email : "";
 }
@@ -168,7 +176,15 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
     collapsed,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_SIDEBAR_PRIMARY_LINKS, pathname),
-    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname),
+    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname).map((link) =>
+      link.label === "Account"
+        ? {
+            ...link,
+            href: getStudioSidebarAccountHref(pathname),
+            isActive: isStudioSidebarPathActive(pathname, getStudioSidebarAccountHref(pathname)),
+          }
+        : link
+    ),
     socialLinks: STUDIO_SIDEBAR_SOCIAL_LINKS,
     onToggleCollapsed: () => setCollapsed((value) => !value),
     onToggleSocial: () => setSocialOpen((value) => !value),

@@ -57,6 +57,14 @@ export function isStudioMobileNavPathActive(pathname = "", href = "") {
     : pathname.startsWith(href);
 }
 
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This drawer renders on every /studio/** route including v2 pages,
+// so the Account destination depends on which surface is current.
+export function getStudioMobileNavAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function normalizeStudioMobileNavEmail(user = {}) {
   return typeof user?.email === "string" ? user.email : "";
 }
@@ -91,7 +99,7 @@ export function useStudioMobileNavViewModel({
     signedInEmail,
     logoutLabel: STUDIO_MOBILE_NAV_COPY.logoutLabel,
     logoutHref: "/logout",
-    accountHref: "/studio/account",
+    accountHref: getStudioMobileNavAccountHref(pathname),
     accountAriaLabel:
       signedInEmail || STUDIO_MOBILE_NAV_COPY.accountFallbackAriaLabel,
     closeMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.closeMenuAriaLabel,
@@ -99,7 +107,15 @@ export function useStudioMobileNavViewModel({
     open,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_PRIMARY_LINKS, pathname),
-    utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname),
+    utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname).map((link) =>
+      link.label === "Account"
+        ? {
+            ...link,
+            href: getStudioMobileNavAccountHref(pathname),
+            isActive: isStudioMobileNavPathActive(pathname, getStudioMobileNavAccountHref(pathname)),
+          }
+        : link
+    ),
     socialLinks: STUDIO_MOBILE_NAV_SOCIAL_LINKS,
     bottomLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_BOTTOM_LINKS, pathname),
     onCloseMenu,

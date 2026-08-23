@@ -25,9 +25,18 @@ export function getStudioTopBarAccountInitial(user = {}) {
 // No notification source exists in the app yet (no contract, no
 // endpoint); an empty list is the honest default until CR-017 is
 // answered. See StudioTopBar/README.md.
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This top bar renders on every /studio/** route including v2 pages,
+// so the account avatar's target depends on which surface is current.
+export function getStudioTopBarAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function useStudioTopBarViewModel({
   user,
   notifications = [],
+  pathname = "",
   onOpenMenu = () => {},
 } = {}) {
   const [searchValue, setSearchValue] = useState("");
@@ -58,7 +67,7 @@ export function useStudioTopBarViewModel({
     onOpenNotifications: openNotifications,
     onOpenNotificationCenter: openNotificationCenter,
     onCloseNotifications: closeNotifications,
-    accountHref: "/studio/account",
+    accountHref: getStudioTopBarAccountHref(pathname),
     accountAriaLabel: getStudioTopBarAccountLabel(user),
     accountInitial: getStudioTopBarAccountInitial(user),
     openMenuAriaLabel: STUDIO_TOP_BAR_COPY.openMenuAriaLabel,
