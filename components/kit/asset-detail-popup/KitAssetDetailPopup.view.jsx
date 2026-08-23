@@ -333,6 +333,38 @@ const MEDIA_SORTS = [
   { value: "likedFirst", label: "Liked First" },
 ];
 
+// Media strip, RULED (FE polish closeout, item 2): the Images tab
+// always shows exactly three slots. Real media fills from the front;
+// any remaining slots render the same ratified geometric placeholder
+// icon this file already uses for the no-media carousel state (the
+// icons-v7.svg#i-59 mark), at sm size. Applies to every consumer of
+// this popup since the recipe lives here once.
+const IMAGE_SLOT_COUNT = 3;
+
+function MediaSlotTile({ item }) {
+  if (item) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={item.src}
+        alt=""
+        className="aspect-square w-full rounded-[var(--radius-md)] object-cover object-[center_18%]"
+      />
+    );
+  }
+
+  return (
+    <div
+      aria-hidden="true"
+      className="flex aspect-square w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)] text-[var(--ink-faint)]"
+    >
+      <svg viewBox="0 0 64 64" className="h-[var(--space-8)] w-[var(--space-8)]">
+        <use href="/assets/icons/icons-v7.svg#i-59" />
+      </svg>
+    </div>
+  );
+}
+
 function MediaLibrary({ media, isLiked, isSaved }) {
   const [tab, setTab] = useState("images");
   const [sort, setSort] = useState("newest");
@@ -358,8 +390,6 @@ function MediaLibrary({ media, isLiked, isSaved }) {
     }
     return sorted;
   }, [media, tab, sort, query, isLiked, isSaved]);
-
-  if (media.length === 0) return null;
 
   return (
     <div className="mt-[var(--space-6)]">
@@ -407,7 +437,13 @@ function MediaLibrary({ media, isLiked, isSaved }) {
         />
       </div>
 
-      {visible.length === 0 ? (
+      {tab === "images" ? (
+        <div className="mt-[var(--space-3)] grid grid-cols-3 gap-[var(--space-2)]">
+          {Array.from({ length: IMAGE_SLOT_COUNT }, (_, index) => (
+            <MediaSlotTile key={visible[index]?.id ?? `empty-${index}`} item={visible[index] || null} />
+          ))}
+        </div>
+      ) : visible.length === 0 ? (
         <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
           Nothing here yet.
         </p>
