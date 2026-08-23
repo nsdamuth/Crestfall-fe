@@ -1182,6 +1182,13 @@ the filter line. The `studio-page` kit package owns the skeleton;
 `studio-filter-bar`'s inner padding mirrors the shell padding token
 for token.
 
+SUPERSEDED 23 Aug 2026 by the container law in
+`docs/DESIGN-TOKENS.md` ("Container law, RULED 23 Aug 2026"): every
+`/studio` page's content column is now `max-width: var(--container)`
+(1200px), centered, on the same shell padding ramp. This paragraph
+is kept for lineage; the "no max-width cap" rule it states is no
+longer in force.
+
 **(m) Banner sizing law, RULED 10 Aug 2026 (kit polish 3 pass, R2),
 amends 2.3.** The bottom promo banner keeps its fixed per-treatment
 proportions and scales responsively with the content width. It is

@@ -350,6 +350,25 @@ override so touch keeps the 44px floor; never on any other control),
 48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
 All locked.
 
+## Container law, RULED 23 Aug 2026
+
+Every `/studio` page's content column is `max-width: var(--container)`
+(1200px), centered with auto margins, on the existing fluid
+`StudioShell` padding ramp (`--space-5` under 640px, `--space-8` to
+1023px, `--space-10` at 1024px and up). Applied at the one width
+authority, `components/studio/studio-shell/StudioShell.view.jsx`'s
+content `<section>`, so it reaches every `/studio/v2` page and every
+list view in one place, explicitly including the chat route and
+story-room surfaces: the thread's reading column is bounded and
+centered like every other page. Nothing full-bleeds past the
+container except intentional hero/banner art layers, whose content
+still stays inside the container. Text blocks cap at `--measure`
+(68ch); form fields and cards never span wider than the container
+column they sit in. This supersedes `docs/BUILD-BLUEPRINT.md`
+2.16(l) ("no max-width cap"), marked superseded in that file in the
+same commit; no new token is minted, `--container` and `--measure`
+were already locked.
+
 `--topbar-h`, minted 10 Aug 2026 (kit polish 3 pass): the sticky
 `StudioTopBar` header's own rendered height, `calc(var(--control-md)
 + var(--space-3) * 2 + 1px)` (control height, its top and bottom
