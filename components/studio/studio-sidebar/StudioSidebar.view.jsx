@@ -6,7 +6,6 @@ import {
   ChevronDown,
   ChevronUp,
   Compass,
-  ExternalLink,
   Home,
   Image,
   LogOut,
@@ -78,7 +77,7 @@ export default function StudioSidebarView({
   return (
     <aside
       className={`
-        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:block
+        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
         ${collapsed ? "w-16" : "w-56"}
       `}
     >
@@ -221,33 +220,6 @@ export default function StudioSidebarView({
       )}
       {economySlot}
       <SidebarDivider />
-
-      {!collapsed ? (
-        <section>
-          <button
-            type="button"
-            onClick={onToggleSocial}
-            className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
-          >
-            <span>{communityLinksLabel}</span>
-            {socialOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-          </button>
-
-          {socialOpen ? (
-            <nav className="mt-1 space-y-[var(--space-1)]">
-              {socialLinks.map((link) => (
-                <SidebarExternalLink key={link.href} link={link} />
-              ))}
-            </nav>
-          ) : null}
-        </section>
-      ) : (
-        <nav className="space-y-[var(--space-1)]">
-          {socialLinks.map((link) => (
-            <SidebarExternalLink key={link.href} link={link} collapsed />
-          ))}
-        </nav>
-      )}
 
       {!collapsed ? (
         <div className="mt-[var(--space-4)] space-y-[var(--space-2)] px-1">
@@ -426,28 +398,3 @@ function SidebarInternalLink({
   );
 }
 
-function SidebarExternalLink({ link, collapsed = false }) {
-  const Icon = resolveIcon(link.iconKey);
-
-  return (
-    <a
-      href={link.href}
-      target="_blank"
-      rel="noreferrer"
-      title={collapsed ? link.label : undefined}
-      className={
-        collapsed
-          ? "cf-nav-link flex items-center justify-center rounded-lg px-2 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
-          : "cf-nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]"
-      }
-    >
-      <Icon size={16} className="shrink-0" />
-      {!collapsed ? (
-        <>
-          <span>{link.label}</span>
-          <ExternalLink size={12} className="ml-auto shrink-0" />
-        </>
-      ) : null}
-    </a>
-  );
-}
