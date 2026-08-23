@@ -1,38 +1,35 @@
-import { Bell, Coins, ShoppingBag, X } from "lucide-react";
+import { Bell, Coins, ShoppingBag } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
+
+// Migrated onto KitModalFrame, RULED (Brian live walk, polish item
+// 4): the raw fixed-inset dialog lost the panel-lift gradient and
+// the mobile bottom-anchor law. KitModalFrame supplies both, plus
+// the circular close control, so this stays a one-panel primitive.
 function UtilityModal({ title = "", body = "", onClose = null }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]">
-      <section className="w-full max-w-sm rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Crestfall
-            </p>
-            <h2 className="mt-2 font-display text-3xl">{title}</h2>
-          </div>
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabelledBy="studio-economy-utility-title"
+      panelClassName="w-full max-w-sm p-[var(--space-5)]"
+    >
+      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        Crestfall
+      </p>
+      <h2 id="studio-economy-utility-title" className="mt-2 font-display text-3xl">
+        {title}
+      </h2>
 
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-            aria-label="Close"
-          >
-            <X size={16} />
-          </button>
-        </div>
+      <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
 
-        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="cf-btn cf-btn--primary mt-5 w-full"
-        >
-          Got it
-        </button>
-      </section>
-    </div>
+      <button
+        type="button"
+        onClick={() => onClose?.()}
+        className="cf-btn cf-btn--primary mt-5 w-full"
+      >
+        Got it
+      </button>
+    </KitModalFrame>
   );
 }
 
