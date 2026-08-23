@@ -91,6 +91,7 @@ export function useKitModalFrameViewModel({
   variant = "modal",
   panelClassName = "",
   hasUnsavedChanges = false,
+  sheetGrabber = false,
   ariaLabelledBy,
   ariaDescribedBy,
   ariaLabel,
@@ -146,6 +147,7 @@ export function useKitModalFrameViewModel({
     ariaDescribedBy,
     generatedLabelId: needsGeneratedLabel ? generatedLabelId : null,
     ariaLabel: needsGeneratedLabel ? ariaLabel : null,
+    sheetGrabber,
     isConfirmingDismiss,
     onKeepEditing: () => setIsConfirmingDismiss(false),
     onConfirmDiscard: () => {

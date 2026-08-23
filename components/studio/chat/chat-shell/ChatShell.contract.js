@@ -1,4 +1,4 @@
-export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CHAT_SHELL_STATUS_PILL_TONES = Object.freeze({
   NEUTRAL: "neutral",
@@ -73,6 +73,20 @@ export const CHAT_SHELL_STATUS_PILL_TONES = Object.freeze({
  * @property {Object} statePanel Direct ChatStatePanel View-contract props.
  * @property {ChatShellSessionDialogs} sessionDialogs
  * @property {ChatShellLibraryPassUpsell|null} libraryPassUpsell
+ * @property {Object|null} partyRoster Added 1.1.0. Direct ChatPartyRoster View-contract props (open gates rendering); the caller wires it to chat-cast-panel's onOpenPartyRoster.
+ *
+ * 1.1.0, 23 Aug 2026 (build-0823 pass 2): the two chat-local headers
+ * this package rendered are removed; the real StudioShell top bar
+ * and sidebar already wrap this route. This package now contributes
+ * one in-flow header (title, one meta line, the coin chip) instead.
+ * The rail-collapse toggles moved into the composed panels' own
+ * headers (chat-cast-panel's canClose/onClosePanel, chat-state-panel's
+ * showCloseControl/onClosePanel, both already-declared props, no
+ * shape change). This package also now opens the cast/state panels'
+ * mobile sheets from the composer's Menu and Party chips, by lifting
+ * the panels' mobile-open state and passing it down through each
+ * panel's own (already-additive) mobile-open controls; no new prop
+ * is added to this package's own boundary.
  */
 
 export {};

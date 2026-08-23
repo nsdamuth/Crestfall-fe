@@ -72,9 +72,21 @@ function FadeDivider({ className = "" }) {
   );
 }
 
-function SheetHeaderRow({ onClose = null }) {
+// sheetGrabber, RULED 23 Aug 2026 (build-0823 pass 2): an optional,
+// decorative grabber bar above the sheet header row. Additive prop,
+// default false, no change to any existing sheet consumer.
+function SheetGrabber() {
+  return (
+    <div className="flex justify-center pt-[var(--space-2)]" aria-hidden="true">
+      <div className="h-[4px] w-[36px] rounded-[var(--radius-full)] bg-[var(--line-strong)]" />
+    </div>
+  );
+}
+
+function SheetHeaderRow({ onClose = null, showGrabber = false }) {
   return (
     <div className="flex min-h-[calc(var(--control-md)+var(--space-3)*2)] flex-col justify-end px-[var(--space-3)]">
+      {showGrabber ? <SheetGrabber /> : null}
       <div className="flex items-center justify-end">
         <CircularCloseButton onClose={onClose} />
       </div>
@@ -133,6 +145,7 @@ export default function KitModalFrameView({
   isConfirmingDismiss = false,
   onKeepEditing = null,
   onConfirmDiscard = null,
+  sheetGrabber = false,
 }) {
   if (typeof document === "undefined") return null;
 
@@ -160,7 +173,7 @@ export default function KitModalFrameView({
       )}
       {isSheet ? (
         <>
-          <SheetHeaderRow onClose={onClose} />
+          <SheetHeaderRow onClose={onClose} showGrabber={sheetGrabber} />
           {body}
         </>
       ) : (

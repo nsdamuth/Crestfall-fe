@@ -334,10 +334,38 @@ convert without that ruling. New code uses scale tokens only.
 | `--radius-md` | 12px | STANDARD: every control, every grid-sibling card, everything nested inside a large panel | locked |
 | `--radius-lg` | 20px | LARGE: every full-content-width surface and every floating surface | locked |
 | `--radius-full` | 999px | PILL: tags and icon buttons ONLY, never a button | locked |
+| `--radius-bubble` | 16px | Chat message bubbles ONLY, RULED 23 Aug 2026 (build-0823 pass 2) | locked |
 
 Tier is decided by where a surface sits, not how big it is. `rounded-xl`
 (16px) and `rounded-2xl` (16px+) are off scale and resolve DOWN to
 `--radius-md` unless the surface floats or spans full width.
+`--radius-bubble` is a deliberate exception, scoped to chat bubbles
+only; nothing else may resolve to it.
+
+## Chat surface tokens and the gap-6 law, RULED 23 Aug 2026
+
+Per-speaker tinted bubble recipe (build-0823 pass 2). `--chat-speaker`
+is not declared globally: it is an inline custom property set by
+`ChatMessage.view` from contract data, per message, falling back to
+`var(--gold-ornament)` when a speaker has no anchor color.
+
+| Token | Dark | Light | Role | Legal on | Never on | Status |
+|---|---|---|---|---|---|---|
+| `--chat-bubble-fill` | `color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 9%, transparent)` | same, interim (F1) | Bubble fill | Chat message bubbles | Any other surface | locked |
+| `--chat-bubble-line` | `color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 22%, transparent)` | same, interim (F1) | Bubble border | Chat message bubbles | Any other surface | locked |
+| `--chat-avatar-fill` | `color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 12%, transparent)` | same, interim (F1) | Avatar tile fill | Chat speaker avatar tiles (party rows, message avatars) | Any other surface | locked |
+| `--chat-speaker-name` | `oklch(from var(--chat-speaker, var(--gold-ornament)) clamp(0.70, l, 0.88) min(c, 0.12) h)` | same, interim (F1) | Speaker-name ink, the gap-6 clamp | Speaker name text in chat bubbles | Body text (stays `--ink`), any surface outside chat | locked |
+
+Gap-6 law: speaker-name ink derived from a user-picked anchor color is
+clamped to a legible lightness range on dark surfaces (0.70 to 0.88)
+and its chroma is capped (0.12) so no anchor can shout. Body text ink
+inside a bubble is NEVER speaker-colored; it stays the standard `--ink`
+token regardless of the speaker's anchor. This supersedes, on the
+display side only, the fixture-only `--chat-msg-*` palette family
+named in "Proposed" below; that demo code may remain in
+`components/studio/chat/chat-message/ChatMessage.view.jsx` gated by
+`enableFixturePaletteDemo` (never true in product) until removed by a
+later pass.
 
 Sizing: `--control-sm` 32 (desktop-dense only), `--control-filter` 38
 (RULED 9 Aug 2026, kit polish 2 pass: the unified filter-line control
@@ -594,7 +622,7 @@ to `--gold-deep`, whose ruled role is already "pressed states".
 | `--blood` `#4b1018`, `--deep-green` `#0f1d16` (today raw in `app/globals.css`) | Marketing body atmosphere | Queue item T4 |
 | Art-tile scrim (the recurring raw `rgba(6,5,4,.82)` art-label fade in the proof files) | Tile label legibility fade | Log occurrences; needs a ruling before minting |
 | `--veil-screen`, `--surface-modal` | Named in legacy N14; `--veil-screen` exists only in the proof (`proof.css:431`) as an alias of `--scrim-strong` | Superseded in practice by `--scrim-strong` and `--surface-4`; mint nothing without a ruling |
-| Chat-scoped palette role family: `--chat-msg-dialogue`, `--chat-msg-narration`, `--chat-msg-emphasis`, `--chat-msg-strong`, `--chat-msg-whisper`, `--chat-msg-speaker`, `--chat-msg-border` (per message, scoped CSS-variable overrides carrying a character's seasonal palette into the chat body, closing CR-016's display side) | O7 option A (`docs/plans/FABLE-GATE-PLAN.md`), wave C1's `components/studio/chat/chat-message` package. Neutral tokens (`--ink`, `--gold-ornament`, etc.) render the shipped body today; this family is the proposed override layer, wired only behind a fixture-only demo flag (never true in product code) until ratified | Brian's ruling on this family's names and values; the story-room-message golds in the Debt map above are the closest existing evidence, log only, no value invented |
+| Chat-scoped palette role family: `--chat-msg-dialogue`, `--chat-msg-narration`, `--chat-msg-emphasis`, `--chat-msg-strong`, `--chat-msg-whisper`, `--chat-msg-speaker`, `--chat-msg-border` (per message, scoped CSS-variable overrides carrying a character's seasonal palette into the chat body, closing CR-016's display side) | O7 option A (`docs/plans/FABLE-GATE-PLAN.md`), wave C1's `components/studio/chat/chat-message` package. Neutral tokens (`--ink`, `--gold-ornament`, etc.) render the shipped body today; this family is the proposed override layer, wired only behind a fixture-only demo flag (never true in product code) until ratified | SUPERSEDED 23 Aug 2026 on the display side by the `--chat-bubble-*` / `--chat-speaker-name` family and the gap-6 law above ("Chat surface tokens and the gap-6 law"); the fixture-only demo code this row describes may remain, gated exactly as before, until removed by a later pass |
 
 ## Debt map: raw value to token
 

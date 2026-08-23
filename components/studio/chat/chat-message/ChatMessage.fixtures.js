@@ -289,6 +289,48 @@ export const chatMessageLongestFixture = {
   onReport: noop,
 };
 
+// Speaker-color set, RULED 23 Aug 2026 (build-0823 pass 2, tinted
+// bubble law). Three distinct anchors proving the fill/border/name-ink
+// derivation; the no-color fixtures above (player-legacy,
+// character-legacy, etc.) already prove the --gold-ornament fallback,
+// so no separate "no-color" duplicate is needed.
+export const chatMessageSpeakerColorAmberFixture = {
+  ...chatMessageCharacterLegacyFixture,
+  speakerColor: "#e0ab5e",
+};
+
+export const chatMessageSpeakerColorTealFixture = {
+  ...chatMessageCharacterLegacyFixture,
+  speakerLabel: "Thane Corvid",
+  legacyBody: "*He leans against the doorframe.* \"You should not be here.\"",
+  speakerColor: "#3ba6a0",
+};
+
+export const chatMessageSpeakerColorRoseFixture = {
+  ...chatMessagePlayerLegacyFixture,
+  speakerColor: "#c25a8f",
+};
+
+// Narration-in-bubble: the narration segment renders italic inside the
+// same speaker bubble as the dialogue segment, not on a separate
+// surface.
+export const chatMessageNarrationInBubbleFixture = {
+  ...chatMessageCharacterSemanticFixture,
+  speakerColor: "#e0ab5e",
+  semanticSegments: [
+    { type: "NARRATION", emphasis: "", text: "She lowers her voice. " },
+    { type: "DIALOGUE", emphasis: "", text: '"Not here. Not tonight."' },
+  ],
+};
+
+// Player at 390: proves the max-w-[86%] cap independent of the
+// max-w-[70%] desktop cap.
+export const chatMessagePlayer390Fixture = {
+  ...chatMessagePlayerLegacyFixture,
+  legacyBody:
+    "I am not leaving until someone tells me what happened to the ledger, and I mean that.",
+};
+
 export const chatMessageFixtures = [
   { id: "player-legacy", label: "Player, legacy", props: chatMessagePlayerLegacyFixture },
   { id: "player-semantic", label: "Player, semantic", props: chatMessagePlayerSemanticFixture },
@@ -311,5 +353,10 @@ export const chatMessageFixtures = [
   { id: "actions-pending", label: "Actions, regenerate pending", props: chatMessageActionsPendingFixture },
   { id: "actions-error", label: "Actions, regenerate error", props: chatMessageActionsErrorFixture },
   { id: "minimal", label: "Minimal, empty fields", props: chatMessageMinimalFixture },
+  { id: "speaker-color-amber", label: "Speaker color, amber anchor", props: chatMessageSpeakerColorAmberFixture },
+  { id: "speaker-color-teal", label: "Speaker color, teal anchor", props: chatMessageSpeakerColorTealFixture },
+  { id: "speaker-color-rose", label: "Speaker color, rose anchor (player)", props: chatMessageSpeakerColorRoseFixture },
+  { id: "narration-in-bubble", label: "Narration inside speaker bubble", props: chatMessageNarrationInBubbleFixture },
+  { id: "player-390", label: "Player, 390 width cap", props: chatMessagePlayer390Fixture },
   { id: "longest", label: "Longest content", props: chatMessageLongestFixture },
 ];

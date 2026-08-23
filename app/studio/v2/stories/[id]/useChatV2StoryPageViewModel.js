@@ -9,6 +9,7 @@ import { useChatTranscriptViewModel } from "@/components/studio/chat/chat-transc
 import { useChatCastPanelViewModel } from "@/components/studio/chat/chat-cast-panel/useChatCastPanelViewModel";
 import { useChatStatePanelViewModel } from "@/components/studio/chat/chat-state-panel/useChatStatePanelViewModel";
 import { useChatSessionDialogsViewModel } from "@/components/studio/chat/chat-session-dialogs/useChatSessionDialogsViewModel";
+import { useChatPartyRosterViewModel } from "@/components/studio/chat/chat-party-roster/useChatPartyRosterViewModel";
 import {
   CHAT_EXPORT_FORMAT_OPTIONS,
   CHAT_EXPORT_RANGE_PRESETS,
@@ -75,9 +76,10 @@ export function useChatV2StoryPageViewModel(id) {
   const [participantMentions, setParticipantMentions] = useState([]);
   const [locationMentions, setLocationMentions] = useState([]);
 
-  const [castMembers, setCastMembers] = useState(snapshot.castMembers);
+  const [partyMembers, setPartyMembers] = useState(snapshot.partyMembers);
   const [deletePending, setDeletePending] = useState(false);
-  const [randomLikedError, setRandomLikedError] = useState("");
+  const [partyRosterOpen, setPartyRosterOpen] = useState(false);
+  const [sceneImagePickerNotice, setSceneImagePickerNotice] = useState(null);
 
   const [activeDialog, setActiveDialog] = useState(null);
 
@@ -137,49 +139,107 @@ export function useChatV2StoryPageViewModel(id) {
     errorMessage: "",
   });
 
+  const rosterCandidates = useMemo(() => {
+    const partyIds = new Set(partyMembers.map((member) => member.id));
+
+    return (snapshot.rosterCandidates || []).map((candidate) => ({
+      ...candidate,
+      inParty: partyIds.has(candidate.id),
+    }));
+  }, [snapshot.rosterCandidates, partyMembers]);
+
+  function addPartyMember(memberId) {
+    if (partyMembers.length >= 5) return;
+
+    const candidate = (snapshot.rosterCandidates || []).find((item) => item.id === memberId);
+    if (!candidate || partyMembers.some((member) => member.id === memberId)) return;
+
+    setPartyMembers((current) => [
+      ...current,
+      {
+        id: candidate.id,
+        name: candidate.name,
+        avatarUrl: candidate.avatarUrl,
+        fallbackInitial: candidate.name.slice(0, 1).toUpperCase(),
+        role: candidate.role,
+        color: candidate.color,
+      },
+    ]);
+  }
+
+  function removePartyMember(memberId) {
+    setPartyMembers((current) => current.filter((member) => member.id !== memberId));
+  }
+
+  const partyRoster = useChatPartyRosterViewModel({
+    title: "Party",
+    candidates: rosterCandidates,
+    partySize: partyMembers.length,
+    onClose: () => setPartyRosterOpen(false),
+    onAddMember: addPartyMember,
+    onRemoveMember: removePartyMember,
+  });
+
+  function handleDeleteRoom() {
+    setDeletePending(true);
+    window.setTimeout(() => {
+      router.push("/studio/v2/stories");
+    }, 600);
+  }
+
   const castPanel = useChatCastPanelViewModel({
-    eyebrow: "Room & Cast",
+    eyebrow: "Party",
     featuredMedia: snapshot.castPanel.featuredMedia,
     roomTitle: snapshot.title,
     roomIdLabel: snapshot.roomIdLabel,
     narrator: snapshot.castPanel.narrator,
-    castHeading: snapshot.castPanel.castHeading,
-    castDescription: snapshot.castPanel.castDescription,
-    castMembers,
-    playerCharacterAction: { visible: false },
+    partyHeading: "Party",
+    partyDescription: snapshot.castPanel.partyDescription,
+    partyMembers,
     npcParticipantManager: snapshot.castPanel.npcParticipantManager,
-    randomLikedAction: { visible: true, disabled: false, busy: false, label: "Random Liked" },
-    randomLikedError,
-    deleteAction: { visible: true, disabled: false, busy: deletePending, label: "Delete Story" },
-    deleteError: "",
-    deletePending,
     roomListHref: "/studio/v2/stories",
     roomListLabel: "Room List",
-    onSelectCastMember: (participantId) => {
-      setCastMembers((current) =>
-        current.map((member) => ({ ...member, selected: member.id === participantId }))
-      );
-    },
-    onLoadRandomLiked: () => {
-      setRandomLikedError("Random Liked has no live registry yet; this is a mock page pending CR-043.");
-    },
-    onDeleteRoom: () => {
-      setDeletePending(true);
-      window.setTimeout(() => {
-        router.push("/studio/v2/stories");
-      }, 600);
-    },
+    onOpenPartyRoster: () => setPartyRosterOpen(true),
+    onOpenSceneImagePicker: () =>
+      setSceneImagePickerNotice({
+        label: "Scene Image",
+        message: "The image selector is wired when this page goes live; nothing happens in this preview.",
+      }),
   });
 
   const statePanel = useChatStatePanelViewModel({
     eyebrow: "Chronicle State",
     title: snapshot.title,
     sections: snapshot.statePanel.sections,
+    deletePending,
+    onDeleteRoom: handleDeleteRoom,
     actions: [
+      {
+        id: "share-snapshot",
+        iconKey: "share",
+        label: "Share",
+        disabled: false,
+        onPress: () =>
+          setActiveDialog({
+            kind: "SHARE",
+            open: true,
+            mode: "TEMPORARY",
+            presets: CHAT_EXPORT_RANGE_PRESETS,
+            preset: "RECENT_50",
+            customRange: false,
+            messageOptions: [],
+            result: null,
+            copied: false,
+            pending: false,
+            error: "",
+            revokeConfirmOpen: false,
+            onClose: () => setActiveDialog(null),
+          }),
+      },
       {
         id: "export-chat",
         iconKey: "download",
-        label: "Export Chat",
+        label: "Export",
         disabled: false,
         onPress: () =>
           setActiveDialog({
@@ -200,26 +260,11 @@ export function useChatV2StoryPageViewModel(id) {
           }),
       },
       {
-        id: "share-snapshot",
-        iconKey: "share",
-        label: "Share Snapshot",
+        id: "delete-story",
+        iconKey: "delete",
+        label: "Delete",
         disabled: false,
-        onPress: () =>
-          setActiveDialog({
-            kind: "SHARE",
-            open: true,
-            mode: "TEMPORARY",
-            presets: CHAT_EXPORT_RANGE_PRESETS,
-            preset: "RECENT_50",
-            customRange: false,
-            messageOptions: [],
-            result: null,
-            copied: false,
-            pending: false,
-            error: "",
-            revokeConfirmOpen: false,
-            onClose: () => setActiveDialog(null),
-          }),
+        onPress: null,
       },
     ],
   });
@@ -247,6 +292,9 @@ export function useChatV2StoryPageViewModel(id) {
     statePanel,
     sessionDialogs,
     libraryPassUpsell: null,
+    partyRoster: { ...partyRoster, open: partyRosterOpen },
+    sceneImagePickerNotice,
+    onCloseSceneImagePicker: () => setSceneImagePickerNotice(null),
   };
 }
 

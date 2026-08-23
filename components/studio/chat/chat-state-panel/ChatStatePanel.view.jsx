@@ -1,33 +1,93 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CloudSun,
-  Download,
-  Eye,
-  Flag,
-  Lock,
-  PanelRightClose,
-  Share2,
-} from "lucide-react";
+import { Download, PanelRightClose, Share2, Trash2 } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
-
-const SECTION_ICONS = {
-  scenario: Flag,
-  world: CloudSun,
-  knowledge: Lock,
-  memory: Eye,
-};
+import { DeleteConfirmSheet } from "../chat-session-dialogs/ChatSessionDialogs.view";
 
 const ACTION_ICONS = {
-  download: Download,
   share: Share2,
+  download: Download,
+  delete: Trash2,
 };
 
-function StatePanelContent({ eyebrow, title, sections, actions, showCloseControl, onClosePanel }) {
-  const safeSections = Array.isArray(sections) ? sections : [];
+// State panel, RULED 23 Aug 2026 (build-0823 pass 2): the management
+// icon row (Share, Export, Delete) replaces the old button stack;
+// Delete Story moved here from chat-cast-panel and carries the
+// quiet-delete law (quiet trigger, no fill, --status-danger ink,
+// visible word beside the icon). Below, World, Knowledge, and
+// Mechanics render as quiet key-value rows separated by fade-line
+// section labels, replacing the boxed StateCards.
+function ManagementRow({ actions, onRequestDeleteRoom }) {
   const safeActions = Array.isArray(actions) ? actions : [];
+
+  return (
+    <div className="flex items-center gap-[var(--space-3)]">
+      {safeActions.map((action) => {
+        const ActionIcon = ACTION_ICONS[action.iconKey] || Share2;
+        const isDelete = action.iconKey === "delete";
+
+        return (
+          <button
+            key={action.id}
+            type="button"
+            disabled={Boolean(action.disabled)}
+            onClick={() => (isDelete ? onRequestDeleteRoom?.() : action.onPress?.())}
+            className={`flex h-[var(--control-filter)] w-[var(--control-filter)] touch-manipulation flex-col items-center justify-center gap-[2px] rounded-[var(--radius-md)] border transition [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+              action.disabled
+                ? "cursor-not-allowed border-[var(--line-whisper)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
+                : isDelete
+                  ? "border-[var(--line-whisper)] bg-transparent text-[var(--status-danger)] hover:bg-[var(--status-danger-bed)]"
+                  : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+            }`}
+            aria-label={action.label}
+            title={action.label}
+          >
+            <ActionIcon size={14} aria-hidden="true" />
+            <span className="text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)]">
+              {action.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function QuietSection({ section }) {
+  const rows = Array.isArray(section?.rows) ? section.rows : [];
+
+  return (
+    <div>
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+        {section?.title || "State"}
+      </p>
+      <div aria-hidden="true" className="mt-[var(--space-2)] h-px bg-[image:var(--line-fade)]" />
+
+      <div className="mt-[var(--space-3)] space-y-[var(--space-2)]">
+        {rows.map((row) => (
+          <div key={row.id} className="flex items-baseline justify-between gap-[var(--space-3)]">
+            <p className="shrink-0 text-[length:var(--text-label)] text-[var(--ink-dim)]">{row.label}</p>
+            <p className="truncate text-right text-[length:var(--text-ui)] text-[var(--ink)]">{row.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatePanelContent({
+  eyebrow,
+  title,
+  sections,
+  actions,
+  showCloseControl,
+  onClosePanel,
+  deleteConfirm,
+  onRequestDeleteRoom,
+}) {
+  const safeSections = Array.isArray(sections) ? sections : [];
 
   return (
     <div>
@@ -53,46 +113,36 @@ function StatePanelContent({ eyebrow, title, sections, actions, showCloseControl
         {title}
       </h2>
 
-      <div className="mt-[var(--space-6)] space-y-[var(--space-4)]">
+      <div className="mt-[var(--space-4)]">
+        <ManagementRow actions={actions} onRequestDeleteRoom={onRequestDeleteRoom} />
+      </div>
+
+      <div className="mt-[var(--space-6)] space-y-[var(--space-5)]">
         {safeSections.map((section) => (
-          <StateCard key={section.id} section={section} />
+          <QuietSection key={section.id} section={section} />
         ))}
       </div>
 
-      {safeActions.length ? (
-        <div className="mt-[var(--space-6)] grid gap-[var(--space-3)]">
-          {safeActions.map((action) => {
-            const ActionIcon = ACTION_ICONS[action.iconKey] || Download;
-
-            return (
-              <button
-                key={action.id}
-                type="button"
-                disabled={Boolean(action.disabled)}
-                onClick={() => action.onPress?.()}
-                className={`inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                  action.disabled
-                    ? "cursor-not-allowed border-[var(--line-whisper)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
-                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-                }`}
-              >
-                <ActionIcon size={14} aria-hidden="true" />
-                {action.label}
-                {action.disabled ? (
-                  <span className="normal-case tracking-normal text-[var(--ink-faint)]">Soon</span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
+      {deleteConfirm?.open ? <DeleteConfirmSheet {...deleteConfirm} /> : null}
     </div>
   );
 }
 
 export default function ChatStatePanelView(props) {
-  const { initialMobileOpen = false, ...contentProps } = props;
-  const [mobileOpen, setMobileOpen] = useState(initialMobileOpen);
+  const { initialMobileOpen = false, mobileOpen: controlledMobileOpen, onMobileOpenChange, ...contentProps } = props;
+
+  const [localMobileOpen, setLocalMobileOpen] = useState(initialMobileOpen);
+  const isControlled = typeof controlledMobileOpen === "boolean";
+  const mobileOpen = isControlled ? controlledMobileOpen : localMobileOpen;
+
+  function closeMobile() {
+    if (isControlled) {
+      onMobileOpenChange?.(false);
+      return;
+    }
+
+    setLocalMobileOpen(false);
+  }
 
   return (
     <>
@@ -100,51 +150,13 @@ export default function ChatStatePanelView(props) {
         <StatePanelContent {...contentProps} />
       </aside>
 
-      <div className="xl:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]"
-        >
-          <Eye size={14} aria-hidden="true" />
-          Chronicle State
-        </button>
-
-        {mobileOpen ? (
-          <KitModalFrame variant="sheet" onClose={() => setMobileOpen(false)} ariaLabel="Chronicle state">
-            <div className="p-[var(--space-4)]">
-              <StatePanelContent {...contentProps} showCloseControl={false} />
-            </div>
-          </KitModalFrame>
-        ) : null}
-      </div>
-    </>
-  );
-}
-
-function StateCard({ section }) {
-  const Icon = SECTION_ICONS[section?.iconKey] || Flag;
-  const rows = Array.isArray(section?.rows) ? section.rows : [];
-
-  return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
-      <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-        <Icon size={14} aria-hidden="true" />
-        {section?.title || "State"}
-      </p>
-
-      <div className="mt-[var(--space-3)] space-y-[var(--space-3)]">
-        {rows.map((row) => (
-          <div key={row.id}>
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-              {row.label}
-            </p>
-            <p className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
-              {row.value}
-            </p>
+      {mobileOpen ? (
+        <KitModalFrame variant="sheet" sheetGrabber onClose={closeMobile} ariaLabel="Chronicle state">
+          <div className="p-[var(--space-4)]">
+            <StatePanelContent {...contentProps} showCloseControl={false} />
           </div>
-        ))}
-      </div>
-    </div>
+        </KitModalFrame>
+      ) : null}
+    </>
   );
 }

@@ -1,13 +1,13 @@
-# Chat Cast Panel LOOM Package
+# Chat Party Panel LOOM Package
 
-**Contract:** `ChatCastPanel.contract.js` (v1.0.0)
+**Contract:** `ChatCastPanel.contract.js` (v2.0.0)
 
-Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
+Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. RESHAPED 23 Aug 2026
+(build-0823 pass 2, the Party panel ruling): renamed from Cast to
+Party in every user-visible string. New build; the legacy
 `components/studio/story-rooms/story-room-cast-panel` tree is a stale
 pre-upgrade fork of this repo and is read-only reference, never edited
-or imported from here. The behavioral baseline this package is a
-designed superset of is `crestfall-main/Crestfall`'s
-`story-room-cast-panel` package, contract 1.0.0.
+or imported from here.
 
 ## Boundary
 
@@ -17,58 +17,42 @@ ChatCastPanel.jsx
   -> ChatCastPanel.view.jsx
 ```
 
-The ViewModel is a defensive pass-through plus one real piece of
-behavior: the delete-confirm sheet's open/closed local state. The View
-composes `chat-npc-manager`'s already portable View directly
-(`npcParticipantManager` is a full `ChatNpcManagerViewProps` object),
-same View-level composition as the crestfall-main baseline.
+The ViewModel is a defensive pass-through only: the delete-confirm
+local state it used to own moved to `chat-state-panel` alongside
+Delete Story itself. The View composes `chat-npc-manager`'s already
+portable View directly (`npcParticipantManager` is a full
+`ChatNpcManagerViewProps` object).
 
 ## Desktop rail, mobile sheet
 
-Desktop renders a sticky, collapsible rail (`canClose` / `onClosePanel`,
-same as the baseline). Mobile does not clone a drawer: a "Room & Cast"
-trigger opens a `KitModalFrame` `variant="sheet"` (R7 structural close
-header, R4-safe) carrying the identical content, gated by local
-disclosure state (`initialMobileOpen` seeds it for isolated preview,
-same pattern as `chat-composer`'s tools sheet).
+Desktop renders a sticky, collapsible rail (`canClose` / `onClosePanel`).
+Mobile no longer carries its own trigger button: the composer's Menu
+and Party chips open the panels' mobile sheets instead (a lifted
+`mobileOpen` / `onMobileOpenChange` controlled pair, additive 2.0.0
+props; the View falls back to its own local state, seeded by
+`initialMobileOpen`, when the caller does not supply them).
 
-## Delete Story: a real kit confirm step, never window.confirm
+## Fixed 5 party slots
 
-`CHAT_CAST_PANEL_DELETE_CONFIRMATION` ports the baseline's exact
-seven-line copy (`useStoryRoomChatShellViewModel.js` in
-crestfall-main) unchanged. `onRequestDeleteRoom` opens a
-`KitModalFrame` `variant="sheet"` confirm step; the sheet's Cancel is
-`cf-btn--secondary`, its Delete Story is `cf-btn--danger-filled`, the
-one place in this repo's design law a filled danger button is legal
-(`docs/DESIGN-TOKENS.md` status colors usage law). The in-page Delete
-Story trigger itself stays a quiet ghost with `--status-danger` text
-only, per the same law; only the confirm step's own button is filled.
+`partyMembers` renders up to `CHAT_CAST_PANEL_MAX_PARTY_SIZE` (5)
+filled rows (38px avatar tile, name, role subline); remaining slots
+render dashed with "Open slot · 5 max". Double-clicking a filled row,
+or tapping an open slot, calls `onOpenPartyRoster`, which opens the
+new `chat-party-roster` selection surface. Set Player Character,
+Random Liked, and Delete Story are REMOVED from this panel (Delete
+Story now lives on `chat-state-panel`'s management row).
 
-## Cast cards
+## Scene art: icon-only, no caption
 
-Avatar (`--radius-sm`, the small-nested-art-thumbnail exception),
-selection chip, role, state (`Arriving`/`Present`/`Inactive`, free
-string beyond those three per the baseline's flexibility), and an
-optional note. Selectable cards report the chosen participant through
-`onSelectCastMember`; non-selectable cards (the player-controlled
-member) render as a plain article, matching contract law (presentation
-changes, the same selection still reports to the same handler).
-
-## Set Player Character, Random Liked, Delete Story
-
-`playerCharacterAction` is visible only when `turnCount === 0`
-(caller-owned gate, matching the crestfall-main inventory); its picker
-overlay is an opaque `playerCharacterPickerContent` slot supplied by
-the Binding Shell, same as the baseline (the picker itself is out of
-this wave's scope). `randomLikedAction` and `deleteAction` are
-straightforward visible/disabled/busy states.
+The missing-image law (`docs/BUILD-BLUEPRINT.md` 2.16(ac)): an
+icon-only well, no caption text, dead-centered. Clicking it calls
+`onOpenSceneImagePicker`.
 
 ## Fixtures
 
-`ChatCastPanel.fixtures.js`: complete, empty cast, many cast (with the
-NPC manager open), loading, error, setting-player-character busy,
-locked (actions hidden), the delete confirm sheet at rest and pending,
-the mobile sheet open, and a longest-content case.
+`ChatCastPanel.fixtures.js`: complete (open slots remain), empty
+party (5 open slots), full party (with the NPC manager open),
+loading, error, locked, mobile sheet open, and a longest-content case.
 
 ## Package assets
 

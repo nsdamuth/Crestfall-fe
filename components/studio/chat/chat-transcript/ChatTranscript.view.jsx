@@ -132,7 +132,7 @@ export default function ChatTranscriptView({
 
             {sending ? (
               <StatusCard icon={Loader2} spin>
-                Crestfall Engine is composing the next response
+                Composing...
               </StatusCard>
             ) : null}
 

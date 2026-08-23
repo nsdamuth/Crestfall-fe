@@ -24,6 +24,20 @@ export const CHAT_V2_STORY_MOCK_MENTION_OPTIONS = [
   { id: "char-thane", label: "Thane Corvid", avatarUrl: "" },
 ];
 
+// Party roster candidates, RULED 23 Aug 2026 (build-0823 pass 2): a
+// small mock pool distinct from the party's current members, so the
+// roster has both in-party rows and addable rows to demonstrate.
+export const CHAT_V2_STORY_MOCK_ROSTER_CANDIDATES = [
+  { id: "narrator", name: "The Chronicler", role: "Narrator", avatarUrl: "", color: "#e0ab5e", kind: "characters", liked: false },
+  { id: "mara", name: "Mara Venn", role: "Night Clerk", avatarUrl: AVATAR_DATA_URL, color: "#3ba6a0", kind: "characters", liked: true },
+  { id: "player", name: "Rowan Vale", role: "Player Character", avatarUrl: "", color: "#c25a8f", kind: "characters", liked: false },
+  { id: "thane", name: "Thane Corvid", role: "Investigator", avatarUrl: "", color: "#7a8cc4", kind: "characters", liked: true },
+  { id: "sable", name: "Sable Orr", role: "Dock Watcher", avatarUrl: "", color: "#a1a15c", kind: "npcs", liked: false },
+  { id: "ilyan", name: "Ilyan Moss", role: "Archive Custodian", avatarUrl: "", color: "", kind: "npcs", liked: false },
+];
+
+export const CHAT_V2_STORY_MOCK_ROSTER_INITIAL_PARTY_IDS = ["narrator", "mara", "player"];
+
 export const CHAT_V2_STORY_MOCK_LOCATION_OPTIONS = [
   {
     runtimeEntryId: "loc-brass-finch",
@@ -60,11 +74,12 @@ export function resolveChatV2StoryMock(id) {
     roomIdLabel: safeId,
     openingHeroImage: base.transcript.openingHeroImage,
     messageItems: base.transcript.messageItems,
-    castMembers: base.castPanel.castMembers,
+    partyMembers: base.castPanel.partyMembers,
     castPanel: base.castPanel,
     statePanel: base.statePanel,
     speakerOptions: CHAT_V2_STORY_MOCK_SPEAKER_OPTIONS,
     participantMentionOptions: CHAT_V2_STORY_MOCK_MENTION_OPTIONS,
     locationMentionOptions: CHAT_V2_STORY_MOCK_LOCATION_OPTIONS,
+    rosterCandidates: CHAT_V2_STORY_MOCK_ROSTER_CANDIDATES,
   };
 }
