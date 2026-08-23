@@ -24,10 +24,14 @@ import {
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
+// Local TextField, not SharedFields.TextField: this file needs a
+// native numeric input (type="number") for numeric requirement
+// values, which SharedFields.TextField does not expose. Kept local
+// intentionally rather than guessing at a shared-component change.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -35,7 +39,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -272,7 +276,7 @@ export default function MechanicsCommandRequirementsView({
   removeRequirement,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -305,7 +309,7 @@ export default function MechanicsCommandRequirementsView({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-4 text-sm leading-6 text-[var(--ink-faint)]">
           No explicit requirements. The command may still be blocked by an active HARD_LOCK guard.
         </p>
       )}

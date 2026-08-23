@@ -25,7 +25,7 @@ export default function MechanicsCommandOutcomesView({
   numericArgumentOptions = [],
 }) {
   return (
-    <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4">
+    <div>
       <div>
         <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Conditional Outcome Effects
@@ -132,7 +132,7 @@ export default function MechanicsCommandOutcomesView({
                   )}
                 </div>
               ) : (
-                <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+                <p className="mt-4 text-xs leading-5 text-[var(--ink-faint)]">
                   No branch-specific effects configured.
                 </p>
               )}

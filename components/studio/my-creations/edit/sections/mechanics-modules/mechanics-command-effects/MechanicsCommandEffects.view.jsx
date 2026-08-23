@@ -16,7 +16,7 @@ export default function MechanicsCommandEffectsView({
   numericArgumentOptions = [],
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>{variant.title}</p>
@@ -44,7 +44,7 @@ export default function MechanicsCommandEffectsView({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">{variant.emptyMessage}</p>
+        <p className="mt-4 text-sm leading-6 text-[var(--ink-faint)]">{variant.emptyMessage}</p>
       )}
     </div>
   );

@@ -241,7 +241,7 @@ export default function MechanicsStatusBlocksView({
   removeLine,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -277,9 +277,9 @@ export default function MechanicsStatusBlocksView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
           No status blocks defined yet. Add a footer such as relationship_footer.
-        </div>
+        </p>
       )}
     </section>
   );

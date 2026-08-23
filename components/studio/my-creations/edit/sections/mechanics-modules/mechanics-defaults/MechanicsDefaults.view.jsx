@@ -157,7 +157,7 @@ export default function MechanicsDefaultsView({
   removeEntry,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>

@@ -57,10 +57,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
       <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)]">{title}</p>
       <div className="mt-3 grid gap-2">
         {issues.map((issue, index) => (
-          <div
-            key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)]"
-          >
+          <div key={`${issue?.path || "issue"}-${index}`}>
             <code className="break-all text-[length:var(--text-label)] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
             </code>
@@ -419,7 +416,7 @@ export default function MechanicsPresetApplicationModalView({
                       </div>
 
                       {selectedPreset.liveValidation.testCommand ? (
-                        <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
+                        <div className="mt-3 border-t border-[var(--line-whisper)] pt-3">
                           <p className={EYEBROW_CLASS}>
                             Reference Test Command
                           </p>
@@ -543,7 +540,7 @@ export default function MechanicsPresetApplicationModalView({
                       {selectedPreset.replacementPaths.map((path) => (
                         <code
                           key={path}
-                          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[11px] text-[var(--ink)]"
+                          className="block break-all text-[11px] text-[var(--ink-dim)]"
                         >
                           {path}
                         </code>

@@ -18,10 +18,13 @@ import {
 const EYEBROW_CLASS =
   "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
+// Local TextField, not SharedFields.TextField: this file needs native
+// numeric inputs (type="number") for argument bounds, which
+// SharedFields.TextField does not expose.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -29,7 +32,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -337,7 +340,7 @@ export function MechanicsCommandArgumentsView({ model }) {
             />
 
             {model.isImplicitTargetArgumentType(argument.type) ? (
-              <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-3">
+              <p className="text-xs leading-5 text-[var(--ink-faint)] md:col-span-3">
                 This target is resolved automatically from the active Mechanics actor or Player Character. The command takes no text for this argument.
               </p>
             ) : null}
@@ -381,7 +384,7 @@ export function MechanicsCommandArgumentsView({ model }) {
                   }
                   placeholder="Optional maximum"
                 />
-                <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+                <p className="text-xs leading-5 text-[var(--ink-faint)]">
                   Leave either bound empty when the command should not enforce that limit during argument parsing.
                 </p>
               </>
@@ -419,7 +422,7 @@ export function MechanicsCommandArgumentsView({ model }) {
       ))}
     </div>
   ) : (
-    <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+    <p className="mt-4 text-sm text-[var(--ink-faint)]">
       No structured arguments. Commands such as #sheet or /help do not need one.
     </p>
   );

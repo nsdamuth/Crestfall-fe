@@ -79,7 +79,7 @@ function OutcomeChecks({ options, selected, onToggle }) {
 function DependencyChecks({ options, selected, onToggle }) {
   if (!options.length) {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+      <p className="text-xs leading-5 text-[var(--ink-faint)]">
         No earlier composition steps are available as dependencies.
       </p>
     );
@@ -147,7 +147,7 @@ function StepActions({ canMoveUp, canMoveDown, onMoveUp, onMoveDown, onRemove })
 function ConditionValueField({ condition, onPatch }) {
   if (["TRUTHY", "FALSY"].includes(condition.operator)) {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+      <p className="text-xs leading-5 text-[var(--ink-faint)]">
         {condition.operator} does not require a comparison value.
       </p>
     );
@@ -351,7 +351,7 @@ function EffectValueField({
 
   if (effect.type === "FLAG_CLEAR") {
     return (
-      <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+      <p className="text-xs leading-5 text-[var(--ink-faint)]">
         FLAG_CLEAR needs no value.
       </p>
     );
@@ -582,7 +582,7 @@ function EffectCard({
           }
         />
         {effect.type === "PROGRESSION_RECONCILE" ? (
-          <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+          <div className="flex items-center text-xs leading-5 text-[var(--ink-faint)]">
             Rank state is configured inside the progression profile below.
           </div>
         ) : (
@@ -813,7 +813,7 @@ function MechanicsStepCard({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--ink-dim)]">
+          <p className="mt-4 text-xs text-[var(--ink-faint)]">
             No conditions. This step is eligible whenever its phase, outcome routing, dependencies, and enabled state allow it.
           </p>
         )}
@@ -855,7 +855,7 @@ function MechanicsStepCard({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs text-[var(--ink-dim)]">
+          <p className="mt-4 text-xs text-[var(--ink-faint)]">
             No effects. An eligible empty step remains auditable but is treated as a failed application for continuation-policy purposes.
           </p>
         )}
@@ -1253,10 +1253,10 @@ export default function MechanicsCompositionBuilderView({
             {validationMessages.map((message, index) => (
               <p
                 key={`${message.path}-${index}`}
-                className={`rounded-lg border px-3 py-2 text-xs leading-5 ${
+                className={`text-xs leading-5 ${
                   message.level === "error"
-                    ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]"
-                    : "border-[var(--status-warning-border)] bg-black/20 text-[var(--status-warning-text)]"
+                    ? "text-[var(--status-danger-text)]"
+                    : "text-[var(--status-warning-text)]"
                 }`}
               >
                 <span className="font-mono text-[10px] text-[var(--ink-dim)]">
@@ -1332,7 +1332,7 @@ export default function MechanicsCompositionBuilderView({
             ))}
           </div>
         ) : (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="mt-5 text-sm leading-6 text-[var(--ink-faint)]">
             No authored Mechanics steps. Existing attempt effects and outcome branches continue to work unchanged.
           </p>
         )}
@@ -1377,7 +1377,7 @@ export default function MechanicsCompositionBuilderView({
             ))}
           </div>
         ) : (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="mt-5 text-sm leading-6 text-[var(--ink-faint)]">
             No authored domain steps. The command may still use its existing single Domain Adapter.
           </p>
         )}
