@@ -27,6 +27,7 @@ import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
+import { ASSET_KIND_TO_TYPE_BUCKET, TYPE_BUCKET_OPTIONS } from "@/lib/shared/presentation/typeBuckets";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -75,21 +76,10 @@ const FIXTURE_VAULT_ITEMS = [
 // fixture data yet (no location/lore/faction card kind exists in the
 // v2 model); its option ships with an honest zero count rather than
 // fabricated fixture items. CR-032 filed for the card-kind field
-// extension needed to populate it for real.
-const ASSET_KIND_TO_TYPE_BUCKET = {
-  character: "characters",
-  story: "stories",
-  adventure: "adventures",
-  image: "looks",
-};
-
-const TYPE_OPTIONS = [
-  { value: "characters", label: "Characters" },
-  { value: "worlds", label: "Worlds" },
-  { value: "looks", label: "Looks" },
-  { value: "stories", label: "Stories" },
-  { value: "adventures", label: "Adventures" },
-];
+// extension needed to populate it for real. RULED 23 Aug 2026
+// (build-0823 pass 3): promoted to the shared
+// lib/shared/presentation/typeBuckets.js module.
+const TYPE_OPTIONS = TYPE_BUCKET_OPTIONS;
 
 const VISIBILITY_OPTIONS = [
   { value: "PRIVATE", label: "Private" },
