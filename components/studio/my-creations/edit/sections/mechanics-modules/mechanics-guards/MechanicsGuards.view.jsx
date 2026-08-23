@@ -15,6 +15,7 @@ import {
   SelectField,
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
+  TextField,
 } from "../../SharedFields";
 
 const EYEBROW_CLASS =
@@ -23,23 +24,6 @@ const EYEBROW_CLASS =
 function valueToInput(value) {
   if (value === null || value === undefined) return "";
   return String(value);
-}
-
-function TextField({ label, value, onChange, placeholder, type = "text" }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
-      />
-    </label>
-  );
 }
 
 function SmallActionButton({ children, onClick, disabled = false }) {
@@ -245,7 +229,7 @@ function GuardCard({
             />
           </div>
 
-          <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-5 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className={EYEBROW_CLASS}>
                 Conditions
@@ -273,7 +257,7 @@ function GuardCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+              <p className="mt-4 text-sm text-[var(--ink-faint)]">
                 No conditions yet. Add at least one condition for the guard to evaluate.
               </p>
             )}
@@ -333,7 +317,7 @@ export default function MechanicsGuardsView({
   removeCondition,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -369,10 +353,10 @@ export default function MechanicsGuardsView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
           No guards defined yet. Add a hard lock, soft lock, or guidance rule.
-        </div>
+        </p>
       )}
-    </section>
+    </div>
   );
 }
