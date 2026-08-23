@@ -203,7 +203,7 @@ export default function WorldCreatorModal({ onClose }) {
       }),
     onSave: handleSave,
     onFinishAndSave: handleSave,
-    onSaveAndOpenEditor: handleSave,
+    closeAriaLabel: "Close world creator",
     onContinueInEditor: handleContinueInEditorAfterSave,
     onDone: handleDoneAfterSave,
     onClose: requestClose,

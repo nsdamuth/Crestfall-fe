@@ -204,7 +204,7 @@ export default function LookCreatorModal({ onClose }) {
       }),
     onSave: handleSave,
     onFinishAndSave: handleSave,
-    onSaveAndOpenEditor: handleSave,
+    closeAriaLabel: "Close look creator",
     onContinueInEditor: handleContinueInEditorAfterSave,
     onDone: handleDoneAfterSave,
     onClose: requestClose,
