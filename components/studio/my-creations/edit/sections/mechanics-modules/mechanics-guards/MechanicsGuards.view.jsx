@@ -317,7 +317,7 @@ export default function MechanicsGuardsView({
   removeCondition,
 }) {
   return (
-    <div>
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -357,6 +357,6 @@ export default function MechanicsGuardsView({
           No guards defined yet. Add a hard lock, soft lock, or guidance rule.
         </p>
       )}
-    </div>
+    </section>
   );
 }
