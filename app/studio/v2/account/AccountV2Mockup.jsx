@@ -582,7 +582,7 @@ export default function AccountV2Mockup() {
                   />
                 </div>
                 <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-                  Native/mobile experiences remain Everyone-only. Teen and Adult access will require age verification before they become active.
+                  Native/mobile experiences remain Everyone-only. Young Adult and Adult access will require age verification before they become active.
                 </p>
               </div>
             </div>

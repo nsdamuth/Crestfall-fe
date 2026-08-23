@@ -366,10 +366,11 @@ both are queued for the Gate close and law-gap rulings above.
 - **List density.** Two-up list rows permitted at desktop widths
   where whitespace allows; Community and Creator Connections both
   render list two-up at 1100px and up.
-- **Ratings presentation.** SFW displays as Everyone, MATURE as Teen,
-  EXPLICIT as Adult, one to one, no disabled row. A required content
-  audit (CR-027) gates live, non-fixture data under these labels;
-  fixture-driven previews are unaffected.
+- **Ratings presentation.** SFW displays as Everyone, MATURE as Young
+  Adult (word superseded 23 Aug 2026, was Teen; FE display layer
+  only), EXPLICIT as Adult, one to one, no disabled row. A required
+  content audit (CR-027) gates live, non-fixture data under these
+  labels; fixture-driven previews are unaffected.
 - **Selection-state law.** Selected and active states read as a gold
   icon or text plus a light gold wash (`--fill`); no bold borders.
 - **Image viewer law (R2/R5).** The viewer is its own surface, never a

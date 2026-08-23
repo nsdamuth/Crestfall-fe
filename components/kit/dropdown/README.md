@@ -76,7 +76,9 @@ The popover still never locks.
 
 An option whose backend cannot answer yet ships `isDisabled: true`
 and renders the word "Soon" (never a fake filter). The rating fixture
-uses this for the Teen tier pending CR-027.
+demonstrated this pattern for the Young Adult tier (display word
+superseded 23 Aug 2026, was Teen) prior to CR-027's final ruling,
+which made all three rating tiers live with no disabled row.
 
 ## States
 
