@@ -1,4 +1,4 @@
-export const CHAT_MESSAGE_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_MESSAGE_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CHAT_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",
@@ -91,6 +91,12 @@ export const CHAT_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  * @property {"TEXT"|"AUTO_EVENT_MEDIA"} contentType
  * @property {string} speakerLabel
  * @property {string|null} speakerAvatarUrl
+ * @property {string|null} speakerColor added 1.1.0, 23 Aug 2026
+ *   (build-0823 pass 2, the tinted bubble law). A CSS color the View
+ *   sets as the inline --chat-speaker custom property for this
+ *   message; the bubble fill, border, avatar tile, and the gap-6
+ *   clamped speaker-name ink all derive from it. Null or omitted
+ *   falls back to --gold-ornament, the pre-1.1.0 rendering.
  * @property {string} openingLabel
  * @property {string} modeLabel
  * @property {"LEGACY"|"SEMANTIC"} bodyMode

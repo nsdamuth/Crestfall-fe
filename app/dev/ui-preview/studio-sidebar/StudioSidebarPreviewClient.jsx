@@ -7,7 +7,6 @@ import {
   studioSidebarCollapsedFixture,
   studioSidebarExpandedFixture,
   studioSidebarPreviewFixture,
-  studioSidebarPreviewLegacyOpenFixture,
   studioSidebarSocialOpenFixture,
 } from "@/components/studio/studio-sidebar/StudioSidebar.fixtures";
 
@@ -27,10 +26,6 @@ const STATES = Object.freeze({
   preview: Object.freeze({
     label: "Preview Nav (flag on)",
     fixture: studioSidebarPreviewFixture,
-  }),
-  previewLegacy: Object.freeze({
-    label: "Preview Nav, Legacy Open",
-    fixture: studioSidebarPreviewLegacyOpenFixture,
   }),
 });
 

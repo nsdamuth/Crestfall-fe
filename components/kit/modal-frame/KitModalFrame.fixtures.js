@@ -167,6 +167,17 @@ export const kitModalFrameFixtures = [
     },
   },
   {
+    id: "sheetGrabber",
+    label: "Sheet, grabber (build-0823 pass 2)",
+    props: {
+      variant: "sheet",
+      panelClassName: "max-w-none",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
     id: "unsavedDismiss",
     label: "Unsaved dismiss confirm (mobile modal law, condition 3)",
     props: {

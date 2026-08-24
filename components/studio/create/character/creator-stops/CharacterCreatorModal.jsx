@@ -348,7 +348,7 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
       }),
     onSave: handleSave,
     onFinishAndSave: handleSave,
-    onSaveAndOpenEditor: handleSave,
+    closeAriaLabel: "Close character creator",
     onContinueInEditor: handleContinueInEditorAfterSave,
     onDone: handleDoneAfterSave,
     onClose: requestClose,

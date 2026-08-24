@@ -1133,23 +1133,25 @@ single-column rows left large blank middles above 1100px, the pattern
 this law bans.
 
 **(h) Ratings presentation, RULED 9 Aug 2026 (kit polish pass),
-mapping CORRECTED 9 Aug 2026 (demo prep pass).** Everyone and Adult
-are live display tiers over real backend values; Teen is a disabled
-row with no backend value, arriving with CR-027, no stub row for the
-other two. Film anchors move out of visible description lines onto
-the row tooltip (native title attribute as an interim, pending a
-design-system tooltip pattern, flagged in
-docs/CONTRACT-REQUESTS.md CR-027). The mapping lives in
+mapping CORRECTED 9 Aug 2026 (demo prep pass), RULED FINAL 9 Aug 2026
+(kit polish 2 pass, CR-027), DISPLAY WORD SUPERSEDED 23 Aug 2026
+(Brian, build-0823 close-out session).** Everyone, the Young Adult
+tier (MATURE), and Adult are all three live display tiers over real
+backend values, one to one, no disabled row. Film anchors move out of
+visible description lines onto the row tooltip (native title
+attribute as an interim, pending a design-system tooltip pattern,
+flagged in docs/CONTRACT-REQUESTS.md CR-027). The mapping lives in
 `lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
-SFW displays as Everyone, MATURE and EXPLICIT both display as Adult
-(EXPLICIT's mapping is interim, pending Nick's migrate-or-reclassify
-ruling), Teen has no backend value yet. The prior mapping recorded
-here (MATURE as Teen, EXPLICIT as Adult) was a semantic error and is
-superseded; see CR-027 for the corrected detail. Whether the backend
-should carry a fourth value is deferred to Nick (CR-027), pending the
-draft content-standards doc revision. The rating facet renders as a
-dropdown on every filter surface, never as loose chips and never as a
-card badge.
+SFW displays as Everyone, MATURE displays as Young Adult (word
+superseded 23 Aug 2026, was Teen; FE display layer only, the backend
+enum value MATURE and the internal tier id TEEN are unchanged),
+EXPLICIT displays as Adult. The paragraph as it stood 9 Aug 2026
+(Teen a disabled row, MATURE and EXPLICIT both display as Adult) was
+an interim state, itself superseded by the 9 Aug 2026 kit-polish-2
+final ruling before this display-word change landed; see
+docs/CONTRACT-REQUESTS.md CR-027 for the full lineage. The rating
+facet renders as a dropdown on every filter surface, never as loose
+chips and never as a card badge.
 
 **(i) Selection-state law, RULED 9 Aug 2026 (kit polish pass).**
 Selected and active states read as a gold icon or text plus a light
@@ -1181,6 +1183,13 @@ cap, no second padding layer, no element in a narrower column than
 the filter line. The `studio-page` kit package owns the skeleton;
 `studio-filter-bar`'s inner padding mirrors the shell padding token
 for token.
+
+SUPERSEDED 23 Aug 2026 by the container law in
+`docs/DESIGN-TOKENS.md` ("Container law, RULED 23 Aug 2026"): every
+`/studio` page's content column is now `max-width: var(--container)`
+(1200px), centered, on the same shell padding ramp. This paragraph
+is kept for lineage; the "no max-width cap" rule it states is no
+longer in force.
 
 **(m) Banner sizing law, RULED 10 Aug 2026 (kit polish 3 pass, R2),
 amends 2.3.** The bottom promo banner keeps its fixed per-treatment

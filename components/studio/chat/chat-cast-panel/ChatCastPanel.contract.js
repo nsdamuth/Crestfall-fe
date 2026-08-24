@@ -1,90 +1,48 @@
-export const CHAT_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHAT_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
 
-export const CHAT_CAST_MEMBER_STATES = Object.freeze({
-  ARRIVING: "Arriving",
-  PRESENT: "Present",
-  INACTIVE: "Inactive",
-});
-
-// Ported unchanged from the crestfall-main chat baseline
-// (useStoryRoomChatShellViewModel.js): the real confirm-step copy this
-// package's deleteConfirm sheet carries, replacing window.confirm.
-export const CHAT_CAST_PANEL_DELETE_CONFIRMATION = [
-  "Delete this Story?",
-  "",
-  "This permanently deletes this chat session and all messages.",
-  "Underlying characters, templates, scenarios, narrators, and locations are not deleted.",
-  "Interaction totals will remain.",
-  "",
-  "This cannot be undone.",
-].join("\n");
+export const CHAT_CAST_PANEL_MAX_PARTY_SIZE = 5;
 
 /**
- * Portable View contract, wave C3 (docs/plans/FABLE-GATE-PLAN.md).
- *
- * A designed superset of the crestfall-main chat baseline
- * (story-room-cast-panel 1.0.0). The View owns the room-media
- * presentation, cast cards, action controls, errors, the delete
- * confirm step, room-list link, and composition of the already
- * portable `chat-npc-manager` View. It does not receive raw Story
+ * Portable View contract, wave C3 (docs/plans/FABLE-GATE-PLAN.md),
+ * RESHAPED 2.0.0 (23 Aug 2026, build-0823 pass 2, the Party panel
+ * ruling): renamed from Cast to Party in every user-visible string;
+ * fixed 5 slots, vertical rows, dashed "Open slot" placeholders past
+ * the filled count. Set Player Character, Random Liked, and Delete
+ * Story left this package (Delete Story now lives on
+ * chat-state-panel's management row); a double-click on a filled
+ * slot or a tap on an open slot opens the Party roster instead,
+ * through onOpenPartyRoster. The scene-art well is icon-only per the
+ * missing-image law (no caption) and opens the image selector
+ * through onOpenSceneImagePicker. The View does not receive raw Story
  * records, participant lifecycle records, player-character creations,
  * or API clients. Desktop renders a sticky collapsible rail; mobile
  * renders a KitModalFrame sheet (R4/R7), never a hand-rolled drawer.
  *
- * @typedef {Object} ChatCastMemberViewItem
+ * @typedef {Object} ChatPartyMemberViewItem
  * @property {string} id
  * @property {string} name
  * @property {string} avatarUrl
  * @property {string} fallbackInitial
  * @property {string} role
- * @property {"Arriving"|"Present"|"Inactive"|string} state
- * @property {string} note
- * @property {boolean} isActive
- * @property {boolean} selectable
- * @property {boolean} selected
- * @property {string} selectionLabel
- * @property {string} selectionAriaLabel
- *
- * @typedef {Object} ChatCastPanelActionState
- * @property {boolean} visible
- * @property {boolean} disabled
- * @property {boolean} busy
- * @property {string} label
- * @property {string} busyLabel
- *
- * @typedef {Object} ChatCastPanelDeleteConfirm
- * @property {boolean} open
- * @property {string} message Baseline copy, CHAT_CAST_PANEL_DELETE_CONFIRMATION.
- * @property {boolean} pending
- * @property {string} error
- * @property {(() => void)|null} onConfirm
- * @property {(() => void)|null} onCancel
+ * @property {string} color CSS color, the per-member --chat-speaker anchor for the avatar tile and fallback initial ink.
  *
  * @typedef {Object} ChatCastPanelViewProps
  * @property {string} eyebrow
  * @property {boolean} canClose
- * @property {{imageUrl:string,imageAltText:string,speakerName:string,emptyEyebrow:string,emptyMessage:string,imageEyebrow:string}} featuredMedia Deterministic last-speaker image pick; determinism is caller-owned.
+ * @property {{imageUrl:string,imageAltText:string,speakerName:string,imageEyebrow:string}} featuredMedia Deterministic last-speaker image pick; determinism is caller-owned.
  * @property {string} roomTitle
  * @property {string} roomIdLabel
  * @property {{label:string,value:string}} narrator
- * @property {string} castHeading
- * @property {string} castDescription
- * @property {ChatCastMemberViewItem[]} castMembers
- * @property {ChatCastPanelActionState} playerCharacterAction Visible only when turnCount === 0 (caller-owned gate).
- * @property {string} setPlayerCharacterError
- * @property {import("react").ReactNode} playerCharacterPickerContent Opaque picker overlay slot supplied by the Binding Shell.
+ * @property {string} partyHeading
+ * @property {string} partyDescription
+ * @property {ChatPartyMemberViewItem[]} partyMembers Up to CHAT_CAST_PANEL_MAX_PARTY_SIZE; remaining slots render dashed and open.
  * @property {Object|null} npcParticipantManager Direct ChatNpcManager View props.
- * @property {ChatCastPanelActionState} randomLikedAction
- * @property {string} randomLikedError
- * @property {ChatCastPanelActionState} deleteAction
- * @property {string} deleteError
- * @property {ChatCastPanelDeleteConfirm|null} deleteConfirm
  * @property {string} roomListHref
  * @property {string} roomListLabel
- * @property {boolean} initialMobileOpen Fixture/dev-only seed for the mobile sheet's local disclosure state.
+ * @property {boolean} initialMobileOpen Fixture/dev-only seed for the mobile sheet's local disclosure state, used only when mobileOpen is not supplied.
+ * @property {boolean} [mobileOpen] Controlled mobile-sheet open state; when supplied (a boolean), the View defers to the caller instead of its own local state.
+ * @property {((next: boolean) => void)|null} [onMobileOpenChange] Required alongside mobileOpen; fires on every open/close request.
  * @property {(() => void)|null} onClosePanel
- * @property {((participantId: string) => void)|null} onSelectCastMember
- * @property {(() => void)|null} onOpenPlayerCharacterPicker
- * @property {(() => void)|null} onLoadRandomLiked
- * @property {(() => void)|null} onRequestDeleteRoom Opens deleteConfirm; the confirm step's own onConfirm performs the real delete.
+ * @property {(() => void)|null} onOpenPartyRoster Opens the Party roster selection surface (new package, chat-party-roster).
+ * @property {(() => void)|null} onOpenSceneImagePicker Opens the scene image selector.
  */

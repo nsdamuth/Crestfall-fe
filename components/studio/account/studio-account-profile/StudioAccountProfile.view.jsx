@@ -1,8 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
-
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function StudioAccountProfileView({
   isLoading,
@@ -380,46 +379,38 @@ function ReadOnlyValue({ label, value, note }) {
 
 function ContentPreferenceNoticeModal({ requestedRatingLabel, onClose }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
-      <section className="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Age Verification Required
-            </p>
-            <h2 className="mt-2 font-display text-3xl">
-              {requestedRatingLabel} Access Coming Soon
-            </h2>
-          </div>
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabelledBy="studio-account-profile-content-preference-title"
+      panelClassName="w-full max-w-md p-[var(--space-5)]"
+    >
+      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        Age Verification Required
+      </p>
+      <h2
+        id="studio-account-profile-content-preference-title"
+        className="mt-2 font-display text-3xl"
+      >
+        {requestedRatingLabel} Access Coming Soon
+      </h2>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-[var(--radius-full)] border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
-            aria-label="Close"
-          >
-            <X size={16} />
-          </button>
-        </div>
+      <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">
+        Mature and explicit content preferences are not active yet. Before
+        anything above SFW is supported, Crestfall will require age
+        verification and additional account controls.
+      </p>
 
-        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">
-          Mature and explicit content preferences are not active yet. Before
-          anything above SFW is supported, Crestfall will require age
-          verification and additional account controls.
-        </p>
+      <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
+        For now, your account will remain set to SFW Only.
+      </p>
 
-        <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
-          For now, your account will remain set to SFW Only.
-        </p>
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="cf-btn cf-btn--primary mt-5 w-full"
-        >
-          OK
-        </button>
-      </section>
-    </div>
+      <button
+        type="button"
+        onClick={onClose}
+        className="cf-btn cf-btn--primary mt-5 w-full"
+      >
+        OK
+      </button>
+    </KitModalFrame>
   );
 }

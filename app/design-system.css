@@ -191,6 +191,20 @@
    kit-search-input suppression rule below is a different, still-live
    recipe. */
 
+/* --- SEARCH FIELD FOCUS, wrapper-level -------------------------
+   RULED (Brian live-walk polish, item 1): reverses the inner-input
+   default above for search fields specifically. The bordered wrapper
+   is the field's visual unit, so the ring belongs on the wrapper via
+   :focus-within, and the inner .kit-search-input must never show its
+   own ring. Wired once, globally, so every kit-search-field consumer
+   inherits it with no per-instance opt-in. */
+.kit-search-field:focus-within {
+  box-shadow: var(--focus-ring);
+}
+.kit-search-input:focus-visible {
+  box-shadow: none;
+}
+
 /* The native type=search cancel/clear icon renders in the browser's
    own color (Chromium and Edge both draw it outside token law); it
    is hidden here so KitStudioFilterBar's own --ink-faint clear icon

@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.2.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -55,6 +55,11 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.2.0";
  *   ("Discard changes?", Keep editing / Discard, B5 danger-fill
  *   recipe on the destructive action) instead of closing immediately.
  *   With the default false, dismissal behavior is unchanged.
+ * @property {boolean} [sheetGrabber] added 1.3.0, 23 Aug 2026
+ *   (build-0823 pass 2). Default false. When true and variant is
+ *   "sheet", renders a small decorative grabber bar above the sheet
+ *   header row (aria-hidden, no drag behavior). With the default
+ *   false, sheet rendering is unchanged.
  * @property {string} [ariaLabelledBy] forwarded to the dialog, same
  *   as ModalShell
  * @property {string} [ariaDescribedBy] forwarded to the dialog

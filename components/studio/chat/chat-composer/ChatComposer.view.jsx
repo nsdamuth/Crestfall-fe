@@ -2,36 +2,36 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  BookOpen,
-  Download,
-  Eye,
+  ChevronDown,
   Image as ImageIcon,
   MapPin,
+  Menu,
+  MessageSquare,
   Send,
-  Share2,
-  Shuffle,
-  SlidersHorizontal,
-  Sparkles,
+  Sparkle,
   Square,
-  UserRound,
   Users,
   Wand2,
 } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
-import { CHAT_COMPOSER_DRAFT_SOFT_LIMIT } from "./ChatComposer.contract";
+import { CHAT_COMPOSER_DRAFT_SOFT_LIMIT, CHAT_COMPOSER_MODES } from "./ChatComposer.contract";
 
-const SPEAKER_ICONS = {
-  auto: Sparkles,
-  narrator: BookOpen,
-  participant: UserRound,
-  random: Shuffle,
+// One action-bar grid at BOTH breakpoints, RULED 23 Aug 2026
+// (build-0823 pass 2), replacing the prior split Desktop/Mobile
+// anatomy's "Next Speaker" row and mode-segmented-control column.
+const PICKER_MODES = [CHAT_COMPOSER_MODES.DIALOGUE, CHAT_COMPOSER_MODES.ACTION, CHAT_COMPOSER_MODES.SUGGESTION];
+
+const MODE_CHIP_LABELS = {
+  [CHAT_COMPOSER_MODES.DIALOGUE]: "Dialogue",
+  [CHAT_COMPOSER_MODES.ACTION]: "Action",
+  [CHAT_COMPOSER_MODES.SUGGESTION]: "Suggestion",
+  [CHAT_COMPOSER_MODES.OOC]: "OOC",
+  [CHAT_COMPOSER_MODES.DIRECT]: "Direct",
 };
 
 const SHARED_PROP_KEYS = [
-  "modeOptions",
   "mode",
-  "speakerOptions",
   "speakerId",
   "draft",
   "draftLength",
@@ -72,6 +72,8 @@ const SHARED_PROP_KEYS = [
   "onSelectLocation",
   "onDismissLocationSuggestions",
   "onSend",
+  "onOpenCast",
+  "onOpenState",
 ];
 
 export default function ChatComposerView(props) {
@@ -82,13 +84,7 @@ export default function ChatComposerView(props) {
 
   return (
     <>
-      <DesktopComposer {...sharedProps} />
-      <MobileComposer
-        {...sharedProps}
-        onOpenCast={props.onOpenCast}
-        onOpenState={props.onOpenState}
-        initialToolsOpen={props.initialToolsOpen}
-      />
+      <ComposerBar {...sharedProps} />
 
       {props.sceneImageConfirmSheet?.open ? (
         <SceneImageConfirmSheet {...props.sceneImageConfirmSheet} />
@@ -97,79 +93,16 @@ export default function ChatComposerView(props) {
   );
 }
 
-function ModeSegmentedControl({ modeOptions = [], mode = "", onChangeMode, idPrefix = "" }) {
+// B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
+// to every modal-family divider: 1px, fades to transparent at both
+// ends, never edge-to-edge. B8: footer buttons align to its ends.
+function FadeDivider({ className = "" }) {
   return (
-    <div role="radiogroup" aria-label="Composer mode" className="flex flex-wrap gap-[var(--space-1)]">
-      {modeOptions.map((option) => {
-        const active = option.value === mode;
-
-        return (
-          <button
-            key={`${idPrefix}${option.value}`}
-            type="button"
-            role="radio"
-            aria-checked={active}
-            onClick={() => onChangeMode?.(option.value)}
-            className={`min-h-[var(--control-md)] touch-manipulation rounded-[var(--radius-full)] border px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-              active
-                ? "border-[var(--gold-action)]/60 bg-[var(--fill)] text-[var(--gold-bright)]"
-                : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-            }`}
-          >
-            {option.label}
-          </button>
-        );
-      })}
-    </div>
+    <div
+      aria-hidden="true"
+      className={`h-px bg-[image:var(--line-fade)] ${className}`}
+    />
   );
-}
-
-function SpeakerButtons({ options = [], selectedId = "", onChange, disabled = false }) {
-  return options.map((option) => {
-    const Icon = SPEAKER_ICONS[option.iconKind] || UserRound;
-    const active = selectedId === option.id;
-    const isParticipant = !["AUTO", "RANDOM"].includes(option.id);
-    const title = isParticipant
-      ? `Send to ${option.label}; select with an empty draft to yield the next turn`
-      : `Choose ${option.label} speaker routing`;
-
-    return (
-      <button
-        key={option.id}
-        type="button"
-        onClick={() => onChange?.(option.id)}
-        disabled={disabled}
-        aria-pressed={active}
-        aria-label={title}
-        title={title}
-        className={`${
-          isParticipant
-            ? "relative h-[var(--control-md)] w-[var(--control-md)] shrink-0 overflow-hidden rounded-[var(--radius-full)]"
-            : "inline-flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] rounded-[var(--radius-full)] px-[var(--space-3)]"
-        } touch-manipulation border text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] ${
-          active
-            ? "border-[var(--gold-action)]/70 bg-[var(--fill)] text-[var(--gold-bright)]"
-            : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-        }`}
-      >
-        {isParticipant ? (
-          option.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={option.avatarUrl} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center bg-[var(--surface-3)] text-[length:var(--text-ui)] font-[var(--weight-bold)] text-[var(--gold-ornament)]">
-              {String(option.label || "?").charAt(0).toUpperCase()}
-            </span>
-          )
-        ) : (
-          <>
-            <Icon size={13} aria-hidden="true" />
-            {option.label}
-          </>
-        )}
-      </button>
-    );
-  });
 }
 
 function LengthCounter({ draftLength = 0, showLengthCounter = false }) {
@@ -195,23 +128,18 @@ function SubmitButton({
   streamingSupported,
   isStreaming,
   onStopGenerating,
-  compact = false,
 }) {
   if (streamingSupported && isStreaming) {
     return (
       <button
         type="button"
         onClick={() => onStopGenerating?.()}
-        className={
-          compact
-            ? "flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)]"
-            : "cf-btn cf-btn--secondary"
-        }
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)] xl:w-auto xl:px-[var(--space-4)]"
         aria-label="Stop generating"
         title="Stop generating"
       >
-        <Square size={compact ? 15 : 14} aria-hidden="true" />
-        {compact ? null : "Stop generating"}
+        <Square size={16} aria-hidden="true" />
+        <span className="hidden xl:inline">Stop generating</span>
       </button>
     );
   }
@@ -221,25 +149,23 @@ function SubmitButton({
       type="button"
       onClick={() => onSend?.()}
       disabled={sendDisabled}
-      className={
-        compact
-          ? "flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--gold-action)]/45 bg-[var(--fill)] text-[var(--gold-bright)] transition hover:bg-[var(--fill-strong)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
-          : "goldring cf-btn cf-btn--primary"
-      }
+      className="goldring flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--gold-action)]/45 bg-[var(--fill)] text-[var(--gold-bright)] transition hover:bg-[var(--fill-strong)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] xl:w-auto xl:px-[var(--space-4)]"
       title={isSending ? submitPendingLabel : submitLabel}
       aria-label={isSending ? submitPendingLabel : submitLabel}
     >
       {submitIsContinuation ? (
-        <Sparkles size={compact ? 16 : 15} aria-hidden="true" />
+        <Sparkle size={16} aria-hidden="true" />
       ) : (
-        <Send size={compact ? 16 : 15} aria-hidden="true" />
+        <Send size={16} aria-hidden="true" />
       )}
-      {compact ? null : isSending ? submitPendingLabel : submitLabel}
+      <span className="hidden text-[length:var(--text-cta)] xl:inline">
+        {isSending ? submitPendingLabel : submitLabel}
+      </span>
     </button>
   );
 }
 
-function SceneToolButtons({ sceneImageSeat, useCurrentSceneSeat, compact = false }) {
+function SceneToolButtons({ sceneImageSeat, useCurrentSceneSeat }) {
   return (
     <>
       {sceneImageSeat?.available ? (
@@ -247,16 +173,12 @@ function SceneToolButtons({ sceneImageSeat, useCurrentSceneSeat, compact = false
           type="button"
           onClick={() => sceneImageSeat.onOpenConfirm?.()}
           disabled={sceneImageSeat.pending}
-          className={
-            compact
-              ? "flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-ornament)] disabled:opacity-[var(--state-disabled-opacity)]"
-              : "inline-flex h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
-          }
-          title={`Generate a scene image (${sceneImageSeat.costLabel})`}
+          className="inline-flex h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
+          title="Generate a scene image"
           aria-label={`Generate a scene image (${sceneImageSeat.costLabel})`}
         >
           <ImageIcon size={14} aria-hidden="true" />
-          {compact ? null : `Scene Image · ${sceneImageSeat.costLabel}`}
+          Scene Image
         </button>
       ) : null}
 
@@ -265,31 +187,15 @@ function SceneToolButtons({ sceneImageSeat, useCurrentSceneSeat, compact = false
           type="button"
           onClick={() => useCurrentSceneSeat.onUse?.()}
           disabled={useCurrentSceneSeat.pending}
-          className={
-            compact
-              ? "flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-ornament)] disabled:opacity-[var(--state-disabled-opacity)]"
-              : "inline-flex h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
-          }
+          className="inline-flex h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
           title="Describe the current scene"
           aria-label="Use current scene"
         >
           <Wand2 size={14} aria-hidden="true" />
-          {compact ? null : "Use Current Scene"}
+          Use Current Scene
         </button>
       ) : null}
     </>
-  );
-}
-
-// B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
-// to every modal-family divider: 1px, fades to transparent at both
-// ends, never edge-to-edge. B8: footer buttons align to its ends.
-function FadeDivider({ className = "" }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={`h-px bg-[image:var(--line-fade)] ${className}`}
-    />
   );
 }
 
@@ -320,7 +226,7 @@ function SceneImageConfirmSheet({ costLabel = "", pending = false, error = "", o
             Cancel
           </button>
           <button type="button" onClick={() => onConfirm?.()} className="goldring cf-btn cf-btn--primary" disabled={pending}>
-            {pending ? "Generating" : `Generate (${costLabel})`}
+            {pending ? "Generating" : "Generate"}
           </button>
         </div>
       </div>
@@ -328,140 +234,125 @@ function SceneImageConfirmSheet({ costLabel = "", pending = false, error = "", o
   );
 }
 
-function DesktopComposer({
-  modeOptions,
-  mode,
-  speakerOptions,
-  speakerId,
-  draft,
-  draftLength,
-  showLengthCounter,
-  mentionSuggestions,
-  highlightedMentionIndex,
-  commandSuggestions,
-  highlightedCommandIndex,
-  highlightedCommandExact,
-  locationSuggestions,
-  highlightedLocationIndex,
-  placeholder,
-  textareaDisabled,
-  sendDisabled,
-  isSending,
-  submitIsContinuation,
-  submitLabel,
-  submitPendingLabel,
-  streamingSupported,
-  isStreaming,
-  onStopGenerating,
-  sceneImageSeat,
-  useCurrentSceneSeat,
-  onChangeMode,
-  onChangeSpeaker,
-  onChangeDraft,
-  onUpdateSuggestionQueries,
-  onMoveMentionHighlight,
-  onSelectHighlightedMention,
-  onSelectMention,
-  onDismissMentionSuggestions,
-  onMoveCommandHighlight,
-  onSelectHighlightedCommand,
-  onSelectCommand,
-  onDismissCommandSuggestions,
-  onMoveLocationHighlight,
-  onSelectHighlightedLocation,
-  onSelectLocation,
-  onDismissLocationSuggestions,
-  onSend,
-}) {
-  const textareaRef = useRef(null);
-
-  useAutoResizeTextarea(textareaRef, draft, 360);
+// Dialogue mode chip, RULED 23 Aug 2026: pops a small anchored picker
+// presenting Dialogue / Action / Suggestion. OOC and DIRECT stay
+// contract-legal (CHAT_COMPOSER_MODES) but are not surfaced here.
+function ModeChip({ mode, onChangeMode }) {
+  const [open, setOpen] = useState(false);
+  const currentLabel = MODE_CHIP_LABELS[mode] || MODE_CHIP_LABELS[CHAT_COMPOSER_MODES.DIALOGUE];
 
   return (
-    <div className="hidden border-t border-[var(--line-whisper)] bg-[var(--surface-3)] p-[var(--space-4)] xl:block">
-      <div className="mb-[var(--space-3)] flex flex-wrap items-center gap-[var(--space-2)]">
-        <p className="mr-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          Next Speaker
-        </p>
-        <SpeakerButtons options={speakerOptions} selectedId={speakerId} onChange={onChangeSpeaker} />
-      </div>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className="flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] xl:h-[2.25rem]"
+      >
+        <MessageSquare size={14} aria-hidden="true" className="shrink-0" />
+        <span className="truncate">{currentLabel}</span>
+        <ChevronDown size={13} aria-hidden="true" className="shrink-0" />
+      </button>
 
-      <div className="grid gap-[var(--space-3)] lg:grid-cols-[minmax(0,1fr)_200px]">
-        <div>
-          <label className="block">
-            <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-              Message
-            </span>
-
-            <ParticipantMentionTextarea
-              textareaRef={textareaRef}
-              value={draft}
-              mentionSuggestions={mentionSuggestions}
-              highlightedMentionIndex={highlightedMentionIndex}
-              commandSuggestions={commandSuggestions}
-              highlightedCommandIndex={highlightedCommandIndex}
-              highlightedCommandExact={highlightedCommandExact}
-              locationSuggestions={locationSuggestions}
-              highlightedLocationIndex={highlightedLocationIndex}
-              disabled={textareaDisabled}
-              placeholder={placeholder}
-              rows={2}
-              className="mt-[var(--space-2)] max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]"
-              onChangeDraft={onChangeDraft}
-              onUpdateSuggestionQueries={onUpdateSuggestionQueries}
-              onMoveMentionHighlight={onMoveMentionHighlight}
-              onSelectHighlightedMention={onSelectHighlightedMention}
-              onSelectMention={onSelectMention}
-              onDismissMentionSuggestions={onDismissMentionSuggestions}
-              onMoveCommandHighlight={onMoveCommandHighlight}
-              onSelectHighlightedCommand={onSelectHighlightedCommand}
-              onSelectCommand={onSelectCommand}
-              onDismissCommandSuggestions={onDismissCommandSuggestions}
-              onMoveLocationHighlight={onMoveLocationHighlight}
-              onSelectHighlightedLocation={onSelectHighlightedLocation}
-              onSelectLocation={onSelectLocation}
-              onDismissLocationSuggestions={onDismissLocationSuggestions}
-              onSend={onSend}
-            />
-          </label>
-
-          <div className="mt-[var(--space-3)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
-            <div className="flex flex-wrap items-center gap-[var(--space-2)]">
-              <SceneToolButtons sceneImageSeat={sceneImageSeat} useCurrentSceneSeat={useCurrentSceneSeat} />
-            </div>
-            <LengthCounter draftLength={draftLength} showLengthCounter={showLengthCounter} />
-          </div>
+      {open ? (
+        <div
+          role="listbox"
+          className="cf-dropdown absolute bottom-full left-0 z-50 mb-[var(--space-2)] w-full min-w-[10rem]"
+        >
+          {PICKER_MODES.map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="option"
+              aria-selected={mode === value}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onChangeMode?.(value);
+                setOpen(false);
+              }}
+              className={`flex min-h-[var(--control-sm)] w-full items-center rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-left text-[length:var(--text-ui)] transition ${
+                mode === value
+                  ? "bg-[var(--fill-whisper)] text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+              }`}
+            >
+              {MODE_CHIP_LABELS[value]}
+            </button>
+          ))}
         </div>
-
-        <div className="grid content-end gap-[var(--space-3)]">
-          <div>
-            <p className="mb-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-              Mode
-            </p>
-            <ModeSegmentedControl modeOptions={modeOptions} mode={mode} onChangeMode={onChangeMode} idPrefix="desktop-" />
-          </div>
-
-          <SubmitButton
-            onSend={onSend}
-            sendDisabled={sendDisabled}
-            isSending={isSending}
-            submitIsContinuation={submitIsContinuation}
-            submitLabel={submitLabel}
-            submitPendingLabel={submitPendingLabel}
-            streamingSupported={streamingSupported}
-            isStreaming={isStreaming}
-            onStopGenerating={onStopGenerating}
-          />
-        </div>
-      </div>
+      ) : null}
     </div>
   );
 }
 
-function MobileComposer({
-  modeOptions,
+// The unified action bar, RULED 23 Aug 2026 (build-0823 pass 2): one
+// grid at both breakpoints, [menu 40px][Auto][Party][Dialogue],
+// replacing "Next Speaker" and the mode-segmented-control column.
+// Menu opens the right story/state panel; Party opens the left party
+// panel; Dialogue pops the mode picker above.
+function ActionBar({ mode, onChangeMode, onChangeSpeaker, onOpenCast, onOpenState }) {
+  return (
+    <div className="grid grid-cols-[40px_1fr_1fr_1fr] items-stretch gap-[var(--space-2)]">
+      <button
+        type="button"
+        onClick={() => onOpenState?.()}
+        className="flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] xl:h-[2.25rem]"
+        aria-label="Open story menu"
+        title="Menu"
+      >
+        <Menu size={16} aria-hidden="true" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onChangeSpeaker?.("AUTO")}
+        className="flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] xl:h-[2.25rem]"
+        aria-label="Continue automatically"
+        title="Auto"
+      >
+        <Sparkle size={14} aria-hidden="true" className="shrink-0" />
+        <span className="truncate">Auto</span>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onOpenCast?.()}
+        className="flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] xl:h-[2.25rem]"
+        aria-label="Open the party panel"
+        title="Party"
+      >
+        <Users size={14} aria-hidden="true" className="shrink-0" />
+        <span className="truncate">Party</span>
+      </button>
+
+      <ModeChip mode={mode} onChangeMode={onChangeMode} />
+    </div>
+  );
+}
+
+function getPlaceholder(mode) {
+  if (mode === CHAT_COMPOSER_MODES.ACTION) {
+    return "Describe an action visible in the scene...";
+  }
+
+  if (mode === CHAT_COMPOSER_MODES.SUGGESTION) {
+    return "Suggest what happens next...";
+  }
+
+  if (mode === CHAT_COMPOSER_MODES.DIRECT) {
+    return "Steer pacing, scene direction, or GM-style movement...";
+  }
+
+  if (mode === CHAT_COMPOSER_MODES.OOC) {
+    return "Write an OOC note...";
+  }
+
+  return "Write dialogue or natural player input...";
+}
+
+function ComposerBar({
   mode,
-  speakerOptions,
   speakerId,
   draft,
   draftLength,
@@ -504,70 +395,55 @@ function MobileComposer({
   onSend,
   onOpenCast,
   onOpenState,
-  initialToolsOpen = false,
 }) {
-  const [toolsOpen, setToolsOpen] = useState(initialToolsOpen);
   const textareaRef = useRef(null);
 
   useAutoResizeTextarea(textareaRef, draft, 220);
 
   return (
-    <div className="border-t border-[var(--line-whisper)] bg-[var(--surface-3)] p-[var(--space-3)] pb-[calc(var(--space-3)+env(safe-area-inset-bottom))] xl:hidden">
-      <div className="mb-[var(--space-2)] flex gap-[var(--space-2)] overflow-x-auto pb-[var(--space-1)]">
-        <SpeakerButtons options={speakerOptions} selectedId={speakerId} onChange={onChangeSpeaker} />
-      </div>
-
-      <ParticipantMentionTextarea
-        textareaRef={textareaRef}
-        value={draft}
-        mentionSuggestions={mentionSuggestions}
-        highlightedMentionIndex={highlightedMentionIndex}
-        commandSuggestions={commandSuggestions}
-        highlightedCommandIndex={highlightedCommandIndex}
-        highlightedCommandExact={highlightedCommandExact}
-        locationSuggestions={locationSuggestions}
-        highlightedLocationIndex={highlightedLocationIndex}
-        disabled={textareaDisabled}
-        placeholder={placeholder}
-        rows={1}
-        className="max-h-[220px] min-h-[var(--control-lg)] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]"
-        onChangeDraft={onChangeDraft}
-        onUpdateSuggestionQueries={onUpdateSuggestionQueries}
-        onMoveMentionHighlight={onMoveMentionHighlight}
-        onSelectHighlightedMention={onSelectHighlightedMention}
-        onSelectMention={onSelectMention}
-        onDismissMentionSuggestions={onDismissMentionSuggestions}
-        onMoveCommandHighlight={onMoveCommandHighlight}
-        onSelectHighlightedCommand={onSelectHighlightedCommand}
-        onSelectCommand={onSelectCommand}
-        onDismissCommandSuggestions={onDismissCommandSuggestions}
-        onMoveLocationHighlight={onMoveLocationHighlight}
-        onSelectHighlightedLocation={onSelectHighlightedLocation}
-        onSelectLocation={onSelectLocation}
-        onDismissLocationSuggestions={onDismissLocationSuggestions}
-        onSend={onSend}
-      />
-
-      <div className="mt-[var(--space-2)] flex items-center justify-between gap-[var(--space-2)]">
-        <div className="flex items-center gap-[var(--space-2)]">
-          <SceneToolButtons sceneImageSeat={sceneImageSeat} useCurrentSceneSeat={useCurrentSceneSeat} compact />
-
-          <button
-            type="button"
-            onClick={() => setToolsOpen(true)}
-            className={`flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border transition ${
-              toolsOpen
-                ? "border-[var(--gold-action)]/55 bg-[var(--fill)] text-[var(--ink)]"
-                : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)]"
-            }`}
-            title="Open tools"
-            aria-label="Open tools"
-          >
-            <SlidersHorizontal size={16} aria-hidden="true" />
-          </button>
+    <div className="border-t border-[var(--line-whisper)] bg-[var(--surface-3)] p-[var(--space-3)] pb-[calc(var(--space-3)+env(safe-area-inset-bottom))] xl:p-[var(--space-4)]">
+      {sceneImageSeat?.available || useCurrentSceneSeat?.available ? (
+        <div className="mb-[var(--space-3)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+          <div className="flex flex-wrap items-center gap-[var(--space-2)]">
+            <SceneToolButtons sceneImageSeat={sceneImageSeat} useCurrentSceneSeat={useCurrentSceneSeat} />
+          </div>
+          {sceneImageSeat?.available ? (
+            <p className="text-[length:var(--text-label)] text-[var(--ink-dim)]">{sceneImageSeat.costLabel}</p>
+          ) : null}
         </div>
+      ) : null}
 
-        <LengthCounter draftLength={draftLength} showLengthCounter={showLengthCounter} />
+      <div className="flex items-end gap-[var(--space-2)]">
+        <ParticipantMentionTextarea
+          textareaRef={textareaRef}
+          value={draft}
+          mentionSuggestions={mentionSuggestions}
+          highlightedMentionIndex={highlightedMentionIndex}
+          commandSuggestions={commandSuggestions}
+          highlightedCommandIndex={highlightedCommandIndex}
+          highlightedCommandExact={highlightedCommandExact}
+          locationSuggestions={locationSuggestions}
+          highlightedLocationIndex={highlightedLocationIndex}
+          disabled={textareaDisabled}
+          placeholder={placeholder || getPlaceholder(mode)}
+          rows={1}
+          className="min-h-[var(--control-md)] max-h-[220px] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]"
+          onChangeDraft={onChangeDraft}
+          onUpdateSuggestionQueries={onUpdateSuggestionQueries}
+          onMoveMentionHighlight={onMoveMentionHighlight}
+          onSelectHighlightedMention={onSelectHighlightedMention}
+          onSelectMention={onSelectMention}
+          onDismissMentionSuggestions={onDismissMentionSuggestions}
+          onMoveCommandHighlight={onMoveCommandHighlight}
+          onSelectHighlightedCommand={onSelectHighlightedCommand}
+          onSelectCommand={onSelectCommand}
+          onDismissCommandSuggestions={onDismissCommandSuggestions}
+          onMoveLocationHighlight={onMoveLocationHighlight}
+          onSelectHighlightedLocation={onSelectHighlightedLocation}
+          onSelectLocation={onSelectLocation}
+          onDismissLocationSuggestions={onDismissLocationSuggestions}
+          onSend={onSend}
+        />
 
         <SubmitButton
           onSend={onSend}
@@ -579,103 +455,23 @@ function MobileComposer({
           streamingSupported={streamingSupported}
           isStreaming={isStreaming}
           onStopGenerating={onStopGenerating}
-          compact
         />
       </div>
 
-      {toolsOpen ? (
-        <MobileToolsSheet
-          modeOptions={modeOptions}
-          mode={mode}
-          speakerOptions={speakerOptions}
-          speakerId={speakerId}
-          onChangeMode={onChangeMode}
-          onChangeSpeaker={onChangeSpeaker}
-          onOpenCast={onOpenCast}
-          onOpenState={onOpenState}
-          onClose={() => setToolsOpen(false)}
-        />
-      ) : null}
-    </div>
-  );
-}
-
-function MobileToolsSheet({
-  modeOptions,
-  mode,
-  speakerOptions,
-  speakerId,
-  onChangeMode,
-  onChangeSpeaker,
-  onOpenCast,
-  onOpenState,
-  onClose,
-}) {
-  return (
-    <KitModalFrame variant="sheet" onClose={onClose} ariaLabel="Chat tools">
-      <div className="p-[var(--space-4)]">
-        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          Room Tools
-        </p>
-
-        <div className="mt-[var(--space-4)] grid gap-[var(--space-4)]">
-          <div>
-            <p className="mb-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-              Mode
-            </p>
-            <ModeSegmentedControl modeOptions={modeOptions} mode={mode} onChangeMode={onChangeMode} idPrefix="mobile-" />
-          </div>
-
-          <div>
-            <p className="mb-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-              Next Speaker
-            </p>
-            <div className="flex flex-wrap gap-[var(--space-2)]">
-              <SpeakerButtons options={speakerOptions} selectedId={speakerId} onChange={onChangeSpeaker} />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-[var(--space-2)]">
-            <button
-              type="button"
-              onClick={() => onOpenCast?.()}
-              className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]"
-            >
-              <Users size={14} aria-hidden="true" />
-              Cast / Room
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onOpenState?.()}
-              className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]"
-            >
-              <Eye size={14} aria-hidden="true" />
-              State
-            </button>
-
-            <DisabledToolButton icon={Download} label="Export" />
-            <DisabledToolButton icon={Share2} label="Share" />
-          </div>
+      <div className="mt-[var(--space-2)] flex items-center justify-between gap-[var(--space-2)]">
+        <div className="min-w-0 flex-1">
+          <ActionBar
+            mode={mode}
+            onChangeMode={onChangeMode}
+            onChangeSpeaker={onChangeSpeaker}
+            onOpenCast={onOpenCast}
+            onOpenState={onOpenState}
+          />
         </div>
-      </div>
-    </KitModalFrame>
-  );
-}
 
-// 4.7/D19: an honest disabled stub carries the word "Soon" beside the
-// control, never baked into the label.
-function DisabledToolButton({ icon: Icon, label }) {
-  return (
-    <button
-      type="button"
-      disabled
-      className="inline-flex min-h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
-    >
-      <Icon size={14} aria-hidden="true" />
-      {label}
-      <span className="normal-case tracking-normal text-[var(--ink-faint)]">Soon</span>
-    </button>
+        <LengthCounter draftLength={draftLength} showLengthCounter={showLengthCounter} />
+      </div>
+    </div>
   );
 }
 
@@ -825,7 +621,7 @@ function ParticipantMentionTextarea({
   }
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 flex-1">
       <textarea
         ref={textareaRef}
         value={value}

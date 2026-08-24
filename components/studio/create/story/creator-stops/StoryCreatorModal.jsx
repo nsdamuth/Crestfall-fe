@@ -299,7 +299,7 @@ export default function StoryCreatorModal({ onClose }) {
       }),
     onSave: handleSave,
     onFinishAndSave: handleSave,
-    onSaveAndOpenEditor: handleSave,
+    closeAriaLabel: "Close story creator",
     onContinueInEditor: handleContinueInEditorAfterSave,
     onDone: handleDoneAfterSave,
     onClose: requestClose,

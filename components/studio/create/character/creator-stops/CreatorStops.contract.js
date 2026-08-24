@@ -61,7 +61,25 @@
 // entry needed there, reused as-is. Every prior package's icon
 // entries are unchanged. No prop added, removed, or renamed on
 // CreatorStopsView itself.
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v6";
+// v6 to v7 (23 Aug 2026, build-0823 pass 5, RULED, shell
+// conformance): MAJOR (a prop is removed). CreatorStopsView gains
+// `closeAriaLabel` (string, default "Close character creator",
+// additive): each of the four modals now passes its own creator
+// name instead of the prior hardcoded Character-only string, fixing
+// the mislabeled close control on World/Look/Story. `onSaveAndOpenEditor`
+// is REMOVED: the last-stop footer's "Save and open the advanced
+// editor" button duplicated "Finish and save" (both called the same
+// handler) and is dropped, keeping the footer to two actions.
+// `onContinueInEditor`'s saved-state button relabels "Keep editing"
+// to "Open in advanced editor" (same handler, already routes to
+// /studio/v2/editor/{id}); no signature change. The panel surface
+// moves onto `--grad-panel-lift` (B3); the header/footer hairlines
+// move onto `--line-fade`; "Unsaved changes" loses its `hidden
+// sm:inline` gate and renders at every width; under 700px the panel
+// is a full-height sheet (R4), full-bleed vertically and
+// horizontally with internal thumb scrolling, replacing the prior
+// inset-floating panel at phone width.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v7";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),

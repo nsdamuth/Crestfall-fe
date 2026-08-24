@@ -17,6 +17,7 @@ import ChatComposerView from "../chat-composer/ChatComposer.view";
 import ChatCastPanelView from "../chat-cast-panel/ChatCastPanel.view";
 import ChatStatePanelView from "../chat-state-panel/ChatStatePanel.view";
 import ChatSessionDialogsView from "../chat-session-dialogs/ChatSessionDialogs.view";
+import ChatPartyRosterView from "../chat-party-roster/ChatPartyRoster.view";
 
 // B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
 // to every modal-family divider: 1px, fades to transparent at both
@@ -149,11 +150,39 @@ export default function ChatShellView({
   statePanel = {},
   sessionDialogs = {},
   libraryPassUpsell = null,
+  partyRoster = null,
 }) {
   const composerWrapRef = useRef(null);
   const [measuredComposerHeight, setMeasuredComposerHeight] = useState(0);
   const safeStatusPills = Array.isArray(statusPills) ? statusPills : [];
   const subtitle = [scenarioLabel, modeLabel].filter(Boolean).join(" · ");
+
+  // Party/state mobile-sheet open state, RULED 23 Aug 2026 (build-0823
+  // pass 2): lifted here so the composer's Menu and Party chips can
+  // open the same sheets the panels themselves render, presentation-
+  // only local toggles per LOOM view rules.
+  const [partySheetOpen, setPartySheetOpen] = useState(false);
+  const [stateSheetOpen, setStateSheetOpen] = useState(false);
+
+  function openPartyPanel() {
+    if (leftRailCollapsed) {
+      onToggleLeftRail?.();
+      return;
+    }
+
+    setPartySheetOpen(true);
+  }
+
+  function openStatePanel() {
+    if (rightRailCollapsed) {
+      onToggleRightRail?.();
+      return;
+    }
+
+    setStateSheetOpen(true);
+  }
+
+  const composerProps = { ...composer, onOpenCast: openPartyPanel, onOpenState: openStatePanel };
 
   useEffect(() => {
     const node = composerWrapRef.current;
@@ -203,71 +232,33 @@ export default function ChatShellView({
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[var(--canvas)] text-[var(--ink)]">
-      <header className="hidden shrink-0 border-b border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-6)] py-[var(--space-4)] xl:flex xl:items-center xl:justify-between xl:gap-[var(--space-4)]">
-        <div className="flex min-w-0 items-center gap-[var(--space-4)]">
-          <BackControl backHref={backHref} backLabel={backLabel} />
-          <div className="min-w-0">
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-              {eyebrow}
-            </p>
-            <h1 className="mt-[var(--space-1)] truncate font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
-              {title}
-            </h1>
-            {subtitle ? (
-              <p className="mt-[var(--space-1)] truncate text-[length:var(--text-ui)] text-[var(--ink-dim)]">{subtitle}</p>
-            ) : null}
-          </div>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-[var(--space-3)]">
-          <div className="flex items-center gap-[var(--space-2)]">
-            {safeStatusPills.map((pill) => (
-              <StatusPill key={pill.id} pill={pill} />
-            ))}
-          </div>
-
-          <div className="flex items-center gap-[var(--space-2)] rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-1)]">
-            <StudioEconomyWidgetView layoutMode="mobileHeader" {...coinChip} />
+      {/* In-flow story header, RULED 23 Aug 2026 (build-0823 pass 2):
+          replaces the two chat-local headers this shell used to carry.
+          The real StudioShell top bar and sidebar already wrap this
+          route (app/studio/layout.js), so the shell contributes only
+          the title, one meta line, and the coin chip; the rail-collapse
+          toggles moved into each panel's own header. */}
+      <div className="shrink-0 border-b border-[var(--line-whisper)] px-[var(--space-5)] py-[var(--space-4)]">
+        <div className="flex flex-wrap items-start justify-between gap-[var(--space-3)]">
+          <div className="flex min-w-0 items-center gap-[var(--space-3)]">
+            <BackControl backHref={backHref} backLabel={backLabel} compact />
+            <div className="min-w-0">
+              <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                {eyebrow}
+              </p>
+              <h1 className="mt-[var(--space-1)] truncate font-display text-[length:var(--text-title)] leading-[var(--lh-title)]">
+                {title}
+              </h1>
+              {subtitle ? (
+                <p className="mt-[var(--space-1)] truncate text-[length:var(--text-ui)] text-[var(--ink-dim)]">{subtitle}</p>
+              ) : null}
+            </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onToggleLeftRail?.()}
-            aria-pressed={!leftRailCollapsed}
-            className="flex h-[var(--control-sm)] w-[var(--control-sm)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
-            aria-label={leftRailCollapsed ? "Show cast panel" : "Hide cast panel"}
-            title={leftRailCollapsed ? "Show cast panel" : "Hide cast panel"}
-          >
-            <ChevronLeft size={15} aria-hidden="true" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onToggleRightRail?.()}
-            aria-pressed={!rightRailCollapsed}
-            className="flex h-[var(--control-sm)] w-[var(--control-sm)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
-            aria-label={rightRailCollapsed ? "Show state panel" : "Hide state panel"}
-            title={rightRailCollapsed ? "Show state panel" : "Hide state panel"}
-          >
-            <ChevronRight size={15} aria-hidden="true" />
-          </button>
-        </div>
-      </header>
-
-      <header className="shrink-0 border-b border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-4)] py-[var(--space-3)] xl:hidden">
-        <div className="flex items-center justify-between gap-[var(--space-3)]">
-          <BackControl backHref={backHref} backLabel={backLabel} compact />
-          <div className="flex items-center gap-[var(--space-2)] rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-1)]">
+          <div className="flex shrink-0 items-center gap-[var(--space-2)] rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-2)] py-[var(--space-1)]">
             <StudioEconomyWidgetView layoutMode="mobileHeader" {...coinChip} />
           </div>
         </div>
-
-        <p className="mt-[var(--space-2)] truncate font-display text-[length:var(--text-subhead-m)] leading-[var(--lh-subhead-m)]">
-          {title}
-        </p>
-        {subtitle ? (
-          <p className="mt-[var(--space-1)] truncate text-[length:var(--text-label)] text-[var(--ink-dim)]">{subtitle}</p>
-        ) : null}
 
         {safeStatusPills.length ? (
           <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
@@ -276,7 +267,7 @@ export default function ChatShellView({
             ))}
           </div>
         ) : null}
-      </header>
+      </div>
 
       <div className="relative flex min-h-0 flex-1 flex-col xl:flex-row">
         <div
@@ -285,7 +276,13 @@ export default function ChatShellView({
           }`}
         >
           <div className="p-[var(--space-4)] xl:sticky xl:top-0 xl:max-h-[calc(100dvh-var(--control-md))] xl:overflow-y-auto">
-            <ChatCastPanelView {...castPanel} canClose onClosePanel={onToggleLeftRail} />
+            <ChatCastPanelView
+              {...castPanel}
+              canClose
+              onClosePanel={onToggleLeftRail}
+              mobileOpen={partySheetOpen}
+              onMobileOpenChange={setPartySheetOpen}
+            />
           </div>
         </div>
 
@@ -306,9 +303,9 @@ export default function ChatShellView({
 
           <div
             ref={composerWrapRef}
-            className="sticky bottom-0 z-10 border-t border-[var(--line-whisper)] bg-[var(--surface-3)] pb-[env(safe-area-inset-bottom)]"
+            className="sticky bottom-0 z-10 bg-[var(--surface-3)] pb-[env(safe-area-inset-bottom)]"
           >
-            <ChatComposerView {...composer} />
+            <ChatComposerView {...composerProps} />
           </div>
         </div>
 
@@ -330,7 +327,13 @@ export default function ChatShellView({
           }`}
         >
           <div className="p-[var(--space-4)] xl:sticky xl:top-0 xl:max-h-[calc(100dvh-var(--control-md))] xl:overflow-y-auto">
-            <ChatStatePanelView {...statePanel} showCloseControl onClosePanel={onToggleRightRail} />
+            <ChatStatePanelView
+              {...statePanel}
+              showCloseControl
+              onClosePanel={onToggleRightRail}
+              mobileOpen={stateSheetOpen}
+              onMobileOpenChange={setStateSheetOpen}
+            />
           </div>
         </div>
       </div>
@@ -346,6 +349,8 @@ export default function ChatShellView({
       <ChatSessionDialogsView activeDialog={sessionDialogs?.activeDialog} />
 
       {libraryPassUpsell?.open ? <LibraryPassUpsellSheet {...libraryPassUpsell} /> : null}
+
+      {partyRoster?.open ? <ChatPartyRosterView {...partyRoster} /> : null}
     </div>
   );
 }

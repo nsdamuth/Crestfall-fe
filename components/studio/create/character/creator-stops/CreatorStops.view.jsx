@@ -68,12 +68,16 @@ export default function CreatorStopsView({
   onNext = null,
   onSave = null,
   onFinishAndSave = null,
-  onSaveAndOpenEditor = null,
   onContinueInEditor = null,
   onDone = null,
   onClose = null,
   onKeepEditing = null,
   onConfirmDiscard = null,
+  // Per-creator close label, RULED 23 Aug 2026 (build-0823 pass 5):
+  // additive, defaults to the pre-existing Character copy so no
+  // caller is forced to pass it. World/Look/Story modals each pass
+  // their own creator name.
+  closeAriaLabel = "Close character creator",
   stopContent = null,
   // A field that needs more room than a fold hands this in to take
   // over the content area in place: { eyebrow, title, description,
@@ -117,23 +121,21 @@ export default function CreatorStopsView({
   }, [secondaryPanel]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[var(--space-3)] sm:p-[var(--space-8)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-[var(--space-8)]">
       <button
         type="button"
-        aria-label="Close character creator"
+        aria-label={closeAriaLabel}
         onClick={() => onClose?.()}
         className="absolute inset-0 cursor-pointer border-0 bg-[var(--scrim-strong)] p-0 backdrop-blur-[2px]"
       />
 
-      <div
-        className="relative flex h-[min(44rem,calc(100dvh-var(--space-3)*2))] w-[min(46rem,calc(100vw-var(--space-3)*2))] flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] shadow-[var(--shadow-modal)] sm:h-[min(44rem,calc(100dvh-var(--space-5)*2))] sm:w-[min(46rem,calc(100vw-var(--space-8)*2))]"
-        style={{
-          backgroundColor:
-            "color-mix(in srgb, var(--surface-2) 88%, var(--canvas))",
-          backgroundImage:
-            "linear-gradient(var(--fill-whisper), var(--fill-whisper))",
-        }}
-      >
+      {/* R4 full-height sheet under 700px: full-bleed vertically and
+          horizontally with internal thumb scrolling, RULED 23 Aug
+          2026 (build-0823 pass 5). At 700px and up, the ruled
+          centered floating panel, unchanged in size. Panel surface:
+          --grad-panel-lift (B3), replacing the prior color-mix plus
+          fill-whisper gradient background. */}
+      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden border border-[var(--line)] bg-[image:var(--grad-panel-lift)] shadow-[var(--shadow-modal)] min-[700px]:h-[min(44rem,calc(100dvh-var(--space-8)*2))] min-[700px]:w-[min(46rem,calc(100vw-var(--space-8)*2))] min-[700px]:rounded-[var(--radius-lg)]">
         {confirmDiscardOpen ? (
           <div className="flex h-full flex-col items-center justify-center gap-[var(--space-4)] px-[var(--space-8)] text-center">
             <h2 className="font-display text-2xl text-[var(--ink)]">
@@ -162,7 +164,7 @@ export default function CreatorStopsView({
           </div>
         ) : (
           <>
-        <div className="relative grid flex-none grid-cols-[var(--control-md)_1fr_var(--control-md)] items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[var(--line-whisper)]">
+        <div className="relative grid flex-none grid-cols-[var(--control-md)_1fr_var(--control-md)] items-center gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-3)] after:absolute after:bottom-0 after:left-[var(--space-8)] after:right-[var(--space-8)] after:h-px after:bg-[image:var(--line-fade)]">
           <span aria-hidden="true" />
 
           <div
@@ -219,7 +221,7 @@ export default function CreatorStopsView({
           <button
             type="button"
             onClick={() => (secondaryPanel ? secondaryPanel.onCancel?.() : onClose?.())}
-            aria-label={secondaryPanel ? "Cancel" : "Close character creator"}
+            aria-label={secondaryPanel ? "Cancel" : closeAriaLabel}
             className="flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center justify-self-end rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
           >
             <X size={18} />
@@ -243,7 +245,7 @@ export default function CreatorStopsView({
           )}
         </div>
 
-        <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[var(--line-whisper)]">
+        <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[image:var(--line-fade)]">
           <div className="flex items-center gap-[var(--space-3)]">
           {secondaryPanel ? (
             <>
@@ -276,7 +278,12 @@ export default function CreatorStopsView({
                   from the final stop. Exactly two actions replace the
                   whole normal footer; the Saved confirmation sits
                   where the save status used to, always with the word
-                  per the status-color law, no layout jump. */}
+                  per the status-color law, no layout jump. Actions
+                  RELABELED 23 Aug 2026 (build-0823 pass 5, RULED):
+                  "Open in advanced editor" replaces "Keep editing" as
+                  the lawful exit label (same onContinueInEditor
+                  handler, already routes to /studio/v2/editor/{id});
+                  "Done" unchanged. */}
               <span aria-live="polite" className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
                 <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-success)]" />
                 <span className="inline">Saved</span>
@@ -289,7 +296,7 @@ export default function CreatorStopsView({
                 onClick={() => onContinueInEditor?.()}
                 className="cf-btn cf-btn--secondary"
               >
-                Keep editing
+                Open in advanced editor
               </button>
 
               <button
@@ -328,9 +335,13 @@ export default function CreatorStopsView({
                     <span className="inline">Save unsuccessful</span>
                   </span>
                 ) : hasUnsavedChanges ? (
+                  // Status word always visible, RULED 23 Aug 2026
+                  // (build-0823 pass 5): the sm:inline gate is
+                  // removed so this word renders at every width, the
+                  // same as "Saved" and "Save unsuccessful" above.
                   <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
-                    <span className="hidden sm:inline">Unsaved changes</span>
+                    <span className="inline">Unsaved changes</span>
                   </span>
                 ) : justSaved ? (
                   // Two-tier save-and-reaccess loop, RULED 11 Aug 2026:
@@ -348,21 +359,13 @@ export default function CreatorStopsView({
 
               <div className="flex-1" />
 
-              {/* Payoff-stop CTA, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md
-                  section 3.3): both field scopes. persistCreation runs
-                  first; navigation only follows a confirmed save. */}
-              {isLastStop ? (
-                <button
-                  type="button"
-                  onClick={() => onSaveAndOpenEditor?.()}
-                  disabled={saveDisabled || isSaving}
-                  aria-busy={isSaving}
-                  className="cf-btn cf-btn--secondary"
-                >
-                  {isSaving ? "Saving..." : "Save and open the advanced editor"}
-                </button>
-              ) : null}
-
+              {/* The last-stop footer button "Save and open the
+                  advanced editor" is REMOVED, RULED 23 Aug 2026
+                  (build-0823 pass 5, the footer max-two-actions
+                  ruling): it duplicated "Finish and save" (both ran
+                  the same handleSave). Advanced-editor entry lives in
+                  the saved state below (onContinueInEditor,
+                  "Open in advanced editor"), the lawful exit. */}
               <button
                 type="button"
                 onClick={() =>

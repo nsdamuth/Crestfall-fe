@@ -94,6 +94,12 @@ export const chatComposerDirectFixture = {
   placeholder: "Steer pacing, scene direction, or GM-style movement...",
 };
 
+export const chatComposerSuggestionFixture = {
+  ...withDraft("Maybe she recognizes the seal on the letter."),
+  mode: CHAT_COMPOSER_MODES.SUGGESTION,
+  placeholder: "Suggest what happens next...",
+};
+
 export const chatComposerCommandMenuOpenFixture = {
   ...withDraft("/"),
   sendDisabled: true,
@@ -203,11 +209,6 @@ export const chatComposerSceneToolsUnavailableFixture = {
   useCurrentSceneSeat: { available: false, pending: false, onUse: null },
 };
 
-export const chatComposerMobileToolsOpenFixture = {
-  ...BASE_PROPS,
-  initialToolsOpen: true,
-};
-
 export const chatComposerLongestDraftFixture = {
   ...withDraft(
     "She folded the note once, then unfolded it again, reading the same line for what must have been the twentieth time. \"This changes nothing,\" she said, though her voice betrayed exactly how much it changed. *She slipped it into her coat, feeling the paper crease sharp against her ribs, and looked up at the archway, at the lantern light flickering across the brass drawers stretching further than any hallway had a right to stretch.* \"We should not be here.\" **\"We are already here.\"** The corridor answered with silence, the kind that has weight, the kind that remembers."
@@ -220,6 +221,7 @@ export const chatComposerFixtures = [
   { id: "action", label: "Action mode", props: chatComposerActionFixture },
   { id: "ooc", label: "OOC mode", props: chatComposerOocFixture },
   { id: "direct", label: "Direct mode", props: chatComposerDirectFixture },
+  { id: "suggestion", label: "Suggestion mode", props: chatComposerSuggestionFixture },
   { id: "command-menu", label: "Command menu open", props: chatComposerCommandMenuOpenFixture },
   { id: "mention-menu", label: "Mention menu open", props: chatComposerMentionMenuOpenFixture },
   { id: "location-menu", label: "Location menu open", props: chatComposerLocationMenuOpenFixture },
@@ -233,6 +235,5 @@ export const chatComposerFixtures = [
   { id: "scene-image-pending", label: "Scene Image, generating", props: chatComposerSceneImagePendingFixture },
   { id: "scene-image-error", label: "Scene Image, error", props: chatComposerSceneImageErrorFixture },
   { id: "scene-tools-unavailable", label: "Scene tool seats unavailable", props: chatComposerSceneToolsUnavailableFixture },
-  { id: "mobile-tools-open", label: "Mobile tools sheet open", props: chatComposerMobileToolsOpenFixture },
   { id: "longest-draft", label: "Longest draft", props: chatComposerLongestDraftFixture },
 ];

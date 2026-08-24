@@ -13,6 +13,10 @@ import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 // All nine destinations are built, RULED 11 Aug 2026: every isBuilt
 // flag moves false to true, so every item routes to its live
 // /studio/v2/<page> route. No hrefs changed, no icon keys changed.
+//
+// Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
+// (build-0823 pass 4, sidebar refinement): the repo's standing
+// archive/vault glyph (witness: KitCreationCard's Archive action).
 export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
@@ -27,7 +31,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     items: Object.freeze([
       Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
-      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: true }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true }),
     ]),
   }),
   Object.freeze({
@@ -133,6 +137,14 @@ export function isStudioSidebarPathActive(pathname = "", href = "") {
     : pathname.startsWith(href);
 }
 
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This sidebar renders on every /studio/** route including v2 pages,
+// so the Account item's target depends on which surface is current.
+export function getStudioSidebarAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function normalizeStudioSidebarEmail(user = {}) {
   return typeof user?.email === "string" ? user.email : "";
 }
@@ -168,7 +180,15 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
     collapsed,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_SIDEBAR_PRIMARY_LINKS, pathname),
-    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname),
+    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname).map((link) =>
+      link.label === "Account"
+        ? {
+            ...link,
+            href: getStudioSidebarAccountHref(pathname),
+            isActive: isStudioSidebarPathActive(pathname, getStudioSidebarAccountHref(pathname)),
+          }
+        : link
+    ),
     socialLinks: STUDIO_SIDEBAR_SOCIAL_LINKS,
     onToggleCollapsed: () => setCollapsed((value) => !value),
     onToggleSocial: () => setSocialOpen((value) => !value),

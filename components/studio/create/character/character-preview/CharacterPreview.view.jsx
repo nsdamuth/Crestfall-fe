@@ -37,14 +37,17 @@ export default function CharacterPreviewView({
           ) : (
             <>
               <KitArtPlaceholderView size="lg" />
-              <div className="absolute inset-x-0 bottom-0 p-3">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[var(--space-1)] p-3">
                 <button
                   type="button"
                   onClick={() => setHasGenerated(true)}
                   className="cf-btn cf-btn--primary w-full text-sm"
                 >
-                  {`Generate preview · ${previewCostLabel} tokens`}
+                  Generate preview
                 </button>
+                <p className="text-center text-[length:var(--text-label)] text-[var(--ink-dim)]">
+                  {`${previewCostLabel} tokens`}
+                </p>
               </div>
             </>
           )}

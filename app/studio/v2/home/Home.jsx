@@ -57,7 +57,11 @@ export default function Home() {
   return (
     <HomeView
       {...viewProps}
-      harnessSlot={<FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />}
+      harnessSlot={
+        process.env.NODE_ENV === "production" ? null : (
+          <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
+        )
+      }
     />
   );
 }

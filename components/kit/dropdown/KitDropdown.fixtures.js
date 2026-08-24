@@ -21,10 +21,11 @@ export const kitDropdownTypeSelectedFixture = {
   selectedValues: ["character", "story"],
 };
 
-// The rating facet: Everyone and Adult over real backend values, Teen
-// a disabled row with no backend value yet (CR-027)
-// (lib/shared/presentation/terminology.js). Film anchors ride as the
-// row tooltip, not a visible description line.
+// The rating facet: Everyone, Young Adult, and Adult, all three live
+// over real backend values (CR-027, lib/shared/presentation/
+// terminology.js). Young Adult's display word superseded Teen 23 Aug
+// 2026 (FE display layer only). Film anchors ride as the row
+// tooltip, not a visible description line.
 export const kitDropdownRatingFixture = {
   label: "Rating",
   options: CONTENT_RATING_TIERS.map((tier) => ({

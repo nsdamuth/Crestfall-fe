@@ -38,7 +38,7 @@ const BASE_SHELL = {
   scenarioLabel: "The Lantern Below",
   modeLabel: "Roleplay",
   statusPills: [
-    { id: "rating", label: "Mature", tone: "neutral" },
+    { id: "rating", label: "Young Adult", tone: "neutral" },
     { id: "visibility", label: "Private", tone: "gold" },
   ],
   coinChip: {
@@ -99,7 +99,7 @@ export const chatShellMobileHeaderFixture = {
   scenarioLabel: "The Lantern Below",
   modeLabel: "Roleplay",
   statusPills: [
-    { id: "rating", label: "Mature", tone: "neutral" },
+    { id: "rating", label: "Young Adult", tone: "neutral" },
     { id: "visibility", label: "Private", tone: "gold" },
     { id: "phase", label: "Turn 12", tone: "neutral" },
   ],
@@ -158,7 +158,7 @@ export const chatShellLongestFixture = {
   scenarioLabel: "The Lantern Below, Extended Cut",
   modeLabel: "Roleplay, Advanced Prompting Active",
   statusPills: [
-    { id: "rating", label: "Mature", tone: "neutral" },
+    { id: "rating", label: "Young Adult", tone: "neutral" },
     { id: "visibility", label: "Private", tone: "gold" },
     { id: "phase", label: "Turn 128", tone: "neutral" },
     { id: "flag", label: "Flagged for review", tone: "danger" },

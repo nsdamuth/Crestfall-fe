@@ -53,7 +53,7 @@ the details below carry only what is still actionable.
 | CR-024 | rename Room Template to Story | Backend type/table naming catch-up; display layer already reads "Story" | open | Nick | later-pass, non-blocking |
 | CR-025 | rename Storyline to Adventure | Backend type/table naming catch-up; v2 surfaces display "Adventure" via the terminology module (ruled 10 Aug 2026) | open | Nick | later-pass, non-blocking; display mapping proceeds frontend-side ahead of the rename |
 | CR-026 | Nick reviews final quick-create mockups, promotes fields from Advanced back to Quick | Nick's pass over the 9 Aug 2026 Character QUICK/ADVANCED allocation before build, to promote any ADVANCED field he wants in quick create | open | Nick | later-pass, non-blocking |
-| CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Teen, EXPLICIT=Adult, no disabled row. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
+| CR-027 | content rating labels, ruled final, gated on a content audit | Labels ruled final 9 Aug 2026 (kit polish 2 pass): one-to-one mapping, SFW=Everyone, MATURE=Young Adult, EXPLICIT=Adult, no disabled row. MATURE's display word changed Teen to Young Adult, RULED 23 Aug 2026 (build-0823 close-out session), FE display layer only, backend enum value MATURE unchanged. Required gate: existing MATURE and EXPLICIT content must be audited and re-tagged against this ladder before live (non-fixture) data reaches users under these labels | open | Nick | blocks live rating data only; fixture-driven previews unaffected; standards doc revision (CRESTFALL-CONTENT-STANDARDS.md, draft) still pending |
 | CR-028 | mute a creator | Account-level mute relationship, persisted per account, with mute and unmute paths; excludes the muted creator from every discovery surface (Home rails, Community browse, Creators browse, search); the creator's profile stays reachable by direct link; credit lines and remix chains unaffected; a readable list of an account's muted creators for a future settings surface | open | Nick | the mute control ships on the Creators profile-detail page; no frontend work depends on this until that page is built |
 | CR-029 | Home feed data: four rails and the continue surface | Data sources for Home's four curated rails (top rated, recently added, from the community, creators to follow) and the in-progress item feeding the top banner's continue state (10 Aug 2026 Home review: the separate Continue strip merged into the top banner; feed shape unchanged); Home builds fixture-first per the CR-017 mock-module pattern | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint G planning gate, updated 10 Aug 2026 by the Sprint H planning gate |
 | CR-030 | Home creations filter: persisted preference and feed support | Account-level persistence for Home's creations filter (All creations / just mine, plus visibility values) and whatever feed support the three creation rails need to honor it; interim is a client-side filter over fixture data with a localStorage-persisted selection | open | Nick | non-blocking; filed 10 Aug 2026 by the Sprint H planning gate |
@@ -390,20 +390,28 @@ the backend's three content rating values
 one to one onto three live display tiers, display-mapped in
 `lib/shared/presentation/terminology.js` (`CONTENT_RATING_TIERS`):
 SFW displays as Everyone (tooltip "Comparable to a G or PG film.");
-MATURE displays as Teen (tooltip "Comparable to a PG-13 film.");
-EXPLICIT displays as Adult (tooltip "Comparable to an R film."). No
-disabled row, no interim note, no NC-17 anywhere. Film anchors ride
-the row tooltip, never a visible description line.
+MATURE displays as Young Adult (tooltip "Comparable to a PG-13
+film."); EXPLICIT displays as Adult (tooltip "Comparable to an R
+film."). No disabled row, no interim note, no NC-17 anywhere. Film
+anchors ride the row tooltip, never a visible description line.
+
+DISPLAY WORD CHANGE, RULED 23 Aug 2026 (Brian, build-0823 close-out
+session): the MATURE tier's display word changes Teen to Young Adult,
+superseding the "Teen" label ruled 9 Aug 2026 above. FE display layer
+only: the backend enum value (`MATURE`), the internal tier id
+(`TEEN`), and the tooltip film anchor are all unchanged. Everyone and
+Adult are unchanged.
 
 REQUIRED GATE before this mapping reaches live data: every existing
 `MATURE` and `EXPLICIT` tagged creation must be audited and re-tagged
 against this ladder before real (non-fixture) content is shown under
-these labels to users. `MATURE` content now surfaces as Teen; any
-`MATURE`-tagged item that is not actually teen-appropriate under this
-ladder must be re-tagged `EXPLICIT` (Adult) as part of the audit, not
-left mislabeled. This gate is Nick's to run and blocks turning on live
-data for the rating filter and rating badge; fixture-driven previews
-are unaffected and may ship ahead of the audit.
+these labels to users. `MATURE` content now surfaces as Young Adult;
+any `MATURE`-tagged item that is not actually young-adult-appropriate
+under this ladder must be re-tagged `EXPLICIT` (Adult) as part of the
+audit, not left mislabeled. This gate is Nick's to run and blocks
+turning on live data for the rating filter and rating badge;
+fixture-driven previews are unaffected and may ship ahead of the
+audit.
 
 Open question for Nick, deferred rather than answered here: whether
 the backend should carry a fourth content-rating value distinct from

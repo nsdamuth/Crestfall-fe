@@ -19,6 +19,7 @@ import {
 const MODE_OPTIONS = [
   { value: CHAT_COMPOSER_MODES.DIALOGUE, label: "Dialogue" },
   { value: CHAT_COMPOSER_MODES.ACTION, label: "Action" },
+  { value: CHAT_COMPOSER_MODES.SUGGESTION, label: "Suggestion" },
   { value: CHAT_COMPOSER_MODES.OOC, label: "OOC / Note" },
   { value: CHAT_COMPOSER_MODES.DIRECT, label: "Direct / GM" },
 ];
@@ -104,6 +105,10 @@ function normalizeMentionOptions(options = []) {
 function getPlaceholder(mode) {
   if (mode === CHAT_COMPOSER_MODES.ACTION) {
     return "Describe an action visible in the scene...";
+  }
+
+  if (mode === CHAT_COMPOSER_MODES.SUGGESTION) {
+    return "Suggest what happens next...";
   }
 
   if (mode === CHAT_COMPOSER_MODES.DIRECT) {

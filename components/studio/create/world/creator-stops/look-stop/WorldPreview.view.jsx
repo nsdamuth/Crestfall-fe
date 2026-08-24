@@ -7,9 +7,10 @@ import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceh
 // Mirrors CharacterPreviewView (components/studio/create/character/
 // character-preview/CharacterPreview.view.jsx): empty art slots render
 // the shared camellia mark, never a blank box; preview generation
-// never fires without a tap. CTA separator: the house middot, matching
-// CharacterPreviewView's own string character for character (same
-// file, around line 46), "Generate preview · X tokens".
+// never fires without a tap. Generate CTA cost note law, RULED 23 Aug
+// 2026 (build-0823 pass 6): the button reads the action only; the
+// cost renders as a quiet note beneath it, matching
+// CharacterPreviewView's own treatment.
 export default function WorldPreviewView({
   displayInitial = "W",
   worldName = "Unnamed World",
@@ -38,14 +39,17 @@ export default function WorldPreviewView({
           ) : (
             <>
               <KitArtPlaceholderView size="lg" />
-              <div className="absolute inset-x-0 bottom-0 p-3">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[var(--space-1)] p-3">
                 <button
                   type="button"
                   onClick={() => setHasGenerated(true)}
                   className="cf-btn cf-btn--primary w-full text-sm"
                 >
-                  {`Generate preview · ${previewCostLabel} tokens`}
+                  Generate preview
                 </button>
+                <p className="text-center text-[length:var(--text-label)] text-[var(--ink-dim)]">
+                  {`${previewCostLabel} tokens`}
+                </p>
               </div>
             </>
           )}

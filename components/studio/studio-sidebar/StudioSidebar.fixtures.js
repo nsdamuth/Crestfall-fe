@@ -109,7 +109,7 @@ const previewGroups = Object.freeze([
     items: Object.freeze([
       Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true, isActive: false }),
-      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true, isActive: false }),
     ]),
   }),
   Object.freeze({
@@ -153,15 +153,14 @@ export const studioSidebarCollapsedFixture = Object.freeze({
   socialOpen: false,
 });
 
+// legacyOpen kept at false: the Legacy group no longer renders in
+// preview mode (RULED 23 Aug 2026, build-0823 pass 4, sidebar
+// refinement), so a legacy-open fixture variant no longer has
+// anything to demonstrate.
 export const studioSidebarPreviewFixture = Object.freeze({
   ...baseFixture,
   previewEnabled: true,
   previewGroups,
   legacyLabel: "Legacy",
   legacyOpen: false,
-});
-
-export const studioSidebarPreviewLegacyOpenFixture = Object.freeze({
-  ...studioSidebarPreviewFixture,
-  legacyOpen: true,
 });

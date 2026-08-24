@@ -21,6 +21,7 @@ import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
+import { ASSET_KIND_TO_TYPE_BUCKET, TYPE_BUCKET_OPTIONS } from "@/lib/shared/presentation/typeBuckets";
 import FixtureActionNotice from "../FixtureActionNotice";
 
 function canonArt(name) {
@@ -78,22 +79,12 @@ const FIXTURE_CREATIONS = [
 // Community as "the shared question with Vault" named in the parity
 // audit section 5): the same five buckets Vault ships replace the
 // prior four-kind-plus-Remix model here too, so both catalogs read
-// the same taxonomy. Flagged for Brian: ruling 1's text names only
-// Vault; this extension is this branch's inference, veto if wrong.
-const ASSET_KIND_TO_TYPE_BUCKET = {
-  character: "characters",
-  story: "stories",
-  adventure: "adventures",
-  image: "looks",
-};
-
-const TYPE_OPTIONS = [
-  { value: "characters", label: "Characters" },
-  { value: "worlds", label: "Worlds" },
-  { value: "looks", label: "Looks" },
-  { value: "stories", label: "Stories" },
-  { value: "adventures", label: "Adventures" },
-];
+// the same taxonomy. RULED 23 Aug 2026 (build-0823 pass 3, the 23 Aug
+// spec's five-bucket-filter ruling): resolves the open flag below,
+// the five-bucket filter is the standard wherever a list mixes asset
+// kinds. Promoted to the shared lib/shared/presentation/typeBuckets.js
+// module.
+const TYPE_OPTIONS = TYPE_BUCKET_OPTIONS;
 
 // Curation rows, RULED 10 Aug 2026 (ruling 2): Featured, Canon, and
 // Recently Updated return as option rows inside the Type dropdown,

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import StudioTopBarView from "./studio-top-bar/StudioTopBar.view";
 import { useStudioTopBarViewModel } from "./studio-top-bar/useStudioTopBarViewModel";
@@ -8,11 +9,13 @@ import { STUDIO_TOP_BAR_MOCK_NOTIFICATIONS } from "./studio-top-bar/studioTopBar
 import { useStudioTopBarNotificationsDemoState } from "./studio-top-bar/studioTopBarNotificationsDemoState";
 
 export default function StudioTopBar({ onOpenMenu, ...props }) {
+  const pathname = usePathname();
   const demoNotifications = useStudioTopBarNotificationsDemoState(
     STUDIO_TOP_BAR_MOCK_NOTIFICATIONS,
   );
   const viewProps = useStudioTopBarViewModel({
     notifications: demoNotifications.notifications,
+    pathname,
     onOpenMenu,
     ...props,
   });

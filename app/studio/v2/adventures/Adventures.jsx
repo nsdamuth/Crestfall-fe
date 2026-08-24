@@ -57,7 +57,11 @@ export default function Adventures() {
   return (
     <AdventuresView
       {...viewProps}
-      harnessSlot={<FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />}
+      harnessSlot={
+        process.env.NODE_ENV === "production" ? null : (
+          <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
+        )
+      }
     />
   );
 }

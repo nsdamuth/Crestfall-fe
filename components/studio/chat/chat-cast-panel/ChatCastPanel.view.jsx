@@ -1,19 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Image as ImageIcon,
-  PanelLeftClose,
-  Shuffle,
-  Sparkles,
-  Trash2,
-  Users,
-  UserRound,
-} from "lucide-react";
+import { Image as ImageIcon, PanelLeftClose } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import ChatNpcManagerView from "../chat-npc-manager/ChatNpcManager.view";
-import { DeleteConfirmSheet } from "../chat-session-dialogs/ChatSessionDialogs.view";
+
+// Party panel, RULED 23 Aug 2026 (build-0823 pass 2): renamed from
+// Cast, fixed 5 slots. Set Player Character, Random Liked, and
+// Delete Story moved out of this panel (Delete Story now lives on
+// chat-state-panel's management row); double-clicking a filled slot
+// or tapping an open slot opens the Party roster, wired by the
+// caller through onOpenPartyRoster.
+const MAX_PARTY_SIZE = 5;
 
 function CastPanelContent({
   eyebrow,
@@ -23,30 +22,20 @@ function CastPanelContent({
   roomTitle,
   roomIdLabel,
   narrator,
-  castHeading,
-  castDescription,
-  castMembers,
-  playerCharacterAction,
-  setPlayerCharacterError,
+  partyHeading,
+  partyDescription,
+  partyMembers,
   npcParticipantManager,
-  randomLikedAction,
-  randomLikedError,
-  deleteAction,
-  deleteError,
   roomListHref,
   roomListLabel,
-  playerCharacterPickerContent,
-  onSelectCastMember,
-  onOpenPlayerCharacterPicker,
-  onLoadRandomLiked,
-  onRequestDeleteRoom,
+  onOpenPartyRoster,
+  onOpenSceneImagePicker,
 }) {
   const safeFeaturedMedia = featuredMedia || {};
   const safeNarrator = narrator || {};
-  const safeCastMembers = Array.isArray(castMembers) ? castMembers : [];
-  const safePlayerCharacterAction = playerCharacterAction || {};
-  const safeRandomLikedAction = randomLikedAction || {};
-  const safeDeleteAction = deleteAction || {};
+  const safePartyMembers = Array.isArray(partyMembers) ? partyMembers : [];
+  const filledSlots = safePartyMembers.slice(0, MAX_PARTY_SIZE);
+  const openSlotCount = Math.max(MAX_PARTY_SIZE - filledSlots.length, 0);
 
   return (
     <div>
@@ -60,15 +49,22 @@ function CastPanelContent({
             type="button"
             onClick={() => onClosePanel?.()}
             className="flex h-[var(--control-sm)] w-[var(--control-sm)] touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
-            aria-label="Hide cast panel"
-            title="Hide cast panel"
+            aria-label="Hide party panel"
+            title="Hide party panel"
           >
             <PanelLeftClose size={15} aria-hidden="true" />
           </button>
         ) : null}
       </div>
 
-      <div className="aspect-[4/5] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)]">
+      {/* Missing-image law (BUILD-BLUEPRINT 2.16(ac)): icon-only well,
+          no caption, dead-centered on both axes. */}
+      <button
+        type="button"
+        onClick={() => onOpenSceneImagePicker?.()}
+        className="flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)] transition hover:border-[var(--line)]"
+        aria-label="Open the image selector"
+      >
         {safeFeaturedMedia.imageUrl ? (
           <div className="relative h-full w-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -88,19 +84,9 @@ function CastPanelContent({
             </div>
           </div>
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <div className="text-center">
-              <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={34} aria-hidden="true" />
-              <p className="mt-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-                {safeFeaturedMedia.emptyEyebrow || "Room Media"}
-              </p>
-              <p className="mt-[var(--space-2)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-                {safeFeaturedMedia.emptyMessage || "Featured room image will appear here."}
-              </p>
-            </div>
-          </div>
+          <ImageIcon className="text-[var(--gold-ornament)]" size={34} aria-hidden="true" />
         )}
-      </div>
+      </button>
 
       <h2 className="mt-[var(--space-5)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
         {roomTitle}
@@ -111,74 +97,36 @@ function CastPanelContent({
       </p>
 
       <div className="mt-[var(--space-5)] space-y-[var(--space-3)]">
-        <RoomInfoLine icon={Sparkles} label={safeNarrator.label || "Narrator"} value={safeNarrator.value || ""} />
+        <RoomInfoLine label={safeNarrator.label || "Narrator"} value={safeNarrator.value || ""} />
       </div>
 
       <div className="mt-[var(--space-6)]">
         <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          {castHeading}
+          {partyHeading || "Party"}
         </p>
-        {castDescription ? (
+        {partyDescription ? (
           <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-            {castDescription}
+            {partyDescription}
           </p>
         ) : null}
 
-        <div className="mt-[var(--space-3)] space-y-[var(--space-3)]">
-          {safeCastMembers.map((member, index) => (
-            <CastCard key={member?.id || index} member={member} onSelect={onSelectCastMember} />
+        <div className="mt-[var(--space-3)] space-y-[var(--space-2)]">
+          {filledSlots.map((member, index) => (
+            <PartySlotRow key={member?.id || index} member={member} onOpenPartyRoster={onOpenPartyRoster} />
+          ))}
+
+          {Array.from({ length: openSlotCount }, (_, index) => (
+            <OpenPartySlotRow
+              key={`open-slot-${index}`}
+              onOpenPartyRoster={onOpenPartyRoster}
+              maxSize={MAX_PARTY_SIZE}
+            />
           ))}
         </div>
       </div>
 
       <div className="mt-[var(--space-6)] grid gap-[var(--space-3)]">
-        {safePlayerCharacterAction.visible ? (
-          <button
-            type="button"
-            onClick={() => onOpenPlayerCharacterPicker?.()}
-            disabled={safePlayerCharacterAction.disabled}
-            className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--gold-action)]/35 bg-[var(--fill)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-bright)] transition hover:bg-[var(--fill-strong)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
-          >
-            <UserRound size={14} aria-hidden="true" />
-            {safePlayerCharacterAction.busy
-              ? safePlayerCharacterAction.busyLabel || "Setting"
-              : safePlayerCharacterAction.label || "Set Player Character"}
-          </button>
-        ) : null}
-
-        {setPlayerCharacterError ? <ErrorLine>{setPlayerCharacterError}</ErrorLine> : null}
-
         {npcParticipantManager ? <ChatNpcManagerView {...npcParticipantManager} /> : null}
-
-        {safeRandomLikedAction.visible !== false ? (
-          <button
-            type="button"
-            onClick={() => onLoadRandomLiked?.()}
-            disabled={safeRandomLikedAction.disabled}
-            className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
-          >
-            <Shuffle size={14} aria-hidden="true" />
-            {safeRandomLikedAction.busy
-              ? safeRandomLikedAction.busyLabel || "Loading"
-              : safeRandomLikedAction.label || "Random Liked"}
-          </button>
-        ) : null}
-
-        {randomLikedError ? <ErrorLine>{randomLikedError}</ErrorLine> : null}
-
-        {safeDeleteAction.visible ? (
-          <button
-            type="button"
-            onClick={() => onRequestDeleteRoom?.()}
-            disabled={safeDeleteAction.disabled}
-            className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-transparent bg-transparent px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)] transition hover:bg-[var(--status-danger-bed)] disabled:cursor-wait disabled:opacity-[var(--state-disabled-opacity)]"
-          >
-            <Trash2 size={14} aria-hidden="true" />
-            {safeDeleteAction.busy ? safeDeleteAction.busyLabel || "Deleting" : safeDeleteAction.label || "Delete Story"}
-          </button>
-        ) : null}
-
-        {deleteError ? <ErrorLine>{deleteError}</ErrorLine> : null}
 
         <a
           href={roomListHref || "/studio/story-rooms"}
@@ -187,26 +135,25 @@ function CastPanelContent({
           {roomListLabel || "Room List"}
         </a>
       </div>
-
-      {playerCharacterPickerContent}
     </div>
   );
 }
 
-// DeleteConfirmSheet, RULED (ED1G chat family pass, CLEANUP): this
-// package's confirm sheet was a near-verbatim duplicate of
-// chat-session-dialogs' DeleteConfirmDialog; both now compose the one
-// portable component exported from ChatSessionDialogs.view (imported
-// above), which also carries the BLOCKER B5/B8 footer fix.
-
 export default function ChatCastPanelView(props) {
-  const {
-    deleteConfirm,
-    initialMobileOpen = false,
-    ...contentProps
-  } = props;
+  const { initialMobileOpen = false, mobileOpen: controlledMobileOpen, onMobileOpenChange, ...contentProps } = props;
 
-  const [mobileOpen, setMobileOpen] = useState(initialMobileOpen);
+  const [localMobileOpen, setLocalMobileOpen] = useState(initialMobileOpen);
+  const isControlled = typeof controlledMobileOpen === "boolean";
+  const mobileOpen = isControlled ? controlledMobileOpen : localMobileOpen;
+
+  function closeMobile() {
+    if (isControlled) {
+      onMobileOpenChange?.(false);
+      return;
+    }
+
+    setLocalMobileOpen(false);
+  }
 
   return (
     <>
@@ -214,35 +161,21 @@ export default function ChatCastPanelView(props) {
         <CastPanelContent {...contentProps} />
       </aside>
 
-      <div className="xl:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="inline-flex min-h-[var(--control-md)] touch-manipulation items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]"
-        >
-          <Users size={14} aria-hidden="true" />
-          Room &amp; Cast
-        </button>
-
-        {mobileOpen ? (
-          <KitModalFrame variant="sheet" onClose={() => setMobileOpen(false)} ariaLabel="Room and cast">
-            <div className="p-[var(--space-4)]">
-              <CastPanelContent {...contentProps} canClose={false} />
-            </div>
-          </KitModalFrame>
-        ) : null}
-      </div>
-
-      {deleteConfirm?.open ? <DeleteConfirmSheet {...deleteConfirm} /> : null}
+      {mobileOpen ? (
+        <KitModalFrame variant="sheet" sheetGrabber onClose={closeMobile} ariaLabel="Party">
+          <div className="p-[var(--space-4)]">
+            <CastPanelContent {...contentProps} canClose={false} />
+          </div>
+        </KitModalFrame>
+      ) : null}
     </>
   );
 }
 
-function RoomInfoLine({ icon: Icon, label, value }) {
+function RoomInfoLine({ label, value }) {
   return (
     <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
-      <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-        <Icon size={13} aria-hidden="true" />
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {label}
       </p>
       <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">{value}</p>
@@ -250,82 +183,52 @@ function RoomInfoLine({ icon: Icon, label, value }) {
   );
 }
 
-function ErrorLine({ children }) {
+function PartySlotRow({ member, onOpenPartyRoster }) {
+  const safeMember = member || {};
+
   return (
-    <p
-      className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]"
-      role="alert"
+    <button
+      type="button"
+      onDoubleClick={() => onOpenPartyRoster?.()}
+      className="flex w-full touch-manipulation items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-2)] text-left transition hover:border-[var(--line)]"
     >
-      {children}
-    </p>
+      <span
+        aria-hidden="true"
+        className="flex h-[var(--control-filter)] w-[var(--control-filter)] shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] bg-[var(--chat-avatar-fill)]"
+        style={safeMember.color ? { "--chat-speaker": safeMember.color } : undefined}
+      >
+        {safeMember.avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={safeMember.avatarUrl} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <span className="font-display text-[length:var(--text-ui)] text-[var(--chat-speaker-name)]">
+            {safeMember.fallbackInitial || "?"}
+          </span>
+        )}
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[length:var(--text-ui)] text-[var(--ink)]">
+          {safeMember.name || "Unnamed Participant"}
+        </p>
+        {safeMember.role ? (
+          <p className="mt-[2px] truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+            {safeMember.role}
+          </p>
+        ) : null}
+      </div>
+    </button>
   );
 }
 
-function CastCard({ member, onSelect }) {
-  const safeMember = member || {};
-  const CardElement = safeMember.selectable ? "button" : "article";
-
+function OpenPartySlotRow({ onOpenPartyRoster, maxSize }) {
   return (
-    <CardElement
-      type={safeMember.selectable ? "button" : undefined}
-      onClick={safeMember.selectable ? () => onSelect?.(safeMember.id) : undefined}
-      aria-pressed={safeMember.selectable ? Boolean(safeMember.selected) : undefined}
-      aria-label={safeMember.selectable ? safeMember.selectionAriaLabel || undefined : undefined}
-      className={`w-full touch-manipulation rounded-[var(--radius-md)] border p-[var(--space-3)] text-left transition ${
-        safeMember.selected
-          ? "border-[var(--gold-action)]/65 bg-[var(--fill)]"
-          : safeMember.selectable
-            ? "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)] hover:bg-[var(--state-hover-fill)]"
-            : "border-[var(--line-whisper)] bg-[var(--surface-1)]"
-      } ${safeMember.isActive ? "" : "opacity-[var(--state-disabled-opacity)]"}`}
+    <button
+      type="button"
+      onClick={() => onOpenPartyRoster?.()}
+      className="flex min-h-[calc(var(--control-filter)+var(--space-4))] w-full touch-manipulation items-center justify-center rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)]"
     >
-      <div className="flex gap-[var(--space-3)]">
-        <div
-          className={`h-14 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] border bg-[var(--surface-3)] ${
-            safeMember.selected ? "border-[var(--gold-action)]/70" : "border-[var(--line-whisper)]"
-          }`}
-        >
-          {safeMember.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={safeMember.avatarUrl} alt={safeMember.name || "Cast member"} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center font-display text-[length:var(--text-lead)] text-[var(--gold-ornament)]">
-              {safeMember.fallbackInitial || "C"}
-            </div>
-          )}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-[var(--space-2)]">
-            <p className="text-[length:var(--text-ui)] text-[var(--ink)]">
-              {safeMember.name || "Unnamed Participant"}
-            </p>
-            <span
-              className={`rounded-[var(--radius-full)] border px-[var(--space-2)] py-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] ${
-                safeMember.selected
-                  ? "border-[var(--gold-action)]/55 bg-[var(--fill)] text-[var(--gold-bright)]"
-                  : "border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-faint)]"
-              }`}
-            >
-              {safeMember.selectionLabel || "Inactive"}
-            </span>
-          </div>
-
-          <p className="mt-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            {safeMember.role || ""}
-          </p>
-
-          <p className="mt-[var(--space-1)] text-[length:var(--text-label)] text-[var(--ink-faint)]">
-            {safeMember.state || ""}
-          </p>
-
-          {safeMember.note ? (
-            <p className="mt-[var(--space-2)] line-clamp-2 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-              {safeMember.note}
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </CardElement>
+      {`Open slot · ${maxSize} max`}
+    </button>
   );
 }

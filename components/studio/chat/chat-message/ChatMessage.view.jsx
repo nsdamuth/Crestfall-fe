@@ -253,24 +253,22 @@ function ChromelessMediaMessage({ media }) {
   );
 }
 
+// Tinted bubble law, RULED 23 Aug 2026 (build-0823 pass 2). Every
+// speaker bubble (PLAYER, CHARACTER, NARRATOR, OPENING) shares the
+// same recipe: fill and border derive from the per-message
+// --chat-speaker anchor (or the --gold-ornament fallback), radius is
+// the chat-scoped --radius-bubble. SYSTEM keeps its own transparent,
+// centered, non-bubble treatment.
 function getArticleClassName(surfaceTone) {
-  if (surfaceTone === CHAT_MESSAGE_SURFACE_TONES.PLAYER) {
-    return "ml-auto max-w-3xl bg-[var(--fill)]";
-  }
-
-  if (surfaceTone === CHAT_MESSAGE_SURFACE_TONES.OPENING) {
-    return "border border-[var(--line-whisper)] bg-[var(--surface-1)]";
-  }
-
   if (surfaceTone === CHAT_MESSAGE_SURFACE_TONES.SYSTEM) {
-    return "mx-auto max-w-xl border-y border-[var(--line-whisper)] bg-transparent text-center";
+    return "mx-auto max-w-xl rounded-[var(--radius-bubble)] border-y border-[var(--line-whisper)] bg-transparent text-center";
   }
 
-  if (surfaceTone === CHAT_MESSAGE_SURFACE_TONES.NARRATOR) {
-    return "border border-[var(--line-whisper)] bg-[var(--surface-1)]";
+  if (surfaceTone === CHAT_MESSAGE_SURFACE_TONES.PLAYER) {
+    return "ml-auto max-w-[86%] min-[700px]:max-w-[70%] rounded-[var(--radius-bubble)] border border-[var(--chat-bubble-line)] bg-[var(--chat-bubble-fill)]";
   }
 
-  return "border border-[var(--line-whisper)] bg-[var(--surface-2)]";
+  return "rounded-[var(--radius-bubble)] border border-[var(--chat-bubble-line)] bg-[var(--chat-bubble-fill)]";
 }
 
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
@@ -294,6 +292,7 @@ export default function ChatMessageView({
   contentType = CHAT_MESSAGE_CONTENT_TYPES.TEXT,
   speakerLabel = "",
   speakerAvatarUrl = null,
+  speakerColor = null,
   openingLabel = "",
   modeLabel = "",
   bodyMode = CHAT_MESSAGE_BODY_MODES.LEGACY,
@@ -356,15 +355,21 @@ export default function ChatMessageView({
       }
     : undefined;
 
+  // Gap-6 law (build-0823 pass 2): --chat-speaker is the per-message
+  // anchor color; --chat-bubble-fill/-line/--chat-speaker-name in
+  // theme.css derive from it, falling back to --gold-ornament when no
+  // speakerColor is supplied.
+  const articleStyle = {
+    ...(speakerColor ? { "--chat-speaker": speakerColor } : null),
+    ...(paletteStyleVars ? { ...paletteStyleVars, borderColor: "var(--chat-msg-border)" } : null),
+  };
+  const hasArticleStyle = Boolean(speakerColor) || Boolean(paletteStyleVars);
+
   return (
     <div className={`flex w-full flex-col ${isPlayerMessage ? "items-end" : "items-start"}`}>
       <article
-        className={`w-full rounded-[var(--radius-md)] p-[var(--space-4)] ${getArticleClassName(surfaceTone)}`}
-        style={
-          paletteStyleVars
-            ? { ...paletteStyleVars, borderColor: "var(--chat-msg-border)" }
-            : undefined
-        }
+        className={`w-full p-[var(--space-4)] ${getArticleClassName(surfaceTone)}`}
+        style={hasArticleStyle ? articleStyle : undefined}
       >
         {surfaceTone !== CHAT_MESSAGE_SURFACE_TONES.SYSTEM ? (
           <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
@@ -387,7 +392,7 @@ export default function ChatMessageView({
 
                 <p
                   className="truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)]"
-                  style={{ color: usePaletteVars ? "var(--chat-msg-speaker)" : "var(--gold-ornament)" }}
+                  style={{ color: usePaletteVars ? "var(--chat-msg-speaker)" : "var(--chat-speaker-name)" }}
                 >
                   {speakerLabel}
                 </p>

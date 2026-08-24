@@ -318,6 +318,20 @@
   --radius-md:  12px;   /* buttons, cards                */
   --radius-lg:  20px;   /* panels, modals, sheets        */
   --radius-full: 999px; /* avatars, pill buttons         */
+  --radius-bubble: 16px; /* chat message bubbles ONLY, RULED 23 Aug 2026 */
+
+  /* --- CHAT SURFACE, RULED 23 Aug 2026 (build-0823 pass 2) ---
+     Per-speaker tinted bubble recipe. --chat-speaker is set inline,
+     per message, by ChatMessage.view from contract data; it falls
+     back to --gold-ornament when a speaker has no anchor color. Body
+     text inside a bubble is never speaker-colored, it stays --ink.
+     Gap-6 law: --chat-speaker-name clamps the anchor's lightness to
+     a legible band on dark surfaces and caps its chroma so no anchor
+     can shout. */
+  --chat-bubble-fill: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 9%, transparent);
+  --chat-bubble-line: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 22%, transparent);
+  --chat-avatar-fill: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 12%, transparent);
+  --chat-speaker-name: oklch(from var(--chat-speaker, var(--gold-ornament)) clamp(0.70, l, 0.88) min(c, 0.12) h);
 
   /* --- SIZING, strict multiples of 4 ------------------------
      44 is the accessibility floor for touch and is the

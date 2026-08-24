@@ -1,70 +1,52 @@
 // Local, deterministic View-shaped fixtures (docs/FRONTEND-SOP.md
-// section 1, LOOM item 5): the three states named by
-// docs/STUDIO-SPEC.md section 8.1's Brief S1 (default, empty, longest
-// content), mapped onto the ladder's own three altitudes per
-// useStudioViewModel.js's comment (the hub carries no user-owned data
-// list to otherwise vary). Built directly from studioContent.mock.js
-// so these exercise the View in isolation (preview route) without
-// mounting the hook.
-import {
-  STUDIO_LEVELS,
-  STUDIO_DOORS,
-  STUDIO_TOOL_GROUPS,
-  STUDIO_HUB_EXPLAINER,
-  STUDIO_STORY_BRIDGE,
-  STUDIO_GUIDED_BUILD_SOON,
-  STUDIO_BOTTOM_BANNER,
-} from "./studioContent.mock";
+// section 1, LOOM item 5). RESHAPED 23 Aug 2026 (build-0823 pass 4,
+// RULED): the three states (default, empty, longest content) now map
+// onto the three-zone page's own doors list, since the altitude
+// ladder this file's fixtures used to hang on is removed. Built
+// directly from studioContent.mock.js so these exercise the View in
+// isolation (preview route) without mounting the hook.
+import { STUDIO_DOORS, STUDIO_HUB_EXPLAINER, STUDIO_BOTTOM_BANNER } from "./studioContent.mock";
 
 const noop = () => {};
 
-function decorateDoors() {
-  return STUDIO_DOORS.map((door) => ({ ...door, onOpen: noop }));
+function decorateDoors(doors) {
+  return doors.map((door) => ({ ...door, onOpen: noop }));
 }
 
-function decorateToolGroups() {
-  return STUDIO_TOOL_GROUPS.map((group) => ({
-    ...group,
-    cards: group.cards.map((card) => ({ ...card, onOpen: noop })),
-  }));
-}
-
-const STORY_BRIDGE = { ...STUDIO_STORY_BRIDGE, onAction: noop };
 const BOTTOM_BANNER = { ...STUDIO_BOTTOM_BANNER, onCtaClick: noop };
 
-// Default: Quick Start, the primary surface, four live doors
-// (Character, Worlds, Looks, Stories) among one quiet Soon door
-// (Player Character), the Story bridge strip beneath.
+// Default: the four live doors (Character, Worlds, Looks, Stories)
+// among one quiet Soon door (Player Character), all three zones
+// present.
 export const studioDefaultFixture = {
-  levels: STUDIO_LEVELS,
-  activeLevelId: "quickStart",
-  onSelectLevel: noop,
   hubExplainer: STUDIO_HUB_EXPLAINER,
-  doors: decorateDoors(),
-  storyBridge: STORY_BRIDGE,
-  guidedBuildSoon: STUDIO_GUIDED_BUILD_SOON,
-  toolGroups: decorateToolGroups(),
+  doors: decorateDoors(STUDIO_DOORS),
+  onOpenAdvancedEditor: noop,
+  onBuildStory: noop,
+  onBuildAdventure: noop,
+  onOpenVault: noop,
   bottomBanner: BOTTOM_BANNER,
   notice: null,
   onCloseNotice: noop,
 };
 
-// Empty: Guided Build, the quietest pane. No doors, no tool cards, one
-// placeholder message; Story assembly has no allocation yet
-// (docs/STUDIO-SPEC.md section 9, item 2).
+// Empty: no doors at all, proving the CREATE zone's grid degrades
+// cleanly with zero content (still no user-owned data list on this
+// page; this state is a stress case, not a live scenario).
 export const studioEmptyFixture = {
   ...studioDefaultFixture,
-  activeLevelId: "guidedBuild",
+  doors: [],
 };
 
-// Longest content: Full Studio, the densest pane, every tool group and
-// card rendered at once, plus the notice open showing the longest
-// copy this page carries.
+// Longest content: doubled description text on every door, plus the
+// notice open showing the longest copy this page carries.
 export const studioLongestContentFixture = {
   ...studioDefaultFixture,
-  activeLevelId: "fullStudio",
+  doors: decorateDoors(
+    STUDIO_DOORS.map((door) => ({ ...door, description: `${door.description} ${door.description}` }))
+  ),
   notice: {
-    label: "Wardrobe",
-    message: "Wardrobe isn't built yet. This door will open its own creator once it exists.",
+    label: "Player Character",
+    message: "Player Character isn't built yet. This door will open its own creator once it exists.",
   },
 };

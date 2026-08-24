@@ -1,4 +1,4 @@
-export const KIT_CREATOR_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_CREATOR_CARD_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the shared creator card kit piece
@@ -6,6 +6,14 @@ export const KIT_CREATOR_CARD_VIEW_CONTRACT_VERSION = "1.0.0";
  * identity, a strip of up to three recent-work thumbnails (each
  * routing to the image overlay), and Follow / View profile actions
  * as soft-cornered rectangles, never pills.
+ *
+ * 1.1.0, 23 Aug 2026 (build-0823 pass 6, RULED): the media strip now
+ * mirrors the KitAssetDetailPopup three-slot treatment from commit
+ * 16dac8b exactly. Behavior only, no prop shape change: the strip
+ * always renders exactly three slots (`--radius-md`, `--space-2`
+ * gap); real thumbnails fill from the front; remaining slots render
+ * the ratified icons-v7.svg#i-59 placeholder instead of the strip
+ * hiding at zero thumbnails.
  *
  * The View receives only display-ready fields and semantic
  * callbacks. It does not know follower counts come from a live
