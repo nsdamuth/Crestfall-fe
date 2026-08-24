@@ -1,3 +1,5 @@
+SUPERSEDED 23 Aug 2026 by docs/handoffs/HANDOFF-NICK-2026-08-23.md. Kept for lineage, not current.
+
 CRESTFALL-FE HANDOFF: ED1F DESIGN SYSTEM COMPLETE
 22 Aug 2026, from Brian. Consolidated update per standing process. For Nick, readable by Sol.
 
