@@ -5,13 +5,12 @@ import {
   Castle,
   ChevronDown,
   ChevronUp,
-  CircleUser,
   Compass,
   ExternalLink,
   Home,
   Image,
+  LogOut,
   Megaphone,
-  Menu,
   MessagesSquare,
   ScrollText,
   ShieldCheck,
@@ -41,7 +40,6 @@ function resolveIcon(iconKey) {
 }
 
 export default function StudioMobileNavView({
-  brandLabel = "Crestfall",
   brandHref = "/studio",
   drawerEyebrow = "Crestfall",
   drawerTitle = "Studio",
@@ -52,7 +50,6 @@ export default function StudioMobileNavView({
   logoutHref = "/logout",
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
-  openMenuAriaLabel = "Open menu",
   closeMenuAriaLabel = "Close menu",
   closeOverlayAriaLabel = "Close menu overlay",
   open = false,
@@ -62,149 +59,196 @@ export default function StudioMobileNavView({
   socialLinks = [],
   bottomLinks = [],
   InternalLinkComponent = "a",
-  headerEconomySlot = null,
   drawerEconomySlot = null,
-  onOpenMenu = () => {},
   onCloseMenu = () => {},
   onToggleSocial = () => {},
   onNavigate = () => {},
 }) {
+  const discordLink =
+    socialLinks.find((link) => /discord/i.test(link?.href || "")) ||
+    socialLinks[0] ||
+    null;
+  const accountLink =
+    utilityLinks.find((link) => link.iconKey === "castle") || null;
+
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b border-[var(--muted-gold)]/15 bg-black/90 px-4 backdrop-blur-md lg:hidden">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onOpenMenu}
-            className="rounded-lg p-2 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10"
-            aria-label={openMenuAriaLabel}
-          >
-            <Menu size={21} />
-          </button>
-
-          <InternalLinkComponent
-            href={brandHref}
-            className="font-display text-lg tracking-[0.12em]"
-          >
-            {brandLabel}
-          </InternalLinkComponent>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {headerEconomySlot}
-          <InternalLinkComponent
-            href={accountHref}
-            className="rounded-full border border-[var(--muted-gold)]/25 p-2 text-[var(--muted-gold)]"
-            aria-label={accountAriaLabel}
-          >
-            <CircleUser size={19} />
-          </InternalLinkComponent>
-        </div>
-      </header>
-
       {open ? (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <button
             type="button"
             aria-label={closeOverlayAriaLabel}
             onClick={onCloseMenu}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]"
           />
 
-          <aside className="relative z-[61] flex h-full w-72 flex-col border-r border-[var(--muted-gold)]/20 bg-black px-5 py-6 shadow-2xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="font-display text-[10px] uppercase tracking-[0.35em] text-[var(--muted-gold)]">
-                  {drawerEyebrow}
-                </p>
-                <h2 className="mt-1 font-display text-2xl tracking-[0.08em]">
-                  {drawerTitle}
-                </h2>
-              </div>
+          <aside className="relative z-[61] flex h-full w-[min(20rem,86vw)] flex-col overflow-y-auto border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 shadow-[var(--shadow-modal)]">
+            <div className="flex items-center justify-between gap-2">
+              <InternalLinkComponent
+                href={brandHref}
+                onClick={onNavigate}
+                className="flex items-center gap-[var(--space-2)]"
+              >
+                <svg
+                  viewBox="0 0 64 64"
+                  aria-hidden="true"
+                  className="h-10 w-10 shrink-0 text-[var(--gold-ornament)]"
+                >
+                  <use href="/assets/icons/icons-v7.svg#i-59" />
+                </svg>
+
+                <span>
+                  <h1 className="font-display text-[length:var(--text-ui)] font-[var(--weight-medium)] uppercase leading-none tracking-[.04em] text-[color:var(--ink)] first-letter:text-[1.45em]">
+                    {drawerEyebrow}
+                  </h1>
+
+                  <p className="mt-[2px] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[color:var(--ink-faint)]">
+                    {drawerTitle}
+                  </p>
+                </span>
+              </InternalLinkComponent>
 
               <button
                 type="button"
                 onClick={onCloseMenu}
-                className="rounded-lg border border-[var(--muted-gold)]/20 p-2 text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/50 hover:bg-[var(--muted-gold)]/10"
+                className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
                 aria-label={closeMenuAriaLabel}
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
-            <div className="mt-8 flex-1 overflow-y-auto pr-1">
-              <nav className="space-y-1.5">
-                {primaryLinks.map((link) => (
-                  <MobileDrawerInternalLink
-                    key={link.href}
-                    link={link}
-                    InternalLinkComponent={InternalLinkComponent}
-                    onNavigate={onNavigate}
-                  />
-                ))}
-              </nav>
+            <nav className="mt-6 space-y-[var(--space-1)]">
+              {primaryLinks.map((link) => (
+                <MobileDrawerInternalLink
+                  key={link.href}
+                  link={link}
+                  InternalLinkComponent={InternalLinkComponent}
+                  onNavigate={onNavigate}
+                />
+              ))}
+            </nav>
 
-              <MobileDivider />
-              {drawerEconomySlot}
-              <MobileDivider />
+            <MobileDivider />
+            {drawerEconomySlot}
+            <MobileDivider />
 
-              <nav className="space-y-1.5">
-                {utilityLinks.map((link) => (
-                  <MobileDrawerInternalLink
-                    key={link.href}
-                    link={link}
-                    InternalLinkComponent={InternalLinkComponent}
-                    onNavigate={onNavigate}
-                  />
-                ))}
-              </nav>
+            <nav className="space-y-[var(--space-1)]">
+              {utilityLinks.map((link) => (
+                <MobileDrawerInternalLink
+                  key={link.href}
+                  link={link}
+                  InternalLinkComponent={InternalLinkComponent}
+                  onNavigate={onNavigate}
+                />
+              ))}
+            </nav>
 
-              <MobileDivider />
+            <MobileDivider />
 
-              <section>
-                <button
-                  type="button"
-                  onClick={onToggleSocial}
-                  className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
-                >
-                  <span>{communityLinksLabel}</span>
-                  {socialOpen ? (
-                    <ChevronUp size={15} />
-                  ) : (
-                    <ChevronDown size={15} />
-                  )}
-                </button>
-
-                {socialOpen ? (
-                  <nav className="mt-1 space-y-1.5">
-                    {socialLinks.map((link) => (
-                      <MobileDrawerExternalLink
-                        key={link.href}
-                        link={link}
-                        onNavigate={onNavigate}
-                      />
-                    ))}
-                  </nav>
-                ) : null}
-              </section>
-            </div>
-
-            <div className="mt-5 rounded-xl border border-[var(--muted-gold)]/15 bg-black/40 p-3 text-xs text-[var(--muted)]">
-              <p className="text-[var(--muted-gold)]">{signedInLabel}</p>
-              <p className="mt-1 break-all">{signedInEmail}</p>
-
-              <a
-                href={logoutHref}
-                className="mt-4 inline-block text-[var(--muted-gold)] transition hover:text-[var(--foreground)]"
+            <section>
+              <button
+                type="button"
+                onClick={onToggleSocial}
+                className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
               >
-                {logoutLabel}
-              </a>
+                <span>{communityLinksLabel}</span>
+                {socialOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+              </button>
+
+              {socialOpen ? (
+                <nav className="mt-1 space-y-[var(--space-1)]">
+                  {socialLinks.map((link) => (
+                    <MobileDrawerExternalLink
+                      key={link.href}
+                      link={link}
+                      onNavigate={onNavigate}
+                    />
+                  ))}
+                </nav>
+              ) : null}
+            </section>
+
+            <div className="mt-4 space-y-[var(--space-2)] px-1">
+              <div className="flex items-center gap-[var(--space-3)]">
+                <span
+                  aria-hidden="true"
+                  className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)]"
+                >
+                  {signedInEmail ? signedInEmail.charAt(0).toUpperCase() : "?"}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[color:var(--ink)]">
+                    {signedInLabel}
+                  </h3>
+                  <p className="truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
+                    {signedInEmail}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-[var(--space-2)]">
+                {discordLink ? (
+                  <a
+                    href={discordLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={discordLink.label}
+                    className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <use href="/assets/icons/icons-v7.svg#i-58" />
+                    </svg>
+                  </a>
+                ) : null}
+
+                {accountLink ? (
+                  <InternalLinkComponent
+                    href={accountLink.href}
+                    onClick={onNavigate}
+                    aria-label={accountLink.label}
+                    className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <use href="/assets/icons/icons-v7.svg#i-12" />
+                    </svg>
+                  </InternalLinkComponent>
+                ) : null}
+
+                <a
+                  href={logoutHref}
+                  className="ml-auto flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--gold-ornament)] transition hover:text-[color:var(--ink)]"
+                >
+                  <LogOut size={14} />
+                  {logoutLabel}
+                </a>
+              </div>
             </div>
           </aside>
         </div>
       ) : null}
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 border-t border-[var(--muted-gold)]/15 bg-black/90 px-2 py-2 backdrop-blur-md lg:hidden">
+      <nav
+        aria-label="Primary"
+        className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 gap-[var(--space-1)] border-t border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-2)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] backdrop-blur-[var(--blur-chrome)] lg:hidden"
+      >
         {bottomLinks.map((link) => {
           const Icon = resolveIcon(link.iconKey);
 
@@ -212,16 +256,10 @@ export default function StudioMobileNavView({
             <InternalLinkComponent
               key={link.href}
               href={link.href}
-              className={`
-                flex flex-col items-center gap-1 rounded-lg px-1 py-1.5 text-[10px] transition
-                ${
-                  link.isActive
-                    ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
-                }
-              `}
+              aria-current={link.isActive ? "page" : undefined}
+              className="cf-dock-link flex min-h-[var(--control-md)] flex-col items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-sm)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]"
             >
-              <Icon size={18} />
+              <Icon size={20} className="shrink-0" />
               <span>{link.label}</span>
             </InternalLinkComponent>
           );
@@ -232,7 +270,7 @@ export default function StudioMobileNavView({
 }
 
 function MobileDivider() {
-  return <div className="my-4 border-t border-[var(--muted-gold)]/15" />;
+  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
 }
 
 function MobileDrawerInternalLink({
@@ -245,13 +283,17 @@ function MobileDrawerInternalLink({
   return (
     <InternalLinkComponent
       href={link.href}
+      title={undefined}
       onClick={onNavigate}
+      aria-current={
+        link.variant !== "return" && link.isActive ? "page" : undefined
+      }
       className={`
-        flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] transition
+        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border border-transparent px-3 py-2.5 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)]
         ${
-          link.isActive
-            ? "border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-            : "text-[var(--muted)] hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+          link.variant === "return"
+            ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
+            : "text-[color:var(--ink-faint)]"
         }
       `}
     >
@@ -270,7 +312,7 @@ function MobileDrawerExternalLink({ link, onNavigate = () => {} }) {
       target="_blank"
       rel="noreferrer"
       onClick={onNavigate}
-      className="flex items-center gap-3 rounded-lg px-3 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+      className="cf-nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
     >
       <Icon size={16} className="shrink-0" />
       <span>{link.label}</span>

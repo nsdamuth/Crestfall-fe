@@ -36,14 +36,14 @@ export default function CharacterCreatorView({
     <>
       {headerContent}
 
-      <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Draft Progress
             </p>
-            <p className="mt-1 text-sm text-[var(--muted)]">
-              {progress}% filled — optional fields can be completed later.
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
+              {progress}% filled · optional fields can be completed later.
             </p>
           </div>
 
@@ -51,9 +51,15 @@ export default function CharacterCreatorView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--tertiary"
           >
-            {saveStatus === "saving" ? "Saving..." : "Save Draft →"}
+            {saveStatus === "saving" ? (
+              "Saving..."
+            ) : (
+              <>
+                Save draft <span className="cf-btn__arrow">→</span>
+              </>
+            )}
           </button>
         </div>
 
@@ -68,10 +74,10 @@ export default function CharacterCreatorView({
                 onClick={() => onSelectStep?.(step.id)}
                 className={`rounded-xl border p-3 text-left transition ${
                   step.active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : step.visited
-                      ? "border-[var(--muted-gold)]/25 bg-black/35 text-[var(--muted-gold)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/25"
+                      ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                 }`}
               >
                 <Icon size={17} />
@@ -87,7 +93,7 @@ export default function CharacterCreatorView({
       <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         {previewContent}
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {editorContent}
 
           {saveMessage ? (
@@ -105,7 +111,7 @@ export default function CharacterCreatorView({
               type="button"
               onClick={() => onBack?.()}
               disabled={activeIndex === 0}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="cf-btn cf-btn--secondary"
             >
               Back
             </button>
@@ -115,15 +121,15 @@ export default function CharacterCreatorView({
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
-                {saveStatus === "saving" ? "Saving..." : "Finish Draft →"}
+                {saveStatus === "saving" ? "Saving..." : "Finish draft"}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => onNext?.()}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                className="cf-btn cf-btn--primary"
               >
                 Next
               </button>

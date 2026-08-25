@@ -28,7 +28,7 @@ export default function CreatorListRowView({
   return (
     <article className="border-b border-white/10 px-5 py-4 last:border-b-0 transition hover:bg-white/[0.03]">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 font-display text-xl text-[var(--muted-gold)]">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
           {avatarInitial}
         </div>
 
@@ -39,7 +39,7 @@ export default function CreatorListRowView({
             </h2>
 
             {featured ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.12em] text-[var(--muted-gold)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.12em] text-[var(--gold-ornament)]">
                 <Sparkles size={10} />
                 Featured
               </span>
@@ -53,16 +53,16 @@ export default function CreatorListRowView({
             ) : null}
           </div>
 
-          <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             @{creatorHandle}
           </p>
 
-          <p className="mt-2 line-clamp-1 text-sm text-[var(--muted)]">
+          <p className="mt-2 line-clamp-1 text-sm text-[var(--ink-dim)]">
             {summary}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-4 text-xs text-[var(--muted)]">
+        <div className="flex flex-wrap gap-4 text-xs text-[var(--ink-dim)]">
           {safeStats.map((stat) => {
             const Icon = STAT_ICONS[stat?.id];
 
@@ -81,9 +81,9 @@ export default function CreatorListRowView({
 
         <LinkComponent
           href={profileHref}
-          className="ml-auto rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary ml-auto"
         >
-          View Profile
+          View profile
         </LinkComponent>
       </div>
     </article>

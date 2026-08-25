@@ -31,7 +31,7 @@ export default function CreationStatsRowView({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-3 text-[var(--muted)] ${
+      className={`flex flex-wrap items-center gap-3 text-[var(--ink-dim)] ${
         compact ? "text-[11px]" : "text-xs"
       }`}
     >

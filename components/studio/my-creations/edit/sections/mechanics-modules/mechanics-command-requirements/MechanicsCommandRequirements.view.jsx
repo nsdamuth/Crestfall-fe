@@ -15,11 +15,23 @@ import {
   normalizeProgressionRequirementTierIds,
   slugifyMechanicsRequirementId,
 } from "./mechanicsCommandRequirementsNormalization.js";
+import {
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
+// Local TextField, not SharedFields.TextField: this file needs a
+// native numeric input (type="number") for numeric requirement
+// values, which SharedFields.TextField does not expose. Kept local
+// intentionally rather than guessing at a shared-component change.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -27,7 +39,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -49,33 +61,29 @@ function RequirementValueField({ requirement, onPatch }) {
 
   if (requirement.type === "PROGRESSION_AT_MAXIMUM_LEVEL") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
-        <span>Expected Maximum-Level State</span>
-        <select
-          value={requirement.value === false ? "false" : "true"}
-          onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-        >
-          <option value="true">At maximum level</option>
-          <option value="false">Not at maximum level</option>
-        </select>
-      </label>
+      <SelectField
+        label="Expected Maximum-Level State"
+        value={requirement.value === false ? "false" : "true"}
+        onChange={(value) => onPatch({ value: value === "true" })}
+        options={[
+          { value: "true", label: "At maximum level" },
+          { value: "false", label: "Not at maximum level" },
+        ]}
+      />
     );
   }
 
   if (requirement.type === "FLAG") {
     return (
-      <label className="grid gap-2 text-sm text-[var(--muted)]">
-        <span>Expected Value</span>
-        <select
-          value={requirement.value === false ? "false" : "true"}
-          onChange={(event) => onPatch({ value: event.target.value === "true" })}
-          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-        >
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
-      </label>
+      <SelectField
+        label="Expected Value"
+        value={requirement.value === false ? "false" : "true"}
+        onChange={(value) => onPatch({ value: value === "true" })}
+        options={[
+          { value: "true", label: "true" },
+          { value: "false", label: "false" },
+        ]}
+      />
     );
   }
 
@@ -128,16 +136,17 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className={EYEBROW_CLASS}>
           Requirement {requirementIndex + 1}
         </p>
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove requirement"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -156,43 +165,37 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
           placeholder="mana_available"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Requirement Type</span>
-          <select
-            value={requirement.type}
-            onChange={(event) => {
-              const nextType = event.target.value;
-              const nextTargetRequirement = isTargetCommandRequirementType(nextType);
-              const nextProgressionRequirement =
-                isProgressionCommandRequirementType(nextType);
-              onPatch({
-                type: nextType,
-                operator: getDefaultCommandRequirementOperator(nextType),
-                value: getDefaultCommandRequirementValue(nextType),
-                targetId: nextTargetRequirement
-                  ? ""
-                  : nextProgressionRequirement
-                    ? requirement.targetId || "progression"
-                    : requirement.targetId,
-                argumentName: nextTargetRequirement
-                  ? requirement.argumentName || "target"
-                  : "",
-                enforcement: nextProgressionRequirement
-                  ? normalizeProgressionCommandRequirementEnforcement(
-                      requirement.enforcement
-                    )
-                  : undefined,
-              });
-            }}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            {COMMAND_REQUIREMENT_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Requirement Type"
+          value={requirement.type}
+          onChange={(nextType) => {
+            const nextTargetRequirement = isTargetCommandRequirementType(nextType);
+            const nextProgressionRequirement =
+              isProgressionCommandRequirementType(nextType);
+            onPatch({
+              type: nextType,
+              operator: getDefaultCommandRequirementOperator(nextType),
+              value: getDefaultCommandRequirementValue(nextType),
+              targetId: nextTargetRequirement
+                ? ""
+                : nextProgressionRequirement
+                  ? requirement.targetId || "progression"
+                  : requirement.targetId,
+              argumentName: nextTargetRequirement
+                ? requirement.argumentName || "target"
+                : "",
+              enforcement: nextProgressionRequirement
+                ? normalizeProgressionCommandRequirementEnforcement(
+                    requirement.enforcement
+                  )
+                : undefined,
+            });
+          }}
+          options={COMMAND_REQUIREMENT_TYPES.map((type) => ({
+            value: type,
+            label: type,
+          }))}
+        />
 
         {targetRequirement ? null : (
           <TextField
@@ -216,47 +219,35 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
         )}
 
         {targetRequirement || progressionRequirement ? null : (
-          <label className="grid gap-2 text-sm text-[var(--muted)]">
-            <span>Operator</span>
-            <select
-              value={requirement.operator}
-              onChange={(event) => onPatch({ operator: event.target.value })}
-              className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-            >
-              {COMMAND_REQUIREMENT_OPERATORS.map((operator) => (
-                <option key={operator} value={operator}>
-                  {operator}
-                </option>
-              ))}
-            </select>
-          </label>
+          <SelectField
+            label="Operator"
+            value={requirement.operator}
+            onChange={(value) => onPatch({ operator: value })}
+            options={COMMAND_REQUIREMENT_OPERATORS.map((operator) => ({
+              value: operator,
+              label: operator,
+            }))}
+          />
         )}
 
         <RequirementValueField requirement={requirement} onPatch={onPatch} />
 
         {progressionRequirement ? (
           <>
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Enforcement Policy</span>
-              <select
-                value={requirement.enforcement}
-                onChange={(event) =>
-                  onPatch({
-                    enforcement: normalizeProgressionCommandRequirementEnforcement(
-                      event.target.value
-                    ),
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {COMMAND_PROGRESSION_ENFORCEMENTS.map((enforcement) => (
-                  <option key={enforcement} value={enforcement}>
-                    {enforcement}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <p className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs leading-5 text-[var(--muted)] md:col-span-2">
+            <SelectField
+              label="Enforcement Policy"
+              value={requirement.enforcement}
+              onChange={(value) =>
+                onPatch({
+                  enforcement: normalizeProgressionCommandRequirementEnforcement(value),
+                })
+              }
+              options={COMMAND_PROGRESSION_ENFORCEMENTS.map((enforcement) => ({
+                value: enforcement,
+                label: enforcement,
+              }))}
+            />
+            <p className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)] md:col-span-2">
               {requirement.enforcement === "HARD_LOCK"
                 ? "HARD_LOCK blocks this recognized command before attempt effects, resolution, outcome effects, and domain actions when the deterministic Progression requirement is not met."
                 : "ADVISORY is the backward-compatible default. The deterministic Progression result is recorded, but command execution continues when the requirement is not met."}
@@ -264,18 +255,15 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
           </>
         ) : null}
 
-        <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-            Failure Message
-          </span>
-          <textarea
+        <div className="md:col-span-2">
+          <TextAreaField
+            label="Failure Message"
             value={requirement.message}
-            onChange={(event) => onPatch({ message: event.target.value })}
-            rows={2}
+            onChange={(value) => onPatch({ message: value })}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
             placeholder="Mana must be at least 5."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
           />
-        </label>
+        </div>
       </div>
     </div>
   );
@@ -288,23 +276,23 @@ export default function MechanicsCommandRequirementsView({
   removeRequirement,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Requirements
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Ordinary Mechanics requirements must pass before Crestfall rolls or applies effects. Progression requirements may remain ADVISORY or explicitly use HARD_LOCK. Gameplay commands are also blocked while any active Mechanics HARD_LOCK guard is blocked.
           </p>
         </div>
         <button
           type="button"
           onClick={addRequirement}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary cf-btn--sm"
         >
           <Plus size={14} />
-          Add Requirement
+          Add requirement
         </button>
       </div>
 
@@ -321,7 +309,7 @@ export default function MechanicsCommandRequirementsView({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-4 text-sm leading-6 text-[var(--ink-faint)]">
           No explicit requirements. The command may still be blocked by an active HARD_LOCK guard.
         </p>
       )}

@@ -21,6 +21,11 @@ import {
 } from "lucide-react";
 
 import StatsPoolsJsonEditorModal from "../stats-pools-json-editor/StatsPoolsJsonEditorModal";
+import { STATS_POOLS_EDITOR_LIMITS } from "./StatsPoolsEditor.contract";
+import {
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function humanize(value) {
   return String(value || "")
@@ -34,11 +39,11 @@ function humanize(value) {
 function FieldLabel({ children, detail = "" }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-2">
-      <label className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <label className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {children}
       </label>
       {detail ? (
-        <span className="text-[11px] text-[var(--muted)]">{detail}</span>
+        <span className="text-[11px] text-[var(--ink-dim)]">{detail}</span>
       ) : null}
     </div>
   );
@@ -52,20 +57,7 @@ function TextInput({ value = "", onChange, placeholder = "", disabled = false, t
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    />
-  );
-}
-
-function TextArea({ value = "", onChange, placeholder = "", disabled = false, rows = 4 }) {
-  return (
-    <textarea
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      rows={rows}
-      className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
@@ -76,7 +68,7 @@ function SelectInput({ value, onChange, children, disabled = false }) {
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0907] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     >
       {children}
     </select>
@@ -91,12 +83,12 @@ function CheckboxRow({ checked, onChange, label, description = "", disabled = fa
         checked={checked}
         onChange={(event) => onChange?.(event.target.checked)}
         disabled={disabled}
-        className="mt-1 h-4 w-4 accent-[var(--muted-gold)] disabled:cursor-not-allowed"
+        className="mt-1 h-4 w-4 accent-[var(--gold-ornament)] disabled:cursor-not-allowed"
       />
       <span>
-        <span className="block text-sm text-[var(--foreground)]">{label}</span>
+        <span className="block text-sm text-[var(--ink)]">{label}</span>
         {description ? (
-          <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+          <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </span>
         ) : null}
@@ -133,12 +125,12 @@ function IssueList({ issues = [] }) {
 function MetricCard({ label, value, detail = "" }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--ink)]">{value}</p>
       {detail ? (
-        <p className="mt-1 text-[11px] leading-4 text-[var(--muted)]">{detail}</p>
+        <p className="mt-1 text-[11px] leading-4 text-[var(--ink-dim)]">{detail}</p>
       ) : null}
     </div>
   );
@@ -173,21 +165,21 @@ function DefinitionHeader({
       <button
         type="button"
         onClick={onToggleExpanded}
-        className="rounded-lg border border-white/10 bg-black/25 p-2 text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+        className="rounded-lg border border-white/10 bg-black/25 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
         aria-label={expanded ? "Collapse definition" : "Expand definition"}
       >
         {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
       </button>
 
-      <Icon size={18} className="text-[var(--muted-gold)]" />
+      <Icon size={18} className="text-[var(--gold-ornament)]" />
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="truncate text-sm font-medium text-[var(--foreground)]">
+          <p className="truncate text-sm font-medium text-[var(--ink)]">
             {title || "Untitled definition"}
           </p>
           {!enabled ? (
-            <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+            <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
               Disabled
             </span>
           ) : null}
@@ -197,18 +189,18 @@ function DefinitionHeader({
             </span>
           ) : null}
         </div>
-        <p className="mt-1 truncate font-mono text-[11px] text-[var(--muted)]">
+        <p className="mt-1 truncate font-mono text-[11px] text-[var(--ink-dim)]">
           {id}
         </p>
       </div>
 
-      <label className="flex items-center gap-2 text-xs text-[var(--muted)]">
+      <label className="flex items-center gap-2 text-xs text-[var(--ink-dim)]">
         <input
           type="checkbox"
           checked={enabled}
           onChange={(event) => onToggleEnabled?.(event.target.checked)}
           disabled={disabled}
-          className="h-4 w-4 accent-[var(--muted-gold)]"
+          className="h-4 w-4 accent-[var(--gold-ornament)]"
         />
         Enabled
       </label>
@@ -218,7 +210,7 @@ function DefinitionHeader({
           type="button"
           onClick={onMoveUp}
           disabled={disabled || first}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:opacity-30"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:opacity-30"
           aria-label="Move up"
         >
           <ArrowUp size={15} />
@@ -227,7 +219,7 @@ function DefinitionHeader({
           type="button"
           onClick={onMoveDown}
           disabled={disabled || last}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:opacity-30"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)] disabled:opacity-30"
           aria-label="Move down"
         >
           <ArrowDown size={15} />
@@ -236,10 +228,11 @@ function DefinitionHeader({
           type="button"
           onClick={onRemove}
           disabled={disabled}
-          className="rounded-lg border border-red-300/15 p-2 text-red-200/75 transition hover:border-red-300/35 hover:text-red-100 disabled:opacity-30"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label="Remove definition"
         >
           <Trash2 size={15} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
     </div>
@@ -268,14 +261,14 @@ function FormulaEditor({
     : [];
 
   return (
-    <div className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 p-4">
+    <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
       <div className="flex items-start gap-3">
-        <Calculator size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+        <Calculator size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Declarative Formula
           </p>
-          <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
             Formulas reference definitions in this profile. They do not execute arbitrary code.
           </p>
         </div>
@@ -419,10 +412,11 @@ function FormulaEditor({
                   type="button"
                   onClick={() => onRemoveOperand?.(kind, definitionId, index)}
                   disabled={disabled || operands.length <= 2}
-                  className="mt-7 self-start rounded-lg border border-red-300/15 p-2 text-red-200/75 transition hover:border-red-300/35 hover:text-red-100 disabled:opacity-30"
+                  className="cf-btn cf-btn--danger cf-btn--sm mt-7 self-start"
                   aria-label="Remove formula operand"
                 >
                   <Minus size={15} />
+                  <span className="text-xs">Remove</span>
                 </button>
               </div>
             </div>
@@ -434,21 +428,21 @@ function FormulaEditor({
         type="button"
         onClick={() => onAddOperand?.(kind, definitionId)}
         disabled={disabled}
-        className="mt-3 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs text-[var(--foreground)] transition hover:border-[var(--muted-gold)]/35 disabled:opacity-50"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3"
       >
         <Plus size={14} />
-        Add Operand
+        Add operand
       </button>
 
       <div className="mt-4">
-        <FieldLabel>Formula Notes</FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Formula Notes"
           value={formula?.notes || ""}
-          onChange={(event) =>
-            onUpdateFormula?.(kind, definitionId, "notes", event.target.value)
+          onChange={(value) =>
+            onUpdateFormula?.(kind, definitionId, "notes", value)
           }
           placeholder="Explain the intent of this derived value..."
-          rows={2}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           disabled={disabled}
         />
       </div>
@@ -491,19 +485,14 @@ function SharedDefinitionFields({
         </div>
       </div>
       <div className="mt-4">
-        <FieldLabel>Description</FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Description"
           value={definition.description}
-          onChange={(event) =>
-            onUpdateDefinition?.(
-              kind,
-              definition.id,
-              "description",
-              event.target.value
-            )
+          onChange={(value) =>
+            onUpdateDefinition?.(kind, definition.id, "description", value)
           }
           placeholder="Explain what this definition represents..."
-          rows={3}
+          maxLength={STATS_POOLS_EDITOR_LIMITS.maxDescriptionLength}
           disabled={disabled}
         />
       </div>
@@ -1111,19 +1100,14 @@ function ModifierCard({
           </div>
 
           <div className="mt-4">
-            <FieldLabel>Modifier Notes</FieldLabel>
-            <TextArea
+            <TextAreaField
+              label="Modifier Notes"
               value={definition.notes}
-              onChange={(event) =>
-                onUpdateDefinition?.(
-                  "modifier",
-                  definition.id,
-                  "notes",
-                  event.target.value
-                )
+              onChange={(value) =>
+                onUpdateDefinition?.("modifier", definition.id, "notes", value)
               }
               placeholder="Clarify special stacking or source behavior..."
-              rows={2}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
               disabled={disabled}
             />
           </div>
@@ -1244,7 +1228,7 @@ function ConditionCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-2 rounded-xl border border-dashed border-white/10 px-4 py-4 text-xs text-[var(--muted)]">
+              <p className="mt-2 rounded-xl border border-dashed border-white/10 px-4 py-4 text-xs text-[var(--ink-dim)]">
                 Add a Modifier definition before linking it to this Condition.
               </p>
             )}
@@ -1339,19 +1323,19 @@ export default function StatsPoolsEditorView({
   };
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <CircleGauge size={18} />
-            <p className="text-xs uppercase tracking-[0.22em]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Stats & Pools · Reusable Definitions
             </p>
           </div>
           <h2 className="mt-3 font-display text-3xl sm:text-4xl">
             Stats and Pools Profile
           </h2>
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable attributes, HP, Stamina, Mana, custom resources,
             derived values, modifiers, and Conditions. Mutable values remain
             isolated to each actor through their Actor Mechanics Profile binding.
@@ -1363,10 +1347,10 @@ export default function StatsPoolsEditorView({
             type="button"
             onClick={() => onOpenJsonEditor?.()}
             disabled={disabled}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:opacity-50"
+            className="cf-btn cf-btn--secondary"
           >
             <Braces size={15} />
-            JSON Editor
+            JSON editor
           </button>
 
           <button
@@ -1377,8 +1361,8 @@ export default function StatsPoolsEditorView({
             disabled={disabled}
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:opacity-50 ${
               enabled
-                ? "border-[var(--muted-gold)]/50 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                : "border-white/10 bg-black/25 text-[var(--muted)]"
+                ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -1452,28 +1436,24 @@ export default function StatsPoolsEditorView({
       </div>
 
       <div className="mt-5">
-        <FieldLabel
-          detail={`${descriptionCharacterCount.toLocaleString()} / ${descriptionCharacterLimit.toLocaleString()}`}
-        >
-          Description
-        </FieldLabel>
-        <TextArea
+        <TextAreaField
+          label="Description"
           value={description}
-          onChange={(event) => onUpdateProfile?.("description", event.target.value)}
+          onChange={(value) => onUpdateProfile?.("description", value)}
           placeholder="Explain the intended actors, scale, and gameplay role..."
-          rows={4}
+          maxLength={descriptionCharacterLimit || STATS_POOLS_EDITOR_LIMITS.maxDescriptionLength}
           disabled={disabled}
         />
       </div>
 
       <div className="mt-7 rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
         <div className="flex items-start gap-3">
-          <Layers3 size={17} className="mt-0.5 shrink-0 text-[var(--muted-gold)]" />
+          <Layers3 size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Capability Policy
             </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
               Beyond Scale profiles require a restricted working mode or narrative-only resolution.
             </p>
           </div>
@@ -1516,16 +1496,12 @@ export default function StatsPoolsEditorView({
         </div>
 
         <div className="mt-4">
-          <FieldLabel
-            detail={`${capabilityNotesCharacterCount.toLocaleString()} / ${capabilityNotesCharacterLimit.toLocaleString()}`}
-          >
-            Capability Notes
-          </FieldLabel>
-          <TextArea
+          <TextAreaField
+            label="Capability Notes"
             value={capabilityPolicy.notes || ""}
-            onChange={(event) => onUpdateCapability?.("notes", event.target.value)}
+            onChange={(value) => onUpdateCapability?.("notes", value)}
             placeholder="Explain restricted manifestations or narrative limits..."
-            rows={3}
+            maxLength={capabilityNotesCharacterLimit || STATS_POOLS_EDITOR_LIMITS.maxNotesLength}
             disabled={disabled}
           />
         </div>
@@ -1539,8 +1515,8 @@ export default function StatsPoolsEditorView({
             onClick={() => onSetActivePanel?.(value)}
             className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs uppercase tracking-[0.14em] transition ${
               activePanel === value
-                ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/12 text-[var(--foreground)]"
-                : "border-white/10 bg-black/20 text-[var(--muted)] hover:border-[var(--muted-gold)]/25"
+                ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/12 text-[var(--ink)]"
+                : "border-white/10 bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
             }`}
           >
             <Icon size={14} />
@@ -1557,7 +1533,7 @@ export default function StatsPoolsEditorView({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="font-display text-2xl">Stat Definitions</h3>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 Core attributes and derived values. Limit: {limits.maxStats || 0}.
               </p>
             </div>
@@ -1565,10 +1541,10 @@ export default function StatsPoolsEditorView({
               type="button"
               onClick={() => onAddDefinition?.("stat")}
               disabled={disabled || stats.length >= limits.maxStats}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/15 disabled:opacity-40"
+              className="cf-btn cf-btn--primary"
             >
               <Plus size={15} />
-              Add Stat
+              Add stat
             </button>
           </div>
           <div className="mt-4 space-y-3">
@@ -1607,7 +1583,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Pool Definitions"
             body={`HP, Stamina, Mana, and custom actor resources. Limit: ${limits.maxPools || 0}.`}
-            actionLabel="Add Pool"
+            actionLabel="Add pool"
             onAction={() => onAddDefinition?.("pool")}
             disabled={disabled || pools.length >= limits.maxPools}
           />
@@ -1648,7 +1624,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Modifier Definitions"
             body={`Reusable changes applied by Conditions, abilities, equipment, or other systems. Limit: ${limits.maxModifierDefinitions || 0}.`}
-            actionLabel="Add Modifier"
+            actionLabel="Add modifier"
             onAction={() => onAddDefinition?.("modifier")}
             disabled={disabled || modifiers.length >= limits.maxModifierDefinitions}
           />
@@ -1689,7 +1665,7 @@ export default function StatsPoolsEditorView({
           <PanelHeading
             title="Condition Definitions"
             body={`Named actor states that activate one or more Modifiers. Limit: ${limits.maxConditionDefinitions || 0}.`}
-            actionLabel="Add Condition"
+            actionLabel="Add condition"
             onAction={() => onAddDefinition?.("condition")}
             disabled={disabled || conditions.length >= limits.maxConditionDefinitions}
           />
@@ -1737,13 +1713,13 @@ function PanelHeading({ title, body, actionLabel, onAction, disabled }) {
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
         <h3 className="font-display text-2xl">{title}</h3>
-        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{body}</p>
+        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{body}</p>
       </div>
       <button
         type="button"
         onClick={onAction}
         disabled={disabled}
-        className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10 px-4 py-2.5 text-xs uppercase tracking-[0.14em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/15 disabled:opacity-40"
+        className="cf-btn cf-btn--primary"
       >
         <Plus size={15} />
         {actionLabel}
@@ -1755,9 +1731,9 @@ function PanelHeading({ title, body, actionLabel, onAction, disabled }) {
 function EmptyPanel({ icon: Icon, title, body }) {
   return (
     <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-5 py-10 text-center">
-      <Icon size={28} className="mx-auto text-[var(--muted-gold)]/70" />
-      <p className="mt-3 text-sm text-[var(--foreground)]">{title}</p>
-      <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--muted)]">
+      <Icon size={28} className="mx-auto text-[var(--gold-ornament)]/70" />
+      <p className="mt-3 text-sm text-[var(--ink)]">{title}</p>
+      <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--ink-dim)]">
         {body}
       </p>
     </div>

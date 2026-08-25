@@ -11,7 +11,7 @@ export default function AccountStubPageView({
   backHref = "/studio/account",
   backLabel = "Back to Account",
   returnHref = "/studio/account",
-  returnLabel = "Return to Account",
+  returnLabel = "Return to account",
   LinkComponent = "a",
 }) {
   const visibleCards = Array.isArray(cards) ? cards : [];
@@ -34,22 +34,22 @@ export default function AccountStubPageView({
         {visibleCards.map((card, index) => (
           <section
             key={card?.id ?? `${card?.title ?? "account-card"}-${index}`}
-            className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5"
+            className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5"
           >
             {card?.eyebrow ? (
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {card.eyebrow}
               </p>
             ) : null}
 
             {card?.title ? (
-              <h2 className="mt-3 font-serif text-2xl text-[var(--foreground)]">
+              <h2 className="mt-3 font-serif text-2xl text-[var(--ink)]">
                 {card.title}
               </h2>
             ) : null}
 
             {card?.body ? (
-              <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+              <p className="mt-3 text-sm leading-7 text-[var(--ink-dim)]">
                 {card.body}
               </p>
             ) : null}
@@ -58,14 +58,14 @@ export default function AccountStubPageView({
       </div>
 
       {notice ? (
-        <div className="rounded-2xl border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--ink-dim)]">
           {notice}
         </div>
       ) : null}
 
       <LinkComponent
         href={returnHref}
-        className="inline-flex rounded-xl border border-[var(--muted-gold)]/25 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/60 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+        className="cf-btn cf-btn--secondary"
       >
         {returnLabel}
       </LinkComponent>

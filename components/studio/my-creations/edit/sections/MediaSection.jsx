@@ -14,10 +14,10 @@ export default function MediaSection() {
         body="Images and videos attached to this creation will appear here. Later this will connect to Image Studio and generated media assets."
       />
 
-      <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-        <ImageIcon className="mx-auto text-[var(--muted-gold)]" size={32} />
+      <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+        <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={32} />
         <p className="mt-4 font-display text-3xl">No media yet</p>
-        <p className="mx-auto mt-2 max-w-xl leading-7 text-[var(--muted)]">
+        <p className="mx-auto mt-2 max-w-xl leading-7 text-[var(--ink-dim)]">
           Generated images will eventually be selected from the internal media
           library. No external file uploads.
         </p>

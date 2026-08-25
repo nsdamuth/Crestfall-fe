@@ -39,11 +39,11 @@ export default function BehaviorStep({ form, updateField }) {
           updateField={updateField}
         />
 
-        <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Optional Personality Frameworks
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             These provide soft narrative flavor when the composer needs more
             characterization. They are optional and never override explicit
             personality choices, behavior settings, or creator notes.
@@ -113,11 +113,11 @@ export default function BehaviorStep({ form, updateField }) {
           value={form.verbosity_level}
           onChange={(value) => updateField("verbosity_level", value)}
           options={[
-            { value: "1", label: "1 — Terse" },
-            { value: "2", label: "2 — Concise" },
-            { value: "3", label: "3 — Balanced" },
-            { value: "4", label: "4 — Expressive" },
-            { value: "5", label: "5 — Highly Verbose" },
+            { value: "1", label: "1 · Terse" },
+            { value: "2", label: "2 · Concise" },
+            { value: "3", label: "3 · Balanced" },
+            { value: "4", label: "4 · Expressive" },
+            { value: "5", label: "5 · Highly Verbose" },
           ]}
           description="Controls how talkative the character should be during scenes."
         />

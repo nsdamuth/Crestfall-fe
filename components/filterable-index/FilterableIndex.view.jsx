@@ -21,21 +21,21 @@ export default function FilterableIndexView({
 
   return (
     <>
-      <div className="mt-10 flex flex-col gap-4 border-y border-[var(--border)] py-5">
+      <div className="mt-10 flex flex-col gap-4 border-y border-[var(--line-strong)] py-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-md">
             <input
               value={search}
               onChange={(event) => onSearchChange?.(event.target.value)}
               placeholder="Search the archive..."
-              className="w-full rounded-full border border-[var(--border)] bg-[rgba(255,255,255,0.08)] px-5 pr-12 py-3 font-serif text-base text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+              className="w-full rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(255,255,255,0.08)] px-5 pr-12 py-3 font-serif text-base text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
             />
 
             {search ? (
               <button
                 type="button"
                 onClick={onClearSearch}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
                 aria-label="Clear search"
               >
                 ×
@@ -51,7 +51,7 @@ export default function FilterableIndexView({
                 onChange={(event) =>
                   onFilterChange?.(filter.key, event.target.value)
                 }
-                className="rounded-full border border-[var(--border)] bg-[rgba(20,18,16,0.95)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[#f2ead9] outline-none focus:border-[var(--muted-gold)]"
+                className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(20,18,16,0.95)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[#f2ead9] outline-none focus:border-[var(--gold-ornament)]"
               >
                 <option value="all">{filter.label}</option>
 
@@ -66,7 +66,7 @@ export default function FilterableIndexView({
             <button
               type="button"
               onClick={onClearFilters}
-              className="rounded-full border border-[var(--border)] bg-[rgba(255,255,255,0.06)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-[var(--muted-gold)] hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
               Clear
             </button>
@@ -79,7 +79,7 @@ export default function FilterableIndexView({
             onClick={() =>
               tagRailRef.current?.scrollBy({ left: -240, behavior: "smooth" })
             }
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[var(--border)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           >
             ←
           </button>
@@ -91,10 +91,10 @@ export default function FilterableIndexView({
             <button
               type="button"
               onClick={onSelectAllTags}
-              className={`whitespace-nowrap rounded-full px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
+              className={`whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
                 allTagsActive
-                  ? "bg-[var(--muted-gold)] text-black"
-                  : "bg-[rgba(255,255,255,0.08)] text-[var(--muted)]"
+                  ? "bg-[var(--gold-ornament)] text-black"
+                  : "bg-[rgba(255,255,255,0.08)] text-[var(--ink-dim)]"
               }`}
             >
               All
@@ -105,10 +105,10 @@ export default function FilterableIndexView({
                 key={tag.value}
                 type="button"
                 onClick={() => onToggleTag?.(tag.value)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
+                className={`whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
                   tag.isActive
-                    ? "bg-[var(--muted-gold)] text-black"
-                    : "bg-[rgba(255,255,255,0.08)] text-[var(--muted)] hover:text-[var(--foreground)]"
+                    ? "bg-[var(--gold-ornament)] text-black"
+                    : "bg-[rgba(255,255,255,0.08)] text-[var(--ink-dim)] hover:text-[var(--ink)]"
                 }`}
               >
                 {tag.value}
@@ -121,7 +121,7 @@ export default function FilterableIndexView({
             onClick={() =>
               tagRailRef.current?.scrollBy({ left: 240, behavior: "smooth" })
             }
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[var(--border)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           >
             →
           </button>
@@ -132,7 +132,7 @@ export default function FilterableIndexView({
         {cards.length > 0 ? (
           cards.map((card) => renderCard?.(card))
         ) : (
-          <p className="font-serif text-xl text-[var(--muted)]">{emptyText}</p>
+          <p className="font-serif text-xl text-[var(--ink-dim)]">{emptyText}</p>
         )}
       </div>
     </>

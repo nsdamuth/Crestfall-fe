@@ -1,6 +1,8 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function HairModalView({
   open = false,
@@ -14,68 +16,80 @@ export default function HairModalView({
   onChooseOption = null,
   onChangeCustomValue = null,
 }) {
+  const hasValue = Boolean(triggerSummary) && triggerSummary !== "Not chosen";
+
   return (
     <div className="md:col-span-2">
+      <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        {triggerLabel}
+      </span>
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm transition hover:border-[var(--muted-gold)]/35"
+        className="mt-[var(--space-1)] flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
-        <span className="block text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-          {triggerLabel}
-        </span>
-        <span className="mt-1 block text-[var(--foreground)]">
+        <span
+          className={`truncate text-[length:var(--text-body)] leading-[var(--lh-body)] ${hasValue ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}`}
+        >
           {triggerSummary || "Not chosen"}
         </span>
+        <ChevronRight
+          size={16}
+          className="shrink-0 text-[var(--ink-faint)]"
+          aria-hidden="true"
+        />
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="max-h-[92vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="font-display text-3xl">{modalTitle}</h2>
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-4xl"
+          onClose={onClose}
+          ariaLabel={modalTitle}
+        >
+          <div className="flex max-h-[92dvh] flex-col p-[var(--space-6)] pt-[var(--space-8)]">
+            <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+              {modalTitle}
+            </h2>
 
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
+            <div className="min-h-0 flex-1 overflow-y-auto pb-[var(--space-2)] pr-1">
+              {sections.map((section) =>
+                section?.layout === "swatches" ? (
+                  <ColorSection
+                    key={section.id}
+                    section={section}
+                    customValueMaxLength={customValueMaxLength}
+                    onChooseOption={onChooseOption}
+                    onChangeCustomValue={onChangeCustomValue}
+                  />
+                ) : (
+                  <OptionSection
+                    key={section.id}
+                    section={section}
+                    customValueMaxLength={customValueMaxLength}
+                    onChooseOption={onChooseOption}
+                    onChangeCustomValue={onChangeCustomValue}
+                  />
+                )
+              )}
             </div>
 
-            {sections.map((section) =>
-              section?.layout === "swatches" ? (
-                <ColorSection
-                  key={section.id}
-                  section={section}
-                  customValueMaxLength={customValueMaxLength}
-                  onChooseOption={onChooseOption}
-                  onChangeCustomValue={onChangeCustomValue}
-                />
-              ) : (
-                <OptionSection
-                  key={section.id}
-                  section={section}
-                  customValueMaxLength={customValueMaxLength}
-                  onChooseOption={onChooseOption}
-                  onChangeCustomValue={onChangeCustomValue}
-                />
-              )
-            )}
-
-            <div className="mt-6 flex justify-end">
+            <div className="mt-[var(--space-5)] flex justify-end">
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+                className="cf-btn cf-btn--primary"
               >
                 Done
               </button>
             </div>
           </div>
-        </div>
+        </KitModalFrame>
       ) : null}
     </div>
   );
@@ -88,12 +102,12 @@ function ColorSection({
   onChangeCustomValue,
 }) {
   return (
-    <div className="mt-6">
-      <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+    <div className="mt-[var(--space-6)] first:mt-0">
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {section?.title || "Hair"}
       </p>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-7">
+      <div className="mt-[var(--space-3)] grid gap-[var(--space-2)] sm:grid-cols-3 lg:grid-cols-7">
         {(section?.options || []).map((option) => {
           const active = option?.isCustom
             ? Boolean(section?.customActive)
@@ -105,18 +119,18 @@ function ColorSection({
               key={option?.id || "none"}
               type="button"
               onClick={() => onChooseOption?.(section?.id, option?.id || "")}
-              className={`rounded-xl border p-2 transition ${
+              className={`rounded-[var(--radius-md)] border p-[var(--space-2)] transition-colors ${
                 active
-                  ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15"
-                  : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/35"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)]"
+                  : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] hover:border-[var(--gold-ornament)]/35"
               }`}
               title={option?.label || "Not chosen"}
             >
               <div
-                className="h-10 rounded-lg border border-white/10"
+                className="h-10 rounded-[var(--radius-md)] border border-[var(--line-whisper)]"
                 style={option?.swatchStyle || {}}
               />
-              <p className="mt-2 text-center text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+              <p className="mt-[var(--space-2)] text-center text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                 {option?.label || "Not chosen"}
               </p>
             </button>
@@ -150,12 +164,12 @@ function OptionSection({
   onChangeCustomValue,
 }) {
   return (
-    <div className="mt-6">
-      <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+    <div className="mt-[var(--space-6)] first:mt-0">
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {section?.title || "Hair"}
       </p>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-[var(--space-3)] grid gap-[var(--space-2)] sm:grid-cols-2 lg:grid-cols-4">
         {(section?.options || []).map((option) => {
           const active = option?.isCustom
             ? Boolean(section?.customActive)
@@ -167,10 +181,10 @@ function OptionSection({
               key={option?.id || "none"}
               type="button"
               onClick={() => onChooseOption?.(section?.id, option?.id || "")}
-              className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+              className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-left text-[length:var(--text-body)] transition-colors ${
                 active
-                  ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                  : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {option?.label || "Not chosen"}
@@ -207,9 +221,9 @@ function CustomValueInput({
   maxLength,
 }) {
   return (
-    <div className="mt-3 rounded-xl border border-[var(--muted-gold)]/25 bg-black/30 p-4">
+    <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-4)]">
       <label className="block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           {title}
         </span>
         <input
@@ -217,10 +231,10 @@ function CustomValueInput({
           value={value}
           onChange={(event) => onChange?.(event.target.value)}
           placeholder={placeholder}
-          className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)]"
         />
       </label>
-      <div className="mt-2 flex items-start justify-between gap-4 text-xs leading-5 text-[var(--muted)]">
+      <div className="mt-[var(--space-2)] flex items-start justify-between gap-[var(--space-4)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
         <p>{helperText}</p>
         <span className="shrink-0 tabular-nums">
           {String(value || "").length} / {maxLength}

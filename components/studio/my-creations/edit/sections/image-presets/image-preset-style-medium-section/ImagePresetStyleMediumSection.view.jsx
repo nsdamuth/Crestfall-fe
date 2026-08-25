@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ImagePresetStyleMediumSectionView({
@@ -82,6 +83,7 @@ export default function ImagePresetStyleMediumSectionView({
             value={styleNotesValue}
             onChange={(value) => onChangeStyleNotes?.(value)}
             placeholder={styleNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

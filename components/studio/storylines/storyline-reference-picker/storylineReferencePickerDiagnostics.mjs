@@ -11,28 +11,36 @@ function read(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 }
 
-test("Storyline Reference Picker shell stays thin and owns the portal binding", () => {
+test("Storyline Reference Picker shell stays thin and delegates straight to the View", () => {
   const shell = read(
     "components/studio/storylines/StorylineReferencePickerModal.jsx"
   );
-  assert.match(shell, /createPortal/);
   assert.match(shell, /useStorylineReferencePickerViewModel/);
   assert.match(shell, /StorylineReferencePickerModalView/);
-  assert.match(shell, /portalTarget/);
-  assert.doesNotMatch(shell, /useState|useEffect|selectedReferenceIds\.filter/);
+  assert.doesNotMatch(
+    shell,
+    /createPortal|useState|useEffect|selectedReferenceIds\.filter/
+  );
 });
 
-test("ViewModel owns portal lifecycle, Escape dismissal, and scroll restoration", () => {
+test("ViewModel owns tab/query state only; portal, Escape, and scroll lock come from KitModalFrame", () => {
   const viewModel = read(
     "components/studio/storylines/storyline-reference-picker/useStorylineReferencePickerViewModel.js"
   );
-  assert.match(viewModel, /document\.createElement\("div"\)/);
-  assert.match(viewModel, /document\.body\.style\.overflow = "hidden"/);
-  assert.match(viewModel, /previousOverflow/);
-  assert.match(viewModel, /event\.key === "Escape"/);
-  assert.match(viewModel, /portalNode\.remove\(\)/);
-  assert.match(viewModel, /crestfallStorylineReferencePickerPortal/);
+  assert.doesNotMatch(
+    viewModel,
+    /document\.createElement\("div"\)|document\.body\.style\.overflow|event\.key === "Escape"|portalNode\.remove\(\)|crestfallStorylineReferencePickerPortal/
+  );
   assert.doesNotMatch(viewModel, /<div|<StorylineReferencePickerModalView/);
+});
+
+test("View composes KitModalFrame with an explicit back path (NESTED MODAL LAW), not a bespoke overlay", () => {
+  const view = read(
+    "components/studio/storylines/storyline-reference-picker/StorylineReferencePickerModal.view.jsx"
+  );
+  assert.match(view, /KitModalFrame/);
+  assert.match(view, /backLabel/);
+  assert.doesNotMatch(view, /zIndex: 2147483647|isolation: "isolate"/);
 });
 
 test("ViewModel owns tab state, filtering, normalization, and selection protection", () => {

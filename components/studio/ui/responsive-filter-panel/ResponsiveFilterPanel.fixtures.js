@@ -8,7 +8,7 @@ function previewAction(label) {
     {
       type: "button",
       className:
-        "rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]",
+        "rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]",
       onClick: noop,
     },
     label
@@ -24,7 +24,7 @@ function previewFilters() {
         "span",
         {
           className:
-            "text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]",
+            "text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]",
         },
         "Search"
       ),
@@ -32,7 +32,7 @@ function previewFilters() {
         defaultValue: "",
         placeholder: "Search creations...",
         className:
-          "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]",
+          "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]",
       })
     ),
     createElement(
@@ -45,7 +45,7 @@ function previewFilters() {
             key: label,
             type: "button",
             className:
-              "rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)]",
+              "rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]",
             onClick: noop,
           },
           label

@@ -6,6 +6,7 @@ function OrchestrationActionButton({
   title,
   disabled,
   onClick,
+  variant = "primary",
 }) {
   return (
     <button
@@ -13,7 +14,7 @@ function OrchestrationActionButton({
       title={title}
       disabled={disabled}
       onClick={() => onClick?.()}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className={`cf-btn cf-btn--sm ${variant === "secondary" ? "cf-btn--secondary" : "cf-btn--primary"}`}
     >
       <Icon size={14} />
       {children}
@@ -36,7 +37,7 @@ export default function MechanicsDocumentOrchestrationControlsView({
         disabled={!canReplaceData}
         onClick={onOpenPresetLibrary}
       >
-        Preset Library
+        Preset library
       </OrchestrationActionButton>
 
       <OrchestrationActionButton
@@ -44,8 +45,9 @@ export default function MechanicsDocumentOrchestrationControlsView({
         title={jsonButtonTitle}
         disabled={!canReplaceData}
         onClick={onOpenJsonEditor}
+        variant="secondary"
       >
-        JSON Editor
+        JSON editor
       </OrchestrationActionButton>
     </>
   );

@@ -82,7 +82,7 @@ function CreatorEngagementButton({
       } ${
         active
           ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
-          : "border-white/10 bg-black/35 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
       }`}
     >
       {children}

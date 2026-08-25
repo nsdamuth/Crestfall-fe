@@ -13,6 +13,13 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
+import {
+  SectionTitle,
+  TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const TAB_ICONS = {
   overview: ListChecks,
@@ -57,23 +64,17 @@ export default function StructuredRegistryBuilderView({
 }) {
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
-              {config.eyebrow}
-            </p>
-            <h2 className="mt-2 font-display text-4xl">
-              {config.builderTitle}
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-              {config.description}
-            </p>
-          </div>
+          <SectionTitle
+            eyebrow={config.eyebrow}
+            title={config.builderTitle}
+            body={config.description}
+          />
 
           <div className="flex flex-wrap gap-2">
             {isEditMode ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+              <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Use the page Save button to persist changes.
               </p>
             ) : (
@@ -81,29 +82,38 @@ export default function StructuredRegistryBuilderView({
                 type="button"
                 onClick={onSave}
                 disabled={["saving", "saved"].includes(saveStatus)}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
                 <Save size={14} />
                 {saveStatus === "saving"
                   ? "Saving..."
                   : saveStatus === "saved"
-                    ? "Opening Draft..."
-                    : "Save Draft"}
+                    ? "Opening draft..."
+                    : "Save draft"}
               </button>
             )}
           </div>
         </div>
 
         {saveMessage ? (
-          <p
-            className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
+          <span
+            role={saveStatus === "error" ? "alert" : undefined}
+            aria-live="polite"
+            className={`mt-4 inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] ${
               saveStatus === "error"
-                ? "border-red-500/30 bg-red-500/10 text-red-200"
-                : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+                ? "text-[var(--status-danger)]"
+                : "text-[var(--status-success)]"
             }`}
           >
-            {saveMessage}
-          </p>
+            <span
+              className={`h-1.5 w-1.5 flex-none rounded-full ${
+                saveStatus === "error"
+                  ? "bg-[var(--status-danger)]"
+                  : "bg-[var(--status-success)]"
+              }`}
+            />
+            <span className="inline">{saveMessage}</span>
+          </span>
         ) : null}
 
         {hideTabs ? null : (
@@ -116,10 +126,10 @@ export default function StructuredRegistryBuilderView({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectTab(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                     tab.active
-                      ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                   }`}
                 >
                   <Icon size={14} />
@@ -198,13 +208,13 @@ export default function StructuredRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {eyebrow}
       </p>
       <h3 className="mt-2 font-display text-3xl">{title}</h3>
       {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
           {body}
         </p>
       ) : null}
@@ -216,7 +226,7 @@ function Panel({ eyebrow, title, body, children }) {
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -228,16 +238,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
-    />
-  );
-}
-
-function TextArea(props) {
-  return (
-    <textarea
-      {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -271,14 +272,13 @@ function OverviewTab({
         </Field>
 
         <div className="lg:col-span-2">
-          <Field label="Description">
-            <TextArea
-              rows={4}
-              value={description}
-              onChange={(event) => onDescriptionChange(event.target.value)}
-              placeholder="Describe what this registry tracks and how future runtime systems should use it."
-            />
-          </Field>
+          <TextAreaField
+            label="Description"
+            value={description}
+            onChange={(value) => onDescriptionChange(value)}
+            placeholder="Describe what this registry tracks and how future runtime systems should use it."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
       </div>
     </Panel>
@@ -307,7 +307,7 @@ function EntriesTab({
         <button
           type="button"
           onClick={onAddEntry}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary"
         >
           <Plus size={14} />
           Add {config.entryLabel}
@@ -325,21 +325,21 @@ function EntriesTab({
                   onClick={() => onSelectEntry(entry.id)}
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
-                      ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                      ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
+                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">
                     {entry.name || `Untitled ${config.entryLabel}`}
                   </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                     {entry.category}
                   </p>
                 </button>
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet.
             </p>
           )}
@@ -367,7 +367,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry(activeEntry.id)}
           />
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Select an entry or add a new one.
           </p>
         )}
@@ -404,67 +404,62 @@ function StructuredEntryEditor({
         </Field>
 
         <div className="lg:col-span-2">
-          <Field label="Aliases / alternate names, one per line">
-            <TextArea
-              rows={3}
-              value={entry.aliasesText || ""}
-              onChange={(event) => onAliasesTextChange(event.target.value)}
-            />
-          </Field>
+          <TextAreaField
+            label="Aliases / alternate names, one per line"
+            value={entry.aliasesText || ""}
+            onChange={(value) => onAliasesTextChange(value)}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Summary">
-            <TextArea
-              rows={3}
-              value={entry.summary || ""}
-              onChange={(event) => onChange({ summary: event.target.value })}
-            />
-          </Field>
+          <TextAreaField
+            label="Summary"
+            value={entry.summary || ""}
+            onChange={(value) => onChange({ summary: value })}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Public description">
-            <TextArea
-              rows={4}
-              value={entry.publicDescription || ""}
-              onChange={(event) =>
-                onChange({ publicDescription: event.target.value })
-              }
-            />
-          </Field>
+          <TextAreaField
+            label="Public description"
+            value={entry.publicDescription || ""}
+            onChange={(value) =>
+              onChange({ publicDescription: value })
+            }
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Hidden / restricted notes">
-            <TextArea
-              rows={4}
-              value={entry.hiddenNotes || ""}
-              onChange={(event) => onChange({ hiddenNotes: event.target.value })}
-            />
-          </Field>
+          <TextAreaField
+            label="Hidden / restricted notes"
+            value={entry.hiddenNotes || ""}
+            onChange={(value) => onChange({ hiddenNotes: value })}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          />
         </div>
 
         <div className="lg:col-span-2">
-          <Field label="Visual identity">
-            <TextArea
-              rows={3}
-              value={entry.visualIdentity || ""}
-              onChange={(event) =>
-                onChange({ visualIdentity: event.target.value })
-              }
-            />
-          </Field>
+          <TextAreaField
+            label="Visual identity"
+            value={entry.visualIdentity || ""}
+            onChange={(value) =>
+              onChange({ visualIdentity: value })
+            }
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
         </div>
       </div>
 
       <button
         type="button"
         onClick={onDelete}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="cf-btn cf-btn--danger"
       >
         <Trash2 size={14} />
-        Delete Entry
+        Delete entry
       </button>
     </div>
   );
@@ -498,7 +493,7 @@ function RelationshipsTab({
             />
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining relationships.
           </p>
         )}
@@ -516,23 +511,22 @@ function EntryRelationshipFields({
   onLinkedCreationNotesChange,
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
       <p className="font-display text-2xl">
         {entry.name || `Untitled ${config.entryLabel}`}
       </p>
 
       <div className="mt-4 grid gap-4">
-        <Field label="Relationship notes">
-          <TextArea
-            rows={3}
-            value={entry.relationshipNotes || ""}
-            onChange={(event) =>
-              onUpdateEntry(entry.id, {
-                relationshipNotes: event.target.value,
-              })
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Relationship notes"
+          value={entry.relationshipNotes || ""}
+          onChange={(value) =>
+            onUpdateEntry(entry.id, {
+              relationshipNotes: value,
+            })
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
         <div className="grid gap-4">
           {(config.relationshipGroups || []).map((group) => (
@@ -561,13 +555,13 @@ function LinkedCreationGroup({
   const links = Array.isArray(entry?.[group.id]) ? entry[group.id] : [];
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {group.label}
           </p>
-          <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-1 text-sm leading-6 text-[var(--ink-dim)]">
             Link existing creations with visual selection cards.
           </p>
         </div>
@@ -575,10 +569,10 @@ function LinkedCreationGroup({
         <button
           type="button"
           onClick={() => onOpenLinkPicker(entry.id, group.id)}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary"
         >
           <Link2 size={14} />
-          {group.addLabel || "Link Creation"}
+          {group.addLabel || "Link creation"}
         </button>
       </div>
 
@@ -603,7 +597,7 @@ function LinkedCreationGroup({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
           {group.emptyLabel || "No linked creations yet."}
         </p>
       )}
@@ -613,20 +607,24 @@ function LinkedCreationGroup({
 
 function LinkedCreationCard({ link, onRemove, onNotesChange }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
-        <div
-          className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${link.imageUrl || "/images/placeholder-card.jpg"})`,
-          }}
-        />
+        {link.imageUrl ? (
+          <div
+            className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
+            style={{ backgroundImage: `url(${link.imageUrl})` }}
+          />
+        ) : (
+          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10">
+            <KitArtPlaceholder size="sm" />
+          </div>
+        )}
 
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-xl">
             {link.title || "Linked Creation"}
           </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {link.type || "Creation"}
           </p>
         </div>
@@ -634,26 +632,27 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label="Remove linked creation"
         >
           <X size={14} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
 
       <div className="p-4">
         {link.description ? (
-          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {link.description}
           </p>
         ) : null}
 
-        <textarea
-          rows={2}
+        <TextAreaField
+          label="Notes"
           value={link.notes || ""}
-          onChange={(event) => onNotesChange(event.target.value)}
+          onChange={(value) => onNotesChange(value)}
           placeholder="Optional link notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>
@@ -672,65 +671,61 @@ function RulesTab({ config, entries, onUpdateEntry }) {
           entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || `Untitled ${config.entryLabel}`}
               </p>
 
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <Field label="Rules notes">
-                  <TextArea
-                    rows={3}
-                    value={entry.rulesNotes || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        rulesNotes: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Rules notes"
+                  value={entry.rulesNotes || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      rulesNotes: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Access / requirements">
-                  <TextArea
-                    rows={3}
-                    value={entry.accessRules || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        accessRules: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Access / requirements"
+                  value={entry.accessRules || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      accessRules: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Knowledge / visibility">
-                  <TextArea
-                    rows={3}
-                    value={entry.knowledgeRules || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        knowledgeRules: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Knowledge / visibility"
+                  value={entry.knowledgeRules || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      knowledgeRules: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
 
-                <Field label="Consequences / outcomes">
-                  <TextArea
-                    rows={3}
-                    value={entry.consequences || ""}
-                    onChange={(event) =>
-                      onUpdateEntry(entry.id, {
-                        consequences: event.target.value,
-                      })
-                    }
-                  />
-                </Field>
+                <TextAreaField
+                  label="Consequences / outcomes"
+                  value={entry.consequences || ""}
+                  onChange={(value) =>
+                    onUpdateEntry(entry.id, {
+                      consequences: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                />
               </div>
             </div>
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining rules.
           </p>
         )}
@@ -747,38 +742,35 @@ function PromptTab({ config, promptGuidance, onPromptGuidanceChange }) {
       body="Describe how this registry should feed runtime packets and Image Studio prompt compilation."
     >
       <div className="grid gap-4">
-        <Field label="Registry summary">
-          <TextArea
-            rows={4}
-            value={promptGuidance.summary || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange("summary", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Registry summary"
+          value={promptGuidance.summary || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange("summary", value)
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
-        <Field label="Usage notes">
-          <TextArea
-            rows={4}
-            value={promptGuidance.usageNotes || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange("usageNotes", event.target.value)
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Usage notes"
+          value={promptGuidance.usageNotes || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange("usageNotes", value)
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
 
-        <Field label="Negative prompt notes">
-          <TextArea
-            rows={3}
-            value={promptGuidance.negativePromptNotes || ""}
-            onChange={(event) =>
-              onPromptGuidanceChange(
-                "negativePromptNotes",
-                event.target.value
-              )
-            }
-          />
-        </Field>
+        <TextAreaField
+          label="Negative prompt notes"
+          value={promptGuidance.negativePromptNotes || ""}
+          onChange={(value) =>
+            onPromptGuidanceChange(
+              "negativePromptNotes",
+              value
+            )
+          }
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+        />
       </div>
     </Panel>
   );
@@ -792,26 +784,26 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
       body="This is the current structured registry payload saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
           <dl className="space-y-3 text-sm">
             <div>
-              <dt className="text-[var(--muted)]">Registry</dt>
-              <dd className="text-[var(--foreground)]">{config.label}</dd>
+              <dt className="text-[var(--ink-dim)]">Registry</dt>
+              <dd className="text-[var(--ink)]">{config.label}</dd>
             </div>
             <div>
-              <dt className="text-[var(--muted)]">Entries</dt>
-              <dd className="text-[var(--foreground)]">{entryCount}</dd>
+              <dt className="text-[var(--ink-dim)]">Entries</dt>
+              <dd className="text-[var(--ink)]">{entryCount}</dd>
             </div>
             <div>
-              <dt className="text-[var(--muted)]">Future payload</dt>
-              <dd className="text-[var(--foreground)]">
+              <dt className="text-[var(--ink-dim)]">Future payload</dt>
+              <dd className="text-[var(--ink)]">
                 {config.futurePayload}
               </dd>
             </div>
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-2xl border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--muted)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>

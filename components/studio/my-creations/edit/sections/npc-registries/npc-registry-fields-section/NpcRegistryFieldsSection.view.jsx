@@ -5,6 +5,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function NpcRegistryFieldsSectionView({
@@ -67,6 +68,7 @@ export default function NpcRegistryFieldsSectionView({
               value={descriptionValue}
               onChange={(value) => onChangeDescription?.(value)}
               placeholder={descriptionPlaceholder}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
           </div>
 
@@ -91,7 +93,7 @@ export default function NpcRegistryFieldsSectionView({
           </PrimaryAction>
 
           {helperMessage ? (
-            <p className="text-sm text-[var(--muted)]">{helperMessage}</p>
+            <p className="text-sm text-[var(--ink-dim)]">{helperMessage}</p>
           ) : null}
 
           {cards.length ? (
@@ -103,7 +105,7 @@ export default function NpcRegistryFieldsSectionView({
       )}
 
       {loadError ? (
-        <p className="mt-4 text-sm text-red-200">{loadError}</p>
+        <p className="mt-4 text-sm text-[var(--status-danger)]">{loadError}</p>
       ) : null}
     </div>
   );
@@ -111,13 +113,15 @@ export default function NpcRegistryFieldsSectionView({
 
 function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-4">
+    <article className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl">{title}</h3>
+          <h3 className="mt-2 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+            {title}
+          </h3>
         </div>
 
         <div className="flex gap-2">
@@ -126,9 +130,9 @@ function RegistryCard({ eyebrow, title, body, meta = "", onEdit, onDelete }) {
         </div>
       </div>
 
-      <p className="mt-3 leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 leading-7 text-[var(--ink-dim)]">{body}</p>
       {meta ? (
-        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+        <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           {meta}
         </p>
       ) : null}
@@ -142,7 +146,7 @@ function PrimaryAction({ children, onClick, disabled = false }) {
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--primary w-fit"
     >
       <Plus size={14} />
       {children}
@@ -155,7 +159,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       {children}
     </button>
@@ -167,18 +171,19 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-lg border border-white/10 px-3 py-2 text-red-200 transition hover:border-red-300/35"
+      className="cf-btn cf-btn--danger cf-btn--sm"
       aria-label="Delete"
     >
       <Trash2 size={14} />
+      Delete
     </button>
   );
 }
 
 function EmptyPanel({ message }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-      <p className="text-sm leading-6 text-[var(--muted)]">{message}</p>
+    <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-8 text-center">
+      <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
 }

@@ -12,9 +12,9 @@ export default function OpeningMessageCardView({
   onRemoveMessage,
 } = {}) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {messageLabel}
         </p>
 
@@ -22,7 +22,7 @@ export default function OpeningMessageCardView({
           type="button"
           onClick={() => onRemoveMessage?.()}
           disabled={!canRemove}
-          className="rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-35"
+          className="cf-btn cf-btn--danger cf-btn--sm"
         >
           Remove
         </button>

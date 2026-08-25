@@ -1,0 +1,47 @@
+export const silhouetteStopEmptyFixture = {
+  kibbeIdentity: "",
+  bodyType: "",
+  height: "",
+  build: "",
+  proportions: [],
+  chestBust: "",
+  bodyNotes: "",
+  appearanceNotes: "",
+  clothingStyle: "",
+  defaultClothingMode: "NONE",
+  defaultOutfitTitle: "",
+  defaultWardrobeTitle: "",
+  fineTuneFoldOpen: false,
+};
+
+export const silhouetteStopFilledFixture = {
+  kibbeIdentity: "ROMANTIC",
+  bodyType: "CURVY",
+  height: "AVERAGE",
+  build: "GRACEFUL",
+  proportions: ["NARROW_WAIST", "FULL_CHEST_BUST", "WIDE_HIPS"],
+  chestBust: "Full",
+  bodyNotes: "Moves like the tide never quite settles.",
+  appearanceNotes: "Always barefoot, even on stone.",
+  clothingStyle: "Salt-worn linen and borrowed coats",
+  defaultClothingMode: "OUTFIT",
+  defaultOutfitTitle: "Lighthouse Keeper's Coat",
+  defaultWardrobeTitle: "",
+  fineTuneFoldOpen: true,
+};
+
+export const silhouetteStopWardrobeFixture = {
+  kibbeIdentity: "FLAMBOYANT_NATURAL",
+  bodyType: "ATHLETIC",
+  height: "TALL",
+  build: "BROAD",
+  proportions: ["BROAD_SHOULDERS"],
+  chestBust: "",
+  bodyNotes: "",
+  appearanceNotes: "",
+  clothingStyle: "",
+  defaultClothingMode: "WARDROBE",
+  defaultOutfitTitle: "",
+  defaultWardrobeTitle: "",
+  fineTuneFoldOpen: false,
+};

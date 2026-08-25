@@ -4,6 +4,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CreationOverviewSectionView({
@@ -15,7 +16,7 @@ export default function CreationOverviewSectionView({
   descriptionLabel = "Public Description",
   descriptionValue = "",
   descriptionPlaceholder = "",
-  previewButtonLabel = "Preview Soon",
+  previewButtonLabel = "Preview",
   previewDisabled = true,
   onChangeTitle = null,
   onChangeDescription = null,
@@ -29,7 +30,7 @@ export default function CreationOverviewSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4">
+      <div className="grid gap-4">
         <TextField
           label={titleLabel}
           value={titleValue}
@@ -41,19 +42,27 @@ export default function CreationOverviewSectionView({
           value={descriptionValue}
           onChange={(value) => onChangeDescription?.(value)}
           placeholder={descriptionPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-[var(--space-4)] flex flex-wrap items-center gap-[var(--space-3)]">
         <button
           type="button"
           disabled={previewDisabled}
           onClick={() => onPreview?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+          className="cf-btn cf-btn--secondary"
         >
           <Eye size={14} />
           {previewButtonLabel}
         </button>
+        {/* 4.7 composed disabled recipe: the word "Soon" lives beside
+            the control as tier 8 meta, never baked into the label. */}
+        {previewDisabled ? (
+          <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+            Soon
+          </span>
+        ) : null}
       </div>
     </div>
   );

@@ -57,6 +57,42 @@
 
   --tag-fill-ink:  #1c1408;
 
+  /* --- STATUS -------------------------------------------------
+     Minted fresh, 3 Aug 2026 — not copied or approximated from
+     any color already in the fe app. Three states only: success,
+     warning, danger. Deliberately no info color; neutral and
+     informational states read through the existing --ink family,
+     not a fourth status hue. Each carries a quiet bed and border
+     at the same alpha tier as --fill/--line-strong, for chip use.
+     Full usage law recorded in docs/RESTYLE-RULES.md — state only,
+     never decoration; always paired with a word; warning is
+     reserved, kept away from gold; --status-danger is the one
+     and only red, including the danger button variant.        */
+
+  /* --status-success revised 22 Aug 2026, Gate 2 token law row 6,
+     closes CR-051: oklch(.76 .08 135), sage ruled the success hue
+     everywhere. The prior hex value is struck for lineage:
+     #7D9B6A. */
+  --status-success:        oklch(.76 .08 135);  /* warm sage   */
+  --status-warning:        #C97B35;  /* burnt amber */
+  --status-danger:         #C2634D;  /* brick red   */
+
+  --status-success-bed:    rgba(155, 189, 138, .14);
+  --status-success-border: rgba(155, 189, 138, .40);
+  --status-warning-bed:    rgba(201, 123, 53, .14);
+  --status-warning-border: rgba(201, 123, 53, .40);
+  --status-danger-bed:     rgba(194, 99, 77, .14);
+  --status-danger-border:  rgba(194, 99, 77, .40);
+
+  /* Brian ruling 1, 22 Aug 2026 (ED1G burn-down, closes ED1E section
+     10 item 1): brighter text-tier variants for status-colored
+     RUNNING TEXT on dark panels only, e.g. the at-limit field
+     counter, a save-error line. Chips and badges keep the base
+     --status-* colors above; never swap a chip/badge to these. */
+  --status-success-text: oklch(.86 .09 135);
+  --status-warning-text: oklch(.80 .13 60);
+  --status-danger-text:  oklch(.78 .12 32);
+
   /* --- LINES ------------------------------------------------
      Bright gold at low alpha, never antique. At these
      opacities antique reads as a brown smudge; bright reads
@@ -81,6 +117,17 @@
 
   --scrim:         rgba(0, 0, 0, .40);
   --scrim-strong:  rgba(0, 0, 0, .70);
+
+  /* Blur: one strength in the whole system, floating panels only
+     (modals, sheets, pickers), paired with --scrim-strong. Never on
+     tile art, banners, or tag beds. Ruled 4 Aug 2026. */
+  --blur-panel:    2px;
+
+  /* Chrome frost: persistent chrome only (sticky top bars), never a
+     floating panel and never paired with --scrim-strong. Distinct
+     strength from --blur-panel by role, not by preference. Minted
+     8 Aug 2026 at the proof's create-hub .topbar value. */
+  --blur-chrome:   12px;
 
   /* --- OVER-ART INK -----------------------------------------
      Sprint 3. Artwork and the scrims over it do not flip with
@@ -271,14 +318,37 @@
   --radius-md:  12px;   /* buttons, cards                */
   --radius-lg:  20px;   /* panels, modals, sheets        */
   --radius-full: 999px; /* avatars, pill buttons         */
+  --radius-bubble: 16px; /* chat message bubbles ONLY, RULED 23 Aug 2026 */
+
+  /* --- CHAT SURFACE, RULED 23 Aug 2026 (build-0823 pass 2) ---
+     Per-speaker tinted bubble recipe. --chat-speaker is set inline,
+     per message, by ChatMessage.view from contract data; it falls
+     back to --gold-ornament when a speaker has no anchor color. Body
+     text inside a bubble is never speaker-colored, it stays --ink.
+     Gap-6 law: --chat-speaker-name clamps the anchor's lightness to
+     a legible band on dark surfaces and caps its chroma so no anchor
+     can shout. */
+  --chat-bubble-fill: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 9%, transparent);
+  --chat-bubble-line: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 22%, transparent);
+  --chat-avatar-fill: color-mix(in srgb, var(--chat-speaker, var(--gold-ornament)) 12%, transparent);
+  --chat-speaker-name: oklch(from var(--chat-speaker, var(--gold-ornament)) clamp(0.70, l, 0.88) min(c, 0.12) h);
 
   /* --- SIZING, strict multiples of 4 ------------------------
      44 is the accessibility floor for touch and is the
      default control height on every surface.               */
 
   --control-sm:  2rem;      /* 32, desktop-only dense chrome */
+  --control-filter: 2.375rem; /* 38, filter-line desktop height, splits
+                                  control-sm/control-md per the kit
+                                  polish 2 ruling; touch keeps control-md */
   --control-md:  2.75rem;   /* 44, default, touch safe       */
   --control-lg:  3rem;      /* 48, primary CTAs              */
+  --topbar-h: calc(var(--control-md) + var(--space-3) * 2 + 1px);
+    /* StudioTopBar's own height (control height, its py-space-3 top
+       and bottom, its 1px bottom border), minted 10 Aug 2026 (kit
+       polish 3 pass) so a sticky surface beneath the top bar can
+       dock to it with no gap and no overlap instead of guessing a
+       literal. */
   --icon-sm:     1rem;      /* 16 */
   --icon-md:     1.25rem;   /* 20 */
   --icon-lg:     1.5rem;    /* 24 */
@@ -308,10 +378,293 @@
 
   /* Softened Sprint 3: the outer ring drops from --gold-bright
      to --gold-ornament. The 2px width and the canvas gap ring
-     stay — visibility is untouched, only the double-gold blaze
+     stay, visibility is untouched, only the double-gold blaze
      comes down. Ornament flips dark on light theme, so the
      ring stays visible on parchment with no extra token.     */
-  --focus-ring:   0 0 0 2px var(--canvas), 0 0 0 4px var(--gold-ornament);
+
+  /* Recipe replaced 22 Aug 2026 (A3, Fable law review): the Gate 1
+     gold-ornament-border-plus-glow recipe becomes the single
+     global ring, ships under this SAME token name (only the
+     recipe changes), and retires the kit-focus border-brightening
+     pattern and the cf-field quiet-field-ring (both deleted from
+     app/design-system.css in the same commit). No canvas gap ring
+     in this recipe; that device stays exclusive to
+     --focus-ring-ongold above, which layers on a gold-filled
+     surface where a gap ring is load-bearing. The prior two-ring
+     value is struck for lineage: 0 0 0 2px var(--canvas), 0 0 0
+     4px var(--gold-ornament). */
+  --focus-ring:   0 0 0 1px var(--gold-ornament), 0 0 0 3px rgba(224, 171, 94, .10);
+}
+
+/* ============================================================
+   CHAPTER 1 TOKEN EXPANSION, RULED 9 Aug 2026
+   docs/BUILD-BLUEPRINT.md chapter 1, sections 1.3 through 1.8.
+   Every token below is a primitive layer under the existing role
+   tokens, or a documented alias, never a replacement. No existing
+   role token's declaration changes in this pass (docs/BUILD-
+   BLUEPRINT.md section 1.10): a role token keeps its own literal
+   value; a ladder step below points at the role token with var(),
+   so a ladder step that resolves through a theme-flipping role
+   token (ink, edge-top, shadows) flips automatically and needs no
+   separate light-theme declaration.
+
+   Steps with no ruled value are commented placeholders, never a
+   literal (token-first directive, FRONTEND-SOP section 17): the
+   name is reserved in docs/DESIGN-TOKENS.md at status "proposed"
+   and stays out of CSS until a real value is ruled.
+   ============================================================ */
+
+:root {
+
+  /* --- GOLD LADDER, 10 named steps, 5 filled ----------------- */
+  /* --gold-1: reserved, unset, no ruled value */
+  --gold-2:  var(--gold-bright);
+  /* --gold-3: reserved, unset, no ruled value */
+  --gold-4:  var(--gold-action);
+  --gold-5:  var(--gold-ornament);
+  /* --gold-6: reserved, unset, no ruled value */
+  --gold-7:  var(--gold-deep);
+  /* --gold-8: reserved, unset, no ruled value */
+  /* --gold-9: reserved, unset, no ruled value */
+  --gold-10: var(--tag-fill-ink);
+
+  /* --- WARM NEUTRAL LADDER, 10 named steps, 8 filled --------- */
+  --neutral-1:  var(--ink);
+  /* --neutral-2: reserved, unset, no ruled value */
+  --neutral-3:  var(--ink-dim);
+  --neutral-4:  var(--ink-faint);
+  /* --neutral-5: reserved, unset, no ruled value */
+  --neutral-6:  var(--surface-4);
+  --neutral-7:  var(--surface-3);
+  --neutral-8:  var(--surface-2);
+  --neutral-9:  var(--surface-1);
+  --neutral-10: var(--canvas);
+
+  /* --- STATUS LADDERS, 3 families x 10 named steps, step 5 only
+     filled per family. Bed/border alpha pairs are untouched;      */
+  /* --success-1: reserved, unset, no ruled value */
+  /* --success-2: reserved, unset, no ruled value */
+  /* --success-3: reserved, unset, no ruled value */
+  /* --success-4: reserved, unset, no ruled value */
+  --success-5:  var(--status-success);
+  /* --success-6: reserved, unset, no ruled value */
+  /* --success-7: reserved, unset, no ruled value */
+  /* --success-8: reserved, unset, no ruled value */
+  /* --success-9: reserved, unset, no ruled value */
+  /* --success-10: reserved, unset, no ruled value */
+
+  /* --warning-1: reserved, unset, no ruled value */
+  /* --warning-2: reserved, unset, no ruled value */
+  /* --warning-3: reserved, unset, no ruled value */
+  /* --warning-4: reserved, unset, no ruled value */
+  --warning-5:  var(--status-warning);
+  /* --warning-6: reserved, unset, no ruled value */
+  /* --warning-7: reserved, unset, no ruled value */
+  /* --warning-8: reserved, unset, no ruled value */
+  /* --warning-9: reserved, unset, no ruled value */
+  /* --warning-10: reserved, unset, no ruled value */
+
+  /* --danger-1: reserved, unset, no ruled value */
+  /* --danger-2: reserved, unset, no ruled value */
+  /* --danger-3: reserved, unset, no ruled value */
+  /* --danger-4: reserved, unset, no ruled value */
+  --danger-5:   var(--status-danger);
+  /* --danger-6: reserved, unset, no ruled value */
+  /* --danger-7: reserved, unset, no ruled value */
+  /* --danger-8: reserved, unset, no ruled value */
+  /* --danger-9: reserved, unset, no ruled value */
+  /* --danger-10: reserved, unset, no ruled value */
+
+  /* --- SPACING, 4 added steps on the existing 4px rhythm ----- */
+  --space-7:  1.75rem;  /* 28 */
+  --space-9:  2.25rem;  /* 36 */
+  --space-14: 3.5rem;   /* 56 */
+  --space-24: 6rem;     /* 96 */
+
+  /* --- TYPE MOBILE PAIRS, 8 steps x 2, RULED fill rule -------
+     label/ui/body/lead alias their own step unchanged (small
+     type does not compress); subhead/heading/title/display each
+     alias one ladder step down, absorbing the compression from
+     the existing ratio scale instead of minting new sizes.     */
+  --text-label-m:    var(--text-label);
+  --lh-label-m:      var(--lh-label);
+  --text-ui-m:       var(--text-ui);
+  --lh-ui-m:         var(--lh-ui);
+  --text-body-m:     var(--text-body);
+  --lh-body-m:       var(--lh-body);
+  --text-lead-m:     var(--text-lead);
+  --lh-lead-m:       var(--lh-lead);
+  --text-subhead-m:  var(--text-lead);
+  --lh-subhead-m:    var(--lh-lead);
+  --text-heading-m:  var(--text-subhead);
+  --lh-heading-m:    var(--lh-subhead);
+  --text-title-m:    var(--text-heading);
+  --lh-title-m:      var(--lh-heading);
+  --text-display-m:  var(--text-title);
+  --lh-display-m:    var(--lh-title);
+
+  /* --- ELEVATION, 6 named levels, 4 filled -------------------
+     Composed entirely from existing tokens; the "exactly two
+     floating shadow tokens" ruling stays true at the value
+     level, this only names the composed recipe per level.     */
+  --elev-1: none;
+  --elev-2: var(--edge-top);
+  --elev-3: var(--shadow-popover), var(--edge-top);
+  --elev-4: var(--shadow-modal), var(--edge-top);
+  /* --elev-5: reserved, unset, no ruled value */
+  /* --elev-6: reserved, unset, no ruled value */
+
+  /* --- BLUR, 6 named levels, 4 filled -------------------------
+     Documents the three strengths that already exist in law,
+     plus the no-blur floor. The one-blur-strength-per-role law
+     (panel blur always with --scrim-strong, chrome frost never
+     with a scrim) is untouched; this only names the ladder.    */
+  --blur-1: 0;
+  --blur-2: var(--blur-panel);
+  --blur-3: 4px;
+  /* --blur-4: reserved, unset, no ruled value */
+  --blur-5: var(--blur-chrome);
+  /* --blur-6: reserved, unset, no ruled value */
+
+  /* --- FIVE-STATE SET -----------------------------------------
+     One state token family every kit control consumes (docs/
+     architecture and docs/BUILD-BLUEPRINT.md chapter 2). Rest is
+     each component's own idle recipe and needs no token. Pressed
+     on gold-filled controls maps to --gold-deep, the token whose
+     ruled role is already "pressed states".                    */
+  --state-hover-fill:      var(--fill-whisper);
+  --state-hover-line:      var(--line);
+  --state-pressed-fill:    var(--fill);
+  --state-pressed-gold:    var(--gold-deep);
+  --state-disabled-opacity: 0.5;
+  --state-focus-ring:      var(--focus-ring);
+}
+
+/* ============================================================
+   ED1F PROPAGATION, RULED 22 Aug 2026
+   Gate 2 twelve-row token law (explorations/gate1/GATE-LOG.md,
+   "TOKEN LAW" section, Crestfall Editor DS Claude Design project)
+   plus the modal-family close candidates, ratified at the Fable
+   law review on branch design/ds1-claude-design-sync. Row 12,
+   --focus-ring-editor, is not minted here: its recipe is
+   ABSORBED into the global --focus-ring below (docs/plans/
+   ED1F-PROPAGATION-PLAN.md section D item 1).
+   ============================================================ */
+
+:root {
+
+  /* --- WEIGHT, ghost buttons ---------------------------------
+     A1: ghost buttons render at 300, the same literal already
+     entering the pipeline for --ink-typed below. Aliased so both
+     consumers name one token instead of repeating a bare 300 at
+     each call site. */
+  --weight-light: 300;
+
+  /* --- FIELD TYPE, editor beds --------------------------------
+     Gate 2 token law rows 1-2. */
+  --text-input:    0.875rem;  /* 14 */
+  --lh-input:      1.375rem;  /* 22 */
+  --ink-typed:     #d9d3c6;   /* Inter 300, field values only */
+
+  /* --- GHOST FILL ----------------------------------------------
+     Gate 2 token law row 3. .cf-btn--secondary, trait chips,
+     quiet interactive surfaces. */
+  --fill-ghost:    rgba(242, 209, 148, .05);
+
+  /* --- EDITOR CONTROL HEIGHTS ------------------------------------
+     Gate 2 token law row 4. 44px mobile touch floor holds; these
+     are desktop-only editor CTA heights. --control-editor-md is
+     the same literal as --control-filter (38px), aliased rather
+     than re-minted so the two names never drift apart (CR-053). */
+  --control-editor-md: var(--control-filter); /* 38 */
+  --control-editor-sm: 1.75rem;               /* 28, genuinely new */
+
+  /* --- STATUS, success revision ------------------------------------
+     Gate 2 token law row 6. Closes CR-051. Sage, ruled the success
+     hue everywhere. Revises the existing locked value below in
+     the base :root block; not declared twice. */
+
+  /* --- GRADIENTS, editor surfaces ------------------------------------
+     Gate 2 token law row 7. Distinct from the panel-lift and
+     creation-card gradients below (three separate gradient
+     tokens; see the propagation plan section D item 4). */
+  --grad-card: linear-gradient(160deg, #1a1610, #14110c);
+  --grad-rail: linear-gradient(160deg, #16130d, #100d09);
+
+  /* --- FIELD BEDS ----------------------------------------------------
+     Gate 2 token law row 8. */
+  --bed-deep:   #0d0b08;
+  --shadow-bed: inset 0 1px 2px rgba(0, 0, 0, .25);
+
+  /* --- FADE DIVIDER --------------------------------------------------
+     Gate 2 token law row 9, scope broadened to modal dividers by
+     B1 (sidebar groups, card-header rules, rail progress rules,
+     now also every modal-family divider). Recipe from Modal
+     Family v2.html's own .fdiv rule; the 1px height and the
+     .tight compact-margin variant are component concerns, not
+     the token. */
+  --line-fade: linear-gradient(90deg, transparent,
+                 rgba(242, 209, 148, .13) 12%,
+                 rgba(242, 209, 148, .13) 88%, transparent);
+
+  /* --- CHROME WASH -----------------------------------------------------
+     Gate 2 token law row 10. Editor sticky nav and mobile save row
+     join the existing --blur-chrome scope; no change to that
+     token's own value. */
+  --chrome-wash: rgba(6, 4, 2, .62);
+
+  /* --- PANEL GLASS -------------------------------------------------------
+     Gate 2 token law row 11. Pairs with the existing --blur-panel
+     (2px), never --blur-glass. Kebab menus, the viewer's two-line
+     header, and the B6 creation-card kebab all cite this token. */
+  --panel-glass: rgba(36, 32, 25, .85);
+
+  /* --- BLUR, tooltips ----------------------------------------------------
+     A2, ratified narrow: three blur tokens, no cross-borrowing.
+     --blur-chrome (12px) and --blur-panel (2px) keep their
+     existing scopes unchanged; --blur-glass is new, tooltips
+     only, never any other surface. No consumer exists until the
+     tooltip component (CR-047) is designed; the token lands so
+     the law is complete. */
+  --blur-glass: 12px;
+
+  /* --- FOCUS ON GOLD -------------------------------------------------------
+     B10, ratified. A separate, narrower recipe layered on
+     gold-filled surfaces only (confirmed applied to
+     .cf-btn--primary via a .goldring class); not a replacement
+     for the global --focus-ring below and not in conflict with
+     it. The 3px ornament ring is the ruled value; an exhibit
+     annotation elsewhere naming "1px ornament" is a documentation
+     typo, not a competing value (Brian, 22 Aug 2026 law review). */
+  --focus-ring-ongold: 0 0 0 2px var(--canvas),
+                       0 0 0 3px var(--gold-ornament),
+                       0 0 0 6px rgba(224, 171, 94, .10);
+
+  /* --- DANGER FILL, modal confirm -----------------------------------------
+     B5, ratified as a new modal-confirm CTA recipe. Distinct from
+     --status-danger-bed (14 percent, chip use); this is a lighter
+     6 percent step for the confirm-step danger button only. */
+  --status-danger-fill: rgba(194, 99, 77, .06);
+
+  /* --- PANEL LIFT GRADIENT --------------------------------------------------
+     B3, ratified as a new surface-gradient token for modal panels,
+     superseding --surface-4 as the modal panel surface (propagated
+     through KitModalFrame). Name avoids the existing --grad-panel. */
+  --grad-panel-lift: linear-gradient(160deg, #332d22, #2a251d);
+
+  /* --- CREATION CARD GRADIENT ------------------------------------------------
+     B6, ratified as a token value; application scope (KitCreationCard
+     app-wide vs. editor-scoped) is F2, held for a Brian ruling. The
+     value mints here so it exists once F2 lands; no consumer wires
+     it in this pass. */
+  --grad-creation-card: linear-gradient(160deg, #241f16, #1b1711);
+
+  /* --- OPTION CARD REST FILL ---------------------------------------------------
+     B4, ratified as a scoped exception to the translucent-black-fill
+     ban, legal on option-card rest state only. The selected fill is
+     an exact match to the already-locked --fill-whisper and is not
+     duplicated here. */
+  --fill-option-rest: rgba(0, 0, 0, .22);
 }
 
 /* ============================================================
@@ -345,7 +698,7 @@
      than repeating --fill-whisper, which would flatten the
      gradient into a single wash.                            */
   --grad-panel:      linear-gradient(160deg, var(--fill-whisper), transparent);
-  --grad-nav-active: linear-gradient(90deg, var(--fill), transparent 88%);
+  --grad-nav-active: linear-gradient(90deg, var(--fill), transparent);
   --grad-rule:       linear-gradient(90deg, var(--gold-ornament), transparent);
   --grad-rule-soft:  linear-gradient(90deg, var(--line-strong), transparent);
 
@@ -473,6 +826,23 @@
   --atm-hearth:    radial-gradient(760px 380px at 50% -12%, rgba(138,101,36,.12), transparent 66%);
   --atm-vault:     radial-gradient(120% 100% at 50% 50%, transparent 40%, rgba(72,58,30,.10) 100%);
   --atm-veil:      linear-gradient(180deg, rgba(138,101,36,.06), transparent 45%);
+
+  /* --- ED1F INTERIM LIGHT VALUES, RULED 22 Aug 2026 -------------
+     F1: every new visual token minted this pass declares the
+     same value in both themes until a real light-theme render
+     sitting rules one, the same precedent as the scrims-do-not-
+     flip family. Each row below is ALSO marked interim in its
+     docs/DESIGN-TOKENS.md row. */
+  --ink-typed:          #d9d3c6;
+  --fill-ghost:         rgba(242, 209, 148, .05);
+  --grad-card:          linear-gradient(160deg, #1a1610, #14110c);
+  --grad-rail:          linear-gradient(160deg, #16130d, #100d09);
+  --bed-deep:           #0d0b08;
+  --chrome-wash:        rgba(6, 4, 2, .62);
+  --panel-glass:        rgba(36, 32, 25, .85);
+  --grad-panel-lift:    linear-gradient(160deg, #332d22, #2a251d);
+  --grad-creation-card: linear-gradient(160deg, #241f16, #1b1711);
+  --fill-option-rest:   rgba(0, 0, 0, .22);
 }
 
 /* --- TYPE ASSIGNMENT CORRECTIONS ----------------------------

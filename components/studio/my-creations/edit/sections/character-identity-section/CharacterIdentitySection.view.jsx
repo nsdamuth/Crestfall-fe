@@ -1,7 +1,7 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ReadOnlyField,
   SectionTitle,
+  SelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -56,7 +56,7 @@ export default function CharacterIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <TextField
           label={characterNameLabel}
           value={characterNameValue}
@@ -70,7 +70,7 @@ export default function CharacterIdentitySectionView({
         />
 
         <div className="space-y-4">
-          <CrestfallSelect
+          <SelectField
             label={speciesLabel}
             value={speciesValue}
             onChange={(value) => onSelectSpecies?.(value)}
@@ -87,15 +87,23 @@ export default function CharacterIdentitySectionView({
           ) : null}
         </div>
 
-        <CrestfallSelect
+        <SelectField
           label={renderingStyleLabel}
           value={renderingStyleValue}
           onChange={(value) => onSelectRenderingStyle?.(value)}
           options={renderingStyleOptions}
         />
 
+        {/* Local field bed, not SharedFields.NumberField (ED1E 4.2):
+            this field needs both a per-keystroke onChangeAge and a
+            separate onBlur-time onCommitAge, which NumberField does
+            not expose. The bed below mirrors NumberField's recipe
+            exactly (tier 5 label, --surface-1 bed, --space-1/-2
+            spacing, right-aligned tabular-nums, no local focus mark)
+            so it reads identically to every other number field on
+            the page. */}
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             {ageLabel}
           </span>
 
@@ -107,18 +115,18 @@ export default function CharacterIdentitySectionView({
             onChange={(event) => onChangeAge?.(event.target.value)}
             onBlur={(event) => onCommitAge?.(event.target.value)}
             placeholder={agePlaceholder}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-right text-[length:var(--text-body)] leading-[var(--lh-body)] tabular-nums text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
           />
 
           {ageHelpText ? (
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               {ageHelpText}
             </p>
           ) : null}
         </label>
 
         <div className="space-y-4">
-          <CrestfallSelect
+          <SelectField
             label={genderPresentationLabel}
             value={genderPresentationValue}
             onChange={(value) => onSelectGenderPresentation?.(value)}

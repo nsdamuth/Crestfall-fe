@@ -1,57 +1,30 @@
 import { Ear, Eye, Plus, Trash2, Wind, X } from "lucide-react";
+import { NumberField } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
-function ScaleField({
-  label,
-  value,
-  onChange,
-  helperText = "",
-  min = 1,
-  max = 10,
-}) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-
-      <input
-        type="number"
-        min={min}
-        max={max}
-        step="1"
-        value={value ?? ""}
-        onChange={(event) => onChange?.(event.target.value)}
-        placeholder="Inherit"
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-      />
-
-      {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
-          {helperText}
-        </span>
-      ) : null}
-    </label>
-  );
-}
-
+// Section 5 de-nesting: Vision/Hearing/Scent are sub-groups inside
+// the section box, not repeatable list items, so they lose their
+// bordered/backgrounded panel and icon plaque for the inset-hairline
+// pattern with an inline icon.
 function SenseCard({ icon, eyebrow, title, body, children }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
-      <div className="flex items-start gap-3">
-        <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
-          {icon}
-        </div>
+    <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+      <div className="flex items-start gap-[var(--space-3)]">
+        <span className="mt-[2px] flex-none text-[var(--gold-ornament)]">{icon}</span>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
-          <h3 className="mt-1 font-display text-2xl">{title}</h3>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{body}</p>
+          <h3 className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+            {title}
+          </h3>
+          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+            {body}
+          </p>
         </div>
       </div>
 
-      <div className="mt-5">{children}</div>
+      <div className="mt-[var(--space-5)]">{children}</div>
     </div>
   );
 }
@@ -67,11 +40,11 @@ function ScentTagEditor({
 }) {
   return (
     <div className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         Tags
       </span>
 
-      <div className="mt-2 flex gap-2">
+      <div className="mt-[var(--space-1)] flex gap-[var(--space-2)]">
         <input
           type="text"
           value={draft}
@@ -83,39 +56,40 @@ function ScentTagEditor({
             onAddTags?.(noteIndex);
           }}
           placeholder="e.g., industrial"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="min-w-0 flex-1 min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
         />
 
         <button
           type="button"
           onClick={() => onAddTags?.(noteIndex)}
           disabled={!canAddTags}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
           aria-label="Add scent tag"
         >
           <Plus size={15} />
         </button>
       </div>
 
-      <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+      <span className="mt-[var(--space-2)] block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
         Type a tag, then press Enter or the plus button. Commas are also accepted when pasting multiple tags.
       </span>
 
       {tags.length ? (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-2)]">
           {tags.map((tag) => (
             <span
               key={tag.toLowerCase()}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-3 py-1.5 text-xs text-[var(--foreground)]"
+              className="inline-flex items-center gap-[var(--space-2)] rounded-full border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]"
             >
               {tag}
               <button
                 type="button"
                 onClick={() => onRemoveTag?.(noteIndex, tag)}
-                className="text-[var(--muted)] transition hover:text-red-200"
+                className="inline-flex items-center gap-[var(--space-1)] text-[var(--status-danger)] transition"
                 aria-label={`Remove ${tag} tag`}
               >
                 <X size={13} />
+                <span className="text-[10px]">Remove</span>
               </button>
             </span>
           ))}
@@ -148,7 +122,7 @@ export default function LocationSensoryEnvironmentFieldsView({
   scentDispersalLevelValue = null,
   scentNotes = [],
   emptyScentNotesText = "",
-  addScentNoteLabel = "Add Scent Note",
+  addScentNoteLabel = "Add scent note",
   onChangeVisionLightLevel = null,
   onChangeVisionObstructionLevel = null,
   onChangeVisionGlareLevel = null,
@@ -167,42 +141,47 @@ export default function LocationSensoryEnvironmentFieldsView({
 } = {}) {
   return (
     <div>
-      <div className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+      {/* CLEANUP fix: guidance banner drops the gold-washed inner
+          panel for a tier 7 helper line. */}
+      <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
         {guidanceText}
-      </div>
+      </p>
 
-      <div className="mt-5 grid gap-4 xl:grid-cols-2">
+      <div className="mt-[var(--space-5)] grid gap-[var(--space-4)] xl:grid-cols-2">
         <SenseCard
           icon={<Eye size={19} />}
           eyebrow={visionEyebrow}
           title={visionTitle}
           body={visionDescription}
         >
-          <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-            <ScaleField
+          <div className="grid gap-[var(--space-4)] md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <NumberField
               label="Light Level"
-              value={visionLightLevelValue}
+              value={visionLightLevelValue ?? ""}
               onChange={onChangeVisionLightLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="1 is effectively lightless, 2 resembles a moonless night, 5 is ordinary dim indoor light, and 8 is clear daylight."
             />
 
-            <ScaleField
+            <NumberField
               label="Visual Obstruction"
-              value={visionObstructionLevelValue}
+              value={visionObstructionLevelValue ?? ""}
               onChange={onChangeVisionObstructionLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Fog, smoke, dust, clutter, foliage, crowds, partitions, or other conditions that complicate sight."
             />
 
-            <ScaleField
+            <NumberField
               label="Glare Level"
-              value={visionGlareLevelValue}
+              value={visionGlareLevelValue ?? ""}
               onChange={onChangeVisionGlareLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Reflected light, magical radiance, forge glow, snow glare, or other brightness that can overwhelm vision."
             />
           </div>
@@ -214,73 +193,78 @@ export default function LocationSensoryEnvironmentFieldsView({
           title={hearingTitle}
           body={hearingDescription}
         >
-          <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-            <ScaleField
+          <div className="grid gap-[var(--space-4)] md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <NumberField
               label="Ambient Noise"
-              value={hearingAmbientNoiseLevelValue}
+              value={hearingAmbientNoiseLevelValue ?? ""}
               onChange={onChangeHearingAmbientNoiseLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Crowds, machinery, weather, music, traffic, wildlife, or other background noise."
             />
 
-            <ScaleField
+            <NumberField
               label="Sound Obstruction"
-              value={hearingObstructionLevelValue}
+              value={hearingObstructionLevelValue ?? ""}
               onChange={onChangeHearingObstructionLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Walls, heavy doors, insulation, terrain, water, or other barriers that suppress sound."
             />
 
-            <ScaleField
+            <NumberField
               label="Echo Level"
-              value={hearingEchoLevelValue}
+              value={hearingEchoLevelValue ?? ""}
               onChange={onChangeHearingEchoLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Echo may reveal that something made a sound while making its exact position harder to determine."
             />
           </div>
         </SenseCard>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-[var(--space-4)]">
         <SenseCard
           icon={<Wind size={19} />}
           eyebrow={scentEyebrow}
           title={scentTitle}
           body={scentDescription}
         >
-          <div className="grid gap-4 md:grid-cols-2">
-            <ScaleField
+          <div className="grid gap-[var(--space-4)] md:grid-cols-2">
+            <NumberField
               label="Scent Masking"
-              value={scentMaskingLevelValue}
+              value={scentMaskingLevelValue ?? ""}
               onChange={onChangeScentMaskingLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="Strong ambient odors that make characters, items, or temporary scent traces harder to distinguish."
             />
 
-            <ScaleField
+            <NumberField
               label="Scent Dispersal"
-              value={scentDispersalLevelValue}
+              value={scentDispersalLevelValue ?? ""}
               onChange={onChangeScentDispersalLevel}
               min={scaleMin}
               max={scaleMax}
+              placeholder="Inherit"
               helperText="How readily scent travels through the space due to openness, airflow, ventilation, or similar narrative factors."
             />
           </div>
 
-          <div className="mt-5 grid gap-3">
+          <div className="mt-[var(--space-5)] grid gap-[var(--space-3)]">
             {scentNotes.length ? (
               scentNotes.map((note) => (
                 <div
                   key={note.loomViewId}
-                  className="grid gap-3 rounded-xl border border-white/10 bg-black/30 p-4 md:grid-cols-[1fr_150px_1fr_auto] md:items-end"
+                  className="grid gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)] md:grid-cols-[1fr_150px_1fr_auto] md:items-end"
                 >
                   <label className="block">
-                    <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                    <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
                       Scent Note
                     </span>
                     <input
@@ -290,16 +274,14 @@ export default function LocationSensoryEnvironmentFieldsView({
                         onChangeScentNoteLabel?.(note.loomRowIndex, event.target.value)
                       }
                       placeholder="e.g., machine oil"
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                      className="mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
                     />
                   </label>
 
-                  <ScaleField
+                  <NumberField
                     label="Strength"
-                    value={note.strength}
-                    onChange={(value) =>
-                      onChangeScentNoteStrength?.(note.loomRowIndex, value)
-                    }
+                    value={note.strength ?? ""}
+                    onChange={(value) => onChangeScentNoteStrength?.(note.loomRowIndex, value)}
                     min={scaleMin}
                     max={scaleMax}
                   />
@@ -317,23 +299,24 @@ export default function LocationSensoryEnvironmentFieldsView({
                   <button
                     type="button"
                     onClick={() => onRemoveScentNote?.(note.loomRowIndex)}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+                    className="cf-btn cf-btn--danger cf-btn--sm"
                     aria-label={`Remove scent note ${note.loomRowIndex + 1}`}
                   >
                     <Trash2 size={15} />
+                    Remove
                   </button>
                 </div>
               ))
             ) : (
-              <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-4 py-5 text-sm leading-6 text-[var(--muted)]">
+              <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                 {emptyScentNotesText}
-              </div>
+              </p>
             )}
 
             <button
               type="button"
               onClick={() => onAddScentNote?.()}
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--primary w-fit"
             >
               <Plus size={14} />
               {addScentNoteLabel}

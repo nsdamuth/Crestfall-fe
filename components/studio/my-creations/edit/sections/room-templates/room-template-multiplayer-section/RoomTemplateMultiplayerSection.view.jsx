@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Plus, Search, Users, X } from "lucide-react";
 
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function RoomTemplateMultiplayerSectionView({
   sectionEyebrow = "Story Editor",
@@ -14,7 +15,7 @@ export default function RoomTemplateMultiplayerSectionView({
   turnBasedRequiredMessage = "",
   inviteesLabel = "Multiplayer Invitees",
   inviteesDescription = "",
-  addPlayerLabel = "Add Player",
+  addPlayerLabel = "Add player",
   invitedPlayers = [],
   inviteeStatusLabel = "Pending invite later",
   emptyInviteesMessage = "No multiplayer invitees selected.",
@@ -42,36 +43,62 @@ export default function RoomTemplateMultiplayerSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
-        <button
-          type="button"
-          onClick={() => onToggleTurnBased?.()}
-          className={`rounded-2xl border p-5 text-left transition ${
-            effectiveTurnBased
-              ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-              : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
-          }`}
-        >
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
-            {turnBasedLabel}
-          </p>
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-5)]">
+        {/* 4.9 toggle: pill track plus a state word, no color-only
+            state. */}
+        <div>
+          <button
+            type="button"
+            onClick={() => onToggleTurnBased?.()}
+            aria-pressed={effectiveTurnBased}
+            className="flex w-full items-center gap-[var(--space-4)] text-left"
+          >
+            <span
+              className={`relative inline-flex h-[var(--control-sm)] w-[calc(var(--control-sm)*1.8)] flex-none items-center rounded-[var(--radius-full)] border transition-colors ${
+                effectiveTurnBased
+                  ? "border-[var(--gold-action)] bg-[var(--gold-action)]"
+                  : "border-[var(--line)] bg-[var(--surface-1)]"
+              }`}
+            >
+              <span
+                className={`inline-block h-[calc(var(--control-sm)-4px)] w-[calc(var(--control-sm)-4px)] rounded-full bg-[var(--tag-fill-ink)] transition-transform ${
+                  effectiveTurnBased
+                    ? "translate-x-[calc(var(--control-sm)*0.8)]"
+                    : "translate-x-[2px]"
+                }`}
+              />
+            </span>
 
-          <p className="mt-2 text-sm leading-6">{turnBasedDescription}</p>
+            <span>
+              <span className="flex items-baseline gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                {turnBasedLabel}
+                <span className="normal-case tracking-normal text-[var(--ink-dim)]">
+                  {effectiveTurnBased ? "On" : "Off"}
+                </span>
+              </span>
 
-          {showTurnBasedRequiredMessage ? (
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
-              {turnBasedRequiredMessage}
-            </p>
-          ) : null}
-        </button>
+              <span className="mt-[var(--space-1)] block text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+                {turnBasedDescription}
+              </span>
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+              {showTurnBasedRequiredMessage ? (
+                <span className="mt-[var(--space-1)] block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)]">
+                  {turnBasedRequiredMessage}
+                </span>
+              ) : null}
+            </span>
+          </button>
+        </div>
+
+        {/* Section 5 de-nesting: the inset-hairline sub-group pattern
+            instead of a second bordered/backgrounded surface-2 box. */}
+        <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                 {inviteesLabel}
               </p>
-              <p className="mt-1 text-sm text-[var(--muted)]">
+              <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                 {inviteesDescription}
               </p>
             </div>
@@ -79,7 +106,7 @@ export default function RoomTemplateMultiplayerSectionView({
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--primary cf-btn--sm"
             >
               <Plus size={14} />
               {addPlayerLabel}
@@ -87,17 +114,19 @@ export default function RoomTemplateMultiplayerSectionView({
           </div>
 
           {mutualLoadError ? (
-            <p className="mt-3 text-sm text-red-200">{mutualLoadError}</p>
+            <p className="mt-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--status-danger)]">
+              {mutualLoadError}
+            </p>
           ) : null}
 
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-3)]">
             {invitedPlayers.length ? (
               invitedPlayers.map((player) => (
                 <div
                   key={player.id}
-                  className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+                  className="flex items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]"
                 >
-                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 font-display text-lg text-[var(--muted-gold)]">
+                  <div className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[length:var(--text-body)] text-[var(--gold-ornament)]">
                     {player.avatarUrl ? (
                       <img
                         src={player.avatarUrl}
@@ -110,10 +139,10 @@ export default function RoomTemplateMultiplayerSectionView({
                   </div>
 
                   <div>
-                    <p className="text-sm text-[var(--foreground)]">
+                    <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                       @{player.username}
                     </p>
-                    <p className="text-xs text-[var(--muted)]">
+                    <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                       {player.statusLabel || inviteeStatusLabel}
                     </p>
                   </div>
@@ -121,15 +150,16 @@ export default function RoomTemplateMultiplayerSectionView({
                   <button
                     type="button"
                     onClick={() => onRemoveInvitedPlayer?.(player.id)}
-                    className="rounded-lg border border-white/10 p-1 text-[var(--muted)] transition hover:text-red-200"
+                    className="cf-btn cf-btn--danger cf-btn--sm"
                     aria-label={player.removeAriaLabel}
                   >
                     <X size={14} />
+                    <span className="text-[10px]">Remove</span>
                   </button>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-[var(--muted)]">
+              <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                 {emptyInviteesMessage}
               </p>
             )}
@@ -156,6 +186,11 @@ export default function RoomTemplateMultiplayerSectionView({
   );
 }
 
+// Ruling 3 (ED1G): hand-rolled fixed-inset overlay retired onto
+// KitModalFrame. LARGE width tier (section 8, featured-image-picker
+// exception): a media grid of player avatar cards. B4 selected
+// recipe (--fill-whisper fill, no inset shadow ring); tier scale
+// corrected on the title, card titles, and empty state.
 function PlayerPickerModal({
   mutualPlayers = [],
   pickerEyebrow = "Multiplayer Picker",
@@ -186,57 +221,48 @@ function PlayerPickerModal({
   }, [mutualPlayers, query]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
-          <div>
-            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
-              <Users size={15} />
-              {pickerEyebrow}
-            </p>
+    <KitModalFrame onClose={onClose} panelClassName="max-w-4xl" ariaLabel={pickerTitle}>
+      <div className="flex max-h-[92dvh] flex-col">
+        <div className="border-b border-[var(--line-fade)] p-[var(--space-5)]">
+          <p className="mb-[var(--space-1)] inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+            <Users size={15} />
+            {pickerEyebrow}
+          </p>
 
-            <h2 className="mt-2 font-display text-4xl">{pickerTitle}</h2>
+          <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-heading-m)] leading-[var(--lh-heading-m)] min-[700px]:text-[length:var(--text-heading)] min-[700px]:leading-[var(--lh-heading)]">
+            {pickerTitle}
+          </h2>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-              {pickerDescription}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-            aria-label="Close picker"
-          >
-            <X size={18} />
-          </button>
+          <p className="mt-[var(--space-2)] max-w-3xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+            {pickerDescription}
+          </p>
         </div>
 
-        <div className="p-5">
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+        <div className="flex-1 overflow-y-auto p-[var(--space-5)] pb-[var(--space-6)]">
+          <div className="flex min-h-[var(--control-md)] items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
+            <Search size={16} className="text-[var(--ink-faint)]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={pickerSearchPlaceholder}
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
             />
           </div>
 
-          <div className="mt-5 grid max-h-[62vh] gap-4 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-[var(--space-5)] grid gap-[var(--space-4)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredPlayers.length ? (
               filteredPlayers.map((player) => (
                 <button
                   key={player.id}
                   type="button"
                   onClick={() => onTogglePlayer?.(player.id)}
-                  className={`overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border text-left transition ${
                     player.isSelected
-                      ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
-                      : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
+                      ? "border-[var(--gold-action)] bg-[var(--fill-whisper)]"
+                      : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] hover:border-[var(--state-hover-line)]"
                   }`}
                 >
-                  <div className="aspect-[3/4] overflow-hidden bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+                  <div className="aspect-[3/4] overflow-hidden bg-[var(--surface-2)]">
                     <img
                       src={player.imageUrl}
                       alt={player.username}
@@ -244,22 +270,22 @@ function PlayerPickerModal({
                     />
                   </div>
 
-                  <div className="p-4">
-                    <p className="font-display text-2xl leading-none text-[var(--foreground)]">
+                  <div className="p-[var(--space-4)]">
+                    <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
                       {player.username}
                     </p>
 
-                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+                    <p className="mt-[var(--space-2)] line-clamp-2 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                       {player.tagline || "Mutual follower"}
                     </p>
 
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                    <div className="mt-[var(--space-3)] flex flex-wrap gap-[var(--space-2)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                         {pickerUserLabel}
                       </span>
 
                       {player.isSelected ? (
-                        <span className="rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+                        <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-bright)]">
                           {pickerSelectedLabel}
                         </span>
                       ) : null}
@@ -268,9 +294,11 @@ function PlayerPickerModal({
                 </button>
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
-                <p className="font-display text-3xl">{pickerEmptyTitle}</p>
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[var(--muted)]">
+              <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] p-[var(--space-8)] text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
+                <p className="text-[length:var(--text-heading-m)] leading-[var(--lh-heading-m)] font-display">
+                  {pickerEmptyTitle}
+                </p>
+                <p className="mx-auto mt-[var(--space-3)] max-w-xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                   {pickerEmptyDescription}
                 </p>
               </div>
@@ -278,6 +306,6 @@ function PlayerPickerModal({
           </div>
         </div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }

@@ -1,3 +1,9 @@
+// Terminology map (4.6, D8/F2, ED1G): a raw data-layer enum never
+// surfaces to the screen.
+const CREATION_TYPE_LABELS = Object.freeze({
+  SCENARIO: "Scenario",
+});
+
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Scenario Editor",
   sectionTitle: "Scenario Identity",
@@ -52,7 +58,7 @@ export function getScenarioIdentitySectionViewProps({
     participantModeValue: data.participant_mode || "FLEXIBLE",
     participantModeOptions: SCENARIO_PARTICIPANT_MODE_OPTIONS,
     tagsValue: formatScenarioIdentityTags(data.tags),
-    creationTypeValue: form?.type || "",
+    creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
     onSelectTone: (value) => updateDataField?.("tone", value),
     onSelectParticipantMode: (value) =>
       updateDataField?.("participant_mode", value),

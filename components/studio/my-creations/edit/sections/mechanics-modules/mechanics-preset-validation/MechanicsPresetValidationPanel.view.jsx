@@ -6,6 +6,11 @@ import {
   X,
 } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+const EYEBROW_CLASS_INLINE =
+  "inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 export default function MechanicsPresetValidationPanelView({
   eyebrow = "Preset Applied",
   title = "Live Validation Guide",
@@ -22,17 +27,17 @@ export default function MechanicsPresetValidationPanelView({
   onDismiss = null,
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-500/[0.045]">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 p-5">
+    <section className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--status-success-border)] bg-[var(--status-success-bed)]">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--line-whisper)] p-5">
         <div className="min-w-0">
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-emerald-100">
+          <p className="inline-flex items-center gap-2 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-success-text)]">
             <Beaker size={15} />
             {eyebrow}
           </p>
-          <h3 className="mt-2 font-display text-3xl text-[var(--foreground)]">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {title}
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -40,7 +45,7 @@ export default function MechanicsPresetValidationPanelView({
         <button
           type="button"
           onClick={() => onDismiss?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-white/20 hover:text-[var(--foreground)]"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-white/20 hover:text-[var(--ink)]"
           aria-label="Dismiss live validation guide"
         >
           <X size={17} />
@@ -50,18 +55,18 @@ export default function MechanicsPresetValidationPanelView({
       <div className="grid gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.55fr)]">
         <div className="grid content-start gap-4">
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full border border-emerald-300/20 bg-emerald-500/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-100">
+            <span className="rounded-full border border-[var(--status-success-border)] bg-[var(--status-success-bed)] px-3 py-1 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--status-success-text)]">
               {statusLabel}
             </span>
             {expectedOutcomeLabel ? (
-              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Expected: {expectedOutcomeLabel}
               </span>
             ) : null}
             {domainLaneLabels.map((lane) => (
               <span
                 key={lane}
-                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
               >
                 {lane}
               </span>
@@ -72,31 +77,31 @@ export default function MechanicsPresetValidationPanelView({
             <div className="rounded-xl border border-white/10 bg-black/30 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className={EYEBROW_CLASS}>
                     Reference Test Command
                   </p>
-                  <code className="mt-2 block break-all text-sm text-[var(--foreground)]">
+                  <code className="mt-2 block break-all text-sm text-[var(--ink)]">
                     {testCommand}
                   </code>
                 </div>
                 <button
                   type="button"
                   onClick={() => onCopyTestCommand?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                  className="cf-btn cf-btn--primary cf-btn--sm"
                 >
                   <Clipboard size={13} />
                   Copy
                 </button>
               </div>
               {copyStatus ? (
-                <p className="mt-2 text-xs text-[var(--muted)]">{copyStatus}</p>
+                <p className="mt-2 text-xs text-[var(--ink-dim)]">{copyStatus}</p>
               ) : null}
             </div>
           ) : null}
 
           {steps.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS_INLINE}>
                 <Route size={14} />
                 Live Validation Steps
               </p>
@@ -104,9 +109,9 @@ export default function MechanicsPresetValidationPanelView({
                 {steps.map((step, index) => (
                   <li
                     key={`${index}-${step}`}
-                    className="flex gap-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--muted)]"
+                    className="flex gap-3 text-xs leading-5 text-[var(--ink-dim)]"
                   >
-                    <span className="shrink-0 text-[var(--muted-gold)]">
+                    <span className="shrink-0 text-[var(--gold-ornament)]">
                       {index + 1}.
                     </span>
                     <span>{step}</span>
@@ -120,7 +125,7 @@ export default function MechanicsPresetValidationPanelView({
         <aside className="grid content-start gap-4">
           {checks.length ? (
             <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS_INLINE}>
                 <CheckCircle2 size={14} />
                 Expected Checks
               </p>
@@ -128,7 +133,7 @@ export default function MechanicsPresetValidationPanelView({
                 {checks.map((check, index) => (
                   <p
                     key={`${index}-${check}`}
-                    className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-xs leading-5 text-[var(--muted)]"
+                    className="text-xs leading-5 text-[var(--ink-dim)]"
                   >
                     {check}
                   </p>
@@ -140,7 +145,7 @@ export default function MechanicsPresetValidationPanelView({
           {notes.map((note, index) => (
             <p
               key={`${index}-${note}`}
-              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--muted)]"
+              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--ink-dim)]"
             >
               {note}
             </p>

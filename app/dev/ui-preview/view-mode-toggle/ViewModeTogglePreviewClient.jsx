@@ -123,9 +123,10 @@ export default function ViewModeTogglePreviewClient() {
             Contract Boundary
           </p>
           <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-            Fixtures contain only the controlled Grid/List value, the visible
-            label, and semantic selection intent. Collection layout, persistent
-            preferences, filtering, APIs, and routing remain application-owned.
+            Fixtures contain only the controlled Grid/List value, the
+            accessible group label, and semantic selection intent. Collection
+            layout, persistent preferences, filtering, APIs, and routing
+            remain application-owned.
           </p>
         </section>
       </div>

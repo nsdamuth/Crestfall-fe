@@ -1,16 +1,18 @@
 "use client";
 
-import { Check, Palette, X } from "lucide-react";
+import { ChevronRight, Palette } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 function PaletteSwatches({ palette = {}, compact = false }) {
   const swatches = Array.isArray(palette?.swatches) ? palette.swatches : [];
 
   return (
-    <div className={`flex items-center ${compact ? "gap-1" : "gap-1.5"}`}>
+    <div className={`flex items-center ${compact ? "gap-1" : "gap-[var(--space-1)]"}`}>
       {swatches.map((color, index) => (
         <span
           key={`${palette?.id || "palette"}-${index}`}
-          className={compact ? "h-3 w-3 rounded-full" : "h-5 w-5 rounded-full"}
+          className={`rounded-[var(--radius-md)] ${compact ? "h-3 w-3" : "h-5 w-5"}`}
           style={{ backgroundColor: color }}
         />
       ))}
@@ -18,6 +20,10 @@ function PaletteSwatches({ palette = {}, compact = false }) {
   );
 }
 
+// ChipRow selected recipe (components/studio/create/character/creator-stops/shared/Controls.jsx):
+// border --gold-action, inset hairline, --gold-bright text. Replaces
+// the gold-pill check badge (literal text-black) and rounded-full
+// swatch-dot pills this card used to carry.
 function PalettePreviewCard({ palette = {}, selected = false, onSelect = null }) {
   const colors = palette?.previewColors || {};
 
@@ -25,37 +31,34 @@ function PalettePreviewCard({ palette = {}, selected = false, onSelect = null })
     <button
       type="button"
       onClick={() => onSelect?.()}
-      className={`relative rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 ${
+      aria-pressed={selected}
+      className={`relative rounded-[var(--radius-md)] border p-[var(--space-4)] text-left transition-colors ${
         selected
-          ? "border-[var(--muted-gold)]/70 bg-[var(--muted-gold)]/10"
-          : "border-white/10 bg-black/30 hover:border-white/25"
+          ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+          : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] hover:border-[var(--line)]"
       }`}
-      style={{ boxShadow: selected ? `0 0 0 1px ${colors.border}` : undefined }}
     >
-      {selected ? (
-        <span className="absolute right-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--muted-gold)] text-black">
-          <Check size={14} />
-        </span>
-      ) : null}
-
       <PaletteSwatches palette={palette} />
 
-      <p className="mt-3 pr-8 text-sm font-medium" style={{ color: colors.speaker }}>
+      <p
+        className={`mt-[var(--space-3)] text-[length:var(--text-body)] font-medium ${selected ? "text-[var(--gold-bright)]" : ""}`}
+        style={selected ? undefined : { color: colors.speaker }}
+      >
         {palette?.label || "Untitled Palette"}
       </p>
-      <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+      <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
         {palette?.description || ""}
       </p>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/35 p-3">
-        <p className="text-xs italic" style={{ color: colors.narration }}>
+      <div className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-3)]">
+        <p className="text-[length:var(--text-label)] italic" style={{ color: colors.narration }}>
           She turns toward the old workshop door.
         </p>
-        <p className="mt-2 text-xs" style={{ color: colors.dialogue }}>
-          “We should leave before the bells ring.”
+        <p className="mt-[var(--space-2)] text-[length:var(--text-label)]" style={{ color: colors.dialogue }}>
+          "We should leave before the bells ring."
         </p>
-        <p className="mt-2 text-xs" style={{ color: colors.emphasis }}>
-          Emphasis · <span style={{ color: colors.strong }}>Strong</span> ·{" "}
+        <p className="mt-[var(--space-2)] text-[length:var(--text-label)]" style={{ color: colors.emphasis }}>
+          Emphasis &middot; <span style={{ color: colors.strong }}>Strong</span> &middot;{" "}
           <span style={{ color: colors.whisper }}>Whisper</span>
         </p>
       </div>
@@ -79,105 +82,96 @@ export default function CharacterColorPaletteModalView({
   onChoosePalette = null,
 }) {
   return (
-    <>
+    <div>
+      <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        {triggerEyebrow}
+      </span>
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left transition hover:border-[var(--muted-gold)]/40"
+        className="mt-[var(--space-1)] flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-          {triggerEyebrow}
+        <span className="min-w-0">
+          <span className="block truncate text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+            {triggerPalette?.label || "Untitled Palette"}
+          </span>
+          <span className="mt-[var(--space-1)] block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            {triggerDescription}
+          </span>
         </span>
 
-        <span className="mt-3 flex items-center justify-between gap-4">
-          <span className="min-w-0">
-            <span className="block text-sm text-[var(--foreground)]">
-              {triggerPalette?.label || "Untitled Palette"}
-            </span>
-            <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
-              {triggerDescription}
-            </span>
-          </span>
-
-          <span className="shrink-0">
-            <PaletteSwatches palette={triggerPalette} compact />
-          </span>
+        <span className="flex shrink-0 items-center gap-[var(--space-3)]">
+          <PaletteSwatches palette={triggerPalette} compact />
+          <ChevronRight size={16} className="text-[var(--ink-faint)]" aria-hidden="true" />
         </span>
       </button>
 
       {open ? (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) onClose?.();
-          }}
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-4xl"
+          onClose={onClose}
+          ariaLabel={modalAriaLabel}
         >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={modalAriaLabel}
-            className="max-h-[88vh] w-full max-w-6xl overflow-y-auto rounded-3xl border border-[var(--muted-gold)]/25 bg-[#090807] p-5 shadow-2xl sm:p-7"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-[var(--muted-gold)]">
-                  <Palette size={15} />
-                  {modalEyebrow}
+          <div className="flex max-h-[92dvh] flex-col p-[var(--space-6)] pt-[var(--space-8)]">
+            <div>
+              <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                <Palette size={15} aria-hidden="true" />
+                {modalEyebrow}
+              </p>
+              <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+                {modalTitle}
+              </h2>
+              {modalDescription ? (
+                <p className="mt-[var(--space-3)] max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                  {modalDescription}
                 </p>
-                <h2 className="mt-2 font-display text-4xl">{modalTitle}</h2>
-                {modalDescription ? (
-                  <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-                    {modalDescription}
-                  </p>
-                ) : null}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-full border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-                aria-label="Close palette selector"
-              >
-                <X size={18} />
-              </button>
+              ) : null}
             </div>
 
-            {paletteFamilies.length > 0 ? (
-              <div className="mt-7 space-y-7">
-                {paletteFamilies.map((family) => {
-                  const palettes = Array.isArray(family?.palettes)
-                    ? family.palettes
-                    : [];
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
 
-                  if (!palettes.length) return null;
+            <div className="min-h-0 flex-1 overflow-y-auto pb-[var(--space-2)] pr-1">
+              {paletteFamilies.length > 0 ? (
+                <div className="space-y-[var(--space-7)]">
+                  {paletteFamilies.map((family) => {
+                    const palettes = Array.isArray(family?.palettes)
+                      ? family.palettes
+                      : [];
 
-                  return (
-                    <section key={family?.id || family?.label}>
-                      <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
-                        {family?.label || "Palette Family"}
-                      </p>
-                      <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                        {palettes.map((palette) => (
-                          <PalettePreviewCard
-                            key={palette?.id || palette?.label}
-                            palette={palette}
-                            selected={palette?.id === selectedPaletteId}
-                            onSelect={() => onChoosePalette?.(palette?.id || "")}
-                          />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="mt-7 rounded-2xl border border-white/10 bg-black/30 p-6 text-sm leading-6 text-[var(--muted)]">
-                No color palettes are available.
-              </div>
-            )}
+                    if (!palettes.length) return null;
+
+                    return (
+                      <section key={family?.id || family?.label}>
+                        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                          {family?.label || "Palette Family"}
+                        </p>
+                        <div className="mt-[var(--space-3)] grid gap-[var(--space-3)] md:grid-cols-2 xl:grid-cols-3">
+                          {palettes.map((palette) => (
+                            <PalettePreviewCard
+                              key={palette?.id || palette?.label}
+                              palette={palette}
+                              selected={palette?.id === selectedPaletteId}
+                              onSelect={() => onChoosePalette?.(palette?.id || "")}
+                            />
+                          ))}
+                        </div>
+                      </section>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-6)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                  No color palettes are available.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </KitModalFrame>
       ) : null}
-    </>
+    </div>
   );
 }

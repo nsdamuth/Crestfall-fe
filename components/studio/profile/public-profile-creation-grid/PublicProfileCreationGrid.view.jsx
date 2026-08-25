@@ -18,9 +18,9 @@ export default function PublicProfileCreationGridView({
         {hasCreations ? (
           creationSlots
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
             <p className="font-display text-3xl">{emptyTitle}</p>
-            <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
+            <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
               {emptyDescription}
             </p>
           </div>

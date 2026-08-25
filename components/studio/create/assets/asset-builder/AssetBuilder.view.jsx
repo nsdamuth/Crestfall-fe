@@ -47,14 +47,14 @@ export default function AssetBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {config.typeLabel} Builder
         </p>
 
         <h2 className="mt-2 font-display text-4xl">{config.title}</h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           {config.description}
         </p>
 
@@ -126,20 +126,20 @@ export default function AssetBuilderView({
           ) : null}
 
           {isLocation ? (
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               <div className="flex items-start gap-3">
-                <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
+                <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
                   <CloudSun size={18} />
                 </div>
 
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     Runtime Modules
                   </p>
                   <p className="mt-2 font-display text-2xl">
                     In-World Weather
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                  <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                     Configure weather rules now, or leave blank and add them
                     later from the Location edit page.
                   </p>
@@ -151,7 +151,7 @@ export default function AssetBuilderView({
               ) : null}
 
               {locationRegistryContent ? (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-4">
+                <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
                   {locationRegistryContent}
                 </div>
               ) : null}
@@ -175,10 +175,10 @@ export default function AssetBuilderView({
           <button
             type="button"
             disabled
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] opacity-75"
+            className="cf-btn cf-btn--secondary w-full"
           >
             <Sparkles size={15} />
-            Generate Test Images Soon
+            Generate test images soon
           </button>
 
           <TextField
@@ -215,10 +215,10 @@ export default function AssetBuilderView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary w-full"
           >
             <Save size={15} />
-            {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+            {saveStatus === "saving" ? "Saving..." : "Save draft"}
           </button>
 
           {saveMessage ? (
@@ -233,18 +233,18 @@ export default function AssetBuilderView({
         </div>
       </aside>
 
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Cover Image
             </p>
             <h2 className="mt-2 font-display text-3xl">Pick a Cover Image</h2>
           </div>
 
-          <p className="text-sm text-[var(--muted)]">
+          <p className="text-sm text-[var(--ink-dim)]">
             Selected:{" "}
-            <span className="text-[var(--foreground)]">
+            <span className="text-[var(--ink)]">
               {selectedCover || "None"}
             </span>
           </p>
@@ -259,22 +259,22 @@ export default function AssetBuilderView({
                 key={candidate.id}
                 type="button"
                 onClick={() => onSelectCover?.(candidate.id)}
-                className={`aspect-[4/5] overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                className={`aspect-[4/5] overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                   active
-                    ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
-                    : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
+                    ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
+                    : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
                 }`}
               >
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
                   <div className="text-center">
                     <ImageIcon
-                      className="mx-auto text-[var(--muted-gold)]"
+                      className="mx-auto text-[var(--gold-ornament)]"
                       size={34}
                     />
-                    <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                    <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                       {candidate.label}
                     </p>
-                    <p className="mt-2 px-4 text-sm text-[var(--muted)]">
+                    <p className="mt-2 px-4 text-sm text-[var(--ink-dim)]">
                       Generated preview placeholder
                     </p>
                   </div>
@@ -284,14 +284,14 @@ export default function AssetBuilderView({
           })}
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
           <div className="flex items-start gap-3">
-            <Tag className="mt-1 text-[var(--muted-gold)]" size={18} />
+            <Tag className="mt-1 text-[var(--gold-ornament)]" size={18} />
             <div>
-              <p className="text-sm text-[var(--foreground)]">
+              <p className="text-sm text-[var(--ink)]">
                 Future quick-save workflow
               </p>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                 Later, successful custom prompts from Image Studio can be saved
                 directly into this same asset type without leaving the image
                 editor.
@@ -312,8 +312,8 @@ function LocationParentPanel({
   onClearParentLocation,
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Parent Location
       </span>
 
@@ -349,16 +349,16 @@ function LocationParentPanel({
             <button
               type="button"
               onClick={() => onOpenParentPicker?.()}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
               <MapPin size={14} />
-              Change Parent
+              Change parent
             </button>
 
             <button
               type="button"
               onClick={() => onClearParentLocation?.()}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+              className="cf-btn cf-btn--danger"
             >
               <X size={14} />
               Clear
@@ -367,7 +367,7 @@ function LocationParentPanel({
         </div>
       ) : (
         <div className="mt-3">
-          <p className="text-sm leading-6 text-[var(--muted)]">
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
             Choose a broader parent location such as a realm, city, district,
             or building. This controls inherited runtime context.
           </p>
@@ -375,10 +375,10 @@ function LocationParentPanel({
           <button
             type="button"
             onClick={() => onOpenParentPicker?.()}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary mt-4"
           >
             <MapPin size={14} />
-            Select Parent
+            Select parent
           </button>
         </div>
       )}
@@ -402,12 +402,12 @@ function RuntimeInheritancePanel({ inheritance = {}, onUpdateInheritance }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Runtime Inheritance
       </p>
 
-      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+      <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
         These settings control whether this location inherits runtime context
         from parent locations.
       </p>
@@ -440,12 +440,12 @@ function RuntimeInheritancePanel({ inheritance = {}, onUpdateInheritance }) {
 
 function InheritanceCheckbox({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 text-sm text-[var(--muted)]">
+    <label className="flex items-center gap-3 text-sm text-[var(--ink-dim)]">
       <input
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange?.(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>{label}</span>
     </label>
@@ -454,7 +454,7 @@ function InheritanceCheckbox({ label, checked, onChange }) {
 
 function LocationPill({ children }) {
   return (
-    <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+    <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
       {children}
     </span>
   );
@@ -463,7 +463,7 @@ function LocationPill({ children }) {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -471,7 +471,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -488,7 +488,7 @@ function TextAreaField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -498,11 +498,11 @@ function TextAreaField({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
 
       {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
           {helperText}
         </span>
       ) : null}

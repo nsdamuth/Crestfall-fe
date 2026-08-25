@@ -27,8 +27,8 @@ export default function ScenarioBuilderView({
   return (
     <>
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Scenario Builder
         </p>
 
@@ -36,27 +36,27 @@ export default function ScenarioBuilderView({
           {form.title || "Untitled Scenario"}
         </h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           A Scenario is the reusable story structure. Stories later
           package scenarios with characters, narrators, display media, and room
           settings.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>
 
           <p className="mt-2 font-display text-4xl">{completion}%</p>
 
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Story Circle fields are optional, but filling them helps create a
             scenario that can resolve instead of drifting forever.
           </p>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Enabled Middleware
           </p>
 
@@ -66,7 +66,7 @@ export default function ScenarioBuilderView({
               .map(([moduleId]) => (
                 <span
                   key={moduleId}
-                  className="rounded-full border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]"
+                  className="rounded-full border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]"
                 >
                   {moduleId.replaceAll("_", " ")}
                 </span>
@@ -78,10 +78,10 @@ export default function ScenarioBuilderView({
           type="button"
           onClick={() => onSave?.()}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
@@ -201,10 +201,10 @@ export default function ScenarioBuilderView({
                   key={module.id}
                   type="button"
                   onClick={() => onToggleModule?.(module.id)}
-                  className={`rounded-2xl border p-4 text-left transition ${
+                  className={`rounded-[var(--radius-md)] border p-4 text-left transition ${
                     active
-                      ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -212,14 +212,14 @@ export default function ScenarioBuilderView({
                       size={20}
                       className={
                         active
-                          ? "text-[var(--muted-gold)]"
-                          : "text-[var(--muted)]"
+                          ? "text-[var(--gold-ornament)]"
+                          : "text-[var(--ink-dim)]"
                       }
                     />
 
                     <div>
                       <p className="text-sm font-medium">{module.title}</p>
-                      <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                      <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                         {module.body}
                       </p>
                     </div>
@@ -305,14 +305,14 @@ export default function ScenarioBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="mt-1 text-[var(--muted-gold)]" size={19} />
+              <ShieldCheck className="mt-1 text-[var(--gold-ornament)]" size={19} />
               <div>
-                <p className="text-sm text-[var(--foreground)]">
+                <p className="text-sm text-[var(--ink)]">
                   Future Scenario State
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                   Later, active rooms can track current story-circle step,
                   completed gates, locked rewards, known facts, and unlocked
                   media as structured state instead of relying on giant prompt
@@ -330,14 +330,14 @@ export default function ScenarioBuilderView({
 
 function BuilderSection({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
 
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
 
-      <p className="mt-3 max-w-4xl leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 max-w-4xl leading-7 text-[var(--ink-dim)]">{body}</p>
 
       <div className="mt-6">{children}</div>
     </section>
@@ -346,16 +346,16 @@ function BuilderSection({ eyebrow, title, body, children }) {
 
 function StoryCircleCard({ step, value, onChange }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr]">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {step.label}
           </p>
 
           <h3 className="mt-2 font-display text-3xl">{step.title}</h3>
 
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
             {step.helper}
           </p>
         </div>
@@ -365,7 +365,7 @@ function StoryCircleCard({ step, value, onChange }) {
           onChange={(event) => onChange(event.target.value)}
           placeholder="Optional story-circle notes..."
           rows={4}
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </div>
     </div>
@@ -375,7 +375,7 @@ function StoryCircleCard({ step, value, onChange }) {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -383,7 +383,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -392,7 +392,7 @@ function TextField({ label, value, onChange, placeholder }) {
 function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -401,7 +401,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -417,23 +417,23 @@ function ReferenceSelectorField({
 
   return (
     <div className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
       <button
         type="button"
         onClick={onOpen}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
       >
-        <span className="block text-sm text-[var(--foreground)]">
+        <span className="block text-sm text-[var(--ink)]">
           {selectedItems.length
             ? `${selectedItems.length} selected`
             : "Select creations..."}
         </span>
 
         {description ? (
-          <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+          <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
             {description}
           </span>
         ) : null}
@@ -450,7 +450,7 @@ function ReferenceSelectorField({
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-3 text-xs leading-5 text-[var(--ink-dim)]">
           No references selected.
         </p>
       )}
@@ -461,7 +461,7 @@ function ReferenceSelectorField({
 function SelectedReferenceChip({ item, onRemove }) {
   return (
     <article className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
@@ -476,10 +476,10 @@ function SelectedReferenceChip({ item, onRemove }) {
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-1 font-display text-lg leading-none text-[var(--foreground)]">
+        <p className="line-clamp-1 font-display text-lg leading-none text-[var(--ink)]">
           {item.title}
         </p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           {item.type}
         </p>
       </div>
@@ -487,10 +487,11 @@ function SelectedReferenceChip({ item, onRemove }) {
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-200"
+        className="cf-btn cf-btn--danger cf-btn--sm"
         aria-label={`Remove ${item.title}`}
       >
         <X size={14} />
+        Remove
       </button>
     </article>
   );

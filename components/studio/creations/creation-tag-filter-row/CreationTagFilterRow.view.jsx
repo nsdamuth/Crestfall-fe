@@ -16,7 +16,7 @@ export default function CreationTagFilterRowView({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {label}
       </p>
 
@@ -31,10 +31,10 @@ export default function CreationTagFilterRowView({
               type="button"
               onClick={() => onTagChange?.(pill.value)}
               aria-pressed={isActive}
-              className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+              className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                 isActive
-                  ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/20 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {pill.label}

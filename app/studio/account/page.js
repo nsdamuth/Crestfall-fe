@@ -49,7 +49,7 @@ export default async function AccountPage() {
         <StudioAccountProfile />
 
         <section className="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
-          <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
             <StudioAccountCoins />
 
             <div className="mt-6">
@@ -62,7 +62,7 @@ export default async function AccountPage() {
               <Link
                 key={row.title}
                 href={row.href}
-                className="group rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5 transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10"
+                className="group rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5 transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>

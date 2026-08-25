@@ -16,15 +16,15 @@ const EDITOR_MODES = new Set(["full", "sequence", "transitions"]);
 
 const COPY = Object.freeze({
   addReferenceLabel: "Add Story or Scenario",
-  errorsTitle: "Storyline authoring errors",
+  errorsTitle: "Adventure authoring errors",
   warningsTitle: "Draft readiness notes",
   emptyStructure:
-    "Add a Story or Scenario to establish the first Storyline node.",
+    "Add a Story or Scenario to establish the first Adventure node.",
   emptyTransitions:
-    "Add Storyline nodes in Narrative Sequence before configuring transitions.",
+    "Add Adventure nodes in Narrative Sequence before configuring transitions.",
   sequenceEyebrow: "Narrative Sequence",
   sequenceDescription:
-    "The first node loads when the Storyline starts. Later nodes follow the authored order shown here.",
+    "The first node loads when the Adventure starts. Later nodes follow the authored order shown here.",
   transitionsEyebrow: "Node Transitions",
   transitionsDescription:
     "Define how each node completes and how the following node becomes eligible.",
@@ -51,7 +51,7 @@ function formatOptionLabel(value) {
 
 function getTransitionDescription(policy, isLast) {
   if (isLast || policy === "COMPLETE_STORYLINE") {
-    return "The final node completes the Storyline. The same chat remains available for open-world play.";
+    return "The final node completes the Adventure. The same chat remains available for open-world play.";
   }
 
   if (policy === "IMMEDIATE") {
@@ -218,7 +218,7 @@ export function useStorylineNodeListEditorViewModel({
     headerDescription: isTransitionsOnly
       ? COPY.transitionsDescription
       : COPY.sequenceDescription,
-    nodeCountLabel: `${normalized.nodes.length} Storyline Node${
+    nodeCountLabel: `${normalized.nodes.length} Adventure Node${
       normalized.nodes.length === 1 ? "" : "s"
     }`,
     showStructureControls,

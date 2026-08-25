@@ -3,7 +3,7 @@ export default function PullQuoteBlock({ text, attribution }) {
     <blockquote className="sourcebook-pullquote">
       <p>“{text}”</p>
 
-      {attribution && <footer>— {attribution}</footer>}
+      {attribution && <footer>· {attribution}</footer>}
     </blockquote>
   );
 }

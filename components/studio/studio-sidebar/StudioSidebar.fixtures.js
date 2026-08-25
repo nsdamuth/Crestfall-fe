@@ -1,12 +1,5 @@
 const primaryLinks = Object.freeze([
   Object.freeze({
-    label: "Lore Archive",
-    href: "/",
-    iconKey: "bookOpen",
-    variant: "return",
-    isActive: true,
-  }),
-  Object.freeze({
     label: "Studio Home",
     href: "/studio",
     iconKey: "home",
@@ -60,6 +53,13 @@ const primaryLinks = Object.freeze([
     iconKey: "compass",
     isActive: false,
   }),
+  Object.freeze({
+    label: "Lore",
+    href: "/",
+    iconKey: "bookOpen",
+    variant: "return",
+    isActive: true,
+  }),
 ]);
 
 const utilityLinks = Object.freeze([
@@ -88,6 +88,37 @@ const socialLinks = Object.freeze([
     label: "Discord",
     href: "https://discord.com/channels/1482041132874727579/1482041133700878529",
     iconKey: "messagesSquare",
+  }),
+]);
+
+// Preview-nav fixture: journey order per docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
+// section 2, mirroring STUDIO_SIDEBAR_PREVIEW_GROUPS in
+// useStudioSidebarViewModel.js. All nine destinations are built,
+// RULED 11 Aug 2026.
+const previewGroups = Object.freeze([
+  Object.freeze({
+    label: "Play",
+    items: Object.freeze([
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true, isActive: false }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Create",
+    items: Object.freeze([
+      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true, isActive: false }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Explore",
+    items: Object.freeze([
+      Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: true, isActive: false }),
+    ]),
   }),
 ]);
 
@@ -120,4 +151,16 @@ export const studioSidebarCollapsedFixture = Object.freeze({
   collapseAriaLabel: "Expand sidebar",
   collapsed: true,
   socialOpen: false,
+});
+
+// legacyOpen kept at false: the Legacy group no longer renders in
+// preview mode (RULED 23 Aug 2026, build-0823 pass 4, sidebar
+// refinement), so a legacy-open fixture variant no longer has
+// anything to demonstrate.
+export const studioSidebarPreviewFixture = Object.freeze({
+  ...baseFixture,
+  previewEnabled: true,
+  previewGroups,
+  legacyLabel: "Legacy",
+  legacyOpen: false,
 });

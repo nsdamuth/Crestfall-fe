@@ -42,8 +42,12 @@ test("ViewModel owns details, reporting, sharing, and deletion orchestration", (
   assert.match(viewModel, /createMediaReport/);
   assert.match(viewModel, /navigator\?\.share/);
   assert.match(viewModel, /navigator\.clipboard\.writeText/);
-  assert.match(viewModel, /window\.confirm/);
   assert.match(viewModel, /confirmed: true/);
+  // B5 danger-confirm recipe (ED1F propagation plan group G3):
+  // window.confirm is retired in favor of the View's own confirm
+  // panel, gated by deleteConfirmOpen state.
+  assert.doesNotMatch(viewModel, /window\.confirm/);
+  assert.match(viewModel, /deleteConfirmOpen/);
 });
 
 test("portable View owns presentation without importing Crestfall clients", () => {
@@ -51,9 +55,9 @@ test("portable View owns presentation without importing Crestfall clients", () =
     "components/studio/media/media-lightbox/MediaLightbox.view.jsx"
   );
 
-  assert.match(view, /desktop|ThumbnailButton|DetailsDialog|ReportDialog/i);
+  assert.match(view, /ThumbnailButton|DetailsDialog|ReportDialog/i);
   assert.match(view, /Generate Variant/);
-  assert.match(view, /Delete Image/);
+  assert.match(view, /Delete this image\?/);
   assert.match(view, /LinkComponent/);
   assert.doesNotMatch(view, /imageDetailsClient|mediaReportClient/);
   assert.doesNotMatch(view, /fetch\(|navigator|window\.confirm|next\/link/);

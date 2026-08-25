@@ -1,0 +1,206 @@
+// Local, deterministic View-shaped fixtures (docs/FRONTEND-SOP.md
+// section 1, LOOM item 5): default, empty, loading, error, longest
+// content, plus muted (item 36 / CR-028: a fixture state showing a
+// muted creator, required by the brief). Built directly from
+// useCreatorProfileViewModel's output shape rather than re-deriving
+// from creatorProfileContent.mock.js, so these exercise the View in
+// isolation (preview route) without mounting the hook.
+import { CREATOR_PROFILES, CREATOR_PROFILE_LONGEST } from "./creatorProfileContent.mock";
+
+const noop = () => {};
+
+const VERMILLION = CREATOR_PROFILES.vermillion;
+const MOONGLASS = CREATOR_PROFILES.moonglass;
+
+function decorateWork(item) {
+  return {
+    cardKind: "creation",
+    assetKind: "character",
+    id: item.id,
+    title: item.title,
+    subtitle: item.subtitle,
+    imageSrc: item.imageSrc,
+    badges: item.badges || [],
+    stats: item.stats,
+    liked: false,
+    bookmarked: false,
+    onOpenAssetDetail: noop,
+    onLike: noop,
+    onBookmark: noop,
+  };
+}
+
+// Banner art mirrors useCreatorProfileViewModel.js, RULED 11 Aug 2026
+// (banner-anchor ruling, CC5 banner-audit sitting): see that file's
+// banner comment and docs/reviews/BANNER-AUDIT.md.
+const BOTTOM_BANNER = {
+  eyebrow: "Next stop",
+  title: "Read the world this creator is writing into.",
+  ctaLabel: "Read the lore",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Crash Santosa.png"),
+  onCtaClick: noop,
+};
+
+const WORKS_LOAD_MORE = { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop };
+const ACTIVITY_LOAD_MORE_DONE = { isLoading: false, hasMore: false, remainingCount: null, onLoadMore: noop };
+const ACTIVITY_PAGE_SIZE = 5;
+
+const DONATE_MODAL_CLOSED = {
+  recipientDisplayName: VERMILLION.displayName,
+  amount: "",
+  onAmountChange: noop,
+  amountError: "",
+  message: "",
+  onMessageChange: noop,
+  isAnonymous: false,
+  onAnonymousChange: noop,
+  onSubmit: noop,
+  onClose: noop,
+};
+
+function baseFixture(record) {
+  return {
+    displayName: record.displayName,
+    handle: record.handle,
+    bio: record.bio,
+    avatarSrc: record.avatarSrc,
+    stats: record.stats,
+    onOpenFollowers: noop,
+    onOpenFollowing: noop,
+    onOpenPlays: noop,
+    engagement: {
+      isFollowing: record.isFollowing,
+      onFollow: noop,
+      isLiked: record.isLiked,
+      onLike: noop,
+      isBookmarked: record.isBookmarked,
+      onBookmark: noop,
+      onShare: noop,
+      onOpenDonate: noop,
+      isMuted: record.isMuted,
+      onToggleMute: noop,
+    },
+    workItems: record.works.map(decorateWork),
+    worksEmptyMessage: record.works.length === 0 ? "Nothing published yet." : null,
+    worksLoadMore: WORKS_LOAD_MORE,
+    activityItems: record.activity.slice(0, ACTIVITY_PAGE_SIZE),
+    activityEmptyMessage: record.activity.length === 0 ? "No activity yet." : null,
+    activityLoadMore: ACTIVITY_LOAD_MORE_DONE,
+    badgeItems: record.badges,
+    badgesEmptyMessage: record.badges.length === 0 ? "No badges yet." : null,
+    errorMessage: null,
+    isLoading: false,
+    isDonateModalOpen: false,
+    donateModal: { ...DONATE_MODAL_CLOSED, recipientDisplayName: record.displayName },
+    bottomBanner: BOTTOM_BANNER,
+    notice: null,
+    onCloseNotice: noop,
+  };
+}
+
+// Default: a populated creator, every section has content.
+export const creatorProfileDefaultFixture = baseFixture(VERMILLION);
+
+// Empty: a creator with no works, no activity, no badges. Ruled
+// empty-state law (matching Adventures/Lore precedent): a message,
+// not a fabricated placeholder card, in every section.
+export const creatorProfileEmptyFixture = {
+  ...creatorProfileDefaultFixture,
+  workItems: [],
+  worksEmptyMessage: "Nothing published yet.",
+  activityItems: [],
+  activityEmptyMessage: "No activity yet.",
+  badgeItems: [],
+  badgesEmptyMessage: "No badges yet.",
+};
+
+// Loading: skeleton state, no content rendered.
+export const creatorProfileLoadingFixture = {
+  ...creatorProfileDefaultFixture,
+  isLoading: true,
+};
+
+// Error: profile-level load failure, distinct from a section's own
+// empty state (docs/PARITY-ECHO-FULL.md Creators row 808-813 note).
+export const creatorProfileErrorFixture = {
+  ...creatorProfileDefaultFixture,
+  errorMessage: "This creator's profile could not be loaded.",
+  workItems: [],
+  worksEmptyMessage: null,
+  activityItems: [],
+  activityEmptyMessage: null,
+  badgeItems: [],
+  badgesEmptyMessage: null,
+};
+
+// Muted: item 36 / CR-028, RULED 11 Aug 2026 (placement is the
+// engagement row, no other variant): a fixture state showing a muted
+// creator, the "Muted" label in the engagement row.
+export const creatorProfileMutedFixture = {
+  ...baseFixture(MOONGLASS),
+  engagement: { ...baseFixture(MOONGLASS).engagement, isMuted: true },
+};
+
+// Activity list cap, RULED 11 Aug 2026: 27 entries, the same
+// batch-then-append KitLoadMoreView pattern the works grid already
+// uses. activityItems carries only the first five, activityLoadMore
+// exposes the remaining 22 for Show more; onLoadMore proves the
+// append-more-rows behavior by revealing the next batch instead of
+// swapping pages.
+const ACTIVITY_CAP_ENTRIES = Array.from({ length: 27 }, (_, index) => ({
+  id: `activity-cap-${index + 1}`,
+  kind: index % 2 === 0 ? "creation" : "donation",
+  label:
+    index % 2 === 0
+      ? `Published "Fixture Entry ${index + 1}"`
+      : `Received a donation from @fixture-creator-${index + 1}`,
+  timestamp: `${index + 1} days ago`,
+}));
+
+function activityLoadMoreFor(visibleCount, allEntries) {
+  const hasMore = visibleCount < allEntries.length;
+  return {
+    isLoading: false,
+    hasMore,
+    remainingCount: hasMore ? allEntries.length - visibleCount : null,
+    onLoadMore: noop,
+  };
+}
+
+export const creatorProfileActivityCapFixture = {
+  ...creatorProfileDefaultFixture,
+  activityItems: ACTIVITY_CAP_ENTRIES.slice(0, ACTIVITY_PAGE_SIZE),
+  activityEmptyMessage: null,
+  activityLoadMore: activityLoadMoreFor(ACTIVITY_PAGE_SIZE, ACTIVITY_CAP_ENTRIES),
+};
+
+// Second batch revealed: proves the append behavior itself, ten
+// entries visible (two Show more presses), fifteen still to come.
+export const creatorProfileActivityCapAppendedFixture = {
+  ...creatorProfileActivityCapFixture,
+  activityItems: ACTIVITY_CAP_ENTRIES.slice(0, ACTIVITY_PAGE_SIZE * 2),
+  activityLoadMore: activityLoadMoreFor(ACTIVITY_PAGE_SIZE * 2, ACTIVITY_CAP_ENTRIES),
+};
+
+// Large stat values: seven-digit counts on every tile plus the
+// longest label (Following), proving the overflow fix (RULED 11 Aug
+// 2026) at the widest realistic value length.
+export const creatorProfileLargeStatsFixture = {
+  ...creatorProfileDefaultFixture,
+  stats: { followers: 2480000, following: 1000000, plays: 9999999, works: 1234567 },
+};
+
+// Longest content: every section at its fullest, longest bio and
+// title strings, donate modal open with its longest states (filled
+// fields, anonymous checked).
+export const creatorProfileLongestContentFixture = {
+  ...baseFixture(CREATOR_PROFILE_LONGEST),
+  isDonateModalOpen: true,
+  donateModal: {
+    ...DONATE_MODAL_CLOSED,
+    recipientDisplayName: CREATOR_PROFILE_LONGEST.displayName,
+    amount: "25",
+    message: "For the Sundered Choir chapters. Keep writing.",
+    isAnonymous: true,
+  },
+};

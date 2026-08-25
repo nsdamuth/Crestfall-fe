@@ -1,5 +1,20 @@
 # Creation Edit Sticky Action Bar
 
+**RETIRED for the v2 editor, 12 Aug 2026 (ED1,
+docs/plans/FABLE-GATE-2-STUDIO.md, contract law s13). Contract stays
+at 1.0.0, not bumped; retirement recorded here, not in the version
+number.** `app/studio/v2/editor/**` no longer mounts this package: its
+save affordance is replaced by `editor-save-bar` (N2, top-docked,
+appears only when dirty); its visibility/review/canon controls move
+into the Publishing group (`creation-publishing-section`, now 1.1.0,
+carrying Submit for Public/Canon Review and the relocated Unlist for
+Editing and Cancel Review, each behind a confirm step); the inert
+emerald Public toggle is dropped, status reads through the new
+editor-header's visibility chip instead. This package is UNCHANGED
+and still live on the legacy `/studio/my-creations/[id]/edit` route
+via `components/studio/my-creations/CreationEditShell.jsx`, which
+this wave does not touch.
+
 ## Purpose
 
 This Loom feature separates the Creation Edit save, visibility, review, and

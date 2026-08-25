@@ -61,8 +61,8 @@ export default function RoomTemplateBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Story Builder
         </p>
 
@@ -70,20 +70,20 @@ export default function RoomTemplateBuilderView({
           {form.title || "Untitled Story"}
         </h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           A Story packages characters, a scenario, narrator guidance,
           locations, registries, runtime modules, opening messages, and play
           rules into a reusable playable setup.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>
 
           <p className="mt-2 font-display text-4xl">{completion}%</p>
 
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             Stories start private. Public review and canon submission happen
             later from My Creations.
           </p>
@@ -95,10 +95,10 @@ export default function RoomTemplateBuilderView({
           type="button"
           onClick={() => onSave?.()}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
@@ -222,13 +222,13 @@ export default function RoomTemplateBuilderView({
             <button
               type="button"
               onClick={() => onToggleTurnBased?.()}
-              className={`rounded-2xl border p-5 text-left transition ${
+              className={`rounded-[var(--radius-md)] border p-5 text-left transition ${
                 effectiveTurnBased
-                  ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
-              <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Turn-Based Story
               </p>
 
@@ -239,7 +239,7 @@ export default function RoomTemplateBuilderView({
               </p>
 
               {invitedPlayersPanelProps.invitedPlayers?.length ? (
-                <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+                <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                   Multiplayer invitees are selected, so turn-based mode is
                   required.
                 </p>
@@ -274,10 +274,10 @@ export default function RoomTemplateBuilderView({
               <button
                 type="button"
                 onClick={() => onAddOpeningMessage?.()}
-                className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                className="cf-btn cf-btn--secondary w-fit"
               >
                 <Plus size={14} />
-                Add Opening Message
+                Add opening message
               </button>
             </div>
           </div>
@@ -289,17 +289,17 @@ export default function RoomTemplateBuilderView({
           body="Later this will select images from the internal media library. No external uploads."
         >
           <div className="grid gap-5 lg:grid-cols-[0.45fr_1fr]">
-            <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+            <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
               <div className="flex h-full w-full items-center justify-center">
                 <div className="text-center">
                   <ImageIcon
-                    className="mx-auto text-[var(--muted-gold)]"
+                    className="mx-auto text-[var(--gold-ornament)]"
                     size={34}
                   />
-                  <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     Display Media Slot
                   </p>
-                  <p className="mt-2 text-sm text-[var(--muted)]">
+                  <p className="mt-2 text-sm text-[var(--ink-dim)]">
                     Slot {displayMediaSlot + 1}
                   </p>
                 </div>
@@ -318,8 +318,8 @@ export default function RoomTemplateBuilderView({
                       onClick={() => onSelectDisplayMediaSlot?.(slot)}
                       className={`aspect-square rounded-xl border text-[10px] uppercase tracking-[0.12em] transition ${
                         active
-                          ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                          : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35"
+                          ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                          : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
                       }`}
                     >
                       Slot {slot + 1}
@@ -331,10 +331,10 @@ export default function RoomTemplateBuilderView({
               <button
                 type="button"
                 disabled
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] opacity-60"
+                className="cf-btn cf-btn--secondary mt-4 w-full"
               >
                 <ImageIcon size={14} />
-                Choose From Media Library Soon
+                Choose from media library soon
               </button>
             </div>
           </div>
@@ -381,17 +381,17 @@ export default function RoomTemplateBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck
-                className="mt-1 text-[var(--muted-gold)]"
+                className="mt-1 text-[var(--gold-ornament)]"
                 size={19}
               />
               <div>
-                <p className="text-sm text-[var(--foreground)]">
+                <p className="text-sm text-[var(--ink)]">
                   Future public requirements
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                   Later, public Stories will require approved characters,
                   reviewed scenario content, visible display media, and a
                   minimum public description before submission.

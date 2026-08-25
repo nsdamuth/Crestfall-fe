@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function LocationPromptGuidanceSectionView({
@@ -13,11 +15,11 @@ export default function LocationPromptGuidanceSectionView({
   imagePromptLabel = "Standalone Image Prompt",
   imagePromptValue = "",
   imagePromptPlaceholder = "",
-  imagePromptMaxLength = 2000,
+  imagePromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
   negativePromptLabel = "Negative Prompt",
   negativePromptValue = "",
   negativePromptPlaceholder = "",
-  negativePromptMaxLength = 2000,
+  negativePromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
   usageNotesLabel = "Usage Notes",
   usageNotesValue = "",
   usageNotesPlaceholder = "",
@@ -42,12 +44,13 @@ export default function LocationPromptGuidanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
         <TextAreaField
           label={promptGuidanceLabel}
           value={promptGuidanceValue}
           onChange={(value) => onChangePromptGuidance?.(value)}
           placeholder={promptGuidancePlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -71,6 +74,7 @@ export default function LocationPromptGuidanceSectionView({
           value={usageNotesValue}
           onChange={(value) => onChangeUsageNotes?.(value)}
           placeholder={usageNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -78,6 +82,7 @@ export default function LocationPromptGuidanceSectionView({
           value={compatibilityNotesValue}
           onChange={(value) => onChangeCompatibilityNotes?.(value)}
           placeholder={compatibilityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -85,6 +90,7 @@ export default function LocationPromptGuidanceSectionView({
           value={registryNotesValue}
           onChange={(value) => onChangeRegistryNotes?.(value)}
           placeholder={registryNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

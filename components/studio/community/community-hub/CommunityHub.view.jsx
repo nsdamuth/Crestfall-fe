@@ -7,10 +7,10 @@ function PillButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick || undefined}
-      className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+      className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
         active
-          ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-          : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+          : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
       }`}
     >
       {children}
@@ -20,13 +20,13 @@ function PillButton({ active, onClick, children }) {
 
 function LoadMoreButton({ nextLoadCount, onClick }) {
   return (
-    <div className="mt-6 flex justify-center">
+    <div className="mt-[var(--space-8)] flex justify-center">
       <button
         type="button"
         onClick={onClick || undefined}
-        className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="cf-btn cf-btn--secondary"
       >
-        Load {nextLoadCount} More
+        Load {nextLoadCount} more
       </button>
     </div>
   );
@@ -122,14 +122,14 @@ export default function CommunityHubView({
               <button
                 type="button"
                 onClick={onToggleMobileCreationGridMode || undefined}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] md:hidden"
+                className="inline-flex h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] transition hover:border-[var(--line)] hover:text-[var(--ink)] md:hidden"
               >
                 <LayoutGrid size={14} />
                 {mobileCreationGridToggleLabel}
               </button>
             ) : null}
 
-            <div className="flex rounded-xl border border-white/10 bg-black/30 p-1">
+            <div className="flex rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-1">
               {[
                 ["CREATIONS", "Creations"],
                 ["CREATORS", "Creators"],
@@ -138,10 +138,10 @@ export default function CommunityHubView({
                   key={id}
                   type="button"
                   onClick={() => onModeChange?.(id)}
-                  className={`rounded-lg px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                  className={`rounded-[var(--radius-sm)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                     mode === id
-                      ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                      ? "bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
                   }`}
                 >
                   {label}
@@ -151,13 +151,13 @@ export default function CommunityHubView({
           </div>
         }
       >
-        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-          <Search size={16} className="text-[var(--muted-gold)]" />
+        <div className="flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
+          <Search size={16} className="text-[var(--gold-ornament)]" />
           <input
             value={query}
             onChange={(event) => onQueryChange?.(event.target.value)}
             placeholder={queryPlaceholder}
-            className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+            className="w-full bg-transparent text-[length:var(--text-body)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
           />
         </div>
 
@@ -234,17 +234,17 @@ export default function CommunityHubView({
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <span className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 View
               </span>
-              <div className="flex rounded-xl border border-white/10 bg-black/30 p-1">
+              <div className="flex rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-1">
                 <button
                   type="button"
                   onClick={() => onCreatorViewChange?.("GRID")}
-                  className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex items-center gap-2 rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                     creatorView === "GRID"
-                      ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                      ? "bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
                   }`}
                 >
                   <LayoutGrid size={14} />
@@ -253,10 +253,10 @@ export default function CommunityHubView({
                 <button
                   type="button"
                   onClick={() => onCreatorViewChange?.("LIST")}
-                  className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs uppercase tracking-[0.14em] transition ${
+                  className={`inline-flex items-center gap-2 rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                     creatorView === "LIST"
-                      ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                      ? "bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
                   }`}
                 >
                   <List size={14} />
@@ -268,15 +268,22 @@ export default function CommunityHubView({
         )}
       </FilterPanelComponent>
 
+      {/* SKIPPED: engagementMessage is a semantic error/warning banner —
+          the red here is unmapped by any of the eight rulings (danger
+          red was proposed for buttons only and isn't applied anywhere
+          in this pass), so it's left as raw Tailwind red rather than
+          inventing a token out of scope. */}
       {engagementMessage ? (
-        <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {engagementMessage}
         </p>
       ) : null}
 
       {mode === "CREATIONS" ? (
         <>
-          <div className={`mt-6 grid gap-3 sm:gap-5 ${creationGridClass}`}>
+          <div
+            className={`mt-[var(--space-5)] grid gap-[var(--space-3)] ${creationGridClass}`}
+          >
             {filteredCreationCount ? (
               safeCreations.map((creation, index) =>
                 CreationCardComponent ? (
@@ -294,9 +301,11 @@ export default function CommunityHubView({
                 ) : null
               )
             ) : (
-              <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
-                <p className="font-display text-3xl">No public creations yet</p>
-                <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
+              <div className="rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] p-[var(--space-8)] text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
+                <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] tabular-nums">
+                  No public creations yet
+                </p>
+                <p className="mx-auto mt-3 max-w-2xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                   Community will populate once creations are public and approved.
                 </p>
               </div>
@@ -314,7 +323,7 @@ export default function CommunityHubView({
         <>
           {filteredCreatorCount ? (
             creatorView === "LIST" ? (
-              <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+              <div className="mt-[var(--space-5)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]">
                 {safeCreators.map((creator) =>
                   CreatorListRowComponent ? (
                     <CreatorListRowComponent
@@ -331,7 +340,9 @@ export default function CommunityHubView({
                 )}
               </div>
             ) : (
-              <div className={`mt-6 grid gap-5 ${creatorGridClass}`}>
+              <div
+                className={`mt-[var(--space-5)] grid gap-[var(--space-3)] ${creatorGridClass}`}
+              >
                 {safeCreators.map((creator) =>
                   CreatorCardComponent ? (
                     <CreatorCardComponent
@@ -349,9 +360,11 @@ export default function CommunityHubView({
               </div>
             )
           ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-              <p className="font-display text-3xl">No public creators yet</p>
-              <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
+            <div className="mt-[var(--space-5)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] p-[var(--space-8)] text-center">
+              <p className="font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] tabular-nums">
+                No public creators yet
+              </p>
+              <p className="mx-auto mt-3 max-w-2xl text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                 Public creator profiles will appear here once profiles are made public.
               </p>
             </div>

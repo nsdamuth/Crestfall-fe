@@ -56,7 +56,7 @@ export default function NpcRegistryBuilderView({
   return (
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
       <div className="space-y-5">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
           <div className="flex flex-wrap gap-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -67,10 +67,10 @@ export default function NpcRegistryBuilderView({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectTab?.(tab.id)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                  className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                     active
-                      ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                      ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                      : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                   }`}
                 >
                   <Icon size={14} />
@@ -81,7 +81,7 @@ export default function NpcRegistryBuilderView({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
           {activeTab === "overview" ? (
             <OverviewTab registry={registry} updateField={onUpdateField} />
           ) : null}
@@ -127,14 +127,14 @@ export default function NpcRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
 
         <h2 className="mt-2 font-display text-3xl">{registry.title}</h2>
 
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           {registry.description}
         </p>
 
@@ -156,16 +156,18 @@ export default function NpcRegistryBuilderView({
           type="button"
           onClick={() => onSaveRegistry?.()}
           disabled={saveStatus === "saving"}
-          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-5 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Registry"}
+          {saveStatus === "saving" ? "Saving..." : "Save registry"}
         </button>
 
         {saveMessage ? (
           <p
             className={`mt-3 text-sm ${
-              saveStatus === "error" ? "text-red-200" : "text-emerald-200"
+              saveStatus === "error"
+                ? "text-[var(--status-danger)]"
+                : "text-[var(--status-success)]"
             }`}
           >
             {saveMessage}
@@ -173,10 +175,12 @@ export default function NpcRegistryBuilderView({
         ) : null}
 
         {characterLoadError ? (
-          <p className="mt-3 text-sm text-red-200">{characterLoadError}</p>
+          <p className="mt-3 text-sm text-[var(--status-danger)]">
+            {characterLoadError}
+          </p>
         ) : null}
 
-        <p className="mt-4 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-4 text-xs leading-5 text-[var(--ink-dim)]">
           Stories can later attach one or more NPC
           registries. Registry data becomes the continuity source for
           relationships, aliases, and knowledge rules.
@@ -248,10 +252,10 @@ function EntriesTab({ entries, onAdd, onEdit, onDelete }) {
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="cf-btn cf-btn--secondary w-fit"
       >
         <Plus size={14} />
-        Add Person
+        Add person
       </button>
 
       <div className="grid gap-4">
@@ -259,10 +263,10 @@ function EntriesTab({ entries, onAdd, onEdit, onDelete }) {
           entries.map((entry) => (
             <article
               key={entry.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4">
+              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {entry.kind === "CREATION_REF" ? "Linked Creation" : "Lightweight NPC"}
                   </p>
                   <h3 className="mt-2 font-display text-3xl">{entry.name}</h3>
@@ -274,11 +278,11 @@ function EntriesTab({ entries, onAdd, onEdit, onDelete }) {
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--muted)]">
+              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
                 {entry.notes || "No notes yet."}
               </p>
 
-              <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+              <p className="mt-3 text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
                 {entry.kind === "CREATION_REF"
                   ? "Mechanics follow the linked Character creation."
                   : getEntryActorMechanicsProfileTitle(entry)
@@ -313,14 +317,14 @@ function RelationshipsTab({
         type="button"
         onClick={onAdd}
         disabled={entries.length < 2}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
-        Add Relationship
+        Add relationship
       </button>
 
       {entries.length < 2 ? (
-        <p className="text-sm text-[var(--muted)]">
+        <p className="text-sm text-[var(--ink-dim)]">
           Add at least two NPC entries before creating relationships.
         </p>
       ) : null}
@@ -330,11 +334,11 @@ function RelationshipsTab({
           relationships.map((relationship) => (
             <article
               key={relationship.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     {relationship.type || "Relationship"} ·{" "}
                     {relationship.strength}
                   </p>
@@ -352,7 +356,7 @@ function RelationshipsTab({
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--muted)]">
+              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
                 {relationship.description || "No relationship rule yet."}
               </p>
             </article>
@@ -382,10 +386,10 @@ function KnowledgeTab({
       <button
         type="button"
         onClick={onAdd}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="cf-btn cf-btn--secondary w-fit"
       >
         <Plus size={14} />
-        Add Knowledge Rule
+        Add knowledge rule
       </button>
 
       <div className="grid gap-4">
@@ -393,11 +397,11 @@ function KnowledgeTab({
           knowledgeRules.map((rule) => (
             <article
               key={rule.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     Default: {rule.defaultKnowledge}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -411,7 +415,7 @@ function KnowledgeTab({
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--muted)]">
+              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
                 {rule.notes || "No knowledge rule notes yet."}
               </p>
             </article>
@@ -436,14 +440,14 @@ function AliasesTab({ entries, aliases, onAdd, onEdit, onDelete }) {
         type="button"
         onClick={onAdd}
         disabled={!entries.length}
-        className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-[var(--control-md)] w-fit items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:border-[var(--gold-action)] hover:shadow-[var(--glow-hover)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus size={14} />
-        Add Alias Rule
+        Add alias rule
       </button>
 
       {!entries.length ? (
-        <p className="text-sm text-[var(--muted)]">
+        <p className="text-sm text-[var(--ink-dim)]">
           Add an NPC entry before creating alias rules.
         </p>
       ) : null}
@@ -453,11 +457,11 @@ function AliasesTab({ entries, aliases, onAdd, onEdit, onDelete }) {
           aliases.map((alias) => (
             <article
               key={alias.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                     Alias Mapping
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -472,7 +476,7 @@ function AliasesTab({ entries, aliases, onAdd, onEdit, onDelete }) {
                 </div>
               </div>
 
-              <p className="mt-3 leading-7 text-[var(--muted)]">
+              <p className="mt-3 leading-7 text-[var(--ink-dim)]">
                 {alias.rule || "No alias rule yet."}
               </p>
             </article>
@@ -489,14 +493,14 @@ function AliasesTab({ entries, aliases, onAdd, onEdit, onDelete }) {
 function TextInput({ label, value, onChange, placeholder = "" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -505,7 +509,7 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
 function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -513,7 +517,7 @@ function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
         onChange={(event) => onChange?.(event.target.value)}
         rows={rows}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -526,11 +530,11 @@ function getEntryName(entries, entryId) {
 function SectionHeader({ title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         NPC Registry
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
-      <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">{body}</p>
     </div>
   );
 }
@@ -538,7 +542,7 @@ function SectionHeader({ title, body }) {
 function EmptyPanel({ message }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-      <p className="text-sm leading-6 text-[var(--muted)]">{message}</p>
+      <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
 }
@@ -548,7 +552,7 @@ function SmallAction({ children, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       {children}
     </button>
@@ -560,21 +564,24 @@ function SmallDangerAction({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="rounded-lg border border-white/10 px-3 py-2 text-red-200 transition hover:border-red-300/35"
+      className="cf-btn cf-btn--danger cf-btn--sm"
       aria-label="Delete"
     >
       <Trash2 size={14} />
+      Delete
     </button>
   );
 }
 
 function SummaryPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-3">
+      <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
+        {value}
+      </p>
     </div>
   );
 }

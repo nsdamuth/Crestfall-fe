@@ -71,7 +71,7 @@ export default function PreferencesPage() {
         description="Set default workflow, browsing, discovery, and page behavior preferences for Studio."
       />
 
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Page Defaults
         </p>
@@ -93,7 +93,7 @@ export default function PreferencesPage() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
         These controls are frontend placeholders. Later, preferences should save
         to a profile/settings table and be consumed by pages like Community, My
         Creations, Image Studio, and creation builders.
@@ -104,7 +104,7 @@ export default function PreferencesPage() {
 
 function PreferenceCard({ setting }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
         {setting.eyebrow}
       </p>
@@ -121,11 +121,9 @@ function PreferenceCard({ setting }) {
             key={option}
             type="button"
             disabled
-            className={`rounded-xl border px-4 py-3 text-left text-xs uppercase tracking-[0.14em] ${
-              index === 0
-                ? "border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
-                : "border-white/10 bg-black/30 text-[var(--muted)]"
-            } opacity-80`}
+            className={`cf-btn cf-btn--secondary w-full justify-start text-left ${
+              index === 0 ? "border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10" : ""
+            }`}
           >
             {option}
           </button>

@@ -1,0 +1,549 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+import CreatorStopsView from "@/components/studio/create/character/creator-stops/CreatorStops.view";
+import {
+  buildCreatorStopItems,
+  CREATOR_STOP_IDS,
+} from "@/components/studio/create/character/creator-stops/CreatorStops.contract";
+import {
+  creatorStopsFirstFixture,
+  creatorStopsLastFixture,
+  creatorStopsMidFixture,
+  creatorStopsUnsavedFixture,
+  creatorStopsConfirmDiscardFixture,
+  creatorStopsSaveErrorFixture,
+  creatorStopsMidSavedFixture,
+  creatorStopsJustSavedFixture,
+} from "@/components/studio/create/character/creator-stops/CreatorStops.fixtures";
+import NameStopView from "@/components/studio/create/character/creator-stops/name-stop/NameStop.view";
+import KindStopView from "@/components/studio/create/character/creator-stops/kind-stop/KindStop.view";
+import FaceStopView from "@/components/studio/create/character/creator-stops/face-stop/FaceStop.view";
+import SilhouetteStopView from "@/components/studio/create/character/creator-stops/silhouette-stop/SilhouetteStop.view";
+import HeartStopView from "@/components/studio/create/character/creator-stops/heart-stop/HeartStop.view";
+import SealStopView from "@/components/studio/create/character/creator-stops/seal-stop/SealStop.view";
+import PayoffStopView from "@/components/studio/create/character/creator-stops/payoff-stop/PayoffStop.view";
+import PalettePanelBody from "@/components/studio/create/character/creator-stops/shared/PalettePanelBody";
+import TemplatePanelBody from "@/components/studio/create/character/creator-stops/shared/TemplatePanelBody";
+import { useCharacterColorPaletteModalViewModel } from "@/components/studio/create/character/character-color-palette/useCharacterColorPaletteModalViewModel";
+import { useCharacterTemplateModalViewModel } from "@/components/studio/create/character/character-template-picker/useCharacterTemplateModalViewModel";
+import { EmptyStateCard } from "@/components/studio/create/character/creator-stops/shared/Controls";
+
+const STATES = [
+  ["First stop", creatorStopsFirstFixture],
+  ["Mid stop", creatorStopsMidFixture],
+  ["Last stop", creatorStopsLastFixture],
+  ["Unsaved changes", creatorStopsUnsavedFixture],
+  ["Confirm discard", creatorStopsConfirmDiscardFixture],
+  ["Save unsuccessful", creatorStopsSaveErrorFixture],
+  ["Saved, mid-flow (confirmation only)", creatorStopsMidSavedFixture],
+  ["Saved, final stop (post-save footer)", creatorStopsJustSavedFixture],
+];
+
+const INITIAL_FORM_STATE = {
+  name: "",
+  title: "",
+  species: "",
+  customSpecies: "",
+  genderPresentation: "",
+  customGenderPresentation: "",
+  shortConcept: "",
+  mbtiType: "",
+  westernZodiacSign: "",
+  eastAsianZodiacSign: "",
+  skinTone: "",
+  skinCustomValue: "",
+  eyeColor: "",
+  eyeCustomValue: "",
+  hairColor: "",
+  hairCustomValue: "",
+  hairLength: "",
+  hairTexture: "",
+  hairStyle: "",
+  ethnicAppearance: "",
+  kibbeIdentity: "",
+  bodyType: "",
+  height: "",
+  build: "",
+  proportions: [],
+  chestBust: "",
+  bodyNotes: "",
+  appearanceNotes: "",
+  clothingStyle: "",
+  defaultClothingMode: "NONE",
+  defaultOutfitTitle: "",
+  defaultWardrobeTitle: "",
+  outwardPersonality: "",
+  internalPersonality: "",
+  speechStyle: "",
+  movementStyle: "",
+  greeting: "",
+  scenario: "",
+  backstory: "",
+  verbosityLevel: "3",
+  philosophy: "",
+  interests: "",
+  relationshipToPlayer: "",
+  voiceModuleIds: [],
+  personalityNotes: "",
+  visibility: "PRIVATE",
+  contentRating: "SFW",
+  age: "",
+  renderingStyle: "auto",
+  characterColorPaletteId: "CRESTFALL_DEFAULT",
+  creatorDirectives: "",
+  extraRuntimeNotes: "",
+};
+
+export default function CreatorStopsPreviewClient() {
+  // fieldScope harness, added 10 Aug 2026 (Studio brief S2,
+  // docs/STUDIO-SPEC.md section 3.2): exercises both "full" (default,
+  // pixel-stable) and "quick" (the v2 Studio hub's set) in this dev-
+  // only preview.
+  const [fieldScope, setFieldScope] = useState("full");
+  const [selectedState, setSelectedState] = useState(0);
+  const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
+  const [maxReachedIndex, setMaxReachedIndex] = useState(
+    Math.max(0, CREATOR_STOP_IDS.indexOf(STATES[0][1].activeStop))
+  );
+  const [templateNote, setTemplateNote] = useState("");
+  const [moreHairOpen, setMoreHairOpen] = useState(false);
+  const [typingFoldOpen, setTypingFoldOpen] = useState(false);
+  const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
+  const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
+
+  const [formState, setFormState] = useState(INITIAL_FORM_STATE);
+  const [savedSnapshot, setSavedSnapshot] = useState(INITIAL_FORM_STATE);
+  const [isOpen, setIsOpen] = useState(true);
+  const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
+  const [secondaryPanel, setSecondaryPanel] = useState(null);
+  const [justSaved, setJustSaved] = useState(false);
+
+  const paletteVM = useCharacterColorPaletteModalViewModel({
+    value: formState.characterColorPaletteId,
+    onChange: updateField("characterColorPaletteId"),
+  });
+
+  const templateVM = useCharacterTemplateModalViewModel({
+    templates: [],
+    onApply: () => setSecondaryPanel(null),
+    onClose: () => setSecondaryPanel(null),
+  });
+
+  const hasUnsavedChanges = useMemo(
+    () => JSON.stringify(formState) !== JSON.stringify(savedSnapshot),
+    [formState, savedSnapshot]
+  );
+
+  useEffect(() => {
+    const index = Math.max(0, CREATOR_STOP_IDS.indexOf(activeStop));
+    setMaxReachedIndex((current) => Math.max(current, index));
+  }, [activeStop]);
+
+  function updateField(key) {
+    return (value) => {
+      setFormState((current) => ({ ...current, [key]: value }));
+      setJustSaved(false);
+    };
+  }
+
+  function requestClose() {
+    if (hasUnsavedChanges) {
+      setConfirmDiscardOpen(true);
+      return;
+    }
+    setIsOpen(false);
+  }
+
+  function handleKeepEditing() {
+    setConfirmDiscardOpen(false);
+  }
+
+  function handleConfirmDiscard() {
+    setFormState(INITIAL_FORM_STATE);
+    setSavedSnapshot(INITIAL_FORM_STATE);
+    setActiveStop(CREATOR_STOP_IDS[0]);
+    setMaxReachedIndex(0);
+    setTemplateNote("");
+    setMoreHairOpen(false);
+    setTypingFoldOpen(false);
+    setFineTuneFoldOpen(false);
+    setHeartAdvancedFoldOpen(false);
+    setSecondaryPanel(null);
+    setConfirmDiscardOpen(false);
+    setJustSaved(false);
+    setIsOpen(false);
+  }
+
+  function handleSave() {
+    setSavedSnapshot(formState);
+    setJustSaved(true);
+  }
+
+  function handleContinueInEditor() {
+    setTemplateNote(
+      'Keep editing routes to /studio/v2/editor/[id] for the just-saved item once a real creationId exists. Preview only.'
+    );
+  }
+
+  function handleDone() {
+    setTemplateNote("Done closes the modal in place. No navigation, no toast.");
+    setIsOpen(false);
+  }
+
+  function handleReopen() {
+    setIsOpen(true);
+    setJustSaved(false);
+  }
+
+  const fixture = STATES[selectedState][1];
+
+  const stopItems = buildCreatorStopItems(activeStop, maxReachedIndex);
+
+  const secondaryPanelConfig =
+    secondaryPanel === "template"
+      ? {
+          eyebrow: templateVM.eyebrow,
+          title: templateVM.modalTitle,
+          description: templateVM.modalDescription,
+          body: (
+            <TemplatePanelBody
+              tabs={templateVM.tabs}
+              activeTabId={templateVM.activeTabId}
+              searchQuery={templateVM.searchQuery}
+              searchPlaceholder={templateVM.searchPlaceholder}
+              showTemplateGrid={templateVM.showTemplateGrid}
+              templates={templateVM.templates}
+              emptyStateTitle={templateVM.emptyStateTitle}
+              emptyStateDescription={templateVM.emptyStateDescription}
+              onChooseTab={templateVM.onChooseTab}
+              onChangeSearchQuery={templateVM.onChangeSearchQuery}
+              onChooseTemplate={templateVM.onChooseTemplate}
+            />
+          ),
+          onCancel: () => setSecondaryPanel(null),
+        }
+      : secondaryPanel === "palette"
+        ? {
+            eyebrow: paletteVM.modalEyebrow,
+            title: paletteVM.modalTitle,
+            description:
+              "This sets the color of this character's dialogue in chat.",
+            body: (
+              <PalettePanelBody
+                paletteFamilies={paletteVM.paletteFamilies}
+                selectedPaletteId={paletteVM.selectedPaletteId}
+                onChoosePalette={(paletteId) => {
+                  paletteVM.onChoosePalette(paletteId);
+                  setSecondaryPanel(null);
+                }}
+              />
+            ),
+            onCancel: () => setSecondaryPanel(null),
+          }
+        : secondaryPanel === "story"
+          ? {
+              eyebrow: "Next step",
+              title: "Continue into a story",
+              description:
+                "Putting a saved character into a story is coming soon.",
+              body: (
+                <EmptyStateCard message="Story selection is not built in this pass. Once it exists, this will place this character into a story you pick, resumable from any device." />
+              ),
+              onCancel: () => setSecondaryPanel(null),
+            }
+          : null;
+
+  const previewProps = {
+    ...fixture,
+    activeStop,
+    activeIndex: Math.max(
+      0,
+      stopItems.findIndex((stop) => stop.active)
+    ),
+    stopItems,
+    isLastStop: activeStop === "payoff",
+    hasUnsavedChanges,
+    confirmDiscardOpen,
+    justSaved,
+    onSelectStop: setActiveStop,
+    onBack: () =>
+      setActiveStop((current) => {
+        const index = CREATOR_STOP_IDS.indexOf(current);
+        return CREATOR_STOP_IDS[Math.max(index - 1, 0)];
+      }),
+    onNext: () =>
+      setActiveStop((current) => {
+        const index = CREATOR_STOP_IDS.indexOf(current);
+        return CREATOR_STOP_IDS[
+          Math.min(index + 1, CREATOR_STOP_IDS.length - 1)
+        ];
+      }),
+    onSave: handleSave,
+    onFinishAndSave: handleSave,
+    onSaveAndOpenEditor: handleSave,
+    onContinueInEditor: handleContinueInEditor,
+    onDone: handleDone,
+    onClose: requestClose,
+    onKeepEditing: handleKeepEditing,
+    onConfirmDiscard: handleConfirmDiscard,
+    secondaryPanel: secondaryPanelConfig,
+  };
+
+  function selectFixture(index) {
+    const [, fx] = STATES[index];
+    setSelectedState(index);
+    setActiveStop(fx.activeStop);
+    setMaxReachedIndex(Math.max(0, CREATOR_STOP_IDS.indexOf(fx.activeStop)));
+
+    if (fx.hasUnsavedChanges) {
+      setFormState((current) => ({ ...current, name: "Ashira" }));
+    } else {
+      setSavedSnapshot(formState);
+    }
+    setConfirmDiscardOpen(Boolean(fx.confirmDiscardOpen));
+    setJustSaved(Boolean(fx.justSaved));
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--background)] px-6 py-10 text-[var(--foreground)]">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-4 flex flex-wrap gap-2">
+          {["full", "quick"].map((scope) => (
+            <button
+              key={scope}
+              type="button"
+              aria-pressed={fieldScope === scope}
+              onClick={() => setFieldScope(scope)}
+              className={`rounded-lg border px-3 py-2 text-xs uppercase tracking-[0.16em] ${
+                fieldScope === scope
+                  ? "border-[var(--gold-ornament)] bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
+                  : "border-white/10 text-[var(--ink-dim)]"
+              }`}
+            >
+              {scope === "full" ? "Full (legacy default)" : "Quick (Studio hub)"}
+            </button>
+          ))}
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          {STATES.map(([label], index) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => selectFixture(index)}
+              className={`rounded-lg border px-3 py-2 text-xs uppercase tracking-[0.16em] ${
+                index === selectedState
+                  ? "border-[var(--gold-ornament)] bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
+                  : "border-white/10 text-[var(--ink-dim)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+          Fixture-driven UI preview. All seven stops are real. Preview
+          loaded, no character form is connected.
+        </p>
+        {templateNote ? (
+          <p className="mb-4 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+            {templateNote}
+          </p>
+        ) : null}
+
+        {!isOpen ? (
+          <button
+            type="button"
+            onClick={handleReopen}
+            className="cf-btn cf-btn--primary"
+          >
+            Reopen creator
+          </button>
+        ) : null}
+      </div>
+
+      {isOpen ? (
+        <CreatorStopsView
+          {...previewProps}
+          stopContent={
+            activeStop === "name" ? (
+              <NameStopView
+                name={formState.name}
+                title={formState.title}
+                onChangeName={updateField("name")}
+                onChangeTitle={updateField("title")}
+                onOpenTemplate={() => setSecondaryPanel("template")}
+              />
+            ) : activeStop === "kind" ? (
+              <KindStopView
+                species={formState.species}
+                customSpecies={formState.customSpecies}
+                genderPresentation={formState.genderPresentation}
+                customGenderPresentation={formState.customGenderPresentation}
+                shortConcept={formState.shortConcept}
+                mbtiType={formState.mbtiType}
+                westernZodiacSign={formState.westernZodiacSign}
+                eastAsianZodiacSign={formState.eastAsianZodiacSign}
+                onChangeSpecies={updateField("species")}
+                onChangeCustomSpecies={updateField("customSpecies")}
+                onChangeGenderPresentation={updateField("genderPresentation")}
+                onChangeCustomGenderPresentation={updateField(
+                  "customGenderPresentation"
+                )}
+                onChangeShortConcept={updateField("shortConcept")}
+                onChangeMbtiType={updateField("mbtiType")}
+                onChangeWesternZodiacSign={updateField("westernZodiacSign")}
+                onChangeEastAsianZodiacSign={updateField("eastAsianZodiacSign")}
+                typingFoldOpen={typingFoldOpen}
+                onToggleTypingFold={() =>
+                  setTypingFoldOpen((current) => !current)
+                }
+                fieldScope={fieldScope}
+              />
+            ) : activeStop === "face" ? (
+              <FaceStopView
+                skinTone={formState.skinTone}
+                skinCustomValue={formState.skinCustomValue}
+                eyeColor={formState.eyeColor}
+                eyeCustomValue={formState.eyeCustomValue}
+                hairColor={formState.hairColor}
+                hairCustomValue={formState.hairCustomValue}
+                hairLength={formState.hairLength}
+                hairTexture={formState.hairTexture}
+                hairStyle={formState.hairStyle}
+                ethnicAppearance={formState.ethnicAppearance}
+                moreHairOpen={moreHairOpen}
+                onChangeSkinTone={updateField("skinTone")}
+                onChangeSkinCustomValue={updateField("skinCustomValue")}
+                onChangeEyeColor={updateField("eyeColor")}
+                onChangeEyeCustomValue={updateField("eyeCustomValue")}
+                onChangeHairColor={updateField("hairColor")}
+                onChangeHairCustomValue={updateField("hairCustomValue")}
+                onChangeHairLength={updateField("hairLength")}
+                onChangeHairTexture={updateField("hairTexture")}
+                onChangeHairStyle={updateField("hairStyle")}
+                onChangeEthnicAppearance={updateField("ethnicAppearance")}
+                onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
+              />
+            ) : activeStop === "silhouette" ? (
+              <SilhouetteStopView
+                kibbeIdentity={formState.kibbeIdentity}
+                bodyType={formState.bodyType}
+                height={formState.height}
+                build={formState.build}
+                proportions={formState.proportions}
+                chestBust={formState.chestBust}
+                bodyNotes={formState.bodyNotes}
+                appearanceNotes={formState.appearanceNotes}
+                clothingStyle={formState.clothingStyle}
+                defaultClothingMode={formState.defaultClothingMode}
+                defaultOutfitTitle={formState.defaultOutfitTitle}
+                defaultWardrobeTitle={formState.defaultWardrobeTitle}
+                onChangeKibbeIdentity={updateField("kibbeIdentity")}
+                onChangeBodyType={updateField("bodyType")}
+                onChangeHeight={updateField("height")}
+                onChangeBuild={updateField("build")}
+                onChangeProportions={updateField("proportions")}
+                onChangeChestBust={updateField("chestBust")}
+                onChangeBodyNotes={updateField("bodyNotes")}
+                onChangeAppearanceNotes={updateField("appearanceNotes")}
+                onChangeClothingStyle={updateField("clothingStyle")}
+                onChangeDefaultClothingMode={updateField("defaultClothingMode")}
+                onOpenOutfitPicker={() =>
+                  setTemplateNote(
+                    "The outfit browser is not built in this pass."
+                  )
+                }
+                onOpenWardrobePicker={() =>
+                  setTemplateNote(
+                    "The wardrobe browser is not built in this pass."
+                  )
+                }
+                fineTuneFoldOpen={fineTuneFoldOpen}
+                onToggleFineTuneFold={() =>
+                  setFineTuneFoldOpen((current) => !current)
+                }
+                fieldScope={fieldScope}
+              />
+            ) : activeStop === "heart" ? (
+              <HeartStopView
+                outwardPersonality={formState.outwardPersonality}
+                internalPersonality={formState.internalPersonality}
+                speechStyle={formState.speechStyle}
+                movementStyle={formState.movementStyle}
+                greeting={formState.greeting}
+                scenario={formState.scenario}
+                backstory={formState.backstory}
+                verbosityLevel={formState.verbosityLevel}
+                philosophy={formState.philosophy}
+                interests={formState.interests}
+                relationshipToPlayer={formState.relationshipToPlayer}
+                voiceModuleIds={formState.voiceModuleIds}
+                personalityNotes={formState.personalityNotes}
+                onChangeOutwardPersonality={updateField("outwardPersonality")}
+                onChangeInternalPersonality={updateField("internalPersonality")}
+                onChangeSpeechStyle={updateField("speechStyle")}
+                onChangeMovementStyle={updateField("movementStyle")}
+                onChangeGreeting={updateField("greeting")}
+                onChangeScenario={updateField("scenario")}
+                onChangeBackstory={updateField("backstory")}
+                onChangeVerbosityLevel={updateField("verbosityLevel")}
+                onChangePhilosophy={updateField("philosophy")}
+                onChangeInterests={updateField("interests")}
+                onChangeRelationshipToPlayer={updateField(
+                  "relationshipToPlayer"
+                )}
+                onOpenVoiceModulePicker={() =>
+                  setTemplateNote(
+                    "The voice module picker is not built in this pass."
+                  )
+                }
+                onChangePersonalityNotes={updateField("personalityNotes")}
+                advancedFoldOpen={heartAdvancedFoldOpen}
+                onToggleAdvancedFold={() =>
+                  setHeartAdvancedFoldOpen((current) => !current)
+                }
+                fieldScope={fieldScope}
+              />
+            ) : activeStop === "seal" ? (
+              <SealStopView
+                visibility={formState.visibility}
+                contentRating={formState.contentRating}
+                age={formState.age}
+                renderingStyle={formState.renderingStyle}
+                colorPaletteLabel={paletteVM.triggerPalette.label}
+                colorPaletteSwatches={paletteVM.triggerPalette.swatches}
+                onChangeVisibility={updateField("visibility")}
+                onChangeContentRating={updateField("contentRating")}
+                onChangeAge={updateField("age")}
+                onChangeRenderingStyle={updateField("renderingStyle")}
+                onOpenColorPalette={() => setSecondaryPanel("palette")}
+                fieldScope={fieldScope}
+              />
+            ) : activeStop === "payoff" ? (
+              <PayoffStopView
+                name={formState.name}
+                title={formState.title}
+                shortConcept={formState.shortConcept}
+                species={formState.species}
+                customSpecies={formState.customSpecies}
+                genderPresentation={formState.genderPresentation}
+                customGenderPresentation={formState.customGenderPresentation}
+                clothingStyle={formState.clothingStyle}
+                creatorDirectives={formState.creatorDirectives}
+                extraRuntimeNotes={formState.extraRuntimeNotes}
+                onChangeCreatorDirectives={updateField("creatorDirectives")}
+                onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
+                onOpenStoryPanel={() => setSecondaryPanel("story")}
+                fieldScope={fieldScope}
+              />
+            ) : null
+          }
+        />
+      ) : null}
+    </main>
+  );
+}

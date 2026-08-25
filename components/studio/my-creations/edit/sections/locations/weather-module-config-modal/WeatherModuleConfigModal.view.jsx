@@ -1,5 +1,21 @@
-import { CloudSun, Loader2, Plus, Save, Trash2, X } from "lucide-react";
+import { Loader2, Plus, Save, Trash2 } from "lucide-react";
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitFormField from "@/components/kit/KitFormField";
+import {
+  CheckboxField,
+  ReadOnlyField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
+// Ruling 3 (ED1G): hand-rolled fixed-inset overlay retired onto
+// KitModalFrame (A4 mobile bottom-anchor law, B5/B8 unsaved-dismiss
+// confirm, B1 fade dividers). LARGE width tier (section 8): the
+// module identity grid, weather library, and per-condition cards are
+// genuinely multi-column content. Section 5 de-nesting: EditorPanel's
+// bordered/backgrounded box is retired for the inset-hairline
+// sub-group pattern, one bordered depth (the frame) inside this
+// surface.
 export default function WeatherModuleConfigModalView({
   isInitializing = false,
   loadingMessage = "Loading weather module...",
@@ -7,6 +23,7 @@ export default function WeatherModuleConfigModalView({
   title = "Configure In-World Weather",
   description = "",
   message = "",
+  messageTone = "success",
   moduleTitle = "",
   priority = "45",
   moduleDescription = "",
@@ -29,6 +46,7 @@ export default function WeatherModuleConfigModalView({
   allowWeatherComplications = false,
   respectIndoorOutdoorLogic = true,
   isSaving = false,
+  hasUnsavedChanges = false,
   footerNote = "",
   onClose = null,
   onSave = null,
@@ -50,54 +68,61 @@ export default function WeatherModuleConfigModalView({
 }) {
   if (isInitializing) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-        <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-6 text-sm text-[var(--muted)]">
+      <KitModalFrame onClose={onClose} panelClassName="max-w-md" ariaLabel={title}>
+        <div className="p-[var(--space-6)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
           {loadingMessage}
         </div>
-      </div>
+      </KitModalFrame>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)]">
-              <CloudSun size={22} />
-            </div>
-
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
-                {eyebrow}
-              </p>
-              <h2 className="mt-2 font-display text-4xl">{title}</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-                {description}
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-            aria-label="Close modal"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <div className="max-h-[75vh] overflow-y-auto p-5">
-          {message ? (
-            <p className="mb-5 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
-              {message}
+    <KitModalFrame
+      onClose={onClose}
+      panelClassName="max-w-4xl"
+      hasUnsavedChanges={hasUnsavedChanges}
+      ariaLabel={title}
+    >
+      <div className="flex max-h-[92dvh] flex-col">
+        <div className="border-b border-[var(--line-fade)] p-[var(--space-5)]">
+          <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+            {eyebrow}
+          </p>
+          <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-heading-m)] leading-[var(--lh-heading-m)] min-[700px]:text-[length:var(--text-heading)] min-[700px]:leading-[var(--lh-heading)]">
+            {title}
+          </h2>
+          {description ? (
+            <p className="mt-[var(--space-2)] max-w-3xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+              {description}
             </p>
           ) : null}
+        </div>
 
-          <div className="grid gap-5">
-            <EditorPanel title="Module Identity">
-              <div className="grid gap-4 md:grid-cols-2">
+        <div className="flex-1 overflow-y-auto p-[var(--space-5)] pb-[var(--space-6)]">
+          {message ? (
+            <span
+              role={messageTone === "error" ? "alert" : undefined}
+              aria-live="polite"
+              className={`mb-[var(--space-5)] inline-flex items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] ${
+                messageTone === "error"
+                  ? "text-[var(--status-danger)]"
+                  : "text-[var(--status-success)]"
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 flex-none rounded-full ${
+                  messageTone === "error"
+                    ? "bg-[var(--status-danger)]"
+                    : "bg-[var(--status-success)]"
+                }`}
+              />
+              <span className="inline">{message}</span>
+            </span>
+          ) : null}
+
+          <div className="grid gap-[var(--space-6)]">
+            <Group title="Module Identity">
+              <div className="grid gap-[var(--space-4)] md:grid-cols-2">
                 <TextField
                   label="Module Title"
                   value={moduleTitle}
@@ -116,17 +141,17 @@ export default function WeatherModuleConfigModalView({
                     label="Description"
                     value={moduleDescription}
                     onChange={onModuleDescriptionChange}
-                    rows={3}
+                    maxLength={SHORT_LONGFORM_MAX_LENGTH}
                   />
                 </div>
 
                 <ReadOnlyField label="Module Type" value={moduleTypeLabel} />
                 <ReadOnlyField label="Status" value={moduleStatusLabel} />
               </div>
-            </EditorPanel>
+            </Group>
 
-            <EditorPanel title="Current Weather">
-              <div className="grid gap-4 md:grid-cols-3">
+            <Group title="Current Weather">
+              <div className="grid gap-[var(--space-4)] md:grid-cols-3">
                 <SelectField
                   label="Current Condition"
                   value={currentConditionId}
@@ -148,10 +173,10 @@ export default function WeatherModuleConfigModalView({
                   placeholder="Old Crescent City"
                 />
               </div>
-            </EditorPanel>
+            </Group>
 
-            <EditorPanel title="Add Recommended Conditions">
-              <div className="grid gap-4 md:grid-cols-[1fr_auto_auto] md:items-end">
+            <Group title="Add Recommended Conditions">
+              <div className="grid gap-[var(--space-4)] md:grid-cols-[1fr_auto_auto] md:items-end">
                 <SelectField
                   label="Recommended Condition"
                   value={selectedPresetId}
@@ -162,40 +187,37 @@ export default function WeatherModuleConfigModalView({
                 <button
                   type="button"
                   onClick={() => onAddRecommendedCondition?.()}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Plus size={15} />
-                  Add Recommended
+                  Add recommended
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onAddCustomCondition?.()}
-                  className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  className="cf-btn cf-btn--secondary"
                 >
-                  Add Custom Draft
+                  Add custom draft
                 </button>
               </div>
 
-              <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
                 Recommended conditions are preferred. Custom weather can be refined
                 later with creator guidance.
               </p>
-            </EditorPanel>
+            </Group>
 
-            <EditorPanel title="Weather Conditions">
-              <div className="grid gap-4">
+            <Group title="Weather Conditions">
+              <div className="grid gap-[var(--space-4)]">
                 {conditionCards.map((condition) => (
-                  <WeatherConditionCard
-                    key={condition.id}
-                    condition={condition}
-                  />
+                  <WeatherConditionCard key={condition.id} condition={condition} />
                 ))}
               </div>
-            </EditorPanel>
+            </Group>
 
-            <EditorPanel title="Presentation Preferences">
-              <div className="grid gap-4 md:grid-cols-3">
+            <Group title="Presentation Preferences">
+              <div className="grid gap-[var(--space-4)] md:grid-cols-3">
                 <SelectField
                   label="Detail Level"
                   value={detailLevel}
@@ -218,7 +240,7 @@ export default function WeatherModuleConfigModalView({
                 />
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
+              <div className="mt-[var(--space-5)] grid gap-[var(--space-3)] md:grid-cols-3">
                 <CheckboxField
                   label="Surface Sensory Notes"
                   checked={surfaceSensoryNotes}
@@ -237,18 +259,20 @@ export default function WeatherModuleConfigModalView({
                   onChange={onRespectIndoorOutdoorLogicChange}
                 />
               </div>
-            </EditorPanel>
+            </Group>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-[var(--muted)]">{footerNote}</p>
+        <div className="flex flex-col gap-[var(--space-3)] border-t border-[var(--line-fade)] p-[var(--space-5)] sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {footerNote}
+          </p>
 
-          <div className="flex shrink-0 gap-3">
+          <div className="flex shrink-0 gap-[var(--space-3)]">
             <button
               type="button"
               onClick={() => onClose?.()}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
               Close
             </button>
@@ -257,55 +281,58 @@ export default function WeatherModuleConfigModalView({
               type="button"
               onClick={() => onSave?.()}
               disabled={isSaving}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:opacity-50"
+              className="cf-btn cf-btn--primary"
             >
               {isSaving ? (
                 <Loader2 size={15} className="animate-spin" />
               ) : (
                 <Save size={15} />
               )}
-              Save Weather Module
+              Save weather module
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </KitModalFrame>
   );
 }
 
 function WeatherConditionCard({ condition }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-black/25 p-4">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+    <section className="border-t border-[var(--line-whisper)] pt-[var(--space-4)] first:border-t-0 first:pt-0">
+      <div className="flex flex-col gap-[var(--space-4)] lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="font-display text-3xl">{condition.label}</p>
-          <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+          <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+            {condition.label}
+          </p>
+          <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             {condition.summary}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-[var(--space-2)]">
           <button
             type="button"
             onClick={() => condition.onSetCurrent?.()}
             disabled={condition.isCurrent}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:opacity-50"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
-            {condition.isCurrent ? "Current" : "Set Current"}
+            {condition.isCurrent ? "Current" : "Set current"}
           </button>
 
           <button
             type="button"
             onClick={() => condition.onRemove?.()}
-            className="rounded-xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+            className="cf-btn cf-btn--danger cf-btn--sm"
             aria-label={`Remove ${condition.label}`}
           >
             <Trash2 size={13} />
+            Remove
           </button>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-3">
+      <div className="mt-[var(--space-4)] grid gap-[var(--space-4)] md:grid-cols-3">
         <TextField
           label="Condition Name"
           value={condition.label}
@@ -348,7 +375,7 @@ function WeatherConditionCard({ condition }) {
         />
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
+      <div className="mt-[var(--space-3)] grid gap-[var(--space-3)] md:grid-cols-3">
         <CheckboxField
           label="Available Here"
           checked={condition.allowed}
@@ -368,12 +395,12 @@ function WeatherConditionCard({ condition }) {
         />
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-4)] grid gap-[var(--space-4)] md:grid-cols-2">
         <TextAreaField
           label="Sensory Notes"
           value={condition.sensoryNotesText}
           onChange={condition.onSensoryNotesChange}
-          rows={5}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           helperText="Use lines like Sight: ..., Sound: ..., Touch: ..., Smell: ..."
         />
 
@@ -381,13 +408,13 @@ function WeatherConditionCard({ condition }) {
           label="Composer Guidance"
           value={condition.composerGuidance}
           onChange={condition.onComposerGuidanceChange}
-          rows={5}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
           helperText="Short guidance for how this weather should appear in scenes."
         />
       </div>
 
       {condition.blocked ? (
-        <p className="mt-4 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-xs leading-5 text-red-100">
+        <p className="mt-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)]">
           This condition is known to the weather library but blocked for this location.
         </p>
       ) : null}
@@ -395,11 +422,15 @@ function WeatherConditionCard({ condition }) {
   );
 }
 
-function EditorPanel({ title, children }) {
+// Section 5 de-nesting: the inset-hairline sub-group pattern, a tier
+// 4 group label, no border/background box.
+function Group({ title, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
-      <h3 className="font-display text-3xl">{title}</h3>
-      <div className="mt-5">{children}</div>
+    <section className="border-t border-[var(--line-whisper)] pt-[var(--space-4)] first:border-t-0 first:pt-0">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        {title}
+      </p>
+      <div className="mt-[var(--space-4)]">{children}</div>
     </section>
   );
 }
@@ -407,90 +438,52 @@ function EditorPanel({ title, children }) {
 function TextField({ label, value = "", onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
       />
-    </label>
-  );
-}
-
-function TextAreaField({
-  label,
-  value = "",
-  onChange,
-  rows = 5,
-  helperText,
-}) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <textarea
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        rows={rows}
-        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-      />
-      {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
-          {helperText}
-        </span>
-      ) : null}
     </label>
   );
 }
 
 function SelectField({ label, value = "", options = [], onChange }) {
+  const normalizedOptions = options.map((option) =>
+    typeof option === "object" && option !== null
+      ? option
+      : { value: option, label: option }
+  );
+
   return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <KitFormFieldSelect
+      label={label}
+      value={value}
+      options={normalizedOptions}
+      onSelect={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
-function CheckboxField({ label, checked = false, onChange }) {
+// Native-select conversion (ED1G ruling): the branded kit dropdown
+// grammar, same pattern SharedFields.SelectField uses (KitFormField
+// variant="select", which composes KitDropdown). Kept local here
+// instead of importing SharedFields.SelectField because this modal's
+// SelectField also serves the per-condition card grid with a plain
+// `options` array of raw values, which SharedFields.SelectField
+// already normalizes identically; this thin wrapper keeps the call
+// sites in this file unchanged.
+function KitFormFieldSelect({ label, value, options, onSelect }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
-      <input
-        type="checkbox"
-        checked={Boolean(checked)}
-        onChange={(event) => onChange?.(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
-      />
-      <span>{label}</span>
-    </label>
-  );
-}
-
-function ReadOnlyField({ label, value }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
-        {value || "Not set"}
-      </div>
-    </label>
+    <KitFormField
+      variant="select"
+      label={label}
+      value={value}
+      options={options}
+      onSelect={onSelect}
+    />
   );
 }

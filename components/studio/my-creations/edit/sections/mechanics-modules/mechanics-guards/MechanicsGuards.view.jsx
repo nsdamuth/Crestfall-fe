@@ -11,27 +11,19 @@ import {
   MECHANICS_GUARD_OPERATORS,
   MECHANICS_GUARD_PUBLIC_VISIBILITIES,
 } from "./MechanicsGuards.contract.js";
+import {
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+  TextField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function valueToInput(value) {
   if (value === null || value === undefined) return "";
   return String(value);
-}
-
-function TextField({ label, value, onChange, placeholder, type = "text" }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-      />
-    </label>
-  );
 }
 
 function SmallActionButton({ children, onClick, disabled = false }) {
@@ -40,7 +32,7 @@ function SmallActionButton({ children, onClick, disabled = false }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--primary cf-btn--sm"
     >
       {children}
     </button>
@@ -56,36 +48,30 @@ function GuardConditionCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className={EYEBROW_CLASS}>
           Condition {conditionIndex + 1}
         </p>
         <button
           type="button"
           onClick={removeCondition}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove condition"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Condition Type</span>
-          <select
-            value={condition.conditionType}
-            onChange={(event) =>
-              patchCondition({ conditionType: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            {MECHANICS_GUARD_CONDITION_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Condition Type"
+          value={condition.conditionType}
+          onChange={(value) => patchCondition({ conditionType: value })}
+          options={MECHANICS_GUARD_CONDITION_TYPES.map((type) => ({
+            value: type,
+            label: type,
+          }))}
+        />
 
         <TextField
           label="Target ID"
@@ -101,20 +87,15 @@ function GuardConditionCard({
           placeholder="value"
         />
 
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Operator</span>
-          <select
-            value={condition.operator}
-            onChange={(event) => patchCondition({ operator: event.target.value })}
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            {MECHANICS_GUARD_OPERATORS.map((operator) => (
-              <option key={operator} value={operator}>
-                {operator}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectField
+          label="Operator"
+          value={condition.operator}
+          onChange={(value) => patchCondition({ operator: value })}
+          options={MECHANICS_GUARD_OPERATORS.map((operator) => ({
+            value: operator,
+            label: operator,
+          }))}
+        />
 
         <TextField
           label="Value"
@@ -145,7 +126,7 @@ function GuardCard({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/25">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -153,21 +134,21 @@ function GuardCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Guard
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                 {guard.label || guard.id || `Guard ${guardIndex + 1}`}
               </h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {guard.summary}
               </p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -176,10 +157,11 @@ function GuardCard({
         <button
           type="button"
           onClick={() => removeGuard(guardIndex)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove guard"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -204,85 +186,57 @@ function GuardCard({
               placeholder="Boundary Warning Lock"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Enforcement</span>
-              <select
-                value={guard.enforcement}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { enforcement: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_GUARD_ENFORCEMENTS.map((enforcement) => (
-                  <option key={enforcement} value={enforcement}>
-                    {enforcement}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Enforcement"
+              value={guard.enforcement}
+              onChange={(value) => patchGuard(guardIndex, { enforcement: value })}
+              options={MECHANICS_GUARD_ENFORCEMENTS.map((enforcement) => ({
+                value: enforcement,
+                label: enforcement,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Condition Mode</span>
-              <select
-                value={guard.mode}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { mode: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_GUARD_MODES.map((mode) => (
-                  <option key={mode} value={mode}>
-                    {mode}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Condition Mode"
+              value={guard.mode}
+              onChange={(value) => patchGuard(guardIndex, { mode: value })}
+              options={MECHANICS_GUARD_MODES.map((mode) => ({
+                value: mode,
+                label: mode,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Composer Visibility</span>
-              <select
-                value={guard.composerVisibility}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    composerVisibility: event.target.value,
-                  })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_GUARD_COMPOSER_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Composer Visibility"
+              value={guard.composerVisibility}
+              onChange={(value) =>
+                patchGuard(guardIndex, { composerVisibility: value })
+              }
+              options={MECHANICS_GUARD_COMPOSER_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Public Visibility</span>
-              <select
-                value={guard.publicVisibility}
-                onChange={(event) =>
-                  patchGuard(guardIndex, { publicVisibility: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_GUARD_PUBLIC_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Public Visibility"
+              value={guard.publicVisibility}
+              onChange={(value) => patchGuard(guardIndex, { publicVisibility: value })}
+              options={MECHANICS_GUARD_PUBLIC_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
           </div>
 
-          <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-5 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS}>
                 Conditions
               </p>
               <SmallActionButton onClick={() => addCondition(guardIndex)}>
                 <Plus size={14} />
-                Add Condition
+                Add condition
               </SmallActionButton>
             </div>
 
@@ -303,63 +257,48 @@ function GuardCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 text-sm text-[var(--ink-faint)]">
                 No conditions yet. Add at least one condition for the guard to evaluate.
               </p>
             )}
           </div>
 
           <div className="mt-5 grid gap-4">
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-                On Fail Summary
-              </span>
-              <textarea
-                value={guard.onFail.summary}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onFail: { summary: event.target.value },
-                  })
-                }
-                rows={2}
-                placeholder="The player has reached too many boundary warnings."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Fail Summary"
+              value={guard.onFail.summary}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onFail: { summary: value },
+                })
+              }
+              placeholder="The player has reached too many boundary warnings."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
 
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-                On Fail Composer Guidance
-              </span>
-              <textarea
-                value={guard.onFail.composerGuidance}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onFail: { composerGuidance: event.target.value },
-                  })
-                }
-                rows={3}
-                placeholder="Do not continue warm, intimate, trusting, or emotionally escalating content."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Fail Composer Guidance"
+              value={guard.onFail.composerGuidance}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onFail: { composerGuidance: value },
+                })
+              }
+              placeholder="Do not continue warm, intimate, trusting, or emotionally escalating content."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
 
-            <label className="block">
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-                On Pass Summary
-              </span>
-              <textarea
-                value={guard.onPass.summary}
-                onChange={(event) =>
-                  patchGuard(guardIndex, {
-                    onPass: { summary: event.target.value },
-                  })
-                }
-                rows={2}
-                placeholder="Boundary warning count is below the lock threshold."
-                className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-              />
-            </label>
+            <TextAreaField
+              label="On Pass Summary"
+              value={guard.onPass.summary}
+              onChange={(value) =>
+                patchGuard(guardIndex, {
+                  onPass: { summary: value },
+                })
+              }
+              placeholder="Boundary warning count is below the lock threshold."
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
+            />
           </div>
         </div>
       ) : null}
@@ -378,14 +317,14 @@ export default function MechanicsGuardsView({
   removeCondition,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">Guards</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Guards</h3>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic lock and guidance rules. Guards save into
             instanceData.guards and are evaluated by middleware before the
             composer response is finalized.
@@ -393,7 +332,7 @@ export default function MechanicsGuardsView({
         </div>
         <SmallActionButton onClick={addGuard}>
           <Plus size={14} />
-          Add Guard
+          Add guard
         </SmallActionButton>
       </div>
 
@@ -414,9 +353,9 @@ export default function MechanicsGuardsView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
           No guards defined yet. Add a hard lock, soft lock, or guidance rule.
-        </div>
+        </p>
       )}
     </section>
   );

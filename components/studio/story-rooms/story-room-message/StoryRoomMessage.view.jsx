@@ -69,7 +69,7 @@ function renderInlineMarkup(text, keyPrefix) {
 
     if (token.type === "bold") {
       return (
-        <strong key={key} className="font-semibold text-[var(--foreground)]">
+        <strong key={key} className="font-semibold text-[var(--ink)]">
           {token.value}
         </strong>
       );
@@ -77,7 +77,7 @@ function renderInlineMarkup(text, keyPrefix) {
 
     if (token.type === "action") {
       return (
-        <em key={key} className="italic text-[var(--muted-gold)]/90">
+        <em key={key} className="italic text-[var(--gold-ornament)]/90">
           {token.value}
         </em>
       );
@@ -106,7 +106,7 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
       return (
         <blockquote
           key={`block-${blockIndex}`}
-          className="my-3 border-l-2 border-[var(--muted-gold)]/50 pl-4 text-[var(--muted)]"
+          className="my-3 border-l-2 border-[var(--gold-ornament)]/50 pl-4 text-[var(--ink-dim)]"
         >
           {quoteLines.map((line, lineIndex) => (
             <span key={`quote-${blockIndex}-${lineIndex}`}>
@@ -138,7 +138,7 @@ function getSegmentStyle(segment, paletteColors) {
         ? paletteColors.dialogue
         : segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
           ? paletteColors.narration
-          : "var(--foreground)",
+          : "var(--ink)",
     fontStyle:
       segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
         ? "italic"
@@ -193,7 +193,7 @@ function SemanticMessageBody({
       </div>
 
       {statusBlocks.length ? (
-        <div className="mt-4 space-y-2 border-t border-[var(--muted-gold)]/20 pt-3 text-xs leading-5 text-[var(--muted-gold)]/90">
+        <div className="mt-4 space-y-2 border-t border-[var(--gold-ornament)]/20 pt-3 text-xs leading-5 text-[var(--gold-ornament)]/90">
           {statusBlocks.map((block, index) => (
             <div
               key={block.id || `status-block-${index}`}
@@ -210,11 +210,11 @@ function SemanticMessageBody({
 
 function getArticleClassName(surfaceTone) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
-    return "ml-auto max-w-3xl border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10";
+    return "ml-auto max-w-3xl border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10";
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.OPENING) {
-    return "border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/5";
+    return "border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5";
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
@@ -222,7 +222,7 @@ function getArticleClassName(surfaceTone) {
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR) {
-    return "border-[var(--muted-gold)]/25 bg-black/30";
+    return "border-[var(--gold-ornament)]/25 bg-black/30";
   }
 
   return "border-white/10 bg-black/25";
@@ -230,21 +230,21 @@ function getArticleClassName(surfaceTone) {
 
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.OPENING) {
-    return "text-sm text-[var(--foreground)]/90";
+    return "text-sm text-[var(--ink)]/90";
   }
 
   if (
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR &&
     !hasSemanticPresentation
   ) {
-    return "font-serif text-lg italic text-[var(--muted)]";
+    return "font-serif text-lg italic text-[var(--ink-dim)]";
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
     return "text-sm text-sky-100/80";
   }
 
-  return "text-[var(--foreground)]";
+  return "text-[var(--ink)]";
 }
 
 export default function StoryRoomMessageView({
@@ -271,7 +271,7 @@ export default function StoryRoomMessageView({
 
   return (
     <article
-      className={`rounded-2xl border p-4 ${getArticleClassName(surfaceTone)}`}
+      className={`rounded-[var(--radius-md)] border p-4 ${getArticleClassName(surfaceTone)}`}
       style={
         hasSemanticPresentation
           ? { borderColor: resolvedPaletteColors.border }
@@ -296,7 +296,7 @@ export default function StoryRoomMessageView({
 
           <div className="min-w-0">
             {openingLabel ? (
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 {openingLabel}
               </p>
             ) : null}
@@ -345,7 +345,7 @@ export default function StoryRoomMessageView({
           Message failed to send. Copy and retry.
         </p>
       ) : deliveryState === STORY_ROOM_MESSAGE_DELIVERY_STATES.SENDING ? (
-        <p className="mt-3 text-xs text-[var(--muted)]">Sending…</p>
+        <p className="mt-3 text-xs text-[var(--ink-dim)]">Sending…</p>
       ) : null}
     </article>
   );
@@ -353,7 +353,7 @@ export default function StoryRoomMessageView({
 
 function StatusPill({ children }) {
   return (
-    <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+    <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
       {children}
     </span>
   );

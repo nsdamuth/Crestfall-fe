@@ -2,6 +2,9 @@
 
 import { Plus } from "lucide-react";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 export default function MechanicsCommandEffectsView({
   variant,
   effects = [],
@@ -13,13 +16,13 @@ export default function MechanicsCommandEffectsView({
   numericArgumentOptions = [],
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">{variant.title}</p>
-          {variant.description ? <p className="mt-2 text-xs leading-5 text-[var(--muted)]">{variant.description}</p> : null}
+          <p className={EYEBROW_CLASS}>{variant.title}</p>
+          {variant.description ? <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{variant.description}</p> : null}
         </div>
-        <button type="button" onClick={addEffect} className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]">
+        <button type="button" onClick={addEffect} className="cf-btn cf-btn--primary cf-btn--sm">
           <Plus size={14} />
           {variant.addLabel}
         </button>
@@ -41,7 +44,7 @@ export default function MechanicsCommandEffectsView({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm leading-6 text-[var(--muted)]">{variant.emptyMessage}</p>
+        <p className="mt-4 text-sm leading-6 text-[var(--ink-faint)]">{variant.emptyMessage}</p>
       )}
     </div>
   );

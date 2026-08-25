@@ -11,13 +11,13 @@ const DEFAULT_COPY = Object.freeze({
     "Completion normally returns the same chat to open-world play. Cast, world state, Mechanics, and memory remain continuous until an authored trigger makes the next node available.",
   defaultTransitionLabel: "Default Transition",
   defaultTransitionHelp:
-    "Used when a node is added or becomes non-final. The final node always completes the Storyline.",
+    "Used when a node is added or becomes non-final. The final node always completes the Adventure.",
   continuityEyebrow: "Continuity Always Preserved",
   continuityDescription:
-    "Same chat, participants, world state, and memory. These are required Storyline invariants and are not optional toggles.",
+    "Same chat, participants, world state, and memory. These are required Adventure invariants and are not optional toggles.",
   guidanceLabel: "Open-World Guidance",
   guidancePlaceholder:
-    "Describe what remains available between Storyline nodes without deciding what the player does.",
+    "Describe what remains available between Adventure nodes without deciding what the player does.",
   pressureCadenceLabel: "Pressure Cadence Guidance",
   pressureCadencePlaceholder:
     "Optional: explain how unresolved consequences may surface naturally without repeated nagging.",

@@ -1,6 +1,7 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CharacterBodySectionView({
@@ -25,7 +26,7 @@ export default function CharacterBodySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         <div className="md:col-span-2">{kibbePresetControl}</div>
 
         {bodyTypeControl}
@@ -39,6 +40,7 @@ export default function CharacterBodySectionView({
             value={bodyNotesValue}
             onChange={(value) => onChangeBodyNotes?.(value)}
             placeholder={bodyNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

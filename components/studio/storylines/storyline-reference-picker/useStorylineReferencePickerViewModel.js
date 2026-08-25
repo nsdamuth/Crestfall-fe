@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 const STORY_TAB = "STORY";
 const SCENARIO_TAB = "SCENARIO";
@@ -61,12 +61,12 @@ export function getStorylineReferencePickerViewProps({
     .map((option) => normalizeOption(option, safeTab, selectedIds));
 
   return {
-    eyebrow: "Storyline Sequence",
+    eyebrow: "Adventure Sequence",
     title: "Add a Story or Scenario",
     description:
       "Stories load a complete playable package. Scenarios apply a reusable narrative structure to the continuing chat.",
     dialogTitleId: "storyline-reference-picker-title",
-    closeLabel: "Close Storyline reference picker",
+    backLabel: "Back to Adventure",
     tabs: [
       {
         id: STORY_TAB,
@@ -102,34 +102,6 @@ export function useStorylineReferencePickerViewModel({
 }) {
   const [activeTab, setActiveTab] = useState(STORY_TAB);
   const [query, setQuery] = useState("");
-  const [portalTarget, setPortalTarget] = useState(null);
-
-  useEffect(() => {
-    const portalNode = document.createElement("div");
-    const previousOverflow = document.body.style.overflow;
-
-    portalNode.dataset.crestfallStorylineReferencePickerPortal = "true";
-    portalNode.style.position = "relative";
-    portalNode.style.zIndex = "2147483647";
-
-    document.body.appendChild(portalNode);
-    document.body.style.overflow = "hidden";
-    setPortalTarget(portalNode);
-
-    function handleKeyDown(event) {
-      if (event.key === "Escape") {
-        onClose?.();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
-      portalNode.remove();
-    };
-  }, [onClose]);
 
   const rawOptions = useMemo(
     () => ({
@@ -173,8 +145,5 @@ export function useStorylineReferencePickerViewModel({
     ]
   );
 
-  return {
-    portalTarget,
-    ...viewProps,
-  };
+  return viewProps;
 }

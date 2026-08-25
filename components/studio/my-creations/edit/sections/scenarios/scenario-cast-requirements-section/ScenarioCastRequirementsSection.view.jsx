@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { ExternalLink, X } from "lucide-react";
 
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -17,19 +17,23 @@ export default function ScenarioCastRequirementsSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5 md:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-5)] md:grid-cols-2">
         {fields.map((field) => (
           <ReferenceSelectorField key={field.id} {...field} />
         ))}
       </div>
 
       {referenceLoadError ? (
-        <p className="mt-4 text-sm text-red-200">{referenceLoadError}</p>
+        <p className="mt-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--status-danger)]">
+          {referenceLoadError}
+        </p>
       ) : null}
     </div>
   );
 }
 
+// 4.5 picker field: label row, standard bed, a right-edge "opens a
+// dialog" affordance glyph distinct from the select chevron.
 function ReferenceSelectorField({
   label,
   description,
@@ -39,30 +43,40 @@ function ReferenceSelectorField({
 }) {
   return (
     <div className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
 
       <button
         type="button"
         onClick={onOpen}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/50"
+        className="relative mt-[var(--space-1)] w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] py-[var(--space-3)] pl-[var(--space-4)] pr-[calc(var(--space-4)+1.25rem)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
-        <span className="block text-sm text-[var(--foreground)]">
+        <ExternalLink
+          size={14}
+          aria-hidden="true"
+          className="absolute right-[var(--space-4)] top-1/2 -translate-y-1/2 text-[var(--ink-faint)]"
+        />
+
+        <span
+          className={`block text-[length:var(--text-body)] leading-[var(--lh-body)] ${
+            selectedItems.length ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"
+          }`}
+        >
           {selectedItems.length
             ? `${selectedItems.length} selected`
             : "Select creations..."}
         </span>
-
-        {description ? (
-          <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
-            {description}
-          </span>
-        ) : null}
       </button>
 
+      {description ? (
+        <span className="mt-[var(--space-2)] block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          {description}
+        </span>
+      ) : null}
+
       {selectedItems.length ? (
-        <div className="mt-3 grid gap-2">
+        <div className="mt-[var(--space-3)] grid gap-[var(--space-2)]">
           {selectedItems.map((item) => (
             <SelectedReferenceChip
               key={item.id}
@@ -72,7 +86,7 @@ function ReferenceSelectorField({
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           No references selected.
         </p>
       )}
@@ -82,8 +96,8 @@ function ReferenceSelectorField({
 
 function SelectedReferenceChip({ item, onRemove }) {
   return (
-    <article className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
+    <article className="flex items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
@@ -91,15 +105,15 @@ function SelectedReferenceChip({ item, onRemove }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="font-display text-lg">{item.initial}</span>
+          <span className="text-[length:var(--text-body)] font-medium">{item.initial}</span>
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-1 font-display text-lg leading-none text-[var(--foreground)]">
+        <p className="line-clamp-1 text-[length:var(--text-body)] leading-none text-[var(--ink)]">
           {item.title}
         </p>
-        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           {item.typeLabel}
         </p>
       </div>
@@ -107,10 +121,11 @@ function SelectedReferenceChip({ item, onRemove }) {
       <button
         type="button"
         onClick={onRemove}
-        className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-300/30 hover:text-red-200"
+        className="cf-btn cf-btn--danger cf-btn--sm"
         aria-label={`Remove ${item.title}`}
       >
         <X size={14} />
+        Remove
       </button>
     </article>
   );

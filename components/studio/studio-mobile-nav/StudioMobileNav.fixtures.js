@@ -34,7 +34,6 @@ const bottomLinks = Object.freeze([
 ]);
 
 const baseFixture = Object.freeze({
-  brandLabel: "Crestfall",
   brandHref: "/studio",
   drawerEyebrow: "Crestfall",
   drawerTitle: "Studio",
@@ -45,7 +44,6 @@ const baseFixture = Object.freeze({
   logoutHref: "/logout",
   accountHref: "/studio/account",
   accountAriaLabel: "creator@example.com",
-  openMenuAriaLabel: "Open menu",
   closeMenuAriaLabel: "Close menu",
   closeOverlayAriaLabel: "Close menu overlay",
   open: false,
@@ -67,4 +65,15 @@ export const studioMobileNavSocialOpenFixture = Object.freeze({
   ...baseFixture,
   open: true,
   socialOpen: true,
+});
+
+export const studioMobileNavActiveDockTileFixture = Object.freeze({
+  ...baseFixture,
+  bottomLinks: Object.freeze(
+    bottomLinks.map((link) =>
+      link.href === "/studio/games"
+        ? Object.freeze({ ...link, isActive: true })
+        : link,
+    ),
+  ),
 });

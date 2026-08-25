@@ -52,7 +52,7 @@ export default function LoginPage() {
     }
   return (
     <main className="min-h-screen px-6 py-20 text-[var(--foreground)] sm:px-10 lg:px-16">
-      <section className="mx-auto max-w-xl rounded-2xl border border-[var(--muted-gold)]/25 bg-black/45 p-8 shadow-2xl backdrop-blur-md">
+      <section className="mx-auto max-w-xl rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/45 p-8 shadow-2xl backdrop-blur-md">
        <div className="flex items-start justify-between">
         <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted-gold)]">
@@ -86,7 +86,7 @@ export default function LoginPage() {
         type="button"
         onClick={handleGoogleLogin}
         disabled={isSubmitting}
-        className="mt-8 w-full rounded-xl border border-[var(--muted-gold)]/40 bg-black/45 px-4 py-3 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/20 disabled:cursor-not-allowed disabled:opacity-60"
+        className="cf-btn cf-btn--secondary mt-8 w-full"
         >
         Continue with Google
         </button>
@@ -110,7 +110,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-[var(--muted-gold)]/25 bg-black/60 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/70"
+              className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/60 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/70"
               placeholder="you@example.com"
             />
           </label>
@@ -118,7 +118,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/20 px-4 py-3 text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/30 disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary w-full"
           >
             {isSubmitting ? "Sending..." : "Send login link"}
           </button>

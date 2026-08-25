@@ -1,30 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
-import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import { useRef, useState } from "react";
 
 export const STUDIO_TOP_BAR_COPY = Object.freeze({
-  eyebrow: "Studio",
-  description: "Manage creations, images, rooms, and account tools.",
-  buyCoinsLabel: "Buy Coins",
+  searchPlaceholder: "Search characters, stories, and adventures",
   notificationsLabel: "Notifications",
-  buyCoinsModalTitle: "Buy Coins",
-  buyCoinsModalBody:
-    "Coin purchases are coming later. For private testing, an admin can manually add coins to your account.",
-  notificationsModalTitle: "Notifications",
-  notificationsModalBody:
-    "Notifications are coming later. This will eventually show review updates, system messages, and creator activity.",
-  dismissLabel: "Got it",
+  openMenuAriaLabel: "Open menu",
 });
-
-export function formatStudioCoinBalance(value) {
-  const amount = Number.parseInt(value, 10);
-
-  if (!Number.isFinite(amount)) return "0";
-
-  return amount.toLocaleString();
-}
 
 export function getStudioTopBarAccountLabel(user = {}) {
   return typeof user?.email === "string" && user.email.trim()
@@ -32,37 +14,63 @@ export function getStudioTopBarAccountLabel(user = {}) {
     : "Account";
 }
 
-export function useStudioTopBarViewModel({ user } = {}) {
-  const { coinBalance, accountStatus } = useStudioAccount();
-  const [activeUtility, setActiveUtility] = useState(null);
+// Same initial-from-name recipe as the sidebar's signed-in footer
+// (StudioSidebar.view.jsx): first character of the account email,
+// uppercased, or "?" when there is none.
+export function getStudioTopBarAccountInitial(user = {}) {
+  const email = typeof user?.email === "string" ? user.email.trim() : "";
+  return email ? email.charAt(0).toUpperCase() : "?";
+}
 
-  const formattedCoins =
-    accountStatus === "loading" ? "..." : formatStudioCoinBalance(coinBalance);
+// No notification source exists in the app yet (no contract, no
+// endpoint); an empty list is the honest default until CR-017 is
+// answered. See StudioTopBar/README.md.
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This top bar renders on every /studio/** route including v2 pages,
+// so the account avatar's target depends on which surface is current.
+export function getStudioTopBarAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
+export function useStudioTopBarViewModel({
+  user,
+  notifications = [],
+  pathname = "",
+  onOpenMenu = () => {},
+} = {}) {
+  const [searchValue, setSearchValue] = useState("");
+  const [notificationsView, setNotificationsView] = useState(null);
+  const bellRef = useRef(null);
+
+  function openNotifications() {
+    setNotificationsView("compact");
+  }
+
+  function openNotificationCenter() {
+    setNotificationsView("full");
+  }
+
+  function closeNotifications() {
+    setNotificationsView(null);
+    bellRef.current?.focus();
+  }
 
   return {
-    eyebrow: STUDIO_TOP_BAR_COPY.eyebrow,
-    description: STUDIO_TOP_BAR_COPY.description,
-    formattedCoins,
-    buyCoinsLabel: STUDIO_TOP_BAR_COPY.buyCoinsLabel,
+    searchValue,
+    searchPlaceholder: STUDIO_TOP_BAR_COPY.searchPlaceholder,
+    onSearchChange: setSearchValue,
+    notifications: Array.isArray(notifications) ? notifications : [],
     notificationsLabel: STUDIO_TOP_BAR_COPY.notificationsLabel,
-    accountHref: "/studio/account",
+    notificationsView,
+    bellRef,
+    onOpenNotifications: openNotifications,
+    onOpenNotificationCenter: openNotificationCenter,
+    onCloseNotifications: closeNotifications,
+    accountHref: getStudioTopBarAccountHref(pathname),
     accountAriaLabel: getStudioTopBarAccountLabel(user),
-    utilityModal:
-      activeUtility === "buy"
-        ? {
-            title: STUDIO_TOP_BAR_COPY.buyCoinsModalTitle,
-            body: STUDIO_TOP_BAR_COPY.buyCoinsModalBody,
-            dismissLabel: STUDIO_TOP_BAR_COPY.dismissLabel,
-          }
-        : activeUtility === "notifications"
-          ? {
-              title: STUDIO_TOP_BAR_COPY.notificationsModalTitle,
-              body: STUDIO_TOP_BAR_COPY.notificationsModalBody,
-              dismissLabel: STUDIO_TOP_BAR_COPY.dismissLabel,
-            }
-          : null,
-    onOpenBuyCoins: () => setActiveUtility("buy"),
-    onOpenNotifications: () => setActiveUtility("notifications"),
-    onCloseUtility: () => setActiveUtility(null),
+    accountInitial: getStudioTopBarAccountInitial(user),
+    openMenuAriaLabel: STUDIO_TOP_BAR_COPY.openMenuAriaLabel,
+    onOpenMenu,
   };
 }

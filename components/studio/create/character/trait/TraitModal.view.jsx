@@ -1,6 +1,8 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function TraitModalView({
   open = false,
@@ -20,49 +22,59 @@ export default function TraitModalView({
   onBackFromCustom = null,
   onUseCustomValue = null,
 }) {
+  const hasValue = Boolean(triggerSummary) && triggerSummary !== "Not chosen";
+
   return (
     <div>
+      <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        {triggerLabel}
+      </span>
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm transition hover:border-[var(--muted-gold)]/35"
+        className="mt-[var(--space-1)] flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-left transition-colors hover:border-[var(--state-hover-line)]"
       >
-        <span className="block text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-          {triggerLabel}
-        </span>
-        <span className="mt-1 block text-[var(--foreground)]">
+        <span
+          className={`truncate text-[length:var(--text-body)] leading-[var(--lh-body)] ${hasValue ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}`}
+        >
           {triggerSummary || "Not chosen"}
         </span>
+        <ChevronRight
+          size={16}
+          className="shrink-0 text-[var(--ink-faint)]"
+          aria-hidden="true"
+        />
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="w-full max-w-5xl rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl">{modalTitle}</h2>
-                {modalDescription ? (
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-                    {modalDescription}
-                  </p>
-                ) : null}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
+        <KitModalFrame
+          variant="modal"
+          panelClassName="w-full max-w-2xl"
+          onClose={onClose}
+          ariaLabel={modalTitle}
+        >
+          <div className="flex max-h-[92dvh] flex-col p-[var(--space-6)] pt-[var(--space-8)]">
+            <div>
+              <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+                {modalTitle}
+              </h2>
+              {modalDescription ? (
+                <p className="mt-[var(--space-2)] max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                  {modalDescription}
+                </p>
+              ) : null}
             </div>
 
+            <div
+              aria-hidden="true"
+              className="h-px bg-[image:var(--line-fade)] my-[var(--space-5)]"
+            />
+
             {customActive ? (
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/30 p-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-4)]">
+                <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                   {customTitle}
-                </p>
+                </span>
 
                 <input
                   value={customValue}
@@ -70,14 +82,14 @@ export default function TraitModalView({
                     onChangeCustomValue?.(event.target.value)
                   }
                   placeholder={customPlaceholder}
-                  className="mt-3 w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                  className="mt-[var(--space-3)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)]"
                 />
 
-                <div className="mt-4 flex justify-between gap-3">
+                <div className="mt-[var(--space-4)] flex justify-between gap-[var(--space-3)]">
                   <button
                     type="button"
                     onClick={() => onBackFromCustom?.()}
-                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]"
+                    className="cf-btn cf-btn--secondary"
                   >
                     Back
                   </button>
@@ -85,30 +97,30 @@ export default function TraitModalView({
                   <button
                     type="button"
                     onClick={() => onUseCustomValue?.()}
-                    className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+                    className="cf-btn cf-btn--primary"
                   >
-                    Use Custom
+                    Use custom
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="mt-5 grid max-h-[60vh] gap-2 overflow-y-auto pr-1 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid min-h-0 flex-1 gap-[var(--space-2)] overflow-y-auto pb-[var(--space-2)] pr-1 md:grid-cols-2">
                 {options.map((option) => (
                   <button
                     key={option?.id || option?.label}
                     type="button"
                     onClick={() => onChooseOption?.(option?.id || "")}
-                    className={`rounded-xl border px-4 py-3 text-left transition ${
+                    className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-left transition-colors ${
                       option?.isSelected
-                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-ornament)]/55 bg-[var(--fill-whisper)] text-[var(--ink)]"
+                        : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                     }`}
                   >
-                    <span className="block text-sm text-[var(--foreground)]">
+                    <span className="block text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                       {option?.label || "Unnamed trait"}
                     </span>
                     {option?.description ? (
-                      <span className="mt-1 block text-xs leading-5 text-[var(--muted)]">
+                      <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
                         {option.description}
                       </span>
                     ) : null}
@@ -117,7 +129,7 @@ export default function TraitModalView({
               </div>
             )}
           </div>
-        </div>
+        </KitModalFrame>
       ) : null}
     </div>
   );

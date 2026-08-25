@@ -7,8 +7,14 @@ import {
   PanelLeftOpen,
   PanelRightClose,
   PanelRightOpen,
-  X,
 } from "lucide-react";
+
+import KitModalFrame from "@/components/kit/KitModalFrame";
+
+import { STORY_ROOM_DELETE_CONFIRMATION_LINES } from "./useStoryRoomChatShellViewModel";
+
+const EYEBROW_CLASS =
+  "text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 export default function StoryRoomChatShellView({
   room = {},
@@ -31,6 +37,9 @@ export default function StoryRoomChatShellView({
   onShowRightPanel,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
+  isConfirmingDeleteRoom = false,
+  onCancelDeleteRoom,
+  onConfirmDeleteRoom,
   CastPanelComponent,
   ComposerComponent,
   MobileDrawerComponent,
@@ -55,7 +64,7 @@ export default function StoryRoomChatShellView({
           )}
         </div>
 
-        <main className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45">
+        <main className="flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)]">
           <StoryRoomHeader
             room={room}
             leftOpen={leftOpen}
@@ -129,7 +138,53 @@ export default function StoryRoomChatShellView({
           ) : null}
         </MobileDrawerComponent>
       ) : null}
+
+      {isConfirmingDeleteRoom ? (
+        <DeleteRoomConfirmSheet
+          onCancel={onCancelDeleteRoom}
+          onConfirm={onConfirmDeleteRoom}
+        />
+      ) : null}
     </section>
+  );
+}
+
+// B5 destructive-action modal confirm, RULED (ED1G ruling 5): replaces
+// the room delete flow's prior window.confirm. Same fade-divider,
+// ends-aligned Cancel / danger-filled CTA footer as the chat family's
+// own delete confirms.
+function DeleteRoomConfirmSheet({ onCancel, onConfirm }) {
+  return (
+    <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm delete Story">
+      <div className="p-[var(--space-5)]">
+        {STORY_ROOM_DELETE_CONFIRMATION_LINES.map((line, index) =>
+          line ? (
+            <p
+              key={`delete-room-line-${index}`}
+              className={
+                index === 0
+                  ? "font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
+                  : "mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]"
+              }
+            >
+              {line}
+            </p>
+          ) : (
+            <div key={`delete-room-gap-${index}`} className="h-[var(--space-2)]" />
+          )
+        )}
+
+        <div aria-hidden="true" className="mt-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
+        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
+            Cancel
+          </button>
+          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
+            Delete Story
+          </button>
+        </div>
+      </div>
+    </KitModalFrame>
   );
 }
 
@@ -137,86 +192,76 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
   const showCommands = panel === "COMMANDS";
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="story-room-composer-help-title"
-        className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[var(--muted-gold)]/35 bg-[#080706] p-5 shadow-2xl sm:p-6"
-      >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-              Story Room Composer
-            </p>
-            <h2
-              id="story-room-composer-help-title"
-              className="mt-2 font-display text-2xl text-[var(--foreground)]"
-            >
-              {showCommands ? "Available Commands" : "Quick Help"}
-            </h2>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-            aria-label="Close composer help"
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabelledBy="story-room-composer-help-title"
+      panelClassName="w-full max-w-2xl p-5 sm:p-6"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className={EYEBROW_CLASS}>Story Room Composer</p>
+          <h2
+            id="story-room-composer-help-title"
+            className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
           >
-            <X size={16} />
-          </button>
+            {showCommands ? "Available Commands" : "Quick Help"}
+          </h2>
         </div>
-
-        {showCommands ? (
-          <div className="mt-5 grid gap-3">
-            {commands.map((command) => (
-              <div
-                key={command.name}
-                className="rounded-xl border border-white/10 bg-black/30 p-4"
-              >
-                <p className="font-mono text-sm text-[var(--muted-gold)]">
-                  {command.usage}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                  {command.description}
-                </p>
-                {command.aliases?.length ? (
-                  <p className="mt-2 text-xs text-[var(--muted)]">
-                    Alias: {command.aliases.map((alias) => `/${alias}`).join(", ")}
-                  </p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <ComposerHelpItem icon={Keyboard} title="Send and format">
-              Press Enter to send. Press Shift+Enter to add a new line.
-            </ComposerHelpItem>
-            <ComposerHelpItem icon={Command} title="Commands">
-              Type / to begin a command. Use /commands for the complete list.
-            </ComposerHelpItem>
-            <ComposerHelpItem icon={HelpCircle} title="Open help">
-              Use /? or /help whenever you need this quick guide again.
-            </ComposerHelpItem>
-            <ComposerHelpItem icon={MapPin} title="Locations">
-              Type # to search and reference locations from the attached Location Registry.
-            </ComposerHelpItem>
-          </div>
-        )}
       </div>
-    </div>
+
+      {showCommands ? (
+        <div className="mt-5 grid gap-3">
+          {commands.map((command) => (
+            <div
+              key={command.name}
+              className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4"
+            >
+              <p className="font-mono text-[length:var(--text-body)] text-[var(--gold-ornament)]">
+                {command.usage}
+              </p>
+              <p className="mt-2 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+                {command.description}
+              </p>
+              {command.aliases?.length ? (
+                <p className="mt-2 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                  Alias: {command.aliases.map((alias) => `/${alias}`).join(", ")}
+                </p>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <ComposerHelpItem icon={Keyboard} title="Send and format">
+            Press Enter to send. Press Shift+Enter to add a new line.
+          </ComposerHelpItem>
+          <ComposerHelpItem icon={Command} title="Commands">
+            Type / to begin a command. Use /commands for the complete list.
+          </ComposerHelpItem>
+          <ComposerHelpItem icon={HelpCircle} title="Open help">
+            Use /? or /help whenever you need this quick guide again.
+          </ComposerHelpItem>
+          <ComposerHelpItem icon={MapPin} title="Locations">
+            Type # to search and reference locations from the attached Location Registry.
+          </ComposerHelpItem>
+        </div>
+      )}
+    </KitModalFrame>
   );
 }
 
 function ComposerHelpItem({ icon: Icon, title, children }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-      <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4">
+      <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
         <Icon size={16} />
-        <p className="text-xs uppercase tracking-[0.14em]">{title}</p>
+        <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)]">
+          {title}
+        </p>
       </div>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{children}</p>
+      <p className="mt-3 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+        {children}
+      </p>
     </div>
   );
 }
@@ -229,18 +274,16 @@ function StoryRoomHeader({
   onToggleRightPanel,
 }) {
   return (
-    <div className="hidden shrink-0 border-b border-white/10 p-5 xl:block">
+    <div className="hidden shrink-0 border-b border-[var(--line-fade)] p-[var(--space-5)] xl:block">
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="min-w-0">
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
-            Story
-          </p>
+          <p className={EYEBROW_CLASS}>Story</p>
 
-          <h1 className="mt-2 font-display text-4xl">
+          <h1 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)]">
             {room?.title}
           </h1>
 
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
             {room?.scenario} · {room?.roomMode}
           </p>
         </div>
@@ -250,10 +293,10 @@ function StoryRoomHeader({
             <button
               type="button"
               onClick={() => onToggleLeftPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
+              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                 leftOpen
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
+                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {leftOpen ? (
@@ -267,10 +310,10 @@ function StoryRoomHeader({
             <button
               type="button"
               onClick={() => onToggleRightPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
+              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                 rightOpen
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
+                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
               }`}
             >
               {rightOpen ? (
@@ -302,7 +345,7 @@ function PanelRevealButton({ side, label, onClick }) {
         onClick={onClick}
         title={label}
         aria-label={label}
-        className="flex h-12 w-11 items-center justify-center rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+        className="flex h-12 w-11 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
       >
         <Icon size={16} />
       </button>
@@ -312,7 +355,7 @@ function PanelRevealButton({ side, label, onClick }) {
 
 function StatusPill({ children }) {
   return (
-    <span className="whitespace-nowrap rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+    <span className="whitespace-nowrap rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-3 py-1 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
       {children}
     </span>
   );

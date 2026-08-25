@@ -2,6 +2,7 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
+  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function OutfitGarmentDesignSectionView({
@@ -68,6 +69,7 @@ export default function OutfitGarmentDesignSectionView({
             value={clothingPiecesValue}
             onChange={(value) => onChangeClothingPieces?.(value)}
             placeholder={clothingPiecesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
 
@@ -77,6 +79,7 @@ export default function OutfitGarmentDesignSectionView({
             value={designNotesValue}
             onChange={(value) => onChangeDesignNotes?.(value)}
             placeholder={designNotesPlaceholder}
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

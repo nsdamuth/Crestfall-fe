@@ -46,10 +46,10 @@ export default function ImageStudioComposerView({
   const isVideoMode = mode === "VIDEO";
 
   return (
-    <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:sticky xl:top-24">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-4 xl:sticky xl:top-24">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             Composer
           </p>
           <h2 className="mt-1 font-display text-2xl">{composerTitle}</h2>
@@ -58,7 +58,7 @@ export default function ImageStudioComposerView({
         <button
           type="button"
           onClick={() => setImageOptionsOpen((current) => !current)}
-          className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 p-3 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           title="Composer options"
         >
           <SlidersHorizontal size={17} />
@@ -76,8 +76,8 @@ export default function ImageStudioComposerView({
               onClick={() => onChangeMode?.(option.id)}
               className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
                 mode === option.id
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <Icon size={14} />
@@ -108,7 +108,7 @@ export default function ImageStudioComposerView({
       ) : (
         <>
           <label className="mt-5 block">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               Prompt
             </span>
             <textarea
@@ -116,25 +116,21 @@ export default function ImageStudioComposerView({
               onChange={(event) => onChangePrompt?.(event.target.value)}
               placeholder="Describe what you want to see..."
               rows={5}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
           <button
             type="button"
             onClick={() => onGenerateImage?.()}
             disabled={!canGenerateImage}
-            className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-4 text-xs uppercase tracking-[0.18em] transition ${
-              canGenerateImage
-                ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 text-[var(--foreground)] hover:bg-[var(--muted-gold)]/25"
-                : "border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)] opacity-60"
-            }`}
+            className="cf-btn cf-btn--primary mt-4 w-full"
           >
             <Wand2 size={15} />
-            Generate Image
+            Generate image
           </button>
 
           {!canGenerateImage && generationHelpText ? (
-            <p className="mt-3 rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 px-4 py-3 text-sm text-[var(--muted)]">
+            <p className="mt-3 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--ink-dim)]">
               {generationHelpText}
             </p>
           ) : null}
@@ -148,7 +144,7 @@ export default function ImageStudioComposerView({
           <button
             type="button"
             onClick={() => setImageOptionsOpen((current) => !current)}
-            className="mt-4 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="mt-4 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           >
             <span className="inline-flex items-center gap-2">
               <SlidersHorizontal size={14} />
@@ -158,7 +154,7 @@ export default function ImageStudioComposerView({
           </button>
 
           {imageOptionsOpen ? (
-            <div className="mt-3 grid gap-4 rounded-2xl border border-white/10 bg-black/25 p-4">
+            <div className="mt-3 grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
               {imageOptionFields.map((field) => (
                 <CrestfallSelect
                   key={field.id}
@@ -170,7 +166,7 @@ export default function ImageStudioComposerView({
               ))}
 
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                   Negative Prompt
                 </span>
                 <textarea
@@ -180,7 +176,7 @@ export default function ImageStudioComposerView({
                   }
                   placeholder="Optional: describe what to avoid..."
                   rows={3}
-                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                 />
               </label>
             </div>
@@ -188,16 +184,16 @@ export default function ImageStudioComposerView({
 
           <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Coins
               </span>
 
-              <span className="text-sm text-[var(--foreground)]">
+              <span className="text-sm text-[var(--ink)]">
                 {coinBalanceLabel}
               </span>
             </div>
 
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Image generation costs {coinCostLabel} coins.
             </p>
 

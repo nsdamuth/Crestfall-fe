@@ -22,10 +22,10 @@ export default function StorylineOpenWorldSettingsView({
   return (
     <div className="space-y-5">
       <div className="flex items-start gap-3">
-        <Globe2 size={22} className="mt-1 text-[var(--muted-gold)]" />
+        <Globe2 size={22} className="mt-1 text-[var(--gold-ornament)]" />
         <div>
           <h3 className="font-display text-3xl">{title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
@@ -33,7 +33,7 @@ export default function StorylineOpenWorldSettingsView({
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {defaultTransitionLabel}
           </span>
           <select
@@ -49,13 +49,13 @@ export default function StorylineOpenWorldSettingsView({
               </option>
             ))}
           </select>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             {defaultTransitionHelp}
           </p>
         </label>
 
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {continuityEyebrow}
           </p>
           <p className="mt-2">{continuityDescription}</p>
@@ -63,7 +63,7 @@ export default function StorylineOpenWorldSettingsView({
       </div>
 
       <label className="block">
-        <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {guidanceLabel}
         </span>
         <textarea
@@ -76,7 +76,7 @@ export default function StorylineOpenWorldSettingsView({
       </label>
 
       <label className="block">
-        <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           {pressureCadenceLabel}
         </span>
         <textarea

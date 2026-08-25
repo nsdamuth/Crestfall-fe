@@ -1,7 +1,7 @@
 const actionFixture = (
   <button
     type="button"
-    className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+    className="rounded-xl border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]"
   >
     Page Action
   </button>
@@ -50,6 +50,20 @@ export const studioPageHeaderFixtures = [
       eyebrow: "Create",
       title: "Choose a Creation Type",
       children: actionFixture,
+    },
+  },
+  {
+    // R7 hardening witness (10 Aug 2026): many live pages pass the
+    // description as bare text children; the view now routes
+    // text-only children through the description branch so they can
+    // never sit beside the H1.
+    id: "text-children",
+    label: "Text Children (legacy misuse)",
+    props: {
+      eyebrow: "Account",
+      title: "Profile & Preferences",
+      children:
+        "Manage your private account settings, Studio preferences, subscription status, and public creator profile.",
     },
   },
   {

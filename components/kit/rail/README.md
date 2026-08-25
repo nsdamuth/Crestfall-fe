@@ -1,0 +1,151 @@
+# Kit Rail LOOM Package
+
+**Contract:** `KitRail.contract.js` (v1.0.0)
+
+## Purpose
+
+The horizontally scrolling rail that holds existing cards, ruled
+10 Aug 2026 (`docs/CRESTFALL-DESIGN-CONTEXT.md`): "No horizontally
+scrolling card row exists in the kit today, so this is a new kit
+package, built once and used four times on Home. It holds existing
+cards; no card-level work is needed." Head anatomy is
+`docs/BUILD-BLUEPRINT.md` 2.16(o) scope 1: gold uppercase label with
+one short solid gold rule to its right, View all beside the label.
+Full build plan: `docs/SPRINT-F-PLAN.md`.
+
+## Boundary
+
+```text
+KitRail.jsx
+  -> useKitRailViewModel.js
+  -> KitRail.view.jsx
+      -> children passed through untouched (creation-card, creator-card)
+      -> headControlSlot passed through untouched (e.g. KitDropdown)
+```
+
+- The ViewModel normalizes `label` and `viewAllLabel` to strings,
+  defends `onViewAll` to function-or-null, and passes `headControlSlot`
+  and `children` through as nullable nodes.
+- The View is presentation only; its one sanctioned local state is
+  the scroll-edge pair (`atStart`, `atEnd`) driving the arrows and
+  the trailing fade, wired through the React `onScroll` prop and a
+  `ResizeObserver` attached in a ref callback. No `useEffect`, no
+  fetch, no router.
+- The caller owns every card's data, reactions, and navigation; the
+  View all destination; and the head control's entire behavior.
+
+## Empty rail law
+
+A rail with nothing in it renders nothing at all, head included.
+This matches the ruled Continue strip precedent ("renders nothing
+when nothing is in progress") and the creator-card strip law ("the
+strip never invents placeholder frames").
+
+## Advance behavior, ruled
+
+Native scroll everywhere (touch, trackpad, shift-wheel), plus gold
+arrow controls from 700px up, disabled at each end, with a trailing
+edge fade signalling more content. No dot indicators, no page
+counter. Arrow clicks advance the scrollport by one full card group
+via `scrollBy`; the behavior option is chosen at event time (`smooth`
+normally, `auto` when `matchMedia("(prefers-reduced-motion: reduce)")`
+matches), so no reduced-motion listener state is needed.
+
+## Snap and resize
+
+`scroll-snap-type: x proximity` on the scrollport, `scroll-snap-align:
+start` on each cell, aligned to the content edge by
+`scroll-padding-inline`. Proximity, not mandatory: cards settle on a
+clean edge when a scroll ends near one, but momentum flicks and
+trackpad glides are never hijacked. On resize, nothing is stored and
+nothing is scripted: cell widths are percentages so they reflow, the
+browser clamps scroll position and re-resolves snap after layout. The
+`ResizeObserver` only recomputes the `atStart`/`atEnd` flags so the
+arrows and the fade stay truthful.
+
+## Trailing fade, package-local recipe
+
+Composed in place from the canvas,
+`linear-gradient(90deg, transparent, var(--canvas))`, the same
+construction as the card legibility veils, about `--space-10` wide,
+`pointer-events-none`, hidden when the rail rests at its end. No fade
+token exists and none is minted here; `docs/DESIGN-TOKENS.md` already
+lists a proposed-but-unminted tile fade under "needs a ruling", and
+this fade stays a package-local recipe until that ruling happens.
+
+## Edge alignment, RULED 10 Aug 2026 (`docs/SPRINT-F-PLAN.md` item 32)
+
+The head row stays in normal flow, sharing the page content edges by
+construction. The scrollport and its trailing fade terminate at the
+same horizontal position as every other page component's right edge,
+at every width including 390; the left edge matches the same gutter.
+No mobile full-bleed exception. There is no negative-margin bleed:
+the scrollport carries no horizontal margin or padding of its own, so
+its edges are the section's own content edges. Only
+`scroll-padding-inline` is set, purely to inset the scroll-into-view
+target from the overflow clip edge for the focus law below; it adds
+no visual padding.
+
+## Keyboard behavior
+
+Tab order is natural DOM order: head first (View all, then the
+seated head control when present, then the arrow pair), then each
+card's own controls in card order. No roving tabindex. Arrow keys are
+not intercepted; the scrollport carries no tabindex. The browser
+scrolls a focused element into a scroll container natively, and
+`scroll-padding-inline` insets that scroll target from the clip edge
+so the global `--focus-ring` always sits in open space.
+
+## Focus law
+
+`:focus-visible` renders the global `--focus-ring`; no doubled
+treatment. The `kit-focus` 1px line-strong border mark (2.16(e)) is
+RETIRED, 22 Aug 2026, A3: the global ring is the only focus mechanism.
+
+## New tokens
+
+None. The head uses `--gold-ornament`, `--text-label`,
+`--track-label`, `--space-3`, `--space-8`. The link and arrows use
+`--gold-action`, `--icon-md`, `--control-sm` with the
+`[@media(pointer:coarse)]:min-h-[var(--control-md)]` bump, and
+`--state-disabled-opacity`. Cell gutters and the scroll-padding inset
+are `--space-3/4/5`.
+
+## Card sizing
+
+Item cells are percentage based: `calc((100% - N * gutter) / (N +
+0.4))`, yielding N full cards plus a 0.4-card peek of the next as the
+more-content signal. 3 cards at `min-[700px]`, 4 at `min-[1100px]`.
+Both card kinds share the same cell width; creation-card fills it and
+derives height from its own `aspect-[3/4]`, creator-card fills it at
+its intrinsic height. Cells use `items-stretch` so creator cards in
+one rail equalize height.
+
+**Phone tier, RULED 10 Aug 2026 (Home fix wave, `docs/SPRINT-H-PLAN.md`
+1d).** Below 700px the tier moved from 2.4 to 1.4 cards in view (one
+full card plus the ruled 0.4-card peek), a 136px to 247px cell change
+at 390. Diagnosed cause: the creator card's measured content minimum
+(227 to 256px, a nowrap stat row plus two nowrap action buttons) and
+the creation-rail overlay actions at the coarse-pointer 44px floor
+both exceed a 136px cell, so cards refused to shrink and overlapped
+their neighbor by about 108px. No smaller change satisfies the mobile
+law (fully functional and comfortable at 390, nothing overflows): at
+2.4 the three 44px overlay actions alone exceed the card, and the peek
+law (0.4 at every tier) permits no width between the two tiers. Tablet
+and desktop tiers are untouched. Package-local CSS change, no contract
+change.
+
+The rail head's `View all` control also gained the 44px touch floor
+at coarse pointers (`min-height` to `--control-md` via the coarse
+pointer media query; visual size at fine pointers is unchanged).
+
+## Package assets
+
+- `KitRail.contract.js`
+- `KitRail.fixtures.js` (all eight fixture states, cards built from
+  the creation-card and creator-card packages' own fixtures)
+- `useKitRailViewModel.js`
+- `/dev/ui-preview/kit-rail`
+
+Fixture-only; every card's own actions are the card package's fixture
+callbacks (no-ops in this preview).

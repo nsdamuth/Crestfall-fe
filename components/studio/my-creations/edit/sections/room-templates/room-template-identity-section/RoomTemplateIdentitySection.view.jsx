@@ -1,6 +1,6 @@
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   SectionTitle,
+  SelectField,
   TextField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -28,15 +28,15 @@ export default function RoomTemplateIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <CrestfallSelect
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] md:grid-cols-2">
+        <SelectField
           label={roomModeLabel}
           value={roomModeValue}
           onChange={(value) => onSelectRoomMode?.(value)}
           options={roomModeOptions}
         />
 
-        <CrestfallSelect
+        <SelectField
           label={playerCharacterModeLabel}
           value={playerCharacterModeValue}
           onChange={(value) => onSelectPlayerCharacterMode?.(value)}

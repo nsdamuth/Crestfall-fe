@@ -1,94 +1,181 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useRef, useState } from "react";
 
 import StudioTopBarView from "@/components/studio/studio-top-bar/StudioTopBar.view";
 import {
-  studioTopBarBuyCoinsFixture,
-  studioTopBarDefaultFixture,
-  studioTopBarLoadingFixture,
-  studioTopBarNotificationsFixture,
+  studioTopBarAllClearedFixture,
+  studioTopBarBellIdleFixture,
+  studioTopBarBellWithNotificationsFixture,
+  studioTopBarCompactPanelOpenFixture,
+  studioTopBarEmptyPanelOpenFixture,
+  studioTopBarFullCenterOpenFixture,
+  studioTopBarIdleFixture,
+  studioTopBarMobileBarIdleFixture,
+  studioTopBarPanelAfterDismissFixture,
+  studioTopBarSearchFocusedFixture,
 } from "@/components/studio/studio-top-bar/StudioTopBar.fixtures";
 
 const STATES = {
-  default: {
-    label: "Default",
-    fixture: studioTopBarDefaultFixture,
+  idle: {
+    label: "Bar idle",
+    fixture: studioTopBarIdleFixture,
   },
-  loading: {
-    label: "Loading",
-    fixture: studioTopBarLoadingFixture,
+  mobileBarIdle: {
+    label: "Mobile bar idle",
+    fixture: studioTopBarMobileBarIdleFixture,
   },
-  buy: {
-    label: "Buy Coins Modal",
-    fixture: studioTopBarBuyCoinsFixture,
+  searchFocused: {
+    label: "Search focused",
+    fixture: studioTopBarSearchFocusedFixture,
   },
-  notifications: {
-    label: "Notifications Modal",
-    fixture: studioTopBarNotificationsFixture,
+  bellIdle: {
+    label: "Bell idle",
+    fixture: studioTopBarBellIdleFixture,
+  },
+  bellWithNotifications: {
+    label: "Bell with notifications",
+    fixture: studioTopBarBellWithNotificationsFixture,
+  },
+  compactOpen: {
+    label: "Compact panel open",
+    fixture: studioTopBarCompactPanelOpenFixture,
+  },
+  fullOpen: {
+    label: "Full notification center open",
+    fixture: studioTopBarFullCenterOpenFixture,
+  },
+  panelAfterDismiss: {
+    label: "Panel after a dismiss",
+    fixture: studioTopBarPanelAfterDismissFixture,
+  },
+  allCleared: {
+    label: "All cleared (empty)",
+    fixture: studioTopBarAllClearedFixture,
+  },
+  emptyOpen: {
+    label: "Empty state",
+    fixture: studioTopBarEmptyPanelOpenFixture,
   },
 };
 
+const FILLER_ROWS = Array.from({ length: 24 }, (_, index) => index);
+
 export default function StudioTopBarPreviewClient() {
-  const [stateKey, setStateKey] = useState("default");
-  const [viewState, setViewState] = useState(STATES.default.fixture);
+  const [stateKey, setStateKey] = useState("idle");
   const [feedback, setFeedback] = useState("Fixture preview ready.");
-
-  useEffect(() => {
-    setViewState(STATES[stateKey].fixture);
-    setFeedback(`${STATES[stateKey].label} fixture loaded.`);
-  }, [stateKey]);
-
-  const viewProps = useMemo(
-    () => ({
-      ...viewState,
-      onOpenBuyCoins: () => {
-        setViewState(studioTopBarBuyCoinsFixture);
-        setFeedback("Buy Coins callback received.");
-      },
-      onOpenNotifications: () => {
-        setViewState(studioTopBarNotificationsFixture);
-        setFeedback("Notifications callback received.");
-      },
-      onCloseUtility: () => {
-        setViewState(studioTopBarDefaultFixture);
-        setFeedback("Utility modal closed.");
-      },
-    }),
-    [viewState]
+  const [notifications, setNotifications] = useState(
+    STATES[stateKey].fixture.notifications,
   );
+  const [notificationsView, setNotificationsView] = useState(
+    STATES[stateKey].fixture.notificationsView,
+  );
+  const bellRef = useRef(null);
+
+  function selectState(key) {
+    setStateKey(key);
+    setNotifications(STATES[key].fixture.notifications);
+    setNotificationsView(STATES[key].fixture.notificationsView);
+    setFeedback(`${STATES[key].label} fixture loaded.`);
+  }
 
   return (
-    <main className="min-h-screen bg-[#080706] p-8 text-[var(--foreground)]">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-5 rounded-xl border border-[var(--muted-gold)]/25 bg-black/40 p-4">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-            Studio Top Bar Preview
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {Object.entries(STATES).map(([key, state]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setStateKey(key)}
-                className={`rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.12em] ${
-                  stateKey === key
-                    ? "border-[var(--muted-gold)]/50 text-[var(--foreground)]"
-                    : "border-white/10 text-[var(--muted)]"
-                }`}
-              >
-                {state.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 text-xs text-[var(--muted)]">{feedback}</p>
+    <main className="min-h-screen bg-[var(--canvas)] text-[var(--ink)]">
+      <div className="border-b border-[var(--line)] bg-[var(--surface-2)] p-4">
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          Studio Top Bar Preview: scroll this page to test sticky + frost
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {Object.entries(STATES).map(([key, entry]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => selectState(key)}
+              className={`rounded-[var(--radius-md)] border px-3 py-2 text-[10px] uppercase tracking-[0.12em] ${
+                stateKey === key
+                  ? "border-[var(--gold-ornament)]/50 text-[var(--ink)]"
+                  : "border-[var(--line)] text-[var(--ink-dim)]"
+              }`}
+            >
+              {entry.label}
+            </button>
+          ))}
         </div>
+        <p className="mt-3 text-xs text-[var(--ink-dim)]">{feedback}</p>
+      </div>
 
-        <StudioTopBarView {...viewProps} />
+      <StudioTopBarView
+        searchValue={STATES[stateKey].fixture.searchValue}
+        searchPlaceholder={STATES[stateKey].fixture.searchPlaceholder}
+        searchAutoFocus={STATES[stateKey].fixture.searchAutoFocus}
+        notificationsLabel={STATES[stateKey].fixture.notificationsLabel}
+        accountHref={STATES[stateKey].fixture.accountHref}
+        accountAriaLabel={STATES[stateKey].fixture.accountAriaLabel}
+        accountInitial={STATES[stateKey].fixture.accountInitial}
+        openMenuAriaLabel="Open menu"
+        notifications={notifications}
+        notificationsView={notificationsView}
+        bellRef={bellRef}
+        accountLinkSlot={
+          <a
+            href="/studio/account"
+            aria-label="creator@example.com"
+            className="hidden h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)] lg:flex"
+          >
+            {STATES[stateKey].fixture.accountInitial}
+          </a>
+        }
+        onOpenMenu={() => setFeedback("onOpenMenu callback received.")}
+        onSearchChange={() => setFeedback("onSearchChange callback received.")}
+        onOpenNotifications={() => {
+          setNotificationsView("compact");
+          setFeedback("onOpenNotifications callback received.");
+        }}
+        onOpenNotificationCenter={() => {
+          setNotificationsView("full");
+          setFeedback("onOpenNotificationCenter callback received.");
+        }}
+        onCloseNotifications={() => {
+          setNotificationsView(null);
+          bellRef.current?.focus();
+          setFeedback("onCloseNotifications callback received; focus returned to the bell.");
+        }}
+        onDismissNotification={(id) => {
+          setNotifications((current) => current.filter((n) => n.id !== id));
+          setFeedback(`onDismissNotification("${id}") callback received.`);
+        }}
+        onClearAllNotifications={() => {
+          setNotifications([]);
+          setFeedback("onClearAllNotifications callback received.");
+        }}
+      />
 
-        <div className="rounded-2xl border border-white/10 bg-black/30 p-8 text-sm leading-7 text-[var(--muted)]">
-          The production bar is hidden below the large-screen breakpoint. Widen
-          the preview window to test the exact desktop layout.
+      <div className="mx-auto max-w-7xl px-[var(--space-5)] py-[var(--space-8)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
+        <p className="mb-6 text-sm leading-7 text-[var(--ink-dim)]">
+          The bar renders at every breakpoint as of 8 Aug 2026: narrow this
+          window to see the hamburger trigger appear and the account avatar
+          hide, matching the mobile studio-home mockup&apos;s topbar. Everything
+          below is filler content, scrolled to verify the bar stays sticky,
+          spans full width, and reads frosted with real content passing
+          beneath it.
+        </p>
+
+        <div className="space-y-4">
+          {FILLER_ROWS.map((row) => (
+            <div
+              key={row}
+              className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-8"
+            >
+              <p className="font-display text-[var(--text-heading)] leading-[var(--lh-heading)] text-[var(--gold-bright)]">
+                Filler section {row + 1}
+              </p>
+              <p className="mt-2 text-sm leading-7 text-[var(--ink-dim)]">
+                Scrollable content used only to verify the sticky chrome bar
+                and its frost read correctly against real page content. Not
+                product copy.
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </main>

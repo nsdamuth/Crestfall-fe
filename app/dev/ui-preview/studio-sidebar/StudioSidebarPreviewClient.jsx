@@ -6,6 +6,7 @@ import StudioSidebarView from "@/components/studio/studio-sidebar/StudioSidebar.
 import {
   studioSidebarCollapsedFixture,
   studioSidebarExpandedFixture,
+  studioSidebarPreviewFixture,
   studioSidebarSocialOpenFixture,
 } from "@/components/studio/studio-sidebar/StudioSidebar.fixtures";
 
@@ -21,6 +22,10 @@ const STATES = Object.freeze({
   collapsed: Object.freeze({
     label: "Collapsed",
     fixture: studioSidebarCollapsedFixture,
+  }),
+  preview: Object.freeze({
+    label: "Preview Nav (flag on)",
+    fixture: studioSidebarPreviewFixture,
   }),
 });
 
@@ -57,6 +62,13 @@ export default function StudioSidebarPreviewClient() {
           socialOpen: !current.socialOpen,
         }));
         setFeedback("Community Links callback received.");
+      },
+      onToggleLegacy: () => {
+        setViewState((current) => ({
+          ...current,
+          legacyOpen: !current.legacyOpen,
+        }));
+        setFeedback("Legacy group callback received.");
       },
     }),
     [viewState]

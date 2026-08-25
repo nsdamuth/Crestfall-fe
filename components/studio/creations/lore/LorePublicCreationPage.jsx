@@ -26,7 +26,7 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
       <div className="mx-auto mb-6 flex max-w-5xl flex-wrap items-center justify-between gap-3">
         <Link
           href="/studio/community"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] hover:text-[var(--ink)]"
         >
           <ArrowLeft size={14} />
           Community
@@ -40,7 +40,7 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
         </div>
       </div>
 
-      <div className="mx-auto mb-6 flex max-w-5xl items-center gap-2 text-[var(--muted-gold)]">
+      <div className="mx-auto mb-6 flex max-w-5xl items-center gap-2 text-[var(--gold-ornament)]">
         <BookOpenText size={18} />
         <p className="text-xs uppercase tracking-[0.22em]">Lore Publication</p>
       </div>

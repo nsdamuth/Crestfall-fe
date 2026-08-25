@@ -61,7 +61,7 @@ export default function StoryExcerptBlock({
 
       {attribution && (
         <footer className="mt-5 font-display text-xs uppercase tracking-[0.3em] text-[#7b5525]">
-          — {attribution}
+          · {attribution}
         </footer>
       )}
     </div>

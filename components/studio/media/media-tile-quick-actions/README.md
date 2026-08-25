@@ -6,6 +6,12 @@ Provides the shared hover/focus controls used by media cards to Like,
 Bookmark, and Expand an image while keeping media identity, persistence,
 optimistic updates, and lightbox routing outside the portable Skin.
 
+Token cleanup, 22 Aug 2026 (ED1F propagation plan group G3): the button
+recipe's raw literal colors (`white/10`, `black/60`, `pink-400`) are
+replaced with the ratified token set, the same active/quiet recipe
+`KitImageOverlay` and `MediaLightbox` use for their own icon rows.
+Presentation-only; no prop change, contract stays `1.0.0`.
+
 ## Feature structure
 
 ```text

@@ -1,0 +1,31 @@
+export const heartStopEmptyFixture = {
+  outwardPersonality: "",
+  internalPersonality: "",
+  speechStyle: "",
+  greeting: "",
+  scenario: "",
+  backstory: "",
+  verbosityLevel: "3",
+  philosophy: "",
+  interests: "",
+  relationshipToPlayer: "",
+  voiceModuleIds: [],
+  personalityNotes: "",
+  advancedFoldOpen: false,
+};
+
+export const heartStopFilledFixture = {
+  outwardPersonality: "Warm and quick to joke with strangers on the docks.",
+  internalPersonality: "Terrified of the dark, and of being needed.",
+  speechStyle: "POETIC",
+  greeting: "You're standing on my rocks.",
+  scenario: "A storm has grounded a ship within sight of the lighthouse.",
+  backstory: "Took over the light after her mother walked into the sea.",
+  verbosityLevel: "4",
+  philosophy: "The light isn't for the ships. It's so I know I'm still here.",
+  interests: "NATURE",
+  relationshipToPlayer: "A cautious new ally.",
+  voiceModuleIds: ["module_low_rasp"],
+  personalityNotes: "Never sits with her back to the door.",
+  advancedFoldOpen: true,
+};

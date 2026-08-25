@@ -25,12 +25,46 @@ creation-edit-shell/
     Chassis / orchestration adapter
   CreationEditSectionContent.jsx
     Crestfall-owned editor composition
+  creationEditSectionComponentMap.js
+    Registry-as-data section dispatch map (ED1)
   CreationEditMechanicsRuntimeQuickNav.jsx
     Crestfall-owned browser-event integration
   CreationEditShell.contract.js
   CreationEditShell.fixtures.js
   creationEditShellDiagnostics.mjs
 ```
+
+## ED1 change, 12 Aug 2026 (docs/plans/FABLE-GATE-2-STUDIO.md, ruling
+N1 option A, escalation authorized by that plan's GO)
+
+Two files here moved from hand-written control flow to data, with no
+behavior change:
+
+- `useCreationEditShellViewModel.js`: `resolveCreationEditSections`
+  (a 15-arm nested ternary) now looks up `CREATION_TYPE_SECTIONS`
+  (`edit/creationEditConstants.js`), byte-for-byte the same
+  resolution, same default fallback. `resolveCreationEditSectionGroups`
+  (new) resolves each type's group grammar the same way from
+  `CREATION_TYPE_SECTION_GROUPS` (also in `creationEditConstants.js`):
+  every type's flat section list regroups into at most five named
+  groups, consumed by the v2 editor's group-tab navigation
+  (`app/studio/v2/editor/editor/Editor.view.jsx`). The legacy
+  `/studio/my-creations/[id]/edit` page (via `CreationEditShell.view.jsx`,
+  unchanged) still reads the flat `activeSections` list only; it does
+  not consume the new group data.
+- `CreationEditSectionContent.jsx`: the 42-guard if-chain is now a
+  lookup into `SECTION_COMPONENT_REGISTRY`
+  (`creationEditSectionComponentMap.js`), one entry per
+  (creationType, sectionId) pair, mechanically transcribed from the
+  old chain: same Component, same props, same condition, now data.
+  "publishing," "danger," and Lore's "preview" (wrapped in its
+  owner-preview link row) stay explicit in `CreationEditSectionContent.jsx`
+  itself, since all three are universal or carry one real branch the
+  registry doesn't model as a plain type/section pair.
+
+Both changes are read-only-lineage-internal: every existing consumer
+(this package's own `CreationEditShell.jsx` AND the v2 editor's
+`Editor.jsx`) receives the exact same resolved data it did before.
 
 The existing `useCreationEditViewModel` remains the authority for Creation
 hydration, form mutation, save, review, archive, deletion, and featured-media

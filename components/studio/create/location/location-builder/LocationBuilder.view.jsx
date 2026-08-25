@@ -44,8 +44,8 @@ export default function LocationBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Location Builder
         </p>
 
@@ -53,13 +53,13 @@ export default function LocationBuilderView({
           {form.name || "Unnamed Location"}
         </h2>
 
-        <p className="mt-3 leading-7 text-[var(--muted)]">
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">
           Build a world space that can carry scene context, inheritance,
           registries, runtime modules, and image guidance.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Summary
           </p>
 
@@ -84,12 +84,12 @@ export default function LocationBuilderView({
           </div>
         </div>
 
-        <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Runtime
           </p>
 
-          <div className="mt-3 grid gap-2 text-sm text-[var(--muted)]">
+          <div className="mt-3 grid gap-2 text-sm text-[var(--ink-dim)]">
             <RuntimeLine
               label="Weather"
               value={
@@ -131,16 +131,16 @@ export default function LocationBuilderView({
           type="button"
           onClick={onSave}
           disabled={saveDisabled}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cf-btn cf-btn--primary mt-6 w-full"
         >
           <Save size={15} />
-          {saveStatus === "saving" ? "Saving..." : "Save Draft"}
+          {saveStatus === "saving" ? "Saving..." : "Save draft"}
         </button>
 
         {saveMessage ? (
           <p
             className={`mt-3 text-sm ${
-              saveStatus === "error" ? "text-red-200" : "text-emerald-200"
+              saveStatus === "error" ? "text-[var(--status-danger)]" : "text-[var(--status-success)]"
             }`}
           >
             {saveMessage}
@@ -249,7 +249,7 @@ export default function LocationBuilderView({
           {locationData.parentLocationId ? (
             <div className="grid gap-4 md:grid-cols-[auto_1fr_auto] md:items-center">
               <div
-                className="h-20 w-20 rounded-xl border border-white/10 bg-black/40 bg-cover bg-center"
+                className="h-20 w-20 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] bg-cover bg-center"
                 style={{
                   backgroundImage: `url(${
                     locationData.parentLocationImageUrl ||
@@ -278,7 +278,7 @@ export default function LocationBuilderView({
                 <button
                   type="button"
                   onClick={() => onOpenParentPicker?.()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                  className="cf-btn cf-btn--secondary"
                 >
                   <MapPin size={14} />
                   Change
@@ -287,7 +287,7 @@ export default function LocationBuilderView({
                 <button
                   type="button"
                   onClick={onClearParentLocation}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+                  className="cf-btn cf-btn--danger"
                 >
                   <X size={14} />
                   Clear
@@ -296,7 +296,7 @@ export default function LocationBuilderView({
             </div>
           ) : (
             <div>
-              <p className="max-w-3xl text-sm leading-7 text-[var(--muted)]">
+              <p className="max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
                 Choose a broader parent location such as a realm, planet, city,
                 district, building, or room. Parent locations provide inherited
                 runtime context when enabled.
@@ -305,17 +305,17 @@ export default function LocationBuilderView({
               <button
                 type="button"
                 onClick={() => onOpenParentPicker?.()}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                className="cf-btn cf-btn--secondary mt-4"
               >
                 <MapPin size={14} />
-                Select Parent
+                Select parent
               </button>
             </div>
           )}
         </EditorCard>
 
         <EditorCard eyebrow="Inheritance" title="Runtime Inheritance">
-          <p className="max-w-3xl text-sm leading-7 text-[var(--muted)]">
+          <p className="max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
             These settings control whether this location inherits runtime context
             from parent locations. Local modules can still declare explicit
             overrides when needed.
@@ -360,14 +360,14 @@ export default function LocationBuilderView({
 
         <EditorCard eyebrow="Cover Image" title="Optional Cover Image">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="max-w-3xl text-sm leading-7 text-[var(--muted)]">
+            <p className="max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
               Cover images are optional. Later, generated location previews can
               be saved here without making the image picker dominate the builder.
             </p>
 
-            <p className="text-sm text-[var(--muted)]">
+            <p className="text-sm text-[var(--ink-dim)]">
               Selected:{" "}
-              <span className="text-[var(--foreground)]">
+              <span className="text-[var(--ink)]">
                 {selectedCover || "None"}
               </span>
             </p>
@@ -382,22 +382,22 @@ export default function LocationBuilderView({
                   key={candidate.id}
                   type="button"
                   onClick={() => onSelectCover?.(candidate.id)}
-                  className={`aspect-[4/3] overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                  className={`aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                     active
-                      ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
-                      : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
+                      ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
+                      : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
                   }`}
                 >
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
                     <div className="text-center">
                       <ImageIcon
-                        className="mx-auto text-[var(--muted-gold)]"
+                        className="mx-auto text-[var(--gold-ornament)]"
                         size={26}
                       />
-                      <p className="mt-3 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+                      <p className="mt-3 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                         {candidate.label}
                       </p>
-                      <p className="mt-1 px-4 text-xs text-[var(--muted)]">
+                      <p className="mt-1 px-4 text-xs text-[var(--ink-dim)]">
                         Placeholder
                       </p>
                     </div>
@@ -423,14 +423,14 @@ export default function LocationBuilderView({
             />
           </div>
 
-          <div className="mt-5 rounded-2xl border border-white/10 bg-black/25 p-5">
+          <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
             <div className="flex items-start gap-3">
-              <Tag className="mt-1 text-[var(--muted-gold)]" size={18} />
+              <Tag className="mt-1 text-[var(--gold-ornament)]" size={18} />
               <div>
-                <p className="text-sm text-[var(--foreground)]">
+                <p className="text-sm text-[var(--ink)]">
                   Future quick-save workflow
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                   Later, successful custom prompts from Image Studio can be
                   saved directly into this location without leaving the image
                   editor.
@@ -448,8 +448,8 @@ export default function LocationBuilderView({
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+    <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
 
@@ -464,14 +464,14 @@ function RuntimeLine({ label, value }) {
   return (
     <div className="flex items-center justify-between gap-3">
       <span>{label}</span>
-      <span className="text-[var(--foreground)]">{value}</span>
+      <span className="text-[var(--ink)]">{value}</span>
     </div>
   );
 }
 
 function SummaryPill({ label }) {
   return (
-    <span className="rounded-full border border-white/10 bg-black/35 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--muted)]">
+    <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase [font-weight:var(--weight-medium)] text-[var(--gold-bright)]">
       {label}
     </span>
   );
@@ -479,12 +479,12 @@ function SummaryPill({ label }) {
 
 function CheckField({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--muted)]">
+    <label className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)] text-sm text-[var(--ink-dim)]">
       <input
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
-        className="h-4 w-4 accent-[var(--muted-gold)]"
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span>{label}</span>
     </label>
@@ -494,7 +494,7 @@ function CheckField({ label, checked, onChange }) {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -502,7 +502,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -519,7 +519,7 @@ function TextAreaField({
 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
 
@@ -529,11 +529,11 @@ function TextAreaField({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
 
       {helperText ? (
-        <span className="mt-2 block text-xs leading-5 text-[var(--muted)]">
+        <span className="mt-2 block text-xs leading-5 text-[var(--ink-dim)]">
           {helperText}
         </span>
       ) : null}

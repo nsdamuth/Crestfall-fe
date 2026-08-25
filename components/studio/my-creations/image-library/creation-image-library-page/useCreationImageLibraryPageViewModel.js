@@ -132,7 +132,7 @@ export function normalizeCreationLibraryImage(image, index = 0) {
   };
 }
 
-export function useCreationImageLibraryPageViewModel({ creationId }) {
+export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -167,6 +167,13 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
   const [deletedImageOutputIds, setDeletedImageOutputIds] = useState(
     () => new Set()
   );
+  // B5 danger-confirm recipe (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md
+  // section 2.5): the grid delete controls now route through this
+  // modal confirm step instead of window.confirm. The lightbox's own
+  // delete action keeps its separate, already-B5 confirm flow
+  // (MediaLightbox owns "deletion confirmation" for itself); this
+  // state is scoped to the card grid only.
+  const [deleteConfirmImageId, setDeleteConfirmImageId] = useState("");
 
   const isLocallyDeletedImage = useCallback(
     (image) =>
@@ -326,11 +333,6 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
       return;
     }
 
-    const confirmed = window.confirm(
-      "Delete this image from your Image Studio and character libraries? This will remove it from featured slots and hide it from public catalogues."
-    );
-    if (!confirmed) return;
-
     setDeleteMessage("");
     setDeletingImageOutputId(imageOutputId);
 
@@ -372,7 +374,18 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
   }
 
   function onDeleteImage(imageId) {
-    const image = findRawImage(imageId);
+    if (!imageId) return;
+    setDeleteMessage("");
+    setDeleteConfirmImageId(String(imageId));
+  }
+
+  function onCancelDeleteImage() {
+    setDeleteConfirmImageId("");
+  }
+
+  function onConfirmDeleteImage() {
+    const image = findRawImage(deleteConfirmImageId);
+    setDeleteConfirmImageId("");
     if (image) handleDeleteImage(image);
   }
 
@@ -453,6 +466,20 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
     [featuredSlots, isLocallyDeletedImage, likedImageIds, bookmarkedImageIds]
   );
 
+  // Type-aware copy input for the B5 delete-confirm modal: whether the
+  // pending image currently fills one of the four featured slots, so
+  // the confirm copy can warn that deleting it also clears that slot.
+  const deleteConfirmIsFeatured = useMemo(
+    () =>
+      Boolean(
+        deleteConfirmImageId &&
+          featuredSlotCards.some(
+            (slot) => slot.image?.id === deleteConfirmImageId
+          )
+      ),
+    [deleteConfirmImageId, featuredSlotCards]
+  );
+
   const activePreviewItem = activePreviewId
     ? lightboxImages.find(
         (image) => normalizeCreationLibraryImage(image).id === activePreviewId
@@ -492,6 +519,14 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
     backHref: creationId
       ? `/studio/my-creations/${encodeURIComponent(creationId)}/edit`
       : "/studio/my-creations",
+    // RULED 11 Aug 2026 (Sprint H render review, item 4): the v2 editor
+    // composition (app/studio/v2/editor/ImageLibrary.jsx) already
+    // renders its own origin-aware Back; passing showBackLink={false}
+    // there removes this legacy control so only one back path exists.
+    // Defaults true, unchanged for the legacy
+    // /studio/my-creations/[id]/image-library caller, which has no
+    // outer back control of its own.
+    showBackLink,
     imageStudioHref,
     loadStatus,
     loadMessage,
@@ -530,5 +565,9 @@ export function useCreationImageLibraryPageViewModel({ creationId }) {
     onHideImage: hideImage,
     onShowImage: showImage,
     onDeleteImage,
+    deleteConfirmOpen: Boolean(deleteConfirmImageId),
+    deleteConfirmIsFeatured,
+    onCancelDeleteImage,
+    onConfirmDeleteImage,
   };
 }

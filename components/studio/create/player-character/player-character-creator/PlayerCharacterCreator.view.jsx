@@ -71,14 +71,14 @@ export default function PlayerCharacterCreatorView({
 }) {
   return (
     <section className="mt-8">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Player Character Draft
             </p>
-            <p className="mt-1 text-sm text-[var(--muted)]">
-              {progress}% filled — all fields can be refined later.
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">
+              {progress}% filled · all fields can be refined later.
             </p>
           </div>
 
@@ -86,9 +86,9 @@ export default function PlayerCharacterCreatorView({
             type="button"
             onClick={() => onSave?.()}
             disabled={saveDisabled}
-            className="rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cf-btn cf-btn--primary"
           >
-            {saveStatus === "saving" ? "Saving..." : "Save Draft →"}
+            {saveStatus === "saving" ? "Saving..." : "Save draft →"}
           </button>
         </div>
 
@@ -103,10 +103,10 @@ export default function PlayerCharacterCreatorView({
                 onClick={() => onSelectStep?.(step.id)}
                 className={`rounded-xl border p-3 text-left transition ${
                   step.active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
+                    ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : step.visited
-                      ? "border-[var(--muted-gold)]/25 bg-black/35 text-[var(--muted-gold)]"
-                      : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/25"
+                      ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                 }`}
               >
                 <Icon size={17} />
@@ -122,7 +122,7 @@ export default function PlayerCharacterCreatorView({
       <div className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         <PlayerCharacterPreview form={form} />
 
-        <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           {activeStep === "identity" ? (
             <IdentityStep
               form={form}
@@ -182,7 +182,7 @@ export default function PlayerCharacterCreatorView({
               type="button"
               onClick={() => onBack?.()}
               disabled={activeIndex === 0}
-              className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="cf-btn cf-btn--secondary"
             >
               Back
             </button>
@@ -192,15 +192,15 @@ export default function PlayerCharacterCreatorView({
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
-                {saveStatus === "saving" ? "Saving..." : "Finish Draft →"}
+                {saveStatus === "saving" ? "Saving..." : "Finish draft →"}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => onNext?.()}
-                className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/25 hover:text-[var(--foreground)]"
+                className="cf-btn cf-btn--primary"
               >
                 Next
               </button>
@@ -214,14 +214,14 @@ export default function PlayerCharacterCreatorView({
 
 function PlayerCharacterPreview({ form }) {
   return (
-    <aside className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-      <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black via-black/75 to-[var(--muted-gold)]/10">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/75 to-[var(--gold-ornament)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
-            <p className="font-display text-5xl text-[var(--muted-gold)]">
+            <p className="font-display text-5xl text-[var(--gold-ornament)]">
               {(form.name || "P").slice(0, 1).toUpperCase()}
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
               Player Character Image
             </p>
           </div>
@@ -232,11 +232,11 @@ function PlayerCharacterPreview({ form }) {
         {form.name || "Unnamed Player Character"}
       </h2>
 
-      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <p className="mt-1 text-sm uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {form.alias || form.role_archetype || "Private Persona"}
       </p>
 
-      <div className="mt-5 space-y-2 text-sm leading-6 text-[var(--muted)]">
+      <div className="mt-5 space-y-2 text-sm leading-6 text-[var(--ink-dim)]">
         <p>
           {resolveIdentityDisplayValue(
             form.species,
@@ -289,7 +289,7 @@ function IdentityStep({
         />
 
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             Age
           </span>
 
@@ -301,7 +301,7 @@ function IdentityStep({
             onChange={(event) => onUpdateField?.("age", event.target.value)}
             onBlur={() => onNormalizeAdultAge?.()}
             placeholder="18+"
-            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
         </label>
 
@@ -458,11 +458,11 @@ function ProfileStep({ form, onUpdateField }) {
           rows={4}
         />
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
-          <p className="text-sm text-[var(--foreground)]">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <p className="text-sm text-[var(--ink)]">
             Player control boundary
           </p>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             These notes inform narration and image generation. The AI should not
             speak or act for this player character unless a room setting
             explicitly allows it.
@@ -510,8 +510,8 @@ function ReviewStep({
         />
       </div>
 
-      <div className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/25 p-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Draft Summary
         </p>
 
@@ -554,11 +554,11 @@ function ReviewStep({
 function StepTitle({ title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         Player Character Builder
       </p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
-      <p className="mt-3 leading-7 text-[var(--muted)]">{body}</p>
+      <p className="mt-3 leading-7 text-[var(--ink-dim)]">{body}</p>
     </div>
   );
 }
@@ -566,10 +566,10 @@ function StepTitle({ title, body }) {
 function SummaryItem({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }
@@ -577,14 +577,14 @@ function SummaryItem({ label, value }) {
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -593,7 +593,7 @@ function TextField({ label, value, onChange, placeholder }) {
 function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <textarea
@@ -601,7 +601,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );

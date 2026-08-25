@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { Plus, Shirt, Trash2 } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import {
+  CheckboxField,
+  SectionTitle,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function WardrobeFieldsSectionView({
   activeSection = "overview",
@@ -39,7 +45,7 @@ export default function WardrobeFieldsSectionView({
 
   return (
     <div>
-      <SectionHeader
+      <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
@@ -142,10 +148,10 @@ function EntriesSection({
         <button
           type="button"
           onClick={() => onAddEntry?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary"
         >
           <Plus size={14} />
-          Add Entry
+          Add entry
         </button>
 
         <div className="mt-4 space-y-2">
@@ -155,38 +161,38 @@ function EntriesSection({
                 key={entry.id}
                 type="button"
                 onClick={() => entry.onSelect?.()}
-                className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   entry.isActive
-                    ? "border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--muted-gold)]/30"
+                    ? "border-[var(--gold-action)] bg-[var(--gold-ornament)]/10"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--line)]"
                 }`}
               >
-                <p className="line-clamp-1 font-display text-xl">
+                <p className="line-clamp-1 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                   {entry.labelDisplay}
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                   {entry.roleDisplay} · {entry.enabledDisplay}
                 </p>
               </button>
             ))
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--muted)]">
+            <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
         {activeEntry ? (
           <WardrobeEntryEditor
             entry={activeEntry}
             entryRoleOptions={entryRoleOptions}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <Shirt size={28} className="mx-auto text-[var(--muted-gold)]" />
-            <p className="mt-4 text-sm text-[var(--muted)]">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-8 text-center">
+            <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
+            <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
             </p>
           </div>
@@ -209,28 +215,30 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
         </Field>
 
         <Field label="Outfit">
-          <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-4">
             {entry.outfitCreationId ? (
               <div className="flex items-start gap-4">
                 {entry.outfitImageUrl ? (
                   <div
-                    className="h-20 w-20 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+                    className="h-20 w-20 shrink-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-cover bg-center"
                     style={{ backgroundImage: `url(${entry.outfitImageUrl})` }}
                   />
                 ) : null}
 
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-2xl">{entry.outfitTitle}</p>
-                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
+                  <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+                    {entry.outfitTitle}
+                  </p>
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
                     {entry.outfitDescription}
                   </p>
-                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--muted)]">
+                  <p className="mt-2 break-all text-[11px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
                     {entry.outfitCreationId}
                   </p>
                 </div>
               </div>
             ) : (
-              <p className="text-sm leading-6 text-[var(--muted)]">
+              <p className="text-sm leading-6 text-[var(--ink-dim)]">
                 No outfit selected yet.
               </p>
             )}
@@ -238,21 +246,20 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
             <button
               type="button"
               onClick={() => entry.onChooseOutfit?.()}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--primary mt-4"
             >
               <Shirt size={14} />
-              {entry.outfitCreationId ? "Change Outfit" : "Select Outfit"}
+              {entry.outfitCreationId ? "Change outfit" : "Select outfit"}
             </button>
           </div>
         </Field>
 
-        <Field label="Role">
-          <CrestfallSelect
-            value={entry.roleValue}
-            options={entryRoleOptions}
-            onChange={(value) => entry.onChangeRole?.(value)}
-          />
-        </Field>
+        <SelectField
+          label="Role"
+          value={entry.roleValue}
+          options={entryRoleOptions}
+          onChange={(value) => entry.onChangeRole?.(value)}
+        />
 
         <Field label="Priority">
           <TextInput
@@ -287,27 +294,19 @@ function WardrobeEntryEditor({ entry, entryRoleOptions }) {
         </div>
       </div>
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
-        <input
-          type="checkbox"
-          checked={entry.enabledChecked}
-          onChange={(event) =>
-            entry.onChangeEnabled?.(event.target.checked)
-          }
-          className="mt-1"
-        />
-        <span className="text-sm leading-6 text-[var(--muted)]">
-          This outfit entry is enabled for future default wardrobe selection.
-        </span>
-      </label>
+      <CheckboxField
+        label="This outfit entry is enabled for future default wardrobe selection."
+        checked={entry.enabledChecked}
+        onChange={(checked) => entry.onChangeEnabled?.(checked)}
+      />
 
       <button
         type="button"
         onClick={() => entry.onDelete?.()}
-        className="inline-flex items-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15"
+        className="cf-btn cf-btn--danger"
       >
         <Trash2 size={14} />
-        Delete Entry
+        Delete entry
       </button>
     </div>
   );
@@ -332,27 +331,18 @@ function RulesSection({
 }) {
   return (
     <div className="mt-6 grid gap-4 lg:grid-cols-2">
-      <Field label="Fallback mode">
-        <CrestfallSelect
-          value={fallbackModeValue}
-          options={fallbackModeOptions}
-          onChange={(value) => onChangeFallbackMode?.(value)}
-        />
-      </Field>
+      <SelectField
+        label="Fallback mode"
+        value={fallbackModeValue}
+        options={fallbackModeOptions}
+        onChange={(value) => onChangeFallbackMode?.(value)}
+      />
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
-        <input
-          type="checkbox"
-          checked={allowRandomChecked}
-          onChange={(event) =>
-            onChangeAllowRandom?.(event.target.checked)
-          }
-          className="mt-1"
-        />
-        <span className="text-sm leading-6 text-[var(--muted)]">
-          Allow random selection among matching enabled outfits later.
-        </span>
-      </label>
+      <CheckboxField
+        label="Allow random selection among matching enabled outfits later."
+        checked={allowRandomChecked}
+        onChange={(checked) => onChangeAllowRandom?.(checked)}
+      />
 
       <div className="lg:col-span-2">
         <Field label="Summary">
@@ -410,7 +400,7 @@ function RulesSection({
 function Field({ label, children }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <div className="mt-2">{children}</div>
@@ -422,31 +412,62 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition-colors hover:border-[var(--line)]"
     />
   );
 }
 
-function TextArea(props) {
-  return (
-    <textarea
-      {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
-    />
-  );
-}
+// K1 folding field pattern (SharedFields.jsx TextAreaField), ED1d
+// Defect 2: every long-form field here was a bare textarea with no
+// fold and no counter. Reimplemented inline (rather than delegating
+// to TextAreaField) because every call site already owns its label
+// via the `Field` wrapper above; a second label would double up.
+// `maxLength` defaults to the SHORT_LONGFORM ruling for call sites
+// that do not pass their own (e.g. the 2,000-char prompt fields do).
+function TextArea({
+  value = "",
+  onChange = () => {},
+  placeholder,
+  maxLength = SHORT_LONGFORM_MAX_LENGTH,
+  rows: _rows, // superseded by the fold's own resting/expanded heights
+  ...rest
+}) {
+  const [isFocused, setIsFocused] = useState(false);
+  const [hasExpanded, setHasExpanded] = useState(false);
+  const isExpanded = hasExpanded || Boolean(String(value).trim());
+  const atLimit = maxLength && value.length >= maxLength;
+  const pastThreshold = maxLength && value.length >= maxLength * 0.8;
+  const showCounter = maxLength && (isFocused || pastThreshold);
 
-function SectionHeader({ eyebrow, title, body }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
-        {eyebrow}
-      </p>
-      <h3 className="mt-2 font-display text-3xl">{title}</h3>
-      {body ? (
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
-          {body}
-        </p>
+      <textarea
+        {...rest}
+        value={value}
+        onChange={(event) => onChange(event)}
+        onFocus={(event) => {
+          setIsFocused(true);
+          setHasExpanded(true);
+          rest.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setIsFocused(false);
+          rest.onBlur?.(event);
+        }}
+        placeholder={placeholder}
+        maxLength={maxLength || undefined}
+        className="w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition-[height,border-color] hover:border-[var(--line)]"
+        style={{ height: isExpanded ? undefined : "3rem", maxHeight: "320px" }}
+      />
+      {showCounter ? (
+        <span
+          className={`mt-1 block text-right text-[length:var(--text-label)] tabular-nums ${
+            atLimit ? "text-[var(--status-danger)]" : "text-[var(--ink-faint)]"
+          }`}
+        >
+          {value.length}/{maxLength}
+          {atLimit ? " limit" : ""}
+        </span>
       ) : null}
     </div>
   );

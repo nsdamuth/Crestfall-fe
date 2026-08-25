@@ -6,10 +6,12 @@ import {
   Download,
   RotateCcw,
   WandSparkles,
-  X,
 } from "lucide-react";
 
-import ModalShell from "@/components/ui/ModalShell";
+import KitModalFrame from "@/components/kit/KitModalFrame";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function IssueList({
   title,
@@ -20,8 +22,8 @@ function IssueList({
 
   const toneClassName =
     tone === "warning"
-      ? "border-amber-300/20 bg-amber-500/10 text-amber-100"
-      : "border-red-300/20 bg-red-500/10 text-red-100";
+      ? "border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] text-[var(--status-warning-text)]"
+      : "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger-text)]";
 
   return (
     <section
@@ -34,11 +36,8 @@ function IssueList({
 
       <div className="mt-3 grid gap-2">
         {issues.map((issue, index) => (
-          <div
-            key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
-          >
-            <code className="break-all text-[11px] text-[var(--muted-gold)]">
+          <div key={`${issue?.path || "issue"}-${index}`}>
+            <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
             </code>
             <p className="mt-1 text-xs leading-5">
@@ -62,7 +61,7 @@ function ToolbarButton({
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       <Icon size={13} />
       {children}
@@ -92,46 +91,38 @@ export default function MechanicsJsonEditorModalView({
   onValidateAndApply = null,
 }) {
   return (
-    <ModalShell
+    <KitModalFrame
       onClose={onClose}
-      closeOnBackdrop={false}
-      panelClassName="max-h-[94vh] w-full max-w-7xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
+      ariaLabel={title}
+      hasUnsavedChanges={hasDraftChanges}
+      panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             <Braces size={15} />
             Loom Authoring Tool
           </p>
 
-          <h2 className="mt-2 font-display text-4xl">
+          <h2 className="mt-2 font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)]">
             {title}
           </h2>
 
-          <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--ink-dim)]">
             {description}
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
-          aria-label="Close Mechanics JSON Editor"
-        >
-          <X size={18} />
-        </button>
       </div>
 
-      <div className="grid max-h-[calc(94vh-10rem)] gap-4 overflow-y-auto p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS}>
                 <Code2 size={14} />
                 Authored Mechanics Data
               </p>
-              <p className="mt-1 text-xs text-[var(--muted)]">
+              <p className="mt-1 text-xs text-[var(--ink-dim)]">
                 {lineCount} lines · {characterCount} characters
                 {hasDraftChanges ? " · unsaved modal edits" : ""}
               </p>
@@ -152,10 +143,10 @@ export default function MechanicsJsonEditorModalView({
                 onClick={onDownloadAiGuide}
               >
                 {guideDownloadStatus === "downloaded"
-                  ? "Guide Downloaded"
+                  ? "Guide downloaded"
                   : guideDownloadStatus === "error"
-                    ? "Retry AI Guide"
-                    : "Download AI Guide"}
+                    ? "Retry AI guide"
+                    : "Download AI guide"}
               </ToolbarButton>
 
               <ToolbarButton
@@ -169,7 +160,7 @@ export default function MechanicsJsonEditorModalView({
                 icon={RotateCcw}
                 onClick={onReset}
               >
-                Reset from Builder
+                Reset from builder
               </ToolbarButton>
             </div>
           </div>
@@ -181,16 +172,16 @@ export default function MechanicsJsonEditorModalView({
             }
             spellCheck={false}
             aria-label="Mechanics Module JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
           />
         </section>
 
         <aside className="grid content-start gap-4">
-          <section className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 p-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+          <section className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
+            <p className={EYEBROW_CLASS}>
               Apply Behavior
             </p>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               The complete object is parsed, contract-checked, normalized, and
               then applied as one replacement of the current creation data.
               Invalid JSON never partially updates the builder.
@@ -199,10 +190,10 @@ export default function MechanicsJsonEditorModalView({
 
           {statusMessage ? (
             <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS}>
                 Status
               </p>
-              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 {statusMessage}
               </p>
             </section>
@@ -225,12 +216,12 @@ export default function MechanicsJsonEditorModalView({
           />
 
           {!errors.length && !warnings.length ? (
-            <section className="rounded-xl border border-emerald-300/15 bg-emerald-500/5 p-4 text-emerald-100">
+            <section className="rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bed)] p-4 text-[var(--status-success-text)]">
               <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em]">
                 <Check size={14} />
                 Ready to Validate
               </p>
-              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 Validation runs when you choose Validate & Apply.
               </p>
             </section>
@@ -238,8 +229,8 @@ export default function MechanicsJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 p-5">
-        <p className="text-xs leading-5 text-[var(--muted)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
+        <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open builder. The normal page Save action still
           controls persistence.
         </p>
@@ -248,7 +239,7 @@ export default function MechanicsJsonEditorModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary"
           >
             Cancel
           </button>
@@ -257,13 +248,13 @@ export default function MechanicsJsonEditorModalView({
             type="button"
             onClick={() => onValidateAndApply?.()}
             disabled={!canApply}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground)] transition hover:bg-[var(--muted-gold)]/25 disabled:cursor-not-allowed disabled:opacity-45"
+            className="cf-btn cf-btn--primary"
           >
             <Check size={14} />
-            Validate & Apply
+            Validate & apply
           </button>
         </div>
       </div>
-    </ModalShell>
+    </KitModalFrame>
   );
 }

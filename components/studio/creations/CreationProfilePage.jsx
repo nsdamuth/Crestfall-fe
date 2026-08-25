@@ -50,7 +50,7 @@ function StandardCreationProfilePage(props) {
         creation?.creatorProfileHref ? (
           <Link
             href={creation.creatorProfileHref}
-            className="text-[var(--foreground)] transition hover:text-[var(--muted-gold)]"
+            className="text-[var(--ink)] transition hover:text-[var(--gold-ornament)]"
           >
             {creation.creatorHandle}
           </Link>
@@ -60,7 +60,7 @@ function StandardCreationProfilePage(props) {
         creation ? (
           <Link
             href={creation.imageStudioHref}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary"
           >
             <Camera size={14} />
             Generate

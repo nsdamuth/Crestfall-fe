@@ -1,5 +1,12 @@
 # Creation Publishing Section
 
+**Contract:** `CreationPublishingSection.contract.js`, 1.1.0 (ED1,
+docs/plans/FABLE-GATE-2-STUDIO.md: Unlist for Editing and Cancel
+Review moved in from the retired sticky action bar, both behind a
+local Confirm/Cancel arm step, same formula as the sticky bar's own
+`canUnlistForEditing`. Public and canon review submission now arm the
+same confirm step. Additive only.)
+
 ## Portable LOOM boundary
 
 ```text

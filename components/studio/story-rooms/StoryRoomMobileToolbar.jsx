@@ -6,15 +6,15 @@ export default function StoryRoomMobileToolbar({
   onOpenState,
 }) {
   return (
-    <div className="mb-3 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-4 xl:hidden">
+    <div className="mb-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-4 xl:hidden">
       <div>
-        <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Story
         </p>
 
         <h1 className="mt-1 font-display text-3xl">{room.title}</h1>
 
-        <p className="mt-1 text-xs text-[var(--muted)]">
+        <p className="mt-1 text-xs text-[var(--ink-dim)]">
           {room.scenario} · {room.roomMode}
         </p>
       </div>
@@ -23,15 +23,15 @@ export default function StoryRoomMobileToolbar({
         <button
           type="button"
           onClick={onOpenCast}
-          className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+          className="cf-btn cf-btn--primary"
         >
-          Cast / Room
+          Cast / room
         </button>
 
         <button
           type="button"
           onClick={onOpenState}
-          className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]"
+          className="cf-btn cf-btn--secondary"
         >
           State
         </button>

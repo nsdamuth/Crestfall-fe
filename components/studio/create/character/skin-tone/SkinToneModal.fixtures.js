@@ -1,9 +1,7 @@
 const noop = () => {};
 
 function toSwatchStyle(color) {
-  return color.includes("gradient")
-    ? { backgroundImage: color }
-    : { backgroundColor: color };
+  return { backgroundColor: color };
 }
 
 function toOption(id, label, color) {
@@ -33,11 +31,7 @@ const options = [
   toOption("DARK_GRAY_TONE", "Dark Gray Tone", "#3f3f46"),
   toOption("PITCH_BLACK_TONE", "Pitch Black Tone", "#020202"),
   toOption("WHITE_TONE", "White Tone", "#ffffff"),
-  toOption(
-    "CUSTOM",
-    "Custom",
-    "linear-gradient(135deg, #f4a7c7, #8b6bd6, #0a7eac)"
-  ),
+  toOption("CUSTOM", "Custom", "var(--surface-1)"),
 ];
 
 const baseFixture = {

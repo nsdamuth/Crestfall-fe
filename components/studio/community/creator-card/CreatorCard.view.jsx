@@ -1,6 +1,14 @@
 "use client";
 
-import { Crown, Heart, Sparkles, User, Users } from "lucide-react";
+import {
+  Crown,
+  Heart,
+  Sparkles,
+  User,
+  UserCheck,
+  UserPlus,
+  Users,
+} from "lucide-react";
 
 import CreatorEngagementActionsView from "@/components/studio/community/creator-engagement-actions/CreatorEngagementActions.view";
 
@@ -27,82 +35,157 @@ export default function CreatorCardView({
   LinkComponent = "a",
 }) {
   const safeStats = Array.isArray(stats) ? stats : [];
+  const followerStat = safeStats.find((stat) => stat?.id === "followers");
+  const mobileEngagementActions = { ...engagementActions, canFollow: false };
 
   return (
-    <article className="w-full min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-black/35 p-5 transition hover:border-[var(--muted-gold)]/30">
+    <article className="w-full min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-white/10 transition hover:border-[var(--gold-ornament)]/30">
       <div
-        className="flex min-w-0 flex-col gap-4 sm:flex-row"
+        className="relative flex min-h-[6rem] items-end overflow-hidden bg-cover bg-center p-4"
         style={
           DEFAULT_PROFILE_BANNER
             ? {
-                backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.86)), url(${DEFAULT_PROFILE_BANNER})`,
-                backgroundPosition: "40% -20px",
-                backgroundSize: "auto 100%",
+                backgroundImage: `linear-gradient(to top, var(--scrim-strong), transparent), url(${DEFAULT_PROFILE_BANNER})`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
               }
             : undefined
         }
       >
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 font-display text-2xl text-[var(--muted-gold)]">
-          {avatarInitial}
+        <div className="flex min-w-0 flex-nowrap items-center gap-3">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-2xl text-[var(--gold-ornament)]">
+            {avatarInitial}
+          </div>
+
+          <div className="min-w-0 flex-1 sm:hidden">
+            <h2 className="truncate font-display text-2xl leading-none">
+              {creatorName}
+            </h2>
+
+            <div className="mt-1 flex min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
+              <span className="truncate text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                @{creatorHandle}
+              </span>
+
+              {followerStat ? (
+                <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-xs text-[var(--ink-dim)]">
+                  <Users size={12} />
+                  {followerStat.value}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="hidden min-w-0 flex-nowrap items-center gap-2 overflow-hidden sm:flex">
+            <span className="truncate text-sm uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              @{creatorHandle}
+            </span>
+
+            <span className="flex shrink-0 flex-nowrap items-center gap-1 whitespace-nowrap text-xs text-[var(--ink-dim)]">
+              {safeStats.map((stat) => {
+                const Icon = STAT_ICONS[stat?.id];
+
+                if (!Icon) return null;
+
+                return (
+                  <span
+                    key={stat.id}
+                    className="inline-flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <Icon size={12} />
+                    {stat.value}
+                  </span>
+                );
+              })}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="flex flex-wrap items-center gap-2">
+          {featured ? (
+            <span className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+              <Sparkles size={11} />
+              Featured
+            </span>
+          ) : null}
+
+          {canonContributor ? (
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-[var(--tag-bed-art)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-200">
+              <Crown size={11} />
+              Canon Contributor
+            </span>
+          ) : null}
         </div>
 
-        <div className="min-w-0 flex-1 overflow-hidden">
-          <div className="flex flex-wrap items-center gap-2">
-            {featured ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
-                <Sparkles size={11} />
-                Featured
-              </span>
+        <h2 className="mt-3 hidden break-words font-display text-3xl leading-none sm:block">
+          {creatorName}
+        </h2>
+
+        <p className="mt-3 leading-7 text-[var(--ink-dim)]">{tagline}</p>
+
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+          {description}
+        </p>
+
+        <div className="sm:hidden">
+          <CreatorEngagementActionsView {...mobileEngagementActions} />
+
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {engagementActions.canFollow ? (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  engagementActions.onToggleFollow?.();
+                }}
+                title={
+                  engagementActions.followed
+                    ? "Unfollow creator"
+                    : "Follow creator"
+                }
+                aria-label={
+                  engagementActions.followed
+                    ? "Unfollow creator"
+                    : "Follow creator"
+                }
+                className={`cf-btn cf-btn--secondary cf-btn--sm ${
+                  engagementActions.followed
+                    ? "border-pink-400/45 bg-pink-400/15 text-pink-200"
+                    : ""
+                }`}
+              >
+                {engagementActions.followed ? (
+                  <UserCheck size={14} />
+                ) : (
+                  <UserPlus size={14} />
+                )}
+                {engagementActions.followed ? "Following" : "Follow"}
+              </button>
             ) : null}
 
-            {canonContributor ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-emerald-200">
-                <Crown size={11} />
-                Canon Contributor
-              </span>
-            ) : null}
+            <LinkComponent
+              href={profileHref}
+              className={`cf-btn cf-btn--primary cf-btn--sm ${
+                engagementActions.canFollow ? "" : "col-span-2"
+              }`}
+            >
+              View profile
+            </LinkComponent>
           </div>
+        </div>
 
-          <h2 className="mt-3 break-words font-display text-3xl leading-none">
-            {creatorName}
-          </h2>
-
-          <p className="mt-1 break-all text-sm uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-            @{creatorHandle}
-          </p>
-
-          <p className="mt-3 leading-7 text-[var(--muted)]">{tagline}</p>
-
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            {description}
-          </p>
-
-          <div className="mt-5 grid grid-cols-1 gap-2 text-xs text-[var(--muted)] sm:grid-cols-2 lg:flex lg:flex-wrap lg:gap-4">
-            {safeStats.map((stat) => {
-              const Icon = STAT_ICONS[stat?.id];
-
-              if (!Icon) return null;
-
-              return (
-                <span
-                  key={stat.id}
-                  className="inline-flex items-center gap-1 whitespace-nowrap"
-                >
-                  <Icon size={14} />
-                  {stat.value} {stat.label}
-                </span>
-              );
-            })}
-          </div>
-
+        <div className="hidden sm:block">
           <CreatorEngagementActionsView {...engagementActions} />
 
           <LinkComponent
             href={profileHref}
-            className="mt-5 inline-flex w-fit rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--primary mt-5 w-fit"
           >
-            View Profile
+            View profile
           </LinkComponent>
         </div>
       </div>

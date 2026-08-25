@@ -5,7 +5,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
   title = "Rules Codex Attachments",
   body =
     "Attach Rules Codices that define how this Story interprets mechanics, thresholds, special cases, and world-specific rules.",
-  addLabel = "Attach Rules Codex",
+  addLabel = "Attach rules codex",
   emptyLabel = "No Rules Codices attached.",
   runtimeNote =
     "This relationship establishes Story scope only. Runtime section selection and prompt composition are activated separately.",
@@ -20,11 +20,11 @@ export default function StoryRulesCodexAttachmentsSectionView({
     <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
           <h3 className="mt-2 font-display text-3xl">{title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--muted)]">
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
             {body}
           </p>
         </div>
@@ -32,20 +32,20 @@ export default function StoryRulesCodexAttachmentsSectionView({
         <button
           type="button"
           onClick={() => onOpenPicker?.()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary"
         >
           <Link2 size={14} />
           {addLabel}
         </button>
       </div>
 
-      <div className="mt-5 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/30 p-5">
+      <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-5">
         <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-4">
           <BookOpen
             size={18}
-            className="mt-0.5 shrink-0 text-[var(--muted-gold)]"
+            className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
           />
-          <p className="text-sm leading-6 text-[var(--muted)]">
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
             {runtimeNote}
           </p>
         </div>
@@ -66,7 +66,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
             {emptyLabel}
           </p>
         )}
@@ -81,7 +81,7 @@ function RulesCodexAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         {attachment?.imageUrl ? (
           <div
@@ -91,7 +91,7 @@ function RulesCodexAttachmentCard({
             aria-label={`${attachment?.title || "Rules Codex"} cover`}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[var(--muted-gold)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[var(--gold-ornament)]">
             <BookOpen size={22} />
           </div>
         )}
@@ -100,7 +100,7 @@ function RulesCodexAttachmentCard({
           <p className="truncate font-display text-xl">
             {attachment?.title || "Attached Rules Codex"}
           </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {attachment?.typeLabel || "Rules Codex"}
           </p>
         </div>
@@ -108,18 +108,19 @@ function RulesCodexAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached Rules Codex"
           }
         >
           <X size={14} />
+          Remove
         </button>
       </div>
 
       <div className="p-4">
         {attachment?.description ? (
-          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {attachment.description}
           </p>
         ) : null}
@@ -129,7 +130,7 @@ function RulesCodexAttachmentCard({
           value={attachment?.notes || ""}
           onChange={(event) => onNotesChange?.(event.target.value)}
           placeholder="Optional Story-scope notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </article>

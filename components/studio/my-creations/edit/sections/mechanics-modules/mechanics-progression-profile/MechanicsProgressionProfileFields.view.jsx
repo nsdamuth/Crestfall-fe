@@ -2,9 +2,14 @@
 
 import { Plus, Trash2 } from "lucide-react";
 
+import { CheckboxField, SelectField as SharedSelectField } from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
 function FieldLabel({ children }) {
   return (
-    <span className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+    <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
       {children}
     </span>
   );
@@ -12,41 +17,39 @@ function FieldLabel({ children }) {
 
 function TextField({ label, value, onChange, type = "text", placeholder = "" }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <FieldLabel>{label}</FieldLabel>
       <input
         type={type}
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
 }
 
+// 4.4: native select retired in favor of the branded kit dropdown
+// grammar. This wrapper keeps its own id-based option shape (every
+// call site in this file already uses it) and translates to
+// SharedFields.SelectField's value-based shape underneath.
 function SelectField({ label, value, options = [], onChange }) {
-  return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
-      <FieldLabel>{label}</FieldLabel>
-      <select
-        value={value ?? ""}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50"
-      >
-        {options.map((option) => {
-          const item = typeof option === "string"
-            ? { id: option, label: option.replaceAll("_", " ") }
-            : option;
+  const normalizedOptions = options.map((option) => {
+    const item =
+      typeof option === "string"
+        ? { id: option, label: option.replaceAll("_", " ") }
+        : option;
+    return { value: item.id, label: item.label, isDisabled: item.disabled === true };
+  });
 
-          return (
-            <option key={item.id} value={item.id} disabled={item.disabled === true}>
-              {item.label}
-            </option>
-          );
-        })}
-      </select>
-    </label>
+  return (
+    <SharedSelectField
+      label={label}
+      value={value ?? ""}
+      options={normalizedOptions}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
@@ -68,11 +71,7 @@ function SmallButton({ children, onClick, danger = false, title = "" }) {
       type="button"
       onClick={onClick}
       title={title}
-      className={
-        danger
-          ? "inline-flex items-center justify-center gap-2 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-red-200 transition hover:bg-red-500/20"
-          : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.12em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20"
-      }
+      className={`cf-btn cf-btn--sm ${danger ? "cf-btn--danger" : "cf-btn--secondary"}`}
     >
       {children}
     </button>
@@ -90,7 +89,7 @@ function DerivedValueCard({
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+        <p className={EYEBROW_CLASS}>
           Derived Value {index + 1}
         </p>
         <SmallButton danger onClick={onRemove} title="Remove derived value">
@@ -185,7 +184,7 @@ function DerivedValueCard({
       </div>
 
       {rule.method === "EXPLICIT_TABLE" ? (
-        <p className="mt-4 rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="mt-4 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit derived-value tables remain available through the JSON Editor.
           Generated interval and linear rules are the compact visual-authoring paths.
         </p>
@@ -251,16 +250,16 @@ export default function MechanicsProgressionProfileFieldsView({
   removeDerivedValue = () => {},
 }) {
   return (
-    <div className="grid gap-5 rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/5 p-5 md:col-span-2 xl:col-span-3">
+    <div className="grid gap-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-5 md:col-span-2 xl:col-span-3">
       <div>
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <p className={EYEBROW_CLASS}>
           Optimized Progression Profile
         </p>
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Reconcile a source counter into a rank and optional derived counters
           without authoring one composition step per rank.
         </p>
-        <p className="mt-2 text-xs text-[var(--foreground)]">{summary.label}</p>
+        <p className="mt-2 text-xs text-[var(--ink)]">{summary.label}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -318,18 +317,14 @@ export default function MechanicsProgressionProfileFieldsView({
         />
       </div>
 
-      <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--muted)]">
-        <input
-          type="checkbox"
-          checked={profile.allowRankDecrease === true}
-          onChange={(event) => patchProfile({ allowRankDecrease: event.target.checked })}
-          className="h-4 w-4 accent-[var(--muted-gold)]"
-        />
-        Allow reconciliation to reduce an existing rank
-      </label>
+      <CheckboxField
+        label="Allow reconciliation to reduce an existing rank"
+        checked={profile.allowRankDecrease === true}
+        onChange={(checked) => patchProfile({ allowRankDecrease: checked })}
+      />
 
       {profile.mode === "EXPLICIT_TABLE" ? (
-        <p className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+        <p className="rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bed)] px-4 py-3 text-xs leading-5 text-[var(--status-warning-text)]">
           Explicit threshold tables remain supported for total manual control and
           can be edited in the JSON Editor. Generated curves are the compact visual path.
         </p>
@@ -392,14 +387,14 @@ export default function MechanicsProgressionProfileFieldsView({
         <div className="rounded-xl border border-white/10 bg-black/25 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <FieldLabel>Rank Overrides</FieldLabel>
-              <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+              <p className={EYEBROW_CLASS}>Rank Overrides</p>
+              <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 Override a generated per-rank cost or cumulative threshold for selected ranks.
               </p>
             </div>
             <SmallButton onClick={addOverride}>
               <Plus size={13} />
-              Add Override
+              Add override
             </SmallButton>
           </div>
           <div className="mt-4 grid gap-3">
@@ -413,7 +408,7 @@ export default function MechanicsProgressionProfileFieldsView({
               />
             ))}
             {!profile.overrides.length ? (
-              <p className="text-xs text-[var(--muted)]">No rank overrides.</p>
+              <p className="text-xs text-[var(--ink-dim)]">No rank overrides.</p>
             ) : null}
           </div>
         </div>
@@ -422,14 +417,14 @@ export default function MechanicsProgressionProfileFieldsView({
       <div className="rounded-xl border border-white/10 bg-black/25 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <FieldLabel>Derived Counters</FieldLabel>
-            <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+            <p className={EYEBROW_CLASS}>Derived Counters</p>
+            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Recalculate proficiency, talent points, health, or other counters from the resulting rank.
             </p>
           </div>
           <SmallButton onClick={addDerivedValue}>
             <Plus size={13} />
-            Add Derived Counter
+            Add derived counter
           </SmallButton>
         </div>
         <div className="mt-4 grid gap-3">
@@ -445,21 +440,21 @@ export default function MechanicsProgressionProfileFieldsView({
             />
           ))}
           {!profile.derivedValues.length ? (
-            <p className="text-xs text-[var(--muted)]">No derived counters configured.</p>
+            <p className="text-xs text-[var(--ink-dim)]">No derived counters configured.</p>
           ) : null}
         </div>
       </div>
 
       <div className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
         <div className="border-b border-white/10 px-4 py-3">
-          <FieldLabel>Generated Threshold Preview</FieldLabel>
-          <p className="mt-2 text-xs text-[var(--muted)]">
+          <p className={EYEBROW_CLASS}>Generated Threshold Preview</p>
+          <p className="mt-2 text-xs text-[var(--ink-dim)]">
             {summary.transitionCount} transitions · maximum threshold {Math.round(summary.maximumThreshold).toLocaleString("en-US")}
           </p>
         </div>
         <div className="max-h-72 overflow-auto">
           <table className="w-full min-w-[34rem] text-left text-xs">
-            <thead className="sticky top-0 bg-[#0b0a09] text-[var(--muted-gold)]">
+            <thead className="sticky top-0 bg-[#0b0a09] text-[var(--gold-ornament)]">
               <tr>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Rank</th>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Cost to Reach</th>
@@ -473,8 +468,8 @@ export default function MechanicsProgressionProfileFieldsView({
             </thead>
             <tbody>
               {previewRows.map((row) => (
-                <tr key={row.rank} className="border-t border-white/5 text-[var(--muted)]">
-                  <td className="px-4 py-3 text-[var(--foreground)]">{row.rank}</td>
+                <tr key={row.rank} className="border-t border-white/5 text-[var(--ink-dim)]">
+                  <td className="px-4 py-3 text-[var(--ink)]">{row.rank}</td>
                   <td className="px-4 py-3">{Math.round(row.requirement).toLocaleString("en-US")}</td>
                   <td className="px-4 py-3">{Math.round(row.totalRequirement).toLocaleString("en-US")}</td>
                   {row.derivedValues.map((derivedValue) => (

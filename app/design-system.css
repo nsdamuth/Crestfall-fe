@@ -1,0 +1,491 @@
+/* ============================================================
+   DESIGN SYSTEM STYLESHEET
+
+   Selector-based rules that pair with the variables-only
+   app/theme.css. Anything here needing a class or element
+   selector lives here, never inside a component file. Every
+   value below resolves through a token already defined in
+   app/theme.css; no raw hex, no new literal outside a named
+   token block.
+
+   Lifted verbatim from the approved proof draft at
+   ~/dev/crestfall-main/Crestfall/design-system/proof/, per the
+   phase 2 skin brief, step 3. Class names are prefixed cf- so
+   they read as design-system definitions rather than page-local
+   markup, matching this repo's existing cf-card/cf-art
+   convention in the same file family.
+
+   These are reusable effect definitions only. Wiring them into
+   any specific component (cards, modals, dropdowns) is Phase 3
+   scope; this file defines the recipe, it does not adopt it.
+   ============================================================ */
+
+/* --- SHEEN --------------------------------------------------
+   Source: library.css, the card-face hover corner CTA (lines
+   356-367). A diagonal sweep of --grad-sheen across an element,
+   triggered on hover/focus-visible of an ancestor that opts in.
+   Generalized here from :is(.lcard,.shot,.lentry) .corner::after
+   to a reusable .cf-sheen target so Phase 3 can attach it to any
+   card-face affordance without duplicating the recipe.        */
+
+.cf-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.cf-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--grad-sheen);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+}
+.cf-sheen:is(:hover, :focus-visible)::after {
+  opacity: 1;
+  animation: cf-cornersheen 0.9s var(--ease) 1;
+}
+@keyframes cf-cornersheen {
+  from { background-position: 120% 0; }
+  to { background-position: -30% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-sheen:is(:hover, :focus-visible)::after { animation: none; }
+}
+
+/* --- GALAXY ---------------------------------------------------
+   Source: proof.css, the galaxy layer (lines 247-254). Two
+   stacked layers so the animated one never forces a repaint of
+   the static atmosphere above it; the second, static layer is
+   whatever sits behind .cf-galaxy in a given canvas, unchanged
+   here. Absolutely positioned, z-index -2, pointer-events none,
+   so it never intercepts input on the canvas it sits inside.  */
+
+.cf-galaxy {
+  position: absolute;
+  inset: -10%;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--atm-constellation);
+  background-repeat: no-repeat;
+  animation:
+    cf-galaxy-drift var(--anim-galaxy) linear infinite,
+    cf-galaxy-twinkle var(--anim-twinkle) ease-in-out infinite alternate;
+}
+@keyframes cf-galaxy-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-4%, -3%, 0); }
+}
+@keyframes cf-galaxy-twinkle {
+  from { opacity: 0.45; }
+  to { opacity: 0.95; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-galaxy { animation: none; }
+}
+
+/* --- GLOW -------------------------------------------------
+   Source: proof.css G7 rule (lines 273-286): every pressable
+   surface answers hover with --glow-hover, timed with
+   --dur-hover and --ease-hover. .cf-glow-hover is the reusable
+   hook; .btn/.btn--ghost in the draft declare their own
+   transition beside their own rules for cascade reasons that do
+   not apply here, so this file carries the one shared version.
+   Under reduced motion the glow still appears on hover; only
+   the transition into it is dropped, matching the draft.     */
+
+.cf-glow-hover {
+  transition: box-shadow var(--dur-hover) var(--ease-hover);
+}
+.cf-glow-hover:hover {
+  box-shadow: var(--glow-hover);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cf-glow-hover { transition: none; }
+}
+
+/* --- MODAL TREATMENT ----------------------------------------
+   Source: docs/RESTYLE-RULES.md, Modal chrome + Ruling 1 (the
+   unified frame), itself traced to modal.css .cmodal, picker.css
+   .picker, and shell.css .sheet. One frame, three floating-chrome
+   contents. Docks to the bottom edge on phone, centers at
+   700px and above. This is the reusable definition; adopting it
+   inside any specific modal/picker/sheet component is Phase 3.
+
+   .cf-modal-veil is the scrim every floating surface shares.
+   .cf-modal-frame is the frame itself, content goes inside
+   unchanged. .cf-modal-close is the shared circular close
+   control shape.                                              */
+
+.cf-modal-veil {
+  background: var(--scrim-strong);
+  backdrop-filter: blur(var(--blur-panel));
+}
+
+.cf-modal-frame {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface-4);
+  box-shadow: var(--shadow-modal);
+}
+@media (min-width: 700px) {
+  .cf-modal-frame {
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-lg);
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+.cf-modal-close {
+  width: var(--control-md);
+  height: var(--control-md);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--line-whisper);
+  margin-left: auto;
+}
+
+/* --- FOCUS-VISIBLE --------------------------------------------
+   Item 7, phase 3 aesthetics. --focus-ring (app/theme.css) was
+   defined but never wired to a global rule; only one component
+   set focus-visible classes ad hoc. One rule, every interactive
+   element, so keyboard focus is visible everywhere without a
+   per-component opt-in.                                        */
+
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* --- FOCUS ON GOLD, .goldring ----------------------------------
+   B10, ratified 22 Aug 2026 (app/theme.css --focus-ring-ongold).
+   cf-btn--primary is the app's one gold-filled button recipe and
+   gets the ongold ring unconditionally, so every current and future
+   gold CTA is covered with no per-instance opt-in required. .goldring
+   remains as an explicit hook for any other gold-filled surface that
+   is not a cf-btn--primary. Neither replaces --focus-ring elsewhere. */
+.cf-btn--primary:focus-visible,
+.goldring:focus-visible {
+  box-shadow: var(--focus-ring-ongold);
+}
+
+/* cf-field (quiet 1px gold field ring) and kit-focus (border-
+   brightening opt-in) retired 22 Aug 2026 (A3, Fable law review,
+   docs/BUILD-BLUEPRINT.md 2.16(e) struck): the Gate 1 gold-ornament-
+   border-plus-glow recipe ships as the single global --focus-ring
+   above, and every focusable control app-wide, not only field beds,
+   resolves through it. Both dead class attributes were swept from
+   every JSX file in the ED1G dead-class pass (sw13); the
+   kit-search-input suppression rule below is a different, still-live
+   recipe. */
+
+/* --- SEARCH FIELD FOCUS, wrapper-level -------------------------
+   RULED (Brian live-walk polish, item 1): reverses the inner-input
+   default above for search fields specifically. The bordered wrapper
+   is the field's visual unit, so the ring belongs on the wrapper via
+   :focus-within, and the inner .kit-search-input must never show its
+   own ring. Wired once, globally, so every kit-search-field consumer
+   inherits it with no per-instance opt-in. */
+.kit-search-field:focus-within {
+  box-shadow: var(--focus-ring);
+}
+.kit-search-input:focus-visible {
+  box-shadow: none;
+}
+
+/* The native type=search cancel/clear icon renders in the browser's
+   own color (Chromium and Edge both draw it outside token law); it
+   is hidden here so KitStudioFilterBar's own --ink-faint clear icon
+   is the only one shown. */
+.kit-search-input::-webkit-search-cancel-button,
+.kit-search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.kit-search-input::-ms-clear {
+  display: none;
+}
+
+/* --- SCROLLBARS -------------------------------------------------
+   Item 9, phase 3 aesthetics. Subtle translucent brand-styled
+   scrollbars on every internal scroll container, vertical only.
+   Horizontal scrollbars are left at the browser default, never
+   styled or sized here.                                          */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--line-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gold-ornament);
+}
+
+/* --- NAV ITEM STATES --------------------------------------------
+   Item 3, phase 3 aesthetics. Hover, active, and pressed defined
+   once, shared by the studio sidebar rail and the phone bottom
+   dock/drawer, which previously each hardcoded their own copy of
+   the same three Tailwind strings inline. Focus-visible is not
+   redeclared here: the global rule above already covers every
+   nav link. Active is signalled through aria-current, matching
+   docs/RESTYLE-RULES.md's canonical [aria-current] selector, so
+   assistive tech gets the same signal sighted users do from the
+   strongest visual state.                                        */
+
+.cf-nav-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover),
+    border-color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-nav-link:hover {
+  background-color: var(--fill-whisper);
+  color: var(--ink);
+}
+
+.cf-nav-link:active {
+  background-color: var(--fill);
+}
+
+/* Ruled: rail/drawer active recipe traced to the proof's
+   .navgroup a[aria-current] (gold fade + leading edge rule),
+   distinct from the bottom tab dock below, which gets its own
+   .cf-dock-link recipe because it is a different shape (narrow
+   column tiles, not a horizontal-reading list row) and the proof
+   itself never shares one recipe across both. */
+.cf-nav-link[aria-current="page"] {
+  background-image: var(--grad-nav-active);
+  background-repeat: no-repeat;
+  color: var(--gold-bright);
+  box-shadow: inset 2px 0 0 var(--gold-action);
+}
+
+.cf-nav-link[aria-current="page"]:hover {
+  background-image: var(--grad-nav-active);
+  background-repeat: no-repeat;
+}
+
+/* Bottom tab dock active state, traced to the proof's
+   .dock a[aria-current] (shell.css): color only, no fill, no
+   border, no inset rule. Kept separate from .cf-nav-link so the
+   rail/drawer gradient recipe above never lands on the dock's
+   narrow column tiles. */
+.cf-dock-link {
+  transition:
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-dock-link:hover {
+  background-color: var(--fill-whisper);
+  color: var(--ink);
+}
+
+.cf-dock-link:active {
+  background-color: var(--fill);
+}
+
+.cf-dock-link[aria-current="page"] {
+  color: var(--gold-bright);
+}
+
+/* --- BUTTON SYSTEM ------------------------------------------------
+   Item 2, phase 3 aesthetics. docs/RESTYLE-RULES.md documented this
+   recipe (traced to proof.css .btn/.btn--ghost) but no shared
+   component or live CSS ever implemented it; every button in the
+   app hardcodes its own one-off Tailwind classes instead. This is
+   the first real implementation, applied globally through the
+   design system rather than per page, per the brief. Three tiers:
+   primary (filled), secondary (outlined), tertiary (text, arrow on
+   hover). Sentence case is the app default already (no
+   text-transform here to fight), uppercase stays reserved for
+   eyebrows/labels/tags. Soft-cornered rectangles only; --radius-full
+   stays reserved for tags and icon buttons, never a button. One
+   disabled rule, shared by every tier. Destructive is the in-page
+   ghost recipe with --status-danger text, per the Destructive
+   ruling; the filled confirm-step variant (--danger-filled) reuses
+   the same --status-danger token, first consumed by the creator's
+   close confirm step.                                              */
+
+.cf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-md);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-cta);
+  line-height: var(--lh-cta);
+  font-weight: var(--weight-bold);
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    box-shadow var(--dur-hover) var(--ease-hover),
+    border-color var(--dur-hover) var(--ease-hover),
+    background-color var(--dur-hover) var(--ease-hover),
+    color var(--dur-hover) var(--ease-hover);
+}
+
+.cf-btn--sm {
+  height: var(--control-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--text-label);
+  line-height: var(--lh-label);
+}
+
+.cf-btn--lg {
+  height: var(--control-lg);
+  padding: 0 var(--space-8);
+}
+
+.cf-btn--primary {
+  background-color: var(--gold-action);
+  background-image: var(--grad-gold);
+  background-repeat: no-repeat;
+  color: var(--tag-fill-ink);
+}
+/* Hover recipe RULED 22 Aug 2026 (B9, Fable law review): brightness
+   lift plus the existing glow, exact match to the ratified exhibit
+   recipe. The brightness literal stays a recipe literal per the
+   ruling, unless propagation finds a second consumer. */
+.cf-btn--primary:hover {
+  filter: brightness(1.08);
+  box-shadow: var(--glow-hover);
+}
+
+/* Ghost weight 300 and the ghost fill bed RULED 22 Aug 2026 (A1,
+   Gate 2 token law row 3, Fable law review): --weight-light and
+   --fill-ghost replace the prior transparent/bold-inherited recipe. */
+.cf-btn--secondary {
+  background-color: var(--fill-ghost);
+  border-color: var(--line-strong);
+  color: var(--gold-action);
+  font-weight: var(--weight-light);
+}
+.cf-btn--secondary:hover {
+  border-color: var(--gold-action);
+  box-shadow: var(--glow-hover);
+}
+
+.cf-btn--tertiary {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--gold-action);
+  font-weight: var(--weight-medium);
+}
+.cf-btn--tertiary .cf-btn__arrow {
+  display: inline-block;
+  transition: transform var(--dur-hover) var(--ease-hover);
+}
+.cf-btn--tertiary:hover .cf-btn__arrow {
+  transform: translateX(3px);
+}
+
+.cf-btn--danger {
+  background: none;
+  border-color: transparent;
+  color: var(--status-danger);
+}
+.cf-btn--danger:hover {
+  box-shadow: var(--glow-hover);
+}
+
+/* Superseded 22 Aug 2026 (B5, Fable law review): the modal-confirm
+   danger CTA is now border AND fill AND ink, all --status-danger,
+   at the new 6 percent fill step, not a solid --status-danger fill
+   with --ink text. This is a new, modal-scoped recipe under the
+   existing class name; the in-page quiet-ghost danger trigger law
+   on .cf-btn--danger above is untouched. */
+.cf-btn--danger-filled {
+  background-color: var(--status-danger-fill);
+  border-color: var(--status-danger);
+  color: var(--status-danger);
+}
+.cf-btn--danger-filled:hover {
+  box-shadow: var(--glow-hover);
+}
+
+/* R6 (10 Aug 2026, kit polish 3 pass): the bottom promo banner's CTA
+   is visually lighter on mobile without breaking the 44px touch
+   floor (height stays --control-md, untouched here). A new modifier,
+   not an edit to .cf-btn itself (the shared recipe serves every
+   button in the app and is not forked for one banner). Tailwind
+   utility classes cannot reach these properties on a .cf-btn element:
+   .cf-btn is unlayered CSS and Tailwind's own utilities live inside a
+   lower-priority CSS cascade layer, so a `px-*`/`text-*` utility never
+   overrides it regardless of class order (confirmed empirically, kit
+   polish 3 pass phase 4). */
+@media (max-width: 699.98px) {
+  .cf-btn--banner-cta-compact {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+    font-size: var(--text-ui);
+    line-height: var(--lh-ui);
+  }
+}
+
+.cf-btn:disabled,
+.cf-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* --- DROPDOWN TREATMENT ---------------------------------------
+   Source: docs/RESTYLE-RULES.md, Filter panels (.cbmenu), traced
+   to library.css lines 300-336. The reusable menu box and row
+   recipe; wiring it into any specific dropdown trigger is Phase
+   3. Menu rows go inside .cf-dropdown unchanged (button markup,
+   idle/hover/selected states are a control concern, not a shell
+   concern, and stay with the control that adopts this frame). */
+
+.cf-dropdown {
+  background: var(--surface-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-popover);
+  padding: var(--space-2);
+  min-width: 13rem;
+  max-height: 19rem;
+  overflow-y: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

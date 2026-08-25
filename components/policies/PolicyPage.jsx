@@ -6,27 +6,27 @@ export default function PolicyPage({ policy }) {
     <article className="mt-12 space-y-8">
       <Link
         href="/terms"
-        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+        className="cf-btn cf-btn--secondary"
       >
         <ArrowLeft size={14} />
-        Terms & Policies
+        Terms & policies
       </Link>
 
-      <header className="rounded-3xl border border-[var(--muted-gold)]/20 bg-black/40 p-6 md:p-8">
-        <p className="text-xs uppercase tracking-[0.28em] text-[var(--muted-gold)]">
+      <header className="rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 md:p-8">
+        <p className="text-xs uppercase tracking-[0.28em] text-[var(--gold-ornament)]">
           {policy.category}
         </p>
 
-        <h1 className="mt-3 font-display text-5xl text-[var(--foreground)]">
+        <h1 className="mt-3 font-display text-5xl text-[var(--ink)]">
           {policy.title}
         </h1>
 
-        <p className="mt-4 max-w-4xl leading-8 text-[var(--muted)]">
+        <p className="mt-4 max-w-4xl leading-8 text-[var(--ink-dim)]">
           {policy.summary}
         </p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
-          <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4">
+          <div className="rounded-[var(--radius-md)] border border-amber-300/20 bg-amber-300/10 p-4">
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-amber-200">
               <AlertTriangle size={15} />
               Draft Placeholder
@@ -38,7 +38,7 @@ export default function PolicyPage({ policy }) {
             </p>
           </div>
 
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             <ShieldCheck size={14} />
             {policy.status}
           </span>
@@ -49,20 +49,20 @@ export default function PolicyPage({ policy }) {
         {policy.sections.map((section) => (
           <section
             key={section.heading}
-            className="rounded-2xl border border-white/10 bg-black/30 p-5 md:p-6"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 md:p-6"
           >
-            <h2 className="font-display text-3xl text-[var(--foreground)]">
+            <h2 className="font-display text-3xl text-[var(--ink)]">
               {section.heading}
             </h2>
 
-            <p className="mt-3 leading-8 text-[var(--muted)]">
+            <p className="mt-3 leading-8 text-[var(--ink-dim)]">
               {section.body}
             </p>
           </section>
         ))}
       </div>
 
-      <footer className="rounded-2xl border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--muted)]">
+      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--ink-dim)]">
         Future versions of this page should include effective date, last updated
         date, contact method, jurisdiction-specific notices where applicable,
         and any required legal language after review.

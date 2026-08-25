@@ -79,20 +79,28 @@ function PreviewTagFilter({ tags, activeTag, onTagChange, label }) {
   );
 }
 
+function PreviewStatusChip({ children }) {
+  return (
+    <span className="inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+      {children}
+    </span>
+  );
+}
+
 function PreviewCreationCard({ creation, liked, bookmarked, priority }) {
   return (
     <article className="min-h-48 rounded-2xl border border-white/10 bg-black/35 p-4">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         {creation.type}
       </p>
-      <h3 className="mt-2 font-display text-2xl">{creation.title}</h3>
+      <h3 className="mt-2 font-display text-2xl tabular-nums">{creation.title}</h3>
       <p className="mt-2 line-clamp-3 text-sm text-[var(--muted)]">
         {creation.description}
       </p>
-      <div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--muted)]">
-        {priority ? <span>eager</span> : null}
-        {liked ? <span>liked</span> : null}
-        {bookmarked ? <span>saved</span> : null}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {priority ? <PreviewStatusChip>eager</PreviewStatusChip> : null}
+        {liked ? <PreviewStatusChip>liked</PreviewStatusChip> : null}
+        {bookmarked ? <PreviewStatusChip>saved</PreviewStatusChip> : null}
       </div>
     </article>
   );
@@ -101,14 +109,14 @@ function PreviewCreationCard({ creation, liked, bookmarked, priority }) {
 function PreviewCreatorCard({ creator, liked, bookmarked, followed }) {
   return (
     <article className="rounded-2xl border border-white/10 bg-black/35 p-5">
-      <h3 className="font-display text-2xl">{creator.displayName}</h3>
+      <h3 className="font-display text-2xl tabular-nums">{creator.displayName}</h3>
       <p className="mt-1 text-sm text-[var(--muted-gold)]">{creator.handle}</p>
       <p className="mt-3 text-sm text-[var(--muted)]">{creator.tagline}</p>
-      <p className="mt-3 text-xs text-[var(--muted)]">
-        {[liked && "liked", bookmarked && "saved", followed && "followed"]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {liked ? <PreviewStatusChip>liked</PreviewStatusChip> : null}
+        {bookmarked ? <PreviewStatusChip>saved</PreviewStatusChip> : null}
+        {followed ? <PreviewStatusChip>followed</PreviewStatusChip> : null}
+      </div>
     </article>
   );
 }

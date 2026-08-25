@@ -24,7 +24,7 @@ export default function ScrollControls() {
         className="
         group
         flex h-12 w-12 items-center justify-center
-        rounded-full
+        rounded-[var(--radius-md)]
 
         border border-[var(--muted-gold)]/20
 
@@ -32,8 +32,6 @@ export default function ScrollControls() {
         text-[var(--muted-gold)]
 
         shadow-[0_0_20px_rgba(0,0,0,0.45)]
-
-        backdrop-blur-md
 
         transition-all duration-300 ease-out
 
@@ -54,7 +52,7 @@ export default function ScrollControls() {
         className="
         group
         flex h-12 w-12 items-center justify-center
-        rounded-full
+        rounded-[var(--radius-md)]
 
         border border-[var(--muted-gold)]/20
 
@@ -62,8 +60,6 @@ export default function ScrollControls() {
         text-[var(--muted-gold)]
 
         shadow-[0_0_20px_rgba(0,0,0,0.45)]
-
-        backdrop-blur-md
 
         transition-all duration-300 ease-out
 

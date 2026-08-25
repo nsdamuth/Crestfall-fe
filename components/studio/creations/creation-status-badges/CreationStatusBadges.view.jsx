@@ -7,7 +7,7 @@ function badgeClass(value) {
   const key = String(value || "").toUpperCase();
 
   if (["PRIVATE", "DRAFT", "NONE"].includes(key)) {
-    return "border-white/10 bg-black/35 text-[var(--muted)]";
+    return "border-white/10 bg-black/35 text-[var(--ink-dim)]";
   }
 
   if (["UNLISTED", "PENDING_REVIEW", "IN_REVIEW"].includes(key)) {
@@ -30,7 +30,7 @@ function badgeClass(value) {
     return "border-sky-400/25 bg-sky-400/10 text-sky-200";
   }
 
-  return "border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]";
+  return "border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]";
 }
 
 export default function CreationStatusBadgesView({

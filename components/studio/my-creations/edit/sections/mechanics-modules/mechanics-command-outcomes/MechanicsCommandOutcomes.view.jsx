@@ -8,6 +8,11 @@ import {
 import {
   getCommandOutcomeEffectModeDescription,
 } from "./mechanicsCommandOutcomesNormalization.js";
+import {
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
 export default function MechanicsCommandOutcomesView({
   branches = [],
@@ -20,12 +25,12 @@ export default function MechanicsCommandOutcomesView({
   numericArgumentOptions = [],
 }) {
   return (
-    <div className="rounded-xl border border-[var(--muted-gold)]/20 bg-black/20 p-4">
+    <div>
       <div>
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Conditional Outcome Effects
         </p>
-        <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
           Select the effect set for each authoritative resolution outcome. Existing Base Success Effects remain backward-compatible through INHERIT.
         </p>
       </div>
@@ -47,10 +52,10 @@ export default function MechanicsCommandOutcomesView({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-[var(--foreground)]">
+                  <p className="text-sm font-medium text-[var(--ink)]">
                     {outcome.replaceAll("_", " ")}
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                     {getCommandOutcomeEffectModeDescription(
                       outcome,
                       branch.effectMode
@@ -67,49 +72,35 @@ export default function MechanicsCommandOutcomesView({
                       ? `Add ${outcome} effect`
                       : "Choose REPLACE or APPEND before adding branch effects"
                   }
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cf-btn cf-btn--primary cf-btn--sm"
                 >
                   <Plus size={14} />
-                  Add Effect
+                  Add effect
                 </button>
               </div>
 
               <div className="mt-4 grid gap-4 md:grid-cols-2">
-                <label className="grid gap-2 text-sm text-[var(--muted)]">
-                  <span>Effect Mode</span>
-                  <select
-                    value={branch.effectMode}
-                    onChange={(event) =>
-                      patchOutcome(outcome, {
-                        effectMode: event.target.value,
-                      })
-                    }
-                    className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-                  >
-                    {COMMAND_OUTCOME_EFFECT_MODES.map((mode) => (
-                      <option key={mode} value={mode}>
-                        {mode}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <SelectField
+                  label="Effect Mode"
+                  value={branch.effectMode}
+                  onChange={(value) => patchOutcome(outcome, { effectMode: value })}
+                  options={COMMAND_OUTCOME_EFFECT_MODES.map((mode) => ({
+                    value: mode,
+                    label: mode,
+                  }))}
+                />
 
-                <label className="block">
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-                    Outcome Summary
-                  </span>
-                  <textarea
-                    value={branch.summary}
-                    onChange={(event) =>
-                      patchOutcome(outcome, {
-                        summary: event.target.value,
-                      })
-                    }
-                    rows={2}
-                    placeholder="Optional deterministic result note."
-                    className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
-                  />
-                </label>
+                <TextAreaField
+                  label="Outcome Summary"
+                  value={branch.summary}
+                  onChange={(value) =>
+                    patchOutcome(outcome, {
+                      summary: value,
+                    })
+                  }
+                  maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                  placeholder="Optional deterministic result note."
+                />
               </div>
 
               {branchEffects.length ? (
@@ -133,7 +124,7 @@ export default function MechanicsCommandOutcomesView({
                     ) : (
                       <pre
                         key={effect.id || effectIndex}
-                        className="overflow-auto rounded-xl border border-white/10 bg-black/35 p-4 text-xs text-[var(--muted)]"
+                        className="overflow-auto rounded-xl border border-white/10 bg-black/35 p-4 text-xs text-[var(--ink-dim)]"
                       >
                         {JSON.stringify(effect, null, 2)}
                       </pre>
@@ -141,7 +132,7 @@ export default function MechanicsCommandOutcomesView({
                   )}
                 </div>
               ) : (
-                <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+                <p className="mt-4 text-xs leading-5 text-[var(--ink-faint)]">
                   No branch-specific effects configured.
                 </p>
               )}

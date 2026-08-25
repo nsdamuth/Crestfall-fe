@@ -57,9 +57,9 @@ export default function CreationProfilePageView({
 
   return (
     <section className="pb-12">
-      <header className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-start">
-          <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-4xl text-[var(--muted-gold)]">
+          <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-4xl text-[var(--gold-ornament)]">
             {creation.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -77,16 +77,16 @@ export default function CreationProfilePageView({
             <h1 className="mt-4 font-display text-5xl">{creation.title}</h1>
 
             {creation.subtitle ? (
-              <p className="mt-2 text-sm uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <p className="mt-2 text-sm uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 {creation.subtitle}
               </p>
             ) : null}
 
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[var(--muted)]">
+            <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[var(--ink-dim)]">
               {creation.creatorHandle ? (
                 <span>
                   by {creatorLinkSlot || (
-                    <span className="text-[var(--foreground)]">
+                    <span className="text-[var(--ink)]">
                       {creation.creatorHandle}
                     </span>
                   )}
@@ -95,7 +95,7 @@ export default function CreationProfilePageView({
               {statsSlot}
             </div>
 
-            <p className="mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--muted)]">
+            <p className="mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)]">
               {description?.visibleText}
               {description?.hasLongDescription ? (
                 <>
@@ -103,7 +103,7 @@ export default function CreationProfilePageView({
                   <button
                     type="button"
                     onClick={() => onToggleDescription?.()}
-                    className="inline text-[var(--muted-gold)] underline-offset-4 transition hover:text-[var(--foreground)] hover:underline"
+                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
                   >
                     {description.toggleLabel}
                   </button>
@@ -116,7 +116,7 @@ export default function CreationProfilePageView({
                 {creation.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]"
+                    className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
                   >
                     {tag}
                   </span>
@@ -131,7 +131,7 @@ export default function CreationProfilePageView({
                 type="button"
                 onClick={() => onStartChat?.()}
                 disabled={startingChat}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-wait disabled:opacity-60"
+                className="cf-btn cf-btn--primary"
               >
                 <MessageCircle size={14} />
                 {startingChat ? "Starting..." : "Chat"}
@@ -139,7 +139,7 @@ export default function CreationProfilePageView({
             ) : null}
 
             {generateLinkSlot || (
-              <span className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+              <span className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                 <Camera size={14} />
                 Generate
               </span>
@@ -154,7 +154,7 @@ export default function CreationProfilePageView({
         </div>
       </header>
 
-      <div className="mt-8 border-t border-[var(--muted-gold)]/15 pt-5">
+      <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {mediaTabs.map((tab) => {
@@ -175,21 +175,21 @@ export default function CreationProfilePageView({
         </div>
 
         <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-          <Search size={16} className="text-[var(--muted-gold)]" />
+          <Search size={16} className="text-[var(--gold-ornament)]" />
           <input
             value={query}
             onChange={(event) => onQueryChange?.(event.target.value)}
             placeholder="Search this creation's media..."
-            className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+            className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
           />
         </div>
 
 
         {!visibleMedia.length ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <ImageIcon size={30} className="mx-auto text-[var(--muted-gold)]" />
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <ImageIcon size={30} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No public media yet</p>
-            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
               Public images for this creation will appear here once approved and
               visible in the character catalogue.
             </p>
@@ -214,9 +214,9 @@ export default function CreationProfilePageView({
             <button
               type="button"
               onClick={() => onLoadMore?.()}
-              className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Load More
+              Load more
             </button>
           </div>
         ) : null}
@@ -232,10 +232,10 @@ function FilterButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+      className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
         active
-          ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-          : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+          ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+          : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
       }`}
     >
       {children}
@@ -246,18 +246,18 @@ function FilterButton({ active, onClick, children }) {
 function MediaTile({ item, actionsSlot, onOpen }) {
   if (!item.imageUrl) {
     return (
-      <article className="aspect-square overflow-hidden rounded-2xl border border-white/10 bg-black/35 text-left">
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
           <div className="text-center">
             {item.type === "VIDEO" ? (
-              <Film className="mx-auto text-[var(--muted-gold)]" size={30} />
+              <Film className="mx-auto text-[var(--gold-ornament)]" size={30} />
             ) : (
-              <ImageIcon className="mx-auto text-[var(--muted-gold)]" size={30} />
+              <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={30} />
             )}
-            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               {item.type}
             </p>
-            <p className="mt-2 text-sm text-[var(--muted)]">{item.title}</p>
+            <p className="mt-2 text-sm text-[var(--ink-dim)]">{item.title}</p>
           </div>
         </div>
       </article>
@@ -265,7 +265,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
   }
 
   return (
-    <article className="group relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--muted-gold)]/35">
+    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35">
       <button
         type="button"
         onClick={onOpen}

@@ -7,18 +7,27 @@ import {
   MECHANICS_STATUS_BLOCK_PLACEMENTS,
   MECHANICS_STATUS_BLOCK_VISIBILITIES,
 } from "./MechanicsStatusBlocks.contract.js";
+import {
+  CheckboxField,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -30,7 +39,7 @@ function SmallActionButton({ children, onClick, disabled = false }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="cf-btn cf-btn--secondary cf-btn--sm"
     >
       {children}
     </button>
@@ -70,21 +79,21 @@ function StatusBlockCard({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Status Block
           </p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
                 {block.label || block.id || `Status Block ${blockIndex + 1}`}
               </h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
                 {block.summary}
               </p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -93,10 +102,11 @@ function StatusBlockCard({
         <button
           type="button"
           onClick={() => removeBlock(blockIndex)}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove status block"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
 
@@ -127,61 +137,41 @@ function StatusBlockCard({
               placeholder="main_footer"
             />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Placement</span>
-              <select
-                value={block.placement}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { placement: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_STATUS_BLOCK_PLACEMENTS.map((placement) => (
-                  <option key={placement} value={placement}>
-                    {placement}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Placement"
+              value={block.placement}
+              onChange={(value) => patchBlock(blockIndex, { placement: value })}
+              options={MECHANICS_STATUS_BLOCK_PLACEMENTS.map((placement) => ({
+                value: placement,
+                label: placement,
+              }))}
+            />
 
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Visibility</span>
-              <select
-                value={block.visibility}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { visibility: event.target.value })
-                }
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {MECHANICS_STATUS_BLOCK_VISIBILITIES.map((visibility) => (
-                  <option key={visibility} value={visibility}>
-                    {visibility}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Visibility"
+              value={block.visibility}
+              onChange={(value) => patchBlock(blockIndex, { visibility: value })}
+              options={MECHANICS_STATUS_BLOCK_VISIBILITIES.map((visibility) => ({
+                value: visibility,
+                label: visibility,
+              }))}
+            />
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
-              <input
-                type="checkbox"
-                checked={block.required}
-                onChange={(event) =>
-                  patchBlock(blockIndex, { required: event.target.checked })
-                }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
-              />
-              Required
-            </label>
+            <CheckboxField
+              label="Required"
+              checked={block.required}
+              onChange={(checked) => patchBlock(blockIndex, { required: checked })}
+            />
           </div>
 
           <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className={EYEBROW_CLASS}>
                 Rendered Lines
               </p>
               <SmallActionButton onClick={submitLine} disabled={!lineDraft.trim()}>
                 <Plus size={14} />
-                Add Line
+                Add line
               </SmallActionButton>
             </div>
 
@@ -195,7 +185,7 @@ function StatusBlockCard({
                 }
               }}
               placeholder="[❤️ Affection: {{trackers.affection.value}}/100]"
-              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
             />
 
             {block.lines.length ? (
@@ -205,27 +195,31 @@ function StatusBlockCard({
                     key={`${lineIndex}-${line}`}
                     className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
                   >
-                    <textarea
-                      value={line}
-                      onChange={(event) =>
-                        patchLine(blockIndex, lineIndex, event.target.value)
-                      }
-                      rows={2}
-                      className="min-w-0 flex-1 resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-xs leading-6 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-                    />
+                    <div className="min-w-0 flex-1">
+                      <TextAreaField
+                        label={`Line ${lineIndex + 1}`}
+                        value={line}
+                        onChange={(value) =>
+                          patchLine(blockIndex, lineIndex, value)
+                        }
+                        maxLength={SHORT_LONGFORM_MAX_LENGTH}
+                        mono
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={() => removeLine(blockIndex, lineIndex)}
-                      className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+                      className="cf-btn cf-btn--danger cf-btn--sm"
                       title="Remove line"
                     >
                       <Trash2 size={13} />
+                      Remove
                     </button>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
                 No rendered lines yet. Add at least one line for this status block.
               </p>
             )}
@@ -247,14 +241,14 @@ export default function MechanicsStatusBlocksView({
   removeLine,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Visual Builder
           </p>
-          <h3 className="mt-2 font-display text-3xl">Status Blocks</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Status Blocks</h3>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define deterministic footer/status lines. These save into
             instanceData.statusBlocks and are appended by services-api, not the
             LLM.
@@ -262,7 +256,7 @@ export default function MechanicsStatusBlocksView({
         </div>
         <SmallActionButton onClick={addBlock}>
           <Plus size={14} />
-          Add Block
+          Add block
         </SmallActionButton>
       </div>
 
@@ -283,9 +277,9 @@ export default function MechanicsStatusBlocksView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
           No status blocks defined yet. Add a footer such as relationship_footer.
-        </div>
+        </p>
       )}
     </section>
   );

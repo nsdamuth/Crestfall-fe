@@ -1,8 +1,9 @@
 import { Plus, X } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
+  DEEP_LONGFORM_MAX_LENGTH,
   SectionTitle,
+  SelectField,
   TextAreaField,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -19,7 +20,7 @@ export default function RoomTemplateOpeningSectionView({
   messagePlaceholder = "",
   openingMessages = [],
   removeMessageLabel = "Remove",
-  addMessageLabel = "Add Opening Message",
+  addMessageLabel = "Add opening message",
   onChangePublicOpeningContext = null,
   onChangeOpeningMessageSpeaker = null,
   onChangeOpeningMessageBody = null,
@@ -34,22 +35,27 @@ export default function RoomTemplateOpeningSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-5)]">
         <TextAreaField
           label={publicOpeningContextLabel}
           value={publicOpeningContextValue}
           onChange={(value) => onChangePublicOpeningContext?.(value)}
           placeholder={publicOpeningContextPlaceholder}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
-        <div className="grid gap-4">
+        <div className="grid gap-[var(--space-4)]">
           {openingMessages.map((message) => (
+            // Opening message rows are repeatable list items, kept
+            // with their own list-item border (same allowance the
+            // sibling card lists use), but the eyebrow moves off the
+            // gold-panel-header recipe to the tier 4 group label.
             <div
               key={message.id}
-              className="rounded-2xl border border-white/10 bg-black/25 p-5"
+              className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-5)]"
             >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+                <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                   {message.messageLabel}
                 </p>
 
@@ -57,15 +63,15 @@ export default function RoomTemplateOpeningSectionView({
                   type="button"
                   onClick={() => onRemoveOpeningMessage?.(message.id)}
                   disabled={!message.canRemove}
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="cf-btn cf-btn--danger cf-btn--sm"
                 >
                   <X size={12} />
                   {removeMessageLabel}
                 </button>
               </div>
 
-              <div className="mt-4 grid gap-4">
-                <CrestfallSelect
+              <div className="mt-[var(--space-4)] grid gap-[var(--space-4)]">
+                <SelectField
                   label={speakerLabel}
                   value={message.speakerValue}
                   onChange={(value) =>
@@ -81,6 +87,7 @@ export default function RoomTemplateOpeningSectionView({
                     onChangeOpeningMessageBody?.(message.id, value)
                   }
                   placeholder={messagePlaceholder}
+                  maxLength={DEEP_LONGFORM_MAX_LENGTH}
                 />
               </div>
             </div>
@@ -89,7 +96,7 @@ export default function RoomTemplateOpeningSectionView({
           <button
             type="button"
             onClick={() => onAddOpeningMessage?.()}
-            className="inline-flex w-fit items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--primary w-fit"
           >
             <Plus size={14} />
             {addMessageLabel}

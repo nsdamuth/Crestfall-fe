@@ -1,38 +1,35 @@
-import { Bell, Coins, ShoppingBag, X } from "lucide-react";
+import { Bell, Coins, ShoppingBag } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
+
+// Migrated onto KitModalFrame, RULED (Brian live walk, polish item
+// 4): the raw fixed-inset dialog lost the panel-lift gradient and
+// the mobile bottom-anchor law. KitModalFrame supplies both, plus
+// the circular close control, so this stays a one-panel primitive.
 function UtilityModal({ title = "", body = "", onClose = null }) {
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <section className="w-full max-w-sm rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
-              Crestfall
-            </p>
-            <h2 className="mt-2 font-display text-3xl">{title}</h2>
-          </div>
+    <KitModalFrame
+      onClose={onClose}
+      ariaLabelledBy="studio-economy-utility-title"
+      panelClassName="w-full max-w-sm p-[var(--space-5)]"
+    >
+      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+        Crestfall
+      </p>
+      <h2 id="studio-economy-utility-title" className="mt-2 font-display text-3xl">
+        {title}
+      </h2>
 
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
-            aria-label="Close"
-          >
-            <X size={16} />
-          </button>
-        </div>
+      <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
 
-        <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{body}</p>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="mt-5 w-full rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
-        >
-          Got it
-        </button>
-      </section>
-    </div>
+      <button
+        type="button"
+        onClick={() => onClose?.()}
+        className="cf-btn cf-btn--primary mt-5 w-full"
+      >
+        Got it
+      </button>
+    </KitModalFrame>
   );
 }
 
@@ -72,7 +69,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="inline-flex items-center gap-1 rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-2.5 py-2 text-[10px] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 px-2.5 py-2 text-[10px] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/20 hover:text-[var(--ink)]"
           aria-label={`Coins: ${balanceLabel}`}
         >
           <Coins size={15} />
@@ -82,7 +79,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenNotificationsInfo?.()}
-          className="rounded-lg p-2 text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+          className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
           aria-label="Notifications"
         >
           <Bell size={18} />
@@ -93,28 +90,23 @@ export default function StudioEconomyWidgetView({
     );
   }
 
+  // Notifications REMOVED from the expanded and collapsed modes,
+  // RULED 23 Aug 2026 (build-0823 pass 4, sidebar refinement):
+  // notifications live in the top bar bell only. mobileHeader (above)
+  // keeps its own bell for its own consumers; onOpenNotificationsInfo
+  // / onCloseNotificationsInfo / notificationsInfoOpen stay in the
+  // contract for that mode.
   if (layoutMode === "collapsed") {
     return (
       <>
-        <div className="space-y-1.5">
-          <button
-            type="button"
-            onClick={() => onOpenBuyInfo?.()}
-            title={`Coins: ${balanceLabel}`}
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
-          >
-            <Coins size={16} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onOpenNotificationsInfo?.()}
-            title="Notifications"
-            className="flex w-full items-center justify-center rounded-lg px-2 py-2.5 text-[var(--muted)] transition hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
-          >
-            <Bell size={16} />
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => onOpenBuyInfo?.()}
+          title={`Coins: ${balanceLabel}`}
+          className="flex w-full items-center justify-center rounded-[var(--radius-md)] px-[var(--space-2)] py-[var(--space-2)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
+        >
+          <Coins size={16} aria-hidden="true" />
+        </button>
 
         {modals}
       </>
@@ -123,38 +115,21 @@ export default function StudioEconomyWidgetView({
 
   return (
     <>
-      <section className="rounded-xl border border-[var(--muted-gold)]/15 bg-black/40 p-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--muted-gold)]">
-              Coins
-            </p>
-            <p className="mt-1 text-sm text-[var(--foreground)]">
-              {balanceLabel}
-            </p>
-          </div>
-
-          <Coins className="text-[var(--muted-gold)]" size={18} />
-        </div>
+      <div className="flex items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
+        <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">
+          <Coins size={16} className="text-[var(--gold-ornament)]" aria-hidden="true" />
+          {balanceLabel}
+        </span>
 
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+          className="inline-flex h-[var(--control-sm)] touch-manipulation items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)]"
         >
-          <ShoppingBag size={14} />
+          <ShoppingBag size={13} aria-hidden="true" />
           Buy Coins
         </button>
-
-        <button
-          type="button"
-          onClick={() => onOpenNotificationsInfo?.()}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
-        >
-          <Bell size={14} />
-          Notifications
-        </button>
-      </section>
+      </div>
 
       {modals}
     </>

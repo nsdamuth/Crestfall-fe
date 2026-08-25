@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function SiteShell({ eyebrow, title, children }) {
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-20 text-[var(--foreground)] sm:px-10 lg:px-16">
+    <main className="relative min-h-screen overflow-hidden px-[var(--space-6)] py-[var(--space-20)] text-[var(--foreground)] sm:px-[var(--space-10)] lg:px-[var(--space-16)]">
       <div
         className="absolute inset-0 bg-cover bg-top bg-no-repeat opacity-30"
         style={{
@@ -11,11 +11,11 @@ export default function SiteShell({ eyebrow, title, children }) {
         }}
       />
 
-      <div className="absolute inset-0 bg-[rgba(5,5,4,0.78)]" />
+      <div className="absolute inset-0 bg-[var(--scrim-strong)]" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
         {eyebrow && (
-          <p className="font-display text-xs uppercase tracking-[0.4em] text-[var(--muted-gold)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {eyebrow}
           </p>
         )}

@@ -6,13 +6,11 @@ export const STUDIO_MOBILE_NAV_DISCORD_URL =
   "https://discord.com/channels/1482041132874727579/1482041133700878529";
 
 export const STUDIO_MOBILE_NAV_COPY = Object.freeze({
-  brandLabel: "Crestfall",
   drawerEyebrow: "Crestfall",
   drawerTitle: "Studio",
   communityLinksLabel: "Community Links",
   signedInLabel: "Signed in",
   logoutLabel: "Log out",
-  openMenuAriaLabel: "Open menu",
   closeMenuAriaLabel: "Close menu",
   closeOverlayAriaLabel: "Close menu overlay",
   accountFallbackAriaLabel: "Account",
@@ -59,6 +57,14 @@ export function isStudioMobileNavPathActive(pathname = "", href = "") {
     : pathname.startsWith(href);
 }
 
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This drawer renders on every /studio/** route including v2 pages,
+// so the Account destination depends on which surface is current.
+export function getStudioMobileNavAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function normalizeStudioMobileNavEmail(user = {}) {
   return typeof user?.email === "string" ? user.email : "";
 }
@@ -70,13 +76,21 @@ function buildNavigationLinks(links, pathname) {
   }));
 }
 
-export function useStudioMobileNavViewModel({ user, pathname = "" } = {}) {
-  const [open, setOpen] = useState(false);
+// Drawer open/closed is owned one level up, by StudioShell.jsx, since
+// StudioTopBar's mobile hamburger (a separate LOOM package) must open
+// the same drawer this package renders (8 Aug 2026, mobile nav restyle
+// brief item 7). This ViewModel receives it as `open` / `onCloseMenu`
+// rather than creating its own state.
+export function useStudioMobileNavViewModel({
+  user,
+  pathname = "",
+  open = false,
+  onCloseMenu = () => {},
+} = {}) {
   const [socialOpen, setSocialOpen] = useState(false);
   const signedInEmail = normalizeStudioMobileNavEmail(user);
 
   return {
-    brandLabel: STUDIO_MOBILE_NAV_COPY.brandLabel,
     brandHref: "/studio",
     drawerEyebrow: STUDIO_MOBILE_NAV_COPY.drawerEyebrow,
     drawerTitle: STUDIO_MOBILE_NAV_COPY.drawerTitle,
@@ -85,21 +99,27 @@ export function useStudioMobileNavViewModel({ user, pathname = "" } = {}) {
     signedInEmail,
     logoutLabel: STUDIO_MOBILE_NAV_COPY.logoutLabel,
     logoutHref: "/logout",
-    accountHref: "/studio/account",
+    accountHref: getStudioMobileNavAccountHref(pathname),
     accountAriaLabel:
       signedInEmail || STUDIO_MOBILE_NAV_COPY.accountFallbackAriaLabel,
-    openMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.openMenuAriaLabel,
     closeMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.closeMenuAriaLabel,
     closeOverlayAriaLabel: STUDIO_MOBILE_NAV_COPY.closeOverlayAriaLabel,
     open,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_PRIMARY_LINKS, pathname),
-    utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname),
+    utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname).map((link) =>
+      link.label === "Account"
+        ? {
+            ...link,
+            href: getStudioMobileNavAccountHref(pathname),
+            isActive: isStudioMobileNavPathActive(pathname, getStudioMobileNavAccountHref(pathname)),
+          }
+        : link
+    ),
     socialLinks: STUDIO_MOBILE_NAV_SOCIAL_LINKS,
     bottomLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_BOTTOM_LINKS, pathname),
-    onOpenMenu: () => setOpen(true),
-    onCloseMenu: () => setOpen(false),
+    onCloseMenu,
     onToggleSocial: () => setSocialOpen((value) => !value),
-    onNavigate: () => setOpen(false),
+    onNavigate: () => onCloseMenu(),
   };
 }

@@ -54,7 +54,7 @@ export const openingMessageLongContentFixture = Object.freeze({
   messageLabel: "Opening Message 4",
   speakerValue: "Captain Elian Rook",
   bodyValue:
-    "The causeway has moved again. What was a straight road at dusk now bends through a district omitted from every civic map, and the patrol sent to investigate has returned carrying records written in their own handwriting from dates that have not happened yet. No one leaves the gatehouse until we understand who—or what—has been rewriting the route.",
+    "The causeway has moved again. What was a straight road at dusk now bends through a district omitted from every civic map, and the patrol sent to investigate has returned carrying records written in their own handwriting from dates that have not happened yet. No one leaves the gatehouse until we understand who, or what, has been rewriting the route.",
   canRemove: true,
 });
 

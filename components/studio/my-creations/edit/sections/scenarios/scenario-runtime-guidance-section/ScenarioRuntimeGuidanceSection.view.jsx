@@ -1,6 +1,7 @@
 import {
   SectionTitle,
   TextAreaField,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function ScenarioRuntimeGuidanceSectionView({
@@ -26,12 +27,13 @@ export default function ScenarioRuntimeGuidanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
         <TextAreaField
           label="Opening Scene"
           value={openingScene}
           onChange={(value) => onOpeningSceneChange?.(value)}
           placeholder="The opening scene or starting moment."
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -39,6 +41,7 @@ export default function ScenarioRuntimeGuidanceSectionView({
           value={openingMessages}
           onChange={(value) => onOpeningMessagesChange?.(value)}
           placeholder="Optional opening messages by narrator or selected characters."
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -46,14 +49,16 @@ export default function ScenarioRuntimeGuidanceSectionView({
           value={privateRuntimeGuidance}
           onChange={(value) => onPrivateRuntimeGuidanceChange?.(value)}
           placeholder="Hidden scenario guidance for AI/runtime behavior."
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-[var(--space-4)] md:grid-cols-2">
           <TextAreaField
             label="Drift Fixes"
             value={driftFixes}
             onChange={(value) => onDriftFixesChange?.(value)}
             placeholder="Optional corrections if the scenario starts drifting."
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
 
           <TextAreaField
@@ -61,6 +66,7 @@ export default function ScenarioRuntimeGuidanceSectionView({
             value={failureHandling}
             onChange={(value) => onFailureHandlingChange?.(value)}
             placeholder="Optional guidance for setbacks, failed attempts, or alternate resolution paths."
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

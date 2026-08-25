@@ -11,9 +11,13 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function CreationImageLibraryPageView({
   title = "Image Library",
   backHref = "/studio/my-creations",
+  showBackLink = true,
   loadStatus = "idle",
   loadMessage = "",
   isLoading = false,
@@ -32,6 +36,8 @@ export default function CreationImageLibraryPageView({
   hasMoreVisibleImages = false,
   lightboxProps = null,
   eagerImageCount = 4,
+  deleteConfirmOpen = false,
+  deleteConfirmIsFeatured = false,
   onRefresh,
   onSetEligibilityFilter,
   onSetSortMode,
@@ -43,6 +49,8 @@ export default function CreationImageLibraryPageView({
   onHideImage,
   onShowImage,
   onDeleteImage,
+  onCancelDeleteImage,
+  onConfirmDeleteImage,
   BackLinkComponent,
   renderQuickActions,
   renderLightbox,
@@ -51,14 +59,14 @@ export default function CreationImageLibraryPageView({
 
   return (
     <section className="mt-8 pb-24">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Character Library
             </p>
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               Images here are associated with this creation. Featured slots must
               come from this library. The Primary slot becomes the default visual
               identity reference later.
@@ -70,48 +78,48 @@ export default function CreationImageLibraryPageView({
               type="button"
               onClick={onRefresh}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="cf-btn cf-btn--secondary"
             >
               <RefreshCw size={14} />
               Refresh
             </button>
 
-            {BackLink ? (
+            {BackLink && showBackLink ? (
               <BackLink
                 href={backHref}
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                className="cf-btn cf-btn--secondary"
               >
                 <ArrowLeft size={14} />
-                Back to Editor
+                Back to editor
               </BackLink>
             ) : null}
           </div>
         </div>
 
         {loadStatus === "error" ? (
-          <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
             {loadMessage || "Image library could not be loaded."}
           </p>
         ) : null}
 
         {reactionMessage ? (
-          <p className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
             {reactionMessage}
           </p>
         ) : null}
 
         {deleteMessage ? (
-          <p className="mt-4 rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-4 py-3 text-sm text-[var(--muted-gold)]">
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill)] px-4 py-3 text-sm text-[var(--gold-ornament)]">
             {deleteMessage}
           </p>
         ) : null}
       </div>
 
-      <section className="mt-6 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex items-center gap-3">
-          <Star size={18} className="text-[var(--muted-gold)]" />
+          <Star size={18} className="text-[var(--gold-ornament)]" />
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Featured Images
             </p>
             <h3 className="mt-1 font-display text-3xl">Primary Slots</h3>
@@ -132,19 +140,19 @@ export default function CreationImageLibraryPageView({
         </div>
       </section>
 
-      <section className="mt-6 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Visible Library
             </p>
             <h3 className="mt-1 font-display text-3xl">Character Images</h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               These images are available to the character library. Only eligible
               visible images can be assigned to the featured slots.
             </p>
           </div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
             {visibleSummary}
           </p>
         </div>
@@ -157,10 +165,10 @@ export default function CreationImageLibraryPageView({
                 key={option.value}
                 type="button"
                 onClick={() => onSetEligibilityFilter?.(option.value)}
-                className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                className={`inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                   active
-                    ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                    : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                 }`}
               >
                 {option.label}
@@ -168,30 +176,27 @@ export default function CreationImageLibraryPageView({
             );
           })}
 
-          <select
-            value={sortMode}
-            onChange={(event) => onSetSortMode?.(event.target.value)}
-            className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] outline-none transition hover:border-[var(--muted-gold)]/35"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <KitDropdownView
+            label="Sort"
+            ariaLabel="Sort library images"
+            options={sortOptions}
+            selectedValues={sortMode ? [sortMode] : []}
+            isMultiSelect={false}
+            onToggleOption={(value) => onSetSortMode?.(value)}
+          />
         </div>
 
         {isLoading ? (
-          <p className="mt-6 text-sm text-[var(--muted)]">Loading images...</p>
+          <p className="mt-6 text-sm text-[var(--ink-dim)]">Loading images...</p>
         ) : null}
 
         {!isLoading && !hasImages ? <EmptyLibraryState /> : null}
 
         {!isLoading && noMatchingImages ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-            <ImageIcon size={28} className="mx-auto text-[var(--muted-gold)]" />
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-1)] p-8 text-center">
+            <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No matching images</p>
-            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
               Try changing the filter or sort selection.
             </p>
           </div>
@@ -221,24 +226,24 @@ export default function CreationImageLibraryPageView({
             <button
               type="button"
               onClick={onLoadMoreVisibleImages}
-              className="rounded-xl border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 px-5 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+              className="cf-btn cf-btn--secondary"
             >
-              Load More
+              Load more
             </button>
           </div>
         ) : null}
       </section>
 
       {hiddenImages.length ? (
-        <section className="mt-6 rounded-2xl border border-white/10 bg-black/35 p-5">
+        <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
               Hidden
             </p>
             <h3 className="mt-1 font-display text-3xl">
               Hidden From Character Library
             </h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               Hidden images remain available to their image owner in Image
               Studio, but are not shown in this character library.
             </p>
@@ -262,7 +267,49 @@ export default function CreationImageLibraryPageView({
       ) : null}
 
       {lightboxProps && renderLightbox ? renderLightbox(lightboxProps) : null}
+
+      {deleteConfirmOpen ? (
+        <DeleteConfirmModal
+          isFeatured={deleteConfirmIsFeatured}
+          onCancel={onCancelDeleteImage}
+          onConfirm={onConfirmDeleteImage}
+        />
+      ) : null}
     </section>
+  );
+}
+
+// B5 danger-confirm recipe, CR-054 placeholder copy: the recovery
+// window is not yet ruled to a single number, so the copy carries the
+// literal "[X] days" placeholder rather than a guessed figure.
+// Replaces the browser's native confirm() dialog
+// (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md section 2.5). Type-aware:
+// a featured-slot image warns that deleting it also clears that slot.
+function DeleteConfirmModal({ isFeatured = false, onCancel = null, onConfirm = null }) {
+  return (
+    <KitModalFrame onClose={onCancel} ariaLabel="Delete this image?" panelClassName="w-full max-w-[26rem]">
+      <div className="p-[var(--space-6)]">
+        <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+          Delete this image?
+        </h2>
+        <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+          It moves to a recovery window for [X] days before it is gone for
+          good.{" "}
+          {isFeatured
+            ? "This also clears it from its featured slot and hides it from public catalogues."
+            : "This also hides it from public catalogues."}
+        </p>
+        <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
+        <div className="flex items-center justify-between gap-[var(--space-3)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
+            Keep image
+          </button>
+          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
+            Delete
+          </button>
+        </div>
+      </div>
+    </KitModalFrame>
   );
 }
 
@@ -275,8 +322,8 @@ function FeaturedSlotCard({
 }) {
   const image = slot.image;
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/30 p-3">
-      <div className="aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-black/40">
+    <article className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
         {image?.thumbnailUrl ? (
           <div className="group relative h-full w-full">
             <button
@@ -303,20 +350,15 @@ function FeaturedSlotCard({
           </div>
         ) : (
           <div className="flex h-full w-full items-center justify-center p-4 text-center">
-            <div>
-              <ImageIcon size={24} className="mx-auto text-[var(--muted-gold)]" />
-              <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
-                No image selected
-              </p>
-            </div>
+            <ImageIcon size={40} className="text-[var(--gold-ornament)]" />
           </div>
         )}
       </div>
-      <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="mt-3 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {slot.label}
       </p>
       {slot.isPrimary ? (
-        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
           Default identity reference image.
         </p>
       ) : null}
@@ -336,7 +378,7 @@ function LibraryImageCard({
   renderQuickActions,
 }) {
   return (
-    <article className="mb-4 inline-block w-full break-inside-avoid rounded-2xl border border-white/10 bg-black/30 p-3 align-top">
+    <article className="mb-4 inline-block w-full break-inside-avoid rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 align-top">
       <ImagePreview
         image={image}
         priority={priority}
@@ -358,7 +400,7 @@ function LibraryImageCard({
       </div>
 
       {!image.canUseAsFeatured ? (
-        <p className="mt-3 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs leading-5 text-red-200">
+        <p className="mt-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
           This image cannot be used as a featured image until it is cleared or
           approved.
         </p>
@@ -372,10 +414,10 @@ function LibraryImageCard({
               onClick={() =>
                 onAssignFeaturedSlot?.(action.slotKey, image.id)
               }
-              className={`rounded-xl border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition disabled:cursor-not-allowed disabled:opacity-60 ${
+              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                 action.active
-                  ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                  : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                  ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
+                  : "border-dashed border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-action)] hover:text-[var(--ink)]"
               }`}
             >
               {action.busy
@@ -392,7 +434,7 @@ function LibraryImageCard({
         type="button"
         onClick={() => onHideImage?.(image.id)}
         disabled={!image.id || image.hideBusy}
-        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-red-500/30 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-full"
       >
         <EyeOff size={13} />
         {image.hideBusy ? "Hiding..." : "Hide"}
@@ -413,7 +455,7 @@ function HiddenImageCard({
   renderQuickActions,
 }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-3 opacity-80">
+    <article className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 opacity-80">
       <ImagePreview
         image={image}
         grayscale
@@ -433,7 +475,7 @@ function HiddenImageCard({
         type="button"
         onClick={() => onShowImage?.(image.id)}
         disabled={!image.id || image.showBusy}
-        className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="cf-btn cf-btn--secondary cf-btn--sm mt-3 w-full"
       >
         <Eye size={13} />
         {image.showBusy ? "Restoring..." : "Show"}
@@ -458,9 +500,9 @@ function ImagePreview({
   return (
     <div
       style={{ aspectRatio: image.aspectRatio }}
-      className={`group relative w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 text-left ${
+      className={`group relative w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-left ${
         imageUrl
-          ? "transition hover:border-[var(--muted-gold)]/35"
+          ? "transition hover:border-[var(--gold-ornament)]/35"
           : "cursor-default"
       }`}
     >
@@ -480,12 +522,7 @@ function ImagePreview({
         </>
       ) : (
         <div className="flex h-full w-full items-center justify-center p-4 text-center">
-          <div>
-            <ImageIcon size={24} className="mx-auto text-[var(--muted-gold)]" />
-            <p className="mt-3 break-all text-xs leading-5 text-[var(--muted)]">
-              {image.label}
-            </p>
-          </div>
+          <ImageIcon size={40} className="text-[var(--gold-ornament)]" />
         </div>
       )}
     </div>
@@ -498,10 +535,10 @@ function DeleteButton({ image, onDeleteImage }) {
       type="button"
       onClick={() => onDeleteImage?.(image.id)}
       disabled={!image.id || image.deleting}
-      className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-red-200 transition hover:border-red-400/40 hover:bg-red-500/15 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+      className="cf-btn cf-btn--danger cf-btn--sm mt-2 w-full"
     >
       <Trash2 size={13} />
-      {image.deleting ? "Deleting..." : "Delete Image"}
+      {image.deleting ? "Deleting..." : "Delete image"}
     </button>
   );
 }
@@ -509,10 +546,8 @@ function DeleteButton({ image, onDeleteImage }) {
 function StatusPill({ label, muted = false }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[10px] uppercase tracking-[0.12em] ${
-        muted
-          ? "border-white/10 text-[var(--muted)]"
-          : "border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]"
+      className={`inline-flex h-[var(--space-6)] items-center gap-[var(--space-1)] rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] font-medium ${
+        muted ? "text-[var(--ink-dim)]" : "text-[var(--gold-bright)]"
       }`}
     >
       <ShieldCheck size={11} />
@@ -523,10 +558,10 @@ function StatusPill({ label, muted = false }) {
 
 function EmptyLibraryState() {
   return (
-    <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
-      <ImageIcon size={28} className="mx-auto text-[var(--muted-gold)]" />
+    <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-1)] p-8 text-center">
+      <ImageIcon size={28} className="mx-auto text-[var(--gold-ornament)]" />
       <p className="mt-4 font-display text-3xl">No images yet</p>
-      <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+      <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
         Generated images associated with this creation will appear here once
         Image Studio produces them.
       </p>

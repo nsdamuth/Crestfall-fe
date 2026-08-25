@@ -41,7 +41,7 @@ export default function LoreArcAccordion({ arcGroups }) {
             onToggle={(event) =>
               handleToggle(group.id, event.currentTarget.open)
             }
-            className="border border-[var(--border)] bg-[rgba(5,5,4,0.55)]"
+            className="border border-[var(--line-strong)] bg-[rgba(5,5,4,0.55)]"
           >
             <summary className="cursor-pointer px-6 py-5 font-display text-xl tracking-[0.12em] text-[var(--muted-gold)]">
               {group.label}

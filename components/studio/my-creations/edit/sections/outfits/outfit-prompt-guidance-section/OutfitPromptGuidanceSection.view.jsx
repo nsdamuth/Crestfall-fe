@@ -1,6 +1,8 @@
 import {
   SectionTitle,
   TextAreaField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function OutfitPromptGuidanceSectionView({
@@ -48,28 +50,39 @@ export default function OutfitPromptGuidanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-5">
+      <div className="mt-[var(--space-6)] grid gap-[var(--space-5)]">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          {/* Tier 4 group label, matching the ActionPanel/SectionTitle
+              recipe. */}
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             {clothingModeLabel}
           </p>
 
-          <div className="mt-3 grid gap-3 md:grid-cols-2">
+          <div className="mt-[var(--space-3)] grid gap-[var(--space-3)] md:grid-cols-2">
             {clothingModeOptions.map((option) => (
+              // B4 token pair: selected --fill-whisper fill plus
+              // --gold-action border and --gold-bright caption; rest
+              // is the plain option-rest bed. No gold at rest.
               <button
                 key={option.value}
                 type="button"
                 onClick={() => onClothingModeChange?.(option.value)}
-                className={`rounded-2xl border p-4 text-left transition ${
+                className={`rounded-[var(--radius-md)] border p-[var(--space-4)] text-left transition ${
                   option.active
-                    ? "border-[var(--muted-gold)]/60 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                    : "border-white/10 bg-black/25 text-[var(--muted)] hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+                    ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
+                    : "border-[var(--line-whisper)] bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--state-hover-line)] hover:text-[var(--ink)]"
                 }`}
               >
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                <p
+                  className={`text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] ${
+                    option.active ? "text-[var(--gold-bright)]" : "text-[var(--ink-faint)]"
+                  }`}
+                >
                   {option.label}
                 </p>
-                <p className="mt-2 text-sm leading-6">{option.description}</p>
+                <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)]">
+                  {option.description}
+                </p>
               </button>
             ))}
           </div>
@@ -81,25 +94,27 @@ export default function OutfitPromptGuidanceSectionView({
             value={normalClothingPrompt}
             onChange={(value) => onNormalClothingPromptChange?.(value)}
             placeholder={normalPromptPlaceholder}
-            rows={8}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         ) : null}
 
         {clothingMode === "ADVANCED" ? (
-          <div className="grid gap-5">
+          <div className="grid gap-[var(--space-5)]">
             <TextAreaField
               label={signatureClothingLabel}
               value={signatureClothing}
               onChange={(value) => onSignatureClothingChange?.(value)}
               placeholder={signatureClothingPlaceholder}
-              rows={4}
+              maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
 
-            <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+            {/* Section 5 de-nesting: inset hairline, tier 4 label,
+                no bordered/backgrounded box. */}
+            <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                 {advancedSectionsTitle}
               </p>
-              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
                 {advancedSectionsDescription}
               </p>
             </div>
@@ -113,7 +128,7 @@ export default function OutfitPromptGuidanceSectionView({
                   onClothingSectionChange?.(field.id, value)
                 }
                 placeholder={field.placeholder}
-                rows={4}
+                maxLength={DEEP_LONGFORM_MAX_LENGTH}
               />
             ))}
           </div>
@@ -124,7 +139,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={standaloneImagePrompt}
           onChange={(value) => onStandaloneImagePromptChange?.(value)}
           placeholder={standalonePromptPlaceholder}
-          rows={5}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -132,7 +147,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={negativePrompt}
           onChange={(value) => onNegativePromptChange?.(value)}
           placeholder={negativePromptPlaceholder}
-          rows={5}
+          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -140,6 +155,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={usageNotes}
           onChange={(value) => onUsageNotesChange?.(value)}
           placeholder={usageNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -147,6 +163,7 @@ export default function OutfitPromptGuidanceSectionView({
           value={compatibilityNotes}
           onChange={(value) => onCompatibilityNotesChange?.(value)}
           placeholder={compatibilityNotesPlaceholder}
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
     </div>

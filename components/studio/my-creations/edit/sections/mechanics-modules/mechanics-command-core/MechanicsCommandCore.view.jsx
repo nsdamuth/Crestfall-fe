@@ -8,11 +8,23 @@ import {
   COMMAND_PRESENTATION_MODES,
   COMMAND_RESULT_VISIBILITIES,
 } from "./MechanicsCommandCore.contract.js";
+import {
+  CheckboxField,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
 
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+
+// Local TextField, not SharedFields.TextField: this file needs native
+// numeric inputs (type="number") for argument bounds, which
+// SharedFields.TextField does not expose.
 function TextField({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
         {label}
       </span>
       <input
@@ -20,7 +32,7 @@ function TextField({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+        className="mt-[var(--space-1)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] transition placeholder:text-[var(--ink-faint)]"
       />
     </label>
   );
@@ -53,16 +65,16 @@ function TokenListField({
 
   return (
     <label className="block">
-      <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/35 p-3 focus-within:border-[var(--muted-gold)]/50">
+      <div className="mt-2 rounded-xl border border-white/10 bg-black/35 p-3 focus-within:border-[var(--gold-ornament)]/50">
         {safeValues.length ? (
           <div className="mb-3 flex flex-wrap gap-2">
             {safeValues.map((value, index) => (
               <span
                 key={`${value}-${index}`}
-                className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--foreground)]"
+                className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
               >
                 <span className="break-all">{value}</span>
                 <button
@@ -74,10 +86,11 @@ function TokenListField({
                       )
                     )
                   }
-                  className="text-[var(--muted)] transition hover:text-red-200"
+                  className="inline-flex items-center gap-1 text-[var(--status-danger)] transition hover:opacity-80"
                   title={`Remove ${value}`}
                 >
                   <X size={12} />
+                  Remove
                 </button>
               </span>
             ))}
@@ -94,9 +107,9 @@ function TokenListField({
             }
           }}
           placeholder={placeholder}
-          className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+          className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
         />
-        <p className="mt-2 text-[11px] leading-5 text-[var(--muted)]">
+        <p className="mt-2 text-[11px] leading-5 text-[var(--ink-dim)]">
           Type one value, then press Enter or comma. Existing values remain editable as chips.
         </p>
       </div>
@@ -105,10 +118,9 @@ function TokenListField({
 }
 
 function SmallActionButton({ children, onClick, variant = "gold", title }) {
-  const className =
-    variant === "danger"
-      ? "inline-flex items-center justify-center gap-2 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:bg-red-500/20"
-      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]";
+  const className = `cf-btn cf-btn--sm ${
+    variant === "danger" ? "cf-btn--danger" : "cf-btn--primary"
+  }`;
 
   return (
     <button type="button" title={title} onClick={onClick} className={className}>
@@ -122,10 +134,10 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
     <>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Command
           </p>
-          <h4 className="mt-1 text-xl text-[var(--foreground)]">
+          <h4 className="mt-1 text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
             {model.safeCommand.label ||
               model.safeCommand.id ||
               `Command ${model.commandIndex + 1}`}
@@ -154,18 +166,15 @@ export function MechanicsCommandIdentityView({ model, onRemoveCommand }) {
           onChange={(value) => model.patchIdentity("label", value)}
           placeholder="Mark Player Settled"
         />
-        <label className="block md:col-span-2">
-          <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-            Reason
-          </span>
-          <textarea
+        <div className="md:col-span-2">
+          <TextAreaField
+            label="Reason"
             value={model.safeCommand.reason || ""}
-            onChange={(event) => model.patchIdentity("reason", event.target.value)}
-            rows={2}
+            onChange={(value) => model.patchIdentity("reason", value)}
             placeholder="The player is now settled."
-            className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
-        </label>
+        </div>
       </div>
     </>
   );
@@ -176,10 +185,10 @@ export function MechanicsCommandInvocationView({ model }) {
     <>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+          <p className={EYEBROW_CLASS}>
             Structured Invocation v1
           </p>
-          <p className="mt-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             Canonical commands parse quoted positional arguments, resolve typed targets,
             and can use deterministic or server-authoritative threshold, advantage,
             disadvantage, opposed, and degree-of-success resolution.
@@ -187,7 +196,7 @@ export function MechanicsCommandInvocationView({ model }) {
         </div>
         <SmallActionButton onClick={model.addArgument}>
           <Plus size={14} />
-          Add Argument
+          Add argument
         </SmallActionButton>
       </div>
 
@@ -222,56 +231,34 @@ export function MechanicsCommandInvocationView({ model }) {
           normalizeToken={model.normalizeCommandName}
           placeholder="Type an alias, then press Enter"
         />
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Command Mode</span>
-          <select
-            value={model.presentation.mode}
-            onChange={(event) =>
-              model.patchPresentation({ mode: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            {COMMAND_PRESENTATION_MODES.map((mode) => (
-              <option key={mode} value={mode}>{mode}</option>
-            ))}
-          </select>
-        </label>
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Result Visibility</span>
-          <select
-            value={model.presentation.resultVisibility}
-            onChange={(event) =>
-              model.patchPresentation({ resultVisibility: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            {COMMAND_RESULT_VISIBILITIES.map((visibility) => (
-              <option key={visibility} value={visibility}>{visibility}</option>
-            ))}
-          </select>
-        </label>
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.continueNarrative}
-            onChange={(event) =>
-              model.patchPresentation({ continueNarrative: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
-          />
-          Continue the fictional scene after execution
-        </label>
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
-          <input
-            type="checkbox"
-            checked={model.presentation.advanceTime}
-            onChange={(event) =>
-              model.patchPresentation({ advanceTime: event.target.checked })
-            }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
-          />
-          Allow normal turn-time advancement
-        </label>
+        <SelectField
+          label="Command Mode"
+          value={model.presentation.mode}
+          onChange={(value) => model.patchPresentation({ mode: value })}
+          options={COMMAND_PRESENTATION_MODES.map((mode) => ({
+            value: mode,
+            label: mode,
+          }))}
+        />
+        <SelectField
+          label="Result Visibility"
+          value={model.presentation.resultVisibility}
+          onChange={(value) => model.patchPresentation({ resultVisibility: value })}
+          options={COMMAND_RESULT_VISIBILITIES.map((visibility) => ({
+            value: visibility,
+            label: visibility,
+          }))}
+        />
+        <CheckboxField
+          label="Continue the fictional scene after execution"
+          checked={model.presentation.continueNarrative}
+          onChange={(checked) => model.patchPresentation({ continueNarrative: checked })}
+        />
+        <CheckboxField
+          label="Allow normal turn-time advancement"
+          checked={model.presentation.advanceTime}
+          onChange={(checked) => model.patchPresentation({ advanceTime: checked })}
+        />
       </div>
     </>
   );
@@ -286,16 +273,18 @@ export function MechanicsCommandArgumentsView({ model }) {
           className="rounded-xl border border-white/10 bg-black/35 p-4"
         >
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+            <p className={EYEBROW_CLASS}>
               Argument {argumentIndex + 1}
             </p>
             <button
               type="button"
               onClick={() => model.removeArgument(argumentIndex)}
-              className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+              className="cf-btn cf-btn--danger cf-btn--sm"
               title="Remove argument"
+              aria-label="Remove argument"
             >
               <Trash2 size={13} />
+              <span className="text-xs">Remove</span>
             </button>
           </div>
 
@@ -321,43 +310,37 @@ export function MechanicsCommandArgumentsView({ model }) {
               }
               placeholder="Target"
             />
-            <label className="grid gap-2 text-sm text-[var(--muted)]">
-              <span>Type</span>
-              <select
-                value={argument.type}
-                onChange={(event) => {
-                  const nextType = event.target.value;
-                  const nextIsImplicit =
-                    model.isImplicitTargetArgumentType(nextType);
-                  const currentIsImplicit =
-                    model.isImplicitTargetArgumentType(argument.type);
-                  model.patchArgument(argumentIndex, {
-                    type: nextType,
-                    ...(nextIsImplicit
-                      ? { required: false, consumeRemaining: false, allowQuoted: false }
-                      : currentIsImplicit
-                        ? {
-                            required: true,
-                            consumeRemaining:
-                              argumentIndex ===
-                              model.invocation.arguments.length - 1,
-                            allowQuoted: true,
-                          }
-                        : {}),
-                  });
-                }}
-                className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-              >
-                {COMMAND_ARGUMENT_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <SelectField
+              label="Type"
+              value={argument.type}
+              onChange={(nextType) => {
+                const nextIsImplicit =
+                  model.isImplicitTargetArgumentType(nextType);
+                const currentIsImplicit =
+                  model.isImplicitTargetArgumentType(argument.type);
+                model.patchArgument(argumentIndex, {
+                  type: nextType,
+                  ...(nextIsImplicit
+                    ? { required: false, consumeRemaining: false, allowQuoted: false }
+                    : currentIsImplicit
+                      ? {
+                          required: true,
+                          consumeRemaining:
+                            argumentIndex ===
+                            model.invocation.arguments.length - 1,
+                          allowQuoted: true,
+                        }
+                      : {}),
+                });
+              }}
+              options={COMMAND_ARGUMENT_TYPES.map((type) => ({
+                value: type,
+                label: type,
+              }))}
+            />
 
             {model.isImplicitTargetArgumentType(argument.type) ? (
-              <p className="rounded-xl border border-[var(--muted-gold)]/20 bg-[var(--muted-gold)]/5 px-4 py-3 text-xs leading-5 text-[var(--muted)] md:col-span-3">
+              <p className="text-xs leading-5 text-[var(--ink-faint)] md:col-span-3">
                 This target is resolved automatically from the active Mechanics actor or Player Character. The command takes no text for this argument.
               </p>
             ) : null}
@@ -401,63 +384,45 @@ export function MechanicsCommandArgumentsView({ model }) {
                   }
                   placeholder="Optional maximum"
                 />
-                <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--muted)]">
+                <p className="text-xs leading-5 text-[var(--ink-faint)]">
                   Leave either bound empty when the command should not enforce that limit during argument parsing.
                 </p>
               </>
             ) : null}
 
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
-              <input
-                type="checkbox"
-                checked={argument.required !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    required: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
-              />
-              Required
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
-              <input
-                type="checkbox"
-                checked={argument.consumeRemaining === true}
-                disabled={
-                  model.isImplicitTargetArgumentType(argument.type) ||
-                  argumentIndex !== model.lastPositionalArgumentIndex
-                }
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    consumeRemaining: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
-              />
-              Consume remaining text
-            </label>
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-[var(--muted)]">
-              <input
-                type="checkbox"
-                checked={argument.allowQuoted !== false}
-                disabled={model.isImplicitTargetArgumentType(argument.type)}
-                onChange={(event) =>
-                  model.patchArgument(argumentIndex, {
-                    allowQuoted: event.target.checked,
-                  })
-                }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
-              />
-              Allow quoted values
-            </label>
+            <CheckboxField
+              label="Required"
+              checked={argument.required !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { required: checked })
+              }
+            />
+            <CheckboxField
+              label="Consume remaining text"
+              checked={argument.consumeRemaining === true}
+              disabled={
+                model.isImplicitTargetArgumentType(argument.type) ||
+                argumentIndex !== model.lastPositionalArgumentIndex
+              }
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { consumeRemaining: checked })
+              }
+            />
+            <CheckboxField
+              label="Allow quoted values"
+              checked={argument.allowQuoted !== false}
+              disabled={model.isImplicitTargetArgumentType(argument.type)}
+              onChange={(checked) =>
+                model.patchArgument(argumentIndex, { allowQuoted: checked })
+              }
+            />
           </div>
         </div>
       ))}
     </div>
   ) : (
-    <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+    <p className="mt-4 text-sm text-[var(--ink-faint)]">
       No structured arguments. Commands such as #sheet or /help do not need one.
     </p>
   );
@@ -472,28 +437,29 @@ export function MechanicsCommandTriggersView({ model }) {
 
   return (
     <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+      <p className={EYEBROW_CLASS}>
         Triggers
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {model.triggers.map((trigger, triggerIndex) => (
           <span
             key={`${trigger}-${triggerIndex}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--foreground)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{trigger}</span>
             <button
               type="button"
               onClick={() => model.removeTrigger(triggerIndex)}
-              className="text-[var(--muted)] transition hover:text-red-200"
+              className="inline-flex items-center gap-1 text-[var(--status-danger)] transition hover:opacity-80"
               title="Remove trigger"
             >
               <X size={12} />
+              Remove
             </button>
           </span>
         ))}
         {!model.triggers.length ? (
-          <span className="text-xs text-[var(--muted)]">No triggers yet.</span>
+          <span className="text-xs text-[var(--ink-dim)]">No triggers yet.</span>
         ) : null}
       </div>
       <div className="mt-4 flex flex-col gap-2 md:flex-row">
@@ -507,11 +473,11 @@ export function MechanicsCommandTriggersView({ model }) {
             }
           }}
           placeholder="/settled"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <SmallActionButton onClick={submitTrigger}>
           <Plus size={14} />
-          Add Trigger
+          Add trigger
         </SmallActionButton>
       </div>
     </div>

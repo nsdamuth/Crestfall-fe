@@ -1,5 +1,14 @@
-export const CREATION_PUBLISHING_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CREATION_PUBLISHING_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
+// Version note, 1.0.0 -> 1.1.0 (additive, ED1,
+// docs/plans/FABLE-GATE-2-STUDIO.md): the Unlist for Editing and
+// Cancel Review actions move here from the retired sticky action bar
+// (docs/DESIGN-TOKENS.md contract law s13; retirement recorded in
+// edit/creation-edit-sticky-action-bar's own README). New optional
+// props only; every existing prop and callback is unchanged. All
+// three review-family buttons (public review, canon review, unlist)
+// now arm a local two-step confirm before firing their callback,
+// UI-only state that adds no new props.
 /**
  * Stable UI boundary for the portable Creation Publishing View.
  *
@@ -46,6 +55,19 @@ export const CREATION_PUBLISHING_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {((value: string) => void)|null} onSelectContentRating
  * @property {(() => void)|null} onSubmitPublicReview
  * @property {(() => void)|null} onSubmitCanonReview
+ * @property {string} [unlistTitle] default "Unlist for Editing"
+ * @property {string} [unlistDescription]
+ * @property {boolean} [showUnlist] default false; true only when the
+ *   creation's current visibility is PUBLIC (the Chassis computes
+ *   this from `form.visibility`, the View never inspects the form)
+ * @property {string} [unlistButtonLabel] default "Unlist for editing"
+ * @property {boolean} [unlistDisabled] default false
+ * @property {(() => void)|null} [onUnlistForEditing]
+ * @property {boolean} [showCancelReview] default false; true only
+ *   while a review submission is pending
+ * @property {string} [cancelReviewButtonLabel] default "Cancel review"
+ * @property {boolean} [cancelReviewDisabled] default false
+ * @property {(() => void)|null} [onCancelReview]
  */
 
 export {};

@@ -15,16 +15,16 @@ export default function CustomIngredientEditorView({
   if (!open) return null;
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 p-4">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+          <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             <BookOpen size={14} />
             Custom {ingredientLabel}
           </p>
 
           {introText ? (
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
               {introText}
             </p>
           ) : null}
@@ -33,7 +33,7 @@ export default function CustomIngredientEditorView({
         <button
           type="button"
           onClick={() => onClear?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           aria-label={`Clear custom ${ingredientLabel}`}
         >
           <X size={15} />
@@ -41,7 +41,7 @@ export default function CustomIngredientEditorView({
       </div>
 
       <label className="mt-4 block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           Custom Guidance
         </span>
 
@@ -50,7 +50,7 @@ export default function CustomIngredientEditorView({
           onChange={(event) => onChangePrompt?.(event.target.value)}
           placeholder={promptPlaceholder}
           rows={4}
-          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </label>
 
@@ -62,20 +62,20 @@ export default function CustomIngredientEditorView({
         <button
           type="button"
           onClick={() => onBackToPresets?.()}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+          className="cf-btn cf-btn--secondary cf-btn--sm"
         >
           <Library size={14} />
-          Back to Presets
+          Back to presets
         </button>
 
         {showSavePresetAction ? (
           <button
             type="button"
             onClick={() => onSavePreset?.()}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <Save size={14} />
-            Save as Preset
+            Save as preset
           </button>
         ) : null}
 
@@ -83,10 +83,10 @@ export default function CustomIngredientEditorView({
           type="button"
           disabled
           aria-pressed="true"
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/20 px-3 py-3 text-[10px] uppercase tracking-[0.14em] text-[var(--foreground)]"
+          className="cf-btn cf-btn--primary cf-btn--sm"
         >
           <Check size={14} />
-          Use Once
+          Use once
         </button>
       </div>
     </section>

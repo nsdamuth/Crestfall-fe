@@ -10,12 +10,17 @@ import {
   normalizeTrackerString,
   slugifyTrackerId,
 } from "./mechanicsTrackersNormalization.js";
+import {
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "../../SharedFields";
+
+const EYEBROW_CLASS =
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
 
 function ActionButton({ children, onClick, variant = "gold", title }) {
-  const className =
-    variant === "danger"
-      ? "inline-flex items-center justify-center gap-2 rounded-xl border border-red-300/20 bg-red-500/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-red-200 transition hover:bg-red-500/20"
-      : "inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-3 py-2 text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]";
+  const className = `cf-btn cf-btn--sm ${variant === "danger" ? "cf-btn--danger" : "cf-btn--secondary"}`;
 
   return (
     <button type="button" onClick={onClick} title={title} className={className}>
@@ -26,14 +31,14 @@ function ActionButton({ children, onClick, variant = "gold", title }) {
 
 function TextField({ label, value, onChange, placeholder = "", type = "text" }) {
   return (
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       <span>{label}</span>
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -63,17 +68,15 @@ function FoldableTracker({
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
-            Tracker / Meter
-          </p>
+          <p className={EYEBROW_CLASS}>Tracker / Meter</p>
           <div className="mt-1 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h4 className="truncate text-xl text-[var(--foreground)]">{title}</h4>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{summary}</p>
+              <h4 className="truncate text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{title}</h4>
+              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">{summary}</p>
             </div>
             <ChevronDown
               size={18}
-              className={`mt-1 shrink-0 text-[var(--muted-gold)] transition-transform ${
+              className={`mt-1 shrink-0 text-[var(--gold-ornament)] transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -82,10 +85,11 @@ function FoldableTracker({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove tracker"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       {expanded ? <div className="border-t border-white/10 p-5">{children}</div> : null}
@@ -99,16 +103,15 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-          Phase {phaseIndex + 1}
-        </p>
+        <p className={EYEBROW_CLASS}>Phase {phaseIndex + 1}</p>
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove phase"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -172,16 +175,15 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-          Mutation Hint {hintIndex + 1}
-        </p>
+        <p className={EYEBROW_CLASS}>Mutation Hint {hintIndex + 1}</p>
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-lg border border-red-300/20 bg-red-500/10 p-2 text-red-200 transition hover:bg-red-500/20"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           title="Remove mutation hint"
         >
           <Trash2 size={13} />
+          Remove
         </button>
       </div>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -209,7 +211,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         setDraft={setEventTypeDraft}
         add={addEventType}
         placeholder="ACCEPTED_REDIRECT"
-        addLabel="Add Event"
+        addLabel="Add event"
         remove={(index) =>
           onPatch({
             eventTypes: safeHint.eventTypes.filter((_value, itemIndex) => itemIndex !== index),
@@ -224,23 +226,22 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
         setDraft={setTriggerDraft}
         add={addTrigger}
         placeholder="accepts redirect"
-        addLabel="Add Trigger"
+        addLabel="Add trigger"
         remove={(index) =>
           onPatch({
             triggers: safeHint.triggers.filter((_value, itemIndex) => itemIndex !== index),
           })
         }
       />
-      <label className="mt-4 block">
-        <span className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Reason</span>
-        <textarea
+      <div className="mt-4">
+        <TextAreaField
+          label="Reason"
           value={safeHint.reason}
-          onChange={(event) => onPatch({ reason: event.target.value })}
-          rows={2}
+          onChange={(value) => onPatch({ reason: value })}
           placeholder="The player accepted the redirect without pushing."
-          className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
-      </label>
+      </div>
     </div>
   );
 }
@@ -248,25 +249,27 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
 function HintList({ title, values, empty, draft, setDraft, add, placeholder, addLabel, remove }) {
   return (
     <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">{title}</p>
+      <p className={EYEBROW_CLASS}>{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {values.map((value, index) => (
           <span
             key={`${value}-${index}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--foreground)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{value}</span>
             <button
               type="button"
               onClick={() => remove(index)}
-              className="text-[var(--muted)] transition hover:text-red-200"
+              className="inline-flex items-center gap-1 text-[var(--status-danger)] transition"
               title={`Remove ${title.toLowerCase()}`}
+              aria-label={`Remove ${title.toLowerCase()}`}
             >
               <X size={12} />
+              <span className="text-[10px]">Remove</span>
             </button>
           </span>
         ))}
-        {!values.length ? <span className="text-xs text-[var(--muted)]">{empty}</span> : null}
+        {!values.length ? <span className="text-xs text-[var(--ink-dim)]">{empty}</span> : null}
       </div>
       <div className="mt-4 flex flex-col gap-2 md:flex-row">
         <input
@@ -279,7 +282,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             }
           }}
           placeholder={placeholder}
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <ActionButton onClick={add}>
           <Plus size={14} />
@@ -310,18 +313,12 @@ function TrackerCard({ entry, handlers }) {
           }
           placeholder="Trust"
         />
-        <label className="grid gap-2 text-sm text-[var(--muted)]">
-          <span>Kind</span>
-          <select
-            value={tracker.kind}
-            onChange={(event) =>
-              handlers.patchTracker(trackerIndex, { kind: event.target.value })
-            }
-            className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-          >
-            <option value="meter">meter</option>
-          </select>
-        </label>
+        <SelectField
+          label="Kind"
+          value={tracker.kind}
+          onChange={(value) => handlers.patchTracker(trackerIndex, { kind: value })}
+          options={[{ value: "meter", label: "meter" }]}
+        />
         <TextField
           label="Initial Value"
           type="number"
@@ -354,9 +351,9 @@ function TrackerCard({ entry, handlers }) {
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Phases</p>
+          <p className={EYEBROW_CLASS}>Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
-            <Plus size={14} /> Add Phase
+            <Plus size={14} /> Add phase
           </ActionButton>
         </div>
         {tracker.phases.length ? (
@@ -372,16 +369,16 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
             No phases yet. Phases give display labels like Guarded, Curious, or Bare.
           </p>
         )}
       </div>
       <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Mutation Hints</p>
+          <p className={EYEBROW_CLASS}>Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
-            <Plus size={14} /> Add Hint
+            <Plus size={14} /> Add hint
           </ActionButton>
         </div>
         {tracker.mutationHints.length ? (
@@ -401,7 +398,7 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--muted)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
             No mutation hints yet. Hints let the router map detected events into meter changes.
           </p>
         )}
@@ -440,18 +437,18 @@ export default function MechanicsTrackersSectionView({
   };
 
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">Visual Builder</p>
-          <h3 className="mt-2 font-display text-3xl">Trackers / Meters</h3>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+          <p className={EYEBROW_CLASS}>Visual Builder</p>
+          <h3 className="mt-2 font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)]">Trackers / Meters</h3>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
             Define reusable meter fields, display phases, and mutation hints.
             These save into instanceData.trackers.
           </p>
         </div>
         <ActionButton onClick={addTracker}>
-          <Plus size={14} /> Add Tracker
+          <Plus size={14} /> Add tracker
         </ActionButton>
       </div>
       {entries.length ? (
@@ -470,10 +467,10 @@ export default function MechanicsTrackersSectionView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
-          No trackers defined yet. Add meters such as <span className="text-[var(--foreground)]">affection</span>,{" "}
-          <span className="text-[var(--foreground)]">trust</span>, or <span className="text-[var(--foreground)]">health</span>.
-        </div>
+        <p className="mt-6 text-sm leading-6 text-[var(--ink-faint)]">
+          No trackers defined yet. Add meters such as <span className="text-[var(--ink)]">affection</span>,{" "}
+          <span className="text-[var(--ink)]">trust</span>, or <span className="text-[var(--ink)]">health</span>.
+        </p>
       )}
     </section>
   );

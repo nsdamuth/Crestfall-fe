@@ -218,11 +218,13 @@ export default function LoreDocumentRendererView({
       {showContents ? (
         <nav
           id={CONTENTS_ANCHOR_ID}
-          className="mx-auto max-w-5xl scroll-mt-24 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5"
+          className="mx-auto max-w-5xl scroll-mt-24 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5"
         >
-          <div className="flex items-center gap-2 text-[var(--muted-gold)]">
+          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={17} />
-            <p className="text-xs uppercase tracking-[0.2em]">Contents</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              Contents
+            </p>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {chapters.map((chapter, chapterIndex) => (
@@ -232,7 +234,7 @@ export default function LoreDocumentRendererView({
               >
                 <a
                   href={`#${chapter.id}`}
-                  className="text-sm text-[var(--foreground)] transition hover:text-[var(--muted-gold)]"
+                  className="text-sm text-[var(--ink)] transition hover:text-[var(--gold-ornament)]"
                 >
                   {chapterIndex + 1}. {chapter.title || "Untitled Chapter"}
                 </a>
@@ -243,7 +245,7 @@ export default function LoreDocumentRendererView({
                         <a
                           key={section.id}
                           href={`#${section.id}`}
-                          className="text-xs leading-5 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                          className="text-xs leading-5 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
                         >
                           {chapterIndex + 1}.{sectionIndex + 1} {section.title}
                         </a>
@@ -347,7 +349,7 @@ export default function LoreDocumentRendererView({
       ))}
 
       {!chapters.length ? (
-        <div className="mx-auto max-w-5xl rounded-2xl border border-dashed border-[var(--muted-gold)]/30 bg-black/30 p-10 text-center text-sm text-[var(--muted)]">
+        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--gold-ornament)]/30 bg-black/30 p-10 text-center text-sm text-[var(--ink-dim)]">
           Add a chapter to begin the Lore publication.
         </div>
       ) : null}

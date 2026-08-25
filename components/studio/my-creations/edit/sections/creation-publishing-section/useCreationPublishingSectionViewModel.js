@@ -32,6 +32,11 @@ const DEFAULT_COPY = Object.freeze({
   canonReviewTitle: "Canon Review",
   canonReviewDescription:
     "Canon review is optional and only for creations voluntarily submitted to become part of official Crestfall continuity.",
+  unlistTitle: "Unlist for Editing",
+  unlistDescription:
+    "Pull this creation back to private so you can keep editing it. It leaves public discovery until you resubmit.",
+  unlistButtonLabel: "Unlist for editing",
+  cancelReviewButtonLabel: "Cancel review",
 });
 
 function normalizeUppercase(value, fallback = "") {
@@ -78,18 +83,21 @@ function getCanonReviewButtonLabel({
   return "Submit for Canon Review";
 }
 
+// 4.7 composed disabled recipe (D19): the word "Soon" is a tier 8
+// meta word the View renders beside a disabled control, never part
+// of the label itself.
 function getTemplateActions(isTemplate) {
   if (isTemplate) {
     return [
       {
         id: "duplicate-template",
-        label: "Duplicate Template Soon",
+        label: "Duplicate Template",
         disabled: true,
         emphasis: "secondary",
       },
       {
         id: "use-template",
-        label: "Use Template Soon",
+        label: "Use Template",
         disabled: true,
         emphasis: "secondary",
       },
@@ -99,7 +107,7 @@ function getTemplateActions(isTemplate) {
   return [
     {
       id: "convert-to-template",
-      label: "Convert To Template Soon",
+      label: "Convert To Template",
       disabled: true,
       emphasis: "primary",
     },
@@ -115,6 +123,8 @@ export function getCreationPublishingSectionViewProps({
   reviewStatus = "idle",
   reviewMessage = "",
   reviewAction = "",
+  onUnlistForEditing = null,
+  onCancelReview = null,
 } = {}) {
   const lifecycleStatus = normalizeCreationPublishingLifecycleStatus(form);
   const isOfficialCanon =
@@ -122,6 +132,14 @@ export function getCreationPublishingSectionViewProps({
   const isInReview = lifecycleStatus === "IN_REVIEW";
   const isSubmittable = isCreationPublishingSubmittable(form);
   const isSaving = reviewStatus === "saving";
+  const isArchived = lifecycleStatus === "ARCHIVED";
+  const visibility = normalizeUppercase(form?.visibility, "PRIVATE");
+  // Same formula as the retired sticky action bar's canUnlistForEditing
+  // (edit/creation-edit-sticky-action-bar/useCreationEditStickyActionBarViewModel.js),
+  // carried here verbatim so unlist eligibility is unchanged by the move.
+  const isPublicLive = visibility === "PUBLIC" && lifecycleStatus === "APPROVED";
+  const canUnlistForEditing =
+    isPublicLive && !isOfficialCanon && !isInReview && !isArchived;
 
   return {
     ...DEFAULT_COPY,
@@ -154,6 +172,12 @@ export function getCreationPublishingSectionViewProps({
       updateField?.("contentRating", value),
     onSubmitPublicReview: () => onSubmitPublicReview?.(),
     onSubmitCanonReview: () => onSubmitCanonReview?.(),
+    showUnlist: canUnlistForEditing,
+    unlistDisabled: isSaving,
+    onUnlistForEditing: () => onUnlistForEditing?.(),
+    showCancelReview: isInReview,
+    cancelReviewDisabled: isSaving,
+    onCancelReview: () => onCancelReview?.(),
   };
 }
 

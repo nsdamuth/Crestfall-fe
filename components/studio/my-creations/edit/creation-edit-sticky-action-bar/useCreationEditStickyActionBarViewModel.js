@@ -1,5 +1,15 @@
 const OWNER_VISIBILITY_OPTIONS = ["PRIVATE", "UNLISTED"];
 
+// Display labels, RULED (a1 advanced-creator pass, standing law:
+// buttons never uppercase): the enum values above stay uppercase
+// (the wire values `onSelectVisibility` compares against); only the
+// rendered label is title-cased. Was `label: value`, which rendered
+// the raw enum text and read as an all-caps button.
+const OWNER_VISIBILITY_LABELS = {
+  PRIVATE: "Private",
+  UNLISTED: "Unlisted",
+};
+
 function createAction({
   visible = true,
   disabled = false,
@@ -98,7 +108,7 @@ export function getCreationEditStickyActionBarViewProps({
     editLockMessage,
     visibilityOptions: OWNER_VISIBILITY_OPTIONS.map((value) => ({
       value,
-      label: value,
+      label: OWNER_VISIBILITY_LABELS[value] || value,
       active: form?.visibility === value,
       disabled: !canEditOwnerFields,
     })),

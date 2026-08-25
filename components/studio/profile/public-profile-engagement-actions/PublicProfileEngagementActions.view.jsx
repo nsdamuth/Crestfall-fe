@@ -13,7 +13,7 @@ export default function PublicProfileEngagementActionsView({
   return (
     <div className={className}>
       {errorMessage ? (
-        <p className="mb-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <p className="mb-3 rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {errorMessage}
         </p>
       ) : null}

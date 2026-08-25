@@ -39,7 +39,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-[rgba(5,5,4,0.42)]" />
 
       <div className="relative z-10">
-        <section className="relative isolate min-h-[50vh] overflow-hidden border-b border-[var(--border)]">
+        <section className="relative isolate min-h-[50vh] overflow-hidden border-b border-[var(--line-strong)]">
           <div className="hero-overlay absolute inset-0" />
 
           <SiteHeader home />
@@ -83,7 +83,7 @@ export default function Home() {
           }}
         >
           <div className="mx-auto max-w-7xl">
-            <div className="mb-8 border-b border-[var(--border)] pb-5">
+            <div className="mb-8 border-b border-[var(--line-strong)] pb-5">
               <p className="font-display text-xs uppercase tracking-[0.4em] text-[var(--muted-gold)]">
                 Archive Index
               </p>

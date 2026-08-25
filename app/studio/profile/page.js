@@ -34,7 +34,7 @@ export default async function PublicProfilePage() {
         Preview how your creator page may appear to other Crestfall users.
       </StudioPageHeader>
 
-      <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex gap-5">
             <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/30 bg-[var(--muted-gold)]/10 font-display text-4xl text-[var(--muted-gold)]">
@@ -64,9 +64,9 @@ export default async function PublicProfilePage() {
           <button
             type="button"
             disabled
-            className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-[var(--muted)] opacity-60"
+            className="cf-btn cf-btn--secondary"
           >
-            Edit Soon
+            Edit soon
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export default async function PublicProfilePage() {
               key={tab}
               type="button"
               disabled
-              className={`rounded-full px-4 py-2 text-xs uppercase tracking-[0.16em] ${
+              className={`rounded-[var(--radius-md)] px-4 py-2 text-xs uppercase tracking-[0.16em] ${
                 index === 0
                   ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
                   : "text-[var(--muted)]"
@@ -92,7 +92,7 @@ export default async function PublicProfilePage() {
         {featuredItems.map((item) => (
           <article
             key={item.title}
-            className="rounded-2xl border border-[var(--muted-gold)]/15 bg-black/35 p-6"
+            className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/35 p-6"
           >
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
               {item.type}

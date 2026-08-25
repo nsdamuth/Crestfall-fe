@@ -15,7 +15,7 @@ export const storylineOpenWorldLegacyFixture = Object.freeze({
   ordered_nodes: [],
   open_world: {
     default_transition_policy: "MANUAL",
-    guidance: "Preserve the continuing chat between legacy Storyline nodes.",
+    guidance: "Preserve the continuing chat between legacy Adventure nodes.",
     pressure_cadence_guidance:
       "Use consequences sparingly and only when supported by prior events.",
   },

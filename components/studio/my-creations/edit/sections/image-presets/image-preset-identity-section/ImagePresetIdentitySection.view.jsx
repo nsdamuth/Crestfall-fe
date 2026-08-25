@@ -31,7 +31,7 @@ export default function ImagePresetIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid gap-4 md:grid-cols-2">
         <TextField
           label={nameLabel}
           value={nameValue}

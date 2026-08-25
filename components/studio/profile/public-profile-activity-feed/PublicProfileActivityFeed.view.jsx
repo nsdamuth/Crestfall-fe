@@ -14,9 +14,9 @@ export default function PublicProfileActivityFeedView({
 
   if (!safeEvents.length) {
     return (
-      <div className="mx-auto mt-5 w-full max-w-5xl rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+      <div className="mx-auto mt-5 w-full max-w-5xl rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
         <p className="font-display text-3xl">{emptyTitle}</p>
-        <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--muted)]">
+        <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
           {emptyBody}
         </p>
       </div>
@@ -47,15 +47,15 @@ function CreationActivityRow({ event, LinkComponent }) {
   const title = event.title || "Untitled Creation";
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/35 p-4">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
       <div className="flex items-start gap-3">
-        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--muted-gold)]/25 bg-[var(--muted-gold)]/10 text-[var(--muted-gold)]">
+        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
           <Sparkles size={15} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-[var(--muted)]">
-            <span className="text-[var(--foreground)]">
+          <p className="text-sm text-[var(--ink-dim)]">
+            <span className="text-[var(--ink)]">
               @{event.username || "creator"}
             </span>{" "}
             {event.actionLabel || "released"} {event.typeLabel || "creation"}.
@@ -63,7 +63,7 @@ function CreationActivityRow({ event, LinkComponent }) {
 
           <LinkComponent
             href={event.href || "#"}
-            className="mt-3 flex gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 transition hover:border-[var(--muted-gold)]/30 hover:bg-[var(--muted-gold)]/10"
+            className="mt-3 flex gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 transition hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10"
           >
             <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/45">
               {event.imageUrl ? (
@@ -76,23 +76,23 @@ function CreationActivityRow({ event, LinkComponent }) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-[var(--muted-gold)]">
+                <div className="flex h-full w-full items-center justify-center text-[var(--gold-ornament)]">
                   <Sparkles size={18} />
                 </div>
               )}
             </div>
 
             <div className="min-w-0">
-              <p className="line-clamp-1 font-display text-xl text-[var(--foreground)]">
+              <p className="line-clamp-1 font-display text-xl text-[var(--ink)]">
                 {title}
               </p>
-              <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+              <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
                 {event.description || "No description available."}
               </p>
             </div>
           </LinkComponent>
 
-          <p className="mt-3 text-xs text-[var(--muted)]">
+          <p className="mt-3 text-xs text-[var(--ink-dim)]">
             {event.occurredLabel || "Recently"}
           </p>
         </div>
@@ -103,31 +103,31 @@ function CreationActivityRow({ event, LinkComponent }) {
 
 function DonationActivityRow({ event }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/35 p-4">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
       <div className="flex items-start gap-3">
         <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-pink-400/25 bg-pink-400/10 text-pink-200">
           <Gift size={15} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-[var(--muted)]">
+          <p className="text-sm text-[var(--ink-dim)]">
             Received{" "}
             <span className="font-semibold text-pink-200">
               {event.amountNet} coins
             </span>{" "}
             from{" "}
-            <span className="text-[var(--foreground)]">
+            <span className="text-[var(--ink)]">
               {event.senderLabel || "Mystery Donor"}
             </span>
           </p>
 
           {event.message ? (
-            <p className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm italic leading-6 text-[var(--muted)]">
+            <p className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm italic leading-6 text-[var(--ink-dim)]">
               “{event.message}”
             </p>
           ) : null}
 
-          <p className="mt-3 text-xs text-[var(--muted)]">
+          <p className="mt-3 text-xs text-[var(--ink-dim)]">
             {event.occurredLabel || "Recently"}
           </p>
         </div>

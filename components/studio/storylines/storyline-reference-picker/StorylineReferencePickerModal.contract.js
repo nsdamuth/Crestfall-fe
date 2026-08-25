@@ -1,4 +1,4 @@
-export const STORYLINE_REFERENCE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORYLINE_REFERENCE_PICKER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Portable LOOM boundary for choosing Story or Scenario references.
@@ -6,6 +6,12 @@ export const STORYLINE_REFERENCE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  * The View receives display-ready tabs, normalized reference items, copy, and
  * semantic callbacks. It does not create portals, touch document/body state,
  * interpret raw reference objects, filter options, or decide selection rules.
+ * It composes `KitModalFrame` (portal, Escape, backdrop dismiss, and
+ * body-scroll lock all live there now), matching the nested modal law: same
+ * KitModalFrame branding as the Adventures builder modal it opens from,
+ * scrollable, with an explicit back path (10 Aug 2026 defect ruling).
+ * 1.0.0 to 1.1.0: closeLabel renamed to backLabel (the control is now a
+ * labeled "Back to Storyline" affordance, not a bare close icon).
  *
  * @typedef {Object} StorylineReferencePickerTab
  * @property {"STORY"|"SCENARIO"} id
@@ -25,7 +31,7 @@ export const STORYLINE_REFERENCE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} title
  * @property {string} description
  * @property {string} dialogTitleId
- * @property {string} closeLabel
+ * @property {string} backLabel
  * @property {StorylineReferencePickerTab[]} tabs
  * @property {string} searchQuery
  * @property {string} searchPlaceholder

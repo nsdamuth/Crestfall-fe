@@ -2,6 +2,60 @@
 
 import { useState } from "react";
 
+import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
+
+// Preview-only nav, journey order per docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
+// section 2. Built destinations route to their live studio v2 page
+// route; unbuilt destinations carry no href and render quiet
+// (non-interactive) until their page ships. Icon keys reuse the
+// existing ICONS set in StudioSidebar.view.jsx, no new icons added.
+//
+// All nine destinations are built, RULED 11 Aug 2026: every isBuilt
+// flag moves false to true, so every item routes to its live
+// /studio/v2/<page> route. No hrefs changed, no icon keys changed.
+//
+// Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
+// (build-0823 pass 4, sidebar refinement): the repo's standing
+// archive/vault glyph (witness: KitCreationCard's Archive action).
+export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
+  Object.freeze({
+    label: "Play",
+    items: Object.freeze([
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true }),
+      Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true }),
+      Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Create",
+    items: Object.freeze([
+      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true }),
+      Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
+      Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true }),
+    ]),
+  }),
+  Object.freeze({
+    label: "Explore",
+    items: Object.freeze([
+      Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass", isBuilt: true }),
+      Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users", isBuilt: true }),
+      Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen", isBuilt: true }),
+    ]),
+  }),
+]);
+
+export const STUDIO_SIDEBAR_LEGACY_LABEL = "Legacy";
+
+function buildPreviewGroups(pathname) {
+  return STUDIO_SIDEBAR_PREVIEW_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.map((item) => ({
+      ...item,
+      isActive: item.isBuilt && isStudioSidebarPathActive(pathname, item.href),
+    })),
+  }));
+}
+
 export const STUDIO_SIDEBAR_DISCORD_URL =
   "https://discord.com/channels/1482041132874727579/1482041133700878529";
 
@@ -14,12 +68,6 @@ export const STUDIO_SIDEBAR_COPY = Object.freeze({
 });
 
 export const STUDIO_SIDEBAR_PRIMARY_LINKS = Object.freeze([
-  Object.freeze({
-    label: "Lore Archive",
-    href: "/",
-    iconKey: "bookOpen",
-    variant: "return",
-  }),
   Object.freeze({ label: "Studio Home", href: "/studio", iconKey: "home" }),
   Object.freeze({ label: "Create", href: "/studio/create", iconKey: "user" }),
   Object.freeze({ label: "Games", href: "/studio/games", iconKey: "sparkles" }),
@@ -53,6 +101,12 @@ export const STUDIO_SIDEBAR_PRIMARY_LINKS = Object.freeze([
     href: "/studio/community",
     iconKey: "compass",
   }),
+  Object.freeze({
+    label: "Lore",
+    href: "/",
+    iconKey: "bookOpen",
+    variant: "return",
+  }),
 ]);
 
 export const STUDIO_SIDEBAR_UTILITY_LINKS = Object.freeze([
@@ -83,6 +137,14 @@ export function isStudioSidebarPathActive(pathname = "", href = "") {
     : pathname.startsWith(href);
 }
 
+// Account destination, RULED (FE polish closeout, item 7): the v2
+// surface must never link into the legacy /studio/account shell.
+// This sidebar renders on every /studio/** route including v2 pages,
+// so the Account item's target depends on which surface is current.
+export function getStudioSidebarAccountHref(pathname = "") {
+  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+}
+
 export function normalizeStudioSidebarEmail(user = {}) {
   return typeof user?.email === "string" ? user.email : "";
 }
@@ -97,8 +159,15 @@ function buildNavigationLinks(links, pathname) {
 export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
+  const [legacyOpen, setLegacyOpen] = useState(false);
+  const previewEnabled = isSidebarV2PreviewEnabled();
 
   return {
+    previewEnabled,
+    previewGroups: previewEnabled ? buildPreviewGroups(pathname) : [],
+    legacyLabel: STUDIO_SIDEBAR_LEGACY_LABEL,
+    legacyOpen,
+    onToggleLegacy: () => setLegacyOpen((value) => !value),
     brandEyebrow: STUDIO_SIDEBAR_COPY.brandEyebrow,
     brandTitle: STUDIO_SIDEBAR_COPY.brandTitle,
     brandHref: "/studio",
@@ -111,7 +180,15 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
     collapsed,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_SIDEBAR_PRIMARY_LINKS, pathname),
-    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname),
+    utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname).map((link) =>
+      link.label === "Account"
+        ? {
+            ...link,
+            href: getStudioSidebarAccountHref(pathname),
+            isActive: isStudioSidebarPathActive(pathname, getStudioSidebarAccountHref(pathname)),
+          }
+        : link
+    ),
     socialLinks: STUDIO_SIDEBAR_SOCIAL_LINKS,
     onToggleCollapsed: () => setCollapsed((value) => !value),
     onToggleSocial: () => setSocialOpen((value) => !value),

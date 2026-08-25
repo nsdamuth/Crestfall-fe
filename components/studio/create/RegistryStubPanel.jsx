@@ -8,14 +8,14 @@ export default function RegistryStubPanel({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[1fr_360px]">
-      <div className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-6">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Builder Planned
         </p>
 
         <h2 className="mt-2 font-display text-4xl">{title}</h2>
 
-        <p className="mt-3 max-w-3xl leading-7 text-[var(--muted)]">
+        <p className="mt-3 max-w-3xl leading-7 text-[var(--ink-dim)]">
           {description}
         </p>
 
@@ -23,13 +23,13 @@ export default function RegistryStubPanel({
           {plannedTabs.map((tab) => (
             <article
               key={tab.title}
-              className="rounded-2xl border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
             >
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 {tab.eyebrow}
               </p>
               <h3 className="mt-2 font-display text-2xl">{tab.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
                 {tab.description}
               </p>
             </article>
@@ -37,14 +37,14 @@ export default function RegistryStubPanel({
         </div>
       </div>
 
-      <aside className="self-start rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
 
         <h2 className="mt-2 font-display text-3xl">{registryType}</h2>
 
-        <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           {futureUse}
         </p>
 
@@ -61,9 +61,9 @@ export default function RegistryStubPanel({
         <button
           type="button"
           disabled
-          className="mt-5 inline-flex w-full items-center justify-center rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-4 text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)] opacity-75"
+          className="cf-btn cf-btn--secondary mt-5 w-full"
         >
-          Builder Coming Soon
+          Builder coming soon
         </button>
       </aside>
     </section>
@@ -73,10 +73,10 @@ export default function RegistryStubPanel({
 function SummaryPill({ label, value }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[var(--foreground)]">{value}</p>
+      <p className="mt-1 text-sm text-[var(--ink)]">{value}</p>
     </div>
   );
 }

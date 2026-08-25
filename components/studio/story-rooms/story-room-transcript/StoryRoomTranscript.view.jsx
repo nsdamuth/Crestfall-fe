@@ -58,11 +58,11 @@ export default function StoryRoomTranscriptView({
           <button
             type="button"
             onClick={loadEarlierMessages}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+            className="cf-btn cf-btn--secondary"
           >
             <ChevronUp size={14} />
-            Load Earlier
-            <span className="text-[var(--muted-gold)]">{hiddenCount}</span>
+            Load earlier
+            <span className="text-[var(--gold-ornament)]">{hiddenCount}</span>
           </button>
         </div>
       ) : null}
@@ -100,20 +100,20 @@ export default function StoryRoomTranscriptView({
 
 function StatusCard({ icon: Icon, spin = false, children }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/10 bg-black/20 p-5 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/20 p-5 text-center">
       <Icon
-        className={`mx-auto text-[var(--muted-gold)] ${spin ? "animate-spin" : ""}`}
+        className={`mx-auto text-[var(--gold-ornament)] ${spin ? "animate-spin" : ""}`}
         size={24}
       />
 
-      <p className="mt-3 text-sm text-[var(--muted)]">{children}</p>
+      <p className="mt-3 text-sm text-[var(--ink-dim)]">{children}</p>
     </div>
   );
 }
 
 function ErrorCard({ message }) {
   return (
-    <div className="rounded-2xl border border-red-400/25 bg-red-500/10 p-5 text-center">
+    <div className="rounded-[var(--radius-md)] border border-red-400/25 bg-red-500/10 p-5 text-center">
       <p className="text-xs uppercase tracking-[0.2em] text-red-200">
         Story Error
       </p>

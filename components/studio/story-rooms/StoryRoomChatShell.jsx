@@ -18,11 +18,6 @@ export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
 
-  const confirmDelete = useCallback(
-    (message) => window.confirm(message),
-    []
-  );
-
   const onRoomDeleted = useCallback(() => {
     router.push("/studio/story-rooms");
   }, [router]);
@@ -30,7 +25,6 @@ export default function StoryRoomChatShell({ roomId }) {
   const viewProps = useStoryRoomChatShellViewModel({
     roomId,
     chat,
-    confirmDelete,
     onRoomDeleted,
   });
 

@@ -27,7 +27,7 @@ const sharedCopy = {
   templateActions: [
     {
       id: "convert-to-template",
-      label: "Convert To Template Soon",
+      label: "Convert To Template",
       disabled: true,
       emphasis: "primary",
     },
@@ -44,6 +44,15 @@ const sharedCopy = {
   canonReviewDisabled: false,
   reviewMessage: "",
   reviewMessageTone: "success",
+  unlistTitle: "Unlist for Editing",
+  unlistDescription:
+    "Pull this creation back to private so you can keep editing it. It leaves public discovery until you resubmit.",
+  showUnlist: false,
+  unlistButtonLabel: "Unlist for editing",
+  unlistDisabled: false,
+  showCancelReview: false,
+  cancelReviewButtonLabel: "Cancel review",
+  cancelReviewDisabled: false,
 };
 
 export const creationPublishingSectionDraftFixture = {
@@ -58,13 +67,13 @@ export const creationPublishingSectionTemplateFixture = {
   templateActions: [
     {
       id: "duplicate-template",
-      label: "Duplicate Template Soon",
+      label: "Duplicate Template",
       disabled: true,
       emphasis: "secondary",
     },
     {
       id: "use-template",
-      label: "Use Template Soon",
+      label: "Use Template",
       disabled: true,
       emphasis: "secondary",
     },
@@ -79,6 +88,13 @@ export const creationPublishingSectionInReviewFixture = {
   canonReviewButtonLabel: "In Review",
   canonReviewDisabled: true,
   reviewMessage: "Submitted for public review.",
+  showCancelReview: true,
+};
+
+export const creationPublishingSectionUnlistableFixture = {
+  ...sharedCopy,
+  visibilityValue: "PUBLIC",
+  showUnlist: true,
 };
 
 export const creationPublishingSectionOfficialCanonFixture = {

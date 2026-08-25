@@ -28,6 +28,10 @@ export const OFFICIAL_CHARACTERS_GRID_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} emptyTitle
  * @property {string} emptyMessage
  * @property {(nextQuery: string) => void} [onChangeQuery]
+ * @property {import("react").ElementType} [LinkComponent] doc-only addition
+ *   (ED1G sw12): link/anchor component injected by the host, defaults to
+ *   "a" in the View. Already read by the View, undeclared here. No
+ *   version bump.
  */
 
 export {};

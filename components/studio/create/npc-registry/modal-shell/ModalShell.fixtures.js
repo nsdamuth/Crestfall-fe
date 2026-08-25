@@ -1,19 +1,19 @@
 const standardBody = (
   <div className="grid gap-4">
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       Display Name
       <input
         type="text"
         defaultValue="Captain Elian Voss"
-        className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--foreground)] outline-none"
+        className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--ink)] outline-none"
       />
     </label>
 
-    <label className="grid gap-2 text-sm text-[var(--muted)]">
+    <label className="grid gap-2 text-sm text-[var(--ink-dim)]">
       Registry Notes
       <textarea
         defaultValue="A trusted harbor captain who knows the eastern trade routes."
-        className="min-h-32 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--foreground)] outline-none"
+        className="min-h-32 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--ink)] outline-none"
       />
     </label>
   </div>
@@ -26,10 +26,10 @@ const longBody = (
         key={index}
         className="rounded-xl border border-white/10 bg-black/25 p-4"
       >
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Registry Section {index + 1}
         </p>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
           This repeated content verifies that the modal body remains independently
           scrollable without allowing the full viewport overlay to drift.
         </p>
@@ -55,7 +55,7 @@ export const npcRegistryModalShellFixtures = [
       title: "Relationship Rule",
       children: (
         <div className="rounded-xl border border-white/10 bg-black/25 p-5">
-          <p className="text-sm leading-6 text-[var(--muted)]">
+          <p className="text-sm leading-6 text-[var(--ink-dim)]">
             Define the source NPC, target NPC, relationship type, and private
             notes inside the modal content area.
           </p>
@@ -98,7 +98,7 @@ export const npcRegistryModalShellFixtures = [
     props: {
       title: "Defensive Callback State",
       children: (
-        <p className="text-sm leading-6 text-[var(--muted)]">
+        <p className="text-sm leading-6 text-[var(--ink-dim)]">
           The close control remains safe when no callback is supplied.
         </p>
       ),

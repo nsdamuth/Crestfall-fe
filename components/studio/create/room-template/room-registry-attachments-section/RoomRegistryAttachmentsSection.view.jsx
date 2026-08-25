@@ -15,11 +15,11 @@ export default function RoomRegistryAttachmentsSectionView({
   return (
     <div>
       <div>
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           {eyebrow}
         </p>
         <h3 className="mt-2 font-display text-3xl">{title}</h3>
-        <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--muted)]">
+        <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
           {body}
         </p>
       </div>
@@ -33,14 +33,14 @@ export default function RoomRegistryAttachmentsSectionView({
           return (
             <div
               key={group?.id || group?.label}
-              className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/30 p-5"
+              className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                     {group?.label || "Registries"}
                   </p>
-                  <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--muted)]">
+                  <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--ink-dim)]">
                     {group?.body || ""}
                   </p>
                 </div>
@@ -48,10 +48,10 @@ export default function RoomRegistryAttachmentsSectionView({
                 <button
                   type="button"
                   onClick={() => onOpenRegistryPicker?.(group?.id)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)] transition hover:bg-[var(--muted-gold)]/20 hover:text-[var(--foreground)]"
+                  className="cf-btn cf-btn--primary"
                 >
                   <Link2 size={14} />
-                  {group?.addLabel || "Attach Registry"}
+                  {group?.addLabel || "Attach registry"}
                 </button>
               </div>
 
@@ -75,7 +75,7 @@ export default function RoomRegistryAttachmentsSectionView({
                   ))}
                 </div>
               ) : (
-                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
                   {group?.emptyLabel || "No registries attached."}
                 </p>
               )}
@@ -93,7 +93,7 @@ function RegistryAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/35">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         {attachment?.imageUrl ? (
           <div
@@ -103,7 +103,7 @@ function RegistryAttachmentCard({
             }}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Registry
           </div>
         )}
@@ -112,7 +112,7 @@ function RegistryAttachmentCard({
           <p className="truncate font-display text-xl">
             {attachment?.title || "Attached Registry"}
           </p>
-          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">
+          <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             {attachment?.typeLabel || "Registry"}
           </p>
         </div>
@@ -120,18 +120,19 @@ function RegistryAttachmentCard({
         <button
           type="button"
           onClick={() => onRemove?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:border-red-400/40 hover:text-red-200"
+          className="cf-btn cf-btn--danger cf-btn--sm"
           aria-label={
             attachment?.removeAriaLabel || "Remove attached registry"
           }
         >
           <X size={14} />
+          <span className="text-xs">Remove</span>
         </button>
       </div>
 
       <div className="p-4">
         {attachment?.description ? (
-          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+          <p className="mb-3 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
             {attachment.description}
           </p>
         ) : null}
@@ -141,7 +142,7 @@ function RegistryAttachmentCard({
           value={attachment?.notes || ""}
           onChange={(event) => onNotesChange?.(event.target.value)}
           placeholder="Optional attachment notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--foreground)] outline-none transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </div>

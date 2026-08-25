@@ -1,0 +1,169 @@
+# Contrast matrix, wave X1
+
+Generated 12 Aug 2026 for the Fable Gate 2 Contrast Law
+(`docs/plans/FABLE-GATE-2-STUDIO.md`, ruling N6, ratified option A).
+Regenerated 22 Aug 2026 per the ED1F propagation plan (G1 verification
+requirement, `docs/plans/ED1F-PROPAGATION-PLAN.md` section E1): the
+`--status-success` revision (CR-051, oklch(.76 .08 135)) and the
+`--focus-ring` recipe revision (A3) are the matrix's own regeneration
+trigger. Every locked ink, gold, and status token in
+`docs/DESIGN-TOKENS.md` computed as WCAG 2 relative-luminance contrast
+against every locked surface token, dark theme (the theme the draft
+Contrast Law and ruling N6 were computed against). Method: sRGB
+relative luminance per `app/theme.css` hex values (oklch values
+converted to sRGB via the standard OKLab transform first), contrast =
+(L1+0.05)/(L2+0.05), no rounding before the PASS/FAIL cut (a computed
+4.497:1 is FAIL at 4.5, not a rounding pass). Generated artifact, not
+hand-maintained; regenerate from `app/theme.css` if a locked value
+ever changes.
+
+`--tag-fill-ink` is included for completeness because it is a locked
+ink-family token, but its ruled role (`docs/DESIGN-TOKENS.md`) is
+text sitting ON a gold fill, never against a canvas/surface token
+directly; its FAIL rows below are expected and out of scope, not a
+product defect.
+
+## Full matrix
+
+| Token | Surface | Ratio | 4.5:1 | 3:1 |
+|---|---|---|---|---|
+| `--ink` | `--canvas` | 16.24:1 | PASS | PASS |
+| `--ink` | `--surface-1` | 15.02:1 | PASS | PASS |
+| `--ink` | `--surface-2` | 14.07:1 | PASS | PASS |
+| `--ink` | `--surface-3` | 13.03:1 | PASS | PASS |
+| `--ink` | `--surface-4` | 12.03:1 | PASS | PASS |
+| `--ink` | `--surface-footer` | 15.00:1 | PASS | PASS |
+| `--ink-dim` | `--canvas` | 7.90:1 | PASS | PASS |
+| `--ink-dim` | `--surface-1` | 7.30:1 | PASS | PASS |
+| `--ink-dim` | `--surface-2` | 6.84:1 | PASS | PASS |
+| `--ink-dim` | `--surface-3` | 6.33:1 | PASS | PASS |
+| `--ink-dim` | `--surface-4` | 5.85:1 | PASS | PASS |
+| `--ink-dim` | `--surface-footer` | 7.30:1 | PASS | PASS |
+| `--ink-faint` | `--canvas` | 5.53:1 | PASS | PASS |
+| `--ink-faint` | `--surface-1` | 5.11:1 | PASS | PASS |
+| `--ink-faint` | `--surface-2` | 4.79:1 | PASS | PASS |
+| `--ink-faint` | `--surface-3` | 4.43:1 | FAIL | PASS |
+| `--ink-faint` | `--surface-4` | 4.09:1 | FAIL | PASS |
+| `--ink-faint` | `--surface-footer` | 5.10:1 | PASS | PASS |
+| `--gold-action` | `--canvas` | 9.69:1 | PASS | PASS |
+| `--gold-action` | `--surface-1` | 8.95:1 | PASS | PASS |
+| `--gold-action` | `--surface-2` | 8.39:1 | PASS | PASS |
+| `--gold-action` | `--surface-3` | 7.77:1 | PASS | PASS |
+| `--gold-action` | `--surface-4` | 7.17:1 | PASS | PASS |
+| `--gold-action` | `--surface-footer` | 8.95:1 | PASS | PASS |
+| `--gold-ornament` | `--canvas` | 8.86:1 | PASS | PASS |
+| `--gold-ornament` | `--surface-1` | 8.19:1 | PASS | PASS |
+| `--gold-ornament` | `--surface-2` | 7.67:1 | PASS | PASS |
+| `--gold-ornament` | `--surface-3` | 7.11:1 | PASS | PASS |
+| `--gold-ornament` | `--surface-4` | 6.56:1 | PASS | PASS |
+| `--gold-ornament` | `--surface-footer` | 8.19:1 | PASS | PASS |
+| `--gold-bright` | `--canvas` | 13.66:1 | PASS | PASS |
+| `--gold-bright` | `--surface-1` | 12.63:1 | PASS | PASS |
+| `--gold-bright` | `--surface-2` | 11.83:1 | PASS | PASS |
+| `--gold-bright` | `--surface-3` | 10.95:1 | PASS | PASS |
+| `--gold-bright` | `--surface-4` | 10.11:1 | PASS | PASS |
+| `--gold-bright` | `--surface-footer` | 12.62:1 | PASS | PASS |
+| `--gold-deep` | `--canvas` | 4.69:1 | PASS | PASS |
+| `--gold-deep` | `--surface-1` | 4.34:1 | FAIL | PASS |
+| `--gold-deep` | `--surface-2` | 4.06:1 | FAIL | PASS |
+| `--gold-deep` | `--surface-3` | 3.76:1 | FAIL | PASS |
+| `--gold-deep` | `--surface-4` | 3.48:1 | FAIL | PASS |
+| `--gold-deep` | `--surface-footer` | 4.34:1 | FAIL | PASS |
+| `--tag-fill-ink` | `--canvas` | 1.10:1 | FAIL | FAIL |
+| `--tag-fill-ink` | `--surface-1` | 1.02:1 | FAIL | FAIL |
+| `--tag-fill-ink` | `--surface-2` | 1.05:1 | FAIL | FAIL |
+| `--tag-fill-ink` | `--surface-3` | 1.13:1 | FAIL | FAIL |
+| `--tag-fill-ink` | `--surface-4` | 1.23:1 | FAIL | FAIL |
+| `--tag-fill-ink` | `--surface-footer` | 1.02:1 | FAIL | FAIL |
+| `--status-success` (revised, oklch(.76 .08 135)) | `--canvas` | 9.57:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-1` | 8.85:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-2` | 8.29:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-3` | 7.68:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-4` | 7.09:1 | PASS | PASS |
+| `--status-success` (revised) | `--surface-footer` | 8.84:1 | PASS | PASS |
+| `--status-warning` | `--canvas` | 6.07:1 | PASS | PASS |
+| `--status-warning` | `--surface-1` | 5.61:1 | PASS | PASS |
+| `--status-warning` | `--surface-2` | 5.26:1 | PASS | PASS |
+| `--status-warning` | `--surface-3` | 4.87:1 | PASS | PASS |
+| `--status-warning` | `--surface-4` | 4.50:1 (4.497 unrounded) | FAIL | PASS |
+| `--status-warning` | `--surface-footer` | 5.61:1 | PASS | PASS |
+| `--status-danger` | `--canvas` | 4.95:1 | PASS | PASS |
+| `--status-danger` | `--surface-1` | 4.57:1 | PASS | PASS |
+| `--status-danger` | `--surface-2` | 4.28:1 | FAIL | PASS |
+| `--status-danger` | `--surface-3` | 3.97:1 | FAIL | PASS |
+| `--status-danger` | `--surface-4` | 3.66:1 | FAIL | PASS |
+| `--status-danger` | `--surface-footer` | 4.57:1 | PASS | PASS |
+
+## Focus ring legibility, A3
+
+`--focus-ring`'s revised recipe (`app/theme.css:373`, ratified A3) is
+a 1px `--gold-ornament` ring plus a 3px 10 percent `--gold-action`
+glow. The glow is a low-opacity wash, not depended on for the
+boundary itself; the checkable UI-component-boundary threshold is
+3:1, and the ring's own `--gold-ornament` color already has a full
+row above against every surface token. Restated here plus the two new
+gradient surfaces the propagation plan names (surface depth, not only
+field beds):
+
+| Ring color | Surface | Ratio | 3:1 |
+|---|---|---|---|
+| `--gold-ornament` | `--canvas` | 8.86:1 | PASS |
+| `--gold-ornament` | `--surface-1` | 8.19:1 | PASS |
+| `--gold-ornament` | `--surface-2` | 7.67:1 | PASS |
+| `--gold-ornament` | `--surface-3` | 7.11:1 | PASS |
+| `--gold-ornament` | `--surface-4` | 6.56:1 | PASS |
+| `--gold-ornament` | `--grad-panel-lift` (top stop, `#332d22`) | 6.04:1 | PASS |
+| `--gold-ornament` | `--grad-panel-lift` (bottom stop, `#2a251d`) | 6.73:1 | PASS |
+| `--gold-ornament` | `--grad-card` (top stop, `#1a1610`) | 7.97:1 | PASS |
+| `--gold-ornament` | `--grad-card` (bottom stop, `#14110c`) | 8.33:1 | PASS |
+
+Legible at every surface depth the ring can land on, including the
+new panel-lift and card gradient surfaces the ring can render against
+inside `KitModalFrame` and card components. No FAIL.
+
+## Findings summary
+
+Ratified and resolved by N6 and its 12 Aug 2026 same-session
+extension:
+
+- `--ink-faint` on `--surface-4`: 4.09:1, FAILS 4.5. Resolution:
+  illegal for normal-size meaningful text there; `--ink-dim` used
+  instead (5.85:1, PASS).
+- `--ink-faint` on `--surface-3`: 4.43:1, FAILS 4.5. Resolved by the
+  extension: illegal for normal-size meaningful text there too;
+  `--ink-dim` used instead (6.33:1, PASS). `--ink-faint` stays legal
+  on `--surface-1` (5.11:1) and `--surface-2` (4.79:1), and at any
+  surface for large text (>=24px / >=18.66px bold, 3:1 threshold,
+  which it clears everywhere).
+- `--gold-deep` on every surface except `--canvas`: 4.34/4.06/3.76/
+  3.48:1, all FAIL 4.5. Resolved by the extension: legal for ornament
+  and large display text on any surface; illegal for normal-size
+  meaningful text on every surface but `--canvas` (4.69:1, PASS,
+  the one surface it clears).
+
+BLOCKED, not resolved (missing token; STOP, reported not ruled):
+
+- `--status-warning` on `--surface-4`: 4.497:1 unrounded, FAILS 4.5.
+- `--status-danger` on `--surface-2`/`--surface-3`/`--surface-4`:
+  4.28/3.97/3.66:1, all FAIL 4.5.
+  Brian's 12 Aug ruling calls for these to use "their brighter
+  primitive ladder step," but the status ladders
+  (`--success-1..10`, `--warning-1..10`, `--danger-1..10`) fill only
+  step 5, each family's own base value; every other step is
+  unset/proposed in `app/theme.css`, not a locked value. No named
+  step exists to consume, so this piece of the ruling did not land.
+  Status text used at normal size on these three surfaces remains as
+  documented above until Brian names (or a render sitting mints) the
+  step; status text continues to ship with its word beside it
+  regardless, per standing law.
+
+Out of scope, expected:
+
+- `--tag-fill-ink` against every surface: FAILS both thresholds
+  everywhere, but its ruled role restricts it to text on a gold
+  fill, never directly against a canvas/surface token, so these rows
+  are expected and out of this law's scope.
+
+These open items are not decided by this wave. X1 lands only the N6
+pairing law above; the rest are reported to Brian as items needing
+their own ruling before any sweep treats them as legal or illegal.

@@ -1,5 +1,13 @@
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  SelectField,
+  SHORT_LONGFORM_MAX_LENGTH,
+  TextAreaField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
+// ED1C dropdown law: the local native-select PolicySelect is replaced
+// by the SharedFields SelectField (branded kit dropdown grammar).
+// Same props, same onChange(value) intent.
 function PolicySelect({
   label = "",
   value = "",
@@ -7,46 +15,36 @@ function PolicySelect({
   onChange = null,
 }) {
   return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+    <SelectField
+      label={label}
+      value={value}
+      options={options}
+      onChange={(nextValue) => onChange?.(nextValue)}
+    />
   );
 }
 
+// K1 folding field pattern (SharedFields.jsx TextAreaField), ED1d
+// Defect 2: this local textarea bypassed it entirely (no fold, no
+// counter). `rows` drops since TextAreaField owns its own resting/
+// expanded heights.
 function GuidanceField({
   label = "",
   value = "",
   placeholder = "",
-  rows = 4,
   className = "",
   onChange = null,
 }) {
   return (
-    <label className={`block ${className}`.trim()}>
-      <span className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-        {label}
-      </span>
-      <textarea
-        rows={rows}
+    <div className={className}>
+      <TextAreaField
+        label={label}
         value={value}
-        onChange={(event) => onChange?.(event.target.value)}
+        onChange={(nextValue) => onChange?.(nextValue)}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+        maxLength={SHORT_LONGFORM_MAX_LENGTH}
       />
-    </label>
+    </div>
   );
 }
 
@@ -110,7 +108,6 @@ export default function StoryNarrativeRuntimeSectionView({
         label={completionGuidanceLabel}
         value={completionGuidanceValue}
         placeholder={completionGuidancePlaceholder}
-        rows={3}
         onChange={onChangeCompletionGuidance}
       />
 
@@ -119,31 +116,30 @@ export default function StoryNarrativeRuntimeSectionView({
           <details
             key={phase.id}
             open={phase.initiallyOpen}
-            className="group rounded-2xl border border-white/10 bg-black/25 p-4"
+            className="group rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]"
           >
             <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-[var(--space-4)]">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
+                  <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                     {phase.phaseEyebrow}
                   </p>
-                  <h3 className="mt-1 font-display text-3xl">
+                  <h3 className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
                     {phase.phaseTitle}
                   </h3>
                 </div>
-                <span className="text-xs uppercase tracking-[0.14em] text-[var(--muted)]">
+                <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                   <span className="group-open:hidden">{openLabel}</span>
                   <span className="hidden group-open:inline">{closeLabel}</span>
                 </span>
               </div>
             </summary>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-[var(--space-5)] grid gap-[var(--space-4)] md:grid-cols-2">
               <GuidanceField
                 label={phaseObjectiveLabel}
                 value={phase.objectiveValue}
                 placeholder={phaseObjectivePlaceholder}
-                rows={3}
                 className="md:col-span-2"
                 onChange={(value) =>
                   onChangePhaseObjective?.(phase.id, value)

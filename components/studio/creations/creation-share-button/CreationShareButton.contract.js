@@ -12,6 +12,8 @@ export const CREATION_SHARE_BUTTON_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} buttonLabel Display-ready action/status label.
  * @property {boolean} disabled Whether the action is unavailable.
  * @property {null|(() => void)} onShare Semantic share intent.
+ * @property {boolean} [compact] doc-only addition (ED1G sw12), no version bump.
+ * @property {string} [ariaLabel] doc-only addition (ED1G sw12), no version bump.
  */
 
 export {};

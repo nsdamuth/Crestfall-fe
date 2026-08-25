@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function SiteHeader({ home = false }) {
   return (
-    <header className="relative z-20 grid w-full grid-cols-[minmax(260px,auto)_1fr] items-center gap-8 px-6 py-8 sm:px-10 lg:px-16">
+    <header className="relative z-20 grid w-full grid-cols-[minmax(260px,auto)_1fr] items-center gap-[var(--space-8)] px-[var(--space-6)] py-[var(--space-8)] sm:px-[var(--space-10)] lg:px-[var(--space-16)]">
       <Link href="/" className="flex items-center gap-4 transition hover:opacity-90">
         <img
           src="/assets/branding/crestfall-seal.svg"
@@ -15,7 +15,7 @@ export default function SiteHeader({ home = false }) {
         />
 
         <div>
-          <p className="font-display text-xs uppercase tracking-[0.45em] text-[var(--muted-gold)]">
+          <p className="font-display text-xs uppercase tracking-[0.45em] text-[var(--gold-ornament)]">
             Crestfall
           </p>
 
@@ -25,29 +25,29 @@ export default function SiteHeader({ home = false }) {
         </div>
       </Link>
 
-      <nav className="hidden min-w-0 flex-wrap justify-end gap-x-8 gap-y-3 text-sm uppercase tracking-[0.22em] text-[var(--muted)] md:flex">
-        <Link href="/intro" className="transition hover:text-[var(--foreground)]">
+      <nav className="hidden min-w-0 flex-wrap justify-end gap-x-8 gap-y-3 text-sm uppercase tracking-[0.22em] text-[var(--ink-dim)] md:flex">
+        <Link href="/intro" className="transition hover:text-[var(--ink)]">
           Intro
         </Link>
-        <Link href="/lore" className="transition hover:text-[var(--foreground)]">
+        <Link href="/lore" className="transition hover:text-[var(--ink)]">
           Lore
         </Link>
-        <Link href="/characters" className="transition hover:text-[var(--foreground)]">
+        <Link href="/characters" className="transition hover:text-[var(--ink)]">
           Characters
         </Link>
-        <Link href="/locations" className="transition hover:text-[var(--foreground)]">
+        <Link href="/locations" className="transition hover:text-[var(--ink)]">
           Locations
         </Link>
-        <Link href="/factions" className="transition hover:text-[var(--foreground)]">
+        <Link href="/factions" className="transition hover:text-[var(--ink)]">
           Factions
         </Link>
-        <Link href="/stories" className="transition hover:text-[var(--foreground)]">
+        <Link href="/stories" className="transition hover:text-[var(--ink)]">
           Stories
         </Link>
-        <Link href="/chronicle" className="transition hover:text-[var(--foreground)]">
+        <Link href="/chronicle" className="transition hover:text-[var(--ink)]">
           Chronicle
         </Link>
-        <Link href="/studio" className="transition hover:text-[var(--foreground)]">
+        <Link href="/studio" className="transition hover:text-[var(--ink)]">
           Studio
         </Link>
       </nav>

@@ -41,39 +41,41 @@ export default function CrestfallOptionModalView({
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm transition hover:border-[var(--muted-gold)]/35 focus:border-[var(--muted-gold)]/50"
+        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)]"
       >
-        <span className="block text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
+        <span className="block text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {triggerLabel}
         </span>
-        <span className="mt-1 block text-[var(--foreground)]">
+        <span className="mt-1 block text-[length:var(--text-ui)] text-[var(--ink)]">
           {selectedLabel}
         </span>
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="w-full max-w-4xl rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] p-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)] min-[700px]:items-center min-[700px]:p-4">
+          <div className="w-full max-w-4xl rounded-t-[var(--radius-lg)] border border-b-0 border-[var(--line)] bg-[image:var(--grad-panel-lift)] p-5 shadow-[var(--shadow-modal)] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="font-display text-3xl">{title}</h2>
+              <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] tabular-nums">
+                {title}
+              </h2>
 
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+                className="flex h-[var(--control-md)] w-[var(--control-md)] flex-shrink-0 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)]"
                 aria-label="Close"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/45 px-4 py-3">
-              <Search size={16} className="text-[var(--muted-gold)]" />
+            <div className="mt-5 flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
+              <Search size={16} className="text-[var(--gold-ornament)]" />
               <input
                 value={searchQuery}
                 onChange={(event) => onSearchQueryChange?.(event.target.value)}
                 placeholder={searchPlaceholder}
-                className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+                className="w-full bg-transparent text-[length:var(--text-body)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
               />
             </div>
 
@@ -84,10 +86,10 @@ export default function CrestfallOptionModalView({
                     key={group}
                     type="button"
                     onClick={() => onChooseGroup?.(group)}
-                    className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                    className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
                       activeGroup === group
-                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                        : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                     }`}
                   >
                     {group}
@@ -97,8 +99,8 @@ export default function CrestfallOptionModalView({
             ) : null}
 
             {customMode ? (
-              <div className="mt-5 rounded-xl border border-white/10 bg-black/30 p-4">
-                <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+              <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+                <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                   {customEyebrow}
                 </p>
 
@@ -106,14 +108,14 @@ export default function CrestfallOptionModalView({
                   value={customValue}
                   onChange={(event) => onCustomValueChange?.(event.target.value)}
                   placeholder={customPlaceholder}
-                  className="mt-3 w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                  className="mt-3 w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] text-[var(--ink)] outline-none focus:border-[var(--gold-action)]"
                 />
 
                 <div className="mt-4 flex justify-between gap-3">
                   <button
                     type="button"
                     onClick={() => onBackFromCustom?.()}
-                    className="rounded-xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted)]"
+                    className="inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-strong)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--gold-action)] transition hover:shadow-[var(--glow-hover)]"
                   >
                     Back
                   </button>
@@ -121,7 +123,7 @@ export default function CrestfallOptionModalView({
                   <button
                     type="button"
                     onClick={() => onUseCustom?.()}
-                    className="rounded-xl border border-[var(--muted-gold)]/45 bg-[var(--muted-gold)]/15 px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]"
+                    className="goldring inline-flex h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] px-[var(--space-6)] text-[length:var(--text-cta)] leading-[var(--lh-cta)] font-bold text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]"
                   >
                     Use Custom
                   </button>
@@ -136,14 +138,19 @@ export default function CrestfallOptionModalView({
                     key={option?.key || option?.id || option?.label}
                     type="button"
                     onClick={() => onChooseOption?.(option?.id ?? "")}
-                    className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
+                    className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-left text-[length:var(--text-ui)] transition ${
                       option?.selected
-                        ? "border-[var(--muted-gold)]/55 bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
-                        : "border-white/10 bg-black/30 text-[var(--muted)] hover:border-[var(--muted-gold)]/30 hover:bg-[var(--muted-gold)]/10 hover:text-[var(--foreground)]"
+                        ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
+                        : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                     }`}
                   >
                     {option?.icon ? (
-                      <span className="mr-2">{option.icon}</span>
+                      <svg
+                        className="mr-2 inline-block h-[var(--icon-sm)] w-[var(--icon-sm)] align-[-3px]"
+                        aria-hidden="true"
+                      >
+                        <use href={`/assets/icons/icons-v7.svg#${option.icon}`} />
+                      </svg>
                     ) : null}
                     {option?.label || "Untitled Option"}
                   </button>

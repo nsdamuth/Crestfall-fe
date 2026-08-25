@@ -1,3 +1,9 @@
+// RULED 11 Aug 2026 (Sprint H render review, item 3): the preview
+// generation cost, "cost value from fixtures." No pricing table
+// exists yet for quick-create preview generation; this is the
+// package-local placeholder value until CR-driven pricing lands.
+export const CHARACTER_PREVIEW_TOKEN_COST = 40;
+
 function resolveIdentityDisplayValue(
   selectedValue,
   customValue,
@@ -35,5 +41,6 @@ export function useCharacterPreviewViewModel({ form = {} } = {}) {
     ),
     clothingStyleLabel:
       form?.clothing_style || "Clothing style not chosen yet.",
+    previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
   };
 }

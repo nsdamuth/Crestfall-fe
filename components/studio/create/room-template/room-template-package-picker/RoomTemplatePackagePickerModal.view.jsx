@@ -48,18 +48,18 @@ export default function RoomTemplatePackagePickerModalView({
   const Icon = ICONS[iconName] || Users;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-3 border-b border-[var(--line-whisper)] py-3 px-4">
           <div>
-            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
+            <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               <Icon size={15} />
               {eyebrow}
             </p>
 
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
 
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
               {description}
             </p>
           </div>
@@ -67,7 +67,7 @@ export default function RoomTemplatePackagePickerModalView({
           <button
             type="button"
             onClick={() => onClose?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--muted)] transition hover:text-[var(--foreground)]"
+            className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
             aria-label="Close picker"
           >
             <X size={18} />
@@ -75,13 +75,13 @@ export default function RoomTemplatePackagePickerModalView({
         </div>
 
         <div className="p-5">
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-            <Search size={16} className="text-[var(--muted-gold)]" />
+          <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-4 py-3">
+            <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)]"
+              className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
             />
           </div>
 
@@ -96,13 +96,13 @@ export default function RoomTemplatePackagePickerModalView({
                     key={item.id}
                     type="button"
                     onClick={() => onChooseItem?.(item.id)}
-                    className={`overflow-hidden rounded-2xl border text-left transition hover:-translate-y-1 ${
+                    className={`overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                       active
-                        ? "border-[var(--muted-gold)]/65 bg-[var(--muted-gold)]/15"
-                        : "border-white/10 bg-black/35 hover:border-[var(--muted-gold)]/35"
+                        ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
+                        : "border-[var(--line)] bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
                     }`}
                   >
-                    <div className="aspect-[3/4] overflow-hidden bg-gradient-to-br from-black via-black/80 to-[var(--muted-gold)]/10">
+                    <div className="aspect-[3/4] overflow-hidden bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
                       {item.imageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -111,36 +111,36 @@ export default function RoomTemplatePackagePickerModalView({
                           className="h-full w-full object-cover opacity-90"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center p-4 text-center text-xs text-[var(--muted)]">
+                        <div className="flex h-full items-center justify-center p-4 text-center text-xs text-[var(--ink-dim)]">
                           Image preview unavailable
                         </div>
                       )}
                     </div>
 
                     <div className="p-4">
-                      <p className="font-display text-2xl leading-none text-[var(--foreground)]">
+                      <p className="font-display text-2xl leading-none text-[var(--ink)]">
                         {item.title || "Untitled Reference"}
                       </p>
 
                       {item.subtitle ? (
-                        <p className="mt-2 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+                        <p className="mt-2 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">
                           {item.subtitle}
                         </p>
                       ) : null}
 
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {item.contentRating ? (
-                          <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">
+                          <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]">
                             {item.contentRating}
                           </span>
                         ) : null}
                         {recommended ? (
-                          <span className="rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+                          <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]">
                             Recommended
                           </span>
                         ) : null}
                         {active ? (
-                          <span className="rounded-full border border-[var(--muted-gold)]/35 bg-[var(--muted-gold)]/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-[var(--muted-gold)]">
+                          <span className="inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-[var(--space-3)] text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]">
                             Selected
                           </span>
                         ) : null}
@@ -150,8 +150,8 @@ export default function RoomTemplatePackagePickerModalView({
                 );
               })
             ) : (
-              <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
-                <p className="text-sm leading-6 text-[var(--muted)]">
+              <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-2)] p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
+                <p className="text-sm leading-6 text-[var(--ink-dim)]">
                   {emptyMessage}
                 </p>
               </div>
