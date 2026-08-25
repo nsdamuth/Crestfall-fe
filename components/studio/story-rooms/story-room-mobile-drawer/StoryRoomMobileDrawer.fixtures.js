@@ -1,5 +1,6 @@
 export const storyRoomMobileDrawerCastFixture = {
   title: "Room & Cast",
+  side: "left",
   children:
     "Cast-panel content is supplied by the Story Room application and scrolls inside this mobile drawer.",
   onClose: null,
@@ -7,6 +8,7 @@ export const storyRoomMobileDrawerCastFixture = {
 
 export const storyRoomMobileDrawerStateFixture = {
   title: "Chronicle State",
+  side: "right",
   children:
     "Chronicle State content is supplied by the separated state panel without giving the drawer any Story Room domain knowledge.",
   onClose: null,

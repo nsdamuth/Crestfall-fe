@@ -135,7 +135,7 @@ export default function CreatorStopsView({
           centered floating panel, unchanged in size. Panel surface:
           --grad-panel-lift (B3), replacing the prior color-mix plus
           fill-whisper gradient background. */}
-      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden border border-[var(--line)] bg-[image:var(--grad-panel-lift)] shadow-[var(--shadow-modal)] min-[700px]:h-[min(44rem,calc(100dvh-var(--space-8)*2))] min-[700px]:w-[min(46rem,calc(100vw-var(--space-8)*2))] min-[700px]:rounded-[var(--radius-lg)]">
+      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden border border-[var(--line)] bg-[image:var(--grad-panel-lift)] shadow-[var(--shadow-modal)] min-[700px]:h-[min(44rem,calc(100dvh-var(--space-8)*2))] min-[700px]:w-[min(46rem,calc(100vw-var(--space-8)*2))] min-[700px]:rounded-[var(--radius-lg)] min-[1024px]:w-[min(64rem,calc(100vw-var(--space-8)*2))]">
         {confirmDiscardOpen ? (
           <div className="flex h-full flex-col items-center justify-center gap-[var(--space-4)] px-[var(--space-8)] text-center">
             <h2 className="font-display text-2xl text-[var(--ink)]">

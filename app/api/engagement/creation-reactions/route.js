@@ -20,6 +20,20 @@ function apiError(message, status = 500, code = "CREATION_REACTIONS_FAILED") {
   );
 }
 
+function forwardServiceError(error, fallbackMessage, fallbackCode) {
+  if (error?.payload && Number.isInteger(error.status)) {
+    return NextResponse.json(error.payload, {
+      status: error.status,
+    });
+  }
+
+  return apiError(
+    error?.message || fallbackMessage,
+    500,
+    fallbackCode
+  );
+}
+
 async function requireUser() {
   const supabase = await createClient();
   return getAuthenticatedUser(supabase);
@@ -62,8 +76,8 @@ export async function GET(request) {
   } catch (error) {
     return forwardServiceError(
       error,
-      "Creation reaction could not be saved.",
-      "CREATION_REACTION_SAVE_FAILED"
+      "Creation reactions could not be loaded.",
+      "CREATION_REACTIONS_LOAD_FAILED"
     );
   }
 }
@@ -95,9 +109,9 @@ export async function POST(request) {
 
     return NextResponse.json(responsePayload);
   } catch (error) {
-    return apiError(
-      error.message || "Creation reaction could not be saved.",
-      500,
+    return forwardServiceError(
+      error,
+      "Creation reaction could not be saved.",
       "CREATION_REACTION_SAVE_FAILED"
     );
   }

@@ -9,10 +9,12 @@
 import { useId, useState } from "react";
 import {
   BookOpen,
+  Camera,
   Check,
   ChevronDown,
   ChevronUp,
   Library,
+  Loader2,
   MapPin,
   Save,
   Shirt,
@@ -27,12 +29,12 @@ import {
 import KitDropdownView from "../dropdown/KitDropdown.view";
 
 const SLOT_DEFS = [
-  { id: "character", label: "Character", icon: Users, requirement: "required", savable: false },
-  { id: "playerCharacter", label: "Player Character", icon: User, requirement: "optional", savable: false },
-  { id: "pose", label: "Pose", icon: Theater, requirement: "optional", savable: true },
-  { id: "outfit", label: "Clothing Source", icon: Shirt, requirement: "optional", savable: true },
-  { id: "location", label: "Location / Scene", icon: MapPin, requirement: "optional", savable: true },
-  { id: "preset", label: "Rendering Preset", icon: Sparkles, requirement: "optional", savable: true },
+  { id: "character", label: "Character", compactLabel: "Character", icon: Users, requirement: "required", savable: false },
+  { id: "playerCharacter", label: "Player Character", compactLabel: "Player", icon: User, requirement: "optional", savable: false },
+  { id: "pose", label: "Pose", compactLabel: "Pose", icon: Theater, requirement: "optional", savable: true },
+  { id: "outfit", label: "Clothing Source", compactLabel: "Outfit", icon: Shirt, requirement: "optional", savable: true },
+  { id: "location", label: "Location / Scene", compactLabel: "Location", icon: MapPin, requirement: "optional", savable: true },
+  { id: "preset", label: "Rendering Preset", compactLabel: "Preset", icon: Sparkles, requirement: "optional", savable: true },
 ];
 
 const EMPTY_SLOT_STATE = { selection: null, isCustomMode: false, customText: "" };
@@ -76,7 +78,7 @@ function ModeToggle({ mode, onChangeMode }) {
   );
 }
 
-function ClearButton({ label, onClick }) {
+function ClearButton({ label, onClick, overlay = false }) {
   return (
     <button
       type="button"
@@ -85,7 +87,11 @@ function ClearButton({ label, onClick }) {
         event.stopPropagation();
         onClick?.();
       }}
-      className="flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+      className={`flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+        overlay
+          ? "border-white/25 bg-black/75 text-white shadow-md backdrop-blur-sm hover:bg-black/90 hover:text-white"
+          : "border-[var(--line-whisper)] text-[var(--ink-faint)] hover:text-[var(--ink)]"
+      }`}
     >
       <X size={14} aria-hidden="true" />
     </button>
@@ -95,38 +101,81 @@ function ClearButton({ label, onClick }) {
 function SlotTile({ def, state, onActivate, onClear }) {
   const Icon = def.icon;
   const hasSelection = Boolean(state.selection);
+  const imageSrc = String(state.selection?.imageSrc || "").trim();
+  const title = hasSelection ? state.selection.title : "Select...";
+  const overlayTextClass = imageSrc ? "text-white/90" : "text-[var(--ink-faint)]";
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-      <div className="flex items-center justify-between gap-[var(--space-2)]">
-        <span className="inline-flex min-w-0 items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-          <Icon size={13} aria-hidden="true" className="flex-none" />
-          <span className="truncate">{def.label}</span>
-        </span>
-        {def.requirement === "required" && (
-          <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-            Req.
-          </span>
-        )}
-      </div>
-
-      <div className="mt-[var(--space-2)] flex items-center gap-[var(--space-2)]">
-        <button
-          type="button"
-          onClick={() => onActivate?.(def.id)}
-          className="min-h-[var(--control-md)] flex-1 truncate rounded-[var(--radius-sm)] border border-transparent px-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors hover:text-[var(--ink)]"
-        >
-          <span className={hasSelection ? "text-[var(--ink)]" : "text-[var(--ink-faint)]"}>
-            {hasSelection ? state.selection.title : "Select..."}
-          </span>
-          {hasSelection && state.selection.subtitle && (
-            <span className="block truncate text-[length:var(--text-label)] text-[var(--ink-faint)]">
-              {state.selection.subtitle}
+    <div
+      className={`group relative aspect-[5/4] overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors ${
+        hasSelection
+          ? "border-[var(--line)]"
+          : "border-[var(--line-whisper)] hover:border-[var(--line)]"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => onActivate?.(def.id)}
+        aria-label={`${hasSelection ? "Change" : "Select"} ${def.label}${hasSelection ? `: ${state.selection.title}` : ""}`}
+        className="absolute inset-0 w-full text-left"
+      >
+        {imageSrc ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageSrc}
+              alt=""
+              className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02]"
+            />
+            <span
+              className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent"
+              aria-hidden="true"
+            />
+            <span
+              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/95 via-black/70 to-transparent"
+              aria-hidden="true"
+            />
+          </>
+        ) : (
+          <>
+            <span
+              className="absolute inset-0 bg-[var(--fill-whisper)] transition-colors group-hover:bg-[var(--fill)]"
+              aria-hidden="true"
+            />
+            <span className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+              <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] transition-colors group-hover:text-[var(--gold-ornament)]">
+                <Icon size={20} />
+              </span>
             </span>
-          )}
-        </button>
-        {hasSelection && <ClearButton label={`Clear ${def.label}`} onClick={() => onClear?.(def.id)} />}
-      </div>
+          </>
+        )}
+
+        <span
+          className={`absolute left-[var(--space-2)] top-[var(--space-2)] inline-flex items-center gap-[var(--space-1)] rounded-[var(--radius-full)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] uppercase tracking-[0.12em] ${
+            imageSrc ? "bg-black/55 backdrop-blur-sm" : "bg-[var(--surface-1)]"
+          } ${overlayTextClass}`}
+          title={def.label}
+        >
+          <Icon size={12} aria-hidden="true" className="flex-none" />
+          <span className="whitespace-nowrap">{def.compactLabel}</span>
+        </span>
+
+        <span className="absolute bottom-[var(--space-3)] left-[var(--space-3)] right-[var(--space-3)] min-w-0">
+          <span
+            className={`block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+              imageSrc ? "text-white" : hasSelection ? "text-[var(--ink)]" : "text-[var(--ink-dim)]"
+            }`}
+          >
+            {title}
+          </span>
+        </span>
+      </button>
+
+      {hasSelection ? (
+        <div className="absolute right-[var(--space-2)] top-[var(--space-2)] z-10">
+          <ClearButton overlay label={`Clear ${def.label}`} onClick={() => onClear?.(def.id)} />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -190,6 +239,12 @@ function OptionsExpander({
   onChangeOption,
   negativePromptValue,
   onChangeNegativePrompt,
+  cameraPresetLabel,
+  cameraPresetDescription,
+  onOpenCameraPresetPicker,
+  showSceneryOnlyHelper,
+  sceneryOnlyHelperEnabled,
+  onChangeSceneryOnlyHelper,
   idPrefix,
 }) {
   return (
@@ -206,6 +261,23 @@ function OptionsExpander({
 
       {isOpen && (
         <div className="mt-[var(--space-3)] flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+          {onOpenCameraPresetPicker ? (
+            <button
+              type="button"
+              onClick={() => onOpenCameraPresetPicker?.()}
+              className="flex w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-left transition-colors hover:border-[var(--line)]"
+            >
+              <Camera size={17} className="shrink-0 text-[var(--gold-ornament)]" aria-hidden="true" />
+              <span className="min-w-0">
+                <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">Camera / Framing</span>
+                <span className="mt-[var(--space-1)] block text-[length:var(--text-ui)] text-[var(--ink)]">{cameraPresetLabel}</span>
+                {cameraPresetDescription ? (
+                  <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{cameraPresetDescription}</span>
+                ) : null}
+              </span>
+            </button>
+          ) : null}
+
           <div className="flex flex-wrap gap-[var(--space-2)]">
             {optionFields.map((field) => (
               <KitDropdownView
@@ -219,6 +291,21 @@ function OptionsExpander({
               />
             ))}
           </div>
+
+          {showSceneryOnlyHelper ? (
+            <label className="flex cursor-pointer items-start gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
+              <input
+                type="checkbox"
+                checked={sceneryOnlyHelperEnabled}
+                onChange={(event) => onChangeSceneryOnlyHelper?.(event.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-[var(--gold-bright)]"
+              />
+              <span>
+                <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">Optimize for scenery-only image</span>
+                <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">Adds bounded scenery guidance only when Location / Scene is the sole visual source.</span>
+              </span>
+            </label>
+          ) : null}
 
           <label className="block">
             <FieldCaption>Negative Prompt</FieldCaption>
@@ -246,6 +333,14 @@ function GenerateBlock({
   showInsufficientCoins,
   canGenerate,
   generationHelpText,
+  generationStatus,
+  generationError,
+  cameraPresetLabel,
+  cameraPresetDescription,
+  onOpenCameraPresetPicker,
+  showSceneryOnlyHelper,
+  sceneryOnlyHelperEnabled,
+  onChangeSceneryOnlyHelper,
   onGenerate,
   optionFields,
   onChangeOption,
@@ -277,6 +372,12 @@ function GenerateBlock({
         onChangeOption={onChangeOption}
         negativePromptValue={negativePromptValue}
         onChangeNegativePrompt={onChangeNegativePrompt}
+        cameraPresetLabel={cameraPresetLabel}
+        cameraPresetDescription={cameraPresetDescription}
+        onOpenCameraPresetPicker={onOpenCameraPresetPicker}
+        showSceneryOnlyHelper={showSceneryOnlyHelper}
+        sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
+        onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
         idPrefix={idPrefix}
       />
 
@@ -300,12 +401,22 @@ function GenerateBlock({
       <button
         type="button"
         onClick={() => onGenerate?.()}
-        disabled={!canGenerate}
+        disabled={!canGenerate || generationStatus === "loading"}
         className="cf-btn cf-btn--primary w-full"
       >
-        <Wand2 size={15} aria-hidden="true" />
-        Generate image
+        {generationStatus === "loading" ? (
+          <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+        ) : (
+          <Wand2 size={15} aria-hidden="true" />
+        )}
+        {generationStatus === "loading" ? "Generating..." : "Generate image"}
       </button>
+
+      {generationError ? (
+        <p role="alert" className="rounded-[var(--radius-md)] border border-[var(--status-danger)]/35 bg-[var(--status-danger)]/10 px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+          {generationError}
+        </p>
+      ) : null}
 
       {generationHelpText && (
         <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
@@ -380,6 +491,14 @@ export default function KitImageCreatorPanelView({
   showInsufficientCoins = false,
   canGenerate = false,
   generationHelpText = "",
+  generationStatus = "idle",
+  generationError = "",
+  cameraPresetLabel = "Auto / No Camera Filter",
+  cameraPresetDescription = "",
+  onOpenCameraPresetPicker = null,
+  showSceneryOnlyHelper = false,
+  sceneryOnlyHelperEnabled = true,
+  onChangeSceneryOnlyHelper = null,
   onGenerate = null,
   videoOptionFields = [],
   onChangeVideoOption = null,
@@ -439,6 +558,14 @@ export default function KitImageCreatorPanelView({
           showInsufficientCoins={showInsufficientCoins}
           canGenerate={canGenerate}
           generationHelpText={generationHelpText}
+          generationStatus={generationStatus}
+          generationError={generationError}
+          cameraPresetLabel={cameraPresetLabel}
+          cameraPresetDescription={cameraPresetDescription}
+          onOpenCameraPresetPicker={onOpenCameraPresetPicker}
+          showSceneryOnlyHelper={showSceneryOnlyHelper}
+          sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
+          onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
           onGenerate={onGenerate}
           optionFields={optionFields}
           onChangeOption={onChangeOption}

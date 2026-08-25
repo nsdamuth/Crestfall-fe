@@ -14,7 +14,6 @@ function castMember({
   isActive = true,
   selectable = true,
   selected = false,
-  selectionLabel = selected ? "Next responder" : "Select responder",
 } = {}) {
   const safeName = name || "Unnamed Participant";
 
@@ -24,12 +23,18 @@ function castMember({
     avatarUrl,
     fallbackInitial: safeName.slice(0, 1).toUpperCase(),
     role,
+    typeLabel:
+      role === "Narrator"
+        ? "Narrator"
+        : role === "Player Character"
+          ? "Player"
+          : "Character",
     state,
+    displayState: /^(present|active|player controlled)$/i.test(state) ? "" : state,
     note,
     isActive,
     selectable,
     selected,
-    selectionLabel,
     selectionAriaLabel: selectable
       ? `Choose ${safeName} as the next responder`
       : "",
@@ -54,8 +59,7 @@ const BASE_FIXTURE = {
     value: "The Chronicler",
   },
   castHeading: "Cast",
-  castDescription:
-    "Select an active Character or Narrator to choose the next responder.",
+  castDescription: "",
   castMembers: [
     castMember({
       id: "narrator",
@@ -77,7 +81,6 @@ const BASE_FIXTURE = {
       role: "Player Character",
       state: "Player controlled",
       selectable: false,
-      selectionLabel: "Player-controlled",
     }),
   ],
   playerCharacterAction: {
@@ -168,8 +171,6 @@ export const storyRoomCastPanelLockedFixture = {
     ...member,
     selectable: false,
     selected: false,
-    selectionLabel:
-      member.role === "Player Character" ? "Player-controlled" : "Not selectable",
     selectionAriaLabel: "",
   })),
 };

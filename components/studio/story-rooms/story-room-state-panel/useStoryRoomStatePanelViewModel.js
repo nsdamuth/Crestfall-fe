@@ -17,62 +17,15 @@ function createRow(id, label, value, fallback = "") {
 }
 
 function buildSections(room = {}) {
-  const engineModuleState =
-    room?.engineModuleState && typeof room.engineModuleState === "object"
-      ? room.engineModuleState
-      : {};
-
   return [
-    {
-      id: "scenario-phase",
-      iconKey: "scenario",
-      title: "Scenario Phase",
-      rows: [
-        createRow("current", "Current", room?.phase),
-        createRow("objective", "Objective", room?.objective),
-        createRow("scenario", "Scenario", room?.scenario),
-      ],
-    },
     {
       id: "world-state",
       iconKey: "world",
       title: "World State",
       rows: [
-        createRow("location", "Location", room?.location),
+        createRow("location", "Location", room?.location, "Unknown"),
         createRow("time", "Time", room?.timeLabel, "Unknown"),
-        createRow(
-          "time-source",
-          "Time Source",
-          engineModuleState.timeSource,
-          "Room State"
-        ),
         createRow("weather", "Weather", room?.weather, "Unknown"),
-        createRow(
-          "weather-source",
-          "Weather Source",
-          engineModuleState.weatherSource,
-          "Room State"
-        ),
-      ],
-    },
-    {
-      id: "knowledge-boundaries",
-      iconKey: "knowledge",
-      title: "Knowledge Boundaries",
-      rows: [
-        createRow("mode", "Mode", "Strict"),
-        createRow("hidden-rewards", "Hidden rewards", "Protected"),
-        createRow("npc-over-knowledge", "NPC over-knowledge", "Blocked later"),
-      ],
-    },
-    {
-      id: "memory",
-      iconKey: "memory",
-      title: "Memory",
-      rows: [
-        createRow("summary", "Summary", "No long-term summary yet"),
-        createRow("recent-events", "Recent events", "Opening scene active"),
-        createRow("rollover", "Rollover", "Not needed"),
       ],
     },
   ];

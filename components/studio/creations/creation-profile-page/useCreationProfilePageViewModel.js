@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { getCreationCredits } from "@/lib/shared/creations/creationAttribution";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import {
@@ -15,12 +16,6 @@ export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
 export const CREATION_PROFILE_EAGER_MEDIA_COUNT = 4;
 export const CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420;
 
-export const CREATION_PROFILE_SORT_OPTIONS = [
-  { value: "NEWEST", label: "Newest" },
-  { value: "OLDEST", label: "Oldest" },
-  { value: "TOP", label: "Top / All Time" },
-  { value: "LIKED", label: "Liked First" },
-];
 
 export const CREATION_PROFILE_MEDIA_TABS = [
   { id: "IMAGES", label: "Images", icon: "IMAGE" },
@@ -29,6 +24,26 @@ export const CREATION_PROFILE_MEDIA_TABS = [
   { id: "BOOKMARKED", label: "Bookmarked", icon: "BOOKMARK" },
   { id: "ALL", label: "All", icon: "ALL" },
 ];
+
+export const CREATION_PROFILE_CREDITS_TAB = {
+  id: "CREDITS",
+  label: "Credits",
+  icon: "CREDITS",
+};
+
+export function buildCreationProfileTabs({
+  credits = [],
+  activeTab = "IMAGES",
+} = {}) {
+  const tabs = credits.length
+    ? [...CREATION_PROFILE_MEDIA_TABS, CREATION_PROFILE_CREDITS_TAB]
+    : CREATION_PROFILE_MEDIA_TABS;
+
+  return tabs.map((tab) => ({
+    ...tab,
+    active: tab.id === activeTab,
+  }));
+}
 
 function normalizeText(value, fallback = "") {
   const normalized = String(value ?? "").trim();
@@ -86,11 +101,10 @@ export function normalizeCreationProfileMedia(media) {
   }));
 }
 
-export function filterAndSortCreationProfileMedia({
+export function filterCreationProfileMedia({
   media,
   activeTab,
   query,
-  sort,
 }) {
   const normalizedQuery = normalizeText(query).toLowerCase();
   const filtered = (Array.isArray(media) ? media : []).filter((item) => {
@@ -109,15 +123,7 @@ export function filterAndSortCreationProfileMedia({
     return matchesTab && (!normalizedQuery || searchableText.includes(normalizedQuery));
   });
 
-  return [...filtered].sort((a, b) => {
-    if (sort === "OLDEST") {
-      return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
-    }
-    if (sort === "LIKED") {
-      return Number(b.liked) - Number(a.liked);
-    }
-    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-  });
+  return filtered;
 }
 
 export function getCreationProfileDescription(description, expanded = false) {
@@ -156,6 +162,9 @@ export function normalizeCreationProfileCreation(creation) {
     creatorHandle: normalizeText(creation.creatorHandle),
     creatorProfileHref: normalizeText(creation.creatorProfileHref),
     stats: creation.stats,
+    credits: Array.isArray(creation.credits)
+      ? creation.credits
+      : getCreationCredits(creation),
     supportsChat: isChatCapableCreationType(creation.type),
     catalogueHref: encodedId
       ? `/studio/creations/${encodedId}`
@@ -192,7 +201,6 @@ export function useCreationProfilePageViewModel({
   );
 
   const [activeTab, setActiveTab] = useState("IMAGES");
-  const [sort, setSort] = useState("NEWEST");
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(
     CREATION_PROFILE_INITIAL_VISIBLE_MEDIA
@@ -267,13 +275,12 @@ export function useCreationProfilePageViewModel({
 
   const filteredMedia = useMemo(
     () =>
-      filterAndSortCreationProfileMedia({
+      filterCreationProfileMedia({
         media: mediaWithLocalReactions,
         activeTab,
         query,
-        sort,
       }),
-    [mediaWithLocalReactions, activeTab, query, sort]
+    [mediaWithLocalReactions, activeTab, query]
   );
 
   const visibleMedia = filteredMedia
@@ -292,11 +299,6 @@ export function useCreationProfilePageViewModel({
 
   function selectTab(nextTab) {
     setActiveTab(nextTab);
-    resetVisibleCount();
-  }
-
-  function changeSort(nextSort) {
-    setSort(nextSort);
     resetVisibleCount();
   }
 
@@ -373,12 +375,12 @@ export function useCreationProfilePageViewModel({
       normalizedCreation?.description,
       descriptionExpanded
     ),
-    mediaTabs: CREATION_PROFILE_MEDIA_TABS.map((tab) => ({
-      ...tab,
-      active: tab.id === activeTab,
-    })),
-    sortOptions: CREATION_PROFILE_SORT_OPTIONS,
-    sort,
+    activeTab,
+    credits: normalizedCreation?.credits || [],
+    mediaTabs: buildCreationProfileTabs({
+      credits: normalizedCreation?.credits || [],
+      activeTab,
+    }),
     query,
     visibleMedia,
     filteredMedia,
@@ -389,7 +391,6 @@ export function useCreationProfilePageViewModel({
     startingChat,
     chatError,
     onSelectTab: selectTab,
-    onSortChange: changeSort,
     onQueryChange: changeQuery,
     onLoadMore: () =>
       setVisibleCount(

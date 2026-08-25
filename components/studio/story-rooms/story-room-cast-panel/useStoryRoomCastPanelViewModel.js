@@ -19,20 +19,15 @@ function normalizeCastMember(member, selectedResponderId, canSelectResponder) {
     Boolean(member?.isSelectableResponder) && Boolean(canSelectResponder);
   const selected = selectable && selectedResponderId === id;
   const participantType = displayText(member?.participantType);
-  const isPlayerControlled =
-    participantType === "PLAYER_CHARACTER" || participantType === "USER";
 
-  let selectionLabel = "Inactive";
-
-  if (selected) {
-    selectionLabel = "Next responder";
-  } else if (selectable) {
-    selectionLabel = "Select responder";
-  } else if (isPlayerControlled) {
-    selectionLabel = "Player-controlled";
-  } else if (member?.isActive) {
-    selectionLabel = "Not selectable";
-  }
+  const typeLabel =
+    participantType === "PLAYER_CHARACTER" || participantType === "USER"
+      ? "Player"
+      : participantType === "NARRATOR"
+        ? "Narrator"
+        : "Character";
+  const state = displayText(member?.state);
+  const displayState = /^(present|active)$/i.test(state) ? "" : state;
 
   return {
     id,
@@ -40,12 +35,13 @@ function normalizeCastMember(member, selectedResponderId, canSelectResponder) {
     avatarUrl: displayText(member?.avatarUrl),
     fallbackInitial: name.slice(0, 1).toUpperCase(),
     role: displayText(member?.role),
-    state: displayText(member?.state),
+    typeLabel,
+    state,
+    displayState,
     note: displayText(member?.note),
     isActive: Boolean(member?.isActive),
     selectable,
     selected,
-    selectionLabel,
     selectionAriaLabel: selectable
       ? `Choose ${name} as the next responder`
       : "",
@@ -100,8 +96,7 @@ function buildCastPanelState({
       value: displayText(safeRoom.narrator),
     },
     castHeading: "Cast",
-    castDescription:
-      "Select an active Character or Narrator to choose the next responder.",
+    castDescription: "",
     castMembers,
     playerCharacterAction: {
       visible: canSetPlayerCharacter,

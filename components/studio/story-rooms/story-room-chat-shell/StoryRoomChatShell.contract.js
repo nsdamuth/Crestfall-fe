@@ -1,5 +1,5 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v1";
+  "story-room-chat-shell.view.v1.1";
 
 /**
  * @typedef {Object} StoryRoomChatShellViewProps
@@ -16,11 +16,13 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {Object} composerProps
  * @property {Object} desktopStatePanelProps
  * @property {Object} mobileStatePanelProps
- * @property {Object} runtimeMechanicsPanelProps
+ * @property {Object|null} runtimeMechanicsPanelProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
  * @property {() => void} onShowLeftPanel
  * @property {() => void} onShowRightPanel
+ * @property {() => void} onOpenMobileCast
+ * @property {() => void} onOpenMobileState
  * @property {() => void} onCloseMobilePanel
  * @property {() => void} onCloseComposerHelpPanel
  * @property {import("react").ElementType} CastPanelComponent

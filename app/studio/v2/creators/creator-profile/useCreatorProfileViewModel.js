@@ -51,6 +51,7 @@ export function useCreatorProfileViewModel({
   const [likedWorkIds, setLikedWorkIds] = useState([]);
   const [bookmarkedWorkIds, setBookmarkedWorkIds] = useState([]);
   const [visibleWorksCount, setVisibleWorksCount] = useState(PAGE_SIZE);
+  const [activeTab, setActiveTab] = useState("creations");
   const [visibleActivityCount, setVisibleActivityCount] = useState(ACTIVITY_PAGE_SIZE);
   const [notice, setNotice] = useState(null);
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(fixtureMode === "longestContent");
@@ -212,6 +213,8 @@ export function useCreatorProfileViewModel({
         "Plays",
         "A dedicated Plays view is not built yet; it needs a backend aggregate this creator's plays across every published work. CR-040 requests it. Nothing was opened in this preview."
       ),
+    activeTab,
+    onSelectTab: setActiveTab,
     workItems,
     worksEmptyMessage,
     worksLoadMore,

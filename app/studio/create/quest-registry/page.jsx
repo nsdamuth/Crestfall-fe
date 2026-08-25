@@ -5,7 +5,7 @@ import StructuredRegistryBuilder from "@/components/studio/create/structured-reg
 export default function CreateQuestRegistryPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=worlds" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Objective Spine" title="Quest Registry">
         Create a reusable quest spine for hooks, tasks, leads, requirements,

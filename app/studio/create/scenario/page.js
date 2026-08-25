@@ -5,7 +5,7 @@ import StudioBackLink from "@/components/studio/StudioBackLink";
 export default function CreateScenarioPage() {
   return (
     <div className="space-y-6">
-        <StudioBackLink href="/studio/create" label="Back to Create" />
+        <StudioBackLink href="/studio?mode=full&section=stories" label="Back to Full Studio" />
       <StudioPageHeader eyebrow="Create" title="Create Scenario">
         Build a reusable story setup using a structured story circle, optional
         runtime guidance, and future middleware support.

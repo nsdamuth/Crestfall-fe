@@ -20,6 +20,22 @@ export const creationProfileFixture = {
     bookmarks: 36,
     messages: 921,
   },
+  credits: [
+    {
+      id: "credit-character-source",
+      kindLabel: "Character",
+      creatorHandle: "@Crestfall",
+      creatorHref: "/studio/profile/crestfall",
+      assetTitle: "Kessa Cindervell",
+    },
+    {
+      id: "credit-location-source",
+      kindLabel: "Location",
+      creatorHandle: "@Crestfall",
+      creatorHref: "/studio/profile/crestfall",
+      assetTitle: "The Brasswhisker's Workshop",
+    },
+  ],
 };
 
 export const creationProfileMediaFixture = Array.from(

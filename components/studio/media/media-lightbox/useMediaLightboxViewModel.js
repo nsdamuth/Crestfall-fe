@@ -3,6 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { fetchImageOutputDetails } from "@/lib/client/studio/media/imageDetailsClient";
+import {
+  fetchImageReassignmentContext,
+  reassignImageOutput,
+} from "@/lib/client/studio/media/imageOutputClient";
 import { createMediaReport } from "@/lib/client/studio/media/mediaReportClient";
 
 export const MEDIA_REPORT_REASON_OPTIONS = [
@@ -55,6 +59,24 @@ export function getMediaImageOutputId(item) {
   return isUuid(normalized) ? normalized : "";
 }
 
+export function getMediaSourceCreationId(item) {
+  const candidate =
+    item?.sourceCreationId ||
+    item?.source_creation_id ||
+    item?.creationId ||
+    item?.creation_id ||
+    item?.primarySubjectCreationId ||
+    item?.primary_subject_creation_id ||
+    item?.output?.primarySubjectCreationId ||
+    item?.output?.primary_subject_creation_id ||
+    item?.job?.primarySubjectCreationId ||
+    item?.job?.primary_subject_creation_id ||
+    "";
+
+  const normalized = String(candidate || "").trim();
+  return isUuid(normalized) ? normalized : "";
+}
+
 export function getMediaTitle(item) {
   return item?.title || item?.label || item?.type || "Image";
 }
@@ -101,6 +123,8 @@ export function normalizeMediaLightboxItem(item) {
     imageUrl: getMediaImageUrl(item),
     thumbnailUrl: getMediaThumbnailUrl(item),
     imageOutputId: getMediaImageOutputId(item),
+    sourceCreationId: getMediaSourceCreationId(item),
+    canReassign: item?.canReassign === true,
     originalItem: item,
   };
 }
@@ -130,6 +154,7 @@ export function useMediaLightboxViewModel({
   onToggleLike,
   onToggleBookmark,
   onDeleteItem,
+  onReassignItem,
 } = {}) {
   const mediaItems = useMemo(
     () =>
@@ -161,6 +186,12 @@ export function useMediaLightboxViewModel({
   const [reportStatus, setReportStatus] = useState("idle");
   const [reportMessage, setReportMessage] = useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [reassignOpen, setReassignOpen] = useState(false);
+  const [reassignStatus, setReassignStatus] = useState("idle");
+  const [reassignMessage, setReassignMessage] = useState("");
+  const [reassignContext, setReassignContext] = useState(null);
+  const [reassignDestinationId, setReassignDestinationId] = useState("");
+  const [reassignSourceOverride, setReassignSourceOverride] = useState("");
 
   const isLiked =
     typeof isItemLiked === "function"
@@ -187,6 +218,12 @@ export function useMediaLightboxViewModel({
     setReportMessage("");
     setReportReasonText("");
     setDeleteConfirmOpen(false);
+    setReassignOpen(false);
+    setReassignStatus("idle");
+    setReassignMessage("");
+    setReassignContext(null);
+    setReassignDestinationId("");
+    setReassignSourceOverride("");
   }, [activeId]);
 
   function handleSelectMedia(media) {
@@ -309,6 +346,87 @@ export function useMediaLightboxViewModel({
     }
   }
 
+  async function handleOpenReassign() {
+    if (!activeMedia?.canReassign || !activeMedia?.imageOutputId) return;
+
+    const sourceCreationId = reassignSourceOverride || activeMedia.sourceCreationId;
+
+    if (!sourceCreationId) {
+      setReassignOpen(true);
+      setReassignStatus("error");
+      setReassignMessage("This image is not currently assigned to an asset.");
+      setReassignContext(null);
+      return;
+    }
+
+    setReassignOpen(true);
+    setReassignStatus("loading");
+    setReassignMessage("");
+    setReassignContext(null);
+    setReassignDestinationId("");
+
+    try {
+      const context = await fetchImageReassignmentContext(activeMedia.imageOutputId, {
+        sourceCreationId,
+      });
+      setReassignContext(context);
+      setReassignDestinationId(context?.targets?.[0]?.id || "");
+      setReassignStatus("ready");
+    } catch (error) {
+      setReassignStatus("error");
+      setReassignMessage(
+        error?.message || "Image reassignment options could not be loaded."
+      );
+    }
+  }
+
+  async function handleSubmitReassign(event) {
+    event?.preventDefault?.();
+    if (reassignStatus === "submitting") return;
+
+    const sourceCreationId =
+      reassignSourceOverride ||
+      reassignContext?.sourceCreation?.id ||
+      activeMedia?.sourceCreationId ||
+      "";
+
+    if (!activeMedia?.imageOutputId || !sourceCreationId) {
+      setReassignStatus("error");
+      setReassignMessage("Source asset is unavailable. Refresh and try again.");
+      return;
+    }
+    if (!reassignDestinationId) {
+      setReassignStatus("error");
+      setReassignMessage("Choose a destination asset.");
+      return;
+    }
+
+    setReassignStatus("submitting");
+    setReassignMessage("");
+    try {
+      const result = await reassignImageOutput(activeMedia.imageOutputId, {
+        sourceCreationId,
+        destinationCreationId: reassignDestinationId,
+      });
+      setReassignSourceOverride(result?.destinationCreationId || "");
+      setReassignStatus("success");
+      setReassignMessage(
+        result?.destinationTitle
+          ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
+          : "Image reassigned. 1 Coin used."
+      );
+      setDetailsOpen(false);
+      setImageDetails(null);
+      await onReassignItem?.(
+        { ...activeOriginalItem, imageOutputId: activeMedia.imageOutputId },
+        result
+      );
+    } catch (error) {
+      setReassignStatus("error");
+      setReassignMessage(error?.message || "Image could not be reassigned.");
+    }
+  }
+
   return {
     mediaItems,
     activeMedia,
@@ -321,6 +439,19 @@ export function useMediaLightboxViewModel({
     isLiked,
     isBookmarked,
     shareMessage,
+    showReassignAction:
+      activeMedia?.canReassign === true &&
+      Boolean(activeMedia?.imageOutputId) &&
+      Boolean(reassignSourceOverride || activeMedia?.sourceCreationId),
+    reassignDialog: {
+      open: reassignOpen,
+      status: reassignStatus,
+      message: reassignMessage,
+      coinCost: reassignContext?.coinCost || 1,
+      sourceCreation: reassignContext?.sourceCreation || null,
+      targets: reassignContext?.targets || [],
+      destinationCreationId: reassignDestinationId,
+    },
     reportReasonOptions: MEDIA_REPORT_REASON_OPTIONS,
     detailsDialog: {
       open: detailsOpen,
@@ -348,6 +479,10 @@ export function useMediaLightboxViewModel({
     onRequestDelete: handleRequestDelete,
     onCancelDelete: handleCancelDelete,
     onConfirmDelete: handleConfirmDelete,
+    onOpenReassign: handleOpenReassign,
+    onCloseReassign: () => setReassignOpen(false),
+    onReassignDestinationChange: setReassignDestinationId,
+    onSubmitReassign: handleSubmitReassign,
     onOpenDetails: handleOpenDetails,
     onCloseDetails: () => setDetailsOpen(false),
     onOpenReport: handleOpenReport,

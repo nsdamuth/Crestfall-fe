@@ -1,4 +1,4 @@
-export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.0.0";
+export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
  * Portable presentation contract for the shared full-screen media viewer.
@@ -14,6 +14,10 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.0.0";
  * the Binding Shell and ViewModel accept is unaffected, only this
  * internal View-facing surface changed.
  *
+ * 2.1.0 (V2 convergence): Reassign Asset is now a live additive surface backed
+ * by application-owned reassignment context/submit callbacks; the B5 delete
+ * confirmation remains unchanged and permanent-delete copy is truthful.
+ *
  * B7 viewer final (22 Aug 2026, Fable law review, ED1F propagation
  * plan group G3): `deleteConfirmOpen` is new (the ViewModel's
  * deletion-confirmation state, now rendered in-surface instead of
@@ -22,9 +26,8 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.0.0";
  * `KitImageOverlay` (`components/kit/image-overlay`): a two-line glass
  * header (title, then the six-icon row: delete, report, details,
  * download, bookmark, like), and a gold-ink bottom bar (Generate
- * Variant, Reassign Asset, Share). `onReassignAsset` is not part of
- * this surface; Reassign Asset always renders as an honest stub
- * (CR-055), matching `KitImageOverlay`'s treatment.
+ * Variant, Reassign Asset, Share). Reassign is enabled only when the
+ * application adapter supplies an eligible authoritative image/output source.
  *
  * The View receives normalized media cards, active-state labels, dialog state,
  * semantic callbacks, and an injected internal-link component. It does not
@@ -43,6 +46,8 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {boolean} isLiked
  * @property {boolean} isBookmarked
  * @property {string} shareMessage
+ * @property {boolean} showReassignAction
+ * @property {Object} reassignDialog
  * @property {Array<{value:string,label:string}>} reportReasonOptions
  * @property {Object} detailsDialog
  * @property {Object} reportDialog
@@ -55,6 +60,10 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {(() => void)|null} onRequestDelete opens the B5 confirm panel
  * @property {(() => void)|null} onCancelDelete
  * @property {(() => void)|null} onConfirmDelete fires the real delete
+ * @property {(() => void)|null} onOpenReassign
+ * @property {(() => void)|null} onCloseReassign
+ * @property {((creationId:string) => void)|null} onReassignDestinationChange
+ * @property {((event?:Object) => void)|null} onSubmitReassign
  * @property {(() => void)|null} onOpenDetails doc-only addition (ED1G sw12), no further version bump.
  * @property {(() => void)|null} onCloseDetails doc-only addition (ED1G sw12), no further version bump.
  * @property {(() => void)|null} onOpenReport doc-only addition (ED1G sw12), no further version bump.

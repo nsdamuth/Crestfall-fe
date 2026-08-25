@@ -1,11 +1,19 @@
 # Kit Credits LOOM Package
 
-**Contract:** `KitCredits.contract.js` (`1.1.0`)
+**Contract:** `KitCredits.contract.js` (`1.2.0`)
+
+## v1.2.0 — tab composition support
+
+`KitCreditsView` accepts optional `showHeading` (default `true`). Parent
+surfaces that already provide a visible Credits tab label can pass
+`showHeading={false}` without duplicating the label; attribution rows,
+links, and empty-state behavior are unchanged.
 
 ## KitCreditsModal, added 1.1.0 (R1, 10 Aug 2026, kit polish 3 pass)
 
-The secondary surface the asset detail popup's "View all credits"
-control opens, stacked above the popup in the same space
+A reusable secondary full-credit surface retained for consumers that
+need a stacked attribution modal. The asset-detail popup now uses the
+conditional Credits tab instead, but this surface remains available
 (`docs/BUILD-BLUEPRINT.md` 2.16 (s)). `KitModalFrame` `variant="modal"`
 `panelClassName="w-full max-w-xl"` (the popup's own width); a header
 row with a back control (`cf-btn cf-btn--secondary cf-btn--sm`, also

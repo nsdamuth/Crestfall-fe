@@ -243,6 +243,9 @@ export function useMediaHistoryGridViewModel({
   hasMoreHistory = false,
   isLoadingMoreHistory = false,
   onLoadMoreHistory,
+  imageStudioHref = "/studio/image-studio",
+  onCoinBalanceChange,
+  onImageReassigned,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -264,6 +267,7 @@ export function useMediaHistoryGridViewModel({
     () => new Set()
   );
   const [bulkDeleteStatus, setBulkDeleteStatus] = useState("idle");
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
     const imageOutputIds = [
@@ -401,17 +405,16 @@ export function useMediaHistoryGridViewModel({
     const imageOutputId = getMediaHistoryImageOutputId(item);
 
     if (!isMediaHistoryUuid(imageOutputId)) {
-      const message = "This image cannot be deleted because it has no output id.";
-      setDeleteMessage(message);
-      window.alert(message);
+      setDeleteMessage("This image cannot be deleted because it has no output id.");
       return;
     }
 
+    // Single-image deletion is confirmed by MediaLightbox's portable danger
+    // surface. Do not fall back to browser-native confirm dialogs from the
+    // application ViewModel.
     if (options.confirmed !== true) {
-      const confirmed = window.confirm(
-        "Delete this image from your Image Studio? This will also remove it from any character libraries and featured slots."
-      );
-      if (!confirmed) return;
+      setDeleteMessage("Open the image and confirm deletion from the media viewer.");
+      return;
     }
 
     setDeleteMessage("");
@@ -434,9 +437,7 @@ export function useMediaHistoryGridViewModel({
       setActivePreviewId(null);
       setDeleteMessage("Image deleted.");
     } catch (error) {
-      const message = error?.message || "Image could not be deleted.";
-      setDeleteMessage(message);
-      window.alert(message);
+      setDeleteMessage(error?.message || "Image could not be deleted.");
     }
   }
 
@@ -477,20 +478,30 @@ export function useMediaHistoryGridViewModel({
     });
   }
 
-  async function handleBulkDeleteSelected() {
+  function handleBulkDeleteSelected() {
+    if (isBulkDeleting || !selectedCount) return;
+    setDeleteMessage("");
+    setBulkDeleteConfirmOpen(true);
+  }
+
+  function handleCancelBulkDelete() {
+    if (isBulkDeleting) return;
+    setBulkDeleteConfirmOpen(false);
+  }
+
+  async function handleConfirmBulkDelete() {
     if (isBulkDeleting || !selectedCount) return;
 
     const imageOutputIds = [...selectedImageOutputIds].filter(
       isMediaHistoryUuid
     );
-    const confirmed = window.confirm(
-      `Permanently delete ${imageOutputIds.length} selected ${
-        imageOutputIds.length === 1 ? "image" : "images"
-      }? This will remove them from Image Studio, connected character libraries, and featured image slots. This action cannot be undone.`
-    );
+    if (!imageOutputIds.length) {
+      setBulkDeleteConfirmOpen(false);
+      setDeleteMessage("No deletable images remain selected.");
+      return;
+    }
 
-    if (!confirmed) return;
-
+    setBulkDeleteConfirmOpen(false);
     setDeleteMessage("");
     setBulkDeleteStatus("deleting");
 
@@ -547,7 +558,7 @@ export function useMediaHistoryGridViewModel({
         onSelectItem: (item) => setActivePreviewId(item?.id || null),
         onClose: () => setActivePreviewId(null),
         modeLabel: "Image Studio",
-        imageStudioHref: "/studio/image-studio",
+        imageStudioHref,
         allowDownload: true,
         showStudioActions: true,
         isItemLiked: (item) =>
@@ -557,6 +568,17 @@ export function useMediaHistoryGridViewModel({
         onToggleLike: toggleLikedMedia,
         onToggleBookmark: toggleBookmarkedMedia,
         onDeleteItem: handleDeleteMedia,
+        onReassignItem: async (item, result) => {
+          if (result?.coinBalance !== undefined) {
+            onCoinBalanceChange?.(result.coinBalance);
+          }
+
+          onImageReassigned?.({
+            imageOutputId:
+              result?.imageOutputId || getMediaHistoryImageOutputId(item),
+            destinationCreationId: result?.destinationCreationId || null,
+          });
+        },
       }
     : null;
 
@@ -577,6 +599,7 @@ export function useMediaHistoryGridViewModel({
     selectionMode,
     selectedCount,
     isBulkDeleting,
+    bulkDeleteConfirmOpen,
     hasSelectableMedia: mediaItems.some((item) => item.selectable),
     hasVisibleSelectableMedia: visibleSelectableImageOutputIds.length > 0,
     allVisibleSelectableItemsSelected,
@@ -599,6 +622,8 @@ export function useMediaHistoryGridViewModel({
     onToggleSelectAllVisible: toggleSelectAllVisible,
     onClearSelection: () => setSelectedImageOutputIds(new Set()),
     onBulkDeleteSelected: handleBulkDeleteSelected,
+    onCancelBulkDelete: handleCancelBulkDelete,
+    onConfirmBulkDelete: handleConfirmBulkDelete,
     onLoadMoreHistory,
   };
 }

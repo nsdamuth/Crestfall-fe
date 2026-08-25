@@ -17,12 +17,16 @@ import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 export default function CreationImageLibraryPageView({
   title = "Image Library",
   backHref = "/studio/my-creations",
+  shareHref = "",
+  isShareable = false,
   showBackLink = true,
   loadStatus = "idle",
   loadMessage = "",
   isLoading = false,
   reactionMessage = "",
   deleteMessage = "",
+  reassignmentMessage = "",
+  libraryPassPanel = null,
   featuredSlotCards = [],
   visibleImages = [],
   hiddenImages = [],
@@ -39,6 +43,7 @@ export default function CreationImageLibraryPageView({
   deleteConfirmOpen = false,
   deleteConfirmIsFeatured = false,
   onRefresh,
+  onToggleLibraryPassSales,
   onSetEligibilityFilter,
   onSetSortMode,
   onLoadMoreVisibleImages,
@@ -52,6 +57,7 @@ export default function CreationImageLibraryPageView({
   onCancelDeleteImage,
   onConfirmDeleteImage,
   BackLinkComponent,
+  ShareButtonComponent,
   renderQuickActions,
   renderLightbox,
 }) {
@@ -84,6 +90,10 @@ export default function CreationImageLibraryPageView({
               Refresh
             </button>
 
+            {isShareable && ShareButtonComponent ? (
+              <ShareButtonComponent href={shareHref} label="Share" />
+            ) : null}
+
             {BackLink && showBackLink ? (
               <BackLink
                 href={backHref}
@@ -113,7 +123,20 @@ export default function CreationImageLibraryPageView({
             {deleteMessage}
           </p>
         ) : null}
+
+        {reassignmentMessage ? (
+          <p className="mt-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill)] px-4 py-3 text-sm text-[var(--gold-ornament)]">
+            {reassignmentMessage}
+          </p>
+        ) : null}
       </div>
+
+      {libraryPassPanel ? (
+        <LibraryPassOwnerPanel
+          panel={libraryPassPanel}
+          onToggleSales={onToggleLibraryPassSales}
+        />
+      ) : null}
 
       <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex items-center gap-3">
@@ -279,12 +302,92 @@ export default function CreationImageLibraryPageView({
   );
 }
 
-// B5 danger-confirm recipe, CR-054 placeholder copy: the recovery
-// window is not yet ruled to a single number, so the copy carries the
-// literal "[X] days" placeholder rather than a guessed figure.
+// B5 danger-confirm recipe. Current media deletion is permanent; CR-054
+// recovery-window product work remains separate and must not be implied here.
 // Replaces the browser's native confirm() dialog
 // (docs/plans/ED1G-FULL-REVIEW-FINDINGS.md section 2.5). Type-aware:
 // a featured-slot image warns that deleting it also clears that slot.
+function LibraryPassOwnerPanel({ panel, onToggleSales }) {
+  const messageIsError = panel.messageTone === "error";
+
+  return (
+    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
+              Library Pass
+            </p>
+            <span className={`inline-flex h-[var(--space-6)] items-center rounded-[var(--radius-full)] border px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] ${
+              panel.salesEnabled
+                ? "border-[var(--status-success-border)] bg-[var(--status-success-bed)] text-[var(--status-success)]"
+                : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)]"
+            }`}>
+              {panel.statusLabel}
+            </span>
+          </div>
+          <h3 className="mt-2 font-display text-3xl">Extended Image Library</h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+            The four most recent eligible images remain visible to everyone.
+            Extended media is protected automatically. A Library Pass unlocks
+            the complete eligible library and future additions for that purchaser.
+            Pausing sales does not remove the lock.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={onToggleSales}
+          disabled={panel.actionDisabled}
+          className={panel.salesEnabled ? "cf-btn cf-btn--secondary" : "cf-btn cf-btn--primary"}
+        >
+          {panel.isBusy ? "Saving..." : panel.actionLabel}
+        </button>
+      </div>
+
+      {panel.loadStatus === "ready" ? (
+        <>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <LibraryPassMetric label="Current price" value={panel.currentPriceLabel} />
+            <LibraryPassMetric label="Eligible images" value={String(panel.eligibleImageCount)} />
+            <LibraryPassMetric label="Public previews" value={String(panel.publicPreviewCount)} />
+            <LibraryPassMetric label="Creator reward per sale" value={panel.creatorRewardLabel} />
+          </div>
+          <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+            <p>
+              Current tier: <strong className="text-[var(--ink)]">{panel.currentTier}</strong>.
+              Expanded pricing begins at {panel.expandedThreshold} eligible images.
+            </p>
+            {panel.currentTier === "EXPANDED" ? <p className="mt-1">Expanded pricing is active and does not automatically downgrade.</p> : null}
+            {!panel.salesEnabled ? <p className="mt-1">Pausing blocks new purchases only. Existing purchasers keep access.</p> : null}
+            {!panel.creationIsPublicLive ? <p className="mt-1 text-[var(--status-warning)]">This creation must be public and approved before Library Pass sales can be enabled.</p> : null}
+          </div>
+        </>
+      ) : null}
+
+      {panel.isLoading ? <p className="mt-4 text-sm text-[var(--ink-dim)]">Loading Library Pass settings...</p> : null}
+      {panel.message ? (
+        <p className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+          messageIsError
+            ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]"
+            : "border-[var(--line)] bg-[var(--fill)] text-[var(--gold-ornament)]"
+        }`}>
+          {panel.message}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
+function LibraryPassMetric({ label, value }) {
+  return (
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-4 py-3">
+      <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">{label}</p>
+      <p className="mt-2 font-display text-2xl text-[var(--ink)]">{value}</p>
+    </div>
+  );
+}
+
 function DeleteConfirmModal({ isFeatured = false, onCancel = null, onConfirm = null }) {
   return (
     <KitModalFrame onClose={onCancel} ariaLabel="Delete this image?" panelClassName="w-full max-w-[26rem]">
@@ -293,11 +396,11 @@ function DeleteConfirmModal({ isFeatured = false, onCancel = null, onConfirm = n
           Delete this image?
         </h2>
         <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-          It moves to a recovery window for [X] days before it is gone for
-          good.{" "}
+          This permanently removes it from Image Studio and any creation
+          libraries using it.{" "}
           {isFeatured
-            ? "This also clears it from its featured slot and hides it from public catalogues."
-            : "This also hides it from public catalogues."}
+            ? "This also clears it from its featured slot. This action cannot be undone."
+            : "This action cannot be undone."}
         </p>
         <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
         <div className="flex items-center justify-between gap-[var(--space-3)]">

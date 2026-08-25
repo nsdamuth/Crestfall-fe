@@ -5,7 +5,7 @@ import CharacterTemplateGallery from "@/components/studio/templates/CharacterTem
 export default function CharacterTemplatesPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=templates" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Templates" title="Character Templates">
         Browse built-in and creator-made character templates.

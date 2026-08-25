@@ -8,7 +8,7 @@ export default function CreateLocationPage() {
 
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=worlds" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow={config.eyebrow} title={config.title}>
         {config.description}

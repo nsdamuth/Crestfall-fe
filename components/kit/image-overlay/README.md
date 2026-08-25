@@ -1,13 +1,13 @@
 # Kit Image Overlay LOOM package
 
-**Contract:** `KitImageOverlay.contract.js` (`1.1.0`)
+**Contract:** `KitImageOverlay.contract.js` (`1.2.0`)
 
 ## B7 viewer final, RULED 22 Aug 2026 (Fable law review, ED1F propagation plan group G3)
 
 Supersedes the R2/R5 recomposition (`docs/BUILD-BLUEPRINT.md` 2.16
 (r)). Additive contract bump 1.0.0 to 1.1.0: six new optional action
 callbacks join the existing prop surface, every prior caller keeps
-working unchanged. The shell composes `KitModalFrame`
+working unchanged. V2 convergence bumps the contract to 1.2.0 so reassignment can be live when an application callback is supplied and delete copy reflects current permanent-delete behavior. The shell composes `KitModalFrame`
 `variant="viewer"` (no `panelClassName` width cap: the panel is a
 transparent full-viewport column, not a bounded surface).
 
@@ -69,15 +69,15 @@ The viewer is its own surface, never a panel with an image inside it:
     Generate Variant, Reassign Asset, Share, in `--gold-action` ink
     with `--gold-bright` hover, on a `--panel-glass` bed
     (`self-stretch`, width-matched to the header by the same
-    construction). Reassign Asset always renders disabled: an honest
-    stub, CR-055, filed by this build since no backend operation
-    exists yet.
+    construction). Reassign Asset is live when an eligible owned
+    source image and authoritative output id are supplied; otherwise
+    the action remains disabled.
 - **Delete confirm** (B5, new): clicking the header's delete icon
   replaces the header/image/bottom-bar column with a single glass
   confirm panel (fade divider, "Keep image" / "Delete" footer, the
   `.cf-btn--danger-filled` recipe) instead of firing `onDelete`
-  immediately. Copy carries the CR-054 "[X] days" placeholder; the
-  recovery window is not yet ruled to a single number.
+  immediately. Copy reflects current permanent deletion; CR-054 recovery
+  remains separate and is not implied.
 - **No-image fallback**: a fixed `aspect-[5/3]` `w-[min(88vw,40rem)]`
   `--surface-1` stand-in box inside the hairline, at every width; the
   header and bottom bar still render (actions stay reachable); zoom
@@ -125,7 +125,7 @@ KitImageOverlay.jsx
 The frame (header, hairline, bottom bar) is REST only; every action
 button carries its own five states, Bookmark and Like additionally
 carry an active/toggled visual per the selection-state law. Reassign
-Asset is a permanent disabled state (CR-055 stub). Delete opens the
+Asset is conditionally enabled when reassignment is eligible. Delete opens the
 B5 confirm panel in place of the header/image/bottom-bar column. The
 no-image fallback keeps the header and bottom bar reachable; zoom is
 disabled when there is no image.

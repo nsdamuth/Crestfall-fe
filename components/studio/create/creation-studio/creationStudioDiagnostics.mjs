@@ -146,10 +146,10 @@ test("progressive guidance publishes six ordered chapters", () => {
   );
 });
 
-test("progressive guidance publishes 25 milestones", () => {
+test("progressive guidance publishes 28 milestones", () => {
   assert.equal(
     GUIDED_BUILD_CHAPTER_DEFINITIONS.flatMap((chapter) => chapter.steps).length,
-    25
+    28
   );
 });
 
@@ -233,12 +233,15 @@ test("two Stories complete the second-Story milestone", () => {
   assert.equal(secondStory.complete, true);
 });
 
-test("rules and mechanics follows state, progression, operations, actor package, codex", () => {
+test("rules and mechanics follows state, progression, skills, abilities, wallet, operations, actor package, codex", () => {
   assert.deepEqual(
     GUIDED_BUILD_CHAPTER_DEFINITIONS[4].steps.map((step) => step.id),
     [
       "STATS_POOLS_PROFILE",
       "PROGRESSION_PROFILE",
+      "SKILLS_PROFILE",
+      "ABILITY_SPELL_PROFILE",
+      "WALLET_PROFILE",
       "MECHANICS_MODULE",
       "ACTOR_MECHANICS_PROFILE",
       "RULES_CODEX",
@@ -251,7 +254,7 @@ test("Character Template is the final reuse milestone", () => {
     (chapter) => chapter.steps
   );
   assert.equal(allSteps.at(-1).id, "CHARACTER_TEMPLATE");
-  assert.equal(allSteps.at(-1).number, 25);
+  assert.equal(allSteps.at(-1).number, 28);
 });
 
 test("every Full Studio asset appears in progressive guidance", () => {
@@ -286,8 +289,8 @@ test("complete guided counts finish every chapter and milestone", () => {
   const progress = getGuidedProgress(chapters);
 
   assert.equal(chapters.every((chapter) => chapter.complete), true);
-  assert.equal(progress.completedStepCount, 25);
-  assert.equal(progress.totalStepCount, 25);
+  assert.equal(progress.completedStepCount, 28);
+  assert.equal(progress.totalStepCount, 28);
   assert.equal(progress.coreComplete, true);
   assert.equal(progress.allComplete, true);
   assert.equal(getRecommendedGuidedStep(chapters), null);
@@ -330,6 +333,9 @@ test("Rules and mechanics remain isolated from story assets", () => {
   assert.deepEqual(rules.assetTitles, [
     "Stats & Pools Profile",
     "Progression Profile",
+    "Skills Profile",
+    "Ability & Spell Profile",
+    "Wallet Profile",
     "Mechanics Module",
     "Actor Mechanics Profile",
     "Rules Codex",
@@ -360,9 +366,10 @@ test("Worlds and Continuity combines Location with every registry", () => {
   );
 });
 
-test("the page delegates behavior to the Creation Studio experience", async () => {
+test("the legacy Creation Studio route points to canonical V2 Full Studio", async () => {
   const source = await readFile("app/studio/create/page.js", "utf8");
-  assert.match(source, /CreationStudioExperience/);
+  assert.match(source, /redirect\("\/studio\?mode=full"\)/);
+  assert.doesNotMatch(source, /CreationStudioExperience/);
   assert.doesNotMatch(source, /fetch\s*\(/);
   assert.doesNotMatch(source, /supabase/i);
   assert.doesNotMatch(source, /postgraphile/i);

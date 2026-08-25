@@ -5,7 +5,7 @@ import ItemRegistryBuilder from "@/components/studio/create/item-registry/ItemRe
 export default function CreateItemRegistryPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=worlds" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Object Continuity" title="Item Registry">
         Create a reusable item-continuity spine for inventories, signature

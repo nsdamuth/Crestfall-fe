@@ -76,7 +76,7 @@ function TabButton({ id, label, count, isActive, onClick }) {
 // RectButton so the per-connection Follow control reads as one button
 // family with the hub's creator card and the profile page's own
 // engagement row.
-function FollowButton({ isFollowing, onClick }) {
+function FollowButton({ isFollowing, canFollow = true, isOwnProfile = false, onClick }) {
   const toneClasses = isFollowing
     ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
     : "border-[var(--line-strong)] bg-transparent text-[var(--gold-action)] hover:border-[var(--gold-action)]";
@@ -86,9 +86,10 @@ function FollowButton({ isFollowing, onClick }) {
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isFollowing}
-      className={`inline-flex min-h-[var(--control-sm)] flex-none items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
+      disabled={!canFollow}
+      className={`inline-flex disabled:cursor-not-allowed disabled:opacity-50 min-h-[var(--control-sm)] flex-none items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
     >
-      {isFollowing ? "Following" : "Follow"}
+      {isOwnProfile ? "You" : isFollowing ? "Following" : "Follow"}
     </button>
   );
 }
@@ -120,7 +121,7 @@ function ConnectionRow({ item }) {
         </p>
       </button>
 
-      <FollowButton isFollowing={item.isFollowing} onClick={item.onToggleFollow} />
+      <FollowButton isFollowing={item.isFollowing} canFollow={item.canFollow !== false} isOwnProfile={item.isOwnProfile} onClick={item.onToggleFollow} />
     </li>
   );
 }
@@ -151,6 +152,7 @@ export default function CreatorConnectionsView({
   emptyMessage = null,
   loadMore,
   errorMessage = null,
+  actionError = null,
   isLoading = false,
   bottomBanner,
   harnessSlot = null,
@@ -191,6 +193,9 @@ export default function CreatorConnectionsView({
         </div>
       ) : (
         <div className="flex flex-col gap-[var(--space-4)]">
+          {actionError ? (
+            <KitAlertStripView tone="danger" title={actionError} body="Your connection list is still available below." />
+          ) : null}
           <TabSwitcher
             activeTab={activeTab}
             followersCount={followersCount}

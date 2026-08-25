@@ -57,6 +57,7 @@ export default function StudioMobileNavView({
   primaryLinks = [],
   utilityLinks = [],
   socialLinks = [],
+  showBottomDock = true,
   bottomLinks = [],
   InternalLinkComponent = "a",
   drawerEconomySlot = null,
@@ -245,26 +246,28 @@ export default function StudioMobileNavView({
         </div>
       ) : null}
 
-      <nav
-        aria-label="Primary"
-        className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 gap-[var(--space-1)] border-t border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-2)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] backdrop-blur-[var(--blur-chrome)] lg:hidden"
-      >
-        {bottomLinks.map((link) => {
-          const Icon = resolveIcon(link.iconKey);
+      {showBottomDock ? (
+        <nav
+          aria-label="Primary"
+          className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 gap-[var(--space-1)] border-t border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-2)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] backdrop-blur-[var(--blur-chrome)] lg:hidden"
+        >
+          {bottomLinks.map((link) => {
+            const Icon = resolveIcon(link.iconKey);
 
-          return (
-            <InternalLinkComponent
-              key={link.href}
-              href={link.href}
-              aria-current={link.isActive ? "page" : undefined}
-              className="cf-dock-link flex min-h-[var(--control-md)] flex-col items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-sm)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]"
-            >
-              <Icon size={20} className="shrink-0" />
-              <span>{link.label}</span>
-            </InternalLinkComponent>
-          );
-        })}
-      </nav>
+            return (
+              <InternalLinkComponent
+                key={link.href}
+                href={link.href}
+                aria-current={link.isActive ? "page" : undefined}
+                className="cf-dock-link flex min-h-[var(--control-md)] flex-col items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-sm)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]"
+              >
+                <Icon size={20} className="shrink-0" />
+                <span>{link.label}</span>
+              </InternalLinkComponent>
+            );
+          })}
+        </nav>
+      ) : null}
     </>
   );
 }

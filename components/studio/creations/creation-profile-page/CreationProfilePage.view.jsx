@@ -6,6 +6,7 @@ import {
   Image as ImageIcon,
   MessageCircle,
   Search,
+  ScrollText,
 } from "lucide-react";
 
 const TAB_ICONS = {
@@ -13,6 +14,7 @@ const TAB_ICONS = {
   VIDEO: Film,
   HEART: Heart,
   BOOKMARK: Bookmark,
+  CREDITS: ScrollText,
 };
 
 export default function CreationProfilePageView({
@@ -22,6 +24,7 @@ export default function CreationProfilePageView({
   description = null,
   mediaTabs = [],
   query = "",
+  creditsSlot = null,
   visibleMedia = [],
   hasMoreMedia = false,
   startingChat = false,
@@ -31,7 +34,6 @@ export default function CreationProfilePageView({
   creatorLinkSlot = null,
   generateLinkSlot = null,
   shareButtonSlot = null,
-  sortControlSlot = null,
   mediaActionSlots = {},
   lightboxSlot = null,
   onSelectTab = null,
@@ -54,6 +56,9 @@ export default function CreationProfilePageView({
   }
 
   if (!creation) return null;
+
+  const activeTabId = mediaTabs.find((tab) => tab.active)?.id || "IMAGES";
+  const showingCredits = activeTabId === "CREDITS";
 
   return (
     <section className="pb-12">
@@ -155,37 +160,37 @@ export default function CreationProfilePageView({
       </header>
 
       <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
-            {mediaTabs.map((tab) => {
-              const Icon = TAB_ICONS[tab.icon];
-              return (
-                <FilterButton
-                  key={tab.id}
-                  active={tab.active}
-                  onClick={() => onSelectTab?.(tab.id)}
-                >
-                  {Icon ? <Icon size={14} /> : null}
-                  {tab.label}
-                </FilterButton>
-              );
-            })}
-          </div>
-          <div className="w-full sm:w-56">{sortControlSlot}</div>
+        <div className="flex flex-wrap gap-2">
+          {mediaTabs.map((tab) => {
+            const Icon = TAB_ICONS[tab.icon];
+            return (
+              <FilterButton
+                key={tab.id}
+                active={tab.active}
+                onClick={() => onSelectTab?.(tab.id)}
+              >
+                {Icon ? <Icon size={14} /> : null}
+                {tab.label}
+              </FilterButton>
+            );
+          })}
         </div>
 
-        <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-          <Search size={16} className="text-[var(--gold-ornament)]" />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange?.(event.target.value)}
-            placeholder="Search this creation's media..."
-            className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
-          />
-        </div>
+        {showingCredits ? (
+          <div className="mt-5">{creditsSlot}</div>
+        ) : (
+          <>
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+              <Search size={16} className="text-[var(--gold-ornament)]" />
+              <input
+                value={query}
+                onChange={(event) => onQueryChange?.(event.target.value)}
+                placeholder="Search this creation's media..."
+                className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
+              />
+            </div>
 
-
-        {!visibleMedia.length ? (
+            {!visibleMedia.length ? (
           <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
             <ImageIcon size={30} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No public media yet</p>
@@ -209,17 +214,19 @@ export default function CreationProfilePageView({
           </div>
         ) : null}
 
-        {hasMoreMedia ? (
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={() => onLoadMore?.()}
-              className="cf-btn cf-btn--secondary"
-            >
-              Load more
-            </button>
-          </div>
-        ) : null}
+            {hasMoreMedia ? (
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => onLoadMore?.()}
+                  className="cf-btn cf-btn--secondary"
+                >
+                  Load more
+                </button>
+              </div>
+            ) : null}
+          </>
+        )}
       </div>
 
       {lightboxSlot}

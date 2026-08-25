@@ -1,4 +1,4 @@
-export const ADVENTURES_VIEW_CONTRACT_VERSION = "1.1.0";
+export const ADVENTURES_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the Adventures page View

@@ -30,7 +30,9 @@ export function getStudioTopBarAccountInitial(user = {}) {
 // This top bar renders on every /studio/** route including v2 pages,
 // so the account avatar's target depends on which surface is current.
 export function getStudioTopBarAccountHref(pathname = "") {
-  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+  return pathname === "/studio" || pathname.startsWith("/studio/v2")
+    ? "/studio/v2/account"
+    : "/studio/account";
 }
 
 export function useStudioTopBarViewModel({

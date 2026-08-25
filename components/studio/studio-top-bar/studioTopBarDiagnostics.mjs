@@ -31,7 +31,7 @@ test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   assert.match(view, /bellRef/);
   assert.match(view, /onOpenNotificationCenter/);
   assert.match(view, /accountLinkSlot/);
-  assert.match(view, /from "@\/components\/ui\/ModalShell"/);
+  assert.match(view, /from "@\/components\/kit\/KitModalFrame"/);
   assert.doesNotMatch(view, /StudioAccountProvider|useStudioAccount/);
   assert.doesNotMatch(view, /useState|useEffect/);
   assert.doesNotMatch(view, /next\/link/);

@@ -114,7 +114,7 @@ test("View integration stays display-only and limits fallback to responses", () 
   assert.match(view, /STORY_ROOM_MESSAGE_SURFACE_TONES\.CHARACTER/);
   assert.match(view, /STORY_ROOM_MESSAGE_SURFACE_TONES\.NARRATOR/);
   assert.doesNotMatch(view, /fetch\(|storyRoomClient|update|persist|save/);
-  assert.match(contract, /VIEW_CONTRACT_VERSION = "1\.1\.0"/);
+  assert.match(contract, /VIEW_CONTRACT_VERSION = "1\.2\.0"/);
   assert.match(contract, /persisted message text remain unchanged/);
   assert.match(fixtures, /storyRoomMessageZeroNewlineActionDialogueActionFixture/);
   assert.match(fixtures, /storyRoomMessageExistingMultilineFixture/);

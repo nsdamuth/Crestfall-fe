@@ -5,7 +5,7 @@ import ProgressionProfileBuilderShell from "@/components/studio/create/progressi
 export default function CreateProgressionProfilePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=mechanics" label="Back to Full Studio" />
       <StudioPageHeader
         eyebrow="Actor Progression Definitions"
         title="Create Progression Profile"

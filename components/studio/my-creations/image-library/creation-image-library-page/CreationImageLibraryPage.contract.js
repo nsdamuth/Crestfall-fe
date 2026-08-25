@@ -1,4 +1,4 @@
-export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
+export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Portable presentation contract for a Creation-owned image library.
@@ -12,6 +12,9 @@ export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
  * (`onDeleteImage`) now open a confirm modal owned by the ViewModel
  * instead of routing through `window.confirm`. Additive only.
  *
+ * 1.3.0 (V2 convergence): adds live share, reassignment feedback, and
+ * Library Pass owner controls while retaining the V2 B5 delete-confirm flow.
+ *
  * Doc-only correction (ED1G sw12), no version bump: 24 view props
  * already read by the View were undeclared here (loadStatus,
  * showBackLink, and the semantic callback set below).
@@ -19,12 +22,16 @@ export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
  * @typedef {Object} CreationImageLibraryPageViewProps
  * @property {string} title
  * @property {string} backHref
+ * @property {string} [shareHref]
+ * @property {boolean} [isShareable]
  * @property {boolean} [showBackLink]
  * @property {"idle"|"loading"|"error"} [loadStatus]
  * @property {string} [loadMessage]
  * @property {boolean} [isLoading]
  * @property {string} [reactionMessage]
  * @property {string} [deleteMessage]
+ * @property {string} [reassignmentMessage]
+ * @property {Object|null} [libraryPassPanel]
  * @property {Array<Object>} featuredSlotCards
  * @property {Array<Object>} visibleImages
  * @property {Array<Object>} hiddenImages
@@ -41,6 +48,7 @@ export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {boolean} deleteConfirmOpen
  * @property {boolean} deleteConfirmIsFeatured
  * @property {(() => void)|null} [onRefresh]
+ * @property {(() => void)|null} [onToggleLibraryPassSales]
  * @property {((value:string) => void)|null} [onSetEligibilityFilter]
  * @property {((value:string) => void)|null} [onSetSortMode]
  * @property {(() => void)|null} [onLoadMoreVisibleImages]
@@ -54,6 +62,7 @@ export const CREATION_IMAGE_LIBRARY_PAGE_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {(() => void)|null} onCancelDeleteImage
  * @property {(() => void)|null} onConfirmDeleteImage
  * @property {import("react").ElementType} BackLinkComponent
+ * @property {import("react").ElementType} [ShareButtonComponent]
  * @property {(props:Object)=>import("react").ReactNode} renderQuickActions
  * @property {(props:Object)=>import("react").ReactNode} renderLightbox
  */

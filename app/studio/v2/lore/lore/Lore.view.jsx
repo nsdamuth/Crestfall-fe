@@ -22,7 +22,6 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
-import KitFormFieldView from "@/components/kit/form-field/KitFormField.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 
@@ -60,103 +59,18 @@ function CardGrid({ items }) {
   );
 }
 
-function LoreCreateModal({
-  title = "",
-  onTitleChange = null,
-  titleError = "",
-  world = "",
-  onWorldChange = null,
-  content = "",
-  onContentChange = null,
-  onSubmit = null,
-  onClose = null,
-  onOpenAdvancedEditor = null,
-}) {
-  return (
-    <KitModalFrame variant="modal" panelClassName="w-full max-w-xl" onClose={onClose} ariaLabel="Write lore">
-      <div className="flex max-h-[85vh] flex-col gap-[var(--space-4)] overflow-y-auto p-[var(--space-6)] pt-[var(--space-8)]">
-        <h2 className="font-[family-name:var(--font-display)] text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
-          Write lore
-        </h2>
-
-        <KitAlertStripView
-          tone="neutral"
-          title="New lore is reviewed before it becomes canon."
-          body="Submissions enter the community archive as pending, and the best of it becomes part of play."
-        />
-
-        {/* CTA to the advanced lore page, RULED 10 Aug 2026 (ruling 4):
-            this quick modal keeps its small field set and gains a path
-            to the full chapters/sections/blocks builder rather than
-            absorbing its 18 rows. */}
-        <button
-          type="button"
-          onClick={() => onOpenAdvancedEditor?.()}
-          className="self-start text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
-        >
-          Need chapters, tags, or images? Open the advanced lore editor
-        </button>
-
-        <KitFormFieldView
-          label="Title"
-          value={title}
-          placeholder="Name your lore"
-          error={titleError}
-          isDisabled={false}
-          onChange={onTitleChange}
-        />
-
-        <KitFormFieldView
-          label="World or faction"
-          value={world}
-          placeholder="e.g. Aethelgard, Eden, the Sundered Choir"
-          helper="Optional. Leave blank if this lore spans the whole setting."
-          isDisabled={false}
-          onChange={onWorldChange}
-        />
-
-        <div className="flex flex-col gap-[var(--space-1)]">
-          <label
-            htmlFor="lore-create-content"
-            className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
-          >
-            Lore
-          </label>
-          <textarea
-            id="lore-create-content"
-            value={content}
-            onChange={(event) => onContentChange?.(event.target.value)}
-            placeholder="Write into the world..."
-            rows={8}
-            className="min-h-[10rem] resize-y rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)]"
-          />
-        </div>
-
-        <div className="flex items-center justify-end gap-[var(--space-2)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-          <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary">
-            Cancel
-          </button>
-          <button type="button" onClick={() => onSubmit?.()} className="cf-btn cf-btn--primary">
-            Submit for review
-          </button>
-        </div>
-      </div>
-    </KitModalFrame>
-  );
-}
-
 export default function LoreView({
   topBanner,
   filterBar,
   communityItems = [],
+  communityError = null,
   communityEmptyMessage = null,
   communityLoadMore,
   mineItems = [],
+  mineError = null,
   mineEmptyMessage = null,
   errorMessage = null,
   bottomBanner,
-  isCreateModalOpen = false,
-  createModal = null,
   notice = null,
   onCloseNotice = null,
   harnessSlot = null,
@@ -212,7 +126,13 @@ export default function LoreView({
           <>
             <div className="flex flex-col gap-[var(--space-4)]">
               <SectionLabel>Community Lore</SectionLabel>
-              {communityEmptyMessage ? (
+              {communityError ? (
+                <KitAlertStripView
+                  tone="danger"
+                  title="Community Lore could not be loaded."
+                  body={communityError}
+                />
+              ) : communityEmptyMessage ? (
                 <EmptySection message={communityEmptyMessage} />
               ) : (
                 <>
@@ -229,26 +149,21 @@ export default function LoreView({
 
             <div className="flex flex-col gap-[var(--space-4)]">
               <SectionLabel>Your Lore</SectionLabel>
-              {mineEmptyMessage ? <EmptySection message={mineEmptyMessage} /> : <CardGrid items={mineItems} />}
+              {mineError ? (
+                <KitAlertStripView
+                  tone="danger"
+                  title="Your Lore could not be loaded."
+                  body={mineError}
+                />
+              ) : mineEmptyMessage ? (
+                <EmptySection message={mineEmptyMessage} />
+              ) : (
+                <CardGrid items={mineItems} />
+              )}
             </div>
           </>
         )}
       </KitStudioPageView>
-
-      {isCreateModalOpen && (
-        <LoreCreateModal
-          title={createModal?.title}
-          onTitleChange={createModal?.onTitleChange}
-          titleError={createModal?.titleError}
-          world={createModal?.world}
-          onWorldChange={createModal?.onWorldChange}
-          content={createModal?.content}
-          onContentChange={createModal?.onContentChange}
-          onSubmit={createModal?.onSubmit}
-          onClose={createModal?.onClose}
-          onOpenAdvancedEditor={createModal?.onOpenAdvancedEditor}
-        />
-      )}
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />
     </>

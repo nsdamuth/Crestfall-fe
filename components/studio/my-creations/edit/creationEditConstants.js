@@ -103,6 +103,9 @@ const tabs = [
   { id: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profiles" },
   { id: "STATS_POOLS_PROFILE", label: "Stats & Pools Profiles" },
   { id: "PROGRESSION_PROFILE", label: "Progression Profiles" },
+  { id: "SKILLS_PROFILE", label: "Skills Profiles" },
+  { id: "ABILITY_SPELL_PROFILE", label: "Ability & Spell Profiles" },
+  { id: "WALLET_PROFILE", label: "Wallet Profiles" },
 ];
 
 const STRUCTURED_REGISTRY_EDIT_SECTIONS = [
@@ -199,6 +202,18 @@ const typeMeta = {
   },
   PROGRESSION_PROFILE: {
     label: "Progression Profile",
+    icon: Activity,
+  },
+  SKILLS_PROFILE: {
+    label: "Skills Profile",
+    icon: Activity,
+  },
+  ABILITY_SPELL_PROFILE: {
+    label: "Ability & Spell Profile",
+    icon: Activity,
+  },
+  WALLET_PROFILE: {
+    label: "Wallet Profile",
     icon: Activity,
   },
 };
@@ -356,6 +371,27 @@ const PROGRESSION_PROFILE_EDIT_SECTIONS = [
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
+
+const SKILLS_PROFILE_EDIT_SECTIONS = [
+  { id: "overview", label: "Overview", icon: Eye },
+  { id: "skills", label: "Skills & Proficiencies", icon: Activity },
+  { id: "publishing", label: "Publishing", icon: ShieldCheck },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle },
+];
+
+const ABILITY_SPELL_PROFILE_EDIT_SECTIONS = [
+  { id: "overview", label: "Overview", icon: Eye },
+  { id: "abilitySpell", label: "Abilities & Spells", icon: Activity },
+  { id: "publishing", label: "Publishing", icon: ShieldCheck },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle },
+];
+
+const WALLET_PROFILE_EDIT_SECTIONS = [
+  { id: "overview", label: "Overview", icon: Eye },
+  { id: "wallet", label: "Wallet", icon: Activity },
+  { id: "publishing", label: "Publishing", icon: ShieldCheck },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle },
+];
 // Editor group grammar, ED1 (docs/plans/FABLE-GATE-2-STUDIO.md,
 // ruling N1 option A): each type's flat section list regroups into
 // at most five named groups, schema-as-data replacing a hand-built
@@ -486,6 +522,24 @@ const PROGRESSION_PROFILE_SECTION_GROUPS = [
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
+const SKILLS_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["skills"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const ABILITY_SPELL_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["abilitySpell"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
+const WALLET_PROFILE_SECTION_GROUPS = [
+  { id: "content", label: "Content", sectionIds: ["overview"] },
+  { id: "systems", label: "Systems", sectionIds: ["wallet"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
 const CREATION_TYPE_SECTION_GROUPS = {
   CHARACTER: CHARACTER_SECTION_GROUPS,
   PLAYER_CHARACTER: CHARACTER_SECTION_GROUPS,
@@ -512,6 +566,9 @@ const CREATION_TYPE_SECTION_GROUPS = {
   ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_SECTION_GROUPS,
   STATS_POOLS_PROFILE: STATS_POOLS_PROFILE_SECTION_GROUPS,
   PROGRESSION_PROFILE: PROGRESSION_PROFILE_SECTION_GROUPS,
+  SKILLS_PROFILE: SKILLS_PROFILE_SECTION_GROUPS,
+  ABILITY_SPELL_PROFILE: ABILITY_SPELL_PROFILE_SECTION_GROUPS,
+  WALLET_PROFILE: WALLET_PROFILE_SECTION_GROUPS,
 };
 
 // Registry-as-data, ED1: replaces the nested ternary
@@ -521,6 +578,9 @@ const CREATION_TYPE_SECTION_GROUPS = {
 // type still fall through to `sections` (CHARACTER_EDIT_SECTIONS),
 // matching the ternary's own final default exactly.
 const CREATION_TYPE_SECTIONS = {
+  WALLET_PROFILE: WALLET_PROFILE_EDIT_SECTIONS,
+  ABILITY_SPELL_PROFILE: ABILITY_SPELL_PROFILE_EDIT_SECTIONS,
+  SKILLS_PROFILE: SKILLS_PROFILE_EDIT_SECTIONS,
   PROGRESSION_PROFILE: PROGRESSION_PROFILE_EDIT_SECTIONS,
   STATS_POOLS_PROFILE: STATS_POOLS_PROFILE_EDIT_SECTIONS,
   ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,
@@ -678,6 +738,21 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
     { id: "systems", label: "Systems", sectionIds: ["progression"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
+  SKILLS_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["skills"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  ABILITY_SPELL_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["abilitySpell"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
+  WALLET_PROFILE: [
+    { id: "profile", label: "Profile", sectionIds: ["overview"] },
+    { id: "systems", label: "Systems", sectionIds: ["wallet"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
 };
 
 // Shared structured-registry page grammar, one instance per type so
@@ -723,6 +798,9 @@ export {
   ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,
   STATS_POOLS_PROFILE_EDIT_SECTIONS,
   PROGRESSION_PROFILE_EDIT_SECTIONS,
+  SKILLS_PROFILE_EDIT_SECTIONS,
+  ABILITY_SPELL_PROFILE_EDIT_SECTIONS,
+  WALLET_PROFILE_EDIT_SECTIONS,
   sections,
   tabs,
   typeMeta,

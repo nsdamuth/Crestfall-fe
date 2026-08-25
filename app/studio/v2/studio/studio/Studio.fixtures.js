@@ -1,13 +1,20 @@
 // Local, deterministic View-shaped fixtures (docs/FRONTEND-SOP.md
 // section 1, LOOM item 5). RESHAPED 23 Aug 2026 (build-0823 pass 4,
-// RULED): the three states (default, empty, longest content) now map
-// onto the three-zone page's own doors list, since the altitude
-// ladder this file's fixtures used to hang on is removed. Built
+// UPDATED 24 Aug 2026: the three fixture stress states remain, while the
+// restored Quick Start / Guided Build / Full Studio selector is part of the
+// portable V2 View contract again. Built
 // directly from studioContent.mock.js so these exercise the View in
 // isolation (preview route) without mounting the hook.
 import { STUDIO_DOORS, STUDIO_HUB_EXPLAINER, STUDIO_BOTTOM_BANNER } from "./studioContent.mock";
+import { CREATION_STUDIO_MODES } from "@/components/studio/create/creation-studio/CreationStudio.contract.mjs";
 
 const noop = () => {};
+
+const MODE_OPTIONS = [
+  { id: CREATION_STUDIO_MODES.QUICK, numeral: "I", label: "Quick Start", description: "Make assets, characters, places, outfits, and start creating fast." },
+  { id: CREATION_STUDIO_MODES.GUIDED, numeral: "II", label: "Guided Build", description: "Follow a guided path from core assets into a playable Story." },
+  { id: CREATION_STUDIO_MODES.FULL, numeral: "III", label: "Full Studio", description: "Every builder, registry, template, and mechanics tool in one workspace." },
+];
 
 function decorateDoors(doors) {
   return doors.map((door) => ({ ...door, onOpen: noop }));
@@ -20,6 +27,10 @@ const BOTTOM_BANNER = { ...STUDIO_BOTTOM_BANNER, onCtaClick: noop };
 // present.
 export const studioDefaultFixture = {
   hubExplainer: STUDIO_HUB_EXPLAINER,
+  modeOptions: MODE_OPTIONS,
+  activeMode: CREATION_STUDIO_MODES.QUICK,
+  onSelectMode: noop,
+  modeContentSlot: null,
   doors: decorateDoors(STUDIO_DOORS),
   onOpenAdvancedEditor: noop,
   onBuildStory: noop,

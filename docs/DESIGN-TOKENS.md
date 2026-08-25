@@ -397,6 +397,17 @@ column they sit in. This supersedes `docs/BUILD-BLUEPRINT.md`
 same commit; no new token is minted, `--container` and `--measure`
 were already locked.
 
+**SUPERSEDED FOR PRODUCT LAYOUT 24 Aug 2026 — V2 convergence W1.**
+The global 1200px shell cap is no longer authoritative. `StudioShell` is a
+fluid application workspace and uses the available viewport width. Individual
+reading, form, modal, or card regions may still apply `--measure`, a local
+max-width, or a grid-specific constraint when that improves readability, but
+no page inherits a narrow centered cap merely because it is under `/studio`.
+This specifically allows Story Chat and other desktop workspaces to reclaim
+horizontal real estate. The existing `--container` token remains legal for
+local components; it is no longer the shell width authority. This is a
+product-direction override for the current Crestfall V2 convergence pass.
+
 `--topbar-h`, minted 10 Aug 2026 (kit polish 3 pass): the sticky
 `StudioTopBar` header's own rendered height, `calc(var(--control-md)
 + var(--space-3) * 2 + 1px)` (control height, its top and bottom

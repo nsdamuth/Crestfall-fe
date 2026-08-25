@@ -2,6 +2,8 @@
 
 import {
   STORY_ROOM_MESSAGE_BODY_MODES,
+  STORY_ROOM_MESSAGE_CONTENT_TYPES,
+  STORY_ROOM_MESSAGE_MEDIA_SUBTYPES,
   STORY_ROOM_MESSAGE_DELIVERY_STATES,
   STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS,
   STORY_ROOM_MESSAGE_SEGMENT_TYPES,
@@ -63,13 +65,17 @@ function tokenizeInlineMarkup(text) {
   return tokens;
 }
 
-function renderInlineMarkup(text, keyPrefix) {
+function renderInlineMarkup(text, keyPrefix, paletteColors = null) {
   return tokenizeInlineMarkup(text).map((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
     if (token.type === "bold") {
       return (
-        <strong key={key} className="font-semibold text-[var(--ink)]">
+        <strong
+          key={key}
+          className="font-semibold"
+          style={paletteColors ? { color: paletteColors.strong } : undefined}
+        >
           {token.value}
         </strong>
       );
@@ -77,17 +83,32 @@ function renderInlineMarkup(text, keyPrefix) {
 
     if (token.type === "action") {
       return (
-        <em key={key} className="italic text-[var(--gold-ornament)]/90">
+        <em
+          key={key}
+          className="italic"
+          style={paletteColors ? { color: paletteColors.narration } : undefined}
+        >
           {token.value}
         </em>
       );
     }
 
-    return <span key={key}>{token.value}</span>;
+    return (
+      <span
+        key={key}
+        style={paletteColors ? { color: paletteColors.dialogue } : undefined}
+      >
+        {token.value}
+      </span>
+    );
   });
 }
 
-function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
+function LegacyMessageBody({
+  body = "",
+  allowAutomaticSpacing = false,
+  paletteColors = null,
+}) {
   const text = String(body || "");
   const blocks = allowAutomaticSpacing
     ? buildLegacyMessageParagraphs(text)
@@ -110,7 +131,11 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
         >
           {quoteLines.map((line, lineIndex) => (
             <span key={`quote-${blockIndex}-${lineIndex}`}>
-              {renderInlineMarkup(line, `quote-${blockIndex}-${lineIndex}`)}
+              {renderInlineMarkup(
+                line,
+                `quote-${blockIndex}-${lineIndex}`,
+                paletteColors
+              )}
               {lineIndex < quoteLines.length - 1 ? <br /> : null}
             </span>
           ))}
@@ -122,7 +147,11 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
       <p key={`block-${blockIndex}`} className="my-3 first:mt-0 last:mb-0">
         {lines.map((line, lineIndex) => (
           <span key={`line-${blockIndex}-${lineIndex}`}>
-            {renderInlineMarkup(line, `line-${blockIndex}-${lineIndex}`)}
+            {renderInlineMarkup(
+              line,
+              `line-${blockIndex}-${lineIndex}`,
+              paletteColors
+            )}
             {lineIndex < lines.length - 1 ? <br /> : null}
           </span>
         ))}
@@ -208,6 +237,41 @@ function SemanticMessageBody({
   );
 }
 
+function AutoEventMediaMessage({ media }) {
+  const isLocation =
+    media?.subtype === STORY_ROOM_MESSAGE_MEDIA_SUBTYPES.LOCATION_EVENT_IMAGE;
+
+  return (
+    <article className="w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-black/25">
+      <div
+        className="flex w-full items-center justify-center overflow-hidden bg-black/40"
+        style={{ maxHeight: "26rem" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={media.displayUrl}
+          alt={media.altText || "Story image"}
+          width={media.width || undefined}
+          height={media.height || undefined}
+          className="h-auto max-w-full object-contain"
+          style={{ maxHeight: "26rem", width: "auto" }}
+        />
+      </div>
+
+      {isLocation && media.caption ? (
+        <div className="border-t border-[var(--line-whisper)] px-4 py-3">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            Location
+          </p>
+          <p className="mt-1 text-sm text-[var(--ink-dim)]">
+            {media.caption}
+          </p>
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
 function getArticleClassName(surfaceTone) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
     return "ml-auto max-w-3xl border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10";
@@ -249,6 +313,7 @@ function getBodyClassName(surfaceTone, hasSemanticPresentation) {
 
 export default function StoryRoomMessageView({
   surfaceTone = STORY_ROOM_MESSAGE_SURFACE_TONES.CHARACTER,
+  contentType = STORY_ROOM_MESSAGE_CONTENT_TYPES.TEXT,
   speakerLabel = "",
   speakerAvatarUrl = null,
   openingLabel = "",
@@ -258,12 +323,21 @@ export default function StoryRoomMessageView({
   semanticSegments = [],
   statusBlocks = [],
   paletteColors = null,
+  media = null,
   deliveryState = null,
 }) {
+  if (
+    contentType === STORY_ROOM_MESSAGE_CONTENT_TYPES.AUTO_EVENT_MEDIA &&
+    media?.displayUrl
+  ) {
+    return <AutoEventMediaMessage media={media} />;
+  }
+
   const safeSegments = Array.isArray(semanticSegments) ? semanticSegments : [];
   const safeStatusBlocks = Array.isArray(statusBlocks) ? statusBlocks : [];
   const hasSemanticPresentation =
     bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC && safeSegments.length > 0;
+  const hasPalettePresentation = Boolean(paletteColors);
   const resolvedPaletteColors = paletteColors || DEFAULT_PALETTE_COLORS;
   const allowAutomaticSpacing =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.CHARACTER ||
@@ -273,7 +347,7 @@ export default function StoryRoomMessageView({
     <article
       className={`rounded-[var(--radius-md)] border p-4 ${getArticleClassName(surfaceTone)}`}
       style={
-        hasSemanticPresentation
+        hasSemanticPresentation || hasPalettePresentation
           ? { borderColor: resolvedPaletteColors.border }
           : undefined
       }
@@ -287,7 +361,7 @@ export default function StoryRoomMessageView({
               alt={speakerLabel || "Speaker"}
               className="h-7 w-7 shrink-0 rounded-full border object-cover"
               style={
-                hasSemanticPresentation
+                hasSemanticPresentation || hasPalettePresentation
                   ? { borderColor: resolvedPaletteColors.border }
                   : undefined
               }
@@ -304,7 +378,7 @@ export default function StoryRoomMessageView({
             <p
               className="truncate text-xs uppercase tracking-[0.2em]"
               style={
-                hasSemanticPresentation
+                hasSemanticPresentation || hasPalettePresentation
                   ? { color: resolvedPaletteColors.speaker }
                   : undefined
               }
@@ -335,6 +409,7 @@ export default function StoryRoomMessageView({
             <LegacyMessageBody
               body={legacyBody}
               allowAutomaticSpacing={allowAutomaticSpacing}
+              paletteColors={hasPalettePresentation ? resolvedPaletteColors : null}
             />
           </div>
         )}

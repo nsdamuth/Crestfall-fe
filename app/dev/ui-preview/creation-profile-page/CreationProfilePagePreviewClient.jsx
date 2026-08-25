@@ -9,9 +9,8 @@ import {
 
 import CreationProfilePageView from "@/components/studio/creations/creation-profile-page/CreationProfilePage.view";
 import {
-  CREATION_PROFILE_MEDIA_TABS,
-  CREATION_PROFILE_SORT_OPTIONS,
-  filterAndSortCreationProfileMedia,
+  buildCreationProfileTabs,
+  filterCreationProfileMedia,
   getCreationProfileDescription,
   normalizeCreationProfileCreation,
   normalizeCreationProfileMedia,
@@ -28,7 +27,6 @@ const STATES = ["POPULATED", "EMPTY", "ERROR"];
 export default function CreationProfilePagePreviewClient() {
   const [previewState, setPreviewState] = useState("POPULATED");
   const [activeTab, setActiveTab] = useState("IMAGES");
-  const [sort, setSort] = useState("NEWEST");
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(12);
   const [expanded, setExpanded] = useState(false);
@@ -50,11 +48,10 @@ export default function CreationProfilePagePreviewClient() {
       })),
     [sourceMedia, likedIds, bookmarkedIds]
   );
-  const filteredMedia = filterAndSortCreationProfileMedia({
+  const filteredMedia = filterCreationProfileMedia({
     media,
     activeTab,
     query,
-    sort,
   });
   const visibleMedia = filteredMedia.slice(0, visibleCount).map((item, index) => ({
     ...item,
@@ -117,10 +114,10 @@ export default function CreationProfilePagePreviewClient() {
             creation.description,
             expanded
           )}
-          mediaTabs={CREATION_PROFILE_MEDIA_TABS.map((tab) => ({
-            ...tab,
-            active: tab.id === activeTab,
-          }))}
+          mediaTabs={buildCreationProfileTabs({
+            credits: creation.credits,
+            activeTab,
+          })}
           query={query}
           visibleMedia={visibleMedia}
           hasMoreMedia={visibleCount < filteredMedia.length}
@@ -143,24 +140,15 @@ export default function CreationProfilePagePreviewClient() {
               <Share2 size={14} /> Share
             </span>
           }
-          sortControlSlot={
-            <label className="block text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
-              Sort
-              <select
-                value={sort}
-                onChange={(event) => {
-                  setSort(event.target.value);
-                  setVisibleCount(12);
-                }}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-black/50 px-3 py-3 text-sm"
-              >
-                {CREATION_PROFILE_SORT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+          creditsSlot={
+            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--muted)]">
+              {creation.credits.map((credit) => (
+                <p key={credit.id}>
+                  {credit.kindLabel} from {credit.creatorHandle}
+                  {credit.assetTitle ? ` · ${credit.assetTitle}` : ""}
+                </p>
+              ))}
+            </div>
           }
           mediaActionSlots={actionSlots}
           lightboxSlot={

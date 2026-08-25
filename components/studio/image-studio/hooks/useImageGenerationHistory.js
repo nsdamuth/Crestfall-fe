@@ -81,6 +81,20 @@ function mapOutputToMediaItem(output, index, jobOverride = null) {
       output.providerMetadata || output.provider_metadata || {},
     storagePath: output.storagePath || output.storage_path || null,
     storageProvider: output.storageProvider || output.storage_provider || null,
+    ownerId: output.ownerId || output.owner_id || null,
+    primarySubjectCreationId:
+      output.primarySubjectCreationId ||
+      output.primary_subject_creation_id ||
+      job?.primarySubjectCreationId ||
+      job?.primary_subject_creation_id ||
+      null,
+    canReassign: Boolean(
+      imageOutputId &&
+        (output.primarySubjectCreationId ||
+          output.primary_subject_creation_id ||
+          job?.primarySubjectCreationId ||
+          job?.primary_subject_creation_id)
+    ),
 
     output,
     job,
@@ -460,6 +474,39 @@ export function useImageGenerationHistory() {
     setMediaItems((current) => dedupeById([...nextItems, ...current]));
   }
 
+  const applyImageReassignment = useCallback(
+    ({ imageOutputId, destinationCreationId } = {}) => {
+      if (!imageOutputId || !destinationCreationId) return false;
+
+      let updated = false;
+      setMediaItems((currentItems) =>
+        currentItems.map((item) => {
+          if (String(item?.imageOutputId || item?.outputId || item?.id || "") !== imageOutputId) {
+            return item;
+          }
+
+          updated = true;
+          return {
+            ...item,
+            primarySubjectCreationId: destinationCreationId,
+            primary_subject_creation_id: destinationCreationId,
+            canReassign: true,
+            output: item?.output
+              ? {
+                  ...item.output,
+                  primarySubjectCreationId: destinationCreationId,
+                  primary_subject_creation_id: destinationCreationId,
+                }
+              : item?.output,
+          };
+        })
+      );
+
+      return updated;
+    },
+    []
+  );
+
   return {
     mediaItems,
     historyStatus,
@@ -472,5 +519,6 @@ export function useImageGenerationHistory() {
     prependPendingGeneration,
     resolvePendingGeneration,
     failPendingGeneration,
+    applyImageReassignment,
   };
 }

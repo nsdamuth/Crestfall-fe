@@ -12,9 +12,14 @@ function normalizeCredits(credits) {
     }));
 }
 
-export function useKitCreditsViewModel({ credits = [], LinkComponent = "a" } = {}) {
+export function useKitCreditsViewModel({
+  credits = [],
+  LinkComponent = "a",
+  showHeading = true,
+} = {}) {
   return {
     credits: normalizeCredits(credits),
     LinkComponent: LinkComponent || "a",
+    showHeading: Boolean(showHeading),
   };
 }

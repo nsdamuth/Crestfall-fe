@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationImageLibraryViewModel } from "@/components/studio/my-creations/image-library/hooks/useCreationImageLibraryViewModel";
 import {
   fetchMediaReactions,
@@ -9,6 +10,7 @@ import {
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
 import { deleteImageOutput } from "@/lib/client/studio/media/imageOutputClient";
+import { useCreationLibraryPassOwnerViewModel } from "./useCreationLibraryPassOwnerViewModel";
 
 export const FEATURED_SLOT_ORDER = ["primary", "alt1", "alt2", "alt3"];
 export const FEATURED_SLOT_LABELS = {
@@ -133,6 +135,7 @@ export function normalizeCreationLibraryImage(image, index = 0) {
 }
 
 export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
+  const { setCoinBalanceFromServer } = useStudioAccount();
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -174,6 +177,18 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
   // (MediaLightbox owns "deletion confirmation" for itself); this
   // state is scoped to the card grid only.
   const [deleteConfirmImageId, setDeleteConfirmImageId] = useState("");
+  const libraryPassOwner = useCreationLibraryPassOwnerViewModel({
+    creationId,
+    publicPreviewFallback: EAGER_IMAGE_COUNT,
+  });
+  const [reassignmentMessage, setReassignmentMessage] = useState("");
+
+  async function handleRefresh() {
+    await Promise.allSettled([
+      Promise.resolve(reload?.()),
+      libraryPassOwner.reload(),
+    ]);
+  }
 
   const isLocallyDeletedImage = useCallback(
     (image) =>
@@ -215,10 +230,24 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     [pagedVisibleImages, isLocallyDeletedImage]
   );
 
-  const lightboxImages = useMemo(
-    () => [...libraryImages, ...hiddenLibraryImages],
-    [libraryImages, hiddenLibraryImages]
-  );
+  const lightboxImages = useMemo(() => {
+    const creationOwnerId = String(creation?.ownerId || creation?.owner_id || "").trim();
+    const currentCreationId = String(creationId || creation?.id || "").trim();
+    return [...libraryImages, ...hiddenLibraryImages].map((image) => {
+      const imageOwnerId = String(image?.ownerId || image?.owner_id || "").trim();
+      const imageCreationId = String(image?.creationId || image?.creation_id || "").trim();
+      return {
+        ...image,
+        canReassign: Boolean(
+          creationOwnerId &&
+            currentCreationId &&
+            imageOwnerId === creationOwnerId &&
+            imageCreationId === currentCreationId &&
+            getCreationLibraryImageOutputId(image)
+        ),
+      };
+    });
+  }, [creation, creationId, libraryImages, hiddenLibraryImages]);
 
   const rawImageById = useMemo(() => {
     const map = new Map();
@@ -486,9 +515,14 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
       )
     : null;
 
-  const imageStudioHref = creationId
-    ? `/studio/image-studio?creation=${encodeURIComponent(creationId)}`
-    : "/studio/image-studio";
+  const shareHref = creationId
+    ? `/studio/creations/${encodeURIComponent(creationId)}`
+    : "";
+  const isShareable = Boolean(
+    shareHref && String(creation?.visibility || "").trim().toUpperCase() !== "PRIVATE"
+  );
+
+  const imageStudioHref = "/studio/v2/images";
 
   const lightboxProps = activePreviewItem
     ? {
@@ -510,6 +544,18 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
         onToggleLike: toggleLikedImage,
         onToggleBookmark: toggleBookmarkedImage,
         onDeleteItem: handleDeleteImage,
+        onReassignItem: async (_item, result) => {
+          if (result?.coinBalance !== undefined) {
+            setCoinBalanceFromServer?.(result.coinBalance);
+          }
+          setReassignmentMessage(
+            result?.destinationTitle
+              ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
+              : "Image reassigned. 1 Coin used."
+          );
+          setActivePreviewId(null);
+          await handleRefresh();
+        },
       }
     : null;
 
@@ -527,12 +573,16 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     // /studio/my-creations/[id]/image-library caller, which has no
     // outer back control of its own.
     showBackLink,
+    shareHref,
+    isShareable,
     imageStudioHref,
     loadStatus,
     loadMessage,
     isLoading: loadStatus === "idle" || loadStatus === "loading",
     reactionMessage,
     deleteMessage,
+    reassignmentMessage,
+    libraryPassPanel: libraryPassOwner.panel,
     featuredSlotCards,
     visibleImages: normalizedVisibleImages,
     hiddenImages: normalizedHiddenImages,
@@ -554,7 +604,8 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
     hasMoreVisibleImages: Boolean(hasMoreVisibleImages),
     lightboxProps,
     eagerImageCount: EAGER_IMAGE_COUNT,
-    onRefresh: reload,
+    onRefresh: handleRefresh,
+    onToggleLibraryPassSales: libraryPassOwner.onToggleSales,
     onSetEligibilityFilter: setEligibilityFilter,
     onSetSortMode: setSortMode,
     onLoadMoreVisibleImages: loadMoreVisibleImages,

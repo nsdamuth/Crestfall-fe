@@ -209,15 +209,11 @@ function KebabMenu({
                   onClick={() => { onGenerateImage?.(); onClose?.(); }}
                 />
                 <KebabMenuItem label="Share" Icon={Share2} onClick={() => { onShare?.(); onClose?.(); }} />
-                {/* Honest stub, CR-056 (filed by this build, ED1F
-                    propagation plan section G4/NEW LAW A): no Archive
-                    endpoint exists yet, so the action renders disabled
-                    rather than pretending to work. */}
                 <KebabMenuItem
                   label="Archive"
                   Icon={Archive}
-                  disabled
-                  title="Archive is not wired yet (CR-056)"
+                  disabled={!onArchive}
+                  title={!onArchive ? "Archive is not available for this creation." : undefined}
                   onClick={() => { onArchive?.(); onClose?.(); }}
                 />
                 <div
@@ -228,6 +224,8 @@ function KebabMenu({
                   label="Delete"
                   Icon={Trash2}
                   danger
+                  disabled={!onDelete}
+                  title={!onDelete ? "Delete is not available for this creation." : undefined}
                   onClick={() => { onDelete?.(); onClose?.(); }}
                 />
               </div>

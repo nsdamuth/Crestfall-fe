@@ -63,6 +63,7 @@ export default function StudioSidebarView({
   onToggleSocial = () => {},
   previewEnabled = false,
   previewGroups = [],
+  previewSupportGroup = null,
   legacyLabel = "Legacy",
   legacyOpen = false,
   onToggleLegacy = () => {},
@@ -153,6 +154,17 @@ export default function StudioSidebarView({
               />
             ))}
           </div>
+
+          {previewSupportGroup ? (
+            <>
+              <SidebarDivider dense />
+              <PreviewGroup
+                group={previewSupportGroup}
+                collapsed={collapsed}
+                InternalLinkComponent={InternalLinkComponent}
+              />
+            </>
+          ) : null}
 
           <SidebarDivider dense />
         </>

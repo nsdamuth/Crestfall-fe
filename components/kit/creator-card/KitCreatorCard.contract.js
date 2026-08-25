@@ -21,6 +21,7 @@ export const KIT_CREATOR_CARD_VIEW_CONTRACT_VERSION = "1.1.0";
  *
  * @typedef {Object} KitCreatorCardStats
  * @property {number|null} followers
+ * @property {number|null} likes
  * @property {number|null} plays
  * @property {number|null} works
  *
@@ -35,6 +36,7 @@ export const KIT_CREATOR_CARD_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {KitCreatorCardStats} stats
  * @property {KitCreatorCardThumbnail[]} thumbnails
  * @property {boolean} isFollowing
+ * @property {boolean} [canFollow]
  * @property {((thumbnailId: string) => void)|null} onThumbnailOpen
  * @property {(() => void)|null} onFollow
  * @property {(() => void)|null} onViewProfile

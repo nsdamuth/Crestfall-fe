@@ -2,7 +2,7 @@
 // ratified 12 Aug 2026, docs/plans/FABLE-GATE-2-STUDIO.md): the
 // picker lists ALL owned creations, filtered by the five vault
 // buckets plus a More bucket carrying the remaining pro types. Every
-// one of the product's 25 creation types
+// one of the product's 28 creation types
 // (lib/server/creations/constants.js CREATION_TYPES) maps onto
 // exactly one bucket below; a type absent from this map is a defect,
 // never a silent "More" fallback.
@@ -47,6 +47,9 @@ export const CREATION_TYPE_TO_BUCKET = {
   ACTOR_MECHANICS_PROFILE: "more",
   STATS_POOLS_PROFILE: "more",
   PROGRESSION_PROFILE: "more",
+  SKILLS_PROFILE: "more",
+  ABILITY_SPELL_PROFILE: "more",
+  WALLET_PROFILE: "more",
 };
 
 export function resolveCreationBucket(creationType) {

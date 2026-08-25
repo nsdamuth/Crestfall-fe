@@ -27,7 +27,18 @@ import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
-import { ASSET_KIND_TO_TYPE_BUCKET, TYPE_BUCKET_OPTIONS } from "@/lib/shared/presentation/typeBuckets";
+import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import { archiveCreation, deleteCreation } from "@/lib/client/studio/creations/creationClient";
+import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
+import {
+  buildDomainFilterGroups,
+  buildTagFilterOptions,
+  getCatalogCreationType,
+  getCatalogTags,
+  getSelectedCatalogCreationTypes,
+} from "../catalog/creationCatalogFilterTaxonomy.js";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -69,23 +80,19 @@ const FIXTURE_VAULT_ITEMS = [
   { id: "v18", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isOwn: false, visibility: "PUBLIC", plays: 3300, hearts: 410, saves: 140, recency: 3, description: "Saved from the Community, not your own work." },
 ];
 
-// Vault type filter, RULED 10 Aug 2026 (section 10 candidate 1, ruling
-// 1): the 27 legacy my-creations buckets do NOT return; five type
-// options replace them, every legacy bucket mapped into exactly one
-// (full mapping in the h-restore branch report). "Worlds" has no
-// fixture data yet (no location/lore/faction card kind exists in the
-// v2 model); its option ships with an honest zero count rather than
-// fabricated fixture items. CR-032 filed for the card-kind field
-// extension needed to populate it for real. RULED 23 Aug 2026
-// (build-0823 pass 3): promoted to the shared
-// lib/shared/presentation/typeBuckets.js module.
-const TYPE_OPTIONS = TYPE_BUCKET_OPTIONS;
-
 const VISIBILITY_OPTIONS = [
   { value: "PRIVATE", label: "Private" },
   { value: "INTERNAL", label: "Internal" },
   { value: "PUBLIC", label: "Public" },
   { value: "CANON", label: "Canon" },
+];
+
+const STATUS_OPTIONS = [
+  { value: "DRAFT", label: "Draft" },
+  { value: "IN_REVIEW", label: "In Review" },
+  { value: "APPROVED", label: "Approved" },
+  { value: "ARCHIVED", label: "Archived" },
+  { value: "REJECTED", label: "Rejected" },
 ];
 
 const SORT_OPTIONS = [
@@ -129,7 +136,7 @@ function LoadingGrid() {
 // Start Creating restored (10 Aug 2026 parity audit, section 7): the
 // original my-creations hub's empty state always carried this
 // next-step action; the v2 empty state had dropped it to copy only.
-function EmptyState({ onStartCreating }) {
+function EmptyState({ onStartCreating, body = "Create something, or save work you love from the Community." }) {
   return (
     <div className="flex flex-col items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-1)] p-[var(--space-12)] text-center">
       <GeometricMark className="h-[var(--space-14)] w-[var(--space-14)]" />
@@ -137,7 +144,7 @@ function EmptyState({ onStartCreating }) {
         Nothing here yet
       </p>
       <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-        Create something, or save work you love from the Community.
+        {body}
       </p>
       <button type="button" onClick={onStartCreating} className="cf-btn cf-btn--secondary mt-[var(--space-2)]">
         Start Creating
@@ -146,8 +153,16 @@ function EmptyState({ onStartCreating }) {
   );
 }
 
-export default function VaultV2Mockup() {
+export default function VaultV2Mockup({
+  items = null,
+  bookmarkCandidates = [],
+  loadError = null,
+  savedSourceError = null,
+  live = false,
+} = {}) {
   const router = useRouter();
+  const ownedItems = Array.isArray(items) ? items : FIXTURE_VAULT_ITEMS;
+  const savedCandidates = Array.isArray(bookmarkCandidates) ? bookmarkCandidates : [];
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
@@ -158,35 +173,43 @@ export default function VaultV2Mockup() {
   const [savedIds, setSavedIds] = useState([]);
   const [overlayImage, setOverlayImage] = useState(null);
   const [assetDetailId, setAssetDetailId] = useState(null);
+  const [openKebabId, setOpenKebabId] = useState(null);
   // R4 (10 Aug 2026 review gate): controls whose real behavior waits
   // on live wiring open a non-persisting notice instead of doing
   // nothing.
   const [actionNotice, setActionNotice] = useState(null);
+  const engagementCandidates = useMemo(() => {
+    if (!live) return [];
+
+    const byId = new Map();
+    [...ownedItems, ...savedCandidates].forEach((item) => {
+      if (item?.id && !byId.has(item.id)) byId.set(item.id, item);
+    });
+    return [...byId.values()];
+  }, [live, ownedItems, savedCandidates]);
+  const engagementState = useCreationEngagementState(engagementCandidates);
+  const sourceItems = useMemo(() => {
+    if (!live) return ownedItems;
+
+    const ownedIds = new Set(ownedItems.map((item) => item?.id).filter(Boolean));
+    const saved = savedCandidates.filter(
+      (item) =>
+        item?.id &&
+        !ownedIds.has(item.id) &&
+        engagementState.isCreationBookmarked(item)
+    );
+
+    return [...ownedItems, ...saved];
+  }, [live, ownedItems, savedCandidates, engagementState.bookmarkedCreationIds]);
+  const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
   const filterGroups = useMemo(() => {
-    const pool = fixtureMode === "empty" || fixtureMode === "error" ? [] : FIXTURE_VAULT_ITEMS;
+    const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceItems;
+
     return [
-      {
-        id: "type",
-        label: "Type",
-        isMultiSelect: true,
-        // Remix folded in as an additional option row (R10, RULED 10
-        // Aug 2026, docs/BUILD-BLUEPRINT.md 2.16(k) fold-in semantics):
-        // the standalone Remixable dropdown stays retired.
-        options: [
-          ...TYPE_OPTIONS.map((option) => ({
-            ...option,
-            count: pool.filter((item) => ASSET_KIND_TO_TYPE_BUCKET[item.assetKind] === option.value).length,
-          })),
-          {
-            value: "remix",
-            label: "Remix",
-            count: pool.filter((item) => item.isRemix).length,
-          },
-        ],
-      },
+      ...buildDomainFilterGroups(pool),
       {
         id: "visibility",
         label: "Visibility",
@@ -196,31 +219,49 @@ export default function VaultV2Mockup() {
           count: pool.filter((item) => item.visibility === option.value).length,
         })),
       },
+      {
+        id: "status",
+        label: "Status",
+        isMultiSelect: true,
+        options: STATUS_OPTIONS.map((option) => ({
+          ...option,
+          count: pool.filter(
+            (item) => item.isOwn && String(item.status || "").toUpperCase() === option.value
+          ).length,
+        })),
+      },
+      {
+        id: "tags",
+        label: "Tags",
+        isMultiSelect: true,
+        options: buildTagFilterOptions(pool),
+      },
     ];
-  }, [fixtureMode]);
+  }, [effectiveMode, sourceItems]);
 
   const filteredItems = useMemo(() => {
-    if (fixtureMode === "empty" || fixtureMode === "error") return [];
+    if (effectiveMode === "empty" || effectiveMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
-    const typeValues = selectedValues.type || [];
-    const remixOnly = typeValues.includes("remix");
-    const types = typeValues.filter((value) => value !== "remix");
+    const types = getSelectedCatalogCreationTypes(selectedValues);
     const visibilities = selectedValues.visibility || [];
+    const statuses = selectedValues.status || [];
+    const selectedTags = selectedValues.tags || [];
 
-    const filtered = FIXTURE_VAULT_ITEMS.filter((item) => {
-      if (types.length && !types.includes(ASSET_KIND_TO_TYPE_BUCKET[item.assetKind])) return false;
-      if (remixOnly && !item.isRemix) return false;
+    const filtered = sourceItems.filter((item) => {
+      const itemType = getCatalogCreationType(item);
+      const itemStatus = String(item.status || "").trim().toUpperCase();
+      const itemTags = getCatalogTags(item);
+      const normalizedTags = new Set(itemTags.map((tag) => tag.toLowerCase()));
+
+      if (types.length && !types.includes(itemType)) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
-      // Search restores original field coverage (title, description,
-      // creator handle, visibility, status, tags per the 10 Aug 2026
-      // parity audit): the handle lives in subtitle here, and the v2
-      // card model carries no separate status or tags field, so
-      // title, subtitle, description, and the visibility label are
-      // the honest equivalent set.
+      if (statuses.length && (!item.isOwn || !statuses.includes(itemStatus))) return false;
+      if (selectedTags.length && !selectedTags.some((tag) => normalizedTags.has(tag))) return false;
+
       const haystack = `${item.title} ${item.subtitle} ${item.description || ""} ${
         VISIBILITY_LABELS[item.visibility] || ""
-      }`.toLowerCase();
+      } ${itemStatus} ${itemTags.join(" ")}`.toLowerCase();
       if (query && !haystack.includes(query)) return false;
       return true;
     });
@@ -234,7 +275,7 @@ export default function VaultV2Mockup() {
       sorted.sort((a, b) => b.recency - a.recency);
     }
     return sorted;
-  }, [fixtureMode, searchValue, selectedValues, selectedSort]);
+  }, [effectiveMode, sourceItems, searchValue, selectedValues, selectedSort]);
 
   const visibleItems = filteredItems.slice(0, visibleCount);
   const hasMore = visibleCount < filteredItems.length;
@@ -257,17 +298,150 @@ export default function VaultV2Mockup() {
       );
   }
 
-  const toggleLiked = toggleId(setLikedIds);
-  const toggleSaved = toggleId(setSavedIds);
+  const toggleFixtureLiked = toggleId(setLikedIds);
+  const toggleFixtureSaved = toggleId(setSavedIds);
 
-  // Shared with the card grid's new contextual third face action
-  // (RULED 11 Aug 2026): the card's play icon routes to the same
-  // destination as the opened popup's own Play primary action.
-  function handlePlay(item) {
+  function isLiked(item) {
+    return live ? engagementState.isCreationLiked(item) : likedIds.includes(item.id);
+  }
+
+  function isSaved(item) {
+    return live ? engagementState.isCreationBookmarked(item) : savedIds.includes(item.id);
+  }
+
+  function toggleLiked(item) {
+    if (live) {
+      engagementState.toggleCreationLike(item);
+      return;
+    }
+
+    toggleFixtureLiked(item.id);
+  }
+
+  function toggleSaved(item) {
+    if (live) {
+      engagementState.toggleCreationBookmark(item);
+      return;
+    }
+
+    toggleFixtureSaved(item.id);
+  }
+
+  async function handlePlay(item) {
+    if (!live) {
+      setActionNotice({
+        label: "Play",
+        message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+      });
+      return;
+    }
+
+    if (!isChatCapableCreationType(item.type)) {
+      setAssetDetailId(item.id);
+      return;
+    }
+
+    try {
+      const payload = await startStoryFromCreation(item.rawCreation || item);
+      const roomId = payload?.room?.id;
+
+      if (!roomId) {
+        throw new Error("Story was created without a room id.");
+      }
+
+      router.push(`/studio/story-rooms/${encodeURIComponent(roomId)}`);
+    } catch (error) {
+      setActionNotice({
+        label: "Start Story",
+        message: error?.message || "Story could not be started.",
+      });
+    }
+  }
+
+  function handleEdit(item) {
+    router.push(`/studio/v2/editor/${encodeURIComponent(item.id)}?origin=vault`);
+  }
+
+  function handleGenerateImage(item) {
+    router.push(`/studio/v2/images?creation=${encodeURIComponent(item.id)}`);
+  }
+
+  async function handleShare(item) {
+    if (!live) {
+      setActionNotice({
+        label: "Share",
+        message: "Sharing is wired when the page goes live. Nothing leaves this preview.",
+      });
+      return;
+    }
+
+    if (!["PUBLIC", "CANON"].includes(item.visibility)) {
+      setActionNotice({
+        label: "Share",
+        message: "This creation is not public yet. Publish it before sharing a public catalogue link.",
+      });
+      return;
+    }
+
+    const href = `/studio/creations/${encodeURIComponent(item.id)}`;
+    const absoluteHref = typeof window !== "undefined" ? new URL(href, window.location.origin).toString() : href;
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: item.title, url: absoluteHref });
+      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(absoluteHref);
+        setActionNotice({ label: "Share", message: "Public catalogue link copied." });
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        setActionNotice({ label: "Share", message: error?.message || "Share link could not be prepared." });
+      }
+    }
+  }
+
+  function handleViewCatalogue(item) {
+    if (live && ["PUBLIC", "CANON"].includes(item.visibility)) {
+      router.push(`/studio/creations/${encodeURIComponent(item.id)}`);
+      return;
+    }
+
+    if (live && item.isOwn) {
+      handleEdit(item);
+      return;
+    }
+
     setActionNotice({
-      label: "Play",
-      message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+      label: "View catalogue",
+      message: "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
     });
+  }
+
+  async function handleArchive(item) {
+    if (!live || !canArchiveVaultItem(item)) return;
+
+    try {
+      await archiveCreation(item.id);
+      setAssetDetailId(null);
+      setActionNotice({ label: "Archive", message: `"${item.title}" was archived.` });
+      router.refresh();
+    } catch (error) {
+      setActionNotice({ label: "Archive", message: error?.message || "Creation could not be archived." });
+    }
+  }
+
+  async function handleDelete(item) {
+    if (!live || !canDeleteVaultItem(item)) return;
+    if (typeof window !== "undefined" && !window.confirm(`Delete "${item.title}" permanently?`)) return;
+
+    try {
+      await deleteCreation(item.id);
+      setAssetDetailId(null);
+      setActionNotice({ label: "Delete", message: `"${item.title}" was deleted.` });
+      router.refresh();
+    } catch (error) {
+      setActionNotice({ label: "Delete", message: error?.message || "Creation could not be deleted." });
+    }
   }
 
   // Badges follow the own-work context (plan section 7.3): owned
@@ -292,6 +466,7 @@ export default function VaultV2Mockup() {
     <>
     <KitStudioPageView
       harnessSlot={
+        live ? null : (
         <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
           <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             Fixture mode
@@ -312,12 +487,17 @@ export default function VaultV2Mockup() {
             </button>
           ))}
         </div>
+        )
       }
       headerSlot={
         <StudioPageHeaderView
           eyebrow="Create"
           title="Vault"
-          description="Everything yours, and everything you have claimed, always findable."
+          description={
+            live
+              ? "Everything you create, plus public work you save from Community, stays findable here."
+              : "Everything yours, and everything you have claimed, always findable."
+          }
         />
       }
       filterBarSlot={
@@ -357,38 +537,59 @@ export default function VaultV2Mockup() {
           // one click apart (see docs/reviews/BANNER-AUDIT.md).
           imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Jax Riker.png")}
           onCtaClick={() =>
-            setActionNotice({
-              label: "Browse the Community",
-              message:
-                "This banner routes to Community when the new pages cut over. Nothing was opened in this preview.",
-            })
+            live
+              ? router.push("/studio/v2/community")
+              : setActionNotice({
+                  label: "Browse the Community",
+                  message:
+                    "This banner routes to Community when the new pages cut over. Nothing was opened in this preview.",
+                })
           }
         />
       }
     >
-        {fixtureMode === "error" && (
+        {effectiveMode === "error" && (
           <KitAlertStripView
             tone="danger"
             title="Vault could not be loaded."
-            body="Try refreshing the page."
+            body={loadError || "Try refreshing the page."}
           />
         )}
 
-        {fixtureMode === "loading" && <LoadingGrid />}
+        {effectiveMode === "loading" && <LoadingGrid />}
 
-        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length === 0 && (
+        {live && savedSourceError && !loadError && (
+          <KitAlertStripView
+            tone="warning"
+            title="Saved community work could not be loaded."
+            body={`${savedSourceError} Your own creations are still available.`}
+          />
+        )}
+
+        {live && engagementState.engagementMessage && (
+          <KitAlertStripView
+            tone="danger"
+            title="Vault action could not be saved."
+            body={engagementState.engagementMessage}
+          />
+        )}
+
+        {effectiveMode !== "loading" && effectiveMode !== "error" && filteredItems.length === 0 && (
           <EmptyState
+            body={live ? "Create something in Studio, or save public work from Community." : undefined}
             onStartCreating={() =>
-              setActionNotice({
-                label: "Start Creating",
-                message:
-                  "This opens the creation picker when live wiring lands. Nothing was opened in this preview.",
-              })
+              live
+                ? router.push("/studio")
+                : setActionNotice({
+                    label: "Start Creating",
+                    message:
+                      "This opens the creation picker when live wiring lands. Nothing was opened in this preview.",
+                  })
             }
           />
         )}
 
-        {fixtureMode !== "loading" && fixtureMode !== "error" && filteredItems.length > 0 && (
+        {effectiveMode !== "loading" && effectiveMode !== "error" && filteredItems.length > 0 && (
           <>
             <div
               className={
@@ -412,19 +613,31 @@ export default function VaultV2Mockup() {
                     saves: item.saves,
                     followers: null,
                   }}
-                  liked={likedIds.includes(item.id)}
-                  bookmarked={savedIds.includes(item.id)}
+                  liked={isLiked(item)}
+                  bookmarked={isSaved(item)}
                   onOpenImageOverlay={() =>
-                    setOverlayImage({ id: item.id, imageSrc: item.imageSrc, title: item.title })
+                    setOverlayImage({ ...item, imageSrc: item.imageSrc, title: item.title })
                   }
                   onOpenAssetDetail={() => setAssetDetailId(item.id)}
-                  onLike={() => toggleLiked(item.id)}
-                  onBookmark={() => toggleSaved(item.id)}
+                  onLike={() => toggleLiked(item)}
+                  onBookmark={() => toggleSaved(item)}
                   onPlay={
-                    item.assetKind === "story" || item.assetKind === "adventure"
+                    (!live && (item.assetKind === "story" || item.assetKind === "adventure")) ||
+                    (live && isChatCapableCreationType(item.type))
                       ? () => handlePlay(item)
                       : undefined
                   }
+                  isOwner={Boolean(live && item.isOwn)}
+                  kebabOpen={openKebabId === item.id}
+                  onToggleKebab={() =>
+                    setOpenKebabId((current) => (current === item.id ? null : item.id))
+                  }
+                  onCloseKebab={() => setOpenKebabId(null)}
+                  onEdit={live && item.isOwn ? () => handleEdit(item) : undefined}
+                  onGenerateImage={live && item.isOwn ? () => handleGenerateImage(item) : undefined}
+                  onShare={live && item.isOwn ? () => handleShare(item) : undefined}
+                  onArchive={live && item.isOwn && canArchiveVaultItem(item) ? () => handleArchive(item) : undefined}
+                  onDelete={live && item.isOwn && canDeleteVaultItem(item) ? () => handleDelete(item) : undefined}
                 />
               ))}
             </div>
@@ -445,23 +658,17 @@ export default function VaultV2Mockup() {
       <KitImageOverlay
         imageSrc={overlayImage.imageSrc}
         title={overlayImage.title}
-        isLoved={likedIds.includes(overlayImage.id)}
-        isSaved={savedIds.includes(overlayImage.id)}
-        onLove={() => toggleLiked(overlayImage.id)}
-        onSave={() => toggleSaved(overlayImage.id)}
-        onShare={() =>
-          setActionNotice({
-            label: "Share",
-            message:
-              "Sharing is wired when the page goes live. Nothing leaves this preview.",
-          })
-        }
+        isLoved={isLiked(overlayImage)}
+        isSaved={isSaved(overlayImage)}
+        onLove={() => toggleLiked(overlayImage)}
+        onSave={() => toggleSaved(overlayImage)}
+        onShare={() => handleShare(overlayImage)}
         onClose={() => setOverlayImage(null)}
       />
     )}
 
     {assetDetailId && (() => {
-      const item = FIXTURE_VAULT_ITEMS.find((entry) => entry.id === assetDetailId);
+      const item = sourceItems.find((entry) => entry.id === assetDetailId);
       if (!item) return null;
 
       const media = [item.imageSrc, ...(item.extraMedia || [])]
@@ -482,40 +689,27 @@ export default function VaultV2Mockup() {
             followers: null,
           }}
           description={item.description}
-          isLiked={likedIds.includes(item.id)}
-          isSaved={savedIds.includes(item.id)}
-          onLike={() => toggleLiked(item.id)}
+          isLiked={isLiked(item)}
+          isSaved={isSaved(item)}
+          onLike={() => toggleLiked(item)}
           onPrimaryAction={() =>
-            item.assetKind === "image"
-              ? setActionNotice({
-                  label: "Open",
-                  message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
-                })
-              : handlePlay(item)
+            live
+              ? isChatCapableCreationType(item.type)
+                ? handlePlay(item)
+                : handleViewCatalogue(item)
+              : item.assetKind === "image"
+                ? setActionNotice({
+                    label: "Open",
+                    message: `Opening "${item.title}" is wired when live wiring lands. Nothing was started in this preview.`,
+                  })
+                : handlePlay(item)
           }
-          onShare={() =>
-            setActionNotice({
-              label: "Share",
-              message:
-                "Sharing is wired when the page goes live. Nothing leaves this preview.",
-            })
-          }
-          onSave={() => toggleSaved(item.id)}
-          onViewCatalogue={() =>
-            setActionNotice({
-              label: "View catalogue",
-              message:
-                "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
-            })
-          }
+          onShare={() => handleShare(item)}
+          onSave={() => toggleSaved(item)}
+          onViewCatalogue={() => handleViewCatalogue(item)}
           credits={item.credits || []}
           onClose={() => setAssetDetailId(null)}
-          // Single edit path, RULED 10 Aug 2026 (docs/STUDIO-SPEC.md
-          // section 5): own-work items only, straight to the advanced
-          // editor, no fork, no choice dialog. Origin tracking, RULED
-          // 11 Aug 2026: carries the opening surface so the advanced
-          // editor's back control returns to the Vault.
-          onEdit={item.isOwn ? () => router.push(`/studio/v2/editor/${item.id}?origin=vault`) : undefined}
+          onEdit={item.isOwn ? () => handleEdit(item) : undefined}
         />
       );
     })()}

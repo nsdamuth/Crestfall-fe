@@ -55,13 +55,20 @@ test("generation packet preserves all current fields and compatibility mappings"
   assert.match(viewModel, /playerCharacter: makeOptionalIngredient/);
   assert.match(viewModel, /renderingPreset: makeOptionalIngredient/);
   assert.match(viewModel, /promptMode: getPromptMode\(renderStyle\)/);
-  assert.match(viewModel, /shotType: cameraPreset/);
+  assert.match(viewModel, /shotType: normalizedCameraPreset/);
+  assert.match(viewModel, /getCameraPresetPrompt/);
+  assert.match(viewModel, /getLegacyCameraPresetValue/);
   assert.match(viewModel, /referenceInputs: \[\]/);
   assert.match(viewModel, /controlInputs: \[\]/);
   assert.match(viewModel, /renderingStyle: getLegacyRenderingStyle\(renderStyle\)/);
   assert.match(viewModel, /aspectRatio: ASPECT_RATIO_BY_COMPOSER_VALUE\[aspectRatio\] \|\| "3:4"/);
   assert.match(viewModel, /quality: "standard"/);
   assert.match(viewModel, /modelProfile: getModelProfile\(renderStyle\)/);
+  assert.match(viewModel, /LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT/);
+  assert.match(viewModel, /isLocationOnlyImageComposition/);
+  assert.match(viewModel, /appendPromptFragment/);
+  assert.match(viewModel, /userPrompt: resolvedUserPrompt/);
+  assert.match(viewModel, /sceneryOnlyHelperEnabled/);
 });
 
 test("availability and ingredient orchestration preserve production rules", () => {

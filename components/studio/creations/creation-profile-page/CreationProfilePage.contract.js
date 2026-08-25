@@ -15,6 +15,7 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {Object|null} description
  * @property {Array<Object>} mediaTabs
  * @property {string} query
+ * @property {import("react").ReactNode} creditsSlot Conditional resolved attribution tab content.
  * @property {Array<Object>} visibleMedia
  * @property {boolean} hasMoreMedia
  * @property {boolean} startingChat
@@ -24,7 +25,6 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {import("react").ReactNode} creatorLinkSlot
  * @property {import("react").ReactNode} generateLinkSlot
  * @property {import("react").ReactNode} shareButtonSlot
- * @property {import("react").ReactNode} sortControlSlot
  * @property {Record<string, import("react").ReactNode>} mediaActionSlots
  * @property {import("react").ReactNode} lightboxSlot
  * @property {((tabId:string) => void)|null} [onSelectTab] doc-only addition (ED1G sw12), no version bump.

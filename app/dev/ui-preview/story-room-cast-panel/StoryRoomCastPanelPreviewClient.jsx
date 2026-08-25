@@ -59,12 +59,6 @@ export default function StoryRoomCastPanelPreviewClient() {
       castMembers: fixture.castMembers.map((member) => ({
         ...member,
         selected: member.selectable && member.id === selectedCastId,
-        selectionLabel:
-          member.selectable && member.id === selectedCastId
-            ? "Next responder"
-            : member.selectionLabel === "Next responder"
-              ? "Select responder"
-              : member.selectionLabel,
       })),
       npcParticipantManager: fixture.npcParticipantManager
         ? {

@@ -1,6 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import {
+  getCameraPresetPrompt,
+  getLegacyCameraPresetValue,
+  normalizeCameraPresetValue,
+} from "../imageStudioData.js";
+import {
+  LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT,
+  appendPromptFragment,
+  isLocationOnlyImageComposition,
+} from "./locationOnlySceneryPrompt.js";
 
 import { createCreationDraft } from "@/lib/client/studio/creations/creationClient";
 import { useImageGenerationHistory } from "@/components/studio/image-studio/hooks/useImageGenerationHistory";
@@ -383,7 +393,21 @@ export function buildImageGenerationPayload({
   wardrobeTheme,
   aspectRatio,
   imageCount,
+  sceneryOnlyHelperEnabled = true,
 }) {
+  const useLocationOnlySceneryHelper =
+    sceneryOnlyHelperEnabled &&
+    isLocationOnlyImageComposition(selectedIngredients);
+  const normalizedCameraPreset = normalizeCameraPresetValue(cameraPreset);
+  const cameraPromptFragment = getCameraPresetPrompt(normalizedCameraPreset);
+  const promptWithSceneryHelper = useLocationOnlySceneryHelper
+    ? appendPromptFragment(prompt, LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT)
+    : String(prompt || "");
+  const resolvedUserPrompt = appendPromptFragment(
+    promptWithSceneryHelper,
+    cameraPromptFragment
+  );
+
   return {
     mode: "image",
     operation: "create_image",
@@ -417,13 +441,13 @@ export function buildImageGenerationPayload({
       }),
     },
     prompt: {
-      userPrompt: prompt,
+      userPrompt: resolvedUserPrompt,
       negativePrompt,
       promptMode: getPromptMode(renderStyle),
     },
     composition: {
-      cameraPreset,
-      shotType: cameraPreset,
+      cameraPreset: getLegacyCameraPresetValue(normalizedCameraPreset),
+      shotType: normalizedCameraPreset,
       wardrobeTheme,
       cameraAngle: null,
       subjectPlacement: null,
@@ -453,6 +477,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
 
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
+  const [sceneryOnlyHelperEnabled, setSceneryOnlyHelperEnabled] = useState(true);
 
   const [renderStyle, setRenderStyle] = useState("auto");
   const [cameraPreset, setCameraPreset] = useState("AUTO");
@@ -491,6 +516,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     prependPendingGeneration,
     resolvePendingGeneration,
     failPendingGeneration,
+    applyImageReassignment,
   } = useImageGenerationHistory();
 
   const {
@@ -517,6 +543,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       wardrobeTheme,
       aspectRatio,
       imageCount,
+      sceneryOnlyHelperEnabled,
     });
 
     const pendingGroupId = prependPendingGeneration({
@@ -698,6 +725,8 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       hasMoreHistory,
       isLoadingMoreHistory,
       onLoadMoreHistory: loadMoreImageGenerationHistory,
+      onCoinBalanceChange: setCoinBalanceFromServer,
+      onImageReassigned: applyImageReassignment,
     },
     composerProps: {
       mode,
@@ -710,6 +739,9 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       onSaveCustomIngredient: openSavePreset,
       prompt,
       setPrompt,
+      showSceneryOnlyHelper: isLocationOnlyImageComposition(selectedIngredients),
+      sceneryOnlyHelperEnabled,
+      setSceneryOnlyHelperEnabled,
       renderStyle,
       setRenderStyle,
       cameraPreset,

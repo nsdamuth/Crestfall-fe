@@ -14,9 +14,16 @@ export default function KitStudioPageView({
   filterBarSlot = null,
   bannerSlot = null,
   children = null,
+  compactMobile = false,
 }) {
   return (
-    <div className="flex flex-col gap-[var(--space-6)] py-[var(--space-6)]">
+    <div
+      className={`flex flex-col ${
+        compactMobile
+          ? "gap-[var(--space-4)] py-[var(--space-2)] sm:gap-[var(--space-6)] sm:py-[var(--space-6)]"
+          : "gap-[var(--space-6)] py-[var(--space-6)]"
+      }`}
+    >
       {harnessSlot}
       {headerSlot ? (
         headerAlign === "center" ? (
@@ -26,7 +33,15 @@ export default function KitStudioPageView({
         )
       ) : null}
       {filterBarSlot}
-      <div className="flex flex-col gap-[var(--space-6)]">{children}</div>
+      <div
+        className={
+          compactMobile
+            ? "flex flex-col gap-[var(--space-4)] sm:gap-[var(--space-6)]"
+            : "flex flex-col gap-[var(--space-6)]"
+        }
+      >
+        {children}
+      </div>
       {bannerSlot}
     </div>
   );

@@ -195,6 +195,7 @@ export default function CreationPreviewModalView({
   tags = [],
   creator = {},
   credits = [],
+  activeInfoTab = "DETAILS",
   catalogueHref,
   editHref,
   statusBadgesProps,
@@ -220,6 +221,7 @@ export default function CreationPreviewModalView({
   defaultPcStatus = "",
   onClose,
   onToggleDescription,
+  onSelectInfoTab,
   onSelectMedia,
   onPreviousMedia,
   onNextMedia,
@@ -233,6 +235,9 @@ export default function CreationPreviewModalView({
   CreditsComponent,
   ShareButtonComponent,
 }) {
+  const hasCredits = credits.length > 0;
+  const showingCredits = hasCredits && activeInfoTab === "CREDITS";
+
   return (
     <>
       <button
@@ -369,37 +374,76 @@ export default function CreationPreviewModalView({
             </p>
           ) : null}
 
-          <div className="mt-5">
-            <p className="whitespace-pre-line break-words leading-7 text-[var(--ink-dim)]">
-              {description.visibleText}
-
-              {description.hasLongDescription ? (
-                <>
-                  {" "}
-                  <button
-                    type="button"
-                    onClick={onToggleDescription}
-                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
-                  >
-                    {description.toggleLabel}
-                  </button>
-                </>
-              ) : null}
-            </p>
-          </div>
-
-          {tags.length ? (
-            <div className="mt-5 flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-3 py-1 text-[var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]"
+          {hasCredits ? (
+            <div
+              role="tablist"
+              aria-label="Creation details"
+              className="mt-5 flex gap-2 border-b border-[var(--line-whisper)] pb-2"
+            >
+              {[
+                { id: "DETAILS", label: "Details" },
+                { id: "CREDITS", label: "Credits" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeInfoTab === tab.id}
+                  onClick={() => onSelectInfoTab?.(tab.id)}
+                  className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                    activeInfoTab === tab.id
+                      ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  }`}
                 >
-                  {tag}
-                </span>
+                  {tab.label}
+                </button>
               ))}
             </div>
           ) : null}
+
+          {showingCredits ? (
+            <div className="mt-5">
+              {CreditsComponent ? (
+                  <CreditsComponent credits={credits} showHeading={false} />
+                ) : null}
+            </div>
+          ) : (
+            <>
+              <div className="mt-5">
+                <p className="whitespace-pre-line break-words leading-7 text-[var(--ink-dim)]">
+                  {description.visibleText}
+
+                  {description.hasLongDescription ? (
+                    <>
+                      {" "}
+                      <button
+                        type="button"
+                        onClick={onToggleDescription}
+                        className="cf-btn cf-btn--tertiary inline h-auto p-0"
+                      >
+                        {description.toggleLabel}
+                      </button>
+                    </>
+                  ) : null}
+                </p>
+              </div>
+
+              {tags.length ? (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-[var(--radius-full)] bg-[var(--tag-bed-canvas)] px-3 py-1 text-[var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-bright)]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
+            </>
+          )}
 
           <LinkComponent
             href={catalogueHref}
@@ -407,10 +451,6 @@ export default function CreationPreviewModalView({
           >
             View Full Catalogue →
           </LinkComponent>
-
-          {credits.length && CreditsComponent ? (
-            <CreditsComponent credits={credits} />
-          ) : null}
 
           <div className="mt-8">
             <PreviewActions

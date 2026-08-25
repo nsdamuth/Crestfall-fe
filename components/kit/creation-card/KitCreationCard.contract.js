@@ -121,10 +121,10 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.4.0";
  *    when `isOwner` is true. Contents are exactly Edit, Generate
  *    Image, Share, Archive, Delete, with a fade divider before the
  *    sole danger item (Delete), on the ratified glass surface
- *    (`--panel-glass` at `--blur-panel`, 2px, NEW LAW B). Archive
- *    ships as an honest disabled stub (CR-056: no endpoint exists
- *    yet); its callback prop still exists so callers may pass one
- *    once CR-056 resolves without another contract bump.
+ *    (`--panel-glass` at `--blur-panel`, 2px, NEW LAW B). CR-056 is
+ *    resolved by the current Crestfall Archive endpoint: Archive is
+ *    enabled whenever the caller supplies `onArchive`, and remains
+ *    disabled when lifecycle policy withholds that callback.
  *
  * @property {boolean} [isOwner] optional (v3.4.0), default false;
  *   gates the kebab menu's existence. Non-owned cards render no kebab.
@@ -138,8 +138,8 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.4.0";
  *   v2.0.0-removed face `onShare`; this one lives in the owner-only
  *   kebab menu, not the face.
  * @property {(() => void)|null} [onArchive] optional (v3.4.0), default
- *   null; kebab menu item, renders disabled pending CR-056 (no
- *   endpoint exists).
+ *   null; kebab menu item. Enabled when supplied; callers withhold it
+ *   when archive is unavailable for the creation lifecycle.
  * @property {(() => void)|null} [onDelete] optional (v3.4.0), default
  *   null; kebab menu item, the sole danger action, below the fade
  *   divider.

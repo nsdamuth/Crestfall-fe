@@ -1,7 +1,7 @@
-import { Bookmark, Play, Users } from "lucide-react";
+import { Bookmark, Heart, Play, Users } from "lucide-react";
 
-const STAT_ICONS = { plays: Play, followers: Users, works: Bookmark };
-const STAT_ORDER = ["followers", "plays", "works"];
+const STAT_ICONS = { likes: Heart, plays: Play, followers: Users, works: Bookmark };
+const STAT_ORDER = ["followers", "likes", "plays", "works"];
 
 // Three-slot media strip law, RULED 23 Aug 2026 (build-0823 pass 6),
 // mirroring the KitAssetDetailPopup media strip treatment from
@@ -67,7 +67,7 @@ function StatRow({ stats }) {
   );
 }
 
-function RectButton({ label, tone = "ghost", onClick = null }) {
+function RectButton({ label, tone = "ghost", onClick = null, disabled = false }) {
   const toneClasses =
     tone === "primary"
       ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
@@ -77,7 +77,8 @@ function RectButton({ label, tone = "ghost", onClick = null }) {
     <button
       type="button"
       onClick={() => onClick?.()}
-      className={`inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] ${toneClasses}`}
+      disabled={disabled}
+      className={`inline-flex min-h-[var(--control-sm)] flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] disabled:cursor-not-allowed disabled:opacity-45 ${toneClasses}`}
     >
       {label}
     </button>
@@ -90,6 +91,7 @@ export default function KitCreatorCardView({
   stats = {},
   thumbnails = [],
   isFollowing = false,
+  canFollow = true,
   onThumbnailOpen = null,
   onFollow = null,
   onViewProfile = null,
@@ -134,9 +136,10 @@ export default function KitCreatorCardView({
 
       <div className="flex flex-wrap gap-[var(--space-2)]">
         <RectButton
-          label={isFollowing ? "Following" : "Follow"}
-          tone={isFollowing ? "primary" : "ghost"}
+          label={!canFollow ? "You" : isFollowing ? "Following" : "Follow"}
+          tone={canFollow && isFollowing ? "primary" : "ghost"}
           onClick={onFollow}
+          disabled={!canFollow}
         />
         <RectButton label="View profile" tone="ghost" onClick={onViewProfile} />
       </div>

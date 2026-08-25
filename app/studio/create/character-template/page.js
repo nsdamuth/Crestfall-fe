@@ -5,7 +5,7 @@ import CharacterTemplateBuilder from "@/components/studio/create/character-templ
 export default function CreateCharacterTemplatePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=templates" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Reusable Blueprint" title="Character Template">
         Build a reusable character template that can prefill character creation

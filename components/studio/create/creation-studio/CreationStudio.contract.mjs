@@ -324,11 +324,50 @@ const POST_CORE_GUIDED_STEPS = Object.freeze([
     why:
       "Progression Profiles define reusable cumulative-experience thresholds, level resolution, and tier ranges.",
     next:
-      "Once growth is defined, create the commands, effects, triggers, and guards that operate on actor state.",
+      "Once growth is defined, author the reusable skills and proficiency ranks actors can advance.",
+  },
+  {
+    id: "SKILLS_PROFILE",
+    number: 22,
+    title: "Create a Skills Profile",
+    assetTitle: "Skills Profile",
+    creationTypes: ["SKILLS_PROFILE"],
+    requiredCount: 1,
+    eyebrow: "Define Skills & Proficiencies",
+    why:
+      "Skills Profiles define reusable skills, proficiency ranks, point costs, and Progression prerequisites.",
+    next:
+      "Once skills exist, define the abilities, spells, techniques, attacks, and passives actors may reference.",
+  },
+  {
+    id: "ABILITY_SPELL_PROFILE",
+    number: 23,
+    title: "Create an Ability & Spell Profile",
+    assetTitle: "Ability & Spell Profile",
+    creationTypes: ["ABILITY_SPELL_PROFILE"],
+    requiredCount: 1,
+    eyebrow: "Define Abilities & Spells",
+    why:
+      "Ability & Spell Profiles define reusable spells, abilities, techniques, special attacks, passives, prerequisites, costs, targeting, and use policies.",
+    next:
+      "Once reusable capabilities exist, define the gameplay currencies actors can own and mutate.",
+  },
+  {
+    id: "WALLET_PROFILE",
+    number: 24,
+    title: "Create a Wallet Profile",
+    assetTitle: "Wallet Profile",
+    creationTypes: ["WALLET_PROFILE"],
+    requiredCount: 1,
+    eyebrow: "Define Gameplay Currency",
+    why:
+      "Wallet Profiles define reusable currencies, starting balances, and authored minimum and maximum balance bounds while actor balances remain isolated Story state.",
+    next:
+      "Once gameplay currency exists, define the commands, effects, triggers, and guards that operate on actor state.",
   },
   {
     id: "MECHANICS_MODULE",
-    number: 22,
+    number: 25,
     title: "Create a Mechanics Module",
     assetTitle: "Mechanics Module",
     creationTypes: ["MECHANICS_MODULE"],
@@ -341,7 +380,7 @@ const POST_CORE_GUIDED_STEPS = Object.freeze([
   },
   {
     id: "ACTOR_MECHANICS_PROFILE",
-    number: 23,
+    number: 26,
     title: "Create an Actor Mechanics Profile",
     assetTitle: "Actor Mechanics Profile",
     creationTypes: ["ACTOR_MECHANICS_PROFILE"],
@@ -354,7 +393,7 @@ const POST_CORE_GUIDED_STEPS = Object.freeze([
   },
   {
     id: "RULES_CODEX",
-    number: 24,
+    number: 27,
     title: "Create a Rules Codex",
     assetTitle: "Rules Codex",
     creationTypes: ["RULES_CODEX"],
@@ -367,7 +406,7 @@ const POST_CORE_GUIDED_STEPS = Object.freeze([
   },
   {
     id: "CHARACTER_TEMPLATE",
-    number: 25,
+    number: 28,
     title: "Create a Character Template",
     assetTitle: "Character Template",
     creationTypes: ["CHARACTER_TEMPLATE"],
@@ -424,7 +463,7 @@ export const GUIDED_BUILD_CHAPTER_DEFINITIONS = Object.freeze([
     title: "Rules & Mechanics",
     description:
       "Define state, runtime operations, actor packages, and verified interpretation guidance in dependency order.",
-    steps: POST_CORE_GUIDED_STEPS.slice(15, 20),
+    steps: POST_CORE_GUIDED_STEPS.slice(15, 23),
   },
   {
     id: "REUSE_SCALE",
@@ -433,7 +472,7 @@ export const GUIDED_BUILD_CHAPTER_DEFINITIONS = Object.freeze([
     title: "Reuse & Scale",
     description:
       "Turn a successful Character structure into a reusable blueprint for faster future creation.",
-    steps: POST_CORE_GUIDED_STEPS.slice(20),
+    steps: POST_CORE_GUIDED_STEPS.slice(23),
   },
 ]);
 
@@ -475,10 +514,13 @@ export const FULL_STUDIO_SECTION_DEFINITIONS = Object.freeze([
     eyebrow: "Rules & Mechanics",
     title: "State, Runtime Logic, Actor Packages, and Codices",
     description:
-      "Create formal stats, meters, commands, progression, effects, guards, and verified interpretation guidance.",
+      "Create formal stats, progression, skills, abilities, spells, gameplay wallets, meters, commands, effects, guards, and verified interpretation guidance.",
     assetTitles: [
       "Stats & Pools Profile",
       "Progression Profile",
+      "Skills Profile",
+      "Ability & Spell Profile",
+      "Wallet Profile",
       "Mechanics Module",
       "Actor Mechanics Profile",
       "Rules Codex",

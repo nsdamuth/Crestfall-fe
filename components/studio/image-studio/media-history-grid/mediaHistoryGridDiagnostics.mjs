@@ -48,7 +48,9 @@ test("ViewModel owns reactions and destructive output orchestration", () => {
   assert.match(viewModel, /owner_deleted_from_image_studio/);
   assert.match(viewModel, /owner_bulk_deleted_from_image_studio/);
   assert.match(viewModel, /deleteMediaHistoryOutputsWithConcurrency/);
-  assert.match(viewModel, /window\.confirm/);
+  assert.match(viewModel, /bulkDeleteConfirmOpen/);
+  assert.match(viewModel, /handleConfirmBulkDelete/);
+  assert.doesNotMatch(viewModel, /window\.(?:confirm|alert)/);
 });
 
 test("portable View owns masonry and presentation without Crestfall clients", () => {
@@ -58,10 +60,13 @@ test("portable View owns masonry and presentation without Crestfall clients", ()
 
   assert.match(view, /ResizeObserver/);
   assert.match(view, /gridRowEnd/);
-  assert.match(view, /Select All Visible/);
-  assert.match(view, /Delete Selected/);
+  assert.match(view, /Select all visible/i);
+  assert.match(view, /Delete selected/i);
   assert.match(view, /renderQuickActions/);
   assert.match(view, /renderLightbox/);
+  assert.match(view, /KitModalFrame/);
+  assert.match(view, /Delete permanently/);
+  assert.match(view, /This action cannot\s+be undone/);
   assert.doesNotMatch(view, /mediaReactionClient|imageOutputClient/);
   assert.doesNotMatch(view, /fetchMediaReactions|deleteImageOutput/);
 });

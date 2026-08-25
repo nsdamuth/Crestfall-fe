@@ -1,4 +1,4 @@
-export const KIT_IMAGE_OVERLAY_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_IMAGE_OVERLAY_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * B7 viewer final (22 Aug 2026, Fable law review, ED1F propagation
@@ -21,9 +21,10 @@ export const KIT_IMAGE_OVERLAY_VIEW_CONTRACT_VERSION = "1.1.0";
  * Reassign Asset, Share), matching the production `MediaLightbox`
  * (`components/studio/media/media-lightbox`) action set per B7.
  * `onDelete` fires only after the package's own B5 danger-confirm
- * step, never directly from the icon. `onReassignAsset` is accepted
- * for forward compatibility but the view always renders that action
- * as an honest stub (CR-055): no backend operation exists yet.
+ * step, never directly from the icon. `onReassignAsset` is live when
+ * the caller supplies a callback and remains disabled when it does not.
+ * Delete confirmation is intentionally permanent: the current runtime
+ * does not expose the unresolved CR-054 recovery-window behavior.
  *
  * @typedef {Object} KitImageOverlayViewProps
  * @property {string|null} imageSrc
@@ -38,7 +39,7 @@ export const KIT_IMAGE_OVERLAY_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {(() => void)|null} onDetails
  * @property {(() => void)|null} onDownload
  * @property {(() => void)|null} onGenerateVariant
- * @property {(() => void)|null} onReassignAsset accepted, unused (CR-055 stub)
+ * @property {(() => void)|null} onReassignAsset live reassignment intent; disabled when absent
  */
 
 export {};

@@ -84,13 +84,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // V2 convergence branch: the proof/review overlay is useful for design
+  // review, but its fixed bottom controls can cover product actions while
+  // we are actively integrating live builders. Keep the tooling available
+  // as an explicit opt-in instead of mounting it on every dev page.
+  const reviewModeEnabled =
+    process.env.NODE_ENV !== "production" &&
+    process.env.CRESTFALL_ENABLE_REVIEW_MODE === "true";
+
   return (
     <html lang="en">
       <body
         className={`${cormorantDisplay.variable} ${cormorant.variable} ${inter.variable}`}
       >
         {children}
-        {process.env.NODE_ENV !== "production" ? <DevOnlyReviewMode /> : null}
+        {reviewModeEnabled ? <DevOnlyReviewMode /> : null}
       </body>
     </html>
   );

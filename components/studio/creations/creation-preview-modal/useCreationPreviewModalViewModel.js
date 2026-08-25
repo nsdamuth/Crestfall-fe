@@ -226,6 +226,7 @@ export function useCreationPreviewModalViewModel({
 } = {}) {
   const [mediaIndexByCreationId, setMediaIndexByCreationId] = useState({});
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [activeInfoTab, setActiveInfoTab] = useState("DETAILS");
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
   const [settingDefaultPc, setSettingDefaultPc] = useState(false);
@@ -325,6 +326,14 @@ export function useCreationPreviewModalViewModel({
 
   return {
     ...viewProps,
+    activeInfoTab:
+      activeInfoTab === "CREDITS" && !viewProps.credits.length
+        ? "DETAILS"
+        : activeInfoTab,
+    onSelectInfoTab: (tabId) =>
+      setActiveInfoTab(
+        tabId === "CREDITS" && !viewProps.credits.length ? "DETAILS" : tabId
+      ),
     onClose,
     onToggleDescription: () =>
       setDescriptionExpanded((current) => !current),

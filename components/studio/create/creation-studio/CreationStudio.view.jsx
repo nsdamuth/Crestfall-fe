@@ -22,10 +22,13 @@ export default function CreationStudioView({
   countLoadError,
   LinkComponent = "a",
   onOpenCharacterCreator = null,
+  showModeSelector = true,
 }) {
   return (
-    <div className="mt-8 space-y-8">
-      <ModeSelector mode={mode} onModeChange={setMode} />
+    <div className={showModeSelector ? "mt-8 space-y-8" : "space-y-8"}>
+      {showModeSelector ? (
+        <ModeSelector mode={mode} onModeChange={setMode} />
+      ) : null}
 
       {mode === CREATION_STUDIO_MODES.QUICK ? (
         <QuickStartView
@@ -133,6 +136,67 @@ function QuickStartView({ assets, onModeChange, onOpenCharacterCreator }) {
         </button>
       </div>
     </section>
+  );
+}
+
+const GUIDED_MILESTONE_DEFAULT_ART = Object.freeze({
+  Character: "/assets/characters/crestfall/lux/profile.png",
+  "Player Character": "/assets/characters/crestfall/sun-hee/profile.png",
+  Location: "/assets/locations/aethelgard/amphitheater/profile.png",
+  Scenario: "/assets/covers/crestfall-camellia-cover.png",
+  Story: "/assets/covers/crestfall-book-cover.png",
+  Storyline: "/assets/covers/crestfall-compass-cover.png",
+  "Outfit / Clothing": "/assets/covers/crestfall-cloak-cover.png",
+  Wardrobe: "/assets/covers/crestfall-painting-cover.png",
+  Pose: "/assets/covers/crestfall-ballerina-cover.png",
+  Narrator: "/assets/covers/crestfall-scrolls-cover.png",
+  "Image Preset": "/assets/covers/crestfall-drawings-cover.png",
+  "NPC Registry": "/assets/characters/aethelgard/kessa/profile.png",
+  "Location Registry": "/assets/locations/aethelgard/amphitheater/profile.png",
+  "Faction Registry": "/assets/covers/crestfall-compass-cover.png",
+  "Organization Registry": "/assets/covers/crestfall-statue-cover.png",
+  "Item Registry": "/assets/covers/crestfall-cloak-cover.png",
+  "Event Registry": "/assets/covers/crestfall-sundial-cover.png",
+  "Quest Registry": "/assets/covers/crestfall-scrolls-cover.png",
+  "Stats & Pools Profile": "/assets/covers/crestfall-statue-cover.png",
+  "Progression Profile": "/assets/covers/crestfall-sundial-cover.png",
+  "Mechanics Module": "/assets/covers/crestfall-drawings-cover.png",
+  "Actor Mechanics Profile": "/assets/covers/crestfall-compass-cover.png",
+  "Rules Codex": "/assets/covers/crestfall-book-cover.png",
+  "Character Template": "/assets/characters/aethelgard/alyera/profile.png",
+});
+
+function resolveGuidedMilestoneArtwork(asset = {}) {
+  return GUIDED_MILESTONE_DEFAULT_ART[asset?.title] || asset?.image || "";
+}
+
+function GuidedMilestoneArtwork({ asset = {}, emphasis = false }) {
+  const image = resolveGuidedMilestoneArtwork(asset);
+  if (!image) return null;
+
+  return (
+    <>
+      {/* Same full-bleed image recipe used by the visibly image-backed Studio cards. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image}
+        alt=""
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.025] group-hover:saturate-110 ${
+          emphasis
+            ? "opacity-90 saturate-95"
+            : "opacity-82 saturate-85"
+        }`}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/88 via-black/58 to-black/18"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15"
+      />
+    </>
   );
 }
 
@@ -267,8 +331,9 @@ function RecommendedNextPanel({ step, asset, LinkComponent }) {
   if (!step || !asset) return null;
 
   return (
-    <article className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/12 p-[var(--space-6)] shadow-[0_0_40px_rgba(184,134,11,0.08)]">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <article className="group relative mt-6 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/12 p-[var(--space-6)] shadow-[0_0_40px_rgba(184,134,11,0.08)]">
+      <GuidedMilestoneArtwork asset={asset} emphasis />
+      <div className="relative z-10 flex h-full flex-col justify-between gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/35 bg-black/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
@@ -293,7 +358,7 @@ function RecommendedNextPanel({ step, asset, LinkComponent }) {
 
         <LinkComponent
           href={asset.href}
-          className="cf-btn cf-btn--primary shrink-0"
+          className="cf-btn cf-btn--primary shrink-0 border-[var(--gold-ornament)]/35 bg-black/35 backdrop-blur-sm"
         >
           {getGuidedStepActionLabel(step, asset)} →
         </LinkComponent>
@@ -403,49 +468,56 @@ function GuidedChapterStep({
 
   return (
     <article
-      className={`rounded-[var(--radius-md)] border p-[var(--space-4)] ${
+      className={`group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border p-[var(--space-5)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--gold-ornament)]/45 ${
         step.complete
-          ? "border-[var(--gold-ornament)]/20 bg-black/20"
-          : "border-white/10 bg-black/20"
+          ? "border-[var(--gold-ornament)]/25 bg-black/35"
+          : "border-white/10 bg-black/35"
       }`}
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-start gap-4">
-          <span
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xs ${
-              step.complete
-                ? "border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
-                : "border-white/10 text-[var(--ink-dim)]"
-            }`}
-          >
-            {step.complete ? "✓" : step.number}
-          </span>
+      <GuidedMilestoneArtwork asset={asset} />
+      <div className="relative z-10 flex h-full flex-col justify-between gap-5">
+        <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]/90">
               Milestone {step.number}
-              {step.complete ? ` complete · ${step.count} created` : " · Available"}
+              {step.complete ? ` · ${step.count} created` : " · Available"}
             </p>
-            <h4 className="mt-1 font-display text-xl text-[var(--ink)]">
+            <h4 className="mt-3 max-w-[18ch] font-display text-[1.95rem] leading-tight text-[var(--ink)]">
               {step.title}
             </h4>
             {!step.complete ? (
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--ink-dim)]">
                 {step.why}
               </p>
             ) : null}
           </div>
+
+          <span
+            className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-sm ${
+              step.complete
+                ? "border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
+                : "border-white/15 bg-black/25 text-[var(--ink-dim)]"
+            }`}
+          >
+            {step.complete ? "✓" : step.number}
+          </span>
         </div>
 
-        <LinkComponent
-          href={asset.href}
-          className="cf-btn cf-btn--secondary cf-btn--sm shrink-0"
-        >
-          {step.complete
-            ? step.id === "SECOND_STORY"
-              ? "Create another story"
-              : "Create another"
-            : getGuidedStepActionLabel(step, asset)} →
-        </LinkComponent>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--ink-dim)]">
+            {step.complete ? "Complete" : "Recommended tool"}
+          </p>
+          <LinkComponent
+            href={asset.href}
+            className="cf-btn cf-btn--secondary cf-btn--sm shrink-0 border-[var(--gold-ornament)]/30 bg-black/35 backdrop-blur-sm"
+          >
+            {step.complete
+              ? step.id === "SECOND_STORY"
+                ? "Create another story"
+                : "Create another"
+              : getGuidedStepActionLabel(step, asset)} →
+          </LinkComponent>
+        </div>
       </div>
     </article>
   );
@@ -462,28 +534,34 @@ function GuidedStep({
 
   if (step.complete) {
     return (
-      <article className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-[var(--space-4)] md:p-[var(--space-5)]">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-sm text-[var(--gold-ornament)]">
-              ✓
-            </span>
+      <article className="group relative min-h-[220px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/35 p-[var(--space-5)] md:p-[var(--space-6)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--gold-ornament)]/45">
+        <GuidedMilestoneArtwork asset={asset} />
+        <div className="relative z-10 flex h-full flex-col justify-between gap-5">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]/90">
                 Step {step.number} complete · {step.count} created
               </p>
-              <h3 className="mt-1 font-display text-2xl text-[var(--ink)]">
+              <h3 className="mt-3 max-w-[18ch] font-display text-3xl leading-tight text-[var(--ink)]">
                 {step.title}
               </h3>
             </div>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 text-sm text-[var(--gold-ornament)]">
+              ✓
+            </span>
           </div>
 
-          <LinkComponent
-            href={asset.href}
-            className="cf-btn cf-btn--secondary cf-btn--sm shrink-0"
-          >
-            Create another →
-          </LinkComponent>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--ink-dim)]">
+              Complete
+            </p>
+            <LinkComponent
+              href={asset.href}
+              className="cf-btn cf-btn--secondary cf-btn--sm shrink-0 border-[var(--gold-ornament)]/30 bg-black/35 backdrop-blur-sm"
+            >
+              Create another →
+            </LinkComponent>
+          </div>
         </div>
       </article>
     );
@@ -493,13 +571,14 @@ function GuidedStep({
 
   return (
     <article
-      className={`rounded-[var(--radius-md)] border p-[var(--space-5)] md:p-[var(--space-6)] ${
+      className={`group relative min-h-[260px] overflow-hidden rounded-[var(--radius-md)] border p-[var(--space-5)] md:p-[var(--space-6)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--gold-ornament)]/55 ${
         step.current
           ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-          : "border-[var(--gold-ornament)]/20 bg-black/30"
+          : "border-[var(--gold-ornament)]/20 bg-black/35"
       }`}
     >
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+      <GuidedMilestoneArtwork asset={asset} emphasis={step.current} />
+      <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-[var(--gold-ornament)]/25 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
@@ -531,7 +610,7 @@ function GuidedStep({
       </div>
 
       {optionalAssets.length ? (
-        <div className="mt-5 border-t border-white/10 pt-5">
+        <div className="relative z-10 mt-5 border-t border-white/10 pt-5">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--ink-dim)]">
             Optional enhancements
           </p>

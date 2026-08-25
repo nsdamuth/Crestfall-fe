@@ -39,25 +39,19 @@ links. Rendered between the description/stats block and the footer,
 matching the old modal's own order (credits after description and
 tags, before actions).
 
-## Credits collapse, RULED 10 Aug 2026 (R1, kit polish 3 pass, plan 1.3)
+## Conditional Credits tab, 24 Aug 2026
 
-Presentation-only recomposition, contract stays `2.1.0`. In place of
-the full `KitCreditsView` list, the popup renders a one-row collapsed
-credit block on the same bed recipe (`--surface-1`, `--line` border,
-`--radius-md`, `p-[var(--space-4)]`): the gold "Credits" label, the
-FIRST credit only, and, when `credits.length > 1`, a "View all
-credits (N)" control (quiet text button, `--gold-ornament`). One
-credit: no control, just the row. Zero credits: nothing renders, as
-before.
+Credits are provenance and now have a stable home in the shared detail
+library. When `credits.length > 0`, the tab row gains `Credits` after
+Images / Videos / Liked / Bookmarked. Selecting it renders the full
+`KitCreditsView` list and hides media-only Search control.
+When there are no resolved credits, the Credits tab does not render at
+all—there is no empty or disabled attribution state.
 
-The control opens `KitCreditsModal` (`components/kit/credits/`,
-package `1.1.0`) stacked above the popup, in the popup's own space
-(`max-w-xl`). While it is open, the shell suppresses THIS frame's own
-Escape and backdrop dismissal (`closeOnEscape`/`closeOnBackdrop`,
-props the frame already has) so one Escape keypress closes only the
-credits modal first; a second Escape closes the popup. The popup
-never unmounts while the credits modal is open, so its scroll
-position is preserved when the credits modal closes.
+This replaces the earlier one-row collapsed credits block/stacked
+credits-modal presentation inside this popup. `KitCreditsModal` remains
+available as a standalone Kit surface for other consumers. The
+`credits` prop and attribution item shape are unchanged.
 
 ## Anatomy
 
@@ -132,7 +126,7 @@ contract from 2.1.0 to 2.2.0 independently, with different additions.
   rendering the old modal's "by @handle" line under the subtitle
   (linked when `href` is present, plain text otherwise); optional
   `tags: string[]` ADDED, rendering the old modal's tag pill row
-  between the description/stats block and credits. Both default to
+  between the description/stats block and the detail library. Both default to
   `null`/`[]` and render nothing when absent, so every existing
   consumer (Vault, Stories) that does not pass them stays
   pixel-stable. The credits block's existing `creditsLinkComponent`
@@ -161,3 +155,12 @@ as this package's own video/liked/bookmarked media tabs.
 - `/dev/ui-preview/kit-asset-detail-popup`
 
 Fixture-only; no query, persistence, or navigation is wired.
+
+## Live credit propagation + compact media ordering, 24 Aug 2026
+
+Live V2 Vault/Community card projections now use the shared
+`getCreationCredits()` resolver instead of reading only `data.credits`.
+That preserves attribution derived from connected assets and selected
+Character/Location/Outfit/etc references. The compact per-asset media
+library keeps source ordering and no longer renders a Sort dropdown;
+Search remains available for the small media set.

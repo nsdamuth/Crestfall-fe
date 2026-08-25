@@ -1191,6 +1191,12 @@ SUPERSEDED 23 Aug 2026 by the container law in
 is kept for lineage; the "no max-width cap" rule it states is no
 longer in force.
 
+**REINSTATED / AMENDED 24 Aug 2026 — V2 convergence W1.** The product
+direction now requires a fluid Studio application workspace. The shell itself
+has no global max-width cap; local content regions may still constrain their
+own readable measure where appropriate. This newer ruling supersedes the
+23 Aug shell-wide container law while preserving `--container` for local use.
+
 **(m) Banner sizing law, RULED 10 Aug 2026 (kit polish 3 pass, R2),
 amends 2.3.** The bottom promo banner keeps its fixed per-treatment
 proportions and scales responsively with the content width. It is
@@ -1386,9 +1392,10 @@ control, not a face icon, opens a menu with exactly five items, in
 order: Edit, Generate Image, Share, Archive, then a fade divider,
 then Delete (the sole danger item). Non-owned cards render no kebab
 at all. The menu surface is `--panel-glass` at `--blur-panel` (2px),
-per NEW LAW B below. Archive is a new operation with no
-`docs/APP-FUNCTION-MAP.csv` row, no prior contract entry, and no
-endpoint; it ships as an honest, permanently disabled stub, CR-056.
+per NEW LAW B below. CR-056 was resolved during Crestfall V2
+convergence on 24 Aug 2026: the current Crestfall application exposes
+the Archive operation, so the menu enables Archive when a caller supplies
+`onArchive` and leaves it disabled when lifecycle policy withholds it.
 `KitCreationCard` contract bumps minor for the new optional props
 (`isOwner`, `onEdit`, `onGenerateImage`, `onShare`, `onArchive`,
 `onDelete`), additive only, every existing consumer unaffected.

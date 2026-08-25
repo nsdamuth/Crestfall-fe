@@ -13,6 +13,8 @@ export default function MediaHistoryGrid(props) {
   return (
     <MediaHistoryGridView
       {...viewProps}
+      mobilePrimaryActionLabel={props.mobilePrimaryActionLabel}
+      onMobilePrimaryAction={props.onMobilePrimaryAction}
       FilterPillComponent={FilterPill}
       renderQuickActions={(quickActionProps) => (
         <MediaTileQuickActions {...quickActionProps} />

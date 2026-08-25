@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 
 const SPEAKER_ICONS = {
@@ -302,68 +303,88 @@ function MobileComposer({
   onOpenState,
 }) {
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [responderPickerOpen, setResponderPickerOpen] = useState(false);
   const textareaRef = useRef(null);
 
   useAutoResizeTextarea(textareaRef, draft, 220);
 
+  const mobileSpeakerOptions = (Array.isArray(nextSpeakerOptions)
+    ? nextSpeakerOptions
+    : []
+  ).filter((option) => option?.id !== "RANDOM");
+  const autoOption = mobileSpeakerOptions.find((option) => option?.id === "AUTO");
+  const responderOptions = mobileSpeakerOptions.filter(
+    (option) => option?.id && option.id !== "AUTO"
+  );
+  const responderOverflow = responderOptions.length > 2;
+  const visibleResponderOptions = responderOverflow ? [] : responderOptions;
+  const selectedResponderIsInOverflow = responderOverflow && responderOptions.some(
+    (option) => option.id === nextSpeaker
+  );
+
   return (
-    <div className="fixed bottom-20 left-3 right-3 z-40 xl:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-transparent px-3 pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-2 xl:hidden">
       {toolsOpen ? (
         <MobileToolsDrawer
           inputModeOptions={inputModeOptions}
           inputMode={inputMode}
-          nextSpeaker={nextSpeaker}
-          nextSpeakerOptions={nextSpeakerOptions}
           onChangeInputMode={onChangeInputMode}
-          onChangeNextSpeaker={onChangeNextSpeaker}
           onOpenCast={onOpenCast}
           onOpenState={onOpenState}
           onClose={() => setToolsOpen(false)}
         />
       ) : null}
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
-        <div className="mb-2 flex gap-2 overflow-x-auto pb-1">
-          <SpeakerButtons
-            options={nextSpeakerOptions}
-            selectedId={nextSpeaker}
-            onChange={onChangeNextSpeaker}
-          />
-        </div>
-
-        <ParticipantMentionTextarea
-          textareaRef={textareaRef}
-          value={draft}
-          mentionSuggestions={mentionSuggestions}
-          highlightedMentionIndex={highlightedMentionIndex}
-          commandSuggestions={commandSuggestions}
-          highlightedCommandIndex={highlightedCommandIndex}
-          highlightedCommandExact={highlightedCommandExact}
-          locationSuggestions={locationSuggestions}
-          highlightedLocationIndex={highlightedLocationIndex}
-          disabled={textareaDisabled}
-          placeholder={placeholder}
-          rows={1}
-          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-          onChangeDraft={onChangeDraft}
-          onUpdateSuggestionQueries={onUpdateSuggestionQueries}
-          onMoveMentionHighlight={onMoveMentionHighlight}
-          onSelectHighlightedMention={onSelectHighlightedMention}
-          onSelectMention={onSelectMention}
-          onDismissMentionSuggestions={onDismissMentionSuggestions}
-          onMoveCommandHighlight={onMoveCommandHighlight}
-          onSelectHighlightedCommand={onSelectHighlightedCommand}
-          onSelectCommand={onSelectCommand}
-          onDismissCommandSuggestions={onDismissCommandSuggestions}
-          onMoveLocationHighlight={onMoveLocationHighlight}
-          onSelectHighlightedLocation={onSelectHighlightedLocation}
-          onSelectLocation={onSelectLocation}
-          onDismissLocationSuggestions={onDismissLocationSuggestions}
-          onSend={onSend}
+      {responderPickerOpen ? (
+        <MobileResponderPicker
+          options={responderOptions}
+          selectedId={nextSpeaker}
+          onSelect={(speakerId) => {
+            setResponderPickerOpen(false);
+            onChangeNextSpeaker?.(speakerId);
+          }}
+          onClose={() => setResponderPickerOpen(false)}
         />
+      ) : null}
 
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
+        <div className="mb-2 flex min-w-0 items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            {autoOption ? (
+              <SpeakerButtons
+                options={[autoOption]}
+                selectedId={nextSpeaker}
+                onChange={onChangeNextSpeaker}
+              />
+            ) : null}
+
+            {visibleResponderOptions.length ? (
+              <SpeakerButtons
+                options={visibleResponderOptions}
+                selectedId={nextSpeaker}
+                onChange={onChangeNextSpeaker}
+              />
+            ) : null}
+
+            {responderOverflow ? (
+              <button
+                type="button"
+                onClick={() => setResponderPickerOpen(true)}
+                aria-pressed={selectedResponderIsInOverflow}
+                aria-label={`Choose responder. ${responderOptions.length} responders available.`}
+                title="Choose responder"
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold tracking-[0.08em] transition ${
+                  selectedResponderIsInOverflow
+                    ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
+                    : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                }`}
+              >
+                3+
+              </button>
+            ) : null}
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             <button
               type="button"
               disabled
@@ -387,21 +408,114 @@ function MobileComposer({
             >
               <SlidersHorizontal size={17} />
             </button>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => onSend?.()}
-            disabled={sendDisabled}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/20 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/30 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
-            title={isSending ? submitPendingLabel : submitLabel}
-            aria-label={isSending ? submitPendingLabel : submitLabel}
-          >
-            {submitIsContinuation ? <Sparkles size={17} /> : <Send size={17} />}
-          </button>
+            <button
+              type="button"
+              onClick={() => onSend?.()}
+              disabled={sendDisabled}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/20 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/30 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
+              title={isSending ? submitPendingLabel : submitLabel}
+              aria-label={isSending ? submitPendingLabel : submitLabel}
+            >
+              {submitIsContinuation ? <Sparkles size={17} /> : <Send size={17} />}
+            </button>
+          </div>
         </div>
+
+        <ParticipantMentionTextarea
+          textareaRef={textareaRef}
+          value={draft}
+          mentionSuggestions={mentionSuggestions}
+          highlightedMentionIndex={highlightedMentionIndex}
+          commandSuggestions={commandSuggestions}
+          highlightedCommandIndex={highlightedCommandIndex}
+          highlightedCommandExact={highlightedCommandExact}
+          locationSuggestions={locationSuggestions}
+          highlightedLocationIndex={highlightedLocationIndex}
+          disabled={textareaDisabled}
+          placeholder={placeholder}
+          rows={1}
+          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/55 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          onChangeDraft={onChangeDraft}
+          onUpdateSuggestionQueries={onUpdateSuggestionQueries}
+          onMoveMentionHighlight={onMoveMentionHighlight}
+          onSelectHighlightedMention={onSelectHighlightedMention}
+          onSelectMention={onSelectMention}
+          onDismissMentionSuggestions={onDismissMentionSuggestions}
+          onMoveCommandHighlight={onMoveCommandHighlight}
+          onSelectHighlightedCommand={onSelectHighlightedCommand}
+          onSelectCommand={onSelectCommand}
+          onDismissCommandSuggestions={onDismissCommandSuggestions}
+          onMoveLocationHighlight={onMoveLocationHighlight}
+          onSelectHighlightedLocation={onSelectHighlightedLocation}
+          onSelectLocation={onSelectLocation}
+          onDismissLocationSuggestions={onDismissLocationSuggestions}
+          onSend={onSend}
+        />
       </div>
     </div>
+  );
+}
+
+function MobileResponderPicker({ options = [], selectedId = "", onSelect, onClose }) {
+  return (
+    <KitModalFrame
+      variant="sheet"
+      sheetGrabber
+      onClose={onClose}
+      ariaLabel="Choose next responder"
+    >
+      <div className="p-[var(--space-4)]">
+        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          Next responder
+        </p>
+        <p className="mt-[var(--space-1)] text-[length:var(--text-body)] text-[var(--ink-dim)]">
+          Choose a Character or Narrator.
+        </p>
+
+        <div className="mt-[var(--space-4)] grid gap-[var(--space-2)]">
+          {options.map((option) => {
+            const active = option.id === selectedId;
+
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => onSelect?.(option.id)}
+                aria-pressed={active}
+                className={`flex min-h-[var(--control-lg)] w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border p-[var(--space-3)] text-left transition ${
+                  active
+                    ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
+                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
+                }`}
+              >
+                {option.avatarUrl ? (
+                  <img
+                    src={option.avatarUrl}
+                    alt=""
+                    className="h-11 w-11 shrink-0 rounded-full border border-white/10 object-cover"
+                  />
+                ) : (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/40 font-display text-[var(--gold-ornament)]">
+                    {String(option.label || "?").charAt(0).toUpperCase()}
+                  </span>
+                )}
+
+                <span className="min-w-0 flex-1 truncate text-[length:var(--text-ui)] text-[var(--ink)]">
+                  {option.label}
+                </span>
+
+                {active ? (
+                  <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+                    Selected
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </KitModalFrame>
   );
 }
 
@@ -767,10 +881,7 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
 function MobileToolsDrawer({
   inputModeOptions,
   inputMode,
-  nextSpeaker,
-  nextSpeakerOptions,
   onChangeInputMode,
-  onChangeNextSpeaker,
   onOpenCast,
   onOpenState,
   onClose,
@@ -800,21 +911,6 @@ function MobileToolsDrawer({
           options={inputModeOptions}
           placement="top"
         />
-
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-            Next Speaker
-          </p>
-
-          <div className="mt-2 flex flex-wrap gap-2">
-            <SpeakerButtons
-              options={nextSpeakerOptions}
-              selectedId={nextSpeaker}
-              onChange={onChangeNextSpeaker}
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"

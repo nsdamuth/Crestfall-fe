@@ -50,8 +50,8 @@ export async function POST(request) {
   } catch (error) {
     return apiError(
       error.message || "Story Template could not be played.",
-      500,
-      "STORY_TEMPLATE_PLAY_FAILED"
+      Number.isInteger(error?.status) ? error.status : 500,
+      error?.code || "STORY_TEMPLATE_PLAY_FAILED"
     );
   }
 }

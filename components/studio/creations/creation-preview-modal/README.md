@@ -30,3 +30,11 @@ Development only:
 ## Deferred work
 
 Mechanics Module field decomposition remains deferred until the final cumulative reassessment.
+
+## Conditional Credits tab — 24 Aug 2026
+
+Resolved attribution is now restored as a first-class tab in the card
+detail modal. A creation with credits receives `Details` and `Credits`
+tabs; a creation with zero credits receives no tab row and keeps the
+existing Details presentation unchanged. Actions remain available in
+both tabs.

@@ -1,16 +1,8 @@
-import StudioPageHeader from "@/components/studio/StudioPageHeader";
-import CreationStudioExperience from "@/components/studio/create/CreationStudioExperience";
+import { redirect } from "next/navigation";
 
+// V2 convergence cutover: the historical /studio/create catalogue is no longer
+// a product destination. Keep the route as a compatibility pointer so stale
+// links, bookmarks, and legacy navigation return to canonical Full Studio.
 export default function CreatePage() {
-  return (
-    <>
-      <StudioPageHeader
-        eyebrow="Create"
-        title="Creation Studio"
-        description="Choose a focused starting point, follow a recommended build path, or open the complete Crestfall creation toolkit. Creations start private by default and can later be shared, published, or submitted for canon review."
-      />
-
-      <CreationStudioExperience />
-    </>
-  );
+  redirect("/studio?mode=full");
 }

@@ -31,11 +31,10 @@ close control (outside top-right on desktop, a floating 44px glass
 control bottom-right at 390) are owned directly in this package's own
 View, unlike `KitImageOverlay`'s cross-boundary note. Delete moves
 from `window.confirm` to the package's own B5 danger-confirm panel,
-CR-054 "[X] days" placeholder copy; the ViewModel now owns
+current permanent-delete copy; CR-054 recovery remains separate; the ViewModel now owns
 `deleteConfirmOpen` state and exposes `onRequestDelete` /
 `onCancelDelete` / `onConfirmDelete` in place of the old `onDelete`.
-Reassign Asset always renders disabled: an honest stub, CR-055, filed
-by this build since no backend operation exists yet.
+Reassign Asset is live when an eligible owned source image is supplied; otherwise the action remains disabled.
 
 ## Feature structure
 

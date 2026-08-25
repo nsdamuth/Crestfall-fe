@@ -136,6 +136,30 @@ const creationAssets = [
     href: "/studio/create/progression-profile",
     image: "/assets/covers/crestfall-book-cover.png",
   },
+  {
+    title: "Skills Profile",
+    eyebrow: "Skills & Proficiency Definitions",
+    description:
+      "Create reusable skills, proficiency ranks, point costs, prerequisites, and grants for Actor Mechanics Profiles.",
+    href: "/studio/create/skills-profile",
+    image: "/assets/covers/crestfall-book-cover.png",
+  },
+  {
+    title: "Ability & Spell Profile",
+    eyebrow: "Ability & Magic Definitions",
+    description:
+      "Create reusable abilities, spells, techniques, special attacks, passives, costs, prerequisites, and targeting rules.",
+    href: "/studio/create/ability-spell-profile",
+    image: "/assets/covers/crestfall-book-cover.png",
+  },
+  {
+    title: "Wallet Profile",
+    eyebrow: "Gameplay Economy Definitions",
+    description:
+      "Create reusable gameplay currencies, starting balances, and authored balance bounds for Actor Mechanics Profiles.",
+    href: "/studio/create/wallet-profile",
+    image: "/assets/covers/crestfall-book-cover.png",
+  },
 ];
 
 export default creationAssets;

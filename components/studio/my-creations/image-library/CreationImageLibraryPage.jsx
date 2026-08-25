@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import CreationShareButton from "@/components/studio/creations/CreationShareButton";
 import MediaLightbox from "@/components/studio/media/MediaLightbox";
 import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActions";
 
@@ -15,6 +16,7 @@ export default function CreationImageLibraryPage(props) {
     <CreationImageLibraryPageView
       {...viewProps}
       BackLinkComponent={Link}
+      ShareButtonComponent={CreationShareButton}
       renderQuickActions={(quickActionProps) => (
         <MediaTileQuickActions {...quickActionProps} />
       )}

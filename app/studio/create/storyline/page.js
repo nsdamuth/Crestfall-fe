@@ -5,7 +5,7 @@ import StorylineBuilderShell from "@/components/studio/storylines/StorylineBuild
 export default function CreateStorylinePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=stories" label="Back to Full Studio" />
       <StudioPageHeader eyebrow="Create" title="Create Storyline">
         Link Stories and Scenarios into an authored continuity path. Each completed
         node may return the same chat to open-world play until the next trigger is

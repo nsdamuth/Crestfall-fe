@@ -4,7 +4,7 @@ import CharacterCreator from "@/components/studio/create/character/CharacterCrea
 export default function CreateCharacterPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=characters" label="Back to Full Studio" />
       <CharacterCreator />
     </div>
   );

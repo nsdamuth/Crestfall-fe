@@ -5,7 +5,7 @@ import NpcRegistryBuilder from "@/components/studio/create/npc-registry/NpcRegis
 export default function CreateNpcRegistryPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=worlds" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Relationship Spine" title="NPC Registry">
         Create a reusable relationship, alias, faction, and knowledge registry

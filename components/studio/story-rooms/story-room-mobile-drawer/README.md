@@ -75,3 +75,12 @@ Story Room
 
 Both drawers must retain their current title, close behavior, content scrolling,
 and mobile-only visibility.
+
+## Mobile directional swipe behavior
+
+The live Story Room chat may open the Cast sheet with a deliberate right swipe
+and the Chronicle State sheet with a deliberate left swipe. Cast is seated on
+the left and closes with the reverse (left) swipe; State is seated on the right
+and closes with the reverse (right) swipe. Existing close buttons and backdrop
+tap remain available. Gesture interpretation lives in the Story Room chat
+presentation/controller layer and does not change Story runtime state.

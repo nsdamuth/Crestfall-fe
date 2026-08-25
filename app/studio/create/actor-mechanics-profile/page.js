@@ -5,7 +5,7 @@ import ActorMechanicsProfileBuilderShell from "@/components/studio/create/actor-
 export default function CreateActorMechanicsProfilePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=mechanics" label="Back to Full Studio" />
 
       <StudioPageHeader
         eyebrow="Actor Mechanics Package"

@@ -5,7 +5,7 @@ import RulesCodexBuilderShell from "@/components/studio/create/rules-codex/Rules
 export default function CreateRulesCodexPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=mechanics" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Interpretation Layer" title="Create Rules Codex">
         Create scoped guidance that explains what verified mechanics mean and

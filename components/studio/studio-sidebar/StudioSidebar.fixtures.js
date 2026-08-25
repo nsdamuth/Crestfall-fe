@@ -122,6 +122,26 @@ const previewGroups = Object.freeze([
   }),
 ]);
 
+const previewSupportGroup = Object.freeze({
+  label: "Support",
+  items: Object.freeze([
+    Object.freeze({
+      label: "Feedback & Updates",
+      href: "/studio/feedback",
+      iconKey: "megaphone",
+      isBuilt: true,
+      isActive: false,
+    }),
+    Object.freeze({
+      label: "Terms & Policies",
+      href: "/terms",
+      iconKey: "shieldCheck",
+      isBuilt: true,
+      isActive: false,
+    }),
+  ]),
+});
+
 const baseFixture = Object.freeze({
   brandEyebrow: "Crestfall",
   brandTitle: "Studio",
@@ -161,6 +181,7 @@ export const studioSidebarPreviewFixture = Object.freeze({
   ...baseFixture,
   previewEnabled: true,
   previewGroups,
+  previewSupportGroup,
   legacyLabel: "Legacy",
   legacyOpen: false,
 });

@@ -1,4 +1,4 @@
-export const STORY_ROOM_MOBILE_DRAWER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_MOBILE_DRAWER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Story Room mobile drawer.
@@ -10,6 +10,7 @@ export const STORY_ROOM_MOBILE_DRAWER_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} StoryRoomMobileDrawerViewProps
  * @property {string} title
+ * @property {"left"|"right"} side
  * @property {(() => void)|null} onClose
  * @property {import("react").ReactNode|null} children
  */

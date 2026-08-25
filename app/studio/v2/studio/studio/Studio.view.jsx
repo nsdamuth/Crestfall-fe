@@ -2,17 +2,13 @@
 
 // Studio hub (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md 4.4; docs/BUILD-
 // BLUEPRINT.md 3.1 row 6; docs/STUDIO-SPEC.md sections 1, 2, 3, 6,
-// 8.1). RESHAPED 23 Aug 2026 (build-0823 pass 4, RULED): the altitude
-// tablist (LevelSelector, three panes) is removed. One calm scroll,
-// three zones in order, plain zone labels, nothing numbered or
-// mandatory-sequential: CREATE (the live quick-create doors plus the
-// advanced-editor line), BUILD (Build a Story, Build an Adventure),
-// PUBLISH (one line routing to Vault). Portable View: presentation
-// only, no data access, no routing decisions, no business rules.
-//
-// The Full Studio tool-card grid (11 cards, 10 Soon) does not fit the
-// ruled three-zone model and is dropped from this page; its one live
-// path (the Character door) is already covered by CREATE.
+// 8.1). UPDATED 24 Aug 2026 (V2 convergence product override): the
+// user-facing altitude/mode ladder is restored because Quick Start, Guided
+// Build, and Full Studio are validated product choices. Quick Start keeps
+// the newer CREATE / BUILD / PUBLISH V2 composition. Guided Build and Full
+// Studio receive the proven progressive/full-tool content through a portable
+// slot from the Binding Shell. Presentation only: no data access, routing
+// decisions, or business rules here.
 //
 // The door recipe is page-local, not a kit package: no
 // components/kit/door exists yet, and this is this page's only
@@ -23,6 +19,7 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
+import { CREATION_STUDIO_MODES } from "@/components/studio/create/creation-studio/CreationStudio.contract.mjs";
 
 function ZoneLabel({ children }) {
   return (
@@ -70,6 +67,59 @@ function Door({ label, eyebrow, description, imageSrc, isLive, onOpen }) {
         </span>
       </div>
     </button>
+  );
+}
+
+function StudioModeSelector({ options = [], activeMode, onSelectMode }) {
+  return (
+    <section className="flex flex-col gap-[var(--space-3)]" aria-label="Studio creation mode">
+      <div className="flex items-center gap-[var(--space-3)]">
+        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          The ladder · assets → stories → adventures
+        </p>
+        <div aria-hidden="true" className="h-px flex-1 bg-[image:var(--line-fade)]" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-[var(--space-3)] lg:grid-cols-3" role="tablist" aria-label="Studio modes">
+        {options.map((option) => {
+          const active = option.id === activeMode;
+
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => onSelectMode?.(option.id)}
+              className={`group flex min-h-[6.5rem] flex-col rounded-[var(--radius-md)] border p-[var(--space-4)] text-left transition-[border-color,background-color,box-shadow] duration-[var(--dur-hover)] ${
+                active
+                  ? "border-[var(--gold-action)] bg-[color-mix(in_srgb,var(--gold-action)_8%,var(--surface-1))] shadow-[var(--glow-hover)]"
+                  : "border-[var(--line)] bg-[var(--surface-1)] hover:border-[var(--line-strong)]"
+              }`}
+            >
+              <div className="flex items-baseline gap-[var(--space-2)]">
+                <span className="font-[family-name:var(--font-display)] text-[length:var(--text-heading)] text-[var(--gold-action)]">
+                  {option.numeral}
+                </span>
+                <span className="font-[family-name:var(--font-display)] text-[length:var(--text-lead)] font-medium text-[var(--ink)]">
+                  {option.label}
+                </span>
+              </div>
+              <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {option.description}
+              </p>
+              <div className="mt-auto pt-[var(--space-3)]">
+                <div className="h-[2px] overflow-hidden rounded-full bg-[var(--line)]">
+                  <div
+                    className={`h-full bg-[var(--gold-action)] transition-[width] ${active ? "w-full" : "w-1/3 group-hover:w-2/3"}`}
+                  />
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -148,6 +198,10 @@ function PublishZone({ onOpenVault }) {
 
 export default function StudioView({
   hubExplainer,
+  modeOptions = [],
+  activeMode = CREATION_STUDIO_MODES.QUICK,
+  onSelectMode = null,
+  modeContentSlot = null,
   doors = [],
   onOpenAdvancedEditor = null,
   onBuildStory = null,
@@ -184,11 +238,21 @@ export default function StudioView({
       >
         <KitAlertStripView tone="neutral" title={hubExplainer?.title} body={hubExplainer?.body} />
 
-        <div className="flex flex-col gap-[var(--space-8)]">
-          <CreateZone doors={doors} onOpenAdvancedEditor={onOpenAdvancedEditor} />
-          <BuildZone onBuildStory={onBuildStory} onBuildAdventure={onBuildAdventure} />
-          <PublishZone onOpenVault={onOpenVault} />
-        </div>
+        <StudioModeSelector
+          options={modeOptions}
+          activeMode={activeMode}
+          onSelectMode={onSelectMode}
+        />
+
+        {activeMode === CREATION_STUDIO_MODES.QUICK ? (
+          <div className="flex flex-col gap-[var(--space-8)]">
+            <CreateZone doors={doors} onOpenAdvancedEditor={onOpenAdvancedEditor} />
+            <BuildZone onBuildStory={onBuildStory} onBuildAdventure={onBuildAdventure} />
+            <PublishZone onOpenVault={onOpenVault} />
+          </div>
+        ) : (
+          modeContentSlot
+        )}
       </KitStudioPageView>
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />

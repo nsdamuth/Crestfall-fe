@@ -21,8 +21,9 @@ components/studio/story-rooms/story-room-state-panel/
 ```
 
 The View owns the Chronicle State visual hierarchy, state cards, close control,
-and the currently disabled export/share actions. It receives display-ready
-sections and emits only semantic close intent.
+and the currently disabled export/share actions. The live player projection is
+intentionally concise: **Location, Time, and Weather** only. It receives
+display-ready sections and emits only semantic close intent.
 
 The View does not know the Story Room snapshot shape, engine-module operation
 results, room-state fallback fields, chat-shell layout state, mobile drawer
@@ -40,9 +41,11 @@ components/studio/story-rooms/story-room-state-panel/
 ```
 
 The ViewModel translates the current Story Room `room` object into semantic,
-display-ready cards. It owns engine-source fallback labels, unknown time/weather
-fallbacks, the current static knowledge/memory rows, disabled future actions,
-and mapping the optional `onClose` callback to `onClosePanel`.
+display-ready player state. Runtime Scenario phase, knowledge-boundary policy,
+memory bookkeeping, and engine source labels remain runtime-owned but are not
+projected into this player side rail. The live card contains Location, Time, and
+Weather with honest `Unknown` fallbacks. The ViewModel also owns the disabled
+future actions and maps the optional `onClose` callback to `onClosePanel`.
 
 ## Contract and Fixtures
 
@@ -81,6 +84,6 @@ components/studio/story-rooms/StoryRoomChatShell.jsx
 ```
 
 Test the desktop right rail with its close/reopen behavior and the mobile
-Chronicle State drawer without an internal close control. Confirm scenario,
-objective, location, time/weather values, engine-versus-room source labels, and
-the disabled export/share placeholders remain unchanged.
+Chronicle State drawer without an internal close control. Confirm only Location,
+Time, and Weather are shown to players. Scenario phase, knowledge boundaries,
+memory, and engine-source labels must not appear in the player rail.

@@ -44,6 +44,7 @@ test("Studio Sidebar ViewModel owns navigation and UI state", () => {
   assert.match(viewModel, /useState/);
   assert.match(viewModel, /STUDIO_SIDEBAR_PRIMARY_LINKS/);
   assert.match(viewModel, /STUDIO_SIDEBAR_UTILITY_LINKS/);
+  assert.match(viewModel, /STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP/);
   assert.match(viewModel, /STUDIO_SIDEBAR_SOCIAL_LINKS/);
   assert.match(viewModel, /isStudioSidebarPathActive/);
   assert.match(viewModel, /normalizeStudioSidebarEmail/);
@@ -78,6 +79,22 @@ test("Studio Sidebar preserves routes, labels, and active matching", () => {
   assert.match(viewModel, /pathname\.startsWith\(href\)/);
   assert.match(viewModel, /"Stories"/);
   assert.match(viewModel, /"Community Links"/);
+});
+
+test("V2 Studio Sidebar restores Support links without duplicating Account", () => {
+  const viewModel = read(
+    "components/studio/studio-sidebar/useStudioSidebarViewModel.js"
+  );
+  const view = read("components/studio/studio-sidebar/StudioSidebar.view.jsx");
+  assert.match(viewModel, /label: "Support"/);
+  assert.match(viewModel, /label: "Feedback & Updates"/);
+  assert.match(viewModel, /href: "\/studio\/feedback"/);
+  assert.match(viewModel, /label: "Terms & Policies"/);
+  assert.match(viewModel, /href: "\/terms"/);
+  assert.match(viewModel, /previewSupportGroup/);
+  assert.match(view, /previewSupportGroup/);
+  const supportBlock = viewModel.match(/STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP[\s\S]*?\n\}\);/)?.[0] || "";
+  assert.doesNotMatch(supportBlock, /label: "Account"/);
 });
 
 test("Studio Sidebar contract and fixtures cover visible states", () => {

@@ -14,6 +14,7 @@ export default function StudioPageHeaderView({
   title = "",
   description = "",
   children = null,
+  compactMobile = false,
 }) {
   const childList = Children.toArray(children);
   const childrenAreTextOnly =
@@ -26,7 +27,11 @@ export default function StudioPageHeaderView({
   const actions = childrenAreTextOnly ? null : children;
 
   return (
-    <header className="flex flex-col gap-6 border-b border-[var(--gold-ornament)]/15 pb-8 lg:flex-row lg:items-center lg:justify-between">
+    <header
+      className={`flex flex-col border-b border-[var(--gold-ornament)]/15 lg:flex-row lg:items-center lg:justify-between ${
+        compactMobile ? "gap-3 pb-4 sm:gap-6 sm:pb-8" : "gap-6 pb-8"
+      }`}
+    >
       <div>
         {eyebrow ? (
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">

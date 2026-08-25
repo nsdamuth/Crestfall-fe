@@ -5,7 +5,7 @@ import MechanicsModuleBuilderShell from "@/components/studio/create/mechanics-mo
 export default function CreateMechanicsModulePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=mechanics" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Runtime Logic" title="Create Mechanics Module">
         Create a reusable mechanics package with meters, counters, flags,

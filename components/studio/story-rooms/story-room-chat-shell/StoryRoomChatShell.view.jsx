@@ -12,6 +12,10 @@ import {
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
 import { STORY_ROOM_DELETE_CONFIRMATION_LINES } from "./useStoryRoomChatShellViewModel";
+import {
+  isStoryRoomSwipeInteractiveTarget,
+  resolveStoryRoomMobileSwipe,
+} from "./storyRoomMobileSwipe";
 
 const EYEBROW_CLASS =
   "text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
@@ -30,11 +34,13 @@ export default function StoryRoomChatShellView({
   composerProps = {},
   desktopStatePanelProps = {},
   mobileStatePanelProps = {},
-  runtimeMechanicsPanelProps = {},
+  runtimeMechanicsPanelProps = null,
   onToggleLeftPanel,
   onToggleRightPanel,
   onShowLeftPanel,
   onShowRightPanel,
+  onOpenMobileCast,
+  onOpenMobileState,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
@@ -47,8 +53,54 @@ export default function StoryRoomChatShellView({
   StatePanelComponent,
   TranscriptComponent,
 }) {
+  function handleSwipeStart(event) {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1280px)").matches) {
+      return;
+    }
+
+    if (isStoryRoomSwipeInteractiveTarget(event.target)) {
+      event.currentTarget.dataset.storyRoomSwipeStartX = "";
+      event.currentTarget.dataset.storyRoomSwipeStartY = "";
+      return;
+    }
+
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    event.currentTarget.dataset.storyRoomSwipeStartX = String(touch.clientX);
+    event.currentTarget.dataset.storyRoomSwipeStartY = String(touch.clientY);
+  }
+
+  function handleSwipeEnd(event) {
+    const startXRaw = event.currentTarget.dataset.storyRoomSwipeStartX;
+    const startYRaw = event.currentTarget.dataset.storyRoomSwipeStartY;
+    const touch = event.changedTouches?.[0];
+
+    event.currentTarget.dataset.storyRoomSwipeStartX = "";
+    event.currentTarget.dataset.storyRoomSwipeStartY = "";
+
+    if (!startXRaw || !startYRaw || !touch) return;
+
+    const startX = Number(startXRaw);
+    const startY = Number(startYRaw);
+    if (!Number.isFinite(startX) || !Number.isFinite(startY)) return;
+
+    const action = resolveStoryRoomMobileSwipe({
+      panel: null,
+      deltaX: touch.clientX - startX,
+      deltaY: touch.clientY - startY,
+    });
+
+    if (action === "OPEN_CAST") onOpenMobileCast?.();
+    if (action === "OPEN_STATE") onOpenMobileState?.();
+  }
+
   return (
-    <section className="flex h-[calc(100dvh-7rem)] min-h-0 flex-col overflow-hidden xl:h-[calc(100vh-7rem)]">
+    <section
+      onTouchStart={handleSwipeStart}
+      onTouchEnd={handleSwipeEnd}
+      className="-mx-[var(--space-5)] -mt-[var(--space-20)] flex h-[calc(100dvh-var(--space-20))] min-h-0 flex-col overflow-hidden sm:-mx-[var(--space-8)] lg:mx-0 lg:mt-0 lg:h-[calc(100dvh-5rem)] xl:h-[calc(100vh-7rem)]"
+    >
       <div className={layoutClass}>
         <div className="hidden min-h-0 xl:block">
           {leftOpen ? (
@@ -64,7 +116,7 @@ export default function StoryRoomChatShellView({
           )}
         </div>
 
-        <main className="flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)]">
+        <main className="flex min-h-0 flex-col overflow-hidden bg-[var(--surface-1)] xl:rounded-[var(--radius-lg)] xl:border xl:border-[var(--line-whisper)]">
           <StoryRoomHeader
             room={room}
             leftOpen={leftOpen}
@@ -88,7 +140,7 @@ export default function StoryRoomChatShellView({
               {StatePanelComponent ? (
                 <StatePanelComponent {...desktopStatePanelProps} />
               ) : null}
-              {RuntimeMechanicsPanelComponent ? (
+              {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
                 <RuntimeMechanicsPanelComponent
                   {...runtimeMechanicsPanelProps}
                 />
@@ -115,6 +167,7 @@ export default function StoryRoomChatShellView({
       {mobilePanel === "cast" && MobileDrawerComponent ? (
         <MobileDrawerComponent
           title="Room & Cast"
+          side="left"
           onClose={onCloseMobilePanel}
         >
           {CastPanelComponent ? (
@@ -126,12 +179,13 @@ export default function StoryRoomChatShellView({
       {mobilePanel === "state" && MobileDrawerComponent ? (
         <MobileDrawerComponent
           title="Chronicle State"
+          side="right"
           onClose={onCloseMobilePanel}
         >
           {StatePanelComponent ? (
             <StatePanelComponent {...mobileStatePanelProps} />
           ) : null}
-          {RuntimeMechanicsPanelComponent ? (
+          {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
             <RuntimeMechanicsPanelComponent
               {...runtimeMechanicsPanelProps}
             />

@@ -18,7 +18,8 @@
 // fixture-mode harness (default / empty / longest content) is
 // dev-only QA scaffolding, never product, per docs/FRONTEND-SOP.md
 // section 2.
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import StudioView from "./studio/Studio.view";
@@ -27,6 +28,51 @@ import CharacterCreatorModal from "@/components/studio/create/character/creator-
 import WorldCreatorModal from "@/components/studio/create/world/creator-stops/WorldCreatorModal";
 import LookCreatorModal from "@/components/studio/create/look/creator-stops/LookCreatorModal";
 import StoryCreatorModal from "@/components/studio/create/story/creator-stops/StoryCreatorModal";
+import { useCreationStudioViewModel } from "@/components/studio/create/creation-studio/useCreationStudioViewModel";
+import { CREATION_STUDIO_MODES } from "@/components/studio/create/creation-studio/CreationStudio.contract.mjs";
+import { StudioGuidedModeView, StudioFullModeView } from "./studio/StudioModePanels.view";
+import { getFullStudioSectionSlug } from "./studio/StudioModePanels.contract.mjs";
+
+
+function StudioModeContent({
+  mode,
+  onModeChange,
+  onOpenCharacterCreator,
+  activeFullStudioSectionSlug = "",
+  onOpenFullStudioSection = null,
+  onBackToFullStudio = null,
+}) {
+  const creationStudioViewModel = useCreationStudioViewModel();
+
+  if (mode === CREATION_STUDIO_MODES.QUICK) return null;
+
+  if (mode === CREATION_STUDIO_MODES.GUIDED) {
+    return (
+      <StudioGuidedModeView
+        chapters={creationStudioViewModel.guidedChapters}
+        progress={creationStudioViewModel.guidedProgress}
+        recommendedStep={creationStudioViewModel.recommendedGuidedStep}
+        guidedAssets={creationStudioViewModel.guidedAssets}
+        isLoading={creationStudioViewModel.isLoadingCounts}
+        loadError={creationStudioViewModel.countLoadError}
+        LinkComponent={Link}
+        onOpenCharacterCreator={onOpenCharacterCreator}
+        onOpenFullStudio={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
+      />
+    );
+  }
+
+  return (
+    <StudioFullModeView
+      sections={creationStudioViewModel.fullStudioSections}
+      activeSectionSlug={activeFullStudioSectionSlug}
+      LinkComponent={Link}
+      onOpenCharacterCreator={onOpenCharacterCreator}
+      onSelectSection={onOpenFullStudioSection}
+      onBack={onBackToFullStudio}
+    />
+  );
+}
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -59,13 +105,46 @@ function FixtureModeHarness({ fixtureMode, onChangeFixtureMode }) {
   );
 }
 
-export default function Studio() {
+export default function Studio({ showFixtureHarness = true }) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
   const [isCharacterCreatorOpen, setIsCharacterCreatorOpen] = useState(false);
   const [isWorldCreatorOpen, setIsWorldCreatorOpen] = useState(false);
   const [isLookCreatorOpen, setIsLookCreatorOpen] = useState(false);
   const [isStoryCreatorOpen, setIsStoryCreatorOpen] = useState(false);
+  const [fullStudioSectionSlug, setFullStudioSectionSlug] = useState("");
+
+  useEffect(() => {
+    function syncFullStudioSectionFromLocation() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        setFullStudioSectionSlug(String(params.get("section") || "").trim().toLowerCase());
+      } catch {
+        setFullStudioSectionSlug("");
+      }
+    }
+
+    syncFullStudioSectionFromLocation();
+    window.addEventListener("popstate", syncFullStudioSectionFromLocation);
+    return () => window.removeEventListener("popstate", syncFullStudioSectionFromLocation);
+  }, []);
+
+  function setFullStudioSection(sectionId = "", { replace = false } = {}) {
+    const slug = sectionId ? getFullStudioSectionSlug(sectionId) : "";
+
+    try {
+      const url = new URL(window.location.href);
+      if (slug) url.searchParams.set("section", slug);
+      else url.searchParams.delete("section");
+
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      if (replace) window.history.replaceState({}, "", nextUrl);
+      else window.history.pushState({}, "", nextUrl);
+      setFullStudioSectionSlug(slug);
+    } catch {
+      setFullStudioSectionSlug(slug);
+    }
+  }
 
   const viewProps = useStudioViewModel({
     fixtureMode,
@@ -76,14 +155,63 @@ export default function Studio() {
     onOpenStoryCreator: () => setIsStoryCreatorOpen(true),
   });
 
+  function syncModeQuery(nextMode) {
+    try {
+      const url = new URL(window.location.href);
+      const modeSlug = {
+        [CREATION_STUDIO_MODES.QUICK]: "quick",
+        [CREATION_STUDIO_MODES.GUIDED]: "guided",
+        [CREATION_STUDIO_MODES.FULL]: "full",
+      }[nextMode];
+
+      if (modeSlug) url.searchParams.set("mode", modeSlug);
+      else url.searchParams.delete("mode");
+
+      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    } catch {
+      // The persisted mode remains authoritative when URL mutation is unavailable.
+    }
+  }
+
+  function handleModeChange(nextMode) {
+    if (
+      nextMode === CREATION_STUDIO_MODES.FULL &&
+      viewProps.activeMode === CREATION_STUDIO_MODES.FULL &&
+      fullStudioSectionSlug
+    ) {
+      setFullStudioSection("", { replace: true });
+      syncModeQuery(nextMode);
+      return;
+    }
+
+    viewProps.onSelectMode(nextMode);
+    syncModeQuery(nextMode);
+    if (nextMode !== CREATION_STUDIO_MODES.FULL && fullStudioSectionSlug) {
+      setFullStudioSection("", { replace: true });
+    }
+  }
+
   return (
     <>
       <StudioView
         {...viewProps}
-        harnessSlot={
-          process.env.NODE_ENV === "production" ? null : (
-            <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
+        onSelectMode={handleModeChange}
+        modeContentSlot={
+          viewProps.activeMode === CREATION_STUDIO_MODES.QUICK ? null : (
+            <StudioModeContent
+              mode={viewProps.activeMode}
+              onModeChange={handleModeChange}
+              onOpenCharacterCreator={() => setIsCharacterCreatorOpen(true)}
+              activeFullStudioSectionSlug={fullStudioSectionSlug}
+              onOpenFullStudioSection={(sectionId) => setFullStudioSection(sectionId)}
+              onBackToFullStudio={() => setFullStudioSection("", { replace: true })}
+            />
           )
+        }
+        harnessSlot={
+          showFixtureHarness && process.env.NODE_ENV !== "production" ? (
+            <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
+          ) : null
         }
       />
 

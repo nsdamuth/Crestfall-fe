@@ -2,14 +2,19 @@
 export default function CreationCreditsView({
   credits = [],
   LinkComponent = "a",
+  showHeading = true,
 }) {
   return (
-    <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
-      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-        Credits
-      </p>
+    <section
+      className={`${showHeading ? "mt-6" : ""} rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4`}
+    >
+      {showHeading ? (
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          Credits
+        </p>
+      ) : null}
 
-      <div className="mt-3 grid gap-3">
+      <div className={`${showHeading ? "mt-3" : ""} grid gap-3`}>
         {credits.map((credit) => (
           <div key={credit.id}>
             <p className="text-sm text-[var(--ink)]">

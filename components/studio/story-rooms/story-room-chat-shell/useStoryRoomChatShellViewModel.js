@@ -7,6 +7,7 @@ import {
   STORY_ROOM_COMMANDS,
   resolveLocalStoryRoomCommand,
 } from "@/components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry";
+import { getMechanicsModuleBindings } from "@/components/studio/story-rooms/story-room-runtime-mechanics-panel/useStoryRoomRuntimeMechanicsPanelViewModel";
 
 export const STORY_ROOM_DELETE_CONFIRMATION_LINES = [
   "Delete this Story?",
@@ -256,11 +257,18 @@ export function useStoryRoomChatShellViewModel({
       selectNextResponder(participantId, { closeMobile: true }),
   };
 
-  const runtimeMechanicsPanelProps = {
-    room,
-    roomId,
-    onUpdated: reloadStoryRoom,
-  };
+  const hasRoomMechanicsModule = useMemo(
+    () => getMechanicsModuleBindings(room).length > 0,
+    [room]
+  );
+
+  const runtimeMechanicsPanelProps = hasRoomMechanicsModule
+    ? null
+    : {
+        room,
+        roomId,
+        onUpdated: reloadStoryRoom,
+      };
 
   return {
     room,
@@ -310,6 +318,8 @@ export function useStoryRoomChatShellViewModel({
     onToggleRightPanel: () => setRightOpen((current) => !current),
     onShowLeftPanel: () => setLeftOpen(true),
     onShowRightPanel: () => setRightOpen(true),
+    onOpenMobileCast: () => setMobilePanel("cast"),
+    onOpenMobileState: () => setMobilePanel("state"),
     onCloseMobilePanel: closeMobilePanel,
     onCloseComposerHelpPanel: closeComposerHelpPanel,
     isConfirmingDeleteRoom,

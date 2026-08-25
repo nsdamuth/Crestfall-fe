@@ -2,18 +2,24 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { crestfallApiRequest } from "@/lib/server/api/crestfallApiClient";
 import { getAuthenticatedUser } from "@/lib/server/auth/getAuthenticatedUser";
+import { readJsonRequestBody } from "@/lib/server/api/readJsonRequestBody";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function apiError(message, status = 500, code = "CREATIONS_FAILED") {
+function apiError(
+  message,
+  status = 500,
+  code = "CREATIONS_FAILED",
+  details = null
+) {
   return NextResponse.json(
     {
       data: null,
       error: {
         code,
         message,
-        details: null,
+        details,
       },
     },
     { status }
@@ -76,6 +82,13 @@ export async function GET(request) {
       },
     });
 
+    // Some upstream GraphQL failures can arrive inside a successful HTTP
+    // transport envelope. A failed write must never report success to the
+    // V2 Chassis. Preserve the FE trunk's fail-closed response behavior.
+    if (responsePayload?.error) {
+      return NextResponse.json(responsePayload, { status: 500 });
+    }
+
     return NextResponse.json(responsePayload);
   } catch (error) {
     return apiError(
@@ -96,9 +109,14 @@ export async function POST(request) {
   let body = null;
 
   try {
-    body = await request.json();
-  } catch {
-    return apiError("Invalid JSON body.", 400, "INVALID_JSON");
+    body = await readJsonRequestBody(request);
+  } catch (error) {
+    return apiError(
+      error?.message || "Invalid JSON body.",
+      Number.isInteger(error?.status) ? error.status : 400,
+      error?.code || "INVALID_JSON",
+      error?.details || null
+    );
   }
 
   try {
@@ -110,13 +128,6 @@ export async function POST(request) {
         "x-crestfall-user-id": user.id,
       },
     });
-
-    // The upstream service can answer 200 with an error body (a
-    // masked GraphQL error keeps the transport status as-is). A
-    // failed write must not report success.
-    if (responsePayload?.error) {
-      return NextResponse.json(responsePayload, { status: 500 });
-    }
 
     return NextResponse.json(responsePayload);
   } catch (error) {

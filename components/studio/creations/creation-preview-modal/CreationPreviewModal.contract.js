@@ -25,6 +25,7 @@ export const CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION =
  * @property {string[]} tags
  * @property {{handle: string, href: string}} creator
  * @property {Array<Object>} credits
+ * @property {"DETAILS"|"CREDITS"} activeInfoTab Conditional details/credits tab state.
  * @property {string} catalogueHref
  * @property {string} editHref
  * @property {CreationPreviewMediaItem[]} featuredMedia
@@ -48,6 +49,7 @@ export const CREATION_PREVIEW_MODAL_VIEW_CONTRACT_VERSION =
  * @property {string} defaultPcStatus
  * @property {Function} onClose
  * @property {Function} onToggleDescription
+ * @property {Function} onSelectInfoTab
  * @property {Function} onSelectMedia
  * @property {Function} onPreviousMedia
  * @property {Function} onNextMedia

@@ -46,12 +46,23 @@ function FixtureModeHarness({ fixtureMode, onChangeFixtureMode }) {
   );
 }
 
-export default function Lore() {
+export default function Lore({
+  live = false,
+  communityCreations = [],
+  communityLoadError = null,
+  ownedCreations = [],
+  ownedLoadError = null,
+} = {}) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("full");
 
   const viewProps = useLoreViewModel({
     fixtureMode,
+    live,
+    communityCreations,
+    communityLoadError,
+    ownedCreations,
+    ownedLoadError,
     onNavigate: (route) => router.push(route),
   });
 
@@ -59,7 +70,7 @@ export default function Lore() {
     <LoreView
       {...viewProps}
       harnessSlot={
-        process.env.NODE_ENV === "production" ? null : (
+        live || process.env.NODE_ENV === "production" ? null : (
           <FixtureModeHarness fixtureMode={fixtureMode} onChangeFixtureMode={setFixtureMode} />
         )
       }

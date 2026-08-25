@@ -1,4 +1,4 @@
-export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the shared attribution kit piece
@@ -6,6 +6,9 @@ export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.1.0";
  * old-design credits panel
  * (components/studio/creations/creation-credits/, read-only
  * reference, never edited) onto current tokens.
+ *
+ * v1.2.0, 24 Aug 2026: additive `showHeading` presentation option for
+ * conditional Credits tabs. Attribution data and links are unchanged.
  *
  * v1.1.0, RULED 10 Aug 2026 (R1, kit polish 3 pass, plan 1.3):
  * additive. The package gains a second documented component,
@@ -39,6 +42,9 @@ export const KIT_CREDITS_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {import("react").ElementType} LinkComponent Injected by
  *   the shell (next/link in product code), matching the old
  *   package's pattern.
+ * @property {boolean} [showHeading=true] Additive v1.2.0 option used
+ *   when Credits already has a visible tab label in the parent
+ *   surface. The credit rows and attribution semantics are unchanged.
  */
 
 export {};

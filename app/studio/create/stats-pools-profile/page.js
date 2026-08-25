@@ -5,7 +5,7 @@ import StatsPoolsBuilderShell from "@/components/studio/create/stats-pools/Stats
 export default function CreateStatsPoolsProfilePage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=mechanics" label="Back to Full Studio" />
       <StudioPageHeader
         eyebrow="Actor State Definitions"
         title="Create Stats & Pools Profile"

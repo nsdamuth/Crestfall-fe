@@ -22,9 +22,9 @@ import {
 // this package, unlike KitImageOverlay. Matches the B7 action set:
 // six-icon header row (delete, report, details, download, bookmark,
 // like) and a three-action gold-ink bottom bar (Generate Variant,
-// Reassign Asset, Share). Reassign Asset always renders disabled: an
-// honest stub, CR-055, filed by this build since no backend operation
-// exists yet. Delete routes through the B5 danger-confirm panel
+// Reassign Asset, Share). Reassign Asset is live when the application
+// adapter supplies an eligible source image and authoritative output id.
+// Delete routes through the B5 danger-confirm panel
 // (`deleteConfirmOpen`, owned by the ViewModel per this package's
 // existing "deletion confirmation" ownership line) instead of
 // the browser's native confirm() dialog.
@@ -40,6 +40,8 @@ export default function MediaLightboxView({
   isLiked = false,
   isBookmarked = false,
   shareMessage = "",
+  showReassignAction = false,
+  reassignDialog = {},
   reportReasonOptions = [],
   detailsDialog = {},
   reportDialog = {},
@@ -52,6 +54,10 @@ export default function MediaLightboxView({
   onRequestDelete = null,
   onCancelDelete = null,
   onConfirmDelete = null,
+  onOpenReassign = null,
+  onCloseReassign = null,
+  onReassignDestinationChange = null,
+  onSubmitReassign = null,
   onOpenDetails = null,
   onCloseDetails = null,
   onOpenReport = null,
@@ -153,6 +159,8 @@ export default function MediaLightboxView({
               showStudioActions={showStudioActions}
               imageStudioHref={imageStudioHref}
               LinkComponent={LinkComponent}
+              showReassignAction={showReassignAction}
+              onReassign={() => onOpenReassign?.()}
               onShare={() => onShare?.()}
             />
 
@@ -174,6 +182,15 @@ export default function MediaLightboxView({
 
       {detailsDialog.open ? (
         <DetailsDialog {...detailsDialog} onClose={() => onCloseDetails?.()} />
+      ) : null}
+
+      {reassignDialog.open ? (
+        <ReassignDialog
+          {...reassignDialog}
+          onDestinationChange={onReassignDestinationChange}
+          onSubmit={onSubmitReassign}
+          onClose={onCloseReassign}
+        />
       ) : null}
 
       {reportDialog.open ? (
@@ -313,7 +330,14 @@ function ViewerBarButton({ onClick, icon, label, disabled = false, title }) {
   );
 }
 
-function ViewerBottomBar({ showStudioActions, imageStudioHref, LinkComponent, onShare }) {
+function ViewerBottomBar({
+  showStudioActions,
+  imageStudioHref,
+  LinkComponent,
+  showReassignAction = false,
+  onReassign,
+  onShare,
+}) {
   return (
     <div className="pointer-events-auto flex w-full max-w-[min(92vw,64rem)] flex-none items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] px-[var(--space-2)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]">
       {showStudioActions ? (
@@ -324,13 +348,16 @@ function ViewerBottomBar({ showStudioActions, imageStudioHref, LinkComponent, on
           label="Generate Variant"
         />
       ) : null}
-      {/* Honest stub, CR-055 (filed by this build, ED1F propagation
-          plan section B item 9): no backend operation exists yet. */}
       <ViewerBarButton
         label="Reassign Asset"
         icon={<RefreshCw size={16} aria-hidden="true" />}
-        disabled
-        title="Reassign Asset is not wired yet (CR-055)"
+        onClick={onReassign}
+        disabled={!showReassignAction}
+        title={
+          showReassignAction
+            ? "Reassign this image to another owned asset"
+            : "Reassignment is unavailable for this image"
+        }
       />
       <ViewerBarButton
         label="Share"
@@ -341,11 +368,9 @@ function ViewerBottomBar({ showStudioActions, imageStudioHref, LinkComponent, on
   );
 }
 
-// B5 danger-confirm recipe, CR-054 placeholder copy: the recovery
-// window is not yet ruled to a single number, so the copy carries the
-// literal "[X] days" placeholder rather than a guessed figure.
-// Replaces the browser's native confirm() dialog (docs/plans/ED1F-PROPAGATION-PLAN.md
-// manifest item 3).
+// B5 danger-confirm recipe. Current media deletion is permanent; CR-054
+// recovery-window product work remains separate and must not be implied here.
+// Replaces the browser's native confirm() dialog.
 function DeleteConfirmPanel({ onCancelDelete, onConfirmDelete }) {
   return (
     <div className="pointer-events-auto w-full max-w-[26rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] p-[var(--space-6)] backdrop-blur-[var(--blur-panel)]">
@@ -353,9 +378,8 @@ function DeleteConfirmPanel({ onCancelDelete, onConfirmDelete }) {
         Delete this image?
       </h2>
       <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-        It moves to a recovery window for [X] days before it is gone for
-        good. This also removes it from any character libraries and
-        featured slots.
+        This permanently removes it from Image Studio and any character
+        libraries or featured slots that use it. This action cannot be undone.
       </p>
       <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
       <div className="flex items-center justify-between gap-[var(--space-3)]">
@@ -395,6 +419,112 @@ function ThumbnailButton({ item, active = false, onClick }) {
         </div>
       )}
     </button>
+  );
+}
+
+function ReassignDialog({
+  status = "idle",
+  message = "",
+  coinCost = 1,
+  sourceCreation = null,
+  targets = [],
+  destinationCreationId = "",
+  onDestinationChange,
+  onSubmit,
+  onClose,
+}) {
+  const isBusy = status === "loading" || status === "submitting";
+  const isSuccess = status === "success";
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
+      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-4)]">
+          <div>
+            <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Reassign Asset
+            </p>
+            <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+              Move this image
+            </h3>
+            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
+              Only images you created can be moved, and both the current and destination assets must belong to you. Reassignment costs {coinCost} Coin{Number(coinCost) === 1 ? "" : "s"}.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close reassignment dialog"
+            className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+          >
+            <X size={17} aria-hidden="true" />
+          </button>
+        </div>
+
+        <form onSubmit={onSubmit} className="mt-[var(--space-5)] space-y-[var(--space-4)]">
+          {sourceCreation?.title ? (
+            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">Current asset</p>
+              <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]">{sourceCreation.title}</p>
+            </div>
+          ) : null}
+
+          {status === "loading" ? (
+            <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+              <Loader2 className="mr-[var(--space-2)] inline animate-spin" size={16} aria-hidden="true" />
+              Loading eligible destinations...
+            </p>
+          ) : null}
+
+          {status !== "loading" && !isSuccess ? (
+            <label className="block">
+              <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                Destination asset
+              </span>
+              <select
+                value={destinationCreationId}
+                onChange={(event) => onDestinationChange?.(event.target.value)}
+                disabled={isBusy || !targets.length}
+                className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink)] outline-none transition-colors hover:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {!targets.length ? <option value="">No eligible destinations</option> : null}
+                {targets.map((target) => (
+                  <option key={target.id} value={target.id}>{target.title || target.name || "Untitled asset"}</option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+
+          {status !== "loading" && !isSuccess ? (
+            <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+              Reassignment moves the same image; it does not duplicate the file. If this image is featured or selected as a visual reference on the current asset, those source references are cleared automatically.
+            </p>
+          ) : null}
+
+          {message ? (
+            <p className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] ${
+              isSuccess
+                ? "border-[var(--gold-ornament)] bg-[var(--fill)] text-[var(--gold-ornament)]"
+                : "border-[var(--status-danger)] bg-[var(--status-danger-fill)] text-[var(--status-danger)]"
+            }`}>
+              {message}
+            </p>
+          ) : null}
+
+          <div className="flex justify-end gap-[var(--space-2)]">
+            <button type="button" onClick={onClose} className="cf-btn cf-btn--secondary">
+              {isSuccess ? "Close" : "Cancel"}
+            </button>
+            {!isSuccess ? (
+              <button type="submit" disabled={isBusy || !destinationCreationId} className="cf-btn cf-btn--primary">
+                {status === "submitting" ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <RefreshCw size={14} aria-hidden="true" />}
+                {status === "submitting" ? "Reassigning..." : `Reassign for ${coinCost} ${Number(coinCost) === 1 ? "Coin" : "Coins"}`}
+              </button>
+            ) : null}
+          </div>
+        </form>
+      </section>
+    </div>
   );
 }
 

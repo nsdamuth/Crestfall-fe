@@ -1,4 +1,4 @@
-export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.3.0";
+export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Stable portable UI boundary for the Creators profile-detail page
@@ -51,6 +51,12 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.3.0";
  * against; CR-040 filed, docs/CONTRACT-REQUESTS.md). Additive minor
  * bump: absent `onOpenPlays` renders the Plays tile non-interactive,
  * same backward-compatible shape as v1.2.0's two tiles.
+ *
+ * v1.4.0, V2 convergence W3I: additive content slots let the live
+ * profile reuse Crestfall's established rich public Activity and Badges
+ * presentation without coupling the portable V2 View to data access.
+ * Fixture behavior remains backward compatible through the existing
+ * activityItems/badgeItems fallbacks.
  *
  * @typedef {Object} CreatorProfileStats
  * @property {number|null} followers
@@ -125,8 +131,10 @@ export const CREATOR_PROFILE_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {CreatorProfileActivityItem[]} activityItems
  * @property {string|null} activityEmptyMessage
  * @property {{isLoading: boolean, hasMore: boolean, remainingCount: number|null, onLoadMore: (() => void)|null}} activityLoadMore doc-only addition (ED1G sw12): already read by the View, undeclared here. No version bump.
+ * @property {import("react").ReactNode} [activityContentSlot] Optional richer live activity rendering; when present it replaces the compact fixture activity list.
  * @property {CreatorProfileBadgeItem[]} badgeItems
  * @property {string|null} badgesEmptyMessage
+ * @property {import("react").ReactNode} [badgesContentSlot] Optional richer live badge rendering; when present it replaces the compact fixture badge grid.
  * @property {string|null} errorMessage Profile-level load-error banner, distinct from a section's own empty state.
  * @property {boolean} isLoading
  * @property {boolean} isDonateModalOpen

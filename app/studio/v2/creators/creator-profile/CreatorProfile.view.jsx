@@ -3,9 +3,8 @@
 // LOOM shape). Composition, top to bottom, exhaustive: back button ->
 // page header (StudioPageHeaderView, left-aligned eyebrow and short
 // gold rule) -> identity block (avatar, handle, bio, tabular stat
-// tiles, engagement action row) -> Creations grid (KitCreationCard,
-// no onPlay/onGenerate, expand fallback only) with load-more ->
-// Activity section -> Badges section -> bottom banner routing to
+// tiles, engagement action row) -> Creations / Activity / Badges tab surface ->
+// selected tab content -> bottom banner routing to
 // Lore. A profile-level load-error banner replaces the whole content
 // area below the header when errorMessage is set.
 import { Bookmark, Coins, Heart, Share2, Users, VolumeX } from "lucide-react";
@@ -24,6 +23,38 @@ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 // Same left-aligned eyebrow-with-trailing-rule recipe as every other
 // v2 page's section labels (Lore.view.jsx SectionLabel, LORE HEADER
 // RULING).
+
+const PROFILE_TABS = [
+  { id: "creations", label: "Creations" },
+  { id: "activity", label: "Activity" },
+  { id: "badges", label: "Badges" },
+];
+
+function ProfileContentTabs({ value = "creations", onChange = null }) {
+  return (
+    <div className="flex flex-wrap items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]">
+      {PROFILE_TABS.map((tab) => {
+        const active = value === tab.id;
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            aria-pressed={active}
+            onClick={() => onChange?.(tab.id)}
+            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors ${
+              active
+                ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
+            }`}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function SectionLabel({ children }) {
   return (
     <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -79,7 +110,7 @@ function StatTile({ label, value, onClick = null, accessibleName = "" }) {
 // Soft-cornered rectangle action, same recipe as KitCreatorCardView's
 // RectButton so the identity block's engagement row reads as one
 // button family with the hub's creator card.
-function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onClick = null }) {
+function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onClick = null, isDisabled = false }) {
   const toneClasses =
     tone === "primary"
       ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
@@ -90,7 +121,8 @@ function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onCl
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className={`inline-flex min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
+      disabled={isDisabled}
+      className={`inline-flex disabled:cursor-not-allowed disabled:opacity-50 min-h-[var(--control-sm)] items-center justify-center gap-[var(--space-2)] whitespace-nowrap rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-bold)] transition-colors hover:shadow-[var(--glow-hover)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${toneClasses}`}
     >
       {Icon && <Icon size={16} aria-hidden="true" />}
       {label}
@@ -246,14 +278,18 @@ export default function CreatorProfileView({
   onOpenFollowers = null,
   onOpenFollowing = null,
   onOpenPlays = null,
+  activeTab = "creations",
+  onSelectTab = null,
   workItems = [],
   worksEmptyMessage = null,
   worksLoadMore,
   activityItems = [],
   activityEmptyMessage = null,
   activityLoadMore,
+  activityContentSlot = null,
   badgeItems = [],
   badgesEmptyMessage = null,
+  badgesContentSlot = null,
   errorMessage = null,
   isLoading = false,
   isDonateModalOpen = false,
@@ -263,7 +299,7 @@ export default function CreatorProfileView({
   onCloseNotice = null,
   harnessSlot = null,
 }) {
-  const muteAction = (
+  const muteAction = engagement?.showMute === false ? null : (
     <QuietAction
       label={engagement?.isMuted ? "Muted" : "Mute content"}
       icon={VolumeX}
@@ -346,15 +382,18 @@ export default function CreatorProfileView({
                     accessibleName="View following"
                   />
                   <StatTile
-                    label="Plays"
-                    value={stats?.plays}
-                    onClick={onOpenPlays}
-                    accessibleName="View plays"
+                    label={stats?.likes !== undefined ? "Likes" : "Plays"}
+                    value={stats?.likes !== undefined ? stats?.likes : stats?.plays}
+                    onClick={stats?.likes !== undefined ? null : onOpenPlays}
+                    accessibleName={stats?.likes !== undefined ? "Creator likes" : "View plays"}
                   />
                   <StatTile
                     label="Works"
                     value={stats?.works}
-                    onClick={scrollToWorks}
+                    onClick={() => {
+                      onSelectTab?.("creations");
+                      window.setTimeout(scrollToWorks, 0);
+                    }}
                     accessibleName="Jump to creations"
                   />
                 </div>
@@ -362,18 +401,21 @@ export default function CreatorProfileView({
 
               <div className="flex flex-wrap items-center gap-[var(--space-3)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
                 <RectAction
-                  label={engagement?.isFollowing ? "Following" : "Follow"}
+                  label={engagement?.isOwnProfile ? "You" : engagement?.isFollowing ? "Following" : "Follow"}
                   icon={Users}
                   tone={engagement?.isFollowing ? "primary" : "ghost"}
                   isPressed={engagement?.isFollowing}
+                  isDisabled={engagement?.isOwnProfile || engagement?.canFollow === false}
                   onClick={engagement?.onFollow}
                 />
-                <RectAction
-                  label="Donate"
-                  icon={Coins}
-                  tone="ghost"
-                  onClick={engagement?.onOpenDonate}
-                />
+                {engagement?.canDonate === false ? null : (
+                  <RectAction
+                    label="Donate"
+                    icon={Coins}
+                    tone="ghost"
+                    onClick={engagement?.onOpenDonate}
+                  />
+                )}
                 <QuietAction
                   label={engagement?.isLiked ? "Liked" : "Like"}
                   icon={Heart}
@@ -391,43 +433,64 @@ export default function CreatorProfileView({
               </div>
             </div>
 
-            <div id="creator-profile-works" className="flex flex-col gap-[var(--space-4)] scroll-mt-[var(--space-6)]">
-              <SectionLabel>Creations</SectionLabel>
-              {worksEmptyMessage ? (
-                <EmptySection message={worksEmptyMessage} />
-              ) : (
-                <>
-                  <CreationsGrid items={workItems} />
-                  <KitLoadMoreView
-                    isLoading={worksLoadMore?.isLoading}
-                    hasMore={worksLoadMore?.hasMore}
-                    remainingCount={worksLoadMore?.remainingCount ?? null}
-                    onLoadMore={() => worksLoadMore?.onLoadMore?.()}
-                  />
-                </>
-              )}
-            </div>
-
             <div className="flex flex-col gap-[var(--space-4)]">
-              <SectionLabel>Activity</SectionLabel>
-              {activityEmptyMessage ? (
-                <EmptySection message={activityEmptyMessage} />
-              ) : (
-                <>
-                  <ActivityList items={activityItems} />
-                  <KitLoadMoreView
-                    isLoading={activityLoadMore?.isLoading}
-                    hasMore={activityLoadMore?.hasMore}
-                    remainingCount={activityLoadMore?.remainingCount ?? null}
-                    onLoadMore={() => activityLoadMore?.onLoadMore?.()}
-                  />
-                </>
-              )}
-            </div>
+              <div className="flex flex-col gap-[var(--space-3)] min-[700px]:flex-row min-[700px]:items-end min-[700px]:justify-between">
+                <div>
+                  <SectionLabel>Public Profile</SectionLabel>
+                  <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--ink)]">
+                    {activeTab === "activity"
+                      ? "Activity"
+                      : activeTab === "badges"
+                        ? "Badges"
+                        : "Characters & Canon Work"}
+                  </h2>
+                </div>
+                <ProfileContentTabs value={activeTab} onChange={onSelectTab} />
+              </div>
 
-            <div className="flex flex-col gap-[var(--space-4)]">
-              <SectionLabel>Badges</SectionLabel>
-              {badgesEmptyMessage ? <EmptySection message={badgesEmptyMessage} /> : <BadgeGrid items={badgeItems} />}
+              <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+                {activeTab === "activity" ? (
+                  activityContentSlot || (
+                    activityEmptyMessage ? (
+                      <EmptySection message={activityEmptyMessage} />
+                    ) : (
+                      <>
+                        <ActivityList items={activityItems} />
+                        <KitLoadMoreView
+                          isLoading={activityLoadMore?.isLoading}
+                          hasMore={activityLoadMore?.hasMore}
+                          remainingCount={activityLoadMore?.remainingCount ?? null}
+                          onLoadMore={() => activityLoadMore?.onLoadMore?.()}
+                        />
+                      </>
+                    )
+                  )
+                ) : activeTab === "badges" ? (
+                  badgesContentSlot || (
+                    badgesEmptyMessage ? (
+                      <EmptySection message={badgesEmptyMessage} />
+                    ) : (
+                      <BadgeGrid items={badgeItems} />
+                    )
+                  )
+                ) : (
+                  <div id="creator-profile-works" className="scroll-mt-[var(--space-6)]">
+                    {worksEmptyMessage ? (
+                      <EmptySection message={worksEmptyMessage} />
+                    ) : (
+                      <>
+                        <CreationsGrid items={workItems} />
+                        <KitLoadMoreView
+                          isLoading={worksLoadMore?.isLoading}
+                          hasMore={worksLoadMore?.hasMore}
+                          remainingCount={worksLoadMore?.remainingCount ?? null}
+                          onLoadMore={() => worksLoadMore?.onLoadMore?.()}
+                        />
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}

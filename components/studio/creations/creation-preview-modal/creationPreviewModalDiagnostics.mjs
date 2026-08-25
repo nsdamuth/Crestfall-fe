@@ -16,7 +16,7 @@ test("Creation Preview Modal shell stays thin and owns application adapters", ()
 
   assert.match(shell, /useCreationPreviewModalViewModel/);
   assert.match(shell, /CreationPreviewModalView/);
-  assert.match(shell, /ModalShell/);
+  assert.match(shell, /KitModalFrame/);
   assert.match(shell, /LinkComponent=\{Link\}/);
   assert.match(shell, /StatusBadgesComponent=\{CreationStatusBadges\}/);
   assert.match(shell, /StatsRowComponent=\{CreationStatsRow\}/);
@@ -48,6 +48,8 @@ test("ViewModel owns creation aliases, routes, description, and media projection
   assert.match(vm, /slice\(0, 4\)/);
   assert.match(vm, /getCreationCreator/);
   assert.match(vm, /getCreationCredits/);
+  assert.match(vm, /activeInfoTab/);
+  assert.match(vm, /onSelectInfoTab/);
 });
 
 test("ViewModel owns story and default Player Character mutations", () => {
@@ -76,6 +78,10 @@ test("portable View receives display-ready state and semantic callbacks", () => 
   assert.match(view, /onSetDefaultPc/);
   assert.match(view, /LinkComponent/);
   assert.match(view, /ShareButtonComponent/);
+  assert.match(view, /activeInfoTab/);
+  assert.match(view, /Details/);
+  assert.match(view, /Credits/);
+  assert.match(view, /onSelectInfoTab/);
   assert.doesNotMatch(
     view,
     /next\/link|next\/navigation|storyRoomClient|defaultPlayerCharacterClient|creationAttribution|creationMedia|creationTypePolicy/
@@ -93,9 +99,9 @@ test("owner, public, picker, carousel, and empty-media behavior remain present",
 
   assert.match(view, /context === "owner"/);
   assert.match(view, /context === "picker"/);
-  assert.match(view, /Set Default PC/);
-  assert.match(view, /Image Library/);
-  assert.match(view, /Select Soon/);
+  assert.match(view, /Set default PC/i);
+  assert.match(view, /Image library/i);
+  assert.match(view, /Select soon/i);
   assert.match(view, /Preview Pending/);
   assert.match(view, /Want to see more\?/);
   assert.match(vm, /isShareable/);

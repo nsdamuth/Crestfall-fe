@@ -15,6 +15,8 @@ import {
   X,
 } from "lucide-react";
 
+import KitModalFrame from "@/components/kit/KitModalFrame";
+
 function getNumericDimension(value) {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
@@ -118,6 +120,7 @@ export default function MediaHistoryGridView({
   selectionMode = false,
   selectedCount = 0,
   isBulkDeleting = false,
+  bulkDeleteConfirmOpen = false,
   hasSelectableMedia = false,
   hasVisibleSelectableMedia = false,
   allVisibleSelectableItemsSelected = false,
@@ -129,6 +132,8 @@ export default function MediaHistoryGridView({
   onSetFilter,
   onToggleFilters,
   onToggleMobileGrid,
+  mobilePrimaryActionLabel = "",
+  onMobilePrimaryAction,
   onToggleSelectionMode,
   onToggleMediaSelection,
   onToggleLike,
@@ -137,6 +142,8 @@ export default function MediaHistoryGridView({
   onToggleSelectAllVisible,
   onClearSelection,
   onBulkDeleteSelected,
+  onCancelBulkDelete,
+  onConfirmBulkDelete,
   onLoadMoreHistory,
   FilterPillComponent,
   renderQuickActions,
@@ -145,7 +152,7 @@ export default function MediaHistoryGridView({
   const FilterPill = FilterPillComponent;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {reactionMessage ? (
         <div className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-4 py-3 text-sm text-[var(--status-danger)]">
           {reactionMessage}
@@ -158,7 +165,7 @@ export default function MediaHistoryGridView({
         </div>
       ) : null}
 
-      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-4">
+      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-3 sm:pb-4">
         <div>
           <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Image Library
@@ -167,6 +174,17 @@ export default function MediaHistoryGridView({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {mobilePrimaryActionLabel && onMobilePrimaryAction ? (
+            <button
+              type="button"
+              onClick={onMobilePrimaryAction}
+              className="cf-btn cf-btn--primary cf-btn--sm min-[1100px]:hidden"
+            >
+              <ImageIcon size={14} />
+              {mobilePrimaryActionLabel}
+            </button>
+          ) : null}
+
           {hasSelectableMedia ? (
             <button
               type="button"
@@ -295,7 +313,7 @@ export default function MediaHistoryGridView({
             No generated media yet
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
-            Select a character and generate an image to start your library.
+            Choose your ingredients and generate an image to start your library.
           </p>
         </div>
       ) : null}
@@ -352,7 +370,86 @@ export default function MediaHistoryGridView({
       {lightboxProps && renderLightbox
         ? renderLightbox(lightboxProps)
         : null}
+
+      {bulkDeleteConfirmOpen ? (
+        <BulkDeleteConfirmModal
+          selectedCount={selectedCount}
+          isDeleting={isBulkDeleting}
+          onCancel={onCancelBulkDelete}
+          onConfirm={onConfirmBulkDelete}
+        />
+      ) : null}
     </div>
+  );
+}
+
+function BulkDeleteConfirmModal({
+  selectedCount = 0,
+  isDeleting = false,
+  onCancel = null,
+  onConfirm = null,
+}) {
+  const noun = selectedCount === 1 ? "image" : "images";
+
+  return (
+    <KitModalFrame
+      onClose={isDeleting ? null : onCancel}
+      ariaLabel={`Delete ${selectedCount} selected ${noun}?`}
+      panelClassName="w-full max-w-[28rem]"
+    >
+      <div className="p-[var(--space-6)] pt-[var(--space-8)]">
+        <div className="flex items-start gap-[var(--space-3)]">
+          <AlertTriangle
+            size={22}
+            className="mt-1 flex-none text-[var(--status-danger)]"
+          />
+          <div>
+            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)]">
+              Permanent deletion
+            </p>
+            <h2 className="mt-[var(--space-2)] font-display text-3xl text-[var(--ink)]">
+              Delete {selectedCount} selected {noun}?
+            </h2>
+            <p className="mt-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+              This removes the selected {noun} from Image Studio, connected
+              creation libraries, and featured image slots. This action cannot
+              be undone.
+            </p>
+          </div>
+        </div>
+
+        <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
+
+        <div className="flex flex-wrap justify-end gap-[var(--space-3)]">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isDeleting}
+            className="cf-btn cf-btn--secondary"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={isDeleting || !selectedCount}
+            className="cf-btn cf-btn--danger"
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <Trash2 size={14} />
+                Delete permanently
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </KitModalFrame>
   );
 }
 

@@ -23,7 +23,7 @@ creation-picker/
   useCreationPickerViewModel.js
     Chassis / orchestration adapter (search, bucket, sort state)
   creationPickerBuckets.js
-    Type -> bucket map, all 25 creation types
+    Type -> bucket map, all 28 creation types
   ownedCreationsPicker.mock.js
     Named mock, pending CR-050
   CreationPicker.contract.js

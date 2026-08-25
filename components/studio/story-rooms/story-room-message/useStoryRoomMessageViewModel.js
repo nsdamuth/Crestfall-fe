@@ -1,6 +1,8 @@
 import { getCharacterColorPalette } from "@/components/studio/create/character/constants/characterColorPalettes";
 import {
   STORY_ROOM_MESSAGE_BODY_MODES,
+  STORY_ROOM_MESSAGE_CONTENT_TYPES,
+  STORY_ROOM_MESSAGE_MEDIA_SUBTYPES,
   STORY_ROOM_MESSAGE_DELIVERY_STATES,
   STORY_ROOM_MESSAGE_SURFACE_TONES,
 } from "./StoryRoomMessage.contract";
@@ -49,9 +51,65 @@ function getValidatedPresentation(message) {
   };
 }
 
+function getAutoEventMedia(message) {
+  const media = normalizeObject(message?.metadata?.autoEventMedia);
+  const displayUrl =
+    typeof media.displayUrl === "string" ? media.displayUrl.trim() : "";
+  const subtype = typeof media.subtype === "string" ? media.subtype.trim() : "";
+
+  if (!displayUrl) {
+    return null;
+  }
+
+  const entityLabel = String(
+    media.canonicalName ||
+      message?.speaker ||
+      (subtype === STORY_ROOM_MESSAGE_MEDIA_SUBTYPES.LOCATION_EVENT_IMAGE
+        ? "Location"
+        : "Character")
+  );
+
+  return {
+    subtype,
+    displayUrl,
+    thumbnailUrl:
+      typeof media.thumbnailUrl === "string" && media.thumbnailUrl.trim()
+        ? media.thumbnailUrl.trim()
+        : null,
+    width: Number.isFinite(Number(media.width)) ? Number(media.width) : null,
+    height: Number.isFinite(Number(media.height)) ? Number(media.height) : null,
+    altText:
+      subtype === STORY_ROOM_MESSAGE_MEDIA_SUBTYPES.LOCATION_EVENT_IMAGE
+        ? `Establishing image for ${entityLabel}`
+        : `Character image for ${entityLabel}`,
+    caption:
+      subtype === STORY_ROOM_MESSAGE_MEDIA_SUBTYPES.LOCATION_EVENT_IMAGE
+        ? entityLabel
+        : "",
+    entityLabel,
+    contentRating: String(media.contentRating || "SFW"),
+  };
+}
+
+function isCharacterOpeningMessage(message) {
+  return (
+    message?.kind === "OPENING_SCENE" &&
+    String(message?.metadata?.resolvedSpeakerType || "").toUpperCase() ===
+      "CHARACTER"
+  );
+}
+
 function getSurfaceTone(message) {
+  if (message?.metadata?.autoEventMedia?.displayUrl) {
+    return STORY_ROOM_MESSAGE_SURFACE_TONES.MEDIA;
+  }
+
   if (message?.type === "player") {
     return STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER;
+  }
+
+  if (isCharacterOpeningMessage(message)) {
+    return STORY_ROOM_MESSAGE_SURFACE_TONES.CHARACTER;
   }
 
   if (message?.kind === "OPENING_SCENE") {
@@ -83,13 +141,22 @@ function getDeliveryState(message) {
 
 export function getStoryRoomMessageViewProps(message) {
   const safeMessage = normalizeObject(message);
-  const presentation = getValidatedPresentation(safeMessage);
+  const autoEventMedia = getAutoEventMedia(safeMessage);
+  const presentation = autoEventMedia ? null : getValidatedPresentation(safeMessage);
+  const openingCharacterPaletteId = isCharacterOpeningMessage(safeMessage)
+    ? safeMessage?.metadata?.openingCharacterPaletteId || "CRESTFALL_DEFAULT"
+    : null;
   const palette = presentation
     ? getCharacterColorPalette(presentation.paletteId)
-    : null;
+    : openingCharacterPaletteId
+      ? getCharacterColorPalette(openingCharacterPaletteId)
+      : null;
 
   return {
     surfaceTone: getSurfaceTone(safeMessage),
+    contentType: autoEventMedia
+      ? STORY_ROOM_MESSAGE_CONTENT_TYPES.AUTO_EVENT_MEDIA
+      : STORY_ROOM_MESSAGE_CONTENT_TYPES.TEXT,
     speakerLabel: String(safeMessage.speaker || ""),
     speakerAvatarUrl: safeMessage.speakerAvatarUrl || null,
     openingLabel:
@@ -102,6 +169,11 @@ export function getStoryRoomMessageViewProps(message) {
     semanticSegments: presentation?.segments || [],
     statusBlocks: presentation?.statusBlocks || [],
     paletteColors: palette?.colors ? { ...palette.colors } : null,
+    speakerColor:
+      typeof palette?.colors?.speaker === "string" && palette.colors.speaker.trim()
+        ? palette.colors.speaker.trim()
+        : null,
+    media: autoEventMedia,
     deliveryState: getDeliveryState(safeMessage),
   };
 }

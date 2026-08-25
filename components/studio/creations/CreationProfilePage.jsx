@@ -7,8 +7,8 @@ import { Camera } from "lucide-react";
 import CreationStatsRow from "@/components/studio/creations/CreationStatsRow";
 import CreationStatusBadges from "@/components/studio/creations/CreationStatusBadges";
 import CreationShareButton from "@/components/studio/creations/CreationShareButton";
+import KitCredits from "@/components/kit/KitCredits";
 import LorePublicCreationPage from "@/components/studio/creations/lore/LorePublicCreationPage";
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import MediaLightbox from "@/components/studio/media/MediaLightbox";
 import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActions";
 
@@ -72,13 +72,10 @@ function StandardCreationProfilePage(props) {
           <CreationShareButton href={creation.catalogueHref} label="Share" />
         ) : null
       }
-      sortControlSlot={
-        <CrestfallSelect
-          label="Sort"
-          value={viewModel.sort}
-          onChange={viewModel.onSortChange}
-          options={viewModel.sortOptions}
-        />
+      creditsSlot={
+        creation?.credits?.length ? (
+          <KitCredits credits={creation.credits} showHeading={false} />
+        ) : null
       }
       mediaActionSlots={mediaActionSlots}
       lightboxSlot={

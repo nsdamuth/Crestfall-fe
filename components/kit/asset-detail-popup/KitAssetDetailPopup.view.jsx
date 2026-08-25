@@ -22,8 +22,7 @@ import { useMemo, useState } from "react";
 import { Bookmark, ChevronLeft, ChevronRight, Heart, Pencil, Play, Search, Share2, Users } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
-import KitCreditsModal from "../KitCreditsModal";
-import KitDropdownView from "../dropdown/KitDropdown.view";
+import KitCreditsView from "../credits/KitCredits.view";
 
 const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
 const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
@@ -83,47 +82,9 @@ function DescriptionBlock({ description }) {
   );
 }
 
-// R1 credits collapse (10 Aug 2026, kit polish 3 pass, plan 1.3): the
-// popup's space budget goes to art and description, not the credit
-// list. One row tall regardless of credit count: the first credit
-// only, plus a "View all credits (N)" control when more than one
-// exists, opening the stacked KitCreditsModal. Zero credits render
-// nothing, same as before.
-function CollapsedCreditsBlock({ credits, LinkComponent, onOpenCreditsModal }) {
-  if (!credits.length) return null;
-
-  const [first] = credits;
-
-  return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-4)]">
-      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-        Credits
-      </p>
-      <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-        {first.kindLabel} from{" "}
-        {first.creatorHref ? (
-          <LinkComponent
-            href={first.creatorHref}
-            className="text-[var(--ink)] transition-colors hover:text-[var(--gold-ornament)]"
-          >
-            {first.creatorHandle}
-          </LinkComponent>
-        ) : (
-          <span className="text-[var(--ink)]">{first.creatorHandle}</span>
-        )}
-      </p>
-      {credits.length > 1 && (
-        <button
-          type="button"
-          onClick={() => onOpenCreditsModal?.()}
-          className="-mx-[var(--space-2)] mt-[var(--space-1)] flex min-h-[var(--control-md)] items-center px-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]"
-        >
-          View all credits ({credits.length})
-        </button>
-      )}
-    </div>
-  );
-}
+// Credits are now presented as a conditional tab beside the media
+// filters. The resolved attribution rows remain the same; zero credits
+// means the tab is omitted entirely.
 
 // Creator-handle link, restored 11 Aug 2026 (design/community-parity,
 // parity audit candidate 6): matches the old preview modal's "by
@@ -309,11 +270,12 @@ function Carousel({ media, onViewCatalogue }) {
 }
 
 // Media library restored, 10 Aug 2026 (h-restore ruling 5): the
-// original creation detail page's media tabs, sort, and search return
-// here rather than at a separate detail surface, per Brian's ruling on
-// candidate 6. Local state only (presentation interaction, same
-// pattern as the carousel's own activeIndex above); it filters and
-// sorts the same `media` array the carousel already receives, capped
+// original creation detail page's media tabs and search return here
+// rather than at a separate detail surface. Per-asset media ordering
+// remains the source order; a sort control adds no useful choice in
+// this compact detail catalogue. Local state only (presentation
+// interaction, same pattern as the carousel's own activeIndex above);
+// it filters the same `media` array the carousel already receives, capped
 // at four items per fixture. Videos and per-media Liked/Bookmarked
 // state have no fixture field yet (the fixture model only carries
 // images and creation-level like/save, not per-media), so those tabs
@@ -326,12 +288,12 @@ const MEDIA_TABS = [
   { value: "bookmarked", label: "Bookmarked" },
 ];
 
-const MEDIA_SORTS = [
-  { value: "newest", label: "Newest" },
-  { value: "oldest", label: "Oldest" },
-  { value: "top", label: "Top" },
-  { value: "likedFirst", label: "Liked First" },
-];
+function getDetailTabs(credits) {
+  return credits.length
+    ? [...MEDIA_TABS, { value: "credits", label: "Credits" }]
+    : MEDIA_TABS;
+}
+
 
 // Media strip, RULED (FE polish closeout, item 2): the Images tab
 // always shows exactly three slots. Real media fills from the front;
@@ -365,10 +327,12 @@ function MediaSlotTile({ item }) {
   );
 }
 
-function MediaLibrary({ media, isLiked, isSaved }) {
+function MediaLibrary({ media, isLiked, isSaved, credits, LinkComponent }) {
   const [tab, setTab] = useState("images");
-  const [sort, setSort] = useState("newest");
   const [query, setQuery] = useState("");
+
+  const tabs = useMemo(() => getDetailTabs(credits), [credits]);
+  const showingCredits = tab === "credits";
 
   const visible = useMemo(() => {
     let items = media.map((item, index) => ({ ...item, index }));
@@ -382,14 +346,8 @@ function MediaLibrary({ media, isLiked, isSaved }) {
       items = items.filter((item) => (item.id || "").toLowerCase().includes(needle));
     }
 
-    const sorted = [...items];
-    if (sort === "oldest") sorted.reverse();
-    if (sort === "top" || sort === "likedFirst") {
-      // No per-media popularity or like field exists yet (CR-035);
-      // stable original order is the honest fallback for both.
-    }
-    return sorted;
-  }, [media, tab, sort, query, isLiked, isSaved]);
+    return items;
+  }, [media, tab, query, isLiked, isSaved]);
 
   return (
     <div className="mt-[var(--space-6)]">
@@ -399,7 +357,7 @@ function MediaLibrary({ media, isLiked, isSaved }) {
 
       <div className="mt-[var(--space-2)] flex flex-wrap items-center gap-[var(--space-2)]">
         <div className="flex flex-wrap gap-[var(--space-1)]">
-          {MEDIA_TABS.map((option) => (
+          {tabs.map((option) => (
             <button
               key={option.value}
               type="button"
@@ -416,28 +374,30 @@ function MediaLibrary({ media, isLiked, isSaved }) {
           ))}
         </div>
 
-        <label className="ml-auto flex min-h-[var(--control-sm)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
-          <Search size={14} aria-hidden="true" className="text-[var(--ink-faint)]" />
-          <span className="sr-only">Search media</span>
-          <input
-            type="text"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search media"
-            className="w-24 bg-transparent text-[length:var(--text-label)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
-          />
-        </label>
-
-        <KitDropdownView
-          label="Sort"
-          options={MEDIA_SORTS}
-          selectedValues={[sort]}
-          isMultiSelect={false}
-          onToggleOption={(value) => setSort(value)}
-        />
+        {!showingCredits ? (
+          <label className="ml-auto flex min-h-[var(--control-sm)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-2)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
+            <Search size={14} aria-hidden="true" className="text-[var(--ink-faint)]" />
+            <span className="sr-only">Search media</span>
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search media"
+              className="w-24 bg-transparent text-[length:var(--text-label)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
+            />
+          </label>
+        ) : null}
       </div>
 
-      {tab === "images" ? (
+      {showingCredits ? (
+        <div className="mt-[var(--space-3)]">
+          <KitCreditsView
+            credits={credits}
+            LinkComponent={LinkComponent}
+            showHeading={false}
+          />
+        </div>
+      ) : tab === "images" ? (
         <div className="mt-[var(--space-3)] grid grid-cols-3 gap-[var(--space-2)]">
           {Array.from({ length: IMAGE_SLOT_COUNT }, (_, index) => (
             <MediaSlotTile key={visible[index]?.id ?? `empty-${index}`} item={visible[index] || null} />
@@ -483,9 +443,6 @@ export default function KitAssetDetailPopupView({
   onViewCatalogue = null,
   credits = [],
   creditsLinkComponent = "a",
-  isCreditsModalOpen = false,
-  onOpenCreditsModal = null,
-  onCloseCreditsModal = null,
   // onEdit, ADDED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio
   // brief S5): the single ruled edit path, own-work items only.
   // Optional; renders as a footer action only when provided, so
@@ -532,17 +489,13 @@ export default function KitAssetDetailPopupView({
           <TagsRow tags={tags} />
         </div>
 
-        {credits.length > 0 && (
-          <div className="mt-[var(--space-4)]">
-            <CollapsedCreditsBlock
-              credits={credits}
-              LinkComponent={creditsLinkComponent}
-              onOpenCreditsModal={onOpenCreditsModal}
-            />
-          </div>
-        )}
-
-        <MediaLibrary media={media} isLiked={isLiked} isSaved={isSaved} />
+        <MediaLibrary
+          media={media}
+          isLiked={isLiked}
+          isSaved={isSaved}
+          credits={credits}
+          LinkComponent={creditsLinkComponent}
+        />
 
         <div className={`mt-[var(--space-4)] grid w-full gap-[var(--space-2)] ${hasEdit ? "grid-cols-5" : "grid-cols-4"}`}>
           <button
@@ -592,9 +545,6 @@ export default function KitAssetDetailPopupView({
         </div>
       </div>
 
-      {isCreditsModalOpen && (
-        <KitCreditsModal credits={credits} onClose={onCloseCreditsModal} />
-      )}
     </div>
   );
 }

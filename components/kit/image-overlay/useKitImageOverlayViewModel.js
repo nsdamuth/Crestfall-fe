@@ -12,10 +12,8 @@ export function useKitImageOverlayViewModel(props) {
     onSave: toCallback(props?.onSave),
     onShare: toCallback(props?.onShare),
     onClose: toCallback(props?.onClose),
-    // B7 viewer final (ED1F propagation plan group G3): the header's
-    // icon row and the bottom bar's Generate Variant action.
-    // onReassignAsset is accepted for forward compatibility but the
-    // view always renders that action as an honest stub (CR-055).
+    // B7 viewer final: application-owned callbacks remain outside the View.
+    // Reassignment is live when the caller supplies the current Chassis binding.
     onDelete: toCallback(props?.onDelete),
     onReport: toCallback(props?.onReport),
     onDetails: toCallback(props?.onDetails),

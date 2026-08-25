@@ -33,7 +33,7 @@ export const kitImageOverlayDefaultFixture = {
   onClose: noop,
   // B7 viewer final: header icon row plus bottom bar callbacks.
   // onReassignAsset is accepted but the view always renders that
-  // action disabled (CR-055 stub).
+  // action disabled when reassignment is unavailable.
   onDelete: noop,
   onReport: noop,
   onDetails: noop,

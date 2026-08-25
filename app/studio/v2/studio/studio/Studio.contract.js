@@ -1,15 +1,12 @@
-// 2.0.0, 23 Aug 2026 (build-0823 pass 4, RULED, the Studio hub
-// three-zone ruling): STRUCTURAL. The altitude ladder (levels,
-// activeLevelId, onSelectLevel), the Guided Build pane
-// (guidedBuildSoon), the Story bridge strip (storyBridge), and the
-// Full Studio tool-card grid (toolGroups) are all REMOVED. One calm
-// scroll, three zones in order, plain zone labels: CREATE (the four
-// live quick-create doors plus Player Character's Soon door, plus a
-// quiet line routing to the advanced editor), BUILD (Build a Story,
-// Build an Adventure), PUBLISH (one line routing to the Vault). New
-// props: onOpenAdvancedEditor, onBuildStory, onBuildAdventure,
-// onOpenVault.
-export const STUDIO_VIEW_CONTRACT_VERSION = "2.0.0";
+// 2.2.0, 24 Aug 2026 (Guided / Full Studio V2 presentation convergence):
+// RESTORES the user-facing Studio altitude/mode ladder as a real product
+// choice: I Quick Start, II Guided Build, III Full Studio. The Aug. 23
+// three-zone CREATE / BUILD / PUBLISH composition remains the Quick Start
+// surface rather than being discarded. Guided Build and Full Studio reuse
+// the already-working progressive Creation Studio contracts, counts, and
+// complete tool inventory through an injected portable slot. Mode choice is
+// persisted by the Binding/ViewModel layer.
+export const STUDIO_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the Studio hub page View
@@ -73,8 +70,18 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {string} title
  * @property {string} body
  *
+ * @typedef {Object} StudioModeOption
+ * @property {string} id QUICK | GUIDED | FULL.
+ * @property {string} numeral I | II | III.
+ * @property {string} label
+ * @property {string} description
+ *
  * @typedef {Object} StudioViewProps
  * @property {StudioExplainer} hubExplainer
+ * @property {StudioModeOption[]} modeOptions User-facing Quick Start / Guided Build / Full Studio choices.
+ * @property {string} activeMode
+ * @property {((mode: string) => void)|null} onSelectMode
+ * @property {import("react").ReactNode} [modeContentSlot] Guided Build / Full Studio portable content supplied by the Binding Shell; Quick Start renders the V2 three-zone surface locally.
  * @property {StudioDoor[]} doors CREATE zone.
  * @property {(() => void)|null} onOpenAdvancedEditor CREATE zone's quiet line, routes to /studio/v2/editor.
  * @property {(() => void)|null} onBuildStory BUILD zone, opens StoryCreatorModal (same handler as the Stories door).

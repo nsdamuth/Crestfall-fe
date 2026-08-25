@@ -9,15 +9,17 @@
 // per control, whether to call it or open the honest stub notice
 // instead.
 //
-// Item 39, RULED 10 Aug 2026: the write-new-lore action is the top
-// banner CTA, "Write lore," opening the creation modal (modal-frame
-// plus KitFormField fields and KitAlertStrip approval notices). Wired
-// this pass now that waves H2a (form-field) and H2c (alert-strip)
-// have landed. Submission itself still stubs with the R4 notice: no
-// services-api exists to submit to (CR-015 pipeline confirmation
-// stays open with Nick, non-blocking, per docs/SPRINT-G-PLAN.md
-// section 4).
+// V2 convergence: the product route is live. Public Lore comes from the
+// existing Community creation catalogue filtered to LORE, owned Lore comes
+// from the owner creation summary contract, and the Write Lore CTA enters the
+// existing full Lore builder directly. Fixture data remains dev-preview only.
 import { useMemo, useState } from "react";
+
+import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import {
+  projectOwnedLoreCreations,
+  projectPublicLoreCreations,
+} from "@/lib/shared/presentation/lorePresentation";
 
 import {
   LORE_APPROVAL_OPTIONS,
@@ -29,7 +31,13 @@ import {
 
 const PAGE_SIZE = 4;
 
-const CREATE_FIELDS_INITIAL = { title: "", world: "", content: "" };
+const LIVE_APPROVAL_OPTIONS = [
+  { value: "draft", label: "Draft" },
+  { value: "pending", label: "Reviewing" },
+  { value: "approved", label: "Approved" },
+  { value: "archived", label: "Archived" },
+  { value: "canon", label: "Canon" },
+];
 
 const TOP_BANNER = {
   eyebrow: "Lore",
@@ -44,7 +52,7 @@ const TOP_BANNER = {
 const BOTTOM_BANNER = {
   eyebrow: "Loop",
   title: "Back to where every session starts.",
-  ctaLabel: "Return to Home",
+  ctaLabel: "Return to Studio",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Dalethia.png"),
 };
 
@@ -61,16 +69,21 @@ function withinRecency(daysAgo, selectedTiers) {
   return selectedTiers.includes(tier);
 }
 
-export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {}) {
+export function useLoreViewModel({
+  fixtureMode = "full",
+  live = false,
+  communityCreations = [],
+  communityLoadError = null,
+  ownedCreations = [],
+  ownedLoadError = null,
+  onNavigate = null,
+} = {}) {
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [selectedValues, setSelectedValues] = useState({});
   const [visibleCommunityCount, setVisibleCommunityCount] = useState(PAGE_SIZE);
   const [notice, setNotice] = useState(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [createFields, setCreateFields] = useState(CREATE_FIELDS_INITIAL);
-  const [createTitleError, setCreateTitleError] = useState("");
 
   function toggleId(setter) {
     return (id) =>
@@ -92,51 +105,80 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     openNotice(label, `${label} opens once this section is built. Nothing was opened in this preview.`);
   }
 
-  const communitySource =
-    fixtureMode === "empty" || fixtureMode === "error"
+  const liveCommunitySource = useMemo(
+    () => projectPublicLoreCreations(communityCreations),
+    [communityCreations]
+  );
+  const liveMineSource = useMemo(
+    () => projectOwnedLoreCreations(ownedCreations),
+    [ownedCreations]
+  );
+
+  const communitySource = live
+    ? liveCommunitySource
+    : fixtureMode === "empty" || fixtureMode === "error"
       ? []
       : fixtureMode === "pendingApproval"
         ? []
         : LORE_COMMUNITY_ITEMS;
-  const mineSource =
-    fixtureMode === "empty" || fixtureMode === "error"
+  const mineSource = live
+    ? liveMineSource
+    : fixtureMode === "empty" || fixtureMode === "error"
       ? []
       : fixtureMode === "pendingApproval"
         ? LORE_MINE_ITEMS.filter((item) => item.approvalState === "pending")
         : LORE_MINE_ITEMS;
 
-  const filterGroups = useMemo(
-    () => [
+  const engagementState = useCreationEngagementState(
+    live ? [...communitySource, ...mineSource] : []
+  );
+
+  const filterGroups = useMemo(() => {
+    const approvalOptions = live ? LIVE_APPROVAL_OPTIONS : LORE_APPROVAL_OPTIONS;
+    const groups = [
       {
         id: "approval",
         label: "Approval state",
         isMultiSelect: true,
-        options: LORE_APPROVAL_OPTIONS.map((option) => ({ ...option, count: null })),
+        options: approvalOptions.map((option) => ({ ...option, count: null })),
       },
-      {
+    ];
+
+    // The current public Community summary contract does not expose a
+    // normalized Lore world/faction facet. Keep the authored fixture filter
+    // for design QA, but do not invent classifications on the live archive.
+    if (!live) {
+      groups.push({
         id: "world",
         label: "World or faction",
         isMultiSelect: true,
         options: LORE_WORLD_OPTIONS.map((option) => ({ ...option, count: null })),
-      },
-      {
-        id: "recency",
-        label: "Recency",
-        isMultiSelect: true,
-        options: LORE_RECENCY_OPTIONS.map((option) => ({ ...option, count: null })),
-      },
-    ],
-    []
-  );
+      });
+    }
+
+    groups.push({
+      id: "recency",
+      label: "Recency",
+      isMultiSelect: true,
+      options: LORE_RECENCY_OPTIONS.map((option) => ({ ...option, count: null })),
+    });
+
+    return groups;
+  }, [live]);
 
   function matchesFilters(item) {
     const approvalValues = selectedValues.approval || [];
     const worldValues = selectedValues.world || [];
     const recencyValues = selectedValues.recency || [];
     const query = searchValue.trim().toLowerCase();
-    if (query && !item.title.toLowerCase().includes(query)) return false;
+    if (
+      query &&
+      !`${item.title || ""} ${item.subtitle || ""} ${item.description || ""}`
+        .toLowerCase()
+        .includes(query)
+    ) return false;
     if (approvalValues.length && !approvalValues.includes(item.approvalState)) return false;
-    if (worldValues.length && !worldValues.includes(item.world)) return false;
+    if (!live && worldValues.length && !worldValues.includes(item.world)) return false;
     if (!withinRecency(item.daysAgo, recencyValues)) return false;
     return true;
   }
@@ -166,7 +208,8 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
     if (item.approvalState === "canon") {
       badges.push({ label: "Canon", variant: "canon" });
     } else if (showApprovalBadge) {
-      const label = LORE_APPROVAL_OPTIONS.find((option) => option.value === item.approvalState)?.label ?? "Draft";
+      const approvalOptions = live ? LIVE_APPROVAL_OPTIONS : LORE_APPROVAL_OPTIONS;
+      const label = approvalOptions.find((option) => option.value === item.approvalState)?.label ?? "Draft";
       badges.push({ label, variant: "status" });
     }
 
@@ -179,13 +222,23 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
       imageSrc: item.imageSrc,
       badges,
       stats: item.stats,
-      liked: likedIds.includes(item.id),
-      bookmarked: savedIds.includes(item.id),
-      onOpenAssetDetail: isMine
-        ? () => onNavigate?.("/studio/create/lore")
-        : () => openNotice(item.title, `Reading "${item.title}" opens once the Lore reading surface is built.`),
-      onLike: () => toggleLiked(item.id),
-      onBookmark: () => toggleSaved(item.id),
+      liked: live
+        ? engagementState.isCreationLiked(item)
+        : likedIds.includes(item.id),
+      bookmarked: live
+        ? engagementState.isCreationBookmarked(item)
+        : savedIds.includes(item.id),
+      onOpenAssetDetail: live
+        ? isMine
+          ? () => onNavigate?.(`/studio/v2/editor/${encodeURIComponent(item.id)}?origin=lore`)
+          : () => onNavigate?.(`/studio/creations/${encodeURIComponent(item.id)}`)
+        : isMine
+          ? () => onNavigate?.("/studio/create/lore")
+          : () => openNotice(item.title, `Reading "${item.title}" opens once the Lore reading surface is built.`),
+      onLike: () =>
+        live ? engagementState.toggleCreationLike(item) : toggleLiked(item.id),
+      onBookmark: () =>
+        live ? engagementState.toggleCreationBookmark(item) : toggleSaved(item.id),
     };
   }
 
@@ -198,19 +251,21 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   const communityHasMore = visibleCommunityCount < filteredCommunity.length;
   const communityRemainingCount = communityHasMore ? filteredCommunity.length - visibleCommunityCount : null;
 
-  const communityEmptyMessage =
-    filteredCommunity.length === 0 && fixtureMode !== "error"
+  const communityEmptyMessage = communityLoadError
+    ? null
+    : filteredCommunity.length === 0 && (live || fixtureMode !== "error")
       ? "No published Lore matches these filters yet."
       : null;
-  const mineEmptyMessage =
-    filteredMine.length === 0 && fixtureMode !== "error"
+  const mineEmptyMessage = ownedLoadError
+    ? null
+    : filteredMine.length === 0 && (live || fixtureMode !== "error")
       ? "Nothing of yours matches these filters yet."
       : null;
 
   // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
   // one; this restores the KitAlertStrip danger banner every fixture-
   // driven page now carries under fixtureMode "error".
-  const errorMessage = fixtureMode === "error" ? "Lore could not be loaded." : null;
+  const errorMessage = !live && fixtureMode === "error" ? "Lore could not be loaded." : null;
 
   const filterBar = {
     searchValue,
@@ -248,64 +303,27 @@ export function useLoreViewModel({ fixtureMode = "full", onNavigate = null } = {
   const topBanner = {
     ...TOP_BANNER,
     imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/The Seer.png"),
-    onCtaClick: () => setIsCreateModalOpen(true),
+    onCtaClick: () => onNavigate?.("/studio/create/lore"),
   };
 
   const bottomBanner = {
     ...BOTTOM_BANNER,
-    onCtaClick: () => navigateOrStub("/studio/v2/home", "Return to Home"),
+    onCtaClick: () => navigateOrStub("/studio", "Return to Studio"),
   };
 
-  function closeCreateModal() {
-    setIsCreateModalOpen(false);
-    setCreateFields(CREATE_FIELDS_INITIAL);
-    setCreateTitleError("");
-  }
-
-  function setCreateField(field) {
-    return (value) => {
-      setCreateFields((current) => ({ ...current, [field]: value }));
-      if (field === "title" && createTitleError) setCreateTitleError("");
-    };
-  }
-
-  function submitCreateModal() {
-    if (!createFields.title.trim()) {
-      setCreateTitleError("Give your lore a title before submitting.");
-      return;
-    }
-    closeCreateModal();
-    openNotice(
-      "Write lore",
-      "Submission opens for review once the live approval pipeline is wired (CR-015). Nothing was published in this preview."
-    );
-  }
-
-  const createModal = {
-    title: createFields.title,
-    onTitleChange: setCreateField("title"),
-    titleError: createTitleError,
-    world: createFields.world,
-    onWorldChange: setCreateField("world"),
-    content: createFields.content,
-    onContentChange: setCreateField("content"),
-    onSubmit: submitCreateModal,
-    onClose: closeCreateModal,
-    onOpenAdvancedEditor: () => onNavigate?.("/studio/create/lore"),
-  };
 
   return {
     topBanner,
     filterBar,
     communityItems,
+    communityError: communityLoadError,
     communityEmptyMessage,
     communityLoadMore,
     mineItems,
+    mineError: ownedLoadError,
     mineEmptyMessage,
     errorMessage,
     bottomBanner,
-    isCreateModalOpen,
-    createModal,
     notice,
     onCloseNotice: () => setNotice(null),
   };

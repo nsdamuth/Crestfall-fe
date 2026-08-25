@@ -11,9 +11,9 @@ exactly Edit, Generate Image, Share, Archive, Delete, with a fade
 divider (`--line-fade`) before the sole danger item (Delete), on the
 ratified glass surface (NEW LAW B: `--panel-glass` at `--blur-panel`,
 2px, the same surface every menu and popover in the app moves to).
-Archive ships as an honest disabled stub, CR-056 (no endpoint exists
-yet); its callback prop is still wired so a caller may supply one once
-that CR resolves, no further contract bump needed for that alone.
+CR-056 is now resolved by the current Crestfall Archive operation.
+Archive is enabled when the caller supplies `onArchive`; lifecycle-locked
+items omit the callback and the menu keeps the action visibly disabled.
 
 The contextual third face action (slot three: like, save, contextual)
 also widens this pass: `assetKind: "character"` cards with an `onPlay`

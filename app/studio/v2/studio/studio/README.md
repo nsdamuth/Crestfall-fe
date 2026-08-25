@@ -1,6 +1,20 @@
 # Studio LOOM package
 
-**Contract:** `Studio.contract.js` (v1.0.0)
+**Contract:** `Studio.contract.js` (v2.2.0)
+
+## 24 Aug 2026 convergence product override
+
+Quick Start / Guided Build / Full Studio are restored as permanent user-facing
+Studio choices. This supersedes the Aug. 23 removal of the altitude ladder.
+Quick Start keeps the newer V2 CREATE / BUILD / PUBLISH composition. Guided
+Build now renders the live progressive Creation Studio guidance and owned-creation
+counts in a V2-native cinematic/progressive presentation. Full Studio renders
+the same complete builder/registry/tool inventory as a V2-native visual
+catalogue. The underlying Creation Studio logic, routes, persistence, and
+permissions remain authoritative; only the presentation is remodeled. The three
+modes share the existing `crestfall.creationStudio.mode.v1` preference so mode
+choice persists. Historical sections below describe the earlier design passes
+and are retained only for provenance where they conflict with this override.
 
 ## Purpose
 

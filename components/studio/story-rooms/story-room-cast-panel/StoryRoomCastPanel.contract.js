@@ -1,4 +1,4 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the Story Room Room & Cast panel.
@@ -14,12 +14,13 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} avatarUrl
  * @property {string} fallbackInitial
  * @property {string} role
+ * @property {string} typeLabel Compact player-facing category label.
  * @property {string} state
+ * @property {string} displayState Exceptional state only; normal Present/Active is omitted.
  * @property {string} note
  * @property {boolean} isActive
  * @property {boolean} selectable
  * @property {boolean} selected
- * @property {string} selectionLabel
  * @property {string} selectionAriaLabel
  *
  * @typedef {Object} StoryRoomCastPanelViewProps

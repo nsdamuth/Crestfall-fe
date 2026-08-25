@@ -140,14 +140,12 @@ function ViewerBottomBar({ onGenerateVariant, onReassignAsset, onShare }) {
         icon={<Sparkles size={16} aria-hidden="true" />}
         onClick={onGenerateVariant}
       />
-      {/* Honest stub, CR-055 (filed by this build, ED1F propagation
-          plan section B item 9): no backend operation exists yet, so
-          the action renders disabled rather than pretending to work. */}
       <ViewerBarAction
         label="Reassign Asset"
         icon={<RefreshCw size={16} aria-hidden="true" />}
-        disabled
-        title="Reassign Asset is not wired yet (CR-055)"
+        onClick={onReassignAsset}
+        disabled={!onReassignAsset}
+        title={onReassignAsset ? "Reassign Asset" : "This image cannot be reassigned"}
       />
       <ViewerBarAction
         label="Share"
@@ -158,9 +156,8 @@ function ViewerBottomBar({ onGenerateVariant, onReassignAsset, onShare }) {
   );
 }
 
-// B5 danger-confirm recipe, CR-054 placeholder copy: the recovery
-// window is not yet ruled to a single number, so the copy carries the
-// literal "[X] days" placeholder rather than a guessed figure.
+// B5 danger-confirm recipe. Current runtime deletion is permanent;
+// CR-054 recovery-window behavior remains a separate unresolved product rule.
 function DeleteConfirm({ onKeepImage = null, onConfirmDelete = null }) {
   return (
     <div className="pointer-events-auto w-full max-w-[26rem] self-stretch rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] p-[var(--space-6)] backdrop-blur-[var(--blur-panel)]">
@@ -168,8 +165,8 @@ function DeleteConfirm({ onKeepImage = null, onConfirmDelete = null }) {
         Delete this image?
       </h2>
       <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-        It moves to a recovery window for [X] days before it is gone for
-        good.
+        This permanently removes the image from Image Studio and any connected
+        creation libraries or featured slots. This action cannot be undone.
       </p>
       <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
       <div className="flex items-center justify-between gap-[var(--space-3)]">

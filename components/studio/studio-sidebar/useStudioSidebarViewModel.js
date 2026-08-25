@@ -4,15 +4,13 @@ import { useState } from "react";
 
 import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 
-// Preview-only nav, journey order per docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
-// section 2. Built destinations route to their live studio v2 page
-// route; unbuilt destinations carry no href and render quiet
-// (non-interactive) until their page ships. Icon keys reuse the
-// existing ICONS set in StudioSidebar.view.jsx, no new icons added.
-//
-// All nine destinations are built, RULED 11 Aug 2026: every isBuilt
-// flag moves false to true, so every item routes to its live
-// /studio/v2/<page> route. No hrefs changed, no icon keys changed.
+// V2 navigation, derived from the journey order in
+// docs/CRESTFALL-PRODUCT-MODEL-UXUI.md section 2. During the convergence
+// cutover, /studio itself is the canonical Studio landing surface while
+// the remaining V2 destinations keep their /studio/v2/* staging addresses.
+// The earlier Home door is intentionally absent from primary navigation;
+// its useful concepts may be folded into Studio during later convergence.
+// Icon keys reuse the existing ICONS set in StudioSidebar.view.jsx.
 //
 // Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
 // (build-0823 pass 4, sidebar refinement): the repo's standing
@@ -21,7 +19,6 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
     items: Object.freeze([
-      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true }),
       Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true }),
       Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true }),
     ]),
@@ -29,7 +26,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Create",
     items: Object.freeze([
-      Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true }),
+      Object.freeze({ label: "Studio", href: "/studio", iconKey: "home", isBuilt: true }),
       Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
       Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true }),
     ]),
@@ -43,6 +40,24 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
     ]),
   }),
 ]);
+export const STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP = Object.freeze({
+  label: "Support",
+  items: Object.freeze([
+    Object.freeze({
+      label: "Feedback & Updates",
+      href: "/studio/feedback",
+      iconKey: "megaphone",
+      isBuilt: true,
+    }),
+    Object.freeze({
+      label: "Terms & Policies",
+      href: "/terms",
+      iconKey: "shieldCheck",
+      isBuilt: true,
+    }),
+  ]),
+});
+
 
 export const STUDIO_SIDEBAR_LEGACY_LABEL = "Legacy";
 
@@ -54,6 +69,16 @@ function buildPreviewGroups(pathname) {
       isActive: item.isBuilt && isStudioSidebarPathActive(pathname, item.href),
     })),
   }));
+}
+
+function buildPreviewSupportGroup(pathname) {
+  return {
+    ...STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP,
+    items: STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP.items.map((item) => ({
+      ...item,
+      isActive: item.isBuilt && isStudioSidebarPathActive(pathname, item.href),
+    })),
+  };
 }
 
 export const STUDIO_SIDEBAR_DISCORD_URL =
@@ -142,7 +167,9 @@ export function isStudioSidebarPathActive(pathname = "", href = "") {
 // This sidebar renders on every /studio/** route including v2 pages,
 // so the Account item's target depends on which surface is current.
 export function getStudioSidebarAccountHref(pathname = "") {
-  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+  return pathname === "/studio" || pathname.startsWith("/studio/v2")
+    ? "/studio/v2/account"
+    : "/studio/account";
 }
 
 export function normalizeStudioSidebarEmail(user = {}) {
@@ -160,11 +187,13 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
   const [legacyOpen, setLegacyOpen] = useState(false);
-  const previewEnabled = isSidebarV2PreviewEnabled();
+  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2");
+  const previewEnabled = v2Surface || isSidebarV2PreviewEnabled();
 
   return {
     previewEnabled,
     previewGroups: previewEnabled ? buildPreviewGroups(pathname) : [],
+    previewSupportGroup: previewEnabled ? buildPreviewSupportGroup(pathname) : null,
     legacyLabel: STUDIO_SIDEBAR_LEGACY_LABEL,
     legacyOpen,
     onToggleLegacy: () => setLegacyOpen((value) => !value),

@@ -1,14 +1,12 @@
 "use client";
 
-// The full Community composition, fixture-driven, presentation only.
-// Rendered by /studio/v2/community (pre-parity staging address) and
-// mirrored at /dev/ui-preview/community-v2-page so any session can
-// verify the whole page without auth. All facets from
-// docs/CRESTFALL-PRODUCT-MODEL-UXUI.md 3.1 (entity type, rating
-// tier, popularity, recency, remixable) are represented and work
-// against the fixtures below; no live data, no API calls, no real
-// navigation.
+// The V2 Community composition. The dev preview remains fixture-driven,
+// while /studio/v2/community injects live public creation summaries and
+// persists Like/Save reactions through the Crestfall Chassis. Presentation
+// filtering stays local so the same Skin can be exercised in fixture and
+// live modes.
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
@@ -21,8 +19,17 @@ import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
-import { ASSET_KIND_TO_TYPE_BUCKET, TYPE_BUCKET_OPTIONS } from "@/lib/shared/presentation/typeBuckets";
+import {
+  buildDomainFilterGroups,
+  buildTagFilterOptions,
+  getCatalogCreationType,
+  getCatalogTags,
+  getSelectedCatalogCreationTypes,
+} from "../catalog/creationCatalogFilterTaxonomy.js";
 import FixtureActionNotice from "../FixtureActionNotice";
+import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -75,23 +82,16 @@ const FIXTURE_CREATIONS = [
   { id: "c16", assetKind: "story", title: "Whiteviolin Nocturne", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin-2"), isCanon: false, isFeatured: false, ratingTier: "ADULT", isRemixable: true, plays: 760, hearts: 130, saves: 25, recency: 3, description: "A late-night story cycle set in a city that never quite sleeps, mature themes." },
 ];
 
-// Type facet, RULED 10 Aug 2026 (h-restore ruling 1, extended to
-// Community as "the shared question with Vault" named in the parity
-// audit section 5): the same five buckets Vault ships replace the
-// prior four-kind-plus-Remix model here too, so both catalogs read
-// the same taxonomy. RULED 23 Aug 2026 (build-0823 pass 3, the 23 Aug
-// spec's five-bucket-filter ruling): resolves the open flag below,
-// the five-bucket filter is the standard wherever a list mixes asset
-// kinds. Promoted to the shared lib/shared/presentation/typeBuckets.js
-// module.
-const TYPE_OPTIONS = TYPE_BUCKET_OPTIONS;
-
-// Curation rows, RULED 10 Aug 2026 (ruling 2): Featured, Canon, and
-// Recently Updated return as option rows inside the Type dropdown,
-// never as loose pills; Popular Tags stays retired (chip-retirement
-// law). "Recently Updated" reads the existing recency field (the top
-// third of the pool) since no updatedAt timestamp exists yet (CR-033).
+// Curation remains independent from creation type. Live items use their
+// projected recentlyUpdated signal; fixture rows retain the existing recency
+// threshold so the design harness still exercises the state.
 const RECENTLY_UPDATED_THRESHOLD = 12;
+
+const CURATION_OPTIONS = [
+  { value: "featured", label: "Featured" },
+  { value: "canon", label: "Canon" },
+  { value: "recentlyUpdated", label: "Recently Updated" },
+];
 
 const SORT_OPTIONS = [
   { value: "recommended", label: "Recommended" },
@@ -115,8 +115,12 @@ const RENDERING_OPTIONS = [
 ];
 
 function renderingStyleFor(item) {
+  if (["anime", "realistic", "either", "auto"].includes(item?.renderingStyle)) {
+    return item.renderingStyle;
+  }
+
   const cycle = ["anime", "realistic", "either", "auto"];
-  const seed = Number.parseInt(item.id.replace(/\D/g, ""), 10) || 0;
+  const seed = Number.parseInt(String(item?.id || "").replace(/\D/g, ""), 10) || 0;
   return cycle[seed % cycle.length];
 }
 
@@ -173,7 +177,13 @@ function EmptyState() {
   );
 }
 
-export default function CommunityV2Mockup() {
+export default function CommunityV2Mockup({
+  creations = null,
+  loadError = null,
+  live = false,
+} = {}) {
+  const router = useRouter();
+  const sourceCreations = Array.isArray(creations) ? creations : FIXTURE_CREATIONS;
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
@@ -189,44 +199,26 @@ export default function CommunityV2Mockup() {
   const [likedIds, setLikedIds] = useState([]);
   const [savedIds, setSavedIds] = useState([]);
   const [lovedOverlayIds, setLovedOverlayIds] = useState([]);
+  const engagementState = useCreationEngagementState(live ? sourceCreations : []);
+  const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
 
   const filterGroups = useMemo(() => {
-    const pool = fixtureMode === "empty" || fixtureMode === "error" ? [] : FIXTURE_CREATIONS;
+    const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreations;
+
     return [
+      ...buildDomainFilterGroups(pool),
       {
-        id: "type",
-        label: "Type",
+        id: "curation",
+        label: "Curation",
         isMultiSelect: true,
-        // Remixable folded in as an additional option group (9 Aug
-        // 2026 kit polish pass); the standalone Remixable dropdown is
-        // retired. Curation rows (Featured, Canon, Recently Updated)
-        // fold in the same way per ruling 2, 10 Aug 2026.
-        options: [
-          ...TYPE_OPTIONS.map((option) => ({
-            ...option,
-            count: pool.filter((item) => ASSET_KIND_TO_TYPE_BUCKET[item.assetKind] === option.value).length,
-          })),
-          {
-            value: "remixable",
-            label: "Remix",
-            count: pool.filter((item) => item.isRemixable).length,
-          },
-          {
-            value: "featured",
-            label: "Featured",
-            count: pool.filter((item) => item.isFeatured).length,
-          },
-          {
-            value: "canon",
-            label: "Canon",
-            count: pool.filter((item) => item.isCanon).length,
-          },
-          {
-            value: "recentlyUpdated",
-            label: "Recently Updated",
-            count: pool.filter((item) => item.recency >= RECENTLY_UPDATED_THRESHOLD).length,
-          },
-        ],
+        options: CURATION_OPTIONS.map((option) => ({
+          ...option,
+          count: pool.filter((item) => {
+            if (option.value === "featured") return item.isFeatured;
+            if (option.value === "canon") return item.isCanon;
+            return live ? item.recentlyUpdated : item.recency >= RECENTLY_UPDATED_THRESHOLD;
+          }).length,
+        })),
       },
       {
         id: "rating",
@@ -251,40 +243,44 @@ export default function CommunityV2Mockup() {
           count: pool.filter((item) => renderingStyleFor(item) === option.value).length,
         })),
       },
+      {
+        id: "tags",
+        label: "Tags",
+        isMultiSelect: true,
+        options: buildTagFilterOptions(pool),
+      },
     ];
-  }, [fixtureMode]);
+  }, [effectiveMode, live, sourceCreations]);
 
   const filteredCreations = useMemo(() => {
-    if (fixtureMode === "empty" || fixtureMode === "error") return [];
+    if (effectiveMode === "empty" || effectiveMode === "error") return [];
 
     const query = searchValue.trim().toLowerCase();
-    const typeValues = selectedValues.type || [];
-    const remixOnly = typeValues.includes("remixable");
-    const featuredOnly = typeValues.includes("featured");
-    const canonOnly = typeValues.includes("canon");
-    const recentlyUpdatedOnly = typeValues.includes("recentlyUpdated");
-    const types = typeValues.filter(
-      (value) => !["remixable", "featured", "canon", "recentlyUpdated"].includes(value)
-    );
+    const types = getSelectedCatalogCreationTypes(selectedValues);
+    const curation = selectedValues.curation || [];
     const ratings = selectedValues.rating || [];
     const renderingValues = selectedValues.rendering || [];
+    const selectedTags = selectedValues.tags || [];
 
-    const filtered = FIXTURE_CREATIONS.filter((item) => {
-      if (types.length && !types.includes(ASSET_KIND_TO_TYPE_BUCKET[item.assetKind])) return false;
+    const filtered = sourceCreations.filter((item) => {
+      const itemType = getCatalogCreationType(item);
+      const itemTags = getCatalogTags(item);
+      const normalizedTags = new Set(itemTags.map((tag) => tag.toLowerCase()));
+
+      if (types.length && !types.includes(itemType)) return false;
       if (ratings.length && !ratings.includes(item.ratingTier)) return false;
       if (renderingValues.length && !renderingValues.includes(renderingStyleFor(item))) return false;
-      if (remixOnly && !item.isRemixable) return false;
-      if (featuredOnly && !item.isFeatured) return false;
-      if (canonOnly && !item.isCanon) return false;
-      if (recentlyUpdatedOnly && item.recency < RECENTLY_UPDATED_THRESHOLD) return false;
-      // Search restores original field coverage (title, description,
-      // creator handle, tags per the 10 Aug 2026 parity audit): the
-      // handle lives in subtitle here and the v2 card model carries no
-      // separate tags field, so title, subtitle, and description are
-      // the honest equivalent set.
+      if (curation.includes("featured") && !item.isFeatured) return false;
+      if (curation.includes("canon") && !item.isCanon) return false;
+      if (
+        curation.includes("recentlyUpdated") &&
+        !(live ? item.recentlyUpdated : item.recency >= RECENTLY_UPDATED_THRESHOLD)
+      ) return false;
+      if (selectedTags.length && !selectedTags.some((tag) => normalizedTags.has(tag))) return false;
+
       if (
         query &&
-        !`${item.title} ${item.subtitle} ${item.description || ""}`
+        !`${item.title} ${item.subtitle} ${item.description || ""} ${itemTags.join(" ")}`
           .toLowerCase()
           .includes(query)
       ) {
@@ -304,7 +300,7 @@ export default function CommunityV2Mockup() {
       sorted.sort((a, b) => (b.saves || 0) - (a.saves || 0));
     }
     return sorted;
-  }, [fixtureMode, searchValue, selectedValues, selectedSort]);
+  }, [effectiveMode, live, sourceCreations, searchValue, selectedValues, selectedSort]);
 
   const visibleCreations = filteredCreations.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCreations.length;
@@ -329,17 +325,113 @@ export default function CommunityV2Mockup() {
       );
   }
 
-  const toggleLiked = toggleId(setLikedIds);
-  const toggleSaved = toggleId(setSavedIds);
+  const toggleFixtureLiked = toggleId(setLikedIds);
+  const toggleFixtureSaved = toggleId(setSavedIds);
   const toggleLovedOverlay = toggleId(setLovedOverlayIds);
 
-  // Shared with the card grid's new contextual third face action
-  // (RULED 11 Aug 2026): the card's play icon routes to the same
-  // destination as the opened popup's own Play primary action.
-  function handlePlay(creation) {
+  function isLiked(creation) {
+    return live
+      ? engagementState.isCreationLiked(creation)
+      : likedIds.includes(creation.id);
+  }
+
+  function isSaved(creation) {
+    return live
+      ? engagementState.isCreationBookmarked(creation)
+      : savedIds.includes(creation.id);
+  }
+
+  function toggleLiked(creation) {
+    if (live) {
+      engagementState.toggleCreationLike(creation);
+      return;
+    }
+
+    toggleFixtureLiked(creation.id);
+  }
+
+  function toggleSaved(creation) {
+    if (live) {
+      engagementState.toggleCreationBookmark(creation);
+      return;
+    }
+
+    toggleFixtureSaved(creation.id);
+  }
+
+  async function handlePlay(creation) {
+    if (!live) {
+      setActionNotice({
+        label: "Play",
+        message: `Playing "${creation.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+      });
+      return;
+    }
+
+    if (!isChatCapableCreationType(creation.type)) {
+      setAssetDetailId(creation.id);
+      return;
+    }
+
+    try {
+      const payload = await startStoryFromCreation(creation.rawCreation || creation);
+      const roomId = payload?.room?.id;
+
+      if (!roomId) {
+        throw new Error("Story was created without a room id.");
+      }
+
+      router.push(`/studio/story-rooms/${encodeURIComponent(roomId)}`);
+    } catch (error) {
+      setActionNotice({
+        label: "Start Story",
+        message: error?.message || "Story could not be started.",
+      });
+    }
+  }
+
+  async function handleShare(creation) {
+    if (!live) {
+      setActionNotice({
+        label: "Share",
+        message: "Sharing is wired when the page goes live. Nothing leaves this preview.",
+      });
+      return;
+    }
+
+    const href = `/studio/creations/${encodeURIComponent(creation.id)}`;
+    const absoluteHref =
+      typeof window !== "undefined"
+        ? new URL(href, window.location.origin).toString()
+        : href;
+
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: creation.title, url: absoluteHref });
+      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(absoluteHref);
+        setActionNotice({ label: "Share", message: "Public catalogue link copied." });
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        setActionNotice({
+          label: "Share",
+          message: error?.message || "Share link could not be prepared.",
+        });
+      }
+    }
+  }
+
+  function handleViewCatalogue(creation) {
+    if (live) {
+      router.push(`/studio/creations/${encodeURIComponent(creation.id)}`);
+      return;
+    }
+
     setActionNotice({
-      label: "Play",
-      message: `Playing "${creation.title}" starts its session when live wiring lands. Nothing was started in this preview.`,
+      label: "View catalogue",
+      message:
+        "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
     });
   }
 
@@ -347,6 +439,7 @@ export default function CommunityV2Mockup() {
     <>
     <KitStudioPageView
       harnessSlot={
+        live ? null : (
         <div className="flex flex-wrap items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)]">
           <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             Fixture mode
@@ -367,6 +460,7 @@ export default function CommunityV2Mockup() {
             </button>
           ))}
         </div>
+        )
       }
       headerSlot={
         <StudioPageHeaderView
@@ -386,7 +480,7 @@ export default function CommunityV2Mockup() {
           filterGroups={filterGroups}
           selectedValues={selectedValues}
           onFilterToggle={toggleFilter}
-          sortOptions={SORT_OPTIONS}
+          sortOptions={live ? SORT_OPTIONS.filter((option) => option.value !== "saved") : SORT_OPTIONS}
           selectedSort={selectedSort}
           onSortChange={setSelectedSort}
           viewModeSlot={
@@ -412,30 +506,40 @@ export default function CommunityV2Mockup() {
             "/tmp-mockup-images/canon-character-images/Charlotte Steele.png"
           )}
           onCtaClick={() =>
-            setActionNotice({
-              label: "Browse creators",
-              message:
-                "This banner routes to Creators when the new pages cut over. Nothing was opened in this preview.",
-            })
+            live
+              ? router.push("/studio/v2/creators")
+              : setActionNotice({
+                  label: "Browse creators",
+                  message:
+                    "This banner routes to Creators when the new pages cut over. Nothing was opened in this preview.",
+                })
           }
         />
       }
     >
-      {fixtureMode === "error" && (
+      {effectiveMode === "error" && (
         <KitAlertStripView
           tone="danger"
           title="Community could not be loaded."
-          body="Try refreshing the page."
+          body={loadError || "Try refreshing the page."}
         />
       )}
 
-      {fixtureMode === "loading" && <LoadingGrid />}
+      {effectiveMode === "loading" && <LoadingGrid />}
 
-      {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreations.length === 0 && (
+      {live && engagementState.engagementMessage && (
+        <KitAlertStripView
+          tone="danger"
+          title="Community action could not be saved."
+          body={engagementState.engagementMessage}
+        />
+      )}
+
+      {effectiveMode !== "loading" && effectiveMode !== "error" && filteredCreations.length === 0 && (
         <EmptyState />
       )}
 
-      {fixtureMode !== "loading" && fixtureMode !== "error" && filteredCreations.length > 0 && (
+      {effectiveMode !== "loading" && effectiveMode !== "error" && filteredCreations.length > 0 && (
         <>
           <div
             className={
@@ -464,8 +568,8 @@ export default function CommunityV2Mockup() {
                   saves: creation.saves,
                   followers: null,
                 }}
-                liked={likedIds.includes(creation.id)}
-                bookmarked={savedIds.includes(creation.id)}
+                liked={isLiked(creation)}
+                bookmarked={isSaved(creation)}
                 onOpenImageOverlay={() =>
                   setOverlayImage({
                     id: creation.id,
@@ -474,10 +578,11 @@ export default function CommunityV2Mockup() {
                   })
                 }
                 onOpenAssetDetail={() => setAssetDetailId(creation.id)}
-                onLike={() => toggleLiked(creation.id)}
-                onBookmark={() => toggleSaved(creation.id)}
+                onLike={() => toggleLiked(creation)}
+                onBookmark={() => toggleSaved(creation)}
                 onPlay={
-                  creation.assetKind === "story" || creation.assetKind === "adventure"
+                  (!live && (creation.assetKind === "story" || creation.assetKind === "adventure")) ||
+                  (live && isChatCapableCreationType(creation.type))
                     ? () => handlePlay(creation)
                     : undefined
                 }
@@ -503,23 +608,17 @@ export default function CommunityV2Mockup() {
         <KitImageOverlay
           imageSrc={overlayImage.imageSrc}
           title={overlayImage.title}
-          isLoved={lovedOverlayIds.includes(overlayImage.id)}
-          isSaved={savedIds.includes(overlayImage.id)}
-          onLove={() => toggleLovedOverlay(overlayImage.id)}
-          onSave={() => toggleSaved(overlayImage.id)}
-          onShare={() =>
-            setActionNotice({
-              label: "Share",
-              message:
-                "Sharing is wired when the page goes live. Nothing leaves this preview.",
-            })
-          }
+          isLoved={live ? isLiked(overlayImage) : lovedOverlayIds.includes(overlayImage.id)}
+          isSaved={isSaved(overlayImage)}
+          onLove={() => (live ? toggleLiked(overlayImage) : toggleLovedOverlay(overlayImage.id))}
+          onSave={() => toggleSaved(overlayImage)}
+          onShare={() => handleShare(overlayImage)}
           onClose={() => setOverlayImage(null)}
         />
       )}
 
       {assetDetailId && (() => {
-        const creation = FIXTURE_CREATIONS.find((item) => item.id === assetDetailId);
+        const creation = sourceCreations.find((item) => item.id === assetDetailId);
         if (!creation) return null;
 
         const media = [creation.imageSrc, ...(creation.extraMedia || [])]
@@ -531,7 +630,7 @@ export default function CommunityV2Mockup() {
             assetKind={creation.assetKind}
             title={creation.title}
             subtitle={creation.subtitle}
-            creator={creatorFromSubtitle(creation.subtitle)}
+            creator={creation.creator || creatorFromSubtitle(creation.subtitle)}
             media={media}
             badges={creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []}
             stats={{
@@ -542,25 +641,18 @@ export default function CommunityV2Mockup() {
             }}
             description={creation.description}
             tags={creation.tags || []}
-            isLiked={likedIds.includes(creation.id)}
-            isSaved={savedIds.includes(creation.id)}
-            onLike={() => toggleLiked(creation.id)}
-            onPrimaryAction={() => handlePlay(creation)}
-            onShare={() =>
-              setActionNotice({
-                label: "Share",
-                message:
-                  "Sharing is wired when the page goes live. Nothing leaves this preview.",
-              })
+            isLiked={isLiked(creation)}
+            isSaved={isSaved(creation)}
+            onLike={() => toggleLiked(creation)}
+            onPrimaryAction={
+              (!live && (creation.assetKind === "story" || creation.assetKind === "adventure")) ||
+              (live && isChatCapableCreationType(creation.type))
+                ? () => handlePlay(creation)
+                : undefined
             }
-            onSave={() => toggleSaved(creation.id)}
-            onViewCatalogue={() =>
-              setActionNotice({
-                label: "View catalogue",
-                message:
-                  "The creator catalogue opens when live wiring lands. Nothing was opened in this preview.",
-              })
-            }
+            onShare={() => handleShare(creation)}
+            onSave={() => toggleSaved(creation)}
+            onViewCatalogue={() => handleViewCatalogue(creation)}
             credits={creation.credits || []}
             onClose={() => setAssetDetailId(null)}
           />

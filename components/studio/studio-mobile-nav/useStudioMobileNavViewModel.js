@@ -29,6 +29,26 @@ export const STUDIO_MOBILE_NAV_PRIMARY_LINKS = Object.freeze([
   Object.freeze({ label: "Community", href: "/studio/community", iconKey: "compass" }),
 ]);
 
+
+export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
+  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
+  Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
+  Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
+  Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image" }),
+  Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle" }),
+  Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass" }),
+  Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users" }),
+  Object.freeze({ label: "Lore", href: "/studio/v2/lore", iconKey: "bookOpen" }),
+]);
+
+export const STUDIO_MOBILE_NAV_V2_BOTTOM_LINKS = Object.freeze([
+  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
+  Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
+  Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
+  Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image" }),
+  Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle" }),
+]);
+
 export const STUDIO_MOBILE_NAV_UTILITY_LINKS = Object.freeze([
   Object.freeze({ label: "Feedback & Updates", href: "/studio/feedback", iconKey: "megaphone" }),
   Object.freeze({ label: "Account", href: "/studio/account", iconKey: "castle" }),
@@ -62,7 +82,9 @@ export function isStudioMobileNavPathActive(pathname = "", href = "") {
 // This drawer renders on every /studio/** route including v2 pages,
 // so the Account destination depends on which surface is current.
 export function getStudioMobileNavAccountHref(pathname = "") {
-  return pathname.startsWith("/studio/v2") ? "/studio/v2/account" : "/studio/account";
+  return pathname === "/studio" || pathname.startsWith("/studio/v2")
+    ? "/studio/v2/account"
+    : "/studio/account";
 }
 
 export function normalizeStudioMobileNavEmail(user = {}) {
@@ -89,6 +111,7 @@ export function useStudioMobileNavViewModel({
 } = {}) {
   const [socialOpen, setSocialOpen] = useState(false);
   const signedInEmail = normalizeStudioMobileNavEmail(user);
+  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2");
 
   return {
     brandHref: "/studio",
@@ -106,7 +129,10 @@ export function useStudioMobileNavViewModel({
     closeOverlayAriaLabel: STUDIO_MOBILE_NAV_COPY.closeOverlayAriaLabel,
     open,
     socialOpen,
-    primaryLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_PRIMARY_LINKS, pathname),
+    primaryLinks: buildNavigationLinks(
+      v2Surface ? STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS : STUDIO_MOBILE_NAV_PRIMARY_LINKS,
+      pathname
+    ),
     utilityLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_UTILITY_LINKS, pathname).map((link) =>
       link.label === "Account"
         ? {
@@ -117,7 +143,10 @@ export function useStudioMobileNavViewModel({
         : link
     ),
     socialLinks: STUDIO_MOBILE_NAV_SOCIAL_LINKS,
-    bottomLinks: buildNavigationLinks(STUDIO_MOBILE_NAV_BOTTOM_LINKS, pathname),
+    bottomLinks: buildNavigationLinks(
+      v2Surface ? STUDIO_MOBILE_NAV_V2_BOTTOM_LINKS : STUDIO_MOBILE_NAV_BOTTOM_LINKS,
+      pathname
+    ),
     onCloseMenu,
     onToggleSocial: () => setSocialOpen((value) => !value),
     onNavigate: () => onCloseMenu(),

@@ -1,4 +1,4 @@
-export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.0.0";
+export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Portable presentation contract for Image Studio's generated-media history.
@@ -7,6 +7,13 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.0.0";
  * callbacks, and injected application-owned controls. It does not import
  * Crestfall media clients, delete image outputs, fetch reactions, interpret
  * legacy output identifiers, or confirm destructive actions.
+ *
+ * 1.2.0 (V2 convergence): adds an optional mobile primary workspace action
+ * so Image Studio can expose its editor in-flow above fixed mobile navigation.
+ *
+ * 1.1.0 (V2 convergence): destructive bulk deletion now uses a portable
+ * Kit confirmation surface and inline error state rather than browser-native
+ * confirm/alert dialogs.
  *
  * Doc-only correction (ED1G sw12), no version bump: 22 view props
  * already read by the View were undeclared here.
@@ -28,6 +35,9 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} selectionMode
  * @property {number} selectedCount
  * @property {boolean} isBulkDeleting
+ * @property {boolean} [bulkDeleteConfirmOpen]
+ * @property {string} [mobilePrimaryActionLabel] optional primary mobile workspace action label
+ * @property {(() => void)|null} [onMobilePrimaryAction] opens the primary mobile workspace action
  * @property {boolean} [hasSelectableMedia]
  * @property {boolean} [hasVisibleSelectableMedia]
  * @property {boolean} [allVisibleSelectableItemsSelected]
@@ -47,6 +57,8 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {(() => void)|null} [onToggleSelectAllVisible]
  * @property {(() => void)|null} [onClearSelection]
  * @property {(() => void)|null} [onBulkDeleteSelected]
+ * @property {(() => void)|null} [onCancelBulkDelete]
+ * @property {(() => void)|null} [onConfirmBulkDelete]
  * @property {(() => void)|null} [onLoadMoreHistory]
  * @property {import("react").ElementType} FilterPillComponent
  * @property {(props:Object)=>import("react").ReactNode} renderQuickActions

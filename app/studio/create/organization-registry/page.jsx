@@ -5,7 +5,7 @@ import StructuredRegistryBuilder from "@/components/studio/create/structured-reg
 export default function CreateOrganizationRegistryPage() {
   return (
     <div className="space-y-6">
-      <StudioBackLink href="/studio/create" label="Back to Create" />
+      <StudioBackLink href="/studio?mode=full&section=worlds" label="Back to Full Studio" />
 
       <StudioPageHeader eyebrow="Institution Spine" title="Organization Registry">
         Create a reusable organization spine for companies, agencies, clubs,

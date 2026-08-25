@@ -20,9 +20,9 @@ test("Creation Profile Page shell stays thin and owns application adapters", () 
     "CreationStatusBadges",
     "CreationStatsRow",
     "CreationShareButton",
-    "CrestfallSelect",
     "MediaTileQuickActions",
     "MediaLightbox",
+    "KitCredits",
     "LorePublicCreationPage",
     "StandardCreationProfilePage",
   ]) {
@@ -37,7 +37,7 @@ test("Creation Profile Page shell stays thin and owns application adapters", () 
   assert.match(shell, /return <StandardCreationProfilePage \{\.\.\.props\} \/>/);
 });
 
-test("ViewModel owns media aliases, filtering, sorting, and pagination", () => {
+test("ViewModel owns media aliases, filtering, source ordering, and pagination", () => {
   const vm = read(
     "components/studio/creations/creation-profile-page/useCreationProfilePageViewModel.js"
   );
@@ -47,7 +47,7 @@ test("ViewModel owns media aliases, filtering, sorting, and pagination", () => {
     "output_id",
     "displayImageUrl",
     "thumbnailUrl",
-    "filterAndSortCreationProfileMedia",
+    "filterCreationProfileMedia",
     "CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12",
     "CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12",
     "CREATION_PROFILE_EAGER_MEDIA_COUNT = 4",
@@ -55,6 +55,8 @@ test("ViewModel owns media aliases, filtering, sorting, and pagination", () => {
     "VIDEOS",
     "LIKED",
     "BOOKMARKED",
+    "CREATION_PROFILE_CREDITS_TAB",
+    "buildCreationProfileTabs",
   ]) {
     assert.match(vm, new RegExp(token));
   }
@@ -84,11 +86,12 @@ test("portable View consumes display-ready state and semantic slots", () => {
     "creatorLinkSlot",
     "generateLinkSlot",
     "shareButtonSlot",
-    "sortControlSlot",
     "mediaActionSlots",
     "lightboxSlot",
     "description?.visibleText",
     "mediaTabs.map",
+    "creditsSlot",
+    "showingCredits",
     "visibleMedia.map",
   ]) {
     assert.match(view, new RegExp(token.replace(/[?.]/g, "\\$&")));
@@ -97,6 +100,7 @@ test("portable View consumes display-ready state and semantic slots", () => {
     view,
     /next\/link|next\/navigation|mediaReactionClient|storyRoomClient|creationTypePolicy|creation\.data/
   );
+  assert.doesNotMatch(view, /sortControlSlot|Sort Newest|label="Sort"/);
 });
 
 test("legacy catalogue behavior and fallback states remain present", () => {
@@ -109,7 +113,7 @@ test("legacy catalogue behavior and fallback states remain present", () => {
 
   assert.match(view, /No public media yet/);
   assert.match(view, /Search this creation's media/);
-  assert.match(view, /Load More/);
+  assert.match(view, /Load more/i);
   assert.match(view, /Starting\.\.\./);
   assert.match(vm, /CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420/);
   assert.match(vm, /No description has been added yet\./);

@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the image creator panel kit piece
@@ -23,8 +23,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @typedef {"character"|"playerCharacter"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
  *
  * @typedef {Object} KitImageCreatorSlotState
- * @property {{title: string, subtitle?: string}|null} selection the
- *   chosen ingredient, or null for an empty slot
+ * @property {{title: string, subtitle?: string, imageSrc?: string}|null} selection the
+ *   chosen ingredient, including its display-ready featured image when available,
+ *   or null for an empty slot
  * @property {boolean} isCustomMode true renders the inline custom
  *   guidance editor in place of the picker-opening tile
  * @property {string} customText the custom guidance textarea value,
@@ -69,6 +70,16 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} generationHelpText the block-reason or
  *   non-blocking help line, pre-computed by the caller; rendered
  *   whenever non-empty
+ * @property {string} generationStatus live generation state; "loading"
+ *   renders an in-flight disabled Generate control
+ * @property {string} generationError live submission error text
+ * @property {string} cameraPresetLabel selected camera/framing preset label
+ * @property {string} cameraPresetDescription selected preset helper copy
+ * @property {(() => void)|null} onOpenCameraPresetPicker opens the
+ *   camera/framing picker when the live catalog is too large for inline tiles
+ * @property {boolean} showSceneryOnlyHelper true for location-only requests
+ * @property {boolean} sceneryOnlyHelperEnabled whether scenery optimization is active
+ * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
  * @property {(() => void)|null} onGenerate fires the R4 fixture-action
  *   notice in fixture mode; the real job pipeline is live wiring
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
