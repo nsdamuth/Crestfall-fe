@@ -27,8 +27,12 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const PUBLIC_SITE_URL = String(
+  process.env.NEXT_PUBLIC_SITE_URL || "https://crestfall-studio.com"
+).replace(/\/+$/, "");
+
 export const metadata = {
-  metadataBase: new URL("https://www.crestfall.net"),
+  metadataBase: new URL(PUBLIC_SITE_URL),
   title: {
     default: "Crestfall Chronicles",
     template: "%s | Crestfall",
@@ -36,13 +40,16 @@ export const metadata = {
   description:
     "A creator platform for persistent interactive fiction, story rooms, characters, lore, and reusable narrative systems.",
   applicationName: "Crestfall",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     siteName: "Crestfall",
     title: "Crestfall Chronicles",
     description:
       "Create characters, story rooms, lore, templates, and persistent interactive fiction worlds.",
-    url: "https://www.crestfall.net",
+    url: "/",
     images: [
       {
         url: "/assets/branding/crestfall-og-v2.png",
