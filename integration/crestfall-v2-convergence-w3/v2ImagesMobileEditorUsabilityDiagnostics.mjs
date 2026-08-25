@@ -8,16 +8,17 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../..");
 const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 
-test("V2 Images reclaims mobile-only vertical whitespace without changing desktop spacing", () => {
+test("V2 Images keeps its compact treatment without reintroducing page-level top offsets", () => {
   const live = read("app/studio/v2/images/ImagesV2Live.jsx");
   const page = read("components/kit/studio-page/KitStudioPage.view.jsx");
   const header = read("components/studio/studio-page-header/StudioPageHeader.view.jsx");
 
-  assert.match(live, /-mt-\[var\(--space-12\)\] sm:mt-0/);
+  assert.doesNotMatch(live, /-mt-\[var\(--space-12\)\] sm:mt-0/);
   assert.match(live, /<KitStudioPageView\s+compactMobile/);
   assert.match(live, /<StudioPageHeaderView\s+compactMobile/);
   assert.match(page, /compactMobile = false/);
-  assert.match(page, /py-\[var\(--space-2\)\].*sm:py-\[var\(--space-6\)\]/s);
+  assert.match(page, /pb-\[var\(--space-2\)\].*sm:pb-\[var\(--space-6\)\]/s);
+  assert.doesNotMatch(page, /py-\[var\(--space-(?:2|6)\)\]/);
   assert.match(header, /compactMobile = false/);
   assert.match(header, /gap-3 pb-4 sm:gap-6 sm:pb-8/);
 });
@@ -54,7 +55,8 @@ test("shared compact presentation options are additive and opt-in", () => {
   const header = read("components/studio/studio-page-header/StudioPageHeader.view.jsx");
 
   assert.match(page, /compactMobile = false/);
-  assert.match(page, /: "gap-\[var\(--space-6\)\] py-\[var\(--space-6\)\]"/);
+  assert.match(page, /: "gap-\[var\(--space-6\)\] pb-\[var\(--space-6\)\]"/);
+  assert.doesNotMatch(page, /gap-\[var\(--space-6\)\] py-\[var\(--space-6\)\]/);
   assert.match(header, /compactMobile = false/);
   assert.match(header, /: "gap-6 pb-8"/);
 });

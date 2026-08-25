@@ -20,8 +20,8 @@ export default function KitStudioPageView({
     <div
       className={`flex flex-col ${
         compactMobile
-          ? "gap-[var(--space-4)] py-[var(--space-2)] sm:gap-[var(--space-6)] sm:py-[var(--space-6)]"
-          : "gap-[var(--space-6)] py-[var(--space-6)]"
+          ? "gap-[var(--space-4)] pb-[var(--space-2)] sm:gap-[var(--space-6)] sm:pb-[var(--space-6)]"
+          : "gap-[var(--space-6)] pb-[var(--space-6)]"
       }`}
     >
       {harnessSlot}

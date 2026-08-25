@@ -31,6 +31,7 @@ export const STUDIO_MOBILE_NAV_PRIMARY_LINKS = Object.freeze([
 
 
 export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
+  Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home" }),
   Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
   Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
@@ -42,9 +43,9 @@ export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
 ]);
 
 export const STUDIO_MOBILE_NAV_V2_BOTTOM_LINKS = Object.freeze([
-  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
+  Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
-  Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
+  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
   Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image" }),
   Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "castle" }),
 ]);
@@ -114,7 +115,7 @@ export function useStudioMobileNavViewModel({
   const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2");
 
   return {
-    brandHref: "/studio",
+    brandHref: v2Surface ? "/studio/v2/home" : "/studio",
     drawerEyebrow: STUDIO_MOBILE_NAV_COPY.drawerEyebrow,
     drawerTitle: STUDIO_MOBILE_NAV_COPY.drawerTitle,
     communityLinksLabel: STUDIO_MOBILE_NAV_COPY.communityLinksLabel,

@@ -96,7 +96,7 @@ export default function ImagesV2Live() {
 
   return (
     <>
-      <div className="-mt-[var(--space-12)] sm:mt-0">
+      <div>
         <KitStudioPageView
           compactMobile
           headerSlot={

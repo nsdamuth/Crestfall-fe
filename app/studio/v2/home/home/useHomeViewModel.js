@@ -1,216 +1,335 @@
 "use client";
 
-// Normalizes the CR-029 mock feed into Home.view.jsx props and owns
-// every piece of presentation-only local state: like/save toggles on
-// the rail cards, the top rail's sort selection, and the R4
-// fixture-action notice. Routing is not owned here: the Shell passes
-// onNavigate (real Next.js navigation for built destinations) and
-// this hook decides, per control, whether to call it or open the
-// honest stub notice instead.
 import { useMemo, useState } from "react";
 
-import {
-  HOME_CONTINUE_ITEM,
-  HOME_CREATORS_TO_FOLLOW_ITEMS,
-  HOME_DESTINATION_TILES,
-  HOME_FROM_THE_COMMUNITY_ITEMS,
-  HOME_RECENTLY_ADDED_ITEMS,
-  HOME_SORT_OPTIONS,
-  HOME_TOP_RATED_ITEMS,
-} from "./homeContent.mock";
+import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
+import { projectCommunityCreations } from "@/lib/shared/presentation/communityPresentation";
+import { projectCommunityCreators } from "@/lib/shared/presentation/creatorPresentation";
+import { projectStoryRoomToContinueItem } from "@/lib/shared/presentation/storiesPresentation";
 
-// Cold-start hero, RULED 11 Aug 2026 (Home top banner empty state):
-// with nothing in progress the top banner is the cold-start
-// invitation, not a hidden surface, per Continue's existing
-// fallback-not-placeholder law.
-const TOP_BANNER = {
+const RAIL_ITEM_CAP = 12;
+
+const DESTINATIONS = Object.freeze([
+  Object.freeze({
+    id: "stories",
+    label: "Stories",
+    supportingLine: "Continue a room or begin a new Story.",
+    href: "/studio/v2/stories",
+    imageSrc: "/assets/covers/crestfall-book-cover.png",
+  }),
+  Object.freeze({
+    id: "adventures",
+    label: "Adventures",
+    supportingLine: "Explore connected Storylines and longer arcs.",
+    href: "/studio/v2/adventures",
+    imageSrc: "/assets/covers/crestfall-compass-cover.png",
+  }),
+  Object.freeze({
+    id: "studio",
+    label: "Studio",
+    supportingLine: "Build characters, worlds, Stories, and mechanics.",
+    href: "/studio",
+    imageSrc: "/assets/covers/crestfall-drawings-cover.png",
+  }),
+  Object.freeze({
+    id: "images",
+    label: "Images",
+    supportingLine: "Generate and manage visual assets.",
+    href: "/studio/v2/images",
+    imageSrc: "/assets/covers/crestfall-ballerina-cover.png",
+  }),
+  Object.freeze({
+    id: "vault",
+    label: "Vault",
+    supportingLine: "Find your work and public creations you saved.",
+    href: "/studio/v2/vault",
+    imageSrc: "/assets/covers/crestfall-scrolls-cover.png",
+  }),
+  Object.freeze({
+    id: "community",
+    label: "Community",
+    supportingLine: "Discover public creations across Crestfall.",
+    href: "/studio/v2/community",
+    imageSrc: "/assets/covers/crestfall-camellia-cover.png",
+  }),
+  Object.freeze({
+    id: "creators",
+    label: "Creators",
+    supportingLine: "Follow creators and browse their recent work.",
+    href: "/studio/v2/creators",
+    imageSrc: "/assets/covers/crestfall-cloak-cover.png",
+  }),
+  Object.freeze({
+    id: "lore",
+    label: "Lore",
+    supportingLine: "Read and author persistent world records.",
+    href: "/studio/v2/lore",
+    imageSrc: "/assets/covers/crestfall-sundial-cover.png",
+  }),
+]);
+
+const SORT_OPTIONS = Object.freeze([
+  Object.freeze({ value: "recommended", label: "Recommended" }),
+  Object.freeze({ value: "popular", label: "Most played" }),
+  Object.freeze({ value: "recent", label: "Newest" }),
+]);
+
+const TOP_BANNER = Object.freeze({
   eyebrow: "Crestfall Chronicles",
   title: "Start something worth finishing.",
   ctaLabel: "Browse stories",
   secondaryCtaLabel: "See what others made",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
-};
+  imageSrc: "/assets/covers/crestfall-compass-cover.png",
+});
 
-const BOTTOM_BANNER = {
-  eyebrow: "Play",
-  title: "Worlds worth committing to.",
-  ctaLabel: "Browse Stories",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
-};
+const BOTTOM_BANNER = Object.freeze({
+  eyebrow: "Create",
+  title: "Build the next world.",
+  ctaLabel: "Open Studio",
+  imageSrc: "/assets/covers/crestfall-drawings-cover.png",
+});
 
-// Rail item cap, RULED (Scale Review H, finding B1): each rail caps
-// its mounted items at a fixed length rather than rendering an
-// unbounded source array; KitRailView has no windowing or
-// virtualization, so an uncapped source mounts every card at once.
-// "View all" is the sanctioned overflow path to the full paginated
-// page. KitRail itself is unchanged; only its caller's input is
-// capped, here.
-const RAIL_ITEM_CAP = 12;
+function relativeTimeLabel(value) {
+  const timestamp = value ? new Date(value).getTime() : 0;
+  if (!Number.isFinite(timestamp) || timestamp <= 0) return "recently";
 
-export function useHomeViewModel({ fixtureMode = "full", onNavigate = null } = {}) {
-  const [likedIds, setLikedIds] = useState([]);
-  const [savedIds, setSavedIds] = useState([]);
-  const [followingIds, setFollowingIds] = useState([]);
-  const [sortValue, setSortValue] = useState(HOME_SORT_OPTIONS[0].value);
+  const deltaMinutes = Math.max(0, Math.round((Date.now() - timestamp) / 60000));
+  if (deltaMinutes < 2) return "just now";
+  if (deltaMinutes < 60) return `${deltaMinutes} minutes ago`;
+
+  const hours = Math.round(deltaMinutes / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+
+  const days = Math.round(hours / 24);
+  if (days < 30) return `${days} day${days === 1 ? "" : "s"} ago`;
+
+  return "recently";
+}
+
+function creationScore(item = {}) {
+  return (Number(item.hearts) || 0) * 8 + (Number(item.saves) || 0) * 5 + (Number(item.plays) || 0);
+}
+
+function sortCommunity(items = [], sortValue = "recommended") {
+  const copy = [...items];
+  if (sortValue === "recent") {
+    return copy.sort((a, b) => (b.recency || 0) - (a.recency || 0));
+  }
+  if (sortValue === "popular") {
+    return copy.sort((a, b) => (b.plays || 0) - (a.plays || 0) || (b.hearts || 0) - (a.hearts || 0));
+  }
+
+  return copy.sort(
+    (a, b) =>
+      Number(Boolean(b.isFeatured)) - Number(Boolean(a.isFeatured)) ||
+      Number(Boolean(b.isCanon)) - Number(Boolean(a.isCanon)) ||
+      creationScore(b) - creationScore(a) ||
+      (b.recency || 0) - (a.recency || 0)
+  );
+}
+
+function rail(label, items, onViewAll) {
+  return {
+    label,
+    viewAllLabel: "View all",
+    onViewAll,
+    items: items.slice(0, RAIL_ITEM_CAP),
+  };
+}
+
+export function useHomeViewModel({
+  rooms = [],
+  communityCreations = [],
+  creators = [],
+  creatorCreations = [],
+  viewerUsername = null,
+  followingUsernames = [],
+  storiesLoadError = null,
+  communityLoadError = null,
+  creatorsLoadError = null,
+  onNavigate = null,
+} = {}) {
+  const [sortValue, setSortValue] = useState("recommended");
+  const [followOverrides, setFollowOverrides] = useState({});
   const [notice, setNotice] = useState(null);
 
-  function toggleId(setter) {
-    return (id) =>
-      setter((current) => (current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]));
-  }
+  const communityItems = useMemo(
+    () => projectCommunityCreations(communityCreations),
+    [communityCreations]
+  );
+  const engagement = useCreationEngagementState(communityItems);
 
-  const toggleLiked = toggleId(setLikedIds);
-  const toggleSaved = toggleId(setSavedIds);
-  const toggleFollowing = toggleId(setFollowingIds);
-
-  function openNotice(label, message) {
-    setNotice({ label, message });
-  }
-
-  function navigateOrStub(route, label) {
-    if (route) {
-      onNavigate?.(route);
-      return;
-    }
-    openNotice(label, `${label} opens once this section is built. Nothing was opened in this preview.`);
-  }
+  const creatorItems = useMemo(
+    () =>
+      projectCommunityCreators(creators, {
+        creations: creatorCreations,
+        viewerUsername,
+        followingUsernames,
+      }),
+    [creators, creatorCreations, viewerUsername, followingUsernames]
+  );
 
   const continueItem = useMemo(() => {
-    if (fixtureMode === "emptyContinue" || fixtureMode === "emptyRails" || fixtureMode === "error") return null;
+    const projected = (Array.isArray(rooms) ? rooms : [])
+      .map((room, index) => projectStoryRoomToContinueItem(room, index))
+      .filter((item) => !["COMPLETED", "ARCHIVED", "DELETED"].includes(item.status))
+      .sort((a, b) => (b.recency || 0) - (a.recency || 0));
+
+    const item = projected[0] || null;
+    if (!item) return null;
+
     return {
-      ...HOME_CONTINUE_ITEM,
-      onContinue: () =>
-        openNotice(
-          "Continue",
-          `Resuming "${HOME_CONTINUE_ITEM.title}" opens its chat when live wiring lands. Nothing was opened in this preview.`
-        ),
-      // Secondary CTA, RULED 11 Aug 2026: quiet ghost action beside
-      // Continue, filled state only (the empty-state fallback CTA is
-      // a separate open decision, untouched here).
+      id: item.id,
+      title: item.title,
+      kindLabel: item.kind === "adventure" ? "Adventure" : "Story",
+      lastPlayedLabel: relativeTimeLabel(item.lastPlayed),
+      imageSrc: item.imageSrc,
       secondaryCtaLabel: "Explore recent stories",
-      onSecondaryCtaClick: () => navigateOrStub("/studio/v2/stories", "Explore recent stories"),
+      onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
+      onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),
     };
-  }, [fixtureMode]);
+  }, [rooms, onNavigate]);
 
   const destinationTiles = useMemo(
     () =>
-      fixtureMode === "error"
-        ? []
-        : HOME_DESTINATION_TILES.map((tile) => ({
-            id: tile.id,
-            label: tile.label,
-            supportingLine: tile.supportingLine,
-            imageSrc: tile.imageSrc,
-            onOpen: () => navigateOrStub(tile.route, tile.label),
-          })),
-    [fixtureMode]
+      DESTINATIONS.map((item) => ({
+        ...item,
+        onOpen: () => onNavigate?.(item.href),
+      })),
+    [onNavigate]
   );
 
-  function decorateCreationItem(item) {
-    return {
-      ...item,
-      liked: likedIds.includes(item.id),
-      bookmarked: savedIds.includes(item.id),
-      onOpenImageOverlay: () =>
-        openNotice(item.title, `Opening "${item.title}" happens on its own page when live wiring lands.`),
-      onOpenAssetDetail: () =>
-        openNotice(item.title, `Opening "${item.title}" happens on its own page when live wiring lands.`),
-      onLike: () => toggleLiked(item.id),
-      onBookmark: () => toggleSaved(item.id),
-    };
-  }
+  const decoratedCommunity = useMemo(
+    () =>
+      communityItems.map((item) => ({
+        cardKind: "creation",
+        id: item.id,
+        assetKind: item.assetKind,
+        title: item.title,
+        subtitle: item.subtitle,
+        imageSrc: item.imageSrc,
+        badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
+        stats: {
+          plays: item.plays,
+          hearts: item.hearts,
+          saves: item.saves,
+          followers: null,
+        },
+        liked: engagement.isCreationLiked(item),
+        bookmarked: engagement.isCreationBookmarked(item),
+        onOpenImageOverlay: () => onNavigate?.(`/studio/creations/${encodeURIComponent(item.id)}`),
+        onOpenAssetDetail: () => onNavigate?.(`/studio/creations/${encodeURIComponent(item.id)}`),
+        onLike: () => engagement.toggleCreationLike(item),
+        onBookmark: () => engagement.toggleCreationBookmark(item),
+      })),
+    [communityItems, engagement, onNavigate]
+  );
 
-  function decorateCreatorItem(item) {
-    return {
-      ...item,
-      isFollowing: followingIds.includes(item.id) || item.isFollowing,
-      onThumbnailOpen: () =>
-        openNotice(item.handle, `Opening ${item.handle}'s work happens on its own page when live wiring lands.`),
-      onFollow: () => toggleFollowing(item.id),
-      onViewProfile: () =>
-        openNotice(item.handle, `${item.handle}'s profile opens when live wiring lands. Nothing was opened in this preview.`),
-    };
-  }
+  const creatorCards = useMemo(
+    () =>
+      creatorItems
+        .filter((creator) => !creator.isOwnProfile)
+        .map((creator) => {
+          const overridden = followOverrides[creator.id];
+          const isFollowing = typeof overridden === "boolean" ? overridden : creator.isFollowing;
 
-  function decorate(item) {
-    return item.cardKind === "creator" ? decorateCreatorItem(item) : decorateCreationItem(item);
-  }
+          return {
+            cardKind: "creator",
+            ...creator,
+            stats: {
+              followers: creator.followers,
+              likes: creator.likes,
+              plays: creator.plays,
+              works: creator.works,
+            },
+            isFollowing,
+            onThumbnailOpen: (thumbnailId) => {
+              const thumbnail = creator.thumbnails.find((entry) => entry.id === thumbnailId);
+              if (thumbnail?.creationId) {
+                onNavigate?.(`/studio/creations/${encodeURIComponent(thumbnail.creationId)}`);
+              }
+            },
+            onViewProfile: () =>
+              onNavigate?.(`/studio/v2/creators/${encodeURIComponent(creator.username)}`),
+            onFollow: creator.canFollow
+              ? async () => {
+                  const nextFollowing = !isFollowing;
+                  setFollowOverrides((current) => ({ ...current, [creator.id]: nextFollowing }));
+                  try {
+                    await setProfileFollowByUsername({
+                      username: creator.username,
+                      active: nextFollowing,
+                    });
+                  } catch (error) {
+                    setFollowOverrides((current) => ({ ...current, [creator.id]: isFollowing }));
+                    setNotice({
+                      label: nextFollowing ? "Follow creator" : "Unfollow creator",
+                      message: error?.message || "Follow state could not be saved.",
+                    });
+                  }
+                }
+              : null,
+          };
+        }),
+    [creatorItems, followOverrides, onNavigate]
+  );
 
-  const railItemSource = fixtureMode === "emptyRails" || fixtureMode === "error" ? [] : null;
-
-  // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
-  // one; this restores the KitAlertStrip danger banner every fixture-
-  // driven page now carries under fixtureMode "error".
-  const errorMessage = fixtureMode === "error" ? "Home could not be loaded." : null;
-
-  const topRatedRail = useMemo(
-    () => ({
-      label: "Top rated",
-      viewAllLabel: "View all",
-      onViewAll: () => navigateOrStub(null, "Top rated"),
-      items: (railItemSource ?? HOME_TOP_RATED_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
+  const sorted = useMemo(
+    () => sortCommunity(decoratedCommunity, sortValue),
+    [decoratedCommunity, sortValue]
+  );
+  const recent = useMemo(
+    () => [...decoratedCommunity].sort((a, b) => {
+      const aSource = communityItems.find((item) => item.id === a.id);
+      const bSource = communityItems.find((item) => item.id === b.id);
+      return (bSource?.recency || 0) - (aSource?.recency || 0);
     }),
-    [railItemSource, likedIds, savedIds]
+    [decoratedCommunity, communityItems]
   );
 
-  const recentlyAddedRail = useMemo(
-    () => ({
-      label: "Recently added",
-      viewAllLabel: "View all",
-      onViewAll: () => navigateOrStub(null, "Recently added"),
-      items: (railItemSource ?? HOME_RECENTLY_ADDED_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
-    }),
-    [railItemSource, likedIds, savedIds]
+  const topRatedRail = rail("Popular now", sorted, () => onNavigate?.("/studio/v2/community"));
+  const recentlyAddedRail = rail("Recently updated", recent, () => onNavigate?.("/studio/v2/community"));
+  const fromTheCommunityRail = rail(
+    "From the community",
+    decoratedCommunity.filter((item) => !sorted.slice(0, 4).some((top) => top.id === item.id)),
+    () => onNavigate?.("/studio/v2/community")
+  );
+  const creatorsToFollowRail = rail(
+    "Creators to follow",
+    creatorCards,
+    () => onNavigate?.("/studio/v2/creators")
   );
 
-  const fromTheCommunityRail = useMemo(
-    () => ({
-      label: "From the community",
-      viewAllLabel: "View all",
-      onViewAll: () => navigateOrStub("/studio/v2/community", "From the community"),
-      items: (railItemSource ?? HOME_FROM_THE_COMMUNITY_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
-    }),
-    [railItemSource, likedIds, savedIds]
-  );
-
-  const creatorsToFollowRail = useMemo(
-    () => ({
-      label: "Creators to follow",
-      viewAllLabel: "View all",
-      onViewAll: () => navigateOrStub("/studio/v2/creators", "Creators to follow"),
-      items: (railItemSource ?? HOME_CREATORS_TO_FOLLOW_ITEMS).slice(0, RAIL_ITEM_CAP).map(decorate),
-    }),
-    [railItemSource, followingIds]
-  );
-
-  const sortControl = {
-    options: HOME_SORT_OPTIONS,
-    selectedValue: sortValue,
-    onChange: setSortValue,
-  };
-
-  const topBanner = {
-    ...TOP_BANNER,
-    onCtaClick: () => navigateOrStub("/studio/v2/stories", TOP_BANNER.ctaLabel),
-    onSecondaryCtaClick: () => navigateOrStub("/studio/v2/community", TOP_BANNER.secondaryCtaLabel),
-  };
-
-  const bottomBanner = {
-    ...BOTTOM_BANNER,
-    onCtaClick: () => navigateOrStub("/studio/v2/stories", "Browse Stories"),
-  };
+  const sourceErrors = [storiesLoadError, communityLoadError, creatorsLoadError, engagement.engagementMessage]
+    .filter(Boolean);
+  const hasDiscoverableData = decoratedCommunity.length > 0 || creatorCards.length > 0 || Boolean(continueItem);
+  const errorMessage = !hasDiscoverableData && sourceErrors.length ? sourceErrors[0] : null;
+  const warningMessage = hasDiscoverableData && sourceErrors.length ? sourceErrors.join(" ") : null;
 
   return {
-    topBanner,
+    topBanner: {
+      ...TOP_BANNER,
+      onCtaClick: () => onNavigate?.("/studio/v2/stories"),
+      onSecondaryCtaClick: () => onNavigate?.("/studio/v2/community"),
+    },
     continueItem,
     destinationTiles,
     topRatedRail,
     recentlyAddedRail,
     fromTheCommunityRail,
     creatorsToFollowRail,
-    sortControl,
-    bottomBanner,
+    sortControl: {
+      options: SORT_OPTIONS,
+      selectedValue: sortValue,
+      onChange: setSortValue,
+    },
+    bottomBanner: {
+      ...BOTTOM_BANNER,
+      onCtaClick: () => onNavigate?.("/studio"),
+    },
     errorMessage,
+    warningMessage,
     notice,
     onCloseNotice: () => setNotice(null),
   };

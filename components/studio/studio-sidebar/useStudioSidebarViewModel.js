@@ -8,8 +8,8 @@ import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 // docs/CRESTFALL-PRODUCT-MODEL-UXUI.md section 2. During the convergence
 // cutover, /studio itself is the canonical Studio landing surface while
 // the remaining V2 destinations keep their /studio/v2/* staging addresses.
-// The earlier Home door is intentionally absent from primary navigation;
-// its useful concepts may be folded into Studio during later convergence.
+// Home is restored as the signed-in guidepost/dashboard while /studio remains
+// the canonical creation workspace.
 // Icon keys reuse the existing ICONS set in StudioSidebar.view.jsx.
 //
 // Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
@@ -19,6 +19,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
     items: Object.freeze([
+      Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home", isBuilt: true }),
       Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare", isBuilt: true }),
       Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText", isBuilt: true }),
     ]),
@@ -199,7 +200,7 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
     onToggleLegacy: () => setLegacyOpen((value) => !value),
     brandEyebrow: STUDIO_SIDEBAR_COPY.brandEyebrow,
     brandTitle: STUDIO_SIDEBAR_COPY.brandTitle,
-    brandHref: "/studio",
+    brandHref: v2Surface ? "/studio/v2/home" : "/studio",
     communityLinksLabel: STUDIO_SIDEBAR_COPY.communityLinksLabel,
     signedInLabel: STUDIO_SIDEBAR_COPY.signedInLabel,
     signedInEmail: normalizeStudioSidebarEmail(user),
