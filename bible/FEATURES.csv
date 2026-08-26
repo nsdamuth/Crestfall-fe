@@ -1,1 +1,1 @@
-id,name,date,lane,visibility,notes-file
+id,title,body_markdown,type,labels,audience,public,channels,version,status,published_at,scheduled_for,image_url,slug,issue_ref,pr_ref

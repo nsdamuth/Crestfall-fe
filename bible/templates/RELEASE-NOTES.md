@@ -1,21 +1,45 @@
 # RELEASE: <id or date>
 
+Purpose: the public and internal release notes for one release,
+generated from bible/FEATURES.csv rows and then human curated before
+publishing. Filled by: drafted from FEATURES.csv, edited by Brian
+before it ships.
+
 Date: ... Tagged by: ... Deployed to: ...
 
-## For users (plain language)
-One short paragraph per feature a user can see. No file names, no
-internal terms.
+Generated drafts are raw material only; every line ships only after
+a human pass. No file names, no internal terms, plain language
+throughout.
 
-## Features in this release
-| FEATURES.csv id | Name | Visibility (public / internal) |
-|---|---|---|
+## Added
 
-## Channels
-- Notifications panel: posted <date>
-- Login modal: yes / no (at most monthly; if yes, which release this
-  month it is)
-- Monthly email: rides the <month> digest
-- Public changelog: the public rows above appear automatically
+FEATURES.csv rows with type = new. One line each, citing the row id.
 
-## Known gaps shipped honestly
-Stubs and hidden affordances in this release, each with its CR.
+## Changed
+
+FEATURES.csv rows with type = improved. One line each, citing the
+row id.
+
+## Fixed
+
+FEATURES.csv rows with type = fixed. One line each, citing the row
+id.
+
+## Removed
+
+FEATURES.csv's type enum (new, improved, fixed) has no "removed"
+value; flagged here, not resolved. Until a type value or a separate
+marker is ruled, list removals here by hand, each still citing a row
+id where one exists.
+
+## Optional (carried from v1, not part of the v2 field list)
+
+- Channels: per-release channel record (notifications panel posted
+  date; whether a login modal ran this release; which monthly email
+  digest it rides; whether it appears in the public changelog).
+  Per-feature channel routing now lives on the FEATURES.csv row
+  itself (audience, public, channels columns); this block is for the
+  release-level facts the row schema does not carry, especially the
+  login-modal monthly cap ruled in bible/COLLAB-WORKFLOW-PRD.md.
+- Known gaps shipped honestly: stubs and hidden affordances in this
+  release, each with its CR number.
