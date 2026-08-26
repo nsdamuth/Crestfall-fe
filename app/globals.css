@@ -473,7 +473,7 @@ body {
   isolation: isolate;
   border: 1px solid rgba(185, 144, 74, 0.46);
   border-radius: var(--radius-sm);
-  background-color: #eadfc8;
+  background-color: #e4d4b8;
   /* The renderer supplies two layers: a soft readability wash first, then
      the parchment artwork. Keep the wash fitted to the full artifact while
      preserving the parchment's intrinsic aspect ratio. */
@@ -495,8 +495,9 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(86, 54, 25, 0.035), transparent 7%, transparent 93%, rgba(86, 54, 25, 0.035)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 16%, transparent 84%, rgba(64, 37, 17, 0.045));
+    radial-gradient(circle at 50% 12%, rgba(255, 249, 236, 0.22), transparent 42%),
+    linear-gradient(90deg, rgba(86, 54, 25, 0.055), transparent 8%, transparent 92%, rgba(86, 54, 25, 0.055)),
+    linear-gradient(180deg, rgba(255, 252, 244, 0.18), rgba(102, 72, 38, 0.06) 58%, rgba(56, 37, 21, 0.08));
 }
 
 .lore-parchment-page::after {
@@ -585,10 +586,85 @@ body {
 .lore-paper-summary {
   border: 1px solid rgba(123, 85, 37, 0.14);
   border-left: 4px solid rgba(123, 85, 37, 0.5);
-  background: rgba(255, 252, 244, 0.34);
+  background: rgba(255, 248, 236, 0.42);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(1px);
 }
+
+.lore-parchment-plate {
+  margin-block: 2.5rem;
+}
+
+.lore-parchment-page .lore-parchment-plate {
+  margin-inline: auto;
+}
+
+.lore-parchment-plate__frame {
+  position: relative;
+  border: 1px solid rgba(92, 62, 29, 0.32);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(92, 65, 34, 0.28), rgba(56, 38, 20, 0.34)),
+    radial-gradient(circle at 50% 0%, rgba(255, 243, 216, 0.16), transparent 44%);
+  padding: clamp(0.7rem, 1.7vw, 1rem);
+  box-shadow:
+    0 16px 34px rgba(30, 18, 9, 0.18),
+    inset 0 1px 0 rgba(255, 247, 229, 0.18),
+    inset 0 0 0 1px rgba(56, 36, 18, 0.1);
+}
+
+.lore-parchment-plate__frame::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  border: 1px solid rgba(242, 220, 176, 0.16);
+  border-radius: 8px;
+}
+
+.lore-parchment-plate__mat {
+  position: relative;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(239, 226, 198, 0.94), rgba(208, 186, 146, 0.9));
+  padding: clamp(0.7rem, 2vw, 1rem);
+  box-shadow:
+    inset 0 0 0 1px rgba(101, 72, 37, 0.12),
+    inset 0 0 40px rgba(97, 69, 39, 0.08);
+}
+
+.lore-parchment-plate__art {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(84, 57, 30, 0.14);
+  background: linear-gradient(180deg, rgba(28, 20, 12, 0.1), rgba(28, 20, 12, 0.02));
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 244, 220, 0.08);
+}
+
+.lore-parchment-plate__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 52%, rgba(50, 32, 17, 0.14) 100%);
+}
+
+.lore-parchment-plate__image {
+  display: block;
+  max-height: min(65vh, 42rem);
+}
+
+.lore-parchment-plate__caption {
+  text-align: center;
+  font-family: var(--font-serif), serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(78, 55, 30, 0.88);
+}
+
 
 .lore-reader-index {
   background:
@@ -647,5 +723,25 @@ body {
 
   .lore-parchment-page h1 {
     text-wrap: balance;
+  }
+
+  .lore-parchment-plate {
+    margin-block: 2rem;
+  }
+
+  .lore-parchment-plate__frame {
+    padding: 0.55rem;
+  }
+
+  .lore-parchment-plate__frame::before {
+    inset: 6px;
+  }
+
+  .lore-parchment-plate__mat {
+    padding: 0.65rem;
+  }
+
+  .lore-parchment-plate__caption {
+    font-size: 0.9rem;
   }
 }

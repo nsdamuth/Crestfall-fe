@@ -68,6 +68,9 @@ test("Lore reader applies parchment to cover and chapter sheets", () => {
   assert.match(css, /\.lore-parchment-page--chapter[\s\S]*background-size:\s*100% 100%, 100% auto/);
   assert.match(css, /\.lore-parchment-page--cover[\s\S]*background-size:\s*100% 100%, cover/);
   assert.doesNotMatch(css, /\.lore-parchment-page--chapter[\s\S]*background-size:\s*100% 100%;/);
+  assert.match(css, /background-color:\s*#e4d4b8/);
+  assert.match(css, /\.lore-parchment-plate__frame/);
+  assert.match(css, /\.lore-parchment-plate__caption/);
   assert.match(css, /\.lore-reader-index/);
 });
 

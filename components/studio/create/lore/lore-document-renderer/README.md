@@ -52,3 +52,12 @@ That preserves owner-session cookies and immutable-publication query authority
 on the request that actually fetches the image. Ordinary static image sources
 continue to use `next/image`. The renderer does not invent or rewrite Lore
 media URLs; image authority remains with the existing Lore/media services.
+
+## Lore image presentation
+
+Lore image blocks render as archival image plates inside the parchment reader.
+That treatment is scoped to the Lore renderer by passing a Lore-only variant to
+`ImageBlock`; it does not restyle the shared image block globally for other
+surfaces. The plate adds a muted mat, inset frame, softer caption treatment,
+and more conservative width so assigned character art feels mounted into the
+manuscript instead of pasted directly onto the page.

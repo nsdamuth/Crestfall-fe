@@ -30,7 +30,13 @@ export default function LoreBlockRenderer({ blocks = [], nested = false }) {
             return <QuoteBlock key={block.id || index} {...block} />;
 
           case "image":
-            return <ImageBlock key={block.id || index} {...block} />;
+            return (
+              <ImageBlock
+                key={block.id || index}
+                {...block}
+                variant="lore-parchment"
+              />
+            );
 
           case "excerpt":
             return <ExcerptBlock key={block.id || index} {...block} />;
