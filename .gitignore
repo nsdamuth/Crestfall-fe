@@ -88,3 +88,9 @@ ds-bundle/
 .design-sync/learnings/
 .design-sync/node_modules
 .design-sync/refs/
+
+# Generated review evidence
+docs/review-artifacts/
+
+# Temporary mockup assets
+public/tmp-mockup-images/
