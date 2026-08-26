@@ -210,7 +210,7 @@ function SectionBox({ section, mark, isOpen, onToggle, children }) {
   return (
     <div
       id={`editor-section-box-${section.id}`}
-      className={`rounded-[var(--radius-lg)] border bg-[var(--surface-2)] transition-colors ${ANCHOR_SCROLL_CLASS} ${
+      className={`min-w-0 max-w-full rounded-[var(--radius-lg)] border bg-[var(--surface-2)] transition-colors ${ANCHOR_SCROLL_CLASS} ${
         isOpen ? "border-[var(--line)]" : "border-[var(--line-whisper)]"
       }`}
     >
@@ -235,7 +235,7 @@ function SectionBox({ section, mark, isOpen, onToggle, children }) {
         />
       </button>
       {isOpen ? (
-        <div className="px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-4)]">{children}</div>
+        <div className="min-w-0 max-w-full px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-4)]">{children}</div>
       ) : null}
     </div>
   );
@@ -308,7 +308,7 @@ export default function EditorView({
   const statusWord = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
 
   return (
-    <section className="mx-auto w-full max-w-[var(--container)] px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
+    <section className="w-full max-w-none px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
       {harnessSlot ? <div className="mb-[var(--space-4)]">{harnessSlot}</div> : null}
 
       {isLoading ? (
@@ -321,7 +321,7 @@ export default function EditorView({
       ) : loadError ? (
         <LoadErrorState onRetry={onRetryLoad} onOpenPicker={onOpenPickerFromError} />
       ) : (
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)]">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)] 2xl:grid-cols-[minmax(0,1fr)_288px]">
           <div className="min-w-0 pb-[var(--space-14)] lg:pb-0">
             {onBack ? (
               <button
@@ -356,7 +356,7 @@ export default function EditorView({
                         >
                           {sectionBadges?.[section.id]}
                           {sectionLeads?.[section.id]}
-                          <div className="min-w-0">{sectionNodes?.[section.id]}</div>
+                          <div className="min-w-0 max-w-full">{sectionNodes?.[section.id]}</div>
                           {sectionSeats?.[section.id]}
                         </SectionBox>
                       );

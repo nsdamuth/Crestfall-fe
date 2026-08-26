@@ -1,8 +1,6 @@
 import {
   SectionTitle,
   TextAreaField,
-  SHORT_LONGFORM_MAX_LENGTH,
-  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CharacterAdvancedSectionView({
@@ -40,20 +38,19 @@ export default function CharacterAdvancedSectionView({
   advancedPromptingControl = null,
 }) {
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
       />
 
-      <div className="grid gap-[var(--space-4)]">
+      <div className="grid min-w-0 max-w-full gap-[var(--space-4)] [&>*]:min-w-0">
         <TextAreaField
           label={greetingLabel}
           value={greetingValue}
           onChange={(value) => onChangeGreeting?.(value)}
           placeholder={greetingPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -61,7 +58,6 @@ export default function CharacterAdvancedSectionView({
           value={scenarioValue}
           onChange={(value) => onChangeScenario?.(value)}
           placeholder={scenarioPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -69,7 +65,6 @@ export default function CharacterAdvancedSectionView({
           value={relationshipValue}
           onChange={(value) => onChangeRelationship?.(value)}
           placeholder={relationshipPlaceholder}
-          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -77,7 +72,6 @@ export default function CharacterAdvancedSectionView({
           value={backstoryValue}
           onChange={(value) => onChangeBackstory?.(value)}
           placeholder={backstoryPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -85,7 +79,6 @@ export default function CharacterAdvancedSectionView({
           value={appearanceNotesValue}
           onChange={(value) => onChangeAppearanceNotes?.(value)}
           placeholder={appearanceNotesPlaceholder}
-          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -93,7 +86,6 @@ export default function CharacterAdvancedSectionView({
           value={personalityNotesValue}
           onChange={(value) => onChangePersonalityNotes?.(value)}
           placeholder={personalityNotesPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         <TextAreaField
@@ -101,7 +93,6 @@ export default function CharacterAdvancedSectionView({
           value={runtimeNotesValue}
           onChange={(value) => onChangeRuntimeNotes?.(value)}
           placeholder={runtimeNotesPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
 
         {advancedPromptingControl}

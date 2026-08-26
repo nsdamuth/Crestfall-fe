@@ -72,10 +72,12 @@ test("Character Advanced preview is development-only", () => {
   assert.match(preview, /CharacterAdvancedSectionView/);
 });
 
-test("Creation Edit retains the public Character Advanced Shell", () => {
+test("Creation Edit retains the public Character Advanced Shell through the registry dispatcher", () => {
   const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import AdvancedSection from/);
-  assert.match(editShell, /<AdvancedSection/);
+  const componentMap = read("components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js");
+  assert.match(editShell, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(componentMap, /import AdvancedSection from/);
+  assert.match(componentMap, /advanced: \{ Component: AdvancedSection/);
 });
 
 test("Character Advanced package includes its documented handoff", () => {

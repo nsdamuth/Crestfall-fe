@@ -78,9 +78,9 @@ export default function AdvancedPromptingEditorView({
   const securityPresentation = getSecurityPresentation(securityStatus);
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
+    <section className="min-w-0 max-w-full rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-3xl">
+        <div className="min-w-0 max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <SlidersHorizontal size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">
@@ -145,19 +145,19 @@ export default function AdvancedPromptingEditorView({
             return (
               <article
                 key={section.id}
-                className="rounded-xl border border-white/10 bg-black/25"
+                className="min-w-0 max-w-full rounded-xl border border-white/10 bg-black/25"
               >
                 <button
                   type="button"
                   onClick={() => onToggleSection?.(section.id)}
-                  className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left"
+                  className="flex min-w-0 w-full items-start justify-between gap-4 px-4 py-4 text-left"
                 >
                   <div className="flex min-w-0 items-start gap-3">
                     <ToggleIcon
                       size={17}
                       className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
                     />
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="text-sm font-medium text-[var(--ink)]">
                           {section.label}
@@ -191,7 +191,7 @@ export default function AdvancedPromptingEditorView({
                       }
                       placeholder={section.placeholder}
                       rows={8}
-                      className="w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                      className="min-w-0 max-w-full w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                     />
 
                     <div className="mt-3 flex items-center justify-between gap-3 text-xs">

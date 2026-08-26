@@ -63,7 +63,11 @@ test("Lore reader applies parchment to cover and chapter sheets", () => {
   assert.match(css, /\.lore-parchment-page/);
   assert.match(css, /\.lore-parchment-page > \*/);
   assert.doesNotMatch(css.slice(css.indexOf("\/* Lore reader convergence")), /radial-gradient\(circle at 12% 78%/);
-  assert.match(css, /background-size:\s*100% 100%/);
+  assert.match(css, /background-size:\s*100% 100%, 100% auto/);
+  assert.match(css, /\.lore-parchment-page--chapter[\s\S]*background-repeat:\s*no-repeat, repeat-y/);
+  assert.match(css, /\.lore-parchment-page--chapter[\s\S]*background-size:\s*100% 100%, 100% auto/);
+  assert.match(css, /\.lore-parchment-page--cover[\s\S]*background-size:\s*100% 100%, cover/);
+  assert.doesNotMatch(css, /\.lore-parchment-page--chapter[\s\S]*background-size:\s*100% 100%;/);
   assert.match(css, /\.lore-reader-index/);
 });
 

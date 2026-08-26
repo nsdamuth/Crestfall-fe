@@ -71,10 +71,12 @@ test("Character Body preview is development-only", () => {
   assert.match(preview, /CharacterBodySectionView/);
 });
 
-test("Creation Edit retains the public Character Body Shell", () => {
+test("Creation Edit retains the public Character Body Shell through the registry dispatcher", () => {
   const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import BodySection from/);
-  assert.match(editShell, /<BodySection/);
+  const componentMap = read("components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js");
+  assert.match(editShell, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(componentMap, /import BodySection from/);
+  assert.match(componentMap, /body: \{ Component: BodySection/);
 });
 
 test("Character Body package includes its documented handoff", () => {

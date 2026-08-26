@@ -42,16 +42,13 @@ export const EditorSectionChromeContext = createContext({
   suppressSectionTitle: false,
 });
 
-// Long-form field character limits, RULED (a1 advanced-creator pass,
-// docs/CONTRACT-REQUESTS.md "Long-form field character limits"): two
-// size classes, applied to every long-form field in the advanced
-// editor via TextAreaField's existing maxLength prop. SHORT for
-// fields that describe in a line or a short paragraph (appearance,
-// tone, premise, summary, and their kin); DEEP for fields that hold
-// extended writing (personality, backstory, history, lore body,
-// scenario detail, and their kin). Display-layer ruling, pending
-// Nick's confirmation against the backend data model; not a backend
-// change, not blocking.
+// Generic display-layer long-form limits retained for editor surfaces
+// whose own contracts explicitly opt into them. These values are NOT
+// Character persistence authority. Character Body / Behavior / Advanced
+// intentionally do not pass them: the legacy Character editor did not
+// impose these presentation caps, and Character creation data is saved
+// through the application/API contract. Do not reintroduce 600/2000 as
+// Character limits without an authoritative Character contract.
 export const SHORT_LONGFORM_MAX_LENGTH = 600;
 export const DEEP_LONGFORM_MAX_LENGTH = 2000;
 
@@ -65,7 +62,7 @@ const LABEL_CLASS =
 // focus treatment on every focusable element app-wide, this field
 // bed included.
 const FIELD_BED_CLASS =
-  "w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
+  "min-w-0 max-w-full w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -147,7 +144,7 @@ export function TextField({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <label className="block">
+    <label className="block min-w-0 max-w-full">
       <LabelRow
         label={label}
         length={value.length}
@@ -295,12 +292,12 @@ export function TextAreaField({
     setIsFocused(false);
   }
 
-  const bedClass = `w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+  const bedClass = `min-w-0 max-w-full w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
     mono ? " font-mono" : ""
   }`;
 
   return (
-    <label className="block">
+    <label className="block min-w-0 max-w-full">
       <LabelRow
         label={label}
         length={value.length}

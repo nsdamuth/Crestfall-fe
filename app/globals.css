@@ -474,9 +474,12 @@ body {
   border: 1px solid rgba(185, 144, 74, 0.46);
   border-radius: var(--radius-sm);
   background-color: #eadfc8;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  /* The renderer supplies two layers: a soft readability wash first, then
+     the parchment artwork. Keep the wash fitted to the full artifact while
+     preserving the parchment's intrinsic aspect ratio. */
+  background-position: center, center top;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% auto;
   color: #17120d;
   padding: 2.5rem;
   box-shadow:
@@ -534,10 +537,19 @@ body {
 
 .lore-parchment-page--cover {
   padding-block: clamp(2.5rem, 6vw, 5rem);
+  /* Covers are bounded presentation pieces, so one full parchment is enough. */
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, cover;
 }
 
 .lore-parchment-page--chapter {
   padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  /* Long chapters must never stretch a single parchment to arbitrary height.
+     Repeat complete folios at their natural ratio instead. The authored edge
+     treatment at each image boundary becomes a deliberate page separator. */
+  background-position: center, center top;
+  background-repeat: no-repeat, repeat-y;
+  background-size: 100% 100%, 100% auto;
 }
 
 .lore-paper-rule {

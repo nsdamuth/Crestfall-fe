@@ -9,42 +9,42 @@ import { SectionTitle } from "@/components/studio/my-creations/edit/sections/Sha
 // clips through the card's own radius instead.
 function ReferenceCard({ card = {} }) {
   return (
-    <article className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
-      <div className="flex items-start justify-between gap-[var(--space-4)]">
-        <div>
-          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            {card.eyebrow}
-          </p>
-          <h4 className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
-            {card.label}
-          </h4>
-          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-            {card.description}
-          </p>
-        </div>
+    <article className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+      <div className="flex min-w-0 items-center justify-between gap-[var(--space-3)]">
+        <p className="min-w-0 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          {card.eyebrow}
+        </p>
 
         {card.onClear ? (
           <button
             type="button"
             onClick={() => card.onClear?.()}
-            className="cf-btn cf-btn--danger"
-            aria-label={card.clearLabel}
+            className="cf-btn cf-btn--danger cf-btn--sm flex-none"
+            aria-label={card.clearLabel || `Clear ${card.label || "reference"}`}
+            title={card.clearLabel || "Clear reference"}
           >
-            <X size={16} />
-            {card.clearLabel || "Clear"}
+            <X size={14} />
+            Clear
           </button>
         ) : null}
       </div>
+
+      <h4 className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] font-medium text-[var(--ink)]">
+        {card.label}
+      </h4>
+      <p className="mt-[var(--space-2)] max-w-[var(--measure)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+        {card.description}
+      </p>
 
       <div className="mt-[var(--space-4)] overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-2)]">
         {card.imageUrl ? (
           <img
             src={card.imageUrl}
             alt={card.label}
-            className="aspect-[3/4] w-full object-cover"
+            className="aspect-[4/3] w-full object-contain"
           />
         ) : (
-          <div className="relative flex aspect-[3/4] items-center justify-center p-[var(--space-6)] text-center">
+          <div className="relative flex aspect-[4/3] items-center justify-center p-[var(--space-6)] text-center">
             <KitArtPlaceholderView size="lg" />
             <p className="pointer-events-none absolute bottom-[var(--space-4)] left-[var(--space-4)] right-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
               {card.emptyMessage}
@@ -113,7 +113,7 @@ export default function VisualReferencesSectionView({
         </p>
       ) : null}
 
-      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)] lg:grid-cols-2">
+      <div className="mt-[var(--space-6)] grid min-w-0 gap-[var(--space-4)] xl:grid-cols-2">
         {referenceCards.map((card) => (
           <ReferenceCard key={card.key} card={card} />
         ))}

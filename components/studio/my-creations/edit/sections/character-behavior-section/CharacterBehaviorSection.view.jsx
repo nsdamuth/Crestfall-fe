@@ -2,7 +2,6 @@ import {
   SectionTitle,
   SelectField,
   TextAreaField,
-  DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CharacterBehaviorSectionView({
@@ -31,14 +30,14 @@ export default function CharacterBehaviorSectionView({
   onChangePhilosophy = null,
 }) {
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid min-w-0 max-w-full gap-4 md:grid-cols-2 [&>*]:min-w-0">
         {outwardPersonalityControl}
         {internalPersonalityControl}
 
@@ -78,7 +77,6 @@ export default function CharacterBehaviorSectionView({
             value={philosophyValue}
             onChange={(value) => onChangePhilosophy?.(value)}
             placeholder={philosophyPlaceholder}
-            maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
         </div>
       </div>

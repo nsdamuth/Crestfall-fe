@@ -4,7 +4,6 @@ import {
   SectionTitle,
   TextAreaField,
   TextField,
-  SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 export default function CreationOverviewSectionView({
@@ -23,14 +22,14 @@ export default function CreationOverviewSectionView({
   onPreview = null,
 }) {
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
       />
 
-      <div className="grid gap-4">
+      <div className="grid min-w-0 max-w-full gap-4 [&>*]:min-w-0">
         <TextField
           label={titleLabel}
           value={titleValue}
@@ -42,7 +41,6 @@ export default function CreationOverviewSectionView({
           value={descriptionValue}
           onChange={(value) => onChangeDescription?.(value)}
           placeholder={descriptionPlaceholder}
-          maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
 

@@ -73,10 +73,12 @@ test("Visual References preview is development-only", () => {
   assert.match(preview, /VisualReferencesSectionView/);
 });
 
-test("Creation Edit retains the public Visual References Shell", () => {
+test("Creation Edit retains the public Visual References Shell through the registry dispatcher", () => {
   const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import VisualReferencesSection from/);
-  assert.match(editShell, /<VisualReferencesSection/);
+  const componentMap = read("components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js");
+  assert.match(editShell, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(componentMap, /import VisualReferencesSection from/);
+  assert.match(componentMap, /Component: VisualReferencesSection/);
 });
 
 test("Visual References package includes its documented handoff", () => {

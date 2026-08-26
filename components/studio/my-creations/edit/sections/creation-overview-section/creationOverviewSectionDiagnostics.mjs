@@ -65,10 +65,12 @@ test("Creation Overview preview is development-only", () => {
   assert.match(preview, /CreationOverviewSectionView/);
 });
 
-test("Creation Edit retains the public Creation Overview Shell", () => {
+test("Creation Edit retains the public Creation Overview Shell through the registry dispatcher", () => {
   const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import OverviewSection from/);
+  const componentMap = read("components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js");
+  assert.match(editShell, /OverviewSection/);
   assert.match(editShell, /<OverviewSection form=\{form\} updateField=\{updateField\}/);
+  assert.match(componentMap, /import OverviewSection from/);
 });
 
 test("Creation Overview package includes its documented handoff", () => {

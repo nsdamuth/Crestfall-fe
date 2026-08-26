@@ -75,10 +75,12 @@ test("Character Behavior preview is development-only", () => {
   assert.match(preview, /CharacterBehaviorSectionView/);
 });
 
-test("Creation Edit retains the public Character Behavior Shell", () => {
+test("Creation Edit retains the public Character Behavior Shell through the registry dispatcher", () => {
   const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import BehaviorSection from/);
-  assert.match(editShell, /<BehaviorSection/);
+  const componentMap = read("components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js");
+  assert.match(editShell, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(componentMap, /import BehaviorSection from/);
+  assert.match(componentMap, /behavior: \{ Component: BehaviorSection/);
 });
 
 test("Character Behavior package includes its documented handoff", () => {
