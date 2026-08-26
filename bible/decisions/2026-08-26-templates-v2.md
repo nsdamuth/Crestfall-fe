@@ -35,7 +35,7 @@ pre-integrate check, and freezes a wider FEATURES.csv schema.
 - FEATURES.csv schema freeze: id, title, body_markdown, type, labels,
   audience, public, channels, version, status, published_at,
   scheduled_for, image_url, slug, issue_ref, pr_ref. type is new,
-  improved, or fixed. channels is a pipe-separated subset of
+  improved, fixed, or removed. channels is a pipe-separated subset of
   panel|modal|digest|public. status is draft, scheduled, or
   published.
 - RELEASE-NOTES.md: Added, Changed, Fixed, Removed sections, one
@@ -51,14 +51,9 @@ pre-integrate check, and freezes a wider FEATURES.csv schema.
 - Fields the new lists did not cover were kept under an "Optional"
   heading in each file rather than dropped, so no v1 discipline is
   silently lost; see the execution report for which fields moved.
-- The FEATURES.csv type enum has no "removed" value; RELEASE-NOTES.md's
-  Removed section is flagged as an open gap, not resolved here.
-- The Model, Effort, and Permission-mode header in BRIEF.md is not
-  part of the v2 field list but is required elsewhere as standing
-  law (docs/FRONTEND-SOP.md section 9, docs/PROJECT-INSTRUCTIONS.md
-  "Claude Code briefs"); it stays at the top of the template,
-  unburied, labeled Optional only because this pass's field list
-  does not name it.
+- Ruled 26 Aug: type values are new, improved, fixed, removed.
+- Ruled 26 Aug: Model, Effort, Permission mode block is required in
+  every brief.
 
 ## Alternatives considered
 

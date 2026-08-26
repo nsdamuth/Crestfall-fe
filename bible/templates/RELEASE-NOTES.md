@@ -27,10 +27,8 @@ id.
 
 ## Removed
 
-FEATURES.csv's type enum (new, improved, fixed) has no "removed"
-value; flagged here, not resolved. Until a type value or a separate
-marker is ruled, list removals here by hand, each still citing a row
-id where one exists.
+FEATURES.csv rows with type = removed. One line each, citing the row
+id.
 
 ## Optional (carried from v1, not part of the v2 field list)
 

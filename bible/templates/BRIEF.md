@@ -4,9 +4,9 @@ Purpose: the executable unit handed to one agent for one focused
 piece of work. Filled by: the lane preparing the work, before any
 edit starts.
 
-## Optional (carried from v1, not part of the v2 field list; standing
-law elsewhere still requires this, kept first and unburied per
-docs/FRONTEND-SOP.md section 9 and docs/PROJECT-INSTRUCTIONS.md)
+## Required (per docs/FRONTEND-SOP.md section 9 and
+docs/PROJECT-INSTRUCTIONS.md; three separate numbered actions before
+the paste block, never buried inside the brief text)
 
 1. Model: <Opus | Fable | Sonnet>
 2. Effort: <low | medium | high>
