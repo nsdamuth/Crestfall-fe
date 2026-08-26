@@ -68,7 +68,24 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
+      {
+        url: "/assets/branding/favicon.ico",
+        type: "image/x-icon",
+      },
+      {
+        url: "/assets/branding/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/assets/branding/favicon-32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/assets/branding/favicon-16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
       {
         url: "/assets/branding/icon-192.png",
         sizes: "192x192",
@@ -80,6 +97,7 @@ export const metadata = {
         type: "image/png",
       },
     ],
+    shortcut: ["/assets/branding/favicon.ico"],
     apple: [
       {
         url: "/assets/branding/apple-touch-icon.png",
