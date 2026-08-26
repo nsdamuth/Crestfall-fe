@@ -42,3 +42,13 @@ reloads while different publications and chapters naturally vary.
 The selection layer is presentation-only: it does not persist a parchment
 choice, call an API, or change Lore document data. A future author-selected
 override can be added without changing the document renderer's data authority.
+
+## Lore image delivery
+
+Lore image blocks may carry Crestfall same-origin media-proxy URLs produced by
+the existing Lore publication and owner-preview pipelines. Those URLs are
+rendered directly by the browser rather than through the Next image optimizer.
+That preserves owner-session cookies and immutable-publication query authority
+on the request that actually fetches the image. Ordinary static image sources
+continue to use `next/image`. The renderer does not invent or rewrite Lore
+media URLs; image authority remains with the existing Lore/media services.

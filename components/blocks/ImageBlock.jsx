@@ -13,12 +13,12 @@ const alignClasses = {
   right: "ml-auto",
 };
 
+function isCrestfallMediaProxyUrl(value) {
+  const src = typeof value === "string" ? value.trim() : "";
 
-function shouldBypassImageOptimizer(src) {
   return (
-    typeof src === "string" &&
-    (src.startsWith("/api/media/images/") ||
-      src.startsWith("/api/studio/image-generation/outputs/"))
+    /^\/api\/media\/images\/[^/]+\/file(?:\?|$)/.test(src) ||
+    /^\/api\/studio\/image-generation\/outputs\/[^/]+\/file(?:\?|$)/.test(src)
   );
 }
 
@@ -33,6 +33,9 @@ export default function ImageBlock({
 }) {
   if (!src) return null;
 
+  const directMediaProxy = isCrestfallMediaProxyUrl(src);
+  const imageClassName = "h-auto w-full object-cover";
+
   return (
     <figure
       className={`space-y-4 ${sizeClasses[size] ?? sizeClasses.full} ${
@@ -40,14 +43,27 @@ export default function ImageBlock({
       }`}
     >
       <div className="overflow-hidden border border-[rgba(120,85,40,0.25)] shadow-lg">
-        <Image
-          src={src}
-          alt={alt ?? ""}
-          width={width}
-          height={height}
-          unoptimized={shouldBypassImageOptimizer(src)}
-          className="h-auto w-full object-cover"
-        />
+        {directMediaProxy ? (
+          // Lore image proxy URLs can carry owner-session or immutable-publication
+          // authority in the browser request. Do not send them through the Next
+          // image optimizer, which performs a separate server-side fetch.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={alt ?? ""}
+            width={width}
+            height={height}
+            className={imageClassName}
+          />
+        ) : (
+          <Image
+            src={src}
+            alt={alt ?? ""}
+            width={width}
+            height={height}
+            className={imageClassName}
+          />
+        )}
       </div>
 
       {caption && (
@@ -58,3 +74,5 @@ export default function ImageBlock({
     </figure>
   );
 }
+
+export { isCrestfallMediaProxyUrl };

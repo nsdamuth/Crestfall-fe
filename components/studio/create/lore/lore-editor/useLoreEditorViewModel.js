@@ -1484,17 +1484,12 @@ export function useLoreEditorViewModel({ value, onChange, contentRating = "SFW" 
   }
 
   function applySelectedImage(block, image, selectedCharacterId) {
-    const imageOutputId = normalizeString(image.imageOutputId);
-    const durableImageSrc = imageOutputId
-      ? `/api/media/images/${encodeURIComponent(imageOutputId)}/file`
-      : normalizeString(image.displayImageUrl);
-
     return {
       ...block,
       sourceCharacterId: selectedCharacterId,
       libraryEntryId: normalizeString(image.id || image.libraryEntryId),
-      imageOutputId,
-      src: durableImageSrc,
+      imageOutputId: normalizeString(image.imageOutputId),
+      src: normalizeString(image.displayImageUrl),
       alt: block.alt || image.title || "Lore character image",
     };
   }

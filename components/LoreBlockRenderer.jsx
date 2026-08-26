@@ -12,37 +12,6 @@ import PullQuoteBlock from "@/components/blocks/PullQuoteBlock";
 import StatBlock from "@/components/blocks/StatBlock";
 import CalloutBlock from "@/components/blocks/CalloutBlock";
 
-function normalizeString(value) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function imageOutputIdFromStudioFileUrl(src) {
-  const value = normalizeString(src);
-  const match = value.match(
-    /^\/api\/studio\/image-generation\/outputs\/([^/?#]+)\/file(?:[?#]|$)/
-  );
-
-  if (!match?.[1]) return "";
-
-  try {
-    return decodeURIComponent(match[1]);
-  } catch {
-    return match[1];
-  }
-}
-
-export function resolveLoreImageBlockSrc(block = {}) {
-  const storedSrc = normalizeString(block.src);
-  const imageOutputId =
-    normalizeString(block.imageOutputId) || imageOutputIdFromStudioFileUrl(storedSrc);
-
-  if (imageOutputId) {
-    return `/api/media/images/${encodeURIComponent(imageOutputId)}/file`;
-  }
-
-  return storedSrc;
-}
-
 export default function LoreBlockRenderer({ blocks = [], nested = false }) {
   return (
     <div className={nested ? "space-y-8" : "mt-12 space-y-12"}>
@@ -61,13 +30,7 @@ export default function LoreBlockRenderer({ blocks = [], nested = false }) {
             return <QuoteBlock key={block.id || index} {...block} />;
 
           case "image":
-            return (
-              <ImageBlock
-                key={block.id || index}
-                {...block}
-                src={resolveLoreImageBlockSrc(block)}
-              />
-            );
+            return <ImageBlock key={block.id || index} {...block} />;
 
           case "excerpt":
             return <ExcerptBlock key={block.id || index} {...block} />;

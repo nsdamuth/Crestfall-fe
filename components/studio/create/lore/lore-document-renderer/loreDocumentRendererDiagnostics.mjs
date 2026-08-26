@@ -44,6 +44,23 @@ test("fixtures README and protected preview exist", () => {
 });
 
 
+test("Lore media proxy image blocks bypass the Next optimizer without rewriting src", () => {
+  const imageBlock = read("components/blocks/ImageBlock.jsx");
+  const renderer = read("components/LoreBlockRenderer.jsx");
+
+  assert.match(imageBlock, /isCrestfallMediaProxyUrl/);
+  assert.equal(imageBlock.includes("/^\\/api\\/media\\/images\\/"), true);
+  assert.equal(
+    imageBlock.includes("/^\\/api\\/studio\\/image-generation\\/outputs\\/"),
+    true
+  );
+  assert.match(imageBlock, /directMediaProxy\s*\?\s*\(/s);
+  assert.match(imageBlock, /<img[\s\S]*src=\{src\}/);
+  assert.match(imageBlock, /<Image[\s\S]*src=\{src\}/);
+  assert.match(renderer, /<ImageBlock key=\{block\.id \|\| index\} \{\.\.\.block\} \/>/);
+  assert.doesNotMatch(renderer, /api\/media\/images|imageOutputId.*file/s);
+});
+
 test("Next Image allows only the known local thumbnail proxy query patterns", () => {
   const config = read("next.config.mjs");
 
@@ -67,18 +84,4 @@ test("Next Image allows only the known local thumbnail proxy query patterns", ()
 
 test("package script is registered", () => {
   assert.match(read("package.json"), /diagnostics:loom:lore-document-renderer/);
-});
-
-test("assigned Lore images resolve through the durable media route without the Next optimizer", () => {
-  const loreBlocks = read("components/LoreBlockRenderer.jsx");
-  const imageBlock = read("components/blocks/ImageBlock.jsx");
-  const editorViewModel = read("components/studio/create/lore/lore-editor/useLoreEditorViewModel.js");
-
-  assert.match(loreBlocks, /resolveLoreImageBlockSrc/);
-  assert.match(loreBlocks, /\/api\/media\/images\/\$\{encodeURIComponent\(imageOutputId\)\}\/file/);
-  assert.match(loreBlocks, /imageOutputIdFromStudioFileUrl/);
-  assert.match(imageBlock, /unoptimized=\{shouldBypassImageOptimizer\(src\)\}/);
-  assert.match(imageBlock, /src\.startsWith\("\/api\/media\/images\/"\)/);
-  assert.match(editorViewModel, /const durableImageSrc = imageOutputId/);
-  assert.match(editorViewModel, /src: durableImageSrc/);
 });
