@@ -37,12 +37,12 @@ These routes render components with local fixture data and are intended for isol
 Examples:
 
 ```text
-http://localhost:3000/dev/ui-preview/studio-top-bar
-http://localhost:3000/dev/ui-preview/studio-sidebar
-http://localhost:3000/dev/ui-preview/creation-card
-http://localhost:3000/dev/ui-preview/community-hub
-http://localhost:3000/dev/ui-preview/room-template-builder
-http://localhost:3000/dev/ui-preview/story-room-chat-shell
+http://localhost:3001/dev/ui-preview/studio-top-bar
+http://localhost:3001/dev/ui-preview/studio-sidebar
+http://localhost:3001/dev/ui-preview/creation-card
+http://localhost:3001/dev/ui-preview/community-hub
+http://localhost:3001/dev/ui-preview/room-template-builder
+http://localhost:3001/dev/ui-preview/story-room-chat-shell
 ```
 
 There are many additional preview routes. Browse:
@@ -98,7 +98,7 @@ Use only frontend-safe values:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=<public Supabase project URL>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<public Supabase anon key>
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
 ```
 
 Do not place backend credentials, database passwords, R2 secret keys, provider API keys, or production secrets in this repository.
@@ -114,13 +114,13 @@ npm run dev
 Open:
 
 ```text
-http://localhost:3000
+http://localhost:3001
 ```
 
 For backend-free frontend work, go directly to a preview route under:
 
 ```text
-http://localhost:3000/dev/ui-preview/
+http://localhost:3001/dev/ui-preview/
 ```
 
 ---

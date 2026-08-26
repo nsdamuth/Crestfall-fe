@@ -11,6 +11,7 @@
    and can break the dev server's CSS compile. docs/ ships no product
    markup and must never feed the scanner. */
 @source not "../docs";
+@source not "../bible";
 
 :root {
   --background: var(--canvas);
