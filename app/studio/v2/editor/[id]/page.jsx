@@ -10,15 +10,17 @@
 // docs/STUDIO-SPEC.md Brief S3 (section 8.3): the advanced editor
 // shell, rehost move. Composition lives in ../Editor.jsx (Binding
 // Shell) and is mirrored at /dev/ui-preview/editor-v2-page for
-// auth-free verification. Resolution of [id] is fixture-first
-// (../editor/editorSavedCreations.mock.js) with a fall-through to the
-// existing live creation client; see that module's header comment
-// (mock, pending CR-031).
+// auth-free verification. The live route deliberately reuses the legacy
+// edit-page loader so Creation data and image-library featured-slot
+// assignments arrive as one hydrated edit payload. Fixture-first preview
+// resolution remains inside ../Editor.jsx / editorSavedCreations.mock.js.
 
 import Editor from "../Editor";
+import { getEditCreationPageData } from "@/lib/server/studio/getEditCreationPageData";
 
 export default async function EditorV2Page({ params }) {
   const { id } = await params;
+  const { creation } = await getEditCreationPageData(id);
 
-  return <Editor creationId={id} />;
+  return <Editor creationId={id} creation={creation} />;
 }

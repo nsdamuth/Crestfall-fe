@@ -38,6 +38,7 @@ const SECTION_CHROME = { suppressSectionTitle: true };
 
 export default function Editor({
   creationId,
+  creation = null,
   harnessSlot = null,
   originOverride,
   previewLoadingOverride,
@@ -55,6 +56,7 @@ export default function Editor({
     <EditorInner
       key={`${creationId || "none"}-${discardKey}`}
       creationId={creationId}
+      creation={creation}
       harnessSlot={harnessSlot}
       originOverride={originOverride}
       previewLoadingOverride={previewLoadingOverride}
@@ -93,6 +95,7 @@ function DefaultPcActions({ settingDefaultPc, onSetDefaultPc, status, error }) {
 
 function EditorInner({
   creationId,
+  creation,
   harnessSlot,
   originOverride,
   previewLoadingOverride,
@@ -121,6 +124,7 @@ function EditorInner({
     loadError,
   } = useEditorViewModel({
     creationId,
+    creation,
     previewLoadingOverride,
     previewLoadErrorOverride,
     previewDirtyOverride,

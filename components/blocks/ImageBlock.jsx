@@ -13,6 +13,15 @@ const alignClasses = {
   right: "ml-auto",
 };
 
+
+function shouldBypassImageOptimizer(src) {
+  return (
+    typeof src === "string" &&
+    (src.startsWith("/api/media/images/") ||
+      src.startsWith("/api/studio/image-generation/outputs/"))
+  );
+}
+
 export default function ImageBlock({
   src,
   alt,
@@ -36,6 +45,7 @@ export default function ImageBlock({
           alt={alt ?? ""}
           width={width}
           height={height}
+          unoptimized={shouldBypassImageOptimizer(src)}
           className="h-auto w-full object-cover"
         />
       </div>

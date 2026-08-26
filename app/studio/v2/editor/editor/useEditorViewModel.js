@@ -46,6 +46,7 @@ function resolveVisibilityChip(form = {}) {
 // `originOverride`. Product never passes these.
 export function useEditorViewModel({
   creationId,
+  creation = null,
   previewLoadingOverride = false,
   previewLoadErrorOverride = null,
   previewDirtyOverride = false,
@@ -57,11 +58,11 @@ export function useEditorViewModel({
 
   const shell = useCreationEditShellViewModel({
     creationId,
-    // Fixture-first: a matched mock creation (ownerId + updatedAt
-    // present, so it passes the read-only hook's hasUsableCreation
-    // check) seeds the ViewModel directly and NO fetch fires. An
-    // unmatched id runs the existing live path unmodified.
-    creation: mockCreation || undefined,
+    // Fixture-first remains intact for the isolated preview. Live V2
+    // routes now pass the same media-hydrated edit payload used by the
+    // legacy editor, so featured image slots render before the client
+    // shell mounts instead of falling back to the creation-only GET.
+    creation: mockCreation || creation || undefined,
   });
 
   const isMockMode = Boolean(mockCreation);
@@ -229,15 +230,34 @@ export function useEditorViewModel({
   // Artwork hero (editor-header 3.0.0): all four featured slots as
   // thumbs, the active one shown large.
   const { visibilityLabel, visibilityVariant } = resolveVisibilityChip(form);
-  const featured = Array.isArray(form.featuredMedia) ? form.featuredMedia : [];
+  const featured = Array.isArray(form.featuredMedia)
+    ? form.featuredMedia
+    : Array.isArray(form.featured_media)
+      ? form.featured_media
+      : [];
   const activeSlotIndex = shell.mediaPanelProps?.activeMediaSlot ?? 0;
-  const heroSlots = featured.map((slot, index) => ({
-    id: slot?.id || `slot-${index + 1}`,
-    index,
-    label: slot?.label || `Slot ${index + 1}`,
-    imageSrc: slot?.isPlaceholder ? null : slot?.imageUrl || null,
-    isActive: index === activeSlotIndex,
-  }));
+  const fallbackPrimaryImage = form.imageUrl || form.image_url || null;
+  const heroSlots = featured.map((slot, index) => {
+    const slotImage =
+      slot?.imageUrl ||
+      slot?.displayImageUrl ||
+      slot?.displayUrl ||
+      slot?.thumbnailUrl ||
+      slot?.url ||
+      slot?.assetUrl ||
+      null;
+
+    return {
+      id: slot?.id || `slot-${index + 1}`,
+      index,
+      label: slot?.label || `Slot ${index + 1}`,
+      imageSrc:
+        slot?.isPlaceholder
+          ? null
+          : slotImage || (index === 0 ? fallbackPrimaryImage : null),
+      isActive: index === activeSlotIndex,
+    };
+  });
   const activeHeroSlot = heroSlots[activeSlotIndex] || heroSlots[0] || null;
 
   const heroProps = {

@@ -68,3 +68,17 @@ test("Next Image allows only the known local thumbnail proxy query patterns", ()
 test("package script is registered", () => {
   assert.match(read("package.json"), /diagnostics:loom:lore-document-renderer/);
 });
+
+test("assigned Lore images resolve through the durable media route without the Next optimizer", () => {
+  const loreBlocks = read("components/LoreBlockRenderer.jsx");
+  const imageBlock = read("components/blocks/ImageBlock.jsx");
+  const editorViewModel = read("components/studio/create/lore/lore-editor/useLoreEditorViewModel.js");
+
+  assert.match(loreBlocks, /resolveLoreImageBlockSrc/);
+  assert.match(loreBlocks, /\/api\/media\/images\/\$\{encodeURIComponent\(imageOutputId\)\}\/file/);
+  assert.match(loreBlocks, /imageOutputIdFromStudioFileUrl/);
+  assert.match(imageBlock, /unoptimized=\{shouldBypassImageOptimizer\(src\)\}/);
+  assert.match(imageBlock, /src\.startsWith\("\/api\/media\/images\/"\)/);
+  assert.match(editorViewModel, /const durableImageSrc = imageOutputId/);
+  assert.match(editorViewModel, /src: durableImageSrc/);
+});
