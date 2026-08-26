@@ -52,7 +52,7 @@ export default function StoryRoomTranscriptView({
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 pb-[18rem] scroll-smooth xl:pb-5">
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 pb-[4rem] scroll-smooth xl:pb-5">
       {hiddenCount > 0 ? (
         <div className="mb-4 flex justify-center">
           <button

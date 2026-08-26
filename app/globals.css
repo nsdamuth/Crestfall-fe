@@ -463,3 +463,177 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+/* Lore reader convergence ---------------------------------------------------
+   The dark Crestfall shell remains the application frame. Lore publications
+   become physical reading artifacts inside it, using deterministic parchment
+   artwork supplied by the Lore renderer. */
+.lore-parchment-page {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(185, 144, 74, 0.46);
+  border-radius: var(--radius-sm);
+  background-color: #eadfc8;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  color: #17120d;
+  padding: 2.5rem;
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(201, 160, 88, 0.08),
+    inset 0 0 42px rgba(78, 48, 20, 0.08);
+}
+
+.lore-parchment-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(86, 54, 25, 0.035), transparent 7%, transparent 93%, rgba(86, 54, 25, 0.035)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 16%, transparent 84%, rgba(64, 37, 17, 0.045));
+}
+
+.lore-parchment-page::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid rgba(113, 76, 35, 0.12);
+  background: none;
+  opacity: 1;
+}
+
+.lore-parchment-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lore-parchment-page h1,
+.lore-parchment-page h2,
+.lore-parchment-page h3 {
+  color: #17120d;
+}
+
+.lore-parchment-page p {
+  color: #2a2118;
+}
+
+.lore-parchment-page .sourcebook-eyebrow {
+  color: #7b5525;
+}
+
+@media (min-width: 768px) {
+  .lore-parchment-page {
+    padding: 3.5rem;
+  }
+}
+
+.lore-parchment-page--cover {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.lore-parchment-page--chapter {
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.lore-paper-rule {
+  width: min(22rem, 72%);
+  height: 1px;
+  margin: 0 auto 1.75rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(123, 85, 37, 0.34) 18%,
+    rgba(123, 85, 37, 0.72) 50%,
+    rgba(123, 85, 37, 0.34) 82%,
+    transparent
+  );
+}
+
+.lore-folio-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(123, 85, 37, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.13);
+  padding: 0.35rem 0.7rem;
+  font-family: var(--font-display), serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(89, 59, 28, 0.78);
+}
+
+.lore-paper-summary {
+  border: 1px solid rgba(123, 85, 37, 0.14);
+  border-left: 4px solid rgba(123, 85, 37, 0.5);
+  background: rgba(255, 252, 244, 0.34);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(1px);
+}
+
+.lore-reader-index {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(188, 139, 65, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(24, 20, 15, 0.96), rgba(8, 8, 7, 0.98));
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.lore-reader-index-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015));
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.lore-reader-index-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(196, 148, 72, 0.28);
+  background-color: rgba(196, 148, 72, 0.035);
+}
+
+.lore-section-divider {
+  position: relative;
+}
+
+.lore-section-divider::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: min(12rem, 42%);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(123, 85, 37, 0.54), transparent);
+}
+
+.lore-reader-return {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 767px) {
+  .lore-parchment-page {
+    border-radius: 4px;
+    padding: 1.5rem;
+    box-shadow:
+      0 22px 55px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(201, 160, 88, 0.06);
+  }
+
+  .lore-parchment-page::after {
+    inset: 8px;
+  }
+
+  .lore-parchment-page h1 {
+    text-wrap: balance;
+  }
+}

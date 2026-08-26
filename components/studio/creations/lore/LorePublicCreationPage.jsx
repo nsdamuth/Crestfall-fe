@@ -22,8 +22,8 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
   const document = creation.data?.lore_document || creation.data?.loreDocument || {};
 
   return (
-    <section className="pb-12">
-      <div className="mx-auto mb-6 flex max-w-5xl flex-wrap items-center justify-between gap-3">
+    <section className="pb-16">
+      <div className="mx-auto mb-6 flex max-w-5xl flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-4">
         <Link
           href="/studio/v2/lore"
           className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] hover:text-[var(--ink)]"
@@ -40,9 +40,16 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
         </div>
       </div>
 
-      <div className="mx-auto mb-6 flex max-w-5xl items-center gap-2 text-[var(--gold-ornament)]">
-        <BookOpenText size={18} />
-        <p className="text-xs uppercase tracking-[0.22em]">Lore Publication</p>
+      <div className="mx-auto mb-6 max-w-5xl">
+        <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
+          <BookOpenText size={18} />
+          <p className="flex items-center gap-3 text-xs uppercase tracking-[0.22em] after:h-px after:w-10 after:bg-[image:var(--grad-rule)]">
+            Lore Publication
+          </p>
+        </div>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
+          A structured world record presented as a Crestfall archive document.
+        </p>
       </div>
 
       <LoreDocumentRenderer
@@ -51,6 +58,7 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
         description={creation.description}
         creator={creation.creator}
         publicHref={`/studio/creations/${encodeURIComponent(creation.id)}`}
+        parchmentSeed={creation.id}
       />
     </section>
   );

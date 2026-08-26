@@ -21,7 +21,7 @@ components/studio/story-rooms/story-room-state-panel/
 ```
 
 The View owns the Chronicle State visual hierarchy, state cards, close control,
-and the currently disabled export/share actions. The live player projection is
+and the live Export Chat / Share Snapshot action entry points. The live player projection is
 intentionally concise: **Location, Time, and Weather** only. It receives
 display-ready sections and emits only semantic close intent.
 
@@ -44,8 +44,7 @@ The ViewModel translates the current Story Room `room` object into semantic,
 display-ready player state. Runtime Scenario phase, knowledge-boundary policy,
 memory bookkeeping, and engine source labels remain runtime-owned but are not
 projected into this player side rail. The live card contains Location, Time, and
-Weather with honest `Unknown` fallbacks. The ViewModel also owns the disabled
-future actions and maps the optional `onClose` callback to `onClosePanel`.
+Weather with honest `Unknown` fallbacks. The ViewModel owns export/share dialog state while transport remains caller-owned, and maps the optional `onClose` callback to `onClosePanel`.
 
 ## Contract and Fixtures
 
@@ -58,7 +57,7 @@ components/studio/story-rooms/story-room-state-panel/
 Current View contract version:
 
 ```text
-STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.0.0"
+STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.1.0"
 ```
 
 Fixtures are direct View props. They contain no Story Room snapshot, message

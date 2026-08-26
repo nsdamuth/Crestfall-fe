@@ -385,5 +385,6 @@ export function buildLorePreviewProps(ctx) {
     testBannerText:
       "Editor preview only. This does not make the Lore Asset public. Open the full owner preview to test chapter and section deep links.",
     compact: true,
+    parchmentSeed: ctx.creationId || ctx.form.title || "lore-editor-preview",
   };
 }

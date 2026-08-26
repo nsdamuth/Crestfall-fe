@@ -46,6 +46,7 @@ export default async function LoreOwnerPreviewPage({ params }) {
         title={creation.title}
         description={creation.description}
         publicHref={previewHref}
+        parchmentSeed={creation.id}
         showTestBanner
         testBannerText="Owner-only saved-draft preview. This route is available only to the Lore owner and does not change the public revision. Public readers receive only an immutable revision that has passed security validation and been explicitly published."
       />

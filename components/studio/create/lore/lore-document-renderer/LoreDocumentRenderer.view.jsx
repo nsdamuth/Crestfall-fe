@@ -5,6 +5,14 @@ import LoreBlockRenderer from "@/components/LoreBlockRenderer";
 
 const CONTENTS_ANCHOR_ID = "lore-contents";
 
+function parchmentStyle(background) {
+  return background?.src
+    ? {
+        backgroundImage: `linear-gradient(180deg, rgba(255, 251, 240, 0.16), rgba(225, 205, 169, 0.04)), url("${background.src}")`,
+      }
+    : undefined;
+}
+
 function buildAnchorHref(publicHref, anchorId) {
   if (!publicHref || !anchorId) return "";
   return `${publicHref}#${encodeURIComponent(anchorId)}`;
@@ -146,6 +154,7 @@ export default function LoreDocumentRendererView({
   publicHref = "",
   LinkComponent = "a",
   ShareButtonComponent = null,
+  parchmentPresentation = null,
 }) {
   const chapters = Array.isArray(document?.chapters) ? document.chapters : [];
   const titledSectionCount = chapters.reduce(
@@ -154,6 +163,10 @@ export default function LoreDocumentRendererView({
     0
   );
   const showContents = !compact && (chapters.length > 1 || titledSectionCount > 1);
+  const coverParchment = parchmentPresentation?.cover || null;
+  const chapterParchments = Array.isArray(parchmentPresentation?.chapters)
+    ? parchmentPresentation.chapters
+    : [];
 
   return (
     <div className={compact ? "space-y-5" : "space-y-8"}>
@@ -167,8 +180,13 @@ export default function LoreDocumentRendererView({
         </div>
       ) : null}
 
-      <article className="sourcebook-page mx-auto max-w-5xl">
+      <article
+        className="lore-parchment-page lore-parchment-page--cover mx-auto max-w-5xl"
+        style={parchmentStyle(coverParchment)}
+        data-lore-parchment={coverParchment?.id || undefined}
+      >
         <header className="text-center">
+          <div className="lore-paper-rule" aria-hidden="true" />
           <p className="sourcebook-eyebrow font-display text-xs uppercase tracking-[0.35em]">
             {document.eyebrow || "Lore Archive"}
           </p>
@@ -208,7 +226,7 @@ export default function LoreDocumentRendererView({
         </header>
 
         {document.summary ? (
-          <div className="sourcebook-callout mt-10">
+          <div className="sourcebook-callout lore-paper-summary mt-10">
             <h3>Archive Summary</h3>
             <p className="mt-3">{document.summary}</p>
           </div>
@@ -218,19 +236,29 @@ export default function LoreDocumentRendererView({
       {showContents ? (
         <nav
           id={CONTENTS_ANCHOR_ID}
-          className="mx-auto max-w-5xl scroll-mt-24 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5"
+          className="lore-reader-index mx-auto max-w-5xl scroll-mt-24 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 p-5 sm:p-6"
         >
-          <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
-            <BookOpenText size={17} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
-              Contents
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
+                <BookOpenText size={17} />
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                  Reader Index
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-[var(--ink-dim)]">
+                Navigate chapters and titled sections in this publication.
+              </p>
+            </div>
+            <p className="rounded-full border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              {chapters.length} {chapters.length === 1 ? "chapter" : "chapters"}
             </p>
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {chapters.map((chapter, chapterIndex) => (
               <div
                 key={chapter.id}
-                className="rounded-lg border border-white/10 bg-black/25 p-3"
+                className="lore-reader-index-card rounded-[var(--radius-sm)] border border-white/10 p-4"
               >
                 <a
                   href={`#${chapter.id}`}
@@ -263,9 +291,15 @@ export default function LoreDocumentRendererView({
         <article
           id={chapter.id}
           key={chapter.id}
-          className="sourcebook-page mx-auto max-w-5xl scroll-mt-24"
+          className="lore-parchment-page lore-parchment-page--chapter mx-auto max-w-5xl scroll-mt-24"
+          style={parchmentStyle(chapterParchments[chapterIndex])}
+          data-lore-parchment={chapterParchments[chapterIndex]?.id || undefined}
         >
           <header className="text-center">
+            <div className="lore-folio-marker" aria-hidden="true">
+              Chapter {String(chapterIndex + 1).padStart(2, "0")}
+            </div>
+            <div className="lore-paper-rule" aria-hidden="true" />
             <p className="sourcebook-eyebrow font-display text-xs uppercase tracking-[0.35em]">
               {chapter.eyebrow || document.eyebrow || `Chapter ${chapterIndex + 1}`}
             </p>
@@ -301,7 +335,7 @@ export default function LoreDocumentRendererView({
           </header>
 
           {chapter.summary ? (
-            <div className="sourcebook-callout mt-10">
+            <div className="sourcebook-callout lore-paper-summary mt-10">
               <h3>Chapter Summary</h3>
               <p className="mt-3">{chapter.summary}</p>
             </div>
@@ -314,7 +348,7 @@ export default function LoreDocumentRendererView({
               className={`scroll-mt-24 ${
                 sectionIndex === 0
                   ? "mt-12"
-                  : "mt-14 border-t border-[#7b5525]/20 pt-14"
+                  : "lore-section-divider mt-14 border-t border-[#7b5525]/20 pt-14"
               }`}
             >
               <SectionHeader
@@ -338,7 +372,7 @@ export default function LoreDocumentRendererView({
             <div className="mt-12 flex justify-center border-t border-[#7b5525]/20 pt-8">
               <a
                 href={`#${CONTENTS_ANCHOR_ID}`}
-                className="inline-flex items-center gap-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#6a481f] transition hover:text-[#3b3024]"
+                className="lore-reader-return inline-flex items-center gap-2 rounded-full border border-[#7b5525]/20 bg-white/15 px-4 py-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#6a481f] transition hover:border-[#7b5525]/40 hover:bg-white/25 hover:text-[#3b3024]"
               >
                 <ArrowUp size={13} />
                 Back to contents

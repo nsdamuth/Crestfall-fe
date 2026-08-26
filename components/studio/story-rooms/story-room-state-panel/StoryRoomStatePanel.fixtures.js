@@ -1,15 +1,17 @@
-const FUTURE_ACTIONS = [
+const LIVE_ACTIONS = [
   {
     id: "export-chat",
     iconKey: "download",
-    label: "Export Chat Soon",
-    disabled: true,
+    label: "Export Chat",
+    disabled: false,
+    onPress: null,
   },
   {
     id: "share-snapshot",
     iconKey: "share",
-    label: "Share Snapshot Soon",
-    disabled: true,
+    label: "Share Snapshot",
+    disabled: false,
+    onPress: null,
   },
 ];
 
@@ -61,7 +63,7 @@ export const storyRoomStateEngineFixture = {
   eyebrow: "Chronicle State",
   title: "Story Data",
   sections: standardSections(),
-  actions: FUTURE_ACTIONS,
+  actions: LIVE_ACTIONS,
   showCloseControl: true,
   onClosePanel: null,
 };

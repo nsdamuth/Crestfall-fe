@@ -71,6 +71,7 @@ export default function StoryRoomStatePanelView({
                 key={action.id}
                 type="button"
                 disabled={action.disabled !== false}
+                onClick={() => action.onPress?.()}
                 className="cf-btn cf-btn--secondary"
               >
                 <ActionIcon size={14} />

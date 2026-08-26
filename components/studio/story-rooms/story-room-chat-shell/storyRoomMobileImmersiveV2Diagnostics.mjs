@@ -47,3 +47,11 @@ test("transcript retains the accepted automatic newest-message scroll behavior",
   assert.match(transcript, /scrollIntoView/);
   assert.match(transcript, /safeMessageItems\.length/);
 });
+
+test("mobile transcript uses the visually verified 4rem bottom clearance", () => {
+  const transcript = read("components/studio/story-rooms/story-room-transcript/StoryRoomTranscript.view.jsx");
+
+  assert.match(transcript, /p-5 pb-\[4rem\] scroll-smooth xl:pb-5/);
+  assert.doesNotMatch(transcript, /11\.5rem/);
+  assert.doesNotMatch(transcript, /pb-\[18rem\]/);
+});

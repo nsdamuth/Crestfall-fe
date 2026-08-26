@@ -1,4 +1,4 @@
-export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Display-ready row supplied to one Story Room state card.
@@ -20,13 +20,14 @@ export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  */
 
 /**
- * Display-ready future action supplied to the portable View.
+ * Display-ready semantic action supplied to the portable View.
  *
  * @typedef {Object} StoryRoomStatePanelActionViewItem
  * @property {string} id
  * @property {"download"|"share"} iconKey
  * @property {string} label
  * @property {boolean} disabled
+ * @property {(() => void)|null} onPress
  */
 
 /**
@@ -34,8 +35,8 @@ export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * The View must not know the Story Room snapshot shape, engine-module result
  * fields, room-state fallbacks, runtime ownership, transcript state, mobile
- * drawer orchestration, export behavior, sharing behavior, APIs, or persistence.
- * It receives display-ready sections and emits only semantic close intent.
+ * drawer orchestration, export/share transport, APIs, or persistence.
+ * It receives display-ready sections/actions and emits semantic action intent only.
  *
  * @typedef {Object} StoryRoomStatePanelViewProps
  * @property {string} eyebrow

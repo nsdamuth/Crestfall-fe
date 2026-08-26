@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { normalizeLoreDocument } from "@/components/studio/create/lore/lore-editor/useLoreEditorViewModel";
+import { buildLoreParchmentPresentation } from "./loreParchmentPresentation";
 
 export function useLoreDocumentRendererViewModel({
   document,
@@ -12,10 +13,27 @@ export function useLoreDocumentRendererViewModel({
   testBannerText = "",
   compact = false,
   publicHref = "",
+  parchmentSeed = "",
 } = {}) {
   const normalizedDocument = useMemo(
     () => normalizeLoreDocument(document),
     [document]
+  );
+
+  const parchmentPresentation = useMemo(
+    () =>
+      buildLoreParchmentPresentation({
+        seed:
+          parchmentSeed ||
+          publicHref ||
+          title ||
+          normalizedDocument.eyebrow ||
+          "crestfall-lore",
+        chapterIds: normalizedDocument.chapters.map(
+          (chapter, chapterIndex) => chapter.id || `chapter-${chapterIndex + 1}`
+        ),
+      }),
+    [normalizedDocument, parchmentSeed, publicHref, title]
   );
 
   return {
@@ -27,5 +45,6 @@ export function useLoreDocumentRendererViewModel({
     testBannerText,
     compact,
     publicHref,
+    parchmentPresentation,
   };
 }

@@ -1,3 +1,4 @@
+import { buildLoreParchmentPresentation } from "./loreParchmentPresentation";
 import { loreDocumentFixture } from "../lore-editor/LoreEditor.fixtures";
 
 export const loreDocumentRendererFixture = {
@@ -13,6 +14,10 @@ export const loreDocumentRendererFixture = {
     "Fixture-only reader preview. No mutable draft is being exposed publicly.",
   compact: false,
   publicHref: "/studio/creations/fixture-lore",
+  parchmentPresentation: buildLoreParchmentPresentation({
+    seed: "fixture-lore",
+    chapterIds: loreDocumentFixture.chapters.map((chapter) => chapter.id),
+  }),
 };
 
 export const loreDocumentRendererCompactFixture = {

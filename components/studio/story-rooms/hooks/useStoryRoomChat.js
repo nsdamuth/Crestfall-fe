@@ -4,6 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchStoryRoom,
   fetchStoryRoomRegistryNpcs,
+  exportStoryRoomTranscript,
+  createTemporaryStoryRoomShare,
+  revokeTemporaryStoryRoomShare,
+  createPersistentStoryRoomShare,
+  revokePersistentStoryRoomShare,
   loadStoryRoomRegistryNpc,
   loadRandomLikedStoryRoomCharacter,
   sendStoryRoomMessage,
@@ -685,6 +690,64 @@ const sendMessage = useCallback(
   },
   [roomId, sending]
 );
+  const exportTranscript = useCallback(
+    async ({
+      preset = "RECENT_50",
+      startMessageId = null,
+      endMessageId = null,
+      format = "TXT",
+    } = {}) => {
+      if (!roomId) throw new Error("Story room id is required.");
+      return exportStoryRoomTranscript(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+        format,
+      });
+    },
+    [roomId]
+  );
+
+  const createTemporaryShare = useCallback(
+    async ({ preset = "RECENT_50", startMessageId = null, endMessageId = null } = {}) => {
+      if (!roomId) throw new Error("Story room id is required.");
+      return createTemporaryStoryRoomShare(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+      });
+    },
+    [roomId]
+  );
+
+  const revokeTemporaryShare = useCallback(
+    async (shareId) => {
+      if (!roomId || !shareId) throw new Error("Temporary share id is required.");
+      return revokeTemporaryStoryRoomShare(roomId, shareId);
+    },
+    [roomId]
+  );
+
+  const createPersistentShare = useCallback(
+    async ({ preset = "RECENT_50", startMessageId = null, endMessageId = null } = {}) => {
+      if (!roomId) throw new Error("Story room id is required.");
+      return createPersistentStoryRoomShare(roomId, {
+        preset,
+        startMessageId,
+        endMessageId,
+      });
+    },
+    [roomId]
+  );
+
+  const revokePersistentShare = useCallback(
+    async (shareId) => {
+      if (!roomId || !shareId) throw new Error("Persistent share id is required.");
+      return revokePersistentStoryRoomShare(roomId, shareId);
+    },
+    [roomId]
+  );
+
   const loadRegistryNpc = useCallback(
     async ({ registryId, entryId }) => {
       if (!roomId || registryNpcActionKey || !registryId || !entryId) {
@@ -834,6 +897,11 @@ const sendMessage = useCallback(
     error,
     reload,
     sendMessage,
+    exportTranscript,
+    createTemporaryShare,
+    revokeTemporaryShare,
+    createPersistentShare,
+    revokePersistentShare,
     canSetPlayerCharacter,
     settingPlayerCharacter,
     setPlayerCharacterError,
