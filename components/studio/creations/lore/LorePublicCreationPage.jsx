@@ -25,11 +25,11 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
     <section className="pb-12">
       <div className="mx-auto mb-6 flex max-w-5xl flex-wrap items-center justify-between gap-3">
         <Link
-          href="/studio/community"
+          href="/studio/v2/lore"
           className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] hover:text-[var(--ink)]"
         >
           <ArrowLeft size={14} />
-          Community
+          Lore
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <CreationStatusBadges creation={creation} />

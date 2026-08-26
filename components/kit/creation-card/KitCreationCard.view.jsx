@@ -451,9 +451,12 @@ function ListCard({
           />
         </>
       ) : (
-        <div className="absolute inset-0">
-          <KitArtPlaceholderView size="md" />
-        </div>
+        <>
+          <div aria-hidden="true" className="absolute inset-0 bg-[var(--surface-2)]" />
+          <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[5.5rem] opacity-70">
+            <KitArtPlaceholderView size="sm" />
+          </div>
+        </>
       )}
 
       <div className="pointer-events-none relative z-[2] flex h-full items-center justify-between gap-[var(--space-3)] p-[var(--space-4)]">

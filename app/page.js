@@ -66,9 +66,9 @@ export default function Home() {
               <Link className="sourcebook-button secondary" href="/chronicle">
                 Read the Chronicle
               </Link>
-              <a className="sourcebook-button" href="/studio">
+              <Link className="sourcebook-button" href="/studio/v2/home">
                 Enter Crestfall
-              </a>
+              </Link>
             </div>
           </div>
         </section>

@@ -47,7 +47,7 @@ export default function SiteHeader({ home = false }) {
         <Link href="/chronicle" className="transition hover:text-[var(--ink)]">
           Chronicle
         </Link>
-        <Link href="/studio" className="transition hover:text-[var(--ink)]">
+        <Link href="/studio/v2/home" className="transition hover:text-[var(--ink)]">
           Studio
         </Link>
       </nav>

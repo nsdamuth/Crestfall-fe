@@ -168,7 +168,11 @@ export function isStudioSidebarPathActive(pathname = "", href = "") {
 // This sidebar renders on every /studio/** route including v2 pages,
 // so the Account item's target depends on which surface is current.
 export function getStudioSidebarAccountHref(pathname = "") {
-  return pathname === "/studio" || pathname.startsWith("/studio/v2")
+  return pathname === "/studio" || pathname.startsWith("/studio/v2") ||
+    pathname.startsWith("/studio/story-rooms") ||
+    pathname.startsWith("/studio/creations") ||
+    pathname.startsWith("/studio/create") ||
+    pathname.startsWith("/studio/feedback")
     ? "/studio/v2/account"
     : "/studio/account";
 }
@@ -188,7 +192,11 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
   const [legacyOpen, setLegacyOpen] = useState(false);
-  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2");
+  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2") ||
+    pathname.startsWith("/studio/story-rooms") ||
+    pathname.startsWith("/studio/creations") ||
+    pathname.startsWith("/studio/create") ||
+    pathname.startsWith("/studio/feedback");
   const previewEnabled = v2Surface || isSidebarV2PreviewEnabled();
 
   return {

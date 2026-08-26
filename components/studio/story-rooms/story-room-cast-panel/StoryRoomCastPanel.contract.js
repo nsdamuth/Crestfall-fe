@@ -1,10 +1,10 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable UI boundary for the Story Room Room & Cast panel.
  *
- * The portable View owns the room-media presentation, cast cards, action
- * controls, errors, room-list link, and composition of the already-portable
+ * The portable View owns the room-media presentation, cast cards, compact action
+ * rail, Manage Cast modal, errors, room-list link, and composition of the already-portable
  * NPC participant-manager View. It does not receive raw Story Room records,
  * participant lifecycle records, player-character creations, or API clients.
  *
@@ -43,15 +43,16 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} roomListHref
  * @property {string} roomListLabel
  * @property {import("react").ReactNode} playerCharacterPickerContent Opaque picker overlay slot supplied by the Binding Shell.
+ * @property {boolean} manageCastOpen Whether the cast-management modal is visible.
  * @property {()=>void} onClosePanel
  * @property {(participantId:string)=>void} onSelectCastMember
  * @property {()=>void} onOpenPlayerCharacterPicker
+ * @property {()=>void} onOpenManageCast
+ * @property {()=>void} onCloseManageCast
  * @property {()=>void} onLoadRandomLiked
  * @property {()=>void} onDeleteRoom
- * @property {import("react").ElementType} [LinkComponent] doc-only addition
- *   (ED1G sw12): link/anchor component injected by the host, defaults to
- *   "a" in the View. Already read by the View, undeclared here. No
- *   version bump.
+ * @property {import("react").ElementType} [LinkComponent] link/anchor component
+ *   injected by the host, defaults to "a" in the View.
  */
 
 export {};

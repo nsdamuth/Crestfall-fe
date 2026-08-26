@@ -15,7 +15,7 @@ test("V2 mobile drawer mirrors desktop Play Create Explore taxonomy", () => {
   );
 
   assert.match(view, /V2_DRAWER_GROUP_DEFINITIONS/);
-  assert.match(view, /label: "Play"[\s\S]*"Stories", "Adventures"/);
+  assert.match(view, /label: "Play"[\s\S]*"Home", "Stories", "Adventures"/);
   assert.match(view, /label: "Create"[\s\S]*"Studio", "Images", "Vault"/);
   assert.match(view, /label: "Explore"[\s\S]*"Community", "Creators", "Lore"/);
   assert.match(view, /<MobileDrawerGroup[\s\S]*label="Support"/);

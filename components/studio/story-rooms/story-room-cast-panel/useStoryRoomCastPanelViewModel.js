@@ -153,6 +153,7 @@ export function useStoryRoomCastPanelViewModel({
 } = {}) {
   const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] =
     useState(false);
+  const [manageCastOpen, setManageCastOpen] = useState(false);
 
   const npcParticipantManager =
     useStoryRoomNpcParticipantManagerViewModel({
@@ -205,6 +206,18 @@ export function useStoryRoomCastPanelViewModel({
     ]
   );
 
+  const onOpenManageCast = useCallback(() => {
+    setManageCastOpen(true);
+
+    if (!npcParticipantManager?.isOpen) {
+      npcParticipantManager?.onTogglePanel?.();
+    }
+  }, [npcParticipantManager?.isOpen, npcParticipantManager?.onTogglePanel]);
+
+  const onCloseManageCast = useCallback(() => {
+    setManageCastOpen(false);
+  }, []);
+
   const onOpenPlayerCharacterPicker = useCallback(() => {
     setPlayerCharacterPickerOpen(true);
   }, []);
@@ -242,9 +255,12 @@ export function useStoryRoomCastPanelViewModel({
     viewProps: {
       ...state,
       npcParticipantManager,
+      manageCastOpen,
       onClosePanel: onClose,
       onSelectCastMember,
       onOpenPlayerCharacterPicker,
+      onOpenManageCast,
+      onCloseManageCast,
       onLoadRandomLiked,
       onDeleteRoom,
     },

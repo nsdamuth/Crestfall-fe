@@ -5,11 +5,10 @@ import {
   AlertTriangle,
   Check,
   CheckSquare2,
-  ChevronDown,
-  ChevronUp,
   Film,
   Grid2X2,
   Image as ImageIcon,
+  SlidersHorizontal,
   Loader2,
   Trash2,
   X,
@@ -103,6 +102,78 @@ function useMasonryCardLayout(item, masonryRowHeight, masonryGap) {
   return { cardRef, gridSpan, handleImageLoad };
 }
 
+function MediaFilterContents({
+  filterOptions = [],
+  activeFilter = "ALL",
+  FilterPill,
+  onSetFilter,
+  onClose,
+  mobile = false,
+}) {
+  const mediaValues = new Set(["ALL", "IMAGES", "VIDEOS"]);
+  const mediaOptions = filterOptions.filter((option) => mediaValues.has(option.value));
+  const activityOptions = filterOptions.filter((option) => !mediaValues.has(option.value));
+
+  function choose(value) {
+    onSetFilter?.(value);
+    onClose?.();
+  }
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-[var(--space-3)]">
+        <div>
+          <p className="text-[length:var(--text-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Filter library
+          </p>
+          <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+            Narrow generated media by format or saved activity.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => choose("ALL")}
+          className="shrink-0 text-[length:var(--text-label)] text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
+        >
+          Clear all
+        </button>
+      </div>
+
+      <div className="mt-[var(--space-5)]">
+        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">Media</p>
+        <div className={`mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)] ${mobile ? "pb-[var(--space-2)]" : ""}`}>
+          {mediaOptions.map((option) => (
+            <FilterPill
+              key={option.value}
+              active={activeFilter === option.value}
+              onClick={() => choose(option.value)}
+            >
+              {option.label}
+            </FilterPill>
+          ))}
+        </div>
+      </div>
+
+      {activityOptions.length ? (
+        <div className="mt-[var(--space-5)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">Activity</p>
+          <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
+            {activityOptions.map((option) => (
+              <FilterPill
+                key={option.value}
+                active={activeFilter === option.value}
+                onClick={() => choose(option.value)}
+              >
+                {option.label}
+              </FilterPill>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function MediaHistoryGridView({
   filterOptions = [],
   activeFilter = "ALL",
@@ -165,7 +236,7 @@ export default function MediaHistoryGridView({
         </div>
       ) : null}
 
-      <section className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-3 sm:pb-4">
+      <section className="relative flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-3 sm:pb-4">
         <div>
           <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Image Library
@@ -197,18 +268,6 @@ export default function MediaHistoryGridView({
             </button>
           ) : null}
 
-          <div className="hidden flex-wrap gap-2 md:flex">
-            {filterOptions.map((option) => (
-              <FilterPill
-                key={option.value}
-                active={activeFilter === option.value}
-                onClick={() => onSetFilter?.(option.value)}
-              >
-                {option.label}
-              </FilterPill>
-            ))}
-          </div>
-
           <button
             type="button"
             onClick={onToggleMobileGrid}
@@ -221,25 +280,48 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleFilters}
-            className="cf-btn cf-btn--secondary cf-btn--sm md:hidden"
+            aria-expanded={filtersOpen}
+            className={`cf-btn cf-btn--secondary cf-btn--sm ${
+              filtersOpen ? "border-[var(--gold-action)] text-[var(--gold-bright)]" : ""
+            }`}
           >
-            {filtersOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            <SlidersHorizontal size={14} />
             Filters
           </button>
         </div>
 
         {filtersOpen ? (
-          <div className="flex w-full flex-wrap gap-2 md:hidden">
-            {filterOptions.map((option) => (
-              <FilterPill
-                key={option.value}
-                active={activeFilter === option.value}
-                onClick={() => onSetFilter?.(option.value)}
-              >
-                {option.label}
-              </FilterPill>
-            ))}
-          </div>
+          <>
+            <div className="absolute right-0 top-full z-40 mt-[var(--space-2)] hidden w-[20rem] rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--panel-glass)] p-[var(--space-4)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-panel)] md:block">
+              <MediaFilterContents
+                filterOptions={filterOptions}
+                activeFilter={activeFilter}
+                FilterPill={FilterPill}
+                onSetFilter={onSetFilter}
+                onClose={onToggleFilters}
+              />
+            </div>
+
+            <div className="fixed inset-0 z-[70] flex items-end bg-black/65 md:hidden">
+              <button
+                type="button"
+                aria-label="Close filters"
+                onClick={onToggleFilters}
+                className="absolute inset-0"
+              />
+              <section className="relative z-[1] max-h-[82dvh] w-full overflow-y-auto rounded-t-[var(--radius-xl)] border border-b-0 border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-5)] pb-[calc(var(--space-6)+env(safe-area-inset-bottom))] shadow-[var(--shadow-modal)]">
+                <div className="mx-auto mb-[var(--space-4)] h-1 w-12 rounded-full bg-[var(--line-strong)]" aria-hidden="true" />
+                <MediaFilterContents
+                  filterOptions={filterOptions}
+                  activeFilter={activeFilter}
+                  FilterPill={FilterPill}
+                  onSetFilter={onSetFilter}
+                  onClose={onToggleFilters}
+                  mobile
+                />
+              </section>
+            </div>
+          </>
         ) : null}
       </section>
 

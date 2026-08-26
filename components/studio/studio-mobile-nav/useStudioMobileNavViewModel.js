@@ -83,7 +83,11 @@ export function isStudioMobileNavPathActive(pathname = "", href = "") {
 // This drawer renders on every /studio/** route including v2 pages,
 // so the Account destination depends on which surface is current.
 export function getStudioMobileNavAccountHref(pathname = "") {
-  return pathname === "/studio" || pathname.startsWith("/studio/v2")
+  return pathname === "/studio" || pathname.startsWith("/studio/v2") ||
+    pathname.startsWith("/studio/story-rooms") ||
+    pathname.startsWith("/studio/creations") ||
+    pathname.startsWith("/studio/create") ||
+    pathname.startsWith("/studio/feedback")
     ? "/studio/v2/account"
     : "/studio/account";
 }
@@ -112,7 +116,11 @@ export function useStudioMobileNavViewModel({
 } = {}) {
   const [socialOpen, setSocialOpen] = useState(false);
   const signedInEmail = normalizeStudioMobileNavEmail(user);
-  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2");
+  const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2") ||
+    pathname.startsWith("/studio/story-rooms") ||
+    pathname.startsWith("/studio/creations") ||
+    pathname.startsWith("/studio/create") ||
+    pathname.startsWith("/studio/feedback");
 
   return {
     brandHref: v2Surface ? "/studio/v2/home" : "/studio",

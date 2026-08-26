@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Sparkles } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
@@ -93,10 +94,15 @@ export default function ImagesV2Live() {
     onOpenCameraPresetPicker: () => setCameraPickerOpen(true),
   });
   const nestedBackLabel = mobileCreatorOpen ? "Back to Image Editor" : null;
+  const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
+  const generationPending = ["loading", "pending", "submitting"].includes(generationStatus);
+  const canGenerate =
+    Boolean(live.panelProps?.canGenerate) &&
+    typeof live.panelProps?.onGenerate === "function";
 
   return (
     <>
-      <div>
+      <div className="pb-24 min-[1100px]:pb-0">
         <KitStudioPageView
           compactMobile
           headerSlot={
@@ -129,6 +135,26 @@ export default function ImagesV2Live() {
             </aside>
           </div>
         </KitStudioPageView>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 px-[var(--space-4)] min-[1100px]:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/35 bg-[color-mix(in_srgb,var(--canvas)_92%,transparent)] p-[var(--space-2)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-chrome)]">
+          <button
+            type="button"
+            onClick={() => live.panelProps?.onGenerate?.()}
+            disabled={!canGenerate || generationPending}
+            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Generate image"
+          >
+            <Sparkles size={17} />
+            <span>{generationPending ? "Generating..." : "Generate"}</span>
+            {live.panelProps?.coinCostLabel ? (
+              <span className="text-[length:var(--text-label)] opacity-80">
+                {live.panelProps.coinCostLabel}
+              </span>
+            ) : null}
+          </button>
+        </div>
       </div>
 
       {mobileCreatorOpen ? (
