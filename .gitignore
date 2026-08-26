@@ -94,3 +94,5 @@ docs/review-artifacts/
 
 # Temporary mockup assets
 public/tmp-mockup-images/
+
+integration/
