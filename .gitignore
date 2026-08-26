@@ -16,6 +16,7 @@ payload/
 /docs/review-artifacts/
 docs/_legacy-reference/
 
+# public/tmp-mockup-images/ is scratch art in general, but the sample
 # set below is committed so a fresh clone renders kit fixtures and the
 # v2 mockup pages with no image 404s. Any new scratch art dropped into
 # these two folders stays ignored unless added to this list; do not
@@ -23,6 +24,62 @@ docs/_legacy-reference/
 # each committed original under the size ruled at commit time
 # (resized to a card/tile display dimension, compressed, never a raw
 # original).
+!/public/tmp-mockup-images/canon-character-images/
+!/public/tmp-mockup-images/alpha-test-creator-images/
+/public/tmp-mockup-images/canon-character-images/*
+!/public/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png
+!/public/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png
+!/public/tmp-mockup-images/canon-character-images/Alyera Valecourt.png
+!/public/tmp-mockup-images/canon-character-images/Aniyya Seraphina Devereaux.png
+!/public/tmp-mockup-images/canon-character-images/Charlotte Steele.png
+!/public/tmp-mockup-images/canon-character-images/Chloe Reis.png
+!/public/tmp-mockup-images/canon-character-images/Crash Santosa.png
+!/public/tmp-mockup-images/canon-character-images/Dalethia.png
+!/public/tmp-mockup-images/canon-character-images/Danielle Desire.png
+!/public/tmp-mockup-images/canon-character-images/Djuna Smith.png
+!/public/tmp-mockup-images/canon-character-images/Dr. Elara Kade.png
+!/public/tmp-mockup-images/canon-character-images/Elizabeth.png
+!/public/tmp-mockup-images/canon-character-images/Elowen.png
+!/public/tmp-mockup-images/canon-character-images/Enox Nix.png
+!/public/tmp-mockup-images/canon-character-images/Jax Riker.png
+!/public/tmp-mockup-images/canon-character-images/Kaela Veynskald.png
+!/public/tmp-mockup-images/canon-character-images/Lilith.png
+!/public/tmp-mockup-images/canon-character-images/Lux.png
+!/public/tmp-mockup-images/canon-character-images/Maya Chen.png
+!/public/tmp-mockup-images/canon-character-images/Rachel Sentry.png
+!/public/tmp-mockup-images/canon-character-images/Saeha Veyrune.png
+!/public/tmp-mockup-images/canon-character-images/Selena Velvet.png
+!/public/tmp-mockup-images/canon-character-images/The Seer.png
+/public/tmp-mockup-images/alpha-test-creator-images/*
+!/public/tmp-mockup-images/alpha-test-creator-images/rev.png
+!/public/tmp-mockup-images/alpha-test-creator-images/sassy.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-2.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-3.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-4.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-5.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-6.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-7.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-8.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-9.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-10.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-11.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-12.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-14.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-15.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-16.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-17.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-18.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-19.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-20.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-21.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-22.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-24.png
+!/public/tmp-mockup-images/alpha-test-creator-images/vermillion-25.png
+!/public/tmp-mockup-images/alpha-test-creator-images/whiteviolin.png
+!/public/tmp-mockup-images/alpha-test-creator-images/whiteviolin-2.png
+!/public/tmp-mockup-images/alpha-test-creator-images/yagirltee.png
 
 # Claude Design sync (design/ds1-claude-design-sync)
 .ds-sync/
