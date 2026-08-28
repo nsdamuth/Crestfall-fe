@@ -25,6 +25,17 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {{value: string, label: string}[]} options Display-ready options.
  * @property {(nextValue: string) => void} onChange Semantic value change.
  *
+ * @typedef {Object} ImageStudioComposerTuningControl
+ * @property {string} id Semantic workflow-tuning field.
+ * @property {string} label Creator-facing label.
+ * @property {string} description Creator-facing explanation.
+ * @property {number} value Controlled semantic percentage.
+ * @property {number} min Hard UI lower bound.
+ * @property {number} max Hard UI upper bound.
+ * @property {number} step Slider increment.
+ * @property {number} defaultValue Validated workflow default marker.
+ * @property {(nextValue: number) => void} onChange Semantic tuning change.
+ *
  * @typedef {Object} ImageStudioComposerViewProps
  * @property {ImageStudioComposerModeOption[]} modeOptions
  * @property {"IMAGE"|"VIDEO"} mode
@@ -38,6 +49,7 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} generationHelpText
  * @property {string} generationError
  * @property {ImageStudioComposerSelectField[]} imageOptionFields
+ * @property {Object|null} advancedTuningProps Curated workflow-specific tuning presentation.
  * @property {string} coinBalanceLabel
  * @property {string} coinCostLabel
  * @property {boolean} showInsufficientCoins

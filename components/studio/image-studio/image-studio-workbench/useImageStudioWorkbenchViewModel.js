@@ -11,6 +11,12 @@ import {
   appendPromptFragment,
   isLocationOnlyImageComposition,
 } from "./locationOnlySceneryPrompt.js";
+import {
+  getDefaultImageWorkflowTuning,
+  getWorkflowTuningHandoff,
+  getWorkflowTuningPayload,
+  normalizeImageWorkflowTuning,
+} from "../imageWorkflowTuning.js";
 
 import { createCreationDraft } from "@/lib/client/studio/creations/creationClient";
 import { useImageGenerationHistory } from "@/components/studio/image-studio/hooks/useImageGenerationHistory";
@@ -393,6 +399,8 @@ export function buildImageGenerationPayload({
   wardrobeTheme,
   aspectRatio,
   imageCount,
+  workflowTuning = {},
+  workflowTuningTouched = false,
   sceneryOnlyHelperEnabled = true,
 }) {
   const useLocationOnlySceneryHelper =
@@ -407,6 +415,11 @@ export function buildImageGenerationPayload({
     promptWithSceneryHelper,
     cameraPromptFragment
   );
+  const resolvedWorkflowTuning = getWorkflowTuningPayload({
+    profileKey: renderStyle,
+    tuning: workflowTuning,
+    touched: workflowTuningTouched,
+  });
 
   return {
     mode: "image",
@@ -462,6 +475,9 @@ export function buildImageGenerationPayload({
       outputCount: Number.parseInt(imageCount, 10) || 1,
       quality: "standard",
       seed: null,
+      ...(resolvedWorkflowTuning
+        ? { workflowTuning: resolvedWorkflowTuning }
+        : {}),
     },
     modelProfile: getModelProfile(renderStyle),
   };
@@ -480,6 +496,8 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [sceneryOnlyHelperEnabled, setSceneryOnlyHelperEnabled] = useState(true);
 
   const [renderStyle, setRenderStyle] = useState("auto");
+  const [workflowTuning, setWorkflowTuning] = useState({});
+  const [workflowTuningTouched, setWorkflowTuningTouched] = useState(false);
   const [cameraPreset, setCameraPreset] = useState("AUTO");
   const [wardrobeTheme, setWardrobeTheme] = useState("AUTO");
   const [aspectRatio, setAspectRatio] = useState("PORTRAIT_4_5");
@@ -530,6 +548,42 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     customIngredientPrompts,
   });
 
+  function handleRenderStyleChange(nextProfileKey) {
+    const nextKey = String(nextProfileKey || "auto");
+    setRenderStyle(nextKey);
+    setWorkflowTuning(getDefaultImageWorkflowTuning(nextKey));
+    setWorkflowTuningTouched(false);
+  }
+
+  function handleWorkflowTuningChange(controlId, nextValue) {
+    setWorkflowTuning((current) =>
+      normalizeImageWorkflowTuning(renderStyle, {
+        ...current,
+        [controlId]: nextValue,
+      })
+    );
+    setWorkflowTuningTouched(true);
+  }
+
+  function resetWorkflowTuning() {
+    setWorkflowTuning(getDefaultImageWorkflowTuning(renderStyle));
+    setWorkflowTuningTouched(false);
+  }
+
+  function switchWorkflowFromTuningBoundary() {
+    const handoff = getWorkflowTuningHandoff(renderStyle);
+    if (!handoff?.targetProfileKey) return;
+
+    const nextTuning = normalizeImageWorkflowTuning(handoff.targetProfileKey, {
+      ...getDefaultImageWorkflowTuning(handoff.targetProfileKey),
+      ...handoff.targetStartingTuning,
+    });
+
+    setRenderStyle(handoff.targetProfileKey);
+    setWorkflowTuning(nextTuning);
+    setWorkflowTuningTouched(true);
+  }
+
   async function handleGenerateImage() {
     if (!canGenerateImage) return;
 
@@ -543,6 +597,8 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       wardrobeTheme,
       aspectRatio,
       imageCount,
+      workflowTuning,
+      workflowTuningTouched,
       sceneryOnlyHelperEnabled,
     });
 
@@ -743,7 +799,12 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       sceneryOnlyHelperEnabled,
       setSceneryOnlyHelperEnabled,
       renderStyle,
-      setRenderStyle,
+      setRenderStyle: handleRenderStyleChange,
+      workflowTuning,
+      workflowTuningTouched,
+      onChangeWorkflowTuning: handleWorkflowTuningChange,
+      onResetWorkflowTuning: resetWorkflowTuning,
+      onSwitchWorkflowTuningProfile: switchWorkflowFromTuningBoundary,
       cameraPreset,
       setCameraPreset,
       wardrobeTheme,

@@ -2,6 +2,10 @@ import { getCustomIngredientEditorViewProps } from "../custom-ingredient-editor/
 import { getIngredientSlotViewProps } from "../ingredient-slot/useIngredientSlotViewModel";
 import { getVideoToolsPanelViewProps } from "../video-tools-panel/useVideoToolsPanelViewModel";
 import {
+  getImageWorkflowTuningDefinition,
+  normalizeImageWorkflowTuning,
+} from "../imageWorkflowTuning.js";
+import {
   aspectRatioOptions,
   cameraPresetOptions,
   imageCountOptions,
@@ -47,6 +51,11 @@ export function getImageStudioComposerViewProps({
   setPrompt = null,
   renderStyle = "",
   setRenderStyle = null,
+  workflowTuning = {},
+  workflowTuningTouched = false,
+  onChangeWorkflowTuning = null,
+  onResetWorkflowTuning = null,
+  onSwitchWorkflowTuningProfile = null,
   cameraPreset = "",
   setCameraPreset = null,
   aspectRatio = "",
@@ -110,6 +119,40 @@ export function getImageStudioComposerViewProps({
       }),
     }));
 
+  const workflowTuningDefinition = getImageWorkflowTuningDefinition(renderStyle);
+  const normalizedWorkflowTuning = normalizeImageWorkflowTuning(
+    renderStyle,
+    workflowTuning
+  );
+  const advancedTuningProps = workflowTuningDefinition
+    ? {
+        enabled: true,
+        title: "Advanced Workflow Tuning",
+        description: workflowTuningDefinition.description,
+        safetyNote:
+          "Controls stay inside tested workflow bounds. CFG, samplers, schedulers, and model selection remain locked.",
+        modified: Boolean(workflowTuningTouched),
+        controls: workflowTuningDefinition.controls.map((entry) => ({
+          ...entry,
+          value: normalizedWorkflowTuning[entry.id],
+          valueLabel: `${Math.round(normalizedWorkflowTuning[entry.id])}%`,
+          onChange: (nextValue) =>
+            onChangeWorkflowTuning?.(entry.id, nextValue),
+        })),
+        handoff:
+          workflowTuningDefinition.handoff &&
+          normalizedWorkflowTuning[
+            workflowTuningDefinition.handoff.boundaryControlId
+          ] >= workflowTuningDefinition.handoff.boundaryValue
+            ? {
+                ...workflowTuningDefinition.handoff,
+                onSwitch: () => onSwitchWorkflowTuningProfile?.(),
+              }
+            : null,
+        onReset: () => onResetWorkflowTuning?.(),
+      }
+    : null;
+
   return {
     modeOptions: MODE_OPTIONS,
     mode: normalizedMode,
@@ -135,6 +178,7 @@ export function getImageStudioComposerViewProps({
     canGenerateImage: Boolean(canGenerateImage),
     generationHelpText: String(generationHelpText || ""),
     generationError: String(generationError || ""),
+    advancedTuningProps,
     imageOptionFields: [
       {
         id: "render-style",

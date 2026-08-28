@@ -33,6 +33,7 @@ export default function ImageStudioComposerView({
   generationHelpText = "",
   generationError = "",
   imageOptionFields = [],
+  advancedTuningProps = null,
   coinBalanceLabel = "0",
   coinCostLabel = "5",
   showInsufficientCoins = false,
@@ -43,6 +44,7 @@ export default function ImageStudioComposerView({
   onGenerateImage = null,
 }) {
   const [imageOptionsOpen, setImageOptionsOpen] = useState(false);
+  const [advancedTuningOpen, setAdvancedTuningOpen] = useState(false);
   const isVideoMode = mode === "VIDEO";
 
   return (
@@ -179,6 +181,114 @@ export default function ImageStudioComposerView({
                   className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                 />
               </label>
+
+
+              {advancedTuningProps?.enabled ? (
+                <section className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/25">
+                  <button
+                    type="button"
+                    onClick={() => setAdvancedTuningOpen((current) => !current)}
+                    className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left"
+                  >
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                        Advanced
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+                        Curated workflow controls
+                      </p>
+                    </div>
+                    {advancedTuningOpen ? (
+                      <ChevronUp size={15} />
+                    ) : (
+                      <ChevronDown size={15} />
+                    )}
+                  </button>
+
+                  {advancedTuningOpen ? (
+                    <div className="border-t border-white/10 px-4 pb-4 pt-4">
+                      <p className="text-sm leading-6 text-[var(--ink-dim)]">
+                        {advancedTuningProps.description}
+                      </p>
+                      <p className="mt-2 rounded-lg border border-[var(--gold-ornament)]/15 bg-[var(--gold-ornament)]/5 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]">
+                        {advancedTuningProps.safetyNote}
+                      </p>
+
+                      <div className="mt-5 grid gap-5">
+                        {advancedTuningProps.controls.map((control) => (
+                          <label key={control.id} className="block">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <span className="text-sm text-[var(--ink)]">
+                                  {control.label}
+                                </span>
+                                <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+                                  {control.description}
+                                </p>
+                              </div>
+                              <span className="shrink-0 rounded-full border border-white/10 bg-black/30 px-2 py-1 text-[10px] tabular-nums text-[var(--gold-ornament)]">
+                                {control.valueLabel}
+                              </span>
+                            </div>
+
+                            <input
+                              type="range"
+                              min={control.min}
+                              max={control.max}
+                              step={control.step}
+                              value={control.value}
+                              onChange={(event) =>
+                                control.onChange?.(Number(event.target.value))
+                              }
+                              className="mt-3 w-full cursor-pointer"
+                              style={{ accentColor: "var(--gold-action)" }}
+                            />
+
+                            <div className="mt-1 flex justify-between gap-3 text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+                              <span>{control.leftLabel}</span>
+                              <span className="text-center">
+                                Default {control.defaultValue}%
+                              </span>
+                              <span className="text-right">{control.rightLabel}</span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+
+                      {advancedTuningProps.handoff ? (
+                        <div className="mt-5 rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/8 p-3">
+                          <p className="text-xs leading-5 text-[var(--ink-dim)]">
+                            {advancedTuningProps.handoff.message}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => advancedTuningProps.handoff.onSwitch?.()}
+                            className="mt-3 text-xs font-medium text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4 hover:text-[var(--ink)]"
+                          >
+                            Switch to {advancedTuningProps.handoff.targetProfileLabel} →
+                          </button>
+                        </div>
+                      ) : null}
+
+                      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+                        <p className="text-xs text-[var(--ink-dim)]">
+                          {advancedTuningProps.modified
+                            ? "Custom tuning will apply to this generation."
+                            : "Using validated workflow defaults."}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => advancedTuningProps.onReset?.()}
+                          disabled={!advancedTuningProps.modified}
+                          className="shrink-0 text-xs text-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-35"
+                        >
+                          Reset defaults
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </section>
+              ) : null}
             </div>
           ) : null}
 
