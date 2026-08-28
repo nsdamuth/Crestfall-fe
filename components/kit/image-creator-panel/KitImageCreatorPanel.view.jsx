@@ -232,11 +232,103 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
   );
 }
 
+function AdvancedTuning({ tuning, idPrefix }) {
+  const [isOpen, setIsOpen] = useState(false);
+  if (!tuning?.enabled) return null;
+
+  return (
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--fill-whisper)]">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((current) => !current)}
+        className="flex w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] text-left"
+      >
+        <span>
+          <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">Advanced</span>
+          <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">Curated workflow controls</span>
+        </span>
+        {isOpen ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
+      </button>
+
+      {isOpen ? (
+        <div className="border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            {tuning.description}
+          </p>
+          <p className="mt-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--gold-ornament)]/15 bg-[var(--gold-ornament)]/5 px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            {tuning.safetyNote}
+          </p>
+
+          <div className="mt-[var(--space-4)] grid gap-[var(--space-5)]">
+            {(tuning.controls || []).map((control) => (
+              <label key={control.id} htmlFor={`${idPrefix}-advanced-${control.id}`} className="block">
+                <div className="flex items-start justify-between gap-[var(--space-3)]">
+                  <span className="min-w-0">
+                    <span className="block text-[length:var(--text-ui)] text-[var(--ink)]">{control.label}</span>
+                    <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{control.description}</span>
+                  </span>
+                  <span className="shrink-0 rounded-full border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums text-[var(--gold-ornament)]">
+                    {control.valueLabel}
+                  </span>
+                </div>
+                <input
+                  id={`${idPrefix}-advanced-${control.id}`}
+                  type="range"
+                  min={control.min}
+                  max={control.max}
+                  step={control.step}
+                  value={control.value}
+                  onChange={(event) => control.onChange?.(Number(event.target.value))}
+                  className="mt-[var(--space-3)] w-full cursor-pointer accent-[var(--gold-action)]"
+                />
+                <div className="mt-[var(--space-1)] flex justify-between gap-[var(--space-2)] text-[10px] uppercase tracking-[0.1em] text-[var(--ink-faint)]">
+                  <span>{control.leftLabel}</span>
+                  <span>Default {control.defaultValue}%</span>
+                  <span className="text-right">{control.rightLabel}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          {tuning.handoff ? (
+            <div className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-[var(--space-3)]">
+              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{tuning.handoff.message}</p>
+              <button
+                type="button"
+                onClick={() => tuning.handoff.onSwitch?.()}
+                className="mt-[var(--space-2)] text-[length:var(--text-label)] font-medium text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4"
+              >
+                Switch to {tuning.handoff.targetProfileLabel} →
+              </button>
+            </div>
+          ) : null}
+
+          <div className="mt-[var(--space-4)] flex items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
+            <span className="text-[length:var(--text-label)] text-[var(--ink-dim)]">
+              {tuning.modified ? "Custom tuning applies to this generation." : "Using validated workflow defaults."}
+            </span>
+            <button
+              type="button"
+              onClick={() => tuning.onReset?.()}
+              disabled={!tuning.modified}
+              className="shrink-0 text-[length:var(--text-label)] text-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              Reset defaults
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 function OptionsExpander({
   isOpen,
   onToggle,
   optionFields,
   onChangeOption,
+  advancedTuningProps,
   negativePromptValue,
   onChangeNegativePrompt,
   cameraPresetLabel,
@@ -292,6 +384,8 @@ function OptionsExpander({
             ))}
           </div>
 
+          <AdvancedTuning tuning={advancedTuningProps} idPrefix={idPrefix} />
+
           {showSceneryOnlyHelper ? (
             <label className="flex cursor-pointer items-start gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
               <input
@@ -344,6 +438,7 @@ function GenerateBlock({
   onGenerate,
   optionFields,
   onChangeOption,
+  advancedTuningProps,
   negativePromptValue,
   onChangeNegativePrompt,
   idPrefix,
@@ -370,6 +465,7 @@ function GenerateBlock({
         onToggle={() => setIsOptionsOpen((current) => !current)}
         optionFields={optionFields}
         onChangeOption={onChangeOption}
+        advancedTuningProps={advancedTuningProps}
         negativePromptValue={negativePromptValue}
         onChangeNegativePrompt={onChangeNegativePrompt}
         cameraPresetLabel={cameraPresetLabel}
@@ -486,6 +582,7 @@ export default function KitImageCreatorPanelView({
   onChangeNegativePrompt = null,
   optionFields = [],
   onChangeOption = null,
+  advancedTuningProps = null,
   coinBalanceLabel = "0",
   coinCostLabel = "5",
   showInsufficientCoins = false,
@@ -569,6 +666,7 @@ export default function KitImageCreatorPanelView({
           onGenerate={onGenerate}
           optionFields={optionFields}
           onChangeOption={onChangeOption}
+          advancedTuningProps={advancedTuningProps}
           negativePromptValue={negativePromptValue}
           onChangeNegativePrompt={onChangeNegativePrompt}
           idPrefix={idPrefix}

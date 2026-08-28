@@ -157,6 +157,7 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
       optionFields: imageOptionFields,
       onChangeOption: (fieldId, value) =>
         imageOptionById.get(fieldId)?.onChange?.(value),
+      advancedTuningProps: composer.advancedTuningProps,
       coinBalanceLabel: composer.coinBalanceLabel,
       coinCostLabel: composer.coinCostLabel,
       showInsufficientCoins: composer.showInsufficientCoins,

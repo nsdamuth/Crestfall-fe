@@ -62,6 +62,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  *   Options-expander dropdowns (Render Style, Camera / Framing,
  *   Wardrobe Theme, Aspect Ratio, Output Count), single-select
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
+ * @property {Object|null} advancedTuningProps optional display-ready bounded
+ *   workflow tuning projection. The kit renders only semantic sliders supplied
+ *   by the caller; workflow limits and payload authority stay outside the View.
  * @property {string} coinBalanceLabel
  * @property {string} coinCostLabel
  * @property {boolean} showInsufficientCoins

@@ -20,6 +20,7 @@ export function useKitImageCreatorPanelViewModel({
   onChangeNegativePrompt = null,
   optionFields = [],
   onChangeOption = null,
+  advancedTuningProps = null,
   coinBalanceLabel = "0",
   coinCostLabel = "5",
   showInsufficientCoins = false,
@@ -46,6 +47,10 @@ export function useKitImageCreatorPanelViewModel({
     onChangeNegativePrompt,
     optionFields: Array.isArray(optionFields) ? optionFields : [],
     onChangeOption,
+    advancedTuningProps:
+      advancedTuningProps && typeof advancedTuningProps === "object"
+        ? advancedTuningProps
+        : null,
     coinBalanceLabel: String(coinBalanceLabel ?? "0"),
     coinCostLabel: String(coinCostLabel ?? "5"),
     showInsufficientCoins: Boolean(showInsufficientCoins),
