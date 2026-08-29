@@ -33,6 +33,18 @@ import {
 import {
   normalizeMechanicsGuards,
 } from "../mechanics-guards/mechanicsGuardsNormalization.js";
+import {
+  normalizeStoryStatusSurfaces,
+} from "../mechanics-story-status-surfaces/storyStatusSurfacesNormalization.js";
+import {
+  STORY_STATUS_SURFACE_HOSTS,
+  STORY_STATUS_SURFACE_MAX_READOUTS,
+  STORY_STATUS_SURFACE_MAX_SURFACES,
+  STORY_STATUS_SURFACE_MECHANICS_BUCKETS,
+  STORY_STATUS_SURFACE_PLACEMENTS,
+  STORY_STATUS_SURFACE_SOURCE_DOMAINS,
+  STORY_STATUS_SURFACE_STATS_KINDS,
+} from "../mechanics-story-status-surfaces/StoryStatusSurfaces.contract.js";
 
 export const MECHANICS_JSON_EDITOR_VALIDATION_VERSION =
   "mechanics_json_editor_validation_v1";
@@ -2531,6 +2543,12 @@ export function canonicalizeMechanicsModuleData(
       statusBlocks: normalizeMechanicsStatusBlocks(
         instanceData.statusBlocks ?? instanceData.status_blocks
       ),
+      storyStatusSurfaces: normalizeStoryStatusSurfaces(
+        instanceData.storyStatusSurfaces ??
+          instanceData.story_status_surfaces ??
+          instanceData.statusSurfaces ??
+          instanceData.status_surfaces
+      ),
       defaults: normalizeMechanicsDefaults(instanceData.defaults),
     },
   };
@@ -2773,6 +2791,104 @@ export function validateMechanicsModuleData(
         "Status block lines must be an array."
       );
     }
+  });
+
+  const storyStatusSurfaces = asArray(
+    instanceData.storyStatusSurfaces ??
+      instanceData.story_status_surfaces ??
+      instanceData.statusSurfaces ??
+      instanceData.status_surfaces
+  );
+  validateUniqueIds(
+    storyStatusSurfaces,
+    "$.instanceData.storyStatusSurfaces",
+    errors,
+    "Story Status Surface"
+  );
+
+  if (storyStatusSurfaces.length > STORY_STATUS_SURFACE_MAX_SURFACES) {
+    addIssue(
+      errors,
+      "$.instanceData.storyStatusSurfaces",
+      `Story Status Surfaces support at most ${STORY_STATUS_SURFACE_MAX_SURFACES} surfaces.`
+    );
+  }
+
+  storyStatusSurfaces.forEach((surface, surfaceIndex) => {
+    const surfacePath = `$.instanceData.storyStatusSurfaces[${surfaceIndex}]`;
+    if (!validatePlainObject(surface, surfacePath, errors)) return;
+
+    const presentation = asObject(surface.presentation);
+    const host = normalizeUpper(presentation.host || "INLINE");
+    const placement = normalizeUpper(presentation.placement || "BOTTOM");
+    if (!STORY_STATUS_SURFACE_HOSTS.includes(host)) {
+      addIssue(
+        errors,
+        `${surfacePath}.presentation.host`,
+        `Unsupported Story Status Surface host "${host || "(missing)"}". V1 authoring supports INLINE only.`
+      );
+    }
+    if (!STORY_STATUS_SURFACE_PLACEMENTS.includes(placement)) {
+      addIssue(
+        errors,
+        `${surfacePath}.presentation.placement`,
+        `Unsupported Story Status Surface placement "${placement || "(missing)"}".`
+      );
+    }
+
+    const readouts = asArray(surface.readouts);
+    validateUniqueIds(readouts, `${surfacePath}.readouts`, errors, "Status readout");
+    if (readouts.length > STORY_STATUS_SURFACE_MAX_READOUTS) {
+      addIssue(
+        errors,
+        `${surfacePath}.readouts`,
+        `A Story Status Surface supports at most ${STORY_STATUS_SURFACE_MAX_READOUTS} readouts.`
+      );
+    }
+
+    readouts.forEach((readout, readoutIndex) => {
+      const readoutPath = `${surfacePath}.readouts[${readoutIndex}]`;
+      if (!validatePlainObject(readout, readoutPath, errors)) return;
+      const source = asObject(readout.source);
+      const domain = normalizeUpper(source.domain || "MECHANICS");
+      const valueId = normalizeString(source.valueId || source.value_id);
+      if (!STORY_STATUS_SURFACE_SOURCE_DOMAINS.includes(domain)) {
+        addIssue(
+          errors,
+          `${readoutPath}.source.domain`,
+          `Unsupported Story Status Surface source domain "${domain || "(missing)"}".`
+        );
+      }
+      if (!valueId) {
+        addIssue(
+          errors,
+          `${readoutPath}.source.valueId`,
+          "Story Status Surface readouts require an authoritative value ID."
+        );
+      }
+      if (
+        domain === "STATS_POOLS" &&
+        !STORY_STATUS_SURFACE_STATS_KINDS.includes(normalizeUpper(source.kind || "POOL"))
+      ) {
+        addIssue(
+          errors,
+          `${readoutPath}.source.kind`,
+          `Unsupported Stats & Pools readout kind "${normalizeUpper(source.kind)}".`
+        );
+      }
+      if (
+        domain === "MECHANICS" &&
+        !STORY_STATUS_SURFACE_MECHANICS_BUCKETS.includes(
+          normalizeUpper(source.bucket || "COUNTER")
+        )
+      ) {
+        addIssue(
+          errors,
+          `${readoutPath}.source.bucket`,
+          `Unsupported Mechanics readout bucket "${normalizeUpper(source.bucket)}".`
+        );
+      }
+    });
   });
 
   const guards = asArray(

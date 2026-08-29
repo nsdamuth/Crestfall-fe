@@ -22,6 +22,9 @@ import {
   normalizeMechanicsStatusBlocks,
 } from "../mechanics-status-blocks/mechanicsStatusBlocksNormalization.js";
 import {
+  normalizeStoryStatusSurfaces,
+} from "../mechanics-story-status-surfaces/storyStatusSurfacesNormalization.js";
+import {
   normalizeMechanicsGuards,
 } from "../mechanics-guards/mechanicsGuardsNormalization.js";
 import {
@@ -52,6 +55,8 @@ export function useMechanicsModuleAssemblyViewModel({
     commands,
     defaults,
     statusBlocks,
+    storyStatusSurfaces,
+    storyStatusSurfaceMechanicsSourceOptions,
     guards,
     tagsText,
     priority,
@@ -95,6 +100,12 @@ export function useMechanicsModuleAssemblyViewModel({
       guards: normalizeMechanicsGuards(instanceData.guards),
       commands: asMechanicsArray(instanceData.commands),
       statusBlocks: normalizeMechanicsStatusBlocks(instanceData.statusBlocks),
+      storyStatusSurfaces: normalizeStoryStatusSurfaces(
+        instanceData.storyStatusSurfaces ||
+          instanceData.story_status_surfaces ||
+          instanceData.statusSurfaces ||
+          instanceData.status_surfaces
+      ),
       defaults: normalizeMechanicsDefaults(instanceData.defaults),
       ...updates,
     };
@@ -217,6 +228,11 @@ export function useMechanicsModuleAssemblyViewModel({
         statusBlocks: normalizeMechanicsStatusBlocks(statusBlocksNext),
       });
     },
+    updateStoryStatusSurfaces(statusSurfacesNext) {
+      updateInstanceData({
+        storyStatusSurfaces: normalizeStoryStatusSurfaces(statusSurfacesNext),
+      });
+    },
     updateGuards(guardsNext) {
       updateInstanceData({ guards: normalizeMechanicsGuards(guardsNext) });
     },
@@ -234,6 +250,11 @@ export function useMechanicsModuleAssemblyViewModel({
       commandSummary,
       defaultsBadge: pluralizeMechanicsCount(defaultEntryCount, "entry", "entries"),
       statusBlocksBadge: pluralizeMechanicsCount(statusBlocks.length, "block"),
+      storyStatusSurfacesBadge: pluralizeMechanicsCount(
+        storyStatusSurfaces.length,
+        "surface"
+      ),
+      storyStatusSurfaceMechanicsSourceOptions,
       guardsBadge: pluralizeMechanicsCount(guards.length, "guard"),
       onToggleSection: toggleSection,
       onCollapseAll: () => setAllSections(false),

@@ -122,7 +122,7 @@ function buildCastPanelState({
       busyLabel: "Deleting...",
     },
     deleteError: displayText(deleteError),
-    roomListHref: "/studio/story-rooms",
+    roomListHref: "/studio/v2/stories",
     roomListLabel: "← Room List",
   };
 }

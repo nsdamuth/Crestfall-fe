@@ -29,6 +29,7 @@ export default function StoryRoomChatShellView({
   composerHelpPanel = null,
   commands = [],
   statusSurfaces = [],
+  commandCatalogError = "",
   statusSurfaceError = "",
   castPanelProps = {},
   mobileCastPanelProps = {},
@@ -146,6 +147,12 @@ export default function StoryRoomChatShellView({
               placement="BOTTOM"
               room={room}
             />
+          ) : null}
+
+          {commandCatalogError ? (
+            <p className="sr-only" role="status">
+              {commandCatalogError}
+            </p>
           ) : null}
 
           {statusSurfaceError ? (
@@ -304,6 +311,12 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
               {command.aliases?.length ? (
                 <p className="mt-2 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
                   Alias: {command.aliases.map((alias) => `/${alias}`).join(", ")}
+                </p>
+              ) : null}
+              {command.sourceLabel ? (
+                <p className="mt-2 text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
+                  {command.sourceLabel}
+                  {command.ambiguous ? " · Multiple active definitions" : ""}
                 </p>
               ) : null}
             </div>

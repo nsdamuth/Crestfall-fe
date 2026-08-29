@@ -58,9 +58,11 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue
  * @property {((value: string) => void)|null} onChangeNegativePrompt
- * @property {KitImageCreatorOptionField[]} optionFields the five
- *   Options-expander dropdowns (Render Style, Camera / Framing,
- *   Wardrobe Theme, Aspect Ratio, Output Count), single-select
+ * @property {KitImageCreatorOptionField[]} optionFields the four inline
+ *   Options-expander dropdowns (Render Style, Wardrobe Theme, Aspect Ratio,
+ *   Output Count), single-select. Camera / Framing uses the dedicated modal
+ *   launcher below so the larger camera catalogue is not collapsed into a
+ *   standard dropdown.
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
  * @property {Object|null} advancedTuningProps optional display-ready bounded
  *   workflow tuning projection. The kit renders only semantic sliders supplied

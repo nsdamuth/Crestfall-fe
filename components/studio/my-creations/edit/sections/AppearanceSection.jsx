@@ -75,6 +75,21 @@ export default function AppearanceSection(props) {
           onSelect={viewProps.onApplySelection}
         />
       ) : null}
+
+      {viewProps.activePicker === "IMAGE_PRESET" ? (
+        <OutfitPickerModal
+          title="Select Default Image Preset"
+          modalEyebrow="Character Image Generation"
+          modalDescription="Choose one Image Preset creation to use automatically when this character is selected for image generation."
+          searchPlaceholder="Search image presets..."
+          creationType="IMAGE_PRESET"
+          typeLabel="Image Preset"
+          selectedCreationId={viewProps.selectedImagePresetId}
+          normalizeSelection={viewProps.normalizeDefaultImagePresetSelection}
+          onClose={viewProps.onClosePicker}
+          onSelect={viewProps.onApplySelection}
+        />
+      ) : null}
     </>
   );
 }

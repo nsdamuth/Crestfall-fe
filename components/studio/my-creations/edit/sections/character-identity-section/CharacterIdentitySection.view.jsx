@@ -23,10 +23,6 @@ export default function CharacterIdentitySectionView({
   renderingStyleLabel = "Default Rendering Style",
   renderingStyleValue = "EITHER",
   renderingStyleOptions = [],
-  defaultImagePresetLabel = "Default Image Preset",
-  defaultImagePresetValue = "AUTO",
-  defaultImagePresetOptions = [],
-  defaultImagePresetHelpText = "",
   ageLabel = "Age",
   ageValue = "",
   ageMinimum = 18,
@@ -47,7 +43,6 @@ export default function CharacterIdentitySectionView({
   onSelectSpecies = null,
   onChangeCustomSpecies = null,
   onSelectRenderingStyle = null,
-  onSelectDefaultImagePreset = null,
   onChangeAge = null,
   onCommitAge = null,
   onSelectGenderPresentation = null,
@@ -99,13 +94,6 @@ export default function CharacterIdentitySectionView({
           options={renderingStyleOptions}
         />
 
-        <SelectField
-          label={defaultImagePresetLabel}
-          value={defaultImagePresetValue}
-          onChange={(value) => onSelectDefaultImagePreset?.(value)}
-          options={defaultImagePresetOptions}
-          helperText={defaultImagePresetHelpText}
-        />
 
         {/* Local field bed, not SharedFields.NumberField (ED1E 4.2):
             this field needs both a per-keystroke onChangeAge and a

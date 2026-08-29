@@ -9,6 +9,9 @@ import {
   normalizeMechanicsGuards as normalizeMechanicsGuardsDomain,
 } from "../mechanics-guards/mechanicsGuardsNormalization.js";
 import {
+  normalizeStoryStatusSurfaces as normalizeStoryStatusSurfacesDomain,
+} from "../mechanics-story-status-surfaces/storyStatusSurfacesNormalization.js";
+import {
   createDefaultMechanicsDocument,
   createDefaultMechanicsInstanceData,
 } from "./mechanicsDocumentDefaults.js";
@@ -68,6 +71,10 @@ export function normalizeMechanicsGuards(value) {
   return normalizeMechanicsGuardsDomain(value);
 }
 
+export function normalizeStoryStatusSurfaces(value) {
+  return normalizeStoryStatusSurfacesDomain(value);
+}
+
 export function normalizeMechanicsInstanceData(
   value,
   { contractVersion = MECHANICS_DOCUMENT_IDENTITIES.contractVersion } = {}
@@ -90,6 +97,13 @@ export function normalizeMechanicsInstanceData(
     statusBlocks: normalizeMechanicsStatusBlocks(
       firstDefined(source, "statusBlocks", ["status_blocks"]) ??
         fallback.statusBlocks
+    ),
+    storyStatusSurfaces: normalizeStoryStatusSurfaces(
+      firstDefined(source, "storyStatusSurfaces", [
+        "story_status_surfaces",
+        "statusSurfaces",
+        "status_surfaces",
+      ]) ?? fallback.storyStatusSurfaces
     ),
     guards: normalizeMechanicsGuards(
       firstDefined(source, "guards", ["guard_rules", "guardRules"]) ??

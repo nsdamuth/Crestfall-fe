@@ -70,6 +70,7 @@ export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
       actorTitle: "",
       progression: [],
       pools: [],
+      wallets: [],
       primaryStats: [],
       details: [],
       readouts,
@@ -79,6 +80,7 @@ export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
 
   const progression = [];
   const pools = [];
+  const wallets = [];
   const primaryStats = [];
   const details = [];
 
@@ -105,6 +107,11 @@ export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
       return;
     }
 
+    if (domain === "WALLET") {
+      wallets.push(decorated);
+      return;
+    }
+
     if (domain === "STATS_POOLS" && kind === "STAT") {
       primaryStats.push(decorated);
       return;
@@ -125,6 +132,7 @@ export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
       "Player Character",
     progression,
     pools,
+    wallets,
     primaryStats,
     details,
     readouts,

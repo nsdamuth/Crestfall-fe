@@ -20,6 +20,7 @@ import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import {
   projectCreationsToStoryStartables,
   projectStoryRoomToContinueItem,
+  resolveStoryContinueImageSrc,
 } from "@/lib/shared/presentation/storiesPresentation";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import StoryLaunchRequirementsSheet from "./StoryLaunchRequirementsSheet";
@@ -475,7 +476,7 @@ export default function StoriesV2Live({
                       assetKind={item.kind}
                       title={item.title}
                       subtitle={item.subtitle || KIND_LABELS[item.kind]}
-                      imageSrc={item.imageSrc}
+                      imageSrc={resolveStoryContinueImageSrc(item, sourceCreation)}
                       badges={badgesFor(item)}
                       stats={{ plays: item.rawRoom?.messages ?? 0, hearts: null, saves: null, followers: null }}
                       liked={sourceCreation ? engagement.isCreationLiked(sourceCreation) : false}

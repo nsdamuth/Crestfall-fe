@@ -18,6 +18,7 @@ export function useStoryRoomTranscriptViewModel({
   sending = false,
   error = null,
   persistentStatusSurfaceDomains = [],
+  playerCharacterPrompt = null,
 } = {}) {
   const safeMessages = Array.isArray(messages) ? messages : [];
 
@@ -31,5 +32,9 @@ export function useStoryRoomTranscriptViewModel({
     loading: Boolean(loading),
     sending: Boolean(sending),
     errorMessage: normalizeErrorMessage(error),
+    playerCharacterPrompt:
+      playerCharacterPrompt && typeof playerCharacterPrompt === "object"
+        ? playerCharacterPrompt
+        : null,
   };
 }

@@ -10,6 +10,16 @@ const baseSelectedClothing = Object.freeze({
   wardrobeButtonLabel: "Select Wardrobe",
 });
 
+const baseSelectedImagePreset = Object.freeze({
+  hasSelection: true,
+  id: "preset-kessa-portrait",
+  title: "Crestfall Fantasy Portrait",
+  description:
+    "A reusable portrait preset with painterly fantasy lighting and character-forward framing.",
+  imageUrl: "/images/placeholder-card.jpg",
+  buttonLabel: "Change Preset",
+});
+
 const baseFixture = Object.freeze({
   sectionEyebrow: "Character Editor",
   sectionTitle: "Appearance",
@@ -18,9 +28,16 @@ const baseFixture = Object.freeze({
   clothingLabel: "Clothing Style",
   emptyClothingDescription:
     "No default clothing source selected. Choose a single Outfit or a Wardrobe.",
+  imagePresetLabel: "Default Image Preset",
+  emptyImagePresetDescription:
+    "No default image preset selected. Image Studio will use its normal preset behavior.",
+  imagePresetHelpText:
+    "Used automatically when this character is selected for image generation. Image Studio can still override it per generation.",
   noDescriptionLabel: "No description.",
   selectedClothingFallbackTitle: "Selected Clothing Source",
+  selectedImagePresetFallbackTitle: "Selected Image Preset",
   selectedClothing: baseSelectedClothing,
+  selectedImagePreset: baseSelectedImagePreset,
 });
 
 export const characterAppearanceSectionOutfitFixture = {
@@ -58,6 +75,14 @@ export const characterAppearanceSectionWardrobeFixture = {
 export const characterAppearanceSectionEmptyFixture = {
   ...baseFixture,
   selectedClothing: { ...baseSelectedClothing },
+  selectedImagePreset: {
+    hasSelection: false,
+    id: "",
+    title: "",
+    description: "",
+    imageUrl: "/images/placeholder-card.jpg",
+    buttonLabel: "Select Preset",
+  },
 };
 
 export const characterAppearanceSectionLongContentFixture = {
@@ -75,6 +100,13 @@ export const characterAppearanceSectionLongContentFixture = {
     outfitButtonLabel: "Change Outfit",
     wardrobeButtonLabel: "Select Wardrobe",
   },
+  selectedImagePreset: {
+    ...baseSelectedImagePreset,
+    title:
+      "The Extremely Long Named Character Portrait Preset for Elaborate Multi-Environment Fantasy Presentation",
+    description:
+      "A deliberately long image-preset description that verifies wrapping, card balance, and the side-by-side Appearance layout without leaking application-owned picker behavior into the portable View.",
+  },
 };
 
 export const characterAppearanceSectionMissingCallbacksFixture = {
@@ -82,4 +114,6 @@ export const characterAppearanceSectionMissingCallbacksFixture = {
   onPickOutfit: null,
   onPickWardrobe: null,
   onClearDefaultClothing: null,
+  onPickImagePreset: null,
+  onClearDefaultImagePreset: null,
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronUp, Loader2, Sparkles } from "lucide-react";
+import { ChevronUp, Loader2, Sparkles, UserRound } from "lucide-react";
 
 import StoryRoomMessageView from "../story-room-message/StoryRoomMessage.view";
 
@@ -13,6 +13,7 @@ export default function StoryRoomTranscriptView({
   loading = false,
   sending = false,
   errorMessage = "",
+  playerCharacterPrompt = null,
 }) {
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_MESSAGES);
   const bottomRef = useRef(null);
@@ -43,7 +44,14 @@ export default function StoryRoomTranscriptView({
         cancelAnimationFrame(scrollFrameRef.current);
       }
     };
-  }, [safeMessageItems.length, sending, loading, errorMessage]);
+  }, [
+    safeMessageItems.length,
+    sending,
+    loading,
+    errorMessage,
+    playerCharacterPrompt?.visible,
+    playerCharacterPrompt?.selectedName,
+  ]);
 
   function loadEarlierMessages() {
     setVisibleCount((current) =>
@@ -72,6 +80,10 @@ export default function StoryRoomTranscriptView({
           <StoryRoomMessageView key={item.id} {...item.message} />
         ))}
 
+        {playerCharacterPrompt?.visible ? (
+          <PlayerCharacterPromptCard prompt={playerCharacterPrompt} />
+        ) : null}
+
         {loading ? (
           <StatusCard icon={Loader2} spin>
             Loading Story...
@@ -95,6 +107,50 @@ export default function StoryRoomTranscriptView({
         <div ref={bottomRef} aria-hidden="true" className="h-px" />
       </div>
     </div>
+  );
+}
+
+function PlayerCharacterPromptCard({ prompt }) {
+  const selectedName = String(prompt?.selectedName || "").trim();
+  const buttonLabel = selectedName
+    ? "Change Player Character"
+    : "Select Player Character";
+
+  return (
+    <article className="rounded-[var(--radius-md)] border border-sky-400/25 bg-sky-400/10 p-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-sky-300/25 bg-sky-300/10 text-sky-200">
+          <UserRound size={17} aria-hidden="true" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-sky-200">
+            Crestfall Engine
+          </p>
+          <p className="mt-2 text-sm leading-6 text-sky-50/90">
+            {selectedName
+              ? `${selectedName} is your Player Character for this Story. You can change it until you send the first message.`
+              : "Choose a Player Character before your first message. This selection stays editable until the Story begins."}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => prompt?.onSelect?.()}
+            disabled={Boolean(prompt?.busy)}
+            className="cf-btn cf-btn--secondary mt-4 border-sky-300/30 text-sky-100 hover:border-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <UserRound size={14} aria-hidden="true" />
+            {prompt?.busy ? "Setting..." : buttonLabel}
+          </button>
+
+          {prompt?.errorMessage ? (
+            <p className="mt-3 text-xs leading-5 text-red-200">
+              {prompt.errorMessage}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </article>
   );
 }
 

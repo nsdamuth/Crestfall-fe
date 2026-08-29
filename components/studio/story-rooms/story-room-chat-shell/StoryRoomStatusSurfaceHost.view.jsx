@@ -75,6 +75,21 @@ function ActorMechanicsSurface({ surface, onToggle }) {
         </div>
       ) : null}
 
+      {surface.wallets.length ? (
+        <div className="flex flex-wrap gap-x-7 gap-y-1 border-b border-[var(--line-fade)] py-2 text-xs sm:text-sm">
+          {surface.wallets.map((readout) => (
+            <span key={readout.id} className="whitespace-nowrap">
+              <span className="mr-2 uppercase tracking-[0.08em] text-[var(--gold-ornament)]">
+                {readout.label}
+              </span>
+              <strong className="font-semibold text-[var(--ink)]">
+                {readout.displayValue}
+              </strong>
+            </span>
+          ))}
+        </div>
+      ) : null}
+
       {surface.primaryStats.length ? (
         <div className="grid grid-cols-4 gap-x-4 gap-y-1.5 py-2 text-[11px] sm:grid-cols-6 lg:grid-cols-11">
           {surface.primaryStats.map((readout) => (

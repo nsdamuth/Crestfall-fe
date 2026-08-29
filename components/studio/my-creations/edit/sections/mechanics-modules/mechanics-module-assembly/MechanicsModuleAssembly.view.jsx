@@ -235,6 +235,7 @@ export default function MechanicsModuleAssemblyView({
   commandSummary = "",
   defaultsBadge = "0 entries",
   statusBlocksBadge = "0 blocks",
+  storyStatusSurfacesBadge = "0 surfaces",
   guardsBadge = "0 guards",
   documentControls = null,
   documentSurfaces = null,
@@ -242,6 +243,7 @@ export default function MechanicsModuleAssemblyView({
   commandsContent = null,
   defaultsContent = null,
   statusBlocksContent = null,
+  storyStatusSurfacesContent = null,
   guardsContent = null,
   onToggleSection = null,
   onCollapseAll = null,
@@ -371,6 +373,18 @@ export default function MechanicsModuleAssemblyView({
         onToggle={() => onToggleSection?.("statusBlocks")}
       >
         {statusBlocksContent}
+      </MechanicsRuntimeFoldSection>
+
+      <MechanicsRuntimeFoldSection
+        id={sectionIds.storyStatusSurfaces}
+        eyebrow="Visual Builder"
+        title="Story Status Surfaces"
+        badge={storyStatusSurfacesBadge}
+        summary="Persistent read-only Story header or footer values from authoritative Mechanics and actor domains."
+        expanded={expandedSections.storyStatusSurfaces}
+        onToggle={() => onToggleSection?.("storyStatusSurfaces")}
+      >
+        {storyStatusSurfacesContent}
       </MechanicsRuntimeFoldSection>
 
       <MechanicsRuntimeFoldSection

@@ -29,7 +29,7 @@ export default function StoryRoomCastPanelView({
   randomLikedError = "",
   deleteAction = null,
   deleteError = "",
-  roomListHref = "/studio/story-rooms",
+  roomListHref = "/studio/v2/stories",
   roomListLabel = "← Room list",
   playerCharacterPickerContent = null,
   manageCastOpen = false,
@@ -195,7 +195,7 @@ export default function StoryRoomCastPanelView({
         ) : null}
 
         <LinkComponent
-          href={roomListHref || "/studio/story-rooms"}
+          href={roomListHref || "/studio/v2/stories"}
           className="cf-btn cf-btn--secondary"
         >
           {roomListLabel || "← Room list"}

@@ -11,12 +11,6 @@ const renderingStyleOptions = [
 ];
 
 
-const defaultImagePresetOptions = [
-  { value: "AUTO", label: "Auto / No Default Preset" },
-  { value: "preset-1", label: "Crestfall Fantasy Portrait" },
-  { value: "preset-2", label: "Crestfall Realistic Character" },
-];
-
 const genderPresentationOptions = [
   { value: "FEMALE", label: "Female" },
   { value: "MALE", label: "Male" },
@@ -42,11 +36,6 @@ const baseFixture = {
   renderingStyleLabel: "Default Rendering Style",
   renderingStyleValue: "ANIME",
   renderingStyleOptions,
-  defaultImagePresetLabel: "Default Image Preset",
-  defaultImagePresetValue: "preset-1",
-  defaultImagePresetOptions,
-  defaultImagePresetHelpText:
-    "Used automatically when this character is selected for image generation.",
   ageLabel: "Age",
   ageValue: "26",
   ageMinimum: 18,
@@ -68,7 +57,6 @@ const baseFixture = {
   onSelectSpecies: null,
   onChangeCustomSpecies: null,
   onSelectRenderingStyle: null,
-  onSelectDefaultImagePreset: null,
   onChangeAge: null,
   onCommitAge: null,
   onSelectGenderPresentation: null,
@@ -97,7 +85,6 @@ export const characterIdentitySectionFallbackFixture = {
   characterTitleValue: "",
   speciesValue: "",
   renderingStyleValue: "EITHER",
-  defaultImagePresetValue: "AUTO",
   ageValue: "",
   genderPresentationValue: "",
   colorPaletteValue: "CRESTFALL_DEFAULT",
@@ -125,7 +112,6 @@ export const characterIdentitySectionNoOptionsFixture = {
   ...baseFixture,
   speciesOptions: [],
   renderingStyleOptions: [],
-  defaultImagePresetOptions: [],
   genderPresentationOptions: [],
 };
 
@@ -136,7 +122,6 @@ export const characterIdentitySectionMissingCallbacksFixture = {
   onSelectSpecies: null,
   onChangeCustomSpecies: null,
   onSelectRenderingStyle: null,
-  onSelectDefaultImagePreset: null,
   onChangeAge: null,
   onCommitAge: null,
   onSelectGenderPresentation: null,

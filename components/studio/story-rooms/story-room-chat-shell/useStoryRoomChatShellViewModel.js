@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { deleteStoryRoom } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import {
   STORY_ROOM_COMMANDS,
+  mergeStoryRoomCommandsWithMechanicsCatalog,
   resolveLocalStoryRoomCommand,
 } from "@/components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry";
 import { getMechanicsModuleBindings } from "@/components/studio/story-rooms/story-room-runtime-mechanics-panel/useStoryRoomRuntimeMechanicsPanelViewModel";
@@ -80,6 +81,9 @@ export function useStoryRoomChatShellViewModel({
     randomLikedLoading = false,
     randomLikedError = "",
     loadRandomLikedCharacter,
+    commandCatalog = {},
+    commandCatalogError = "",
+    reloadCommandCatalog,
     statusSurfaces = {},
     statusSurfaceError = "",
   } = safeChat;
@@ -100,11 +104,41 @@ export function useStoryRoomChatShellViewModel({
   const [deleteError, setDeleteError] = useState("");
   const [isConfirmingDeleteRoom, setIsConfirmingDeleteRoom] = useState(false);
   const [composerHelpPanel, setComposerHelpPanel] = useState(null);
+  const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] = useState(false);
+  const [firstMessageSubmitted, setFirstMessageSubmitted] = useState(false);
+
+  const selectedPlayerCharacter = useMemo(
+    () =>
+      (Array.isArray(cast) ? cast : []).find(
+        (member) =>
+          String(member?.participantType || "").toUpperCase() ===
+          "PLAYER_CHARACTER"
+      ) || null,
+    [cast]
+  );
+
+  useEffect(() => {
+    setFirstMessageSubmitted(false);
+    setPlayerCharacterPickerOpen(false);
+  }, [roomId]);
 
   const nextSpeakerOptions = useMemo(
     () => buildNextSpeakerOptions(safeSpeakerOptions),
     [safeSpeakerOptions]
   );
+
+  const commands = useMemo(
+    () =>
+      mergeStoryRoomCommandsWithMechanicsCatalog(
+        commandCatalog,
+        STORY_ROOM_COMMANDS
+      ),
+    [commandCatalog]
+  );
+
+  useEffect(() => {
+    void reloadCommandCatalog?.({ requestedSpeakerId: nextSpeaker });
+  }, [nextSpeaker, reloadCommandCatalog]);
 
   const participantMentionOptions = useMemo(
     () =>
@@ -201,6 +235,10 @@ export function useStoryRoomChatShellViewModel({
         setLocationMentions([]);
       }
 
+      if (!isYieldTurn) {
+        setFirstMessageSubmitted(true);
+      }
+
       const result = await sendStoryMessage?.({
         message: body,
         inputMode,
@@ -211,6 +249,7 @@ export function useStoryRoomChatShellViewModel({
       });
 
       if (!result && !isYieldTurn) {
+        setFirstMessageSubmitted(false);
         setDraft(body);
         setParticipantMentions(mentionsForSend);
         setLocationMentions(locationMentionsForSend);
@@ -227,6 +266,29 @@ export function useStoryRoomChatShellViewModel({
     ]
   );
 
+  const openPlayerCharacterPicker = useCallback(() => {
+    if (!canSetPlayerCharacter || firstMessageSubmitted) return;
+    setPlayerCharacterPickerOpen(true);
+  }, [canSetPlayerCharacter, firstMessageSubmitted]);
+
+  const closePlayerCharacterPicker = useCallback(() => {
+    setPlayerCharacterPickerOpen(false);
+  }, []);
+
+  const choosePlayerCharacter = useCallback(
+    async (playerCharacter) => {
+      if (!playerCharacter?.id || typeof setPlayerCharacter !== "function") {
+        return;
+      }
+
+      const result = await setPlayerCharacter(playerCharacter.id);
+      if (result) {
+        setPlayerCharacterPickerOpen(false);
+      }
+    },
+    [setPlayerCharacter]
+  );
+
   const closeMobilePanel = useCallback(() => setMobilePanel(null), []);
   const closeComposerHelpPanel = useCallback(
     () => setComposerHelpPanel(null),
@@ -241,10 +303,6 @@ export function useStoryRoomChatShellViewModel({
     onDeleteRoom: requestDeleteRoom,
     isDeletingRoom: deletingRoom,
     deleteError,
-    canSetPlayerCharacter,
-    onSetPlayerCharacter: setPlayerCharacter,
-    isSettingPlayerCharacter: settingPlayerCharacter,
-    setPlayerCharacterError,
     selectedResponderId: nextSpeaker,
     onSelectResponder: selectNextResponder,
     registryNpcs,
@@ -299,8 +357,9 @@ export function useStoryRoomChatShellViewModel({
     rightOpen,
     mobilePanel,
     composerHelpPanel,
-    commands: STORY_ROOM_COMMANDS,
+    commands,
     statusSurfaces: storyStatusSurfaces,
+    commandCatalogError,
     statusSurfaceError,
     castPanelProps,
     mobileCastPanelProps,
@@ -311,7 +370,21 @@ export function useStoryRoomChatShellViewModel({
       error,
       statusSurfaces: storyStatusSurfaces,
       persistentStatusSurfaceDomains,
+      playerCharacterPrompt: {
+        visible: Boolean(canSetPlayerCharacter) && !firstMessageSubmitted,
+        selectedName: selectedPlayerCharacter?.name || "",
+        busy: Boolean(settingPlayerCharacter),
+        errorMessage: setPlayerCharacterError,
+        onSelect: openPlayerCharacterPicker,
+      },
     },
+    playerCharacterPickerProps: playerCharacterPickerOpen
+      ? {
+          selectedId: selectedPlayerCharacter?.participant?.creationId || "",
+          onClose: closePlayerCharacterPicker,
+          onSelect: choosePlayerCharacter,
+        }
+      : null,
     composerProps: {
       inputMode,
       setInputMode,
@@ -326,6 +399,7 @@ export function useStoryRoomChatShellViewModel({
       locationMentions,
       setLocationMentions,
       locationMentionOptions,
+      commandOptions: commands,
       onSend: sendMessage,
       onOpenCast: () => setMobilePanel("cast"),
       onOpenState: () => setMobilePanel("state"),

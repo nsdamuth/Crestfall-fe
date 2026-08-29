@@ -2,18 +2,22 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchImageGenerationHistory } from "@/lib/client/studio/image-studio/imageStudioClient";
+import {
+  applyImageOutputDisplayNameResult,
+  getImageOutputDisplayTitle,
+} from "@/lib/shared/media/imageOutputNaming";
 
 const IMAGE_HISTORY_PAGE_SIZE = 12;
 const ACTIVE_JOB_POLL_INTERVAL_MS = 3000;
 
-function makeMediaTitle(output, index) {
-  const prompt = output?.job?.promptSnapshot?.userPrompt;
-
-  if (typeof prompt === "string" && prompt.trim()) {
-    return prompt.trim().slice(0, 70);
-  }
-
-  return `Generated image ${index + 1}`;
+function makeMediaTitle(output, job = null) {
+  return getImageOutputDisplayTitle(
+    {
+      ...output,
+      job: job || output?.job || null,
+    },
+    { fallbackBase: "Generated Image" }
+  );
 }
 
 function getImageUrlForOutput(output) {
@@ -66,7 +70,7 @@ function mapOutputToMediaItem(output, index, jobOverride = null) {
     image_output_id: imageOutputId,
 
     type: "IMAGE",
-    title: makeMediaTitle({ ...output, job }, index),
+    title: makeMediaTitle(output, job),
     imageUrl: getImageUrlForOutput(output),
     thumbnailUrl: getThumbnailUrlForOutput(output),
 
@@ -130,13 +134,11 @@ function getJobOutputCount(job) {
   return Math.min(Math.max(Number.isFinite(parsedCount) ? parsedCount : 1, 1), 4);
 }
 
-function getJobPromptTitle(job) {
-  const promptSnapshot = job?.promptSnapshot || job?.prompt_snapshot || {};
-  const prompt = promptSnapshot.userPrompt || promptSnapshot.user_prompt || "";
-
-  return typeof prompt === "string" && prompt.trim()
-    ? prompt.trim().slice(0, 70)
-    : "Generating image";
+function getJobDisplayTitle(job) {
+  return getImageOutputDisplayTitle(
+    { job },
+    { fallbackBase: "Generating Image" }
+  );
 }
 
 function getJobResolvedDimensions(job) {
@@ -162,7 +164,7 @@ function mapActiveJobsToPendingMediaItems(activeJobs = [], outputs = []) {
 
     const pendingGroupId = `image-generation-job-${jobId}`;
     const outputCount = getJobOutputCount(job);
-    const title = getJobPromptTitle(job);
+    const title = getJobDisplayTitle(job);
     const dimensions = getJobResolvedDimensions(job);
 
     return Array.from({ length: outputCount }, (_, index) => ({
@@ -229,7 +231,7 @@ function makePendingMediaItems({ count = 1, prompt = "" }) {
   const pendingGroupId = makeClientId("pending-image-generation");
   const itemCount = Math.max(1, Number.parseInt(count, 10) || 1);
   const now = new Date().toISOString();
-  const title = prompt?.trim() || "Generating image";
+  const title = "Generating Image";
 
   return {
     pendingGroupId,
@@ -507,6 +509,32 @@ export function useImageGenerationHistory() {
     []
   );
 
+  const applyImageRename = useCallback(
+    ({ imageOutputId, result } = {}) => {
+      if (!imageOutputId || !result) return false;
+
+      let updated = false;
+      setMediaItems((currentItems) =>
+        currentItems.map((item) => {
+          if (String(item?.imageOutputId || item?.outputId || item?.id || "") !== imageOutputId) {
+            return item;
+          }
+
+          updated = true;
+          const nextItem = applyImageOutputDisplayNameResult(item, result);
+          return {
+            ...nextItem,
+            title: getImageOutputDisplayTitle(nextItem),
+          };
+        })
+      );
+
+      return updated;
+    },
+    []
+  );
+
+
   return {
     mediaItems,
     historyStatus,
@@ -520,5 +548,6 @@ export function useImageGenerationHistory() {
     resolvePendingGeneration,
     failPendingGeneration,
     applyImageReassignment,
+    applyImageRename,
   };
 }

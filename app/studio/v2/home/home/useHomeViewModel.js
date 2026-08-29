@@ -6,7 +6,11 @@ import { useCreationEngagementState } from "@/components/studio/engagement/hooks
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
 import { projectCommunityCreations } from "@/lib/shared/presentation/communityPresentation";
 import { projectCommunityCreators } from "@/lib/shared/presentation/creatorPresentation";
-import { projectStoryRoomToContinueItem } from "@/lib/shared/presentation/storiesPresentation";
+import {
+  projectCreationsToStoryStartables,
+  projectStoryRoomToContinueItem,
+  resolveStoryContinueImageSrc,
+} from "@/lib/shared/presentation/storiesPresentation";
 
 const RAIL_ITEM_CAP = 12;
 
@@ -140,6 +144,7 @@ function rail(label, items, onViewAll) {
 
 export function useHomeViewModel({
   rooms = [],
+  ownedCreations = [],
   communityCreations = [],
   creators = [],
   creatorCreations = [],
@@ -160,6 +165,24 @@ export function useHomeViewModel({
   );
   const engagement = useCreationEngagementState(communityItems);
 
+  const storySourceCreationById = useMemo(() => {
+    const byId = new Map();
+    const ownedSources = projectCreationsToStoryStartables(ownedCreations, {
+      isOwn: true,
+    });
+    const communitySources = projectCreationsToStoryStartables(communityCreations, {
+      isOwn: false,
+    });
+
+    [...ownedSources, ...communitySources].forEach((creation) => {
+      if (creation?.id && !byId.has(creation.id)) {
+        byId.set(creation.id, creation);
+      }
+    });
+
+    return byId;
+  }, [ownedCreations, communityCreations]);
+
   const creatorItems = useMemo(
     () =>
       projectCommunityCreators(creators, {
@@ -179,17 +202,21 @@ export function useHomeViewModel({
     const item = projected[0] || null;
     if (!item) return null;
 
+    const sourceCreation = item.sourceCreationId
+      ? storySourceCreationById.get(item.sourceCreationId)
+      : null;
+
     return {
       id: item.id,
       title: item.title,
       kindLabel: item.kind === "adventure" ? "Adventure" : "Story",
       lastPlayedLabel: relativeTimeLabel(item.lastPlayed),
-      imageSrc: item.imageSrc,
+      imageSrc: resolveStoryContinueImageSrc(item, sourceCreation),
       secondaryCtaLabel: "Explore recent stories",
       onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
       onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),
     };
-  }, [rooms, onNavigate]);
+  }, [rooms, storySourceCreationById, onNavigate]);
 
   const destinationTiles = useMemo(
     () =>

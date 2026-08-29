@@ -138,6 +138,10 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   const autoCameraPreset = cameraPresetCatalog.find(
     (preset) => preset.value === "AUTO"
   );
+  const openCameraPresetPicker =
+    typeof onOpenCameraPresetPicker === "function"
+      ? onOpenCameraPresetPicker
+      : null;
 
   return {
     mediaHistoryProps: workbench.mediaHistoryProps,
@@ -167,7 +171,7 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
       generationError: workbench.composerProps.generationError,
       cameraPresetLabel: normalizedCameraPreset.label,
       cameraPresetDescription: normalizedCameraPreset.description,
-      onOpenCameraPresetPicker,
+      onOpenCameraPresetPicker: openCameraPresetPicker,
       showSceneryOnlyHelper: workbench.composerProps.showSceneryOnlyHelper,
       sceneryOnlyHelperEnabled: workbench.composerProps.sceneryOnlyHelperEnabled,
       onChangeSceneryOnlyHelper:

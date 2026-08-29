@@ -1,4 +1,4 @@
-export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.2.0";
+export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Portable presentation contract for Image Studio's generated-media history.
@@ -7,6 +7,9 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.2.0";
  * callbacks, and injected application-owned controls. It does not import
  * Crestfall media clients, delete image outputs, fetch reactions, interpret
  * legacy output identifiers, or confirm destructive actions.
+ *
+ * 1.3.0 (V2 convergence): adds asset/prompt search, opaque desktop filters,
+ * and a working Grid/Large density toggle across responsive breakpoints.
  *
  * 1.2.0 (V2 convergence): adds an optional mobile primary workspace action
  * so Image Studio can expose its editor in-flow above fixed mobile navigation.
@@ -21,6 +24,7 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.2.0";
  * @typedef {Object} MediaHistoryGridViewProps
  * @property {Array<{value:string,label:string}>} filterOptions
  * @property {string} activeFilter
+ * @property {string} searchQuery
  * @property {boolean} filtersOpen
  * @property {boolean} compactMobileGrid
  * @property {string} [mobileGridClass]
@@ -47,6 +51,8 @@ export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {number} [masonryRowHeight]
  * @property {number} [masonryGap]
  * @property {((value:string) => void)|null} [onSetFilter]
+ * @property {((value:string) => void)|null} [onChangeSearchQuery]
+ * @property {(() => void)|null} [onClearFilters]
  * @property {(() => void)|null} [onToggleFilters]
  * @property {(() => void)|null} [onToggleMobileGrid]
  * @property {(() => void)|null} [onToggleSelectionMode]

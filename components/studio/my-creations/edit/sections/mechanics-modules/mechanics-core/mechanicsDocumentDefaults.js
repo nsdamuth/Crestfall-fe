@@ -11,6 +11,7 @@ export function createDefaultMechanicsInstanceData() {
       stages: [],
     },
     statusBlocks: [],
+    storyStatusSurfaces: [],
     guards: [],
   };
 }

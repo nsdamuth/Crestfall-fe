@@ -7,6 +7,7 @@ export const MECHANICS_MODULE_ASSEMBLY_SECTION_IDS = Object.freeze({
   commands: "mechanics-runtime-commands",
   defaults: "mechanics-runtime-defaults",
   statusBlocks: "mechanics-runtime-status-blocks",
+  storyStatusSurfaces: "mechanics-runtime-story-status-surfaces",
   guards: "mechanics-runtime-guards",
 });
 
@@ -16,6 +17,7 @@ export const DEFAULT_MECHANICS_MODULE_ASSEMBLY_SECTION_STATE = Object.freeze({
   commands: false,
   defaults: false,
   statusBlocks: false,
+  storyStatusSurfaces: false,
   guards: false,
 });
 

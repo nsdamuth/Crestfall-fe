@@ -30,6 +30,13 @@ const actorSurface = {
       source: { domain: "STATS_POOLS", kind: "POOL" },
     },
     {
+      id: "gold",
+      label: "Gold",
+      status: "RESOLVED",
+      displayValue: "12 G",
+      source: { domain: "WALLET", kind: "POOL" },
+    },
+    {
       id: "strength",
       label: "Strength",
       status: "RESOLVED",
@@ -52,13 +59,15 @@ const projected = buildStoryRoomStatusSurfacePresentation(actorSurface);
 assert.equal(projected.variant, "ACTOR_MECHANICS");
 assert.equal(projected.progression.length, 1);
 assert.equal(projected.pools.length, 1);
+assert.equal(projected.wallets.length, 1);
+assert.equal(projected.wallets[0].displayValue, "12 G");
 assert.equal(projected.primaryStats.length, 1);
 assert.equal(projected.details.length, 1);
 assert.equal(projected.hasDetails, true);
 assert.equal(buildStoryRoomStatusShortLabel("Strength"), "STR");
 assert.deepEqual(
   getPersistentStatusSurfaceDomains([actorSurface]),
-  ["PROGRESSION", "STATS_POOLS"]
+  ["PROGRESSION", "STATS_POOLS", "WALLET"]
 );
 
 const shell = readFileSync(
@@ -90,6 +99,7 @@ assert.match(hook, /fetchStoryRoomStatusSurfaces/);
 assert.match(messageVm, /shouldSuppressPersistentSnapshotBlock/);
 assert.match(messageVm, /progression_actor_/);
 assert.match(messageVm, /stats_pools_actor_/);
+assert.match(hostView, /surface\.wallets/);
 assert.match(hostView, /surface\.details/);
 assert.match(hostView, /aria-expanded/);
 assert.doesNotMatch(hostView, /Crimson Sphinx|Iron Rank|Valentina/i);
@@ -102,6 +112,7 @@ console.log(
       persistentTopSurfaceWired: true,
       persistentBottomSurfaceWired: true,
       polishedActorMechanicsFooterClassification: true,
+      walletBalancesHaveDedicatedActorHudRow: true,
       derivedStatsCollapseIntoDetail: true,
       mobileResponsivePresentationOwnedByView: true,
       persistentSnapshotMessageBlocksSuppressedWhenHudOwnsDomain: true,

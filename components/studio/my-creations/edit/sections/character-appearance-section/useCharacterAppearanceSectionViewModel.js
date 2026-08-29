@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { visualHeritageReferenceOptions } from "@/components/studio/create/character/constants/constants";
+import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Character Editor",
@@ -13,8 +14,14 @@ const DEFAULT_COPY = Object.freeze({
   clothingLabel: "Clothing Style",
   emptyClothingDescription:
     "No default clothing source selected. Choose a single Outfit or a Wardrobe.",
+  imagePresetLabel: "Default Image Preset",
+  emptyImagePresetDescription:
+    "No default image preset selected. Image Studio will use its normal preset behavior.",
+  imagePresetHelpText:
+    "Used automatically when this character is selected for image generation. Image Studio can still override it per generation.",
   noDescriptionLabel: "No description.",
   selectedClothingFallbackTitle: "Selected Clothing Source",
+  selectedImagePresetFallbackTitle: "Selected Image Preset",
 });
 
 const PLACEHOLDER_IMAGE_URL = "/images/placeholder-card.jpg";
@@ -124,6 +131,14 @@ export function normalizeDefaultWardrobeSelection(wardrobe = {}) {
   };
 }
 
+export function normalizeDefaultImagePresetSelection(imagePreset = {}) {
+  return {
+    default_image_preset_id: imagePreset.id || null,
+    default_image_preset_title:
+      imagePreset.title || imagePreset?.data?.name || "Untitled Image Preset",
+  };
+}
+
 export function getClearedDefaultClothingFields() {
   return {
     clothing_source: {
@@ -154,6 +169,13 @@ export function getClearedDefaultClothingFields() {
     default_wardrobe_description: "",
     default_wardrobe_image_url: "",
     default_wardrobe_content_rating: "",
+  };
+}
+
+export function getClearedDefaultImagePresetFields() {
+  return {
+    default_image_preset_id: null,
+    default_image_preset_title: null,
   };
 }
 
@@ -201,13 +223,76 @@ export function getSelectedClothingSummary(data = {}) {
   };
 }
 
+export function getSelectedImagePresetSummary(data = {}, imagePresets = []) {
+  const selectedId = String(data.default_image_preset_id || "").trim();
+  if (!selectedId) {
+    return {
+      hasSelection: false,
+      id: "",
+      title: "",
+      description: "",
+      imageUrl: PLACEHOLDER_IMAGE_URL,
+      buttonLabel: "Select Preset",
+    };
+  }
+
+  const selectedPreset = (Array.isArray(imagePresets) ? imagePresets : []).find(
+    (creation) => String(creation?.id || "") === selectedId
+  );
+
+  return {
+    hasSelection: true,
+    id: selectedId,
+    title:
+      selectedPreset?.title ||
+      selectedPreset?.data?.name ||
+      data.default_image_preset_title ||
+      "Selected Image Preset",
+    description:
+      selectedPreset?.description ||
+      selectedPreset?.data?.description ||
+      selectedPreset?.data?.prompt_guidance ||
+      "",
+    imageUrl: selectedPreset
+      ? getCreationImageUrl(selectedPreset)
+      : PLACEHOLDER_IMAGE_URL,
+    buttonLabel: "Change Preset",
+  };
+}
+
 export function useCharacterAppearanceSectionViewModel({
   form = {},
   updateDataField = null,
 } = {}) {
   const [activePicker, setActivePicker] = useState(null);
+  const [imagePresets, setImagePresets] = useState([]);
   const appearanceData = form?.data || {};
   const selectedClothing = getSelectedClothingSummary(appearanceData);
+  const selectedImagePreset = getSelectedImagePresetSummary(
+    appearanceData,
+    imagePresets
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchOwnedCreations(
+      { type: "IMAGE_PRESET" },
+      "Image presets could not be loaded."
+    )
+      .then((creations) => {
+        if (!cancelled) {
+          setImagePresets(Array.isArray(creations) ? creations : []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setImagePresets([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function applyFields(fields) {
     Object.entries(fields).forEach(([field, value]) => {
@@ -224,6 +309,10 @@ export function useCharacterAppearanceSectionViewModel({
     applyFields(getClearedDefaultClothingFields());
   }
 
+  function handleClearDefaultImagePreset() {
+    applyFields(getClearedDefaultImagePresetFields());
+  }
+
   return {
     ...DEFAULT_COPY,
     appearanceData,
@@ -231,16 +320,21 @@ export function useCharacterAppearanceSectionViewModel({
     activePicker,
     selectedOutfitId: appearanceData.default_outfit_id || "",
     selectedWardrobeId: appearanceData.default_wardrobe_id || "",
+    selectedImagePresetId: appearanceData.default_image_preset_id || "",
     selectedClothing,
+    selectedImagePreset,
     placeholderImageUrl: PLACEHOLDER_IMAGE_URL,
     normalizeDefaultOutfitSelection,
     normalizeDefaultWardrobeSelection,
+    normalizeDefaultImagePresetSelection,
     onChangeCharacterField: (field, value) =>
       updateDataField?.(field, value),
     onPickOutfit: () => setActivePicker("OUTFIT"),
     onPickWardrobe: () => setActivePicker("WARDROBE"),
+    onPickImagePreset: () => setActivePicker("IMAGE_PRESET"),
     onClosePicker: () => setActivePicker(null),
     onApplySelection: handleApplySelection,
     onClearDefaultClothing: handleClearDefaultClothing,
+    onClearDefaultImagePreset: handleClearDefaultImagePreset,
   };
 }

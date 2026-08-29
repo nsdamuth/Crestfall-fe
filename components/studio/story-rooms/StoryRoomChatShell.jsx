@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
+import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
 import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
 import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
@@ -20,7 +21,7 @@ export default function StoryRoomChatShell({ roomId }) {
   const chat = useStoryRoomChat(roomId);
 
   const onRoomDeleted = useCallback(() => {
-    router.push("/studio/story-rooms");
+    router.push("/studio/v2/stories");
   }, [router]);
 
   const viewProps = useStoryRoomChatShellViewModel({
@@ -30,15 +31,23 @@ export default function StoryRoomChatShell({ roomId }) {
   });
 
   return (
-    <StoryRoomChatShellView
-      {...viewProps}
-      CastPanelComponent={StoryRoomCastPanel}
-      ComposerComponent={StoryRoomComposer}
-      MobileDrawerComponent={StoryRoomMobileDrawer}
-      RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
-      StatePanelComponent={StoryRoomStatePanel}
-      StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
-      TranscriptComponent={StoryRoomTranscript}
-    />
+    <>
+      <StoryRoomChatShellView
+        {...viewProps}
+        CastPanelComponent={StoryRoomCastPanel}
+        ComposerComponent={StoryRoomComposer}
+        MobileDrawerComponent={StoryRoomMobileDrawer}
+        RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
+        StatePanelComponent={StoryRoomStatePanel}
+        StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
+        TranscriptComponent={StoryRoomTranscript}
+      />
+
+      {viewProps.playerCharacterPickerProps ? (
+        <DefaultPlayerCharacterPickerModal
+          {...viewProps.playerCharacterPickerProps}
+        />
+      ) : null}
+    </>
   );
 }

@@ -535,6 +535,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     resolvePendingGeneration,
     failPendingGeneration,
     applyImageReassignment,
+    applyImageRename,
   } = useImageGenerationHistory();
 
   const {
@@ -783,6 +784,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       onLoadMoreHistory: loadMoreImageGenerationHistory,
       onCoinBalanceChange: setCoinBalanceFromServer,
       onImageReassigned: applyImageReassignment,
+      onImageRenamed: applyImageRename,
     },
     composerProps: {
       mode,

@@ -1,4 +1,4 @@
-import { Shirt, X } from "lucide-react";
+import { Shirt, Sparkles, X } from "lucide-react";
 
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
@@ -13,7 +13,7 @@ function SelectedClothingCard({
   onClearDefaultClothing = null,
 }) {
   return (
-    <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+    <div className="min-w-0 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
       <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {clothingLabel}
       </p>
@@ -32,9 +32,7 @@ function SelectedClothingCard({
               <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
                 {selectedClothing.label}
               </p>
-              {/* Tier 6 (ED1E section 3): an entry value never renders
-                  at display size or family. */}
-              <p className="mt-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+              <p className="mt-[var(--space-1)] break-words text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
                 {selectedClothing.title || selectedClothingFallbackTitle}
               </p>
               <p className="mt-[var(--space-2)] line-clamp-2 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
@@ -82,6 +80,81 @@ function SelectedClothingCard({
   );
 }
 
+function SelectedImagePresetCard({
+  imagePresetLabel = "Default Image Preset",
+  selectedImagePreset = {},
+  emptyImagePresetDescription = "",
+  imagePresetHelpText = "",
+  noDescriptionLabel = "No description.",
+  selectedImagePresetFallbackTitle = "Selected Image Preset",
+  onPickImagePreset = null,
+  onClearDefaultImagePreset = null,
+}) {
+  return (
+    <div className="min-w-0 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        {imagePresetLabel}
+      </p>
+
+      <div className="mt-[var(--space-3)]">
+        {selectedImagePreset.hasSelection ? (
+          <div className="flex flex-wrap items-start gap-[var(--space-4)]">
+            <div
+              className="h-24 w-24 shrink-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${selectedImagePreset.imageUrl})`,
+              }}
+            />
+
+            <div className="min-w-0 flex-1">
+              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+                Image Preset
+              </p>
+              <p className="mt-[var(--space-1)] break-words text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
+                {selectedImagePreset.title || selectedImagePresetFallbackTitle}
+              </p>
+              <p className="mt-[var(--space-2)] line-clamp-2 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {selectedImagePreset.description || noDescriptionLabel}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onClearDefaultImagePreset?.()}
+              className="cf-btn cf-btn--danger"
+              aria-label="Clear default image preset"
+            >
+              <X size={16} />
+              Clear
+            </button>
+          </div>
+        ) : (
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {emptyImagePresetDescription}
+          </p>
+        )}
+
+        <div className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-3)]">
+          <button
+            type="button"
+            onClick={() => onPickImagePreset?.()}
+            className="cf-btn cf-btn--primary"
+          >
+            <Sparkles size={14} />
+            {selectedImagePreset.buttonLabel || "Select Preset"}
+          </button>
+        </div>
+
+        {imagePresetHelpText ? (
+          <p className="mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {imagePresetHelpText}
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 export default function CharacterAppearanceSectionView({
   sectionEyebrow = "Character Editor",
   sectionTitle = "Appearance",
@@ -93,11 +166,18 @@ export default function CharacterAppearanceSectionView({
   clothingLabel = "Clothing Style",
   selectedClothing = {},
   emptyClothingDescription = "",
+  imagePresetLabel = "Default Image Preset",
+  selectedImagePreset = {},
+  emptyImagePresetDescription = "",
+  imagePresetHelpText = "",
   noDescriptionLabel = "No description.",
   selectedClothingFallbackTitle = "Selected Clothing Source",
+  selectedImagePresetFallbackTitle = "Selected Image Preset",
   onPickOutfit = null,
   onPickWardrobe = null,
   onClearDefaultClothing = null,
+  onPickImagePreset = null,
+  onClearDefaultImagePreset = null,
 }) {
   return (
     <div>
@@ -107,22 +187,35 @@ export default function CharacterAppearanceSectionView({
         body={sectionDescription}
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid min-w-0 gap-4 md:grid-cols-2 [&>*]:min-w-0">
         {skinToneControl}
         {eyeColorControl}
         {hairControl}
         {visualHeritageControl}
 
-        <SelectedClothingCard
-          clothingLabel={clothingLabel}
-          selectedClothing={selectedClothing}
-          emptyClothingDescription={emptyClothingDescription}
-          noDescriptionLabel={noDescriptionLabel}
-          selectedClothingFallbackTitle={selectedClothingFallbackTitle}
-          onPickOutfit={onPickOutfit}
-          onPickWardrobe={onPickWardrobe}
-          onClearDefaultClothing={onClearDefaultClothing}
-        />
+        <div className="md:col-span-2 grid min-w-0 gap-[var(--space-5)] xl:grid-cols-2 [&>*]:min-w-0">
+          <SelectedClothingCard
+            clothingLabel={clothingLabel}
+            selectedClothing={selectedClothing}
+            emptyClothingDescription={emptyClothingDescription}
+            noDescriptionLabel={noDescriptionLabel}
+            selectedClothingFallbackTitle={selectedClothingFallbackTitle}
+            onPickOutfit={onPickOutfit}
+            onPickWardrobe={onPickWardrobe}
+            onClearDefaultClothing={onClearDefaultClothing}
+          />
+
+          <SelectedImagePresetCard
+            imagePresetLabel={imagePresetLabel}
+            selectedImagePreset={selectedImagePreset}
+            emptyImagePresetDescription={emptyImagePresetDescription}
+            imagePresetHelpText={imagePresetHelpText}
+            noDescriptionLabel={noDescriptionLabel}
+            selectedImagePresetFallbackTitle={selectedImagePresetFallbackTitle}
+            onPickImagePreset={onPickImagePreset}
+            onClearDefaultImagePreset={onClearDefaultImagePreset}
+          />
+        </div>
       </div>
     </div>
   );

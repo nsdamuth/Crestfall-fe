@@ -1,5 +1,5 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v1.1";
+  "story-room-chat-shell.view.v1.2";
 
 /**
  * @typedef {Object} StoryRoomChatShellViewProps
@@ -15,6 +15,8 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {Object} castPanelProps
  * @property {Object} mobileCastPanelProps
  * @property {Object} transcriptProps
+ * @property {Object|null} playerCharacterPickerProps binding-shell props for the
+ *   transient pre-first-message Player Character picker
  * @property {Object} composerProps
  * @property {Object} desktopStatePanelProps
  * @property {Object} mobileStatePanelProps

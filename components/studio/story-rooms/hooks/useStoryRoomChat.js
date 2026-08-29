@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchStoryRoom,
+  fetchStoryRoomCommandCatalog,
   fetchStoryRoomRegistryNpcs,
   fetchStoryRoomStatusSurfaces,
   exportStoryRoomTranscript,
@@ -526,12 +527,52 @@ export default function useStoryRoomChat(roomId) {
   const [registryNpcError, setRegistryNpcError] = useState("");
   const [randomLikedLoading, setRandomLikedLoading] = useState(false);
   const [randomLikedError, setRandomLikedError] = useState("");
+  const [commandCatalog, setCommandCatalog] = useState({
+    version: "mechanics_command_catalog_v1",
+    status: "EMPTY",
+    entries: [],
+  });
+  const [commandCatalogError, setCommandCatalogError] = useState("");
   const [statusSurfaces, setStatusSurfaces] = useState({
     version: "story_status_surface_projection_v1",
     status: "EMPTY",
     surfaces: [],
   });
   const [statusSurfaceError, setStatusSurfaceError] = useState("");
+
+  const reloadCommandCatalog = useCallback(
+    async ({ requestedSpeakerId = "AUTO" } = {}) => {
+      if (!roomId) return null;
+
+      try {
+        const catalog = await fetchStoryRoomCommandCatalog(roomId, {
+          requestedSpeakerId,
+        });
+        const nextCatalog =
+          catalog && typeof catalog === "object"
+            ? catalog
+            : {
+                version: "mechanics_command_catalog_v1",
+                status: "EMPTY",
+                entries: [],
+              };
+        setCommandCatalog(nextCatalog);
+        setCommandCatalogError("");
+        return nextCatalog;
+      } catch (catalogError) {
+        setCommandCatalog({
+          version: "mechanics_command_catalog_v1",
+          status: "EMPTY",
+          entries: [],
+        });
+        setCommandCatalogError(
+          catalogError?.message || "Story room commands could not be loaded."
+        );
+        return null;
+      }
+    },
+    [roomId]
+  );
 
   const reloadStatusSurfaces = useCallback(async () => {
     if (!roomId) return null;
@@ -571,6 +612,7 @@ export default function useStoryRoomChat(roomId) {
       const [data] = await Promise.all([
         fetchStoryRoom(roomId),
         reloadStatusSurfaces(),
+        reloadCommandCatalog(),
       ]);
       setSnapshot(data || null);
 
@@ -594,7 +636,7 @@ export default function useStoryRoomChat(roomId) {
     } finally {
       setLoading(false);
     }
-  }, [reloadStatusSurfaces, roomId]);
+  }, [reloadCommandCatalog, reloadStatusSurfaces, roomId]);
 
   useEffect(() => {
     reload();
@@ -697,6 +739,9 @@ const sendMessage = useCallback(
       });
 
       void reloadStatusSurfaces();
+      void reloadCommandCatalog({
+        requestedSpeakerId: requestedSpeakerId || "AUTO",
+      });
       return data;
     } catch (sendError) {
       if (optimisticUserMessage) {
@@ -727,7 +772,7 @@ const sendMessage = useCallback(
       setSending(false);
     }
   },
-  [reloadStatusSurfaces, roomId, sending]
+  [reloadCommandCatalog, reloadStatusSurfaces, roomId, sending]
 );
   const exportTranscript = useCallback(
     async ({
@@ -811,6 +856,7 @@ const sendMessage = useCallback(
           setRegistryNpcs(data.registryNpcs);
         }
 
+        void reloadCommandCatalog();
         return data;
       } catch (loadError) {
         setRegistryNpcError(
@@ -821,7 +867,7 @@ const sendMessage = useCallback(
         setRegistryNpcActionKey("");
       }
     },
-    [roomId, registryNpcActionKey]
+    [reloadCommandCatalog, roomId, registryNpcActionKey]
   );
 
   const unloadRegistryNpc = useCallback(
@@ -845,6 +891,7 @@ const sendMessage = useCallback(
           setRegistryNpcs(data.registryNpcs);
         }
 
+        void reloadCommandCatalog();
         return data;
       } catch (unloadError) {
         setRegistryNpcError(
@@ -855,7 +902,7 @@ const sendMessage = useCallback(
         setRegistryNpcActionKey("");
       }
     },
-    [roomId, registryNpcActionKey]
+    [reloadCommandCatalog, roomId, registryNpcActionKey]
   );
 
   const loadRandomLikedCharacter = useCallback(async () => {
@@ -871,6 +918,7 @@ const sendMessage = useCallback(
         setSnapshot(data.snapshot);
       }
 
+      void reloadCommandCatalog();
       return data;
     } catch (loadError) {
       setRandomLikedError(
@@ -881,7 +929,7 @@ const sendMessage = useCallback(
     } finally {
       setRandomLikedLoading(false);
     }
-  }, [roomId, randomLikedLoading]);
+  }, [reloadCommandCatalog, roomId, randomLikedLoading]);
 
   const setPlayerCharacter = useCallback(
     async (playerCharacterId) => {
@@ -898,6 +946,7 @@ const sendMessage = useCallback(
 
         setSnapshot(data || null);
         void reloadStatusSurfaces();
+        void reloadCommandCatalog();
 
         return data;
       } catch (setError) {
@@ -909,7 +958,7 @@ const sendMessage = useCallback(
         setSettingPlayerCharacter(false);
       }
     },
-    [reloadStatusSurfaces, roomId, settingPlayerCharacter]
+    [reloadCommandCatalog, reloadStatusSurfaces, roomId, settingPlayerCharacter]
   );
   const room = useMemo(
     () => buildRoomViewModel(snapshot, roomId),
@@ -955,6 +1004,9 @@ const sendMessage = useCallback(
     randomLikedLoading,
     randomLikedError,
     loadRandomLikedCharacter,
+    commandCatalog,
+    commandCatalogError,
+    reloadCommandCatalog,
     statusSurfaces,
     statusSurfaceError,
     reloadStatusSurfaces,

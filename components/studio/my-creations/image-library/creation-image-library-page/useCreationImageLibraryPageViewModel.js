@@ -10,6 +10,9 @@ import {
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
 import { deleteImageOutput } from "@/lib/client/studio/media/imageOutputClient";
+import {
+  getImageOutputDisplayTitle,
+} from "@/lib/shared/media/imageOutputNaming";
 import { useCreationLibraryPassOwnerViewModel } from "./useCreationLibraryPassOwnerViewModel";
 
 export const FEATURED_SLOT_ORDER = ["primary", "alt1", "alt2", "alt3"];
@@ -120,12 +123,17 @@ export function normalizeCreationLibraryImage(image, index = 0) {
   const imageOutputId = getCreationLibraryImageOutputId(image);
   const id = String(image?.id || imageOutputId || `library-image-${index}`);
 
+  const title = imageOutputId
+    ? getImageOutputDisplayTitle(image)
+    : getImageLabel(image);
+
   return {
     id,
     imageOutputId,
+    title,
     thumbnailUrl: getCreationLibraryThumbnailUrl(image),
     displayUrl: getCreationLibraryFullImageUrl(image),
-    label: getImageLabel(image),
+    label: title,
     aspectRatio: width && height ? `${width} / ${height}` : "3 / 4",
     moderationStatus: image?.moderationStatus || "CLEAR",
     contentRating: image?.contentRating || "SFW",
@@ -544,6 +552,10 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
         onToggleLike: toggleLikedImage,
         onToggleBookmark: toggleBookmarkedImage,
         onDeleteItem: handleDeleteImage,
+        allowRename: true,
+        onRenameItem: async () => {
+          await reload?.();
+        },
         onReassignItem: async (_item, result) => {
           if (result?.coinBalance !== undefined) {
             setCoinBalanceFromServer?.(result.coinBalance);

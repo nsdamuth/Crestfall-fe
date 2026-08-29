@@ -21,7 +21,7 @@ test("Story Room Chat Shell stays thin and owns app bindings", () => {
   assert.match(shell, /CastPanelComponent=\{StoryRoomCastPanel\}/);
   assert.match(shell, /RuntimeMechanicsPanelComponent=\{StoryRoomRuntimeMechanicsPanel\}/);
   assert.doesNotMatch(shell, /window\.confirm/);
-  assert.match(shell, /router\.push\("\/studio\/story-rooms"\)/);
+  assert.match(shell, /router\.push\("\/studio\/v2\/stories"\)/);
   assert.doesNotMatch(shell, /useState|deleteStoryRoom|resolveLocalStoryRoomCommand/);
 });
 
@@ -120,7 +120,7 @@ test("delete wording and navigation behavior remain explicit", () => {
   assert.match(viewModel, /isConfirmingDeleteRoom/);
   assert.match(viewModel, /await deleteStoryRoom\(roomId\)/);
   assert.match(viewModel, /onRoomDeleted\?\.\(\)/);
-  assert.match(shell, /\/studio\/story-rooms/);
+  assert.match(shell, /\/studio\/v2\/stories/);
 });
 
 test("contract, fixtures, and protected preview cover shell states", () => {

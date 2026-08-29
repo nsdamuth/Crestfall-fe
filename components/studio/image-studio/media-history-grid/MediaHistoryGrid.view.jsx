@@ -8,6 +8,7 @@ import {
   Film,
   Grid2X2,
   Image as ImageIcon,
+  Search,
   SlidersHorizontal,
   Loader2,
   Trash2,
@@ -105,8 +106,11 @@ function useMasonryCardLayout(item, masonryRowHeight, masonryGap) {
 function MediaFilterContents({
   filterOptions = [],
   activeFilter = "ALL",
+  searchQuery = "",
   FilterPill,
   onSetFilter,
+  onChangeSearchQuery,
+  onClearFilters,
   onClose,
   mobile = false,
 }) {
@@ -116,6 +120,11 @@ function MediaFilterContents({
 
   function choose(value) {
     onSetFilter?.(value);
+    onClose?.();
+  }
+
+  function clearAll() {
+    onClearFilters?.();
     onClose?.();
   }
 
@@ -132,12 +141,31 @@ function MediaFilterContents({
         </div>
         <button
           type="button"
-          onClick={() => choose("ALL")}
+          onClick={clearAll}
           className="shrink-0 text-[length:var(--text-label)] text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
         >
           Clear all
         </button>
       </div>
+
+      <label className="mt-[var(--space-5)] block">
+        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          Search assets
+        </span>
+        <span className="mt-[var(--space-2)] flex items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-3)]">
+          <Search size={15} className="shrink-0 text-[var(--ink-faint)]" aria-hidden="true" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => onChangeSearchQuery?.(event.target.value)}
+            placeholder="Character, outfit, preset, or prompt..."
+            className="min-h-[var(--control-md)] min-w-0 flex-1 bg-transparent text-[length:var(--text-ui)] text-[var(--ink)] outline-none placeholder:text-[var(--ink-faint)]"
+          />
+        </span>
+        <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+          Search generated media by the Crestfall assets used to create it.
+        </span>
+      </label>
 
       <div className="mt-[var(--space-5)]">
         <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">Media</p>
@@ -177,6 +205,7 @@ function MediaFilterContents({
 export default function MediaHistoryGridView({
   filterOptions = [],
   activeFilter = "ALL",
+  searchQuery = "",
   filtersOpen = false,
   compactMobileGrid = true,
   mobileGridClass = "grid-cols-2",
@@ -201,6 +230,8 @@ export default function MediaHistoryGridView({
   masonryRowHeight = 8,
   masonryGap = 12,
   onSetFilter,
+  onChangeSearchQuery,
+  onClearFilters,
   onToggleFilters,
   onToggleMobileGrid,
   mobilePrimaryActionLabel = "",
@@ -249,7 +280,7 @@ export default function MediaHistoryGridView({
             <button
               type="button"
               onClick={onMobilePrimaryAction}
-              className="cf-btn cf-btn--primary cf-btn--sm min-[1100px]:hidden"
+              className="cf-btn cf-btn--primary cf-btn--sm min-[1100px]:!hidden"
             >
               <ImageIcon size={14} />
               {mobilePrimaryActionLabel}
@@ -271,7 +302,7 @@ export default function MediaHistoryGridView({
           <button
             type="button"
             onClick={onToggleMobileGrid}
-            className="cf-btn cf-btn--secondary cf-btn--sm md:hidden"
+            className="cf-btn cf-btn--secondary cf-btn--sm"
           >
             <Grid2X2 size={14} />
             {compactMobileGrid ? "Large" : "Grid"}
@@ -292,12 +323,15 @@ export default function MediaHistoryGridView({
 
         {filtersOpen ? (
           <>
-            <div className="absolute right-0 top-full z-40 mt-[var(--space-2)] hidden w-[20rem] rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--panel-glass)] p-[var(--space-4)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-panel)] md:block">
+            <div className="absolute right-0 top-full z-40 mt-[var(--space-2)] hidden w-[22rem] rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] shadow-[var(--shadow-modal)] md:block">
               <MediaFilterContents
                 filterOptions={filterOptions}
                 activeFilter={activeFilter}
+                searchQuery={searchQuery}
                 FilterPill={FilterPill}
                 onSetFilter={onSetFilter}
+                onChangeSearchQuery={onChangeSearchQuery}
+                onClearFilters={onClearFilters}
                 onClose={onToggleFilters}
               />
             </div>
@@ -314,8 +348,11 @@ export default function MediaHistoryGridView({
                 <MediaFilterContents
                   filterOptions={filterOptions}
                   activeFilter={activeFilter}
+                  searchQuery={searchQuery}
                   FilterPill={FilterPill}
                   onSetFilter={onSetFilter}
+                  onChangeSearchQuery={onChangeSearchQuery}
+                  onClearFilters={onClearFilters}
                   onClose={onToggleFilters}
                   mobile
                 />
@@ -402,7 +439,7 @@ export default function MediaHistoryGridView({
 
       {visibleMediaItems.length ? (
         <section
-          className={`grid ${mobileGridClass} sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4`}
+          className={`grid ${mobileGridClass}`}
           style={{
             gridAutoRows: `${masonryRowHeight}px`,
             gap: `${masonryGap}px`,

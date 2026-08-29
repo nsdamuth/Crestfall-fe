@@ -39,6 +39,9 @@ import {
   normalizeMechanicsStatusBlocks,
 } from "../mechanics-status-blocks/mechanicsStatusBlocksNormalization.js";
 import {
+  normalizeStoryStatusSurfaces,
+} from "../mechanics-story-status-surfaces/storyStatusSurfacesNormalization.js";
+import {
   normalizeMechanicsTracker,
 } from "../mechanics-trackers/mechanicsTrackersNormalization.js";
 import {
@@ -241,6 +244,36 @@ export function addMechanicsAssemblyCommand(commands) {
   ];
 }
 
+export function buildStoryStatusSurfaceMechanicsSourceOptions({
+  trackers = [],
+  defaults = {},
+} = {}) {
+  const safeDefaults = asMechanicsObject(defaults);
+  return [
+    ...asMechanicsArray(trackers).map((tracker, index) => {
+      const normalized = normalizeMechanicsTracker(tracker, index);
+      return {
+        bucket: "METER",
+        valueId: normalized.id,
+        label: normalized.label || normalized.id,
+      };
+    }),
+    ...[
+      ["FLAG", safeDefaults.flags],
+      ["COUNTER", safeDefaults.counters],
+      ["STAGE", safeDefaults.stages],
+    ].flatMap(([bucket, entries]) =>
+      asMechanicsArray(entries).map((entry) => ({
+        bucket,
+        valueId: normalizeMechanicsString(entry?.id),
+        label:
+          normalizeMechanicsString(entry?.label || entry?.title || entry?.name) ||
+          normalizeMechanicsString(entry?.id),
+      }))
+    ),
+  ].filter((option) => option.valueId);
+}
+
 export function buildMechanicsModuleAssemblyProjection(value) {
   const data = normalizeMechanicsDocument(value);
   const instanceData = asMechanicsObject(data.instanceData);
@@ -248,6 +281,12 @@ export function buildMechanicsModuleAssemblyProjection(value) {
   const commands = asMechanicsArray(instanceData.commands);
   const defaults = normalizeMechanicsDefaults(instanceData.defaults);
   const statusBlocks = normalizeMechanicsStatusBlocks(instanceData.statusBlocks);
+  const storyStatusSurfaces = normalizeStoryStatusSurfaces(
+    instanceData.storyStatusSurfaces ||
+      instanceData.story_status_surfaces ||
+      instanceData.statusSurfaces ||
+      instanceData.status_surfaces
+  );
   const guards = normalizeMechanicsGuards(instanceData.guards);
 
   const trackerSummary = trackers
@@ -255,6 +294,8 @@ export function buildMechanicsModuleAssemblyProjection(value) {
     .filter(Boolean)
     .slice(0, 3)
     .join(", ");
+  const storyStatusSurfaceMechanicsSourceOptions =
+    buildStoryStatusSurfaceMechanicsSourceOptions({ trackers, defaults });
   const commandSummary = commands
     .map((command, index) => {
       const invocation = normalizeCommandInvocation(
@@ -275,6 +316,8 @@ export function buildMechanicsModuleAssemblyProjection(value) {
     commands,
     defaults,
     statusBlocks,
+    storyStatusSurfaces,
+    storyStatusSurfaceMechanicsSourceOptions,
     guards,
     tagsText: asMechanicsArray(data.tags).join(", "),
     priority: Number.isFinite(Number(data.priority)) ? String(data.priority) : "65",

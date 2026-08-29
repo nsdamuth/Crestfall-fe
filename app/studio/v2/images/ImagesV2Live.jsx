@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
@@ -90,8 +90,10 @@ function LiveSavePreset({ saveProps, backLabel = null }) {
 export default function ImagesV2Live() {
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
+  const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
+  const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const live = useImagesV2LiveViewModel({
-    onOpenCameraPresetPicker: () => setCameraPickerOpen(true),
+    onOpenCameraPresetPicker: openCameraPresetPicker,
   });
   const nestedBackLabel = mobileCreatorOpen ? "Back to Image Editor" : null;
   const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
@@ -189,7 +191,7 @@ export default function ImagesV2Live() {
       {cameraPickerOpen ? (
         <ImagesV2CameraPresetPicker
           {...live.cameraPickerProps}
-          onClose={() => setCameraPickerOpen(false)}
+          onClose={closeCameraPresetPicker}
         />
       ) : null}
     </>

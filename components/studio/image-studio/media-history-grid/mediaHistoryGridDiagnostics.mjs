@@ -117,6 +117,38 @@ test("contract, fixtures, and protected preview are explicit", () => {
   assert.match(preview, /Load More completed/);
 });
 
+
+test("V2 Image Library owns asset search, opaque filters, and working Grid/Large density", () => {
+  const viewModel = read(
+    "components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel.js"
+  );
+  const view = read(
+    "components/studio/image-studio/media-history-grid/MediaHistoryGrid.view.jsx"
+  );
+  const contract = read(
+    "components/studio/image-studio/media-history-grid/MediaHistoryGrid.contract.js"
+  );
+
+  assert.match(viewModel, /fetchOwnedCreations/);
+  assert.match(viewModel, /creationSearchLabelsById/);
+  assert.match(viewModel, /searchQuery/);
+  assert.match(viewModel, /sourceAssetsSnapshot|source_assets_snapshot/);
+  assert.match(viewModel, /grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3/);
+  assert.match(viewModel, /grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4/);
+
+  assert.match(view, /Search assets/);
+  assert.match(view, /Character, outfit, preset, or prompt/);
+  assert.match(view, /bg-\[var\(--surface-2\)\]/);
+  assert.doesNotMatch(view, /bg-\[var\(--panel-glass\)\]/);
+  assert.match(view, /min-\[1100px\]:!hidden/);
+  assert.match(view, /\{compactMobileGrid \? "Large" : "Grid"\}/);
+  assert.match(view, /className=\{`grid \$\{mobileGridClass\}`\}/);
+
+  assert.match(contract, /MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1\.3\.0"/);
+  assert.match(contract, /onChangeSearchQuery/);
+  assert.match(contract, /onClearFilters/);
+});
+
 test("documentation and diagnostics command remain discoverable", () => {
   const readme = read(
     "components/studio/image-studio/media-history-grid/README.md"

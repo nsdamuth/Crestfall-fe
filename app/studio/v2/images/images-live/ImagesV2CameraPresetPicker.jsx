@@ -11,26 +11,29 @@ function CameraOption({ option, onSelect }) {
       type="button"
       onClick={() => onSelect?.(option.value)}
       aria-pressed={option.selected}
-      className={`min-h-[7rem] rounded-[var(--radius-md)] border p-[var(--space-4)] text-left transition-colors ${
+      className={`group flex min-h-[var(--control-lg)] w-full items-start justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-left transition-colors duration-[var(--dur-hover)] ${
         option.selected
-          ? "border-[var(--gold-ornament)] bg-[var(--fill)]"
-          : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--line)] hover:bg-[var(--fill-whisper)]"
+          ? "border-[var(--gold-ornament)]/55 bg-[var(--fill)]"
+          : "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)] hover:bg-[var(--state-hover-fill)] active:bg-[var(--state-pressed-fill)]"
       }`}
     >
-      <span className="flex items-start justify-between gap-[var(--space-3)]">
-        <span className="min-w-0">
-          <span className="block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
-            {option.label}
-          </span>
-          <span className="mt-[var(--space-2)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-            {option.description}
-          </span>
+      <span className="min-w-0 flex-1">
+        <span className={`block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${option.selected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}>
+          {option.label}
         </span>
-        {option.selected ? (
-          <span className="flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] bg-[var(--gold-ornament)] text-[var(--surface-1)]">
-            <Check size={14} aria-hidden="true" />
-          </span>
-        ) : null}
+        <span className="mt-[var(--space-1)] block line-clamp-2 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+          {option.description}
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        className={`mt-0.5 flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border ${
+          option.selected
+            ? "border-[var(--gold-ornament)] bg-[var(--gold-ornament)] text-[var(--surface-1)]"
+            : "border-[var(--line-whisper)] text-transparent group-hover:border-[var(--line)]"
+        }`}
+      >
+        <Check size={14} />
       </span>
     </button>
   );
@@ -78,7 +81,7 @@ export default function ImagesV2CameraPresetPicker({
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="min-[700px]:w-[min(72rem,calc(100vw-2rem))]"
+      panelClassName="min-[700px]:w-[min(58rem,calc(100vw-2rem))]"
       onClose={onClose}
       ariaLabel="Choose camera treatment"
     >
@@ -96,6 +99,7 @@ export default function ImagesV2CameraPresetPicker({
         </div>
 
         <label className="relative mt-[var(--space-5)] block">
+          <span className="sr-only">Search camera presets</span>
           <Search
             size={16}
             aria-hidden="true"
@@ -112,7 +116,14 @@ export default function ImagesV2CameraPresetPicker({
 
         <div className="mt-[var(--space-5)] max-h-[min(64dvh,46rem)] overflow-y-auto pr-[var(--space-1)]">
           {visibleAutoOption ? (
-            <CameraOption option={visibleAutoOption} onSelect={select} />
+            <section>
+              <h3 className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                Automatic
+              </h3>
+              <div className="mt-[var(--space-3)]">
+                <CameraOption option={visibleAutoOption} onSelect={select} />
+              </div>
+            </section>
           ) : null}
 
           {visibleGroups.length ? (
@@ -122,7 +133,7 @@ export default function ImagesV2CameraPresetPicker({
                   <h3 className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                     {group.label}
                   </h3>
-                  <div className="mt-[var(--space-3)] grid gap-[var(--space-3)] min-[700px]:grid-cols-2 min-[1000px]:grid-cols-3">
+                  <div className="mt-[var(--space-3)] grid gap-[var(--space-2)] min-[760px]:grid-cols-2">
                     {group.options.map((option) => (
                       <CameraOption key={option.value} option={option} onSelect={select} />
                     ))}

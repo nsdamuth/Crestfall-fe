@@ -19,6 +19,8 @@ test("Character Appearance Shell remains a thin LOOM binding", () => {
   assert.match(shell, /<CharacterAppearanceSectionView/);
   assert.match(shell, /<SkinToneModal/);
   assert.match(shell, /<OutfitPickerModal/);
+  assert.match(shell, /creationType="IMAGE_PRESET"/);
+  assert.match(shell, /normalizeDefaultImagePresetSelection/);
   assert.doesNotMatch(shell, /form\.data|updateDataField\?\.\(/);
 });
 
@@ -29,7 +31,7 @@ test("Character Appearance View is API, persistence, and application-picker free
   assert.doesNotMatch(view, /\bfetch\s*\(|supabase|PostGraphile|\/api\//);
   assert.doesNotMatch(
     view,
-    /updateDataField|form\.data|clothing_source|default_outfit_id|default_wardrobe_id/
+    /updateDataField|form\.data|clothing_source|default_outfit_id|default_wardrobe_id|default_image_preset_id/
   );
   assert.doesNotMatch(
     view,
@@ -37,7 +39,7 @@ test("Character Appearance View is API, persistence, and application-picker free
   );
 });
 
-test("Character Appearance ViewModel owns clothing normalization and storage mapping", () => {
+test("Character Appearance ViewModel owns clothing and default image-preset normalization/storage mapping", () => {
   const viewModel = read(
     "components/studio/my-creations/edit/sections/character-appearance-section/useCharacterAppearanceSectionViewModel.js"
   );
@@ -47,10 +49,15 @@ test("Character Appearance ViewModel owns clothing normalization and storage map
   assert.match(viewModel, /clothing_source/);
   assert.match(viewModel, /default_outfit_id/);
   assert.match(viewModel, /default_wardrobe_id/);
+  assert.match(viewModel, /normalizeDefaultImagePresetSelection/);
+  assert.match(viewModel, /getClearedDefaultImagePresetFields/);
+  assert.match(viewModel, /default_image_preset_id/);
+  assert.match(viewModel, /fetchOwnedCreations/);
+  assert.match(viewModel, /type: "IMAGE_PRESET"/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
-test("Character Appearance contract and fixtures cover portable clothing states", () => {
+test("Character Appearance contract and fixtures cover clothing and default image-preset states", () => {
   const contract = read(
     "components/studio/my-creations/edit/sections/character-appearance-section/CharacterAppearanceSection.contract.js"
   );
@@ -60,10 +67,15 @@ test("Character Appearance contract and fixtures cover portable clothing states"
   assert.match(contract, /CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /skinToneControl/);
   assert.match(contract, /onClearDefaultClothing/);
+  assert.match(contract, /selectedImagePreset/);
+  assert.match(contract, /onPickImagePreset/);
+  assert.match(contract, /onClearDefaultImagePreset/);
   assert.match(fixtures, /characterAppearanceSectionOutfitFixture/);
   assert.match(fixtures, /characterAppearanceSectionWardrobeFixture/);
   assert.match(fixtures, /characterAppearanceSectionEmptyFixture/);
   assert.match(fixtures, /characterAppearanceSectionMissingCallbacksFixture/);
+  assert.match(fixtures, /Default Image Preset/);
+  assert.match(fixtures, /Change Preset/);
 });
 
 test("Character Appearance preview is development-only", () => {
@@ -78,10 +90,12 @@ test("Character Appearance preview is development-only", () => {
   assert.match(preview, /CharacterAppearanceSectionView/);
 });
 
-test("Creation Edit retains the public Character Appearance Shell", () => {
-  const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import AppearanceSection from/);
-  assert.match(editShell, /<AppearanceSection/);
+test("Creation Edit registry retains the public Character Appearance Shell", () => {
+  const componentMap = read(
+    "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
+  );
+  assert.match(componentMap, /import AppearanceSection from/);
+  assert.match(componentMap, /appearance:\s*\{\s*Component:\s*AppearanceSection/);
 });
 
 test("Character Appearance package includes its documented handoff", () => {

@@ -90,7 +90,6 @@ export function insufficientCoinsHelpText(coinCost) {
 function baseOptionFields() {
   return [
     { id: "renderStyle", label: "Render Style", value: "auto", options: RENDER_STYLE_OPTIONS },
-    { id: "camera", label: "Camera / Framing", value: "AUTO", options: CAMERA_OPTIONS },
     { id: "wardrobe", label: "Wardrobe Theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
     { id: "aspectRatio", label: "Aspect Ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
     { id: "outputCount", label: "Output Count", value: "1", options: OUTPUT_COUNT_OPTIONS },
@@ -115,6 +114,7 @@ const sharedCallbacks = {
   onChangePrompt: noop,
   onChangeNegativePrompt: noop,
   onChangeOption: noop,
+  onOpenCameraPresetPicker: noop,
   onGenerate: noop,
   onChangeVideoOption: noop,
   onChangeVideoDirection: noop,

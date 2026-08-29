@@ -8,6 +8,7 @@ import {
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
 import { deleteImageOutput } from "@/lib/client/studio/media/imageOutputClient";
+import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 
 export const EAGER_IMAGE_COUNT = 4;
 export const MASONRY_ROW_HEIGHT = 8;
@@ -176,24 +177,84 @@ export function normalizeMediaHistoryItem(item, index = 0) {
   };
 }
 
-export function filterMediaHistoryItems(items, activeFilter) {
+function normalizeSearchValue(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function getMediaHistorySourceCreationIds(item) {
+  const job = item?.job || {};
+  const sourceAssets =
+    job?.sourceAssetsSnapshot || job?.source_assets_snapshot || {};
+
+  return [
+    item?.primarySubjectCreationId,
+    item?.primary_subject_creation_id,
+    job?.primarySubjectCreationId,
+    job?.primary_subject_creation_id,
+    sourceAssets?.characterId,
+    sourceAssets?.character_id,
+    sourceAssets?.playerCharacterId,
+    sourceAssets?.player_character_id,
+    sourceAssets?.poseId,
+    sourceAssets?.pose_id,
+    sourceAssets?.outfitId,
+    sourceAssets?.outfit_id,
+    sourceAssets?.locationId,
+    sourceAssets?.location_id,
+    sourceAssets?.renderingPresetId,
+    sourceAssets?.rendering_preset_id,
+  ]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean);
+}
+
+function getMediaHistorySearchText(item, creationSearchLabelsById = {}) {
+  const job = item?.job || {};
+  const promptSnapshot = job?.promptSnapshot || job?.prompt_snapshot || {};
+  const sourceLabels = getMediaHistorySourceCreationIds(item).map(
+    (creationId) => creationSearchLabelsById[creationId] || ""
+  );
+
+  return [
+    item?.title,
+    promptSnapshot?.userPrompt,
+    promptSnapshot?.user_prompt,
+    promptSnapshot?.compiledPrompt,
+    promptSnapshot?.compiled_prompt,
+    ...sourceLabels,
+  ]
+    .map(normalizeSearchValue)
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function filterMediaHistoryItems(
+  items,
+  activeFilter,
+  searchQuery = "",
+  creationSearchLabelsById = {}
+) {
+  let filtered = items;
+
   if (activeFilter === "IMAGES") {
-    return items.filter((item) => item.type !== "VIDEO");
+    filtered = filtered.filter((item) => item.type !== "VIDEO");
+  } else if (activeFilter === "VIDEOS") {
+    filtered = filtered.filter((item) => item.type === "VIDEO");
+  } else if (activeFilter === "LIKED") {
+    filtered = filtered.filter((item) => item.liked);
+  } else if (activeFilter === "BOOKMARKED") {
+    filtered = filtered.filter((item) => item.bookmarked);
   }
 
-  if (activeFilter === "VIDEOS") {
-    return items.filter((item) => item.type === "VIDEO");
-  }
+  const normalizedQuery = normalizeSearchValue(searchQuery);
+  if (!normalizedQuery) return filtered;
 
-  if (activeFilter === "LIKED") {
-    return items.filter((item) => item.liked);
-  }
+  const queryTerms = normalizedQuery.split(/\s+/).filter(Boolean);
 
-  if (activeFilter === "BOOKMARKED") {
-    return items.filter((item) => item.bookmarked);
-  }
-
-  return items;
+  return filtered.filter((item) => {
+    const haystack = getMediaHistorySearchText(item, creationSearchLabelsById);
+    return queryTerms.every((term) => haystack.includes(term));
+  });
 }
 
 export async function deleteMediaHistoryOutputsWithConcurrency(
@@ -246,6 +307,7 @@ export function useMediaHistoryGridViewModel({
   imageStudioHref = "/studio/image-studio",
   onCoinBalanceChange,
   onImageReassigned,
+  onImageRenamed,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -255,6 +317,8 @@ export function useMediaHistoryGridViewModel({
   const [compactMobileGrid, setCompactMobileGrid] = useState(true);
   const [activePreviewId, setActivePreviewId] = useState(null);
   const [activeFilter, setActiveFilter] = useState("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [creationSearchLabelsById, setCreationSearchLabelsById] = useState({});
   const [likedMediaIds, setLikedMediaIds] = useState(() => new Set());
   const [bookmarkedMediaIds, setBookmarkedMediaIds] = useState(() => new Set());
   const [reactionMessage, setReactionMessage] = useState("");
@@ -268,6 +332,47 @@ export function useMediaHistoryGridViewModel({
   );
   const [bulkDeleteStatus, setBulkDeleteStatus] = useState("idle");
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchOwnedCreations()
+      .then((creations) => {
+        if (cancelled) return;
+
+        const nextLabels = Object.fromEntries(
+          (Array.isArray(creations) ? creations : [])
+            .map((creation) => {
+              const id = String(creation?.id || creation?.rowId || "").trim();
+              if (!id) return null;
+
+              const label = [
+                creation?.title,
+                creation?.name,
+                creation?.data?.name,
+                creation?.data?.title,
+                ...(Array.isArray(creation?.data?.tags)
+                  ? creation.data.tags
+                  : []),
+              ]
+                .filter(Boolean)
+                .join(" ");
+
+              return [id, label];
+            })
+            .filter(Boolean)
+        );
+
+        setCreationSearchLabelsById(nextLabels);
+      })
+      .catch(() => {
+        if (!cancelled) setCreationSearchLabelsById({});
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const imageOutputIds = [
@@ -339,8 +444,14 @@ export function useMediaHistoryGridViewModel({
   );
 
   const visibleMediaItems = useMemo(
-    () => filterMediaHistoryItems(mediaItems, activeFilter),
-    [mediaItems, activeFilter]
+    () =>
+      filterMediaHistoryItems(
+        mediaItems,
+        activeFilter,
+        searchQuery,
+        creationSearchLabelsById
+      ),
+    [mediaItems, activeFilter, searchQuery, creationSearchLabelsById]
   );
 
   const visibleSelectableImageOutputIds = visibleMediaItems
@@ -568,6 +679,14 @@ export function useMediaHistoryGridViewModel({
         onToggleLike: toggleLikedMedia,
         onToggleBookmark: toggleBookmarkedMedia,
         onDeleteItem: handleDeleteMedia,
+        allowRename: true,
+        onRenameItem: async (item, result) => {
+          onImageRenamed?.({
+            imageOutputId:
+              result?.imageOutputId || getMediaHistoryImageOutputId(item),
+            result,
+          });
+        },
         onReassignItem: async (item, result) => {
           if (result?.coinBalance !== undefined) {
             onCoinBalanceChange?.(result.coinBalance);
@@ -585,9 +704,12 @@ export function useMediaHistoryGridViewModel({
   return {
     filterOptions: MEDIA_HISTORY_FILTER_OPTIONS,
     activeFilter,
+    searchQuery,
     filtersOpen,
     compactMobileGrid,
-    mobileGridClass: compactMobileGrid ? "grid-cols-2" : "grid-cols-1",
+    mobileGridClass: compactMobileGrid
+      ? "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3",
     mediaItems,
     visibleMediaItems,
     historyStatus,
@@ -609,6 +731,11 @@ export function useMediaHistoryGridViewModel({
     masonryRowHeight: MASONRY_ROW_HEIGHT,
     masonryGap: MASONRY_GAP,
     onSetFilter: setActiveFilter,
+    onChangeSearchQuery: setSearchQuery,
+    onClearFilters: () => {
+      setActiveFilter("ALL");
+      setSearchQuery("");
+    },
     onToggleFilters: () => setFiltersOpen((current) => !current),
     onToggleMobileGrid: () =>
       setCompactMobileGrid((current) => !current),

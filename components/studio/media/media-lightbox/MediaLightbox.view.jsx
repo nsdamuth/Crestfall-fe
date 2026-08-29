@@ -6,6 +6,7 @@ import {
   Image as ImageIcon,
   Info,
   Loader2,
+  Pencil,
   RefreshCw,
   Share2,
   Sparkles,
@@ -37,6 +38,8 @@ export default function MediaLightboxView({
   allowDownload = false,
   showStudioActions = true,
   showDeleteAction = false,
+  showRenameAction = false,
+  renameDialog = {},
   isLiked = false,
   isBookmarked = false,
   shareMessage = "",
@@ -54,6 +57,11 @@ export default function MediaLightboxView({
   onRequestDelete = null,
   onCancelDelete = null,
   onConfirmDelete = null,
+  onOpenRename = null,
+  onCloseRename = null,
+  onRenameValueChange = null,
+  onSubmitRename = null,
+  onResetRename = null,
   onOpenReassign = null,
   onCloseReassign = null,
   onReassignDestinationChange = null,
@@ -121,6 +129,8 @@ export default function MediaLightboxView({
               downloadUrl={activeMedia.imageUrl}
               showDeleteAction={showDeleteAction}
               onRequestDelete={() => onRequestDelete?.()}
+              showRenameAction={showRenameAction}
+              onOpenRename={() => onOpenRename?.()}
               onOpenReport={() => onOpenReport?.()}
               onOpenDetails={() => onOpenDetails?.()}
             />
@@ -179,6 +189,16 @@ export default function MediaLightboxView({
           </>
         )}
       </div>
+
+      {renameDialog.open ? (
+        <RenameDialog
+          {...renameDialog}
+          onValueChange={onRenameValueChange}
+          onSubmit={onSubmitRename}
+          onReset={onResetRename}
+          onClose={onCloseRename}
+        />
+      ) : null}
 
       {detailsDialog.open ? (
         <DetailsDialog {...detailsDialog} onClose={() => onCloseDetails?.()} />
@@ -254,6 +274,8 @@ function ViewerHeader({
   downloadUrl,
   showDeleteAction,
   onRequestDelete,
+  showRenameAction,
+  onOpenRename,
   onOpenReport,
   onOpenDetails,
 }) {
@@ -266,6 +288,11 @@ function ViewerHeader({
         {showDeleteAction ? (
           <ViewerIconButton label="Delete" danger onClick={onRequestDelete}>
             <Trash2 size={17} aria-hidden="true" />
+          </ViewerIconButton>
+        ) : null}
+        {showRenameAction ? (
+          <ViewerIconButton label="Edit image name" onClick={onOpenRename}>
+            <Pencil size={17} aria-hidden="true" />
           </ViewerIconButton>
         ) : null}
         <ViewerIconButton label="Report" onClick={onOpenReport}>
@@ -419,6 +446,94 @@ function ThumbnailButton({ item, active = false, onClick }) {
         </div>
       )}
     </button>
+  );
+}
+
+function RenameDialog({
+  value = "",
+  status = "idle",
+  message = "",
+  onValueChange,
+  onSubmit,
+  onReset,
+  onClose,
+}) {
+  const isBusy = status === "saving";
+  const isSuccess = status === "success";
+
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
+      <section className="w-full max-w-lg rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]">
+        <div className="flex items-start justify-between gap-[var(--space-4)]">
+          <div>
+            <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Image Name
+            </p>
+            <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+              Rename this image
+            </h3>
+            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
+              This changes the display name only. Prompt details, storage, and asset assignment stay unchanged.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close rename dialog"
+            className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+          >
+            <X size={17} aria-hidden="true" />
+          </button>
+        </div>
+
+        <form onSubmit={onSubmit} className="mt-[var(--space-5)] space-y-[var(--space-4)]">
+          <label className="block">
+            <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              Display name
+            </span>
+            <input
+              type="text"
+              value={value}
+              maxLength={120}
+              disabled={isBusy}
+              onChange={(event) => onValueChange?.(event.target.value)}
+              placeholder="Name this image..."
+              className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink)] outline-none transition-colors focus:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </label>
+
+          {message ? (
+            <p className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] ${
+              isSuccess
+                ? "border-[var(--gold-ornament)] bg-[var(--fill)] text-[var(--gold-ornament)]"
+                : "border-[var(--status-danger)] bg-[var(--status-danger-fill)] text-[var(--status-danger)]"
+            }`}>
+              {message}
+            </p>
+          ) : null}
+
+          <div className="flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+            <button
+              type="button"
+              onClick={onReset}
+              disabled={isBusy}
+              className="cf-btn cf-btn--secondary"
+            >
+              Reset to default
+            </button>
+            <div className="flex gap-[var(--space-2)]">
+              <button type="button" onClick={onClose} className="cf-btn cf-btn--secondary">
+                Close
+              </button>
+              <button type="submit" disabled={isBusy} className="cf-btn cf-btn--primary">
+                {isBusy ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Pencil size={14} aria-hidden="true" />}
+                {isBusy ? "Saving..." : "Save name"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
   );
 }
 

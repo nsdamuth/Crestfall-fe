@@ -720,6 +720,14 @@ function ParticipantMentionTextarea({
                 <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
                   {command.description}
                 </span>
+                {command.sourceLabel ? (
+                  <span className="mt-1 block text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+                    {command.sourceLabel}
+                    {command.ambiguous
+                      ? " · Multiple active definitions"
+                      : ""}
+                  </span>
+                ) : null}
               </span>
 
               {command.aliases?.length ? (

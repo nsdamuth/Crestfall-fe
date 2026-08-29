@@ -44,6 +44,7 @@ import {
 } from "../mechanics-command-domain-actions/mechanicsCommandDomainActionsNormalization.js";
 import MechanicsDefaults from "../mechanics-defaults/MechanicsDefaults";
 import MechanicsStatusBlocks from "../mechanics-status-blocks/MechanicsStatusBlocks";
+import StoryStatusSurfaces from "../mechanics-story-status-surfaces/StoryStatusSurfaces";
 import MechanicsGuards from "../mechanics-guards/MechanicsGuards";
 import MechanicsCompositionBuilder from "../mechanics-composition-builder/MechanicsCompositionBuilder";
 import {
@@ -282,6 +283,16 @@ export default function MechanicsModuleAssembly(props) {
           statusBlocks={projection.statusBlocks}
           onChange={assembly.updateStatusBlocks}
           foldSignal={foldSignal}
+        />
+      }
+      storyStatusSurfacesContent={
+        <StoryStatusSurfaces
+          statusSurfaces={projection.storyStatusSurfaces}
+          onChange={assembly.updateStoryStatusSurfaces}
+          foldSignal={foldSignal}
+          mechanicsSourceOptions={
+            projection.storyStatusSurfaceMechanicsSourceOptions
+          }
         />
       }
       guardsContent={

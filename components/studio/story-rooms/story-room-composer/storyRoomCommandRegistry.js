@@ -15,6 +15,14 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     handling: "LOCAL_UI",
     panel: "COMMANDS",
   }),
+  Object.freeze({
+    name: "inventory",
+    aliases: Object.freeze([]),
+    description:
+      "Show the current Player Character inventory without advancing the Story.",
+    usage: "/inventory",
+    handling: "SERVER_COMMAND",
+  }),
 ]);
 
 function normalizeCommandToken(value) {
@@ -27,10 +35,15 @@ export function getStoryRoomCommandSearchTerms(command) {
     .filter(Boolean);
 }
 
-export function getStoryRoomCommandSuggestions(commandToken = "") {
+export function getStoryRoomCommandSuggestions(
+  commandToken = "",
+  commands = STORY_ROOM_COMMANDS
+) {
   const normalizedToken = normalizeCommandToken(commandToken);
+  const sourceCommands =
+    Array.isArray(commands) && commands.length ? commands : STORY_ROOM_COMMANDS;
 
-  return STORY_ROOM_COMMANDS.filter((command) => {
+  return sourceCommands.filter((command) => {
     if (!normalizedToken) return true;
 
     return getStoryRoomCommandSearchTerms(command).some((term) =>
@@ -46,6 +59,73 @@ export function getStoryRoomCommandSuggestions(commandToken = "") {
 
     return left.name.localeCompare(right.name);
   });
+}
+
+function normalizeMechanicsCatalogCommand(entry = {}) {
+  const name = normalizeCommandToken(entry?.command);
+  if (!name) return null;
+
+  const aliases = [
+    ...new Set(
+      (Array.isArray(entry?.aliases) ? entry.aliases : [])
+        .map(normalizeCommandToken)
+        .filter((alias) => alias && alias !== name)
+    ),
+  ];
+  const argumentsList = Array.isArray(entry?.arguments) ? entry.arguments : [];
+  const sourceLabel = String(
+    entry?.source?.scopeLabel || entry?.source?.ownerTitle || "Mechanics"
+  ).trim();
+
+  return {
+    name,
+    aliases: Object.freeze(aliases),
+    description:
+      String(entry?.description || "").trim() ||
+      "Creator-authored Mechanics command.",
+    usage: String(entry?.usage || `/${name}`).trim() || `/${name}`,
+    handling: "MECHANICS",
+    sourceLabel,
+    ambiguous: entry?.ambiguous === true,
+    collisionSurfaces: Array.isArray(entry?.collisionSurfaces)
+      ? entry.collisionSurfaces.filter(Boolean)
+      : [],
+    requiresArguments: argumentsList.some(
+      (argument) => argument?.required !== false
+    ),
+  };
+}
+
+export function mergeStoryRoomCommandsWithMechanicsCatalog(
+  catalog = {},
+  baseCommands = STORY_ROOM_COMMANDS
+) {
+  const merged = (
+    Array.isArray(baseCommands) ? baseCommands : STORY_ROOM_COMMANDS
+  ).map((command) => ({ ...command }));
+  const occupiedNames = new Set(
+    merged.flatMap((command) => getStoryRoomCommandSearchTerms(command))
+  );
+  const entries = Array.isArray(catalog?.entries) ? catalog.entries : [];
+
+  for (const entry of entries) {
+    const command = normalizeMechanicsCatalogCommand(entry);
+    if (!command || occupiedNames.has(command.name)) continue;
+
+    const projected = {
+      ...command,
+      aliases: Object.freeze(
+        command.aliases.filter((alias) => !occupiedNames.has(alias))
+      ),
+    };
+
+    merged.push(projected);
+    getStoryRoomCommandSearchTerms(projected).forEach((term) =>
+      occupiedNames.add(term)
+    );
+  }
+
+  return merged;
 }
 
 export function findStoryRoomCommand(commandToken) {

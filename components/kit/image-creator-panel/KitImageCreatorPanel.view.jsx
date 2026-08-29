@@ -9,7 +9,6 @@
 import { useId, useState } from "react";
 import {
   BookOpen,
-  Camera,
   Check,
   ChevronDown,
   ChevronUp,
@@ -323,6 +322,34 @@ function AdvancedTuning({ tuning, idPrefix }) {
   );
 }
 
+function CameraPresetTrigger({
+  selectedLabel = "Auto / No Camera Filter",
+  description = "",
+  onOpen = null,
+}) {
+  const isDisabled = typeof onOpen !== "function";
+
+  return (
+    <button
+      type="button"
+      disabled={isDisabled}
+      aria-haspopup="dialog"
+      aria-label={`Camera / Framing: ${selectedLabel}`}
+      title={description || undefined}
+      onClick={() => onOpen?.()}
+      className={`inline-flex min-h-[var(--control-filter)] max-w-full items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+        isDisabled
+          ? "cursor-not-allowed border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
+          : "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
+      }`}
+    >
+      <span className="truncate">Camera / Framing</span>
+      <span className="truncate text-[var(--gold-bright)]">{selectedLabel}</span>
+      <ChevronDown size={14} className="flex-none text-[var(--gold-ornament)]" aria-hidden="true" />
+    </button>
+  );
+}
+
 function OptionsExpander({
   isOpen,
   onToggle,
@@ -353,24 +380,12 @@ function OptionsExpander({
 
       {isOpen && (
         <div className="mt-[var(--space-3)] flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
-          {onOpenCameraPresetPicker ? (
-            <button
-              type="button"
-              onClick={() => onOpenCameraPresetPicker?.()}
-              className="flex w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-left transition-colors hover:border-[var(--line)]"
-            >
-              <Camera size={17} className="shrink-0 text-[var(--gold-ornament)]" aria-hidden="true" />
-              <span className="min-w-0">
-                <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">Camera / Framing</span>
-                <span className="mt-[var(--space-1)] block text-[length:var(--text-ui)] text-[var(--ink)]">{cameraPresetLabel}</span>
-                {cameraPresetDescription ? (
-                  <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{cameraPresetDescription}</span>
-                ) : null}
-              </span>
-            </button>
-          ) : null}
-
           <div className="flex flex-wrap gap-[var(--space-2)]">
+            <CameraPresetTrigger
+              selectedLabel={cameraPresetLabel}
+              description={cameraPresetDescription}
+              onOpen={onOpenCameraPresetPicker}
+            />
             {optionFields.map((field) => (
               <KitDropdownView
                 key={field.id}

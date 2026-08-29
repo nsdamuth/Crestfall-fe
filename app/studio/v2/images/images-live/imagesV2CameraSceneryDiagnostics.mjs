@@ -82,6 +82,7 @@ test("V2 adapter exposes camera, scenery, and live generation state without tran
   assert.match(adapter, /cameraPresetCatalog/);
   assert.match(adapter, /cameraPresetGroups/);
   assert.match(adapter, /field\.id !== "camera-preset"/);
+  assert.match(adapter, /onOpenCameraPresetPicker: openCameraPresetPicker/);
   assert.match(adapter, /generationStatus: workbench\.composerProps\.generationStatus/);
   assert.match(adapter, /generationError: workbench\.composerProps\.generationError/);
   assert.match(adapter, /showSceneryOnlyHelper: workbench\.composerProps\.showSceneryOnlyHelper/);
@@ -91,10 +92,28 @@ test("V2 adapter exposes camera, scenery, and live generation state without tran
   assert.doesNotMatch(adapter, /postgraphile/i);
 });
 
-test("V2 Kit creator renders camera choice, scenery helper, loading, and error states", () => {
+test("V2 Kit creator preserves camera, generation, and scenery bindings through its ViewModel", () => {
+  const panelViewModel = read(
+    "components/kit/image-creator-panel/useKitImageCreatorPanelViewModel.js"
+  );
+
+  assert.match(panelViewModel, /generationStatus: String\(generationStatus \|\| "idle"\)/);
+  assert.match(panelViewModel, /generationError: generationError \|\| ""/);
+  assert.match(panelViewModel, /cameraPresetLabel: cameraPresetLabel \|\| "Auto \/ No Camera Filter"/);
+  assert.match(panelViewModel, /cameraPresetDescription: cameraPresetDescription \|\| ""/);
+  assert.ok((panelViewModel.match(/onOpenCameraPresetPicker/g) || []).length >= 2);
+  assert.match(panelViewModel, /showSceneryOnlyHelper: Boolean\(showSceneryOnlyHelper\)/);
+  assert.match(panelViewModel, /sceneryOnlyHelperEnabled: Boolean\(sceneryOnlyHelperEnabled\)/);
+  assert.ok((panelViewModel.match(/onChangeSceneryOnlyHelper/g) || []).length >= 2);
+});
+
+test("V2 Kit creator renders the camera launcher in the same compact Options row grammar", () => {
   const panel = read("components/kit/image-creator-panel/KitImageCreatorPanel.view.jsx");
   const contract = read("components/kit/image-creator-panel/KitImageCreatorPanel.contract.js");
 
+  assert.match(panel, /function CameraPresetTrigger/);
+  assert.match(panel, /aria-haspopup="dialog"/);
+  assert.match(panel, /min-h-\[var\(--control-filter\)\]/);
   assert.match(panel, /Camera \/ Framing/);
   assert.match(panel, /Optimize for scenery-only image/);
   assert.match(panel, /generationStatus === "loading"/);
@@ -105,15 +124,20 @@ test("V2 Kit creator renders camera choice, scenery helper, loading, and error s
   assert.match(contract, /showSceneryOnlyHelper/);
 });
 
-test("V2 camera picker uses Kit modal vocabulary rather than the legacy camera modal", () => {
+test("V2 camera picker uses current Kit modal vocabulary rather than the legacy camera modal", () => {
   const live = read("app/studio/v2/images/ImagesV2Live.jsx");
   const picker = read("app/studio/v2/images/images-live/ImagesV2CameraPresetPicker.jsx");
 
   assert.match(live, /ImagesV2CameraPresetPicker/);
+  assert.match(live, /onOpenCameraPresetPicker: openCameraPresetPicker/);
+  assert.match(live, /onClose=\{closeCameraPresetPicker\}/);
   assert.doesNotMatch(live, /CameraPresetPickerModal/);
   assert.match(picker, /KitModalFrame/);
   assert.match(picker, /Search camera presets/);
-  assert.match(picker, /grid-cols-3/);
+  assert.match(picker, /Automatic/);
+  assert.match(picker, /min-\[760px\]:grid-cols-2/);
+  assert.doesNotMatch(picker, /min-h-\[7rem\]/);
+  assert.doesNotMatch(picker, /grid-cols-3/);
   assert.match(picker, /No camera presets match this search/);
   assert.doesNotMatch(picker, /ModalShell/);
   assert.doesNotMatch(picker, /fetch\s*\(/);

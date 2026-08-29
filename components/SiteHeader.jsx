@@ -25,32 +25,34 @@ export default function SiteHeader({ home = false }) {
         </div>
       </Link>
 
-      <nav className="hidden min-w-0 flex-wrap justify-end gap-x-8 gap-y-3 text-sm uppercase tracking-[0.22em] text-[var(--ink-dim)] md:flex">
-        <Link href="/intro" className="transition hover:text-[var(--ink)]">
-          Intro
-        </Link>
-        <Link href="/lore" className="transition hover:text-[var(--ink)]">
-          Lore
-        </Link>
-        <Link href="/characters" className="transition hover:text-[var(--ink)]">
-          Characters
-        </Link>
-        <Link href="/locations" className="transition hover:text-[var(--ink)]">
-          Locations
-        </Link>
-        <Link href="/factions" className="transition hover:text-[var(--ink)]">
-          Factions
-        </Link>
-        <Link href="/stories" className="transition hover:text-[var(--ink)]">
-          Stories
-        </Link>
-        <Link href="/chronicle" className="transition hover:text-[var(--ink)]">
-          Chronicle
-        </Link>
-        <Link href="/studio/v2/home" className="transition hover:text-[var(--ink)]">
-          Studio
-        </Link>
-      </nav>
+      {!home ? (
+        <nav className="hidden min-w-0 flex-wrap justify-end gap-x-8 gap-y-3 text-sm uppercase tracking-[0.22em] text-[var(--ink-dim)] md:flex">
+          <Link href="/intro" className="transition hover:text-[var(--ink)]">
+            Intro
+          </Link>
+          <Link href="/lore" className="transition hover:text-[var(--ink)]">
+            Lore
+          </Link>
+          <Link href="/characters" className="transition hover:text-[var(--ink)]">
+            Characters
+          </Link>
+          <Link href="/locations" className="transition hover:text-[var(--ink)]">
+            Locations
+          </Link>
+          <Link href="/factions" className="transition hover:text-[var(--ink)]">
+            Factions
+          </Link>
+          <Link href="/stories" className="transition hover:text-[var(--ink)]">
+            Stories
+          </Link>
+          <Link href="/chronicle" className="transition hover:text-[var(--ink)]">
+            Chronicle
+          </Link>
+          <Link href="/studio/v2/home" className="transition hover:text-[var(--ink)]">
+            Studio
+          </Link>
+        </nav>
+      ) : null}
     </header>
   );
 }

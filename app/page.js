@@ -58,14 +58,7 @@ export default function Home() {
               myths, histories, and the unfolding Chronicle of Crestfall.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link className="sourcebook-button" href="/lore">
-                Enter the Archive
-              </Link>
-
-              <Link className="sourcebook-button secondary" href="/chronicle">
-                Read the Chronicle
-              </Link>
+            <div className="mt-10 flex justify-center">
               <Link className="sourcebook-button" href="/studio/v2/home">
                 Enter Crestfall
               </Link>

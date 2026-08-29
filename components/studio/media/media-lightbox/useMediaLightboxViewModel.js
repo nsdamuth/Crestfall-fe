@@ -6,7 +6,13 @@ import { fetchImageOutputDetails } from "@/lib/client/studio/media/imageDetailsC
 import {
   fetchImageReassignmentContext,
   reassignImageOutput,
+  updateImageOutputDisplayName,
 } from "@/lib/client/studio/media/imageOutputClient";
+import {
+  applyImageOutputDisplayNameResult,
+  getImageOutputCustomDisplayName,
+  getImageOutputDisplayTitle,
+} from "@/lib/shared/media/imageOutputNaming";
 import { createMediaReport } from "@/lib/client/studio/media/mediaReportClient";
 
 export const MEDIA_REPORT_REASON_OPTIONS = [
@@ -78,6 +84,10 @@ export function getMediaSourceCreationId(item) {
 }
 
 export function getMediaTitle(item) {
+  if (getMediaImageOutputId(item)) {
+    return getImageOutputDisplayTitle(item);
+  }
+
   return item?.title || item?.label || item?.type || "Image";
 }
 
@@ -155,6 +165,8 @@ export function useMediaLightboxViewModel({
   onToggleBookmark,
   onDeleteItem,
   onReassignItem,
+  allowRename = false,
+  onRenameItem,
 } = {}) {
   const mediaItems = useMemo(
     () =>
@@ -192,6 +204,11 @@ export function useMediaLightboxViewModel({
   const [reassignContext, setReassignContext] = useState(null);
   const [reassignDestinationId, setReassignDestinationId] = useState("");
   const [reassignSourceOverride, setReassignSourceOverride] = useState("");
+  const [renameOpen, setRenameOpen] = useState(false);
+  const [renameValue, setRenameValue] = useState("");
+  const [renameStatus, setRenameStatus] = useState("idle");
+  const [renameMessage, setRenameMessage] = useState("");
+  const [activeTitleOverride, setActiveTitleOverride] = useState("");
 
   const isLiked =
     typeof isItemLiked === "function"
@@ -224,6 +241,11 @@ export function useMediaLightboxViewModel({
     setReassignContext(null);
     setReassignDestinationId("");
     setReassignSourceOverride("");
+    setRenameOpen(false);
+    setRenameValue("");
+    setRenameStatus("idle");
+    setRenameMessage("");
+    setActiveTitleOverride("");
   }, [activeId]);
 
   function handleSelectMedia(media) {
@@ -273,12 +295,91 @@ export function useMediaLightboxViewModel({
     );
   }
 
+  function handleOpenRename() {
+    if (!allowRename || !activeMedia?.imageOutputId) return;
+    setRenameOpen(true);
+    setRenameStatus("idle");
+    setRenameMessage("");
+    setRenameValue(
+      getImageOutputCustomDisplayName(activeOriginalItem) ||
+        activeTitleOverride ||
+        activeMedia?.title ||
+        ""
+    );
+  }
+
+  async function persistRename(displayName) {
+    if (!activeMedia?.imageOutputId) {
+      setRenameStatus("error");
+      setRenameMessage("This image does not have an output id.");
+      return;
+    }
+
+    setRenameStatus("saving");
+    setRenameMessage("");
+
+    try {
+      const result = await updateImageOutputDisplayName(
+        activeMedia.imageOutputId,
+        displayName
+      );
+      const updatedSource = applyImageOutputDisplayNameResult(
+        activeOriginalItem || {},
+        result
+      );
+      const nextTitle =
+        result?.effectiveTitle ||
+        getImageOutputDisplayTitle(updatedSource);
+
+      setActiveTitleOverride(nextTitle);
+      setRenameStatus("success");
+      setRenameMessage(
+        result?.resetToDefault
+          ? "Automatic image name restored."
+          : "Image name saved."
+      );
+      setRenameValue(result?.displayName || nextTitle);
+      await onRenameItem?.(
+        {
+          ...activeOriginalItem,
+          imageOutputId: activeMedia.imageOutputId,
+        },
+        result
+      );
+    } catch (error) {
+      setRenameStatus("error");
+      setRenameMessage(error?.message || "Image name could not be saved.");
+    }
+  }
+
+  async function handleSubmitRename(event) {
+    event?.preventDefault?.();
+    if (renameStatus === "saving") return;
+
+    const nextName = String(renameValue || "").trim();
+    if (!nextName) {
+      setRenameStatus("error");
+      setRenameMessage("Enter an image name or use Reset to default.");
+      return;
+    }
+
+    await persistRename(nextName);
+  }
+
+  async function handleResetRename() {
+    if (renameStatus === "saving") return;
+    await persistRename("");
+  }
+
   async function handleShare() {
     setShareMessage("");
 
     try {
       if (navigator?.share) {
-        await navigator.share({ title: activeMedia?.title || "Image", url: shareUrl });
+        await navigator.share({
+          title: activeTitleOverride || activeMedia?.title || "Image",
+          url: shareUrl,
+        });
         setShareMessage("Shared.");
         return;
       }
@@ -429,13 +530,25 @@ export function useMediaLightboxViewModel({
 
   return {
     mediaItems,
-    activeMedia,
+    activeMedia: activeMedia
+      ? {
+          ...activeMedia,
+          title: activeTitleOverride || activeMedia.title,
+        }
+      : null,
     activeId,
     modeLabel,
     imageStudioHref,
     allowDownload: Boolean(allowDownload),
     showStudioActions: Boolean(showStudioActions),
     showDeleteAction: typeof onDeleteItem === "function",
+    showRenameAction: Boolean(allowRename && activeMedia?.imageOutputId),
+    renameDialog: {
+      open: renameOpen,
+      value: renameValue,
+      status: renameStatus,
+      message: renameMessage,
+    },
     isLiked,
     isBookmarked,
     shareMessage,
@@ -464,7 +577,7 @@ export function useMediaLightboxViewModel({
     },
     reportDialog: {
       open: reportOpen,
-      title: activeMedia?.title || "Image",
+      title: activeTitleOverride || activeMedia?.title || "Image",
       reasonKey: reportReasonKey,
       reasonText: reportReasonText,
       status: reportStatus,
@@ -479,6 +592,11 @@ export function useMediaLightboxViewModel({
     onRequestDelete: handleRequestDelete,
     onCancelDelete: handleCancelDelete,
     onConfirmDelete: handleConfirmDelete,
+    onOpenRename: handleOpenRename,
+    onCloseRename: () => setRenameOpen(false),
+    onRenameValueChange: setRenameValue,
+    onSubmitRename: handleSubmitRename,
+    onResetRename: handleResetRename,
     onOpenReassign: handleOpenReassign,
     onCloseReassign: () => setReassignOpen(false),
     onReassignDestinationChange: setReassignDestinationId,

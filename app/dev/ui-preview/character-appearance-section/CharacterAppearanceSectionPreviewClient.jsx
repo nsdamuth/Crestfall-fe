@@ -78,6 +78,14 @@ export default function CharacterAppearanceSectionPreviewClient() {
     setFeedback(message);
   }
 
+  function setImagePreset(nextImagePreset, message) {
+    setViewProps((current) => ({
+      ...current,
+      selectedImagePreset: cloneFixture(nextImagePreset),
+    }));
+    setFeedback(message);
+  }
+
   return (
     <main className="min-h-screen bg-[#080706] px-4 py-10 text-[var(--foreground)] sm:px-6">
       <div className="mx-auto max-w-6xl space-y-6">
@@ -175,6 +183,24 @@ export default function CharacterAppearanceSectionPreviewClient() {
                       setClothing(
                         characterAppearanceSectionEmptyFixture.selectedClothing,
                         "Default clothing cleared in local preview state."
+                      )
+                  : null
+              }
+              onPickImagePreset={
+                callbacksEnabled
+                  ? () =>
+                      setImagePreset(
+                        characterAppearanceSectionOutfitFixture.selectedImagePreset,
+                        "Default Image Preset selected in local preview state."
+                      )
+                  : null
+              }
+              onClearDefaultImagePreset={
+                callbacksEnabled
+                  ? () =>
+                      setImagePreset(
+                        characterAppearanceSectionEmptyFixture.selectedImagePreset,
+                        "Default Image Preset cleared in local preview state."
                       )
                   : null
               }

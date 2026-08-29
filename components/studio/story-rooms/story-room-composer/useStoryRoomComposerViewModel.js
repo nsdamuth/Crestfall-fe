@@ -190,6 +190,7 @@ export function useStoryRoomComposerViewModel({
   locationMentions = [],
   setLocationMentions,
   locationMentionOptions = [],
+  commandOptions = [],
   onSend,
   onOpenCast,
   onOpenState,
@@ -227,8 +228,11 @@ export function useStoryRoomComposerViewModel({
   const commandSuggestions = useMemo(() => {
     if (!activeCommandQuery) return [];
 
-    return getStoryRoomCommandSuggestions(activeCommandQuery.query).slice(0, 8);
-  }, [activeCommandQuery]);
+    return getStoryRoomCommandSuggestions(
+      activeCommandQuery.query,
+      commandOptions
+    ).slice(0, 8);
+  }, [activeCommandQuery, commandOptions]);
 
   const mentionSuggestions = useMemo(() => {
     if (!activeMentionQuery) return [];
@@ -372,7 +376,9 @@ export function useStoryRoomComposerViewModel({
 
     if (!command || !activeCommandQuery) return null;
 
-    const nextValue = `/${command.name}`;
+    const nextValue = command.requiresArguments
+      ? `/${command.name} `
+      : `/${command.name}`;
     const nextCursor = nextValue.length;
 
     setDraft?.(nextValue);
@@ -407,8 +413,9 @@ export function useStoryRoomComposerViewModel({
 
     if (!command || !activeCommandQuery?.query) return false;
 
-    return getStoryRoomCommandSearchTerms(command).includes(
-      activeCommandQuery.query
+    return (
+      command.requiresArguments !== true &&
+      getStoryRoomCommandSearchTerms(command).includes(activeCommandQuery.query)
     );
   }
 

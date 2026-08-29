@@ -1,4 +1,4 @@
-export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.1.0";
+export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Portable presentation contract for the shared full-screen media viewer.
@@ -13,6 +13,10 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.1.0";
  * three-callback set; the top-level `onDeleteItem` application prop
  * the Binding Shell and ViewModel accept is unaffected, only this
  * internal View-facing surface changed.
+ *
+ * 2.2.0 (Image Output Naming): adds an owner-only Rename surface with persisted
+ * display-name override and Reset to default behavior. The default name remains
+ * generation-time asset title + generation date; prompt text never owns identity.
  *
  * 2.1.0 (V2 convergence): Reassign Asset is now a live additive surface backed
  * by application-owned reassignment context/submit callbacks; the B5 delete
@@ -43,6 +47,8 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {boolean} allowDownload
  * @property {boolean} showStudioActions
  * @property {boolean} showDeleteAction
+ * @property {boolean} showRenameAction
+ * @property {Object} renameDialog
  * @property {boolean} isLiked
  * @property {boolean} isBookmarked
  * @property {string} shareMessage
@@ -60,6 +66,11 @@ export const MEDIA_LIGHTBOX_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {(() => void)|null} onRequestDelete opens the B5 confirm panel
  * @property {(() => void)|null} onCancelDelete
  * @property {(() => void)|null} onConfirmDelete fires the real delete
+ * @property {(() => void)|null} onOpenRename
+ * @property {(() => void)|null} onCloseRename
+ * @property {((value:string) => void)|null} onRenameValueChange
+ * @property {((event?:Object) => void)|null} onSubmitRename
+ * @property {(() => void)|null} onResetRename
  * @property {(() => void)|null} onOpenReassign
  * @property {(() => void)|null} onCloseReassign
  * @property {((creationId:string) => void)|null} onReassignDestinationChange

@@ -40,20 +40,29 @@ test("character identity prevents mobile min-content overflow", () => {
   assert.match(optionModal, /break-words/);
 });
 
-test("character identity exposes an owned default image preset selector", () => {
+test("character Appearance exposes the default image preset beside clothing through the linked-creation picker", () => {
+  const shell = read(
+    "components/studio/my-creations/edit/sections/AppearanceSection.jsx"
+  );
   const view = read(
-    "components/studio/my-creations/edit/sections/character-identity-section/CharacterIdentitySection.view.jsx"
+    "components/studio/my-creations/edit/sections/character-appearance-section/CharacterAppearanceSection.view.jsx"
   );
   const vm = read(
-    "components/studio/my-creations/edit/sections/character-identity-section/useCharacterIdentitySectionViewModel.js"
+    "components/studio/my-creations/edit/sections/character-appearance-section/useCharacterAppearanceSectionViewModel.js"
+  );
+  const identityView = read(
+    "components/studio/my-creations/edit/sections/character-identity-section/CharacterIdentitySection.view.jsx"
   );
 
-  assert.match(view, /defaultImagePresetLabel/);
-  assert.match(view, /defaultImagePresetOptions/);
+  assert.match(view, /imagePresetLabel/);
+  assert.match(view, /selectedImagePreset/);
+  assert.match(view, /xl:grid-cols-2/);
+  assert.match(shell, /creationType="IMAGE_PRESET"/);
   assert.match(vm, /fetchOwnedCreations/);
   assert.match(vm, /type: "IMAGE_PRESET"/);
   assert.match(vm, /default_image_preset_id/);
   assert.match(vm, /default_image_preset_title/);
+  assert.doesNotMatch(identityView, /defaultImagePresetLabel/);
 });
 
 test("notification close control imports its X icon instead of crashing the bell panel", () => {

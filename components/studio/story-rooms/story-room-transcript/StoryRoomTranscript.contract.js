@@ -1,4 +1,4 @@
-export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Portable View contract.
@@ -12,4 +12,6 @@ export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} loading
  * @property {boolean} sending
  * @property {string} errorMessage
+ * @property {Object|null} playerCharacterPrompt transient pre-first-message
+ *   system prompt with select/change action; never persisted into room messages
  */
