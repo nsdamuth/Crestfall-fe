@@ -22,9 +22,8 @@ function decorateDoors(doors) {
 
 const BOTTOM_BANNER = { ...STUDIO_BOTTOM_BANNER, onCtaClick: noop };
 
-// Default: the four live doors (Character, Worlds, Looks, Stories)
-// among one quiet Soon door (Player Character), all three zones
-// present.
+// Default: the five live doors (Character, Player Character, Worlds, Looks, Stories),
+// with all three zones present.
 export const studioDefaultFixture = {
   hubExplainer: STUDIO_HUB_EXPLAINER,
   modeOptions: MODE_OPTIONS,

@@ -17,6 +17,7 @@ export default function PayoffStopView({
   creatorDirectives = "",
   extraRuntimeNotes = "",
   onChangeCreatorDirectives = null,
+  creatorDirectivesPlaceholder = "Instructions for how the AI should run this character",
   onChangeExtraRuntimeNotes = null,
   onOpenStoryPanel = null,
   // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): the preview
@@ -70,7 +71,7 @@ export default function PayoffStopView({
             label="Creator directives"
             value={creatorDirectives}
             onChange={onChangeCreatorDirectives}
-            placeholder="Instructions for how the AI should run this character"
+            placeholder={creatorDirectivesPlaceholder}
             maxLength={PAYOFF_NOTES_MAX_LENGTH}
           />
 

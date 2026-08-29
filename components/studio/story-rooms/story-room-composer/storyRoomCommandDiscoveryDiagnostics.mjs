@@ -54,6 +54,7 @@ const commands = mergeStoryRoomCommandsWithMechanicsCatalog(
 
 assert.equal(commands.filter((command) => command.name === "help").length, 1);
 assert.equal(commands.some((command) => command.name === "commands"), true);
+assert.equal(commands.some((command) => command.name === "format"), true);
 assert.equal(commands.some((command) => command.name === "inventory"), true);
 assert.equal(commands.some((command) => command.name === "stats"), true);
 assert.equal(commands.some((command) => command.name === "cast"), true);
@@ -66,6 +67,9 @@ assert.deepEqual(cast.aliases, ["spell"]);
 assert.equal(cast.sourceLabel, "Test Mechanics");
 assert.equal(resolveLocalStoryRoomCommand("/inventory"), null);
 assert.equal(resolveLocalStoryRoomCommand("/commands")?.panel, "COMMANDS");
+assert.equal(resolveLocalStoryRoomCommand("/format")?.panel, "FORMAT");
+assert.equal(resolveLocalStoryRoomCommand("say /format"), null);
+assert.equal(resolveLocalStoryRoomCommand("/format extra"), null);
 
 assert.deepEqual(
   getStoryRoomCommandSuggestions("sta", commands).map((command) => command.name),
@@ -107,6 +111,11 @@ assert.match(
 assert.match(shellVm, /commandOptions:\s*commands/);
 assert.match(shellVm, /reloadCommandCatalog.*requestedSpeakerId:\s*nextSpeaker/s);
 assert.match(shellView, /command\.sourceLabel/);
+assert.match(shellView, /panel === "FORMAT"/);
+assert.match(shellView, /Story Text Formatting/);
+assert.match(shellView, /Private Thought/);
+assert.match(shellView, /Written \/ Digital Message/);
+assert.match(shellView, /Telepathy/);
 assert.match(chatHook, /fetchStoryRoomCommandCatalog/);
 assert.match(chatHook, /reloadCommandCatalog/);
 assert.match(chatHook, /requestedSpeakerId:\s*requestedSpeakerId \|\| "AUTO"/);
@@ -121,6 +130,7 @@ console.log(
       diagnostic: "story_room_command_discovery_projection_v2",
       status: "PASSED",
       platformUtilitiesPreserved: true,
+      formatUtilityProjected: true,
       inventoryUtilityProjected: true,
       creatorMechanicsCommandsProjected: true,
       platformCommandCollisionsRejected: true,

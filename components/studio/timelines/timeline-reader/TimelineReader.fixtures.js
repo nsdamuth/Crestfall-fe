@@ -1,4 +1,5 @@
 export const timelineReaderFixture = {
+  timelineId: "timeline-preview",
   loadStatus: "ready",
   loadMessage: "",
   title: "Aethelgard Historical Timeline",
@@ -6,12 +7,15 @@ export const timelineReaderFixture = {
     "A creator-curated chronology spanning the earliest surviving records through the War in Heaven.",
   publicEnabled: true,
   sortDirection: "ASC",
+  groupingMode: "CHAPTERS",
   entryCount: 4,
   showEditAction: true,
   groups: [
     {
-      id: "primordial-era",
-      label: "Primordial Era",
+      id: "origins",
+      label: "Arc I — Origins to Bronze Age",
+      collapsible: true,
+      defaultOpen: true,
       entries: [
         {
           id: "lore-lux",
@@ -21,6 +25,7 @@ export const timelineReaderFixture = {
           era: "Primordial Era",
           displayDate: "Before the First Age",
           chronologyLabel: "Before the First Age",
+          chapterId: "origins",
           orderOverride: null,
           isUnavailable: false,
         },
@@ -32,14 +37,17 @@ export const timelineReaderFixture = {
           era: "Primordial Era",
           displayDate: "The First Fracture",
           chronologyLabel: "The First Fracture",
+          chapterId: "origins",
           orderOverride: null,
           isUnavailable: false,
         },
       ],
     },
     {
-      id: "celestial-conflict",
-      label: "Celestial Conflict",
+      id: "celestial",
+      label: "Arc II — Celestial Conflict",
+      collapsible: true,
+      defaultOpen: false,
       entries: [
         {
           id: "lore-lucifer",
@@ -49,6 +57,7 @@ export const timelineReaderFixture = {
           era: "Celestial Conflict",
           displayDate: "Year 0 of the Sundering",
           chronologyLabel: "Year 0 of the Sundering",
+          chapterId: "celestial",
           orderOverride: 0,
           isUnavailable: false,
         },
@@ -60,6 +69,7 @@ export const timelineReaderFixture = {
           era: "Celestial Conflict",
           displayDate: "0–7 AS",
           chronologyLabel: "0–7 AS",
+          chapterId: "celestial",
           orderOverride: null,
           isUnavailable: false,
         },

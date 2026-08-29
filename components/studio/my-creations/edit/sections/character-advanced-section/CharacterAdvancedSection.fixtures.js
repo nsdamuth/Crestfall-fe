@@ -7,6 +7,7 @@ const baseFixture = Object.freeze({
   greetingPlaceholder: "Optional opening message.",
   scenarioLabel: "Scenario",
   scenarioPlaceholder: "Optional scenario/premise setup.",
+  showRelationshipToPlayer: true,
   relationshipLabel: "Relationship to Player",
   relationshipPlaceholder: "Optional starting relationship or dynamic.",
   backstoryLabel: "Backstory",
@@ -75,4 +76,11 @@ export const characterAdvancedSectionMissingCallbacksFixture = {
   onChangeAppearanceNotes: null,
   onChangePersonalityNotes: null,
   onChangeRuntimeNotes: null,
+};
+
+export const playerCharacterAdvancedSectionFixture = {
+  ...characterAdvancedSectionPopulatedFixture,
+  sectionDescription:
+    "Optional advanced guidance for your Player Character. These fields shape Crestfall presentation and runtime context without changing player control.",
+  showRelationshipToPlayer: false,
 };

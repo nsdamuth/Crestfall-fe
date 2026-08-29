@@ -1,3 +1,8 @@
+import {
+  CHARACTER_CREATOR_TYPES,
+  normalizeCharacterCreatorType,
+} from "@/components/studio/create/character/characterCreationMode";
+
 // RULED 11 Aug 2026 (Sprint H render review, item 3): the preview
 // generation cost, "cost value from fixtures." No pricing table
 // exists yet for quick-create preview generation; this is the
@@ -19,12 +24,25 @@ function resolveIdentityDisplayValue(
   return selected || emptyFallback;
 }
 
-export function useCharacterPreviewViewModel({ form = {} } = {}) {
+export function useCharacterPreviewViewModel({
+  form = {},
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
+} = {}) {
   const name = form?.name || "";
+  const normalizedType = normalizeCharacterCreatorType(creationType);
+  const fallbackName =
+    normalizedType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER
+      ? "Unnamed Player Character"
+      : "Unnamed Character";
 
   return {
-    displayInitial: String(name || "C").slice(0, 1).toUpperCase(),
-    characterName: name || "Unnamed Character",
+    displayInitial: String(
+      name ||
+        (normalizedType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER ? "P" : "C")
+    )
+      .slice(0, 1)
+      .toUpperCase(),
+    characterName: name || fallbackName,
     characterSubtitle:
       form?.title || form?.short_concept || "Private Draft",
     speciesLabel: resolveIdentityDisplayValue(

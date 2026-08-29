@@ -2,6 +2,11 @@
 
 import { useMemo } from "react";
 
+import {
+  CHARACTER_CREATOR_TYPES,
+  normalizeCharacterCreatorType,
+} from "@/components/studio/create/character/characterCreationMode";
+
 import { getCharacterColorPaletteLabel } from "@/components/studio/create/character/constants/characterColorPalettes";
 import { kibbeIdentityOptions } from "@/components/studio/create/character/constants/constants";
 import {
@@ -29,11 +34,19 @@ export function normalizeAdultAgeValue(value) {
   return value;
 }
 
-export function buildCharacterReviewSummaryItems(formValue) {
+export function buildCharacterReviewSummaryItems(
+  formValue,
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER
+) {
   const form = normalizeForm(formValue);
+  const normalizedCreationType = normalizeCharacterCreatorType(creationType);
+  const fallbackName =
+    normalizedCreationType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER
+      ? "Unnamed Player Character"
+      : "Unnamed Character";
 
   return [
-    { key: "name", label: "Name", value: form.name || "Unnamed Character" },
+    { key: "name", label: "Name", value: form.name || fallbackName },
     { key: "species", label: "Species", value: form.species || "Not chosen" },
     {
       key: "short_concept",
@@ -88,10 +101,14 @@ export function buildCharacterReviewSummaryItems(formValue) {
 export default function useCharacterReviewStepViewModel({
   form: formValue,
   updateField,
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
   advancedOpen = false,
   setAdvancedOpen,
 } = {}) {
   const form = normalizeForm(formValue);
+  const normalizedCreationType = normalizeCharacterCreatorType(creationType);
+  const isPlayerCharacter =
+    normalizedCreationType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER;
 
   const selectFields = useMemo(
     () => [
@@ -119,7 +136,10 @@ export default function useCharacterReviewStepViewModel({
 
   const advancedFields = useMemo(
     () =>
-      CHARACTER_REVIEW_ADVANCED_FIELDS.map((field) => ({
+      CHARACTER_REVIEW_ADVANCED_FIELDS.filter(
+        (field) =>
+          !isPlayerCharacter || field.key !== "relationship_to_player"
+      ).map((field) => ({
         ...field,
         value: form[field.key],
       })),
@@ -131,11 +151,12 @@ export default function useCharacterReviewStepViewModel({
       form.personality_notes,
       form.relationship_to_player,
       form.scenario,
+      isPlayerCharacter,
     ]
   );
 
   const summaryItems = useMemo(
-    () => buildCharacterReviewSummaryItems(form),
+    () => buildCharacterReviewSummaryItems(form, normalizedCreationType),
     [
       form.body_type,
       form.character_color_palette_id,
@@ -149,6 +170,7 @@ export default function useCharacterReviewStepViewModel({
       form.short_concept,
       form.species,
       form.western_zodiac_sign,
+      normalizedCreationType,
     ]
   );
 

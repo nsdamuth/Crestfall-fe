@@ -10,10 +10,15 @@ import IdentityStep from "@/components/studio/create/character/IdentityStep";
 import ReviewStep from "@/components/studio/create/character/ReviewStep";
 import CharacterCreatorView from "./character-creator/CharacterCreator.view";
 import { useCharacterCreatorViewModel } from "./character-creator/useCharacterCreatorViewModel";
+import {
+  CHARACTER_CREATOR_TYPES,
+  normalizeCharacterCreatorType,
+} from "./characterCreationMode";
 
 function renderCharacterEditor({
   activeStep,
   form,
+  creationType,
   advancedOpen,
   setAdvancedOpen,
   setTemplateModalOpen,
@@ -44,6 +49,7 @@ function renderCharacterEditor({
   if (activeStep === "review") {
     return (
       <ReviewStep
+        creationType={creationType}
         form={form}
         updateField={updateField}
         advancedOpen={advancedOpen}
@@ -55,9 +61,18 @@ function renderCharacterEditor({
   return null;
 }
 
-export default function CharacterCreator(props) {
+export default function CharacterCreator({
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
+  ...props
+} = {}) {
+  const normalizedCreationType = normalizeCharacterCreatorType(creationType);
+  const isPlayerCharacter =
+    normalizedCreationType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER;
   const { viewProps, applicationContentProps } =
-    useCharacterCreatorViewModel(props);
+    useCharacterCreatorViewModel({
+      ...props,
+      creationType: normalizedCreationType,
+    });
   const {
     activeStep,
     form,
@@ -77,14 +92,28 @@ export default function CharacterCreator(props) {
         headerContent={
           <StudioPageHeader
             eyebrow="Create"
-            title="Create a Crestfall Character"
-            description="Shape a legendary character worth adventuring with. Everything here can be refined later from My Creations."
+            title={
+              isPlayerCharacter
+                ? "Create a Player Character"
+                : "Create a Crestfall Character"
+            }
+            description={
+              isPlayerCharacter
+                ? "Build the playable identity you bring into Stories. Everything here can be refined later in the shared Character editor."
+                : "Shape a legendary character worth adventuring with. Everything here can be refined later from My Creations."
+            }
           />
         }
-        previewContent={<CharacterPreview form={form} />}
+        previewContent={
+          <CharacterPreview
+            form={form}
+            creationType={normalizedCreationType}
+          />
+        }
         editorContent={renderCharacterEditor({
           activeStep,
           form,
+          creationType: normalizedCreationType,
           advancedOpen,
           setAdvancedOpen,
           setTemplateModalOpen,

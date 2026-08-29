@@ -70,8 +70,9 @@ participant mentions.
 components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry.js
 ```
 
-The first local command registry defines `/help` (with `/?` as an alias) and
-`/commands`. `StoryRoomChatShell` resolves these commands before the existing
+The local command registry defines `/help` (with `/?` as an alias), `/commands`,
+and `/format`. `/format` opens the Story text
+formatting guide locally. `StoryRoomChatShell` resolves these commands before the existing
 turn submission path, opens a local help panel, and does not write the command
 into the transcript or send it to the AI provider.
 
@@ -89,7 +90,7 @@ into the transcript or send it to the AI provider.
 - Suggestions filter by command name and aliases while the command token is typed.
 - Arrow Up/Down changes the highlighted command.
 - Tab completes the highlighted command without submitting it.
-- Enter completes a partial command; Enter executes an exact `/help`, `/?`, or `/commands` command through the existing local-command path.
+- Enter completes a partial command; Enter executes an exact `/help`, `/?`, `/commands`, or `/format` command through the existing local-command path.
 - Escape dismisses the command menu.
 - Mouse selection completes the command and keeps focus in the composer.
 - Only commands present in `storyRoomCommandRegistry.js` are displayed.

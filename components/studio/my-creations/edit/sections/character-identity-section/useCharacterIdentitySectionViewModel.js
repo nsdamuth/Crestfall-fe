@@ -44,6 +44,7 @@ export const CHARACTER_ROLE_ARCHETYPE_GROUPS = Object.freeze([
 // character-template-fields-section/useCharacterTemplateFieldsSectionViewModel.js.
 const CREATION_TYPE_LABELS = Object.freeze({
   CHARACTER: "Character",
+  PLAYER_CHARACTER: "Player Character",
   CHARACTER_TEMPLATE: "Character Template",
 });
 
@@ -63,11 +64,18 @@ export function limitCustomIdentityValue(value) {
 export function getCharacterIdentitySectionViewProps({
   form = {},
   updateDataField = null,
+  creationType = "",
 } = {}) {
   const data = form?.data || {};
+  const normalizedCreationType = String(creationType || form?.type || "").toUpperCase();
+  const isPlayerCharacter = normalizedCreationType === "PLAYER_CHARACTER";
 
   return {
     ...DEFAULT_COPY,
+    sectionDescription: isPlayerCharacter
+      ? "Edit the identity of this Player Character using the same Character data model while preserving player-controlled runtime semantics."
+      : DEFAULT_COPY.sectionDescription,
+    characterNameLabel: isPlayerCharacter ? "Player Character Name" : DEFAULT_COPY.characterNameLabel,
     characterNameValue: data.name ?? form?.title ?? "",
     characterTitleValue: data.title || "",
     speciesValue: data.species || "",
@@ -91,7 +99,8 @@ export function getCharacterIdentitySectionViewProps({
     roleArchetypeOptions,
     roleArchetypeGroups: CHARACTER_ROLE_ARCHETYPE_GROUPS,
     roleArchetypeColumns: 3,
-    creationTypeValue: CREATION_TYPE_LABELS[form?.type] || form?.type || "",
+    creationTypeValue:
+      CREATION_TYPE_LABELS[normalizedCreationType] || normalizedCreationType || "",
     onChangeCharacterName: (value) => updateDataField?.("name", value),
     onChangeCharacterTitle: (value) => updateDataField?.("title", value),
     onSelectSpecies: (value) => updateDataField?.("species", value),

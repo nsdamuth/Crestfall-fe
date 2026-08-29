@@ -18,6 +18,7 @@ import ChatCastPanelView from "../chat-cast-panel/ChatCastPanel.view";
 import ChatStatePanelView from "../chat-state-panel/ChatStatePanel.view";
 import ChatSessionDialogsView from "../chat-session-dialogs/ChatSessionDialogs.view";
 import ChatPartyRosterView from "../chat-party-roster/ChatPartyRoster.view";
+import ChatFormatHelpView from "../chat-format-help/ChatFormatHelp.view";
 
 // B1 fade divider (docs/plans/ED1F-DESIGN-DELTAS.md), scope broadened
 // to every modal-family divider: 1px, fades to transparent at both
@@ -151,6 +152,7 @@ export default function ChatShellView({
   sessionDialogs = {},
   libraryPassUpsell = null,
   partyRoster = null,
+  formatHelp = null,
 }) {
   const composerWrapRef = useRef(null);
   const [measuredComposerHeight, setMeasuredComposerHeight] = useState(0);
@@ -349,6 +351,8 @@ export default function ChatShellView({
       <ChatSessionDialogsView activeDialog={sessionDialogs?.activeDialog} />
 
       {libraryPassUpsell?.open ? <LibraryPassUpsellSheet {...libraryPassUpsell} /> : null}
+
+      <ChatFormatHelpView {...(formatHelp || {})} />
 
       {partyRoster?.open ? <ChatPartyRosterView {...partyRoster} /> : null}
     </div>

@@ -52,7 +52,6 @@
     "diagnostics:loom:narrator-builder": "node components/studio/create/narrator/narrator-builder/narratorBuilderDiagnostics.mjs",
     "diagnostics:loom:mechanics-module-builder": "node components/studio/create/mechanics-module/mechanics-module-builder/mechanicsModuleBuilderDiagnostics.mjs",
     "diagnostics:loom:asset-builder": "node components/studio/create/assets/asset-builder/assetBuilderDiagnostics.mjs",
-    "diagnostics:loom:player-character-creator": "node components/studio/create/player-character/player-character-creator/playerCharacterCreatorDiagnostics.mjs",
     "diagnostics:loom:location-builder": "node components/studio/create/location/location-builder/locationBuilderDiagnostics.mjs",
     "diagnostics:loom:scenario-builder": "node components/studio/create/scenario/scenario-builder/scenarioBuilderDiagnostics.mjs",
     "diagnostics:loom:character-creator": "node components/studio/create/character/character-creator/characterCreatorDiagnostics.mjs",

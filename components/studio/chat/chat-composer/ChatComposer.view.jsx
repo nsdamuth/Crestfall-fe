@@ -20,11 +20,12 @@ import { CHAT_COMPOSER_DRAFT_SOFT_LIMIT, CHAT_COMPOSER_MODES } from "./ChatCompo
 // One action-bar grid at BOTH breakpoints, RULED 23 Aug 2026
 // (build-0823 pass 2), replacing the prior split Desktop/Mobile
 // anatomy's "Next Speaker" row and mode-segmented-control column.
-const PICKER_MODES = [CHAT_COMPOSER_MODES.DIALOGUE, CHAT_COMPOSER_MODES.ACTION, CHAT_COMPOSER_MODES.SUGGESTION];
+const PICKER_MODES = [CHAT_COMPOSER_MODES.DIALOGUE, CHAT_COMPOSER_MODES.ACTION, CHAT_COMPOSER_MODES.THOUGHT, CHAT_COMPOSER_MODES.SUGGESTION];
 
 const MODE_CHIP_LABELS = {
   [CHAT_COMPOSER_MODES.DIALOGUE]: "Dialogue",
   [CHAT_COMPOSER_MODES.ACTION]: "Action",
+  [CHAT_COMPOSER_MODES.THOUGHT]: "Thought",
   [CHAT_COMPOSER_MODES.SUGGESTION]: "Suggestion",
   [CHAT_COMPOSER_MODES.OOC]: "OOC",
   [CHAT_COMPOSER_MODES.DIRECT]: "Direct",
@@ -235,7 +236,7 @@ function SceneImageConfirmSheet({ costLabel = "", pending = false, error = "", o
 }
 
 // Dialogue mode chip, RULED 23 Aug 2026: pops a small anchored picker
-// presenting Dialogue / Action / Suggestion. OOC and DIRECT stay
+// presenting Dialogue / Action / Thought / Suggestion. OOC and DIRECT stay
 // contract-legal (CHAT_COMPOSER_MODES) but are not surfaced here.
 function ModeChip({ mode, onChangeMode }) {
   const [open, setOpen] = useState(false);
@@ -334,6 +335,10 @@ function ActionBar({ mode, onChangeMode, onChangeSpeaker, onOpenCast, onOpenStat
 function getPlaceholder(mode) {
   if (mode === CHAT_COMPOSER_MODES.ACTION) {
     return "Describe an action visible in the scene...";
+  }
+
+  if (mode === CHAT_COMPOSER_MODES.THOUGHT) {
+    return "Write private inner dialogue...";
   }
 
   if (mode === CHAT_COMPOSER_MODES.SUGGESTION) {

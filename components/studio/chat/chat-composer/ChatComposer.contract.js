@@ -1,8 +1,9 @@
-export const CHAT_COMPOSER_VIEW_CONTRACT_VERSION = "2.0.0";
+export const CHAT_COMPOSER_VIEW_CONTRACT_VERSION = "2.2.0";
 
 export const CHAT_COMPOSER_MODES = Object.freeze({
   DIALOGUE: "DIALOGUE",
   ACTION: "ACTION",
+  THOUGHT: "THOUGHT",
   SUGGESTION: "SUGGESTION",
   OOC: "OOC",
   DIRECT: "DIRECT",
@@ -74,7 +75,7 @@ export const CHAT_COMPOSER_DRAFT_SOFT_LIMIT = 2000;
  * @property {(() => void)|null} onUse
  *
  * @typedef {Object} ChatComposerViewProps
- * @property {"DIALOGUE"|"ACTION"|"SUGGESTION"|"OOC"|"DIRECT"} mode
+ * @property {"DIALOGUE"|"ACTION"|"THOUGHT"|"SUGGESTION"|"OOC"|"DIRECT"} mode
  * @property {string} speakerId Read by the Auto chip's active state only; no options row renders.
  * @property {string} draft
  * @property {number} draftLength
@@ -99,7 +100,7 @@ export const CHAT_COMPOSER_DRAFT_SOFT_LIMIT = 2000;
  * @property {ChatComposerSceneImageSeat} sceneImageSeat O10.
  * @property {ChatComposerSceneImageConfirmSheet|null} sceneImageConfirmSheet O10.
  * @property {ChatComposerUseCurrentSceneSeat} useCurrentSceneSeat O10.
- * @property {(nextValue: "DIALOGUE"|"ACTION"|"SUGGESTION") => void} onChangeMode Fired only for the three chip-presented modes; OOC/DIRECT stay contract-legal but unreachable from this chip.
+ * @property {(nextValue: "DIALOGUE"|"ACTION"|"THOUGHT"|"SUGGESTION") => void} onChangeMode Fired only for the chip-presented modes; OOC/DIRECT stay contract-legal but unreachable from this chip.
  * @property {(speakerId: string) => void} onChangeSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft
  * @property {(value: string, cursorPosition: number) => void} onUpdateSuggestionQueries

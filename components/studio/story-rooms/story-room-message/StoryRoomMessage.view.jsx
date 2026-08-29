@@ -1,8 +1,19 @@
 "use client";
 
 import {
+  AlertCircle,
+  Check,
+  Copy,
+  Flag,
+  Loader2,
+  RotateCcw,
+  StepForward,
+} from "lucide-react";
+
+import {
   STORY_ROOM_MESSAGE_BODY_MODES,
   STORY_ROOM_MESSAGE_CONTENT_TYPES,
+  STORY_ROOM_MESSAGE_COPY_STATES,
   STORY_ROOM_MESSAGE_MEDIA_SUBTYPES,
   STORY_ROOM_MESSAGE_DELIVERY_STATES,
   STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS,
@@ -325,6 +336,22 @@ export default function StoryRoomMessageView({
   paletteColors = null,
   media = null,
   deliveryState = null,
+  canCopy = false,
+  copyState = null,
+  onCopy = null,
+  canRegenerate = false,
+  regeneratePending = false,
+  regenerateError = "",
+  onRegenerate = null,
+  canContinue = false,
+  continuePending = false,
+  continueError = "",
+  onContinue = null,
+  canReport = false,
+  reportPending = false,
+  reportSubmitted = false,
+  reportError = "",
+  onReport = null,
 }) {
   if (
     contentType === STORY_ROOM_MESSAGE_CONTENT_TYPES.AUTO_EVENT_MEDIA &&
@@ -342,8 +369,22 @@ export default function StoryRoomMessageView({
   const allowAutomaticSpacing =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.CHARACTER ||
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR;
+  const isPlayerMessage =
+    surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER;
+  const copyLabel =
+    copyState === STORY_ROOM_MESSAGE_COPY_STATES.COPIED
+      ? "Copied"
+      : copyState === STORY_ROOM_MESSAGE_COPY_STATES.FAILED
+        ? "Copy failed"
+        : "Copy message";
+  const hasMessageActions =
+    (canCopy && typeof onCopy === "function") ||
+    (canRegenerate && typeof onRegenerate === "function") ||
+    (canContinue && typeof onContinue === "function") ||
+    (canReport && typeof onReport === "function");
 
   return (
+    <div className="w-full">
     <article
       className={`rounded-[var(--radius-md)] border p-4 ${getArticleClassName(surfaceTone)}`}
       style={
@@ -423,6 +464,140 @@ export default function StoryRoomMessageView({
         <p className="mt-3 text-xs text-[var(--ink-dim)]">Sending…</p>
       ) : null}
     </article>
+
+    {hasMessageActions ? (
+      <div
+        className={`mt-1.5 flex items-center gap-0.5 ${
+          isPlayerMessage ? "justify-end" : "justify-start"
+        }`}
+      >
+        {canCopy && typeof onCopy === "function" ? (
+          <MessageActionButton onClick={onCopy} label={copyLabel}>
+            {copyState === STORY_ROOM_MESSAGE_COPY_STATES.COPIED ? (
+              <Check size={13} aria-hidden="true" />
+            ) : copyState === STORY_ROOM_MESSAGE_COPY_STATES.FAILED ? (
+              <AlertCircle size={13} aria-hidden="true" />
+            ) : (
+              <Copy size={13} aria-hidden="true" />
+            )}
+          </MessageActionButton>
+        ) : null}
+
+        {canRegenerate && typeof onRegenerate === "function" ? (
+          <MessageActionButton
+            onClick={onRegenerate}
+            disabled={regeneratePending || continuePending || reportPending}
+            label={
+              regeneratePending
+                ? "Regenerating response"
+                : regenerateError
+                  ? `Regenerate response. Last attempt failed: ${regenerateError}`
+                  : "Regenerate response"
+            }
+            title={
+              regeneratePending
+                ? "Regenerating response"
+                : regenerateError || "Regenerate response"
+            }
+          >
+            {regeneratePending ? (
+              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
+            ) : regenerateError ? (
+              <AlertCircle size={13} aria-hidden="true" />
+            ) : (
+              <RotateCcw size={13} aria-hidden="true" />
+            )}
+          </MessageActionButton>
+        ) : null}
+
+        {canContinue && typeof onContinue === "function" ? (
+          <MessageActionButton
+            onClick={onContinue}
+            disabled={continuePending || regeneratePending || reportPending}
+            label={
+              continuePending
+                ? "Continuing response"
+                : continueError
+                  ? `Continue response. Last attempt failed: ${continueError}`
+                  : "Continue response"
+            }
+            title={
+              continuePending
+                ? "Continuing response"
+                : continueError || "Continue response"
+            }
+          >
+            {continuePending ? (
+              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
+            ) : continueError ? (
+              <AlertCircle size={13} aria-hidden="true" />
+            ) : (
+              <StepForward size={13} aria-hidden="true" />
+            )}
+          </MessageActionButton>
+        ) : null}
+
+        {canReport && typeof onReport === "function" ? (
+          <MessageActionButton
+            onClick={onReport}
+            disabled={
+              reportPending ||
+              regeneratePending ||
+              continuePending ||
+              reportSubmitted
+            }
+            label={
+              reportPending
+                ? "Submitting report"
+                : reportSubmitted
+                  ? "Message reported"
+                  : reportError
+                    ? `Report message. Last attempt failed: ${reportError}`
+                    : "Report message"
+            }
+            title={
+              reportPending
+                ? "Submitting report"
+                : reportSubmitted
+                  ? "Reported"
+                  : reportError || "Report message"
+            }
+          >
+            {reportPending ? (
+              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
+            ) : reportSubmitted ? (
+              <Check size={13} aria-hidden="true" />
+            ) : reportError ? (
+              <AlertCircle size={13} aria-hidden="true" />
+            ) : (
+              <Flag size={13} aria-hidden="true" />
+            )}
+          </MessageActionButton>
+        ) : null}
+      </div>
+    ) : null}
+    </div>
+  );
+}
+
+function MessageActionButton({
+  onClick,
+  disabled = false,
+  label,
+  title = label,
+  children,
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={title}
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-wait disabled:opacity-60"
+    >
+      {children}
+    </button>
   );
 }
 

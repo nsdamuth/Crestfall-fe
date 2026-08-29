@@ -76,6 +76,11 @@ import ActorMechanicsProfileAttachmentSection from "@/components/studio/characte
 
 const basicFieldProps = (ctx) => ({ form: ctx.form, updateField: ctx.updateField, updateDataField: ctx.updateDataField });
 const dataFieldProps = (ctx) => ({ form: ctx.form, updateDataField: ctx.updateDataField });
+const characterDataFieldProps = (ctx) => ({
+  form: ctx.form,
+  updateDataField: ctx.updateDataField,
+  creationType: ctx.creationType,
+});
 
 function familySection(Component, section) {
   return {
@@ -103,11 +108,11 @@ function runtimeModulesEntry({ ownerLabel, defaultInheritanceMode, defaultMechan
 }
 
 const CHARACTER_LIKE_SECTIONS = {
-  identity: { Component: IdentitySection, buildProps: dataFieldProps },
+  identity: { Component: IdentitySection, buildProps: characterDataFieldProps },
   appearance: { Component: AppearanceSection, buildProps: dataFieldProps },
   body: { Component: BodySection, buildProps: dataFieldProps },
-  behavior: { Component: BehaviorSection, buildProps: dataFieldProps },
-  advanced: { Component: AdvancedSection, buildProps: dataFieldProps },
+  behavior: { Component: BehaviorSection, buildProps: characterDataFieldProps },
+  advanced: { Component: AdvancedSection, buildProps: characterDataFieldProps },
   visualReferences: {
     Component: VisualReferencesSection,
     buildProps: (ctx) => ({ creationId: ctx.creationId, form: ctx.form, updateDataField: ctx.updateDataField }),

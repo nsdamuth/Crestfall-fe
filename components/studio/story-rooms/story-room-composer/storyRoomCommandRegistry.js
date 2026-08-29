@@ -16,6 +16,14 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     panel: "COMMANDS",
   }),
   Object.freeze({
+    name: "format",
+    aliases: Object.freeze([]),
+    description: "Show Crestfall Story text-formatting and message-semantics help.",
+    usage: "/format",
+    handling: "LOCAL_UI",
+    panel: "FORMAT",
+  }),
+  Object.freeze({
     name: "inventory",
     aliases: Object.freeze([]),
     description:

@@ -1,25 +1,18 @@
-# Timeline v1 shared contract
+# Timeline shared contract
 
-`TIMELINE` is a lightweight organizational creation. It does not duplicate Lore
-content or become chronology authority for a Lore Asset.
+`timeline_contract_v2` keeps Timeline as a lightweight presentation/curation asset over Lore.
+Lore continues to own prose, images, publication state, era, display date, and canonical chronology.
 
-Canonical Timeline data lives at `creation.data.timeline` and uses
-`timeline_contract_v1`:
+Timeline v2 owns:
 
-- `publicEnabled` — creator intent for future public projection;
-- `sortDirection` — `ASC` or `DESC`;
-- `groupByEra` — presentation grouping preference;
-- `entries[]` — references to Lore creation ids with optional numeric
-  `orderOverride` values.
+- `publicEnabled`
+- chronology direction
+- `groupingMode`: `CHAPTERS`, `ERA`, or `NONE`
+- authored `chapters[]` (`id`, `title`, numeric `order`)
+- Lore membership
+- optional per-entry `orderOverride`
+- optional per-entry `chapterId`
 
-Lore keeps its human-readable `displayDate`. The optional root
-`lore_document.timelineOrder` is the machine-sort chronology key. The Timeline
-never parses or rewrites `displayDate`.
+`timeline_contract_v1` remains readable. `groupByEra: true` normalizes to `ERA`; false normalizes to `NONE`. A save through the v2 editor upgrades the persisted definition to v2.
 
-For ordering, an entry-level `orderOverride` wins over the referenced Lore
-Asset's root `timelineOrder`. Lore with neither value is unplaced and sorts at
-the end.
-
-Public Timeline projection is intentionally not implemented by TL1A. The public
-read boundary must filter entries through Lore publication authority and must
-not leak private/unpublished Lore metadata.
+Chapters are Timeline presentation metadata only. Removing a chapter unassigns its Lore entries; it never deletes or mutates the referenced Lore assets.

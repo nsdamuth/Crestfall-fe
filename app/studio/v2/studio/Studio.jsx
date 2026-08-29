@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import StudioView from "./studio/Studio.view";
 import { useStudioViewModel } from "./studio/useStudioViewModel";
 import CharacterCreatorModal from "@/components/studio/create/character/creator-stops/CharacterCreatorModal";
+import { CHARACTER_CREATOR_TYPES } from "@/components/studio/create/character/characterCreationMode";
 import WorldCreatorModal from "@/components/studio/create/world/creator-stops/WorldCreatorModal";
 import LookCreatorModal from "@/components/studio/create/look/creator-stops/LookCreatorModal";
 import StoryCreatorModal from "@/components/studio/create/story/creator-stops/StoryCreatorModal";
@@ -38,6 +39,7 @@ function StudioModeContent({
   mode,
   onModeChange,
   onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
   activeFullStudioSectionSlug = "",
   onOpenFullStudioSection = null,
   onBackToFullStudio = null,
@@ -57,6 +59,7 @@ function StudioModeContent({
         loadError={creationStudioViewModel.countLoadError}
         LinkComponent={Link}
         onOpenCharacterCreator={onOpenCharacterCreator}
+        onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
         onOpenFullStudio={() => onModeChange(CREATION_STUDIO_MODES.FULL)}
       />
     );
@@ -68,6 +71,7 @@ function StudioModeContent({
       activeSectionSlug={activeFullStudioSectionSlug}
       LinkComponent={Link}
       onOpenCharacterCreator={onOpenCharacterCreator}
+      onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
       onSelectSection={onOpenFullStudioSection}
       onBack={onBackToFullStudio}
     />
@@ -108,7 +112,7 @@ function FixtureModeHarness({ fixtureMode, onChangeFixtureMode }) {
 export default function Studio({ showFixtureHarness = true }) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
-  const [isCharacterCreatorOpen, setIsCharacterCreatorOpen] = useState(false);
+  const [characterCreatorRequest, setCharacterCreatorRequest] = useState(null);
   const [isWorldCreatorOpen, setIsWorldCreatorOpen] = useState(false);
   const [isLookCreatorOpen, setIsLookCreatorOpen] = useState(false);
   const [isStoryCreatorOpen, setIsStoryCreatorOpen] = useState(false);
@@ -149,7 +153,16 @@ export default function Studio({ showFixtureHarness = true }) {
   const viewProps = useStudioViewModel({
     fixtureMode,
     onNavigate: (route) => router.push(route),
-    onOpenCharacterCreator: () => setIsCharacterCreatorOpen(true),
+    onOpenCharacterCreator: () =>
+      setCharacterCreatorRequest({
+        creationType: CHARACTER_CREATOR_TYPES.CHARACTER,
+        fieldScope: "quick",
+      }),
+    onOpenPlayerCharacterCreator: () =>
+      setCharacterCreatorRequest({
+        creationType: CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER,
+        fieldScope: "quick",
+      }),
     onOpenWorldCreator: () => setIsWorldCreatorOpen(true),
     onOpenLookCreator: () => setIsLookCreatorOpen(true),
     onOpenStoryCreator: () => setIsStoryCreatorOpen(true),
@@ -201,7 +214,18 @@ export default function Studio({ showFixtureHarness = true }) {
             <StudioModeContent
               mode={viewProps.activeMode}
               onModeChange={handleModeChange}
-              onOpenCharacterCreator={() => setIsCharacterCreatorOpen(true)}
+              onOpenCharacterCreator={() =>
+                setCharacterCreatorRequest({
+                  creationType: CHARACTER_CREATOR_TYPES.CHARACTER,
+                  fieldScope: "full",
+                })
+              }
+              onOpenPlayerCharacterCreator={() =>
+                setCharacterCreatorRequest({
+                  creationType: CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER,
+                  fieldScope: "full",
+                })
+              }
               activeFullStudioSectionSlug={fullStudioSectionSlug}
               onOpenFullStudioSection={(sectionId) => setFullStudioSection(sectionId)}
               onBackToFullStudio={() => setFullStudioSection("", { replace: true })}
@@ -215,18 +239,11 @@ export default function Studio({ showFixtureHarness = true }) {
         }
       />
 
-      {isCharacterCreatorOpen ? (
-        // fieldScope="quick" per docs/STUDIO-SPEC.md section 3.2. S2
-        // (components/studio/create/character/creator-stops/**, run in
-        // parallel, not yet landed at this brief's build time) adds
-        // this prop to CharacterCreatorModal's signature. Until it
-        // lands the component destructures only { onClose } and
-        // silently ignores the extra prop, rendering its full field
-        // set: correct integration behavior per the brief, not a bug
-        // to fix here.
+      {characterCreatorRequest ? (
         <CharacterCreatorModal
-          fieldScope="quick"
-          onClose={() => setIsCharacterCreatorOpen(false)}
+          creationType={characterCreatorRequest.creationType}
+          fieldScope={characterCreatorRequest.fieldScope}
+          onClose={() => setCharacterCreatorRequest(null)}
         />
       ) : null}
 

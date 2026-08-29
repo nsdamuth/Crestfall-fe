@@ -53,8 +53,9 @@ export function buildSavePayload(form) {
   };
   data.is_creditable = data.is_creditable ?? true;
 
-  if (form.type === "CHARACTER") {
-    data.name = data.name || form.title;
+  const normalizedType = String(form.type || "").toUpperCase();
+  if (["CHARACTER", "PLAYER_CHARACTER"].includes(normalizedType)) {
+    data.name = form.title || data.name || "";
   }
 
   data.visibility = form.visibility;

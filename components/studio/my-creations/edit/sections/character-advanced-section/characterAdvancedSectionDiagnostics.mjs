@@ -43,6 +43,8 @@ test("Character Advanced ViewModel owns normalization and storage mapping", () =
   assert.match(viewModel, /personality_notes/);
   assert.match(viewModel, /extra_runtime_notes/);
   assert.match(viewModel, /creator_directives/);
+  assert.match(viewModel, /showRelationshipToPlayer/);
+  assert.match(viewModel, /PLAYER_CHARACTER/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
@@ -55,11 +57,13 @@ test("Character Advanced contract and fixtures cover portable states", () => {
   );
   assert.match(contract, /CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /advancedPromptingControl/);
+  assert.match(contract, /showRelationshipToPlayer/);
   assert.match(contract, /onChangeRuntimeNotes/);
   assert.match(fixtures, /characterAdvancedSectionPopulatedFixture/);
   assert.match(fixtures, /characterAdvancedSectionEmptyFixture/);
   assert.match(fixtures, /characterAdvancedSectionLongContentFixture/);
   assert.match(fixtures, /characterAdvancedSectionMissingCallbacksFixture/);
+  assert.match(fixtures, /playerCharacterAdvancedSectionFixture/);
 });
 
 test("Character Advanced preview is development-only", () => {

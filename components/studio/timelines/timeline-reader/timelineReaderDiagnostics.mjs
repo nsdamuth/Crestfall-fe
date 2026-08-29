@@ -26,6 +26,10 @@ assert.doesNotMatch(shell, /\bfetch\s*\(/);
 assert.match(view, /Edit Timeline/);
 assert.match(view, /Public Timeline|Internal Timeline/);
 assert.match(view, /showEditAction/);
+assert.match(view, /<details/);
+assert.match(view, /localStorage/);
+assert.match(view, /group-hover:text-\[var\(--gold-ornament\)\]/);
+assert.match(view, /group-hover:-translate-y-1/);
 assert.doesNotMatch(view, /\bfetch\s*\(|\/api\/|router\./);
 
 assert.match(viewModel, /fetchOwnedCreation/);
@@ -34,6 +38,8 @@ assert.match(viewModel, /initialCreation/);
 assert.match(viewModel, /buildOwnedTimelineProjection/);
 assert.doesNotMatch(viewModel, /fetchOwnedTimelineProjection/);
 assert.match(viewModel, /groupTimelineReaderEntries/);
+assert.match(viewModel, /groupingMode/);
+assert.match(viewModel, /chapters/);
 assert.match(viewModel, /Undated \/ unplaced/);
 assert.match(viewModel, /\/studio\/v2\/editor\/\$\{encodeURIComponent\(timelineId\)\}\?origin=timeline/);
 assert.doesNotMatch(viewModel, /\/studio\/create\//);
@@ -55,13 +61,13 @@ assert.match(builderShell, /backHref/);
 assert.match(builderViewModel, /initialCreation/);
 assert.match(builderViewModel, /fetchOwnedCreation/);
 assert.doesNotMatch(builderViewModel, /fetchOwnedTimelineProjection/);
-assert.match(contract, /TIMELINE_READER_VIEW_CONTRACT_VERSION = "1\.0\.0"/);
+assert.match(contract, /TIMELINE_READER_VIEW_CONTRACT_VERSION = "1\.1\.0"/);
 assert.match(fixtures, /timelineReaderFixture/);
 assert.match(preview, /process\.env\.NODE_ENV === "production"/);
 assert.match(preview, /notFound\(\)/);
 
 console.log(JSON.stringify({
-  diagnostic: "timeline_reader_editor_v2_owner_authority_tl3b_v0",
+  diagnostic: "timeline_reader_chapters_interaction_tl4_v0",
   status: "PASSED",
   loreTimelineCardsOpenReader: true,
   readerUsesSameOwnerCreationAuthorityAsV2Editor: true,
@@ -70,5 +76,8 @@ console.log(JSON.stringify({
   genericCharacterEditorBypassedForTimeline: true,
   ownerReaderAndEditorDoNotDependOnTimelineProjectionEndpoint: true,
   postCreateLandsOnReader: true,
+  chapterGroupsAreCollapsible: true,
+  loreCardsHaveGoldHoverAffordance: true,
+  chapterOpenStatePersistsLocally: true,
   loomBoundaryPreserved: true,
 }, null, 2));

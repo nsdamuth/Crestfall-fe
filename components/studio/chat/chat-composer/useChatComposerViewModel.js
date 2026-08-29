@@ -10,6 +10,7 @@ import {
   getChatComposerCommandSearchTerms,
   getChatComposerCommandSuggestions,
 } from "./chatComposerCommandRegistry";
+import { routeChatComposerSubmission } from "./chatComposerSubmissionRouter";
 import {
   getMentionSearchTerms,
   normalizeChatComposerSearch,
@@ -19,6 +20,7 @@ import {
 const MODE_OPTIONS = [
   { value: CHAT_COMPOSER_MODES.DIALOGUE, label: "Dialogue" },
   { value: CHAT_COMPOSER_MODES.ACTION, label: "Action" },
+  { value: CHAT_COMPOSER_MODES.THOUGHT, label: "Thought" },
   { value: CHAT_COMPOSER_MODES.SUGGESTION, label: "Suggestion" },
   { value: CHAT_COMPOSER_MODES.OOC, label: "OOC / Note" },
   { value: CHAT_COMPOSER_MODES.DIRECT, label: "Direct / GM" },
@@ -107,6 +109,10 @@ function getPlaceholder(mode) {
     return "Describe an action visible in the scene...";
   }
 
+  if (mode === CHAT_COMPOSER_MODES.THOUGHT) {
+    return "Write private inner dialogue...";
+  }
+
   if (mode === CHAT_COMPOSER_MODES.SUGGESTION) {
     return "Suggest what happens next...";
   }
@@ -145,6 +151,7 @@ export function useChatComposerViewModel({
   setLocationMentions,
   locationMentionOptions = [],
   onSend,
+  onLocalCommand,
   onOpenCast,
   onOpenState,
   isSending = false,
@@ -439,7 +446,21 @@ export function useChatComposerViewModel({
       return;
     }
 
-    onSend?.(options);
+    const routing = routeChatComposerSubmission({
+      draft: draftText,
+      options,
+      onLocalCommand,
+      onSend,
+    });
+
+    if (routing.handledLocally) {
+      setDraft?.("");
+      setParticipantMentions?.([]);
+      setLocationMentions?.([]);
+      setActiveCommandQuery(null);
+      setActiveMentionQuery(null);
+      setActiveLocationQuery(null);
+    }
   }
 
   const sceneImageAvailable = Boolean(sceneImage?.available);

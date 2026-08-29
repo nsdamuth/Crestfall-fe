@@ -58,5 +58,4 @@ an application draft.
 
 ```text
 components/studio/create/character/AppearanceStep.jsx
-components/studio/create/player-character/PlayerCharacterCreator.jsx
 ```

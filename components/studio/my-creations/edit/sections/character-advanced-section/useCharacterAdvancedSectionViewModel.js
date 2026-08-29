@@ -26,11 +26,18 @@ function normalizeText(value) {
 export function getCharacterAdvancedSectionViewProps({
   form = {},
   updateDataField = null,
+  creationType = "",
 } = {}) {
   const data = form?.data || {};
+  const normalizedCreationType = String(creationType || form?.type || "").toUpperCase();
+  const isPlayerCharacter = normalizedCreationType === "PLAYER_CHARACTER";
 
   return {
     ...DEFAULT_COPY,
+    sectionDescription: isPlayerCharacter
+      ? "Optional advanced guidance for your Player Character. These fields shape Crestfall presentation and runtime context without changing player control."
+      : DEFAULT_COPY.sectionDescription,
+    showRelationshipToPlayer: !isPlayerCharacter,
     greetingValue: normalizeText(data.greeting),
     scenarioValue: normalizeText(data.scenario),
     relationshipValue: normalizeText(data.relationship_to_player),

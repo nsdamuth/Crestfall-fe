@@ -7,12 +7,9 @@
 // public/tmp-mockup-images sample set; no new art acquired this wave.
 
 // Quick Start doors, asset-first (docs/_legacy-reference proof,
-// docs/STUDIO-SPEC.md section 3.1). Character, Worlds, Looks, and
-// Stories are the four live doors (docs/STUDIO-SPEC.md section 3.2
-// for Character; the Worlds, Looks, and Stories quick creates are
-// their own briefs). Every other type has no allocation yet
-// (docs/STUDIO-SPEC.md section 9, item 2) and renders the standing
-// Soon treatment.
+// docs/STUDIO-SPEC.md section 3.1). Character and Player Character now share
+// the Character creator component family with type-specific persistence;
+// Worlds, Looks, and Stories retain their existing live creator adapters.
 export const STUDIO_DOORS = [
   {
     id: "character",
@@ -28,7 +25,7 @@ export const STUDIO_DOORS = [
     eyebrow: "Your identity",
     description: "A private or public player identity to bring into stories, rooms, and future image generation.",
     imageSrc: encodeURI("/tmp-mockup-images/alpha-test-creator-images/rev.png"),
-    isLive: false,
+    isLive: true,
   },
   {
     // World-space door, renamed from "Location" this pass (RULED, the

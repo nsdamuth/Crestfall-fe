@@ -45,6 +45,8 @@ test("Character Behavior ViewModel owns normalization and storage mapping", () =
   assert.match(viewModel, /normalizeVoiceModuleIds/);
   assert.match(viewModel, /voice_module_ids/);
   assert.match(viewModel, /verbosity_level/);
+  assert.match(viewModel, /PLAYER_CHARACTER/);
+  assert.match(viewModel, /without taking control away from the player/);
   assert.match(viewModel, /outward_personality/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });

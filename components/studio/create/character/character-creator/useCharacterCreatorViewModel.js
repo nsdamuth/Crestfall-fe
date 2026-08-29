@@ -12,6 +12,10 @@ import {
   extractCreationFromApiResponse,
 } from "@/components/studio/characters/characterUtils";
 import {
+  CHARACTER_CREATOR_TYPES,
+  getCharacterCreatorMode,
+} from "@/components/studio/create/character/characterCreationMode";
+import {
   CHARACTER_CREATOR_STEP_IDS,
   buildCharacterCreatorStepItems,
 } from "./CharacterCreator.contract";
@@ -44,8 +48,10 @@ export function useCharacterCreatorViewModel({
   templates = characterTemplates,
   createDraft = createCharacterDraft,
   onCreated = null,
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
 } = {}) {
   const router = useRouter();
+  const creatorMode = getCharacterCreatorMode(creationType);
   const [activeStep, setActiveStep] = useState("identity");
   const [form, setForm] = useState(() => cloneInitialForm(initialForm));
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -103,13 +109,19 @@ export function useCharacterCreatorViewModel({
     setSaveMessage("");
 
     try {
-      const creationPayload = buildCharacterCreationPayload(form);
-      const apiPayload = await createDraft(creationPayload);
+      const creationPayload = buildCharacterCreationPayload(
+        form,
+        creatorMode.creationType
+      );
+      const apiPayload = await createDraft(
+        creationPayload,
+        `${creatorMode.label} draft could not be saved.`
+      );
       const creation = extractCreationFromApiResponse(apiPayload);
 
       if (!creation?.id) {
         throw new Error(
-          "Character draft was saved, but no creation ID was returned."
+          `${creatorMode.label} draft was saved, but no creation ID was returned.`
         );
       }
 
@@ -121,15 +133,19 @@ export function useCharacterCreatorViewModel({
         return;
       }
 
-      router.push(`/studio/my-creations/${creation.id}/edit`);
+      router.push(`/studio/v2/editor/${creation.id}?origin=studio`);
     } catch (error) {
       setSaveStatus("error");
-      setSaveMessage(error?.message || "Character draft could not be saved.");
+      setSaveMessage(
+        error?.message || `${creatorMode.label} draft could not be saved.`
+      );
     }
   }
 
   return {
     viewProps: {
+      creationType: creatorMode.creationType,
+      creatorLabel: creatorMode.label,
       activeStep,
       activeIndex,
       stepItems,

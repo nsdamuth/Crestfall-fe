@@ -26,6 +26,14 @@ export const CHAT_COMPOSER_COMMANDS = Object.freeze([
     handling: "LOCAL_UI",
     panel: "COMMANDS",
   }),
+  Object.freeze({
+    name: "format",
+    aliases: Object.freeze([]),
+    description: "Show Story Chat text-formatting and semantic-channel help.",
+    usage: "/format",
+    handling: "LOCAL_UI",
+    panel: "FORMAT",
+  }),
 ]);
 
 function normalizeCommandToken(value) {
@@ -69,4 +77,38 @@ export function findChatComposerCommand(commandToken) {
       getChatComposerCommandSearchTerms(command).includes(normalizedToken)
     ) || null
   );
+}
+
+/**
+ * Resolve a complete composer draft that begins with a slash command.
+ *
+ * Autocomplete works on partial tokens, while send-time routing must resolve
+ * the complete draft deterministically. Keep those concerns separate so a
+ * local command can never fall through to the Story runtime because of
+ * suggestion-menu state.
+ */
+export function resolveChatComposerCommandInput(value) {
+  const raw = String(value || "").trim();
+  if (!raw.startsWith("/")) return null;
+
+  const commandBody = raw.slice(1).trim();
+  if (!commandBody) return null;
+
+  const firstWhitespace = commandBody.search(/\s/);
+  const token = firstWhitespace < 0
+    ? commandBody
+    : commandBody.slice(0, firstWhitespace);
+  const args = firstWhitespace < 0
+    ? ""
+    : commandBody.slice(firstWhitespace).trim();
+  const command = findChatComposerCommand(token);
+
+  return command
+    ? Object.freeze({
+        command,
+        token: normalizeCommandToken(token),
+        args,
+        raw,
+      })
+    : null;
 }

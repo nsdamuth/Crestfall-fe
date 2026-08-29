@@ -22,6 +22,11 @@ import TemplatePanelBody from "./shared/TemplatePanelBody";
 import { EmptyStateCard } from "./shared/Controls";
 import { useCharacterColorPaletteModalViewModel } from "../character-color-palette/useCharacterColorPaletteModalViewModel";
 import { useCharacterTemplateModalViewModel } from "../character-template-picker/useCharacterTemplateModalViewModel";
+import {
+  CHARACTER_CREATOR_TYPES,
+  buildCharacterCreatorCreationPayload,
+  getCharacterCreatorMode,
+} from "../characterCreationMode";
 
 const INITIAL_FORM_STATE = {
   name: "",
@@ -84,31 +89,6 @@ const INITIAL_FORM_STATE = {
   extraRuntimeNotes: "",
 };
 
-// Same top-level shape (type, title, description, visibility,
-// content_rating, data) the working character creator posts to
-// /v1/studio/creations, sourced from this form's own field names.
-function buildSaveCreationPayload(formState) {
-  const name = formState.name?.trim() || "Unnamed Character";
-
-  return {
-    type: "CHARACTER",
-    title: name,
-    description:
-      formState.shortConcept ||
-      formState.title ||
-      formState.species ||
-      "A private draft character created in Crestfall Studio.",
-    visibility: formState.visibility || "PRIVATE",
-    content_rating: formState.contentRating || "SFW",
-    data: {
-      ...formState,
-      name,
-      builder: "CHARACTER_CREATOR",
-      builder_version: "1.0",
-    },
-  };
-}
-
 function extractCreationFromApiResponse(payload) {
   return payload?.creation || payload?.data?.creation || null;
 }
@@ -118,8 +98,15 @@ function extractCreationFromApiResponse(payload) {
 // exactly today's field set so the legacy /studio/create hub (which
 // imports this same modal) stays pixel-stable under the strangler
 // law; the v2 Studio hub passes "quick" for the section 2.2 QUICK set.
-export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) {
+export default function CharacterCreatorModal({
+  onClose,
+  fieldScope = "full",
+  creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
+}) {
   const router = useRouter();
+  const creatorMode = getCharacterCreatorMode(creationType);
+  const isPlayerCharacter =
+    creatorMode.creationType === CHARACTER_CREATOR_TYPES.PLAYER_CHARACTER;
   const [activeStop, setActiveStop] = useState(CREATOR_STOP_IDS[0]);
   const [maxReachedIndex, setMaxReachedIndex] = useState(0);
   const [moreHairOpen, setMoreHairOpen] = useState(false);
@@ -198,7 +185,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
     const snapshot = formState;
 
     try {
-      const payload = buildSaveCreationPayload(snapshot);
+      const payload = buildCharacterCreatorCreationPayload(
+        snapshot,
+        creatorMode.creationType
+      );
       const response = creationId
         ? await updateCreationDraft(creationId, payload)
         : await createCreationDraft(payload);
@@ -309,11 +299,10 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
         : secondaryPanel === "story"
           ? {
               eyebrow: "Next step",
-              title: "Continue into a story",
-              description:
-                "Putting a saved character into a story is coming soon.",
+              title: creatorMode.storyPanelTitle,
+              description: creatorMode.storyPanelDescription,
               body: (
-                <EmptyStateCard message="Story selection is not built yet. Once it exists, this will place this character into a story you pick, resumable from any device." />
+                <EmptyStateCard message={creatorMode.storyPanelMessage} />
               ),
               onCancel: () => setSecondaryPanel(null),
             }
@@ -348,7 +337,7 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
       }),
     onSave: handleSave,
     onFinishAndSave: handleSave,
-    closeAriaLabel: "Close character creator",
+    closeAriaLabel: creatorMode.closeAriaLabel,
     onContinueInEditor: handleContinueInEditorAfterSave,
     onDone: handleDoneAfterSave,
     onClose: requestClose,
@@ -478,6 +467,7 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
             onChangePhilosophy={updateField("philosophy")}
             onChangeInterests={updateField("interests")}
             onChangeRelationshipToPlayer={updateField("relationshipToPlayer")}
+            showRelationshipToPlayer={!isPlayerCharacter}
             onOpenVoiceModulePicker={() => {}}
             onChangePersonalityNotes={updateField("personalityNotes")}
             advancedFoldOpen={heartAdvancedFoldOpen}
@@ -514,6 +504,9 @@ export default function CharacterCreatorModal({ onClose, fieldScope = "full" }) 
             creatorDirectives={formState.creatorDirectives}
             extraRuntimeNotes={formState.extraRuntimeNotes}
             onChangeCreatorDirectives={updateField("creatorDirectives")}
+            creatorDirectivesPlaceholder={
+              creatorMode.creatorDirectivesPlaceholder
+            }
             onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
             onOpenStoryPanel={() => setSecondaryPanel("story")}
             fieldScope={fieldScope}

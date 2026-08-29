@@ -1,23 +1,7 @@
-# Timeline Builder LOOM boundary
+# Timeline Builder / Editor
 
-```text
-TimelineBuilderShell.jsx                 Binding Shell
-        ↓
-useTimelineBuilderViewModel.js           ViewModel / Chassis
-        ↓
-TimelineBuilder.view.jsx                 Portable View / Skin
-```
+The V2 Timeline editor owns only Timeline presentation/curation state. Lore remains authoritative for Lore content and chronology metadata.
 
-The View owns only Timeline authoring presentation. It does not fetch creations,
-call APIs, interpret persistence records, or navigate.
+Timeline v2 adds authored chapters and `groupingMode` while retaining v1 compatibility. Creators can add/rename/order/remove chapters, assign attached Lore to chapters, use Lore era grouping, or choose a continuous chronology. Removing a chapter unassigns its entries rather than deleting Lore.
 
-The ViewModel owns Timeline draft state, Lore loading, Timeline loading, automatic
-chronology ordering, manual order overrides, create/update mutation, save state,
-and navigation semantics.
-
-The Binding Shell owns composition of the existing Creation Picker portable View.
-The Timeline View receives that picker as an application-owned slot and does not
-import or fetch Crestfall creation data directly.
-
-Timeline membership stores Lore creation ids only. Lore title, prose, dates,
-images, and publication authority remain owned by the Lore assets.
+The View remains portable; fetching, save orchestration, chapter-id generation, normalization, and navigation stay in the ViewModel/Shell boundary.

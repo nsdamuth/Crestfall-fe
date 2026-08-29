@@ -5,6 +5,7 @@ import {
   BookOpenText,
   CalendarDays,
   Globe2,
+  Layers3,
   ListOrdered,
   Plus,
   Save,
@@ -49,7 +50,13 @@ function ToggleRow({ label, description, checked, onChange }) {
   );
 }
 
-function EntryRow({ entry, onUpdateOrderOverride, onRemoveLore }) {
+function EntryRow({
+  entry,
+  chapters = [],
+  onUpdateOrderOverride,
+  onUpdateEntryChapter,
+  onRemoveLore,
+}) {
   const chronology = entry.displayDate || entry.era || "Undated / unplaced";
 
   return (
@@ -73,7 +80,26 @@ function EntryRow({ entry, onUpdateOrderOverride, onRemoveLore }) {
           </div>
         </div>
 
-        <div className="grid shrink-0 gap-2 sm:grid-cols-[10rem_auto]">
+        <div className="grid shrink-0 gap-2 sm:grid-cols-[12rem_10rem_auto]">
+          <label className="block">
+            <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+              Chapter
+            </span>
+            <select
+              value={entry.chapterId || ""}
+              onChange={(event) =>
+                onUpdateEntryChapter?.(entry.id, event.target.value)
+              }
+              className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+            >
+              <option value="">Unassigned</option>
+              {chapters.map((chapter) => (
+                <option key={chapter.id} value={chapter.id}>
+                  {chapter.title}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="block">
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
               Order override
@@ -104,6 +130,48 @@ function EntryRow({ entry, onUpdateOrderOverride, onRemoveLore }) {
   );
 }
 
+function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
+  return (
+    <article className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-4 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-end">
+      <label className="block">
+        <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+          Order
+        </span>
+        <input
+          type="number"
+          step="any"
+          value={chapter.order}
+          onChange={(event) =>
+            onUpdateChapter?.(chapter.id, "order", event.target.value)
+          }
+          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+        />
+      </label>
+      <label className="block min-w-0">
+        <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
+          Chapter title
+        </span>
+        <input
+          value={chapter.title}
+          maxLength={160}
+          onChange={(event) =>
+            onUpdateChapter?.(chapter.id, "title", event.target.value)
+          }
+          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+          placeholder="Arc I — Origins to Bronze Age"
+        />
+      </label>
+      <button
+        type="button"
+        onClick={() => onRemoveChapter?.(chapter.id)}
+        className="cf-btn cf-btn--danger"
+      >
+        <Trash2 size={14} /> Remove
+      </button>
+    </article>
+  );
+}
+
 export default function TimelineBuilderView({
   isEditing = false,
   loadStatus = "ready",
@@ -115,7 +183,9 @@ export default function TimelineBuilderView({
   publicEnabled = false,
   sortDirection = "ASC",
   sortOptions = [],
-  groupByEra = true,
+  groupingMode = "ERA",
+  groupingOptions = [],
+  chapters = [],
   entries = [],
   entryCount = 0,
   unplacedCount = 0,
@@ -127,6 +197,10 @@ export default function TimelineBuilderView({
   onOpenLorePicker = null,
   onRemoveLore = null,
   onUpdateOrderOverride = null,
+  onUpdateEntryChapter = null,
+  onAddChapter = null,
+  onUpdateChapter = null,
+  onRemoveChapter = null,
   onSave = null,
   onBackToLore = null,
 }) {
@@ -229,7 +303,7 @@ export default function TimelineBuilderView({
                 />
               </Field>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
                 <Field label="Workspace visibility" help="Controls owner/internal access to the Timeline asset itself.">
                   <select
                     className={inputClass}
@@ -253,23 +327,62 @@ export default function TimelineBuilderView({
                     ))}
                   </select>
                 </Field>
+
+                <Field label="Viewer grouping" help="Chapters are authored by this Timeline; Lore eras remain owned by Lore.">
+                  <select
+                    className={inputClass}
+                    value={groupingMode}
+                    onChange={(event) => onUpdateField?.("groupingMode", event.target.value)}
+                  >
+                    {groupingOptions.map((option) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </Field>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                <ToggleRow
-                  label="Public Timeline"
-                  description="No review is required for the Timeline itself. Public readers will see only attached Lore that has a published Lore release."
-                  checked={publicEnabled}
-                  onChange={(checked) => onUpdateField?.("publicEnabled", checked)}
-                />
-                <ToggleRow
-                  label="Group by Era"
-                  description="Keep era labels available to the Timeline viewer. Ordering still comes from numeric chronology or per-entry overrides."
-                  checked={groupByEra}
-                  onChange={(checked) => onUpdateField?.("groupByEra", checked)}
-                />
-              </div>
+              <ToggleRow
+                label="Public Timeline"
+                description="No review is required for the Timeline itself. Public readers will see only attached Lore that has a published Lore release."
+                checked={publicEnabled}
+                onChange={(checked) => onUpdateField?.("publicEnabled", checked)}
+              />
             </div>
+          </section>
+
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
+                  <Layers3 size={17} />
+                  <p className="text-xs uppercase tracking-[0.18em]">Timeline Chapters</p>
+                </div>
+                <h2 className="mt-2 font-display text-3xl">Author collapsible sections</h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+                  Chapters belong to this Timeline and do not modify Lore. When Viewer Grouping is Chapters, readers can expand and collapse these sections independently.
+                </p>
+              </div>
+              <button type="button" onClick={() => onAddChapter?.()} className="cf-btn">
+                <Plus size={15} /> Add Chapter
+              </button>
+            </div>
+
+            {chapters.length ? (
+              <div className="mt-5 space-y-3">
+                {chapters.map((chapter) => (
+                  <ChapterRow
+                    key={chapter.id}
+                    chapter={chapter}
+                    onUpdateChapter={onUpdateChapter}
+                    onRemoveChapter={onRemoveChapter}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-8 text-center">
+                <p className="text-sm text-[var(--ink-dim)]">No authored chapters yet. Era grouping and continuous chronology still work without them.</p>
+              </div>
+            )}
           </section>
 
           <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
@@ -295,7 +408,9 @@ export default function TimelineBuilderView({
                   <EntryRow
                     key={entry.id}
                     entry={entry}
+                    chapters={chapters}
                     onUpdateOrderOverride={onUpdateOrderOverride}
+                    onUpdateEntryChapter={onUpdateEntryChapter}
                     onRemoveLore={onRemoveLore}
                   />
                 ))}

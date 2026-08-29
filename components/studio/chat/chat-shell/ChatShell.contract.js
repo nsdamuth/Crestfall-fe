@@ -1,4 +1,4 @@
-export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const CHAT_SHELL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 export const CHAT_SHELL_STATUS_PILL_TONES = Object.freeze({
   NEUTRAL: "neutral",
@@ -73,6 +73,7 @@ export const CHAT_SHELL_STATUS_PILL_TONES = Object.freeze({
  * @property {Object} statePanel Direct ChatStatePanel View-contract props.
  * @property {ChatShellSessionDialogs} sessionDialogs
  * @property {ChatShellLibraryPassUpsell|null} libraryPassUpsell
+ * @property {Object|null} formatHelp V2-local `/format` help surface; open gates rendering and onClose is caller-owned.
  * @property {Object|null} partyRoster Added 1.1.0. Direct ChatPartyRoster View-contract props (open gates rendering); the caller wires it to chat-cast-panel's onOpenPartyRoster.
  *
  * 1.1.0, 23 Aug 2026 (build-0823 pass 2): the two chat-local headers

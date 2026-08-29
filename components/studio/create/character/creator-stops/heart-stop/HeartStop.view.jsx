@@ -41,6 +41,7 @@ export default function HeartStopView({
   onChangePhilosophy = null,
   onChangeInterests = null,
   onChangeRelationshipToPlayer = null,
+  showRelationshipToPlayer = true,
   onOpenVoiceModulePicker = null,
   onChangePersonalityNotes = null,
   advancedFoldOpen = false,
@@ -61,7 +62,7 @@ export default function HeartStopView({
     verbosityLevel ||
       philosophy ||
       interests ||
-      relationshipToPlayer ||
+      (showRelationshipToPlayer && relationshipToPlayer) ||
       (voiceModuleIds && voiceModuleIds.length) ||
       personalityNotes
   );
@@ -194,13 +195,15 @@ export default function HeartStopView({
               onChange={onChangeInterests}
             />
 
-            <TextAreaField
-              label="Relationship to the player"
-              value={relationshipToPlayer}
-              onChange={onChangeRelationshipToPlayer}
-              placeholder="How they relate to whoever they're talking to"
-              maxLength={HEART_NOTES_MAX_LENGTH}
-            />
+            {showRelationshipToPlayer ? (
+              <TextAreaField
+                label="Relationship to the player"
+                value={relationshipToPlayer}
+                onChange={onChangeRelationshipToPlayer}
+                placeholder="How they relate to whoever they're talking to"
+                maxLength={HEART_NOTES_MAX_LENGTH}
+              />
+            ) : null}
 
             <EmptyStateCard
               message={

@@ -124,8 +124,19 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false, usePalett
 }
 
 function getSegmentStyle(segment, usePaletteVars) {
+  if (segment.type === CHAT_MESSAGE_SEGMENT_TYPES.THOUGHT) {
+    return {
+      fontStyle: "italic",
+      color: "var(--ink-dim)",
+    };
+  }
+
   if (!usePaletteVars) {
     return {
+      color:
+        segment.type === CHAT_MESSAGE_SEGMENT_TYPES.NARRATION
+          ? "var(--gold-ornament)"
+          : undefined,
       fontStyle:
         segment.type === CHAT_MESSAGE_SEGMENT_TYPES.NARRATION ? "italic" : "normal",
     };
@@ -190,14 +201,41 @@ function SemanticMessageBody({
               key={`presentation-paragraph-${paragraphIndex}`}
               className="whitespace-pre-wrap leading-[var(--lh-body)]"
             >
-              {paragraph.map((segment, segmentIndex) => (
-                <span
-                  key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
-                  style={getSegmentStyle(segment, usePaletteVars)}
-                >
-                  {segment.text}
-                </span>
-              ))}
+              {paragraph.map((segment, segmentIndex) =>
+                segment.type === CHAT_MESSAGE_SEGMENT_TYPES.THOUGHT ? (
+                  <span
+                    key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
+                    className="my-[var(--space-2)] block border-l-2 border-[var(--line-strong)] pl-[var(--space-4)] italic text-[var(--ink-dim)]"
+                    style={getSegmentStyle(segment, usePaletteVars)}
+                    data-private-thought="true"
+                  >
+                    {segment.text}
+                  </span>
+                ) : segment.type === CHAT_MESSAGE_SEGMENT_TYPES.MESSAGE ? (
+                  <span
+                    key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
+                    className="my-[var(--space-2)] block border-l-2 border-[var(--gold-ornament)]/45 pl-[var(--space-4)] text-[var(--ink-dim)]"
+                    data-written-message="true"
+                  >
+                    {segment.text}
+                  </span>
+                ) : segment.type === CHAT_MESSAGE_SEGMENT_TYPES.TELEPATHY ? (
+                  <span
+                    key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
+                    className="my-[var(--space-2)] block border-l-2 border-[var(--line-strong)] pl-[var(--space-4)] font-mono text-[var(--ink-dim)]"
+                    data-telepathy="true"
+                  >
+                    {segment.text}
+                  </span>
+                ) : (
+                  <span
+                    key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
+                    style={getSegmentStyle(segment, usePaletteVars)}
+                  >
+                    {segment.text}
+                  </span>
+                )
+              )}
               {isLastParagraph && isStreaming ? (
                 <StreamingCursor label={generationCursorLabel} />
               ) : null}

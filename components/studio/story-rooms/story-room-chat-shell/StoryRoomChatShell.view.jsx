@@ -161,7 +161,7 @@ export default function StoryRoomChatShellView({
             </p>
           ) : null}
 
-          <div className="shrink-0">
+          <div className="h-[calc(9rem+env(safe-area-inset-bottom))] shrink-0 xl:h-auto">
             {ComposerComponent ? <ComposerComponent {...composerProps} /> : null}
           </div>
         </main>
@@ -276,6 +276,7 @@ function DeleteRoomConfirmSheet({ onCancel, onConfirm }) {
 
 function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
   const showCommands = panel === "COMMANDS";
+  const showFormat = panel === "FORMAT";
 
   return (
     <KitModalFrame
@@ -290,7 +291,11 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
             id="story-room-composer-help-title"
             className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
           >
-            {showCommands ? "Available Commands" : "Quick Help"}
+            {showCommands
+              ? "Available Commands"
+              : showFormat
+                ? "Story Text Formatting"
+                : "Quick Help"}
           </h2>
         </div>
       </div>
@@ -322,6 +327,39 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
             </div>
           ))}
         </div>
+      ) : showFormat ? (
+        <div className="mt-5 grid gap-3">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4">
+            <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+              Crestfall recognizes common roleplay writing styles automatically. Your original text is preserved; formatting helps the Story understand what is spoken, acted, thought, written, or transmitted mentally.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <FormatHelpItem label="Dialogue" example={'"Do not touch that."'}>
+              Put spoken dialogue in quotation marks. When you use quoted dialogue, ordinary unquoted prose in the same turn is treated as action.
+            </FormatHelpItem>
+            <FormatHelpItem label="Action" example="I take one step back.">
+              With quote-style roleplay, plain prose is action. If you prefer the asterisk-action style, *action like this* is also supported.
+            </FormatHelpItem>
+            <FormatHelpItem label="Private Thought" example="*Why is that ticking?*">
+              In quote-style roleplay, italicized text is private inner thought. Ordinary Characters do not receive private thoughts unless explicit perception authority allows it.
+            </FormatHelpItem>
+            <FormatHelpItem label="Written / Digital Message" example="> Meet me behind the station.">
+              Begin a line with &gt; for a written, physical, or digital message.
+            </FormatHelpItem>
+            <FormatHelpItem label="Telepathy" example={'`Can you hear me?`'}>
+              Wrap deliberately transmitted mental speech in backticks. Telepathy is distinct from a private inner thought and remains subject to recipient/perception rules.
+            </FormatHelpItem>
+            <FormatHelpItem label="Alternate RP Style" example="*She steps closer.*  Hello there.">
+              If you use asterisks for actions and do not use quoted dialogue, ordinary unwrapped text is treated as spoken dialogue.
+            </FormatHelpItem>
+          </div>
+
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            Tip: use /commands to see all available Story commands. /format is local help only: it does not advance the Story or send a message to Characters.
+          </p>
+        </div>
       ) : (
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <ComposerHelpItem icon={Keyboard} title="Send and format">
@@ -339,6 +377,22 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
         </div>
       )}
     </KitModalFrame>
+  );
+}
+
+function FormatHelpItem({ label, example, children }) {
+  return (
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4">
+      <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+        {label}
+      </p>
+      <p className="mt-2 rounded-[var(--radius-sm)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-2 font-mono text-[length:var(--text-body)] text-[var(--ink)]">
+        {example}
+      </p>
+      <p className="mt-3 text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+        {children}
+      </p>
+    </div>
   );
 }
 

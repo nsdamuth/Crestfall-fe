@@ -30,6 +30,7 @@ export function useChatShellViewModel({
   statePanel = {},
   sessionDialogs = {},
   libraryPassUpsell = null,
+  formatHelp = null,
 } = {}) {
   const [leftRailCollapsed, setLeftRailCollapsed] = useState(initialLeftRailCollapsed);
   const [rightRailCollapsed, setRightRailCollapsed] = useState(initialRightRailCollapsed);
@@ -65,5 +66,6 @@ export function useChatShellViewModel({
     statePanel: statePanel || {},
     sessionDialogs: sessionDialogs || {},
     libraryPassUpsell: libraryPassUpsell || null,
+    formatHelp: formatHelp || null,
   };
 }

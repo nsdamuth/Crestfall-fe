@@ -14,7 +14,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "2.2.0";
  * 3.1 row 6; docs/STUDIO-SPEC.md sections 1, 2, 3, 6, 8.1). Build
  * address /studio/v2/studio (route law, cutover sequence).
  * Fixture-driven only, pre-parity: no fetch, no services-api, no
- * product data, except the four quick-create modals' own existing
+ * product data, except the five quick-create modals' own existing
  * live save wiring, which this page consumes read-only.
  *
  * Ruled composition, top to bottom, exhaustive: page header
@@ -55,7 +55,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "2.2.0";
  * @property {string} eyebrow
  * @property {string} description
  * @property {string|null} imageSrc
- * @property {boolean} isLive Character, Worlds (door id "location"), Looks (door id "outfit"), and Stories (door id "story") only; Player Character is Soon.
+ * @property {boolean} isLive Character, Player Character, Worlds (door id "location"), Looks (door id "outfit"), and Stories (door id "story").
  * @property {(() => void)|null} onOpen Present only when isLive; the button renders `disabled` when not.
  *
  * @typedef {Object} StudioBanner
@@ -88,7 +88,7 @@ export const STUDIO_VIEW_CONTRACT_VERSION = "2.2.0";
  * @property {(() => void)|null} onBuildAdventure BUILD zone, routes to /studio/v2/adventures.
  * @property {(() => void)|null} onOpenVault PUBLISH zone, routes to /studio/v2/vault.
  * @property {StudioBanner} bottomBanner Routes to /studio/v2/images.
- * @property {{label: string, message: string}|null} notice R4 fixture-action notice: non-persisting acknowledgement for any control whose real behavior waits on live wiring (the Player Character Soon door). Null renders nothing.
+ * @property {{label: string, message: string}|null} notice R4 fixture-action notice for any future door whose real behavior still waits on live wiring. Null renders nothing.
  * @property {(() => void)|null} onCloseNotice
  * @property {import("react").ReactNode} [harnessSlot] Dev-only fixture-state switcher, never product.
  */

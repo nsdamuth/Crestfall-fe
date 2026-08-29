@@ -1,4 +1,4 @@
-export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * @typedef {Object} TimelineReaderEntry
@@ -9,6 +9,7 @@ export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} era
  * @property {string} displayDate
  * @property {string} chronologyLabel
+ * @property {string} chapterId
  * @property {number|null} orderOverride
  * @property {boolean} isUnavailable
  */
@@ -18,6 +19,8 @@ export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} id
  * @property {string} label
  * @property {TimelineReaderEntry[]} entries
+ * @property {boolean} collapsible
+ * @property {boolean} defaultOpen
  */
 
 /**
@@ -26,12 +29,14 @@ export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.0.0";
  * the caller/ViewModel.
  *
  * @typedef {Object} TimelineReaderViewProps
+ * @property {string} timelineId
  * @property {"loading"|"ready"|"error"} loadStatus
  * @property {string} loadMessage
  * @property {string} title
  * @property {string} description
  * @property {boolean} publicEnabled
  * @property {"ASC"|"DESC"} sortDirection
+ * @property {"CHAPTERS"|"ERA"|"NONE"} groupingMode
  * @property {number} entryCount
  * @property {TimelineReaderGroup[]} groups
  * @property {boolean} showEditAction

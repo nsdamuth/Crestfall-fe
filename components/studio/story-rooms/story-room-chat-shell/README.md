@@ -14,7 +14,7 @@
 - composer draft, input mode, responder, and mention state
 - desktop panel and mobile drawer state
 - responder availability reconciliation
-- local `/help` and `/commands` resolution
+- local `/help`, `/commands`, and `/format` resolution
 - room deletion through the existing Story Room client
 - send projection into the transport hook
 - restoration of unsent draft and mentions when transport returns no result
@@ -50,7 +50,7 @@ The conversion preserves:
 - Character-only `@` mention candidates
 - Location Registry `#` mention options
 - all four input modes supplied to the existing Composer
-- local `/help`, `/?`, and `/commands` behavior before network send
+- local `/help`, `/?`, `/commands`, and `/format` behavior before network send
 - draft and mention clearing before send
 - draft and mention restoration when a non-yield send fails
 - `PLAYER_YIELD_TO_CHARACTER` empty-body behavior

@@ -33,7 +33,6 @@ The existing import path and public props are preserved:
 The current live consumers remain:
 
 - `components/studio/create/character-template/CharacterTemplateBuilder.jsx`
-- `components/studio/create/player-character/PlayerCharacterCreator.jsx`
 - `components/studio/my-creations/edit/sections/character-templates/CharacterTemplateFieldsSection.jsx`
 
 ## Ownership Boundary

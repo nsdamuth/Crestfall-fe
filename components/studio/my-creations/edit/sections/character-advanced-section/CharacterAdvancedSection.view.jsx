@@ -15,6 +15,7 @@ export default function CharacterAdvancedSectionView({
   scenarioValue = "",
   scenarioPlaceholder = "",
   onChangeScenario = null,
+  showRelationshipToPlayer = true,
   relationshipLabel = "Relationship to Player",
   relationshipValue = "",
   relationshipPlaceholder = "",
@@ -60,12 +61,14 @@ export default function CharacterAdvancedSectionView({
           placeholder={scenarioPlaceholder}
         />
 
-        <TextAreaField
-          label={relationshipLabel}
-          value={relationshipValue}
-          onChange={(value) => onChangeRelationship?.(value)}
-          placeholder={relationshipPlaceholder}
-        />
+        {showRelationshipToPlayer ? (
+          <TextAreaField
+            label={relationshipLabel}
+            value={relationshipValue}
+            onChange={(value) => onChangeRelationship?.(value)}
+            placeholder={relationshipPlaceholder}
+          />
+        ) : null}
 
         <TextAreaField
           label={backstoryLabel}

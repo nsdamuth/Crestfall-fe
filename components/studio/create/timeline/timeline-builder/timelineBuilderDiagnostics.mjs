@@ -25,7 +25,10 @@ assert.doesNotMatch(shell, /\bfetch\s*\(/);
 
 assert.match(view, /Timeline Editor|Timeline Builder/);
 assert.match(view, /Public Timeline/);
-assert.match(view, /Group by Era/);
+assert.match(view, /Viewer grouping/);
+assert.match(view, /Timeline Chapters/);
+assert.match(view, /Chapter title/);
+assert.match(view, /Chapter/);
 assert.match(view, /Order override/);
 assert.match(view, /Add Lore/);
 assert.doesNotMatch(view, /\bfetch\s*\(|\/api\/|supabase|PostGraphile|router\./);
@@ -39,6 +42,9 @@ assert.match(viewModel, /createTimelineDraft/);
 assert.match(viewModel, /updateTimelineDraft/);
 assert.match(viewModel, /sortTimelineEntries/);
 assert.match(viewModel, /orderOverride/);
+assert.match(viewModel, /groupingMode/);
+assert.match(viewModel, /onAddChapter|createChapter/);
+assert.match(viewModel, /updateEntryChapter/);
 assert.match(viewModel, /publicEnabled/);
 assert.match(viewModel, /\/studio\/v2\/lore\/timelines\/\$\{encodeURIComponent\(creation\.id\)\}/);
 assert.doesNotMatch(viewModel, /\/studio\/create\//);
@@ -60,12 +66,14 @@ assert.match(previewPage, /notFound\(\)/);
 assert.match(creationPickerBuckets, /TIMELINE:\s*"more"/);
 
 console.log(JSON.stringify({
-  diagnostic: "timeline_builder_v2_only_tl3b_v0",
+  diagnostic: "timeline_builder_chapters_tl4_v0",
   status: "PASSED",
   v2CreateRouteOwnsTimelineCreation: true,
   savedTimelineUsesGenericOwnerCreationAuthority: true,
   timelineEditorUsesServerHydratedInitialCreation: true,
   legacyTimelineRoutesAreCompatibilityRedirectsOnly: true,
   noTimelineBuilderNavigationToV1: true,
+  chapterAuthoringAvailable: true,
+  loreChapterAssignmentAvailable: true,
   loomBoundaryPreserved: true,
 }, null, 2));

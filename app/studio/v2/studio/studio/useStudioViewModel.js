@@ -6,9 +6,9 @@
 // user-facing Quick Start / Guided Build / Full Studio mode choice and
 // persists it through the shared Creation Studio storage key. Routing is
 // not owned here: the Shell passes onNavigate (real Next.js
-// navigation), onOpenCharacterCreator, onOpenWorldCreator,
-// onOpenLookCreator, and onOpenStoryCreator (the Shell's own state,
-// since all four quick creates are live-wired, not fixture data).
+// navigation), onOpenCharacterCreator, onOpenPlayerCharacterCreator,
+// onOpenWorldCreator, onOpenLookCreator, and onOpenStoryCreator (the Shell's
+// own state, since all five quick creates are live-wired, not fixture data).
 // Every Soon door opens the honest R4 stub notice: none of those
 // destinations exist yet (docs/STUDIO-SPEC.md section 9, items 2
 // and 3).
@@ -28,6 +28,7 @@ import {
 // Door id -> the opener prop it calls when live: data, not branches.
 const DOOR_OPENER_PROP_BY_ID = {
   character: "onOpenCharacterCreator",
+  playerCharacter: "onOpenPlayerCharacterCreator",
   location: "onOpenWorldCreator",
   outfit: "onOpenLookCreator",
   story: "onOpenStoryCreator",
@@ -37,6 +38,7 @@ export function useStudioViewModel({
   fixtureMode = "default",
   onNavigate = null,
   onOpenCharacterCreator = null,
+  onOpenPlayerCharacterCreator = null,
   onOpenWorldCreator = null,
   onOpenLookCreator = null,
   onOpenStoryCreator = null,
@@ -93,6 +95,7 @@ export function useStudioViewModel({
 
   const openerByPropName = {
     onOpenCharacterCreator,
+    onOpenPlayerCharacterCreator,
     onOpenWorldCreator,
     onOpenLookCreator,
     onOpenStoryCreator,

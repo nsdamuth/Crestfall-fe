@@ -1,7 +1,7 @@
-import StoryChatPage from "./StoryChatPage";
+import { redirect } from "next/navigation";
 
 export default async function StoryChatV2Page({ params }) {
   const { id } = await params;
 
-  return <StoryChatPage id={id} />;
+  redirect(`/studio/story-rooms/${encodeURIComponent(id)}`);
 }

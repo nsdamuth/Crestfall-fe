@@ -4,7 +4,16 @@ export const timelineBuilderFixture = {
   visibility: "PRIVATE",
   publicEnabled: true,
   sortDirection: "ASC",
-  groupByEra: true,
+  groupingMode: "CHAPTERS",
+  groupingOptions: [
+    { value: "CHAPTERS", label: "Chapters" },
+    { value: "ERA", label: "Lore eras" },
+    { value: "NONE", label: "Continuous chronology" },
+  ],
+  chapters: [
+    { id: "arc-i", title: "Arc I — Origins to Bronze Age", order: 100 },
+    { id: "arc-ii", title: "Arc II — Iron Age to Dark Age", order: 200 },
+  ],
   entries: [
     {
       id: "lore-1",
@@ -14,6 +23,8 @@ export const timelineBuilderFixture = {
       displayDate: "Before the First War",
       timelineOrder: -12000,
       orderOverride: null,
+      chapterId: "arc-i",
+      chapterLabel: "Arc I — Origins to Bronze Age",
       effectiveOrder: -12000,
       availability: "AVAILABLE",
       isUnplaced: false,
@@ -26,6 +37,8 @@ export const timelineBuilderFixture = {
       displayDate: "The Sundering",
       timelineOrder: null,
       orderOverride: null,
+      chapterId: "arc-i",
+      chapterLabel: "Arc I — Origins to Bronze Age",
       effectiveOrder: null,
       availability: "AVAILABLE",
       isUnplaced: true,

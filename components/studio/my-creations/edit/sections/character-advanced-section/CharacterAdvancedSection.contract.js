@@ -1,4 +1,4 @@
-export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION = "1.0";
+export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION = "1.1";
 
 export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT = Object.freeze({
   version: CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION,
@@ -13,6 +13,7 @@ export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT = Object.freeze({
     "scenarioLabel",
     "scenarioValue",
     "scenarioPlaceholder",
+    "showRelationshipToPlayer",
     "relationshipLabel",
     "relationshipValue",
     "relationshipPlaceholder",

@@ -40,6 +40,7 @@ test("Character Identity ViewModel owns defaults, storage mapping, and adult age
   assert.match(viewModel, /character_color_palette_id/);
   assert.match(viewModel, /short_concept/);
   assert.match(viewModel, /rendering_style/);
+  assert.match(viewModel, /PLAYER_CHARACTER: "Player Character"/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
@@ -70,10 +71,16 @@ test("Character Identity preview is development-only", () => {
   assert.match(preview, /CharacterIdentitySectionView/);
 });
 
-test("Creation Edit retains the public Character Identity Shell", () => {
-  const editShell = read("components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx");
-  assert.match(editShell, /import IdentitySection from/);
-  assert.match(editShell, /<IdentitySection form=\{form\}/);
+test("Creation Edit retains the public Character Identity Shell through the registry dispatcher", () => {
+  const editShell = read(
+    "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
+  );
+  const componentMap = read(
+    "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
+  );
+  assert.match(editShell, /SECTION_COMPONENT_REGISTRY/);
+  assert.match(componentMap, /import IdentitySection from/);
+  assert.match(componentMap, /identity: \{ Component: IdentitySection/);
 });
 
 test("Character Identity package includes its documented handoff", () => {

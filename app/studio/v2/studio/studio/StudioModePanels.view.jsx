@@ -50,14 +50,26 @@ function ProgressMeter({ completed = 0, total = 0 }) {
   );
 }
 
-function AssetAction({ asset, label, LinkComponent, onOpenCharacterCreator = null, primary = false }) {
+function AssetAction({
+  asset,
+  label,
+  LinkComponent,
+  onOpenCharacterCreator = null,
+  onOpenPlayerCharacterCreator = null,
+  primary = false,
+}) {
   if (!asset) return null;
-  const isCharacter = asset.href === "/studio/create/character" && onOpenCharacterCreator;
+  const actorCreator =
+    asset.href === "/studio/create/character"
+      ? onOpenCharacterCreator
+      : asset.href === "/studio/create/player-character"
+        ? onOpenPlayerCharacterCreator
+        : null;
   const className = primary ? "cf-btn cf-btn--primary" : "cf-btn cf-btn--secondary";
 
-  if (isCharacter) {
+  if (actorCreator) {
     return (
-      <button type="button" className={className} onClick={() => onOpenCharacterCreator?.()}>
+      <button type="button" className={className} onClick={() => actorCreator?.()}>
         {label} →
       </button>
     );
@@ -70,7 +82,13 @@ function AssetAction({ asset, label, LinkComponent, onOpenCharacterCreator = nul
   );
 }
 
-function RecommendedHero({ step, asset, LinkComponent, onOpenCharacterCreator }) {
+function RecommendedHero({
+  step,
+  asset,
+  LinkComponent,
+  onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
+}) {
   if (!step || !asset) return null;
   const art = hasUsableArt(asset);
 
@@ -115,6 +133,7 @@ function RecommendedHero({ step, asset, LinkComponent, onOpenCharacterCreator })
             label={step.id === "SECOND_STORY" ? "Create second Story" : `Create ${asset.title}`}
             LinkComponent={LinkComponent}
             onOpenCharacterCreator={onOpenCharacterCreator}
+            onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
             primary
           />
         </div>
@@ -182,7 +201,13 @@ function applyStudioAssetArtFallback(event, fallbackArt) {
   image.hidden = true;
 }
 
-function MilestoneCard({ step, asset, LinkComponent, onOpenCharacterCreator }) {
+function MilestoneCard({
+  step,
+  asset,
+  LinkComponent,
+  onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
+}) {
   if (!asset) return null;
   const art = getGuidedMilestoneArt(asset);
 
@@ -237,6 +262,7 @@ function MilestoneCard({ step, asset, LinkComponent, onOpenCharacterCreator }) {
             label={step.complete ? "Create another" : `Create ${asset.title}`}
             LinkComponent={LinkComponent}
             onOpenCharacterCreator={onOpenCharacterCreator}
+            onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
           />
         </div>
       </div>
@@ -244,7 +270,13 @@ function MilestoneCard({ step, asset, LinkComponent, onOpenCharacterCreator }) {
   );
 }
 
-function GuidedChapter({ chapter, guidedAssets, LinkComponent, onOpenCharacterCreator }) {
+function GuidedChapter({
+  chapter,
+  guidedAssets,
+  LinkComponent,
+  onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
+}) {
   const [open, setOpen] = useState(Boolean(chapter.current));
 
   useEffect(() => {
@@ -285,6 +317,7 @@ function GuidedChapter({ chapter, guidedAssets, LinkComponent, onOpenCharacterCr
             asset={getAssetByTitle(guidedAssets, step.assetTitle)}
             LinkComponent={LinkComponent}
             onOpenCharacterCreator={onOpenCharacterCreator}
+            onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
           />
         ))}
       </div>
@@ -301,6 +334,7 @@ export function StudioGuidedModeView({
   loadError = "",
   LinkComponent = "a",
   onOpenCharacterCreator = null,
+  onOpenPlayerCharacterCreator = null,
   onOpenFullStudio = null,
 }) {
   const coreChapter = chapters[0] || null;
@@ -330,9 +364,9 @@ export function StudioGuidedModeView({
           {coreSteps.map((step) => {
             const asset = getAssetByTitle(guidedAssets, step.assetTitle);
             return step.current ? (
-              <RecommendedHero key={step.id} step={step} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} />
+              <RecommendedHero key={step.id} step={step} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator} />
             ) : (
-              <MilestoneCard key={step.id} step={step} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} />
+              <MilestoneCard key={step.id} step={step} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator} />
             );
           })}
         </div>
@@ -344,11 +378,11 @@ export function StudioGuidedModeView({
             <p className="mt-[var(--space-2)] max-w-[58rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">Continue through the deeper chapters when they serve your project. Guided Build keeps the dependency order, but it never locks the rest of Studio.</p>
           </div>
 
-          {recommendedStep ? <RecommendedHero step={recommendedStep} asset={recommendedAsset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} /> : null}
+          {recommendedStep ? <RecommendedHero step={recommendedStep} asset={recommendedAsset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator} /> : null}
 
           <div className="space-y-[var(--space-3)]">
             {postCoreChapters.map((chapter) => (
-              <GuidedChapter key={chapter.id} chapter={chapter} guidedAssets={guidedAssets} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} />
+              <GuidedChapter key={chapter.id} chapter={chapter} guidedAssets={guidedAssets} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator} />
             ))}
           </div>
         </>
@@ -362,10 +396,20 @@ export function StudioGuidedModeView({
   );
 }
 
-function FullStudioAssetCard({ asset, LinkComponent, onOpenCharacterCreator }) {
+function FullStudioAssetCard({
+  asset,
+  LinkComponent,
+  onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
+}) {
   const fallbackArt = getStudioAssetFallbackArt(asset);
   const art = hasUsableArt(asset) ? String(asset.image) : fallbackArt;
-  const isCharacter = asset.href === "/studio/create/character" && onOpenCharacterCreator;
+  const actorCreator =
+    asset.href === "/studio/create/character"
+      ? onOpenCharacterCreator
+      : asset.href === "/studio/create/player-character"
+        ? onOpenPlayerCharacterCreator
+        : null;
   const classes = "group relative flex min-h-[13rem] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] text-left transition-[border-color,box-shadow,transform] duration-[var(--dur-hover)] hover:-translate-y-[2px] hover:border-[var(--line-strong)] hover:shadow-[var(--glow-hover)]";
   const content = (
     <>
@@ -386,7 +430,7 @@ function FullStudioAssetCard({ asset, LinkComponent, onOpenCharacterCreator }) {
     </>
   );
 
-  return isCharacter ? <button type="button" className={classes} onClick={() => onOpenCharacterCreator?.()}>{content}</button> : <LinkComponent href={asset.href} className={classes}>{content}</LinkComponent>;
+  return actorCreator ? <button type="button" className={classes} onClick={() => actorCreator?.()}>{content}</button> : <LinkComponent href={asset.href} className={classes}>{content}</LinkComponent>;
 }
 
 function FullStudioCategoryCard({ section, onOpen }) {
@@ -449,7 +493,13 @@ function FullStudioCategoryIndex({ sections = [], onSelectSection = null }) {
   );
 }
 
-function FullStudioCategoryDetail({ section, LinkComponent, onOpenCharacterCreator, onBack }) {
+function FullStudioCategoryDetail({
+  section,
+  LinkComponent,
+  onOpenCharacterCreator,
+  onOpenPlayerCharacterCreator,
+  onBack,
+}) {
   if (!section) return null;
 
   return (
@@ -475,7 +525,7 @@ function FullStudioCategoryDetail({ section, LinkComponent, onOpenCharacterCreat
 
       <div className="grid gap-[var(--space-3)] sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {(section.assets || []).map((asset) => (
-          <FullStudioAssetCard key={asset.title} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} />
+          <FullStudioAssetCard key={asset.title} asset={asset} LinkComponent={LinkComponent} onOpenCharacterCreator={onOpenCharacterCreator} onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator} />
         ))}
       </div>
     </section>
@@ -487,6 +537,7 @@ export function StudioFullModeView({
   activeSectionSlug = "",
   LinkComponent = "a",
   onOpenCharacterCreator = null,
+  onOpenPlayerCharacterCreator = null,
   onSelectSection = null,
   onBack = null,
 }) {
@@ -530,6 +581,7 @@ export function StudioFullModeView({
             section={displayedSection}
             LinkComponent={LinkComponent}
             onOpenCharacterCreator={onOpenCharacterCreator}
+            onOpenPlayerCharacterCreator={onOpenPlayerCharacterCreator}
             onBack={onBack}
           />
         ) : (

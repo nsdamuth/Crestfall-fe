@@ -17,6 +17,7 @@ export function useStoryLaunchController({
   prepareLaunch = prepareStoryCreationForLaunch,
   startStory = startStoryFromCreation,
   navigate = null,
+  resolvePostCreateHref = resolveStoryPostCreateNavigationHref,
 } = {}) {
   const router = useRouter();
   const [pendingCreation, setPendingCreation] = useState(null);
@@ -74,14 +75,14 @@ export function useStoryLaunchController({
         }
 
         resetPicker();
-        push(resolveStoryPostCreateNavigationHref({ room, roomId }));
+        push(resolvePostCreateHref({ room, roomId }));
       } catch (error) {
         setLaunchError(error?.message || "Story could not be started.");
       } finally {
         setLaunchingCreationId(null);
       }
     },
-    [push, resetPicker, startStory]
+    [push, resetPicker, resolvePostCreateHref, startStory]
   );
 
   const launch = useCallback(

@@ -14,4 +14,6 @@ export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} errorMessage
  * @property {Object|null} playerCharacterPrompt transient pre-first-message
  *   system prompt with select/change action; never persisted into room messages
+ * @property {Object|null} reportDialog transient report reason/comment dialog
+ *   projected from the Story Room message-action runtime
  */

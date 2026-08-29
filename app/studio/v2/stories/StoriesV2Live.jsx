@@ -517,7 +517,7 @@ export default function StoriesV2Live({
             <SectionLabel>Start something</SectionLabel>
             <button
               type="button"
-              onClick={() => router.push("/studio/create/room-template")}
+              onClick={() => router.push("/studio/v2/editor/new?type=ROOM_TEMPLATE&origin=stories")}
               className="cf-btn cf-btn--secondary"
             >
               New Story

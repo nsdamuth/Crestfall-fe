@@ -145,7 +145,12 @@ export function useCreationEditViewModel({ creationId, creation }) {
         [field]: value,
       };
 
-      if (field === "title" && current.type === "CHARACTER") {
+      if (
+        field === "title" &&
+        ["CHARACTER", "PLAYER_CHARACTER"].includes(
+          String(current.type || "").toUpperCase()
+        )
+      ) {
         next.data = {
           ...(current.data || {}),
           name: value,

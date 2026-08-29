@@ -1,4 +1,4 @@
-export const CHAT_MESSAGE_VIEW_CONTRACT_VERSION = "1.1.0";
+export const CHAT_MESSAGE_VIEW_CONTRACT_VERSION = "1.3.0";
 
 export const CHAT_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",
@@ -38,6 +38,9 @@ export const CHAT_MESSAGE_SEGMENT_TYPES = Object.freeze({
   DIALOGUE: "DIALOGUE",
   NARRATION: "NARRATION",
   TEXT: "TEXT",
+  THOUGHT: "THOUGHT",
+  MESSAGE: "MESSAGE",
+  TELEPATHY: "TELEPATHY",
 });
 
 export const CHAT_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
@@ -59,7 +62,7 @@ export const CHAT_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  *
  * @typedef {Object} ChatMessageSegment
  * @property {string} text
- * @property {"DIALOGUE"|"NARRATION"|"TEXT"} type
+ * @property {"DIALOGUE"|"NARRATION"|"TEXT"|"THOUGHT"|"MESSAGE"|"TELEPATHY"} type
  * @property {""|"EMPHASIS"|"STRONG"|"WHISPER"} emphasis
  *
  * @typedef {Object} ChatMessageStatusBlock

@@ -23,6 +23,7 @@ import {
 } from "@/lib/shared/timelines/timelineOwnerProjection";
 import {
   TIMELINE_DRAFT_VISIBILITY_OPTIONS,
+  TIMELINE_GROUPING_OPTIONS,
   TIMELINE_SORT_OPTIONS,
 } from "./TimelineBuilder.contract";
 
@@ -59,7 +60,8 @@ function createInitialDraft() {
     visibility: "PRIVATE",
     publicEnabled: false,
     sortDirection: "ASC",
-    groupByEra: true,
+    groupingMode: "ERA",
+    chapters: [],
     entries: [],
   };
 }
@@ -135,10 +137,25 @@ export function useTimelineBuilderViewModel({
                 : "PRIVATE",
             publicEnabled: timeline.publicEnabled === true,
             sortDirection: timeline.sortDirection === "DESC" ? "DESC" : "ASC",
-            groupByEra: timeline.groupByEra !== false,
+            groupingMode: ["CHAPTERS", "ERA", "NONE"].includes(
+              normalizeString(timeline.groupingMode).toUpperCase()
+            )
+              ? normalizeString(timeline.groupingMode).toUpperCase()
+              : timeline.groupByEra === false
+                ? "NONE"
+                : "ERA",
+            chapters: Array.isArray(timeline.chapters)
+              ? timeline.chapters.map((chapter, index) => ({
+                  id: normalizeString(chapter?.id),
+                  title: normalizeString(chapter?.title) || `Chapter ${index + 1}`,
+                  order:
+                    normalizeOptionalTimelineNumber(chapter?.order) ?? index + 1,
+                }))
+              : [],
             entries: entries.map((entry) => ({
               loreCreationId: normalizeString(entry?.loreCreationId),
               orderOverride: normalizeOptionalTimelineNumber(entry?.orderOverride),
+              chapterId: normalizeString(entry?.chapterId),
               lore: projectTimelineEntryLore(entry),
             })),
           });
@@ -174,6 +191,7 @@ export function useTimelineBuilderViewModel({
       draft.entries.map((entry) => ({
         loreCreationId: normalizeString(entry.loreCreationId),
         orderOverride: normalizeOptionalTimelineNumber(entry.orderOverride),
+        chapterId: normalizeString(entry.chapterId),
       })),
     [draft.entries]
   );
@@ -212,6 +230,10 @@ export function useTimelineBuilderViewModel({
           displayDate: lore.displayDate || "",
           timelineOrder: normalizeOptionalTimelineNumber(lore.timelineOrder),
           orderOverride: normalizeOptionalTimelineNumber(entry.orderOverride),
+          chapterId: normalizeString(entry.chapterId),
+          chapterLabel:
+            draft.chapters.find((chapter) => chapter.id === normalizeString(entry.chapterId))
+              ?.title || "",
           effectiveOrder,
           availability: lore.availability || "AVAILABLE",
           status: lore.status || "",
@@ -219,7 +241,7 @@ export function useTimelineBuilderViewModel({
           isUnplaced: effectiveOrder === null,
         };
       }),
-    [sortedEntryRefs, loreById]
+    [sortedEntryRefs, loreById, draft.chapters]
   );
 
   const attachedIds = useMemo(
@@ -250,7 +272,7 @@ export function useTimelineBuilderViewModel({
         "visibility",
         "publicEnabled",
         "sortDirection",
-        "groupByEra",
+        "groupingMode",
       ].includes(field)
     ) {
       return;
@@ -273,7 +295,7 @@ export function useTimelineBuilderViewModel({
       ...current,
       entries: [
         ...current.entries,
-        { loreCreationId, orderOverride: null, lore },
+        { loreCreationId, orderOverride: null, chapterId: "", lore },
       ],
     }));
     setSaveMessage("");
@@ -284,6 +306,75 @@ export function useTimelineBuilderViewModel({
       ...current,
       entries: current.entries.filter(
         (entry) => entry.loreCreationId !== loreCreationId
+      ),
+    }));
+    setSaveMessage("");
+  }
+
+  function createChapter() {
+    const chapterId = `chapter-${Date.now().toString(36)}-${Math.random()
+      .toString(36)
+      .slice(2, 8)}`;
+    setDraft((current) => ({
+      ...current,
+      groupingMode: "CHAPTERS",
+      chapters: [
+        ...current.chapters,
+        {
+          id: chapterId,
+          title: `Chapter ${current.chapters.length + 1}`,
+          order: (current.chapters.length + 1) * 100,
+        },
+      ],
+    }));
+    setSaveMessage("");
+  }
+
+  function updateChapter(chapterId, field, rawValue) {
+    if (!["title", "order"].includes(field)) return;
+    setDraft((current) => ({
+      ...current,
+      chapters: current.chapters.map((chapter) =>
+        chapter.id === chapterId
+          ? {
+              ...chapter,
+              [field]:
+                field === "order"
+                  ? normalizeOptionalTimelineNumber(rawValue) ?? chapter.order
+                  : rawValue,
+            }
+          : chapter
+      ),
+    }));
+    setSaveMessage("");
+  }
+
+  function removeChapter(chapterId) {
+    setDraft((current) => ({
+      ...current,
+      chapters: current.chapters.filter((chapter) => chapter.id !== chapterId),
+      entries: current.entries.map((entry) =>
+        entry.chapterId === chapterId ? { ...entry, chapterId: "" } : entry
+      ),
+    }));
+    setSaveMessage("");
+  }
+
+  function updateEntryChapter(loreCreationId, chapterId) {
+    const normalizedChapterId = normalizeString(chapterId);
+    setDraft((current) => ({
+      ...current,
+      entries: current.entries.map((entry) =>
+        entry.loreCreationId === loreCreationId
+          ? {
+              ...entry,
+              chapterId: current.chapters.some(
+                (chapter) => chapter.id === normalizedChapterId
+              )
+                ? normalizedChapterId
+                : "",
+            }
+          : entry
       ),
     }));
     setSaveMessage("");
@@ -305,10 +396,20 @@ export function useTimelineBuilderViewModel({
     setSaveMessage("");
   }
 
+  const chapterDefinitionInvalid =
+    new Set(draft.chapters.map((chapter) => chapter.id)).size !== draft.chapters.length ||
+    draft.chapters.some(
+      (chapter) =>
+        !normalizeString(chapter.id) ||
+        !normalizeString(chapter.title) ||
+        !Number.isFinite(Number(chapter.order))
+    );
+
   const saveDisabled =
     loadStatus !== "ready" ||
     saveStatus === "saving" ||
-    !normalizeString(draft.title);
+    !normalizeString(draft.title) ||
+    chapterDefinitionInvalid;
 
   async function save() {
     if (saveDisabled) return;
@@ -319,7 +420,8 @@ export function useTimelineBuilderViewModel({
     const timeline = normalizeTimelineDefinition({
       publicEnabled: draft.publicEnabled,
       sortDirection: draft.sortDirection,
-      groupByEra: draft.groupByEra,
+      groupingMode: draft.groupingMode,
+      chapters: draft.chapters,
       entries: normalizedEntries,
     });
 
@@ -332,7 +434,7 @@ export function useTimelineBuilderViewModel({
       content_rating: "SFW",
       data: {
         builder: "TIMELINE_BUILDER",
-        builder_version: "1.0",
+        builder_version: "2.0",
         timeline,
       },
     };
@@ -373,7 +475,9 @@ export function useTimelineBuilderViewModel({
     publicEnabled: draft.publicEnabled,
     sortDirection: draft.sortDirection,
     sortOptions: TIMELINE_SORT_OPTIONS,
-    groupByEra: draft.groupByEra,
+    groupingMode: draft.groupingMode,
+    groupingOptions: TIMELINE_GROUPING_OPTIONS,
+    chapters: [...draft.chapters].sort((a, b) => a.order - b.order),
     entries: sortedEntries,
     entryCount: draft.entries.length,
     unplacedCount: sortedEntries.filter((entry) => entry.isUnplaced).length,
@@ -388,6 +492,10 @@ export function useTimelineBuilderViewModel({
     onAddLore: addLore,
     onRemoveLore: removeLore,
     onUpdateOrderOverride: updateOrderOverride,
+    onUpdateEntryChapter: updateEntryChapter,
+    onAddChapter: createChapter,
+    onUpdateChapter: updateChapter,
+    onRemoveChapter: removeChapter,
     onSave: save,
     onBackToLore: () => router.push(backHref || "/studio/v2/lore"),
   };

@@ -63,6 +63,10 @@ export function useStoryRoomChatShellViewModel({
     error = null,
     reload: reloadStoryRoom,
     sendMessage: sendStoryMessage,
+    regenerateMessage,
+    continueMessage,
+    reportMessage,
+    messageActionState = {},
     exportTranscript,
     createTemporaryShare,
     revokeTemporaryShare,
@@ -377,6 +381,10 @@ export function useStoryRoomChatShellViewModel({
         errorMessage: setPlayerCharacterError,
         onSelect: openPlayerCharacterPicker,
       },
+      onRegenerateMessage: regenerateMessage,
+      onContinueMessage: continueMessage,
+      onReportMessage: reportMessage,
+      messageActionState,
     },
     playerCharacterPickerProps: playerCharacterPickerOpen
       ? {

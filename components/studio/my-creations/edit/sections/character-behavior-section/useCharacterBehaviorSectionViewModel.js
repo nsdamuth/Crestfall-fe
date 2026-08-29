@@ -70,8 +70,11 @@ export function normalizeVoiceModuleIds(value) {
 export function getCharacterBehaviorSectionViewProps({
   form = {},
   updateDataField = null,
+  creationType = "",
 } = {}) {
   const data = form?.data || {};
+  const normalizedCreationType = String(creationType || form?.type || "").toUpperCase();
+  const isPlayerCharacter = normalizedCreationType === "PLAYER_CHARACTER";
   const behaviorData = {
     ...data,
     interests: normalizeCharacterInterests(data.interests),
@@ -79,6 +82,15 @@ export function getCharacterBehaviorSectionViewProps({
 
   return {
     ...DEFAULT_COPY,
+    sectionDescription: isPlayerCharacter
+      ? "Describe how your Player Character tends to speak, move, think, and express themselves. These preferences guide Crestfall presentation without taking control away from the player."
+      : DEFAULT_COPY.sectionDescription,
+    personalityFrameworksDescription: isPlayerCharacter
+      ? "These provide optional narrative flavor when Crestfall needs supplemental characterization. They never override your choices, explicit personality settings, or creator notes."
+      : DEFAULT_COPY.personalityFrameworksDescription,
+    verbosityDescription: isPlayerCharacter
+      ? "A presentation preference for generated dialogue or portrayal. It does not limit what you type or choose for your Player Character."
+      : DEFAULT_COPY.verbosityDescription,
     behaviorData,
     outwardPersonalityField: "outward_personality",
     internalPersonalityField: "internal_personality",

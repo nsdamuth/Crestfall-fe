@@ -3,109 +3,110 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
+import { deleteStoryRoom } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { useChatComposerViewModel } from "@/components/studio/chat/chat-composer/useChatComposerViewModel";
 import { CHAT_COMPOSER_MODES } from "@/components/studio/chat/chat-composer/ChatComposer.contract";
 import { useChatTranscriptViewModel } from "@/components/studio/chat/chat-transcript/useChatTranscriptViewModel";
 import { useChatCastPanelViewModel } from "@/components/studio/chat/chat-cast-panel/useChatCastPanelViewModel";
 import { useChatStatePanelViewModel } from "@/components/studio/chat/chat-state-panel/useChatStatePanelViewModel";
 import { useChatSessionDialogsViewModel } from "@/components/studio/chat/chat-session-dialogs/useChatSessionDialogsViewModel";
-import { useChatPartyRosterViewModel } from "@/components/studio/chat/chat-party-roster/useChatPartyRosterViewModel";
+import { useStoryRoomV2MessageActions } from "./useStoryRoomV2MessageActions";
 import {
-  CHAT_EXPORT_FORMAT_OPTIONS,
-  CHAT_EXPORT_RANGE_PRESETS,
-  CHAT_REPORT_REASON_OPTIONS,
-  CHAT_SESSION_DELETE_STORY_CONFIRMATION,
-} from "@/components/studio/chat/chat-session-dialogs/ChatSessionDialogs.contract";
-import { resolveChatV2StoryMock } from "./chatV2StoryMock";
+  projectStoryRoomCastToV2,
+  projectStoryRoomFeaturedMediaToV2,
+  projectStoryRoomMentionOptionsToV2,
+  projectStoryRoomMessagesToV2,
+  projectStoryRoomOpeningHero,
+  projectStoryRoomStateSectionsToV2,
+} from "./storyRoomV2LiveAdapter";
 
-let mockMessageSequence = 0;
-function nextMockMessageId() {
-  mockMessageSequence += 1;
-  return `mock-msg-${mockMessageSequence}`;
+function normalizeComposerModeForRuntime(mode) {
+  if (mode === CHAT_COMPOSER_MODES.SUGGESTION) return "DIRECT";
+  return mode || "DIALOGUE";
 }
 
-function playerMessage(text) {
-  return {
-    surfaceTone: "PLAYER",
-    speakerLabel: "You",
-    speakerAvatarUrl: null,
-    bodyMode: "LEGACY",
-    legacyBody: text,
-    semanticSegments: [],
-    statusBlocks: [],
-    deliveryState: null,
-  };
+function formatCoinBalance(value, loading) {
+  if (loading) return "...";
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed.toLocaleString() : "0";
 }
 
-function characterMockReply(text) {
-  return {
-    surfaceTone: "CHARACTER",
-    speakerLabel: "Lady Verena Ashcroft",
-    speakerAvatarUrl: null,
-    bodyMode: "LEGACY",
-    legacyBody: text,
-    semanticSegments: [],
-    statusBlocks: [],
-    deliveryState: null,
-  };
+function getErrorMessage(value) {
+  if (typeof value === "string") return value;
+  return value?.message ? String(value.message) : "";
 }
 
 /**
- * Binding-Shell-level ViewModel for app/studio/v2/stories/[id]. Resolves
- * the mock snapshot (chatV2StoryMock.js, pending CR-043), and wires the
- * real chat-composer/chat-transcript/chat-cast-panel/chat-state-panel/
- * chat-session-dialogs ViewModels against local page state so their
- * already-shipped interaction logic (autocomplete, delivery confirm
- * steps, mobile disclosure) is reused rather than re-implemented here.
+ * V2 Story Chat binding ViewModel.
  *
- * The send loop is honestly a mock: it appends an optimistic PLAYER
- * message, holds a brief simulated delay with the transcript's sending
- * state visible, then appends one canned CHARACTER reply. No engine call
- * exists yet; that is CR-043 and CR-044 (streaming transport).
+ * The live Story Room hook owns network/persistence/runtime behavior. This
+ * adapter only projects that application state into the portable V2 Chat
+ * packages. No V1 Story Room View is mounted or navigated to from here.
  */
 export function useChatV2StoryPageViewModel(id) {
   const router = useRouter();
-  const snapshot = useMemo(() => resolveChatV2StoryMock(id), [id]);
-
-  const [messageItems, setMessageItems] = useState(snapshot.messageItems);
-  const [sending, setSending] = useState(false);
+  const account = useStudioAccount();
+  const chat = useStoryRoomChat(id);
 
   const [mode, setMode] = useState(CHAT_COMPOSER_MODES.DIALOGUE);
   const [speakerId, setSpeakerId] = useState("AUTO");
   const [draft, setDraft] = useState("");
   const [participantMentions, setParticipantMentions] = useState([]);
   const [locationMentions, setLocationMentions] = useState([]);
-
-  const [partyMembers, setPartyMembers] = useState(snapshot.partyMembers);
   const [deletePending, setDeletePending] = useState(false);
-  const [partyRosterOpen, setPartyRosterOpen] = useState(false);
-  const [sceneImagePickerNotice, setSceneImagePickerNotice] = useState(null);
+  const [formatHelpOpen, setFormatHelpOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
-  const [activeDialog, setActiveDialog] = useState(null);
+  const projectedMessageItems = useMemo(
+    () => projectStoryRoomMessagesToV2(chat.messages),
+    [chat.messages]
+  );
+  const messageActions = useStoryRoomV2MessageActions({
+    messages: chat.messages,
+    projectedMessageItems,
+    regenerateMessage: chat.regenerateMessage,
+    continueMessage: chat.continueMessage,
+    reportMessage: chat.reportMessage,
+    messageActionState: chat.messageActionState,
+  });
+  const openingHeroImage = useMemo(
+    () => projectStoryRoomOpeningHero(chat.room),
+    [chat.room]
+  );
+  const partyMembers = useMemo(
+    () => projectStoryRoomCastToV2(chat.cast),
+    [chat.cast]
+  );
+  const participantMentionOptions = useMemo(
+    () => projectStoryRoomMentionOptionsToV2(chat.cast),
+    [chat.cast]
+  );
 
-  function appendMessage(message) {
-    setMessageItems((current) => [...current, { id: nextMockMessageId(), message }]);
-  }
+  async function handleSend(options = {}) {
+    const body = String(draft || "").trim();
+    const actionType = String(options?.actionType || "MESSAGE");
+    const isYield = ["PLAYER_YIELD_TO_CHARACTER", "PLAYER_YIELD_TO_AUTO"].includes(actionType);
+    if ((!body && !isYield) || chat.sending) return;
 
-  function handleSend(options = {}) {
-    const trimmed = draft.trim();
-    setDraft("");
-    setSending(true);
+    const mentionsForSend = isYield ? [] : participantMentions;
+    const locationsForSend = isYield ? [] : locationMentions;
 
-    if (trimmed) {
-      appendMessage(playerMessage(trimmed));
-    } else if (options?.actionType === "PLAYER_YIELD_TO_AUTO") {
-      appendMessage(playerMessage("(continues the scene)"));
+    const result = await chat.sendMessage({
+      message: body,
+      inputMode: normalizeComposerModeForRuntime(mode),
+      requestedSpeakerId: speakerId || "AUTO",
+      participantMentions: mentionsForSend,
+      locationMentions: locationsForSend,
+      actionType,
+    });
+
+    if (result || isYield) {
+      setDraft("");
+      setParticipantMentions([]);
+      setLocationMentions([]);
     }
-
-    window.setTimeout(() => {
-      appendMessage(
-        characterMockReply(
-          "The mock engine has no live response yet, this reply is a fixture placeholder pending CR-043."
-        )
-      );
-      setSending(false);
-    }, 900);
   }
 
   const composer = useChatComposerViewModel({
@@ -113,104 +114,73 @@ export function useChatV2StoryPageViewModel(id) {
     setMode,
     speakerId,
     setSpeakerId,
-    speakerOptions: snapshot.speakerOptions,
+    speakerOptions: chat.speakerOptions,
     draft,
     setDraft,
     participantMentions,
     setParticipantMentions,
-    participantMentionOptions: snapshot.participantMentionOptions,
+    participantMentionOptions,
     locationMentions,
     setLocationMentions,
-    locationMentionOptions: snapshot.locationMentionOptions,
+    locationMentionOptions: chat.locationMentionOptions,
     onSend: handleSend,
-    isSending: sending,
+    onLocalCommand: (commandInput) => {
+      if (commandInput?.command?.panel !== "FORMAT") return false;
+      setFormatHelpOpen(true);
+      return true;
+    },
+    isSending: chat.sending,
+    disabled: chat.loading || Boolean(chat.error),
     streamingSupported: false,
     isStreaming: false,
-    sceneImage: { available: true, costLabel: "40 coins", pending: false },
+    sceneImage: { available: false, costLabel: "", pending: false },
     useCurrentScene: { available: false },
   });
 
   const transcript = useChatTranscriptViewModel({
-    openingHeroImage: snapshot.openingHeroImage,
-    messageItems,
-    loading: false,
-    sending,
+    openingHeroImage,
+    messageItems: messageActions.messageItems,
+    loading: chat.loading,
+    sending: chat.sending,
     summaryPending: false,
-    errorMessage: "",
+    errorMessage: getErrorMessage(chat.error),
   });
-
-  const rosterCandidates = useMemo(() => {
-    const partyIds = new Set(partyMembers.map((member) => member.id));
-
-    return (snapshot.rosterCandidates || []).map((candidate) => ({
-      ...candidate,
-      inParty: partyIds.has(candidate.id),
-    }));
-  }, [snapshot.rosterCandidates, partyMembers]);
-
-  function addPartyMember(memberId) {
-    if (partyMembers.length >= 5) return;
-
-    const candidate = (snapshot.rosterCandidates || []).find((item) => item.id === memberId);
-    if (!candidate || partyMembers.some((member) => member.id === memberId)) return;
-
-    setPartyMembers((current) => [
-      ...current,
-      {
-        id: candidate.id,
-        name: candidate.name,
-        avatarUrl: candidate.avatarUrl,
-        fallbackInitial: candidate.name.slice(0, 1).toUpperCase(),
-        role: candidate.role,
-        color: candidate.color,
-      },
-    ]);
-  }
-
-  function removePartyMember(memberId) {
-    setPartyMembers((current) => current.filter((member) => member.id !== memberId));
-  }
-
-  const partyRoster = useChatPartyRosterViewModel({
-    title: "Party",
-    candidates: rosterCandidates,
-    partySize: partyMembers.length,
-    onClose: () => setPartyRosterOpen(false),
-    onAddMember: addPartyMember,
-    onRemoveMember: removePartyMember,
-  });
-
-  function handleDeleteRoom() {
-    setDeletePending(true);
-    window.setTimeout(() => {
-      router.push("/studio/v2/stories");
-    }, 600);
-  }
 
   const castPanel = useChatCastPanelViewModel({
     eyebrow: "Party",
-    featuredMedia: snapshot.castPanel.featuredMedia,
-    roomTitle: snapshot.title,
-    roomIdLabel: snapshot.roomIdLabel,
-    narrator: snapshot.castPanel.narrator,
+    featuredMedia: projectStoryRoomFeaturedMediaToV2(chat.room),
+    roomTitle: chat.room.title,
+    roomIdLabel: String(id || ""),
+    narrator: { label: "Narrator", value: chat.room.narrator || "Default Crestfall Narrator" },
     partyHeading: "Party",
-    partyDescription: snapshot.castPanel.partyDescription,
+    partyDescription: "Characters currently present in this Story.",
     partyMembers,
-    npcParticipantManager: snapshot.castPanel.npcParticipantManager,
+    npcParticipantManager: null,
     roomListHref: "/studio/v2/stories",
-    roomListLabel: "Room List",
-    onOpenPartyRoster: () => setPartyRosterOpen(true),
-    onOpenSceneImagePicker: () =>
-      setSceneImagePickerNotice({
-        label: "Scene Image",
-        message: "The image selector is wired when this page goes live; nothing happens in this preview.",
-      }),
+    roomListLabel: "Stories",
+    onOpenPartyRoster: null,
+    onOpenSceneImagePicker: null,
   });
+
+  async function handleDeleteRoom() {
+    if (!id || deletePending) return;
+    setDeletePending(true);
+    setDeleteError("");
+
+    try {
+      await deleteStoryRoom(id);
+      router.push("/studio/v2/stories");
+    } catch (error) {
+      setDeleteError(error?.message || "Story could not be deleted.");
+    } finally {
+      setDeletePending(false);
+    }
+  }
 
   const statePanel = useChatStatePanelViewModel({
     eyebrow: "Chronicle State",
-    title: snapshot.title,
-    sections: snapshot.statePanel.sections,
+    title: chat.room.title || "Story Data",
+    sections: projectStoryRoomStateSectionsToV2(chat.room),
     deletePending,
     onDeleteRoom: handleDeleteRoom,
     actions: [
@@ -218,46 +188,15 @@ export function useChatV2StoryPageViewModel(id) {
         id: "share-snapshot",
         iconKey: "share",
         label: "Share",
-        disabled: false,
-        onPress: () =>
-          setActiveDialog({
-            kind: "SHARE",
-            open: true,
-            mode: "TEMPORARY",
-            presets: CHAT_EXPORT_RANGE_PRESETS,
-            preset: "RECENT_50",
-            customRange: false,
-            messageOptions: [],
-            result: null,
-            copied: false,
-            pending: false,
-            error: "",
-            revokeConfirmOpen: false,
-            onClose: () => setActiveDialog(null),
-          }),
+        disabled: true,
+        onPress: null,
       },
       {
         id: "export-chat",
         iconKey: "download",
         label: "Export",
-        disabled: false,
-        onPress: () =>
-          setActiveDialog({
-            kind: "EXPORT",
-            open: true,
-            presets: CHAT_EXPORT_RANGE_PRESETS,
-            preset: "RECENT_50",
-            formats: CHAT_EXPORT_FORMAT_OPTIONS,
-            format: "TXT",
-            customRange: false,
-            messageOptions: [],
-            startMessageId: "",
-            endMessageId: "",
-            pending: false,
-            error: "",
-            onClose: () => setActiveDialog(null),
-            onSubmit: () => setActiveDialog(null),
-          }),
+        disabled: true,
+        onPress: null,
       },
       {
         id: "delete-story",
@@ -270,32 +209,33 @@ export function useChatV2StoryPageViewModel(id) {
   });
 
   const sessionDialogs = useChatSessionDialogsViewModel({
-    activeDialog,
+    activeDialog: messageActions.reportDialog,
     summaryPending: null,
   });
 
+  const errorMessage = getErrorMessage(chat.error) || deleteError || "";
+
   return {
-    id: snapshot.id,
-    backHref: snapshot.backHref,
-    backLabel: snapshot.backLabel,
-    eyebrow: snapshot.eyebrow,
-    title: snapshot.title,
-    scenarioLabel: snapshot.scenarioLabel,
-    modeLabel: snapshot.modeLabel,
-    statusPills: snapshot.statusPills,
-    coinBalanceLabel: snapshot.coinBalanceLabel,
-    loading: false,
-    errorMessage: "",
+    id,
+    backHref: "/studio/v2/stories",
+    backLabel: "Stories",
+    eyebrow: "Story",
+    title: chat.room.title || "Story",
+    scenarioLabel: chat.room.scenario || "",
+    modeLabel: chat.room.roomMode || "",
+    statusPills: [],
+    coinBalanceLabel: formatCoinBalance(account?.coinBalance, account?.accountStatus === "loading"),
+    loading: chat.loading,
+    errorMessage,
     transcript,
     composer,
     castPanel,
     statePanel,
     sessionDialogs,
     libraryPassUpsell: null,
-    partyRoster: { ...partyRoster, open: partyRosterOpen },
-    sceneImagePickerNotice,
-    onCloseSceneImagePicker: () => setSceneImagePickerNotice(null),
+    formatHelp: {
+      open: formatHelpOpen,
+      onClose: () => setFormatHelpOpen(false),
+    },
   };
 }
-
-export { CHAT_REPORT_REASON_OPTIONS, CHAT_SESSION_DELETE_STORY_CONFIRMATION };

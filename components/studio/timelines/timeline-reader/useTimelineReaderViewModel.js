@@ -35,6 +35,7 @@ function normalizeEntry(entry, index) {
     chronologyLabel: displayDate || era || "Undated / unplaced",
     timelineOrder: normalizeOptionalNumber(entry?.timelineOrder),
     orderOverride: normalizeOptionalNumber(entry?.orderOverride),
+    chapterId: normalizeString(entry?.chapterId || entry?.chapter_id),
     effectiveOrder: normalizeOptionalNumber(entry?.effectiveOrder),
     availability,
     status: normalizeString(entry?.status).toUpperCase(),
@@ -44,12 +45,78 @@ function normalizeEntry(entry, index) {
   };
 }
 
-export function groupTimelineReaderEntries(entries = [], groupByEra = true) {
+function normalizeGroupingMode(value, legacyGroupByEra = true) {
+  const normalized = normalizeString(value).toUpperCase();
+  if (["CHAPTERS", "ERA", "NONE"].includes(normalized)) return normalized;
+  return legacyGroupByEra === false ? "NONE" : "ERA";
+}
+
+export function groupTimelineReaderEntries(
+  entries = [],
+  { groupingMode = "ERA", chapters = [] } = {}
+) {
   const normalized = Array.isArray(entries) ? entries : [];
   if (!normalized.length) return [];
 
-  if (!groupByEra) {
-    return [{ id: "chronology", label: "Chronology", entries: normalized }];
+  const mode = normalizeGroupingMode(groupingMode);
+  if (mode === "NONE") {
+    return [
+      {
+        id: "chronology",
+        label: "Chronology",
+        entries: normalized,
+        collapsible: false,
+        defaultOpen: true,
+      },
+    ];
+  }
+
+  if (mode === "CHAPTERS") {
+    const orderedChapters = (Array.isArray(chapters) ? chapters : [])
+      .map((chapter, index) => ({
+        id: normalizeString(chapter?.id),
+        label: normalizeString(chapter?.title) || `Chapter ${index + 1}`,
+        order: normalizeOptionalNumber(chapter?.order) ?? index,
+        sourceIndex: index,
+      }))
+      .filter((chapter) => chapter.id)
+      .sort((a, b) => a.order - b.order || a.sourceIndex - b.sourceIndex);
+
+    const byId = new Map(
+      orderedChapters.map((chapter, index) => [
+        chapter.id,
+        {
+          id: chapter.id,
+          label: chapter.label,
+          entries: [],
+          collapsible: true,
+          defaultOpen: index === 0,
+        },
+      ])
+    );
+    const unassigned = [];
+
+    normalized.forEach((entry) => {
+      const group = byId.get(normalizeString(entry.chapterId));
+      if (group) group.entries.push(entry);
+      else unassigned.push(entry);
+    });
+
+    const groups = orderedChapters
+      .map((chapter) => byId.get(chapter.id))
+      .filter((group) => group?.entries?.length);
+
+    if (unassigned.length) {
+      groups.push({
+        id: "unassigned",
+        label: "Unassigned",
+        entries: unassigned,
+        collapsible: true,
+        defaultOpen: groups.length === 0,
+      });
+    }
+
+    return groups;
   }
 
   const groups = [];
@@ -65,6 +132,8 @@ export function groupTimelineReaderEntries(entries = [], groupByEra = true) {
         id: `${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "era"}-${index}`,
         label,
         entries: [],
+        collapsible: false,
+        defaultOpen: true,
       };
       groups.push(active);
     }
@@ -146,13 +215,18 @@ export function useTimelineReaderViewModel({
       })),
     [entries, timelineId]
   );
+  const groupingMode = normalizeGroupingMode(
+    timeline.groupingMode,
+    timeline.groupByEra !== false
+  );
+  const chapters = Array.isArray(timeline.chapters) ? timeline.chapters : [];
   const groups = useMemo(
     () =>
-      groupTimelineReaderEntries(
-        navigableEntries,
-        timeline.groupByEra !== false
-      ),
-    [navigableEntries, timeline.groupByEra]
+      groupTimelineReaderEntries(navigableEntries, {
+        groupingMode,
+        chapters,
+      }),
+    [navigableEntries, groupingMode, chapters]
   );
 
   return {
@@ -163,7 +237,7 @@ export function useTimelineReaderViewModel({
     description: normalizeString(timeline.description),
     publicEnabled: timeline.publicEnabled === true,
     sortDirection: timeline.sortDirection === "DESC" ? "DESC" : "ASC",
-    groupByEra: timeline.groupByEra !== false,
+    groupingMode,
     visibility: normalizeString(timeline.visibility).toUpperCase(),
     status: normalizeString(timeline.status).toUpperCase(),
     entryCount: entries.length,

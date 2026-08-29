@@ -1,13 +1,23 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   buildStoryRoomStatusSurfacePresentation,
 } from "./storyRoomStatusSurfacePresentation";
 
+const ACTOR_HUD_COLLAPSE_PREFERENCE_PREFIX =
+  "crestfall.story-room.actor-hud.collapsed";
+
 function normalizeArray(value) {
   return Array.isArray(value) ? value : [];
+}
+
+function getActorHudCollapsePreferenceKey(room = {}) {
+  const roomId = String(room?.id || "").trim();
+  return roomId
+    ? `${ACTOR_HUD_COLLAPSE_PREFERENCE_PREFIX}:${roomId}`
+    : "";
 }
 
 function normalizePlacement(value) {
@@ -18,9 +28,30 @@ function normalizePlacement(value) {
 export default function useStoryRoomStatusSurfaceHostViewModel({
   surfaces = [],
   placement = "BOTTOM",
+  room = null,
 } = {}) {
   const resolvedPlacement = normalizePlacement(placement);
   const [expandedSurfaceIds, setExpandedSurfaceIds] = useState(() => new Set());
+  const [actorHudCollapsed, setActorHudCollapsed] = useState(false);
+  const actorHudPreferenceKey = useMemo(
+    () => getActorHudCollapsePreferenceKey(room),
+    [room?.id]
+  );
+
+  useEffect(() => {
+    if (!actorHudPreferenceKey) {
+      setActorHudCollapsed(false);
+      return;
+    }
+
+    try {
+      setActorHudCollapsed(
+        window.localStorage.getItem(actorHudPreferenceKey) === "1"
+      );
+    } catch {
+      setActorHudCollapsed(false);
+    }
+  }, [actorHudPreferenceKey]);
 
   const projectedSurfaces = useMemo(
     () =>
@@ -33,6 +64,22 @@ export default function useStoryRoomStatusSurfaceHostViewModel({
         .map(buildStoryRoomStatusSurfacePresentation),
     [resolvedPlacement, surfaces]
   );
+
+  const onToggleActorHudVisibility = useCallback(() => {
+    setActorHudCollapsed((current) => {
+      const next = !current;
+
+      if (actorHudPreferenceKey) {
+        try {
+          window.localStorage.setItem(actorHudPreferenceKey, next ? "1" : "0");
+        } catch {
+          // Presentation preference persistence is best-effort only.
+        }
+      }
+
+      return next;
+    });
+  }, [actorHudPreferenceKey]);
 
   const onToggleSurface = useCallback((surfaceId) => {
     setExpandedSurfaceIds((current) => {
@@ -48,7 +95,10 @@ export default function useStoryRoomStatusSurfaceHostViewModel({
     surfaces: projectedSurfaces.map((surface) => ({
       ...surface,
       expanded: expandedSurfaceIds.has(surface.id),
+      collapsed:
+        surface.variant === "ACTOR_MECHANICS" && actorHudCollapsed,
     })),
     onToggleSurface,
+    onToggleActorHudVisibility,
   };
 }

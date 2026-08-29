@@ -38,9 +38,41 @@ function ConfiguredSurface({ surface, placement }) {
   );
 }
 
-function ActorMechanicsSurface({ surface, onToggle }) {
+function ActorMechanicsVisibilityTab({ surface, onToggleVisibility }) {
+  const collapsed = surface.collapsed === true;
+  const action = collapsed ? "Show" : "Hide";
+
   return (
-    <section className="border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] px-4 py-3 sm:px-5">
+    <button
+      type="button"
+      onClick={() => onToggleVisibility?.()}
+      className="absolute right-0 top-1/2 z-10 flex h-10 w-7 -translate-y-1/2 items-center justify-center rounded-l-lg border border-r-0 border-[var(--gold-ornament)]/30 bg-black/60 text-[var(--gold-ornament)]/80 shadow-lg transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+      aria-label={`${action} ${surface.actorTitle} mechanics`}
+      title={`${action} character mechanics`}
+    >
+      {collapsed ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+    </button>
+  );
+}
+
+function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
+  if (surface.collapsed) {
+    return (
+      <section className="relative h-10 border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)]/70">
+        <ActorMechanicsVisibilityTab
+          surface={surface}
+          onToggleVisibility={onToggleVisibility}
+        />
+      </section>
+    );
+  }
+
+  return (
+    <section className="relative border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] px-4 py-3 pr-10 sm:px-5 sm:pr-11">
+      <ActorMechanicsVisibilityTab
+        surface={surface}
+        onToggleVisibility={onToggleVisibility}
+      />
       <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2 border-b border-[var(--line-fade)] pb-2.5">
         <div className="min-w-0">
           <p className="truncate font-display text-base uppercase tracking-[0.08em] text-[var(--gold-ornament)] sm:text-lg">
@@ -139,6 +171,7 @@ export default function StoryRoomStatusSurfaceHostView({
   placement = "BOTTOM",
   surfaces = [],
   onToggleSurface,
+  onToggleActorHudVisibility,
 }) {
   if (!surfaces.length) return null;
 
@@ -150,6 +183,7 @@ export default function StoryRoomStatusSurfaceHostView({
             key={surface.id}
             surface={surface}
             onToggle={onToggleSurface}
+            onToggleVisibility={onToggleActorHudVisibility}
           />
         ) : (
           <ConfiguredSurface

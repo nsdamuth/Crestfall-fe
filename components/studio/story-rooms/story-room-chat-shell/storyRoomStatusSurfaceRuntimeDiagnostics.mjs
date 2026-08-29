@@ -86,8 +86,16 @@ const messageVm = readFileSync(
   new URL("../story-room-message/useStoryRoomMessageViewModel.js", import.meta.url),
   "utf8"
 );
+const messageDedup = readFileSync(
+  new URL("../story-room-message/storyRoomPersistentStatusDedup.js", import.meta.url),
+  "utf8"
+);
 const hostView = readFileSync(
   new URL("./StoryRoomStatusSurfaceHost.view.jsx", import.meta.url),
+  "utf8"
+);
+const hostViewModel = readFileSync(
+  new URL("./useStoryRoomStatusSurfaceHostViewModel.js", import.meta.url),
   "utf8"
 );
 
@@ -97,11 +105,19 @@ assert.match(shellBinding, /StoryRoomStatusSurfaceHost/);
 assert.match(hook, /reloadStatusSurfaces/);
 assert.match(hook, /fetchStoryRoomStatusSurfaces/);
 assert.match(messageVm, /shouldSuppressPersistentSnapshotBlock/);
-assert.match(messageVm, /progression_actor_/);
-assert.match(messageVm, /stats_pools_actor_/);
+assert.match(messageVm, /stripPersistentSnapshotBlocksFromBody/);
+assert.match(messageDedup, /progression_actor_/);
+assert.match(messageDedup, /stats_pools_actor_/);
 assert.match(hostView, /surface\.wallets/);
 assert.match(hostView, /surface\.details/);
 assert.match(hostView, /aria-expanded/);
+assert.match(hostView, /ActorMechanicsVisibilityTab/);
+assert.match(hostView, /const action = collapsed \? "Show" : "Hide"/);
+assert.match(hostView, /character mechanics/);
+assert.match(hostViewModel, /actorHudCollapsed/);
+assert.match(hostViewModel, /localStorage/);
+assert.match(hostViewModel, /crestfall\.story-room\.actor-hud\.collapsed/);
+assert.match(shell, /9rem\+env\(safe-area-inset-bottom\)/);
 assert.doesNotMatch(hostView, /Crimson Sphinx|Iron Rank|Valentina/i);
 
 console.log(
@@ -114,6 +130,9 @@ console.log(
       polishedActorMechanicsFooterClassification: true,
       walletBalancesHaveDedicatedActorHudRow: true,
       derivedStatsCollapseIntoDetail: true,
+      actorHudRightEdgeShowHideTabSupported: true,
+      actorHudVisibilityPreferenceRoomScoped: true,
+      mobileComposerFootprintReservedBelowHud: true,
       mobileResponsivePresentationOwnedByView: true,
       persistentSnapshotMessageBlocksSuppressedWhenHudOwnsDomain: true,
       turnSpecificMessageStatusBlocksPreservedByPatternBoundary: true,

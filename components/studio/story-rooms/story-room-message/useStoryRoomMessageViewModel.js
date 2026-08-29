@@ -7,6 +7,11 @@ import {
   STORY_ROOM_MESSAGE_SURFACE_TONES,
 } from "./StoryRoomMessage.contract";
 
+import {
+  shouldSuppressPersistentSnapshotBlock,
+  stripPersistentSnapshotBlocksFromBody,
+} from "./storyRoomPersistentStatusDedup";
+
 const PRESENTATION_CONTRACT_VERSION = "chat.responsePresentation.v1";
 
 function normalizeArray(value) {
@@ -17,23 +22,6 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value
     : {};
-}
-
-function shouldSuppressPersistentSnapshotBlock(block, persistentDomains = []) {
-  const id = String(block?.id || "").toLowerCase();
-  const domains = new Set(
-    normalizeArray(persistentDomains).map((domain) => String(domain || "").toUpperCase())
-  );
-
-  if (domains.has("PROGRESSION") && /^progression_actor_\d+$/.test(id)) {
-    return true;
-  }
-
-  if (domains.has("STATS_POOLS") && /^stats_pools_actor_\d+$/.test(id)) {
-    return true;
-  }
-
-  return false;
 }
 
 function getValidatedPresentation(message, { persistentDomains = [] } = {}) {
@@ -178,6 +166,12 @@ export function getStoryRoomMessageViewProps(
       ? getCharacterColorPalette(openingCharacterPaletteId)
       : null;
 
+  const legacyBody = stripPersistentSnapshotBlocksFromBody(
+    safeMessage.body,
+    normalizeObject(safeMessage?.metadata?.presentation),
+    persistentStatusSurfaceDomains
+  );
+
   return {
     surfaceTone: getSurfaceTone(safeMessage),
     contentType: autoEventMedia
@@ -191,7 +185,7 @@ export function getStoryRoomMessageViewProps(
     bodyMode: presentation
       ? STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC
       : STORY_ROOM_MESSAGE_BODY_MODES.LEGACY,
-    legacyBody: String(safeMessage.body || ""),
+    legacyBody,
     semanticSegments: presentation?.segments || [],
     statusBlocks: presentation?.statusBlocks || [],
     paletteColors: palette?.colors ? { ...palette.colors } : null,

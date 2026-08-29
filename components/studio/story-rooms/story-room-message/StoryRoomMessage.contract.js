@@ -1,4 +1,4 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "1.2.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "1.4.0";
 
 export const STORY_ROOM_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",
@@ -27,6 +27,11 @@ export const STORY_ROOM_MESSAGE_BODY_MODES = Object.freeze({
 export const STORY_ROOM_MESSAGE_DELIVERY_STATES = Object.freeze({
   FAILED: "FAILED",
   SENDING: "SENDING",
+});
+
+export const STORY_ROOM_MESSAGE_COPY_STATES = Object.freeze({
+  COPIED: "COPIED",
+  FAILED: "FAILED",
 });
 
 export const STORY_ROOM_MESSAGE_SEGMENT_TYPES = Object.freeze({
@@ -58,6 +63,22 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  * @property {{dialogue:string,narration:string,emphasis:string,strong:string,whisper:string,speaker:string,border:string}|null} paletteColors
  * @property {{subtype:string,displayUrl:string,thumbnailUrl:string|null,width:number|null,height:number|null,altText:string,caption:string,entityLabel:string,contentRating:string}|null} media
  * @property {"FAILED"|"SENDING"|null} deliveryState
+ * @property {boolean} canCopy
+ * @property {"COPIED"|"FAILED"|null} copyState
+ * @property {(() => void)|null} onCopy
+ * @property {boolean} canRegenerate
+ * @property {boolean} regeneratePending
+ * @property {string} regenerateError
+ * @property {(() => void)|null} onRegenerate
+ * @property {boolean} canContinue
+ * @property {boolean} continuePending
+ * @property {string} continueError
+ * @property {(() => void)|null} onContinue
+ * @property {boolean} canReport
+ * @property {boolean} reportPending
+ * @property {boolean} reportSubmitted
+ * @property {string} reportError
+ * @property {(() => void)|null} onReport
  *
  * Character and narrator responses may receive display-only paragraph spacing
  * when the authored response contains no line breaks. Existing line breaks and
