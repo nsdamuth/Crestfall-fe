@@ -19,3 +19,11 @@ supersession in docs/DESIGN-TOKENS.md. StudioShell and Story Chat stay
 fluid; every v2 page's foreground content is now capped and centered at
 one new provisional token, --container-wide (1440), applied at
 KitStudioPageView. Build verified exit 0.
+BUG FIX, 29 Aug 2026: infinite render loop in
+components/studio/engagement/hooks/useCreationEngagementState.js fixed.
+Root cause: creationIds was memoized on the `creations` array reference;
+several call sites pass a fresh array each render (spread, inline `[]`),
+so the sync effect refired every render and its empty-state branch kept
+creating new Set() instances, forcing another render. Fixed by keying
+the memo on the serialized id list instead of array identity. Build
+verified exit 0.
