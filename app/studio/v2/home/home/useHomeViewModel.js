@@ -306,17 +306,34 @@ export function useHomeViewModel({
     () => sortCommunity(decoratedCommunity, sortValue),
     [decoratedCommunity, sortValue]
   );
+  // R3, RULED 29 Aug 2026 (bible/prds/2026-08-29-home.md, amended
+  // same day by S2): the shelf is "Recently added", ordered by
+  // creation time (F-003). The projected `recency` field carries
+  // updatedAt, not createdAt, so creation time is read here from the
+  // raw creations the page was handed.
+  const createdAtById = useMemo(() => {
+    const byId = new Map();
+
+    (Array.isArray(communityCreations) ? communityCreations : []).forEach((creation) => {
+      if (!creation?.id) return;
+      const created = creation.createdAt || creation.created_at || null;
+      const timestamp = created ? new Date(created).getTime() : 0;
+      byId.set(creation.id, Number.isFinite(timestamp) ? timestamp : 0);
+    });
+
+    return byId;
+  }, [communityCreations]);
+
   const recent = useMemo(
-    () => [...decoratedCommunity].sort((a, b) => {
-      const aSource = communityItems.find((item) => item.id === a.id);
-      const bSource = communityItems.find((item) => item.id === b.id);
-      return (bSource?.recency || 0) - (aSource?.recency || 0);
-    }),
-    [decoratedCommunity, communityItems]
+    () =>
+      [...decoratedCommunity].sort(
+        (a, b) => (createdAtById.get(b.id) || 0) - (createdAtById.get(a.id) || 0)
+      ),
+    [decoratedCommunity, createdAtById]
   );
 
   const topRatedRail = rail("Popular now", sorted, () => onNavigate?.("/studio/v2/community"));
-  const recentlyAddedRail = rail("Recently updated", recent, () => onNavigate?.("/studio/v2/community"));
+  const recentlyAddedRail = rail("Recently added", recent, () => onNavigate?.("/studio/v2/community"));
   const fromTheCommunityRail = rail(
     "From the community",
     decoratedCommunity.filter((item) => !sorted.slice(0, 4).some((top) => top.id === item.id)),
