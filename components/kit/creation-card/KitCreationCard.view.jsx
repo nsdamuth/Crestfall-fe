@@ -289,6 +289,24 @@ function OverlayActions({ liked, bookmarked, onLike, onBookmark, contextualActio
   );
 }
 
+function OwnerQuickActions({ onEdit, onGenerateImage, contextualAction }) {
+  const { label, Icon, onClick } = contextualAction;
+
+  return (
+    <>
+      <IconActionButton label="Edit" onClick={onEdit}>
+        <Pencil size={16} />
+      </IconActionButton>
+      <IconActionButton label="Generate Image" onClick={onGenerateImage}>
+        <ImageIcon size={16} />
+      </IconActionButton>
+      <IconActionButton label={label} onClick={onClick}>
+        <Icon size={16} />
+      </IconActionButton>
+    </>
+  );
+}
+
 // Overlay actions reveal on hover/focus at fine pointers and stay
 // visible at coarse pointers (touch has no hover; mobile law).
 const OVERLAY_REVEAL =
@@ -307,6 +325,7 @@ function GridCard({
   onBookmark,
   contextualAction,
   isOwner,
+  promoteOwnerActions,
   kebabOpen,
   onToggleKebab,
   onCloseKebab,
@@ -367,13 +386,21 @@ function GridCard({
                 onDelete={onDelete}
               />
             ) : null}
-            <OverlayActions
-              liked={liked}
-              bookmarked={bookmarked}
-              onLike={onLike}
-              onBookmark={onBookmark}
-              contextualAction={contextualAction}
-            />
+            {isOwner && promoteOwnerActions ? (
+              <OwnerQuickActions
+                onEdit={onEdit}
+                onGenerateImage={onGenerateImage}
+                contextualAction={contextualAction}
+              />
+            ) : (
+              <OverlayActions
+                liked={liked}
+                bookmarked={bookmarked}
+                onLike={onLike}
+                onBookmark={onBookmark}
+                contextualAction={contextualAction}
+              />
+            )}
           </div>
         </div>
 
@@ -412,6 +439,7 @@ function ListCard({
   onBookmark,
   contextualAction,
   isOwner,
+  promoteOwnerActions,
   kebabOpen,
   onToggleKebab,
   onCloseKebab,
@@ -494,13 +522,20 @@ function ListCard({
               onDelete={onDelete}
             />
           ) : null}
-          <OverlayActions
-            liked={liked}
-            bookmarked={bookmarked}
-            onLike={onLike}
-            onBookmark={onBookmark}
-            contextualAction={contextualAction}
-          />
+          {isOwner && promoteOwnerActions ? (
+            <OwnerQuickActions
+              onEdit={onEdit}
+              contextualAction={contextualAction}
+            />
+          ) : (
+            <OverlayActions
+              liked={liked}
+              bookmarked={bookmarked}
+              onLike={onLike}
+              onBookmark={onBookmark}
+              contextualAction={contextualAction}
+            />
+          )}
         </div>
       </div>
     </>
@@ -526,6 +561,7 @@ export default function KitCreationCardView({
   onGenerate = null,
   onContinue = null,
   isOwner = false,
+  promoteOwnerActions = false,
   onEdit = null,
   onGenerateImage = null,
   onShare = null,
@@ -546,6 +582,7 @@ export default function KitCreationCardView({
   const [kebabOpen, setKebabOpen] = useState(false);
   const kebabProps = {
     isOwner,
+    promoteOwnerActions,
     kebabOpen,
     onToggleKebab: () => setKebabOpen((current) => !current),
     onCloseKebab: () => setKebabOpen(false),

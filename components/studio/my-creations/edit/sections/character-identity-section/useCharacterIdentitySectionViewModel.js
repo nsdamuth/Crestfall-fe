@@ -1,3 +1,7 @@
+import { useEffect, useMemo, useState } from "react";
+
+import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
+
 import {
   CUSTOM_APPEARANCE_VALUE_MAX_LENGTH,
   genderPresentationOptions,
@@ -15,6 +19,9 @@ const DEFAULT_COPY = Object.freeze({
   speciesLabel: "Species",
   customSpeciesLabel: "Custom Species",
   renderingStyleLabel: "Default Rendering Style",
+  defaultImagePresetLabel: "Default Image Preset",
+  defaultImagePresetHelpText:
+    "Used automatically when this character is selected for image generation. Image Studio can still override it per generation.",
   ageLabel: "Age",
   agePlaceholder: "18+",
   ageHelpText:
@@ -63,8 +70,28 @@ export function limitCustomIdentityValue(value) {
 export function getCharacterIdentitySectionViewProps({
   form = {},
   updateDataField = null,
+  imagePresetOptions = [],
 } = {}) {
   const data = form?.data || {};
+  const storedDefaultImagePresetId = String(data.default_image_preset_id || "").trim();
+  const storedDefaultImagePresetTitle = String(
+    data.default_image_preset_title || ""
+  ).trim();
+  const normalizedImagePresetOptions = [
+    { value: "AUTO", label: "Auto / No Default Preset" },
+    ...(Array.isArray(imagePresetOptions) ? imagePresetOptions : []),
+  ];
+  if (
+    storedDefaultImagePresetId &&
+    !normalizedImagePresetOptions.some(
+      (option) => option.value === storedDefaultImagePresetId
+    )
+  ) {
+    normalizedImagePresetOptions.push({
+      value: storedDefaultImagePresetId,
+      label: storedDefaultImagePresetTitle || "Saved image preset",
+    });
+  }
 
   return {
     ...DEFAULT_COPY,
@@ -77,6 +104,8 @@ export function getCharacterIdentitySectionViewProps({
     customIdentityMaxLength: CUSTOM_APPEARANCE_VALUE_MAX_LENGTH,
     renderingStyleValue: data.rendering_style || "EITHER",
     renderingStyleOptions: CHARACTER_RENDERING_STYLE_OPTIONS,
+    defaultImagePresetValue: storedDefaultImagePresetId || "AUTO",
+    defaultImagePresetOptions: normalizedImagePresetOptions,
     ageValue: data.age || "",
     ageMinimum: 18,
     genderPresentationValue: data.gender_presentation || "",
@@ -99,6 +128,23 @@ export function getCharacterIdentitySectionViewProps({
       updateDataField?.("custom_species", limitCustomIdentityValue(value)),
     onSelectRenderingStyle: (value) =>
       updateDataField?.("rendering_style", value),
+    onSelectDefaultImagePreset: (value) => {
+      const selectedValue = String(value || "AUTO");
+      if (selectedValue === "AUTO") {
+        updateDataField?.("default_image_preset_id", null);
+        updateDataField?.("default_image_preset_title", null);
+        return;
+      }
+
+      const selectedPreset = normalizedImagePresetOptions.find(
+        (option) => option.value === selectedValue
+      );
+      updateDataField?.("default_image_preset_id", selectedValue);
+      updateDataField?.(
+        "default_image_preset_title",
+        selectedPreset?.label || storedDefaultImagePresetTitle || ""
+      );
+    },
     onChangeAge: (value) => updateDataField?.("age", value),
     onCommitAge: (value) =>
       updateDataField?.("age", clampAdultCharacterAge(value)),
@@ -117,5 +163,40 @@ export function getCharacterIdentitySectionViewProps({
 }
 
 export function useCharacterIdentitySectionViewModel(props = {}) {
-  return getCharacterIdentitySectionViewProps(props);
+  const [imagePresets, setImagePresets] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchOwnedCreations(
+      { type: "IMAGE_PRESET" },
+      "Image presets could not be loaded."
+    )
+      .then((creations) => {
+        if (!cancelled) setImagePresets(Array.isArray(creations) ? creations : []);
+      })
+      .catch(() => {
+        if (!cancelled) setImagePresets([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const imagePresetOptions = useMemo(
+    () =>
+      imagePresets.map((creation) => ({
+        value: String(creation?.id || ""),
+        label: String(
+          creation?.title || creation?.data?.name || "Untitled Image Preset"
+        ),
+      })).filter((option) => option.value),
+    [imagePresets]
+  );
+
+  return getCharacterIdentitySectionViewProps({
+    ...props,
+    imagePresetOptions,
+  });
 }

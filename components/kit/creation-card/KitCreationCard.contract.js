@@ -1,4 +1,4 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.4.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.5.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
@@ -143,6 +143,15 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.4.0";
  * @property {(() => void)|null} [onDelete] optional (v3.4.0), default
  *   null; kebab menu item, the sole danger action, below the fade
  *   divider.
+ *
+ * v3.5.0 adds `promoteOwnerActions`, an opt-in owner-card face mode
+ * used by Vault. When true with `isOwner`, Edit, Generate Image, and
+ * the existing contextual action (Play / Generate / Expand) replace
+ * Like and Save as the three prominent face actions. The owner kebab
+ * remains for secondary lifecycle actions. Default false preserves
+ * every other consumer.
+ * @property {boolean} [promoteOwnerActions] optional (v3.5.0), default
+ *   false.
  */
 
 export {};

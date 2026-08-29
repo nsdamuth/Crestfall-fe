@@ -8,6 +8,7 @@ import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer
 import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
 import StoryRoomRuntimeMechanicsPanel from "@/components/studio/story-rooms/StoryRoomRuntimeMechanicsPanel";
 import StoryRoomStatePanel from "@/components/studio/story-rooms/StoryRoomStatePanel";
+import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
 import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
 import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
 
@@ -36,6 +37,7 @@ export default function StoryRoomChatShell({ roomId }) {
       MobileDrawerComponent={StoryRoomMobileDrawer}
       RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
       StatePanelComponent={StoryRoomStatePanel}
+      StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
       TranscriptComponent={StoryRoomTranscript}
     />
   );

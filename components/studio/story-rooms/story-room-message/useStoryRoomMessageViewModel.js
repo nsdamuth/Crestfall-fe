@@ -19,7 +19,24 @@ function normalizeObject(value) {
     : {};
 }
 
-function getValidatedPresentation(message) {
+function shouldSuppressPersistentSnapshotBlock(block, persistentDomains = []) {
+  const id = String(block?.id || "").toLowerCase();
+  const domains = new Set(
+    normalizeArray(persistentDomains).map((domain) => String(domain || "").toUpperCase())
+  );
+
+  if (domains.has("PROGRESSION") && /^progression_actor_\d+$/.test(id)) {
+    return true;
+  }
+
+  if (domains.has("STATS_POOLS") && /^stats_pools_actor_\d+$/.test(id)) {
+    return true;
+  }
+
+  return false;
+}
+
+function getValidatedPresentation(message, { persistentDomains = [] } = {}) {
   const presentation = normalizeObject(message?.metadata?.presentation);
   const segments = normalizeArray(presentation.segments)
     .filter((segment) => typeof segment?.text === "string" && segment.text)
@@ -42,7 +59,9 @@ function getValidatedPresentation(message) {
     statusBlocks: normalizeArray(presentation.statusBlocks)
       .filter(
         (block) =>
-          typeof block?.renderedText === "string" && block.renderedText
+          typeof block?.renderedText === "string" &&
+          block.renderedText &&
+          !shouldSuppressPersistentSnapshotBlock(block, persistentDomains)
       )
       .map((block, index) => ({
         id: String(block.id || `status-block-${index}`),
@@ -139,10 +158,17 @@ function getDeliveryState(message) {
   return null;
 }
 
-export function getStoryRoomMessageViewProps(message) {
+export function getStoryRoomMessageViewProps(
+  message,
+  { persistentStatusSurfaceDomains = [] } = {}
+) {
   const safeMessage = normalizeObject(message);
   const autoEventMedia = getAutoEventMedia(safeMessage);
-  const presentation = autoEventMedia ? null : getValidatedPresentation(safeMessage);
+  const presentation = autoEventMedia
+    ? null
+    : getValidatedPresentation(safeMessage, {
+        persistentDomains: persistentStatusSurfaceDomains,
+      });
   const openingCharacterPaletteId = isCharacterOpeningMessage(safeMessage)
     ? safeMessage?.metadata?.openingCharacterPaletteId || "CRESTFALL_DEFAULT"
     : null;

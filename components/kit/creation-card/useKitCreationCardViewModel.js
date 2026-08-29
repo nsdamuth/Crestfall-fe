@@ -47,6 +47,7 @@ export function useKitCreationCardViewModel(props) {
     onPlay: toCallback(props?.onPlay),
     onGenerate: toCallback(props?.onGenerate),
     isOwner: Boolean(props?.isOwner),
+    promoteOwnerActions: Boolean(props?.promoteOwnerActions),
     onEdit: toCallback(props?.onEdit),
     onGenerateImage: toCallback(props?.onGenerateImage),
     onShare: toCallback(props?.onShare),

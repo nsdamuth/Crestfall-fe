@@ -17,13 +17,16 @@ export function useStoryRoomTranscriptViewModel({
   loading = false,
   sending = false,
   error = null,
+  persistentStatusSurfaceDomains = [],
 } = {}) {
   const safeMessages = Array.isArray(messages) ? messages : [];
 
   return {
     messageItems: safeMessages.map((message, index) => ({
       id: String(message?.id ?? `story-room-message-${index}`),
-      message: getStoryRoomMessageViewProps(message),
+      message: getStoryRoomMessageViewProps(message, {
+        persistentStatusSurfaceDomains,
+      }),
     })),
     loading: Boolean(loading),
     sending: Boolean(sending),

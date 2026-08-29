@@ -628,6 +628,7 @@ export default function VaultV2Mockup({
                       : undefined
                   }
                   isOwner={Boolean(live && item.isOwn)}
+                  promoteOwnerActions={Boolean(live && item.isOwn)}
                   kebabOpen={openKebabId === item.id}
                   onToggleKebab={() =>
                     setOpenKebabId((current) => (current === item.id ? null : item.id))

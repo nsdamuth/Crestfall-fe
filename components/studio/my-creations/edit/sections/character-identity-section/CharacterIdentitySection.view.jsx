@@ -23,6 +23,10 @@ export default function CharacterIdentitySectionView({
   renderingStyleLabel = "Default Rendering Style",
   renderingStyleValue = "EITHER",
   renderingStyleOptions = [],
+  defaultImagePresetLabel = "Default Image Preset",
+  defaultImagePresetValue = "AUTO",
+  defaultImagePresetOptions = [],
+  defaultImagePresetHelpText = "",
   ageLabel = "Age",
   ageValue = "",
   ageMinimum = 18,
@@ -43,6 +47,7 @@ export default function CharacterIdentitySectionView({
   onSelectSpecies = null,
   onChangeCustomSpecies = null,
   onSelectRenderingStyle = null,
+  onSelectDefaultImagePreset = null,
   onChangeAge = null,
   onCommitAge = null,
   onSelectGenderPresentation = null,
@@ -56,7 +61,7 @@ export default function CharacterIdentitySectionView({
         body={sectionDescription}
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid min-w-0 max-w-full gap-4 md:grid-cols-2 [&>*]:min-w-0 [&>*]:max-w-full">
         <TextField
           label={characterNameLabel}
           value={characterNameValue}
@@ -94,6 +99,14 @@ export default function CharacterIdentitySectionView({
           options={renderingStyleOptions}
         />
 
+        <SelectField
+          label={defaultImagePresetLabel}
+          value={defaultImagePresetValue}
+          onChange={(value) => onSelectDefaultImagePreset?.(value)}
+          options={defaultImagePresetOptions}
+          helperText={defaultImagePresetHelpText}
+        />
+
         {/* Local field bed, not SharedFields.NumberField (ED1E 4.2):
             this field needs both a per-keystroke onChangeAge and a
             separate onBlur-time onCommitAge, which NumberField does
@@ -102,7 +115,7 @@ export default function CharacterIdentitySectionView({
             spacing, right-aligned tabular-nums, no local focus mark)
             so it reads identically to every other number field on
             the page. */}
-        <label className="block">
+        <label className="block min-w-0 max-w-full">
           <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
             {ageLabel}
           </span>
@@ -119,7 +132,7 @@ export default function CharacterIdentitySectionView({
           />
 
           {ageHelpText ? (
-            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            <p className="mt-[var(--space-2)] max-w-full break-words text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               {ageHelpText}
             </p>
           ) : null}

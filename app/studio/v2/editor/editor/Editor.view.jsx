@@ -308,7 +308,7 @@ export default function EditorView({
   const statusWord = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
 
   return (
-    <section className="w-full max-w-none px-[var(--space-4)] pb-[var(--space-16)] pt-[var(--space-4)] sm:px-[var(--space-6)]">
+    <section className="w-full max-w-none px-[var(--space-4)] pb-[calc(var(--control-md)*2+var(--space-12)+env(safe-area-inset-bottom))] pt-[var(--space-4)] sm:px-[var(--space-6)] lg:pb-[var(--space-16)]">
       {harnessSlot ? <div className="mb-[var(--space-4)]">{harnessSlot}</div> : null}
 
       {isLoading ? (
@@ -395,38 +395,45 @@ export default function EditorView({
       )}
 
       {!isLoading && !loadError ? (
-        <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center gap-[var(--space-3)] border-t border-[var(--line)] bg-[var(--chrome-wash)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-4)] py-[var(--space-2)] lg:hidden">
+        <div className="fixed bottom-[calc(var(--control-md)+var(--space-4)+env(safe-area-inset-bottom))] left-[var(--space-3)] right-[var(--space-3)] z-40 flex items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-3)] p-[var(--space-2)] shadow-[var(--shadow-popover)] backdrop-blur-[var(--blur-chrome)] lg:hidden">
           <button
             type="button"
             onClick={() => onToggleMobileNav?.()}
-            className="flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
+            aria-label="Open editor sections"
+            className="flex min-h-[var(--control-md)] flex-none items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
           >
             <List size={14} aria-hidden="true" />
-            Sections
+            <span className="hidden min-[430px]:inline">Sections</span>
           </button>
-          <p
-            aria-live="polite"
-            className={`min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
-              saveStatus === "error"
-                ? "text-[var(--status-danger-text)]"
-                : isDirty
-                  ? "text-[var(--ink)]"
-                  : "text-[var(--ink-dim)]"
-            }`}
-          >
-            {statusWord}
-          </p>
+
           {isDirty || saveStatus === "error" ? (
-            <button
-              type="button"
-              disabled={saveStatus === "saving"}
-              onClick={() => onSave?.()}
-              className="cf-btn cf-btn--primary flex-none"
+            <div className="grid min-w-0 flex-1 grid-cols-2 gap-[var(--space-2)]">
+              <button
+                type="button"
+                disabled={saveStatus === "saving"}
+                onClick={() => onDiscard?.()}
+                className="cf-btn cf-btn--secondary w-full"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={saveStatus === "saving"}
+                onClick={() => onSave?.()}
+                className="cf-btn cf-btn--primary w-full"
+              >
+                <Save size={14} aria-hidden="true" />
+                {saveStatus === "saving" ? "Saving" : "Save"}
+              </button>
+            </div>
+          ) : (
+            <p
+              aria-live="polite"
+              className="min-w-0 flex-1 truncate text-right text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]"
             >
-              <Save size={14} aria-hidden="true" />
-              Save
-            </button>
-          ) : null}
+              {statusWord}
+            </p>
+          )}
         </div>
       ) : null}
 

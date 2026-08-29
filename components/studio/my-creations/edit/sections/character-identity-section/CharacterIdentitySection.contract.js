@@ -1,4 +1,4 @@
-export const CHARACTER_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CHARACTER_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Character Identity View.
@@ -30,6 +30,10 @@ export const CHARACTER_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} renderingStyleLabel
  * @property {string} renderingStyleValue
  * @property {CharacterIdentityOption[]} renderingStyleOptions
+ * @property {string} defaultImagePresetLabel
+ * @property {string} defaultImagePresetValue
+ * @property {CharacterIdentityOption[]} defaultImagePresetOptions
+ * @property {string} defaultImagePresetHelpText
  * @property {string} ageLabel
  * @property {string} ageValue
  * @property {number} ageMinimum
@@ -50,6 +54,7 @@ export const CHARACTER_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {((value: string) => void)|null} onSelectSpecies
  * @property {((value: string) => void)|null} onChangeCustomSpecies
  * @property {((value: string) => void)|null} onSelectRenderingStyle
+ * @property {((value: string) => void)|null} onSelectDefaultImagePreset
  * @property {((value: string) => void)|null} onChangeAge
  * @property {((value: string) => void)|null} onCommitAge
  * @property {((value: string) => void)|null} onSelectGenderPresentation

@@ -10,6 +10,8 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {"cast"|"state"|null} mobilePanel
  * @property {"COMMANDS"|"HELP"|null} composerHelpPanel
  * @property {Array<Object>} commands
+ * @property {Array<Object>} statusSurfaces Host-agnostic authoritative readout projections.
+ * @property {string} statusSurfaceError Non-fatal persistent surface loading error.
  * @property {Object} castPanelProps
  * @property {Object} mobileCastPanelProps
  * @property {Object} transcriptProps
@@ -30,6 +32,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {import("react").ElementType} MobileDrawerComponent
  * @property {import("react").ElementType} RuntimeMechanicsPanelComponent
  * @property {import("react").ElementType} StatePanelComponent
+ * @property {import("react").ElementType} StatusSurfaceHostComponent
  * @property {import("react").ElementType} TranscriptComponent
  */
 

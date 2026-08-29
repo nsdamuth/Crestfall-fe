@@ -9,8 +9,9 @@ export const EDITOR_HEADER_VIEW_CONTRACT_VERSION = "3.0.0";
 //
 // Breaking:
 // - `imageSrc` becomes `primaryImageSrc` (the ACTIVE featured
-//   slot's image, large 3:4 frame: 232px wide from sm, 148px at
-//   phone widths).
+//   slot's image, large 3:4 frame: fluid across phone/tablet widths
+//   so the artwork + thumb rail use the available hero width, then
+//   300px at desktop and 320px on wider desktop layouts.
 // - New `slots` array + `onSelectSlot`: the other featured slots
 //   render as a thumb rail beside the primary art; tapping a thumb
 //   makes it the displayed primary. New `onReplaceActiveSlot`

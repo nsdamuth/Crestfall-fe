@@ -28,6 +28,8 @@ export default function StoryRoomChatShellView({
   mobilePanel = null,
   composerHelpPanel = null,
   commands = [],
+  statusSurfaces = [],
+  statusSurfaceError = "",
   castPanelProps = {},
   mobileCastPanelProps = {},
   transcriptProps = {},
@@ -51,6 +53,7 @@ export default function StoryRoomChatShellView({
   MobileDrawerComponent,
   RuntimeMechanicsPanelComponent,
   StatePanelComponent,
+  StatusSurfaceHostComponent,
   TranscriptComponent,
 }) {
   function handleSwipeStart(event) {
@@ -117,6 +120,14 @@ export default function StoryRoomChatShellView({
         </div>
 
         <main className="flex min-h-0 flex-col overflow-hidden bg-[var(--surface-1)] xl:rounded-[var(--radius-lg)] xl:border xl:border-[var(--line-whisper)]">
+          {StatusSurfaceHostComponent ? (
+            <StatusSurfaceHostComponent
+              surfaces={statusSurfaces}
+              placement="TOP"
+              room={room}
+            />
+          ) : null}
+
           <StoryRoomHeader
             room={room}
             leftOpen={leftOpen}
@@ -127,6 +138,20 @@ export default function StoryRoomChatShellView({
 
           {TranscriptComponent ? (
             <TranscriptComponent {...transcriptProps} />
+          ) : null}
+
+          {StatusSurfaceHostComponent ? (
+            <StatusSurfaceHostComponent
+              surfaces={statusSurfaces}
+              placement="BOTTOM"
+              room={room}
+            />
+          ) : null}
+
+          {statusSurfaceError ? (
+            <p className="sr-only" role="status">
+              {statusSurfaceError}
+            </p>
           ) : null}
 
           <div className="shrink-0">

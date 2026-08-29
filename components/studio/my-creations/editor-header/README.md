@@ -6,8 +6,9 @@
 
 The advanced editor's artwork hero
 (`docs/plans/ED1B-EDITOR-PAGE-SPEC.md` section 3.2, ED1C): the
-primary featured art large (the ACTIVE slot; 232px wide from sm,
-148px at phone widths), the other featured slots as a thumb rail
+primary featured art large (the ACTIVE slot; fluid across phone/tablet
+widths so the artwork rail uses the available hero space, then 300px
+at desktop and 320px on wider desktop layouts), the other featured slots as a thumb rail
 beside it (tap to make a slot the displayed primary), the type
 eyebrow (from `lib/shared/presentation/terminology.js`, the type
 identity surface), title, visibility chip (composes `KitBadge`), an

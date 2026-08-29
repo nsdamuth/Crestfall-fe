@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchStoryRoom,
   fetchStoryRoomRegistryNpcs,
+  fetchStoryRoomStatusSurfaces,
   exportStoryRoomTranscript,
   createTemporaryStoryRoomShare,
   revokeTemporaryStoryRoomShare,
@@ -525,6 +526,40 @@ export default function useStoryRoomChat(roomId) {
   const [registryNpcError, setRegistryNpcError] = useState("");
   const [randomLikedLoading, setRandomLikedLoading] = useState(false);
   const [randomLikedError, setRandomLikedError] = useState("");
+  const [statusSurfaces, setStatusSurfaces] = useState({
+    version: "story_status_surface_projection_v1",
+    status: "EMPTY",
+    surfaces: [],
+  });
+  const [statusSurfaceError, setStatusSurfaceError] = useState("");
+
+  const reloadStatusSurfaces = useCallback(async () => {
+    if (!roomId) return null;
+
+    setStatusSurfaceError("");
+
+    try {
+      const projection = await fetchStoryRoomStatusSurfaces(roomId);
+      setStatusSurfaces(
+        projection || {
+          version: "story_status_surface_projection_v1",
+          status: "EMPTY",
+          surfaces: [],
+        }
+      );
+      return projection || null;
+    } catch (surfaceError) {
+      setStatusSurfaces({
+        version: "story_status_surface_projection_v1",
+        status: "EMPTY",
+        surfaces: [],
+      });
+      setStatusSurfaceError(
+        surfaceError?.message || "Story status surfaces could not be loaded."
+      );
+      return null;
+    }
+  }, [roomId]);
 
   const reload = useCallback(async () => {
     if (!roomId) return;
@@ -533,7 +568,10 @@ export default function useStoryRoomChat(roomId) {
     setError(null);
 
     try {
-      const data = await fetchStoryRoom(roomId);
+      const [data] = await Promise.all([
+        fetchStoryRoom(roomId),
+        reloadStatusSurfaces(),
+      ]);
       setSnapshot(data || null);
 
       setRegistryNpcsLoading(true);
@@ -556,7 +594,7 @@ export default function useStoryRoomChat(roomId) {
     } finally {
       setLoading(false);
     }
-  }, [roomId]);
+  }, [reloadStatusSurfaces, roomId]);
 
   useEffect(() => {
     reload();
@@ -658,6 +696,7 @@ const sendMessage = useCallback(
         };
       });
 
+      void reloadStatusSurfaces();
       return data;
     } catch (sendError) {
       if (optimisticUserMessage) {
@@ -688,7 +727,7 @@ const sendMessage = useCallback(
       setSending(false);
     }
   },
-  [roomId, sending]
+  [reloadStatusSurfaces, roomId, sending]
 );
   const exportTranscript = useCallback(
     async ({
@@ -858,6 +897,7 @@ const sendMessage = useCallback(
         );
 
         setSnapshot(data || null);
+        void reloadStatusSurfaces();
 
         return data;
       } catch (setError) {
@@ -869,7 +909,7 @@ const sendMessage = useCallback(
         setSettingPlayerCharacter(false);
       }
     },
-    [roomId, settingPlayerCharacter]
+    [reloadStatusSurfaces, roomId, settingPlayerCharacter]
   );
   const room = useMemo(
     () => buildRoomViewModel(snapshot, roomId),
@@ -915,5 +955,8 @@ const sendMessage = useCallback(
     randomLikedLoading,
     randomLikedError,
     loadRandomLikedCharacter,
+    statusSurfaces,
+    statusSurfaceError,
+    reloadStatusSurfaces,
   };
 }

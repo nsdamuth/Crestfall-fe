@@ -8,6 +8,7 @@ import {
   resolveLocalStoryRoomCommand,
 } from "@/components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry";
 import { getMechanicsModuleBindings } from "@/components/studio/story-rooms/story-room-runtime-mechanics-panel/useStoryRoomRuntimeMechanicsPanelViewModel";
+import { getPersistentStatusSurfaceDomains } from "./storyRoomStatusSurfacePresentation";
 
 export const STORY_ROOM_DELETE_CONFIRMATION_LINES = [
   "Delete this Story?",
@@ -79,6 +80,8 @@ export function useStoryRoomChatShellViewModel({
     randomLikedLoading = false,
     randomLikedError = "",
     loadRandomLikedCharacter,
+    statusSurfaces = {},
+    statusSurfaceError = "",
   } = safeChat;
 
   const safeSpeakerOptions = Array.isArray(speakerOptions)
@@ -275,6 +278,20 @@ export function useStoryRoomChatShellViewModel({
         onUpdated: reloadStoryRoom,
       };
 
+  const storyStatusSurfaces = useMemo(
+    () =>
+      Array.isArray(statusSurfaces?.surfaces)
+        ? statusSurfaces.surfaces.filter(
+            (surface) => surface?.presentation?.host === "INLINE"
+          )
+        : [],
+    [statusSurfaces]
+  );
+  const persistentStatusSurfaceDomains = useMemo(
+    () => getPersistentStatusSurfaceDomains(storyStatusSurfaces),
+    [storyStatusSurfaces]
+  );
+
   return {
     room,
     layoutClass: buildStoryRoomLayoutClass({ leftOpen, rightOpen }),
@@ -283,6 +300,8 @@ export function useStoryRoomChatShellViewModel({
     mobilePanel,
     composerHelpPanel,
     commands: STORY_ROOM_COMMANDS,
+    statusSurfaces: storyStatusSurfaces,
+    statusSurfaceError,
     castPanelProps,
     mobileCastPanelProps,
     transcriptProps: {
@@ -290,6 +309,8 @@ export function useStoryRoomChatShellViewModel({
       loading,
       sending,
       error,
+      statusSurfaces: storyStatusSurfaces,
+      persistentStatusSurfaceDomains,
     },
     composerProps: {
       inputMode,

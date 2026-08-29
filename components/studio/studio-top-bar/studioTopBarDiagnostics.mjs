@@ -29,6 +29,7 @@ test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   assert.match(view, /notifications/);
   assert.match(view, /notificationsView/);
   assert.match(view, /bellRef/);
+  assert.match(view, /import \{ Bell, Menu, X \} from "lucide-react"/);
   assert.match(view, /onOpenNotificationCenter/);
   assert.match(view, /accountLinkSlot/);
   assert.match(view, /from "@\/components\/kit\/KitModalFrame"/);

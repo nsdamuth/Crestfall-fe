@@ -37,16 +37,16 @@ export default function CrestfallOptionModalView({
   const columnClass = getColumnClass(columns);
 
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <button
         type="button"
         onClick={() => onOpen?.()}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)]"
+        className="min-w-0 max-w-full w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-left transition hover:border-[var(--line)]"
       >
         <span className="block text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {triggerLabel}
         </span>
-        <span className="mt-1 block text-[length:var(--text-ui)] text-[var(--ink)]">
+        <span className="mt-1 block max-w-full break-words text-[length:var(--text-ui)] text-[var(--ink)]">
           {selectedLabel}
         </span>
       </button>

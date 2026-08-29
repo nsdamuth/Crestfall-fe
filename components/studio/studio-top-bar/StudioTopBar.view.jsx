@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, X } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 

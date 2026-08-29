@@ -11,7 +11,7 @@ function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
       <img
         src={imageSrc}
         alt=""
-        className="aspect-[3/4] w-[148px] flex-none rounded-[var(--radius-md)] border border-[var(--line)] object-cover sm:w-[232px]"
+        className="aspect-[3/4] min-w-0 flex-1 rounded-[var(--radius-md)] border border-[var(--line)] object-cover lg:w-[300px] lg:flex-none xl:w-[320px]"
       />
     );
   }
@@ -21,7 +21,7 @@ function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
   return (
     <div
       aria-hidden="true"
-      className="flex aspect-[3/4] w-[148px] flex-none items-center justify-center rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-faint)] sm:w-[232px]"
+      className="flex aspect-[3/4] min-w-0 flex-1 items-center justify-center rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-faint)] lg:w-[300px] lg:flex-none xl:w-[320px]"
     >
       <Icon size={48} />
     </div>
@@ -88,7 +88,7 @@ export default function EditorHeaderView({
 }) {
   return (
     <header className="flex flex-wrap items-start gap-[var(--space-4)] sm:gap-[var(--space-5)]">
-      <div className="flex items-start gap-[var(--space-2)] sm:gap-[var(--space-3)]">
+      <div className="flex w-full max-w-[500px] items-start gap-[var(--space-2)] sm:gap-[var(--space-3)] lg:w-auto lg:max-w-none">
         <PrimaryArt imageSrc={primaryImageSrc} typeIcon={typeIcon} />
         <SlotRail slots={slots} onSelectSlot={onSelectSlot} />
       </div>
