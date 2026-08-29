@@ -2,16 +2,20 @@
 
 From bible/templates/HANDOFF.md. States verified state only; anything
 unconfirmed is written "expected, verify first" where it is stated.
+Updated same day for ROUND 2 after Sol's round 1 BLOCK; the round 1
+goal and artifact list are superseded by this revision (round 1 is
+fully recorded in bible/PLAN-REVIEW-LOG.md).
 
 ## goal
 
-Attack the Home page PRD (bible/prds/2026-08-29-home.md) before Gate
-2 sign-off. Your job is to find what breaks on the Chassis: feed
-shapes the PRD assumes wrongly, contract or CR citations that do not
-match what the backend can serve, resume routes or persistence claims
-that will not hold, edge cases the acceptance criteria miss, and any
-place the PRD quietly decides something that belongs to Nick. Claude
-drafted this PRD, so per the invariant it cannot grade it; you do.
+Round 2: re-check your nine stable findings (F-001 through F-009)
+against the revised Home PRD v0.3 and current source. Round 1's
+verdict was BLOCK; every finding now carries an FE disposition
+(RESOLVED, ACCEPTED-DEFERRED, or OPEN with evidence) in
+bible/PLAN-REVIEW-LOG.md. Do not reset finding IDs. Additionally,
+rule on the four OPEN projection confirmations (O1 to O4) the PRD's
+projection section poses, from Services authority you can inspect
+and we cannot.
 
 ## standing_rules
 
@@ -24,80 +28,104 @@ drafted this PRD, so per the invariant it cannot grade it; you do.
 
 ## active_artifacts
 
-All on branch design/fe-dev at commit 92f2c80:
+All on branch design/fe-dev at commit 55e9221:
 
-- bible/prds/2026-08-29-home.md, the PRD under attack (v0.2, rulings
-  R1 to R4 applied).
-- bible/decisions/2026-08-29-final-url-map.md, OPEN, referenced by
-  the PRD's to-file list; not itself under attack but attack its
-  Chassis assumptions if you see one wrong.
-- docs/reviews/FE-CONVERGENCE-AUDIT-2026-08.md, the audit the PRD's
-  problem statement leans on.
-- docs/CONTRACT-REQUESTS.md, the CRs the PRD cites: CR-014, CR-027,
-  CR-028, CR-029, CR-030, CR-042.
+- bible/prds/2026-08-29-home.md, the PRD under review, now v0.3.
+  New since v0.2: the "Visibility projection and shelf candidate
+  set" section (S1), the S2 shelf-name amendment, the S3 signed-in
+  ruling, and the mechanical fixes for F-001/003/005/006.
+- bible/PLAN-REVIEW-LOG.md, round 1 fully logged: your nine rows
+  plus the FE response per stable ID.
+- bible/handoffs/CRESTFALL_HOME_PRD_SOL_ATTACK_R1_DETAILED_FINDINGS_2026-08-29.md,
+  your verbatim round 1 findings, archived byte-identical.
+- bible/decisions/2026-08-29-r3-amendment-popular-now.md, the S2
+  amendment record.
+- docs/CONTRACT-REQUESTS.md, amended this pass: CR-028 (actorless
+  discovery warning), CR-029 (Popular now interim, Top rated
+  reserved, saves absent on this path, mute warning), CR-030
+  (ViewModel persistence ownership).
 
 ## decisions_and_open_loops
 
-Settled (Brian, 29 Aug 2026, recorded in the PRD): R1 bottom banner
-to Stories; R2 Studio tile to the /studio/v2 Studio hub; R3 shelf
-names Top rated and Recently added; R4 the CR-030 filter enters this
-build on its ruled localStorage interim.
+Settled this pass (Brian, 29 Aug 2026): S1 projection and
+candidate-set rulings (Canon exclusive and highest precedence,
+Internal from the unlisted link-share state, Just mine pure
+ownership, dedupe to owned copy, filter before ranking); S2 Popular
+now interim (amends R3); S3 Home signed-in-only under current
+/studio/** authority. Earlier: R1 Stories bottom banner, R2 Studio
+tile (exact route /studio/v2/studio per your F-005), R4 filter with
+localStorage interim, URL map GO option 1 (CR-057, at cutover only).
 
 Open, with owners:
 
-- C2, continue surface form: OPEN FOR RENDER, ruled by Brian at a
-  render sitting, never on paper. Do not attack the choice; do
-  attack the specs of the options if either is unbuildable.
-- Signed-out Home behavior: Nick.
-- Analytics events for the two success metrics: CR to file, Chassis.
-- View-all destinations for two rails, expand-card behavior: render
-  sitting, Brian.
-- Final URL map: OPEN for Brian; route work a future CR to Nick.
-- Nick's stable preview URL for design/fe-dev: requested, unrecorded
-  (bible/STATUS.md STAGING URL line).
+- O1 (Sol, round 2): exact eligibility predicate of the Services
+  /v1/community/creations list; the FE repo only proxies it.
+  Expected visibility PUBLIC plus status APPROVED plus moderation
+  gates; expected, verify first.
+- O2 (Sol, round 2): whether visibility PUBLIC ever coexists with a
+  status other than APPROVED in live data; if yes, each such
+  combination needs a bucket ruling, not a guess.
+- O3 (Sol, round 2): whether canonStatus CANDIDATE or COMPATIBLE
+  carries any Home display consequence beyond falling through to
+  its visibility bucket.
+- O4 (Sol or Nick, round 2): whether ARCHIVED items are eligible
+  for the Home shelves at all.
+- C2 continue-surface form: Brian, at a render sitting; out of
+  review scope.
+- home-preview-staging-gate: FE task plus operator work, below.
+
+## operator note (Nick): staging preview gate, F-006
+
+The remote render gate is not executable today, for three verified
+reasons: /dev/ui-preview/home-v2-page returns notFound when
+NODE_ENV is production, the preview wrapper injects no fixture
+selection, and no longest-content fixture exists. The FE task
+home-preview-staging-gate (named in PRD v0.3 technical_constraints)
+builds the staging-safe preview: warm, cold, error, and
+longest-content states at 390 and 1440, with the longest-content
+fixture created, and nothing exposed on production Crestfall. Per
+the workflow you proposed in round 1: Sol inspects deployment and
+source authority and writes exact operator steps; Nick executes
+against Git and Railway for the design/fe-dev deployment and
+returns observed state; Sol validates. The stable design/fe-dev
+preview URL this produces is external input 1 of the PRD and lands
+on the STAGING URL line of bible/STATUS.md.
 
 ## provenance
 
-- Live-branch facts in the PRD (Home contract 3.0.0, live data via
-  lib/server/studio/getHomePageData.js, all eight tile destinations
-  real routes, the merged continue banner, the orphaned continue-row
-  view): read from the repo on design/fe-dev this session.
-- Function-map facts: read from docs/APP-FUNCTION-MAP.csv rows for
-  /studio/v2/home this session; the map is stale against the live
-  build and the PRD says so.
-- CR contents: read from docs/CONTRACT-REQUESTS.md this session.
-- Convergence claims: docs/reviews/FE-CONVERGENCE-AUDIT-2026-08.md,
-  read this session.
-- Not rendered this session: no page was rendered for this PRD; every
-  claim about how Home renders is contract-and-code derived and is
-  marked for render verification inside the PRD itself (expected,
-  verify first at the sittings).
+- PRD v0.3 changes: authored this session directly from your round
+  1 file (read in full) and Brian's rulings.
+- Projection authority: read this session from the converged
+  Crestfall repo: lib/server/creations/constants.js (the three
+  enums), the creation publishing section ViewModel (OFFICIAL-only
+  canon treatment; APPROVED-while-internal states), the
+  internal-editing service (APPROVED to UNLISTED plus DRAFT), and
+  app/api/community/creations/route.js (pure proxy to
+  /v1/community/creations, which is why O1 is yours).
+- Everything else: files named above, read or written this session
+  at commit 55e9221.
 
 ## contradictions_and_uncertainties
 
-- The function map contradicts the live build (fixture-fed and
-  stubbed rows vs live data and real routes). The PRD treats the
-  build as truth and the map as stale; if you believe the reverse
-  anywhere, that is a finding.
-- CR-029 describes dedicated curated feeds; the converged build
-  re-projects existing list fetches instead. The PRD flags a CR-029
-  amendment as to-file. If the Chassis intends something else,
-  say so.
-- The continue-mode ghost CTA (parity row 29) is asserted from
-  contract lineage, not a render: expected, verify first.
-- Whether the top-rail sort actually reorders live data (parity row
-  20) is unverified: expected, verify first.
+- The OPEN row of the projection table (PUBLIC with non-APPROVED
+  status) is deliberately unmapped: the transitions we can read
+  never produce it, but absence is unproven. O2.
+- The function map remains stale against the live build; the PRD
+  carries that as flags with map updates assigned to the build
+  commit. Unchanged from round 1.
+- The continue-mode ghost CTA and live top-rail re-sort remain
+  render-unverified (parity rows 20 and 29): expected, verify
+  first; they gate on the preview task above.
 
 ## ask
 
-Return an attack round as PLAN-REVIEW-LOG rows per
-bible/templates/PLAN-REVIEW-LOG.md: one row per finding with
-finding_id (F-NNN), severity (critical, high, medium, low), location,
-one checkable claim, and evidence. Open with the packet completeness
-check (list anything missing before reviewing past it). Close the
-round with one verdict line: APPROVE, APPROVE WITH COMMENTS, or
-BLOCK. Rounds continue until zero new critical or high findings, hard
-cap three; open criticals after round three go to Brian as HANDOFF.
+Round 2, per the stopping rule: re-check F-001 through F-009 against
+PRD v0.3 and current source, append new rows to the same table in
+bible/PLAN-REVIEW-LOG.md format (stable IDs, round column 2), rule
+O1 to O4 where Services authority answers them, and close the round
+with one verdict line: APPROVE, APPROVE WITH COMMENTS, or BLOCK.
+Zero new critical or high findings closes the review; hard cap three
+rounds, open criticals after round three go to Brian as HANDOFF.
 
 Size rule honored: large files are linked by path above, nothing
 pasted.
