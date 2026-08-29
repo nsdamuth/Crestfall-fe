@@ -14,3 +14,8 @@ NEXT ACTION: Sol round 2 on the Home PRD v0.3 (round 1 BLOCK
 answered; log bible/PLAN-REVIEW-LOG.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
 OWNERS: Brian, design and gates. Nick, Chassis, merge, staging, deploy. Claude, FE drafts and builds. Sol, review only.
+CONTAINER LAW: Brian ruled 29 Aug 2026, amending the 24 Aug fluid-shell
+supersession in docs/DESIGN-TOKENS.md. StudioShell and Story Chat stay
+fluid; every v2 page's foreground content is now capped and centered at
+one new provisional token, --container-wide (1440), applied at
+KitStudioPageView. Build verified exit 0.

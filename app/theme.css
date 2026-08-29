@@ -353,6 +353,16 @@
   --icon-md:     1.25rem;   /* 20 */
   --icon-lg:     1.5rem;    /* 24 */
   --container:   75rem;     /* 1200 */
+  --container-wide: 90rem;  /* 1440, provisional. Ruling 29 Aug 2026:
+                                amends the 24 Aug fluid-shell
+                                supersession in docs/DESIGN-TOKENS.md
+                                (Container law). StudioShell stays
+                                fluid; this caps each v2 page's
+                                foreground content (text, buttons,
+                                cards, grids) inside one centered
+                                column so nothing scales unbounded at
+                                1920+. Value is provisional, Brian
+                                retunes it at a render sitting. */
   --measure:     68ch;      /* max prose width */
 
   /* --- MOTION ---------------------------------------------- */

@@ -408,6 +408,23 @@ horizontal real estate. The existing `--container` token remains legal for
 local components; it is no longer the shell width authority. This is a
 product-direction override for the current Crestfall V2 convergence pass.
 
+**AMENDED 29 Aug 2026, Brian, Container law ruling.** The fluid
+StudioShell direction from the 24 Aug supersession stands: `StudioShell`
+is not re-capped, and Story Chat and other desktop workspaces keep the
+full viewport width. Unbounded scaling on the nine v2 pages ends. One
+new provisional token, `--container-wide` (1440), is minted for this
+ruling and no other. Every v2 page's foreground content (text, buttons,
+cards, grids) is centered and capped at `--container-wide` at the single
+existing width authority, `KitStudioPageView`
+(`components/kit/studio-page/KitStudioPage.view.jsx`), so it reaches
+every v2 page and list view composed on that component in one place.
+Full-bleed backgrounds (hero art, banners) may still span wider than the
+cap; their foreground content stays inside it. Card grids cap tile width
+at their largest designed size through this same outer cap rather than a
+per-grid constraint. `--container-wide` is provisional: Brian retunes
+the value at a render sitting. Story Chat and story-room surfaces are
+not part of this ruling; they remain fluid per the 24 Aug carve-out.
+
 `--topbar-h`, minted 10 Aug 2026 (kit polish 3 pass): the sticky
 `StudioTopBar` header's own rendered height, `calc(var(--control-md)
 + var(--space-3) * 2 + 1px)` (control height, its top and bottom

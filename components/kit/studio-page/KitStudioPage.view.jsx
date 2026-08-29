@@ -1,10 +1,11 @@
 "use client";
 
-// Content width law (R1, docs/BUILD-BLUEPRINT.md 2.16(l)): one
-// content width per page. StudioShell's own section padding is the
-// page container margin and nothing else adds one. This view renders
-// NO horizontal class anywhere: no padding, no max-width, no
-// centering margin. The filter bar slot is a direct child of the
+// Content width law (R1, docs/BUILD-BLUEPRINT.md 2.16(l)), amended by
+// Container law ruling 29 Aug 2026: one content width per page,
+// StudioShell itself stays fluid (24 Aug supersession stands), but
+// this view is the single width authority for every v2 page's
+// foreground content, so it caps and centers here at
+// --container-wide. The filter bar slot is a direct child of the
 // root with no wrapper, so its own negative margins meet the shell
 // padding with nothing in between.
 export default function KitStudioPageView({
@@ -18,7 +19,7 @@ export default function KitStudioPageView({
 }) {
   return (
     <div
-      className={`flex flex-col ${
+      className={`mx-auto flex w-full max-w-[var(--container-wide)] flex-col ${
         compactMobile
           ? "gap-[var(--space-4)] pb-[var(--space-2)] sm:gap-[var(--space-6)] sm:pb-[var(--space-6)]"
           : "gap-[var(--space-6)] pb-[var(--space-6)]"
