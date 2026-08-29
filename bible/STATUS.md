@@ -8,3 +8,4 @@ ENGAGEMENT LOOP: fixed 29 Aug in useCreationEngagementState.js (creationIds memo
 IMAGE PACKAGE: sent to Nick 29 Aug as bible/handoffs/HANDOFF-NICK-IMAGES-2026-08-29.md and SELECTOR-IMAGE-CATALOG-2026-08-29.csv, with a staging-parity ask.
 NEXT ACTION: waiting on Nick N1-N3 plus staging answers, and Sol round 2 on the Home PRD v0.3.
 STAGING URL: none recorded; requested from Nick, logged here once received.
+STAGING MODEL, working assumption per Brian 29 Aug, NOT confirmed: crestfall-studio.com is the staged new site, believed served from the branch named "staging"; crestfallstudio.com is the future live domain. The branch name is believed, not verified. This is a working model only, recorded so work can proceed; it does not close the STAGING URL question above, which stays open and awaits Nick's confirmation of the domain, the branch, and the deploy path.
