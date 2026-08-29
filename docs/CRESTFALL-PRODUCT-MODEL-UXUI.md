@@ -2,7 +2,7 @@
 
 * **Status:** Living document. Reissued 9 Aug 2026\. Supersedes all previous product models.  
 * **Audience:** UX/UI planning and build agents, and the design authority. This is the reference for building the new page architecture under the updated design system.  
-* **Companions:** CRESTFALL-CONTENT-STANDARDS.md (content rating and compliance), docs/RESTYLE-RULES.md (visual design tokens and law), docs/CONTRACT-REQUESTS.md (backend change requests), docs/LOOM-WORKFLOW-GUIDE.md (component architecture).
+* **Companions, corrected 26 Aug 2026:** CRESTFALL-CONTENT-STANDARDS.md (content rating and compliance, draft, not yet in this repo), docs/DESIGN-TOKENS.md (visual design tokens and law; docs/RESTYLE-RULES.md is demoted history only, per its own header), docs/CONTRACT-REQUESTS.md (backend change requests), docs/architecture/CRESTFALL_LOOM_PATTERN.md (component architecture; no docs/LOOM-WORKFLOW-GUIDE.md exists in this repo).
 
 ## How to use this document (read first)
 
@@ -84,7 +84,7 @@ Each page below states its purpose, primary layout, key components, and the user
 
 ### Play
 
-**4.1 Home.** Purpose: the guidepost, not a dashboard and not an editorial front page. **Layout, RULED 10 Aug 2026** (amends the earlier "dynamic feed" description below; full detail: `docs/CRESTFALL-DESIGN-CONTEXT.md`, `docs/SPRINT-G-PLAN.md` section 1): top to bottom, a medium top banner (galaxy layer on); a Continue strip that renders nothing when nothing is in progress; a block of eight destination tiles covering every other section; four curated rails (top rated, recently added, from the community, creators to follow); a medium bottom banner routing to Stories. Every card and tile routes outward; Home holds no content of its own. Journey: land, orient, and step into whichever section calls.
+**4.1 Home.** Purpose: the guidepost, not a dashboard and not an editorial front page. **Layout, RULED 10 Aug 2026** (the superseded "dynamic feed" prose this ruling amended is no longer in this document; the stale pointer to it was removed 29 Aug 2026, R5 improvement 6; full detail: `docs/CRESTFALL-DESIGN-CONTEXT.md`, `docs/SPRINT-G-PLAN.md` section 1): top to bottom, a medium top banner (galaxy layer on); a continue surface that renders nothing extra when nothing is in progress (its FORM, separate strip vs merged into the top banner, is question C2, OPEN for a render sitting per `bible/prds/2026-08-29-home.md`; Ruling 1a of 10 Aug 2026 merged it into the banner, and the sitting re-examines that on renders); a block of eight destination tiles covering every other section; four curated rails (Top rated, Recently added, From the community, Creators to follow; names reaffirmed R3, 29 Aug 2026); a medium bottom banner routing to Stories (reaffirmed R1, 29 Aug 2026). Every card and tile routes outward; Home holds no content of its own. Journey: land, orient, and step into whichever section calls.
 
 **4.2 Stories.** Purpose: play history and next session in one place. Layout: the Continue group leads (every in-progress Story and Adventure, newest activity first, one tap resumes the chat), then the startable shelf: playable Characters, Stories, and Adventures across all visibilities the user can access (own private work, saved public work, link-shared Internal work). Journey: open Stories, resume in one tap, or choose what to start next.
 
@@ -136,7 +136,12 @@ The new nine-page architecture is built alongside the existing pages, not by reb
 No page cuts over individually ahead of this sequence, and no new
 page enters the live sidebar before the go-live step; the preview
 flag (`docs/FRONTEND-SOP.md` section 18) remains the only pre-cutover
-navigation surface. Old page code is deleted only in the single
+navigation surface. Final addresses, RULED 29 Aug 2026
+(`bible/decisions/2026-08-29-final-url-map.md`, GO option 1; the
+rename and redirect work is CR-057): at the go-live step the nine
+pages move in one move to clean top-level paths (/home, /stories,
+/adventures, /studio, /images, /vault, /community, /creators,
+/lore); `/studio/v2/**` stays the only address family until then. Old page code is deleted only in the single
 full-inventory sweep after go-live (`docs/BUILD-BLUEPRINT.md` route
 law 3.3(d), unchanged). Every page build brief still ends by echoing
 every function-map row assigned to that page as present, deliberately

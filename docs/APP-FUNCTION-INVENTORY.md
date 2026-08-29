@@ -22,9 +22,13 @@ authoritative map.
 - The map is regenerated at the start of every sprint (`FRONTEND-SOP.md`
   section 15), and any agent that adds or rewires a control updates its
   row in the same change.
-- `status` is one of `working`, `stubbed`, `broken`, `gated`. A row is
-  only moved off `broken`/`gated` after the fix is verified against the
-  code, the same way this pass verified the 15 flagged rows below.
+- `status` is one of `working`, `stubbed`, `broken`, `gated`,
+  `planned`. A row is only moved off `broken`/`gated` after the fix is
+  verified against the code, the same way this pass verified the 15
+  flagged rows below. `planned` (R5 improvement 4, ruled 29 Aug 2026)
+  marks a control a ruling or CR names before any build exists, so
+  parity echoes can see it; the row is created the moment the ruling
+  lands and moves to `working` or `stubbed` in the build commit.
 - Columns added in this pass (`max_length`, `required`, `default_value`,
   `destination_page`) follow the same rule as every other column: never
   guessed. See the value conventions below.

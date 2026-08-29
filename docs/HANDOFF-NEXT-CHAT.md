@@ -1,5 +1,10 @@
 # Handoff to next chat
 
+> **SUPERSEDED, 26 Aug 2026.** This stray root-of-docs handoff is
+> overtaken by events. Current handoffs live in `docs/handoffs/`; the
+> latest is `docs/handoffs/HANDOFF-NICK-2026-08-23.md`. Kept for
+> history only.
+
 ## Sprint E build, R6 image creator panel (10 Aug 2026, unattended, engine Sonnet)
 
 Ran `docs/SPRINT-E-SONNET-BRIEF.md` against `docs/SPRINT-E-PLAN.md`, all

@@ -1,5 +1,10 @@
 # Handoff
 
+> **SUPERSEDED, 26 Aug 2026.** This stray root-of-docs handoff is
+> overtaken by events. Current handoffs live in `docs/handoffs/`; the
+> latest is `docs/handoffs/HANDOFF-NICK-2026-08-23.md`. Kept for
+> history only.
+
 Written 16 Aug 2026, DC1 docs-only close, branch
 `design/ed1e-editor-design`.
 
