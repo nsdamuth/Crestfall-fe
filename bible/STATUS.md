@@ -10,7 +10,7 @@ exists.
 TRACKER: GitHub Issues.
 Sprint-h anchor for reference: design/sprint-h-final, tip 1236a3dd
 (the 26 Aug entry cited a816172, one commit short of the actual tip).
-NEXT ACTION: Sol attack round on the Home PRD
-(bible/prds/2026-08-29-home.md; packet
+NEXT ACTION: Sol round 2 on the Home PRD v0.3 (round 1 BLOCK
+answered; log bible/PLAN-REVIEW-LOG.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
 OWNERS: Brian, design and gates. Nick, Chassis, merge, staging, deploy. Claude, FE drafts and builds. Sol, review only.

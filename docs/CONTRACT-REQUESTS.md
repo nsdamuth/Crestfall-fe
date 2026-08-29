@@ -440,6 +440,14 @@ account's muted creators, for a future settings surface.
 No frontend work depends on this until the Creators profile-detail
 page is built; the mute control ships on that profile.
 
+Contract warning, 29 Aug 2026 (Sol Home PRD attack round 1, F-008,
+accepted deferred): the current public discovery path is actorless;
+the server does not receive the requesting account on the public
+list requests. Server-side per-account mute exclusion is therefore
+impossible until discovery becomes actor-aware (authenticated,
+actor-carrying feed requests). Neither this CR nor CR-029 may claim
+server-side mute exclusion before that lands.
+
 ### CR-029, Home feed data: four rails and the Continue strip
 
 Filed 10 Aug 2026 by the Sprint G planning gate. Home's ruled
@@ -475,6 +483,19 @@ item gains two fields for the CR-030 filter: `ownership`
 (`"mine" | "community"`) and `visibility` (the ruled four-state
 enum, whose data-model landing remains CR-014). Fixture data carries
 both fields ahead of the real feed.
+
+Amended 29 Aug 2026 (Sol Home PRD attack round 1, F-004; ruling S2,
+`bible/decisions/2026-08-29-r3-amendment-popular-now.md`): the top
+rail displays "Popular now" until a real rating metric exists; the
+"Top rated" name is reserved for the future curated feed this CR
+describes. Defining that metric joins this CR's scope: inputs,
+weights, tie breakers, canon and featured treatment, and whether
+saves participate; note the community creation summary currently
+supplies likes, messages, images, and videos but NOT saves on this
+path, so a save term requires a Services addition. Also carried
+here, from F-008: the mute exclusion this CR promises is server-side
+only once discovery is actor-aware (see the CR-028 warning); until
+then no server-side exclusion is claimed.
 
 ### CR-030, Home creations filter: persisted preference and feed support
 
@@ -522,6 +543,17 @@ read on mount, falling back to a coarse-pointer (mobile) check for
 the default when nothing is stored yet. When CR-030 lands its real
 preference, this key folds into the same account-level object rather
 than shipping its own field.
+
+Amended 29 Aug 2026 (Sol Home PRD attack round 1, F-001, critical):
+the interim `cf.home.creationsFilter` key is owned by the Home
+ViewModel (`useHomeViewModel`, or a persistence adapter it invokes),
+never the Binding Shell, per the LOOM boundary; the Shell stays thin
+and touches no storage. This corrects the "written by the Home
+Binding Shell" line above; the mechanism and deletion path are
+unchanged. The filter's visibility values are the Home display
+buckets projected from backend visibility, status, and canonStatus
+(the projection table in `bible/prds/2026-08-29-home.md`), not raw
+backend enum values.
 
 ### CR-031, advanced editor full-field read and update path
 
