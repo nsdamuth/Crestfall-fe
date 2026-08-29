@@ -5,20 +5,27 @@ import { useCreationPickerViewModel } from "@/components/studio/creation-picker/
 import TimelineBuilderView from "./timeline-builder/TimelineBuilder.view";
 import { useTimelineBuilderViewModel } from "./timeline-builder/useTimelineBuilderViewModel";
 
-function TimelineLorePicker({ creations, onSelect, onClose, onCreateNew }) {
+function TimelineLorePicker({ creations, onSelect, onClose }) {
   const viewProps = useCreationPickerViewModel({
     creations,
     title: "Add Lore to Timeline",
     onSelect,
     onClose,
-    onCreateNew,
   });
 
-  return <CreationPickerView {...viewProps} emptyCreateLabel="Write Lore" />;
+  return <CreationPickerView {...viewProps} />;
 }
 
-export default function TimelineBuilderShell({ timelineId = null } = {}) {
-  const viewProps = useTimelineBuilderViewModel({ timelineId });
+export default function TimelineBuilderShell({
+  timelineId = null,
+  initialCreation = null,
+  backHref = "/studio/v2/lore",
+} = {}) {
+  const viewProps = useTimelineBuilderViewModel({
+    timelineId,
+    initialCreation,
+    backHref,
+  });
 
   return (
     <TimelineBuilderView
@@ -29,7 +36,6 @@ export default function TimelineBuilderShell({ timelineId = null } = {}) {
             creations={viewProps.pickerCreations}
             onSelect={viewProps.onAddLore}
             onClose={viewProps.onCloseLorePicker}
-            onCreateNew={viewProps.onWriteLore}
           />
         ) : null
       }

@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
+import {
+  fetchOwnedCreation,
+  fetchOwnedCreations,
+} from "@/lib/client/studio/creations/creationClient";
 import {
   createTimelineDraft,
-  fetchOwnedTimelineProjection,
   updateTimelineDraft,
 } from "@/lib/client/studio/timelines/timelineClient";
 import {
@@ -15,6 +17,10 @@ import {
   normalizeTimelineDefinition,
   sortTimelineEntries,
 } from "@/lib/shared/timelines/timelineContract";
+import {
+  buildOwnedTimelineProjection,
+  projectOwnedLoreForTimeline,
+} from "@/lib/shared/timelines/timelineOwnerProjection";
 import {
   TIMELINE_DRAFT_VISIBILITY_OPTIONS,
   TIMELINE_SORT_OPTIONS,
@@ -26,46 +32,6 @@ function normalizeObject(value) {
 
 function normalizeString(value) {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function getLoreDocument(creation) {
-  const data = normalizeObject(creation?.data);
-  return normalizeObject(data.lore_document || data.loreDocument);
-}
-
-function getChronologyFromLore(creation) {
-  const document = getLoreDocument(creation);
-  return {
-    subtitle: normalizeString(document.subtitle),
-    era: normalizeString(document.era),
-    displayDate: normalizeString(document.displayDate || document.display_date),
-    timelineOrder: normalizeOptionalTimelineNumber(
-      document.timelineOrder ?? document.timeline_order
-    ),
-  };
-}
-
-function projectOwnedLoreForTimeline(creation) {
-  if (!creation?.id || normalizeString(creation.type).toUpperCase() !== "LORE") {
-    return null;
-  }
-
-  return {
-    loreCreationId: String(creation.id),
-    id: String(creation.id),
-    type: "LORE",
-    title: normalizeString(creation.title) || "Untitled Lore",
-    description: normalizeString(creation.description),
-    visibility: normalizeString(creation.visibility).toUpperCase(),
-    status: normalizeString(creation.status).toUpperCase(),
-    imageSrc:
-      creation.imageUrl ||
-      creation.imageSrc ||
-      creation.featuredMedia?.[0]?.imageUrl ||
-      creation.featuredMedia?.[0]?.url ||
-      null,
-    ...getChronologyFromLore(creation),
-  };
 }
 
 function projectTimelineEntryLore(entry) {
@@ -102,7 +68,11 @@ function extractCreation(payload) {
   return payload?.data?.creation || payload?.creation || null;
 }
 
-export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
+export function useTimelineBuilderViewModel({
+  timelineId = null,
+  initialCreation = null,
+  backHref = "/studio/v2/lore",
+} = {}) {
   const router = useRouter();
   const [draft, setDraft] = useState(createInitialDraft);
   const [ownedLore, setOwnedLore] = useState([]);
@@ -120,12 +90,19 @@ export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
       setLoadMessage("");
 
       try {
-        const [loreRows, timelineProjection] = await Promise.all([
+        const [loreRows, timelineCreation] = await Promise.all([
           fetchOwnedCreations(
             { type: "LORE" },
             "Lore Assets could not be loaded for this Timeline."
           ),
-          timelineId ? fetchOwnedTimelineProjection(timelineId) : Promise.resolve(null),
+          timelineId
+            ? initialCreation
+              ? Promise.resolve(initialCreation)
+              : fetchOwnedCreation(
+                  timelineId,
+                  "Timeline could not be loaded."
+                )
+            : Promise.resolve(null),
         ]);
 
         if (cancelled) return;
@@ -136,6 +113,10 @@ export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
         setOwnedLore(projectedLore);
 
         if (timelineId) {
+          const timelineProjection = buildOwnedTimelineProjection({
+            timelineCreation,
+            ownedLore: loreRows,
+          });
           const timeline = normalizeObject(timelineProjection?.timeline);
           const entries = Array.isArray(timelineProjection?.entries)
             ? timelineProjection.entries
@@ -175,7 +156,7 @@ export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
     return () => {
       cancelled = true;
     };
-  }, [timelineId]);
+  }, [initialCreation, timelineId]);
 
   const loreById = useMemo(() => {
     const map = new Map();
@@ -370,7 +351,9 @@ export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
       setSaveMessage(timelineId ? "Timeline saved." : "Timeline created.");
 
       if (!timelineId && creation?.id) {
-        router.replace(`/studio/create/timeline/${encodeURIComponent(creation.id)}`);
+        router.replace(
+          `/studio/v2/lore/timelines/${encodeURIComponent(creation.id)}`
+        );
       }
     } catch (error) {
       setSaveStatus("error");
@@ -406,7 +389,6 @@ export function useTimelineBuilderViewModel({ timelineId = null } = {}) {
     onRemoveLore: removeLore,
     onUpdateOrderOverride: updateOrderOverride,
     onSave: save,
-    onWriteLore: () => router.push("/studio/create/lore"),
-    onBackToLore: () => router.push("/studio/v2/lore"),
+    onBackToLore: () => router.push(backHref || "/studio/v2/lore"),
   };
 }

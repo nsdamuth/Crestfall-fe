@@ -1,0 +1,80 @@
+export const timelineReaderFixture = {
+  loadStatus: "ready",
+  loadMessage: "",
+  title: "Aethelgard Historical Timeline",
+  description:
+    "A creator-curated chronology spanning the earliest surviving records through the War in Heaven.",
+  publicEnabled: true,
+  sortDirection: "ASC",
+  entryCount: 4,
+  showEditAction: true,
+  groups: [
+    {
+      id: "primordial-era",
+      label: "Primordial Era",
+      entries: [
+        {
+          id: "lore-lux",
+          title: "Lux, the First Light",
+          description: "Before kingdoms, before angels, before humanity, there was Light.",
+          subtitle: "Primordial Record",
+          era: "Primordial Era",
+          displayDate: "Before the First Age",
+          chronologyLabel: "Before the First Age",
+          orderOverride: null,
+          isUnavailable: false,
+        },
+        {
+          id: "lore-shadow",
+          title: "The Shadow Union",
+          description: "Darkness did not create the first fracture, but it learned from it.",
+          subtitle: "Primordial Conflict",
+          era: "Primordial Era",
+          displayDate: "The First Fracture",
+          chronologyLabel: "The First Fracture",
+          orderOverride: null,
+          isUnavailable: false,
+        },
+      ],
+    },
+    {
+      id: "celestial-conflict",
+      label: "Celestial Conflict",
+      entries: [
+        {
+          id: "lore-lucifer",
+          title: "Lucifer, the Fallen Archangel",
+          description: "What he sought remains disputed across the surviving records.",
+          subtitle: "Celestial Conflict",
+          era: "Celestial Conflict",
+          displayDate: "Year 0 of the Sundering",
+          chronologyLabel: "Year 0 of the Sundering",
+          orderOverride: 0,
+          isUnavailable: false,
+        },
+        {
+          id: "lore-war",
+          title: "The War in Heaven",
+          description: "Reality itself had already become unstable before the rebellion ended.",
+          subtitle: "Celestial Conflict",
+          era: "Celestial Conflict",
+          displayDate: "0–7 AS",
+          chronologyLabel: "0–7 AS",
+          orderOverride: null,
+          isUnavailable: false,
+        },
+      ],
+    },
+  ],
+  onBack: null,
+  onEdit: null,
+};
+
+export const timelineReaderEmptyFixture = {
+  ...timelineReaderFixture,
+  publicEnabled: false,
+  title: "New Historical Timeline",
+  description: "",
+  entryCount: 0,
+  groups: [],
+};

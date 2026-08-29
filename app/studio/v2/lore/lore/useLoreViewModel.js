@@ -160,7 +160,9 @@ export function useLoreViewModel({
           entryCount: entries.length,
           publicEnabled: timeline.publicEnabled === true,
           onOpen: () =>
-            onNavigate?.(`/studio/create/timeline/${encodeURIComponent(creation.id)}`),
+            onNavigate?.(
+              `/studio/v2/lore/timelines/${encodeURIComponent(creation.id)}`
+            ),
         };
       });
   }, [live, ownedTimelines, onNavigate]);
@@ -353,7 +355,8 @@ export function useLoreViewModel({
       live && !ownedTimelinesLoadError && timelineItems.length === 0
         ? "No Timelines yet. Build one to organize your Lore chronologically."
         : null,
-    onBuildTimeline: () => onNavigate?.("/studio/create/timeline"),
+    onBuildTimeline: () =>
+      onNavigate?.("/studio/v2/editor/new?type=TIMELINE&origin=lore"),
     communityItems,
     communityError: communityLoadError,
     communityEmptyMessage,

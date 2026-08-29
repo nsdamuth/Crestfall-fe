@@ -73,11 +73,14 @@ export async function GET(
     );
   }
 
-  const variant =
+  const requestedVariant =
     request.nextUrl.searchParams.get(
       "variant"
-    ) === "thumbnail"
-      ? "thumbnail"
+    );
+  const variant =
+    requestedVariant === "thumbnail" ||
+    requestedVariant === "display"
+      ? requestedVariant
       : null;
 
   /*

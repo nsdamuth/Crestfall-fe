@@ -1,6 +1,12 @@
-import TimelineBuilderShell from "@/components/studio/create/timeline/TimelineBuilderShell";
+import { redirect } from "next/navigation";
 
-export default async function EditTimelinePage({ params }) {
+export default async function LegacyEditTimelineCompatibilityPage({ params }) {
   const resolved = await params;
-  return <TimelineBuilderShell timelineId={resolved?.id || null} />;
+  const timelineId = String(resolved?.id || "").trim();
+
+  if (!timelineId) {
+    redirect("/studio/v2/lore");
+  }
+
+  redirect(`/studio/v2/editor/${encodeURIComponent(timelineId)}?origin=timeline`);
 }

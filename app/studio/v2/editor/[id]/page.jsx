@@ -16,11 +16,31 @@
 // resolution remains inside ../Editor.jsx / editorSavedCreations.mock.js.
 
 import Editor from "../Editor";
+import TimelineBuilderShell from "@/components/studio/create/timeline/TimelineBuilderShell";
 import { getEditCreationPageData } from "@/lib/server/studio/getEditCreationPageData";
 
-export default async function EditorV2Page({ params }) {
+export default async function EditorV2Page({ params, searchParams }) {
   const { id } = await params;
+  const query = (await searchParams) || {};
   const { creation } = await getEditCreationPageData(id);
+
+  if (String(creation?.type || "").toUpperCase() === "TIMELINE") {
+    const origin = String(query.origin || "");
+    const backHref =
+      origin === "vault"
+        ? "/studio/v2/vault"
+        : origin === "timeline"
+          ? `/studio/v2/lore/timelines/${encodeURIComponent(id)}`
+          : "/studio/v2/lore";
+
+    return (
+      <TimelineBuilderShell
+        timelineId={id}
+        initialCreation={creation}
+        backHref={backHref}
+      />
+    );
+  }
 
   return <Editor creationId={id} creation={creation} />;
 }

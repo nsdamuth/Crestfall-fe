@@ -47,7 +47,10 @@ export async function GET(request, { params }) {
     return apiError("Image output id is required.", 400, "MISSING_IMAGE_OUTPUT_ID");
   }
   const variant = request.nextUrl?.searchParams?.get("variant") || "";
-  const safeVariant = variant === "thumbnail" ? "thumbnail" : "";
+  const safeVariant =
+    variant === "thumbnail" || variant === "display"
+      ? variant
+      : "";
 
   const supabase = await createClient();
   const { user, error: userError } = await getAuthenticatedUser(supabase);

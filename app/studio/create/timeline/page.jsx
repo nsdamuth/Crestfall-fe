@@ -1,5 +1,5 @@
-import TimelineBuilderShell from "@/components/studio/create/timeline/TimelineBuilderShell";
+import { redirect } from "next/navigation";
 
-export default function CreateTimelinePage() {
-  return <TimelineBuilderShell />;
+export default function LegacyCreateTimelineCompatibilityPage() {
+  redirect("/studio/v2/editor/new?type=TIMELINE&origin=lore");
 }
