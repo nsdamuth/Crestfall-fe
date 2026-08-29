@@ -16,6 +16,7 @@ export const loreDocumentFixture = {
     "This isolated document exercises chapters, sections, references, sourcebook blocks, and immutable public-link controls without loading product data.",
   era: "Age of Embers",
   displayDate: "The Ninth Turning",
+  timelineOrder: 412,
   realm: "Aster Reach",
   characterRefs: [
     {

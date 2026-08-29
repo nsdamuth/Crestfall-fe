@@ -1326,6 +1326,21 @@ export default function LoreEditorView({
             placeholder="1994–1997"
           />
         </Field>
+        <Field label="Timeline order" detail="Optional chronology key">
+          <input
+            className={inputClass}
+            type="number"
+            step="any"
+            value={document.timelineOrder ?? ""}
+            onChange={(event) =>
+              onUpdateDocumentField?.(
+                "timelineOrder",
+                event.target.value === "" ? null : Number(event.target.value)
+              )
+            }
+            placeholder="e.g. -12400, 412, 2026"
+          />
+        </Field>
         <Field label="Realm">
           <input
             className={inputClass}

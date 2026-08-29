@@ -10,6 +10,8 @@ export default async function LoreV2Page() {
     communityLoadError,
     ownedCreations,
     ownedLoadError,
+    ownedTimelines,
+    ownedTimelinesLoadError,
   } = await getLoreV2PageData();
 
   return (
@@ -19,6 +21,8 @@ export default async function LoreV2Page() {
       communityLoadError={communityLoadError}
       ownedCreations={ownedCreations}
       ownedLoadError={ownedLoadError}
+      ownedTimelines={ownedTimelines}
+      ownedTimelinesLoadError={ownedTimelinesLoadError}
     />
   );
 }

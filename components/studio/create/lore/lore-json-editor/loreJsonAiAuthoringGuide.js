@@ -56,6 +56,7 @@ Return **one complete JSON object only**. Do not return Markdown fences, comment
 - Image blocks may only reuse image reference fields already present in the current JSON. To add a new Character, Location, or image, tell the creator to add it through Crestfall's visual editor first rather than inventing identifiers.
 - Keep \`contractVersion\` exactly \`${LORE_DOCUMENT_CONTRACT_VERSION}\`.
 - Keep every chapter title non-empty.
+- Root \`timelineOrder\` is an optional finite numeric chronology key for Timeline assets. It is independent of the human-readable \`displayDate\`; never infer or rewrite one from the other.
 - Keep all ids unique across their respective object types.
 - Do not exceed the limits listed below.
 - Return valid JSON using double-quoted property names and strings. Do not include trailing commas or comments.
@@ -70,6 +71,7 @@ Return **one complete JSON object only**. Do not return Markdown fences, comment
   "summary": "",
   "era": "",
   "displayDate": "",
+  "timelineOrder": null,
   "realm": "",
   "characterRefs": [],
   "locationRefs": [],

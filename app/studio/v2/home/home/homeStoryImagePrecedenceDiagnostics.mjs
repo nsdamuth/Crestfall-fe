@@ -34,6 +34,30 @@ test("assigned source Story media outranks the room opening-scene image", () => 
   );
 });
 
+
+test("Story Continue hero prefers the original featured asset over its thumbnail", () => {
+  const continueItem = { imageSrc: "/location/opening-scene.webp" };
+  const sourceCreation = {
+    id: "story-full-quality",
+    type: "ROOM_TEMPLATE",
+    featuredMedia: [
+      {
+        imageUrl: "/api/media/images/output-1/file?variant=thumbnail",
+        thumbnailUrl: "/api/media/images/output-1/file?variant=thumbnail",
+        assetUrl: "/api/media/images/output-1/file",
+        imageOutputId: "output-1",
+        label: "Primary",
+        isPlaceholder: false,
+      },
+    ],
+  };
+
+  assert.equal(
+    resolveStoryContinueImageSrc(continueItem, sourceCreation),
+    "/api/media/images/output-1/file"
+  );
+});
+
 test("room opening-scene image remains the fallback when the Story has no assigned media", () => {
   const continueItem = { imageSrc: "/location/opening-scene.webp" };
   const sourceCreation = {

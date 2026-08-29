@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthenticatedUser } from "@/lib/server/auth/getAuthenticatedUser";
+import {
+  appendImageConditionalRequestHeaders,
+  buildImageProxyResponseHeaders,
+} from "@/lib/server/media/imageFileCacheProxy";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -66,12 +70,19 @@ export async function GET(request, { params }) {
 
     const response = await fetch(serviceUrl.toString(), {
       method: "GET",
-      headers: {
+      headers: appendImageConditionalRequestHeaders(request, {
         "x-crestfall-internal-secret": secret,
         "x-crestfall-user-id": user.id,
-      },
+      }),
       cache: "no-store",
     });
+
+    if (response.status === 304) {
+      return new Response(null, {
+        status: 304,
+        headers: buildImageProxyResponseHeaders(response),
+      });
+    }
 
     if (!response.ok) {
       const payload = await response.json().catch(() => null);
@@ -83,18 +94,9 @@ export async function GET(request, { params }) {
       );
     }
 
-    const headers = new Headers();
-    const contentType = response.headers.get("content-type");
-    const contentLength = response.headers.get("content-length");
-    const cacheControl = response.headers.get("cache-control");
-
-    if (contentType) headers.set("content-type", contentType);
-    if (contentLength) headers.set("content-length", contentLength);
-    if (cacheControl) headers.set("cache-control", cacheControl);
-
     return new Response(response.body, {
       status: 200,
-      headers,
+      headers: buildImageProxyResponseHeaders(response),
     });
   } catch (error) {
     return apiError(

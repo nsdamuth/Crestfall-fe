@@ -34,6 +34,12 @@ function truncate(value, limit) {
   return typeof value === "string" ? value.slice(0, limit) : "";
 }
 
+function normalizeOptionalTimelineNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
 function normalizeStringList(values, limit, itemLimit) {
   return normalizeArray(values)
     .map((value) => truncate(normalizeString(value), itemLimit))
@@ -376,6 +382,7 @@ export function normalizeLoreDocument(value) {
     summary: truncate(source.summary, LORE_EDITOR_LIMITS.maxSummaryLength),
     era: truncate(source.era, LORE_EDITOR_LIMITS.maxTitleLength),
     displayDate: truncate(source.displayDate, LORE_EDITOR_LIMITS.maxTitleLength),
+    timelineOrder: normalizeOptionalTimelineNumber(source.timelineOrder),
     realm: truncate(source.realm, LORE_EDITOR_LIMITS.maxTitleLength),
     characterRefs: uniqueCharacterRefs(
       source.characterRefs,

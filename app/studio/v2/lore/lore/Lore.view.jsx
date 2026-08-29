@@ -49,6 +49,39 @@ function EmptySection({ message }) {
   );
 }
 
+
+function TimelineGrid({ items = [] }) {
+  return (
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {items.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => item.onOpen?.()}
+          className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-black/30 text-left transition hover:border-[var(--gold-ornament)]/40"
+        >
+          <div className="grid min-h-36 grid-cols-[7rem_1fr]">
+            <div
+              className="bg-cover bg-center opacity-80 transition group-hover:opacity-100"
+              style={{ backgroundImage: `url(${item.imageSrc})` }}
+              aria-hidden="true"
+            />
+            <div className="min-w-0 p-4">
+              <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+                <span>{item.publicEnabled ? "Public Timeline" : "Internal Timeline"}</span>
+                <span className="text-[var(--ink-faint)]">•</span>
+                <span className="text-[var(--ink-faint)]">{item.entryCount} Lore</span>
+              </div>
+              <p className="mt-2 break-words font-display text-xl text-[var(--ink)]">{item.title}</p>
+              <p className="mt-2 line-clamp-2 text-xs leading-5 text-[var(--ink-dim)]">{item.description}</p>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function CardGrid({ items }) {
   return (
     <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4">
@@ -62,6 +95,10 @@ function CardGrid({ items }) {
 export default function LoreView({
   topBanner,
   filterBar,
+  timelineItems = [],
+  timelineError = null,
+  timelineEmptyMessage = null,
+  onBuildTimeline = null,
   communityItems = [],
   communityError = null,
   communityEmptyMessage = null,
@@ -124,6 +161,31 @@ export default function LoreView({
           <KitAlertStripView tone="danger" title={errorMessage} body="Try refreshing the page." />
         ) : (
           <>
+            <div className="flex flex-col gap-[var(--space-4)]">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <SectionLabel>Your Timelines</SectionLabel>
+                <button type="button" onClick={() => onBuildTimeline?.()} className="cf-btn cf-btn--primary">
+                  Build Timeline
+                </button>
+              </div>
+              {timelineError ? (
+                <KitAlertStripView
+                  tone="danger"
+                  title="Your Timelines could not be loaded."
+                  body={timelineError}
+                />
+              ) : timelineEmptyMessage ? (
+                <div className="rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-8 text-center">
+                  <p className="text-sm text-[var(--ink-dim)]">{timelineEmptyMessage}</p>
+                  <button type="button" onClick={() => onBuildTimeline?.()} className="cf-btn mt-4">
+                    Build your first Timeline
+                  </button>
+                </div>
+              ) : (
+                <TimelineGrid items={timelineItems} />
+              )}
+            </div>
+
             <div className="flex flex-col gap-[var(--space-4)]">
               <SectionLabel>Community Lore</SectionLabel>
               {communityError ? (

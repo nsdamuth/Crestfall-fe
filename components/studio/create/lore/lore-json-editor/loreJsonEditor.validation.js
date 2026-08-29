@@ -160,6 +160,19 @@ function validateRawLoreShape(value, sourceDocument) {
     );
   }
 
+  if (
+    value.timelineOrder !== null &&
+    value.timelineOrder !== undefined &&
+    value.timelineOrder !== "" &&
+    !Number.isFinite(Number(value.timelineOrder))
+  ) {
+    addIssue(
+      errors,
+      "timelineOrder",
+      "Timeline order must be a finite number or empty."
+    );
+  }
+
   validateReferenceArray({
     value: value.characterRefs,
     path: "characterRefs",

@@ -44,6 +44,7 @@ export const CREATION_TYPE_TO_BUCKET = {
   MECHANICS_MODULE: "more",
   RULES_CODEX: "more",
   LORE: "more",
+  TIMELINE: "more",
   ACTOR_MECHANICS_PROFILE: "more",
   STATS_POOLS_PROFILE: "more",
   PROGRESSION_PROFILE: "more",

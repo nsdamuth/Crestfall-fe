@@ -87,6 +87,19 @@ const FILTER_BAR = {
   onFilterToggle: noop,
 };
 
+
+const TIMELINE_ITEMS = [
+  {
+    id: "timeline-1",
+    title: "Aethelgard History",
+    description: "A curated chronology of the realm's foundational Lore.",
+    imageSrc: "/assets/covers/crestfall-sundial-cover.png",
+    entryCount: 9,
+    publicEnabled: true,
+    onOpen: noop,
+  },
+];
+
 const COMMUNITY_LOAD_MORE = {
   isLoading: false,
   hasMore: true,
@@ -112,6 +125,10 @@ const CREATE_MODAL_CLOSED = {
 export const loreDefaultFixture = {
   topBanner: TOP_BANNER,
   filterBar: FILTER_BAR,
+  timelineItems: TIMELINE_ITEMS,
+  timelineError: null,
+  timelineEmptyMessage: null,
+  onBuildTimeline: noop,
   communityItems: LORE_COMMUNITY_ITEMS.slice(0, 4).map((item) => decorate(item, { showApprovalBadge: false })),
   communityEmptyMessage: null,
   communityLoadMore: COMMUNITY_LOAD_MORE,
@@ -130,6 +147,8 @@ export const loreDefaultFixture = {
 // fabricated placeholder card, in both sections.
 export const loreEmptyFixture = {
   ...loreDefaultFixture,
+  timelineItems: [],
+  timelineEmptyMessage: "No Timelines yet. Build one to organize your Lore chronologically.",
   communityItems: [],
   communityEmptyMessage: "No published Lore matches these filters yet.",
   communityLoadMore: { ...COMMUNITY_LOAD_MORE, hasMore: false, remainingCount: null },

@@ -1,4 +1,4 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.4.0";
+export const LORE_VIEW_CONTRACT_VERSION = "1.5.0";
 
 /**
  * Stable portable UI boundary for the Lore page View
@@ -67,6 +67,16 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.4.0";
  * @property {(() => void)|null} onLike
  * @property {(() => void)|null} onBookmark
  *
+
+ * @typedef {Object} LoreTimelineItem
+ * @property {string} id
+ * @property {string} title
+ * @property {string} description
+ * @property {string|null} imageSrc
+ * @property {number} entryCount
+ * @property {boolean} publicEnabled
+ * @property {(() => void)|null} onOpen
+ *
  * @typedef {Object} LoreFilterBar
  * @property {string} searchValue
  * @property {string} searchPlaceholder
@@ -96,6 +106,10 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.4.0";
  * @typedef {Object} LoreViewProps
  * @property {LoreBannerProps} topBanner
  * @property {LoreFilterBar} filterBar
+ * @property {LoreTimelineItem[]} timelineItems Added 1.5.0. Owner Timeline assets shown as an independent Lore-archive section.
+ * @property {string|null} timelineError
+ * @property {string|null} timelineEmptyMessage
+ * @property {(() => void)|null} onBuildTimeline
  * @property {LoreCardItem[]} communityItems Visible slice of the public archive, already paged.
  * @property {string|null} communityEmptyMessage Non-null renders the empty-section state instead of the community grid.
  * @property {LoreLoadMore} communityLoadMore

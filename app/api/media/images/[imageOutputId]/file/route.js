@@ -10,6 +10,11 @@ import {
   getAuthenticatedUser,
 } from "@/lib/server/auth/getAuthenticatedUser";
 
+import {
+  appendImageConditionalRequestHeaders,
+  buildImageProxyResponseHeaders,
+} from "@/lib/server/media/imageFileCacheProxy";
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -128,10 +133,17 @@ export async function GET(
       serviceUrl,
       {
         method: "GET",
-        headers,
+        headers: appendImageConditionalRequestHeaders(request, headers),
         cache: "no-store",
       }
     );
+
+    if (response.status === 304) {
+      return new Response(null, {
+        status: 304,
+        headers: buildImageProxyResponseHeaders(response),
+      });
+    }
 
     if (!response.ok) {
       const payload = await response
@@ -149,33 +161,11 @@ export async function GET(
       );
     }
 
-    const responseHeaders =
-      new Headers();
-
-    for (const headerName of [
-      "content-type",
-      "content-length",
-      "cache-control",
-    ]) {
-      const value =
-        response.headers.get(
-          headerName
-        );
-
-      if (value) {
-        responseHeaders.set(
-          headerName,
-          value
-        );
-      }
-    }
-
     return new Response(
       response.body,
       {
         status: 200,
-        headers:
-          responseHeaders,
+        headers: buildImageProxyResponseHeaders(response),
       }
     );
   } catch (error) {

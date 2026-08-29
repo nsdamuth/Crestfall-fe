@@ -52,6 +52,8 @@ export default function Lore({
   communityLoadError = null,
   ownedCreations = [],
   ownedLoadError = null,
+  ownedTimelines = [],
+  ownedTimelinesLoadError = null,
 } = {}) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("full");
@@ -63,6 +65,8 @@ export default function Lore({
     communityLoadError,
     ownedCreations,
     ownedLoadError,
+    ownedTimelines,
+    ownedTimelinesLoadError,
     onNavigate: (route) => router.push(route),
   });
 

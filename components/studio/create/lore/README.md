@@ -35,6 +35,10 @@ Lore Asset
             └── Optional two-column child blocks
 ```
 
+Lore Assets also carry an optional root `timelineOrder` numeric chronology key.
+It is intentionally separate from the free-form `displayDate`: Timeline assets
+may sort by the numeric key without parsing or rewriting creator-facing date text.
+
 Sections are stable, addressable units with their own metadata, Character tags,
 and Location tags. Each Asset, chapter, or section scope accepts up to five
 Characters and five Locations through compact autocomplete controls that switch

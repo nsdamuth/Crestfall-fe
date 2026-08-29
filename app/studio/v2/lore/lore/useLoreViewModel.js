@@ -76,6 +76,8 @@ export function useLoreViewModel({
   communityLoadError = null,
   ownedCreations = [],
   ownedLoadError = null,
+  ownedTimelines = [],
+  ownedTimelinesLoadError = null,
   onNavigate = null,
 } = {}) {
   const [likedIds, setLikedIds] = useState([]);
@@ -132,6 +134,36 @@ export function useLoreViewModel({
   const engagementState = useCreationEngagementState(
     live ? [...communitySource, ...mineSource] : []
   );
+
+  const timelineItems = useMemo(() => {
+    if (!live) return [];
+
+    return (Array.isArray(ownedTimelines) ? ownedTimelines : [])
+      .filter((creation) => String(creation?.type || "").toUpperCase() === "TIMELINE")
+      .map((creation) => {
+        const timeline = creation?.data?.timeline || {};
+        const entries = Array.isArray(timeline.entries) ? timeline.entries : [];
+        const primaryMedia = creation?.featuredMedia?.[0] || null;
+        const imageSrc = primaryMedia?.isPlaceholder
+          ? "/assets/covers/crestfall-sundial-cover.png"
+          : creation?.imageUrl ||
+            creation?.imageSrc ||
+            primaryMedia?.imageUrl ||
+            primaryMedia?.url ||
+            "/assets/covers/crestfall-sundial-cover.png";
+
+        return {
+          id: creation.id,
+          title: creation.title || "Untitled Timeline",
+          description: creation.description || "A curated Lore chronology.",
+          imageSrc,
+          entryCount: entries.length,
+          publicEnabled: timeline.publicEnabled === true,
+          onOpen: () =>
+            onNavigate?.(`/studio/create/timeline/${encodeURIComponent(creation.id)}`),
+        };
+      });
+  }, [live, ownedTimelines, onNavigate]);
 
   const filterGroups = useMemo(() => {
     const approvalOptions = live ? LIVE_APPROVAL_OPTIONS : LORE_APPROVAL_OPTIONS;
@@ -315,6 +347,13 @@ export function useLoreViewModel({
   return {
     topBanner,
     filterBar,
+    timelineItems,
+    timelineError: ownedTimelinesLoadError,
+    timelineEmptyMessage:
+      live && !ownedTimelinesLoadError && timelineItems.length === 0
+        ? "No Timelines yet. Build one to organize your Lore chronologically."
+        : null,
+    onBuildTimeline: () => onNavigate?.("/studio/create/timeline"),
     communityItems,
     communityError: communityLoadError,
     communityEmptyMessage,
