@@ -19,11 +19,12 @@ function between(source, startToken, endToken) {
   return source.slice(start, end);
 }
 
-test("mobile composer positioning wrapper is transparent while the chat menu keeps its opaque panel", () => {
+test("mobile composer stays in Story chat flow while the chat menu keeps its opaque panel", () => {
   const mobile = between(view, "function MobileComposer({", "function MobileResponderPicker(");
   const desktop = between(view, "function DesktopComposer({", "function MobileComposer({");
 
-  assert.match(mobile, /fixed bottom-0 left-0 right-0[^\n]+bg-transparent/);
+  assert.match(mobile, /relative z-50 shrink-0[^\n]+bg-transparent/);
+  assert.doesNotMatch(mobile, /fixed bottom-0 left-0 right-0/);
   assert.match(mobile, /rounded-\[var\(--radius-md\)\][^\n]+bg-\[#080706\]\/95 p-3 shadow-2xl/);
   assert.match(desktop, /hidden border-t border-white\/10 bg-black\/35 p-4 xl:block/);
 });

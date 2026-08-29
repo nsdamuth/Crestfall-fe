@@ -91,3 +91,24 @@ test("Character Identity package includes its documented handoff", () => {
   assert.match(readme, /adult minimum of 18/);
   assert.match(readme, /\/dev\/ui-preview\/character-identity-section/);
 });
+
+test("Character Identity accepts the same render-profile keys as new Character creation", () => {
+  const viewModel = read(
+    "components/studio/my-creations/edit/sections/character-identity-section/useCharacterIdentitySectionViewModel.js"
+  );
+
+  for (const value of [
+    "auto",
+    "crestfall_fantasy",
+    "crestfall_realistic",
+    "crestfall_anime_anime",
+    "crestfall_fantasy_realistic",
+    "crestfall_realistic_fantasy",
+  ]) {
+    assert.match(viewModel, new RegExp(value));
+  }
+
+  assert.match(viewModel, /normalizeCharacterRenderingStyleValue/);
+  assert.match(viewModel, /ANIME: "crestfall_fantasy"/);
+  assert.match(viewModel, /REALISTIC: "crestfall_realistic"/);
+});

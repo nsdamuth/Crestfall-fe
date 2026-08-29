@@ -13,6 +13,7 @@ import {
   STATS_POOLS_MODIFIER_OPERATION_OPTIONS,
   STATS_POOLS_MODIFIER_TARGET_TYPE_OPTIONS,
   STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS,
+  STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
   STATS_POOLS_POOL_DEFAULT_CURRENT_OPTIONS,
   STATS_POOLS_POOL_DEFINITION_VERSION,
   STATS_POOLS_POOL_MAXIMUM_MODE_OPTIONS,
@@ -154,6 +155,9 @@ ${optionLines(STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS)}
     "enabled": false,
     "formula": null
   },
+  "playerReadout": {
+    "visibility": "PRIMARY"
+  },
   "tags": ["physical"],
   "order": 0,
   "metadata": {}
@@ -163,6 +167,14 @@ ${optionLines(STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS)}
 Value types:
 
 ${optionLines(STATS_POOLS_VALUE_TYPE_OPTIONS)}
+
+Player readout visibility:
+
+${optionLines(STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS)}
+
+- Existing non-derived Stats default to \`PRIMARY\`.
+- Existing derived Stats default to \`DETAIL\`.
+- \`HIDDEN\` Stats still participate in mechanics formulas but are not exposed through player-facing readouts.
 
 Scale modes:
 
@@ -195,6 +207,9 @@ ${optionLines(STATS_POOLS_SCALE_MODE_OPTIONS)}
     "value": null
   },
   "allowOverfill": false,
+  "playerReadout": {
+    "visibility": "PRIMARY"
+  },
   "tags": ["health"],
   "order": 0,
   "metadata": {}
@@ -209,6 +224,13 @@ Default-current modes:
 
 ${optionLines(STATS_POOLS_POOL_DEFAULT_CURRENT_OPTIONS)}
 
+Player readout visibility:
+
+${optionLines(STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS)}
+
+- Existing Pools default to \`PRIMARY\`.
+- \`DETAIL\` Pools remain available under the HUD More control.
+- \`HIDDEN\` Pools still participate in mechanics formulas but are not exposed through player-facing readouts.
 - Pool definitions may define a reusable starting policy, but never an actor's current Pool value.
 - Fixed maximum must be greater than minimum.
 - A fixed default current value must remain in bounds unless overfill is allowed.

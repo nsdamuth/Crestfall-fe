@@ -1,4 +1,4 @@
-export const EDITOR_HEADER_VIEW_CONTRACT_VERSION = "3.0.0";
+export const EDITOR_HEADER_VIEW_CONTRACT_VERSION = "3.2.0";
 
 // Version note, 2.0.0 -> 3.0.0 (BREAKING, ED1C,
 // docs/plans/ED1B-EDITOR-PAGE-SPEC.md section 3.2): the identity
@@ -27,6 +27,11 @@ export const EDITOR_HEADER_VIEW_CONTRACT_VERSION = "3.0.0";
 // Carried forward: `title`, `typeLabel`, `typeIcon`,
 // `visibilityLabel`/`visibilityVariant`, `actions` meta-row seat.
 
+// v3.2.0, WC5F-B: optional display-ready image anchors are carried
+// for the active hero and slot thumbnails. The View does not inspect
+// face-analysis metadata; the caller resolves backend focal metadata
+// into ordinary CSS object-position strings.
+
 /**
  * Stable portable UI boundary for the editor's artwork hero
  * (docs/plans/ED1B-EDITOR-PAGE-SPEC.md section 3.2). Primary art
@@ -40,12 +45,15 @@ export const EDITOR_HEADER_VIEW_CONTRACT_VERSION = "3.0.0";
  * @property {string} id
  * @property {number} index featured-slot index (0..3)
  * @property {string} label "Primary" / "Alt 1" / ...
- * @property {string|null} imageSrc
+ * @property {string|null} imageSrc display-sized source for the active hero
+ * @property {string|null} [thumbnailSrc] thumbnail-sized source for the rail
+ * @property {string} [imageAnchor] display-ready CSS object-position string
  * @property {boolean} isActive the slot currently shown as primary
  *
  * @typedef {Object} EditorHeaderViewProps
  * @property {string|null} [primaryImageSrc] Active slot's image;
  *   the no-art frame (quiet type icon) renders when absent.
+ * @property {string} [primaryImageAnchor] display-ready CSS object-position
  * @property {EditorHeroSlot[]} [slots]
  * @property {((index: number) => void)|null} [onSelectSlot]
  * @property {(() => void)|null} [onReplaceActiveSlot]

@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.3.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -58,7 +58,9 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.3.0";
  *
  * @typedef {Object} KitAssetDetailPopupMediaItem
  * @property {string} id
- * @property {string} src
+ * @property {string} src display-sized fallback URL
+ * @property {string} [displaySrc] display-sized carousel URL
+ * @property {string} [thumbnailSrc] thumbnail-sized compact-tile URL
  *
  * @typedef {Object} KitAssetDetailPopupStats
  * @property {number|null} plays

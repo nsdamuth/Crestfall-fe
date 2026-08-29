@@ -9,6 +9,7 @@ import { projectCommunityCreators } from "@/lib/shared/presentation/creatorPrese
 import {
   projectCreationsToStoryStartables,
   projectStoryRoomToContinueItem,
+  resolveStoryContinueImageAnchor,
   resolveStoryContinueImageSrc,
 } from "@/lib/shared/presentation/storiesPresentation";
 
@@ -212,6 +213,7 @@ export function useHomeViewModel({
       kindLabel: item.kind === "adventure" ? "Adventure" : "Story",
       lastPlayedLabel: relativeTimeLabel(item.lastPlayed),
       imageSrc: resolveStoryContinueImageSrc(item, sourceCreation),
+      imageAnchor: resolveStoryContinueImageAnchor(item, sourceCreation),
       secondaryCtaLabel: "Explore recent stories",
       onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
       onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),

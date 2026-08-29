@@ -32,12 +32,16 @@ test("Story chat claims the mobile content width and height without changing des
   assert.match(view, /xl:border/);
 });
 
-test("mobile composer replaces the dock at the physical safe-area bottom", () => {
+test("mobile composer replaces the dock in Story chat flow with safe-area clearance", () => {
+  const shell = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
   const composer = read("components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx");
 
   assert.doesNotMatch(composer, /fixed bottom-20 left-3 right-3/);
-  assert.match(composer, /fixed bottom-0 left-0 right-0 z-50/);
+  assert.doesNotMatch(composer, /fixed bottom-0 left-0 right-0 z-50/);
+  assert.match(composer, /relative z-50 shrink-0 bg-transparent/);
   assert.match(composer, /safe-area-inset-bottom/);
+  assert.match(shell, /<div className="shrink-0">[\s\S]*ComposerComponent/);
+  assert.doesNotMatch(shell, /9rem\+env\(safe-area-inset-bottom\)/);
 });
 
 test("transcript retains the accepted automatic newest-message scroll behavior", () => {
@@ -48,10 +52,11 @@ test("transcript retains the accepted automatic newest-message scroll behavior",
   assert.match(transcript, /safeMessageItems\.length/);
 });
 
-test("mobile transcript uses the visually verified 4rem bottom clearance", () => {
+test("mobile transcript no longer reserves legacy fixed-composer bottom clearance", () => {
   const transcript = read("components/studio/story-rooms/story-room-transcript/StoryRoomTranscript.view.jsx");
 
-  assert.match(transcript, /p-5 pb-\[4rem\] scroll-smooth xl:pb-5/);
+  assert.match(transcript, /p-5 scroll-smooth/);
+  assert.doesNotMatch(transcript, /pb-\[4rem\]/);
   assert.doesNotMatch(transcript, /11\.5rem/);
   assert.doesNotMatch(transcript, /pb-\[18rem\]/);
 });

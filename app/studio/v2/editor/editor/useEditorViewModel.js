@@ -9,6 +9,7 @@
 // never the live client), and plain-language error mapping. Returns
 // plain prop bags and builders only; it builds no JSX.
 import { useMemo, useState } from "react";
+import { resolveImageFocalObjectPosition } from "@/lib/shared/media/imageFocalPresentation";
 
 import { useCreationEditShellViewModel } from "@/components/studio/my-creations/creation-edit-shell/useCreationEditShellViewModel";
 import {
@@ -239,13 +240,17 @@ export function useEditorViewModel({
   const fallbackPrimaryImage = form.imageUrl || form.image_url || null;
   const heroSlots = featured.map((slot, index) => {
     const slotImage =
-      slot?.imageUrl ||
       slot?.displayImageUrl ||
       slot?.displayUrl ||
-      slot?.thumbnailUrl ||
+      slot?.imageUrl ||
       slot?.url ||
+      slot?.thumbnailUrl ||
       slot?.assetUrl ||
       null;
+    const slotThumbnail =
+      slot?.thumbnailUrl ||
+      slot?.thumbnail_url ||
+      slotImage;
 
     return {
       id: slot?.id || `slot-${index + 1}`,
@@ -255,6 +260,13 @@ export function useEditorViewModel({
         slot?.isPlaceholder
           ? null
           : slotImage || (index === 0 ? fallbackPrimaryImage : null),
+      thumbnailSrc:
+        slot?.isPlaceholder
+          ? null
+          : slotThumbnail || slotImage || (index === 0 ? fallbackPrimaryImage : null),
+      imageAnchor: resolveImageFocalObjectPosition(slot, {
+        fallback: "center center",
+      }),
       isActive: index === activeSlotIndex,
     };
   });
@@ -262,6 +274,7 @@ export function useEditorViewModel({
 
   const heroProps = {
     primaryImageSrc: activeHeroSlot?.imageSrc || null,
+    primaryImageAnchor: activeHeroSlot?.imageAnchor || "center center",
     slots: heroSlots,
     onSelectSlot: (index) => shell.mediaPanelProps?.setActiveMediaSlot?.(index),
     onReplaceActiveSlot: () =>

@@ -6,6 +6,7 @@
 // caller's job.
 export function useEditorHeaderViewModel({
   primaryImageSrc = null,
+  primaryImageAnchor = "center center",
   slots = [],
   onSelectSlot = null,
   onReplaceActiveSlot = null,
@@ -20,6 +21,7 @@ export function useEditorHeaderViewModel({
 } = {}) {
   return {
     primaryImageSrc,
+    primaryImageAnchor,
     slots: Array.isArray(slots) ? slots : [],
     onSelectSlot,
     onReplaceActiveSlot,

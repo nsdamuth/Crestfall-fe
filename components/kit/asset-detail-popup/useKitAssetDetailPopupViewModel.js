@@ -13,11 +13,28 @@ function normalizeMedia(media) {
   if (!Array.isArray(media)) return [];
 
   return media
-    .filter((item) => item && typeof item.src === "string" && item.src)
-    .map((item, index) => ({
-      id: item.id || `media-${index + 1}`,
-      src: item.src,
-    }))
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null;
+
+      const displaySrc =
+        (typeof item.displaySrc === "string" && item.displaySrc) ||
+        (typeof item.src === "string" && item.src) ||
+        "";
+
+      if (!displaySrc) return null;
+
+      const thumbnailSrc =
+        (typeof item.thumbnailSrc === "string" && item.thumbnailSrc) ||
+        displaySrc;
+
+      return {
+        id: item.id || `media-${index + 1}`,
+        src: displaySrc,
+        displaySrc,
+        thumbnailSrc,
+      };
+    })
+    .filter(Boolean)
     .slice(0, 4);
 }
 

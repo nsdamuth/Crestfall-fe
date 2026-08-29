@@ -174,11 +174,11 @@ const previewPageSource = readFileSync(
 );
 
 assert.match(editorViewSource, /StatsPoolsJsonEditorModal/);
-assert.match(editorViewSource, /JSON Editor/);
+assert.match(editorViewSource, /JSON editor/i);
 assert.match(editorVmSource, /jsonEditorOpen/);
 assert.match(editorVmSource, /applyJsonProfile/);
-assert.match(modalViewSource, /Download AI Guide/);
-assert.match(modalViewSource, /Validate & Apply/);
+assert.match(modalViewSource, /Download AI guide/i);
+assert.match(modalViewSource, /Validate & apply/i);
 assert.match(modalViewSource, /Authored Stats & Pools Profile/);
 assert.doesNotMatch(modalViewSource, /fetch\s*\(/);
 assert.doesNotMatch(modalViewSource, /supabase/i);

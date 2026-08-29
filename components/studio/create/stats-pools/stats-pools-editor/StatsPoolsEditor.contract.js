@@ -77,6 +77,24 @@ export const STATS_POOLS_VALUE_TYPE_OPTIONS = Object.freeze([
   { value: "DECIMAL", label: "Decimal" },
 ]);
 
+export const STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS = Object.freeze([
+  {
+    value: "PRIMARY",
+    label: "Main HUD",
+    description: "Show this value in the compact player Actor HUD.",
+  },
+  {
+    value: "DETAIL",
+    label: "More",
+    description: "Keep this value available under the HUD More control.",
+  },
+  {
+    value: "HIDDEN",
+    label: "Hidden",
+    description: "Do not expose this value in player-facing readouts.",
+  },
+]);
+
 export const STATS_POOLS_SCALE_MODE_OPTIONS = Object.freeze([
   {
     value: "BOUNDED",
@@ -224,6 +242,9 @@ export function createEmptyStatDefinition(index = 0, overrides = {}) {
       enabled: false,
       formula: null,
     },
+    playerReadout: {
+      visibility: "PRIMARY",
+    },
     tags: [],
     order: index,
     metadata: {},
@@ -251,6 +272,9 @@ export function createEmptyPoolDefinition(index = 0, overrides = {}) {
       value: null,
     },
     allowOverfill: false,
+    playerReadout: {
+      visibility: "PRIMARY",
+    },
     tags: [],
     order: index,
     metadata: {},

@@ -161,7 +161,7 @@ export default function StoryRoomChatShellView({
             </p>
           ) : null}
 
-          <div className="h-[calc(9rem+env(safe-area-inset-bottom))] shrink-0 xl:h-auto">
+          <div className="shrink-0">
             {ComposerComponent ? <ComposerComponent {...composerProps} /> : null}
           </div>
         </main>

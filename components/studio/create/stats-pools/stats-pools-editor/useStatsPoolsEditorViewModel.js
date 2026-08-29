@@ -16,6 +16,7 @@ import {
   STATS_POOLS_MODIFIER_OPERATION_OPTIONS,
   STATS_POOLS_MODIFIER_TARGET_TYPE_OPTIONS,
   STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS,
+  STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
   STATS_POOLS_POOL_DEFAULT_CURRENT_OPTIONS,
   STATS_POOLS_POOL_MAXIMUM_MODE_OPTIONS,
   STATS_POOLS_PROFILE_CONTRACT_VERSION,
@@ -149,6 +150,8 @@ function normalizeStat(value = {}, index = 0) {
   const source = normalizeObject(value);
   const scale = normalizeObject(source.scale);
   const derived = normalizeObject(source.derived);
+  const playerReadout = normalizeObject(source.playerReadout);
+  const derivedEnabled = derived.enabled === true;
   const scaleMode = normalizeEnum(
     scale.mode,
     STATS_POOLS_SCALE_MODE_OPTIONS,
@@ -180,8 +183,15 @@ function normalizeStat(value = {}, index = 0) {
           : normalizeNumber(scale.defaultValue, 0),
     },
     derived: {
-      enabled: derived.enabled === true,
-      formula: derived.enabled === true ? normalizeFormula(derived.formula) : null,
+      enabled: derivedEnabled,
+      formula: derivedEnabled ? normalizeFormula(derived.formula) : null,
+    },
+    playerReadout: {
+      visibility: normalizeEnum(
+        playerReadout.visibility,
+        STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
+        derivedEnabled ? "DETAIL" : "PRIMARY"
+      ),
     },
     tags: normalizeTags(source.tags),
     order: normalizeInteger(source.order, index, 0, 100000),
@@ -193,6 +203,7 @@ function normalizePool(value = {}, index = 0) {
   const source = normalizeObject(value);
   const maximum = normalizeObject(source.maximum);
   const defaultCurrent = normalizeObject(source.defaultCurrent);
+  const playerReadout = normalizeObject(source.playerReadout);
   const maximumMode = normalizeEnum(
     maximum.mode,
     STATS_POOLS_POOL_MAXIMUM_MODE_OPTIONS,
@@ -229,6 +240,13 @@ function normalizePool(value = {}, index = 0) {
       value: normalizeNumber(defaultCurrent.value, null),
     },
     allowOverfill: source.allowOverfill === true,
+    playerReadout: {
+      visibility: normalizeEnum(
+        playerReadout.visibility,
+        STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
+        "PRIMARY"
+      ),
+    },
     tags: normalizeTags(source.tags),
     order: normalizeInteger(source.order, index, 0, 100000),
     metadata: normalizeObject(source.metadata),
@@ -840,6 +858,16 @@ export function useStatsPoolsEditorViewModel({
             defaultCurrent: { ...item.defaultCurrent, [nested]: nextValue },
           };
         }
+        if (field.startsWith("playerReadout.")) {
+          const nested = field.split(".")[1];
+          return {
+            ...item,
+            playerReadout: {
+              ...normalizeObject(item.playerReadout),
+              [nested]: nextValue,
+            },
+          };
+        }
         if (field.startsWith("target.")) {
           const nested = field.split(".")[1];
           const target = { ...item.target, [nested]: nextValue };
@@ -852,14 +880,18 @@ export function useStatsPoolsEditorViewModel({
           return { ...item, target };
         }
         if (field === "derivedEnabled") {
+          const enablingDerived = Boolean(nextValue);
           return {
             ...item,
             derived: {
-              enabled: Boolean(nextValue),
-              formula: nextValue
+              enabled: enablingDerived,
+              formula: enablingDerived
                 ? item.derived?.formula || createEmptyFormula()
                 : null,
             },
+            playerReadout: enablingDerived
+              ? { visibility: "DETAIL" }
+              : item.playerReadout,
           };
         }
         return { ...item, [field]: nextValue };
@@ -1034,6 +1066,8 @@ export function useStatsPoolsEditorViewModel({
     capabilityModeOptions: STATS_POOLS_CAPABILITY_MODE_OPTIONS,
     numericResolutionOptions: STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS,
     valueTypeOptions: STATS_POOLS_VALUE_TYPE_OPTIONS,
+    playerReadoutVisibilityOptions:
+      STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
     scaleModeOptions: STATS_POOLS_SCALE_MODE_OPTIONS,
     poolMaximumModeOptions: STATS_POOLS_POOL_MAXIMUM_MODE_OPTIONS,
     poolDefaultCurrentOptions: STATS_POOLS_POOL_DEFAULT_CURRENT_OPTIONS,

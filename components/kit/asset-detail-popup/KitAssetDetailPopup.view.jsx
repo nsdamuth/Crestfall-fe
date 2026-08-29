@@ -191,6 +191,14 @@ function CarouselDots({ count, activeIndex, catalogueIndex, onSelect }) {
   );
 }
 
+function getMediaDisplaySrc(item) {
+  return item?.displaySrc || item?.src || "";
+}
+
+function getMediaThumbnailSrc(item) {
+  return item?.thumbnailSrc || getMediaDisplaySrc(item);
+}
+
 function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
   return (
     <div className="absolute inset-0">
@@ -247,11 +255,11 @@ function Carousel({ media, onViewCatalogue }) {
   return (
     <div className="relative aspect-[5/3] w-full overflow-hidden rounded-t-[var(--radius-lg)] bg-[var(--canvas)]">
       {isCatalogueSlide ? (
-        <CatalogueSlide backgroundSrc={media[0]?.src} onViewCatalogue={onViewCatalogue} />
+        <CatalogueSlide backgroundSrc={getMediaDisplaySrc(media[0])} onViewCatalogue={onViewCatalogue} />
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={media[activeIndex]?.src}
+          src={getMediaDisplaySrc(media[activeIndex])}
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
         />
@@ -308,8 +316,10 @@ function MediaSlotTile({ item }) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={item.src}
+        src={getMediaThumbnailSrc(item)}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="aspect-square w-full rounded-[var(--radius-md)] object-cover object-[center_18%]"
       />
     );
@@ -413,8 +423,10 @@ function MediaLibrary({ media, isLiked, isSaved, credits, LinkComponent }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               key={item.id || item.index}
-              src={item.src}
+              src={getMediaThumbnailSrc(item)}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="aspect-square w-full rounded-[var(--radius-md)] object-cover object-[center_18%]"
             />
           ))}
@@ -488,6 +500,16 @@ export default function KitAssetDetailPopupView({
           <StatRow stats={stats} />
           <TagsRow tags={tags} />
         </div>
+
+        {onViewCatalogue ? (
+          <button
+            type="button"
+            onClick={() => onViewCatalogue?.()}
+            className="mt-[var(--space-3)] inline-flex text-[length:var(--text-ui)] uppercase leading-[var(--lh-ui)] tracking-[var(--track-label)] text-[var(--gold-ornament)] transition hover:text-[var(--ink)]"
+          >
+            View full catalogue →
+          </button>
+        ) : null}
 
         <MediaLibrary
           media={media}

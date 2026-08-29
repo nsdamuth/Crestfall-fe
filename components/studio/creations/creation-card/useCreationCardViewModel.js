@@ -51,13 +51,13 @@ export function useCreationCardViewModel({
     creation?.chatHref ||
     `/studio/play${encodedId ? `?creation=${encodedId}` : ""}`;
   const catalogueHref =
-    creation?.catalogueHref ||
-    creation?.imageLibraryHref ||
-    (context === "owner" && encodedId
+    context === "owner" && encodedId
       ? `/studio/my-creations/${encodedId}/image-library`
-      : encodedId
-        ? `/studio/creations/${encodedId}`
-        : "/studio/community");
+      : creation?.catalogueHref ||
+        creation?.imageLibraryHref ||
+        (encodedId
+          ? `/studio/creations/${encodedId}`
+          : "/studio/community");
   const imageHref =
     creation?.imageHref ||
     `/studio/image-studio${encodedId ? `?creation=${encodedId}` : ""}`;

@@ -13,6 +13,7 @@ import {
   STATS_POOLS_MODIFIER_OPERATION_OPTIONS,
   STATS_POOLS_MODIFIER_TARGET_TYPE_OPTIONS,
   STATS_POOLS_NUMERIC_RESOLUTION_OPTIONS,
+  STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS,
   STATS_POOLS_POOL_DEFAULT_CURRENT_OPTIONS,
   STATS_POOLS_POOL_DEFINITION_VERSION,
   STATS_POOLS_POOL_MAXIMUM_MODE_OPTIONS,
@@ -358,6 +359,13 @@ function validateRawStatsPoolsShape(value) {
       } else {
         validateEnum(definition.scale.mode, STATS_POOLS_SCALE_MODE_OPTIONS, `${path}.scale.mode`, "Stat scale mode", errors);
       }
+      if (definition.playerReadout !== undefined) {
+        if (!isObject(definition.playerReadout)) {
+          errors.push(issue("STATS_POOLS_JSON_PLAYER_READOUT_OBJECT_REQUIRED", `${path}.playerReadout`, "Stat playerReadout must be a JSON object."));
+        } else {
+          validateEnum(definition.playerReadout.visibility, STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS, `${path}.playerReadout.visibility`, "Player readout visibility", errors);
+        }
+      }
       if (!isObject(definition.derived)) {
         errors.push(issue("STATS_POOLS_JSON_STAT_DERIVED_REQUIRED", `${path}.derived`, "Stat derived settings must be a JSON object."));
       } else if (definition.derived.enabled === true) {
@@ -372,6 +380,13 @@ function validateRawStatsPoolsShape(value) {
       if (!isObject(definition)) return;
       validateVersion(definition.definitionVersion, STATS_POOLS_POOL_DEFINITION_VERSION, `${path}.definitionVersion`, "Pool definition", errors);
       validateEnum(definition.valueType, STATS_POOLS_VALUE_TYPE_OPTIONS, `${path}.valueType`, "Pool value type", errors);
+      if (definition.playerReadout !== undefined) {
+        if (!isObject(definition.playerReadout)) {
+          errors.push(issue("STATS_POOLS_JSON_PLAYER_READOUT_OBJECT_REQUIRED", `${path}.playerReadout`, "Pool playerReadout must be a JSON object."));
+        } else {
+          validateEnum(definition.playerReadout.visibility, STATS_POOLS_PLAYER_READOUT_VISIBILITY_OPTIONS, `${path}.playerReadout.visibility`, "Player readout visibility", errors);
+        }
+      }
       if (!isObject(definition.maximum)) {
         errors.push(issue("STATS_POOLS_JSON_POOL_MAXIMUM_REQUIRED", `${path}.maximum`, "Pool maximum must be a JSON object."));
       } else {

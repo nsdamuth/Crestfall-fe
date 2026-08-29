@@ -323,7 +323,7 @@ function MobileComposer({
   );
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-transparent px-3 pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-2 xl:hidden">
+    <div className="relative z-50 shrink-0 bg-transparent px-3 pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-2 xl:hidden">
       {toolsOpen ? (
         <MobileToolsDrawer
           inputModeOptions={inputModeOptions}

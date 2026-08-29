@@ -4,7 +4,7 @@ import { Camera, ImageOff, Library, Plus, Sparkles } from "lucide-react";
 
 import KitBadge from "@/components/kit/KitBadge";
 
-function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
+function PrimaryArt({ imageSrc, imageAnchor = "center center", typeIcon: TypeIcon }) {
   if (imageSrc) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
@@ -12,6 +12,7 @@ function PrimaryArt({ imageSrc, typeIcon: TypeIcon }) {
         src={imageSrc}
         alt=""
         className="aspect-[3/4] min-w-0 flex-1 rounded-[var(--radius-md)] border border-[var(--line)] object-cover lg:w-[300px] lg:flex-none xl:w-[320px]"
+        style={{ objectPosition: imageAnchor }}
       />
     );
   }
@@ -55,7 +56,14 @@ function SlotRail({ slots, onSelectSlot }) {
           }`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={slot.imageSrc} alt="" className="h-full w-full object-cover" />
+          <img
+            src={slot.thumbnailSrc || slot.imageSrc}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+            style={{ objectPosition: slot.imageAnchor || "center center" }}
+          />
         </button>
       ))}
       {nextEmptySlot ? (
@@ -74,6 +82,7 @@ function SlotRail({ slots, onSelectSlot }) {
 
 export default function EditorHeaderView({
   primaryImageSrc = null,
+  primaryImageAnchor = "center center",
   slots = [],
   onSelectSlot = null,
   onReplaceActiveSlot = null,
@@ -89,7 +98,11 @@ export default function EditorHeaderView({
   return (
     <header className="flex flex-wrap items-start gap-[var(--space-4)] sm:gap-[var(--space-5)]">
       <div className="flex w-full max-w-[500px] items-start gap-[var(--space-2)] sm:gap-[var(--space-3)] lg:w-auto lg:max-w-none">
-        <PrimaryArt imageSrc={primaryImageSrc} typeIcon={typeIcon} />
+        <PrimaryArt
+          imageSrc={primaryImageSrc}
+          imageAnchor={primaryImageAnchor}
+          typeIcon={typeIcon}
+        />
         <SlotRail slots={slots} onSelectSlot={onSelectSlot} />
       </div>
 

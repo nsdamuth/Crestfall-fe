@@ -401,13 +401,13 @@ export default function VaultV2Mockup({
   }
 
   function handleViewCatalogue(item) {
-    if (live && ["PUBLIC", "CANON"].includes(item.visibility)) {
-      router.push(`/studio/creations/${encodeURIComponent(item.id)}`);
+    if (live && item.isOwn) {
+      router.push(`/studio/my-creations/${encodeURIComponent(item.id)}/image-library`);
       return;
     }
 
-    if (live && item.isOwn) {
-      handleEdit(item);
+    if (live && ["PUBLIC", "CANON"].includes(item.visibility)) {
+      router.push(`/studio/creations/${encodeURIComponent(item.id)}`);
       return;
     }
 
@@ -672,9 +672,11 @@ export default function VaultV2Mockup({
       const item = sourceItems.find((entry) => entry.id === assetDetailId);
       if (!item) return null;
 
-      const media = [item.imageSrc, ...(item.extraMedia || [])]
-        .filter(Boolean)
-        .map((src, index) => ({ id: `${item.id}-media-${index + 1}`, src }));
+      const media = item.detailMedia?.length
+        ? item.detailMedia
+        : [item.imageSrc, ...(item.extraMedia || [])]
+            .filter(Boolean)
+            .map((src, index) => ({ id: `${item.id}-media-${index + 1}`, src }));
 
       return (
         <KitAssetDetailPopup

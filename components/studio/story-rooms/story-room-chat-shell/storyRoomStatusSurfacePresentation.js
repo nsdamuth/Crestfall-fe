@@ -87,12 +87,20 @@ export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
   readouts.forEach((readout) => {
     const domain = normalizeUpper(readout?.source?.domain);
     const kind = normalizeUpper(readout?.source?.kind);
+    const playerReadoutVisibility = normalizeUpper(
+      readout?.playerReadoutVisibility
+    );
     const decorated = {
       ...readout,
       shortLabel: buildStoryRoomStatusShortLabel(readout?.label),
     };
 
-    if (readout?.derived === true) {
+    if (playerReadoutVisibility === "HIDDEN") return;
+
+    if (
+      playerReadoutVisibility === "DETAIL" ||
+      (!playerReadoutVisibility && readout?.derived === true)
+    ) {
       details.push(decorated);
       return;
     }

@@ -46,7 +46,7 @@ function ActorMechanicsVisibilityTab({ surface, onToggleVisibility }) {
     <button
       type="button"
       onClick={() => onToggleVisibility?.()}
-      className="absolute right-0 top-1/2 z-10 flex h-10 w-7 -translate-y-1/2 items-center justify-center rounded-l-lg border border-r-0 border-[var(--gold-ornament)]/30 bg-black/60 text-[var(--gold-ornament)]/80 shadow-lg transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+      className="absolute right-0 top-1/2 z-10 flex h-11 w-10 -translate-y-1/2 items-center justify-center rounded-l-lg border border-r-0 border-[var(--gold-ornament)]/30 bg-black/60 text-[var(--gold-ornament)]/80 shadow-lg transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)] sm:h-10 sm:w-7"
       aria-label={`${action} ${surface.actorTitle} mechanics`}
       title={`${action} character mechanics`}
     >
@@ -55,10 +55,41 @@ function ActorMechanicsVisibilityTab({ surface, onToggleVisibility }) {
   );
 }
 
+function CollapsedActorMechanicsStrip({ surface }) {
+  const criticalReadouts = surface.pools.slice(0, 2);
+
+  return (
+    <div
+      className="flex min-h-8 min-w-0 items-center gap-3 overflow-hidden"
+      data-actor-mechanics-collapsed-strip
+    >
+      <p className="min-w-0 shrink truncate font-display text-xs uppercase tracking-[0.08em] text-[var(--gold-ornament)] sm:text-sm">
+        {surface.actorTitle}
+      </p>
+
+      {criticalReadouts.length ? (
+        <div className="flex min-w-0 shrink-0 items-center gap-3 text-[10px] sm:text-xs">
+          {criticalReadouts.map((readout) => (
+            <span key={readout.id} className="whitespace-nowrap">
+              <span className="mr-1 uppercase tracking-[0.08em] text-[var(--gold-ornament)]/85">
+                {readout.shortLabel || readout.label}
+              </span>
+              <strong className="font-semibold text-[var(--ink)]">
+                {readout.displayValue}
+              </strong>
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
   if (surface.collapsed) {
     return (
-      <section className="relative h-10 border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)]/70">
+      <section className="relative min-h-11 border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)]/70 px-3 py-1.5 pr-12 sm:min-h-10 sm:px-5 sm:py-1 sm:pr-11">
+        <CollapsedActorMechanicsStrip surface={surface} />
         <ActorMechanicsVisibilityTab
           surface={surface}
           onToggleVisibility={onToggleVisibility}
@@ -68,20 +99,20 @@ function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
   }
 
   return (
-    <section className="relative border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] px-4 py-3 pr-10 sm:px-5 sm:pr-11">
+    <section className="relative border-t border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] px-3 py-2 pr-12 sm:px-5 sm:py-3 sm:pr-11">
       <ActorMechanicsVisibilityTab
         surface={surface}
         onToggleVisibility={onToggleVisibility}
       />
-      <div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2 border-b border-[var(--line-fade)] pb-2.5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-[var(--line-fade)] pb-1.5 sm:gap-x-5 sm:gap-y-2 sm:pb-2.5">
         <div className="min-w-0">
-          <p className="truncate font-display text-base uppercase tracking-[0.08em] text-[var(--gold-ornament)] sm:text-lg">
+          <p className="truncate font-display text-sm uppercase tracking-[0.08em] text-[var(--gold-ornament)] sm:text-lg">
             {surface.actorTitle}
           </p>
         </div>
 
         {surface.progression.length ? (
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[10px] uppercase tracking-[0.14em] sm:text-xs">
+          <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-0.5 text-[9px] uppercase tracking-[0.12em] sm:gap-x-3 sm:gap-y-1 sm:text-xs sm:tracking-[0.14em]">
             {surface.progression.map((readout, index) => (
               <span key={readout.id} className="whitespace-nowrap text-[var(--gold-ornament)]/90">
                 {index ? <span className="mr-3 text-[var(--ink-dim)]/35">·</span> : null}
@@ -93,10 +124,10 @@ function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
       </div>
 
       {surface.pools.length ? (
-        <div className="flex flex-wrap gap-x-7 gap-y-1 border-b border-[var(--line-fade)] py-2 text-xs sm:text-sm">
+        <div className="grid grid-cols-3 gap-x-2 gap-y-1 border-b border-[var(--line-fade)] py-1.5 text-[11px] sm:flex sm:flex-wrap sm:gap-x-7 sm:py-2 sm:text-sm">
           {surface.pools.map((readout) => (
-            <span key={readout.id} className="whitespace-nowrap">
-              <span className="mr-2 uppercase tracking-[0.08em] text-[var(--gold-ornament)]">
+            <span key={readout.id} className="min-w-0 whitespace-nowrap">
+              <span className="mr-1 uppercase tracking-[0.06em] text-[var(--gold-ornament)] sm:mr-2 sm:tracking-[0.08em]">
                 {readout.label}
               </span>
               <strong className="font-semibold text-[var(--ink)]">
@@ -108,10 +139,10 @@ function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
       ) : null}
 
       {surface.wallets.length ? (
-        <div className="flex flex-wrap gap-x-7 gap-y-1 border-b border-[var(--line-fade)] py-2 text-xs sm:text-sm">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 border-b border-[var(--line-fade)] py-1.5 text-[11px] sm:flex sm:flex-wrap sm:gap-x-7 sm:py-2 sm:text-sm">
           {surface.wallets.map((readout) => (
-            <span key={readout.id} className="whitespace-nowrap">
-              <span className="mr-2 uppercase tracking-[0.08em] text-[var(--gold-ornament)]">
+            <span key={readout.id} className="min-w-0 whitespace-nowrap">
+              <span className="mr-1 uppercase tracking-[0.06em] text-[var(--gold-ornament)] sm:mr-2 sm:tracking-[0.08em]">
                 {readout.label}
               </span>
               <strong className="font-semibold text-[var(--ink)]">
@@ -123,10 +154,10 @@ function ActorMechanicsSurface({ surface, onToggle, onToggleVisibility }) {
       ) : null}
 
       {surface.primaryStats.length ? (
-        <div className="grid grid-cols-4 gap-x-4 gap-y-1.5 py-2 text-[11px] sm:grid-cols-6 lg:grid-cols-11">
+        <div className="grid grid-cols-6 gap-x-2 gap-y-1 py-1.5 text-[10px] sm:grid-cols-6 sm:gap-x-4 sm:gap-y-1.5 sm:py-2 sm:text-[11px] lg:grid-cols-11">
           {surface.primaryStats.map((readout) => (
             <div key={readout.id} className="min-w-0 whitespace-nowrap" title={readout.label}>
-              <span className="mr-1.5 text-[var(--gold-ornament)]">{readout.shortLabel}</span>
+              <span className="mr-1 text-[var(--gold-ornament)] sm:mr-1.5">{readout.shortLabel}</span>
               <strong className="font-semibold text-[var(--ink)]">{readout.displayValue}</strong>
             </div>
           ))}

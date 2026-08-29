@@ -450,6 +450,42 @@ function FormulaEditor({
   );
 }
 
+function PlayerReadoutVisibilityField({
+  definition,
+  kind,
+  options = [],
+  disabled = false,
+  onUpdateDefinition,
+}) {
+  const visibility = definition?.playerReadout?.visibility || "PRIMARY";
+  const selected = options.find((option) => option.value === visibility);
+
+  return (
+    <div className="mt-4">
+      <FieldLabel detail="Player-facing Story readout">Player Readout</FieldLabel>
+      <SelectInput
+        value={visibility}
+        onChange={(event) =>
+          onUpdateDefinition?.(
+            kind,
+            definition.id,
+            "playerReadout.visibility",
+            event.target.value
+          )
+        }
+        disabled={disabled}
+      >
+        <OptionList options={options} />
+      </SelectInput>
+      {selected?.description ? (
+        <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
+          {selected.description}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function SharedDefinitionFields({
   definition,
   kind,
@@ -542,6 +578,7 @@ function StatDefinitionCard({
   disabled,
   valueTypeOptions,
   scaleModeOptions,
+  playerReadoutVisibilityOptions,
   statOptions,
   poolOptions,
   formulaProps,
@@ -578,6 +615,13 @@ function StatDefinitionCard({
             <SharedDefinitionFields
               definition={definition}
               kind="stat"
+              disabled={disabled}
+              onUpdateDefinition={onUpdateDefinition}
+            />
+            <PlayerReadoutVisibilityField
+              definition={definition}
+              kind="stat"
+              options={playerReadoutVisibilityOptions}
               disabled={disabled}
               onUpdateDefinition={onUpdateDefinition}
             />
@@ -717,6 +761,7 @@ function PoolDefinitionCard({
   valueTypeOptions,
   maximumModeOptions,
   defaultCurrentOptions,
+  playerReadoutVisibilityOptions,
   statOptions,
   poolOptions,
   formulaProps,
@@ -753,6 +798,13 @@ function PoolDefinitionCard({
             <SharedDefinitionFields
               definition={definition}
               kind="pool"
+              disabled={disabled}
+              onUpdateDefinition={onUpdateDefinition}
+            />
+            <PlayerReadoutVisibilityField
+              definition={definition}
+              kind="pool"
+              options={playerReadoutVisibilityOptions}
               disabled={disabled}
               onUpdateDefinition={onUpdateDefinition}
             />
@@ -1267,6 +1319,7 @@ export default function StatsPoolsEditorView({
   capabilityModeOptions = [],
   numericResolutionOptions = [],
   valueTypeOptions = [],
+  playerReadoutVisibilityOptions = [],
   scaleModeOptions = [],
   poolMaximumModeOptions = [],
   poolDefaultCurrentOptions = [],
@@ -1558,6 +1611,7 @@ export default function StatsPoolsEditorView({
                   disabled={disabled}
                   valueTypeOptions={valueTypeOptions}
                   scaleModeOptions={scaleModeOptions}
+                  playerReadoutVisibilityOptions={playerReadoutVisibilityOptions}
                   statOptions={statOptions}
                   poolOptions={poolOptions}
                   formulaProps={formulaProps}
@@ -1599,6 +1653,7 @@ export default function StatsPoolsEditorView({
                   valueTypeOptions={valueTypeOptions}
                   maximumModeOptions={poolMaximumModeOptions}
                   defaultCurrentOptions={poolDefaultCurrentOptions}
+                  playerReadoutVisibilityOptions={playerReadoutVisibilityOptions}
                   statOptions={statOptions}
                   poolOptions={poolOptions}
                   formulaProps={formulaProps}

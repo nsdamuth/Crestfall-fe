@@ -126,8 +126,103 @@ function normalizeAttachmentLink(value = {}) {
   };
 }
 
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(normalizeObject(value), key);
+}
+
+function getAttachmentFromDraft(data = {}) {
+  const source = normalizeObject(data);
+  const hasDraft =
+    hasOwn(source, "actorMechanicsProfileAttachmentDraft") ||
+    hasOwn(source, "actor_mechanics_profile_attachment_draft");
+
+  if (!hasDraft) return undefined;
+
+  const draft = normalizeObject(
+    source.actorMechanicsProfileAttachmentDraft ||
+      source.actor_mechanics_profile_attachment_draft
+  );
+  const creationId = normalizeString(
+    draft.profileCreationId ||
+      draft.profile_creation_id ||
+      draft.creationId ||
+      draft.creation_id
+  );
+
+  return creationId
+    ? normalizeAttachmentLink({
+        creationId,
+        title: normalizeString(draft.title) || creationId,
+        description: normalizeString(draft.description),
+        imageUrl: normalizeString(draft.imageUrl || draft.image_url),
+        notes: normalizeString(draft.notes),
+        profileContractVersion: normalizeString(
+          draft.profileContractVersion || draft.profile_contract_version
+        ),
+        presetId: normalizeString(draft.presetId || draft.preset_id),
+        ownerBindingMode: normalizeString(
+          draft.ownerBindingMode || draft.owner_binding_mode
+        ),
+        ownerType: normalizeString(draft.ownerType || draft.owner_type),
+        ownerId: normalizeString(draft.ownerId || draft.owner_id),
+        ownerTitle: normalizeString(draft.ownerTitle || draft.owner_title),
+        enabledDomains: normalizeArray(
+          draft.enabledDomains || draft.enabled_domains
+        ),
+      })
+    : null;
+}
+
+function getAttachmentFromGraphProjection(data = {}) {
+  const source = normalizeObject(data);
+  const graph = normalizeObject(
+    source.actorMechanicsProfileAttachmentGraph ||
+      source.actor_mechanics_profile_attachment_graph
+  );
+  const profile = normalizeObject(graph.profile);
+  const creationId = normalizeString(
+    graph.profileCreationId ||
+      graph.profile_creation_id ||
+      profile.id
+  );
+
+  if (!creationId) return null;
+
+  return normalizeAttachmentLink({
+    creationId,
+    title: normalizeString(profile.title) || creationId,
+    description: normalizeString(profile.description),
+    notes: normalizeString(graph.notes),
+    profileContractVersion: normalizeString(
+      profile.profileContractVersion || profile.profile_contract_version
+    ),
+    presetId: normalizeString(profile.presetId || profile.preset_id),
+    ownerBindingMode: normalizeString(
+      profile.ownerBindingMode || profile.owner_binding_mode
+    ),
+    ownerType: normalizeString(profile.ownerType || profile.owner_type),
+    ownerId: normalizeString(profile.ownerId || profile.owner_id),
+    ownerTitle: normalizeString(profile.ownerTitle || profile.owner_title),
+    enabledDomains: normalizeArray(
+      profile.enabledDomains || profile.enabled_domains
+    ),
+  });
+}
+
 function getAttachment(data = {}) {
   const source = normalizeObject(data);
+  const draftAttachment = getAttachmentFromDraft(source);
+
+  // An explicitly supplied draft, including an empty draft used for removal,
+  // is the local unsaved authority until the save response replaces it with
+  // the persisted graph projection.
+  if (draftAttachment !== undefined) return draftAttachment;
+
+  const graphAttachment = getAttachmentFromGraphProjection(source);
+  if (graphAttachment) return graphAttachment;
+
+  // Legacy JSON remains readable during the graph migration window, but new
+  // writes use the draft -> creation_asset_edges graph path below.
   const link = normalizeAttachmentLink(
     source.actorMechanicsProfileLink ||
       source.actor_mechanics_profile_link
@@ -242,15 +337,23 @@ export function useActorMechanicsProfileAttachmentSectionViewModel({
   function persist(nextAttachment) {
     const normalized = normalizeAttachmentLink(nextAttachment);
 
-    updateDataField?.(
-      "actorMechanicsProfileAttachmentContractVersion",
-      ACTOR_MECHANICS_PROFILE_ATTACHMENT_CONTRACT_VERSION
-    );
-    updateDataField?.(
-      "actorMechanicsProfileId",
-      normalized?.creationId || ""
-    );
-    updateDataField?.("actorMechanicsProfileLink", normalized);
+    // Services owns the persisted attachment graph. FE supplies only a draft
+    // selection on save; the response rehydrates actorMechanicsProfileAttachmentGraph.
+    updateDataField?.("actorMechanicsProfileAttachmentDraft", {
+      version: ACTOR_MECHANICS_PROFILE_ATTACHMENT_CONTRACT_VERSION,
+      profileCreationId: normalized?.creationId || "",
+      title: normalized?.title || "",
+      description: normalized?.description || "",
+      imageUrl: normalized?.imageUrl || "",
+      notes: normalized?.notes || "",
+      profileContractVersion: normalized?.profileContractVersion || "",
+      presetId: normalized?.presetId || "",
+      ownerBindingMode: normalized?.ownerBindingMode || "",
+      ownerType: normalized?.ownerType || "",
+      ownerId: normalized?.ownerId || "",
+      ownerTitle: normalized?.ownerTitle || "",
+      enabledDomains: normalized?.enabledDomains || [],
+    });
   }
 
   function handleSelect(creation) {

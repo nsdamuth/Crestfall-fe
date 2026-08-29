@@ -27,10 +27,34 @@ const DEFAULT_COPY = Object.freeze({
 });
 
 export const CHARACTER_RENDERING_STYLE_OPTIONS = Object.freeze([
-  { value: "EITHER", label: "Either / Auto" },
-  { value: "ANIME", label: "Anime" },
-  { value: "REALISTIC", label: "Realistic" },
+  { value: "auto", label: "Auto / Character Default" },
+  { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
+  { value: "crestfall_realistic", label: "Crestfall Realistic" },
+  { value: "crestfall_anime_anime", label: "Crestfall Anime / Anime" },
+  {
+    value: "crestfall_fantasy_realistic",
+    label: "Crestfall Fantasy → Realistic",
+  },
+  {
+    value: "crestfall_realistic_fantasy",
+    label: "Crestfall Realistic → Fantasy",
+  },
 ]);
+
+const LEGACY_CHARACTER_RENDERING_STYLE_MAP = Object.freeze({
+  EITHER: "auto",
+  AUTO: "auto",
+  ANIME: "crestfall_fantasy",
+  REALISTIC: "crestfall_realistic",
+});
+
+export function normalizeCharacterRenderingStyleValue(value) {
+  const source = String(value || "").trim();
+  if (!source) return "auto";
+
+  const legacy = LEGACY_CHARACTER_RENDERING_STYLE_MAP[source.toUpperCase()];
+  return legacy || source.toLowerCase();
+}
 
 export const CHARACTER_ROLE_ARCHETYPE_GROUPS = Object.freeze([
   "Fantasy",
@@ -83,7 +107,9 @@ export function getCharacterIdentitySectionViewProps({
     showCustomSpecies: data.species === "CUSTOM",
     customSpeciesValue: data.custom_species || "",
     customIdentityMaxLength: CUSTOM_APPEARANCE_VALUE_MAX_LENGTH,
-    renderingStyleValue: data.rendering_style || "EITHER",
+    renderingStyleValue: normalizeCharacterRenderingStyleValue(
+      data.rendering_style || data.renderingStyle
+    ),
     renderingStyleOptions: CHARACTER_RENDERING_STYLE_OPTIONS,
     ageValue: data.age || "",
     ageMinimum: 18,

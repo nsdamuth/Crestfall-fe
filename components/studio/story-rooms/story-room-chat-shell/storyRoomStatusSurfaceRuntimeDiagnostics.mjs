@@ -98,6 +98,14 @@ const hostViewModel = readFileSync(
   new URL("./useStoryRoomStatusSurfaceHostViewModel.js", import.meta.url),
   "utf8"
 );
+const composerView = readFileSync(
+  new URL("../story-room-composer/StoryRoomComposer.view.jsx", import.meta.url),
+  "utf8"
+);
+const transcriptView = readFileSync(
+  new URL("../story-room-transcript/StoryRoomTranscript.view.jsx", import.meta.url),
+  "utf8"
+);
 
 assert.match(shell, /placement="TOP"/);
 assert.match(shell, /placement="BOTTOM"/);
@@ -112,12 +120,23 @@ assert.match(hostView, /surface\.wallets/);
 assert.match(hostView, /surface\.details/);
 assert.match(hostView, /aria-expanded/);
 assert.match(hostView, /ActorMechanicsVisibilityTab/);
+assert.match(hostView, /CollapsedActorMechanicsStrip/);
+assert.match(hostView, /data-actor-mechanics-collapsed-strip/);
+assert.match(hostView, /surface\.pools\.slice\(0, 2\)/);
 assert.match(hostView, /const action = collapsed \? "Show" : "Hide"/);
 assert.match(hostView, /character mechanics/);
+assert.match(hostView, /h-11 w-10[^"]+sm:h-10 sm:w-7/);
 assert.match(hostViewModel, /actorHudCollapsed/);
 assert.match(hostViewModel, /localStorage/);
 assert.match(hostViewModel, /crestfall\.story-room\.actor-hud\.collapsed/);
-assert.match(shell, /9rem\+env\(safe-area-inset-bottom\)/);
+assert.match(hostView, /grid grid-cols-3/);
+assert.match(hostView, /grid grid-cols-2/);
+assert.match(hostView, /grid grid-cols-6/);
+assert.doesNotMatch(shell, /9rem\+env\(safe-area-inset-bottom\)/);
+assert.match(shell, /<div className="shrink-0">[\s\S]*ComposerComponent/);
+assert.match(composerView, /relative z-50 shrink-0 bg-transparent/);
+assert.doesNotMatch(composerView, /fixed bottom-0 left-0 right-0 z-50/);
+assert.doesNotMatch(transcriptView, /pb-\[4rem\]/);
 assert.doesNotMatch(hostView, /Crimson Sphinx|Iron Rank|Valentina/i);
 
 console.log(
@@ -131,8 +150,12 @@ console.log(
       walletBalancesHaveDedicatedActorHudRow: true,
       derivedStatsCollapseIntoDetail: true,
       actorHudRightEdgeShowHideTabSupported: true,
+      actorHudCollapsedIdentityCriticalStripPreserved: true,
+      actorHudMobileToggleTargetExpanded: true,
       actorHudVisibilityPreferenceRoomScoped: true,
-      mobileComposerFootprintReservedBelowHud: true,
+      mobileDefaultActorHudRowsCompacted: true,
+      mobileComposerFlowsImmediatelyBelowHud: true,
+      mobileLegacyDoubleClearanceRemoved: true,
       mobileResponsivePresentationOwnedByView: true,
       persistentSnapshotMessageBlocksSuppressedWhenHudOwnsDomain: true,
       turnSpecificMessageStatusBlocksPreservedByPatternBoundary: true,

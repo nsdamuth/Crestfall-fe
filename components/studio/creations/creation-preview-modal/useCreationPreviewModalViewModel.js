@@ -89,14 +89,16 @@ export function resolveCreationPreviewCatalogueHref(
     ? encodeURIComponent(creation.id)
     : "";
 
+  if (context === "owner" && encodedCreationId) {
+    return `/studio/my-creations/${encodedCreationId}/image-library`;
+  }
+
   return (
     creation.catalogueHref ||
     creation.imageLibraryHref ||
-    (context === "owner" && encodedCreationId
-      ? `/studio/my-creations/${encodedCreationId}/image-library`
-      : encodedCreationId
-        ? `/studio/creations/${encodedCreationId}`
-        : "/studio/community")
+    (encodedCreationId
+      ? `/studio/creations/${encodedCreationId}`
+      : "/studio/community")
   );
 }
 

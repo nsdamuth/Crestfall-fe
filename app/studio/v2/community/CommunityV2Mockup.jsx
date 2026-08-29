@@ -621,9 +621,11 @@ export default function CommunityV2Mockup({
         const creation = sourceCreations.find((item) => item.id === assetDetailId);
         if (!creation) return null;
 
-        const media = [creation.imageSrc, ...(creation.extraMedia || [])]
-          .filter(Boolean)
-          .map((src, index) => ({ id: `${creation.id}-media-${index + 1}`, src }));
+        const media = creation.detailMedia?.length
+          ? creation.detailMedia
+          : [creation.imageSrc, ...(creation.extraMedia || [])]
+              .filter(Boolean)
+              .map((src, index) => ({ id: `${creation.id}-media-${index + 1}`, src }));
 
         return (
           <KitAssetDetailPopup
