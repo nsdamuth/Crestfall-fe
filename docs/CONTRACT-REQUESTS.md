@@ -82,6 +82,7 @@ the details below carry only what is still actionable.
 | CR-054 | Soft-delete recovery window | Renumbered 22 Aug 2026 from GATE-LOG.md's colliding "CR-052" use (that number already named the sidebar deviations bundle above); window is 7 to 30 days, not yet ruled to a single number | open | Nick | non-blocking; confirm copy carries a "[X] days" placeholder until Nick rules the number |
 | CR-055 | Reassign Asset backend operation | Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final); the code and package READMEs cited this number on landing but the ledger row was never entered, backfilled here 22 Aug 2026 by the G4 pass. No backend operation exists for Reassign Asset on `KitImageOverlay` or `MediaLightbox`; both render the action permanently disabled | open | Brian | non-blocking; presentation-only stub, both consumers already ship this way |
 | CR-056 | Creation card Archive operation | Filed 22 Aug 2026 by the G4 propagation pass. Resolved against current Crestfall source during V2 convergence on 24 Aug 2026: `/api/creations/[id]/archive` and the corresponding client operation now exist, so `KitCreationCard` enables Archive when an allowed caller supplies `onArchive` | done | Nick/Brian | closed 24 Aug 2026; lifecycle/canon policy still determines whether the callback is supplied |
+| CR-057 | Final URL map rename and redirect table | Post-cutover, the nine pages move from `/studio/v2/<page>` to ruled clean top-level paths in one move, with Chassis-owned redirects from every legacy address | open | Nick | non-blocking until cutover; ruling: `bible/decisions/2026-08-29-final-url-map.md` (GO option 1, 29 Aug 2026) |
 
 ## Details
 
@@ -893,6 +894,31 @@ the previously missing Archive endpoint and client operation. CR-056 is
 therefore closed: the menu enables Archive when the caller supplies
 `onArchive`; canon-locked or already archived items withhold the callback
 and remain honestly disabled.
+
+### CR-057, final URL map rename and redirect table
+
+Filed 29 Aug 2026 by the Home PRD session, carrying the ruling in
+`bible/decisions/2026-08-29-final-url-map.md` (GO option 1, Brian,
+29 Aug 2026). At the all-nine cutover, and only then, the nine pages
+rename in one move from `/studio/v2/<page>` to the ruled clean
+top-level paths: /home, /stories, /adventures, /studio, /images,
+/vault, /community, /creators, /lore.
+
+Needed from the Chassis, at cutover time:
+
+1. **The rename.** All nine routes serve at the top-level paths
+   above; `/studio/v2/**` addresses stop being the canonical homes.
+2. **The redirect table.** Every legacy address redirects: the old
+   `/studio/**` pages (retired in the ruled post-live sweep) and the
+   `/studio/v2/**` staging addresses both land on their ruled
+   top-level successor. The `/studio` path itself transfers from the
+   legacy root to the Studio page.
+
+Nothing here blocks front-end work and nothing renames early:
+`/studio/v2/**` remains the only address family until the cutover
+sequence's go-live step. Routes are Chassis lane (FE-REVIEW-01);
+this CR is the record of the ask, the ruling document is the record
+of the choice.
 
 ## Closed
 

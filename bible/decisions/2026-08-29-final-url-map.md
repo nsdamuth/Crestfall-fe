@@ -1,8 +1,9 @@
-# DECISION: final URL map for the nine pages, OPEN
+# DECISION: final URL map for the nine pages, RULED
 
 Date drafted: 29 Aug 2026 (R7, Home PRD approval session). Gate:
 other (address architecture, pre-cutover). Decider: Brian. Status:
-OPEN, unruled. Drafted per bible/templates/GATES.md.
+RULED 29 Aug 2026, GO on option 1. Drafted per
+bible/templates/GATES.md.
 
 Standing facts this decision sits on:
 
@@ -31,13 +32,34 @@ lands in a redirect table the post-live sweep needs anyway.
 
 ## Ruling
 
-OPEN. Selected: none yet. Reply per the vocabulary (GO rules option
-1 as recommended; NO asks for a new set; HOLD names the trigger).
-Feedback on all three is required when ruled; the two rejections
-carry the most signal.
+Selected: option 1, clean top-level paths. GO, Brian, 29 Aug 2026.
+
+The ruled map: /home, /stories, /adventures, /studio, /images,
+/vault, /community, /creators, /lore.
+
+Why this one: the nine pages are the site after cutover and their
+addresses read like it; shortest, most shareable, most crawlable;
+matches the nine-page model naming exactly. The /studio collision
+cost lands in a redirect table the post-live sweep needs anyway.
+
+Why not option 2 (section-grouped): longer addresses users retype;
+section membership frozen into URLs breaks links if a page ever
+moves between sections; the sidebar already communicates grouping,
+so the URL would carry it twice.
+
+Why not option 3 (keep /studio prefix): produces "/studio/studio"
+or an inconsistent exception for the Studio page; the prefix is a
+legacy artifact with no product meaning post-cutover; least clean
+for sharing and search. Its smaller rename distance does not matter
+because the rename is one move at cutover either way.
+
+Standing either way: /studio/v2/** stays until the all-nine cutover
+renames in one move; never piecemeal.
 
 ## Carried into
 
-When ruled: a CR to Nick in docs/CONTRACT-REQUESTS.md (the rename
-and redirect table, one move at cutover), and the cutover step list
-in docs/CRESTFALL-PRODUCT-MODEL-UXUI.md section 6.
+- CR-057 in docs/CONTRACT-REQUESTS.md (filed 29 Aug 2026 with this
+  ruling): the rename and the legacy redirect table, one move at
+  cutover, Chassis-owned.
+- The cutover sequence in docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
+  section 6 (note added in the same commit).

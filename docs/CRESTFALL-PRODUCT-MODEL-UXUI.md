@@ -136,7 +136,12 @@ The new nine-page architecture is built alongside the existing pages, not by reb
 No page cuts over individually ahead of this sequence, and no new
 page enters the live sidebar before the go-live step; the preview
 flag (`docs/FRONTEND-SOP.md` section 18) remains the only pre-cutover
-navigation surface. Old page code is deleted only in the single
+navigation surface. Final addresses, RULED 29 Aug 2026
+(`bible/decisions/2026-08-29-final-url-map.md`, GO option 1; the
+rename and redirect work is CR-057): at the go-live step the nine
+pages move in one move to clean top-level paths (/home, /stories,
+/adventures, /studio, /images, /vault, /community, /creators,
+/lore); `/studio/v2/**` stays the only address family until then. Old page code is deleted only in the single
 full-inventory sweep after go-live (`docs/BUILD-BLUEPRINT.md` route
 law 3.3(d), unchanged). Every page build brief still ends by echoing
 every function-map row assigned to that page as present, deliberately
