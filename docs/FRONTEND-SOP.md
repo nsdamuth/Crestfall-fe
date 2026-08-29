@@ -252,7 +252,9 @@ drafts are NOT silently resolved here; they are queue items T13 to T15.
 
 ## 6. Rulings this SOP is waiting on
 
-- T11: which single agent-instruction file governs this repo.
+- T11 CLOSED 26 Aug 2026: CLAUDE.md is the single agent-instruction
+  file (Ruling 2, 7 Aug 2026, already the answer; this line lagged
+  it).
 - T13: nav-label ownership (View-owned vs display-ready ViewModel).
 - T14: contract version string format (semver vs dotted name).
 - T15: approver of View-scope changes in the pilot sheet lineage
@@ -383,10 +385,12 @@ Load only when the task calls for it, not by default:
 
 PARALLELISM LAW (ruled 4 Aug 2026, supersedes edits-serial)
 
-Roles. Fable 5 plans and rules at strategy gates only, never executes.
-Opus plans sprints, writes briefs, and runs synthesis phases. Sonnet
-executes edits. Haiku runs bulk mechanical reads and single-rule
-checks inside workflows.
+Roles, RULED 26 Aug 2026 (closes the C5 conflict with
+docs/PROJECT-INSTRUCTIONS.md): Fable plans, reviews, and rules at
+strategy gates, and designs novel components in plan mode; it never
+executes edits. Opus plans sprints, writes briefs, and runs synthesis
+phases. Sonnet executes edits. Haiku runs bulk mechanical reads and
+single-rule checks inside workflows.
 
 Fan out by default. Any task that is a list of more than twenty like
 items runs as a dynamic workflow, not a serial pass. Read-only fan-out

@@ -2,7 +2,7 @@
 
 * **Status:** Living document. Reissued 9 Aug 2026\. Supersedes all previous product models.  
 * **Audience:** UX/UI planning and build agents, and the design authority. This is the reference for building the new page architecture under the updated design system.  
-* **Companions:** CRESTFALL-CONTENT-STANDARDS.md (content rating and compliance), docs/RESTYLE-RULES.md (visual design tokens and law), docs/CONTRACT-REQUESTS.md (backend change requests), docs/LOOM-WORKFLOW-GUIDE.md (component architecture).
+* **Companions, corrected 26 Aug 2026:** CRESTFALL-CONTENT-STANDARDS.md (content rating and compliance, draft, not yet in this repo), docs/DESIGN-TOKENS.md (visual design tokens and law; docs/RESTYLE-RULES.md is demoted history only, per its own header), docs/CONTRACT-REQUESTS.md (backend change requests), docs/architecture/CRESTFALL_LOOM_PATTERN.md (component architecture; no docs/LOOM-WORKFLOW-GUIDE.md exists in this repo).
 
 ## How to use this document (read first)
 

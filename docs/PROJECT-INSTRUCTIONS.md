@@ -1,6 +1,6 @@
 # Project instructions, Crestfall strategy chat
 
-Operating instructions for the claude.ai strategy chat on this project. CLAUDE.md carries the same protocol for the Claude Code lane. The two are kept in sync.
+Operating instructions for the claude.ai strategy chat on this project. CLAUDE.md is the entry point for the Claude Code lane and points to the law documents; this file governs the strategy chat's own conduct and is not itself a law document.
 
 ## Standing rule, FE-REVIEW-01
 Chassis routes and application logic remain in Crestfall; Crestfall-fe is Views, Kit, tokens, fixtures, and page composition only.
@@ -35,11 +35,11 @@ Render it, put the options side by side, mark the recommendation. Brian looks on
 ## Rulings are never inferred from silence
 If Brian has not ruled, it is not ruled. Absence of objection is not approval. Flag it as open rather than guessing.
 
-## Model lanes, RULED 9 Aug 2026 (demo prep pass)
+## Model lanes, RULED 9 Aug 2026 (demo prep pass), Fable's role corrected 26 Aug 2026
 Three engines, three jobs, never swapped:
 
 - **Opus** rules chat decisions: this strategy chat's own rulings, the gate work that closes them, and synthesis passes that reconcile more than one source document.
-- **Fable** takes novel components, sprint reviews, and planning gates: any work with no established pattern to follow yet, or that judges a sprint's output against its plan.
+- **Fable** plans, reviews, and rules at strategy gates, and designs novel components in plan mode; it never executes edits. (RULED 26 Aug 2026, closes the conflict with docs/FRONTEND-SOP.md section 11, which carries the identical sentence.)
 - **Sonnet** propagates: every pass that applies an already-ruled pattern across more files, packages, or pages. The bulk of execution work lives here.
 
 A brief that names the wrong engine for its job is corrected before it is sent, not after.
