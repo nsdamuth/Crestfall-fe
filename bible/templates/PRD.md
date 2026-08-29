@@ -25,6 +25,7 @@ Adds, on top of every Tier A field above:
 key_flows_and_edge_cases
 technical_constraints (link to PLAN.md)
 contracts_touched (CR numbers in docs/CONTRACT-REQUESTS.md; this PRD never restates or replaces a CR, it cites one, and files a new one first if none exists yet)
+parity_echo (page-scoped PRDs only, R5 improvement 1, 29 Aug 2026: every docs/APP-FUNCTION-MAP.csv row assigned to the page echoed as present, deliberately excluded with its ruling cited, or flagged; plus any ruled control the map does not yet carry)
 faq (working-backwards style)
 change_log
 
@@ -55,3 +56,9 @@ Signed by: Brian (always), Nick (when the Chassis is touched).
   PRD, exactly three options, one recommended with the reason, two
   rejected with the reason not, each with its cost. Record the
   ruling in bible/decisions/ using bible/templates/GATES.md.
+  OPEN FOR RENDER variant (R5 improvement 2, 29 Aug 2026): a visual
+  choice that will be ruled at a render sitting carries no paper
+  recommendation; instead it specifies each option for side-by-side
+  render (three-way at the sitting, competitor-pattern variants
+  gathered at render time count as options), and the ruling is
+  recorded after the sitting, never in the PRD text.

@@ -75,6 +75,8 @@ never edits this repo. Boundary rule of record: FE-REVIEW-01
       PLAN-REVIEW-LOG.md      the live review log for the current PRD
       decisions/              dated one-page decision records
       handoffs/               dated handoff briefs (Nick, Sol)
+      prds/                   finished PRDs, one dated file each
+                              (R5 improvement 9, 29 Aug 2026)
       templates/
         PRD.md
         PLAN.md

@@ -480,6 +480,14 @@ The function map is regenerated at the start of every sprint, not
 once. It is a living document, and its diff is how upstream change is
 detected.
 
+Convergence rule (R5 improvements 3 and 8, ruled 29 Aug 2026): the
+first pass after any convergence-class merge (a merge landing another
+lane's work across pages) regenerates the map the same way, and that
+pass echoes each converged PAGE's rows per the parity echo
+(docs/BUILD-BLUEPRINT.md 3.4), not only package survival. Check: the
+convergence report contains a per-page row echo, or names the page it
+stopped on.
+
 ## 16. Visible change rule
 
 Every sprint ends with before and after renders at 390 and 1440. Work
