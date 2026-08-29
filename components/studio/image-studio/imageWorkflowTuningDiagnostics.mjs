@@ -7,15 +7,68 @@ import { fileURLToPath } from "node:url";
 import {
   getDefaultImageWorkflowTuning,
   getImageWorkflowTuningDefinition,
+  getRenderStyleRailStop,
   getWorkflowTuningPayload,
   normalizeImageWorkflowTuning,
+  normalizeRenderStyleRailSelection,
+  RENDER_STYLE_RAIL_STOPS,
 } from "./imageWorkflowTuning.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../../..");
 const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 
-test("hybrid workflows expose only curated semantic tuning controls", () => {
+test("render style rail has five fixed stops from Fantasy to Realistic", () => {
+  assert.deepEqual(
+    RENDER_STYLE_RAIL_STOPS.map((entry) => entry.value),
+    [
+      "crestfall_fantasy",
+      "crestfall_anime_anime",
+      "crestfall_fantasy_realistic",
+      "crestfall_realistic_fantasy",
+      "crestfall_realistic",
+    ]
+  );
+  assert.equal(RENDER_STYLE_RAIL_STOPS[0].mappedLabel, "Crestfall Fantasy");
+  assert.equal(
+    RENDER_STYLE_RAIL_STOPS[RENDER_STYLE_RAIL_STOPS.length - 1].mappedLabel,
+    "Crestfall Realistic"
+  );
+  assert.equal(normalizeRenderStyleRailSelection("auto"), "crestfall_fantasy");
+  assert.equal(
+    getRenderStyleRailStop("crestfall_realistic_fantasy").shortLabel,
+    "Real → Fantasy"
+  );
+});
+
+test("all five rail workflows expose bounded semantic tuning definitions", () => {
+  for (const entry of RENDER_STYLE_RAIL_STOPS) {
+    const definition = getImageWorkflowTuningDefinition(entry.value);
+    assert.ok(definition, `${entry.value} should have tuning`);
+    assert.ok(definition.controls.length >= 1);
+    assert.equal(
+      definition.controls.some((control) =>
+        ["cfg", "sampler", "scheduler", "model"].includes(control.id)
+      ),
+      false
+    );
+  }
+
+  assert.deepEqual(
+    getImageWorkflowTuningDefinition("crestfall_fantasy").controls.map(
+      (entry) => entry.id
+    ),
+    ["detailLevel"]
+  );
+  assert.deepEqual(
+    getImageWorkflowTuningDefinition("crestfall_anime_anime").controls.map(
+      (entry) => entry.id
+    ),
+    ["foundationDetail", "polishDetail"]
+  );
+});
+
+test("hybrid workflows preserve curated semantic tuning controls", () => {
   const fantasyRealistic = getImageWorkflowTuningDefinition(
     "crestfall_fantasy_realistic"
   );
@@ -30,13 +83,6 @@ test("hybrid workflows expose only curated semantic tuning controls", () => {
   assert.deepEqual(
     realisticFantasy.controls.map((entry) => entry.id),
     ["referenceInfluence", "styleBalance", "foundationDetail", "polishDetail"]
-  );
-
-  assert.equal(
-    fantasyRealistic.controls.some((entry) =>
-      ["cfg", "sampler", "scheduler", "model"].includes(entry.id)
-    ),
-    false
   );
 });
 
@@ -79,30 +125,7 @@ test("untouched workflow controls do not alter the generation payload", () => {
   );
 });
 
-test("workflow ceilings hand off to the inverse hybrid workflow", () => {
-  const fantasyRealistic = getImageWorkflowTuningDefinition(
-    "crestfall_fantasy_realistic"
-  );
-  const realisticFantasy = getImageWorkflowTuningDefinition(
-    "crestfall_realistic_fantasy"
-  );
-
-  assert.equal(
-    fantasyRealistic.handoff.targetProfileKey,
-    "crestfall_realistic_fantasy"
-  );
-  assert.equal(
-    realisticFantasy.handoff.targetProfileKey,
-    "crestfall_fantasy_realistic"
-  );
-  assert.equal(fantasyRealistic.handoff.boundaryValue, 100);
-  assert.equal(realisticFantasy.handoff.boundaryValue, 100);
-});
-
-test("composer owns a bounded Advanced accordion with reset and handoff affordances", () => {
-  const view = read(
-    "components/studio/image-studio/image-studio-composer/ImageStudioComposer.view.jsx"
-  );
+test("composer projects the rail and bounded Advanced controls without owning workflow internals", () => {
   const viewModel = read(
     "components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel.js"
   );
@@ -110,10 +133,8 @@ test("composer owns a bounded Advanced accordion with reset and handoff affordan
     "components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel.js"
   );
 
-  assert.match(view, /Advanced/);
-  assert.match(view, /type="range"/);
-  assert.match(view, /Reset defaults/);
-  assert.match(view, /Switch to \{advancedTuningProps\.handoff\.targetProfileLabel\}/);
+  assert.match(viewModel, /renderStyleRailProps/);
+  assert.match(viewModel, /RENDER_STYLE_RAIL_STOPS/);
   assert.match(viewModel, /safetyNote/);
   assert.match(workbench, /workflowTuningTouched/);
   assert.match(workbench, /getWorkflowTuningPayload/);

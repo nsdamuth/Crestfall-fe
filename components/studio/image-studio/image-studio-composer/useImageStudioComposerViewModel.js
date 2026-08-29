@@ -3,7 +3,9 @@ import { getIngredientSlotViewProps } from "../ingredient-slot/useIngredientSlot
 import { getVideoToolsPanelViewProps } from "../video-tools-panel/useVideoToolsPanelViewModel";
 import {
   getImageWorkflowTuningDefinition,
+  getRenderStyleRailStop,
   normalizeImageWorkflowTuning,
+  RENDER_STYLE_RAIL_STOPS,
 } from "../imageWorkflowTuning.js";
 import {
   aspectRatioOptions,
@@ -119,11 +121,26 @@ export function getImageStudioComposerViewProps({
       }),
     }));
 
-  const workflowTuningDefinition = getImageWorkflowTuningDefinition(renderStyle);
+  const activeRenderStyle = getRenderStyleRailStop(renderStyle);
+  const workflowTuningDefinition = getImageWorkflowTuningDefinition(
+    activeRenderStyle.value
+  );
   const normalizedWorkflowTuning = normalizeImageWorkflowTuning(
-    renderStyle,
+    activeRenderStyle.value,
     workflowTuning
   );
+  const renderStyleRailProps = {
+    value: activeRenderStyle.value,
+    activeLabel: activeRenderStyle.mappedLabel,
+    helperText:
+      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint.",
+    options: RENDER_STYLE_RAIL_STOPS.map((entry, index) => ({
+      ...entry,
+      index,
+      active: entry.value === activeRenderStyle.value,
+    })),
+    onChange: (nextValue) => setRenderStyle?.(nextValue),
+  };
   const advancedTuningProps = workflowTuningDefinition
     ? {
         enabled: true,
@@ -178,6 +195,7 @@ export function getImageStudioComposerViewProps({
     canGenerateImage: Boolean(canGenerateImage),
     generationHelpText: String(generationHelpText || ""),
     generationError: String(generationError || ""),
+    renderStyleRailProps,
     advancedTuningProps,
     imageOptionFields: [
       {

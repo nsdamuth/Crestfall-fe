@@ -133,9 +133,26 @@ export function useTimelineReaderViewModel({
       ),
     [projection?.entries]
   );
+  const navigableEntries = useMemo(
+    () =>
+      entries.map((entry) => ({
+        ...entry,
+        href:
+          !entry.isUnavailable && entry.loreCreationId
+            ? `/studio/v2/lore/timelines/${encodeURIComponent(
+                timelineId
+              )}/lore/${encodeURIComponent(entry.loreCreationId)}`
+            : "",
+      })),
+    [entries, timelineId]
+  );
   const groups = useMemo(
-    () => groupTimelineReaderEntries(entries, timeline.groupByEra !== false),
-    [entries, timeline.groupByEra]
+    () =>
+      groupTimelineReaderEntries(
+        navigableEntries,
+        timeline.groupByEra !== false
+      ),
+    [navigableEntries, timeline.groupByEra]
   );
 
   return {

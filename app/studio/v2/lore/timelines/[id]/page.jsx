@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 
 import TimelineReaderShell from "@/components/studio/timelines/TimelineReaderShell";
-import { getEditCreationPageData } from "@/lib/server/studio/getEditCreationPageData";
+import { getOwnedCreationPageData } from "@/lib/server/studio/getOwnedCreationPageData";
 
 export default async function TimelineReaderPage({ params }) {
   const { id } = await params;
-  const { creation } = await getEditCreationPageData(id);
+  const { creation } = await getOwnedCreationPageData(id);
 
   if (String(creation?.type || "").toUpperCase() !== "TIMELINE") {
     notFound();

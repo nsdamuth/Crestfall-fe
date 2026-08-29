@@ -40,7 +40,7 @@ assert.doesNotMatch(viewModel, /\/studio\/create\//);
 assert.doesNotMatch(viewModel, /<\w+/);
 
 assert.match(ownerProjection, /buildOwnedTimelineProjection/);
-assert.match(readerRoute, /getEditCreationPageData/);
+assert.match(readerRoute, /getOwnedCreationPageData/);
 assert.match(readerRoute, /creation\?\.type/);
 assert.match(readerRoute, /<TimelineReaderShell timelineId=\{id\} initialCreation=\{creation\}/);
 assert.match(loreViewModel, /\/studio\/v2\/lore\/timelines\/\$\{encodeURIComponent\(creation\.id\)\}/);

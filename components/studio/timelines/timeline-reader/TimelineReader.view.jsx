@@ -2,8 +2,8 @@
 
 import { ArrowLeft, CalendarDays, Edit3, Globe2, LockKeyhole } from "lucide-react";
 
-function TimelineEntryCard({ entry, side = "left" }) {
-  return (
+function TimelineEntryCard({ entry, side = "left", LinkComponent = "a" }) {
+  const content = (
     <article
       className={`min-w-0 rounded-[var(--radius-md)] border p-5 sm:p-6 ${
         entry.isUnavailable
@@ -51,9 +51,21 @@ function TimelineEntryCard({ entry, side = "left" }) {
       <span className="sr-only">Timeline card positioned on the {side} side.</span>
     </article>
   );
+
+  if (!entry.href || entry.isUnavailable) return content;
+
+  return (
+    <LinkComponent
+      href={entry.href}
+      className="block min-w-0 rounded-[var(--radius-md)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-0)]"
+      aria-label={`Open Lore: ${entry.title}`}
+    >
+      {content}
+    </LinkComponent>
+  );
 }
 
-function EraGroup({ group, startIndex = 0 }) {
+function EraGroup({ group, startIndex = 0, LinkComponent = "a" }) {
   return (
     <section>
       <div className="mb-5 flex items-center gap-3">
@@ -82,7 +94,7 @@ function EraGroup({ group, startIndex = 0 }) {
               />
               {left ? (
                 <>
-                  <TimelineEntryCard entry={entry} side="left" />
+                  <TimelineEntryCard entry={entry} side="left" LinkComponent={LinkComponent} />
                   <div aria-hidden="true" />
                   <div aria-hidden="true" />
                 </>
@@ -90,7 +102,7 @@ function EraGroup({ group, startIndex = 0 }) {
                 <>
                   <div aria-hidden="true" />
                   <div aria-hidden="true" />
-                  <TimelineEntryCard entry={entry} side="right" />
+                  <TimelineEntryCard entry={entry} side="right" LinkComponent={LinkComponent} />
                 </>
               )}
             </div>
@@ -113,6 +125,7 @@ export default function TimelineReaderView({
   showEditAction = true,
   onBack = null,
   onEdit = null,
+  LinkComponent = "a",
 }) {
   if (loadStatus === "loading") {
     return (
@@ -174,7 +187,14 @@ export default function TimelineReaderView({
           {groups.map((group) => {
             const groupOffset = offset;
             offset += group.entries.length;
-            return <EraGroup key={group.id} group={group} startIndex={groupOffset} />;
+            return (
+              <EraGroup
+                key={group.id}
+                group={group}
+                startIndex={groupOffset}
+                LinkComponent={LinkComponent}
+              />
+            );
           })}
         </div>
       ) : (

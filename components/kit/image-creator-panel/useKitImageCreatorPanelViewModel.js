@@ -18,6 +18,7 @@ export function useKitImageCreatorPanelViewModel({
   onChangePrompt = null,
   negativePromptValue = "",
   onChangeNegativePrompt = null,
+  renderStyleRailProps = null,
   optionFields = [],
   onChangeOption = null,
   advancedTuningProps = null,
@@ -53,6 +54,10 @@ export function useKitImageCreatorPanelViewModel({
     onChangePrompt,
     negativePromptValue: negativePromptValue || "",
     onChangeNegativePrompt,
+    renderStyleRailProps:
+      renderStyleRailProps && typeof renderStyleRailProps === "object"
+        ? renderStyleRailProps
+        : null,
     optionFields: Array.isArray(optionFields) ? optionFields : [],
     onChangeOption,
     advancedTuningProps:

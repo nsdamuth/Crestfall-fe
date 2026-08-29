@@ -144,12 +144,12 @@ export default function ImagesV2Live() {
           <button
             type="button"
             onClick={() => live.panelProps?.onGenerate?.()}
-            disabled={!canGenerate || generationPending}
+            disabled={!canGenerate}
             className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Generate image"
           >
             <Sparkles size={17} />
-            <span>{generationPending ? "Generating..." : "Generate"}</span>
+            <span>{generationPending ? "Generate another" : "Generate"}</span>
             {live.panelProps?.coinCostLabel ? (
               <span className="text-[length:var(--text-label)] opacity-80">
                 {live.panelProps.coinCostLabel}

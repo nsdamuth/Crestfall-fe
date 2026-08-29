@@ -231,6 +231,84 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
   );
 }
 
+function RenderStyleRail({ rail, idPrefix }) {
+  if (!rail?.options?.length) return null;
+
+  const activeIndex = Math.max(
+    0,
+    rail.options.findIndex((option) => option.active || option.value === rail.value)
+  );
+  const maxIndex = Math.max(rail.options.length - 1, 0);
+
+  function selectIndex(nextIndex) {
+    const boundedIndex = Math.min(Math.max(Number(nextIndex) || 0, 0), maxIndex);
+    const option = rail.options[boundedIndex];
+    if (option) rail.onChange?.(option.value);
+  }
+
+  return (
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--fill-whisper)] p-[var(--space-4)]">
+      <div className="flex items-start justify-between gap-[var(--space-3)]">
+        <div className="min-w-0">
+          <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Render Style
+          </span>
+          <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            Slide from fantasy-first workflows to realistic-first workflows.
+          </p>
+        </div>
+        <span className="max-w-[55%] rounded-full border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-right text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-bright)]">
+          {rail.activeLabel}
+        </span>
+      </div>
+
+      <div className="mt-[var(--space-4)]">
+        <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+          <span>Fantasy</span>
+          <span>Realistic</span>
+        </div>
+        <input
+          id={`${idPrefix}-render-style-rail`}
+          type="range"
+          min={0}
+          max={maxIndex}
+          step={1}
+          value={activeIndex}
+          aria-label="Render style workflow"
+          aria-valuetext={rail.activeLabel}
+          onChange={(event) => selectIndex(event.target.value)}
+          className="mt-[var(--space-2)] w-full cursor-pointer accent-[var(--gold-action)]"
+        />
+
+        <div className="mt-[var(--space-2)] grid grid-cols-5 gap-1">
+          {rail.options.map((option, index) => (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={index === activeIndex}
+              onClick={() => selectIndex(index)}
+              className={`min-w-0 rounded-[var(--radius-sm)] px-1 py-2 text-center text-[10px] leading-tight transition-colors ${
+                index === activeIndex
+                  ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "text-[var(--ink-faint)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink-dim)]"
+              }`}
+              title={option.mappedLabel}
+            >
+              {option.shortLabel}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {rail.helperText ? (
+        <p className="mt-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+          {rail.helperText}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 function AdvancedTuning({ tuning, idPrefix }) {
   const [isOpen, setIsOpen] = useState(false);
   if (!tuning?.enabled) return null;
@@ -353,6 +431,7 @@ function CameraPresetTrigger({
 function OptionsExpander({
   isOpen,
   onToggle,
+  renderStyleRailProps,
   optionFields,
   onChangeOption,
   advancedTuningProps,
@@ -380,6 +459,8 @@ function OptionsExpander({
 
       {isOpen && (
         <div className="mt-[var(--space-3)] flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-4)]">
+          <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
+
           <div className="flex flex-wrap gap-[var(--space-2)]">
             <CameraPresetTrigger
               selectedLabel={cameraPresetLabel}
@@ -451,6 +532,7 @@ function GenerateBlock({
   sceneryOnlyHelperEnabled,
   onChangeSceneryOnlyHelper,
   onGenerate,
+  renderStyleRailProps,
   optionFields,
   onChangeOption,
   advancedTuningProps,
@@ -478,6 +560,7 @@ function GenerateBlock({
       <OptionsExpander
         isOpen={isOptionsOpen}
         onToggle={() => setIsOptionsOpen((current) => !current)}
+        renderStyleRailProps={renderStyleRailProps}
         optionFields={optionFields}
         onChangeOption={onChangeOption}
         advancedTuningProps={advancedTuningProps}
@@ -512,7 +595,7 @@ function GenerateBlock({
       <button
         type="button"
         onClick={() => onGenerate?.()}
-        disabled={!canGenerate || generationStatus === "loading"}
+        disabled={!canGenerate}
         className="cf-btn cf-btn--primary w-full"
       >
         {generationStatus === "loading" ? (
@@ -520,7 +603,7 @@ function GenerateBlock({
         ) : (
           <Wand2 size={15} aria-hidden="true" />
         )}
-        {generationStatus === "loading" ? "Generating..." : "Generate image"}
+        {generationStatus === "loading" ? "Generate another image" : "Generate image"}
       </button>
 
       {generationError ? (
@@ -595,6 +678,7 @@ export default function KitImageCreatorPanelView({
   onChangePrompt = null,
   negativePromptValue = "",
   onChangeNegativePrompt = null,
+  renderStyleRailProps = null,
   optionFields = [],
   onChangeOption = null,
   advancedTuningProps = null,
@@ -679,6 +763,7 @@ export default function KitImageCreatorPanelView({
           sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
           onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
           onGenerate={onGenerate}
+          renderStyleRailProps={renderStyleRailProps}
           optionFields={optionFields}
           onChangeOption={onChangeOption}
           advancedTuningProps={advancedTuningProps}

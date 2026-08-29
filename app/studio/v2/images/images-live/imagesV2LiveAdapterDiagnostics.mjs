@@ -30,6 +30,7 @@ test("V2 Images adapter reuses application-owned workbench state", () => {
   assert.match(adapter, /getImageStudioComposerViewProps/);
   assert.match(adapter, /mediaHistoryProps: workbench\.mediaHistoryProps/);
   assert.match(adapter, /onGenerate: composer\.onGenerateImage/);
+  assert.match(adapter, /renderStyleRailProps: composer\.renderStyleRailProps/);
   assert.match(adapter, /advancedTuningProps: composer\.advancedTuningProps/);
   assert.match(adapter, /pickerModalProps: workbench\.pickerModalProps/);
   assert.match(adapter, /savePresetModalProps: workbench\.savePresetModalProps/);
@@ -62,19 +63,28 @@ test("V2 Images retains the wide desktop workspace and mobile creator path", () 
   assert.doesNotMatch(live, /max-w-\[(?:7xl|6xl|5xl|4xl|3xl)\]/);
 });
 
-test("V2 Image Creator panel renders the shared bounded workflow tuning projection", () => {
+test("V2 Image Creator panel renders the snapping workflow rail and bounded tuning projection", () => {
   const panel = read(
     "components/kit/image-creator-panel/KitImageCreatorPanel.view.jsx"
   );
   const vm = read(
     "components/kit/image-creator-panel/useKitImageCreatorPanelViewModel.js"
   );
+  const adapter = read(
+    "app/studio/v2/images/images-live/useImagesV2LiveViewModel.js"
+  );
 
+  assert.match(panel, /RenderStyleRail/);
+  assert.match(panel, /Slide from fantasy-first workflows to realistic-first workflows/);
+  assert.match(panel, /aria-valuetext=\{rail\.activeLabel\}/);
   assert.match(panel, /AdvancedTuning/);
   assert.match(panel, /Curated workflow controls/);
   assert.match(panel, /type="range"/);
   assert.match(panel, /Reset defaults/);
+  assert.match(vm, /renderStyleRailProps/);
   assert.match(vm, /advancedTuningProps/);
+  assert.match(adapter, /field\.id !== "render-style"/);
+  assert.match(adapter, /setRenderStyle\?\.\("crestfall_fantasy"\)/);
 });
 
 test("unsupported video generation remains explicitly non-live", () => {

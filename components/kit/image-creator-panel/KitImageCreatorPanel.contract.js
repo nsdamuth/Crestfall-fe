@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the image creator panel kit piece
@@ -58,11 +58,13 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue
  * @property {((value: string) => void)|null} onChangeNegativePrompt
- * @property {KitImageCreatorOptionField[]} optionFields the four inline
- *   Options-expander dropdowns (Render Style, Wardrobe Theme, Aspect Ratio,
- *   Output Count), single-select. Camera / Framing uses the dedicated modal
- *   launcher below so the larger camera catalogue is not collapsed into a
- *   standard dropdown.
+ * @property {Object|null} renderStyleRailProps optional five-stop snapping
+ *   workflow rail. Presentation is owned here; profile values and callbacks are
+ *   supplied by the caller.
+ * @property {KitImageCreatorOptionField[]} optionFields the remaining inline
+ *   Options-expander dropdowns (Wardrobe Theme, Aspect Ratio, Output Count),
+ *   single-select. Camera / Framing uses the dedicated modal launcher below so
+ *   the larger camera catalogue is not collapsed into a standard dropdown.
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
  * @property {Object|null} advancedTuningProps optional display-ready bounded
  *   workflow tuning projection. The kit renders only semantic sliders supplied
@@ -76,7 +78,7 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  *   non-blocking help line, pre-computed by the caller; rendered
  *   whenever non-empty
  * @property {string} generationStatus live generation state; "loading"
- *   renders an in-flight disabled Generate control
+ *   renders in-flight feedback while Generate remains available for another independent request
  * @property {string} generationError live submission error text
  * @property {string} cameraPresetLabel selected camera/framing preset label
  * @property {string} cameraPresetDescription selected preset helper copy

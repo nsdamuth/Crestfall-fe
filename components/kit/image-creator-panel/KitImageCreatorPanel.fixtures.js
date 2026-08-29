@@ -89,11 +89,28 @@ export function insufficientCoinsHelpText(coinCost) {
 
 function baseOptionFields() {
   return [
-    { id: "renderStyle", label: "Render Style", value: "auto", options: RENDER_STYLE_OPTIONS },
     { id: "wardrobe", label: "Wardrobe Theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
     { id: "aspectRatio", label: "Aspect Ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
     { id: "outputCount", label: "Output Count", value: "1", options: OUTPUT_COUNT_OPTIONS },
   ];
+}
+
+
+function baseRenderStyleRailProps() {
+  return {
+    value: "crestfall_fantasy_realistic",
+    activeLabel: "Crestfall Fantasy → Realistic",
+    helperText:
+      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint.",
+    options: [
+      { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", index: 0, active: false },
+      { value: "crestfall_anime_anime", shortLabel: "Anime", mappedLabel: "Crestfall Anime / Anime", index: 1, active: false },
+      { value: "crestfall_fantasy_realistic", shortLabel: "Fantasy → Real", mappedLabel: "Crestfall Fantasy → Realistic", index: 2, active: true },
+      { value: "crestfall_realistic_fantasy", shortLabel: "Real → Fantasy", mappedLabel: "Crestfall Realistic → Fantasy", index: 3, active: false },
+      { value: "crestfall_realistic", shortLabel: "Realistic", mappedLabel: "Crestfall Realistic", index: 4, active: false },
+    ],
+    onChange: noop,
+  };
 }
 
 function baseVideoOptionFields() {
@@ -133,6 +150,7 @@ const defaultFixture = {
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
     negativePromptValue: "",
+    renderStyleRailProps: baseRenderStyleRailProps(),
     optionFields: baseOptionFields(),
     coinBalanceLabel: "40",
     coinCostLabel: "5",
@@ -153,6 +171,7 @@ const emptySlotsFixture = {
     slots: {},
     promptValue: "",
     negativePromptValue: "",
+    renderStyleRailProps: baseRenderStyleRailProps(),
     optionFields: baseOptionFields(),
     coinBalanceLabel: "40",
     coinCostLabel: "5",
@@ -175,6 +194,7 @@ const insufficientCoinsFixture = {
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
     negativePromptValue: "",
+    renderStyleRailProps: baseRenderStyleRailProps(),
     optionFields: baseOptionFields(),
     coinBalanceLabel: "2",
     coinCostLabel: "5",
@@ -207,6 +227,7 @@ const customIngredientFixture = {
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
     negativePromptValue: "",
+    renderStyleRailProps: baseRenderStyleRailProps(),
     optionFields: baseOptionFields(),
     coinBalanceLabel: "40",
     coinCostLabel: "5",
@@ -230,6 +251,7 @@ const videoModeFixture = {
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
     negativePromptValue: "",
+    renderStyleRailProps: baseRenderStyleRailProps(),
     optionFields: baseOptionFields(),
     coinBalanceLabel: "40",
     coinCostLabel: "5",

@@ -18,7 +18,7 @@ assert.match(v2New, /type === "TIMELINE"/);
 assert.match(v2New, /TimelineBuilderShell/);
 assert.match(v2Edit, /=== "TIMELINE"/);
 assert.match(v2Edit, /initialCreation=\{creation\}/);
-assert.match(v2Reader, /getEditCreationPageData/);
+assert.match(v2Reader, /getOwnedCreationPageData/);
 assert.match(v2Reader, /initialCreation=\{creation\}/);
 assert.match(loreVm, /\/studio\/v2\/editor\/new\?type=TIMELINE&origin=lore/);
 assert.match(loreVm, /\/studio\/v2\/lore\/timelines\//);

@@ -23,7 +23,80 @@ function control({
   });
 }
 
+export const RENDER_STYLE_RAIL_STOPS = Object.freeze([
+  Object.freeze({
+    value: "crestfall_fantasy",
+    shortLabel: "Fantasy",
+    mappedLabel: "Crestfall Fantasy",
+  }),
+  Object.freeze({
+    value: "crestfall_anime_anime",
+    shortLabel: "Anime",
+    mappedLabel: "Crestfall Anime / Anime",
+  }),
+  Object.freeze({
+    value: "crestfall_fantasy_realistic",
+    shortLabel: "Fantasy → Real",
+    mappedLabel: "Crestfall Fantasy → Realistic",
+  }),
+  Object.freeze({
+    value: "crestfall_realistic_fantasy",
+    shortLabel: "Real → Fantasy",
+    mappedLabel: "Crestfall Realistic → Fantasy",
+  }),
+  Object.freeze({
+    value: "crestfall_realistic",
+    shortLabel: "Realistic",
+    mappedLabel: "Crestfall Realistic",
+  }),
+]);
+
+const DEFAULT_PROFILE_KEY = RENDER_STYLE_RAIL_STOPS[0].value;
+
 export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
+  crestfall_fantasy: Object.freeze({
+    key: "crestfall_fantasy",
+    label: "Fantasy",
+    description:
+      "Tune the fantasy workflow inside its validated detail envelope without exposing raw workflow internals.",
+    controls: Object.freeze([
+      control({
+        id: "detailLevel",
+        label: "Fantasy Detail",
+        description:
+          "Adjust the bounded sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 70,
+      }),
+    ]),
+  }),
+
+  crestfall_anime_anime: Object.freeze({
+    key: "crestfall_anime_anime",
+    label: "Anime",
+    description:
+      "Tune the two-pass anime workflow inside its validated foundation and polish detail envelopes.",
+    controls: Object.freeze([
+      control({
+        id: "foundationDetail",
+        label: "Anime Foundation Detail",
+        description: "Adjust the bounded first-pass detail budget.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 70,
+      }),
+      control({
+        id: "polishDetail",
+        label: "Anime Polish Detail",
+        description: "Adjust the bounded second-pass anime polish detail budget.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 70,
+      }),
+    ]),
+  }),
+
   crestfall_fantasy_realistic: Object.freeze({
     key: "crestfall_fantasy_realistic",
     label: "Fantasy → Realistic",
@@ -71,7 +144,7 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
       targetProfileKey: "crestfall_realistic_fantasy",
       targetProfileLabel: "Realistic → Fantasy",
       message:
-        "This is the validated realism ceiling for Fantasy → Realistic. For a more realism-first result, switch workflows.",
+        "This is the validated realism ceiling for Fantasy → Realistic. Move the workflow rail right for a realism-first result.",
       targetStartingTuning: Object.freeze({ styleBalance: 0 }),
     }),
   }),
@@ -123,9 +196,27 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
       targetProfileKey: "crestfall_fantasy_realistic",
       targetProfileLabel: "Fantasy → Realistic",
       message:
-        "This is the validated fantasy ceiling for Realistic → Fantasy. For a more fantasy-first result, switch workflows.",
+        "This is the validated fantasy ceiling for Realistic → Fantasy. Move the workflow rail left for a fantasy-first result.",
       targetStartingTuning: Object.freeze({ styleBalance: 0 }),
     }),
+  }),
+
+  crestfall_realistic: Object.freeze({
+    key: "crestfall_realistic",
+    label: "Realistic",
+    description:
+      "Tune the realistic workflow inside its validated detail envelope without exposing raw workflow internals.",
+    controls: Object.freeze([
+      control({
+        id: "detailLevel",
+        label: "Realism Detail",
+        description:
+          "Adjust the bounded sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 70,
+      }),
+    ]),
   }),
 });
 
@@ -137,6 +228,22 @@ function clampSemanticValue(value, fallback) {
   }
 
   return Math.min(Math.max(parsed, SEMANTIC_MIN), SEMANTIC_MAX);
+}
+
+export function normalizeRenderStyleRailSelection(profileKey) {
+  const normalizedKey = String(profileKey || "").trim();
+  if (RENDER_STYLE_RAIL_STOPS.some((entry) => entry.value === normalizedKey)) {
+    return normalizedKey;
+  }
+  return DEFAULT_PROFILE_KEY;
+}
+
+export function getRenderStyleRailStop(profileKey) {
+  const normalizedKey = normalizeRenderStyleRailSelection(profileKey);
+  return (
+    RENDER_STYLE_RAIL_STOPS.find((entry) => entry.value === normalizedKey) ||
+    RENDER_STYLE_RAIL_STOPS[0]
+  );
 }
 
 export function getImageWorkflowTuningDefinition(profileKey) {

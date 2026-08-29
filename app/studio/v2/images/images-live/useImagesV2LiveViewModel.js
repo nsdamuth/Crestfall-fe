@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
@@ -56,6 +56,13 @@ function projectSlotStates(composerProps) {
 export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   const account = useStudioAccount();
   const workbench = useImageStudioWorkbenchViewModel({ account });
+
+  useEffect(() => {
+    if (workbench.composerProps.renderStyle === "auto") {
+      workbench.composerProps.setRenderStyle?.("crestfall_fantasy");
+    }
+  }, [workbench.composerProps.renderStyle]);
+
   const composer = getImageStudioComposerViewProps(workbench.composerProps);
 
   const slots = useMemo(
@@ -67,7 +74,9 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   );
 
   const imageOptionFields = composer.imageOptionFields
-    .filter((field) => field.id !== "camera-preset")
+    .filter(
+      (field) => field.id !== "camera-preset" && field.id !== "render-style"
+    )
     .map((field) => ({
       id: field.id,
       label: field.label,
@@ -158,6 +167,7 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
       onChangePrompt: composer.onChangePrompt,
       negativePromptValue: composer.negativePromptValue,
       onChangeNegativePrompt: composer.onChangeNegativePrompt,
+      renderStyleRailProps: composer.renderStyleRailProps,
       optionFields: imageOptionFields,
       onChangeOption: (fieldId, value) =>
         imageOptionById.get(fieldId)?.onChange?.(value),

@@ -19,7 +19,8 @@ fakes a pending job or a saved preset.
 KitImageCreatorPanel.jsx
   -> useKitImageCreatorPanelViewModel.js
   -> KitImageCreatorPanel.view.jsx
-     -> KitDropdownView (../dropdown/KitDropdown.view) for the five
+     -> native snapping render-style rail for the five validated image workflows
+     -> KitDropdownView (../dropdown/KitDropdown.view) for the remaining
         Options dropdowns and the three video dropdowns
 ```
 
@@ -48,12 +49,14 @@ ingredient picker (1.2, phase 2).
 
 One control, not two (the live composer's duplicate sliders-icon
 button collapses into this single expander, a presentation change the
-contract permits per FRONTEND-SOP section 13). Opens five KitDropdown
-single-selects (Render Style, Camera / Framing, Wardrobe Theme, Aspect
-Ratio, Output Count, each `ariaLabel`-wired) plus the negative prompt
-textarea. Option lists are exported from `KitImageCreatorPanel.fixtures.js`
-and mirror `imageStudioData.js` verbatim; phase 3's Images page
-integration imports the same constants rather than re-declaring them.
+contract permits per FRONTEND-SOP section 13). In V2 Image Studio, Render
+Style is a five-stop snapping rail from Crestfall Fantasy at the left endpoint
+to Crestfall Realistic at the right endpoint. Camera / Framing uses its
+dedicated catalogue picker; Wardrobe Theme, Aspect Ratio, and Output Count
+remain KitDropdown single-selects. Bounded Advanced Workflow Tuning renders
+only semantic controls supplied by the application layer; raw CFG, sampler,
+scheduler, and model selection remain outside the View. The negative prompt
+textarea remains in the same expander.
 
 ## Generate block
 
