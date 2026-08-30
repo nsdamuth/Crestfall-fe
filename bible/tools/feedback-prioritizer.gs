@@ -1,4 +1,21 @@
 /**
+ * REFERENCE COPY, NOT THE LIVE VERSION
+ * =============================================================
+ * The live prioritizer is v2 and lives in the Crestfall Feedback
+ * responses Sheet, under Extensions, Apps Script. It was installed
+ * and verified live on 30 Aug 2026 (test row scored 10, hand-set
+ * statuses survived a rescore).
+ *
+ * This file is kept for reference and review only. It is NOT the
+ * authority. If this file and the Sheet's script disagree, the
+ * Sheet wins and this copy is the stale one. Do not paste this
+ * file over the live script to "fix" a difference without checking
+ * what changed in v2 first.
+ *
+ * Links and access rules:
+ * bible/decisions/2026-08-30-feedback-pipeline.md
+ * =============================================================
+ *
  * Crestfall Feedback Prioritizer
  * =============================================================
  * Scores Google Form feedback responses and maintains a sorted

@@ -62,8 +62,35 @@ Behavior worth knowing about:
   new submission rescores every row, so it stays current in normal
   use; after a quiet stretch, Rescore all refreshes it.
 
+## LINKS
+
+| What | Where |
+|---|---|
+| Form (responder view) | https://forms.gle/EU8CUp1nxYWTUXg46 |
+| Responses Sheet | https://docs.google.com/spreadsheets/d/15A3o4999yEuU2E48oCbCc9B9V9BBA4ugnm7famnj4WM/ |
+| Uploads folder | Brian's Drive, restricted, auto-managed |
+
+Access: the Form and the Sheet are both restricted to Brian's
+account. No agent has direct access to either. Until a connector is
+ruled, an agent reads this data only from exports Brian pastes in.
+Nothing in this repo should be written as though the Sheet were
+readable from a session.
+
+## Live status
+
+Prioritizer v2 installed in the Sheet's Apps Script and verified
+live on 30 Aug 2026: a test row scored 10, and hand-set statuses
+survived a rescore.
+
+Authority note: the live version is v2, and it lives in the Sheet's
+own Apps Script editor, not in this repo. The repo copy at
+bible/tools/feedback-prioritizer.gs is kept as reference only. If
+the two ever disagree, the Sheet wins, and the repo copy is the
+stale one.
+
 ## Trail
 
 - Ruled by Brian, 30 Aug 2026.
-- Implementation: bible/tools/feedback-prioritizer.gs.
+- Implementation of record: v2 in the Sheet's Apps Script editor.
+- Reference copy, not authoritative: bible/tools/feedback-prioritizer.gs.
 - Status line: bible/STATUS.md.

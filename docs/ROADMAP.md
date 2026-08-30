@@ -52,6 +52,12 @@ process error, not a style preference.
 
 - [ ] Repo hygiene waves 1 to 9
 - [ ] Sidebar finalization
+- [ ] Feedback & Updates nav link points at the form URL
+      (https://forms.gle/EU8CUp1nxYWTUXg46). Display-layer
+      one-liner; the link currently routes to the internal
+      /studio/feedback page (useStudioSidebarViewModel.js and
+      useStudioMobileNavViewModel.js both carry it). Lands during
+      Brian's review pass. Queued 30 Aug 2026.
 - [ ] Banner art pass
 - [ ] Spacing and stray-text sweep
 - [ ] Copywriting pass
