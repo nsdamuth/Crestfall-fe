@@ -19,6 +19,8 @@ built names. The one mapping file is
 | Quest | Proposed display alias for one Scenario category value, pending GO | same |
 | Vault | The personal management hub page: everything owned plus everything saved | same, section 4.6 |
 | Canon | Work officially accepted into Crestfall Chronicles; gold badge; creator relinquishes edit rights | same, section 5 |
+| Studio Home | The signed-in webapp home page, the current polish target. Bare "Home" in any Crestfall document means Studio Home | RULED Brian 30 Aug 2026 |
+| Marketing site | The signed-out public surface: lead gen, blog, landing pages, sign-up, payments. Phase 4, out of scope until the webapp is complete | RULED Brian 30 Aug 2026 |
 
 ## Ratings display
 
@@ -82,7 +84,7 @@ table in `docs/DESIGN-TOKENS.md` "Retired names".
 |---|---|---|
 | Nine-page model | Play (Home, Stories, Adventures), Create (Studio, Images, Vault), Explore (Community, Creators, Lore) | CRESTFALL-PRODUCT-MODEL-UXUI.md section 2 |
 | Journey loop | Each page's bottom banner routes to the next page in the loop | same |
-| Visibility | The four-state enum: Private, Internal, Public, Canon | same, section 5 |
+| Visibility | The four display buckets Private, Internal, Public, Canon. A display-layer projection the front end computes from the backend visibility, status, and canonStatus fields; NOT one backend enum (Sol F-002, RULED Brian 30 Aug 2026). Projection table: bible/prds/2026-08-29-home.md | same, section 5; bible/reviews/SOL-ATTACK-R1-RESPONSE-2026-08-30.md |
 | Strangler build | New pages build alongside old ones at /studio/v2/, old pages untouched until cutover | same, section 6 |
 | Cutover sequence | Build all nine, prove 100 percent coverage, Nick sign-off, freeze and merge, stage, go live; never per page | same |
 | Parity echo | Every function-map row per page accounted for: present, deliberately excluded with a ruling, or flagged | BUILD-BLUEPRINT.md 3.4 |

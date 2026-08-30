@@ -79,3 +79,32 @@ Round 1 verdict row: BLOCK (Sol, 29 Aug 2026).
 
 Response artifact: PRD v0.3 on design/fe-dev (commit recorded in the
 round 2 packet). Awaiting Sol round 2 against the same stable IDs.
+
+## Round 1 ratification (Brian, 30 Aug 2026)
+
+Response packet issued as
+bible/reviews/SOL-ATTACK-R1-RESPONSE-2026-08-30.md, which re-put
+S1 and S3 to Brian for explicit confirmation rather than treating
+them as settled. Brian ratified both as written on 30 Aug 2026.
+
+- F-002, F-009: RULED BY BRIAN 30 Aug 2026. The projection and the
+  candidate set stand as written, with this binding framing: Nick's
+  backend fields, enums, and filter and sort options are authority
+  and are used as they exist today; the projection is display-layer
+  only; FE fine-tuning may combine or restyle filter and sort
+  controls for clean sticky bars and may adjust display names for
+  clarity, but never invents new backend semantics. O1 to O4 remain
+  open for Sol's verification.
+- F-007: RULED BY BRIAN 30 Aug 2026. The sign-in ruling goes in as
+  written.
+- F-004 residual: the two stale "Top rated" display-name passages
+  in the PRD (user story 4, FAQ) swept to "Popular now" on Brian's
+  30 Aug authorisation. Parity ledger rows 12, 13 and 20 keep the
+  string because it is the function-map control name, which changes
+  with the map in the build commit.
+- Terminology RULED 30 Aug 2026 and added to bible/CONTEXT.md:
+  Studio Home is the signed-in webapp home page; Marketing site is
+  the signed-out public surface, Phase 4; bare "Home" means Studio
+  Home. The CONTEXT.md "Visibility" line, which had defined the four
+  states as a backend enum (the F-002 error), was corrected to a
+  display-layer projection in the same pass.

@@ -11,6 +11,20 @@ bible/handoffs/CRESTFALL_HOME_PRD_SOL_ATTACK_R1_DETAILED_FINDINGS_2026-08-29.md
 Review target under answer: bible/prds/2026-08-29-home.md, now
 v0.3. Sol reviewed v0.2.
 
+Terminology used throughout, RULED by Brian 30 Aug 2026 and added
+to the glossary at bible/CONTEXT.md:
+
+- "Studio Home" is the signed-in webapp home page, the current
+  polish target and the subject of this packet.
+- "Marketing site" is the signed-out public surface: lead gen,
+  blog, landing pages, sign-up, payments. It is Phase 4 and out of
+  scope until the webapp is complete.
+- Bare "Home" in any Crestfall document means Studio Home.
+
+Update since first draft: the three items this packet originally
+carried as PENDING BRIAN GO were ratified by Brian on 30 Aug 2026
+and are now RULED. Sol verification of O1 to O4 stays open.
+
 Finding IDs are stable and are not reset, per Sol's working order
 section 1. Every RESOLVED below cites a PRD line range or a commit
 hash that was verified in this session by reading the file or the
@@ -20,19 +34,21 @@ git object named. Nothing is asserted RESOLVED on memory.
 
 | Finding | Severity | Status | Evidence anchor |
 |---|---|---|---|
-| F-001 | Critical | RESOLVED | PRD v0.3 lines 25 to 27, 184 to 188 |
-| F-002 | High | OPEN-WITH-PROPOSAL | PRD v0.3 lines 275 to 319, pending Brian go |
+| F-001 | Critical | RESOLVED | PRD v0.3 lines 25 to 27, 203 to 206 |
+| F-002 | High | RULED BY BRIAN 30 Aug | PRD v0.3 projection section; O1 to O4 open for Sol |
 | F-003 | High | RESOLVED | commit d6d6a53, on origin/design/fe-dev |
-| F-004 | High | RESOLVED | PRD v0.3 lines 18 to 24, 159 to 162; decision doc; code line 335 |
-| F-005 | High | RESOLVED | PRD v0.3 lines 14 to 17, 151 to 158, 365 |
+| F-004 | High | RESOLVED | PRD v0.3 lines 18 to 24, 179 to 181; decision doc; code line 335 |
+| F-005 | High | RESOLVED | PRD v0.3 lines 14 to 17, 169 to 177, 391 |
 | F-006 | High | OPEN | staging deployment work, Nick, HACM path |
-| F-007 | Medium | OPEN-WITH-PROPOSAL | PRD v0.3 lines 36 to 38, 225 to 231, pending Brian go |
-| F-008 | Medium | ACCEPTED / DEFERRED | PRD v0.3 lines 219 to 225 |
-| F-009 | High | OPEN-WITH-PROPOSAL | PRD v0.3 lines 320 to 336, pending Brian go |
+| F-007 | Medium | RULED BY BRIAN 30 Aug | PRD v0.3 rulings block and key flows |
+| F-008 | Medium | ACCEPTED / DEFERRED | PRD v0.3 lines 238 to 244 |
+| F-009 | High | RULED BY BRIAN 30 Aug | PRD v0.3 candidate-set rule; O1 to O4 open for Sol |
 
-Two items carry PENDING BRIAN GO and are set out in full in the
-proposals section: the visibility projection with its candidate set
-(F-002 with F-009), and the signed-in-only one-liner (F-007).
+The three ruled-on-30-August items are set out in full in the
+rulings section below: the visibility projection with its candidate
+set (F-002 with F-009), and the signed-in-only one-liner (F-007).
+Nothing in this packet now awaits Brian. What remains open is Sol's
+verification of O1 to O4, and F-006's staging deployment.
 
 ## Verification method
 
@@ -54,14 +70,14 @@ PRD lines 25 to 27, in the rulings block:
 > localStorage interim; persistence is owned by the ViewModel per
 > LOOM (F-001), never the Binding Shell.
 
-PRD lines 184 to 188, inside AC6:
+PRD lines 203 to 206, inside AC6:
 
 > Ownership (F-001): the ViewModel (useHomeViewModel, or a
 > persistence adapter it invokes) owns reading and writing the
 > interim key; the Binding Shell stays thin and never touches
 > persistence.
 
-The AC6 verify line at PRD line 191 makes the shell check
+The AC6 verify line at PRD line 209 makes the shell check
 executable: "confirm the Binding Shell contains no storage access".
 
 Sol's clarification is honoured exactly. localStorage stays as the
@@ -71,9 +87,10 @@ shape the PRD now specifies.
 
 ## F-002, HIGH, private / internal / public / canon is not one backend enum
 
-Status: OPEN-WITH-PROPOSAL. See the proposals section below, item
-P1. The projection is drafted in full at PRD lines 275 to 319 and
-is not asserted closed in this packet.
+Status: RULED BY BRIAN 30 Aug 2026. See the rulings section below,
+item P1, for the projection in full and the display-layer framing
+the ruling attaches to it. O1 to O4 remain open for Sol's
+verification.
 
 ## F-003, HIGH, Recently added would sort by update time
 
@@ -124,7 +141,7 @@ PRD lines 18 to 24, rulings block:
 > "Top rated" is reserved for that future metric via a flagged
 > CR-029 amendment.
 
-PRD lines 159 to 162, AC4, names the four shelf titles as Popular
+PRD lines 179 to 181, AC4, names the four shelf titles as Popular
 now, Recently added, From the community, Creators to follow.
 
 The standing decision record is
@@ -139,16 +156,20 @@ Already in code: app/studio/v2/home/home/useHomeViewModel.js line
 335 reads rail("Popular now", sorted, ...). The label is live on
 the branch, not only on paper.
 
-Residual for Sol round 2 (FE flags this against itself): two
-non-normative passages in the PRD still say "Top rated" as though
-it were the display name, at PRD line 119 (user story 4) and PRD
-line 480 (the FAQ question). The ruling sections, the acceptance
-criteria, the parity ledger, and the code all say Popular now.
-These two lines are stale prose, not a competing ruling. FE did
-not edit them in this packet because this task's manifest is
-limited to the response document and STATUS.md. They are listed
-here so Sol sees them named rather than discovering them, and so
-Brian can authorise the one-line prose sweep.
+Residual, now closed. Two non-normative passages in the PRD still
+said "Top rated" as though it were the display name, in user story
+4 and in the FAQ question. Brian authorised the sweep on 30 Aug
+2026 and both now read "Popular now". Every normative section, the
+acceptance criteria, the parity ledger, and the code agreed
+already.
+
+One deliberate exception, flagged so Sol does not read it as a
+miss: the parity ledger rows 12, 13 and 20 still carry "Top rated"
+in their row names. Those strings are the control names as they
+appear in the function map (docs/APP-FUNCTION-MAP.csv), not display
+copy. Renaming them in the PRD alone would desync the PRD from the
+ledger; they change in the build commit when the map rows change,
+as the PRD already requires.
 
 ## F-005, HIGH, the pre-cutover Studio destination must be exact
 
@@ -162,14 +183,14 @@ PRD lines 14 to 17, rulings block:
 > /studio/v2/studio (no /studio/v2 index page exists; no early
 > rename, no compatibility redirects).
 
-PRD lines 151 to 158, AC3:
+PRD lines 169 to 177, AC3:
 
 > The Studio tile routes to the exact route /studio/v2/studio
 > (RULED R2, 29 Aug 2026; exact route per the F-005 fix:
 > /studio/v2 has no page, and no early rename or compatibility
 > redirect is added ahead of the CR-057 cutover move).
 
-PRD line 365, parity ledger row 6, repeats the exact route and
+PRD line 391, parity ledger row 6, repeats the exact route and
 records that the function-map row updates in the build commit.
 
 All three of Sol's prohibitions are written into the PRD: no
@@ -193,9 +214,9 @@ FE accepts all three of Sol's gaps without argument: the
 the preview client renders Home with no fixture injection, and no
 longest-content fixture exists.
 
-The PRD stopped claiming the gate is executable. PRD lines 232 to
-236 record the longest-content fixture as not existing, and PRD
-lines 451 to 456 and 531 name the FE task home-preview-staging-gate
+The PRD stopped claiming the gate is executable. PRD lines 251 to
+255 record the longest-content fixture as not existing, and PRD
+lines 479 to 484 and 558 name the FE task home-preview-staging-gate
 as the precondition for every remote render gate.
 
 The blocking half is not FE's. It is the stable design/fe-dev
@@ -221,9 +242,9 @@ without publishing a development harness on production Crestfall.
 
 ## F-007, MEDIUM, signed-out Home is constrained by /studio/**
 
-Status: OPEN-WITH-PROPOSAL. See the proposals section, item P2.
-The one-line ruling Sol asks for is drafted and is at PRD lines 36
-to 38 and 225 to 231; this packet does not assert it closed.
+Status: RULED BY BRIAN 30 Aug 2026. The one-line ruling Sol asks
+for is at PRD lines 36 to 38 (rulings block) and 245 to 250 (key
+flows), and is restated at item P2 below. Nothing further is pending on it.
 
 ## F-008, MEDIUM, muted-creator exclusion needs an actor-aware feed
 
@@ -235,7 +256,7 @@ path is actorless, so server-side per-account mute exclusion is
 impossible until discovery becomes actor-aware, and CR-028 and
 CR-029 cannot claim it before then.
 
-PRD lines 219 to 225, key flows and edge cases:
+PRD lines 238 to 244, key flows and edge cases:
 
 > Contract warning (ACCEPTED-DEFERRED, F-008): the current public
 > discovery path is actorless, so server-side per-account mute
@@ -249,23 +270,37 @@ mute-aware discovery CR lands. It should not stall round 2.
 
 ## F-009, HIGH, Just mine and private / internal filtering
 
-Status: OPEN-WITH-PROPOSAL. See the proposals section, item P1;
-F-009 travels with F-002 because the candidate set is meaningless
-without the projection, exactly as Sol's finding says.
+Status: RULED BY BRIAN 30 Aug 2026. See the rulings section, item
+P1; F-009 travels with F-002 because the candidate set is
+meaningless without the projection, exactly as Sol's finding says.
+O1 to O4 remain open for Sol's verification.
 
-## Proposals pending Brian go
+## Rulings, ratified by Brian 30 Aug 2026
 
-Both items below are drafted in the PRD and are recorded there
-under ruling labels S1 and S3 dated 29 Aug 2026. This packet
-re-surfaces them as PROPOSED and PENDING BRIAN GO because the
-30 Aug brief directs FE to put them to Brian for an explicit
-confirmation before Sol round 2 treats them as settled. FE has not
-altered, weakened, or re-decided either one; the text below is the
-PRD text. Under CLAUDE.md, silence is never approval and never
-ratification, so FE will not represent these to Sol as closed
-until Brian answers.
+Both items below were drafted in the PRD under ruling labels S1 and
+S3 dated 29 Aug 2026, and were put back to Brian for explicit
+confirmation before Sol round 2 treated them as settled. Brian
+ratified both as written on 30 Aug 2026. They are RULED, not
+proposed.
 
-### P1, the visibility projection and the shelf candidate set (F-002 and F-009)
+### The framing the ratification attaches (binds both items)
+
+Brian ratified the projection with this framing, which now governs
+every use of it:
+
+Nick's backend fields, enums, and filter and sort options are
+authority and are used as they exist today. The projection is
+display-layer only. FE fine-tuning may combine or restyle filter
+and sort controls for clean sticky bars, and may adjust display
+names for clarity, but never invents new backend semantics.
+
+Read plainly for Nick and Sol: the front end is not asking the
+backend to change, add, or rename anything. It reads what is
+already there and decides how to show it. Where FE tidies a control
+or a word, that is presentation only, and the underlying backend
+meaning is left exactly as Nick built it.
+
+### P1, the visibility projection and the shelf candidate set (F-002 and F-009), RULED
 
 Plain reading first. The filter's four words, Private, Internal,
 Public, Canon, are labels Home works out for itself from three
@@ -286,7 +321,9 @@ locally inspectable because the community route proxies to
 /v1/community/creations, so everything resting on it is marked
 OPEN below and is not assumed.
 
-PROPOSED projection, evaluated top to bottom, first match wins:
+RULED projection, evaluated top to bottom, first match wins. Every
+column on the left is a backend fact read as it exists today; the
+right column is a display bucket only:
 
 | Precedence | Backend facts | Home display bucket |
 |---|---|---|
@@ -307,8 +344,8 @@ re-litigated later:
   because Canon is exclusive; that work answers only to Mine plus
   Canon.
 
-PROPOSED candidate set for the three creation shelves, which is
-the direct answer to F-009. The shelves draw from the union of
+RULED candidate set for the three creation shelves, which is the
+direct answer to F-009. The shelves draw from the union of
 both collections Home already receives, never from the community
 list alone:
 
@@ -322,8 +359,9 @@ list alone:
    always precedes ranking.
 5. Rank and project the surviving items into the shelves.
 
-Still OPEN for Sol round 2 under this proposal, as confirmations
-rather than guesses:
+Still OPEN for Sol round 2 under this ruling, as confirmations
+rather than guesses. The ruling settles the display buckets; it
+does not claim knowledge of the Services predicate:
 
 - O1: the exact eligibility predicate of the Services
   /v1/community/creations list. Expected to be visibility PUBLIC
@@ -338,9 +376,10 @@ rather than guesses:
   Their bucket is defined above; their eligibility is a product and
   Services question.
 
-PENDING BRIAN GO.
+RULED BY BRIAN 30 Aug 2026, with O1 to O4 open for Sol's
+verification.
 
-### P2, signed-out Home under current /studio/** authority (F-007)
+### P2, signed-out Studio Home under current /studio/** authority (F-007), RULED
 
 Plain reading first. Home cannot decide for itself what a
 signed-out visitor sees, because the page sits under /studio and
@@ -349,24 +388,30 @@ before Home is reached. So this is not an open Home question; it is
 an already-decided routing fact that the PRD should simply write
 down.
 
-PROPOSED one-line ruling, which is the line Sol asks for verbatim:
+RULED one-line ruling, which is the line Sol asks for verbatim:
 
 > Home requires sign-in under current /studio/** authority.
 
-With the scope note the PRD carries at lines 225 to 231: the
+With the scope note the PRD carries at lines 245 to 250: the
 parent studio layout returns the signed-out gate for every
 /studio/** address, so /studio/v2/home never decides this alone,
 and a public cold-start Home for signed-out visitors is a separate
 future route and chassis decision, out of this PRD.
 
-PENDING BRIAN GO.
+Under the 30 Aug terminology ruling this is now sharper than it was
+in the first draft: signed-out visitors are Marketing site
+territory, which is Phase 4 and out of scope until the webapp is
+complete. Studio Home is signed-in by definition.
+
+RULED BY BRIAN 30 Aug 2026.
 
 ## What FE asks of Sol for round 2
 
 1. Re-check F-001, F-003, F-004, F-005 against PRD v0.3 and commit
    d6d6a53 and confirm they can be marked closed.
-2. Hold F-002, F-007, F-009 as proposals until Brian's go is
-   recorded, then re-check them against the same stable IDs.
+2. Treat F-002, F-007, F-009 as RULED by Brian on 30 Aug 2026 and
+   re-check them against the same stable IDs, under the
+   display-layer framing recorded above.
 3. Treat F-006 as jointly owned and blocked on the staging
    deployment, on the HACM path Sol defined, with Nick executing.
 4. Treat F-008 as deferred and not a round 2 blocker, per Sol's own
@@ -375,5 +420,8 @@ PENDING BRIAN GO.
    where FE declined to guess.
 
 Round 1 verdict BLOCK is not contested. FE's position is that the
-corrective burden was PRD clarification, as Sol said, and that
-four of the nine are now mechanically closed with evidence.
+corrective burden was PRD clarification, as Sol said. Four of the
+nine are mechanically closed with evidence, three more are ruled by
+Brian as of 30 Aug 2026, one is accepted and deferred on Sol's own
+disposition, and one (F-006) is open and jointly owned. No finding
+now waits on Brian.
