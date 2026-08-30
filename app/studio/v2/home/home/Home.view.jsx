@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitDestinationTileView from "@/components/kit/destination-tile/KitDestinationTile.view";
@@ -10,6 +12,43 @@ import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
+
+
+function HomeHeroBanner({ welcomeName = "Player", children }) {
+  const [sheenPass, setSheenPass] = useState(0);
+  const triggerSheen = () => setSheenPass((value) => value + 1);
+
+  return (
+    <div
+      className="group/home-hero relative rounded-[var(--radius-lg)]"
+      onMouseEnter={triggerSheen}
+      onMouseLeave={triggerSheen}
+    >
+      {children}
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[2] rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--gold-ornament)_78%,transparent)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.24),0_12px_30px_rgba(0,0,0,0.22)]"
+      />
+
+      <div className="pointer-events-none absolute left-[var(--space-5)] top-[var(--space-5)] z-[3] min-[700px]:left-[var(--space-8)] min-[700px]:top-[var(--space-6)]">
+        <p className="cf-art-text-readable font-display text-[clamp(1.55rem,2.35vw,2.65rem)] leading-[1.05] tracking-[-0.015em] text-[var(--art-ink)]">
+          Welcome back, {welcomeName}.
+        </p>
+      </div>
+
+      {sheenPass > 0 ? (
+        <div
+          key={sheenPass}
+          aria-hidden="true"
+          className="cf-home-hero-sheen pointer-events-none absolute inset-0 z-[2] overflow-hidden rounded-[var(--radius-lg)]"
+        >
+          <span className="absolute inset-y-[-20%] left-0 w-[38%] -skew-x-12 bg-gradient-to-r from-transparent via-[rgba(255,239,196,0.12)] to-transparent blur-[2px]" />
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 function RailCard({ item }) {
   return item.cardKind === "creator" ? (
@@ -39,6 +78,7 @@ function Rail({ rail, headControlSlot = null }) {
 export default function HomeView({
   topBanner,
   continueItem = null,
+  welcomeName = "Player",
   destinationTiles = [],
   topRatedRail,
   recentlyAddedRail,
@@ -75,37 +115,40 @@ export default function HomeView({
           />
         }
       >
-        <KitPromoBannerView
-          treatment="top"
-          showGalaxy={!useHomeWordmarkFallback}
-          eyebrow={continueItem ? "Continue" : topBanner?.eyebrow}
-          title={continueItem ? continueItem.title : topBanner?.title}
-          line={
-            continueItem
-              ? `Last played ${continueItem.lastPlayedLabel} · ${continueItem.kindLabel}`
-              : ""
-          }
-          ctaLabel={continueItem ? "Continue" : topBanner?.ctaLabel}
-          imageSrc={topBannerImageSrc}
-          emptyArtworkVariant={useHomeWordmarkFallback ? "crestfall-gray-wordmark" : "default"}
-          imageAnchor={
-            (continueItem ? continueItem.imageAnchor : topBanner?.imageAnchor) ||
-            undefined
-          }
-          onCtaClick={() =>
-            (continueItem ? continueItem.onContinue : topBanner?.onCtaClick)?.()
-          }
-          secondaryCtaLabel={
-            continueItem
-              ? continueItem.secondaryCtaLabel
-              : topBanner?.secondaryCtaLabel ?? ""
-          }
-          onSecondaryCtaClick={() =>
-            (continueItem
-              ? continueItem.onSecondaryCtaClick
-              : topBanner?.onSecondaryCtaClick)?.()
-          }
-        />
+        <HomeHeroBanner welcomeName={welcomeName}>
+          <KitPromoBannerView
+            treatment="top"
+            enhanceTextReadability
+            showGalaxy={!useHomeWordmarkFallback}
+            eyebrow={continueItem ? "Continue" : topBanner?.eyebrow}
+            title={continueItem ? continueItem.title : topBanner?.title}
+            line={
+              continueItem
+                ? `Last played ${continueItem.lastPlayedLabel} · ${continueItem.kindLabel}`
+                : ""
+            }
+            ctaLabel={continueItem ? "Continue" : topBanner?.ctaLabel}
+            imageSrc={topBannerImageSrc}
+            emptyArtworkVariant={useHomeWordmarkFallback ? "crestfall-gray-wordmark" : "default"}
+            imageAnchor={
+              (continueItem ? continueItem.imageAnchor : topBanner?.imageAnchor) ||
+              undefined
+            }
+            onCtaClick={() =>
+              (continueItem ? continueItem.onContinue : topBanner?.onCtaClick)?.()
+            }
+            secondaryCtaLabel={
+              continueItem
+                ? continueItem.secondaryCtaLabel
+                : topBanner?.secondaryCtaLabel ?? ""
+            }
+            onSecondaryCtaClick={() =>
+              (continueItem
+                ? continueItem.onSecondaryCtaClick
+                : topBanner?.onSecondaryCtaClick)?.()
+            }
+          />
+        </HomeHeroBanner>
 
         {errorMessage ? (
           <KitAlertStripView

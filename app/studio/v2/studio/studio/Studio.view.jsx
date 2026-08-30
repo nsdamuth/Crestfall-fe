@@ -47,7 +47,7 @@ function Door({ label, eyebrow, description, imageSrc, isLive, onOpen }) {
         <img src={imageSrc} alt="" className="absolute inset-0 h-full w-full object-cover object-[center_20%]" />
       ) : null}
       <div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_55%,transparent)] to-[color-mix(in_srgb,var(--canvas)_15%,transparent)] ${
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent ${
           isLive ? "" : "opacity-90"
         }`}
         aria-hidden="true"

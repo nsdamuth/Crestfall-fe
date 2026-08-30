@@ -177,8 +177,11 @@ export function getStudioSidebarAccountHref(pathname = "") {
     : "/studio/account";
 }
 
-export function normalizeStudioSidebarEmail(user = {}) {
-  return typeof user?.email === "string" ? user.email : "";
+export function normalizeStudioSidebarPublicUsername(profile = {}) {
+  const username =
+    typeof profile?.username === "string" ? profile.username.trim() : "";
+
+  return username ? `@${username.replace(/^@+/, "")}` : "Player";
 }
 
 function buildNavigationLinks(links, pathname) {
@@ -188,7 +191,11 @@ function buildNavigationLinks(links, pathname) {
   }));
 }
 
-export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
+export function useStudioSidebarViewModel({
+  user,
+  accountProfile,
+  pathname = "",
+} = {}) {
   const [collapsed, setCollapsed] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
   const [legacyOpen, setLegacyOpen] = useState(false);
@@ -211,7 +218,7 @@ export function useStudioSidebarViewModel({ user, pathname = "" } = {}) {
     brandHref: v2Surface ? "/studio/v2/home" : "/studio",
     communityLinksLabel: STUDIO_SIDEBAR_COPY.communityLinksLabel,
     signedInLabel: STUDIO_SIDEBAR_COPY.signedInLabel,
-    signedInEmail: normalizeStudioSidebarEmail(user),
+    signedInUsername: normalizeStudioSidebarPublicUsername(accountProfile),
     logoutLabel: STUDIO_SIDEBAR_COPY.logoutLabel,
     logoutHref: "/logout",
     collapseAriaLabel: collapsed ? "Expand sidebar" : "Collapse sidebar",

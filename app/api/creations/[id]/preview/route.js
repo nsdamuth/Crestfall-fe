@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
 import { crestfallApiRequest } from "@/lib/server/api/crestfallApiClient";
+import { getAuthenticatedUser } from "@/lib/server/auth/getAuthenticatedUser";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+async function getOptionalAuthenticatedUser() {
+  const supabase = await createClient();
+  const { user, error } =
+    await getAuthenticatedUser(supabase);
+
+  return error || !user ? null : user;
+}
 
 function apiError(
   message,
@@ -39,6 +49,8 @@ export async function GET(
   }
 
   try {
+    const user =
+      await getOptionalAuthenticatedUser();
     const payload =
       await crestfallApiRequest({
         path: `/v1/creations/${encodeURIComponent(
@@ -46,6 +58,11 @@ export async function GET(
         )}/preview`,
 
         method: "GET",
+        headers: user
+          ? {
+              "x-crestfall-user-id": user.id,
+            }
+          : {},
       });
 
     return NextResponse.json(payload);

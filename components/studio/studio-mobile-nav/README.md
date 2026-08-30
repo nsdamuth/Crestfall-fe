@@ -16,7 +16,7 @@ React state, or interpret the pathname.
 - primary, utility, social, and bottom navigation definitions;
 - exact `/studio` and prefix-based nested-route matching;
 - Community Links disclosure state;
-- signed-in email and account-label normalization; and
+- signed-in public-username and account-label normalization; and
 - navigation-dismissal and social-toggle behavior.
 
 The component remains mounted once by `StudioShell.jsx`. The desktop

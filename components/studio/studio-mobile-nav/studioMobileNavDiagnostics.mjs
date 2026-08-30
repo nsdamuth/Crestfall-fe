@@ -16,6 +16,8 @@ test("Studio Mobile Nav Shell stays thin and application-owned", () => {
   assert.match(shell, /useStudioMobileNavViewModel/);
   assert.match(shell, /StudioMobileNavView/);
   assert.match(shell, /usePathname/);
+  assert.match(shell, /useStudioAccount/);
+  assert.match(shell, /accountProfile/);
   assert.match(shell, /InternalLinkComponent=\{Link\}/);
   assert.match(shell, /variant="drawer"/);
   assert.match(shell, /open, onCloseMenu/);
@@ -53,7 +55,7 @@ test("Studio Mobile Nav ViewModel owns Community Links state, not drawer open st
   assert.match(viewModel, /STUDIO_MOBILE_NAV_SOCIAL_LINKS/);
   assert.match(viewModel, /STUDIO_MOBILE_NAV_BOTTOM_LINKS/);
   assert.match(viewModel, /isStudioMobileNavPathActive/);
-  assert.match(viewModel, /normalizeStudioMobileNavEmail/);
+  assert.match(viewModel, /normalizeStudioMobileNavPublicUsername/);
   assert.match(viewModel, /setSocialOpen/);
   assert.doesNotMatch(viewModel, /setOpen\b/);
   assert.doesNotMatch(viewModel, /<\w+/);
@@ -102,7 +104,8 @@ test("Studio Mobile Nav contract and fixtures cover visible states", () => {
   assert.match(fixtures, /studioMobileNavClosedFixture/);
   assert.match(fixtures, /studioMobileNavDrawerOpenFixture/);
   assert.match(fixtures, /studioMobileNavSocialOpenFixture/);
-  assert.match(fixtures, /creator@example\.com/);
+  assert.match(fixtures, /@preview_creator/);
+  assert.doesNotMatch(fixtures, /creator@example\.com/);
 });
 
 test("Studio Mobile Nav preview is development-only and fixture driven", () => {

@@ -148,7 +148,7 @@ const baseFixture = Object.freeze({
   brandHref: "/studio",
   communityLinksLabel: "Community Links",
   signedInLabel: "Signed in",
-  signedInEmail: "creator@example.com",
+  signedInUsername: "@preview_creator",
   logoutLabel: "Log out",
   logoutHref: "/logout",
   collapseAriaLabel: "Collapse sidebar",

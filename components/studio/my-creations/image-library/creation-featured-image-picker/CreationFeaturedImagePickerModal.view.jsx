@@ -110,7 +110,7 @@ export default function CreationFeaturedImagePickerModalView({
                     onChange={(event) => onSearchChange?.(event.target.value)}
                     placeholder={searchPlaceholder}
                     aria-label="Search Crestfall Stock"
-                    className="h-10 w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-0)] pl-9 pr-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/45"
+                    className="h-10 w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] pl-9 pr-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/45"
                   />
                 </label>
               ) : null}
@@ -128,7 +128,7 @@ export default function CreationFeaturedImagePickerModalView({
                         className={`rounded-full border px-3 py-1.5 text-xs transition ${
                           active
                             ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]"
-                            : "border-[var(--line)] bg-[var(--surface-0)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                            : "border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                         }`}
                       >
                         {filter?.label}
@@ -263,7 +263,7 @@ export default function CreationFeaturedImagePickerModalView({
                         {image.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-[var(--line)] bg-[var(--surface-0)] px-2 py-1 text-[10px] uppercase tracking-wide text-[var(--ink-dim)]"
+                            className="rounded-full border border-[var(--line)] bg-[var(--surface-2)] px-2 py-1 text-[10px] uppercase tracking-wide text-[var(--ink-dim)]"
                           >
                             {tag}
                           </span>

@@ -16,11 +16,11 @@ export default function DefaultClothingSelectorView({
         Clothing Style
       </p>
 
-      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
+      <div className="mt-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
         {selectedClothing ? (
           <div className="flex flex-wrap items-start gap-4">
             <div
-              className="h-24 w-24 shrink-0 rounded-xl border border-white/10 bg-cover bg-center"
+              className="h-24 w-24 shrink-0 rounded-xl border border-[var(--line)] bg-cover bg-center"
               style={{
                 backgroundImage: `url(${
                   selectedClothing?.imageUrl || "/images/placeholder-card.jpg"

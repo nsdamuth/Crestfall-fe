@@ -60,6 +60,18 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Studio Eggshell is scoped by StudioShell through data-theme. The main
+   V2 shell is token-driven already; this body override matters for portal
+   surfaces and the small viewport edges visible behind fixed overlays. */
+body[data-theme="light"] {
+  --panel: rgba(248, 243, 231, 0.88);
+  --panel-strong: rgba(252, 248, 238, 0.96);
+  --bone-white: var(--ink);
+
+  background: var(--canvas);
+  color: var(--ink);
+}
+
 @layer base {
   a {
     color: inherit;

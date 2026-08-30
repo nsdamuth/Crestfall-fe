@@ -92,8 +92,11 @@ export function getStudioMobileNavAccountHref(pathname = "") {
     : "/studio/account";
 }
 
-export function normalizeStudioMobileNavEmail(user = {}) {
-  return typeof user?.email === "string" ? user.email : "";
+export function normalizeStudioMobileNavPublicUsername(profile = {}) {
+  const username =
+    typeof profile?.username === "string" ? profile.username.trim() : "";
+
+  return username ? `@${username.replace(/^@+/, "")}` : "Player";
 }
 
 function buildNavigationLinks(links, pathname) {
@@ -110,12 +113,13 @@ function buildNavigationLinks(links, pathname) {
 // rather than creating its own state.
 export function useStudioMobileNavViewModel({
   user,
+  accountProfile,
   pathname = "",
   open = false,
   onCloseMenu = () => {},
 } = {}) {
   const [socialOpen, setSocialOpen] = useState(false);
-  const signedInEmail = normalizeStudioMobileNavEmail(user);
+  const signedInUsername = normalizeStudioMobileNavPublicUsername(accountProfile);
   const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2") ||
     pathname.startsWith("/studio/story-rooms") ||
     pathname.startsWith("/studio/creations") ||
@@ -128,12 +132,14 @@ export function useStudioMobileNavViewModel({
     drawerTitle: STUDIO_MOBILE_NAV_COPY.drawerTitle,
     communityLinksLabel: STUDIO_MOBILE_NAV_COPY.communityLinksLabel,
     signedInLabel: STUDIO_MOBILE_NAV_COPY.signedInLabel,
-    signedInEmail,
+    signedInUsername,
     logoutLabel: STUDIO_MOBILE_NAV_COPY.logoutLabel,
     logoutHref: "/logout",
     accountHref: getStudioMobileNavAccountHref(pathname),
     accountAriaLabel:
-      signedInEmail || STUDIO_MOBILE_NAV_COPY.accountFallbackAriaLabel,
+      signedInUsername
+        ? `Account for ${signedInUsername}`
+        : STUDIO_MOBILE_NAV_COPY.accountFallbackAriaLabel,
     closeMenuAriaLabel: STUDIO_MOBILE_NAV_COPY.closeMenuAriaLabel,
     closeOverlayAriaLabel: STUDIO_MOBILE_NAV_COPY.closeOverlayAriaLabel,
     open,

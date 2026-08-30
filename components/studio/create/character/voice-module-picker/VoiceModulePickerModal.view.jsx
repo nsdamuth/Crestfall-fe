@@ -30,7 +30,7 @@ export default function VoiceModulePickerModalView({
   const safeOptionGroups = Array.isArray(optionGroups) ? optionGroups : [];
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4 md:col-span-2">
+    <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-1)] p-4 md:col-span-2">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
@@ -119,7 +119,7 @@ export default function VoiceModulePickerModalView({
                                 className={`rounded-xl border px-4 py-3 text-left transition ${
                                   active
                                     ? "border-[var(--gold-ornament)]/60 bg-[var(--fill-whisper)] text-[var(--ink)]"
-                                    : "border-white/10 bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+                                    : "border-[var(--line)] bg-[var(--fill-option-rest)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                                 }`}
                               >
                                 <span className="flex items-start justify-between gap-3">
@@ -148,7 +148,7 @@ export default function VoiceModulePickerModalView({
                   })}
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-white/10 bg-black/25 p-6 text-sm leading-6 text-[var(--ink-dim)]">
+                <div className="rounded-xl border border-dashed border-[var(--line)] bg-[var(--surface-1)] p-6 text-sm leading-6 text-[var(--ink-dim)]">
                   No voice modules are available.
                 </div>
               )}

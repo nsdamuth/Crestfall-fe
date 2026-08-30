@@ -19,8 +19,8 @@ export default function CreationEditMediaPanelView({
   const safeFeaturedSlots = Array.isArray(featuredSlots) ? featuredSlots : [];
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+      <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
         {activeMedia?.imageUrl ? (
           <img
             src={activeMedia.imageUrl}
@@ -52,7 +52,7 @@ export default function CreationEditMediaPanelView({
             className={`aspect-square overflow-hidden rounded-xl border text-[10px] uppercase tracking-[0.12em] transition ${
               media.isActive
                 ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
+                : "border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
             }`}
           >
             {media.imageUrl ? (
@@ -93,7 +93,7 @@ export default function CreationEditMediaPanelView({
       </p>
 
       {supportsChatMedia ? (
-        <section className="mt-6 flex flex-col gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+        <section className="mt-6 flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
           <ChatMediaSlot
             label="Chat Avatar"
             description="Shown beside this character's messages in chat."
@@ -113,7 +113,7 @@ export default function CreationEditMediaPanelView({
           />
         </section>
       ) : (
-        <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+        <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
             {nonChatContextTitle}
           </p>
@@ -137,7 +137,7 @@ function ChatMediaSlot({
   buttonLabel,
 }) {
   return (
-    <article className="rounded-xl border border-white/10 bg-black/30 p-3">
+    <article className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-3">
       <div className="flex items-center gap-3">
         <div
           className={`flex shrink-0 items-center justify-center overflow-hidden border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] ${

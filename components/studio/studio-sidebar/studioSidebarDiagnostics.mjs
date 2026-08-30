@@ -16,6 +16,8 @@ test("Studio Sidebar Shell stays thin and application-owned", () => {
   assert.match(shell, /useStudioSidebarViewModel/);
   assert.match(shell, /StudioSidebarView/);
   assert.match(shell, /usePathname/);
+  assert.match(shell, /useStudioAccount/);
+  assert.match(shell, /accountProfile/);
   assert.match(shell, /InternalLinkComponent=\{Link\}/);
   assert.match(shell, /economySlot/);
   assert.doesNotMatch(shell, /useState/);
@@ -47,7 +49,7 @@ test("Studio Sidebar ViewModel owns navigation and UI state", () => {
   assert.match(viewModel, /STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP/);
   assert.match(viewModel, /STUDIO_SIDEBAR_SOCIAL_LINKS/);
   assert.match(viewModel, /isStudioSidebarPathActive/);
-  assert.match(viewModel, /normalizeStudioSidebarEmail/);
+  assert.match(viewModel, /normalizeStudioSidebarPublicUsername/);
   assert.match(viewModel, /setCollapsed/);
   assert.match(viewModel, /setSocialOpen/);
   assert.doesNotMatch(viewModel, /<\w+/);
@@ -106,7 +108,8 @@ test("Studio Sidebar contract and fixtures cover visible states", () => {
   assert.match(fixtures, /studioSidebarExpandedFixture/);
   assert.match(fixtures, /studioSidebarSocialOpenFixture/);
   assert.match(fixtures, /studioSidebarCollapsedFixture/);
-  assert.match(fixtures, /creator@example\.com/);
+  assert.match(fixtures, /@preview_creator/);
+  assert.doesNotMatch(fixtures, /creator@example\.com/);
 });
 
 test("Studio Sidebar preview is development-only and fixture driven", () => {

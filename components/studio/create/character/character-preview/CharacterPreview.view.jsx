@@ -20,9 +20,9 @@ export default function CharacterPreviewView({
   const [hasGenerated, setHasGenerated] = useState(false);
 
   return (
-    <aside className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
       <div className="flex flex-col gap-[var(--space-6)] sm:flex-row">
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-md)] border border-white/10 sm:w-48 sm:flex-none">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] sm:w-48 sm:flex-none">
           {hasGenerated ? (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/70 to-[var(--gold-ornament)]/10">
               <div className="text-center">

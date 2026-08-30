@@ -5,10 +5,14 @@ export default function StudioShellView({
   mobileNavSlot = null,
   topBarSlot = null,
   reserveMobileDockSpace = true,
+  themeMode = "dark",
   children = null,
 }) {
   return (
-    <main className="min-h-screen bg-[var(--canvas)] text-[var(--ink)]">
+    <main
+      data-theme={themeMode === "light" ? "light" : undefined}
+      className="min-h-screen bg-[var(--canvas)] text-[var(--ink)]"
+    >
       <div className="flex min-h-screen">
         {sidebarSlot}
 

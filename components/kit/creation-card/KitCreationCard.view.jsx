@@ -203,7 +203,7 @@ function KebabMenu({
               <div
                 role="menu"
                 style={{ top: menuPosition.top, right: menuPosition.right }}
-                className="fixed z-[3] w-[12rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]"
+                className="fixed z-[3] w-[12rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-ui-glass)] py-[var(--space-1)] backdrop-blur-[var(--blur-panel)]"
               >
                 <KebabMenuItem label="Edit" Icon={Pencil} onClick={() => { onEdit?.(); onClose?.(); }} />
                 <KebabMenuItem
@@ -368,7 +368,7 @@ function GridCard({
       )}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_45%,transparent)] to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
 
       <div className="pointer-events-none relative z-[2] flex h-full flex-col justify-between p-[var(--space-3)]">
@@ -484,7 +484,7 @@ function ListCard({
           left edge for both assigned art and semantic fallback backgrounds. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_55%,transparent)] to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
 
       <div className="pointer-events-none relative z-[2] flex h-full items-center justify-between gap-[var(--space-3)] p-[var(--space-4)]">

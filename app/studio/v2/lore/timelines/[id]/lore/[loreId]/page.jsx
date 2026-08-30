@@ -60,7 +60,7 @@ export default async function TimelineOwnedLoreReaderPage({ params }) {
         >
           <ArrowLeft size={14} aria-hidden="true" /> Back to Timeline
         </Link>
-        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--gold-ornament)]/20 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
+        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--surface-1)] px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
           <LockKeyhole size={12} aria-hidden="true" /> Owner-only Lore · {visibility} · {status}
         </div>
       </div>

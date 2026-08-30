@@ -96,7 +96,7 @@ function RecommendedHero({
       </div>
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_84%,transparent)] to-[color-mix(in_srgb,var(--canvas)_28%,transparent)]"
+        className="absolute inset-0 bg-gradient-to-r from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
       <div className="relative z-[1] flex min-h-[22rem] max-w-[48rem] flex-col justify-center p-[clamp(1.5rem,4vw,3.25rem)]">
         <div className="flex flex-wrap items-center gap-[var(--space-2)]">
@@ -157,7 +157,7 @@ function MilestoneCard({
       </div>
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_76%,transparent)] to-[color-mix(in_srgb,var(--canvas)_30%,transparent)]"
+        className="absolute inset-0 bg-gradient-to-r from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
 
       <div className="relative z-[1] flex w-full flex-col justify-between gap-[var(--space-5)] p-[var(--space-5)]">
@@ -345,7 +345,7 @@ function FullStudioAssetCard({
       <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-[1.015]">
         <KitArtPlaceholderView size="lg" identityKey={identityKey} />
       </div>
-      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_78%,transparent)] to-[color-mix(in_srgb,var(--canvas)_28%,transparent)]" />
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent" />
       <div className="relative z-[1] mt-auto w-full p-[var(--space-4)]">
         <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-action)]">{asset.eyebrow}</p>
         <h4 className="mt-[var(--space-1)] font-[family-name:var(--font-display)] text-[length:var(--text-lead)] font-medium text-[var(--art-ink)]">{asset.title}</h4>
@@ -374,7 +374,7 @@ function FullStudioCategoryCard({ section, onOpen }) {
       </div>
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_66%,transparent)] to-[color-mix(in_srgb,var(--canvas)_20%,transparent)]"
+        className="absolute inset-0 bg-gradient-to-t from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
       <div className="relative z-[1] mt-auto w-full p-[var(--space-4)] md:p-[var(--space-5)]">
         <div className="flex items-center justify-between gap-[var(--space-3)]">

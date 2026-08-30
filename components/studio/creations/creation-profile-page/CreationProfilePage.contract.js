@@ -15,6 +15,7 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {Object|null} description
  * @property {Array<Object>} mediaTabs
  * @property {string} query
+ * @property {Object|null} libraryPassPanel Server-projected Library Pass state and purchase presentation.
  * @property {import("react").ReactNode} creditsSlot Conditional resolved attribution tab content.
  * @property {Array<Object>} visibleMedia
  * @property {boolean} hasMoreMedia
@@ -31,6 +32,7 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {((value:string) => void)|null} [onQueryChange] doc-only addition (ED1G sw12), no version bump.
  * @property {(() => void)|null} [onLoadMore] doc-only addition (ED1G sw12), no version bump.
  * @property {((media:Object) => void)|null} [onOpenMedia] doc-only addition (ED1G sw12), no version bump.
+ * @property {(() => void)|null} [onPurchaseLibraryPass] Starts the idempotent Library Pass purchase flow.
  * @property {(() => void)|null} [onToggleDescription] doc-only addition (ED1G sw12), no version bump.
  * @property {(() => void)|null} [onStartChat] doc-only addition (ED1G sw12), no version bump.
  */
@@ -39,6 +41,7 @@ export const CREATION_PROFILE_PAGE_LAYER_OWNERSHIP = Object.freeze({
   rawCreationAndMediaNormalization: "ViewModel",
   mediaFilteringAndPagination: "ViewModel",
   reactionsAndStoryStart: "ViewModel",
+  libraryPassPurchaseAndLockedMediaPolicy: "ViewModel",
   nextNavigationAndApplicationComponents: "Binding Shell",
   visualComposition: "Portable View",
 });

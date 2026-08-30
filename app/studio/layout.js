@@ -1,5 +1,11 @@
+import { cookies } from "next/headers";
+
 import { createClient } from "@/lib/supabase/server";
 import StudioShell from "@/components/studio/StudioShell";
+import {
+  normalizeStudioThemeMode,
+  STUDIO_THEME_COOKIE,
+} from "@/components/studio/studio-shell/studioThemePreference";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -78,7 +84,13 @@ function SignedOutStudioGate() {
 }
 
 export default async function StudioLayout({ children }) {
-  const supabase = await createClient();
+  const [supabase, studioCookies] = await Promise.all([
+    createClient(),
+    cookies(),
+  ]);
+  const initialThemeMode = normalizeStudioThemeMode(
+    studioCookies.get(STUDIO_THEME_COOKIE)?.value,
+  );
 
   const {
     data: { user },
@@ -88,5 +100,9 @@ export default async function StudioLayout({ children }) {
     return <SignedOutStudioGate />;
   }
 
-  return <StudioShell user={user}>{children}</StudioShell>;
+  return (
+    <StudioShell user={user} initialThemeMode={initialThemeMode}>
+      {children}
+    </StudioShell>
+  );
 }

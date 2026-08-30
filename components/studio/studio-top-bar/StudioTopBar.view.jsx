@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Menu, X } from "lucide-react";
+import { Bell, Menu, Moon, Sun, X } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
@@ -17,6 +17,8 @@ export default function StudioTopBarView({
   notificationsLabel = "Notifications",
   notificationsView = null,
   bellRef = null,
+  themeMode = "dark",
+  themeToggleAriaLabel = "Switch to Eggshell theme",
   accountHref = "/studio/account",
   accountAriaLabel = "Account",
   accountInitial = "?",
@@ -25,6 +27,7 @@ export default function StudioTopBarView({
   onSearchChange = () => {},
   onOpenNotifications = () => {},
   onOpenNotificationCenter = () => {},
+  onToggleTheme = () => {},
   onCloseNotifications = () => {},
   onDismissNotification = () => {},
   onClearAllNotifications = () => {},
@@ -69,6 +72,16 @@ export default function StudioTopBarView({
           }`}
         >
           <Bell size={17} />
+        </button>
+
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          aria-label={themeToggleAriaLabel}
+          title={themeToggleAriaLabel}
+          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,background-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line-strong)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+        >
+          {themeMode === "light" ? <Moon size={17} /> : <Sun size={17} />}
         </button>
 
         {accountLinkSlot || (

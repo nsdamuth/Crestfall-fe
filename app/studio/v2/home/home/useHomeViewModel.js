@@ -150,6 +150,7 @@ export function useHomeViewModel({
   creators = [],
   creatorCreations = [],
   viewerUsername = null,
+  viewerDisplayName = null,
   followingUsernames = [],
   storiesLoadError = null,
   communityLoadError = null,
@@ -351,8 +352,13 @@ export function useHomeViewModel({
   const hasDiscoverableData = decoratedCommunity.length > 0 || creatorCards.length > 0 || Boolean(continueItem);
   const errorMessage = !hasDiscoverableData && sourceErrors.length ? sourceErrors[0] : null;
   const warningMessage = hasDiscoverableData && sourceErrors.length ? sourceErrors.join(" ") : null;
+  const welcomeName =
+    (typeof viewerDisplayName === "string" && viewerDisplayName.trim()) ||
+    (typeof viewerUsername === "string" && viewerUsername.trim()) ||
+    "Player";
 
   return {
+    welcomeName,
     topBanner: {
       ...TOP_BANNER,
       onCtaClick: () => onNavigate?.("/studio/v2/stories"),

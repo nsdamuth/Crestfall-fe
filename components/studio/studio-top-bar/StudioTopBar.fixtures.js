@@ -5,6 +5,8 @@ const baseFixture = Object.freeze({
   notifications: [],
   notificationsLabel: "Notifications",
   notificationsView: null,
+  themeMode: "dark",
+  themeToggleAriaLabel: "Switch to Eggshell theme",
   accountHref: "/studio/account",
   accountAriaLabel: "creator@example.com",
   accountInitial: "C",

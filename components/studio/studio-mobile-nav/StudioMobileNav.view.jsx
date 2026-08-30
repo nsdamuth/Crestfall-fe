@@ -65,7 +65,7 @@ export default function StudioMobileNavView({
   drawerTitle = "Studio",
   communityLinksLabel = "Community Links",
   signedInLabel = "Signed in",
-  signedInEmail = "",
+  signedInUsername = "Player",
   logoutLabel = "Log out",
   logoutHref = "/logout",
   accountHref = "/studio/account",
@@ -222,7 +222,7 @@ export default function StudioMobileNavView({
 
             <MobileAccountSummary
               signedInLabel={signedInLabel}
-              signedInEmail={signedInEmail}
+              signedInUsername={signedInUsername}
               logoutLabel={logoutLabel}
               logoutHref={logoutHref}
               discordLink={discordLink}
@@ -295,7 +295,7 @@ function MobileDrawerGroup({
 
 function MobileAccountSummary({
   signedInLabel,
-  signedInEmail,
+  signedInUsername,
   logoutLabel,
   logoutHref,
   discordLink,
@@ -310,7 +310,7 @@ function MobileAccountSummary({
           aria-hidden="true"
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)]"
         >
-          {signedInEmail ? signedInEmail.charAt(0).toUpperCase() : "?"}
+          {signedInUsername ? signedInUsername.replace(/^@/, "").charAt(0).toUpperCase() : "P"}
         </span>
 
         <div className="min-w-0 flex-1">
@@ -318,7 +318,7 @@ function MobileAccountSummary({
             {signedInLabel}
           </h3>
           <p className="truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
-            {signedInEmail}
+            {signedInUsername}
           </p>
         </div>
 

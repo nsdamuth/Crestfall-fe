@@ -59,7 +59,7 @@ function TimelineGrid({ items = [] }) {
           key={item.id}
           type="button"
           onClick={() => item.onOpen?.()}
-          className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-black/30 text-left transition hover:border-[var(--gold-ornament)]/40"
+          className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/40"
         >
           <div className="grid min-h-36 grid-cols-[7rem_1fr]">
             <div className="overflow-hidden border-r border-[var(--line)]" aria-hidden="true">
@@ -181,7 +181,7 @@ export default function LoreView({
                   body={timelineError}
                 />
               ) : timelineEmptyMessage ? (
-                <div className="rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-8 text-center">
+                <div className="rounded-xl border border-dashed border-[var(--line)] bg-[var(--surface-1)] px-5 py-8 text-center">
                   <p className="text-sm text-[var(--ink-dim)]">{timelineEmptyMessage}</p>
                   <button type="button" onClick={() => onBuildTimeline?.()} className="cf-btn mt-4">
                     Build your first Timeline

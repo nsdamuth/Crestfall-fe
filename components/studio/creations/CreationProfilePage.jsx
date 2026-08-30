@@ -20,23 +20,26 @@ function StandardCreationProfilePage(props) {
   const viewModel = useCreationProfilePageViewModel({
     ...props,
     navigate: (href) => router.push(href),
+    refreshPage: () => router.refresh(),
   });
 
   if (!viewModel.shouldRender) return null;
 
   const creation = viewModel.creation;
   const mediaActionSlots = Object.fromEntries(
-    viewModel.visibleMedia.map((item) => [
-      item.id,
-      <MediaTileQuickActions
-        key={`actions-${item.id}`}
-        liked={item.liked}
-        bookmarked={item.bookmarked}
-        onToggleLike={() => viewModel.onToggleLike(item)}
-        onToggleBookmark={() => viewModel.onToggleBookmark(item)}
-        onExpand={() => viewModel.onOpenMedia(item.id)}
-      />,
-    ])
+    viewModel.visibleMedia
+      .filter((item) => !item.isLocked)
+      .map((item) => [
+        item.id,
+        <MediaTileQuickActions
+          key={`actions-${item.id}`}
+          liked={item.liked}
+          bookmarked={item.bookmarked}
+          onToggleLike={() => viewModel.onToggleLike(item)}
+          onToggleBookmark={() => viewModel.onToggleBookmark(item)}
+          onExpand={() => viewModel.onOpenMedia(item.id)}
+        />,
+      ])
   );
 
   return (

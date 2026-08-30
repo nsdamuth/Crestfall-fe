@@ -32,6 +32,7 @@ export default async function StudioCreationProfileRoute({ params }) {
     <CreationProfilePage
       creation={pageData.creation}
       media={pageData.media}
+      libraryPass={pageData.libraryPass}
       loadError={pageData.loadError}
     />
   );

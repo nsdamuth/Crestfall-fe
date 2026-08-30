@@ -111,10 +111,14 @@ export default function KitPromoBannerView({
   onCtaClick = null,
   secondaryCtaLabel = "",
   onSecondaryCtaClick = null,
+  enhanceTextReadability = false,
 }) {
   const config = TREATMENT_CONFIG[treatment] || TREATMENT_CONFIG.bottom;
   const veilClass =
     treatment === "bottom" ? resolveBottomVeil(bottomVariant) : config.veil;
+  const readabilityClass = enhanceTextReadability
+    ? "cf-art-text-readable"
+    : "";
 
   return (
     <div
@@ -150,13 +154,13 @@ export default function KitPromoBannerView({
           </p>
         )}
         {title && (
-          <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--art-ink)]">
+          <h2 className={`mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--art-ink)] ${readabilityClass}`}>
             {title}
           </h2>
         )}
         {line && (
           <p
-            className={`mt-[var(--space-2)] max-w-[30rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--art-ink-dim)] ${config.line}`}
+            className={`mt-[var(--space-2)] max-w-[30rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--art-ink-dim)] ${config.line} ${readabilityClass}`}
           >
             {line}
           </p>

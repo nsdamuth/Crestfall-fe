@@ -614,10 +614,12 @@
   --chrome-wash: rgba(6, 4, 2, .62);
 
   /* --- PANEL GLASS -------------------------------------------------------
-     Gate 2 token law row 11. Pairs with the existing --blur-panel
-     (2px), never --blur-glass. Kebab menus, the viewer's two-line
-     header, and the B6 creation-card kebab all cite this token. */
+     Over-art glass stays dark in both themes because the artwork under it
+     does not flip. UI menus/popovers get a separate themed glass so
+     Eggshell does not strand dark chrome on parchment. Both pair with
+     --blur-panel, never --blur-glass. */
   --panel-glass: rgba(36, 32, 25, .85);
+  --panel-ui-glass: rgba(36, 32, 25, .92);
 
   /* --- BLUR, tooltips ----------------------------------------------------
      A2, ratified narrow: three blur tokens, no cross-borrowing.
@@ -777,7 +779,7 @@
      descend toward black, warmth held throughout so nothing
      drifts toward grey or hospital white.                    */
 
-  --canvas:        #ebe3d0;   /* warm paper, ~L* 90.5           */
+  --canvas:        #ece7dc;   /* Eggshell canvas, 30 Aug 2026 proof */
 
   --surface-1:     #f0e9d8;   /* quiet sections, inset wells    */
   --surface-2:     #f4eee0;   /* cards, list rows               */
@@ -827,22 +829,21 @@
   --atm-vault:     radial-gradient(120% 100% at 50% 50%, transparent 40%, rgba(72,58,30,.10) 100%);
   --atm-veil:      linear-gradient(180deg, rgba(138,101,36,.06), transparent 45%);
 
-  /* --- ED1F INTERIM LIGHT VALUES, RULED 22 Aug 2026 -------------
-     F1: every new visual token minted this pass declares the
-     same value in both themes until a real light-theme render
-     sitting rules one, the same precedent as the scrims-do-not-
-     flip family. Each row below is ALSO marked interim in its
-     docs/DESIGN-TOKENS.md row. */
+  /* --- ED1F LIGHT VALUES, S02 RENDER SITTING 30 Aug 2026 ---------
+     UI-only beds now follow the Eggshell ramp. Art/lightbox glass
+     and chat-only deep beds stay dark because their background role
+     does not change with app theme. */
   --ink-typed:          #d9d3c6;
-  --fill-ghost:         rgba(242, 209, 148, .05);
-  --grad-card:          linear-gradient(160deg, #1a1610, #14110c);
-  --grad-rail:          linear-gradient(160deg, #16130d, #100d09);
+  --fill-ghost:         rgba(96, 74, 34, .04);
+  --grad-card:          linear-gradient(160deg, var(--surface-2), var(--surface-1));
+  --grad-rail:          linear-gradient(160deg, var(--surface-3), var(--surface-2));
   --bed-deep:           #0d0b08;
   --chrome-wash:        rgba(6, 4, 2, .62);
   --panel-glass:        rgba(36, 32, 25, .85);
-  --grad-panel-lift:    linear-gradient(160deg, #332d22, #2a251d);
-  --grad-creation-card: linear-gradient(160deg, #241f16, #1b1711);
-  --fill-option-rest:   rgba(0, 0, 0, .22);
+  --panel-ui-glass:     rgba(252, 248, 238, .94);
+  --grad-panel-lift:    linear-gradient(160deg, var(--surface-4), var(--surface-2));
+  --grad-creation-card: linear-gradient(160deg, var(--surface-2), var(--surface-1));
+  --fill-option-rest:   rgba(96, 74, 34, .06);
 }
 
 /* --- TYPE ASSIGNMENT CORRECTIONS ----------------------------
@@ -866,4 +867,40 @@
   --track-eyebrow: .16em;
   --text-cta:      var(--text-body);
   --lh-cta:        var(--lh-body);
+}
+
+/* Artwork text readability: opt-in only for white/dim text placed over imagery. */
+.cf-art-text-readable {
+  text-shadow:
+    0 0 4px rgb(41 41 41 / 80%),
+    0 0 8px rgba(0, 0, 0, 0.6),
+    0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Home hero polish: one-pass reflected-light brush on pointer entry/exit. */
+@keyframes cf-home-hero-sheen-pass {
+  0% {
+    transform: translateX(-150%);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.42;
+  }
+  72% {
+    opacity: 0.32;
+  }
+  100% {
+    transform: translateX(340%);
+    opacity: 0;
+  }
+}
+
+.cf-home-hero-sheen > span {
+  animation: cf-home-hero-sheen-pass 920ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-home-hero-sheen {
+    display: none;
+  }
 }

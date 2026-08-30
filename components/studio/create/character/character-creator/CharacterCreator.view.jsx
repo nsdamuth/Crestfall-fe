@@ -36,7 +36,7 @@ export default function CharacterCreatorView({
     <>
       {headerContent}
 
-      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <section className="mt-8 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -76,8 +76,8 @@ export default function CharacterCreatorView({
                   step.active
                     ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                     : step.visited
-                      ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
-                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
+                      ? "border-[var(--line-strong)] bg-[var(--surface-1)] text-[var(--gold-ornament)]"
+                      : "border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                 }`}
               >
                 <Icon size={17} />
@@ -93,7 +93,7 @@ export default function CharacterCreatorView({
       <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
         {previewContent}
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
           {editorContent}
 
           {saveMessage ? (

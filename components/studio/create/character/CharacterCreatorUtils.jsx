@@ -1,6 +1,6 @@
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+    <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-1)] p-4">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -21,7 +21,7 @@ function PlaceholderStep({ step }) {
         body="This section is stubbed for now. The flow is being shaped before database persistence and AI generation are added."
       />
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm leading-7 text-[var(--ink-dim)]">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-6 text-sm leading-7 text-[var(--ink-dim)]">
         Coming soon: optional fields, advanced controls, and draft persistence.
       </div>
     </div>
@@ -49,7 +49,7 @@ function TextField({ label, value, onChange }) {
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-[var(--line)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -66,7 +66,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );

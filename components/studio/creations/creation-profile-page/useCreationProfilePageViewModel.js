@@ -17,6 +17,10 @@ import {
   setMediaBookmark,
   setMediaLike,
 } from "@/lib/client/studio/media/mediaReactionClient";
+import {
+  createLibraryPassPurchaseIdempotencyKey,
+  purchaseCreationLibraryPass,
+} from "@/lib/client/studio/creations/libraryPassClient";
 
 export const CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12;
 export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
@@ -63,6 +67,73 @@ function normalizeTags(value) {
     : [];
 }
 
+function formatCoinAmount(value) {
+  const amount = Number.parseInt(value, 10);
+  return new Intl.NumberFormat("en-US").format(
+    Number.isFinite(amount) ? amount : 0
+  );
+}
+
+export function projectCreationProfileLibraryPassPanel({
+  state,
+  purchaseStatus = "idle",
+  purchaseMessage = "",
+} = {}) {
+  if (!state?.passRequired) return null;
+
+  const eligibleImageCount =
+    Number.parseInt(state.eligibleImageCount, 10) || 0;
+  const publicPreviewCount =
+    Number.parseInt(state.publicPreviewCount, 10) || 4;
+  const currentPriceCoins =
+    Number.parseInt(state.currentPriceCoins, 10) || 0;
+  const protectedImageCount = Math.max(
+    eligibleImageCount - publicPreviewCount,
+    0
+  );
+  const isOwner = Boolean(state.isOwner);
+  const hasActiveEntitlement = Boolean(
+    state.hasActiveEntitlement
+  );
+  const hasFullAccess = Boolean(
+    isOwner || hasActiveEntitlement || state.canViewFullLibrary
+  );
+  const salesEnabled = Boolean(state.salesEnabled);
+  const canPurchase = Boolean(
+    state.canPurchase &&
+      salesEnabled &&
+      !hasFullAccess
+  );
+  const purchaseBusy = purchaseStatus === "purchasing";
+
+  return {
+    isOwner,
+    hasActiveEntitlement,
+    hasFullAccess,
+    salesEnabled,
+    canPurchase,
+    purchaseBusy,
+    purchaseStatus,
+    purchaseMessage: normalizeText(purchaseMessage),
+    currentPriceCoins,
+    currentPriceLabel: `${formatCoinAmount(currentPriceCoins)} coins`,
+    eligibleImageCount,
+    publicPreviewCount,
+    protectedImageCount,
+    includesFutureAdditions: state.includesFutureAdditions !== false,
+    statusLabel: isOwner
+      ? "Creator access"
+      : hasActiveEntitlement
+        ? "Library Pass active"
+        : salesEnabled
+          ? "Extended library locked"
+          : "New pass sales paused",
+    actionLabel: purchaseBusy
+      ? "Unlocking..."
+      : `Unlock full library — ${formatCoinAmount(currentPriceCoins)} coins`,
+  };
+}
+
 export function getCreationProfileMediaImageUrl(item) {
   return getCreationMediaDisplayUrl(item, null);
 }
@@ -88,25 +159,43 @@ function getMediaId(item, index) {
 
 export function normalizeCreationProfileMedia(media) {
   return (Array.isArray(media) ? media : []).map((item, index) => {
-    const displayUrl = getCreationProfileMediaImageUrl(item);
-    const cardUrl = getCreationMediaCardUrl(item, displayUrl);
-    const thumbnailUrl = getCreationMediaThumbnailUrl(item, cardUrl || displayUrl);
+    const accessState = normalizeText(
+      item?.accessState || item?.access_state
+    ).toUpperCase();
+    const isLocked = Boolean(
+      item?.isLocked === true || accessState === "LOCKED"
+    );
+    const lockedPreviewUrl = getCreationMediaLockedPreviewUrl(item);
+    const displayUrl = isLocked
+      ? null
+      : getCreationProfileMediaImageUrl(item);
+    const cardUrl = isLocked
+      ? null
+      : getCreationMediaCardUrl(item, displayUrl);
+    const thumbnailUrl = isLocked
+      ? null
+      : getCreationMediaThumbnailUrl(item, cardUrl || displayUrl);
 
     return {
       ...item,
       id: getMediaId(item, index),
       imageOutputId: getCreationProfileReactionImageOutputId(item),
-      imageUrl: displayUrl,
+      imageUrl: isLocked ? lockedPreviewUrl : displayUrl,
       displayUrl,
       cardUrl,
       thumbnailUrl,
-      lockedPreviewUrl: getCreationMediaLockedPreviewUrl(item),
+      lockedPreviewUrl,
+      accessState,
+      isLocked,
+      canViewOriginal: Boolean(item?.canViewOriginal),
+      canUseInTools: Boolean(item?.canUseInTools),
+      canUseInChat: Boolean(item?.canUseInChat),
       title: normalizeText(item?.title, item?.type || "Creation media"),
       type: normalizeText(item?.type, "IMAGE").toUpperCase(),
       contentRating: normalizeText(item?.contentRating, "SFW"),
       createdAt: item?.createdAt || item?.created_at || null,
-      liked: Boolean(item?.liked),
-      bookmarked: Boolean(item?.bookmarked),
+      liked: isLocked ? false : Boolean(item?.liked),
+      bookmarked: isLocked ? false : Boolean(item?.bookmarked),
     };
   });
 }
@@ -211,8 +300,10 @@ function toggleSetItem(setter, id) {
 export function useCreationProfilePageViewModel({
   creation,
   media = [],
+  libraryPass = null,
   loadError = null,
   navigate,
+  refreshPage,
 } = {}) {
   const normalizedCreation = useMemo(
     () => normalizeCreationProfileCreation(creation),
@@ -235,11 +326,18 @@ export function useCreationProfilePageViewModel({
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [libraryPassPurchaseStatus, setLibraryPassPurchaseStatus] =
+    useState("idle");
+  const [libraryPassPurchaseMessage, setLibraryPassPurchaseMessage] =
+    useState("");
 
   useEffect(() => {
     const imageOutputIds = [
       ...new Set(
-        normalizedMedia.map((item) => item.imageOutputId).filter(Boolean)
+        normalizedMedia
+          .filter((item) => !item.isLocked)
+          .map((item) => item.imageOutputId)
+          .filter(Boolean)
       ),
     ];
 
@@ -331,6 +429,13 @@ export function useCreationProfilePageViewModel({
   }
 
   async function toggleLikedMedia(item) {
+    if (item?.isLocked) {
+      setReactionMessage(
+        "Unlock this creation's Library Pass to react to protected media."
+      );
+      return;
+    }
+
     const imageOutputId = item?.imageOutputId;
     if (!imageOutputId) {
       setReactionMessage(
@@ -352,6 +457,13 @@ export function useCreationProfilePageViewModel({
   }
 
   async function toggleBookmarkedMedia(item) {
+    if (item?.isLocked) {
+      setReactionMessage(
+        "Unlock this creation's Library Pass to react to protected media."
+      );
+      return;
+    }
+
     const imageOutputId = item?.imageOutputId;
     if (!imageOutputId) {
       setReactionMessage(
@@ -372,6 +484,35 @@ export function useCreationProfilePageViewModel({
     }
   }
 
+  async function purchaseLibraryPass() {
+    if (
+      !normalizedCreation?.id ||
+      libraryPassPurchaseStatus === "purchasing"
+    ) {
+      return;
+    }
+
+    setLibraryPassPurchaseStatus("purchasing");
+    setLibraryPassPurchaseMessage("");
+
+    try {
+      await purchaseCreationLibraryPass(
+        normalizedCreation.id,
+        createLibraryPassPurchaseIdempotencyKey()
+      );
+      setLibraryPassPurchaseStatus("success");
+      setLibraryPassPurchaseMessage(
+        "Library Pass purchased. Unlocking the full library..."
+      );
+      refreshPage?.();
+    } catch (error) {
+      setLibraryPassPurchaseStatus("error");
+      setLibraryPassPurchaseMessage(
+        error?.message || "Library Pass purchase could not be completed."
+      );
+    }
+  }
+
   async function startChat() {
     if (!normalizedCreation?.supportsChat || startingChat) return;
 
@@ -386,6 +527,21 @@ export function useCreationProfilePageViewModel({
       setChatError(error?.message || "Story could not be started.");
       setStartingChat(false);
     }
+  }
+
+  function openMedia(itemId) {
+    const item = filteredMedia.find(
+      (candidate) => candidate.id === itemId
+    );
+
+    if (item?.isLocked) {
+      setLibraryPassPurchaseMessage(
+        "This image is part of the protected Library Pass collection."
+      );
+      return;
+    }
+
+    setActivePreviewId(itemId || null);
   }
 
   return {
@@ -405,6 +561,11 @@ export function useCreationProfilePageViewModel({
       activeTab,
     }),
     query,
+    libraryPassPanel: projectCreationProfileLibraryPassPanel({
+      state: libraryPass,
+      purchaseStatus: libraryPassPurchaseStatus,
+      purchaseMessage: libraryPassPurchaseMessage,
+    }),
     visibleMedia,
     filteredMedia,
     activePreviewItem,
@@ -419,7 +580,8 @@ export function useCreationProfilePageViewModel({
       setVisibleCount(
         (current) => current + CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT
       ),
-    onOpenMedia: (itemId) => setActivePreviewId(itemId || null),
+    onOpenMedia: openMedia,
+    onPurchaseLibraryPass: purchaseLibraryPass,
     onCloseMedia: () => setActivePreviewId(null),
     onSelectPreviewItem: (item) => setActivePreviewId(item?.id || null),
     onToggleLike: toggleLikedMedia,

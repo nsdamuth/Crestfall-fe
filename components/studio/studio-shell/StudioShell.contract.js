@@ -1,4 +1,4 @@
-export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable UI boundary for the studio canvas frame that wraps all 54 studio
@@ -14,6 +14,7 @@ export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {import("react").ReactNode} mobileNavSlot
  * @property {import("react").ReactNode} topBarSlot
  * @property {boolean} reserveMobileDockSpace Whether mobile page content reserves the bottom-dock clearance. Story Chat disables it because the composer replaces the dock.
+ * @property {"dark"|"light"} themeMode Studio presentation mode; light is the Eggshell theme.
  * @property {import("react").ReactNode} children
  */
 

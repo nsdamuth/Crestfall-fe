@@ -6,6 +6,8 @@ export const STUDIO_TOP_BAR_COPY = Object.freeze({
   searchPlaceholder: "Search characters, stories, and adventures",
   notificationsLabel: "Notifications",
   openMenuAriaLabel: "Open menu",
+  eggshellThemeLabel: "Switch to Eggshell theme",
+  darkThemeLabel: "Switch to Night theme",
 });
 
 export function getStudioTopBarAccountLabel(user = {}) {
@@ -20,6 +22,13 @@ export function getStudioTopBarAccountLabel(user = {}) {
 export function getStudioTopBarAccountInitial(user = {}) {
   const email = typeof user?.email === "string" ? user.email.trim() : "";
   return email ? email.charAt(0).toUpperCase() : "?";
+}
+
+
+export function getStudioTopBarThemeToggleLabel(themeMode = "dark") {
+  return themeMode === "light"
+    ? STUDIO_TOP_BAR_COPY.darkThemeLabel
+    : STUDIO_TOP_BAR_COPY.eggshellThemeLabel;
 }
 
 // No notification source exists in the app yet (no contract, no
@@ -39,6 +48,8 @@ export function useStudioTopBarViewModel({
   user,
   notifications = [],
   pathname = "",
+  themeMode = "dark",
+  onToggleTheme = () => {},
   onOpenMenu = () => {},
 } = {}) {
   const [searchValue, setSearchValue] = useState("");
@@ -66,6 +77,9 @@ export function useStudioTopBarViewModel({
     notificationsLabel: STUDIO_TOP_BAR_COPY.notificationsLabel,
     notificationsView,
     bellRef,
+    themeMode: themeMode === "light" ? "light" : "dark",
+    themeToggleAriaLabel: getStudioTopBarThemeToggleLabel(themeMode),
+    onToggleTheme,
     onOpenNotifications: openNotifications,
     onOpenNotificationCenter: openNotificationCenter,
     onCloseNotifications: closeNotifications,

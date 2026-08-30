@@ -39,7 +39,7 @@ export default function BehaviorStep({ form, updateField }) {
           updateField={updateField}
         />
 
-        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Optional Personality Frameworks
           </p>

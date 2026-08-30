@@ -48,7 +48,7 @@ export default function StudioSidebarView({
   brandHref = "/studio",
   communityLinksLabel = "Community Links",
   signedInLabel = "Signed in",
-  signedInEmail = "",
+  signedInUsername = "Player",
   logoutLabel = "Log out",
   logoutHref = "/logout",
   collapseAriaLabel = "Collapse sidebar",
@@ -212,7 +212,7 @@ export default function StudioSidebarView({
               aria-hidden="true"
               className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-[var(--line)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[color:var(--gold-ornament)]"
             >
-              {signedInEmail ? signedInEmail.charAt(0).toUpperCase() : "?"}
+              {signedInUsername ? signedInUsername.replace(/^@/, "").charAt(0).toUpperCase() : "P"}
             </span>
 
             <div className="min-w-0 flex-1">
@@ -220,7 +220,7 @@ export default function StudioSidebarView({
                 {signedInLabel}
               </h3>
               <p className="truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
-                {signedInEmail}
+                {signedInUsername}
               </p>
             </div>
 
@@ -258,7 +258,7 @@ export default function StudioSidebarView({
           {/* Consolidated with the former duplicate sign-in panel
               below it (RULED 9 Aug 2026, kit polish 2 pass): both
               blocks rendered simultaneously and unconditionally,
-              repeating the same email; logout is the only affordance
+              repeating the same account identity; logout is the only affordance
               the second block carried that this one did not, so it
               folds in here instead, tokenized, word beside the icon
               per the destructive-word law even though logout is not

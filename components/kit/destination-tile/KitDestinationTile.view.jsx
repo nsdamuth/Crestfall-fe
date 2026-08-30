@@ -50,7 +50,7 @@ export default function KitDestinationTileView({
       )}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_45%,transparent)] to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-[var(--scrim-strong)] via-[var(--scrim)] to-transparent"
       />
 
       <div className="pointer-events-none relative z-[1] flex h-full flex-col justify-end gap-[var(--space-1)] p-[var(--space-3)]">

@@ -17,7 +17,7 @@ context, own React state, or interpret the current pathname.
 - exact `/studio` and prefix-based nested-route matching;
 - collapsed, Community Links, and Legacy group state;
 - the flagged nine-destination preview nav (below);
-- signed-in email normalization; and
+- signed-in public-username normalization; and
 - existing brand, logout, and accessibility copy.
 
 The component remains mounted once by `StudioShell.jsx`. `StudioMobileNav` is a
@@ -59,7 +59,7 @@ density is untouched. Vault's iconKey reverted `castle` to `archive`
 in the same pass (the repo's standing archive/vault glyph).
 
 The signed-in area's Discord and Settings icons now sit inline on the
-signed-in row itself (avatar, name, email, then the two icons); Log
+signed-in row itself (avatar, label, public username, then the two icons); Log
 out is a quiet row directly beneath. No separate icon row remains.
 
 The economy slot's `expanded` and `collapsed` layout modes lost their

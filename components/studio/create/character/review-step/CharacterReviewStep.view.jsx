@@ -11,7 +11,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         rows={4}
-        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -19,7 +19,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
 
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -78,7 +78,7 @@ export default function CharacterReviewStepView({
             onChange={(event) => onAgeChange?.(event.target.value)}
             onBlur={() => onNormalizeAge?.()}
             placeholder="18+"
-            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+            className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           />
 
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -88,7 +88,7 @@ export default function CharacterReviewStepView({
         </label>
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-white/10 bg-black/25">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
         <button
           type="button"
           onClick={() => onToggleAdvanced?.()}
@@ -108,7 +108,7 @@ export default function CharacterReviewStepView({
         </button>
 
         {advancedOpen ? (
-          <div className="border-t border-white/10 px-5 py-5">
+          <div className="border-t border-[var(--line)] px-5 py-5">
             <div className="grid gap-5">
               {advancedFields.map((field) => (
                 <TextAreaField
@@ -127,7 +127,7 @@ export default function CharacterReviewStepView({
         ) : null}
       </div>
 
-      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-5">
+      <div className="mt-8 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Draft Summary
         </p>

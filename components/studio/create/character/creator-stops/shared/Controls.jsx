@@ -381,7 +381,7 @@ export function InlineDropdown({ label, options, value, onChange, placeholder = 
 
 export function CustomValueField({ label, value, onChange, placeholder, maxLength = 80 }) {
   return (
-    <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/20 p-[var(--space-3)]">
+    <div className="mt-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-3)]">
       <FieldLabel count={(value || "").length} max={maxLength}>
         {label}
       </FieldLabel>

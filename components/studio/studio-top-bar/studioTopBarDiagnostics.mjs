@@ -29,8 +29,10 @@ test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   assert.match(view, /notifications/);
   assert.match(view, /notificationsView/);
   assert.match(view, /bellRef/);
-  assert.match(view, /import \{ Bell, Menu, X \} from "lucide-react"/);
+  assert.match(view, /import \{ Bell, Menu, Moon, Sun, X \} from "lucide-react"/);
   assert.match(view, /onOpenNotificationCenter/);
+  assert.match(view, /onToggleTheme/);
+  assert.match(view, /themeMode === "light" \? <Moon/);
   assert.match(view, /accountLinkSlot/);
   assert.match(view, /from "@\/components\/kit\/KitModalFrame"/);
   assert.doesNotMatch(view, /StudioAccountProvider|useStudioAccount/);
@@ -69,6 +71,7 @@ test("Studio Top Bar ViewModel owns search and panel state", () => {
   assert.match(viewModel, /notificationsView/);
   assert.match(viewModel, /bellRef/);
   assert.match(viewModel, /getStudioTopBarAccountLabel/);
+  assert.match(viewModel, /getStudioTopBarThemeToggleLabel/);
   assert.doesNotMatch(viewModel, /useStudioAccount/);
   assert.doesNotMatch(viewModel, /activeUtility|formatStudioCoinBalance/);
   assert.doesNotMatch(viewModel, /<\w+/);
@@ -84,6 +87,7 @@ test("Studio Top Bar contract and fixtures cover all visible states", () => {
   assert.match(contract, /STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /applicationOwnedDependencies/);
   assert.match(contract, /notificationsView/);
+  assert.match(contract, /themeToggle/);
   assert.match(fixtures, /studioTopBarIdleFixture/);
   assert.match(fixtures, /studioTopBarSearchFocusedFixture/);
   assert.match(fixtures, /studioTopBarBellIdleFixture/);

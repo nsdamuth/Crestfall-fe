@@ -4,12 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import StudioEconomyWidget from "@/components/studio/StudioEconomyWidget";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import StudioSidebarView from "./studio-sidebar/StudioSidebar.view";
 import { useStudioSidebarViewModel } from "./studio-sidebar/useStudioSidebarViewModel";
 
 export default function StudioSidebar(props) {
   const pathname = usePathname();
-  const viewProps = useStudioSidebarViewModel({ ...props, pathname });
+  const { accountProfile } = useStudioAccount();
+  const viewProps = useStudioSidebarViewModel({
+    ...props,
+    accountProfile,
+    pathname,
+  });
 
   return (
     <StudioSidebarView

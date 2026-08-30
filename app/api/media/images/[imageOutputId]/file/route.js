@@ -84,6 +84,10 @@ export async function GET(
     requestedVariant === "display"
       ? requestedVariant
       : null;
+  const creationId =
+    request.nextUrl.searchParams.get(
+      "creationId"
+    )?.trim() || null;
 
   /*
    * Authentication is optional and used
@@ -121,6 +125,13 @@ export async function GET(
       serviceUrl.searchParams.set(
         "variant",
         variant
+      );
+    }
+
+    if (creationId) {
+      serviceUrl.searchParams.set(
+        "creationId",
+        creationId
       );
     }
 

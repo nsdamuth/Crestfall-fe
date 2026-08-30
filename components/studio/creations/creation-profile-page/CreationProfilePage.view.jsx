@@ -1,9 +1,11 @@
 import {
   Bookmark,
   Camera,
+  Coins,
   Film,
   Heart,
   Image as ImageIcon,
+  LockKeyhole,
   MessageCircle,
   Search,
   ScrollText,
@@ -24,6 +26,7 @@ export default function CreationProfilePageView({
   description = null,
   mediaTabs = [],
   query = "",
+  libraryPassPanel = null,
   creditsSlot = null,
   visibleMedia = [],
   hasMoreMedia = false,
@@ -40,6 +43,7 @@ export default function CreationProfilePageView({
   onQueryChange = null,
   onLoadMore = null,
   onOpenMedia = null,
+  onPurchaseLibraryPass = null,
   onToggleDescription = null,
   onStartChat = null,
 }) {
@@ -159,6 +163,13 @@ export default function CreationProfilePageView({
         </div>
       </header>
 
+      {libraryPassPanel ? (
+        <LibraryPassViewerPanel
+          panel={libraryPassPanel}
+          onPurchase={onPurchaseLibraryPass}
+        />
+      ) : null}
+
       <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
         <div className="flex flex-wrap gap-2">
           {mediaTabs.map((tab) => {
@@ -234,6 +245,66 @@ export default function CreationProfilePageView({
   );
 }
 
+function LibraryPassViewerPanel({ panel, onPurchase }) {
+  const messageIsError = panel.purchaseStatus === "error";
+
+  return (
+    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
+              <LockKeyhole size={16} />
+            </span>
+            <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+              Library Pass
+            </p>
+            <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              {panel.statusLabel}
+            </span>
+          </div>
+
+          <h2 className="mt-3 font-display text-3xl">Extended Image Library</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+            {panel.publicPreviewCount} images are public previews. {panel.protectedImageCount} additional {panel.protectedImageCount === 1 ? "image is" : "images are"} protected.
+            {panel.includesFutureAdditions
+              ? " One Library Pass also unlocks future eligible additions to this creation."
+              : ""}
+          </p>
+        </div>
+
+        {!panel.isOwner && !panel.hasActiveEntitlement ? (
+          panel.canPurchase ? (
+            <button
+              type="button"
+              onClick={() => onPurchase?.()}
+              disabled={panel.purchaseBusy}
+              className="cf-btn cf-btn--primary"
+            >
+              <Coins size={15} />
+              {panel.actionLabel}
+            </button>
+          ) : (
+            <span className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              New purchases unavailable
+            </span>
+          )
+        ) : null}
+      </div>
+
+      {panel.purchaseMessage ? (
+        <p className={`mt-4 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${
+          messageIsError
+            ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] text-[var(--status-danger)]"
+            : "border-[var(--line)] bg-[var(--fill)] text-[var(--gold-ornament)]"
+        }`}>
+          {panel.purchaseMessage}
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 function FilterButton({ active, onClick, children }) {
   return (
     <button
@@ -251,6 +322,45 @@ function FilterButton({ active, onClick, children }) {
 }
 
 function MediaTile({ item, actionsSlot, onOpen }) {
+  if (item.isLocked) {
+    return (
+      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 text-left">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="relative h-full w-full text-left"
+          aria-label={`Library Pass required for ${item.title || "media"}`}
+        >
+          {item.lockedPreviewUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={item.lockedPreviewUrl}
+              alt="Protected Library Pass preview"
+              loading={item.priority ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={item.priority ? "high" : "low"}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10" />
+          )}
+
+          <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+            <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-black/70 px-5 py-4 text-center shadow-[var(--shadow-popover)]">
+              <LockKeyhole className="mx-auto text-[var(--gold-ornament)]" size={24} />
+              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                Library Pass
+              </p>
+              <p className="mt-1 text-xs text-[var(--ink-dim)]">
+                Unlock full image
+              </p>
+            </div>
+          </div>
+        </button>
+      </article>
+    );
+  }
+
   if (!item.imageUrl) {
     return (
       <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
