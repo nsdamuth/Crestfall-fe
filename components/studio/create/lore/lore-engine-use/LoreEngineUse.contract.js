@@ -35,3 +35,18 @@ export const LORE_ENGINE_USE_KNOWLEDGE_MODES = Object.freeze([
     label: "Private belief",
   },
 ]);
+
+export const LORE_ENGINE_USE_BINDING_SCOPE_TYPES = Object.freeze([
+  {
+    value: "ASSET",
+    label: "All submitted Lore",
+  },
+  {
+    value: "CHAPTER",
+    label: "One chapter",
+  },
+  {
+    value: "SECTION",
+    label: "One section",
+  },
+]);

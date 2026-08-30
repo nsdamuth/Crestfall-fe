@@ -124,6 +124,185 @@ function ReferenceChoice({
   );
 }
 
+function CharacterAccessControls({
+  characterId,
+  knowledgeMode,
+  knowledgeModeOptions,
+  access = {},
+  characterScopeOptions,
+  availableChapters,
+  includedSections,
+  availableBlocks,
+  onKnowledgeModeChange,
+  onScopeTypeChange,
+  onChapterChange,
+  onSectionChange,
+  onToggleExclusion,
+}) {
+  const scopeType = access.scopeType || "ASSET";
+  const includedChapterIds = new Set(
+    includedSections.map((section) => section.chapterId)
+  );
+  const chapterOptions = availableChapters.filter((chapter) =>
+    includedChapterIds.has(chapter.id)
+  );
+  const scopedSections = includedSections.filter((section) => {
+    if (scopeType === "CHAPTER") return section.chapterId === access.chapterId;
+    if (scopeType === "SECTION") return section.id === access.sectionId;
+    return true;
+  });
+  const scopedSectionIds = new Set(scopedSections.map((section) => section.id));
+  const scopedBlocks = availableBlocks.filter((block) =>
+    scopedSectionIds.has(block.sectionId)
+  );
+  const scopedChapterIds = new Set(
+    scopedSections.map((section) => section.chapterId)
+  );
+
+  const exclusionGroups = [
+    scopeType === "ASSET"
+      ? {
+          field: "excludedChapterIds",
+          label: "Excluded chapters",
+          items: chapterOptions.filter((chapter) => scopedChapterIds.has(chapter.id)),
+          selected: access.excludedChapterIds || [],
+          getSecondary: () => "Deny every section and block in this chapter.",
+        }
+      : null,
+    scopeType !== "SECTION"
+      ? {
+          field: "excludedSectionIds",
+          label: "Excluded sections",
+          items: scopedSections,
+          selected: access.excludedSectionIds || [],
+          getSecondary: (item) => item.chapterTitle,
+        }
+      : null,
+    {
+      field: "excludedBlockIds",
+      label: "Excluded blocks",
+      items: scopedBlocks,
+      selected: access.excludedBlockIds || [],
+      getSecondary: (item) => `${item.sectionTitle} · ${item.type}`,
+    },
+  ].filter(Boolean);
+
+  return (
+    <div className="grid gap-3">
+      <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+        Knowledge relationship
+        <select
+          value={knowledgeMode || "SECONDHAND"}
+          onChange={(event) => onKnowledgeModeChange(event.target.value)}
+          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+        >
+          {knowledgeModeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+        Knowledge scope
+        <select
+          value={scopeType}
+          onChange={(event) => onScopeTypeChange(event.target.value)}
+          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+        >
+          {characterScopeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {scopeType === "CHAPTER" ? (
+        <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Chapter
+          <select
+            value={access.chapterId || ""}
+            onChange={(event) => onChapterChange(event.target.value)}
+            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+          >
+            <option value="">Select a chapter</option>
+            {chapterOptions.map((chapter) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.title}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
+      {scopeType === "SECTION" ? (
+        <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Section
+          <select
+            value={access.sectionId || ""}
+            onChange={(event) => onSectionChange(event.target.value)}
+            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+          >
+            <option value="">Select a section</option>
+            {includedSections.map((section) => (
+              <option key={section.id} value={section.id}>
+                {section.chapterTitle} · {section.title}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+
+      {(scopeType === "ASSET" ||
+        (scopeType === "CHAPTER" && access.chapterId) ||
+        (scopeType === "SECTION" && access.sectionId)) ? (
+        <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+            Explicit exclusions
+          </p>
+          <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+            Deny-precedence exceptions are removed before retrieval. Excluded Lore is never sent to the model for this Character.
+          </p>
+          <div className="mt-3 grid gap-3">
+            {exclusionGroups.map((group) =>
+              group.items.length ? (
+                <div key={group.field}>
+                  <p className="text-xs text-[var(--ink)]">{group.label}</p>
+                  <div className="mt-2 grid gap-2">
+                    {group.items.map((item) => (
+                      <label
+                        key={`${characterId}:${group.field}:${item.id}`}
+                        className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={group.selected.includes(item.id)}
+                          onChange={() => onToggleExclusion(group.field, item.id)}
+                          className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
+                        />
+                        <span className="min-w-0">
+                          <span className="block text-xs text-[var(--ink)]">
+                            {item.title}
+                          </span>
+                          <span className="mt-0.5 block text-[11px] text-[var(--ink-dim)]">
+                            {group.getSecondary(item)}
+                          </span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ) : null
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function SubmissionHistory({ submissions }) {
   if (!submissions.length) return null;
 
@@ -169,8 +348,13 @@ export default function LoreEngineUseView({
   selectedCharacterIds = [],
   selectedLocationIds = [],
   knowledgeModes = {},
+  characterAccess = {},
   knowledgeModeOptions = [],
+  characterScopeOptions = [],
+  availableChapters = [],
   availableSections = [],
+  availableBlocks = [],
+  includedSections = [],
   characterRefs = [],
   locationRefs = [],
   canSubmit = false,
@@ -181,6 +365,10 @@ export default function LoreEngineUseView({
   toggleCharacter,
   toggleLocation,
   setCharacterKnowledgeMode,
+  setCharacterScopeType,
+  setCharacterScopeChapter,
+  setCharacterScopeSection,
+  toggleCharacterExclusion,
   submit,
   cancel,
   withdraw,
@@ -433,25 +621,31 @@ export default function LoreEngineUseView({
                           selected={selected}
                           onToggle={() => toggleCharacter(refItem.id)}
                         >
-                          <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
-                            Knowledge relationship
-                            <select
-                              value={knowledgeModes[refItem.id] || "SECONDHAND"}
-                              onChange={(event) =>
-                                setCharacterKnowledgeMode(
-                                  refItem.id,
-                                  event.target.value
-                                )
-                              }
-                              className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-                            >
-                              {knowledgeModeOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
+                          <CharacterAccessControls
+                            characterId={refItem.id}
+                            knowledgeMode={knowledgeModes[refItem.id] || "SECONDHAND"}
+                            knowledgeModeOptions={knowledgeModeOptions}
+                            access={characterAccess[refItem.id] || {}}
+                            characterScopeOptions={characterScopeOptions}
+                            availableChapters={availableChapters}
+                            includedSections={includedSections}
+                            availableBlocks={availableBlocks}
+                            onKnowledgeModeChange={(mode) =>
+                              setCharacterKnowledgeMode(refItem.id, mode)
+                            }
+                            onScopeTypeChange={(scopeType) =>
+                              setCharacterScopeType(refItem.id, scopeType)
+                            }
+                            onChapterChange={(chapterId) =>
+                              setCharacterScopeChapter(refItem.id, chapterId)
+                            }
+                            onSectionChange={(sectionId) =>
+                              setCharacterScopeSection(refItem.id, sectionId)
+                            }
+                            onToggleExclusion={(field, id) =>
+                              toggleCharacterExclusion(refItem.id, field, id)
+                            }
+                          />
                         </ReferenceChoice>
                       );
                     })}
@@ -518,6 +712,10 @@ export default function LoreEngineUseView({
                   !selectedSectionIds.length ? (
                   <p className="text-xs text-amber-100">
                     Select at least one Lore section.
+                  </p>
+                ) : !canSubmit ? (
+                  <p className="text-xs text-amber-100">
+                    Complete the knowledge scope for each selected Character.
                   </p>
                 ) : null}
               </div>

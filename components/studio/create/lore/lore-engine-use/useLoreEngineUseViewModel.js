@@ -8,6 +8,7 @@ import {
   withdrawLoreEngineUseSubmission,
 } from "@/lib/client/studio/creations/loreEngineUseClient";
 import {
+  LORE_ENGINE_USE_BINDING_SCOPE_TYPES,
   LORE_ENGINE_USE_CONTRACT_VERSION,
   LORE_ENGINE_USE_KNOWLEDGE_MODES,
 } from "./LoreEngineUse.contract";
@@ -34,6 +35,34 @@ function toggleId(list, id) {
     : [...list, id];
 }
 
+function createDefaultCharacterAccess() {
+  return {
+    scopeType: "ASSET",
+    chapterId: "",
+    sectionId: "",
+    excludedChapterIds: [],
+    excludedSectionIds: [],
+    excludedBlockIds: [],
+  };
+}
+
+function normalizeCharacterAccess(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    ...createDefaultCharacterAccess(),
+    ...source,
+    excludedChapterIds: Array.isArray(source.excludedChapterIds)
+      ? source.excludedChapterIds
+      : [],
+    excludedSectionIds: Array.isArray(source.excludedSectionIds)
+      ? source.excludedSectionIds
+      : [],
+    excludedBlockIds: Array.isArray(source.excludedBlockIds)
+      ? source.excludedBlockIds
+      : [],
+  };
+}
+
 export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   const [state, setState] = useState({
     source: {},
@@ -44,11 +73,12 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   const [loadMessage, setLoadMessage] = useState("");
   const [actionStatus, setActionStatus] = useState("IDLE");
   const [actionMessage, setActionMessage] = useState("");
-  const [scopeMode, setScopeMode] = useState("ENTIRE_ASSET");
+  const [scopeMode, setScopeModeState] = useState("ENTIRE_ASSET");
   const [selectedSectionIds, setSelectedSectionIds] = useState([]);
   const [selectedCharacterIds, setSelectedCharacterIds] = useState([]);
   const [selectedLocationIds, setSelectedLocationIds] = useState([]);
   const [knowledgeModes, setKnowledgeModes] = useState({});
+  const [characterAccess, setCharacterAccess] = useState({});
   const [configuredReleaseId, setConfiguredReleaseId] = useState("");
 
   const source = state.source || {};
@@ -96,11 +126,12 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     if (!sourceReleaseId || sourceReleaseId === configuredReleaseId) return;
 
     setConfiguredReleaseId(sourceReleaseId);
-    setScopeMode("ENTIRE_ASSET");
+    setScopeModeState("ENTIRE_ASSET");
     setSelectedSectionIds([]);
     setSelectedCharacterIds([]);
     setSelectedLocationIds([]);
     setKnowledgeModes({});
+    setCharacterAccess({});
     setActionStatus("IDLE");
     setActionMessage("");
   }, [configuredReleaseId, sourceReleaseId]);
@@ -114,6 +145,15 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
 
     return () => window.clearInterval(interval);
   }, [creationId, isActive, loadState]);
+
+  const availableChapters = useMemo(
+    () =>
+      (Array.isArray(source.chapters) ? source.chapters : []).map((chapter) => ({
+        id: chapter.id,
+        title: chapter.title,
+      })),
+    [source.chapters]
+  );
 
   const availableSections = useMemo(
     () =>
@@ -130,12 +170,59 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     [source.chapters]
   );
 
+  const availableBlocks = useMemo(
+    () =>
+      availableSections.flatMap((section) =>
+        (Array.isArray(section.blocks) ? section.blocks : []).map((block) => ({
+          ...block,
+          chapterId: section.chapterId,
+          chapterTitle: section.chapterTitle,
+          sectionId: section.id,
+          sectionTitle: section.title,
+        }))
+      ),
+    [availableSections]
+  );
+
+  const includedSections = useMemo(
+    () =>
+      scopeMode === "SELECTED_SECTIONS"
+        ? availableSections.filter((section) =>
+            selectedSectionIds.includes(section.id)
+          )
+        : availableSections,
+    [availableSections, scopeMode, selectedSectionIds]
+  );
+
+  const includedSectionIds = useMemo(
+    () => new Set(includedSections.map((section) => section.id)),
+    [includedSections]
+  );
+
+  const includedChapterIds = useMemo(
+    () => new Set(includedSections.map((section) => section.chapterId)),
+    [includedSections]
+  );
+
   const characterRefs = Array.isArray(source.characterRefs)
     ? source.characterRefs
     : [];
   const locationRefs = Array.isArray(source.locationRefs)
     ? source.locationRefs
     : [];
+
+  const setScopeMode = useCallback((nextMode) => {
+    setScopeModeState(nextMode);
+    setSelectedSectionIds([]);
+    setCharacterAccess((current) =>
+      Object.fromEntries(
+        Object.keys(current).map((characterId) => [
+          characterId,
+          createDefaultCharacterAccess(),
+        ])
+      )
+    );
+  }, []);
 
   const toggleSection = useCallback((sectionId) => {
     setSelectedSectionIds((current) => toggleId(current, sectionId));
@@ -146,6 +233,10 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     setKnowledgeModes((current) => ({
       ...current,
       [characterId]: current[characterId] || "SECONDHAND",
+    }));
+    setCharacterAccess((current) => ({
+      ...current,
+      [characterId]: normalizeCharacterAccess(current[characterId]),
     }));
   }, []);
 
@@ -160,12 +251,82 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     }));
   }, []);
 
+  const setCharacterScopeType = useCallback((characterId, scopeType) => {
+    setCharacterAccess((current) => ({
+      ...current,
+      [characterId]: {
+        ...normalizeCharacterAccess(current[characterId]),
+        scopeType,
+        chapterId: "",
+        sectionId: "",
+        excludedChapterIds: [],
+        excludedSectionIds: [],
+        excludedBlockIds: [],
+      },
+    }));
+  }, []);
+
+  const setCharacterScopeChapter = useCallback((characterId, chapterId) => {
+    setCharacterAccess((current) => ({
+      ...current,
+      [characterId]: {
+        ...normalizeCharacterAccess(current[characterId]),
+        chapterId,
+        sectionId: "",
+        excludedChapterIds: [],
+        excludedSectionIds: [],
+        excludedBlockIds: [],
+      },
+    }));
+  }, []);
+
+  const setCharacterScopeSection = useCallback((characterId, sectionId) => {
+    setCharacterAccess((current) => ({
+      ...current,
+      [characterId]: {
+        ...normalizeCharacterAccess(current[characterId]),
+        sectionId,
+        excludedChapterIds: [],
+        excludedSectionIds: [],
+        excludedBlockIds: [],
+      },
+    }));
+  }, []);
+
+  const toggleCharacterExclusion = useCallback((characterId, field, id) => {
+    setCharacterAccess((current) => {
+      const access = normalizeCharacterAccess(current[characterId]);
+      return {
+        ...current,
+        [characterId]: {
+          ...access,
+          [field]: toggleId(access[field] || [], id),
+        },
+      };
+    });
+  }, []);
+
+  const isCharacterAccessValid = useCallback(
+    (characterId) => {
+      const access = normalizeCharacterAccess(characterAccess[characterId]);
+      if (access.scopeType === "CHAPTER") {
+        return Boolean(access.chapterId && includedChapterIds.has(access.chapterId));
+      }
+      if (access.scopeType === "SECTION") {
+        return Boolean(access.sectionId && includedSectionIds.has(access.sectionId));
+      }
+      return access.scopeType === "ASSET";
+    },
+    [characterAccess, includedChapterIds, includedSectionIds]
+  );
+
   const canSubmit =
     Boolean(creationId && sourceReleaseId) &&
     !isActive &&
     actionStatus !== "WORKING" &&
     selectedCharacterIds.length > 0 &&
-    (scopeMode === "ENTIRE_ASSET" || selectedSectionIds.length > 0);
+    (scopeMode === "ENTIRE_ASSET" || selectedSectionIds.length > 0) &&
+    selectedCharacterIds.every(isCharacterAccessValid);
 
   const submit = useCallback(async () => {
     if (!canSubmit) return;
@@ -178,10 +339,19 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
         publicReleaseId: sourceReleaseId,
         scopeMode,
         selectedSectionIds,
-        characterBindings: selectedCharacterIds.map((subjectId) => ({
-          subjectId,
-          knowledgeMode: knowledgeModes[subjectId] || "SECONDHAND",
-        })),
+        characterBindings: selectedCharacterIds.map((subjectId) => {
+          const access = normalizeCharacterAccess(characterAccess[subjectId]);
+          return {
+            subjectId,
+            knowledgeMode: knowledgeModes[subjectId] || "SECONDHAND",
+            scopeType: access.scopeType,
+            chapterId: access.chapterId || null,
+            sectionId: access.sectionId || null,
+            excludedChapterIds: access.excludedChapterIds,
+            excludedSectionIds: access.excludedSectionIds,
+            excludedBlockIds: access.excludedBlockIds,
+          };
+        }),
         locationBindings: selectedLocationIds.map((subjectId) => ({
           subjectId,
         })),
@@ -206,6 +376,7 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     }
   }, [
     canSubmit,
+    characterAccess,
     creationId,
     knowledgeModes,
     scopeMode,
@@ -287,8 +458,13 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     selectedCharacterIds,
     selectedLocationIds,
     knowledgeModes,
+    characterAccess,
     knowledgeModeOptions: LORE_ENGINE_USE_KNOWLEDGE_MODES,
+    characterScopeOptions: LORE_ENGINE_USE_BINDING_SCOPE_TYPES,
+    availableChapters,
     availableSections,
+    availableBlocks,
+    includedSections,
     characterRefs,
     locationRefs,
     canSubmit,
@@ -303,6 +479,10 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     toggleCharacter,
     toggleLocation,
     setCharacterKnowledgeMode,
+    setCharacterScopeType,
+    setCharacterScopeChapter,
+    setCharacterScopeSection,
+    toggleCharacterExclusion,
     submit,
     cancel,
     withdraw,
