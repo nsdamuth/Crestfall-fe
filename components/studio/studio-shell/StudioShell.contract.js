@@ -1,4 +1,4 @@
-export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the studio canvas frame that wraps all 54 studio
@@ -13,6 +13,7 @@ export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {import("react").ReactNode} sidebarSlot
  * @property {import("react").ReactNode} mobileNavSlot
  * @property {import("react").ReactNode} topBarSlot
+ * @property {boolean} reserveMobileDockSpace Whether mobile page content reserves the bottom-dock clearance. Story Chat disables it because the composer replaces the dock.
  * @property {import("react").ReactNode} children
  */
 

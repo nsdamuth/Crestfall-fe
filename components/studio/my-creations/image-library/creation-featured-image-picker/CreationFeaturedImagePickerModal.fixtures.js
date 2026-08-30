@@ -6,6 +6,7 @@ const fixtureImages = [
     displayImageUrl: "/assets/covers/crestfall-painting-cover.png",
     altText: "Fixture portrait option one",
     metadataLabel: "SFW · CLEAR",
+    isSelected: true,
   },
   {
     id: "fixture-image-2",
@@ -78,4 +79,55 @@ export const creationFeaturedImagePickerSaveErrorFixture = {
   saveMessage: "Featured image slot could not be saved.",
   saveMessageTone: "error",
   hasMoreImages: false,
+};
+
+export const creationFeaturedImagePickerStockFixture = {
+  ...baseFixture,
+  sourceOptions: [
+    { id: "library", label: "Your Images" },
+    { id: "stock", label: "Crestfall Stock" },
+  ],
+  activeSource: "stock",
+  images: [
+    {
+      id: "crestfall-stock-compass",
+      title: "Compass",
+      displayImageUrl: "/assets/covers/crestfall-compass-cover.png",
+      altText: "Compass",
+      description: "Antique navigation artwork for travel, locations, and worldbuilding.",
+      category: "Worlds & Places",
+      orientationLabel: "Portrait cover",
+      metadataLabel: "Worlds & Places · Portrait cover",
+      tags: ["cartography", "travel", "world"],
+      isStockMedia: true,
+      isSelected: true,
+    },
+    {
+      id: "crestfall-stock-book",
+      title: "Book",
+      displayImageUrl: "/assets/covers/crestfall-book-cover.png",
+      altText: "Book",
+      description: "Antique book artwork for stories, chronicles, codices, and lore.",
+      category: "Story & Lore",
+      orientationLabel: "Portrait cover",
+      metadataLabel: "Story & Lore · Portrait cover",
+      tags: ["book", "lore", "story"],
+      isStockMedia: true,
+    },
+  ],
+  hasMoreImages: false,
+  searchValue: "",
+  searchPlaceholder: "Search stock by title, tag, or use...",
+  filterOptions: [
+    { id: "all", label: "All" },
+    { id: "Worlds & Places", label: "Worlds & Places" },
+    { id: "Story & Lore", label: "Story & Lore" },
+  ],
+  activeFilter: "all",
+  resultsLabel: "2 of 2 stock images",
+  showClearFilters: false,
+  helperText: "Choose Crestfall-owned artwork by title, category, or tag.",
+  onSearchChange: noop,
+  onFilterChange: noop,
+  onClearFilters: noop,
 };

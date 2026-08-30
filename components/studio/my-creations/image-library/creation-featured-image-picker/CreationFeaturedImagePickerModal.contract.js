@@ -1,4 +1,4 @@
-export const CREATION_FEATURED_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const CREATION_FEATURED_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * @typedef {Object} CreationFeaturedImagePickerViewItem
@@ -6,6 +6,13 @@ export const CREATION_FEATURED_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} displayImageUrl
  * @property {string} altText
  * @property {string} metadataLabel
+ * @property {string} [title]
+ * @property {boolean} [isStockMedia]
+ * @property {string} [description]
+ * @property {string} [category]
+ * @property {string} [orientationLabel]
+ * @property {string[]} [tags]
+ * @property {boolean} [isSelected]
  */
 
 /**
@@ -17,6 +24,8 @@ export const CREATION_FEATURED_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} CreationFeaturedImagePickerModalViewProps
  * @property {string} slotLabel
+ * @property {{id:string,label:string}[]} [sourceOptions]
+ * @property {string} [activeSource]
  * @property {CreationFeaturedImagePickerViewItem[]} images
  * @property {boolean} isLoading
  * @property {string} loadErrorMessage
@@ -25,8 +34,21 @@ export const CREATION_FEATURED_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string|null} activeImageId
  * @property {boolean} hasMoreImages
  * @property {boolean} refreshDisabled
+ * @property {string} [searchValue]
+ * @property {string} [searchPlaceholder]
+ * @property {{id:string,label:string}[]} [filterOptions]
+ * @property {string} [activeFilter]
+ * @property {string} [resultsLabel]
+ * @property {boolean} [showClearFilters]
+ * @property {string} [emptyTitle]
+ * @property {string} [emptyMessage]
+ * @property {string} [helperText]
  * @property {(() => void)|null} onClose
  * @property {(() => void)|null} onRefresh
+ * @property {((sourceId: string) => void)|null} [onSourceChange]
+ * @property {((value: string) => void)|null} [onSearchChange]
+ * @property {((filterId: string) => void)|null} [onFilterChange]
+ * @property {(() => void)|null} [onClearFilters]
  * @property {(() => void)|null} onLoadMore
  * @property {((imageId: string) => void)|null} onChooseImage
  */

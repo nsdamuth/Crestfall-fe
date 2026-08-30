@@ -41,7 +41,15 @@ export function useCreationEngagementState(creations = []) {
   );
   const [engagementMessage, setEngagementMessage] = useState("");
 
-  const creationIds = useMemo(() => normalizeCreationIds(creations), [creations]);
+  const normalizedCreationIds = normalizeCreationIds(creations);
+  const creationIdsKey = normalizedCreationIds.join("|");
+  // Depend on the stable ID set rather than the caller's array identity so
+  // fresh array/object allocations do not repeatedly refetch engagement.
+  const creationIds = useMemo(
+    () => normalizedCreationIds,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [creationIdsKey]
+  );
 
   useEffect(() => {
     if (!creationIds.length) {

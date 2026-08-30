@@ -336,7 +336,7 @@ export function useMediaHistoryGridViewModel({
   useEffect(() => {
     let cancelled = false;
 
-    fetchOwnedCreations()
+    fetchOwnedCreations({ view: "summary" })
       .then((creations) => {
         if (cancelled) return;
 

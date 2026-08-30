@@ -103,7 +103,7 @@ export default function StoryRoomChatShellView({
     <section
       onTouchStart={handleSwipeStart}
       onTouchEnd={handleSwipeEnd}
-      className="-mx-[var(--space-5)] -mt-[var(--space-20)] flex h-[calc(100dvh-var(--space-20))] min-h-0 flex-col overflow-hidden sm:-mx-[var(--space-8)] lg:mx-0 lg:mt-0 lg:h-[calc(100dvh-5rem)] xl:h-[calc(100vh-7rem)]"
+      className="-mx-[var(--space-5)] -mt-[var(--topbar-h)] flex h-[100dvh] min-h-0 flex-col overflow-hidden sm:-mx-[var(--space-8)] lg:mx-0 lg:mt-0 lg:h-[calc(100dvh-5rem)] xl:h-[calc(100vh-7rem)]"
     >
       <div className={layoutClass}>
         <div className="hidden min-h-0 xl:block">

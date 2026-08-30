@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import StudioSidebar from "@/components/studio/StudioSidebar";
 import StudioMobileNav from "@/components/studio/StudioMobileNav";
@@ -8,6 +9,7 @@ import StudioTopBar from "@/components/studio/StudioTopBar";
 import { StudioAccountProvider } from "@/components/studio/StudioAccountProvider";
 
 import StudioShellView from "./studio-shell/StudioShell.view";
+import { isStoryChatPath } from "./studio-shell/studioShellPathPolicy";
 import { useStudioShellViewModel } from "./studio-shell/useStudioShellViewModel";
 
 // Drawer open/closed is the one piece of state StudioTopBar's mobile
@@ -17,6 +19,7 @@ import { useStudioShellViewModel } from "./studio-shell/useStudioShellViewModel"
 // both (8 Aug 2026, mobile nav restyle brief item 7).
 export default function StudioShell({ user, children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const viewProps = useStudioShellViewModel({
     sidebarSlot: <StudioSidebar user={user} />,
@@ -30,6 +33,7 @@ export default function StudioShell({ user, children }) {
     topBarSlot: (
       <StudioTopBar user={user} onOpenMenu={() => setMobileMenuOpen(true)} />
     ),
+    reserveMobileDockSpace: !isStoryChatPath(pathname),
     children,
   });
 

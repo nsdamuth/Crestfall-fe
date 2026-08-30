@@ -11,23 +11,30 @@ const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath)
 test("mobile dock is suppressed by the StudioMobileNav binding only for active Story chats", () => {
   const shell = read("components/studio/StudioMobileNav.jsx");
   const view = read("components/studio/studio-mobile-nav/StudioMobileNav.view.jsx");
+  const pathPolicy = read("components/studio/studio-shell/studioShellPathPolicy.js");
 
   assert.match(shell, /isStoryChatPath/);
-  assert.match(shell, /studio\\?\/story-rooms|story-rooms/);
-  assert.match(shell, /studio\\?\/v2\\?\/stories|v2/);
+  assert.match(pathPolicy, /story-rooms/);
+  assert.match(pathPolicy, /v2/);
+  assert.match(pathPolicy, /stories/);
   assert.match(shell, /showBottomDock=\{!isStoryChatPath\(pathname\)\}/);
   assert.match(view, /showBottomDock = true/);
   assert.match(view, /\{showBottomDock \? \(/);
+
+  const studioShell = read("components/studio/StudioShell.jsx");
+  const studioShellView = read("components/studio/studio-shell/StudioShell.view.jsx");
+  assert.match(studioShell, /reserveMobileDockSpace: !isStoryChatPath\(pathname\)/);
+  assert.match(studioShellView, /reserveMobileDockSpace \? "pb-24" : "pb-0"/);
 });
 
 test("Story chat claims the mobile content width and height without changing desktop rails", () => {
   const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
 
   assert.match(view, /-mx-\[var\(--space-5\)\]/);
-  assert.match(view, /-mt-\[var\(--space-20\)\]/);
+  assert.match(view, /-mt-\[var\(--topbar-h\)\]/);
   assert.match(view, /lg:mt-0/);
   assert.match(view, /sm:-mx-\[var\(--space-8\)\]/);
-  assert.match(view, /h-\[calc\(100dvh-var\(--space-20\)\)\]/);
+  assert.match(view, /h-\[100dvh\]/);
   assert.match(view, /xl:rounded-\[var\(--radius-lg\)\]/);
   assert.match(view, /xl:border/);
 });

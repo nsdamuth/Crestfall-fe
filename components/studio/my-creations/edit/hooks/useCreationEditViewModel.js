@@ -187,8 +187,16 @@ export function useCreationEditViewModel({ creationId, creation }) {
 
     if (slotIndex < 0) return;
 
-    setHasUnsavedChanges(true);
+    // Featured-image selection is persisted immediately by the picker through
+    // the dedicated slot API. Mirror that authoritative result into local form
+    // state without manufacturing an unrelated draft-save requirement.
     const imageUrl = getSelectedImageUrl(selectedImage);
+    const isStockMedia = Boolean(
+      selectedImage?.isStockMedia || selectedImage?.stockMediaId
+    );
+    const stockMediaId = isStockMedia
+      ? String(selectedImage?.stockMediaId || selectedImage?.id || "").trim() || null
+      : null;
 
     setForm((current) => {
       const nextFeaturedMedia = Array.isArray(current.featuredMedia)
@@ -218,8 +226,11 @@ export function useCreationEditViewModel({ creationId, creation }) {
         imageUrl,
         url: imageUrl,
         title: selectedImage?.title || current.title || currentSlot.title,
-        libraryEntryId:
-          selectedImage?.libraryEntryId || selectedImage?.id || null,
+        libraryEntryId: isStockMedia
+          ? null
+          : selectedImage?.libraryEntryId || selectedImage?.id || null,
+        stockMediaId,
+        isStockMedia,
         imageOutputId: selectedImage?.imageOutputId || null,
         storagePath: selectedImage?.storagePath || null,
         storageProvider: selectedImage?.storageProvider || null,
@@ -227,10 +238,41 @@ export function useCreationEditViewModel({ creationId, creation }) {
         isPlaceholder: false,
       };
 
+      const currentData = current.data || {};
+      const currentPresentation =
+        currentData.presentation &&
+        typeof currentData.presentation === "object" &&
+        !Array.isArray(currentData.presentation)
+          ? currentData.presentation
+          : {};
+      const currentStockSlots =
+        currentPresentation.stock_featured_media &&
+        typeof currentPresentation.stock_featured_media === "object" &&
+        !Array.isArray(currentPresentation.stock_featured_media)
+          ? currentPresentation.stock_featured_media
+          : currentPresentation.stockFeaturedMedia &&
+              typeof currentPresentation.stockFeaturedMedia === "object" &&
+              !Array.isArray(currentPresentation.stockFeaturedMedia)
+            ? currentPresentation.stockFeaturedMedia
+            : {};
+      const nextStockSlots = {
+        ...currentStockSlots,
+      };
+
+      if (stockMediaId) {
+        nextStockSlots[normalizedSlotKey] = stockMediaId;
+      } else {
+        delete nextStockSlots[normalizedSlotKey];
+      }
+
       const nextData = {
-        ...(current.data || {}),
+        ...currentData,
         featuredMedia: nextFeaturedMedia,
         featured_media: nextFeaturedMedia,
+        presentation: {
+          ...currentPresentation,
+          stock_featured_media: nextStockSlots,
+        },
       };
 
       return {

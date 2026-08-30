@@ -4,6 +4,7 @@ export default function StudioShellView({
   sidebarSlot = null,
   mobileNavSlot = null,
   topBarSlot = null,
+  reserveMobileDockSpace = true,
   children = null,
 }) {
   return (
@@ -15,7 +16,11 @@ export default function StudioShellView({
           {mobileNavSlot}
           {topBarSlot}
 
-          <section className="min-w-0 w-full flex-1 px-[var(--space-5)] pb-24 pt-0 sm:px-[var(--space-8)] lg:px-[var(--space-10)] lg:pb-[var(--space-8)]">
+          <section
+            className={`min-w-0 w-full flex-1 px-[var(--space-5)] pt-0 sm:px-[var(--space-8)] lg:px-[var(--space-10)] lg:pb-[var(--space-8)] ${
+              reserveMobileDockSpace ? "pb-24" : "pb-0"
+            }`}
+          >
             {children}
           </section>
         </div>

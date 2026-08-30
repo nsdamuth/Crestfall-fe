@@ -44,7 +44,7 @@ export function useCreationStudioViewModel() {
       setCountLoadError("");
 
       try {
-        const ownedCreations = await fetchOwnedCreations();
+        const ownedCreations = await fetchOwnedCreations({ view: "summary" });
 
         if (!active) return;
         setCreations(Array.isArray(ownedCreations) ? ownedCreations : []);

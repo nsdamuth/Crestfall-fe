@@ -71,3 +71,14 @@ Development only:
 ```text
 /dev/ui-preview/studio-shell
 ```
+
+## Story Chat mobile dock-space policy (30 Aug 2026)
+
+The shared Studio content section normally reserves `pb-24` on mobile so page
+content does not sit behind the persistent five-item bottom dock. Active Story
+Chat routes are the exception: `StudioMobileNav` suppresses that dock because
+the in-flow Story composer replaces it. `StudioShell` now consumes the same
+`isStoryChatPath()` policy and passes `reserveMobileDockSpace=false` for those
+routes, removing only the obsolete 96px shell clearance. The Story composer
+continues to own `env(safe-area-inset-bottom)` itself. Desktop padding is
+unchanged.
