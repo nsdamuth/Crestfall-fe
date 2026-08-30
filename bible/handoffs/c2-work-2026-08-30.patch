@@ -1,0 +1,405 @@
+diff --git a/app/studio/v2/home/Home.jsx b/app/studio/v2/home/Home.jsx
+index 57f3a8a..c68eed2 100644
+--- a/app/studio/v2/home/Home.jsx
++++ b/app/studio/v2/home/Home.jsx
+@@ -1,9 +1,91 @@
+ "use client";
+ 
++import { useState } from "react";
+ import { useRouter } from "next/navigation";
+ 
+ import HomeView from "./home/Home.view";
+ import { useHomeViewModel } from "./home/useHomeViewModel";
++import { homeContinueItemsFixture } from "./home/Home.fixtures";
++
++// C2 exploration harness, TEMPORARY and UNCOMMITTED. Renders only
++// outside production, exactly as the FixtureModeHarness on Lore,
++// Adventures, Studio and Creators does. Delete this block, the three
++// props it feeds, and the fixture import when the sitting rules.
++//
++// Letters follow the PRD (bible/prds/2026-08-29-home.md, section
++// "C2: the continue surface"), which is the authority: A is the
++// merged top banner built today under Ruling 1a, B is the separate
++// strip, C is the resume shelf drawn from the competitor patterns
++// that section names. RULED 29 Aug 2026: the PRD letters stand and
++// the earlier chat brief that reversed A and B was stale.
++const CONTINUE_FORMS = {
++  merged: "A: Merged top banner",
++  strip: "B: Separate strip",
++  shelf: "C: Resume shelf",
++};
++
++const CONTINUE_STATES = {
++  warm: "Warm (in progress)",
++  cold: "Cold (nothing in progress)",
++};
++
++function ContinueFormHarness({
++  continueForm,
++  onChangeContinueForm,
++  continueState,
++  onChangeContinueState,
++}) {
++  return (
++    <div className="flex flex-col gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)]">
++      <p className="text-[length:var(--text-label)] text-[var(--ink-faint)]">
++        C2 exploration harness, dev only, not committed. Letters follow the Home PRD: A is the
++        merged banner built today, B the separate strip, C the resume shelf.
++      </p>
++
++      <div className="flex flex-wrap items-center gap-[var(--space-2)]">
++        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
++          Continue form
++        </span>
++        {Object.entries(CONTINUE_FORMS).map(([key, label]) => (
++          <button
++            key={key}
++            type="button"
++            aria-pressed={continueForm === key}
++            onClick={() => onChangeContinueForm(key)}
++            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
++              continueForm === key
++                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
++                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
++            }`}
++          >
++            {label}
++          </button>
++        ))}
++      </div>
++
++      <div className="flex flex-wrap items-center gap-[var(--space-2)]">
++        <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
++          Continue state
++        </span>
++        {Object.entries(CONTINUE_STATES).map(([key, label]) => (
++          <button
++            key={key}
++            type="button"
++            aria-pressed={continueState === key}
++            onClick={() => onChangeContinueState(key)}
++            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
++              continueState === key
++                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
++                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)]"
++            }`}
++          >
++            {label}
++          </button>
++        ))}
++      </div>
++    </div>
++  );
++}
+ 
+ export default function Home(props = {}) {
+   const router = useRouter();
+@@ -12,5 +94,33 @@ export default function Home(props = {}) {
+     onNavigate: (href) => router.push(href),
+   });
+ 
+-  return <HomeView {...viewProps} />;
++  const [continueForm, setContinueForm] = useState("merged");
++  const [continueState, setContinueState] = useState("warm");
++
++  const isDev = process.env.NODE_ENV !== "production";
++  if (!isDev) return <HomeView {...viewProps} />;
++
++  // Same data feeds both forms so the sitting compares form, not
++  // content. Live rooms win where they exist; the fixture list stands
++  // in on the auth-free preview route, which receives no rooms.
++  const liveItems = viewProps.continueItems ?? [];
++  const warmItems = liveItems.length ? liveItems : homeContinueItemsFixture;
++  const items = continueState === "warm" ? warmItems : [];
++
++  return (
++    <HomeView
++      {...viewProps}
++      continueForm={continueForm}
++      continueItems={items}
++      continueItem={items[0] ?? null}
++      harnessSlot={
++        <ContinueFormHarness
++          continueForm={continueForm}
++          onChangeContinueForm={setContinueForm}
++          continueState={continueState}
++          onChangeContinueState={setContinueState}
++        />
++      }
++    />
++  );
+ }
+diff --git a/app/studio/v2/home/home/Home.fixtures.js b/app/studio/v2/home/home/Home.fixtures.js
+index fa41932..5a90849 100644
+--- a/app/studio/v2/home/home/Home.fixtures.js
++++ b/app/studio/v2/home/home/Home.fixtures.js
+@@ -45,9 +45,39 @@ const CONTINUE_ITEM = {
+   kindLabel: "Story",
+   lastPlayedLabel: "2 hours ago",
+   imageSrc: HOME_TOP_RATED_ITEMS[1]?.imageSrc ?? null,
++  secondaryCtaLabel: "Explore recent stories",
+   onContinue: noop,
++  onSecondaryCtaClick: noop,
+ };
+ 
++// C2 exploration (temporary, uncommitted): the warm in-progress list,
++// newest first. The merged-banner form reads only the first of these;
++// the separate-strip form lists all of them. Same fixture data feeds
++// both forms so the sitting compares form, not content.
++export const homeContinueItemsFixture = [
++  CONTINUE_ITEM,
++  {
++    id: "home-continue-2",
++    title: "Ashes of the Third Gate",
++    kindLabel: "Adventure",
++    lastPlayedLabel: "yesterday",
++    imageSrc: HOME_TOP_RATED_ITEMS[2]?.imageSrc ?? null,
++    secondaryCtaLabel: "Explore recent stories",
++    onContinue: noop,
++    onSecondaryCtaClick: noop,
++  },
++  {
++    id: "home-continue-3",
++    title: "A Lantern for the Drowned",
++    kindLabel: "Story",
++    lastPlayedLabel: "4 days ago",
++    imageSrc: HOME_TOP_RATED_ITEMS[3]?.imageSrc ?? null,
++    secondaryCtaLabel: "Explore recent stories",
++    onContinue: noop,
++    onSecondaryCtaClick: noop,
++  },
++];
++
+ function rail(label, items) {
+   return { label, viewAllLabel: "View all", onViewAll: noop, items: items.map(decorate) };
+ }
+diff --git a/app/studio/v2/home/home/Home.view.jsx b/app/studio/v2/home/home/Home.view.jsx
+index 24da438..bb0be49 100644
+--- a/app/studio/v2/home/home/Home.view.jsx
++++ b/app/studio/v2/home/home/Home.view.jsx
+@@ -8,6 +8,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
+ import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
+ import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+ import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
++import KitContinueRowView from "@/components/kit/promo-banner/KitContinueRow.view";
+ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
+ 
+ function RailCard({ item }) {
+@@ -35,9 +36,83 @@ function Rail({ rail, headControlSlot = null }) {
+   );
+ }
+ 
++// C2 exploration (temporary, uncommitted, dev harness only).
++// Option B, the separate strip: the invitation hero always renders as
++// the constant doorway, and this strip lists in-progress items newest
++// first beneath it. Renders nothing at all when empty, head included,
++// per the empty-rail law in components/kit/rail/KitRail.view.jsx. Head
++// styling mirrors that rail head exactly (gold uppercase label, short
++// gold rule); rows are the existing KitContinueRowView, unmodified.
++function ContinueStrip({ items = [] }) {
++  if (!items.length) return null;
++
++  return (
++    <section aria-label="Continue" className="flex flex-col gap-[var(--space-4)]">
++      <div className="flex items-center gap-[var(--space-3)]">
++        <p className="min-w-0 flex-1 break-words text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] min-[700px]:flex-none min-[700px]:truncate">
++          Continue
++        </p>
++        <div aria-hidden="true" className="h-px w-[var(--space-8)] flex-none bg-[var(--gold-ornament)]" />
++      </div>
++
++      <div className="flex flex-col gap-[var(--space-3)]">
++        {items.map((item) => (
++          <KitContinueRowView
++            key={item.id}
++            title={item.title}
++            lastPlayedLabel={`Last played ${item.lastPlayedLabel} · ${item.kindLabel}`}
++            imageSrc={item.imageSrc ?? null}
++            onContinue={() => item.onContinue?.()}
++          />
++        ))}
++      </div>
++    </section>
++  );
++}
++
++// C2 exploration (temporary, uncommitted, dev harness only).
++// Option C, the resume shelf, drawn from the competitor patterns named
++// in bible/prds/2026-08-29-home.md: Netflix's Continue Watching row
++// under a hero, Steam's Continue playing shelf, Character.AI's home
++// resume tiles, AI Dungeon's continue surface, and the console
++// recently-played row. What those five share is a horizontally
++// scrolling, art-forward shelf of resume tiles beneath a constant
++// hero, which is what this builds. The console variant fuses the row
++// INTO the hero; that reading is not taken here because it collapses
++// toward Option A and would not give the sitting a third distinct
++// form.
++//
++// Built entirely from existing Kit: KitRailView supplies the shelf
++// (gold head, arrow controls from 700px, edge fade, and the empty-rail
++// law so nothing renders when nothing is in progress), and
++// KitDestinationTileView supplies the tile, both unmodified. Density
++// is the axis under test: A shows one item fused into the banner, B
++// shows several as a vertical list, C shows several as a browsable
++// art-forward shelf.
++function ContinueShelf({ items = [] }) {
++  if (!items.length) return null;
++
++  return (
++    <KitRailView label="Continue" onViewAll={null}>
++      {items.map((item) => (
++        <KitDestinationTileView
++          key={item.id}
++          label={item.title}
++          supportingLine={`Last played ${item.lastPlayedLabel} · ${item.kindLabel}`}
++          imageSrc={item.imageSrc ?? null}
++          onOpen={() => item.onContinue?.()}
++        />
++      ))}
++    </KitRailView>
++  );
++}
++
+ export default function HomeView({
+   topBanner,
+   continueItem = null,
++  continueItems = [],
++  continueForm = "merged",
++  harnessSlot = null,
+   destinationTiles = [],
+   topRatedRail,
+   recentlyAddedRail,
+@@ -50,9 +125,18 @@ export default function HomeView({
+   notice = null,
+   onCloseNotice = null,
+ }) {
++  // Option A (Ruling 1a, what is built today): the one top banner
++  // carries the continue content. Options B and C: the banner always
++  // shows the invitation hero, and the strip or the shelf beneath it
++  // carries continue.
++  const isStripForm = continueForm === "strip";
++  const isShelfForm = continueForm === "shelf";
++  const bannerContinueItem = continueForm === "merged" ? continueItem : null;
++
+   return (
+     <>
+       <KitStudioPageView
++        harnessSlot={harnessSlot}
+         bannerSlot={
+           <KitPromoBannerView
+             treatment="bottom"
+@@ -69,30 +153,35 @@ export default function HomeView({
+         <KitPromoBannerView
+           treatment="top"
+           showGalaxy
+-          eyebrow={continueItem ? "Continue" : topBanner?.eyebrow}
+-          title={continueItem ? continueItem.title : topBanner?.title}
++          eyebrow={bannerContinueItem ? "Continue" : topBanner?.eyebrow}
++          title={bannerContinueItem ? bannerContinueItem.title : topBanner?.title}
+           line={
+-            continueItem
+-              ? `Last played ${continueItem.lastPlayedLabel} · ${continueItem.kindLabel}`
++            bannerContinueItem
++              ? `Last played ${bannerContinueItem.lastPlayedLabel} · ${bannerContinueItem.kindLabel}`
+               : ""
+           }
+-          ctaLabel={continueItem ? "Continue" : topBanner?.ctaLabel}
+-          imageSrc={(continueItem ? continueItem.imageSrc : null) ?? topBanner?.imageSrc ?? null}
++          ctaLabel={bannerContinueItem ? "Continue" : topBanner?.ctaLabel}
++          imageSrc={
++            (bannerContinueItem ? bannerContinueItem.imageSrc : null) ?? topBanner?.imageSrc ?? null
++          }
+           onCtaClick={() =>
+-            (continueItem ? continueItem.onContinue : topBanner?.onCtaClick)?.()
++            (bannerContinueItem ? bannerContinueItem.onContinue : topBanner?.onCtaClick)?.()
+           }
+           secondaryCtaLabel={
+-            continueItem
+-              ? continueItem.secondaryCtaLabel
++            bannerContinueItem
++              ? bannerContinueItem.secondaryCtaLabel
+               : topBanner?.secondaryCtaLabel ?? ""
+           }
+           onSecondaryCtaClick={() =>
+-            (continueItem
+-              ? continueItem.onSecondaryCtaClick
++            (bannerContinueItem
++              ? bannerContinueItem.onSecondaryCtaClick
+               : topBanner?.onSecondaryCtaClick)?.()
+           }
+         />
+ 
++        {isStripForm ? <ContinueStrip items={continueItems} /> : null}
++        {isShelfForm ? <ContinueShelf items={continueItems} /> : null}
++
+         {errorMessage ? (
+           <KitAlertStripView
+             tone="danger"
+diff --git a/app/studio/v2/home/home/useHomeViewModel.js b/app/studio/v2/home/home/useHomeViewModel.js
+index 0a6e569..8e1ac7d 100644
+--- a/app/studio/v2/home/home/useHomeViewModel.js
++++ b/app/studio/v2/home/home/useHomeViewModel.js
+@@ -193,31 +193,37 @@ export function useHomeViewModel({
+     [creators, creatorCreations, viewerUsername, followingUsernames]
+   );
+ 
+-  const continueItem = useMemo(() => {
++  // C2 exploration (temporary, uncommitted): the in-progress list is
++  // projected in full, newest first, because the separate-strip form
++  // shows several items while the merged-banner form shows only the
++  // most recent. continueItem below stays exactly what it was, the
++  // first of this list, so the merged form is byte-for-byte unchanged.
++  const continueItems = useMemo(() => {
+     const projected = (Array.isArray(rooms) ? rooms : [])
+       .map((room, index) => projectStoryRoomToContinueItem(room, index))
+       .filter((item) => !["COMPLETED", "ARCHIVED", "DELETED"].includes(item.status))
+       .sort((a, b) => (b.recency || 0) - (a.recency || 0));
+ 
+-    const item = projected[0] || null;
+-    if (!item) return null;
+-
+-    const sourceCreation = item.sourceCreationId
+-      ? storySourceCreationById.get(item.sourceCreationId)
+-      : null;
+-
+-    return {
+-      id: item.id,
+-      title: item.title,
+-      kindLabel: item.kind === "adventure" ? "Adventure" : "Story",
+-      lastPlayedLabel: relativeTimeLabel(item.lastPlayed),
+-      imageSrc: resolveStoryContinueImageSrc(item, sourceCreation),
+-      secondaryCtaLabel: "Explore recent stories",
+-      onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
+-      onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),
+-    };
++    return projected.map((item) => {
++      const sourceCreation = item.sourceCreationId
++        ? storySourceCreationById.get(item.sourceCreationId)
++        : null;
++
++      return {
++        id: item.id,
++        title: item.title,
++        kindLabel: item.kind === "adventure" ? "Adventure" : "Story",
++        lastPlayedLabel: relativeTimeLabel(item.lastPlayed),
++        imageSrc: resolveStoryContinueImageSrc(item, sourceCreation),
++        secondaryCtaLabel: "Explore recent stories",
++        onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
++        onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),
++      };
++    });
+   }, [rooms, storySourceCreationById, onNavigate]);
+ 
++  const continueItem = continueItems[0] || null;
++
+   const destinationTiles = useMemo(
+     () =>
+       DESTINATIONS.map((item) => ({
+@@ -341,6 +347,7 @@ export function useHomeViewModel({
+       onSecondaryCtaClick: () => onNavigate?.("/studio/v2/community"),
+     },
+     continueItem,
++    continueItems,
+     destinationTiles,
+     topRatedRail,
+     recentlyAddedRail,
