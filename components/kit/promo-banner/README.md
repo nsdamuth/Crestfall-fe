@@ -1,6 +1,6 @@
 # Kit Promo Banner LOOM Package
 
-**Contract:** `KitPromoBanner.contract.js` (v1.3.0)
+**Contract:** `KitPromoBanner.contract.js` (v1.4.0)
 
 ## Hierarchy law (9 Aug 2026, kit revision)
 
@@ -90,6 +90,15 @@ banner still holds. Both buttons resolve to `cf-btn`'s default
 on every existing consumer, pixel-stable. First consumer: Home's top
 continue banner, filled state only (`app/studio/v2/home/home/
 Home.view.jsx`), routing to `/studio/v2/stories`.
+
+## v1.4.0, RULED 30 Aug 2026 (Home semantic-banner correction)
+
+`emptyArtworkVariant` is an additive empty-art presentation hook. The
+default remains the existing neutral icon. Home alone opts into
+`crestfall-gray-wordmark` for its top banner when no real Story/room
+image is available: a restrained gray field with a large CRESTFALL
+wordmark. This does not alter banner geometry, overlay copy, CTA
+placement, or any non-Home banner.
 
 ## v1.3.0, RULED 11 Aug 2026 (banner-anchor ruling)
 

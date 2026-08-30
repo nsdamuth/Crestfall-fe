@@ -1,4 +1,4 @@
-export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.3.0";
+export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Stable portable UI boundary for the shared promo banner kit piece
@@ -32,6 +32,13 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.3.0";
  * `cf-btn`'s default `--control-md` height (44px), the mobile law
  * floor.
  *
+ * v1.4.0, RULED 30 Aug 2026 (Home semantic-banner correction):
+ * optional `emptyArtworkVariant` ADDED, additive. The default remains
+ * the existing neutral empty-art icon. `"crestfall-gray-wordmark"` is
+ * a branded gray CRESTFALL wordmark surface intended only for Home's
+ * top banner when no real Story/room art exists. No geometry, copy,
+ * veil, CTA, or image behavior changes for any existing consumer.
+ *
  * v1.3.0, RULED 11 Aug 2026 (banner-anchor ruling): optional
  * `imageAnchor` ADDED, additive. An object-position string applied to
  * the art layer, default `"center 10%"` (banner art pins toward the
@@ -52,6 +59,7 @@ export const KIT_PROMO_BANNER_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {string} line
  * @property {string} ctaLabel
  * @property {string|null} imageSrc
+ * @property {"default"|"crestfall-gray-wordmark"} [emptyArtworkVariant]
  * @property {string} [imageAnchor] optional (v1.3.0), default
  *   "center 10%", an object-position string for the art layer
  * @property {(() => void)|null} onCtaClick

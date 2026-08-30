@@ -603,6 +603,7 @@ export default function VaultV2Mockup({
                   key={item.id}
                   layout={layout}
                   assetKind={item.assetKind}
+                  creationType={item.type}
                   title={item.title}
                   subtitle={item.subtitle}
                   imageSrc={item.imageSrc}

@@ -3,15 +3,12 @@
 import { useEffect, useState } from "react";
 
 import { getAssetByTitle } from "@/components/studio/create/creation-studio/CreationStudio.contract.mjs";
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 import {
   findFullStudioSectionBySlug,
   getFullStudioCategoryPresentation,
+  getStudioAssetIdentityKey,
 } from "./StudioModePanels.contract.mjs";
-
-function hasUsableArt(asset) {
-  const image = String(asset?.image || "");
-  return Boolean(image) && !image.includes("placeholder-card");
-}
 
 function ModeSectionLabel({ eyebrow, title, description, aside = null }) {
   return (
@@ -90,21 +87,16 @@ function RecommendedHero({
   onOpenPlayerCharacterCreator,
 }) {
   if (!step || !asset) return null;
-  const art = hasUsableArt(asset);
+  const identityKey = getStudioAssetIdentityKey(asset);
 
   return (
     <article className="relative min-h-[22rem] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)]">
-      {art ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={asset.image} alt="" className="absolute inset-0 h-full w-full object-cover object-center" />
-      ) : null}
+      <div className="absolute inset-0">
+        <KitArtPlaceholderView size="lg" identityKey={identityKey} />
+      </div>
       <div
         aria-hidden="true"
-        className={`absolute inset-0 ${
-          art
-            ? "bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_84%,transparent)] to-[color-mix(in_srgb,var(--canvas)_28%,transparent)]"
-            : "bg-[radial-gradient(circle_at_85%_20%,color-mix(in_srgb,var(--gold-action)_12%,transparent),transparent_38%)]"
-        }`}
+        className="absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_84%,transparent)] to-[color-mix(in_srgb,var(--canvas)_28%,transparent)]"
       />
       <div className="relative z-[1] flex min-h-[22rem] max-w-[48rem] flex-col justify-center p-[clamp(1.5rem,4vw,3.25rem)]">
         <div className="flex flex-wrap items-center gap-[var(--space-2)]">
@@ -142,65 +134,6 @@ function RecommendedHero({
   );
 }
 
-const STUDIO_ASSET_FALLBACK_ART_BY_TITLE = Object.freeze({
-  Character: "/assets/characters/crestfall/lux/profile.png",
-  "Player Character": "/assets/characters/crestfall/sun-hee/profile.png",
-  Location: "/assets/locations/aethelgard/amphitheater/profile.png",
-  Scenario: "/assets/covers/crestfall-camellia-cover.png",
-  Story: "/assets/covers/crestfall-book-cover.png",
-  Storyline: "/assets/covers/crestfall-compass-cover.png",
-  "Outfit / Clothing": "/assets/covers/crestfall-cloak-cover.png",
-  Outfit: "/assets/covers/crestfall-cloak-cover.png",
-  Wardrobe: "/assets/covers/crestfall-painting-cover.png",
-  Pose: "/assets/covers/crestfall-ballerina-cover.png",
-  Narrator: "/assets/covers/crestfall-scrolls-cover.png",
-  "Image Preset": "/assets/covers/crestfall-drawings-cover.png",
-  "NPC Registry": "/assets/characters/aethelgard/kessa/profile.png",
-  "Location Registry": "/assets/locations/aethelgard/amphitheater/profile.png",
-  "Faction Registry": "/assets/covers/crestfall-compass-cover.png",
-  "Organization Registry": "/assets/covers/crestfall-statue-cover.png",
-  "Item Registry": "/assets/covers/crestfall-cloak-cover.png",
-  "Event Registry": "/assets/covers/crestfall-sundial-cover.png",
-  "Quest Registry": "/assets/covers/crestfall-scrolls-cover.png",
-  "Stats & Pools Profile": "/assets/covers/crestfall-statue-cover.png",
-  "Progression Profile": "/assets/covers/crestfall-sundial-cover.png",
-  "Skills Profile": "/assets/covers/crestfall-drawings-cover.png",
-  "Ability & Spell Profile": "/assets/covers/crestfall-camellia-cover.png",
-  "Wallet Profile": "/assets/covers/crestfall-cloak-cover.png",
-  "Mechanics Module": "/assets/covers/crestfall-sundial-cover.png",
-  "Actor Mechanics Profile": "/assets/covers/crestfall-compass-cover.png",
-  "Rules Codex": "/assets/covers/crestfall-book-cover.png",
-  "Character Template": "/assets/characters/aethelgard/alyera/profile.png",
-  "Lore Asset": "/assets/lore/crestfall/lilith/images/eden-confrontation.png",
-});
-
-function getGuidedMilestoneArt(asset) {
-  return (
-    STUDIO_ASSET_FALLBACK_ART_BY_TITLE[String(asset?.title || "").trim()] ||
-    (hasUsableArt(asset) ? asset.image : "/assets/covers/crestfall-drawings-cover.png")
-  );
-}
-
-function getStudioAssetFallbackArt(asset) {
-  return (
-    STUDIO_ASSET_FALLBACK_ART_BY_TITLE[String(asset?.title || "").trim()] ||
-    "/assets/covers/crestfall-drawings-cover.png"
-  );
-}
-
-function applyStudioAssetArtFallback(event, fallbackArt) {
-  const image = event?.currentTarget;
-  if (!image) return;
-
-  if (fallbackArt && image.dataset.fallbackApplied !== "true") {
-    image.dataset.fallbackApplied = "true";
-    image.src = fallbackArt;
-    return;
-  }
-
-  image.hidden = true;
-}
-
 function MilestoneCard({
   step,
   asset,
@@ -209,7 +142,7 @@ function MilestoneCard({
   onOpenPlayerCharacterCreator,
 }) {
   if (!asset) return null;
-  const art = getGuidedMilestoneArt(asset);
+  const identityKey = getStudioAssetIdentityKey(asset);
 
   return (
     <article
@@ -219,12 +152,9 @@ function MilestoneCard({
           : "border-[var(--gold-action)]/35 bg-[var(--surface-1)]"
       }`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={art}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-center opacity-80 saturate-75 transition-[opacity,transform,filter] duration-300 group-hover:scale-[1.015] group-hover:opacity-90 group-hover:saturate-100"
-      />
+      <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-[1.015]">
+        <KitArtPlaceholderView size="lg" identityKey={identityKey} />
+      </div>
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_76%,transparent)] to-[color-mix(in_srgb,var(--canvas)_30%,transparent)]"
@@ -402,8 +332,7 @@ function FullStudioAssetCard({
   onOpenCharacterCreator,
   onOpenPlayerCharacterCreator,
 }) {
-  const fallbackArt = getStudioAssetFallbackArt(asset);
-  const art = hasUsableArt(asset) ? String(asset.image) : fallbackArt;
+  const identityKey = getStudioAssetIdentityKey(asset);
   const actorCreator =
     asset.href === "/studio/create/character"
       ? onOpenCharacterCreator
@@ -413,13 +342,9 @@ function FullStudioAssetCard({
   const classes = "group relative flex min-h-[13rem] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] text-left transition-[border-color,box-shadow,transform] duration-[var(--dur-hover)] hover:-translate-y-[2px] hover:border-[var(--line-strong)] hover:shadow-[var(--glow-hover)]";
   const content = (
     <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={art}
-        alt=""
-        onError={(event) => applyStudioAssetArtFallback(event, fallbackArt)}
-        className="absolute inset-0 h-full w-full object-cover object-center transition-[transform,filter] duration-300 group-hover:scale-[1.015] group-hover:saturate-110"
-      />
+      <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-[1.015]">
+        <KitArtPlaceholderView size="lg" identityKey={identityKey} />
+      </div>
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_78%,transparent)] to-[color-mix(in_srgb,var(--canvas)_28%,transparent)]" />
       <div className="relative z-[1] mt-auto w-full p-[var(--space-4)]">
         <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-action)]">{asset.eyebrow}</p>
@@ -435,7 +360,7 @@ function FullStudioAssetCard({
 
 function FullStudioCategoryCard({ section, onOpen }) {
   const presentation = getFullStudioCategoryPresentation(section?.id);
-  const heroImage = presentation?.heroImage || "";
+  const identityKey = presentation?.identityKey || "DESTINATION_STUDIO";
   const toolCount = Array.isArray(section?.assets) ? section.assets.length : 0;
 
   return (
@@ -444,14 +369,9 @@ function FullStudioCategoryCard({ section, onOpen }) {
       onClick={() => onOpen?.(section.id)}
       className="group relative flex min-h-[10.5rem] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] text-left transition-[border-color,box-shadow,transform] duration-[var(--dur-hover)] hover:-translate-y-[2px] hover:border-[var(--line-strong)] hover:shadow-[var(--glow-hover)] md:min-h-[18rem]"
     >
-      {heroImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={heroImage}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.015]"
-        />
-      ) : null}
+      <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-[1.015]">
+        <KitArtPlaceholderView size="lg" identityKey={identityKey} />
+      </div>
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_66%,transparent)] to-[color-mix(in_srgb,var(--canvas)_20%,transparent)]"

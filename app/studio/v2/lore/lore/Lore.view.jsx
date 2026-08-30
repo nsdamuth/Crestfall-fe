@@ -20,6 +20,7 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
+import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
@@ -61,11 +62,16 @@ function TimelineGrid({ items = [] }) {
           className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-black/30 text-left transition hover:border-[var(--gold-ornament)]/40"
         >
           <div className="grid min-h-36 grid-cols-[7rem_1fr]">
-            <div
-              className="bg-cover bg-center opacity-80 transition group-hover:opacity-100"
-              style={{ backgroundImage: `url(${item.imageSrc})` }}
-              aria-hidden="true"
-            />
+            <div className="overflow-hidden border-r border-[var(--line)]" aria-hidden="true">
+              {item.imageSrc ? (
+                <div
+                  className="h-full w-full bg-cover bg-center opacity-80 transition group-hover:opacity-100"
+                  style={{ backgroundImage: `url(${item.imageSrc})` }}
+                />
+              ) : (
+                <KitArtPlaceholderView size="sm" identityKey={item.identityKey || "TIMELINE"} />
+              )}
+            </div>
             <div className="min-w-0 p-4">
               <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
                 <span>{item.publicEnabled ? "Public Timeline" : "Internal Timeline"}</span>

@@ -1,7 +1,10 @@
 "use client";
 
-// Card law, 9 Aug 2026 (docs/BUILD-BLUEPRINT.md 2.6 second revision):
-// full-bleed art in BOTH layouts, no bottom action bar anywhere.
+// Card law, 9 Aug 2026 (docs/BUILD-BLUEPRINT.md 2.6 second revision),
+// semantic-background clarification 30 Aug 2026: full-bleed art/background in
+// BOTH layouts, no bottom action bar anywhere. A semantic Crestfall identity
+// surface replaces automatic legacy stock fallback art without changing card
+// geometry, text placement, actions, or real assigned artwork.
 // Actions are small overlay icons (like, save, expand); share,
 // download, and delete live inside the open destination, because
 // Ruling 6 (share always carries its word) and the destructive law
@@ -316,6 +319,8 @@ function GridCard({
   title,
   subtitle,
   imageSrc,
+  creationType,
+  assetKind,
   badges,
   stats,
   liked,
@@ -349,24 +354,22 @@ function GridCard({
       </button>
 
       {hasImage ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageSrc}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_45%,transparent)] to-transparent"
-          />
-        </>
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={imageSrc}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
+        />
       ) : (
         <div className="absolute inset-0">
-          <KitArtPlaceholderView size="md" />
+          <KitArtPlaceholderView size="md" identityKey={creationType || assetKind} />
         </div>
       )}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_45%,transparent)] to-transparent"
+      />
 
       <div className="pointer-events-none relative z-[2] flex h-full flex-col justify-between p-[var(--space-3)]">
         <div className="flex items-start justify-between gap-[var(--space-2)]">
@@ -407,13 +410,13 @@ function GridCard({
         <div className="flex items-end justify-between gap-[var(--space-2)]">
           <div className="min-w-0">
             <h3
-              className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${hasImage ? "text-[var(--art-ink)]" : "text-[var(--ink)]"}`}
+              className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]`}
             >
               {title || "Untitled"}
             </h3>
             {subtitle && (
               <p
-                className={`truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${hasImage ? "text-[var(--art-ink-dim)]" : "text-[var(--ink-dim)]"}`}
+                className={`truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--art-ink-dim)]`}
               >
                 {subtitle}
               </p>
@@ -430,6 +433,8 @@ function ListCard({
   title,
   subtitle,
   imageSrc,
+  creationType,
+  assetKind,
   badges,
   stats,
   liked,
@@ -463,29 +468,24 @@ function ListCard({
       </button>
 
       {hasImage ? (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageSrc}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
-          />
-          {/* List rows read left to right, so the legibility fade
-              anchors to the left edge (card-banner veil direction). */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_55%,transparent)] to-transparent"
-          />
-        </>
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={imageSrc}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition-transform duration-[var(--dur-slow)] group-hover:scale-[1.04]"
+        />
       ) : (
-        <>
-          <div aria-hidden="true" className="absolute inset-0 bg-[var(--surface-2)]" />
-          <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[5.5rem] opacity-70">
-            <KitArtPlaceholderView size="sm" />
-          </div>
-        </>
+        <div className="absolute inset-0">
+          <KitArtPlaceholderView size="lg" identityKey={creationType || assetKind} />
+        </div>
       )}
+      {/* List rows read left to right, so the legibility fade anchors to the
+          left edge for both assigned art and semantic fallback backgrounds. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--canvas)] via-[color-mix(in_srgb,var(--canvas)_55%,transparent)] to-transparent"
+      />
 
       <div className="pointer-events-none relative z-[2] flex h-full items-center justify-between gap-[var(--space-3)] p-[var(--space-4)]">
         <div className="min-w-0">
@@ -493,13 +493,13 @@ function ListCard({
             <BadgeRow badges={badges} />
           </div>
           <h3
-            className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${hasImage ? "text-[var(--art-ink)]" : "text-[var(--ink)]"}`}
+            className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]`}
           >
             {title || "Untitled"}
           </h3>
           {subtitle && (
             <p
-              className={`truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${hasImage ? "text-[var(--art-ink-dim)]" : "text-[var(--ink-dim)]"}`}
+              className={`truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--art-ink-dim)]`}
             >
               {subtitle}
             </p>
@@ -525,6 +525,7 @@ function ListCard({
           {isOwner && promoteOwnerActions ? (
             <OwnerQuickActions
               onEdit={onEdit}
+              onGenerateImage={onGenerateImage}
               contextualAction={contextualAction}
             />
           ) : (
@@ -545,6 +546,7 @@ function ListCard({
 export default function KitCreationCardView({
   layout = "grid",
   assetKind = "character",
+  creationType = null,
   title = "",
   subtitle = "",
   imageSrc = null,
@@ -604,6 +606,8 @@ export default function KitCreationCardView({
           title={title}
           subtitle={subtitle}
           imageSrc={imageSrc}
+          creationType={creationType}
+          assetKind={assetKind}
           badges={badges}
           stats={stats}
           liked={liked}
@@ -619,6 +623,8 @@ export default function KitCreationCardView({
           title={title}
           subtitle={subtitle}
           imageSrc={imageSrc}
+          creationType={creationType}
+          assetKind={assetKind}
           badges={badges}
           stats={stats}
           liked={liked}

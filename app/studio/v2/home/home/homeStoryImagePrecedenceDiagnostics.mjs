@@ -72,7 +72,7 @@ test("room opening-scene image remains the fallback when the Story has no assign
   );
 });
 
-test("image-less Story rooms use the shared Crestfall default hero", () => {
+test("image-less Story rooms no longer synthesize legacy banner artwork", () => {
   const continueItem = { imageSrc: null };
   const sourceCreation = {
     id: "story-no-image",
@@ -80,23 +80,10 @@ test("image-less Story rooms use the shared Crestfall default hero", () => {
     data: {},
   };
 
-  assert.equal(
-    resolveStoryContinueImageSrc(continueItem, sourceCreation),
-    STORY_CONTINUE_DEFAULT_HERO_IMAGE_SRC
-  );
+  assert.equal(resolveStoryContinueImageSrc(continueItem, sourceCreation), null);
   assert.equal(
     STORY_CONTINUE_DEFAULT_HERO_IMAGE_SRC,
     "/assets/covers/banner.png"
-  );
-  assert.equal(
-    fs.existsSync(
-      path.join(
-        repoRoot,
-        "public",
-        STORY_CONTINUE_DEFAULT_HERO_IMAGE_SRC.replace(/^\//, "")
-      )
-    ),
-    true
   );
 });
 
@@ -160,4 +147,15 @@ test("Stories Continue cards use the shared source-Story image precedence", () =
     storiesView,
     /imageSrc=\{resolveStoryContinueImageSrc\(item, sourceCreation\)\}/
   );
+});
+
+
+test("Home top banner alone opts into the gray CRESTFALL empty-art treatment", () => {
+  const homeView = read("app/studio/v2/home/home/Home.view.jsx");
+  const promoView = read("components/kit/promo-banner/KitPromoBanner.view.jsx");
+
+  assert.match(homeView, /emptyArtworkVariant=\{useHomeWordmarkFallback \? "crestfall-gray-wordmark" : "default"\}/);
+  assert.match(homeView, /showGalaxy=\{!useHomeWordmarkFallback\}/);
+  assert.match(promoView, /variant === "crestfall-gray-wordmark"/);
+  assert.match(promoView, />\s*CRESTFALL\s*</);
 });

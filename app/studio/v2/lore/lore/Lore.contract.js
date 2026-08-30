@@ -73,6 +73,7 @@ export const LORE_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {string} title
  * @property {string} description
  * @property {string|null} imageSrc
+ * @property {string} identityKey
  * @property {number} entryCount
  * @property {boolean} publicEnabled
  * @property {(() => void)|null} onOpen

@@ -172,6 +172,7 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
     cardKind: "creation",
     layout: "grid",
     assetKind: item.assetKind,
+    creationType: item.type,
     id: item.id,
     title: item.title,
     subtitle: item.subtitle,

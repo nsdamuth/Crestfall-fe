@@ -27,6 +27,7 @@ export function useKitCreationCardViewModel(props) {
   return {
     layout,
     assetKind,
+    creationType: typeof props?.creationType === "string" ? props.creationType : null,
     title: typeof props?.title === "string" ? props.title : "",
     subtitle: typeof props?.subtitle === "string" ? props.subtitle : "",
     imageSrc: typeof props?.imageSrc === "string" ? props.imageSrc : null,

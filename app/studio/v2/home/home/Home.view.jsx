@@ -9,6 +9,7 @@ import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.vie
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
+import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
 
 function RailCard({ item }) {
   return item.cardKind === "creator" ? (
@@ -50,6 +51,14 @@ export default function HomeView({
   notice = null,
   onCloseNotice = null,
 }) {
+  const coldStartBannerImage = topBanner?.imageSrc ?? null;
+  const topBannerImageSrc = continueItem
+    ? continueItem.imageSrc ?? null
+    : coldStartBannerImage && !isLegacyDefaultCreationImageSrc(coldStartBannerImage)
+      ? coldStartBannerImage
+      : null;
+  const useHomeWordmarkFallback = !topBannerImageSrc;
+
   return (
     <>
       <KitStudioPageView
@@ -68,7 +77,7 @@ export default function HomeView({
       >
         <KitPromoBannerView
           treatment="top"
-          showGalaxy
+          showGalaxy={!useHomeWordmarkFallback}
           eyebrow={continueItem ? "Continue" : topBanner?.eyebrow}
           title={continueItem ? continueItem.title : topBanner?.title}
           line={
@@ -77,7 +86,8 @@ export default function HomeView({
               : ""
           }
           ctaLabel={continueItem ? "Continue" : topBanner?.ctaLabel}
-          imageSrc={(continueItem ? continueItem.imageSrc : null) ?? topBanner?.imageSrc ?? null}
+          imageSrc={topBannerImageSrc}
+          emptyArtworkVariant={useHomeWordmarkFallback ? "crestfall-gray-wordmark" : "default"}
           imageAnchor={
             (continueItem ? continueItem.imageAnchor : topBanner?.imageAnchor) ||
             undefined
@@ -120,6 +130,7 @@ export default function HomeView({
               label={tile.label}
               supportingLine={tile.supportingLine}
               imageSrc={tile.imageSrc ?? null}
+              identityKey={tile.identityKey ?? tile.id}
               onOpen={() => tile.onOpen?.()}
             />
           ))}

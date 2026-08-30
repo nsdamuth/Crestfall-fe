@@ -14,6 +14,7 @@ function toAdventureCard(item, engagement, router) {
   return {
     cardKind: "creation",
     assetKind: "adventure",
+    creationType: item.type,
     id: item.id,
     title: item.title,
     subtitle: item.subtitle,

@@ -474,6 +474,7 @@ export default function StoriesV2Live({
                     <KitCreationCardView
                       layout={layout}
                       assetKind={item.kind}
+                      creationType={sourceCreation?.type || (item.kind === "adventure" ? "STORYLINE" : "ROOM_TEMPLATE")}
                       title={item.title}
                       subtitle={item.subtitle || KIND_LABELS[item.kind]}
                       imageSrc={resolveStoryContinueImageSrc(item, sourceCreation)}
@@ -543,6 +544,7 @@ export default function StoriesV2Live({
                     key={item.id}
                     layout={layout}
                     assetKind={item.kind}
+                    creationType={item.type}
                     title={item.title}
                     subtitle={item.subtitle || KIND_LABELS[item.kind]}
                     imageSrc={item.imageSrc}

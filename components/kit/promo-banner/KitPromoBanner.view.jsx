@@ -46,6 +46,51 @@ const TREATMENT_CONFIG = {
   },
 };
 
+function PromoBannerEmptyArtwork({ variant = "default" }) {
+  if (variant === "crestfall-gray-wordmark") {
+    return (
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 flex items-center justify-center overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(circle at 74% 28%, rgba(255,255,255,0.055), transparent 28%), linear-gradient(135deg, #303030 0%, #181818 52%, #262626 100%)",
+        }}
+      >
+        <div
+          className="absolute inset-[3%] rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--gold-ornament)_28%,transparent)]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute left-[8%] right-[8%] top-[15%] h-px bg-[image:var(--line-fade)] opacity-70"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute bottom-[15%] left-[8%] right-[8%] h-px bg-[image:var(--line-fade)] opacity-50"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute left-1/2 top-[15%] h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 border border-[color-mix(in_srgb,var(--gold-ornament)_50%,transparent)]"
+        />
+        <span className="select-none font-display text-[clamp(5.5rem,15vw,15rem)] leading-[0.82] tracking-[0.08em] text-[rgba(238,238,238,0.22)] drop-shadow-[0_2px_18px_rgba(0,0,0,0.42)] max-[700px]:text-[clamp(4rem,19vw,7.5rem)] max-[700px]:tracking-[0.045em]">
+          CRESTFALL
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)]"
+    >
+      <svg viewBox="0 0 64 64" className="h-[var(--space-16)] w-[var(--space-16)] text-[var(--ink-faint)]">
+        <use href="/assets/icons/icons-v7.svg#i-59" />
+      </svg>
+    </div>
+  );
+}
+
 function resolveBottomVeil(bottomVariant) {
   return bottomVariant === "bottom-fade"
     ? "bg-gradient-to-t from-[var(--scrim-strong)] to-transparent"
@@ -62,6 +107,7 @@ export default function KitPromoBannerView({
   ctaLabel = "",
   imageSrc = null,
   imageAnchor = "center 10%",
+  emptyArtworkVariant = "default",
   onCtaClick = null,
   secondaryCtaLabel = "",
   onSecondaryCtaClick = null,
@@ -84,14 +130,7 @@ export default function KitPromoBannerView({
           style={{ objectPosition: imageAnchor }}
         />
       ) : (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 flex items-center justify-center bg-[var(--surface-2)]"
-        >
-          <svg viewBox="0 0 64 64" className="h-[var(--space-16)] w-[var(--space-16)] text-[var(--ink-faint)]">
-            <use href="/assets/icons/icons-v7.svg#i-59" />
-          </svg>
-        </div>
+        <PromoBannerEmptyArtwork variant={emptyArtworkVariant} />
       )}
 
       {showGalaxy && treatment === "top" && (

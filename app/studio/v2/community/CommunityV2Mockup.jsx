@@ -553,6 +553,7 @@ export default function CommunityV2Mockup({
                 key={creation.id}
                 layout={layout}
                 assetKind={creation.assetKind}
+                creationType={creation.type}
                 title={creation.title}
                 subtitle={creation.subtitle}
                 imageSrc={creation.imageSrc}

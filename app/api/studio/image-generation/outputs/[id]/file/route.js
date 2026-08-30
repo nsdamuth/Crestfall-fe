@@ -48,7 +48,10 @@ export async function GET(request, { params }) {
   }
   const variant = request.nextUrl?.searchParams?.get("variant") || "";
   const safeVariant =
-    variant === "thumbnail" || variant === "display"
+    variant === "thumbnail" ||
+    variant === "card" ||
+    variant === "lockedPreview" ||
+    variant === "display"
       ? variant
       : "";
 

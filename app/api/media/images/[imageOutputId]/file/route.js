@@ -79,6 +79,8 @@ export async function GET(
     );
   const variant =
     requestedVariant === "thumbnail" ||
+    requestedVariant === "card" ||
+    requestedVariant === "lockedPreview" ||
     requestedVariant === "display"
       ? requestedVariant
       : null;

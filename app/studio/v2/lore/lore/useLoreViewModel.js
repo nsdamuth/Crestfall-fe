@@ -17,6 +17,10 @@ import { useMemo, useState } from "react";
 
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import {
+  getFirstAssignedCreationImageUrl,
+  isLegacyDefaultCreationImageSrc,
+} from "@/lib/shared/creations/creationMedia";
+import {
   projectOwnedLoreCreations,
   projectPublicLoreCreations,
 } from "@/lib/shared/presentation/lorePresentation";
@@ -143,20 +147,25 @@ export function useLoreViewModel({
       .map((creation) => {
         const timeline = creation?.data?.timeline || {};
         const entries = Array.isArray(timeline.entries) ? timeline.entries : [];
-        const primaryMedia = creation?.featuredMedia?.[0] || null;
-        const imageSrc = primaryMedia?.isPlaceholder
-          ? "/assets/covers/crestfall-sundial-cover.png"
-          : creation?.imageUrl ||
-            creation?.imageSrc ||
-            primaryMedia?.imageUrl ||
-            primaryMedia?.url ||
-            "/assets/covers/crestfall-sundial-cover.png";
+        const mediaImageSrc = getFirstAssignedCreationImageUrl(
+          creation?.featuredMedia,
+          null
+        );
+        const topLevelImageSrc = String(
+          creation?.imageUrl || creation?.imageSrc || ""
+        ).trim();
+        const assignedImageSrc =
+          mediaImageSrc ||
+          (topLevelImageSrc && !isLegacyDefaultCreationImageSrc(topLevelImageSrc)
+            ? topLevelImageSrc
+            : null);
 
         return {
           id: creation.id,
           title: creation.title || "Untitled Timeline",
           description: creation.description || "A curated Lore chronology.",
-          imageSrc,
+          imageSrc: assignedImageSrc,
+          identityKey: "TIMELINE",
           entryCount: entries.length,
           publicEnabled: timeline.publicEnabled === true,
           onOpen: () =>
@@ -250,6 +259,7 @@ export function useLoreViewModel({
     return {
       cardKind: "creation",
       assetKind: "lore",
+      creationType: item.type || "LORE",
       id: item.id,
       title: item.title,
       subtitle: item.subtitle,

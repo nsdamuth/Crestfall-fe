@@ -7,6 +7,7 @@ export function useKitDestinationTileViewModel(props) {
     label: typeof props?.label === "string" ? props.label : "",
     supportingLine: typeof props?.supportingLine === "string" ? props.supportingLine : "",
     imageSrc: typeof props?.imageSrc === "string" ? props.imageSrc : null,
+    identityKey: typeof props?.identityKey === "string" ? props.identityKey : null,
     onOpen: toCallback(props?.onOpen),
   };
 }

@@ -1,12 +1,15 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.5.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.7.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
  * (docs/BUILD-BLUEPRINT.md 2.6 as amended by 2.16(a), the card law,
- * RULED 9 Aug 2026). Full-bleed art in BOTH layouts: grid is the 3/4
- * image-first template with title, meta, and stats on a bottom fade;
- * list is a wide full-bleed art row with a left-anchored fade. There
- * is no bottom action bar in any layout.
+ * RULED 9 Aug 2026; semantic-background clarification 30 Aug 2026). Full-bleed
+ * presentation remains the law in BOTH layouts: grid is the existing 3/4
+ * image-first template with title, meta, and stats on a bottom fade; list is
+ * the existing wide full-bleed row with a left-anchored fade. Unillustrated
+ * creations render a semantic Crestfall identity background in that same
+ * geometry instead of inherited stock cover art. There is no bottom action
+ * bar in any layout.
  *
  * Face actions are exactly three overlay icons, never more. Slots one
  * and two are always like, save. Slot three is contextual by content
@@ -23,11 +26,10 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.5.0";
  * adventure assets open the asset detail popup (onOpenAssetDetail).
  *
  * Overlay-action placement is RULED (10 Aug 2026, kit polish 3 pass,
- * docs/BUILD-BLUEPRINT.md): icons sit top-right over the art,
- * everywhere, in every grid card. The scrim-row alternative (icons
- * bottom-right beside the title) is retired; there is no placement
- * prop. List layout always trails its actions at the row's right
- * edge.
+ * docs/BUILD-BLUEPRINT.md): icons sit top-right over the art, everywhere, in
+ * every grid card. The scrim-row alternative (icons bottom-right beside the
+ * title) remains retired; there is no placement prop. List layout trails its
+ * actions at the row's right edge.
  *
  * Tag economy (2.16(c)) is enforced by the DATA a caller passes:
  * Canon always; visibility badges only in own-work contexts; never a
@@ -69,6 +71,8 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.5.0";
  * @typedef {Object} KitCreationCardViewProps
  * @property {"grid"|"list"} layout
  * @property {"image"|"character"|"story"|"adventure"} assetKind
+ * @property {string|null} [creationType] Optional concrete Crestfall creation
+ *   type used only to choose the semantic no-art identity treatment.
  * @property {string} title
  * @property {string} subtitle
  * @property {string|null} imageSrc
@@ -152,6 +156,12 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.5.0";
  * every other consumer.
  * @property {boolean} [promoteOwnerActions] optional (v3.5.0), default
  *   false.
+ *
+ * v3.6.0 introduced semantic no-art identity input. v3.7.0 clarifies that
+ * semantic identity is a background substitution only: the pre-existing full-
+ * bleed grid/list geometry, text placement, overlays, and assigned-art behavior
+ * remain unchanged. Unillustrated cards never imply that Crestfall stock art
+ * was selected.
  */
 
 export {};
