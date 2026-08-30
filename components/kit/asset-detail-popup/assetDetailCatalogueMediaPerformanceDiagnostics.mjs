@@ -11,14 +11,20 @@ function read(relativePath) {
   return fs.readFileSync(path.join(repositoryRoot, relativePath), "utf8");
 }
 
-test("featured-media hydration preserves display and thumbnail derivatives", () => {
+test("featured-media hydration preserves display, card, thumbnail, and locked-preview derivatives", () => {
   const attach = read("lib/server/services/creations/attachFeaturedImageSlotsToCreationRows.js");
   const media = read("lib/shared/creations/creationMedia.js");
 
   assert.match(attach, /thumbnailUrl/);
+  assert.match(attach, /cardUrl/);
+  assert.match(attach, /lockedPreviewUrl/);
   assert.match(attach, /displayUrl/);
-  assert.match(media, /function getThumbnailUrl/);
+  assert.match(media, /function getCreationMediaThumbnailUrl/);
+  assert.match(media, /function getCreationMediaCardUrl/);
+  assert.match(media, /function getCreationMediaLockedPreviewUrl/);
   assert.match(media, /thumbnailUrl,/);
+  assert.match(media, /cardUrl,/);
+  assert.match(media, /lockedPreviewUrl,/);
   assert.match(media, /displayImageUrl: imageUrl/);
 });
 
@@ -55,7 +61,7 @@ test("editor hero rail consumes the thumbnail derivative without shrinking the l
   assert.match(editor, /thumbnailSrc:/);
   assert.match(contract, /thumbnailSrc/);
   assert.match(view, /slot\.thumbnailSrc \|\| slot\.imageSrc/);
-  assert.match(view, /<PrimaryArt imageSrc=\{primaryImageSrc\}/);
+  assert.match(view, /<PrimaryArt[\s\S]{0,180}imageSrc=\{primaryImageSrc\}/);
 });
 
 test("owner catalogue actions resolve to the authenticated creation image library", () => {

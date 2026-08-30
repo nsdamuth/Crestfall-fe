@@ -3,6 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getCreationCredits } from "@/lib/shared/creations/creationAttribution";
+import {
+  getCreationMediaCardUrl,
+  getCreationMediaDisplayUrl,
+  getCreationMediaLockedPreviewUrl,
+  getCreationMediaThumbnailUrl,
+  getFirstCreationMediaUrl,
+} from "@/lib/shared/creations/creationMedia";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import {
@@ -57,14 +64,7 @@ function normalizeTags(value) {
 }
 
 export function getCreationProfileMediaImageUrl(item) {
-  return (
-    item?.imageUrl ||
-    item?.displayUrl ||
-    item?.displayImageUrl ||
-    item?.thumbnailUrl ||
-    item?.url ||
-    null
-  );
+  return getCreationMediaDisplayUrl(item, null);
 }
 
 export function getCreationProfileReactionImageOutputId(item) {
@@ -87,18 +87,28 @@ function getMediaId(item, index) {
 }
 
 export function normalizeCreationProfileMedia(media) {
-  return (Array.isArray(media) ? media : []).map((item, index) => ({
-    ...item,
-    id: getMediaId(item, index),
-    imageOutputId: getCreationProfileReactionImageOutputId(item),
-    imageUrl: getCreationProfileMediaImageUrl(item),
-    title: normalizeText(item?.title, item?.type || "Creation media"),
-    type: normalizeText(item?.type, "IMAGE").toUpperCase(),
-    contentRating: normalizeText(item?.contentRating, "SFW"),
-    createdAt: item?.createdAt || item?.created_at || null,
-    liked: Boolean(item?.liked),
-    bookmarked: Boolean(item?.bookmarked),
-  }));
+  return (Array.isArray(media) ? media : []).map((item, index) => {
+    const displayUrl = getCreationProfileMediaImageUrl(item);
+    const cardUrl = getCreationMediaCardUrl(item, displayUrl);
+    const thumbnailUrl = getCreationMediaThumbnailUrl(item, cardUrl || displayUrl);
+
+    return {
+      ...item,
+      id: getMediaId(item, index),
+      imageOutputId: getCreationProfileReactionImageOutputId(item),
+      imageUrl: displayUrl,
+      displayUrl,
+      cardUrl,
+      thumbnailUrl,
+      lockedPreviewUrl: getCreationMediaLockedPreviewUrl(item),
+      title: normalizeText(item?.title, item?.type || "Creation media"),
+      type: normalizeText(item?.type, "IMAGE").toUpperCase(),
+      contentRating: normalizeText(item?.contentRating, "SFW"),
+      createdAt: item?.createdAt || item?.created_at || null,
+      liked: Boolean(item?.liked),
+      bookmarked: Boolean(item?.bookmarked),
+    };
+  });
 }
 
 export function filterCreationProfileMedia({
@@ -156,7 +166,20 @@ export function normalizeCreationProfileCreation(creation) {
     title,
     titleInitial: title.slice(0, 1).toUpperCase() || "C",
     subtitle: normalizeText(creation.subtitle),
-    imageUrl: normalizeText(creation.imageUrl || creation.image_url),
+    imageUrl: normalizeText(
+      getFirstCreationMediaUrl(
+        creation.featuredMedia || creation.featured_media || [],
+        {
+          variant: "card",
+          fallback:
+            creation.cardUrl ||
+            creation.card_url ||
+            creation.imageUrl ||
+            creation.image_url ||
+            null,
+        }
+      )
+    ),
     description: creation.description,
     tags: normalizeTags(creation.tags),
     creatorHandle: normalizeText(creation.creatorHandle),

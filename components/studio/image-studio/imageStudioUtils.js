@@ -1,7 +1,7 @@
 import {
   buildFeaturedMedia,
   getDefaultCreationImageForType,
-  getFirstCreationImageUrl,
+  getFirstCreationMediaUrl,
 } from "@/lib/shared/creations/creationMedia";
 
 export function getImageStudioAllowedTypes(slots = []) {
@@ -23,6 +23,10 @@ export function normalizeImageStudioIngredientOption(creation) {
   });
 
   const fallbackImage = getDefaultCreationImageForType(creation.type);
+  const thumbnailUrl = getFirstCreationMediaUrl(featuredMedia, {
+    variant: "thumbnail",
+    fallback: fallbackImage,
+  });
 
   return {
     id: creation.id,
@@ -42,7 +46,9 @@ export function normalizeImageStudioIngredientOption(creation) {
       creation.data?.short_concept ||
       creation.data?.description ||
       "",
-    imageUrl: getFirstCreationImageUrl(featuredMedia, fallbackImage),
+    imageUrl: thumbnailUrl,
+    thumbnailUrl,
+    featuredMedia,
     contentRating: creation.contentRating || creation.content_rating || "SFW",
     visibility: creation.visibility || "PRIVATE",
     status: creation.status || "DRAFT",

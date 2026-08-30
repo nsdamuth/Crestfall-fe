@@ -16,8 +16,10 @@ const view = read("components/kit/image-creator-panel/KitImageCreatorPanel.view.
 const contract = read("components/kit/image-creator-panel/KitImageCreatorPanel.contract.js");
 const fixtures = read("components/kit/image-creator-panel/KitImageCreatorPanel.fixtures.js");
 
-test("live V2 adapter projects the existing Creation image into selected slot state", () => {
-  assert.match(adapter, /imageSrc:\s*String\(value\.imageUrl \|\| value\.image_url \|\| ""\)/);
+test("live V2 adapter projects the compact Creation thumbnail into selected slot state", () => {
+  assert.match(adapter, /getFirstCreationMediaUrl/);
+  assert.match(adapter, /variant:\s*["']thumbnail["']/);
+  assert.match(adapter, /value\.thumbnailUrl/);
 });
 
 test("Kit creator contract carries a display-ready image without adding transport ownership", () => {

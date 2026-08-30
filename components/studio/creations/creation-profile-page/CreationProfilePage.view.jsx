@@ -281,7 +281,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={item.imageUrl}
+          src={item.cardUrl || item.thumbnailUrl || item.imageUrl}
           alt={item.title || "Creation media"}
           loading={item.priority ? "eager" : "lazy"}
           decoding="async"

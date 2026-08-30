@@ -31,7 +31,8 @@ test("Image Studio keeps shared creation-media resolution for assigned primary i
   const creationMedia = read("lib/shared/creations/creationMedia.js");
 
   assert.match(imageStudioUtils, /buildFeaturedMedia/);
-  assert.match(imageStudioUtils, /getFirstCreationImageUrl/);
+  assert.match(imageStudioUtils, /getFirstCreationMediaUrl/);
+  assert.match(imageStudioUtils, /variant:\s*["']thumbnail["']/);
   assert.match(creationMedia, /row\.featuredMedia/);
   assert.match(creationMedia, /row\.featured_media/);
   assert.match(creationMedia, /row\.imageUrl/);

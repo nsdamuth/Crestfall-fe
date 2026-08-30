@@ -1,5 +1,7 @@
 "use client";
 
+import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
+
 const ICON_NAME_BY_SLOT_ID = Object.freeze({
   character: "users",
   playerCharacter: "user",
@@ -14,6 +16,21 @@ function getItemId(item, index) {
 }
 
 function toViewItem(item, index) {
+  const featuredMedia = Array.isArray(item?.featuredMedia)
+    ? item.featuredMedia
+    : Array.isArray(item?.featured_media)
+      ? item.featured_media
+      : [];
+  const thumbnailUrl = getFirstCreationMediaUrl(featuredMedia, {
+    variant: "thumbnail",
+    fallback:
+      item?.thumbnailUrl ||
+      item?.thumbnail_url ||
+      item?.imageUrl ||
+      item?.image_url ||
+      "",
+  });
+
   return {
     id: getItemId(item, index),
     title: item?.title || "Untitled Creation",
@@ -21,7 +38,7 @@ function toViewItem(item, index) {
     description: item?.description || "",
     type: item?.type || "Creation",
     contentRating: item?.contentRating || item?.content_rating || "SFW",
-    imageUrl: item?.imageUrl || item?.image_url || "",
+    imageUrl: thumbnailUrl || "",
   };
 }
 

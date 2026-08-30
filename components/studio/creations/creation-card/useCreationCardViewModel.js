@@ -8,6 +8,7 @@ import { fetchCreationPreview } from "@/lib/client/studio/creations/creationClie
 import { setDefaultPlayerCharacter } from "@/lib/client/studio/profile/defaultPlayerCharacterClient";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { getCreationCreator } from "@/lib/shared/creations/creationAttribution";
+import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 
 export function useCreationCardViewModel({
@@ -183,7 +184,18 @@ export function useCreationCardViewModel({
     cardViewProps: {
       title,
       fallbackInitial: title.slice(0, 1).toUpperCase(),
-      imageUrl: creation?.imageUrl || null,
+      imageUrl:
+        getFirstCreationMediaUrl(
+          creation?.featuredMedia || creation?.featured_media || [],
+          {
+            variant: "card",
+            fallback:
+              creation?.cardUrl ||
+              creation?.card_url ||
+              creation?.imageUrl ||
+              null,
+          }
+        ) || null,
       priority: Boolean(priority),
       mobileCompact: Boolean(mobileCompact),
       isPreviewLoading: loadingPreview,

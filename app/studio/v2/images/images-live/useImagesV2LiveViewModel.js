@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
 import { useImageStudioWorkbenchViewModel } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
+import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import {
   cameraPresetCatalog,
   cameraPresetGroups,
@@ -42,7 +43,20 @@ function projectSlotStates(composerProps) {
                 id: String(value.id || ""),
                 title: String(value.title || slot.label),
                 subtitle: String(value.subtitle || value.type || ""),
-                imageSrc: String(value.imageUrl || value.image_url || ""),
+                imageSrc: String(
+                  getFirstCreationMediaUrl(
+                    value.featuredMedia || value.featured_media || [],
+                    {
+                      variant: "thumbnail",
+                      fallback:
+                        value.thumbnailUrl ||
+                        value.thumbnail_url ||
+                        value.imageUrl ||
+                        value.image_url ||
+                        "",
+                    }
+                  ) || ""
+                ),
               }
             : null,
           isCustomMode: Boolean(value?.custom),
