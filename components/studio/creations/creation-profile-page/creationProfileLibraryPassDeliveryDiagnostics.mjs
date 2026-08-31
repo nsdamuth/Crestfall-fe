@@ -25,6 +25,8 @@ test("public media proxy preserves creation-library access context", () => {
 
   assert.match(route, /searchParams\.get\([\s\S]*?"creationId"/);
   assert.match(route, /serviceUrl\.searchParams\.set\([\s\S]*?"creationId"[\s\S]*?creationId/);
+  assert.match(route, /"x-crestfall-creation-id"/);
+  assert.match(route, /"x-crestfall-image-variant"/);
   assert.match(route, /requestedVariant === "lockedPreview"/);
   assert.match(route, /"x-crestfall-user-id"/);
 });

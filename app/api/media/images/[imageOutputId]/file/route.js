@@ -140,6 +140,23 @@ export async function GET(
         secret,
     };
 
+    /*
+     * Preserve security-critical media context across
+     * the internal service boundary in both the URL
+     * and headers. Query parameters remain canonical
+     * for public URLs; headers prevent an intermediary
+     * redirect/proxy from silently dropping context.
+     */
+    if (variant) {
+      headers["x-crestfall-image-variant"] =
+        variant;
+    }
+
+    if (creationId) {
+      headers["x-crestfall-creation-id"] =
+        creationId;
+    }
+
     if (authenticatedUser) {
       headers["x-crestfall-user-id"] =
         authenticatedUser.id;
