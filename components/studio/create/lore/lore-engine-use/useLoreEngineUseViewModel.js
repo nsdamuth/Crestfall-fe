@@ -7,7 +7,9 @@ import {
   submitLoreForEngineUse,
   withdrawLoreEngineUseSubmission,
 } from "@/lib/client/studio/creations/loreEngineUseClient";
+import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 import {
+  LORE_ENGINE_USE_AVAILABILITY_MODES,
   LORE_ENGINE_USE_BINDING_SCOPE_TYPES,
   LORE_ENGINE_USE_CONTRACT_VERSION,
   LORE_ENGINE_USE_KNOWLEDGE_MODES,
@@ -35,6 +37,10 @@ function toggleId(list, id) {
     : [...list, id];
 }
 
+function createDefaultKnowledgeTimePoint() {
+  return { day: "", minutes: "" };
+}
+
 function createDefaultCharacterAccess() {
   return {
     scopeType: "ASSET",
@@ -43,6 +49,19 @@ function createDefaultCharacterAccess() {
     excludedChapterIds: [],
     excludedSectionIds: [],
     excludedBlockIds: [],
+    availabilityMode: "ALWAYS",
+    knowledgeAvailableFrom: createDefaultKnowledgeTimePoint(),
+    knowledgeAvailableUntil: createDefaultKnowledgeTimePoint(),
+    allowedScenarioIds: [],
+    allowedRoomTemplateIds: [],
+  };
+}
+
+function normalizeKnowledgeTimePoint(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    day: source.day ?? "",
+    minutes: source.minutes ?? "",
   };
 }
 
@@ -51,6 +70,12 @@ function normalizeCharacterAccess(value) {
   return {
     ...createDefaultCharacterAccess(),
     ...source,
+    knowledgeAvailableFrom: normalizeKnowledgeTimePoint(
+      source.knowledgeAvailableFrom
+    ),
+    knowledgeAvailableUntil: normalizeKnowledgeTimePoint(
+      source.knowledgeAvailableUntil
+    ),
     excludedChapterIds: Array.isArray(source.excludedChapterIds)
       ? source.excludedChapterIds
       : [],
@@ -60,7 +85,37 @@ function normalizeCharacterAccess(value) {
     excludedBlockIds: Array.isArray(source.excludedBlockIds)
       ? source.excludedBlockIds
       : [],
+    allowedScenarioIds: Array.isArray(source.allowedScenarioIds)
+      ? source.allowedScenarioIds
+      : [],
+    allowedRoomTemplateIds: Array.isArray(source.allowedRoomTemplateIds)
+      ? source.allowedRoomTemplateIds
+      : [],
   };
+}
+
+function normalizeContextOption(value) {
+  const source = value && typeof value === "object" ? value : {};
+  return {
+    id: normalizeString(source.id),
+    title: normalizeString(source.title) || "Untitled",
+    status: normalizeStatus(source.status),
+    visibility: normalizeStatus(source.visibility),
+  };
+}
+
+function parseKnowledgeTimePoint(value) {
+  const source = normalizeKnowledgeTimePoint(value);
+  const day = Number(source.day);
+  const minutes = Number(source.minutes);
+  if (!Number.isInteger(day) || day < 1) return null;
+  if (!Number.isInteger(minutes) || minutes < 0 || minutes > 10079) return null;
+  return { day, minutes };
+}
+
+function compareKnowledgeTimePoints(left, right) {
+  if (left.day !== right.day) return left.day - right.day;
+  return left.minutes - right.minutes;
 }
 
 export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
@@ -80,6 +135,12 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   const [knowledgeModes, setKnowledgeModes] = useState({});
   const [characterAccess, setCharacterAccess] = useState({});
   const [configuredReleaseId, setConfiguredReleaseId] = useState("");
+  const [storyContextOptions, setStoryContextOptions] = useState({
+    scenarios: [],
+    roomTemplates: [],
+  });
+  const [storyContextLoadStatus, setStoryContextLoadStatus] = useState("IDLE");
+  const [storyContextLoadMessage, setStoryContextLoadMessage] = useState("");
 
   const source = state.source || {};
   const submissions = Array.isArray(state.submissions)
@@ -118,9 +179,41 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     [creationId]
   );
 
+  const loadStoryContextOptions = useCallback(async () => {
+    if (!creationId) return;
+    setStoryContextLoadStatus("LOADING");
+    setStoryContextLoadMessage("");
+
+    try {
+      const [scenarios, roomTemplates] = await Promise.all([
+        fetchOwnedCreations({ type: "SCENARIO" }),
+        fetchOwnedCreations({ type: "ROOM_TEMPLATE" }),
+      ]);
+      setStoryContextOptions({
+        scenarios: (Array.isArray(scenarios) ? scenarios : [])
+          .map(normalizeContextOption)
+          .filter((item) => item.id),
+        roomTemplates: (Array.isArray(roomTemplates) ? roomTemplates : [])
+          .map(normalizeContextOption)
+          .filter((item) => item.id),
+      });
+      setStoryContextLoadStatus("READY");
+    } catch (error) {
+      setStoryContextOptions({ scenarios: [], roomTemplates: [] });
+      setStoryContextLoadStatus("ERROR");
+      setStoryContextLoadMessage(
+        error.message || "Story context options could not be loaded."
+      );
+    }
+  }, [creationId]);
+
   useEffect(() => {
     void loadState();
   }, [loadState]);
+
+  useEffect(() => {
+    void loadStoryContextOptions();
+  }, [loadStoryContextOptions]);
 
   useEffect(() => {
     if (!sourceReleaseId || sourceReleaseId === configuredReleaseId) return;
@@ -306,16 +399,84 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     });
   }, []);
 
+  const setCharacterAvailabilityMode = useCallback((characterId, mode) => {
+    setCharacterAccess((current) => {
+      const access = normalizeCharacterAccess(current[characterId]);
+      const next = { ...access, availabilityMode: mode };
+      if (mode === "ALWAYS") {
+        next.knowledgeAvailableFrom = createDefaultKnowledgeTimePoint();
+        next.knowledgeAvailableUntil = createDefaultKnowledgeTimePoint();
+      } else if (mode === "FROM") {
+        next.knowledgeAvailableUntil = createDefaultKnowledgeTimePoint();
+      } else if (mode === "UNTIL") {
+        next.knowledgeAvailableFrom = createDefaultKnowledgeTimePoint();
+      }
+      return { ...current, [characterId]: next };
+    });
+  }, []);
+
+  const setCharacterKnowledgeTimeField = useCallback(
+    (characterId, boundary, field, value) => {
+      setCharacterAccess((current) => {
+        const access = normalizeCharacterAccess(current[characterId]);
+        const point = normalizeKnowledgeTimePoint(access[boundary]);
+        return {
+          ...current,
+          [characterId]: {
+            ...access,
+            [boundary]: { ...point, [field]: value },
+          },
+        };
+      });
+    },
+    []
+  );
+
+  const toggleCharacterContextAllowlist = useCallback(
+    (characterId, field, id) => {
+      setCharacterAccess((current) => {
+        const access = normalizeCharacterAccess(current[characterId]);
+        return {
+          ...current,
+          [characterId]: {
+            ...access,
+            [field]: toggleId(access[field] || [], id),
+          },
+        };
+      });
+    },
+    []
+  );
+
   const isCharacterAccessValid = useCallback(
     (characterId) => {
       const access = normalizeCharacterAccess(characterAccess[characterId]);
       if (access.scopeType === "CHAPTER") {
-        return Boolean(access.chapterId && includedChapterIds.has(access.chapterId));
+        if (!access.chapterId || !includedChapterIds.has(access.chapterId)) {
+          return false;
+        }
+      } else if (access.scopeType === "SECTION") {
+        if (!access.sectionId || !includedSectionIds.has(access.sectionId)) {
+          return false;
+        }
+      } else if (access.scopeType !== "ASSET") {
+        return false;
       }
-      if (access.scopeType === "SECTION") {
-        return Boolean(access.sectionId && includedSectionIds.has(access.sectionId));
+
+      const mode = access.availabilityMode || "ALWAYS";
+      const from = parseKnowledgeTimePoint(access.knowledgeAvailableFrom);
+      const until = parseKnowledgeTimePoint(access.knowledgeAvailableUntil);
+      if (mode === "FROM" && !from) return false;
+      if (mode === "UNTIL" && !until) return false;
+      if (mode === "BETWEEN") {
+        if (!from || !until || compareKnowledgeTimePoints(from, until) > 0) {
+          return false;
+        }
+      } else if (!["ALWAYS", "FROM", "UNTIL"].includes(mode)) {
+        return false;
       }
-      return access.scopeType === "ASSET";
+
+      return true;
     },
     [characterAccess, includedChapterIds, includedSectionIds]
   );
@@ -350,6 +511,18 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
             excludedChapterIds: access.excludedChapterIds,
             excludedSectionIds: access.excludedSectionIds,
             excludedBlockIds: access.excludedBlockIds,
+            knowledgeAvailableFrom: ["FROM", "BETWEEN"].includes(
+              access.availabilityMode
+            )
+              ? parseKnowledgeTimePoint(access.knowledgeAvailableFrom)
+              : null,
+            knowledgeAvailableUntil: ["UNTIL", "BETWEEN"].includes(
+              access.availabilityMode
+            )
+              ? parseKnowledgeTimePoint(access.knowledgeAvailableUntil)
+              : null,
+            allowedScenarioIds: access.allowedScenarioIds,
+            allowedRoomTemplateIds: access.allowedRoomTemplateIds,
           };
         }),
         locationBindings: selectedLocationIds.map((subjectId) => ({
@@ -460,6 +633,7 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     knowledgeModes,
     characterAccess,
     knowledgeModeOptions: LORE_ENGINE_USE_KNOWLEDGE_MODES,
+    availabilityModeOptions: LORE_ENGINE_USE_AVAILABILITY_MODES,
     characterScopeOptions: LORE_ENGINE_USE_BINDING_SCOPE_TYPES,
     availableChapters,
     availableSections,
@@ -467,6 +641,9 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     includedSections,
     characterRefs,
     locationRefs,
+    storyContextOptions,
+    storyContextLoadStatus,
+    storyContextLoadMessage,
     canSubmit,
     canCancel:
       ["QUEUED", "PREPARING"].includes(latestStatus) &&
@@ -483,6 +660,9 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     setCharacterScopeChapter,
     setCharacterScopeSection,
     toggleCharacterExclusion,
+    setCharacterAvailabilityMode,
+    setCharacterKnowledgeTimeField,
+    toggleCharacterContextAllowlist,
     submit,
     cancel,
     withdraw,

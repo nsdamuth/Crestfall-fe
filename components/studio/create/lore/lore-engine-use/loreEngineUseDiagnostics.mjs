@@ -27,10 +27,19 @@ test("Lore Engine Use shell follows LOOM boundaries", () => {
   assert.match(viewModel, /excludedChapterIds/);
   assert.match(viewModel, /excludedSectionIds/);
   assert.match(viewModel, /excludedBlockIds/);
+  assert.match(viewModel, /knowledgeAvailableFrom/);
+  assert.match(viewModel, /knowledgeAvailableUntil/);
+  assert.match(viewModel, /allowedScenarioIds/);
+  assert.match(viewModel, /allowedRoomTemplateIds/);
+  assert.match(viewModel, /fetchOwnedCreations/);
   assert.match(view, /Submit for Engine Use/);
   assert.match(view, /Character knowledge/);
   assert.match(view, /Knowledge scope/);
   assert.match(view, /Explicit exclusions/);
+  assert.match(view, /Knowledge availability/);
+  assert.match(view, /Story context/);
+  assert.match(view, /Allowed Scenarios/);
+  assert.match(view, /Allowed Room Templates/);
   assert.match(view, /Location relevance/);
   assert.doesNotMatch(view, /@\/lib\/client|next\/link|Supabase|PostGraphile/);
 });
@@ -49,7 +58,7 @@ test("engine-use routes preserve the Crestfall service boundary", () => {
   assert.match(service, /crestfallApiRequest/);
   assert.match(route, /submitLoreForEngineUse/);
   assert.match(repository, /postgraphileRequest/);
-  assert.match(repository, /createLoreEngineUseSubmissionV2JsonAsActor/);
+  assert.match(repository, /createLoreEngineUseSubmissionV3JsonAsActor/);
 });
 
 console.log("Lore engine-use LOOM diagnostics passed.");

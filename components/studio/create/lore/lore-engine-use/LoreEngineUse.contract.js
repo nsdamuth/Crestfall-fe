@@ -1,5 +1,5 @@
 export const LORE_ENGINE_USE_CONTRACT_VERSION =
-  "lore_engine_use_contract_v1";
+  "lore_engine_use_contract_v2";
 
 export const LORE_ENGINE_USE_KNOWLEDGE_MODES = Object.freeze([
   {
@@ -49,4 +49,11 @@ export const LORE_ENGINE_USE_BINDING_SCOPE_TYPES = Object.freeze([
     value: "SECTION",
     label: "One section",
   },
+]);
+
+export const LORE_ENGINE_USE_AVAILABILITY_MODES = Object.freeze([
+  { value: "ALWAYS", label: "Always available" },
+  { value: "FROM", label: "Available starting at a story time" },
+  { value: "UNTIL", label: "Available until a story time" },
+  { value: "BETWEEN", label: "Available between story times" },
 ]);

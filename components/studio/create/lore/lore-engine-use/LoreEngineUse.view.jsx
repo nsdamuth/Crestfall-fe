@@ -124,20 +124,63 @@ function ReferenceChoice({
   );
 }
 
+function KnowledgeTimePointFields({ label, value = {}, onChange }) {
+  return (
+    <div>
+      <p className="text-xs text-[var(--ink)]">{label}</p>
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        <label className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+          Story day
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={value.day ?? ""}
+            onChange={(event) => onChange("day", event.target.value)}
+            placeholder="1"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+          />
+        </label>
+        <label className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+          Minute of day
+          <input
+            type="number"
+            min="0"
+            max="10079"
+            step="1"
+            value={value.minutes ?? ""}
+            onChange={(event) => onChange("minutes", event.target.value)}
+            placeholder="0"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
 function CharacterAccessControls({
   characterId,
   knowledgeMode,
   knowledgeModeOptions,
+  availabilityModeOptions,
   access = {},
   characterScopeOptions,
   availableChapters,
   includedSections,
   availableBlocks,
+  availableScenarios,
+  availableRoomTemplates,
+  storyContextLoadStatus,
+  storyContextLoadMessage,
   onKnowledgeModeChange,
   onScopeTypeChange,
   onChapterChange,
   onSectionChange,
   onToggleExclusion,
+  onAvailabilityModeChange,
+  onKnowledgeTimeFieldChange,
+  onToggleContextAllowlist,
 }) {
   const scopeType = access.scopeType || "ASSET";
   const includedChapterIds = new Set(
@@ -299,6 +342,130 @@ function CharacterAccessControls({
           </div>
         </div>
       ) : null}
+
+      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Knowledge availability
+        </p>
+        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+          Optionally limit when this Character may receive this Lore as evidence. Story time comes from the active Time/Calendar runtime.
+        </p>
+        <label className="mt-3 block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Availability window
+          <select
+            value={access.availabilityMode || "ALWAYS"}
+            onChange={(event) => onAvailabilityModeChange(event.target.value)}
+            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
+          >
+            {availabilityModeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        {(["FROM", "BETWEEN"].includes(access.availabilityMode || "ALWAYS")) ? (
+          <div className="mt-3">
+            <KnowledgeTimePointFields
+              label="Available from"
+              value={access.knowledgeAvailableFrom}
+              onChange={(field, value) =>
+                onKnowledgeTimeFieldChange("knowledgeAvailableFrom", field, value)
+              }
+            />
+          </div>
+        ) : null}
+        {(["UNTIL", "BETWEEN"].includes(access.availabilityMode || "ALWAYS")) ? (
+          <div className="mt-3">
+            <KnowledgeTimePointFields
+              label="Available until"
+              value={access.knowledgeAvailableUntil}
+              onChange={(field, value) =>
+                onKnowledgeTimeFieldChange("knowledgeAvailableUntil", field, value)
+              }
+            />
+          </div>
+        ) : null}
+        <p className="mt-3 text-[11px] leading-5 text-[var(--ink-dim)]">
+          Minute-of-day is validated against the active calendar when Story time is available. Timed bindings fail closed when Story time is unavailable, invalid, or outside the authored window.
+        </p>
+      </div>
+
+      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Story context
+        </p>
+        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+          Leave both lists empty for any Story context. Selecting Scenarios or Room Templates creates an allowlist. If both lists are used, both must match the active room.
+        </p>
+        {storyContextLoadStatus === "ERROR" ? (
+          <p className="mt-3 text-xs text-amber-100">{storyContextLoadMessage}</p>
+        ) : null}
+        {storyContextLoadStatus === "LOADING" ? (
+          <p className="mt-3 text-xs text-[var(--ink-dim)]">Loading Story context options…</p>
+        ) : null}
+        {availableScenarios.length ? (
+          <div className="mt-3">
+            <p className="text-xs text-[var(--ink)]">Allowed Scenarios</p>
+            <div className="mt-2 grid gap-2">
+              {availableScenarios.map((item) => (
+                <label
+                  key={`${characterId}:scenario:${item.id}`}
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={(access.allowedScenarioIds || []).includes(item.id)}
+                    onChange={() => onToggleContextAllowlist("allowedScenarioIds", item.id)}
+                    className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-xs text-[var(--ink)]">{item.title}</span>
+                    <span className="mt-0.5 block text-[11px] text-[var(--ink-dim)]">
+                      Scenario{item.status ? ` · ${item.status}` : ""}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {availableRoomTemplates.length ? (
+          <div className="mt-3">
+            <p className="text-xs text-[var(--ink)]">Allowed Room Templates</p>
+            <div className="mt-2 grid gap-2">
+              {availableRoomTemplates.map((item) => (
+                <label
+                  key={`${characterId}:room-template:${item.id}`}
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={(access.allowedRoomTemplateIds || []).includes(item.id)}
+                    onChange={() =>
+                      onToggleContextAllowlist("allowedRoomTemplateIds", item.id)
+                    }
+                    className="mt-0.5 h-4 w-4 accent-[var(--gold-ornament)]"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-xs text-[var(--ink)]">{item.title}</span>
+                    <span className="mt-0.5 block text-[11px] text-[var(--ink-dim)]">
+                      Room Template{item.status ? ` · ${item.status}` : ""}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {storyContextLoadStatus === "READY" &&
+        !availableScenarios.length &&
+        !availableRoomTemplates.length ? (
+          <p className="mt-3 text-xs text-[var(--ink-dim)]">
+            No owned Scenarios or Room Templates are available. This binding will remain valid in any Story context.
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -350,6 +517,7 @@ export default function LoreEngineUseView({
   knowledgeModes = {},
   characterAccess = {},
   knowledgeModeOptions = [],
+  availabilityModeOptions = [],
   characterScopeOptions = [],
   availableChapters = [],
   availableSections = [],
@@ -357,6 +525,9 @@ export default function LoreEngineUseView({
   includedSections = [],
   characterRefs = [],
   locationRefs = [],
+  storyContextOptions = { scenarios: [], roomTemplates: [] },
+  storyContextLoadStatus = "IDLE",
+  storyContextLoadMessage = "",
   canSubmit = false,
   canCancel = false,
   canWithdraw = false,
@@ -369,6 +540,9 @@ export default function LoreEngineUseView({
   setCharacterScopeChapter,
   setCharacterScopeSection,
   toggleCharacterExclusion,
+  setCharacterAvailabilityMode,
+  setCharacterKnowledgeTimeField,
+  toggleCharacterContextAllowlist,
   submit,
   cancel,
   withdraw,
@@ -625,11 +799,16 @@ export default function LoreEngineUseView({
                             characterId={refItem.id}
                             knowledgeMode={knowledgeModes[refItem.id] || "SECONDHAND"}
                             knowledgeModeOptions={knowledgeModeOptions}
+                            availabilityModeOptions={availabilityModeOptions}
                             access={characterAccess[refItem.id] || {}}
                             characterScopeOptions={characterScopeOptions}
                             availableChapters={availableChapters}
                             includedSections={includedSections}
                             availableBlocks={availableBlocks}
+                            availableScenarios={storyContextOptions.scenarios || []}
+                            availableRoomTemplates={storyContextOptions.roomTemplates || []}
+                            storyContextLoadStatus={storyContextLoadStatus}
+                            storyContextLoadMessage={storyContextLoadMessage}
                             onKnowledgeModeChange={(mode) =>
                               setCharacterKnowledgeMode(refItem.id, mode)
                             }
@@ -644,6 +823,20 @@ export default function LoreEngineUseView({
                             }
                             onToggleExclusion={(field, id) =>
                               toggleCharacterExclusion(refItem.id, field, id)
+                            }
+                            onAvailabilityModeChange={(mode) =>
+                              setCharacterAvailabilityMode(refItem.id, mode)
+                            }
+                            onKnowledgeTimeFieldChange={(boundary, field, value) =>
+                              setCharacterKnowledgeTimeField(
+                                refItem.id,
+                                boundary,
+                                field,
+                                value
+                              )
+                            }
+                            onToggleContextAllowlist={(field, id) =>
+                              toggleCharacterContextAllowlist(refItem.id, field, id)
                             }
                           />
                         </ReferenceChoice>
