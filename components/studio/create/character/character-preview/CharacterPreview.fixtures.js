@@ -26,7 +26,7 @@ export const characterPreviewEmptyFixture = {
   characterSubtitle: "Private Draft",
   speciesLabel: "Species not chosen yet.",
   genderPresentationLabel: "Gender presentation not chosen yet.",
-  clothingStyleLabel: "Clothing style not chosen yet.",
+  clothingStyleLabel: "Default clothing not chosen yet.",
   previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
 };
 

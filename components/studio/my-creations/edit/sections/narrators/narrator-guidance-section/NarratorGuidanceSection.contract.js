@@ -1,4 +1,4 @@
-export const NARRATOR_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const NARRATOR_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Narrator guidance View.
@@ -17,6 +17,7 @@ export const NARRATOR_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} avoidGuidanceLabel
  * @property {string} avoidGuidanceValue
  * @property {string} avoidGuidancePlaceholder
+ * @property {import("react").ReactNode|null} narratorDirectivesControl
  * @property {((value: string) => void)|null} onChangeGuidance
  * @property {((value: string) => void)|null} onChangeAvoidGuidance
  */

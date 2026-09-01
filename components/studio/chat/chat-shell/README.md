@@ -91,9 +91,9 @@ own existing fixtures wherever one already fit; nothing was reshaped.
 - `ChatShell.fixtures.js`
 - `README.md`
 - Binding shell: `../ChatShell.jsx`
-- Preview route: `app/dev/ui-preview/chat-v2-page/**` (this wave's named
-  preview address doubles as this package's preview surface, since this
-  package is itself the full page composition)
+- This package is retained as a portable/fixture surface. It is not the
+  live Story Chat route binding; `/studio/v2/stories/[id]` mounts
+  `components/studio/story-rooms/StoryRoomChatShell.jsx` directly.
 
 ## STOP items, none
 

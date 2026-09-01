@@ -186,6 +186,7 @@ export function useNarratorBuilderViewModel({
     tone: form.tone,
     narratorGuidance: form.narrator_guidance,
     avoidGuidance: form.avoid_guidance,
+    narratorDirectives: form.narrator_directives,
     tags: form.tags,
     visibility: form.visibility,
     contentRating: form.content_rating,

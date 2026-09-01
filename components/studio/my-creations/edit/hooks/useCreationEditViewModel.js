@@ -17,6 +17,10 @@ import {
   extractCreationFromApiResponse,
   mergeSavedCreationIntoForm,
 } from "@/components/studio/my-creations/edit/creationEditPayloads";
+import {
+  isPoseSemanticField,
+  updatePoseSemanticField,
+} from "@/lib/shared/creations/poseSemantics";
 
 const FEATURED_SLOT_ORDER = ["primary", "alt1", "alt2", "alt3"];
 
@@ -164,10 +168,19 @@ export function useCreationEditViewModel({ creationId, creation }) {
   function updateDataField(field, value) {
     setHasUnsavedChanges(true);
     setForm((current) => {
-      const nextData = {
+      const isPose = String(current.type || "").toUpperCase() === "POSE";
+      let nextData = {
         ...(current.data || {}),
         [field]: value,
       };
+
+      if (isPose && isPoseSemanticField(field)) {
+        nextData = updatePoseSemanticField(current.data || {}, field, value);
+      }
+
+      if (isPose && field === "prompt_guidance") {
+        nextData.prompt = value;
+      }
 
       const next = {
         ...current,

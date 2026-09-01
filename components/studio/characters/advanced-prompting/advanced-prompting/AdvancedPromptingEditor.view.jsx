@@ -8,7 +8,10 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-function getSecurityPresentation(securityStatus = "INACTIVE") {
+function getSecurityPresentation(
+  securityStatus = "INACTIVE",
+  subjectLabel = "character"
+) {
   const status = String(securityStatus || "INACTIVE").toUpperCase();
 
   const presentations = {
@@ -25,7 +28,7 @@ function getSecurityPresentation(securityStatus = "INACTIVE") {
     },
     NEEDS_RESCAN: {
       label: "Needs security check",
-      detail: "Save the character to scan and compile the latest changes.",
+      detail: `Save the ${subjectLabel} to scan and compile the latest changes.`,
       className: "border-sky-300/25 bg-sky-300/10 text-sky-100",
     },
     REVIEW_REQUIRED: {
@@ -73,9 +76,20 @@ export default function AdvancedPromptingEditorView({
   onToggleSection = null,
   onUpdateSection = null,
   onClearSection = null,
+  eyebrow = "Advanced Prompting · Optional",
+  title = "Creator Directives",
+  description =
+    "Add nuanced portrayal, conditional behavior, and anti-drift guidance only when the standard character fields and modules are not enough. Crestfall safety, verified state, modules, registries, meters, and guards always take precedence.",
+  inactiveDescription =
+    "Standard character fields, modules, registries, and mechanics remain a complete character definition. Advanced Prompting adds nothing unless enabled.",
+  authorityNotice = "",
+  subjectLabel = "character",
 }) {
   const safeSections = Array.isArray(sections) ? sections : [];
-  const securityPresentation = getSecurityPresentation(securityStatus);
+  const securityPresentation = getSecurityPresentation(
+    securityStatus,
+    subjectLabel
+  );
 
   return (
     <section className="min-w-0 max-w-full rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
@@ -84,16 +98,13 @@ export default function AdvancedPromptingEditorView({
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <SlidersHorizontal size={18} />
             <p className="text-xs uppercase tracking-[0.22em]">
-              Advanced Prompting · Optional
+              {eyebrow}
             </p>
           </div>
 
-          <h3 className="mt-3 font-display text-3xl">Creator Directives</h3>
+          <h3 className="mt-3 font-display text-3xl">{title}</h3>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-            Add nuanced portrayal, conditional behavior, and anti-drift guidance
-            only when the standard character fields and modules are not enough.
-            Crestfall safety, verified state, modules, registries, meters, and
-            guards always take precedence.
+            {description}
           </p>
         </div>
 
@@ -111,6 +122,12 @@ export default function AdvancedPromptingEditorView({
           {enabled ? "Enabled" : "Enable Advanced Prompting"}
         </button>
       </div>
+
+      {authorityNotice ? (
+        <div className="mt-5 rounded-xl border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm leading-6 text-amber-100">
+          {authorityNotice}
+        </div>
+      ) : null}
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs">
         <div className="flex items-center gap-2">
@@ -219,9 +236,7 @@ export default function AdvancedPromptingEditorView({
         </div>
       ) : (
         <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
-          Standard character fields, modules, registries, and mechanics remain a
-          complete character definition. Advanced Prompting adds nothing unless
-          enabled.
+          {inactiveDescription}
         </div>
       )}
     </section>

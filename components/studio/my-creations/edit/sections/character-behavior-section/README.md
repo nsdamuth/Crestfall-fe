@@ -15,7 +15,7 @@ The portable View owns the Behavior section layout, optional-framework explanati
 The ViewModel owns:
 
 - reading the existing Character creation data;
-- preserving the current scalar fallback for legacy array-shaped `interests` values;
+- normalizing both legacy scalar and modern array-shaped `interests` values into the canonical multi-select array;
 - normalizing `voice_module_ids` into a clean string array;
 - supplying the current option catalogues and copy;
 - mapping semantic callbacks to the existing `updateDataField` storage keys.

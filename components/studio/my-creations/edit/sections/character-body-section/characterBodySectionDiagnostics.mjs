@@ -18,6 +18,7 @@ test("Character Body Shell remains a thin LOOM binding", () => {
   assert.match(shell, /useCharacterBodySectionViewModel/);
   assert.match(shell, /<CharacterBodySectionView/);
   assert.match(shell, /<KibbePresetModal/);
+  assert.match(shell, /label="Body Identity"/);
   assert.match(shell, /<MultiTraitModal/);
   assert.doesNotMatch(shell, /form\.data|updateDataField\?\.\(/);
 });
@@ -39,6 +40,7 @@ test("Character Body ViewModel owns normalization and storage mapping", () => {
     "components/studio/my-creations/edit/sections/character-body-section/useCharacterBodySectionViewModel.js"
   );
   assert.match(viewModel, /normalizeCharacterProportions/);
+  assert.match(viewModel, /return single \? \[single\] : \[\]/);
   assert.match(viewModel, /body_type/);
   assert.match(viewModel, /body_notes/);
   assert.match(viewModel, /proportions/);

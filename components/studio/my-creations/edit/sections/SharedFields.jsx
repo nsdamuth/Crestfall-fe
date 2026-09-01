@@ -31,7 +31,7 @@ import KitFormField from "@/components/kit/KitFormField";
 // ActionPanel drops its own bordered/icon/display-header chrome for
 // the inset-hairline seated-action-row pattern (section 5). No prop
 // shape changed on any export.
-export const SHARED_FIELDS_VERSION = "1.2.0";
+export const SHARED_FIELDS_VERSION = "1.3.0";
 
 // ED1C section chrome context: the v2 editor page shell renders one
 // header per section box and suppresses the sections' own internal
@@ -242,12 +242,10 @@ export function NumberField({
   );
 }
 
-// Sensible ceiling for the expanded textarea: past this height a
-// field scrolls internally instead of pushing the footer off screen,
-// the same recipe the World/Look/Story quick creates already prove
-// (components/studio/create/world/creator-stops/shared/Controls.jsx
-// FoldingTextField).
-const TEXTAREA_MAX_HEIGHT_PX = 320;
+// Character long-form fields may be manually resized vertically once
+// expanded. There is deliberately no maximum height: authored character
+// guidance can be long, and the writer must be able to expose as much of it
+// as needed while reviewing or editing.
 
 // Folding long-form field, RULED (Fable Gate O1, option A, wave E1),
 // REBUILT 22 Aug 2026 (ED1G SW1, ED1E section 4.3): rest, filled
@@ -256,10 +254,10 @@ const TEXTAREA_MAX_HEIGHT_PX = 320;
 // second line; rest, empty is the same height with a placeholder.
 // Expansion happens on focus from ANY path (pointer, keyboard,
 // programmatic), never merely because the value is non-empty at
-// mount, and grows to fit content up to 320px before scrolling
-// internally. Once expanded it stays expanded for the rest of the
-// session so a filled-in answer never disappears out from under the
-// person who wrote it. Counter follows O4 (same Counter component as
+// mount. Once expanded it stays expanded for the rest of the session so a
+// filled-in answer never disappears out from under the person who wrote it.
+// The textarea is vertically resizable with no artificial height ceiling.
+// Counter follows O4 (same Counter component as
 // TextField/SelectField). `disabled` and `mono` (RULED, sf1 pass):
 // both additive and optional, default false, no change to any
 // existing consumer.
@@ -314,11 +312,9 @@ export function TextAreaField({
           placeholder={placeholder}
           maxLength={maxLength || undefined}
           disabled={disabled}
-          className={`mt-[var(--space-1)] resize-none overflow-y-auto py-[var(--space-2)] ${bedClass}`}
-          style={{
-            minHeight: "var(--control-md)",
-            maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px`,
-          }}
+          rows={2}
+          className={`mt-[var(--space-1)] resize-y overflow-y-auto py-[var(--space-2)] ${bedClass}`}
+          style={{ minHeight: "var(--control-md)" }}
         />
       ) : (
         <button

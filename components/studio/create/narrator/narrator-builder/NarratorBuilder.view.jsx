@@ -4,6 +4,7 @@ import { BookOpen, Save, Sparkles } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import NarratorModuleSelectorView from "@/components/studio/create/narrator/narrator-module-selector/NarratorModuleSelector.view";
+import NarratorDirectivesEditor from "@/components/studio/narrators/advanced-prompting/NarratorDirectivesEditor";
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
@@ -34,7 +35,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -46,6 +47,7 @@ export default function NarratorBuilderView({
   tone = "",
   narratorGuidance = "",
   avoidGuidance = "",
+  narratorDirectives = null,
   tags = "",
   visibility = "PRIVATE",
   contentRating = "SFW",
@@ -182,6 +184,13 @@ export default function NarratorBuilderView({
             onChange={(value) => onUpdateField?.("avoidGuidance", value)}
             placeholder="Optional: describe narration habits to avoid."
             rows={4}
+          />
+
+          <NarratorDirectivesEditor
+            value={narratorDirectives}
+            onChange={(value) =>
+              onUpdateField?.("narrator_directives", value)
+            }
           />
 
           <TextField

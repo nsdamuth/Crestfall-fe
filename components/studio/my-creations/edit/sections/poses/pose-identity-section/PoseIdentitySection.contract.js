@@ -1,4 +1,4 @@
-export const POSE_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const POSE_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Pose identity View.
@@ -16,10 +16,14 @@ export const POSE_IDENTITY_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} nameValue
  * @property {string} categoryLabel
  * @property {string} categoryValue
+ * @property {Array<{value:string,label:string}>} categoryOptions
+ * @property {string} categoryHelper
  * @property {string} intendedUseLabel
  * @property {string} intendedUseValue
+ * @property {string} intendedUseHelper
  * @property {string} tagsLabel
  * @property {string} tagsValue
+ * @property {string} tagsHelper
  * @property {string} creationTypeLabel
  * @property {string} creationTypeValue
  * @property {((value: string) => void)|null} onChangeName

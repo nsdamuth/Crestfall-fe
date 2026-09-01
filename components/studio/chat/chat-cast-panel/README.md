@@ -4,10 +4,11 @@
 
 Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. RESHAPED 23 Aug 2026
 (build-0823 pass 2, the Party panel ruling): renamed from Cast to
-Party in every user-visible string. New build; the legacy
-`components/studio/story-rooms/story-room-cast-panel` tree is a stale
-pre-upgrade fork of this repo and is read-only reference, never edited
-or imported from here.
+Party in every user-visible string. This portable package is not the
+live Story Chat route authority. The established
+`components/studio/story-rooms/story-room-cast-panel` package remains
+part of the canonical Story Chat implementation mounted at
+`/studio/v2/stories/[id]`.
 
 ## Boundary
 

@@ -1,40 +1,15 @@
 export const assetBuilderConfigs = {
   pose: {
-    eyebrow: "Image Preset",
+    eyebrow: "Visual Asset",
     creationType: "POSE",
     title: "Create Pose",
     description:
-      "Create reusable pose logic for image generation, character cards, and visual scenes.",
+      "Create a reusable pose with structured body geometry, motion/staging semantics, and focused image-generation guidance.",
     typeLabel: "Pose",
     promptLabel: "Pose Guidance",
     promptPlaceholder:
-      "Describe the pose, body orientation, posture, mood, framing, and action.",
-    extraFields: [
-      {
-        id: "energy",
-        label: "Energy",
-        options: [
-          { value: "", label: "Not chosen" },
-          { value: "CALM", label: "Calm" },
-          { value: "ELEGANT", label: "Elegant" },
-          { value: "DOMINANT", label: "Dominant" },
-          { value: "DYNAMIC", label: "Dynamic" },
-          { value: "COMBAT_READY", label: "Combat Ready" },
-        ],
-      },
-      {
-        id: "orientation",
-        label: "Orientation",
-        options: [
-          { value: "", label: "Not chosen" },
-          { value: "STANDING", label: "Standing" },
-          { value: "SEATED", label: "Seated" },
-          { value: "RECLINING", label: "Reclining" },
-          { value: "ACTION", label: "Action" },
-          { value: "PORTRAIT", label: "Portrait" },
-        ],
-      },
-    ],
+      "Describe the pose geometry and staging. You can also build guidance from the structured Pose fields.",
+    extraFields: [],
   },
 
   outfit: {

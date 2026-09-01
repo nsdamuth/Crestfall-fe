@@ -25,7 +25,7 @@ const baseFixture = Object.freeze({
   sectionTitle: "Appearance",
   sectionDescription:
     "Edit visual identity fields using the same guided controls from character creation.",
-  clothingLabel: "Clothing Style",
+  clothingLabel: "Default Clothing",
   emptyClothingDescription:
     "No default clothing source selected. Choose a single Outfit or a Wardrobe.",
   imagePresetLabel: "Default Image Preset",

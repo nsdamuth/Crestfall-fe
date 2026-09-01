@@ -10,6 +10,7 @@ import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoo
 import { getCreationCreator } from "@/lib/shared/creations/creationAttribution";
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 export function useCreationCardViewModel({
   creation = {},
@@ -135,7 +136,7 @@ export function useCreationCardViewModel({
         throw new Error("Story was created without a room id.");
       }
 
-      router.push(`/studio/story-rooms/${roomId}`);
+      router.push(buildStoryChatHref(roomId));
     } catch (error) {
       setChatError(error?.message || "Story could not be started.");
       setStartingChat(false);

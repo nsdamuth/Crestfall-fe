@@ -1,5 +1,6 @@
 import {
   SectionTitle,
+  SelectField,
   TextAreaField,
   TextField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -11,16 +12,24 @@ export default function PoseMotionStagingSectionView({
   sectionDescription = "",
   actionMotionLabel = "Action / Motion",
   actionMotionValue = "",
+  actionMotionHelper = "",
   energyLevelLabel = "Energy Level",
   energyLevelValue = "",
+  energyOptions = [],
+  energyLevelHelper = "",
   viewerRelationLabel = "Viewer Relation",
   viewerRelationValue = "",
+  viewerRelationOptions = [],
+  viewerRelationHelper = "",
   propInteractionLabel = "Prop Interaction",
   propInteractionValue = "",
+  propInteractionHelper = "",
   sceneFitLabel = "Scene Fit",
   sceneFitValue = "",
+  sceneFitHelper = "",
   moodAttitudeLabel = "Mood / Attitude",
   moodAttitudeValue = "",
+  moodAttitudeHelper = "",
   stagingNotesLabel = "Staging Notes",
   stagingNotesValue = "",
   stagingNotesPlaceholder = "",
@@ -45,36 +54,44 @@ export default function PoseMotionStagingSectionView({
           label={actionMotionLabel}
           value={actionMotionValue}
           onChange={(value) => onChangeActionMotion?.(value)}
+          helperText={actionMotionHelper}
         />
 
-        <TextField
+        <SelectField
           label={energyLevelLabel}
           value={energyLevelValue}
           onChange={(value) => onChangeEnergyLevel?.(value)}
+          options={energyOptions}
+          helperText={energyLevelHelper}
         />
 
-        <TextField
+        <SelectField
           label={viewerRelationLabel}
           value={viewerRelationValue}
           onChange={(value) => onChangeViewerRelation?.(value)}
+          options={viewerRelationOptions}
+          helperText={viewerRelationHelper}
         />
 
         <TextField
           label={propInteractionLabel}
           value={propInteractionValue}
           onChange={(value) => onChangePropInteraction?.(value)}
+          helperText={propInteractionHelper}
         />
 
         <TextField
           label={sceneFitLabel}
           value={sceneFitValue}
           onChange={(value) => onChangeSceneFit?.(value)}
+          helperText={sceneFitHelper}
         />
 
         <TextField
           label={moodAttitudeLabel}
           value={moodAttitudeValue}
           onChange={(value) => onChangeMoodAttitude?.(value)}
+          helperText={moodAttitudeHelper}
         />
 
         <div className="md:col-span-2">

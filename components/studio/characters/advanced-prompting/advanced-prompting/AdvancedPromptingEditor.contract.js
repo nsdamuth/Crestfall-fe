@@ -1,7 +1,7 @@
 export const CREATOR_DIRECTIVES_CONTRACT_VERSION =
   "character.creatorDirectives.v1";
 
-export const ADVANCED_PROMPTING_EDITOR_VIEW_CONTRACT_VERSION = "1.0.0";
+export const ADVANCED_PROMPTING_EDITOR_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const CREATOR_DIRECTIVES_TOTAL_LIMIT = 32000;
 
@@ -166,4 +166,10 @@ export function getCreatorDirectiveCharacterCount(source = {}) {
  * @property {((sectionId: string) => void)|null} onToggleSection
  * @property {((sectionId: string, nextText: string) => void)|null} onUpdateSection
  * @property {((sectionId: string) => void)|null} onClearSection
+ * @property {string} [eyebrow] Optional presentation copy; Character defaults remain authoritative when omitted.
+ * @property {string} [title]
+ * @property {string} [description]
+ * @property {string} [inactiveDescription]
+ * @property {string} [authorityNotice]
+ * @property {string} [subjectLabel]
  */

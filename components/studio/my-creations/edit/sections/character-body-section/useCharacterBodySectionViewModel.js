@@ -26,7 +26,12 @@ const DEFAULT_COPY = Object.freeze({
 });
 
 export function normalizeCharacterProportions(value) {
-  return Array.isArray(value) ? value : [];
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item || "").trim()).filter(Boolean);
+  }
+
+  const single = String(value || "").trim();
+  return single ? [single] : [];
 }
 
 export function getCharacterBodySectionViewProps({

@@ -35,6 +35,7 @@ function buildFixture(overrides = {}) {
       "Frame each scene with sensory detail, preserve character agency, and let clues emerge through action rather than exposition.",
     avoidGuidance:
       "Avoid omniscient spoilers, forced emotional reactions, and excessive summaries.",
+    narratorDirectives: null,
     tags: "cinematic, mystery, slow-burn",
     visibility: "PRIVATE",
     contentRating: "SFW",

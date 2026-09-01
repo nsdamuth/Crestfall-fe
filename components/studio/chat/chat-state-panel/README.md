@@ -7,9 +7,10 @@ Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. RESHAPED 23 Aug 2026
 icon-only 38px controls) replaces the prior button-stack `actions`
 rendering; World, Knowledge, and Mechanics render as quiet key-value
 rows with fade-line section labels, replacing the boxed StateCards.
-New build; the legacy `components/studio/story-rooms/story-room-state-panel`
-tree is a stale pre-upgrade fork of this repo and is read-only
-reference, never edited or imported from here.
+This portable package is not the live Story Chat route authority. The
+established `components/studio/story-rooms/story-room-state-panel`
+package remains part of the canonical Story Chat implementation mounted
+at `/studio/v2/stories/[id]`.
 
 ## Boundary
 

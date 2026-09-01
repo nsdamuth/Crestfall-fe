@@ -1,12 +1,23 @@
+import {
+  POSE_CATEGORY_OPTIONS,
+  normalizePoseSemantics,
+} from "@/lib/shared/creations/poseSemantics";
+
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Pose Editor",
   sectionTitle: "Pose Identity",
   sectionDescription:
-    "Define what this pose is, how it should be categorized, and how it may be reused as an Image Studio pose ingredient.",
+    "Define what this pose is and how creators can discover or reuse it. Runtime matching metadata remains separate from public tags.",
   nameLabel: "Pose Name",
   categoryLabel: "Pose Type / Category",
+  categoryHelper:
+    "Broad discovery taxonomy. This does not replace the more precise Posture field.",
   intendedUseLabel: "Intended Use",
+  intendedUseHelper:
+    "Human-facing guidance for when this pose is useful; not inserted directly into image prompts.",
   tagsLabel: "Tags",
+  tagsHelper:
+    "Public discovery tags. Automatic chat matching uses internal pose_match metadata instead.",
   creationTypeLabel: "Creation Type",
 });
 
@@ -27,12 +38,14 @@ export function getPoseIdentitySectionViewProps({
   updateDataField = null,
 } = {}) {
   const data = form?.data || {};
+  const semantics = normalizePoseSemantics(data);
 
   return {
     ...DEFAULT_COPY,
     nameValue: data.name ?? form?.title ?? "",
-    categoryValue: data.category || data.pose_type || "",
-    intendedUseValue: data.intended_use || "",
+    categoryValue: semantics.category,
+    categoryOptions: POSE_CATEGORY_OPTIONS,
+    intendedUseValue: semantics.intended_use,
     tagsValue: formatPoseIdentityTags(data.tags),
     creationTypeValue: form?.type || "",
     onChangeName: (value) => updateDataField?.("name", value),

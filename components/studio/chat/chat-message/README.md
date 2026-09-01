@@ -2,10 +2,11 @@
 
 **Contract:** `ChatMessage.contract.js` (v1.0.0)
 
-Wave C1, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
-`components/studio/story-rooms/story-room-message` tree is a stale
-pre-upgrade fork of this repo and is read-only reference, never edited
-or imported from here. The behavioral baseline this package is a
+Wave C1, `docs/plans/FABLE-GATE-PLAN.md`. This portable package is
+not the live Story Chat route authority. The established
+`components/studio/story-rooms/story-room-message` package remains part
+of the canonical Story Chat implementation mounted at
+`/studio/v2/stories/[id]`. The behavioral baseline this package is a
 designed superset of is `crestfall-main/Crestfall`'s
 `story-room-message` package, contract 1.4.0.
 

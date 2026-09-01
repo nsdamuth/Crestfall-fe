@@ -5,6 +5,7 @@ import {
 } from "@/components/studio/create/character/CharacterCreatorUtils"
 import PersonalityModal from "@/components/studio/create/character/PersonalityModal";
 import TraitModal from "@/components/studio/create/character/TraitModal";
+import MultiTraitModal from "@/components/studio/create/character/MultiTraitModal";
 import VoiceModulePickerModal from "@/components/studio/create/character/VoiceModulePickerModal";
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
@@ -122,13 +123,13 @@ export default function BehaviorStep({ form, updateField }) {
           description="Controls how talkative the character should be during scenes."
         />
 
-      <TraitModal
+      <MultiTraitModal
             label="Interests"
             field="interests"
             form={form}
             updateField={updateField}
             options={interestOptions}
-            description="Core subjects, goals, or fascinations the character naturally gravitates toward."
+            description="Choose every core subject, goal, or fascination the character naturally gravitates toward."
           />
         <div className="md:col-span-2">
           <TextAreaField

@@ -1,4 +1,4 @@
-export const POSE_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const POSE_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Pose prompt-guidance View.
@@ -14,13 +14,18 @@ export const POSE_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} promptGuidanceLabel
  * @property {string} promptGuidanceValue
  * @property {string} promptGuidancePlaceholder
+ * @property {string} promptGuidanceHelper
+ * @property {string} suggestedPromptGuidance
  * @property {string} usageNotesLabel
  * @property {string} usageNotesValue
  * @property {string} usageNotesPlaceholder
+ * @property {string} usageNotesHelper
  * @property {string} compatibilityNotesLabel
  * @property {string} compatibilityNotesValue
  * @property {string} compatibilityNotesPlaceholder
+ * @property {string} compatibilityNotesHelper
  * @property {((value: string) => void)|null} onChangePromptGuidance
+ * @property {(() => void)|null} onUseSuggestedPromptGuidance
  * @property {((value: string) => void)|null} onChangeUsageNotes
  * @property {((value: string) => void)|null} onChangeCompatibilityNotes
  */

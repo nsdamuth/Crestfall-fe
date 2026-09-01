@@ -47,6 +47,7 @@ const initialForm = {
   detail_level: "",
   narrator_guidance: "",
   avoid_guidance: "",
+  narrator_directives: null,
   tags: "",
   visibility: "PRIVATE",
   content_rating: "SFW",

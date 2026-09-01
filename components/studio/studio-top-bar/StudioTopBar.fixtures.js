@@ -3,6 +3,8 @@ const baseFixture = Object.freeze({
   searchPlaceholder: "Search characters, stories, and adventures",
   searchAutoFocus: false,
   notifications: [],
+  notificationsStatus: "idle",
+  notificationsLoadError: "",
   notificationsLabel: "Notifications",
   notificationsView: null,
   themeMode: "dark",
@@ -13,11 +15,6 @@ const baseFixture = Object.freeze({
 });
 
 export const studioTopBarIdleFixture = baseFixture;
-
-// Same fixture, named for item 10 of the mobile nav restyle brief
-// (8 Aug 2026): the header now renders at every breakpoint, so "idle"
-// covers mobile too. Rendered width, not fixture content, is what
-// changes between the desktop and mobile checks.
 export const studioTopBarMobileBarIdleFixture = baseFixture;
 
 export const studioTopBarSearchFocusedFixture = Object.freeze({
@@ -28,40 +25,20 @@ export const studioTopBarSearchFocusedFixture = Object.freeze({
 
 const sampleNotifications = Object.freeze([
   Object.freeze({
-    id: "n-1",
-    title: "Your character \"Lysandra\" passed review and is now public.",
+    id: "release-1",
+    type: "FOLLOWED_CREATOR_PUBLISHED",
+    title: "@lyra published “The Hollow Court”.",
+    body: "Storyline is now public.",
     supportingLine: "12m ago",
-    group: "today",
+    href: "/studio/creations/11111111-1111-4111-8111-111111111111",
   }),
   Object.freeze({
-    id: "n-2",
-    title: "New comment on your Story \"The Hollow Court\".",
+    id: "coins-1",
+    type: "COINS_RECEIVED",
+    title: "You received 500 Coins from @patron.",
+    body: "For the next chapter.",
     supportingLine: "1h ago",
-    group: "today",
-  }),
-  Object.freeze({
-    id: "n-3",
-    title: "Image Studio finished generating 4 portraits.",
-    supportingLine: "3h ago",
-    group: "today",
-  }),
-  Object.freeze({
-    id: "n-4",
-    title: "Weekly creator digest is ready.",
-    supportingLine: "1d ago",
-    group: "earlier",
-  }),
-  Object.freeze({
-    id: "n-5",
-    title: "\"Morning Star\" reached 100 sessions played.",
-    supportingLine: "2d ago",
-    group: "earlier",
-  }),
-  Object.freeze({
-    id: "n-6",
-    title: "A room you follow, \"Ashfall Tavern\", went live.",
-    supportingLine: "3d ago",
-    group: "earlier",
+    href: null,
   }),
 ]);
 
@@ -75,33 +52,25 @@ export const studioTopBarBellWithNotificationsFixture = Object.freeze({
 export const studioTopBarCompactPanelOpenFixture = Object.freeze({
   ...baseFixture,
   notifications: sampleNotifications,
+  notificationsStatus: "loaded",
   notificationsView: "compact",
 });
 
-export const studioTopBarFullCenterOpenFixture = Object.freeze({
+export const studioTopBarLoadingPanelOpenFixture = Object.freeze({
   ...baseFixture,
-  notifications: sampleNotifications,
-  notificationsView: "full",
+  notificationsStatus: "loading",
+  notificationsView: "compact",
+});
+
+export const studioTopBarErrorPanelOpenFixture = Object.freeze({
+  ...baseFixture,
+  notificationsStatus: "error",
+  notificationsLoadError: "Notifications could not be loaded.",
+  notificationsView: "compact",
 });
 
 export const studioTopBarEmptyPanelOpenFixture = Object.freeze({
   ...baseFixture,
-  notificationsView: "compact",
-});
-
-// Items 3-4 (notification demo interactions, 8 Aug 2026): the compact
-// panel after one row has been dismissed, and the all-cleared empty
-// state. The live demo (studioTopBarNotificationsDemoState.js) reaches
-// both interactively; these fixtures give the preview harness the same
-// two states without needing to click through the demo.
-export const studioTopBarPanelAfterDismissFixture = Object.freeze({
-  ...baseFixture,
-  notifications: sampleNotifications.filter((notification) => notification.id !== "n-1"),
-  notificationsView: "compact",
-});
-
-export const studioTopBarAllClearedFixture = Object.freeze({
-  ...baseFixture,
-  notifications: [],
+  notificationsStatus: "loaded",
   notificationsView: "compact",
 });

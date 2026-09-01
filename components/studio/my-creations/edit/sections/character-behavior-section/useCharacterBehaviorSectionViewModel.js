@@ -55,10 +55,11 @@ export const CHARACTER_VERBOSITY_OPTIONS = Object.freeze([
 
 export function normalizeCharacterInterests(value) {
   if (Array.isArray(value)) {
-    return value[0] || "";
+    return value.map((item) => String(item || "").trim()).filter(Boolean);
   }
 
-  return value || "";
+  const single = String(value || "").trim();
+  return single ? [single] : [];
 }
 
 export function normalizeVoiceModuleIds(value) {

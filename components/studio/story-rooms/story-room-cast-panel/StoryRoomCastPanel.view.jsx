@@ -51,7 +51,7 @@ export default function StoryRoomCastPanelView({
 
   return (
     <>
-      <aside className="min-w-0 overflow-hidden self-start rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="min-w-0 overflow-hidden self-start rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-0">
       <div className="mb-4 flex items-center justify-between gap-3">
         <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {eyebrow}

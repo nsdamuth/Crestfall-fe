@@ -1,19 +1,16 @@
 "use client";
 
-import { Bell, Menu, Moon, Sun, X } from "lucide-react";
+import { Bell, Menu, Moon, Sun } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
-
-const GROUP_LABELS = Object.freeze({
-  today: "Today",
-  earlier: "Earlier",
-});
 
 export default function StudioTopBarView({
   searchValue = "",
   searchPlaceholder = "Search characters, stories, and adventures",
   searchAutoFocus = false,
   notifications = [],
+  notificationsStatus = "idle",
+  notificationsLoadError = "",
   notificationsLabel = "Notifications",
   notificationsView = null,
   bellRef = null,
@@ -26,16 +23,14 @@ export default function StudioTopBarView({
   openMenuAriaLabel = "Open menu",
   onSearchChange = () => {},
   onOpenNotifications = () => {},
-  onOpenNotificationCenter = () => {},
   onToggleTheme = () => {},
   onCloseNotifications = () => {},
-  onDismissNotification = () => {},
-  onClearAllNotifications = () => {},
   onOpenMenu = () => {},
 }) {
   const hasNotifications = notifications.length > 0;
-  const isCompactOpen = notificationsView === "compact";
-  const isFullOpen = notificationsView === "full";
+  const isOpen = notificationsView === "compact";
+  const isLoading = notificationsStatus === "loading";
+  const hasLoadError = notificationsStatus === "error";
 
   return (
     <>
@@ -64,12 +59,8 @@ export default function StudioTopBarView({
           type="button"
           onClick={onOpenNotifications}
           aria-label={notificationsLabel}
-          aria-expanded={isCompactOpen || isFullOpen}
-          className={`flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border bg-[var(--surface-2)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] ${
-            hasNotifications
-              ? "border-[var(--line-strong)] text-[var(--gold-action)] shadow-[var(--glow-hover)]"
-              : "border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
-          }`}
+          aria-expanded={isOpen}
+          className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-[color,border-color,box-shadow] duration-[var(--dur-hover)] hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
         >
           <Bell size={17} />
         </button>
@@ -95,72 +86,43 @@ export default function StudioTopBarView({
         )}
       </header>
 
-      {isCompactOpen ? (
+      {isOpen ? (
         <KitModalFrame
           onClose={onCloseNotifications}
-          ariaLabelledBy="studio-notif-compact-title"
-          panelClassName="w-full max-w-[26rem] p-[var(--space-5)]"
+          ariaLabelledBy="studio-notif-title"
+          panelClassName="w-full max-w-[29rem] p-[var(--space-5)]"
         >
-          <NotificationsHeader
-            titleId="studio-notif-compact-title"
-            title={notificationsLabel}
-            subtitle="Recent activity"
-          />
+          <div className="mb-[var(--space-4)] pr-[var(--space-10)]">
+            <h2
+              id="studio-notif-title"
+              className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
+            >
+              {notificationsLabel}
+            </h2>
+            <p className="mt-1 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
+              Recent public releases and Coins received.
+            </p>
+          </div>
 
-          {hasNotifications ? (
-            <ul className="divide-y divide-[var(--line-whisper)]">
-              {notifications.slice(0, 3).map((notification) => (
+          {isLoading ? (
+            <NotificationMessage>Loading recent activity…</NotificationMessage>
+          ) : hasLoadError ? (
+            <NotificationMessage>
+              {notificationsLoadError || "Notifications could not be loaded."}
+            </NotificationMessage>
+          ) : hasNotifications ? (
+            <ul className="max-h-[62dvh] overflow-y-auto divide-y divide-[var(--line-whisper)] pr-1">
+              {notifications.map((notification) => (
                 <NotificationRow
                   key={notification.id}
                   notification={notification}
-                  onDismiss={onDismissNotification}
                 />
               ))}
             </ul>
           ) : (
-            <EmptyNotifications />
-          )}
-
-          {hasNotifications ? (
-            <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-center gap-[var(--space-2)]">
-              <button
-                type="button"
-                onClick={onClearAllNotifications}
-                className="cf-btn cf-btn--secondary cf-btn--sm"
-              >
-                Clear all
-              </button>
-              <button
-                type="button"
-                onClick={onOpenNotificationCenter}
-                className="cf-btn cf-btn--primary cf-btn--sm"
-              >
-                Notification Center
-              </button>
-            </div>
-          ) : null}
-        </KitModalFrame>
-      ) : null}
-
-      {isFullOpen ? (
-        <KitModalFrame
-          onClose={onCloseNotifications}
-          ariaLabelledBy="studio-notif-full-title"
-          panelClassName="w-full max-w-[30rem] p-[var(--space-5)]"
-        >
-          <NotificationsHeader
-            titleId="studio-notif-full-title"
-            title="Notification Center"
-            subtitle="Everything, organized by day"
-          />
-
-          {hasNotifications ? (
-            <NotificationGroups
-              notifications={notifications}
-              onDismiss={onDismissNotification}
-            />
-          ) : (
-            <EmptyNotifications />
+            <NotificationMessage>
+              No recent public releases or Coin gifts yet.
+            </NotificationMessage>
           )}
         </KitModalFrame>
       ) : null}
@@ -168,87 +130,53 @@ export default function StudioTopBarView({
   );
 }
 
-function NotificationsHeader({ titleId, title = "", subtitle = "" }) {
+function NotificationMessage({ children }) {
   return (
-    <div className="mb-[var(--space-4)] pr-[var(--space-10)]">
-      <h2
-        id={titleId}
-        className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] font-[var(--weight-medium)]"
-      >
-        {title}
-      </h2>
-      <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
-        {subtitle}
-      </p>
-    </div>
-  );
-}
-
-function NotificationGroups({ notifications = [], onDismiss = () => {} }) {
-  const groups = ["today", "earlier"]
-    .map((key) => ({
-      key,
-      label: GROUP_LABELS[key],
-      items: notifications.filter((notification) => notification.group === key),
-    }))
-    .filter((group) => group.items.length > 0);
-
-  return (
-    <>
-      {groups.map((group) => (
-        <div key={group.key}>
-          <p className="mt-[var(--space-4)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase font-[var(--weight-medium)] text-[color:var(--ink-faint)] first:mt-0">
-            {group.label}
-          </p>
-          <ul className="divide-y divide-[var(--line-whisper)]">
-            {group.items.map((notification) => (
-              <NotificationRow
-                key={notification.id}
-                notification={notification}
-                onDismiss={onDismiss}
-              />
-            ))}
-          </ul>
-        </div>
-      ))}
-    </>
-  );
-}
-
-function NotificationRow({ notification, onDismiss = () => {} }) {
-  return (
-    <li className="flex items-center gap-[var(--space-1)]">
-      <div className="flex flex-1 min-w-0 items-start gap-[var(--space-3)] py-[var(--space-3)]">
-        <span
-          aria-hidden="true"
-          className="mt-[var(--space-2)] h-2 w-2 shrink-0 rounded-[var(--radius-full)] bg-[var(--gold-action)]"
-        />
-        <div className="min-w-0">
-          <h3 className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-pretty">
-            {notification.title}
-          </h3>
-          <p className="mt-0.5 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
-            {notification.supportingLine}
-          </p>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onDismiss?.(notification.id)}
-        aria-label={`Dismiss ${notification.title}`}
-        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-faint)] transition-[color,background-color] duration-[var(--dur-hover)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-      >
-        <X size={14} />
-      </button>
-    </li>
-  );
-}
-
-function EmptyNotifications() {
-  return (
-    <p className="py-[var(--space-4)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[color:var(--ink-faint)]">
-      No notifications yet.
+    <p className="py-[var(--space-5)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[color:var(--ink-faint)]">
+      {children}
     </p>
+  );
+}
+
+function NotificationRow({ notification = {} }) {
+  const content = (
+    <>
+      <span
+        aria-hidden="true"
+        className="mt-[0.45rem] h-2 w-2 shrink-0 rounded-[var(--radius-full)] bg-[var(--gold-action)]"
+      />
+      <div className="min-w-0 flex-1">
+        <h3 className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-pretty text-[var(--ink)]">
+          {notification.title}
+        </h3>
+        {notification.body ? (
+          <p className="mt-1 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-dim)]">
+            {notification.body}
+          </p>
+        ) : null}
+        <p className="mt-1 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]">
+          {notification.supportingLine}
+        </p>
+      </div>
+    </>
+  );
+
+  if (notification.href) {
+    return (
+      <li>
+        <a
+          href={notification.href}
+          className="flex items-start gap-[var(--space-3)] py-[var(--space-3)] transition-colors hover:text-[var(--gold-action)]"
+        >
+          {content}
+        </a>
+      </li>
+    );
+  }
+
+  return (
+    <li className="flex items-start gap-[var(--space-3)] py-[var(--space-3)]">
+      {content}
+    </li>
   );
 }

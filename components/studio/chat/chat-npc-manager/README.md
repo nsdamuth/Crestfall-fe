@@ -2,11 +2,12 @@
 
 **Contract:** `ChatNpcManager.contract.js` (v1.0.0)
 
-Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. New build; the legacy
+Wave C3, `docs/plans/FABLE-GATE-PLAN.md`. This portable package is not
+the live Story Chat route authority. The established
 `components/studio/story-rooms/story-room-npc-participant-manager`
-tree is a stale pre-upgrade fork of this repo and is read-only
-reference, never edited or imported from here. The behavioral
-baseline this package is a designed superset of is
+package remains part of the canonical Story Chat implementation mounted
+at `/studio/v2/stories/[id]`. The behavioral baseline this package is a
+designed superset of is
 `crestfall-main/Crestfall`'s `story-room-npc-participant-manager`
 package, contract 1.0.0.
 

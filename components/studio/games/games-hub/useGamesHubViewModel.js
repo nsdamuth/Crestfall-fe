@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import { fetchGames } from "@/lib/client/studio/games/gamesClient";
 import { playStoryTemplate } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 export const gamesHubFilters = Object.freeze([
   { id: "ALL", label: "All" },
@@ -24,7 +25,7 @@ function normalizeText(value, fallback = "") {
 export function getRoomIdFromGameHref(href) {
   if (!href || typeof href !== "string") return null;
 
-  const match = href.match(/\/studio\/story-rooms\/([^/?#]+)/);
+  const match = href.match(/\/studio\/(?:v2\/stories|story-rooms)\/([^/?#]+)/);
   return match ? decodeURIComponent(match[1]) : null;
 }
 
@@ -224,7 +225,7 @@ export function useGamesHubViewModel({
     if (game.playState === "CONTINUE") {
       const roomId = game.continueRoomId || getRoomIdFromGameHref(game.href);
       if (roomId) {
-        router.push(`/studio/story-rooms/${roomId}`);
+        router.push(buildStoryChatHref(roomId));
         return;
       }
     }
@@ -244,7 +245,7 @@ export function useGamesHubViewModel({
         throw new Error("Story was created without a room id.");
       }
 
-      router.push(`/studio/story-rooms/${roomId}`);
+      router.push(buildStoryChatHref(roomId));
     } catch (error) {
       setPlayError(error?.message || "Story Template could not be played.");
       setStartingGameId(null);

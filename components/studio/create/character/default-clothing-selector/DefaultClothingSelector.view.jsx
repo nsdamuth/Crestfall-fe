@@ -13,7 +13,7 @@ export default function DefaultClothingSelectorView({
   return (
     <div className="md:col-span-2">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-        Clothing Style
+        Default Clothing
       </p>
 
       <div className="mt-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">

@@ -1,4 +1,4 @@
-export const POSE_BODY_POSITION_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const POSE_BODY_POSITION_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Pose body-position View.
@@ -13,14 +13,19 @@ export const POSE_BODY_POSITION_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} sectionDescription
  * @property {string} postureLabel
  * @property {string} postureValue
+ * @property {Array<{value:string,label:string}>} postureOptions
+ * @property {string} postureHelper
  * @property {string} bodyOrientationLabel
  * @property {string} bodyOrientationValue
+ * @property {Array<{value:string,label:string}>} bodyOrientationOptions
+ * @property {string} bodyOrientationHelper
  * @property {string} armHandPositionLabel
  * @property {string} armHandPositionValue
  * @property {string} legFootPositionLabel
  * @property {string} legFootPositionValue
  * @property {string} facialExpressionLabel
  * @property {string} facialExpressionValue
+ * @property {string} facialExpressionHelper
  * @property {string} balanceWeightLabel
  * @property {string} balanceWeightValue
  * @property {string} bodyPositionNotesLabel

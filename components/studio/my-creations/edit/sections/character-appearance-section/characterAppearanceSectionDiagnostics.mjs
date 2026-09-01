@@ -37,6 +37,8 @@ test("Character Appearance View is API, persistence, and application-picker free
     view,
     /SkinToneModal|EyeColorModal|HairModal|TraitModal|OutfitPickerModal/
   );
+  assert.match(view, /Default Clothing/);
+  assert.doesNotMatch(view, />Clothing Style</);
 });
 
 test("Character Appearance ViewModel owns clothing and default image-preset normalization/storage mapping", () => {

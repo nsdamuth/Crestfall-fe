@@ -74,7 +74,7 @@ test("ViewModel owns reactions and Story Room orchestration", () => {
   assert.match(vm, /setMediaBookmark\(imageOutputId, nextActive\)/);
   assert.match(vm, /startStoryFromCreation\(normalizedCreation\.raw\)/);
   assert.match(vm, /Story was created without a room id\./);
-  assert.match(vm, /navigate\?\.\(`\/studio\/story-rooms\/\$\{roomId\}`\)/);
+  assert.match(vm, /navigate\?\.\(buildStoryChatHref\(roomId\)\)/);
 });
 
 test("portable View consumes display-ready state and semantic slots", () => {

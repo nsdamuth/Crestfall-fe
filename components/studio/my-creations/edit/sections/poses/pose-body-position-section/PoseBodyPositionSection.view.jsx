@@ -1,5 +1,6 @@
 import {
   SectionTitle,
+  SelectField,
   TextAreaField,
   TextField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -11,14 +12,19 @@ export default function PoseBodyPositionSectionView({
   sectionDescription = "",
   postureLabel = "Posture",
   postureValue = "",
+  postureOptions = [],
+  postureHelper = "",
   bodyOrientationLabel = "Body Orientation",
   bodyOrientationValue = "",
+  bodyOrientationOptions = [],
+  bodyOrientationHelper = "",
   armHandPositionLabel = "Arm / Hand Position",
   armHandPositionValue = "",
   legFootPositionLabel = "Leg / Foot Position",
   legFootPositionValue = "",
   facialExpressionLabel = "Facial Expression",
   facialExpressionValue = "",
+  facialExpressionHelper = "",
   balanceWeightLabel = "Balance / Weight",
   balanceWeightValue = "",
   bodyPositionNotesLabel = "Body Position Notes",
@@ -41,16 +47,20 @@ export default function PoseBodyPositionSectionView({
       />
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <TextField
+        <SelectField
           label={postureLabel}
           value={postureValue}
           onChange={(value) => onChangePosture?.(value)}
+          options={postureOptions}
+          helperText={postureHelper}
         />
 
-        <TextField
+        <SelectField
           label={bodyOrientationLabel}
           value={bodyOrientationValue}
           onChange={(value) => onChangeBodyOrientation?.(value)}
+          options={bodyOrientationOptions}
+          helperText={bodyOrientationHelper}
         />
 
         <TextField
@@ -69,6 +79,7 @@ export default function PoseBodyPositionSectionView({
           label={facialExpressionLabel}
           value={facialExpressionValue}
           onChange={(value) => onChangeFacialExpression?.(value)}
+          helperText={facialExpressionHelper}
         />
 
         <TextField

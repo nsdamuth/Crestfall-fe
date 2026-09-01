@@ -15,6 +15,7 @@ export default function BodySection(props) {
       {...viewProps}
       kibbePresetControl={
         <KibbePresetModal
+          label="Body Identity"
           form={viewProps.bodyData}
           updateField={viewProps.onChangeCharacterField}
         />

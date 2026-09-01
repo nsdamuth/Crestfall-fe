@@ -12,6 +12,7 @@ import {
   resolveStoryContinueImageAnchor,
   resolveStoryContinueImageSrc,
 } from "@/lib/shared/presentation/storiesPresentation";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 const RAIL_ITEM_CAP = 12;
 
@@ -216,7 +217,7 @@ export function useHomeViewModel({
       imageSrc: resolveStoryContinueImageSrc(item, sourceCreation),
       imageAnchor: resolveStoryContinueImageAnchor(item, sourceCreation),
       secondaryCtaLabel: "Explore recent stories",
-      onContinue: () => onNavigate?.(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`),
+      onContinue: () => onNavigate?.(buildStoryChatHref(item.roomId)),
       onSecondaryCtaClick: () => onNavigate?.("/studio/v2/stories"),
     };
   }, [rooms, storySourceCreationById, onNavigate]);

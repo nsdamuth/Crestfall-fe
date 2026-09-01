@@ -58,7 +58,7 @@ The conversion preserves:
 - mobile Room & Cast and Chronicle State drawers
 - Runtime Mechanics Panel placement in both State surfaces
 - existing permanent-delete confirmation wording
-- existing `/studio/story-rooms` navigation after successful deletion
+- canonical `/studio/v2/stories` navigation after successful deletion
 
 ## Preview
 

@@ -2,6 +2,7 @@
 
 import PersonalityModal from "@/components/studio/create/character/PersonalityModal";
 import TraitModal from "@/components/studio/create/character/TraitModal";
+import MultiTraitModal from "@/components/studio/create/character/MultiTraitModal";
 import VoiceModulePickerModal from "@/components/studio/create/character/VoiceModulePickerModal";
 
 import CharacterBehaviorSectionView from "./character-behavior-section/CharacterBehaviorSection.view";
@@ -87,7 +88,7 @@ export default function BehaviorSection(props) {
         />
       }
       interestsControl={
-        <TraitModal
+        <MultiTraitModal
           label={viewProps.interestsLabel}
           field={viewProps.interestsField}
           form={viewProps.behaviorData}

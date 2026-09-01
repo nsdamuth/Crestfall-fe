@@ -10,7 +10,7 @@ useCharacterAdvancedSectionViewModel.js          ViewModel / Chassis
 CharacterAdvancedSection.view.jsx                Portable View / Skin
 ```
 
-The portable View owns the Advanced Guidance layout and the seven standard text areas. It receives the existing Advanced Prompting feature as an application-owned slot.
+The portable View owns the Advanced Guidance layout for optional creator guidance that remains part of Character authoring. It receives the existing Advanced Prompting feature as an application-owned slot.
 
 The ViewModel owns:
 
@@ -24,16 +24,16 @@ The Binding Shell owns `AdvancedPromptingEditor`. The portable View does not imp
 
 ## Stored fields preserved
 
-The conversion preserves:
+The visible editor preserves:
 
 - `greeting`;
-- `scenario`;
 - `relationship_to_player`;
-- `backstory`;
 - `appearance_notes`;
 - `personality_notes`;
 - `extra_runtime_notes`;
 - `creator_directives`.
+
+Historical `scenario` and `backstory` values remain untouched in stored Character data, but they are no longer exposed as Character authoring controls. Those concepts belong to Story/Scenario authoring rather than Character definition.
 
 ## Development preview
 

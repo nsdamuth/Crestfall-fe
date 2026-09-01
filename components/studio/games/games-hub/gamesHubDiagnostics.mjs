@@ -25,7 +25,7 @@ test("Games Hub ViewModel owns loading, play orchestration, and navigation", () 
   assert.match(vm, /playStoryTemplate/);
   assert.match(vm, /usePersistentViewMode/);
   assert.match(vm, /useRouter/);
-  assert.match(vm, /router\.push\(`\/studio\/story-rooms\/\$\{roomId\}`\)/);
+  assert.match(vm, /router\.push\(buildStoryChatHref\(roomId\)\)/);
   assert.match(vm, /Games could not be loaded\./);
   assert.match(vm, /Story Template could not be played\./);
   assert.doesNotMatch(vm, /<GamesHubView|<section|<article/);

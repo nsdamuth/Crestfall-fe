@@ -43,7 +43,7 @@ const CHARACTER_EDIT_SECTIONS = [
   { id: "behavior", label: "Behavior", icon: Sparkles },
   { id: "mechanicsProfile", label: "Mechanics Profile", icon: Activity },
   { id: "runtimeModules", label: "Runtime Modules", icon: Activity },
-  { id: "advanced", label: "Advanced", icon: BookOpen },
+  { id: "advanced", label: "Additional Guidance", icon: BookOpen },
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
@@ -396,16 +396,17 @@ const WALLET_PROFILE_EDIT_SECTIONS = [
 // ruling N1 option A): each type's flat section list regroups into
 // at most five named groups, schema-as-data replacing a hand-built
 // layout. Named grammar per the plan: Story / Cast & World / Runtime
-// / Publishing (ROOM_TEMPLATE); Identity / Body & Behavior / Systems
-// / Publishing (CHARACTER, PLAYER_CHARACTER); Place / Runtime /
+// / Publishing (ROOM_TEMPLATE); Identity & Appearance / Body / Behavior /
+// Systems / Publishing (CHARACTER, PLAYER_CHARACTER); Place / Runtime /
 // Publishing (LOCATION); Entries / Rules & Prompt / Publishing
 // (every *_REGISTRY type). Default rule for every remaining type:
 // Content / Systems / Publishing, Systems present only when the type
 // carries a mechanics-flavored section.
 const CHARACTER_SECTION_GROUPS = [
-  { id: "identity", label: "Identity", sectionIds: ["overview", "identity", "appearance", "visualReferences"] },
-  { id: "bodyBehavior", label: "Body & Behavior", sectionIds: ["body", "behavior"] },
-  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules", "advanced"] },
+  { id: "identity", label: "Identity & Appearance", sectionIds: ["overview", "identity", "appearance", "visualReferences"] },
+  { id: "body", label: "Body", sectionIds: ["body"] },
+  { id: "behavior", label: "Behavior", sectionIds: ["behavior", "advanced"] },
+  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
@@ -617,10 +618,10 @@ const CREATION_TYPE_SECTIONS = {
 // the rules codex carry no media group. Every section id of the
 // type's own section array appears in exactly one group.
 const CHARACTER_EDITOR_PAGE_GROUPS = [
-  { id: "identity", label: "Identity", sectionIds: ["overview", "identity", "appearance"] },
-  { id: "bodyBehavior", label: "Body & Behavior", sectionIds: ["body", "behavior"] },
-  { id: "media", label: "Artwork & Media", sectionIds: ["visualReferences"], hostsMedia: true },
-  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules", "advanced"] },
+  { id: "identity", label: "Identity & Appearance", sectionIds: ["overview", "identity", "appearance", "visualReferences"] },
+  { id: "body", label: "Body", sectionIds: ["body"] },
+  { id: "behavior", label: "Behavior", sectionIds: ["behavior", "advanced"] },
+  { id: "systems", label: "Systems", sectionIds: ["mechanicsProfile", "runtimeModules"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 

@@ -1,4 +1,5 @@
 import { DEFAULT_CREATION_IMAGE } from "@/lib/shared/creations/creationMedia";
+import { normalizePoseDataForPersistence } from "@/lib/shared/creations/poseSemantics";
 
 export function createFallbackForm(creationId) {
   return {
@@ -55,6 +56,11 @@ export function buildSavePayload(form) {
 
   const normalizedType = String(form.type || "").toUpperCase();
   if (["CHARACTER", "PLAYER_CHARACTER"].includes(normalizedType)) {
+    data.name = form.title || data.name || "";
+  }
+
+  if (normalizedType === "POSE") {
+    Object.assign(data, normalizePoseDataForPersistence(data));
     data.name = form.title || data.name || "";
   }
 

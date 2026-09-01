@@ -29,6 +29,24 @@ import TemplatePanelBody from "@/components/studio/create/character/creator-stop
 import { useCharacterColorPaletteModalViewModel } from "@/components/studio/create/character/character-color-palette/useCharacterColorPaletteModalViewModel";
 import { useCharacterTemplateModalViewModel } from "@/components/studio/create/character/character-template-picker/useCharacterTemplateModalViewModel";
 import { EmptyStateCard } from "@/components/studio/create/character/creator-stops/shared/Controls";
+import KibbePresetModal from "@/components/studio/create/character/KibbePresetModal";
+import MultiTraitModal from "@/components/studio/create/character/MultiTraitModal";
+import PersonalityModal from "@/components/studio/create/character/PersonalityModal";
+import TraitModal from "@/components/studio/create/character/TraitModal";
+import VoiceModulePickerModal from "@/components/studio/create/character/VoiceModulePickerModal";
+import DefaultClothingSelector from "@/components/studio/create/character/DefaultClothingSelector";
+import {
+  bodyTypeOptions,
+  buildOptions,
+  eastAsianZodiacOptions,
+  heightOptions,
+  interestOptions,
+  mbtiTypeOptions,
+  movementStyleOptions,
+  proportionOptions,
+  speechStyleOptions,
+  westernZodiacOptions,
+} from "@/components/studio/create/character/constants/constants";
 
 const STATES = [
   ["First stop", creatorStopsFirstFixture],
@@ -67,13 +85,22 @@ const INITIAL_FORM_STATE = {
   height: "",
   build: "",
   proportions: [],
+  hipsWaistShoulders: "",
   chestBust: "",
   bodyNotes: "",
   appearanceNotes: "",
   clothingStyle: "",
   defaultClothingMode: "NONE",
+  defaultOutfitId: null,
   defaultOutfitTitle: "",
+  defaultOutfitDescription: "",
+  defaultOutfitImageUrl: "",
+  defaultOutfitContentRating: "",
+  defaultWardrobeId: null,
   defaultWardrobeTitle: "",
+  defaultWardrobeDescription: "",
+  defaultWardrobeImageUrl: "",
+  defaultWardrobeContentRating: "",
   outwardPersonality: "",
   internalPersonality: "",
   speechStyle: "",
@@ -83,7 +110,7 @@ const INITIAL_FORM_STATE = {
   backstory: "",
   verbosityLevel: "3",
   philosophy: "",
-  interests: "",
+  interests: [],
   relationshipToPlayer: "",
   voiceModuleIds: [],
   personalityNotes: "",
@@ -96,11 +123,39 @@ const INITIAL_FORM_STATE = {
   extraRuntimeNotes: "",
 };
 
+const PREVIEW_FORM_FIELD_BY_CANONICAL_KEY = Object.freeze({
+  kibbe_identity: "kibbeIdentity",
+  body_type: "bodyType",
+  height: "height",
+  build: "build",
+  proportions: "proportions",
+  hips_waist_shoulders: "hipsWaistShoulders",
+  outward_personality: "outwardPersonality",
+  internal_personality: "internalPersonality",
+  mbti_type: "mbtiType",
+  western_zodiac_sign: "westernZodiacSign",
+  east_asian_zodiac_sign: "eastAsianZodiacSign",
+  speech_style: "speechStyle",
+  movement_style: "movementStyle",
+  interests: "interests",
+  clothing_style: "clothingStyle",
+  default_clothing_mode: "defaultClothingMode",
+  default_outfit_id: "defaultOutfitId",
+  default_outfit_title: "defaultOutfitTitle",
+  default_outfit_description: "defaultOutfitDescription",
+  default_outfit_image_url: "defaultOutfitImageUrl",
+  default_outfit_content_rating: "defaultOutfitContentRating",
+  default_wardrobe_id: "defaultWardrobeId",
+  default_wardrobe_title: "defaultWardrobeTitle",
+  default_wardrobe_description: "defaultWardrobeDescription",
+  default_wardrobe_image_url: "defaultWardrobeImageUrl",
+  default_wardrobe_content_rating: "defaultWardrobeContentRating",
+});
+
 export default function CreatorStopsPreviewClient() {
-  // fieldScope harness, added 10 Aug 2026 (Studio brief S2,
-  // docs/STUDIO-SPEC.md section 3.2): exercises both "full" (default,
-  // pixel-stable) and "quick" (the v2 Studio hub's set) in this dev-
-  // only preview.
+  // Exercises both V2 creator entry modes. Full uses the restored V1
+  // Character product semantics inside the V2 presentation shell; Quick
+  // intentionally remains the smaller guided subset.
   const [fieldScope, setFieldScope] = useState("full");
   const [selectedState, setSelectedState] = useState(0);
   const [activeStop, setActiveStop] = useState(STATES[0][1].activeStop);
@@ -109,8 +164,6 @@ export default function CreatorStopsPreviewClient() {
   );
   const [templateNote, setTemplateNote] = useState("");
   const [moreHairOpen, setMoreHairOpen] = useState(false);
-  const [typingFoldOpen, setTypingFoldOpen] = useState(false);
-  const [fineTuneFoldOpen, setFineTuneFoldOpen] = useState(false);
   const [heartAdvancedFoldOpen, setHeartAdvancedFoldOpen] = useState(false);
 
   const [formState, setFormState] = useState(INITIAL_FORM_STATE);
@@ -148,6 +201,13 @@ export default function CreatorStopsPreviewClient() {
     };
   }
 
+  function updateCanonicalFormField(field, value) {
+    const stateField = PREVIEW_FORM_FIELD_BY_CANONICAL_KEY[field];
+    if (!stateField) return;
+    setFormState((current) => ({ ...current, [stateField]: value }));
+    setJustSaved(false);
+  }
+
   function requestClose() {
     if (hasUnsavedChanges) {
       setConfirmDiscardOpen(true);
@@ -167,8 +227,6 @@ export default function CreatorStopsPreviewClient() {
     setMaxReachedIndex(0);
     setTemplateNote("");
     setMoreHairOpen(false);
-    setTypingFoldOpen(false);
-    setFineTuneFoldOpen(false);
     setHeartAdvancedFoldOpen(false);
     setSecondaryPanel(null);
     setConfirmDiscardOpen(false);
@@ -384,9 +442,6 @@ export default function CreatorStopsPreviewClient() {
                 genderPresentation={formState.genderPresentation}
                 customGenderPresentation={formState.customGenderPresentation}
                 shortConcept={formState.shortConcept}
-                mbtiType={formState.mbtiType}
-                westernZodiacSign={formState.westernZodiacSign}
-                eastAsianZodiacSign={formState.eastAsianZodiacSign}
                 onChangeSpecies={updateField("species")}
                 onChangeCustomSpecies={updateField("customSpecies")}
                 onChangeGenderPresentation={updateField("genderPresentation")}
@@ -394,13 +449,6 @@ export default function CreatorStopsPreviewClient() {
                   "customGenderPresentation"
                 )}
                 onChangeShortConcept={updateField("shortConcept")}
-                onChangeMbtiType={updateField("mbtiType")}
-                onChangeWesternZodiacSign={updateField("westernZodiacSign")}
-                onChangeEastAsianZodiacSign={updateField("eastAsianZodiacSign")}
-                typingFoldOpen={typingFoldOpen}
-                onToggleTypingFold={() =>
-                  setTypingFoldOpen((current) => !current)
-                }
                 fieldScope={fieldScope}
               />
             ) : activeStop === "face" ? (
@@ -427,80 +475,172 @@ export default function CreatorStopsPreviewClient() {
                 onChangeHairStyle={updateField("hairStyle")}
                 onChangeEthnicAppearance={updateField("ethnicAppearance")}
                 onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
+                defaultClothingControl={
+                  <DefaultClothingSelector
+                    form={{
+                      clothing_style: formState.clothingStyle,
+                      default_clothing_mode: formState.defaultClothingMode,
+                      default_outfit_id: formState.defaultOutfitId,
+                      default_outfit_title: formState.defaultOutfitTitle,
+                      default_outfit_description: formState.defaultOutfitDescription,
+                      default_outfit_image_url: formState.defaultOutfitImageUrl,
+                      default_outfit_content_rating: formState.defaultOutfitContentRating,
+                      default_wardrobe_id: formState.defaultWardrobeId,
+                      default_wardrobe_title: formState.defaultWardrobeTitle,
+                      default_wardrobe_description: formState.defaultWardrobeDescription,
+                      default_wardrobe_image_url: formState.defaultWardrobeImageUrl,
+                      default_wardrobe_content_rating: formState.defaultWardrobeContentRating,
+                    }}
+                    updateField={updateCanonicalFormField}
+                  />
+                }
               />
             ) : activeStop === "silhouette" ? (
               <SilhouetteStopView
-                kibbeIdentity={formState.kibbeIdentity}
-                bodyType={formState.bodyType}
-                height={formState.height}
-                build={formState.build}
-                proportions={formState.proportions}
-                chestBust={formState.chestBust}
+                bodyIdentityControl={
+                  <KibbePresetModal
+                    label="Body Identity"
+                    form={{
+                      kibbe_identity: formState.kibbeIdentity,
+                      body_type: formState.bodyType,
+                      height: formState.height,
+                      build: formState.build,
+                      proportions: formState.proportions,
+                      hips_waist_shoulders: formState.hipsWaistShoulders,
+                    }}
+                    updateField={updateCanonicalFormField}
+                  />
+                }
+                bodyTypeControl={
+                  <TraitModal
+                    label="Body Type"
+                    field="body_type"
+                    form={{ body_type: formState.bodyType }}
+                    updateField={updateCanonicalFormField}
+                    options={bodyTypeOptions}
+                    description="Choose a broad body silhouette."
+                  />
+                }
+                heightControl={
+                  <TraitModal
+                    label="Height"
+                    field="height"
+                    form={{ height: formState.height }}
+                    updateField={updateCanonicalFormField}
+                    options={heightOptions}
+                    description="Use relative adult height descriptors rather than exact measurements."
+                  />
+                }
+                buildControl={
+                  <TraitModal
+                    label="Build"
+                    field="build"
+                    form={{ build: formState.build }}
+                    updateField={updateCanonicalFormField}
+                    options={buildOptions}
+                    description="Choose how the character's frame feels physically."
+                  />
+                }
+                proportionsControl={
+                  <MultiTraitModal
+                    label="Proportions"
+                    field="proportions"
+                    form={{ proportions: formState.proportions }}
+                    updateField={updateCanonicalFormField}
+                    options={proportionOptions}
+                    description="Optional silhouette emphasis. Select multiple compatible traits."
+                  />
+                }
                 bodyNotes={formState.bodyNotes}
-                appearanceNotes={formState.appearanceNotes}
-                clothingStyle={formState.clothingStyle}
-                defaultClothingMode={formState.defaultClothingMode}
-                defaultOutfitTitle={formState.defaultOutfitTitle}
-                defaultWardrobeTitle={formState.defaultWardrobeTitle}
-                onChangeKibbeIdentity={updateField("kibbeIdentity")}
-                onChangeBodyType={updateField("bodyType")}
-                onChangeHeight={updateField("height")}
-                onChangeBuild={updateField("build")}
-                onChangeProportions={updateField("proportions")}
-                onChangeChestBust={updateField("chestBust")}
                 onChangeBodyNotes={updateField("bodyNotes")}
-                onChangeAppearanceNotes={updateField("appearanceNotes")}
-                onChangeClothingStyle={updateField("clothingStyle")}
-                onChangeDefaultClothingMode={updateField("defaultClothingMode")}
-                onOpenOutfitPicker={() =>
-                  setTemplateNote(
-                    "The outfit browser is not built in this pass."
-                  )
-                }
-                onOpenWardrobePicker={() =>
-                  setTemplateNote(
-                    "The wardrobe browser is not built in this pass."
-                  )
-                }
-                fineTuneFoldOpen={fineTuneFoldOpen}
-                onToggleFineTuneFold={() =>
-                  setFineTuneFoldOpen((current) => !current)
-                }
-                fieldScope={fieldScope}
               />
             ) : activeStop === "heart" ? (
               <HeartStopView
-                outwardPersonality={formState.outwardPersonality}
-                internalPersonality={formState.internalPersonality}
-                speechStyle={formState.speechStyle}
-                movementStyle={formState.movementStyle}
+                outwardPersonalityControl={
+                  <PersonalityModal
+                    label="Outward Personality"
+                    field="outward_personality"
+                    form={{ outward_personality: formState.outwardPersonality }}
+                    updateField={updateCanonicalFormField}
+                  />
+                }
+                internalPersonalityControl={
+                  <PersonalityModal
+                    label="Internal Personality"
+                    field="internal_personality"
+                    form={{ internal_personality: formState.internalPersonality }}
+                    updateField={updateCanonicalFormField}
+                  />
+                }
+                mbtiControl={
+                  <TraitModal
+                    label="MBTI Personality Type"
+                    field="mbti_type"
+                    form={{ mbti_type: formState.mbtiType }}
+                    updateField={updateCanonicalFormField}
+                    options={mbtiTypeOptions}
+                  />
+                }
+                westernZodiacControl={
+                  <TraitModal
+                    label="Western Zodiac"
+                    field="western_zodiac_sign"
+                    form={{ western_zodiac_sign: formState.westernZodiacSign }}
+                    updateField={updateCanonicalFormField}
+                    options={westernZodiacOptions}
+                  />
+                }
+                eastAsianZodiacControl={
+                  <TraitModal
+                    label="East Asian Zodiac"
+                    field="east_asian_zodiac_sign"
+                    form={{ east_asian_zodiac_sign: formState.eastAsianZodiacSign }}
+                    updateField={updateCanonicalFormField}
+                    options={eastAsianZodiacOptions}
+                  />
+                }
+                speechStyleControl={
+                  <TraitModal
+                    label="Speech Style"
+                    field="speech_style"
+                    form={{ speech_style: formState.speechStyle }}
+                    updateField={updateCanonicalFormField}
+                    options={speechStyleOptions}
+                  />
+                }
+                movementStyleControl={
+                  <TraitModal
+                    label="Movement Style"
+                    field="movement_style"
+                    form={{ movement_style: formState.movementStyle }}
+                    updateField={updateCanonicalFormField}
+                    options={movementStyleOptions}
+                  />
+                }
+                voiceModulesControl={
+                  <VoiceModulePickerModal
+                    value={formState.voiceModuleIds}
+                    onChange={updateField("voiceModuleIds")}
+                  />
+                }
+                interestsControl={
+                  <MultiTraitModal
+                    label="Interests"
+                    field="interests"
+                    form={{ interests: formState.interests }}
+                    updateField={updateCanonicalFormField}
+                    options={interestOptions}
+                  />
+                }
                 greeting={formState.greeting}
-                scenario={formState.scenario}
-                backstory={formState.backstory}
                 verbosityLevel={formState.verbosityLevel}
                 philosophy={formState.philosophy}
-                interests={formState.interests}
                 relationshipToPlayer={formState.relationshipToPlayer}
-                voiceModuleIds={formState.voiceModuleIds}
                 personalityNotes={formState.personalityNotes}
-                onChangeOutwardPersonality={updateField("outwardPersonality")}
-                onChangeInternalPersonality={updateField("internalPersonality")}
-                onChangeSpeechStyle={updateField("speechStyle")}
-                onChangeMovementStyle={updateField("movementStyle")}
                 onChangeGreeting={updateField("greeting")}
-                onChangeScenario={updateField("scenario")}
-                onChangeBackstory={updateField("backstory")}
                 onChangeVerbosityLevel={updateField("verbosityLevel")}
                 onChangePhilosophy={updateField("philosophy")}
-                onChangeInterests={updateField("interests")}
-                onChangeRelationshipToPlayer={updateField(
-                  "relationshipToPlayer"
-                )}
-                onOpenVoiceModulePicker={() =>
-                  setTemplateNote(
-                    "The voice module picker is not built in this pass."
-                  )
-                }
+                onChangeRelationshipToPlayer={updateField("relationshipToPlayer")}
                 onChangePersonalityNotes={updateField("personalityNotes")}
                 advancedFoldOpen={heartAdvancedFoldOpen}
                 onToggleAdvancedFold={() =>

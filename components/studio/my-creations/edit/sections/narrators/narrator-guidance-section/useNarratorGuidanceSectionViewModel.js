@@ -20,10 +20,13 @@ export function getNarratorGuidanceSectionViewProps({
     ...DEFAULT_COPY,
     guidanceValue: data.narrator_guidance || "",
     avoidGuidanceValue: data.avoid_guidance || "",
+    narratorDirectivesValue: data.narrator_directives || null,
     onChangeGuidance: (value) =>
       updateDataField?.("narrator_guidance", value),
     onChangeAvoidGuidance: (value) =>
       updateDataField?.("avoid_guidance", value),
+    onChangeNarratorDirectives: (value) =>
+      updateDataField?.("narrator_directives", value),
   };
 }
 

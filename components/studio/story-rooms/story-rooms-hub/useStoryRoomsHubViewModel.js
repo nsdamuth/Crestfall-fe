@@ -7,6 +7,7 @@ import {
   deleteStoryRoom,
   fetchStoryRooms,
 } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 export const STORY_ROOMS_HUB_FILTERS = Object.freeze([
   { id: "ACTIVE", label: "Active" },
@@ -60,7 +61,7 @@ export function normalizeRoomForHub(room = {}, index = 0, now = Date.now()) {
 
   return {
     id,
-    href: `/studio/story-rooms/${id}`,
+    href: buildStoryChatHref(id),
     title: room.title || "Private Story",
     subtitle: room.subtitle || "Private Story",
     type: room.type || "Active Room",

@@ -397,35 +397,23 @@ export function CustomValueField({ label, value, onChange, placeholder, maxLengt
   );
 }
 
-// Sensible ceiling for auto-grow: past this height a field scrolls
-// internally instead of pushing the footer off screen. Comfortably covers
-// the 800-character fields this creator holds.
-const TEXTAREA_MAX_HEIGHT_PX = 200;
-
+// Character long-form fields stay compact at rest but are always manually
+// resizable vertically. Do not cap their height: creators need to be able to
+// expand any authored text far enough to read and revise it comfortably.
 export function TextAreaField({ label, value, onChange, placeholder, maxLength }) {
-  const textareaRef = useRef(null);
-
-  useEffect(() => {
-    const node = textareaRef.current;
-    if (!node) return;
-    node.style.height = "auto";
-    node.style.height = `${Math.min(node.scrollHeight, TEXTAREA_MAX_HEIGHT_PX)}px`;
-  }, [value]);
-
   return (
     <div>
       <FieldLabel count={(value || "").length} max={maxLength}>
         {label}
       </FieldLabel>
       <textarea
-        ref={textareaRef}
         value={value || ""}
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={maxLength}
         placeholder={placeholder}
-        rows={1}
-        className="w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
-        style={{ maxHeight: `${TEXTAREA_MAX_HEIGHT_PX}px` }}
+        rows={2}
+        className="w-full resize-y overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        style={{ minHeight: "var(--control-md)" }}
       />
     </div>
   );

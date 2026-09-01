@@ -50,6 +50,7 @@ export const ASSET_BUILDER_VIEW_CONTRACT = Object.freeze({
     renderingStyleOptions: "array",
     imageCountOptions: "array",
   },
+  poseEditorContent: "ReactNode | null",
   locationRuntimeContent: "ReactNode | null",
   locationRegistryContent: "ReactNode | null",
   parentPickerContent: "ReactNode | null",

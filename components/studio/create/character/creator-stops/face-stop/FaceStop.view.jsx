@@ -61,15 +61,17 @@ export default function FaceStopView({
   onChangeHairCustomValue = null,
   moreHairOpen = false,
   onToggleMoreHair = null,
+  defaultClothingControl = null,
 } = {}) {
   return (
     <>
-      <Eyebrow>Shape the face</Eyebrow>
+      <Eyebrow>Define their appearance</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
-        Skin, eyes, and hair
+        Appearance
       </h2>
       <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-        The face the portrait will carry.
+        Define the first visual anchor. Rendering style remains changeable later;
+        the character identity is not locked to one image style.
       </p>
 
       <div className="mt-6">
@@ -132,6 +134,10 @@ export default function FaceStopView({
           onChange={onChangeEthnicAppearance}
         />
       </div>
+
+      {defaultClothingControl ? (
+        <div className="mt-6">{defaultClothingControl}</div>
+      ) : null}
 
       <Fold
         title="More hair"

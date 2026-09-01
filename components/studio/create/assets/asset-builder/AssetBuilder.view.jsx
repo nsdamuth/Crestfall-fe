@@ -30,6 +30,7 @@ export default function AssetBuilderView({
   contentRatingOptions,
   renderingStyleOptions,
   imageCountOptions,
+  poseEditorContent = null,
   locationRuntimeContent = null,
   locationRegistryContent = null,
   parentPickerContent = null,
@@ -44,6 +45,7 @@ export default function AssetBuilderView({
   onSave,
 }) {
   const isLocation = creationType === "LOCATION";
+  const isPose = creationType === "POSE";
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
@@ -59,20 +61,24 @@ export default function AssetBuilderView({
         </p>
 
         <div className="mt-6 grid gap-4">
-          <TextField
-            label="Name"
-            value={form.name}
-            onChange={(value) => onUpdateField?.("name", value)}
-            placeholder={`e.g., ${config.typeLabel} Name`}
-          />
+          {!isPose ? (
+            <>
+              <TextField
+                label="Name"
+                value={form.name}
+                onChange={(value) => onUpdateField?.("name", value)}
+                placeholder={`e.g., ${config.typeLabel} Name`}
+              />
 
-          <TextAreaField
-            label={config.promptLabel}
-            value={form.prompt}
-            onChange={(value) => onUpdateField?.("prompt", value)}
-            placeholder={config.promptPlaceholder}
-            rows={7}
-          />
+              <TextAreaField
+                label={config.promptLabel}
+                value={form.prompt}
+                onChange={(value) => onUpdateField?.("prompt", value)}
+                placeholder={config.promptPlaceholder}
+                rows={7}
+              />
+            </>
+          ) : null}
 
           {supportsImagePromptFields ? (
             <>
@@ -80,20 +86,20 @@ export default function AssetBuilderView({
                 label="Standalone Image Prompt"
                 value={form.image_prompt}
                 onChange={(value) => onUpdateField?.("image_prompt", value)}
-                placeholder="Optional standalone prompt for generating catalogue, preview, or reference images of this outfit as its own visual asset."
+                placeholder={`Optional standalone prompt for generating catalogue, preview, or reference images of this ${config.typeLabel.toLowerCase()} as its own visual asset.`}
                 rows={5}
                 maxLength={ASSET_IMAGE_PROMPT_MAX_LENGTH}
-                helperText="Optional. Used later for standalone outfit image generation. Max 2,000 characters."
+                helperText={`Optional. Used for standalone ${config.typeLabel.toLowerCase()} catalogue/reference generation. Max 2,000 characters.`}
               />
 
               <TextAreaField
                 label="Negative Prompt"
                 value={form.negative_prompt}
                 onChange={(value) => onUpdateField?.("negative_prompt", value)}
-                placeholder="Optional negatives this outfit should contribute when used in image generation. Example: no transparent fabric, no modern logos, no sneakers."
+                placeholder={`Optional negatives this ${config.typeLabel.toLowerCase()} should contribute when selected in image generation.`}
                 rows={5}
                 maxLength={ASSET_NEGATIVE_PROMPT_MAX_LENGTH}
-                helperText="Optional. Compiled into the negative prompt when this outfit is selected. Max 2,000 characters."
+                helperText={`Optional. Compiled into the negative prompt when this ${config.typeLabel.toLowerCase()} is selected. Max 2,000 characters.`}
               />
             </>
           ) : null}
@@ -188,12 +194,14 @@ export default function AssetBuilderView({
             placeholder="Brief public/private description."
           />
 
-          <TextField
-            label="Tags"
-            value={form.tags}
-            onChange={(value) => onUpdateField?.("tags", value)}
-            placeholder="Type tags later."
-          />
+          {!isPose ? (
+            <TextField
+              label="Tags"
+              value={form.tags}
+              onChange={(value) => onUpdateField?.("tags", value)}
+              placeholder="Type tags later."
+            />
+          ) : null}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <CrestfallSelect
@@ -234,6 +242,10 @@ export default function AssetBuilderView({
       </aside>
 
       <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+        {poseEditorContent ? (
+          <div className="mb-6">{poseEditorContent}</div>
+        ) : null}
+
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">

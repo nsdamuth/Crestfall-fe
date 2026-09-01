@@ -23,9 +23,9 @@ test("ViewModel preserves three explicit commit modes", () => {
 
 test("portable View stays persistence-free", () => {
   const view = read("components/studio/create/character/kibbe-preset/KibbePresetModal.view.jsx");
-  assert.match(view, /Save Identity Only/);
-  assert.match(view, /Fill Empty Fields/);
-  assert.match(view, /Replace Body Traits/);
+  assert.match(view, /Save identity only/);
+  assert.match(view, /Fill empty fields/);
+  assert.match(view, /Replace body traits/);
   assert.doesNotMatch(view, /@\/lib\/client|next\/navigation|Supabase|PostGraphile/);
 });
 

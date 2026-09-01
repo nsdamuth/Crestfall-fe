@@ -12,6 +12,10 @@ import {
   ASSET_RENDERING_STYLE_OPTIONS,
   ASSET_VISIBILITY_OPTIONS,
 } from "./AssetBuilder.contract";
+import {
+  normalizePoseDataForPersistence,
+  updatePoseSemanticField,
+} from "@/lib/shared/creations/poseSemantics";
 
 export const ASSET_BUILDER_INITIAL_FORM = Object.freeze({
   name: "",
@@ -188,37 +192,42 @@ export function buildAssetCreationPayload({
       ? cloneInitialLocationData(normalizedExtras)
       : {};
 
+  const baseData = {
+    ...normalizedForm,
+    ...outfitDefaults,
+    ...locationDefaults,
+    ...normalizedExtras,
+    name,
+    tags,
+
+    builder: "VISUAL_ASSET_BUILDER",
+    builder_version: "1.0",
+
+    asset_type: creationType,
+    ingredient_type: creationType,
+    visual_asset: true,
+    image_gen_ingredient: true,
+
+    prompt_guidance: normalizedForm.prompt,
+    selected_cover: selectedCover,
+
+    playable: false,
+    chat_enabled: false,
+    addable_to_rooms_as_character: false,
+
+    registry_links: [],
+  };
+
   return {
     type: creationType,
     title: name,
     description: buildAssetDescription(normalizedForm, config),
     visibility: normalizedForm.visibility || "PRIVATE",
     content_rating: normalizedForm.content_rating || "SFW",
-    data: {
-      ...normalizedForm,
-      ...outfitDefaults,
-      ...locationDefaults,
-      ...normalizedExtras,
-      name,
-      tags,
-
-      builder: "VISUAL_ASSET_BUILDER",
-      builder_version: "1.0",
-
-      asset_type: creationType,
-      ingredient_type: creationType,
-      visual_asset: true,
-      image_gen_ingredient: true,
-
-      prompt_guidance: normalizedForm.prompt,
-      selected_cover: selectedCover,
-
-      playable: false,
-      chat_enabled: false,
-      addable_to_rooms_as_character: false,
-
-      registry_links: [],
-    },
+    data:
+      creationType === "POSE"
+        ? normalizePoseDataForPersistence(baseData)
+        : baseData,
   };
 }
 
@@ -262,6 +271,7 @@ export function useAssetBuilderViewModel({
 
   const supportsImagePromptFields = [
     "OUTFIT",
+    "POSE",
     "LOCATION",
     "IMAGE_PRESET",
   ].includes(creationType);
@@ -285,6 +295,27 @@ export function useAssetBuilderViewModel({
       ...current,
       [field]: value,
     }));
+  }
+
+  function updatePoseDataField(field, value) {
+    if (field === "name") {
+      updateField("name", value);
+      return;
+    }
+
+    if (field === "tags") {
+      updateField("tags", Array.isArray(value) ? value.join(", ") : value);
+      return;
+    }
+
+    if (field === "prompt_guidance") {
+      updateField("prompt", value);
+      return;
+    }
+
+    setExtraValues((current) =>
+      updatePoseSemanticField(current, field, value)
+    );
   }
 
   function updateExtraFields(patch) {
@@ -360,6 +391,21 @@ export function useAssetBuilderViewModel({
     }
   }
 
+  const poseRuntimeForm = {
+    ...form,
+    title: form.name,
+    type: "POSE",
+    data: normalizePoseDataForPersistence({
+      ...extraValues,
+      name: form.name,
+      tags: parseAssetTags(form.tags),
+      prompt: form.prompt,
+      prompt_guidance: form.prompt,
+      image_prompt: form.image_prompt,
+      negative_prompt: form.negative_prompt,
+    }),
+  };
+
   const runtimeForm = {
     ...form,
     title: form.name,
@@ -406,6 +452,13 @@ export function useAssetBuilderViewModel({
     onOpenParentPicker: () => setParentPickerOpen(true),
     onClearParentLocation: clearParentLocation,
     onSave: saveDraft,
+    poseEditorProps:
+      creationType === "POSE"
+        ? {
+            form: poseRuntimeForm,
+            updateDataField: updatePoseDataField,
+          }
+        : null,
     locationRuntimeProps:
       creationType === "LOCATION"
         ? {

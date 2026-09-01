@@ -16,6 +16,7 @@ import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileF
 import { donateProfileCoins } from "@/lib/client/studio/profile/creatorDonationClient";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import PublicProfileActivityFeedView from "@/components/studio/profile/public-profile-activity-feed/PublicProfileActivityFeed.view";
 import { buildPublicProfileActivityFeedViewProps } from "@/components/studio/profile/public-profile-activity-feed/usePublicProfileActivityFeedViewModel";
 import PublicProfileBadgesView from "@/components/studio/profile/public-profile-badges/PublicProfileBadges.view";
@@ -161,7 +162,7 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
       const payload = await startStoryFromCreation(item.rawCreation || item);
       const roomId = payload?.room?.id;
       if (!roomId) throw new Error("Story was created without a room id.");
-      router.push(`/studio/story-rooms/${encodeURIComponent(roomId)}`);
+      router.push(buildStoryChatHref(roomId));
     } catch (error) {
       openNotice("Start Story", error?.message || "Story could not be started.");
     }

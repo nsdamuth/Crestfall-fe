@@ -37,7 +37,7 @@ const initialForm = {
   hair_style: "",
   visual_heritage_reference: "",
   philosophy: "",
-  interests: "",
+  interests: [],
   kibbe_identity: "",
   body_type: "",
   height: "",

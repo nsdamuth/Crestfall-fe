@@ -47,7 +47,7 @@ test("room normalization preserves fallbacks, routes, counts, and timestamps", (
     "components/studio/story-rooms/story-rooms-hub/useStoryRoomsHubViewModel.js"
   );
 
-  assert.match(viewModel, /\/studio\/story-rooms\/\$\{id\}/);
+  assert.match(viewModel, /href: buildStoryChatHref\(id\)/);
   assert.match(viewModel, /Private Story/);
   assert.match(viewModel, /Active Room/);
   assert.match(viewModel, /Character Chat/);

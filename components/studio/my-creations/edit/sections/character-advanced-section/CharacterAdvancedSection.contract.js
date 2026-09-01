@@ -1,4 +1,4 @@
-export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION = "1.1";
+export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION = "1.2";
 
 export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT = Object.freeze({
   version: CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION,
@@ -10,16 +10,10 @@ export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT = Object.freeze({
     "greetingLabel",
     "greetingValue",
     "greetingPlaceholder",
-    "scenarioLabel",
-    "scenarioValue",
-    "scenarioPlaceholder",
     "showRelationshipToPlayer",
     "relationshipLabel",
     "relationshipValue",
     "relationshipPlaceholder",
-    "backstoryLabel",
-    "backstoryValue",
-    "backstoryPlaceholder",
     "appearanceNotesLabel",
     "appearanceNotesValue",
     "appearanceNotesPlaceholder",
@@ -33,9 +27,7 @@ export const CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT = Object.freeze({
   ],
   callbacks: [
     "onChangeGreeting",
-    "onChangeScenario",
     "onChangeRelationship",
-    "onChangeBackstory",
     "onChangeAppearanceNotes",
     "onChangePersonalityNotes",
     "onChangeRuntimeNotes",

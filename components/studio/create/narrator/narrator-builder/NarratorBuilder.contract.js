@@ -1,4 +1,4 @@
-export const NARRATOR_BUILDER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const NARRATOR_BUILDER_VIEW_CONTRACT_VERSION = "1.1.0";
 
 export const NARRATOR_BUILDER_DEFAULT_MODULES = Object.freeze({
   prose_style: "cinematic",
@@ -23,6 +23,7 @@ export const NARRATOR_BUILDER_VIEW_CONTRACT = Object.freeze({
     tone: "string",
     narratorGuidance: "string",
     avoidGuidance: "string",
+    narratorDirectives: "object | null",
     tags: "string",
     visibility: "string",
     contentRating: "string",

@@ -30,6 +30,7 @@ import FixtureActionNotice from "../FixtureActionNotice";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -381,7 +382,7 @@ export default function CommunityV2Mockup({
         throw new Error("Story was created without a room id.");
       }
 
-      router.push(`/studio/story-rooms/${encodeURIComponent(roomId)}`);
+      router.push(buildStoryChatHref(roomId));
     } catch (error) {
       setActionNotice({
         label: "Start Story",

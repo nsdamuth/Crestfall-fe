@@ -11,7 +11,7 @@ const DEFAULT_COPY = Object.freeze({
   visualHeritageLabel: "Ethnic Appearance",
   visualHeritageDescription:
     "Choose the real-world visual heritage reference the image generator should use for this character. This is separate from species and skin tone.",
-  clothingLabel: "Clothing Style",
+  clothingLabel: "Default Clothing",
   emptyClothingDescription:
     "No default clothing source selected. Choose a single Outfit or a Wardrobe.",
   imagePresetLabel: "Default Image Preset",

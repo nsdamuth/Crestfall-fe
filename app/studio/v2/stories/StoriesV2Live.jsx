@@ -17,6 +17,7 @@ import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { deleteStoryRoom } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import {
   projectCreationsToStoryStartables,
   projectStoryRoomToContinueItem,
@@ -308,7 +309,7 @@ export default function StoriesV2Live({
   }
 
   function continueRoom(item) {
-    router.push(`/studio/story-rooms/${encodeURIComponent(item.roomId)}`);
+    router.push(buildStoryChatHref(item.roomId));
   }
 
   function openStartable(item) {

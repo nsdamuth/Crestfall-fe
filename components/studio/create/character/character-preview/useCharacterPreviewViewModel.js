@@ -58,7 +58,7 @@ export function useCharacterPreviewViewModel({
       "Custom gender presentation not entered yet."
     ),
     clothingStyleLabel:
-      form?.clothing_style || "Clothing style not chosen yet.",
+      form?.clothing_style || "Default clothing not chosen yet.",
     previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
   };
 }

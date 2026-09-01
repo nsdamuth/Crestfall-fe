@@ -11,6 +11,7 @@ import {
   shouldSuppressPersistentSnapshotBlock,
   stripPersistentSnapshotBlocksFromBody,
 } from "./storyRoomPersistentStatusDedup";
+import { buildCharacterOpeningGreetingPresentation } from "./storyRoomOpeningGreetingPresentation";
 
 const PRESENTATION_CONTRACT_VERSION = "chat.responsePresentation.v1";
 
@@ -99,10 +100,50 @@ function getAutoEventMedia(message) {
 }
 
 function isCharacterOpeningMessage(message) {
+  if (message?.kind !== "OPENING_SCENE") return false;
+
+  const resolvedSpeakerType = String(
+    message?.metadata?.resolvedSpeakerType || ""
+  ).toUpperCase();
+  const messageType = String(message?.type || "").toLowerCase();
+
   return (
-    message?.kind === "OPENING_SCENE" &&
-    String(message?.metadata?.resolvedSpeakerType || "").toUpperCase() ===
-      "CHARACTER"
+    resolvedSpeakerType === "CHARACTER" ||
+    messageType === "character" ||
+    Boolean(message?.metadata?.openingCharacterPaletteId)
+  );
+}
+
+function shouldRepairCharacterOpeningPresentation(
+  message,
+  presentation,
+  fallbackSegments
+) {
+  if (!isCharacterOpeningMessage(message) || !fallbackSegments.length) {
+    return false;
+  }
+
+  if (!presentation) {
+    return true;
+  }
+
+  const fallbackHasDialogue = fallbackSegments.some(
+    (segment) => segment.type === "DIALOGUE"
+  );
+  const fallbackHasNarration = fallbackSegments.some(
+    (segment) => segment.type === "NARRATION"
+  );
+  const presentationHasDialogue = presentation.segments.some(
+    (segment) => String(segment?.type || "").toUpperCase() === "DIALOGUE"
+  );
+  const presentationHasNarration = presentation.segments.some(
+    (segment) => String(segment?.type || "").toUpperCase() === "NARRATION"
+  );
+
+  return (
+    fallbackHasDialogue &&
+    fallbackHasNarration &&
+    (!presentationHasDialogue || !presentationHasNarration)
   );
 }
 
@@ -171,6 +212,17 @@ export function getStoryRoomMessageViewProps(
     normalizeObject(safeMessage?.metadata?.presentation),
     persistentStatusSurfaceDomains
   );
+  const openingGreetingSegments = isCharacterOpeningMessage(safeMessage)
+    ? buildCharacterOpeningGreetingPresentation(legacyBody)
+    : [];
+  const useOpeningGreetingRepair = shouldRepairCharacterOpeningPresentation(
+    safeMessage,
+    presentation,
+    openingGreetingSegments
+  );
+  const semanticSegments = useOpeningGreetingRepair
+    ? openingGreetingSegments
+    : presentation?.segments || [];
 
   return {
     surfaceTone: getSurfaceTone(safeMessage),
@@ -182,11 +234,11 @@ export function getStoryRoomMessageViewProps(
     openingLabel:
       safeMessage.kind === "OPENING_SCENE" ? "Opening Scene" : "",
     modeLabel: String(safeMessage.mode || ""),
-    bodyMode: presentation
+    bodyMode: semanticSegments.length
       ? STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC
       : STORY_ROOM_MESSAGE_BODY_MODES.LEGACY,
     legacyBody,
-    semanticSegments: presentation?.segments || [],
+    semanticSegments,
     statusBlocks: presentation?.statusBlocks || [],
     paletteColors: palette?.colors ? { ...palette.colors } : null,
     speakerColor:

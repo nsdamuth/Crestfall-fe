@@ -13,6 +13,7 @@ for the full breaking list.)
 The advanced editor: the one full edit surface for every saved
 creation. Build addresses `/studio/v2/editor/[id]` (deep-linkable)
 and `/studio/v2/editor` (index, "Select a creation to edit").
+For Character and Player Character, the V1-functional-parity pass keeps the V2 editor presentation while making **Identity & Appearance**, **Body**, and **Behavior** explicit information-architecture groups. Optional Additional Guidance follows Behavior; Systems contains only mechanics/runtime sections.
 Rehost then seat: the page carries the standalone editor's full
 function by consuming the existing `components/studio/my-creations/**`
 edit-section components read-only inside the ED1C shell. Internal

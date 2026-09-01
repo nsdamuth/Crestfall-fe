@@ -31,6 +31,7 @@ import { useCreationEngagementState } from "@/components/studio/engagement/hooks
 import { archiveCreation, deleteCreation } from "@/lib/client/studio/creations/creationClient";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
 import {
   buildDomainFilterGroups,
@@ -349,7 +350,7 @@ export default function VaultV2Mockup({
         throw new Error("Story was created without a room id.");
       }
 
-      router.push(`/studio/story-rooms/${encodeURIComponent(roomId)}`);
+      router.push(buildStoryChatHref(roomId));
     } catch (error) {
       setActionNotice({
         label: "Start Story",

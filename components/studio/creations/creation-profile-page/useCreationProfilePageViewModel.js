@@ -12,6 +12,7 @@ import {
 } from "@/lib/shared/creations/creationMedia";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import {
   fetchMediaReactions,
   setMediaBookmark,
@@ -522,7 +523,7 @@ export function useCreationProfilePageViewModel({
       const data = await startStoryFromCreation(normalizedCreation.raw);
       const roomId = data?.room?.id;
       if (!roomId) throw new Error("Story was created without a room id.");
-      navigate?.(`/studio/story-rooms/${roomId}`);
+      navigate?.(buildStoryChatHref(roomId));
     } catch (error) {
       setChatError(error?.message || "Story could not be started.");
       setStartingChat(false);

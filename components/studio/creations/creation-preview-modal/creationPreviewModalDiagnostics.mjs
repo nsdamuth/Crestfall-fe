@@ -63,7 +63,7 @@ test("ViewModel owns story and default Player Character mutations", () => {
   assert.match(vm, /Story could not be started\./);
   assert.match(vm, /Default Player Character set\./);
   assert.match(vm, /Default Player Character could not be saved\./);
-  assert.match(vm, /navigate\?\.\(`\/studio\/story-rooms\/\$\{roomId\}`\)/);
+  assert.match(vm, /navigate\?\.\(buildStoryChatHref\(roomId\)\)/);
 });
 
 test("portable View receives display-ready state and semantic callbacks", () => {

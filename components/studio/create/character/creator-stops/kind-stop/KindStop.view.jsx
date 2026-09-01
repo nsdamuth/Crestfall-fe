@@ -4,20 +4,16 @@ import {
   CustomValueField,
   Eyebrow,
   FieldPair,
-  Fold,
   InlineDropdown,
   SectionLabel,
   TileGrid,
 } from "../shared/Controls";
 import {
-  EAST_ASIAN_ZODIAC_OPTIONS,
   GENDER_PRESENTATION_OPTIONS,
   isKnownRoleArchetype,
   KIND_STOP_CUSTOM_VALUE_MAX_LENGTH,
-  MBTI_TYPE_OPTIONS,
   ROLE_ARCHETYPE_OPTIONS,
   SPECIES_OPTIONS,
-  WESTERN_ZODIAC_OPTIONS,
 } from "./KindStop.contract";
 
 // Photographic species art was retired; every tile falls back to
@@ -100,25 +96,16 @@ export default function KindStopView({
   genderPresentation = "",
   customGenderPresentation = "",
   shortConcept = "",
-  mbtiType = "",
-  westernZodiacSign = "",
-  eastAsianZodiacSign = "",
   onChangeSpecies = null,
   onChangeCustomSpecies = null,
   onChangeGenderPresentation = null,
   onChangeCustomGenderPresentation = null,
   onChangeShortConcept = null,
-  onChangeMbtiType = null,
-  onChangeWesternZodiacSign = null,
-  onChangeEastAsianZodiacSign = null,
-  typingFoldOpen = false,
-  onToggleTypingFold = null,
-  // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): quick create
-  // hides Gender presentation (and its custom field), Role archetype,
-  // and the Typing and zodiac fold. Species stays in both scopes.
+  // Quick create hides Gender presentation (and its custom field) and Role
+  // archetype. Personality frameworks live with Behavior, matching the
+  // canonical Character authoring model. Species stays in both scopes.
   fieldScope = "full",
 } = {}) {
-  const typingFilled = Boolean(mbtiType || westernZodiacSign || eastAsianZodiacSign);
   const isQuick = fieldScope === "quick";
 
   return (
@@ -180,34 +167,6 @@ export default function KindStopView({
         </div>
       ) : null}
 
-      {!isQuick ? (
-        <Fold
-          title="Typing and zodiac"
-          sub="Optional personality-typing flavor"
-          open={typingFoldOpen}
-          onToggle={onToggleTypingFold}
-          filled={typingFilled}
-        >
-          <InlineDropdown
-            label="MBTI type"
-            options={MBTI_TYPE_OPTIONS}
-            value={mbtiType}
-            onChange={onChangeMbtiType}
-          />
-          <InlineDropdown
-            label="Western zodiac"
-            options={WESTERN_ZODIAC_OPTIONS}
-            value={westernZodiacSign}
-            onChange={onChangeWesternZodiacSign}
-          />
-          <InlineDropdown
-            label="East Asian zodiac"
-            options={EAST_ASIAN_ZODIAC_OPTIONS}
-            value={eastAsianZodiacSign}
-            onChange={onChangeEastAsianZodiacSign}
-          />
-        </Fold>
-      ) : null}
     </>
   );
 }

@@ -84,9 +84,9 @@ export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v7";
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),
   Object.freeze({ id: "kind", label: "The kind", iconKey: "kind" }),
-  Object.freeze({ id: "face", label: "The face", iconKey: "face" }),
-  Object.freeze({ id: "silhouette", label: "The silhouette", iconKey: "silhouette" }),
-  Object.freeze({ id: "heart", label: "The heart", iconKey: "heart" }),
+  Object.freeze({ id: "face", label: "Appearance", iconKey: "face" }),
+  Object.freeze({ id: "silhouette", label: "Body", iconKey: "silhouette" }),
+  Object.freeze({ id: "heart", label: "Behavior", iconKey: "heart" }),
   Object.freeze({ id: "seal", label: "The seal", iconKey: "seal" }),
   Object.freeze({ id: "payoff", label: "The payoff", iconKey: "payoff" }),
 ]);

@@ -71,6 +71,9 @@ test("portable View owns responsive layout and uses injected children only", () 
   const statePanelView = read(
     "components/studio/story-rooms/story-room-state-panel/StoryRoomStatePanel.view.jsx"
   );
+  const castPanelView = read(
+    "components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.view.jsx"
+  );
 
   assert.match(view, /CastPanelComponent/);
   assert.match(view, /ComposerComponent/);
@@ -82,6 +85,8 @@ test("portable View owns responsive layout and uses injected children only", () 
   assert.match(view, /hidden min-h-0 overflow-y-auto pr-1 xl:block/);
   assert.match(view, /min-w-0 pb-4/);
   assert.doesNotMatch(statePanelView, /2xl:sticky|2xl:top-24/);
+  assert.match(castPanelView, /xl:sticky xl:top-0/);
+  assert.doesNotMatch(castPanelView, /xl:top-24/);
   assert.match(view, /Room & Cast/);
   assert.match(view, /Chronicle State/);
   assert.match(view, /Available Commands/);

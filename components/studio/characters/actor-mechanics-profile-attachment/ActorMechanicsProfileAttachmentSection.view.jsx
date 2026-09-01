@@ -178,7 +178,7 @@ function ActorMechanicsProfileAttachmentCard({
             onChange={(event) => onNotesChange?.(event.target.value)}
             disabled={disabled}
             placeholder="Optional notes about how this actor uses the profile..."
-            className="mt-2 w-full resize-none rounded-xl border border-[var(--line)] bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-2 w-full resize-y rounded-xl border border-[var(--line)] bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45 disabled:cursor-not-allowed disabled:opacity-60"
           />
         </label>
       </div>

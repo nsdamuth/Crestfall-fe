@@ -20,7 +20,7 @@ components/studio/create/character/character-preview/CharacterPreview.view.jsx
 
 The View receives display-ready identity values only. It does not receive the
 raw character form or know fields such as `custom_species`,
-`custom_gender_presentation`, `short_concept`, or `clothing_style`.
+`custom_gender_presentation`, `short_concept`, or the compatibility-backed default-clothing title (`clothing_style`).
 
 ## ViewModel
 

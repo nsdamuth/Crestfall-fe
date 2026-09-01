@@ -31,6 +31,7 @@ test("Character Advanced View is API, persistence, and application-feature free"
     /updateDataField|form\.data|relationship_to_player|appearance_notes|personality_notes|extra_runtime_notes|creator_directives/
   );
   assert.doesNotMatch(view, /AdvancedPromptingEditor/);
+  assert.doesNotMatch(view, /Scenario|Backstory/);
 });
 
 test("Character Advanced ViewModel owns normalization and storage mapping", () => {

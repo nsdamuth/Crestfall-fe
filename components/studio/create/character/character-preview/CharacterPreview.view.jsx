@@ -10,7 +10,7 @@ export default function CharacterPreviewView({
   characterSubtitle = "Private Draft",
   speciesLabel = "Species not chosen yet.",
   genderPresentationLabel = "Gender presentation not chosen yet.",
-  clothingStyleLabel = "Clothing style not chosen yet.",
+  clothingStyleLabel = "Default clothing not chosen yet.",
   previewCostLabel = "40",
 } = {}) {
   // RULED 11 Aug 2026 (Sprint H render review, item 3): no generation

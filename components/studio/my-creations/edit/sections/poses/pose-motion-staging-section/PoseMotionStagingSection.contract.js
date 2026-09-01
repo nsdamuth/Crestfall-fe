@@ -1,4 +1,4 @@
-export const POSE_MOTION_STAGING_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const POSE_MOTION_STAGING_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Pose motion/staging View.
@@ -13,16 +13,24 @@ export const POSE_MOTION_STAGING_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} sectionDescription
  * @property {string} actionMotionLabel
  * @property {string} actionMotionValue
+ * @property {string} actionMotionHelper
  * @property {string} energyLevelLabel
  * @property {string} energyLevelValue
+ * @property {Array<{value:string,label:string}>} energyOptions
+ * @property {string} energyLevelHelper
  * @property {string} viewerRelationLabel
  * @property {string} viewerRelationValue
+ * @property {Array<{value:string,label:string}>} viewerRelationOptions
+ * @property {string} viewerRelationHelper
  * @property {string} propInteractionLabel
  * @property {string} propInteractionValue
+ * @property {string} propInteractionHelper
  * @property {string} sceneFitLabel
  * @property {string} sceneFitValue
+ * @property {string} sceneFitHelper
  * @property {string} moodAttitudeLabel
  * @property {string} moodAttitudeValue
+ * @property {string} moodAttitudeHelper
  * @property {string} stagingNotesLabel
  * @property {string} stagingNotesValue
  * @property {string} stagingNotesPlaceholder

@@ -19,6 +19,7 @@ test("Character Behavior Shell remains a thin LOOM binding", () => {
   assert.match(shell, /<CharacterBehaviorSectionView/);
   assert.match(shell, /<PersonalityModal/);
   assert.match(shell, /<VoiceModulePickerModal/);
+  assert.match(shell, /<MultiTraitModal/);
   assert.doesNotMatch(shell, /form\.data|updateDataField\?\.\(/);
 });
 
@@ -42,6 +43,7 @@ test("Character Behavior ViewModel owns normalization and storage mapping", () =
     "components/studio/my-creations/edit/sections/character-behavior-section/useCharacterBehaviorSectionViewModel.js"
   );
   assert.match(viewModel, /normalizeCharacterInterests/);
+  assert.match(viewModel, /return single \? \[single\] : \[\]/);
   assert.match(viewModel, /normalizeVoiceModuleIds/);
   assert.match(viewModel, /voice_module_ids/);
   assert.match(viewModel, /verbosity_level/);

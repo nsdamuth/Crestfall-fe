@@ -3,7 +3,7 @@ import { Shirt, Sparkles, X } from "lucide-react";
 import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function SelectedClothingCard({
-  clothingLabel = "Clothing Style",
+  clothingLabel = "Default Clothing",
   selectedClothing = {},
   emptyClothingDescription = "",
   noDescriptionLabel = "No description.",
@@ -163,7 +163,7 @@ export default function CharacterAppearanceSectionView({
   eyeColorControl = null,
   hairControl = null,
   visualHeritageControl = null,
-  clothingLabel = "Clothing Style",
+  clothingLabel = "Default Clothing",
   selectedClothing = {},
   emptyClothingDescription = "",
   imagePresetLabel = "Default Image Preset",
