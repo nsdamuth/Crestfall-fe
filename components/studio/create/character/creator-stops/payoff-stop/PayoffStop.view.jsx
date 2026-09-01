@@ -1,11 +1,11 @@
 "use client";
 
-import CharacterPreviewView from "../../character-preview/CharacterPreview.view";
-import { useCharacterPreviewViewModel } from "../../character-preview/useCharacterPreviewViewModel";
+import CharacterPreview from "../../CharacterPreview";
 import { Eyebrow, SectionLabel, TextAreaField } from "../shared/Controls";
 import { PAYOFF_NOTES_MAX_LENGTH } from "./PayoffStop.contract";
 
 export default function PayoffStopView({
+  creationType = "CHARACTER",
   name = "",
   title = "",
   shortConcept = "",
@@ -20,6 +20,10 @@ export default function PayoffStopView({
   creatorDirectivesPlaceholder = "Instructions for how the AI should run this character",
   onChangeExtraRuntimeNotes = null,
   onOpenStoryPanel = null,
+  previewImageUrl = "",
+  previewStatus = "idle",
+  previewError = "",
+  onGeneratePreview = null,
   // RULED 10 Aug 2026 (docs/STUDIO-SPEC.md section 2.2): the preview
   // panel and the Continue-into-a-story panel stay in both scopes;
   // quick create hides Advanced directives (Creator directives, Extra
@@ -27,18 +31,6 @@ export default function PayoffStopView({
   fieldScope = "full",
 } = {}) {
   const isQuick = fieldScope === "quick";
-  const previewProps = useCharacterPreviewViewModel({
-    form: {
-      name,
-      title,
-      short_concept: shortConcept,
-      species,
-      custom_species: customSpecies,
-      gender_presentation: genderPresentation,
-      custom_gender_presentation: customGenderPresentation,
-      clothing_style: clothingStyle,
-    },
-  });
 
   return (
     <>
@@ -52,7 +44,23 @@ export default function PayoffStopView({
       </p>
 
       <div className="mt-6">
-        <CharacterPreviewView {...previewProps} />
+        <CharacterPreview
+          creationType={creationType}
+          form={{
+            name,
+            title,
+            short_concept: shortConcept,
+            species,
+            custom_species: customSpecies,
+            gender_presentation: genderPresentation,
+            custom_gender_presentation: customGenderPresentation,
+            clothing_style: clothingStyle,
+          }}
+          previewImageUrl={previewImageUrl}
+          previewStatus={previewStatus}
+          previewError={previewError}
+          onGeneratePreview={onGeneratePreview}
+        />
       </div>
 
       <button

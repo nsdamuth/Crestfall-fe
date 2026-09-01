@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import KitArtPlaceholderView from "@/components/kit/art-placeholder/KitArtPlaceholder.view";
 
 export default function CharacterPreviewView({
@@ -11,46 +9,55 @@ export default function CharacterPreviewView({
   speciesLabel = "Species not chosen yet.",
   genderPresentationLabel = "Gender presentation not chosen yet.",
   clothingStyleLabel = "Default clothing not chosen yet.",
-  previewCostLabel = "40",
+  previewCostLabel = "5",
+  previewImageUrl = "",
+  previewStatus = "idle",
+  previewError = "",
+  previewDisabled = false,
+  onGeneratePreview = null,
 } = {}) {
-  // RULED 11 Aug 2026 (Sprint H render review, item 3): no generation
-  // fires without a tap. Package-local state, not lifted to the
-  // ViewModel: this is a fixture-only stand-in with no backend call
-  // to await, so there is no async status to normalize upstream.
-  const [hasGenerated, setHasGenerated] = useState(false);
+  const isPreparing = previewStatus === "preparing";
+  const isGenerating = previewStatus === "generating";
+  const buttonLabel = isPreparing
+    ? "Saving draft..."
+    : isGenerating
+      ? "Generating preview..."
+      : previewImageUrl
+        ? "Generate another"
+        : "Generate preview";
 
   return (
     <aside className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
       <div className="flex flex-col gap-[var(--space-6)] sm:flex-row">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] sm:w-48 sm:flex-none">
-          {hasGenerated ? (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/70 to-[var(--gold-ornament)]/10">
-              <div className="text-center">
-                <p className="font-display text-5xl text-[var(--gold-ornament)]">
-                  {displayInitial}
-                </p>
-                <p className="mt-4 text-xs uppercase tracking-[0.25em] text-[var(--ink-dim)]">
-                  Preview Generated
-                </p>
-              </div>
-            </div>
+          {previewImageUrl ? (
+            <img
+              src={previewImageUrl}
+              alt={`${characterName} generated preview`}
+              className="h-full w-full object-cover"
+            />
           ) : (
-            <>
-              <KitArtPlaceholderView size="lg" />
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[var(--space-1)] p-3">
-                <button
-                  type="button"
-                  onClick={() => setHasGenerated(true)}
-                  className="cf-btn cf-btn--primary w-full text-sm"
-                >
-                  Generate preview
-                </button>
-                <p className="text-center text-[length:var(--text-label)] text-[var(--ink-dim)]">
-                  {`${previewCostLabel} tokens`}
-                </p>
-              </div>
-            </>
+            <KitArtPlaceholderView size="lg" />
           )}
+
+          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-[var(--space-1)] bg-gradient-to-t from-black/85 via-black/55 to-transparent p-3 pt-10">
+            <button
+              type="button"
+              onClick={() => onGeneratePreview?.()}
+              disabled={previewDisabled || typeof onGeneratePreview !== "function"}
+              className="cf-btn cf-btn--primary w-full text-sm"
+            >
+              {buttonLabel}
+            </button>
+            <p className="text-center text-[length:var(--text-label)] text-[var(--ink-dim)]">
+              {`${previewCostLabel} coins`}
+            </p>
+            {previewError ? (
+              <p className="text-center text-xs leading-4 text-red-200">
+                {previewError}
+              </p>
+            ) : null}
+          </div>
         </div>
 
         <div className="min-w-0 flex-1">

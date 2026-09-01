@@ -10,6 +10,9 @@ import {
   updateCreationDraft,
   getCreationApiErrorMessage,
 } from "@/lib/client/studio/creations/creationClient";
+import {
+  generateCharacterPreviewImage,
+} from "@/lib/client/studio/characters/characterPreviewClient";
 import NameStopView from "./name-stop/NameStop.view";
 import KindStopView from "./kind-stop/KindStop.view";
 import FaceStopView from "./face-stop/FaceStop.view";
@@ -172,6 +175,9 @@ export default function CharacterCreatorModal({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [creationId, setCreationId] = useState(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
+  const [previewStatus, setPreviewStatus] = useState("idle");
+  const [previewError, setPreviewError] = useState("");
   // The save-and-reaccess loop, RULED 11 Aug 2026: true immediately
   // after any confirmed save, cleared the moment a field changes again
   // so the post-save footer is not sticky across further edits.
@@ -201,10 +207,17 @@ export default function CharacterCreatorModal({
     setMaxReachedIndex((current) => Math.max(current, index));
   }, [activeStop]);
 
+  function invalidatePreview() {
+    setPreviewImageUrl("");
+    setPreviewStatus("idle");
+    setPreviewError("");
+  }
+
   function updateField(key) {
     return (value) => {
       setFormState((current) => ({ ...current, [key]: value }));
       setJustSaved(false);
+      invalidatePreview();
     };
   }
 
@@ -214,6 +227,7 @@ export default function CharacterCreatorModal({
 
     setFormState((current) => ({ ...current, [stateField]: value }));
     setJustSaved(false);
+    invalidatePreview();
   }
 
   function requestClose() {
@@ -293,6 +307,43 @@ export default function CharacterCreatorModal({
     const saved = await persistCreation();
     if (saved) {
       setJustSaved(true);
+    }
+  }
+
+  async function handleGeneratePreview() {
+    if (["preparing", "generating"].includes(previewStatus)) return;
+
+    setPreviewError("");
+    setPreviewStatus("preparing");
+
+    const saved = await persistCreation();
+    if (!saved?.id) {
+      setPreviewStatus("error");
+      setPreviewError(
+        "Save the Character draft before generating a preview. Your work is still here."
+      );
+      return;
+    }
+
+    setPreviewStatus("generating");
+
+    try {
+      const result = await generateCharacterPreviewImage({
+        creationId: saved.id,
+        creationType: creatorMode.creationType,
+      });
+
+      if (!result?.imageUrl) {
+        throw new Error("The preview finished without a displayable image.");
+      }
+
+      setPreviewImageUrl(result.imageUrl);
+      setPreviewStatus("ready");
+    } catch (error) {
+      setPreviewStatus("error");
+      setPreviewError(
+        error?.message || "Character preview could not be generated."
+      );
     }
   }
 
@@ -656,6 +707,7 @@ export default function CharacterCreatorModal({
           />
         ) : activeStop === "payoff" ? (
           <PayoffStopView
+            creationType={creatorMode.creationType}
             name={formState.name}
             title={formState.title}
             shortConcept={formState.shortConcept}
@@ -672,6 +724,10 @@ export default function CharacterCreatorModal({
             }
             onChangeExtraRuntimeNotes={updateField("extraRuntimeNotes")}
             onOpenStoryPanel={() => setSecondaryPanel("story")}
+            previewImageUrl={previewImageUrl}
+            previewStatus={previewStatus}
+            previewError={previewError}
+            onGeneratePreview={handleGeneratePreview}
             fieldScope={fieldScope}
           />
         ) : null

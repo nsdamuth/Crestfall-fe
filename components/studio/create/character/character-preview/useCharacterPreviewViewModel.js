@@ -2,12 +2,11 @@ import {
   CHARACTER_CREATOR_TYPES,
   normalizeCharacterCreatorType,
 } from "@/components/studio/create/character/characterCreationMode";
+import {
+  CHARACTER_PREVIEW_COIN_COST,
+} from "./characterPreviewGeneration";
 
-// RULED 11 Aug 2026 (Sprint H render review, item 3): the preview
-// generation cost, "cost value from fixtures." No pricing table
-// exists yet for quick-create preview generation; this is the
-// package-local placeholder value until CR-driven pricing lands.
-export const CHARACTER_PREVIEW_TOKEN_COST = 40;
+export { CHARACTER_PREVIEW_COIN_COST };
 
 function resolveIdentityDisplayValue(
   selectedValue,
@@ -27,6 +26,10 @@ function resolveIdentityDisplayValue(
 export function useCharacterPreviewViewModel({
   form = {},
   creationType = CHARACTER_CREATOR_TYPES.CHARACTER,
+  previewImageUrl = "",
+  previewStatus = "idle",
+  previewError = "",
+  onGeneratePreview = null,
 } = {}) {
   const name = form?.name || "";
   const normalizedType = normalizeCharacterCreatorType(creationType);
@@ -59,6 +62,11 @@ export function useCharacterPreviewViewModel({
     ),
     clothingStyleLabel:
       form?.clothing_style || "Default clothing not chosen yet.",
-    previewCostLabel: String(CHARACTER_PREVIEW_TOKEN_COST),
+    previewCostLabel: String(CHARACTER_PREVIEW_COIN_COST),
+    previewImageUrl: String(previewImageUrl || ""),
+    previewStatus: String(previewStatus || "idle"),
+    previewError: String(previewError || ""),
+    previewDisabled: ["preparing", "generating"].includes(previewStatus),
+    onGeneratePreview,
   };
 }
