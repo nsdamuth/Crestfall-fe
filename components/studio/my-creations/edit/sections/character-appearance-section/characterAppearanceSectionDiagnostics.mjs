@@ -41,6 +41,16 @@ test("Character Appearance View is API, persistence, and application-picker free
   assert.doesNotMatch(view, />Clothing Style</);
   assert.match(view, /Image Generation Guidance/);
   assert.match(view, /negativePromptMaxLength/);
+  assert.equal(
+    [...view.matchAll(/imageGenerationGuidanceLabel/g)].length,
+    2,
+    "image guidance must be owned only by the top-level Appearance view prop and field"
+  );
+  assert.equal(
+    [...view.matchAll(/onChangeNegativePrompt/g)].length,
+    2,
+    "negative-prompt callback must not leak into nested cards without props"
+  );
 });
 
 test("Character Appearance ViewModel owns clothing and default image-preset normalization/storage mapping", () => {
