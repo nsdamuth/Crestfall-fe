@@ -63,7 +63,7 @@ const baseFixture = {
   imagePrompt: "Fantasy artificer wardrobe catalogue, brass and leather craftwear.",
   negativePrompt: "modern logos, sneakers",
   imagePromptMaxLength: 2000,
-  negativePromptMaxLength: 2000,
+  negativePromptMaxLength: 300,
   entryRoleOptions: roleOptions,
   fallbackModeOptions,
   saveStatus: "idle",

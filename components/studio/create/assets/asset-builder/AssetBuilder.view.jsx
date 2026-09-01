@@ -13,7 +13,6 @@ import {
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ASSET_IMAGE_PROMPT_MAX_LENGTH,
-  ASSET_NEGATIVE_PROMPT_MAX_LENGTH,
 } from "./AssetBuilder.contract";
 
 export default function AssetBuilderView({
@@ -25,6 +24,7 @@ export default function AssetBuilderView({
   candidates,
   selectedCover,
   supportsImagePromptFields,
+  negativePromptMaxLength = 2000,
   parentLocation,
   visibilityOptions,
   contentRatingOptions,
@@ -98,8 +98,8 @@ export default function AssetBuilderView({
                 onChange={(value) => onUpdateField?.("negative_prompt", value)}
                 placeholder={`Optional negatives this ${config.typeLabel.toLowerCase()} should contribute when selected in image generation.`}
                 rows={5}
-                maxLength={ASSET_NEGATIVE_PROMPT_MAX_LENGTH}
-                helperText={`Optional. Compiled into the negative prompt when this ${config.typeLabel.toLowerCase()} is selected. Max 2,000 characters.`}
+                maxLength={negativePromptMaxLength}
+                helperText={`Optional. Compiled into the negative prompt when this ${config.typeLabel.toLowerCase()} is selected. Max ${negativePromptMaxLength.toLocaleString()} characters.`}
               />
             </>
           ) : null}

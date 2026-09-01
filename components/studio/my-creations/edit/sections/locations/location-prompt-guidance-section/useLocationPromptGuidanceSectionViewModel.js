@@ -1,7 +1,7 @@
 "use client";
 
 export const LOCATION_IMAGE_PROMPT_MAX_LENGTH = 2000;
-export const LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 2000;
+export const LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Location Editor",
@@ -16,7 +16,7 @@ const DEFAULT_COPY = Object.freeze({
     "Optional standalone prompt for generating environment, catalogue, or reference images of this location as its own visual asset. Max 2,000 characters.",
   negativePromptLabel: "Negative Prompt",
   negativePromptPlaceholder:
-    "Optional negatives this location should contribute when selected in image generation. Example: no modern electronics, no empty white room, no outdoor scene. Max 2,000 characters.",
+    "Optional negatives this location should contribute when selected in image generation. Example: no modern electronics, no empty white room, no outdoor scene. Max 300 characters.",
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this location be used? What scenes, characters, moods, or image presets does it support?",
@@ -50,7 +50,10 @@ export function normalizeLocationPromptGuidanceData(data = {}) {
       source.prompt_guidance || source.prompt || ""
     ),
     imagePrompt: normalizeText(source.image_prompt),
-    negativePrompt: normalizeText(source.negative_prompt),
+    negativePrompt: limitLocationPromptValue(
+      source.negative_prompt,
+      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
     usageNotes: normalizeText(source.usage_notes),
     compatibilityNotes: normalizeText(source.compatibility_notes),
     registryNotes: normalizeText(source.registry_notes),

@@ -1,4 +1,4 @@
-export const CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT_VERSION = "1.1";
+export const CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT_VERSION = "1.2";
 
 export const CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT = Object.freeze({
   version: CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT_VERSION,
@@ -21,6 +21,12 @@ export const CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT = Object.freeze({
     "noDescriptionLabel",
     "selectedClothingFallbackTitle",
     "selectedImagePresetFallbackTitle",
+    "imageGenerationGuidanceLabel",
+    "negativePromptLabel",
+    "negativePromptValue",
+    "negativePromptPlaceholder",
+    "negativePromptHelpText",
+    "negativePromptMaxLength",
   ],
   callbacks: [
     "onPickOutfit",
@@ -28,6 +34,7 @@ export const CHARACTER_APPEARANCE_SECTION_VIEW_CONTRACT = Object.freeze({
     "onClearDefaultClothing",
     "onPickImagePreset",
     "onClearDefaultImagePreset",
+    "onChangeNegativePrompt",
   ],
   applicationOwnedControls: [
     "skinToneControl",

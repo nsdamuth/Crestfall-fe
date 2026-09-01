@@ -14,6 +14,7 @@ import {
   getCreationApiErrorMessage,
 } from "@/lib/client/studio/creations/creationClient";
 import { buildWorldStopItems, WORLD_STOP_IDS } from "./WorldCreatorStops.contract";
+import { limitAssetNegativePromptGuidance } from "@/lib/shared/image-generation/assetNegativePromptGuidance";
 import NameStopView from "./name-stop/NameStopView";
 import PremiseStopView from "./premise-stop/PremiseStopView";
 import SettingStopView from "./setting-stop/SettingStopView";
@@ -25,6 +26,7 @@ const INITIAL_FORM_STATE = {
   premise: "",
   setting: "",
   tone: "",
+  negativePrompt: "",
 };
 
 // Same top-level shape (type, title, description, visibility,
@@ -45,6 +47,8 @@ function buildSaveCreationPayload(formState) {
     content_rating: "SFW",
     data: {
       ...formState,
+      negativePrompt: undefined,
+      negative_prompt: limitAssetNegativePromptGuidance(formState.negativePrompt),
       name,
       builder: "WORLD_CREATOR",
       builder_version: "1.0",
@@ -226,7 +230,9 @@ export default function WorldCreatorModal({ onClose }) {
         ) : activeStop === "setting" ? (
           <SettingStopView
             setting={formState.setting}
+            negativePrompt={formState.negativePrompt}
             onChangeSetting={updateField("setting")}
+            onChangeNegativePrompt={updateField("negativePrompt")}
           />
         ) : activeStop === "tone" ? (
           <ToneStopView tone={formState.tone} onChangeTone={updateField("tone")} />

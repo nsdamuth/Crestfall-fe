@@ -44,7 +44,7 @@ test("Location Prompt Guidance ViewModel owns fallback, limits, and storage mapp
   assert.match(viewModel, /normalizeLocationPromptGuidanceData/);
   assert.match(viewModel, /source\.prompt_guidance \|\| source\.prompt/);
   assert.match(viewModel, /LOCATION_IMAGE_PROMPT_MAX_LENGTH = 2000/);
-  assert.match(viewModel, /LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 2000/);
+  assert.match(viewModel, /LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 300/);
   assert.match(viewModel, /limitLocationPromptValue/);
   assert.match(viewModel, /updateDataField\?\.\("prompt_guidance"/);
   assert.match(viewModel, /"image_prompt"/);
@@ -64,7 +64,7 @@ test("Location Prompt Guidance contract and fixtures cover current and legacy st
   assert.match(contract, /legacyReadFields/);
   assert.match(contract, /"prompt"/);
   assert.match(contract, /imagePrompt: 2000/);
-  assert.match(contract, /negativePrompt: 2000/);
+  assert.match(contract, /negativePrompt: 300/);
   assert.match(fixtures, /locationPromptGuidanceCompleteFixture/);
   assert.match(fixtures, /locationPromptGuidanceLegacyFixture/);
   assert.match(fixtures, /locationPromptGuidanceSparseFixture/);

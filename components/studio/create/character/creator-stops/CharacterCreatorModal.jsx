@@ -79,6 +79,7 @@ const INITIAL_FORM_STATE = {
   chestBust: "",
   bodyNotes: "",
   appearanceNotes: "",
+  negativePrompt: "",
   clothingStyle: "",
   defaultClothingMode: "NONE",
   defaultOutfitId: null,
@@ -509,6 +510,8 @@ export default function CharacterCreatorModal({
             onChangeHairStyle={updateField("hairStyle")}
             onChangeEthnicAppearance={updateField("ethnicAppearance")}
             onToggleMoreHair={() => setMoreHairOpen((current) => !current)}
+            negativePrompt={formState.negativePrompt}
+            onChangeNegativePrompt={updateField("negativePrompt")}
             defaultClothingControl={
               <DefaultClothingSelector
                 form={{

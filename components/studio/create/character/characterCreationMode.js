@@ -1,3 +1,5 @@
+import { limitAssetNegativePromptGuidance } from "@/lib/shared/image-generation/assetNegativePromptGuidance";
+
 export const CHARACTER_CREATOR_TYPES = Object.freeze({
   CHARACTER: "CHARACTER",
   PLAYER_CHARACTER: "PLAYER_CHARACTER",
@@ -156,6 +158,7 @@ function canonicalCharacterData(formState = {}, mode) {
     chest_bust: formState.chestBust || "",
     body_notes: formState.bodyNotes || "",
     appearance_notes: formState.appearanceNotes || "",
+    negative_prompt: limitAssetNegativePromptGuidance(formState.negativePrompt),
     clothing_source: clothingSource,
     clothing_style: formState.clothingStyle || "",
     default_clothing_mode: clothingSource.mode,

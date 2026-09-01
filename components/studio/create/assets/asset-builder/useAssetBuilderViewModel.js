@@ -8,7 +8,7 @@ import {
   ASSET_CONTENT_RATING_OPTIONS,
   ASSET_IMAGE_COUNT_OPTIONS,
   ASSET_IMAGE_PROMPT_MAX_LENGTH,
-  ASSET_NEGATIVE_PROMPT_MAX_LENGTH,
+  getAssetNegativePromptMaxLength,
   ASSET_RENDERING_STYLE_OPTIONS,
   ASSET_VISIBILITY_OPTIONS,
 } from "./AssetBuilder.contract";
@@ -182,7 +182,7 @@ export function buildAssetCreationPayload({
           ),
           negative_prompt: limitAssetPromptValue(
             normalizedForm.negative_prompt,
-            ASSET_NEGATIVE_PROMPT_MAX_LENGTH
+            getAssetNegativePromptMaxLength(creationType)
           ),
         }
       : {};
@@ -197,6 +197,10 @@ export function buildAssetCreationPayload({
     ...outfitDefaults,
     ...locationDefaults,
     ...normalizedExtras,
+    negative_prompt: limitAssetPromptValue(
+      normalizedForm.negative_prompt,
+      getAssetNegativePromptMaxLength(creationType)
+    ),
     name,
     tags,
 
@@ -254,6 +258,7 @@ export function useAssetBuilderViewModel({
   const router = useRouter();
   const creationType = getCreationTypeFromAssetConfig(config);
   const [form, setForm] = useState(() => cloneInitialForm(initialForm));
+  const negativePromptMaxLength = getAssetNegativePromptMaxLength(creationType);
   const [extraValues, setExtraValues] = useState(() =>
     creationType === "LOCATION"
       ? cloneInitialLocationData(initialExtraValues)
@@ -281,7 +286,7 @@ export function useAssetBuilderViewModel({
       field === "image_prompt"
         ? limitAssetPromptValue(value, ASSET_IMAGE_PROMPT_MAX_LENGTH)
         : field === "negative_prompt"
-          ? limitAssetPromptValue(value, ASSET_NEGATIVE_PROMPT_MAX_LENGTH)
+          ? limitAssetPromptValue(value, negativePromptMaxLength)
           : value;
 
     setForm((current) => ({
@@ -432,6 +437,7 @@ export function useAssetBuilderViewModel({
     candidates,
     selectedCover,
     supportsImagePromptFields,
+    negativePromptMaxLength,
     parentLocation: {
       id: extraValues.parentLocationId || "",
       title: extraValues.parentLocationTitle || "",

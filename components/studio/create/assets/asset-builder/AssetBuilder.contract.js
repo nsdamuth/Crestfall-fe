@@ -2,6 +2,13 @@ export const ASSET_BUILDER_VIEW_CONTRACT_VERSION = "1.0.0";
 
 export const ASSET_IMAGE_PROMPT_MAX_LENGTH = 2000;
 export const ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 2000;
+export const PERSISTENT_ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 300;
+
+export function getAssetNegativePromptMaxLength(creationType) {
+  return ["OUTFIT", "LOCATION"].includes(String(creationType || "").toUpperCase())
+    ? PERSISTENT_ASSET_NEGATIVE_PROMPT_MAX_LENGTH
+    : ASSET_NEGATIVE_PROMPT_MAX_LENGTH;
+}
 
 export const ASSET_VISIBILITY_OPTIONS = Object.freeze([
   { value: "PRIVATE", label: "Private" },
@@ -43,6 +50,7 @@ export const ASSET_BUILDER_VIEW_CONTRACT = Object.freeze({
   candidates: "array",
   selectedCover: "string | null",
   supportsImagePromptFields: "boolean",
+  negativePromptMaxLength: "number",
   parentLocation: "normalized parent-location presentation state",
   options: {
     visibilityOptions: "array",

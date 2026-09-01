@@ -1,7 +1,7 @@
 export const LOCATION_BUILDER_VIEW_CONTRACT_VERSION = "1.0.0";
 
 export const LOCATION_IMAGE_PROMPT_MAX_LENGTH = 2000;
-export const LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 2000;
+export const LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
 export const LOCATION_VISIBILITY_OPTIONS = Object.freeze([
   { value: "PRIVATE", label: "Private" },

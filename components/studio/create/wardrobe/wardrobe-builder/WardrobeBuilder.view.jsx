@@ -38,7 +38,7 @@ export default function WardrobeBuilderView({
   imagePrompt = "",
   negativePrompt = "",
   imagePromptMaxLength = 2000,
-  negativePromptMaxLength = 2000,
+  negativePromptMaxLength = 300,
   entryRoleOptions = [],
   fallbackModeOptions = [],
   saveStatus = "idle",
@@ -568,7 +568,7 @@ function RulesTab({
               maxLength={negativePromptMaxLength}
               value={negativePrompt}
               onChange={(event) => onNegativePromptChange?.(event.target.value)}
-              placeholder="Optional negatives this wardrobe should contribute when selected as a clothing source. Example: no modern logos, no sneakers, no transparent fabric. Max 2,000 characters."
+              placeholder="Optional negatives this wardrobe should contribute when selected as a clothing source. Example: no modern logos, no sneakers, no transparent fabric. Max 300 characters."
             />
           </Field>
         </div>

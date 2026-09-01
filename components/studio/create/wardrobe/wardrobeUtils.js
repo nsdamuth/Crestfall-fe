@@ -2,7 +2,7 @@ export const WARDROBE_KIND = "WARDROBE";
 export const WARDROBE_VERSION = "1.0";
 
 export const WARDROBE_IMAGE_PROMPT_MAX_LENGTH = 2000;
-export const WARDROBE_NEGATIVE_PROMPT_MAX_LENGTH = 2000;
+export const WARDROBE_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
 export function limitWardrobePromptValue(value, maxLength = 2000) {
   return String(value || "").slice(0, maxLength);

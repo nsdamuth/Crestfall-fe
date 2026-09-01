@@ -27,6 +27,7 @@ export default function OutfitPromptGuidanceSectionView({
   negativePromptLabel = "Negative Prompt",
   negativePrompt = "",
   negativePromptPlaceholder = "",
+  negativePromptMaxLength = 300,
   usageNotesLabel = "Usage Notes",
   usageNotes = "",
   usageNotesPlaceholder = "",
@@ -147,7 +148,8 @@ export default function OutfitPromptGuidanceSectionView({
           value={negativePrompt}
           onChange={(value) => onNegativePromptChange?.(value)}
           placeholder={negativePromptPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          maxLength={negativePromptMaxLength}
+          helperText="Persistent image-generation guidance. Added automatically whenever this outfit is selected. Max 300 characters."
         />
 
         <TextAreaField

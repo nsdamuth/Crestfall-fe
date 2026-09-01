@@ -27,7 +27,7 @@ export default function WardrobeFieldsSectionView({
   imagePromptValue = "",
   negativePromptValue = "",
   imagePromptMaxLength = 2000,
-  negativePromptMaxLength = 2000,
+  negativePromptMaxLength = 300,
   onChangeWardrobeTitle = null,
   onChangeWardrobeScope = null,
   onChangeWardrobeDescription = null,
@@ -377,7 +377,7 @@ function RulesSection({
             maxLength={imagePromptMaxLength}
             value={imagePromptValue}
             onChange={(event) => onChangeImagePrompt?.(event.target.value)}
-            placeholder="Optional standalone prompt for generating catalogue, preview, mannequin lineup, or reference images of this wardrobe as its own visual asset. Max 2,000 characters."
+            placeholder="Optional standalone prompt for generating catalogue, preview, mannequin lineup, or reference images of this wardrobe as its own visual asset. Max 300 characters."
           />
         </Field>
       </div>
@@ -389,7 +389,7 @@ function RulesSection({
             maxLength={negativePromptMaxLength}
             value={negativePromptValue}
             onChange={(event) => onChangeNegativePrompt?.(event.target.value)}
-            placeholder="Optional negatives this wardrobe should contribute when selected as a clothing source. Example: no modern logos, no sneakers, no transparent fabric. Max 2,000 characters."
+            placeholder="Optional negatives this wardrobe should contribute when selected as a clothing source. Example: no modern logos, no sneakers, no transparent fabric. Max 300 characters."
           />
         </Field>
       </div>

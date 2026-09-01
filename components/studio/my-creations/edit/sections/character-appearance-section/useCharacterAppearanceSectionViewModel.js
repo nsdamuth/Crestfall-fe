@@ -1,3 +1,7 @@
+import {
+  ASSET_NEGATIVE_PROMPT_GUIDANCE_MAX_LENGTH,
+  limitAssetNegativePromptGuidance,
+} from "@/lib/shared/image-generation/assetNegativePromptGuidance";
 import { useEffect, useState } from "react";
 
 import { visualHeritageReferenceOptions } from "@/components/studio/create/character/constants/constants";
@@ -22,6 +26,12 @@ const DEFAULT_COPY = Object.freeze({
   noDescriptionLabel: "No description.",
   selectedClothingFallbackTitle: "Selected Clothing Source",
   selectedImagePresetFallbackTitle: "Selected Image Preset",
+  imageGenerationGuidanceLabel: "Image Generation Guidance",
+  negativePromptLabel: "Negative Prompt",
+  negativePromptPlaceholder:
+    "What should image generation avoid whenever this character is selected?",
+  negativePromptHelpText:
+    "Persistent image-generation guidance. Added automatically in Image Studio. Max 300 characters.",
 });
 
 const PLACEHOLDER_IMAGE_URL = "/images/placeholder-card.jpg";
@@ -323,12 +333,16 @@ export function useCharacterAppearanceSectionViewModel({
     selectedImagePresetId: appearanceData.default_image_preset_id || "",
     selectedClothing,
     selectedImagePreset,
+    negativePromptValue: limitAssetNegativePromptGuidance(appearanceData.negative_prompt),
+    negativePromptMaxLength: ASSET_NEGATIVE_PROMPT_GUIDANCE_MAX_LENGTH,
     placeholderImageUrl: PLACEHOLDER_IMAGE_URL,
     normalizeDefaultOutfitSelection,
     normalizeDefaultWardrobeSelection,
     normalizeDefaultImagePresetSelection,
     onChangeCharacterField: (field, value) =>
       updateDataField?.(field, value),
+    onChangeNegativePrompt: (value) =>
+      updateDataField?.("negative_prompt", limitAssetNegativePromptGuidance(value)),
     onPickOutfit: () => setActivePicker("OUTFIT"),
     onPickWardrobe: () => setActivePicker("WARDROBE"),
     onPickImagePreset: () => setActivePicker("IMAGE_PRESET"),

@@ -48,6 +48,7 @@ const initialForm = {
   body_notes: "",
   relationship_to_player: "",
   appearance_notes: "",
+  negative_prompt: "",
   personality_notes: "",
   extra_runtime_notes: "",
   creator_directives: null,

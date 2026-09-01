@@ -54,7 +54,7 @@ test("Outfit Prompt Guidance ViewModel owns normalization and storage mapping", 
     assert.match(viewModel, new RegExp(fieldName));
   }
   assert.match(viewModel, /ASSET_IMAGE_PROMPT_MAX_LENGTH = 2000/);
-  assert.match(viewModel, /ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 2000/);
+  assert.match(viewModel, /ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 300/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 

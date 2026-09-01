@@ -1,3 +1,4 @@
+import { getInheritedAssetNegativePromptItems } from "@/lib/shared/image-generation/assetNegativePromptGuidance";
 import { getCustomIngredientEditorViewProps } from "../custom-ingredient-editor/useCustomIngredientEditorViewModel";
 import { getIngredientSlotViewProps } from "../ingredient-slot/useIngredientSlotViewModel";
 import { getVideoToolsPanelViewProps } from "../video-tools-panel/useVideoToolsPanelViewModel";
@@ -89,6 +90,8 @@ export function getImageStudioComposerViewProps({
     selectedIngredients && typeof selectedIngredients === "object"
       ? selectedIngredients
       : {};
+  const inheritedNegativePromptItems =
+    getInheritedAssetNegativePromptItems(ingredientValues);
   const promptValues =
     customIngredientPrompts && typeof customIngredientPrompts === "object"
       ? customIngredientPrompts
@@ -192,6 +195,7 @@ export function getImageStudioComposerViewProps({
         : null,
     promptValue: String(prompt || ""),
     negativePromptValue: String(negativePrompt || ""),
+    inheritedNegativePromptItems,
     canGenerateImage: Boolean(canGenerateImage),
     generationHelpText: String(generationHelpText || ""),
     generationError: String(generationError || ""),

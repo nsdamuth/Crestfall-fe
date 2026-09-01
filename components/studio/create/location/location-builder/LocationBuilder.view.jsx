@@ -222,7 +222,7 @@ export default function LocationBuilderView({
               placeholder="Optional negatives this location should contribute when used in image generation."
               rows={5}
               maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
-              helperText="Optional. Compiled into the negative prompt when this location is selected. Max 2,000 characters."
+              helperText="Optional. Compiled into the negative prompt when this location is selected. Max 300 characters."
             />
           </div>
         </EditorCard>

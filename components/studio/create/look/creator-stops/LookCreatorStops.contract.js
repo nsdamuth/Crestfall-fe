@@ -41,7 +41,7 @@
 // already uses for outfit/clothing assets, per the brief's instruction
 // to map onto the existing outfit door and type rather than inventing
 // a new one. No new type introduced.
-export const LOOK_CREATOR_STOPS_CONTRACT_VERSION = "1.0.0";
+export const LOOK_CREATOR_STOPS_CONTRACT_VERSION = "1.1.0";
 
 export const LOOK_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),
@@ -64,6 +64,7 @@ export const LOOK_FIELD_LIMITS = Object.freeze({
   vibe: 500,
   garments: 120,
   palette: 300,
+  negativePrompt: 300,
 });
 
 // Mirrors buildWorldStopItems (World's WorldCreatorStops.contract.js),

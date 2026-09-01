@@ -39,6 +39,8 @@ test("Character Appearance View is API, persistence, and application-picker free
   );
   assert.match(view, /Default Clothing/);
   assert.doesNotMatch(view, />Clothing Style</);
+  assert.match(view, /Image Generation Guidance/);
+  assert.match(view, /negativePromptMaxLength/);
 });
 
 test("Character Appearance ViewModel owns clothing and default image-preset normalization/storage mapping", () => {
@@ -56,6 +58,8 @@ test("Character Appearance ViewModel owns clothing and default image-preset norm
   assert.match(viewModel, /default_image_preset_id/);
   assert.match(viewModel, /fetchOwnedCreations/);
   assert.match(viewModel, /type: "IMAGE_PRESET"/);
+  assert.match(viewModel, /negative_prompt/);
+  assert.match(viewModel, /ASSET_NEGATIVE_PROMPT_GUIDANCE_MAX_LENGTH/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 
@@ -72,6 +76,8 @@ test("Character Appearance contract and fixtures cover clothing and default imag
   assert.match(contract, /selectedImagePreset/);
   assert.match(contract, /onPickImagePreset/);
   assert.match(contract, /onClearDefaultImagePreset/);
+  assert.match(contract, /negativePromptValue/);
+  assert.match(contract, /onChangeNegativePrompt/);
   assert.match(fixtures, /characterAppearanceSectionOutfitFixture/);
   assert.match(fixtures, /characterAppearanceSectionWardrobeFixture/);
   assert.match(fixtures, /characterAppearanceSectionEmptyFixture/);

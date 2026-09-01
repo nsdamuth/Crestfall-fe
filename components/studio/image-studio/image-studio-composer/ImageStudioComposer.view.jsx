@@ -29,6 +29,7 @@ export default function ImageStudioComposerView({
   videoToolsProps = null,
   promptValue = "",
   negativePromptValue = "",
+  inheritedNegativePromptItems = [],
   canGenerateImage = false,
   generationHelpText = "",
   generationError = "",
@@ -176,11 +177,37 @@ export default function ImageStudioComposerView({
                   onChange={(event) =>
                     onChangeNegativePrompt?.(event.target.value)
                   }
-                  placeholder="Optional: describe what to avoid..."
+                  placeholder="Optional: describe what to avoid for this request..."
                   rows={3}
-                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                 />
               </label>
+
+              {inheritedNegativePromptItems.length ? (
+                <div className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/20 p-3">
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                    Inherited from selected assets
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+                    Added automatically in addition to the request-level negative prompt above.
+                  </p>
+                  <div className="mt-3 grid gap-2">
+                    {inheritedNegativePromptItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                      >
+                        <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
+                          {item.sourceLabel} · {item.label}
+                        </p>
+                        <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+                          {item.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
 
               {advancedTuningProps?.enabled ? (

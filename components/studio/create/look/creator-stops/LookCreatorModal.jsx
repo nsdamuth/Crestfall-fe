@@ -14,6 +14,7 @@ import {
   getCreationApiErrorMessage,
 } from "@/lib/client/studio/creations/creationClient";
 import { buildLookStopItems, LOOK_STOP_IDS } from "./LookCreatorStops.contract";
+import { limitAssetNegativePromptGuidance } from "@/lib/shared/image-generation/assetNegativePromptGuidance";
 import NameStopView from "./name-stop/NameStopView";
 import VibeStopView from "./vibe-stop/VibeStopView";
 import GarmentsStopView from "./garments-stop/GarmentsStopView";
@@ -25,6 +26,7 @@ const INITIAL_FORM_STATE = {
   vibe: "",
   garments: "",
   palette: "",
+  negativePrompt: "",
 };
 
 // Same top-level shape (type, title, description, visibility,
@@ -46,6 +48,8 @@ function buildSaveCreationPayload(formState) {
     content_rating: "SFW",
     data: {
       ...formState,
+      negativePrompt: undefined,
+      negative_prompt: limitAssetNegativePromptGuidance(formState.negativePrompt),
       name,
       builder: "LOOK_CREATOR",
       builder_version: "1.0",
@@ -224,7 +228,9 @@ export default function LookCreatorModal({ onClose }) {
         ) : activeStop === "garments" ? (
           <GarmentsStopView
             garments={formState.garments}
+            negativePrompt={formState.negativePrompt}
             onChangeGarments={updateField("garments")}
+            onChangeNegativePrompt={updateField("negativePrompt")}
           />
         ) : activeStop === "palette" ? (
           <PaletteStopView

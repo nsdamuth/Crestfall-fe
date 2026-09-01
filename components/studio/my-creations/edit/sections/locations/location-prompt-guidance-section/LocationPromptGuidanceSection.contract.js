@@ -50,7 +50,7 @@ export const LOCATION_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT = Object.freeze({
   legacyReadFields: Object.freeze(["prompt"]),
   limits: Object.freeze({
     imagePrompt: 2000,
-    negativePrompt: 2000,
+    negativePrompt: 300,
   }),
   applicationOwned: Object.freeze([
     "Creation Edit form hydration",

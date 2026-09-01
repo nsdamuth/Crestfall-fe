@@ -1,5 +1,5 @@
 const ASSET_IMAGE_PROMPT_MAX_LENGTH = 2000;
-const ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 2000;
+const ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Outfit Editor",
@@ -21,7 +21,7 @@ const DEFAULT_COPY = Object.freeze({
     "Optional standalone prompt for generating catalogue, preview, or reference images of this outfit as its own visual asset. Max 2,000 characters.",
   negativePromptLabel: "Negative Prompt",
   negativePromptPlaceholder:
-    "Optional negatives this outfit should contribute when selected in image generation. Example: no transparent fabric, no modern logos, no sneakers. Max 2,000 characters.",
+    "Optional negatives this outfit should contribute when selected in image generation. Example: no transparent fabric, no modern logos, no sneakers. Max 300 characters.",
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this outfit be used? What character types, settings, or scenes does it support?",
@@ -152,7 +152,10 @@ export function getOutfitPromptGuidanceSectionViewProps({
       value: normalizeText(clothingSections[field.id]),
     })),
     standaloneImagePrompt: normalizeText(data.image_prompt),
-    negativePrompt: normalizeText(data.negative_prompt),
+    negativePrompt: limitPromptValue(
+      data.negative_prompt,
+      ASSET_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
     usageNotes: normalizeText(data.usage_notes),
     compatibilityNotes: normalizeText(data.compatibility_notes),
     standaloneImagePromptMaxLength: ASSET_IMAGE_PROMPT_MAX_LENGTH,

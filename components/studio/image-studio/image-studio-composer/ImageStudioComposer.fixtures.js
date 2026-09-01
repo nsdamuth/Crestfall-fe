@@ -140,6 +140,20 @@ const baseFixture = {
   promptValue:
     "A cinematic dark-fantasy portrait in the moonlit upper gallery.",
   negativePromptValue: "low detail, distorted hands, flat lighting",
+  inheritedNegativePromptItems: [
+    {
+      id: "character",
+      label: "Kessa Cindervell",
+      sourceLabel: "Character",
+      text: "beard, modern clothing",
+    },
+    {
+      id: "location",
+      label: "Brasswhisker Workshop",
+      sourceLabel: "Location",
+      text: "daylight, sterile white room",
+    },
+  ],
   canGenerateImage: true,
   generationHelpText: "",
   generationError: "",

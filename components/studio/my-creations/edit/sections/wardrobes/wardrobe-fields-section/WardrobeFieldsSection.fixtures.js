@@ -58,7 +58,7 @@ const baseFixture = {
     "A curated fantasy artificer wardrobe displayed as a catalogue lineup.",
   negativePromptValue: "modern logos, sneakers, transparent fabric",
   imagePromptMaxLength: 2000,
-  negativePromptMaxLength: 2000,
+  negativePromptMaxLength: 300,
   onChangeWardrobeTitle: noop,
   onChangeWardrobeScope: noop,
   onChangeWardrobeDescription: noop,

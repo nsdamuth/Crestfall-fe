@@ -8,6 +8,7 @@ import {
   InlineDropdown,
   SectionLabel,
   SwatchGrid,
+  TextAreaField,
 } from "../shared/Controls";
 import {
   CUSTOM_VALUE_MAX_LENGTH,
@@ -19,6 +20,7 @@ import {
   HAIR_TEXTURE_OPTIONS,
   SKIN_OPTIONS,
 } from "./FaceStop.contract";
+import { ASSET_NEGATIVE_PROMPT_GUIDANCE_MAX_LENGTH } from "@/lib/shared/image-generation/assetNegativePromptGuidance";
 
 // Every description here just restates its label ("Chinese" / "Use a
 // Chinese visual appearance."); the tooltip added no detail the label
@@ -62,6 +64,8 @@ export default function FaceStopView({
   moreHairOpen = false,
   onToggleMoreHair = null,
   defaultClothingControl = null,
+  negativePrompt = "",
+  onChangeNegativePrompt = null,
 } = {}) {
   return (
     <>
@@ -138,6 +142,20 @@ export default function FaceStopView({
       {defaultClothingControl ? (
         <div className="mt-6">{defaultClothingControl}</div>
       ) : null}
+
+      <div className="mt-6 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+        <SectionLabel>Image Generation Guidance</SectionLabel>
+        <p className="mb-[var(--space-3)] text-sm leading-6 text-[var(--ink-dim)]">
+          Optional persistent guidance that is added automatically whenever this character is selected in Image Studio.
+        </p>
+        <TextAreaField
+          label="Negative Prompt"
+          value={negativePrompt}
+          onChange={onChangeNegativePrompt}
+          placeholder="What should image generation avoid for this character?"
+          maxLength={ASSET_NEGATIVE_PROMPT_GUIDANCE_MAX_LENGTH}
+        />
+      </div>
 
       <Fold
         title="More hair"

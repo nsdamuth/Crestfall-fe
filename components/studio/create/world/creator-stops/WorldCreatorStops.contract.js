@@ -43,7 +43,7 @@
 // Backend creation type: "LOCATION" (lib/shared/creations/
 // creationTypePolicy.js), the existing type this app's data model
 // already uses for world-space assets. No new type introduced.
-export const WORLD_CREATOR_STOPS_CONTRACT_VERSION = "1.1.0";
+export const WORLD_CREATOR_STOPS_CONTRACT_VERSION = "1.2.0";
 
 export const WORLD_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),
@@ -64,6 +64,7 @@ export const WORLD_FIELD_LIMITS = Object.freeze({
   premise: 500,
   setting: 120,
   tone: 300,
+  negativePrompt: 300,
 });
 
 // Mirrors buildCreatorStopItems (Character's CreatorStops.contract.js)

@@ -45,6 +45,7 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {Object|null} videoToolsProps
  * @property {string} promptValue
  * @property {string} negativePromptValue
+ * @property {{id:string,label:string,sourceLabel:string,text:string}[]} inheritedNegativePromptItems Effective asset-level negative guidance shown read-only.
  * @property {boolean} canGenerateImage
  * @property {string} generationHelpText
  * @property {string} generationError

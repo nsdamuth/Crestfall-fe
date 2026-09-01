@@ -36,6 +36,14 @@ const baseFixture = Object.freeze({
   noDescriptionLabel: "No description.",
   selectedClothingFallbackTitle: "Selected Clothing Source",
   selectedImagePresetFallbackTitle: "Selected Image Preset",
+  imageGenerationGuidanceLabel: "Image Generation Guidance",
+  negativePromptLabel: "Negative Prompt",
+  negativePromptValue: "beard, modern clothing",
+  negativePromptPlaceholder:
+    "What should image generation avoid whenever this character is selected?",
+  negativePromptHelpText:
+    "Persistent image-generation guidance. Added automatically in Image Studio. Max 300 characters.",
+  negativePromptMaxLength: 300,
   selectedClothing: baseSelectedClothing,
   selectedImagePreset: baseSelectedImagePreset,
 });

@@ -12,8 +12,8 @@ const sharedCopy = {
   imagePromptMaxLength: 2000,
   negativePromptLabel: "Negative Prompt",
   negativePromptPlaceholder:
-    "Optional negatives this location should contribute when selected in image generation. Example: no modern electronics, no empty white room, no outdoor scene. Max 2,000 characters.",
-  negativePromptMaxLength: 2000,
+    "Optional negatives this location should contribute when selected in image generation. Example: no modern electronics, no empty white room, no outdoor scene. Max 300 characters.",
+  negativePromptMaxLength: 300,
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this location be used? What scenes, characters, moods, or image presets does it support?",

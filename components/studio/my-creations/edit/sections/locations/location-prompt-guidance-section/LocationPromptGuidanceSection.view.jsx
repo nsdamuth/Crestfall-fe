@@ -19,7 +19,7 @@ export default function LocationPromptGuidanceSectionView({
   negativePromptLabel = "Negative Prompt",
   negativePromptValue = "",
   negativePromptPlaceholder = "",
-  negativePromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
+  negativePromptMaxLength = 300,
   usageNotesLabel = "Usage Notes",
   usageNotesValue = "",
   usageNotesPlaceholder = "",
@@ -67,6 +67,7 @@ export default function LocationPromptGuidanceSectionView({
           onChange={(value) => onChangeNegativePrompt?.(value)}
           placeholder={negativePromptPlaceholder}
           maxLength={negativePromptMaxLength}
+          helperText="Persistent image-generation guidance. Added automatically whenever this location is selected. Max 300 characters."
         />
 
         <TextAreaField

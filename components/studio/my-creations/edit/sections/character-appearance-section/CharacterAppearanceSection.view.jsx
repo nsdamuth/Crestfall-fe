@@ -1,6 +1,9 @@
 import { Shirt, Sparkles, X } from "lucide-react";
 
-import { SectionTitle } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import {
+  SectionTitle,
+  TextAreaField,
+} from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 function SelectedClothingCard({
   clothingLabel = "Default Clothing",
@@ -75,6 +78,22 @@ function SelectedClothingCard({
             {selectedClothing.wardrobeButtonLabel || "Select wardrobe"}
           </button>
         </div>
+
+        <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            {imageGenerationGuidanceLabel}
+          </p>
+          <div className="mt-[var(--space-3)]">
+            <TextAreaField
+              label={negativePromptLabel}
+              value={negativePromptValue}
+              onChange={(value) => onChangeNegativePrompt?.(value)}
+              placeholder={negativePromptPlaceholder}
+              maxLength={negativePromptMaxLength}
+              helperText={negativePromptHelpText}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -87,8 +106,15 @@ function SelectedImagePresetCard({
   imagePresetHelpText = "",
   noDescriptionLabel = "No description.",
   selectedImagePresetFallbackTitle = "Selected Image Preset",
+  imageGenerationGuidanceLabel = "Image Generation Guidance",
+  negativePromptLabel = "Negative Prompt",
+  negativePromptValue = "",
+  negativePromptPlaceholder = "",
+  negativePromptHelpText = "",
+  negativePromptMaxLength = 300,
   onPickImagePreset = null,
   onClearDefaultImagePreset = null,
+  onChangeNegativePrompt = null,
 }) {
   return (
     <div className="min-w-0 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
@@ -173,11 +199,18 @@ export default function CharacterAppearanceSectionView({
   noDescriptionLabel = "No description.",
   selectedClothingFallbackTitle = "Selected Clothing Source",
   selectedImagePresetFallbackTitle = "Selected Image Preset",
+  imageGenerationGuidanceLabel = "Image Generation Guidance",
+  negativePromptLabel = "Negative Prompt",
+  negativePromptValue = "",
+  negativePromptPlaceholder = "",
+  negativePromptHelpText = "",
+  negativePromptMaxLength = 300,
   onPickOutfit = null,
   onPickWardrobe = null,
   onClearDefaultClothing = null,
   onPickImagePreset = null,
   onClearDefaultImagePreset = null,
+  onChangeNegativePrompt = null,
 }) {
   return (
     <div>
@@ -215,6 +248,22 @@ export default function CharacterAppearanceSectionView({
             onPickImagePreset={onPickImagePreset}
             onClearDefaultImagePreset={onClearDefaultImagePreset}
           />
+        </div>
+
+        <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            {imageGenerationGuidanceLabel}
+          </p>
+          <div className="mt-[var(--space-3)]">
+            <TextAreaField
+              label={negativePromptLabel}
+              value={negativePromptValue}
+              onChange={(value) => onChangeNegativePrompt?.(value)}
+              placeholder={negativePromptPlaceholder}
+              maxLength={negativePromptMaxLength}
+              helperText={negativePromptHelpText}
+            />
+          </div>
         </div>
       </div>
     </div>
