@@ -8,7 +8,7 @@ export const studioAccountProviderContract = Object.freeze({
   shellResponsibilities: Object.freeze([
     "Own the React context boundary",
     "Expose the existing StudioAccountProvider and useStudioAccount public API",
-    "Inject an optional account loader for isolated previews and diagnostics",
+    "Inject optional account/capability loaders for isolated previews and diagnostics",
   ]),
   chassisResponsibilities: Object.freeze([
     "Load the current Studio account through the client API",
@@ -16,13 +16,18 @@ export const studioAccountProviderContract = Object.freeze({
     "Own loading, loaded, and error state",
     "Merge account snapshots without discarding current profile fields",
     "Synchronize server coin balances into both balance aliases",
+    "Load the sanitized effective capability projection independently of profile state",
   ]),
   contextValue: Object.freeze([
     "accountProfile",
     "coinBalance",
     "accountStatus",
     "accountError",
+    "capabilities",
+    "capabilityStatus",
+    "capabilityError",
     "refreshAccount",
+    "refreshCapabilities",
     "mergeAccountSnapshot",
     "setCoinBalanceFromServer",
   ]),

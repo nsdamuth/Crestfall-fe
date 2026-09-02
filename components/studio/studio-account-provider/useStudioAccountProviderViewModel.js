@@ -7,7 +7,10 @@ import {
   useState,
 } from "react";
 
-import { fetchCurrentStudioAccount } from "@/lib/client/studio/profile/studioAccountClient";
+import {
+  fetchCurrentStudioAccount,
+  fetchStudioAccountCapabilities,
+} from "@/lib/client/studio/profile/studioAccountClient";
 
 export function normalizeStudioCoinBalance(value) {
   const balance = Number.parseInt(value, 10);
@@ -44,11 +47,15 @@ export function getStudioAccountSnapshotCoinBalance(snapshot) {
 
 export function useStudioAccountProviderViewModel({
   loadAccount = fetchCurrentStudioAccount,
+  loadCapabilities = fetchStudioAccountCapabilities,
 } = {}) {
   const [accountProfile, setAccountProfile] = useState(null);
   const [coinBalance, setCoinBalance] = useState(0);
   const [accountStatus, setAccountStatus] = useState("idle");
   const [accountError, setAccountError] = useState("");
+  const [capabilities, setCapabilities] = useState(null);
+  const [capabilityStatus, setCapabilityStatus] = useState("idle");
+  const [capabilityError, setCapabilityError] = useState("");
 
   const setCoinBalanceFromServer = useCallback((value) => {
     const normalizedBalance = normalizeStudioCoinBalance(value);
@@ -100,9 +107,30 @@ export function useStudioAccountProviderViewModel({
     }
   }, [loadAccount]);
 
+  const refreshCapabilities = useCallback(async () => {
+    setCapabilityStatus("loading");
+    setCapabilityError("");
+
+    try {
+      const nextCapabilities = await loadCapabilities();
+
+      setCapabilities(nextCapabilities);
+      setCapabilityStatus("loaded");
+
+      return nextCapabilities;
+    } catch (error) {
+      setCapabilityStatus("error");
+      setCapabilityError(
+        error?.message || "Account capabilities could not be loaded."
+      );
+      throw error;
+    }
+  }, [loadCapabilities]);
+
   useEffect(() => {
     refreshAccount().catch(() => {});
-  }, [refreshAccount]);
+    refreshCapabilities().catch(() => {});
+  }, [refreshAccount, refreshCapabilities]);
 
   return useMemo(
     () => ({
@@ -110,7 +138,11 @@ export function useStudioAccountProviderViewModel({
       coinBalance,
       accountStatus,
       accountError,
+      capabilities,
+      capabilityStatus,
+      capabilityError,
       refreshAccount,
+      refreshCapabilities,
       mergeAccountSnapshot,
       setCoinBalanceFromServer,
     }),
@@ -119,7 +151,11 @@ export function useStudioAccountProviderViewModel({
       coinBalance,
       accountStatus,
       accountError,
+      capabilities,
+      capabilityStatus,
+      capabilityError,
       refreshAccount,
+      refreshCapabilities,
       mergeAccountSnapshot,
       setCoinBalanceFromServer,
     ]

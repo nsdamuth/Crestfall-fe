@@ -13,6 +13,8 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} id Semantic mode value.
  * @property {string} label Display label.
  * @property {"image"|"video"} iconKind Presentation icon category.
+ * @property {boolean} [disabled] Whether this mode is unavailable for the current account.
+ * @property {string} [title] Accessible explanation for the mode state.
  *
  * @typedef {Object} ImageStudioComposerChildView
  * @property {string} id Stable display key.

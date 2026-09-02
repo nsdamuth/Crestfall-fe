@@ -23,3 +23,9 @@ export const studioAccountMergeFixture = Object.freeze({
 export const studioAccountErrorFixture = Object.freeze({
   message: "Fixture account request failed.",
 });
+
+export const studioAccountCapabilitiesFixture = Object.freeze({
+  chat: true,
+  imageGeneration: true,
+  videoGeneration: false,
+});

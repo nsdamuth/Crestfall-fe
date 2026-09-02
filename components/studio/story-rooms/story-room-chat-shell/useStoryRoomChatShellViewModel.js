@@ -46,12 +46,27 @@ function normalizeChat(chat) {
   return chat && typeof chat === "object" ? chat : {};
 }
 
+
+export function getChatCapabilityPresentation(account) {
+  const explicitlyDenied = account?.capabilities?.chat === false;
+
+  return {
+    chatAllowed: !explicitlyDenied,
+    chatUnavailableReason: explicitlyDenied
+      ? "Chat is not available for this account."
+      : "",
+  };
+}
+
 export function useStoryRoomChatShellViewModel({
   roomId,
   chat,
+  account,
   onRoomDeleted,
 } = {}) {
   const safeChat = normalizeChat(chat);
+  const { chatAllowed, chatUnavailableReason } =
+    getChatCapabilityPresentation(account);
   const {
     room = {},
     cast = [],
@@ -216,7 +231,7 @@ export function useStoryRoomChatShellViewModel({
         "PLAYER_YIELD_TO_AUTO",
       ].includes(actionType);
 
-      if ((!body && !isYieldTurn) || sending) return;
+      if (!chatAllowed || (!body && !isYieldTurn) || sending) return;
 
       const localCommand = isYieldTurn
         ? null
@@ -260,6 +275,7 @@ export function useStoryRoomChatShellViewModel({
       }
     },
     [
+      chatAllowed,
       draft,
       inputMode,
       locationMentions,
@@ -383,6 +399,8 @@ export function useStoryRoomChatShellViewModel({
       },
       onRegenerateMessage: regenerateMessage,
       onContinueMessage: continueMessage,
+      chatGenerationAllowed: chatAllowed,
+      chatGenerationDisabledReason: chatUnavailableReason,
       onReportMessage: reportMessage,
       messageActionState,
     },
@@ -412,7 +430,8 @@ export function useStoryRoomChatShellViewModel({
       onOpenCast: () => setMobilePanel("cast"),
       onOpenState: () => setMobilePanel("state"),
       isSending: sending,
-      disabled: loading || Boolean(error),
+      disabled: loading || Boolean(error) || !chatAllowed,
+      disabledReason: chatUnavailableReason,
     },
     desktopStatePanelProps: {
       room,

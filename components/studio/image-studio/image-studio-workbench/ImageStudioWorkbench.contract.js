@@ -21,6 +21,7 @@ export const IMAGE_STUDIO_WORKBENCH_VIEW_CONTRACT_VERSION =
 
 export const IMAGE_STUDIO_WORKBENCH_PORTABILITY_RULES = Object.freeze({
   ownsStudioAccountContext: "Binding Shell",
+  ownsCapabilityPresentation: "ViewModel",
   ownsApplicationChildBindings: "Binding Shell",
   ownsGenerationAndHistoryHooks: "ViewModel",
   ownsCreationPresetClient: "ViewModel",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getCameraPresetPrompt,
   getLegacyCameraPresetValue,
@@ -312,6 +312,7 @@ export function getImageGenerationAvailability({
   coinBalance,
   selectedIngredients,
   customIngredientPrompts,
+  imageGenerationAllowed = true,
 }) {
   const hasEnoughCoins = coinBalance >= IMAGE_GENERATION_COIN_COST;
   const selectedCharacterId = getSelectedCreationId(selectedIngredients.character);
@@ -365,11 +366,13 @@ export function getImageGenerationAvailability({
       hasCustomLocationSource
   );
 
-  const imageGenerationBlockReason = !hasEnoughCoins
-    ? `You need at least ${IMAGE_GENERATION_COIN_COST} coins to generate an image.`
-    : !hasRenderableImageSource
-      ? "Select a character, clothing source, wardrobe, or location before generating."
-      : "";
+  const imageGenerationBlockReason = !imageGenerationAllowed
+    ? "Image generation is not available for this account."
+    : !hasEnoughCoins
+      ? `You need at least ${IMAGE_GENERATION_COIN_COST} coins to generate an image.`
+      : !hasRenderableImageSource
+        ? "Select a character, clothing source, wardrobe, or location before generating."
+        : "";
 
   const imageGenerationHelpText =
     !imageGenerationBlockReason && hasVisualSubject && !hasClothingSource
@@ -511,9 +514,24 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     coinBalance,
     accountStatus: coinStatus,
     accountError: coinError,
+    capabilities,
+    capabilityStatus,
     refreshAccount,
     setCoinBalanceFromServer,
   } = account;
+
+  const imageGenerationAllowed = capabilities?.imageGeneration !== false;
+  const videoGenerationAllowed = capabilities?.videoGeneration === true;
+
+  useEffect(() => {
+    if (
+      mode === "VIDEO" &&
+      capabilityStatus === "loaded" &&
+      !videoGenerationAllowed
+    ) {
+      setMode("IMAGE");
+    }
+  }, [capabilityStatus, mode, videoGenerationAllowed]);
 
   const { ingredientOptionsBySlot, ingredientLoadError } =
     useImageStudioIngredientOptions();
@@ -547,6 +565,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     coinBalance,
     selectedIngredients,
     customIngredientPrompts,
+    imageGenerationAllowed,
   });
 
   function handleRenderStyleChange(nextProfileKey) {
@@ -825,6 +844,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       setVideoMotionStyle,
       onGenerateImage: handleGenerateImage,
       canGenerateImage,
+      videoGenerationAllowed,
       generationStatus,
       generationError,
       generationHelpText: imageGenerationHelpText,

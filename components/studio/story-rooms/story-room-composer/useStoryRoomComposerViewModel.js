@@ -196,6 +196,7 @@ export function useStoryRoomComposerViewModel({
   onOpenState,
   isSending = false,
   disabled = false,
+  disabledReason = "",
 } = {}) {
   const [activeMentionQuery, setActiveMentionQuery] = useState(null);
   const [highlightedMentionIndex, setHighlightedMentionIndex] = useState(0);
@@ -544,6 +545,7 @@ export function useStoryRoomComposerViewModel({
     locationSuggestions,
     highlightedLocationIndex,
     placeholder: getPlaceholder(inputMode),
+    disabledReason: composerDisabled ? String(disabledReason || "") : "",
     textareaDisabled: composerDisabled || sending,
     sendDisabled:
       composerDisabled || sending || (!draftText.trim() && !autoContinuationAvailable),

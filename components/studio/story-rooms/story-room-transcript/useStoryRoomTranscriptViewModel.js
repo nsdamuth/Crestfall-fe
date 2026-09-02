@@ -133,6 +133,8 @@ export function useStoryRoomTranscriptViewModel({
   playerCharacterPrompt = null,
   onRegenerateMessage = null,
   onContinueMessage = null,
+  chatGenerationAllowed = true,
+  chatGenerationDisabledReason = "",
   onReportMessage = null,
   messageActionState = {},
 } = {}) {
@@ -288,6 +290,10 @@ export function useStoryRoomTranscriptViewModel({
               copyFeedback?.messageId === id ? copyFeedback.state : null,
             onCopy: canCopy ? () => copyMessage(id, copyText) : null,
             canRegenerate,
+            regenerateDisabled: !chatGenerationAllowed,
+            regenerateDisabledReason: !chatGenerationAllowed
+              ? String(chatGenerationDisabledReason || "Chat is not available for this account.")
+              : "",
             regeneratePending:
               Boolean(actionState.pending) &&
               pendingAction === "REGENERATE_RESPONSE",
@@ -299,6 +305,10 @@ export function useStoryRoomTranscriptViewModel({
               ? () => onRegenerateMessage(id)
               : null,
             canContinue,
+            continueDisabled: !chatGenerationAllowed,
+            continueDisabledReason: !chatGenerationAllowed
+              ? String(chatGenerationDisabledReason || "Chat is not available for this account.")
+              : "",
             continuePending:
               Boolean(actionState.pending) &&
               pendingAction === "CONTINUE_RESPONSE",
@@ -323,6 +333,8 @@ export function useStoryRoomTranscriptViewModel({
         };
       }),
     [
+      chatGenerationAllowed,
+      chatGenerationDisabledReason,
       copyFeedback,
       copyMessage,
       latestAssistantActionMessageId,

@@ -109,7 +109,7 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   assert.match(viewModel, /onOpenCast: \(\) => setMobilePanel\("cast"\)/);
   assert.match(viewModel, /onOpenState: \(\) => setMobilePanel\("state"\)/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
-  assert.match(viewModel, /disabled: loading \|\| Boolean\(error\)/);
+  assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);
 });
 
 test("delete wording and navigation behavior remain explicit", () => {

@@ -75,6 +75,7 @@ export function getImageStudioComposerViewProps({
   setVideoMotionStyle = null,
   onGenerateImage = null,
   canGenerateImage = false,
+  videoGenerationAllowed = false,
   generationError = "",
   generationHelpText = "",
   coinBalance = 0,
@@ -174,7 +175,17 @@ export function getImageStudioComposerViewProps({
     : null;
 
   return {
-    modeOptions: MODE_OPTIONS,
+    modeOptions: MODE_OPTIONS.map((option) =>
+      option.id === "VIDEO"
+        ? {
+            ...option,
+            disabled: !videoGenerationAllowed,
+            title: videoGenerationAllowed
+              ? "Open Video tools preview"
+              : "Video generation is not available for this account.",
+          }
+        : option
+    ),
     mode: normalizedMode,
     composerTitle:
       normalizedMode === "VIDEO" ? "Build a Video" : "Build an Image",

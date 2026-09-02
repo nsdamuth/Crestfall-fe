@@ -47,6 +47,7 @@ export const STORY_ROOM_CHAT_SHELL_PORTABILITY_RULES = Object.freeze({
   ownsOptimisticMessageLifecycle: "Transport / Runtime Hook",
   ownsRegistryNpcLifecycle: "Transport / Runtime Hook",
   ownsComposerAndPanelState: "ViewModel",
+  ownsCapabilityPresentation: "ViewModel",
   ownsLocalCommandResolution: "ViewModel",
   ownsStoryRoomDeletionClient: "ViewModel",
   ownsResponsiveChatLayout: "Portable View",

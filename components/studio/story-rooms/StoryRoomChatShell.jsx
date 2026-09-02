@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
 import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
@@ -19,6 +20,7 @@ import { useStoryRoomChatShellViewModel } from "./story-room-chat-shell/useStory
 export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
+  const account = useStudioAccount();
 
   const onRoomDeleted = useCallback(() => {
     router.push("/studio/v2/stories");
@@ -27,6 +29,7 @@ export default function StoryRoomChatShell({ roomId }) {
   const viewProps = useStoryRoomChatShellViewModel({
     roomId,
     chat,
+    account,
     onRoomDeleted,
   });
 

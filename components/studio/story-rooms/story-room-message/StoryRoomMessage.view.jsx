@@ -340,10 +340,14 @@ export default function StoryRoomMessageView({
   copyState = null,
   onCopy = null,
   canRegenerate = false,
+  regenerateDisabled = false,
+  regenerateDisabledReason = "",
   regeneratePending = false,
   regenerateError = "",
   onRegenerate = null,
   canContinue = false,
+  continueDisabled = false,
+  continueDisabledReason = "",
   continuePending = false,
   continueError = "",
   onContinue = null,
@@ -486,17 +490,26 @@ export default function StoryRoomMessageView({
         {canRegenerate && typeof onRegenerate === "function" ? (
           <MessageActionButton
             onClick={onRegenerate}
-            disabled={regeneratePending || continuePending || reportPending}
+            disabled={
+              regenerateDisabled ||
+              regeneratePending ||
+              continuePending ||
+              reportPending
+            }
             label={
-              regeneratePending
+              regenerateDisabled
+                ? regenerateDisabledReason || "Regenerate response unavailable"
+                : regeneratePending
                 ? "Regenerating response"
                 : regenerateError
                   ? `Regenerate response. Last attempt failed: ${regenerateError}`
                   : "Regenerate response"
             }
             title={
-              regeneratePending
-                ? "Regenerating response"
+              regenerateDisabled
+                ? regenerateDisabledReason || "Regenerate response unavailable"
+                : regeneratePending
+                  ? "Regenerating response"
                 : regenerateError || "Regenerate response"
             }
           >
@@ -513,17 +526,26 @@ export default function StoryRoomMessageView({
         {canContinue && typeof onContinue === "function" ? (
           <MessageActionButton
             onClick={onContinue}
-            disabled={continuePending || regeneratePending || reportPending}
+            disabled={
+              continueDisabled ||
+              continuePending ||
+              regeneratePending ||
+              reportPending
+            }
             label={
-              continuePending
+              continueDisabled
+                ? continueDisabledReason || "Continue response unavailable"
+                : continuePending
                 ? "Continuing response"
                 : continueError
                   ? `Continue response. Last attempt failed: ${continueError}`
                   : "Continue response"
             }
             title={
-              continuePending
-                ? "Continuing response"
+              continueDisabled
+                ? continueDisabledReason || "Continue response unavailable"
+                : continuePending
+                  ? "Continuing response"
                 : continueError || "Continue response"
             }
           >
@@ -594,7 +616,7 @@ function MessageActionButton({
       disabled={disabled}
       aria-label={label}
       title={title}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-wait disabled:opacity-60"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {children}
     </button>

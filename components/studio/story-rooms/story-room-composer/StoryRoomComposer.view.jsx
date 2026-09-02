@@ -42,6 +42,7 @@ export default function StoryRoomComposerView({
   locationSuggestions = [],
   highlightedLocationIndex = 0,
   placeholder = "Write dialogue or natural player input...",
+  disabledReason = "",
   textareaDisabled = false,
   sendDisabled = true,
   isSending = false,
@@ -82,6 +83,7 @@ export default function StoryRoomComposerView({
     locationSuggestions,
     highlightedLocationIndex,
     placeholder,
+    disabledReason,
     textareaDisabled,
     sendDisabled,
     isSending,
@@ -133,6 +135,7 @@ function DesktopComposer({
   locationSuggestions,
   highlightedLocationIndex,
   placeholder,
+  disabledReason,
   textareaDisabled,
   sendDisabled,
   isSending,
@@ -163,6 +166,12 @@ function DesktopComposer({
 
   return (
     <div className="hidden border-t border-white/10 bg-black/35 p-4 xl:block">
+      {disabledReason ? (
+        <p className="mb-3 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          {disabledReason}
+        </p>
+      ) : null}
+
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <p className="mr-1 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Next Speaker
@@ -276,6 +285,7 @@ function MobileComposer({
   locationSuggestions,
   highlightedLocationIndex,
   placeholder,
+  disabledReason,
   textareaDisabled,
   sendDisabled,
   isSending,
@@ -348,6 +358,12 @@ function MobileComposer({
       ) : null}
 
       <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
+        {disabledReason ? (
+          <p className="mb-2 rounded-lg border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]">
+            {disabledReason}
+          </p>
+        ) : null}
+
         <div className="mb-2 flex min-w-0 items-center gap-2">
           <div className="flex min-w-0 items-center gap-2">
             {autoOption ? (

@@ -42,6 +42,7 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {Object[]} locationSuggestions Filtered display-ready Location Registry options.
  * @property {number} highlightedLocationIndex
  * @property {string} placeholder
+ * @property {string} disabledReason User-facing explanation when chat authoring is unavailable.
  * @property {boolean} textareaDisabled
  * @property {boolean} sendDisabled
  * @property {boolean} isSending

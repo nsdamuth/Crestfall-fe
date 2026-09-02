@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "diagnostics:uac1b-d": "node components/studio/access-control/userCapabilityPresentationDiagnostics.mjs",
     "diagnostics:location-registry-save": "node components/studio/registries/hooks/locationRegistrySaveSessionDiagnostics.mjs",
     "diagnostics:mc8a": "node components/studio/my-creations/edit/sections/mechanics-modules/mechanics-presets/mc8RegressionBaseline.mjs",
     "diagnostics:mc8b": "npm run diagnostics:mc8a && node components/studio/my-creations/edit/sections/mechanics-modules/mechanics-saved-asset-migration/mc8SavedAssetMigrationDiagnostics.mjs --skip-baseline",

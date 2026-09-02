@@ -7,10 +7,11 @@ only the React context boundary and the existing public exports:
 - `useStudioAccount`
 
 `useStudioAccountProviderViewModel.js` is the ViewModel / Chassis. It owns the
-client request, account normalization, loading/error state, profile merges, and
+client requests, account/capability normalization, independent loading/error state, profile merges, and
 coin-balance synchronization.
 
-The public context shape is unchanged, so existing consumers such as
+The public context remains backward-compatible and now also projects sanitized
+`capabilities`, `capabilityStatus`, `capabilityError`, and `refreshCapabilities`. Existing consumers such as
 `StudioTopBar`, `StudioEconomyWidget`, Image Studio, and profile donation flows
 continue using `useStudioAccount()` without migration work.
 
@@ -28,9 +29,11 @@ Studio consumer
 → DB
 ```
 
-The optional `loadAccount` prop exists only as a dependency-injection seam for
-the development preview and isolated tests. Production behavior still defaults
-to `fetchCurrentStudioAccount` and refreshes on mount.
+The optional `loadAccount` and `loadCapabilities` props exist only as
+dependency-injection seams for development previews and isolated tests.
+Production behavior defaults to the real account/capability clients and refreshes
+both on mount. Capability metadata is the sanitized effective boolean projection
+only; administrative reason/setter/audit data never enters Crestfall-fe.
 
 Preview:
 

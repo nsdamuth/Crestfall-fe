@@ -7,6 +7,7 @@ import {
   useStudioAccount,
 } from "@/components/studio/StudioAccountProvider";
 import {
+  studioAccountCapabilitiesFixture,
   studioAccountErrorFixture,
   studioAccountLoadedFixture,
   studioAccountMergeFixture,
@@ -18,7 +19,11 @@ function AccountContextInspector() {
     coinBalance,
     accountStatus,
     accountError,
+    capabilities,
+    capabilityStatus,
+    capabilityError,
     refreshAccount,
+    refreshCapabilities,
     mergeAccountSnapshot,
     setCoinBalanceFromServer,
   } = useStudioAccount();
@@ -45,11 +50,23 @@ function AccountContextInspector() {
             @{accountProfile?.username || "unknown"}
           </p>
         </div>
+        <div className="rounded-xl border border-white/10 p-4 sm:col-span-2 lg:col-span-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">Capabilities</p>
+          <p className="mt-2 text-sm text-[var(--foreground)]">
+            {capabilityStatus}: chat={String(capabilities?.chat)} · image={String(capabilities?.imageGeneration)} · video={String(capabilities?.videoGeneration)}
+          </p>
+        </div>
       </div>
 
       {accountError ? (
         <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
           {accountError}
+        </p>
+      ) : null}
+
+      {capabilityError ? (
+        <p className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          {capabilityError}
         </p>
       ) : null}
 
@@ -60,6 +77,13 @@ function AccountContextInspector() {
           className="rounded-lg border border-[var(--muted-gold)]/40 px-4 py-2 text-sm text-[var(--foreground)]"
         >
           Refresh fixture
+        </button>
+        <button
+          type="button"
+          onClick={() => refreshCapabilities().catch(() => {})}
+          className="rounded-lg border border-[var(--muted-gold)]/40 px-4 py-2 text-sm text-[var(--foreground)]"
+        >
+          Refresh capabilities
         </button>
         <button
           type="button"
@@ -93,6 +117,11 @@ export default function StudioAccountProviderPreviewClient() {
 
     return studioAccountLoadedFixture;
   }, [mode]);
+
+  const loadCapabilities = useCallback(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 120));
+    return studioAccountCapabilitiesFixture;
+  }, []);
 
   function selectMode(nextMode) {
     setMode(nextMode);
@@ -130,7 +159,11 @@ export default function StudioAccountProviderPreviewClient() {
           </button>
         </div>
 
-        <StudioAccountProvider key={providerKey} loadAccount={loadAccount}>
+        <StudioAccountProvider
+          key={providerKey}
+          loadAccount={loadAccount}
+          loadCapabilities={loadCapabilities}
+        >
           <AccountContextInspector />
         </StudioAccountProvider>
       </div>

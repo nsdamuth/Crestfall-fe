@@ -76,8 +76,12 @@ export default function ImageStudioComposerView({
             <button
               key={option.id}
               type="button"
-              onClick={() => onChangeMode?.(option.id)}
-              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
+              onClick={() => {
+                if (!option.disabled) onChangeMode?.(option.id);
+              }}
+              disabled={Boolean(option.disabled)}
+              title={option.title || option.label}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                 mode === option.id
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                   : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"

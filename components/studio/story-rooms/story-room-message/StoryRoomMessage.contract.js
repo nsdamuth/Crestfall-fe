@@ -67,10 +67,14 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  * @property {"COPIED"|"FAILED"|null} copyState
  * @property {(() => void)|null} onCopy
  * @property {boolean} canRegenerate
+ * @property {boolean} regenerateDisabled
+ * @property {string} regenerateDisabledReason
  * @property {boolean} regeneratePending
  * @property {string} regenerateError
  * @property {(() => void)|null} onRegenerate
  * @property {boolean} canContinue
+ * @property {boolean} continueDisabled
+ * @property {string} continueDisabledReason
  * @property {boolean} continuePending
  * @property {string} continueError
  * @property {(() => void)|null} onContinue

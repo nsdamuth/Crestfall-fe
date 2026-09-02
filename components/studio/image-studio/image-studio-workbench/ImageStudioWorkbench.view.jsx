@@ -60,7 +60,11 @@ export default function ImageStudioWorkbenchView({
               onClick={onQuickGenerate}
               disabled={!canGenerateImage}
               className="cf-btn cf-btn--primary cf-btn--sm"
-              title="Generate image"
+              title={
+                canGenerateImage
+                  ? "Generate image"
+                  : composerProps.generationHelpText || "Generate image unavailable"
+              }
             >
               <Wand2 size={16} />
               Gen

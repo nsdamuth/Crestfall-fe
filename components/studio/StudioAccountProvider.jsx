@@ -6,8 +6,15 @@ import { useStudioAccountProviderViewModel } from "./studio-account-provider/use
 
 const StudioAccountContext = createContext(null);
 
-export function StudioAccountProvider({ children, loadAccount }) {
-  const value = useStudioAccountProviderViewModel({ loadAccount });
+export function StudioAccountProvider({
+  children,
+  loadAccount,
+  loadCapabilities,
+}) {
+  const value = useStudioAccountProviderViewModel({
+    loadAccount,
+    loadCapabilities,
+  });
 
   return (
     <StudioAccountContext.Provider value={value}>
