@@ -16,6 +16,10 @@ export default function SilhouetteStopView({
   proportionsControl = null,
   bodyNotes = "",
   onChangeBodyNotes = null,
+  fantasyBodyNotes = "",
+  onChangeFantasyBodyNotes = null,
+  realisticBodyNotes = "",
+  onChangeRealisticBodyNotes = null,
 } = {}) {
   return (
     <>
@@ -38,10 +42,30 @@ export default function SilhouetteStopView({
 
         <div className="md:col-span-2">
           <TextAreaField
-            label="Custom body notes"
+            label="Custom body prompt"
             value={bodyNotes}
             onChange={onChangeBodyNotes}
-            placeholder="Optional physical details that should affect image generation or narration."
+            placeholder="Optional model-neutral physical details that should affect image generation across all rendering styles."
+            maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
+          />
+        </div>
+
+        <div>
+          <TextAreaField
+            label="Fantasy specific prompt details"
+            value={fantasyBodyNotes}
+            onChange={onChangeFantasyBodyNotes}
+            placeholder="Optional short guidance applied only to fantasy and anime rendering stages."
+            maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
+          />
+        </div>
+
+        <div>
+          <TextAreaField
+            label="Realistic specific prompt details"
+            value={realisticBodyNotes}
+            onChange={onChangeRealisticBodyNotes}
+            placeholder="Optional short guidance applied only to realistic rendering stages."
             maxLength={SILHOUETTE_NOTES_MAX_LENGTH}
           />
         </div>

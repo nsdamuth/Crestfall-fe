@@ -118,10 +118,23 @@ function saveStateWord({ isDirty, saveStatus, saveErrorCopy }) {
 // The always-visible save block (rail and sheet). Clean state is a
 // quiet check + words; dirty shows Save and Discard; saving and
 // error carry their own words.
-function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
+function SaveBlock({
+  isDirty,
+  saveStatus,
+  saveErrorCopy,
+  onSave,
+  onDiscard,
+  onUnlistForEditing,
+  savePolicy = {},
+}) {
   const isSaving = saveStatus === "saving";
   const isError = saveStatus === "error";
   const word = saveStateWord({ isDirty, saveStatus, saveErrorCopy });
+  const canSave = savePolicy?.canSave !== false;
+  const canUnlistForEditing = Boolean(savePolicy?.canUnlistForEditing);
+  const unlistDisabled = Boolean(savePolicy?.unlistDisabled) || isSaving;
+  const editLockMessage = savePolicy?.editLockMessage || "";
+  const showActions = isDirty || isError || canUnlistForEditing;
 
   return (
     <div>
@@ -144,25 +157,44 @@ function SaveBlock({ isDirty, saveStatus, saveErrorCopy, onSave, onDiscard }) {
         {word}
       </p>
 
-      {isDirty || isError ? (
+      {editLockMessage && !canSave ? (
+        <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+          {editLockMessage}
+        </p>
+      ) : null}
+
+      {showActions ? (
         <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={() => onSave?.()}
-            className="cf-btn cf-btn--primary"
-          >
-            <Save size={14} aria-hidden="true" />
-            {isSaving ? "Saving" : "Save"}
-          </button>
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={() => onDiscard?.()}
-            className="cf-btn cf-btn--secondary"
-          >
-            Discard
-          </button>
+          {canUnlistForEditing ? (
+            <button
+              type="button"
+              disabled={unlistDisabled}
+              onClick={() => onUnlistForEditing?.()}
+              className="cf-btn cf-btn--primary"
+            >
+              {isSaving ? "Unlisting..." : "Unlist for Editing"}
+            </button>
+          ) : canSave && (isDirty || isError) ? (
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={() => onSave?.()}
+              className="cf-btn cf-btn--primary"
+            >
+              <Save size={14} aria-hidden="true" />
+              {isSaving ? "Saving" : "Save"}
+            </button>
+          ) : null}
+          {isDirty || isError ? (
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={() => onDiscard?.()}
+              className="cf-btn cf-btn--secondary"
+            >
+              Discard
+            </button>
+          ) : null}
         </div>
       ) : null}
     </div>
@@ -276,6 +308,8 @@ export default function EditorView({
   saveErrorCopy = "",
   onSave = null,
   onDiscard = null,
+  onUnlistForEditing = null,
+  savePolicy = null,
   onOpenSwitcher = null,
   sectionNodes = {},
   sectionLeads = {},
@@ -380,6 +414,8 @@ export default function EditorView({
                   saveErrorCopy={saveErrorCopy}
                   onSave={onSave}
                   onDiscard={onDiscard}
+                  onUnlistForEditing={onUnlistForEditing}
+                  savePolicy={savePolicy}
                 />
               </div>
               <SwitcherBlock isDirty={isDirty} onOpenSwitcher={onOpenSwitcher} />
@@ -406,7 +442,7 @@ export default function EditorView({
             <span className="hidden min-[430px]:inline">Sections</span>
           </button>
 
-          {isDirty || saveStatus === "error" ? (
+          {isDirty || saveStatus === "error" || savePolicy?.canUnlistForEditing ? (
             <div className="grid min-w-0 flex-1 grid-cols-2 gap-[var(--space-2)]">
               <button
                 type="button"
@@ -416,15 +452,26 @@ export default function EditorView({
               >
                 Cancel
               </button>
-              <button
-                type="button"
-                disabled={saveStatus === "saving"}
-                onClick={() => onSave?.()}
-                className="cf-btn cf-btn--primary w-full"
-              >
-                <Save size={14} aria-hidden="true" />
-                {saveStatus === "saving" ? "Saving" : "Save"}
-              </button>
+              {savePolicy?.canUnlistForEditing ? (
+                <button
+                  type="button"
+                  disabled={saveStatus === "saving" || savePolicy?.unlistDisabled}
+                  onClick={() => onUnlistForEditing?.()}
+                  className="cf-btn cf-btn--primary w-full"
+                >
+                  {saveStatus === "saving" ? "Unlisting" : "Unlist"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled={saveStatus === "saving" || savePolicy?.canSave === false}
+                  onClick={() => onSave?.()}
+                  className="cf-btn cf-btn--primary w-full"
+                >
+                  <Save size={14} aria-hidden="true" />
+                  {saveStatus === "saving" ? "Saving" : "Save"}
+                </button>
+              )}
             </div>
           ) : (
             <p
@@ -454,6 +501,8 @@ export default function EditorView({
                 saveErrorCopy={saveErrorCopy}
                 onSave={onSave}
                 onDiscard={onDiscard}
+                onUnlistForEditing={onUnlistForEditing}
+                savePolicy={savePolicy}
               />
             </div>
             <div className="mt-[var(--space-3)]">

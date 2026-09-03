@@ -1,4 +1,3 @@
-
 import {
     StepTitle,
     TextAreaField,
@@ -62,10 +61,28 @@ export default function BodyStep({ form, updateField }) {
 
         <div className="md:col-span-2">
           <TextAreaField
-            label="Custom Body Notes"
+            label="Custom Body Prompt"
             value={form.body_notes}
             onChange={(value) => updateField("body_notes", value)}
-            placeholder="Optional physical details that should affect image generation or narration."
+            placeholder="Optional model-neutral physical details that should affect image generation across all rendering styles."
+          />
+        </div>
+
+        <div>
+          <TextAreaField
+            label="Fantasy Specific Prompt Details"
+            value={form.fantasy_body_notes}
+            onChange={(value) => updateField("fantasy_body_notes", value)}
+            placeholder="Optional short guidance applied only to fantasy and anime rendering stages."
+          />
+        </div>
+
+        <div>
+          <TextAreaField
+            label="Realistic Specific Prompt Details"
+            value={form.realistic_body_notes}
+            onChange={(value) => updateField("realistic_body_notes", value)}
+            placeholder="Optional short guidance applied only to realistic rendering stages."
           />
         </div>
       </div>

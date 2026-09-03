@@ -14,6 +14,7 @@ export default function NarratorGuidanceSectionView({
   avoidGuidanceLabel = "Avoid Guidance",
   avoidGuidanceValue = "",
   avoidGuidancePlaceholder = "",
+  presentationPrioritiesControl = null,
   narratorDirectivesControl = null,
   onChangeGuidance = null,
   onChangeAvoidGuidance = null,
@@ -42,6 +43,10 @@ export default function NarratorGuidanceSectionView({
           placeholder={avoidGuidancePlaceholder}
           maxLength={DEEP_LONGFORM_MAX_LENGTH}
         />
+
+        {presentationPrioritiesControl ? (
+          <div className="mt-2">{presentationPrioritiesControl}</div>
+        ) : null}
 
         {narratorDirectivesControl ? (
           <div className="mt-2">{narratorDirectivesControl}</div>

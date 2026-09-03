@@ -12,6 +12,7 @@ const baseFixture = {
   avoidGuidanceValue:
     "Avoid summarizing emotional reactions before characters have a chance to demonstrate them through dialogue or action.",
   avoidGuidancePlaceholder: "Describe narration habits to avoid.",
+  presentationPrioritiesControl: null,
   narratorDirectivesControl: null,
   onChangeGuidance: null,
   onChangeAvoidGuidance: null,

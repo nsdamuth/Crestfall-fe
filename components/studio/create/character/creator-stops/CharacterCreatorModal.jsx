@@ -78,6 +78,8 @@ const INITIAL_FORM_STATE = {
   hipsWaistShoulders: "",
   chestBust: "",
   bodyNotes: "",
+  fantasyBodyNotes: "",
+  realisticBodyNotes: "",
   appearanceNotes: "",
   negativePrompt: "",
   clothingStyle: "",
@@ -590,6 +592,10 @@ export default function CharacterCreatorModal({
             }
             bodyNotes={formState.bodyNotes}
             onChangeBodyNotes={updateField("bodyNotes")}
+            fantasyBodyNotes={formState.fantasyBodyNotes}
+            onChangeFantasyBodyNotes={updateField("fantasyBodyNotes")}
+            realisticBodyNotes={formState.realisticBodyNotes}
+            onChangeRealisticBodyNotes={updateField("realisticBodyNotes")}
           />
         ) : activeStop === "heart" ? (
           <HeartStopView

@@ -1,4 +1,8 @@
 import {
+  CHARACTER_DECISION_PRIORITY_OPTIONS,
+  normalizePriorityOrder,
+} from "@/components/studio/my-creations/edit/priority-triads/priorityTriadEditorContract";
+import {
   eastAsianZodiacOptions,
   interestOptions,
   mbtiTypeOptions,
@@ -11,7 +15,7 @@ const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Character Editor",
   sectionTitle: "Behavior",
   sectionDescription:
-    "Edit how this character speaks, moves, thinks, and expresses themselves using the same guided controls from character creation.",
+    "Edit how this character speaks, moves, thinks, and expresses themselves, including optional editor-only decision priorities.",
   outwardPersonalityLabel: "Outward Personality",
   internalPersonalityLabel: "Internal Personality",
   personalityFrameworksEyebrow: "Optional Personality Frameworks",
@@ -42,6 +46,11 @@ const DEFAULT_COPY = Object.freeze({
   philosophyLabel: "Philosophy",
   philosophyPlaceholder:
     "What does this character believe about the world, people, power, duty, freedom, love, fear, or survival?",
+  decisionPrioritiesTitle: "Decision Priorities",
+  decisionPrioritiesDescription:
+    "Optional 1→2→3 preference order for choosing among otherwise valid Character-consistent actions, speech, interpretations, opinions, and internal conflict.",
+  decisionPrioritiesAuthorityNote:
+    "Preference only. State, mechanics, evidence, knowledge, Character identity, Story authority, and actor agency are resolved first. Priorities never grant knowledge, invent evidence, or override valid state.",
 });
 
 export const CHARACTER_VERBOSITY_OPTIONS = Object.freeze([
@@ -111,6 +120,12 @@ export function getCharacterBehaviorSectionViewProps({
     verbosityValue: data.verbosity_level || "",
     verbosityOptions: CHARACTER_VERBOSITY_OPTIONS,
     philosophyValue: data.philosophy || "",
+    showDecisionPriorities: !isPlayerCharacter,
+    decisionPriorityOptions: CHARACTER_DECISION_PRIORITY_OPTIONS,
+    decisionPrioritiesValue: normalizePriorityOrder(
+      data.decisionPriorities,
+      CHARACTER_DECISION_PRIORITY_OPTIONS
+    ),
     onChangeCharacterField: (field, value) =>
       updateDataField?.(field, value),
     onChangeVoiceModuleIds: (nextVoiceModuleIds) =>
@@ -121,6 +136,8 @@ export function getCharacterBehaviorSectionViewProps({
     onSelectVerbosity: (value) =>
       updateDataField?.("verbosity_level", value),
     onChangePhilosophy: (value) => updateDataField?.("philosophy", value),
+    onChangeDecisionPriorities: (value) =>
+      updateDataField?.("decisionPriorities", value),
   };
 }
 

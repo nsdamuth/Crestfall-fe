@@ -22,6 +22,7 @@ const baseFixture = Object.freeze({
   philosophyLabel: "Philosophy",
   philosophyPlaceholder:
     "What does this character believe about the world, people, power, duty, freedom, love, fear, or survival?",
+  decisionPrioritiesControl: null,
 });
 
 export const characterBehaviorSectionPopulatedFixture = {

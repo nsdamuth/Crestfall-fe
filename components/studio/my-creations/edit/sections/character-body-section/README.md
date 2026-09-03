@@ -1,42 +1,28 @@
 # Character Body Section
 
-## Portable LOOM boundary
+Portable LOOM boundary for the Character Body edit section used by the V2 Creation editor.
 
-```text
-BodySection.jsx                              Binding Shell
-        ↓
-useCharacterBodySectionViewModel.js          ViewModel / Chassis
-        ↓
-CharacterBodySection.view.jsx                Portable View / Skin
-```
+## Responsibility
 
-The portable View owns the Body section layout and the Custom Body Notes field. It receives Kibbe, Body Type, Height, Build, and Proportions controls as application-owned slots.
+- `BodySection.jsx` is the shell. It binds existing application-owned controls (Kibbe preset picker, trait modals) into the portable section view.
+- `useCharacterBodySectionViewModel.js` owns normalization of incoming Creation data and maps persisted storage fields into portable view props.
+- `CharacterBodySection.view.jsx` is presentation only. It must not import application modals, API clients, routing, or persistence helpers.
 
-The ViewModel owns:
+## Persisted fields
 
-- reading existing Character creation data;
-- normalizing the `proportions` array;
-- mapping guided controls to the existing Character data fields;
-- forwarding body-note updates through the existing `updateDataField` callback;
-- supplying semantic labels, descriptions, and option lists to the Binding Shell.
+The ViewModel reads and writes the following Character data fields:
 
-The Binding Shell owns the existing Crestfall `KibbePresetModal`, `TraitModal`, and `MultiTraitModal` components. The portable View does not import those application controls and does not know Character JSONB storage field names.
+- `kibbe_identity`
+- `body_type`
+- `height`
+- `build`
+- `proportions`
+- `body_notes`
+- `fantasy_body_notes`
+- `realistic_body_notes`
 
-## Stored fields preserved
+`body_notes` remains the canonical model-neutral Custom Body Prompt. `fantasy_body_notes` and `realistic_body_notes` are short lane-specific additions for image-generation workflows only.
 
-The conversion preserves:
+## Preview
 
-- `body_type`;
-- `height`;
-- `build`;
-- `proportions`;
-- `body_notes`;
-- all fields written by the existing Kibbe preset control.
-
-## Development preview
-
-```text
-/dev/ui-preview/character-body-section
-```
-
-The preview renders the portable View from fixtures and substitutes local visual controls for Crestfall application modals.
+Use the fixture-driven preview at `/dev/ui-preview/character-body-section` to verify portable rendering states without entering the full editor shell.

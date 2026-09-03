@@ -37,6 +37,7 @@ export const CREATION_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {CreationPickerFilterChip[]} filters bucket row plus the
  *   trailing sort chip
  * @property {boolean} isSearching
+ * @property {boolean} isLoading live owned-creations request is in flight
  * @property {boolean} isEmpty true only when the owned-creations list
  *   itself is empty (not a search/filter miss); renders the Create
  *   CTA state instead of the kit's plain empty text

@@ -32,6 +32,7 @@ export default function CreationPickerView({
   searchPlaceholder = "Search your creations",
   filters = [],
   isSearching = false,
+  isLoading = false,
   isEmpty = false,
   emptyCreateLabel = "Create your first creation",
   emptyMessage = "No matching creations found.",
@@ -43,7 +44,7 @@ export default function CreationPickerView({
   onClose = null,
   onCreateNew = null,
 }) {
-  if (isEmpty && !errorMessage) {
+  if (isEmpty && !errorMessage && !isLoading) {
     return (
       <EmptyVaultState
         title={title}
@@ -64,7 +65,7 @@ export default function CreationPickerView({
       searchValue={searchValue}
       searchPlaceholder={searchPlaceholder}
       filters={filters}
-      isLoading={false}
+      isLoading={isLoading}
       hasMore={false}
       isSearching={isSearching}
       emptyMessage={emptyMessage}

@@ -87,6 +87,163 @@ function EngineUseStatusBadge({ status }) {
   );
 }
 
+
+function normalizeDisplayValue(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function formatKnowledgeMode(value) {
+  const normalized = normalizeDisplayValue(value).toUpperCase();
+  const labels = {
+    PERSONAL_PARTICIPANT: "Personal participant",
+    DIRECT_WITNESS: "Direct witness",
+    SECONDHAND: "Secondhand knowledge",
+    INSTITUTIONAL: "Institutional knowledge",
+    CULTURAL: "Cultural knowledge",
+    RUMOR: "Rumor",
+    SCHOLARLY: "Scholarly knowledge",
+    PRIVATE_BELIEF: "Private belief",
+    CONTEXTUAL_RELEVANCE: "Contextual relevance",
+  };
+  return labels[normalized] || normalized || "Knowledge relationship unavailable";
+}
+
+function resolveBindingScopeLabel(binding, source) {
+  const scopeType = normalizeDisplayValue(binding?.scopeType).toUpperCase();
+  const chapters = Array.isArray(source?.chapters) ? source.chapters : [];
+  const chapter = chapters.find((item) => item?.id === binding?.chapterId) || null;
+
+  if (scopeType === "CHAPTER") {
+    return `Chapter · ${chapter?.title || binding?.chapterId || "Unknown chapter"}`;
+  }
+
+  if (scopeType === "SECTION") {
+    const section = chapters
+      .flatMap((item) =>
+        (Array.isArray(item?.sections) ? item.sections : []).map((candidate) => ({
+          ...candidate,
+          chapterTitle: item?.title || "",
+        }))
+      )
+      .find((item) => item?.id === binding?.sectionId);
+    return `Section · ${section?.title || binding?.sectionId || "Unknown section"}${
+      section?.chapterTitle ? ` · ${section.chapterTitle}` : ""
+    }`;
+  }
+
+  return "All submitted Lore";
+}
+
+function ActiveEngineConfiguration({ latest, source }) {
+  const bindings = Array.isArray(latest?.bindings) ? latest.bindings : [];
+  const characterBindings = bindings.filter(
+    (binding) => normalizeDisplayValue(binding?.subjectType).toUpperCase() === "CHARACTER"
+  );
+  const locationBindings = bindings.filter(
+    (binding) => normalizeDisplayValue(binding?.subjectType).toUpperCase() === "LOCATION"
+  );
+  const scopeMode = normalizeDisplayValue(latest?.scope?.mode).toUpperCase();
+  const selectedSectionIds = Array.isArray(latest?.scope?.selectedSectionIds)
+    ? latest.scope.selectedSectionIds
+    : [];
+  const scopeLabel =
+    scopeMode === "SELECTED_SECTIONS"
+      ? `${selectedSectionIds.length} selected section${selectedSectionIds.length === 1 ? "" : "s"}`
+      : "Entire public revision";
+
+  return (
+    <div className="mt-5 rounded-[var(--radius-md)] border border-emerald-300/20 bg-emerald-300/[0.04] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
+            Active engine configuration
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+            This is the read-only binding configuration currently connected to the engine. Withdraw it before authoring a replacement.
+          </p>
+        </div>
+        <span className="inline-flex items-center rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-emerald-100">
+          Connected
+        </span>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">Lore scope</p>
+        <p className="mt-1 text-sm text-[var(--ink)]">{scopeLabel}</p>
+      </div>
+
+      <div className="mt-4">
+        <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+          Connected Characters
+        </p>
+        {characterBindings.length ? (
+          <div className="mt-2 grid gap-2">
+            {characterBindings.map((binding) => {
+              const approvalStatus = normalizeDisplayValue(binding?.approvalStatus).toUpperCase();
+              return (
+                <div
+                  key={binding.id || `${binding.subjectId}:${binding.scopeType}`}
+                  className="rounded-xl border border-emerald-300/20 bg-black/20 px-4 py-3"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-start gap-3">
+                      <UserRound size={17} className="mt-0.5 shrink-0 text-emerald-200" />
+                      <div className="min-w-0">
+                        <p className="truncate text-sm text-[var(--ink)]">
+                          {binding.subjectTitle || "Untitled Character"}
+                        </p>
+                        <p className="mt-1 text-xs text-emerald-100">
+                          Connected to active Engine Use
+                        </p>
+                        <p className="mt-2 text-xs text-[var(--ink-dim)]">
+                          {formatKnowledgeMode(binding.knowledgeMode)} · {resolveBindingScopeLabel(binding, source)}
+                        </p>
+                      </div>
+                    </div>
+                    {approvalStatus ? (
+                      <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                        {approvalStatus}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="mt-2 rounded-xl border border-amber-300/20 bg-amber-300/5 px-4 py-3 text-xs text-amber-100">
+            The active submission did not project a Character binding summary. Refresh before making lifecycle changes.
+          </p>
+        )}
+      </div>
+
+      {locationBindings.length ? (
+        <div className="mt-4">
+          <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+            Connected Locations
+          </p>
+          <div className="mt-2 grid gap-2">
+            {locationBindings.map((binding) => (
+              <div
+                key={binding.id || `${binding.subjectId}:location`}
+                className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+              >
+                <MapPin size={17} className="mt-0.5 shrink-0 text-violet-200" />
+                <div>
+                  <p className="text-sm text-[var(--ink)]">
+                    {binding.subjectTitle || "Untitled Location"}
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--ink-dim)]">Contextual relevance</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ReferenceChoice({
   icon: Icon,
   refItem,
@@ -550,6 +707,9 @@ export default function LoreEngineUseView({
 }) {
   const hasPublicRelease = Boolean(source.publicReleaseId);
   const isWorking = actionStatus === "WORKING";
+  const hasAuthoritativeConfiguration = ["READY", "ACTIVE"].includes(
+    String(latestStatus || "").trim().toUpperCase()
+  );
 
   return (
     <div className="mt-6 rounded-[var(--radius-md)] border border-violet-300/20 bg-violet-300/[0.04] p-5">
@@ -692,7 +852,11 @@ export default function LoreEngineUseView({
             </div>
           ) : null}
 
-          {!isActive ? (
+          {hasAuthoritativeConfiguration ? (
+            <ActiveEngineConfiguration latest={latest} source={source} />
+          ) : null}
+
+          {!isActive && !hasAuthoritativeConfiguration ? (
             <div className="mt-5 grid gap-5">
               <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">

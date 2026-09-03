@@ -65,3 +65,7 @@ Validate both:
 
 Change both guidance fields, save, refresh, and confirm that the stored values
 remain unchanged from the pre-conversion behavior.
+
+## Presentation & Pressure Priorities
+
+Narrator edit (not Narrator creation) may author an optional `presentationPriorities` complete ordering of `KAIROS`, `TOPOS`, and `MYTHOS`. The ordering is described as low-authority presentation and story-pressure preference only; authoritative Story/state/continuity/actor constraints remain prior.

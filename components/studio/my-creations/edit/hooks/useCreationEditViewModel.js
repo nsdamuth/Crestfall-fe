@@ -81,6 +81,28 @@ function getInitialEditForm({ creationId, creation }) {
     : createFallbackForm(creationId);
 }
 
+function mergeLifecycleTransitionIntoForm(current, savedCreation) {
+  if (!savedCreation) return current;
+
+  const lifecycleStatus =
+    savedCreation.status ||
+    savedCreation.reviewStatus ||
+    savedCreation.review_status ||
+    current.status ||
+    current.reviewStatus ||
+    "DRAFT";
+
+  return {
+    ...current,
+    visibility: savedCreation.visibility || current.visibility,
+    status: lifecycleStatus,
+    reviewStatus: lifecycleStatus,
+    canonStatus: savedCreation.canonStatus || current.canonStatus,
+    updatedAt: savedCreation.updatedAt || current.updatedAt,
+    updated_at: savedCreation.updated_at || current.updated_at,
+  };
+}
+
 export function useCreationEditViewModel({ creationId, creation }) {
   const [activeSection, setActiveSection] = useState("overview");
   const [activeMediaSlot, setActiveMediaSlot] = useState(0);
@@ -348,10 +370,15 @@ export function useCreationEditViewModel({ creationId, creation }) {
       const payload = await moveCreationToInternalEditing(creationId);
       const savedCreation = extractCreationFromApiResponse(payload);
 
-      setForm((current) => mergeSavedCreationIntoForm(current, savedCreation));
+      // The V2 editor can already hold local dirty fields when the owner
+      // chooses Unlist for Editing. Apply only the authoritative lifecycle
+      // transition here so those local edits survive and can be saved next.
+      setForm((current) =>
+        mergeLifecycleTransitionIntoForm(current, savedCreation)
+      );
       setSaveStatus("saved");
       setSaveMessage(
-        "Unlisted for editing. Changes can now be saved; returning to public discovery will require review again."
+        "Unlisted for editing. Your pending changes are ready to save; returning to public discovery will require review again."
       );
     } catch (error) {
       setSaveStatus("error");

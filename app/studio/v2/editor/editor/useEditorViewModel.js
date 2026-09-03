@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import { resolveImageFocalObjectPosition } from "@/lib/shared/media/imageFocalPresentation";
 
 import { useCreationEditShellViewModel } from "@/components/studio/my-creations/creation-edit-shell/useCreationEditShellViewModel";
+import { getCreationEditStickyActionBarViewProps } from "@/components/studio/my-creations/edit/creation-edit-sticky-action-bar/useCreationEditStickyActionBarViewModel";
 import {
   resolveEditorPageGroups,
   typeMeta,
@@ -172,6 +173,32 @@ export function useEditorViewModel({
       ? "idle"
       : rawSaveBar.saveStatus || "idle";
 
+  const lifecycleActions = isMockMode
+    ? null
+    : getCreationEditStickyActionBarViewProps(
+        shell.stickyActionBarProps || {}
+      );
+
+  const savePolicy = isMockMode
+    ? {
+        canSave: true,
+        canUnlistForEditing: false,
+        unlistDisabled: false,
+        editLockMessage: null,
+      }
+    : {
+        canSave: !lifecycleActions?.saveAction?.disabled,
+        canUnlistForEditing: Boolean(lifecycleActions?.unlistAction?.visible),
+        unlistDisabled: Boolean(lifecycleActions?.unlistAction?.disabled),
+        editLockMessage: lifecycleActions?.editLockMessage || null,
+      };
+
+  function onUnlistForEditing() {
+    if (isMockMode || !savePolicy.canUnlistForEditing) return;
+    markActionAttempted();
+    lifecycleActions?.onUnlistForEditing?.();
+  }
+
   // Per-section prop bags: the Binding Shell mounts one section body
   // per id; the field-update callbacks are wrapped per section so
   // edits mark their own section dirty. Publishing/danger actions
@@ -302,6 +329,8 @@ export function useEditorViewModel({
       saveStatus,
       saveErrorCopy: saveStatus === "error" ? SAVE_ERROR_COPY : "",
       onSave,
+      onUnlistForEditing,
+      savePolicy,
       isLoading: Boolean(previewLoadingOverride),
       mobileNavOpen,
       onToggleMobileNav: () => setMobileNavOpen((current) => !current),

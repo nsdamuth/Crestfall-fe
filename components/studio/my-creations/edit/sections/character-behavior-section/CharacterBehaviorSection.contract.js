@@ -1,4 +1,4 @@
-export const CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT_VERSION = "1.0";
+export const CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT_VERSION = "1.1";
 
 export const CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT = Object.freeze({
   version: CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT_VERSION,
@@ -17,6 +17,7 @@ export const CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT = Object.freeze({
     "speechStyleControl",
     "movementStyleControl",
     "voiceModulesControl",
+    "decisionPrioritiesControl",
     "verbosityLabel",
     "verbosityValue",
     "verbosityOptions",
@@ -36,6 +37,7 @@ export const CHARACTER_BEHAVIOR_SECTION_VIEW_CONTRACT = Object.freeze({
     "speechStyleControl",
     "movementStyleControl",
     "voiceModulesControl",
+    "decisionPrioritiesControl",
     "interestsControl",
   ],
 });

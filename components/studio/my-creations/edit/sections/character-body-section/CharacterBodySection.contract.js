@@ -1,4 +1,4 @@
-export const CHARACTER_BODY_SECTION_VIEW_CONTRACT_VERSION = "1.0";
+export const CHARACTER_BODY_SECTION_VIEW_CONTRACT_VERSION = "1.1";
 
 export const CHARACTER_BODY_SECTION_VIEW_CONTRACT = Object.freeze({
   version: CHARACTER_BODY_SECTION_VIEW_CONTRACT_VERSION,
@@ -12,11 +12,21 @@ export const CHARACTER_BODY_SECTION_VIEW_CONTRACT = Object.freeze({
     "heightControl",
     "buildControl",
     "proportionsControl",
-    "bodyNotesLabel",
-    "bodyNotesValue",
-    "bodyNotesPlaceholder",
+    "bodyPromptLabel",
+    "bodyPromptValue",
+    "bodyPromptPlaceholder",
+    "fantasyPromptLabel",
+    "fantasyPromptValue",
+    "fantasyPromptPlaceholder",
+    "realisticPromptLabel",
+    "realisticPromptValue",
+    "realisticPromptPlaceholder",
   ],
-  callbacks: ["onChangeBodyNotes"],
+  callbacks: [
+    "onChangeBodyPrompt",
+    "onChangeFantasyPrompt",
+    "onChangeRealisticPrompt",
+  ],
   applicationOwnedControls: [
     "kibbePresetControl",
     "bodyTypeControl",

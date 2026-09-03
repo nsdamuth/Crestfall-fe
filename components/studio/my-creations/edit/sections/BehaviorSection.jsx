@@ -4,6 +4,7 @@ import PersonalityModal from "@/components/studio/create/character/PersonalityMo
 import TraitModal from "@/components/studio/create/character/TraitModal";
 import MultiTraitModal from "@/components/studio/create/character/MultiTraitModal";
 import VoiceModulePickerModal from "@/components/studio/create/character/VoiceModulePickerModal";
+import PriorityTriadEditor from "@/components/studio/my-creations/edit/priority-triads/PriorityTriadEditor";
 
 import CharacterBehaviorSectionView from "./character-behavior-section/CharacterBehaviorSection.view";
 import { useCharacterBehaviorSectionViewModel } from "./character-behavior-section/useCharacterBehaviorSectionViewModel";
@@ -86,6 +87,18 @@ export default function BehaviorSection(props) {
           onChange={viewProps.onChangeVoiceModuleIds}
           description={viewProps.voiceModulesDescription}
         />
+      }
+      decisionPrioritiesControl={
+        viewProps.showDecisionPriorities ? (
+          <PriorityTriadEditor
+            title={viewProps.decisionPrioritiesTitle}
+            description={viewProps.decisionPrioritiesDescription}
+            authorityNote={viewProps.decisionPrioritiesAuthorityNote}
+            options={viewProps.decisionPriorityOptions}
+            value={viewProps.decisionPrioritiesValue}
+            onChange={viewProps.onChangeDecisionPriorities}
+          />
+        ) : null
       }
       interestsControl={
         <MultiTraitModal

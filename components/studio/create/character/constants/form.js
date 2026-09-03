@@ -46,6 +46,8 @@ const initialForm = {
   chest_bust: "",
   hips_waist_shoulders: "",
   body_notes: "",
+  fantasy_body_notes: "",
+  realistic_body_notes: "",
   relationship_to_player: "",
   appearance_notes: "",
   negative_prompt: "",

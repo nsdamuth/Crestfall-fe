@@ -41,3 +41,7 @@ The conversion preserves:
 ```
 
 The preview renders the portable View from fixtures and substitutes local visual controls for Crestfall application modals.
+
+## Decision Priorities
+
+Character edit (not Character creation, and not Player Character edit) may author an optional `decisionPriorities` complete ordering of `LOGOS`, `PATHOS`, and `ETHOS`. The portable reorder control treats absence as genuinely unset and writes only after explicit creator interaction.

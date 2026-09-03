@@ -30,6 +30,14 @@ const ORIGIN_BACK_HREFS = {
 };
 const FALLBACK_BACK_HREF = "/studio/v2/vault";
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function normalizeCreationUuid(value) {
+  const normalized = String(value || "").trim();
+  return UUID_PATTERN.test(normalized) ? normalized : null;
+}
+
 // ED1C section chrome suppression: every mounted section body sits
 // under this provider so the shared SectionTitle (and the converted
 // hand-rolled header stacks) render nothing; the section box carries
@@ -133,9 +141,12 @@ function EditorInner({
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
 
   function openSwitcherTo(nextCreationId) {
+    const normalizedCreationId = normalizeCreationUuid(nextCreationId);
+    if (!normalizedCreationId) return;
+
     setIsSwitcherOpen(false);
     router.push(
-      `/studio/v2/editor/${encodeURIComponent(nextCreationId)}${
+      `/studio/v2/editor/${encodeURIComponent(normalizedCreationId)}${
         origin ? `?origin=${encodeURIComponent(origin)}` : ""
       }`
     );

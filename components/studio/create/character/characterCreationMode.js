@@ -157,6 +157,8 @@ function canonicalCharacterData(formState = {}, mode) {
     hips_waist_shoulders: formState.hipsWaistShoulders || "",
     chest_bust: formState.chestBust || "",
     body_notes: formState.bodyNotes || "",
+    fantasy_body_notes: formState.fantasyBodyNotes || "",
+    realistic_body_notes: formState.realisticBodyNotes || "",
     appearance_notes: formState.appearanceNotes || "",
     negative_prompt: limitAssetNegativePromptGuidance(formState.negativePrompt),
     clothing_source: clothingSource,

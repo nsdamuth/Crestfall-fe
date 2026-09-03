@@ -18,6 +18,7 @@ export default function CharacterBehaviorSectionView({
   speechStyleControl = null,
   movementStyleControl = null,
   voiceModulesControl = null,
+  decisionPrioritiesControl = null,
   verbosityLabel = "Verbosity",
   verbosityValue = "",
   verbosityOptions = [],
@@ -70,6 +71,10 @@ export default function CharacterBehaviorSectionView({
         />
 
         {interestsControl}
+
+        {decisionPrioritiesControl ? (
+          <div className="md:col-span-2">{decisionPrioritiesControl}</div>
+        ) : null}
 
         <div className="md:col-span-2">
           <TextAreaField

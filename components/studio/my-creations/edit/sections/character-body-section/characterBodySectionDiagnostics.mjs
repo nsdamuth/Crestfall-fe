@@ -43,6 +43,8 @@ test("Character Body ViewModel owns normalization and storage mapping", () => {
   assert.match(viewModel, /return single \? \[single\] : \[\]/);
   assert.match(viewModel, /body_type/);
   assert.match(viewModel, /body_notes/);
+  assert.match(viewModel, /fantasy_body_notes/);
+  assert.match(viewModel, /realistic_body_notes/);
   assert.match(viewModel, /proportions/);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
@@ -56,7 +58,9 @@ test("Character Body contract and fixtures cover portable states", () => {
   );
   assert.match(contract, /CHARACTER_BODY_SECTION_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /kibbePresetControl/);
-  assert.match(contract, /onChangeBodyNotes/);
+  assert.match(contract, /onChangeBodyPrompt/);
+  assert.match(contract, /onChangeFantasyPrompt/);
+  assert.match(contract, /onChangeRealisticPrompt/);
   assert.match(fixtures, /characterBodySectionPopulatedFixture/);
   assert.match(fixtures, /characterBodySectionEmptyFixture/);
   assert.match(fixtures, /characterBodySectionLongContentFixture/);
@@ -87,5 +91,7 @@ test("Character Body package includes its documented handoff", () => {
   );
   assert.match(readme, /Portable LOOM boundary/);
   assert.match(readme, /body_notes/);
+  assert.match(readme, /fantasy_body_notes/);
+  assert.match(readme, /realistic_body_notes/);
   assert.match(readme, /\/dev\/ui-preview\/character-body-section/);
 });

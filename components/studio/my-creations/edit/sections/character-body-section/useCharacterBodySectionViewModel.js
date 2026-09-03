@@ -20,9 +20,15 @@ const DEFAULT_COPY = Object.freeze({
   proportionsLabel: "Proportions",
   proportionsDescription:
     "Optional silhouette emphasis for image generation and narration. You can select multiple compatible traits.",
-  bodyNotesLabel: "Custom Body Notes",
-  bodyNotesPlaceholder:
-    "Optional physical details that should affect image generation or narration.",
+  bodyPromptLabel: "Custom Body Prompt",
+  bodyPromptPlaceholder:
+    "Optional model-neutral physical details that should affect image generation across all rendering styles.",
+  fantasyPromptLabel: "Fantasy Specific Prompt Details",
+  fantasyPromptPlaceholder:
+    "Optional short guidance applied only to fantasy and anime rendering stages.",
+  realisticPromptLabel: "Realistic Specific Prompt Details",
+  realisticPromptPlaceholder:
+    "Optional short guidance applied only to realistic rendering stages.",
 });
 
 export function normalizeCharacterProportions(value) {
@@ -55,10 +61,16 @@ export function getCharacterBodySectionViewProps({
     heightOptions,
     buildOptions,
     proportionOptions,
-    bodyNotesValue: data.body_notes || "",
+    bodyPromptValue: data.body_notes || "",
+    fantasyPromptValue: data.fantasy_body_notes || "",
+    realisticPromptValue: data.realistic_body_notes || "",
     onChangeCharacterField: (field, value) =>
       updateDataField?.(field, value),
-    onChangeBodyNotes: (value) => updateDataField?.("body_notes", value),
+    onChangeBodyPrompt: (value) => updateDataField?.("body_notes", value),
+    onChangeFantasyPrompt: (value) =>
+      updateDataField?.("fantasy_body_notes", value),
+    onChangeRealisticPrompt: (value) =>
+      updateDataField?.("realistic_body_notes", value),
   };
 }
 

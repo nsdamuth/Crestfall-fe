@@ -41,6 +41,10 @@ test("Lore Engine Use shell follows LOOM boundaries", () => {
   assert.match(view, /Allowed Scenarios/);
   assert.match(view, /Allowed Room Templates/);
   assert.match(view, /Location relevance/);
+  assert.match(view, /Active engine configuration/);
+  assert.match(view, /Connected to active Engine Use/);
+  assert.match(view, /hasAuthoritativeConfiguration/);
+  assert.match(view, /!isActive && !hasAuthoritativeConfiguration/);
   assert.doesNotMatch(view, /@\/lib\/client|next\/link|Supabase|PostGraphile/);
 });
 
