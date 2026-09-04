@@ -66,6 +66,12 @@ test("all five rail workflows expose bounded semantic tuning definitions", () =>
     ),
     ["foundationDetail", "polishDetail"]
   );
+  assert.deepEqual(
+    getImageWorkflowTuningDefinition("crestfall_realistic").controls.map(
+      (entry) => entry.id
+    ),
+    ["referenceInfluence", "detailLevel"]
+  );
 });
 
 test("hybrid workflows preserve curated semantic tuning controls", () => {
@@ -83,6 +89,17 @@ test("hybrid workflows preserve curated semantic tuning controls", () => {
   assert.deepEqual(
     realisticFantasy.controls.map((entry) => entry.id),
     ["referenceInfluence", "styleBalance", "foundationDetail", "polishDetail"]
+  );
+  assert.deepEqual(
+    Object.fromEntries(
+      realisticFantasy.controls.map((entry) => [entry.id, entry.defaultValue])
+    ),
+    {
+      referenceInfluence: 50,
+      styleBalance: 50,
+      foundationDetail: 65,
+      polishDetail: 50,
+    }
   );
 });
 

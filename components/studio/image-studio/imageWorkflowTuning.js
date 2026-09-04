@@ -153,41 +153,41 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
     key: "crestfall_realistic_fantasy",
     label: "Realistic → Fantasy",
     description:
-      "Tune the tested Realistic → Fantasy envelope without exposing sampler, CFG, or model internals.",
+      "Tune the V3 realism-first foundation and restrained fantasy polish without exposing sampler, CFG, or model internals.",
     controls: Object.freeze([
       control({
         id: "referenceInfluence",
         label: "Reference Influence",
         description:
-          "How strongly a compatible Character reference image anchors identity and composition.",
+          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
         leftLabel: "Looser",
         rightLabel: "Stronger",
         defaultValue: 50,
       }),
       control({
         id: "styleBalance",
-        label: "Fantasy Balance",
+        label: "Fantasy Influence",
         description:
-          "How strongly the fantasy polish is allowed to reshape the realistic foundation.",
-        leftLabel: "More Realistic",
-        rightLabel: "Max Fantasy",
-        defaultValue: 100,
+          "How strongly the restrained fantasy polish may reshape the realism-first foundation.",
+        leftLabel: "Mostly Realistic",
+        rightLabel: "Stronger Fantasy",
+        defaultValue: 50,
       }),
       control({
         id: "foundationDetail",
         label: "Realistic Foundation Detail",
-        description: "How much of the validated first-pass detail budget is used.",
+        description: "How much of the bounded RealVis foundation detail budget is used.",
         leftLabel: "Lighter",
-        rightLabel: "Full Detail",
-        defaultValue: 100,
+        rightLabel: "Richer",
+        defaultValue: 65,
       }),
       control({
         id: "polishDetail",
         label: "Fantasy Polish Detail",
-        description: "How much of the validated fantasy-polish detail budget is used.",
+        description: "How much of the bounded fantasy-polish detail budget is used.",
         leftLabel: "Lighter",
-        rightLabel: "Full Detail",
-        defaultValue: 100,
+        rightLabel: "Richer",
+        defaultValue: 50,
       }),
     ]),
     handoff: Object.freeze({
@@ -205,16 +205,25 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
     key: "crestfall_realistic",
     label: "Realistic",
     description:
-      "Tune the realistic workflow inside its validated detail envelope without exposing raw workflow internals.",
+      "Tune the V3 photoreal workflow and optional Realistic Reference influence without exposing raw workflow internals.",
     controls: Object.freeze([
+      control({
+        id: "referenceInfluence",
+        label: "Reference Influence",
+        description:
+          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
+        leftLabel: "Looser",
+        rightLabel: "Stronger",
+        defaultValue: 50,
+      }),
       control({
         id: "detailLevel",
         label: "Realism Detail",
         description:
-          "Adjust the bounded sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
+          "Adjust the bounded RealVis sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
         leftLabel: "Lighter",
         rightLabel: "Richer",
-        defaultValue: 70,
+        defaultValue: 50,
       }),
     ]),
   }),
