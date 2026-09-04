@@ -45,6 +45,7 @@ export default function AssetBuilderView({
   onSave,
 }) {
   const isLocation = creationType === "LOCATION";
+  const isOutfit = creationType === "OUTFIT";
   const isPose = creationType === "POSE";
 
   return (
@@ -96,11 +97,64 @@ export default function AssetBuilderView({
                 label="Negative Prompt"
                 value={form.negative_prompt}
                 onChange={(value) => onUpdateField?.("negative_prompt", value)}
-                placeholder={`Optional negatives this ${config.typeLabel.toLowerCase()} should contribute when selected in image generation.`}
+                placeholder={`Optional shared fallback negatives this ${config.typeLabel.toLowerCase()} should contribute when no lane-specific negative is authored.`}
                 rows={5}
                 maxLength={negativePromptMaxLength}
-                helperText={`Optional. Compiled into the negative prompt when this ${config.typeLabel.toLowerCase()} is selected. Max ${negativePromptMaxLength.toLocaleString()} characters.`}
+                helperText={`Optional shared fallback. Max ${negativePromptMaxLength.toLocaleString()} characters.`}
               />
+
+              {isOutfit ? (
+                <div className="grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                      Lane-Specific Image Guidance
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
+                      Anime / Fantasy guidance is used by Fantasy and anime stages. Realistic guidance is used by Realistic stages. Hybrid workflows use the matching field at each stage.
+                    </p>
+                  </div>
+
+                  <TextAreaField
+                    label="Anime / Fantasy Outfit Prompt"
+                    value={form.anime_prompt}
+                    onChange={(value) => onUpdateField?.("anime_prompt", value)}
+                    placeholder="Optional outfit wording optimized for Fantasy / anime rendering. Leave blank to use the general clothing prompt."
+                    rows={5}
+                    maxLength={ASSET_IMAGE_PROMPT_MAX_LENGTH}
+                  />
+
+                  <TextAreaField
+                    label="Realistic Outfit Prompt"
+                    value={form.realistic_prompt}
+                    onChange={(value) => onUpdateField?.("realistic_prompt", value)}
+                    placeholder="Optional construction/material wording optimized for Realistic rendering. Leave blank to use the general clothing prompt."
+                    rows={5}
+                    maxLength={ASSET_IMAGE_PROMPT_MAX_LENGTH}
+                  />
+
+                  <TextAreaField
+                    label="Anime / Fantasy Negative Prompt"
+                    value={form.anime_negative_prompt}
+                    onChange={(value) =>
+                      onUpdateField?.("anime_negative_prompt", value)
+                    }
+                    placeholder="Optional negatives used only by Fantasy / anime stages. Leave blank to use the shared Negative Prompt."
+                    rows={4}
+                    maxLength={negativePromptMaxLength}
+                  />
+
+                  <TextAreaField
+                    label="Realistic Negative Prompt"
+                    value={form.realistic_negative_prompt}
+                    onChange={(value) =>
+                      onUpdateField?.("realistic_negative_prompt", value)
+                    }
+                    placeholder="Optional negatives used only by Realistic stages. Leave blank to use the shared Negative Prompt."
+                    rows={4}
+                    maxLength={negativePromptMaxLength}
+                  />
+                </div>
+              ) : null}
             </>
           ) : null}
 

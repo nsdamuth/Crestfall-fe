@@ -30,6 +30,21 @@ export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} negativePromptLabel
  * @property {string} negativePrompt
  * @property {string} negativePromptPlaceholder
+ * @property {string} lanePromptsTitle
+ * @property {string} lanePromptsDescription
+ * @property {string} animePromptLabel
+ * @property {string} animePrompt
+ * @property {string} animePromptPlaceholder
+ * @property {string} realisticPromptLabel
+ * @property {string} realisticPrompt
+ * @property {string} realisticPromptPlaceholder
+ * @property {string} animeNegativePromptLabel
+ * @property {string} animeNegativePrompt
+ * @property {string} animeNegativePromptPlaceholder
+ * @property {string} realisticNegativePromptLabel
+ * @property {string} realisticNegativePrompt
+ * @property {string} realisticNegativePromptPlaceholder
+ * @property {number} lanePromptMaxLength
  * @property {string} usageNotesLabel
  * @property {string} usageNotes
  * @property {string} usageNotesPlaceholder
@@ -42,6 +57,10 @@ export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {((sectionId: string, value: string) => void)|null} onClothingSectionChange
  * @property {((value: string) => void)|null} onStandaloneImagePromptChange
  * @property {((value: string) => void)|null} onNegativePromptChange
+ * @property {((value: string) => void)|null} onAnimePromptChange
+ * @property {((value: string) => void)|null} onRealisticPromptChange
+ * @property {((value: string) => void)|null} onAnimeNegativePromptChange
+ * @property {((value: string) => void)|null} onRealisticNegativePromptChange
  * @property {((value: string) => void)|null} onUsageNotesChange
  * @property {((value: string) => void)|null} onCompatibilityNotesChange
  */

@@ -23,6 +23,10 @@ export const ASSET_BUILDER_INITIAL_FORM = Object.freeze({
   prompt: "",
   image_prompt: "",
   negative_prompt: "",
+  anime_prompt: "",
+  realistic_prompt: "",
+  anime_negative_prompt: "",
+  realistic_negative_prompt: "",
   tags: "",
   visibility: "PRIVATE",
   content_rating: "SFW",
@@ -184,6 +188,22 @@ export function buildAssetCreationPayload({
             normalizedForm.negative_prompt,
             getAssetNegativePromptMaxLength(creationType)
           ),
+          anime_prompt: limitAssetPromptValue(
+            normalizedForm.anime_prompt,
+            ASSET_IMAGE_PROMPT_MAX_LENGTH
+          ),
+          realistic_prompt: limitAssetPromptValue(
+            normalizedForm.realistic_prompt,
+            ASSET_IMAGE_PROMPT_MAX_LENGTH
+          ),
+          anime_negative_prompt: limitAssetPromptValue(
+            normalizedForm.anime_negative_prompt,
+            getAssetNegativePromptMaxLength(creationType)
+          ),
+          realistic_negative_prompt: limitAssetPromptValue(
+            normalizedForm.realistic_negative_prompt,
+            getAssetNegativePromptMaxLength(creationType)
+          ),
         }
       : {};
 
@@ -283,9 +303,13 @@ export function useAssetBuilderViewModel({
 
   function updateField(field, value) {
     const nextValue =
-      field === "image_prompt"
+      ["image_prompt", "anime_prompt", "realistic_prompt"].includes(field)
         ? limitAssetPromptValue(value, ASSET_IMAGE_PROMPT_MAX_LENGTH)
-        : field === "negative_prompt"
+        : [
+              "negative_prompt",
+              "anime_negative_prompt",
+              "realistic_negative_prompt",
+            ].includes(field)
           ? limitAssetPromptValue(value, negativePromptMaxLength)
           : value;
 

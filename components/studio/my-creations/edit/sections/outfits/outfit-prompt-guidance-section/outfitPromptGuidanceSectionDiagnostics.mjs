@@ -31,10 +31,16 @@ test("Outfit Prompt Guidance View is API and persistence free", () => {
   assert.doesNotMatch(view, /\bfetch\s*\(|\/api\/|supabase|PostGraphile/);
   assert.doesNotMatch(
     view,
-    /normal_clothing_prompt|prompt_guidance|clothing_sections|image_prompt|negative_prompt|updateDataField|form\.data/
+    /normal_clothing_prompt|prompt_guidance|clothing_sections|image_prompt|negative_prompt|anime_prompt|realistic_prompt|anime_negative_prompt|realistic_negative_prompt|updateDataField|form\.data/
   );
   assert.match(view, /onClothingModeChange\?\.\(option\.value\)/);
   assert.match(view, /onClothingSectionChange\?\.\(field\.id, value\)/);
+  assert.match(view, /Anime \/ Fantasy Outfit Prompt/);
+  assert.match(view, /Realistic Outfit Prompt/);
+  assert.match(view, /onAnimePromptChange/);
+  assert.match(view, /onRealisticPromptChange/);
+  assert.match(view, /onAnimeNegativePromptChange/);
+  assert.match(view, /onRealisticNegativePromptChange/);
 });
 
 test("Outfit Prompt Guidance ViewModel owns normalization and storage mapping", () => {
@@ -48,6 +54,10 @@ test("Outfit Prompt Guidance ViewModel owns normalization and storage mapping", 
     "clothing_sections",
     "image_prompt",
     "negative_prompt",
+    "anime_prompt",
+    "realistic_prompt",
+    "anime_negative_prompt",
+    "realistic_negative_prompt",
     "usage_notes",
     "compatibility_notes",
   ]) {
@@ -84,13 +94,16 @@ test("Outfit Prompt Guidance preview is development-only", () => {
   assert.match(preview, /OutfitPromptGuidanceSectionView/);
 });
 
-test("Creation Edit retains the public Outfit Prompt Guidance Shell", () => {
-  const editShell = readRepo(
-    "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
+test("Creation Edit registry retains the public Outfit Prompt Guidance Shell", () => {
+  const sectionMap = readRepo(
+    "components/studio/my-creations/creation-edit-shell/creationEditSectionComponentMap.js"
   );
 
-  assert.match(editShell, /import OutfitPromptGuidanceSection from/);
-  assert.match(editShell, /<OutfitPromptGuidanceSection/);
+  assert.match(sectionMap, /import OutfitPromptGuidanceSection from/);
+  assert.match(
+    sectionMap,
+    /prompt:\s*\{\s*Component:\s*OutfitPromptGuidanceSection,\s*buildProps:\s*dataFieldProps\s*\}/
+  );
 });
 
 test("Outfit Prompt Guidance package includes its documented handoff", () => {

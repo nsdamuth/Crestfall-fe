@@ -32,6 +32,10 @@ test("Asset Builder View is API and persistence free", () => {
   );
   assert.match(view, /locationRuntimeContent/);
   assert.match(view, /locationRegistryContent/);
+  assert.match(view, /Anime \/ Fantasy Outfit Prompt/);
+  assert.match(view, /Realistic Outfit Prompt/);
+  assert.match(view, /anime_negative_prompt/);
+  assert.match(view, /realistic_negative_prompt/);
 });
 
 test("Asset Builder ViewModel owns payload, save, and location compatibility", () => {
@@ -42,6 +46,14 @@ test("Asset Builder ViewModel owns payload, save, and location compatibility", (
   assert.match(viewModel, /buildAssetCreationPayload/);
   assert.match(viewModel, /getCreationTypeFromAssetConfig/);
   assert.match(viewModel, /builder: "VISUAL_ASSET_BUILDER"/);
+  for (const laneField of [
+    "anime_prompt",
+    "realistic_prompt",
+    "anime_negative_prompt",
+    "realistic_negative_prompt",
+  ]) {
+    assert.match(viewModel, new RegExp(laneField));
+  }
   assert.match(viewModel, /createVisualAssetDraft/);
   assert.match(viewModel, /selectParentLocation/);
   assert.match(viewModel, /router\.push/);

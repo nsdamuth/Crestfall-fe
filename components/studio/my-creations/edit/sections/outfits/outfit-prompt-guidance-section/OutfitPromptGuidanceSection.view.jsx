@@ -28,6 +28,21 @@ export default function OutfitPromptGuidanceSectionView({
   negativePrompt = "",
   negativePromptPlaceholder = "",
   negativePromptMaxLength = 300,
+  lanePromptsTitle = "Lane-Specific Image Guidance",
+  lanePromptsDescription = "",
+  animePromptLabel = "Anime / Fantasy Outfit Prompt",
+  animePrompt = "",
+  animePromptPlaceholder = "",
+  realisticPromptLabel = "Realistic Outfit Prompt",
+  realisticPrompt = "",
+  realisticPromptPlaceholder = "",
+  animeNegativePromptLabel = "Anime / Fantasy Negative Prompt",
+  animeNegativePrompt = "",
+  animeNegativePromptPlaceholder = "",
+  realisticNegativePromptLabel = "Realistic Negative Prompt",
+  realisticNegativePrompt = "",
+  realisticNegativePromptPlaceholder = "",
+  lanePromptMaxLength = 2000,
   usageNotesLabel = "Usage Notes",
   usageNotes = "",
   usageNotesPlaceholder = "",
@@ -40,6 +55,10 @@ export default function OutfitPromptGuidanceSectionView({
   onClothingSectionChange = null,
   onStandaloneImagePromptChange = null,
   onNegativePromptChange = null,
+  onAnimePromptChange = null,
+  onRealisticPromptChange = null,
+  onAnimeNegativePromptChange = null,
+  onRealisticNegativePromptChange = null,
   onUsageNotesChange = null,
   onCompatibilityNotesChange = null,
 }) {
@@ -149,8 +168,55 @@ export default function OutfitPromptGuidanceSectionView({
           onChange={(value) => onNegativePromptChange?.(value)}
           placeholder={negativePromptPlaceholder}
           maxLength={negativePromptMaxLength}
-          helperText="Persistent image-generation guidance. Added automatically whenever this outfit is selected. Max 300 characters."
+          helperText="Shared fallback only. A lane-specific negative takes precedence for its matching render stage. Max 300 characters."
         />
+
+        <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            {lanePromptsTitle}
+          </p>
+          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+            {lanePromptsDescription}
+          </p>
+        </div>
+
+        <div className="grid gap-[var(--space-5)] xl:grid-cols-2">
+          <TextAreaField
+            label={animePromptLabel}
+            value={animePrompt}
+            onChange={(value) => onAnimePromptChange?.(value)}
+            placeholder={animePromptPlaceholder}
+            maxLength={lanePromptMaxLength}
+            helperText="Fantasy, Anime, and the fantasy stage of hybrid workflows."
+          />
+
+          <TextAreaField
+            label={realisticPromptLabel}
+            value={realisticPrompt}
+            onChange={(value) => onRealisticPromptChange?.(value)}
+            placeholder={realisticPromptPlaceholder}
+            maxLength={lanePromptMaxLength}
+            helperText="Realistic and the realistic stage of hybrid workflows."
+          />
+
+          <TextAreaField
+            label={animeNegativePromptLabel}
+            value={animeNegativePrompt}
+            onChange={(value) => onAnimeNegativePromptChange?.(value)}
+            placeholder={animeNegativePromptPlaceholder}
+            maxLength={negativePromptMaxLength}
+            helperText="Optional lane-specific override. Max 300 characters."
+          />
+
+          <TextAreaField
+            label={realisticNegativePromptLabel}
+            value={realisticNegativePrompt}
+            onChange={(value) => onRealisticNegativePromptChange?.(value)}
+            placeholder={realisticNegativePromptPlaceholder}
+            maxLength={negativePromptMaxLength}
+            helperText="Optional lane-specific override. Max 300 characters."
+          />
+        </div>
 
         <TextAreaField
           label={usageNotesLabel}

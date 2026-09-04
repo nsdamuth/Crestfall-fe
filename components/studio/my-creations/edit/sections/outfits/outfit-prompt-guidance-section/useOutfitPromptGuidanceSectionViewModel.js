@@ -21,7 +21,22 @@ const DEFAULT_COPY = Object.freeze({
     "Optional standalone prompt for generating catalogue, preview, or reference images of this outfit as its own visual asset. Max 2,000 characters.",
   negativePromptLabel: "Negative Prompt",
   negativePromptPlaceholder:
-    "Optional negatives this outfit should contribute when selected in image generation. Example: no transparent fabric, no modern logos, no sneakers. Max 300 characters.",
+    "Optional shared fallback negatives this outfit should contribute when no lane-specific negative is authored. Max 300 characters.",
+  lanePromptsTitle: "Lane-Specific Image Guidance",
+  lanePromptsDescription:
+    "Optional model-family wording for this outfit. Anime / Fantasy guidance is used by Fantasy and anime stages; Realistic guidance is used by Realistic stages. Hybrid workflows use the matching field at each stage.",
+  animePromptLabel: "Anime / Fantasy Outfit Prompt",
+  animePromptPlaceholder:
+    "Optional outfit wording optimized for Fantasy / anime rendering. Leave blank to use the general clothing prompt.",
+  realisticPromptLabel: "Realistic Outfit Prompt",
+  realisticPromptPlaceholder:
+    "Optional construction/material wording optimized for Realistic rendering. Leave blank to use the general clothing prompt.",
+  animeNegativePromptLabel: "Anime / Fantasy Negative Prompt",
+  animeNegativePromptPlaceholder:
+    "Optional negatives used only by Fantasy / anime stages for this outfit. Leave blank to use the shared Negative Prompt.",
+  realisticNegativePromptLabel: "Realistic Negative Prompt",
+  realisticNegativePromptPlaceholder:
+    "Optional negatives used only by Realistic stages for this outfit. Leave blank to use the shared Negative Prompt.",
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this outfit be used? What character types, settings, or scenes does it support?",
@@ -156,9 +171,26 @@ export function getOutfitPromptGuidanceSectionViewProps({
       data.negative_prompt,
       ASSET_NEGATIVE_PROMPT_MAX_LENGTH
     ),
+    animePrompt: limitPromptValue(
+      data.anime_prompt,
+      ASSET_IMAGE_PROMPT_MAX_LENGTH
+    ),
+    realisticPrompt: limitPromptValue(
+      data.realistic_prompt,
+      ASSET_IMAGE_PROMPT_MAX_LENGTH
+    ),
+    animeNegativePrompt: limitPromptValue(
+      data.anime_negative_prompt,
+      ASSET_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
+    realisticNegativePrompt: limitPromptValue(
+      data.realistic_negative_prompt,
+      ASSET_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
     usageNotes: normalizeText(data.usage_notes),
     compatibilityNotes: normalizeText(data.compatibility_notes),
     standaloneImagePromptMaxLength: ASSET_IMAGE_PROMPT_MAX_LENGTH,
+    lanePromptMaxLength: ASSET_IMAGE_PROMPT_MAX_LENGTH,
     negativePromptMaxLength: ASSET_NEGATIVE_PROMPT_MAX_LENGTH,
     onClothingModeChange: (nextMode) =>
       updateDataField?.("clothing_mode", normalizeClothingMode(nextMode)),
@@ -181,6 +213,26 @@ export function getOutfitPromptGuidanceSectionViewProps({
     onNegativePromptChange: (value) =>
       updateDataField?.(
         "negative_prompt",
+        limitPromptValue(value, ASSET_NEGATIVE_PROMPT_MAX_LENGTH)
+      ),
+    onAnimePromptChange: (value) =>
+      updateDataField?.(
+        "anime_prompt",
+        limitPromptValue(value, ASSET_IMAGE_PROMPT_MAX_LENGTH)
+      ),
+    onRealisticPromptChange: (value) =>
+      updateDataField?.(
+        "realistic_prompt",
+        limitPromptValue(value, ASSET_IMAGE_PROMPT_MAX_LENGTH)
+      ),
+    onAnimeNegativePromptChange: (value) =>
+      updateDataField?.(
+        "anime_negative_prompt",
+        limitPromptValue(value, ASSET_NEGATIVE_PROMPT_MAX_LENGTH)
+      ),
+    onRealisticNegativePromptChange: (value) =>
+      updateDataField?.(
+        "realistic_negative_prompt",
         limitPromptValue(value, ASSET_NEGATIVE_PROMPT_MAX_LENGTH)
       ),
     onUsageNotesChange: (value) => updateDataField?.("usage_notes", value),
