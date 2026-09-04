@@ -414,13 +414,53 @@ function buildCastViewModel(snapshot) {
 
 function buildLocationMentionOptions(snapshot) {
   const context = normalizeObject(snapshot?.composerContext?.locations);
-  return normalizeArray(context.options).map((option) => ({
+  const utilityTargets = normalizeObject(snapshot?.composerContext?.utilityTargets);
+  const registryOptions = normalizeArray(context.options).map((option) => ({
     ...option,
+    targetKind: option.linkedLocationCreationId
+      ? "CREATION"
+      : "CREATOR_REGISTRY_ENTRY",
     isCurrent:
       option.runtimeEntryId === context.currentEntryRuntimeId ||
       (option.linkedLocationCreationId &&
         option.linkedLocationCreationId === context.activeLocationCreationId),
   }));
+  const seen = new Set(registryOptions.map((option) => option.runtimeEntryId));
+  const utilityOptions = normalizeArray(utilityTargets.locations).filter(
+    (option) => option?.runtimeEntryId && !seen.has(option.runtimeEntryId)
+  );
+
+  return [...registryOptions, ...utilityOptions];
+}
+
+function buildParticipantMentionOptions(snapshot) {
+  const participants = normalizeArray(snapshot?.participants);
+  const utilityTargets = normalizeObject(snapshot?.composerContext?.utilityTargets);
+  const characterOptions = participants
+    .filter((participant) => participant?.participantType === "CHARACTER" && participant?.isActive !== false)
+    .map((participant) => ({
+      id: participant.id,
+      label: participant.displayName || "Character",
+      participantType: "CHARACTER",
+      creationId: participant.creationId || null,
+      targetKind: participant.creationId
+        ? "CREATION"
+        : "CREATOR_REGISTRY_ENTRY",
+      avatarUrl: getParticipantAvatarUrl(participant),
+    }));
+  const seen = new Set(characterOptions.map((option) => option.id));
+  const adHocOptions = normalizeArray(utilityTargets.people)
+    .filter((option) => option?.participantId && option?.label && !seen.has(option.participantId))
+    .map((option) => ({
+      id: option.participantId,
+      label: option.label,
+      participantType: "AD_HOC_SCENE_ACTOR",
+      creationId: null,
+      targetKind: option.targetKind || "AD_HOC_SCENE_ACTOR",
+      avatarUrl: "",
+    }));
+
+  return [...characterOptions, ...adHocOptions];
 }
 
 function buildSpeakerOptions(snapshot) {
@@ -542,6 +582,7 @@ export default function useStoryRoomChat(roomId) {
   const [statusSurfaceError, setStatusSurfaceError] = useState("");
   const [messageActionState, setMessageActionState] = useState({});
   const activeMessageActionRequestsRef = useRef(new Map());
+  const statusSurfaceRequestSequenceRef = useRef(0);
 
   const reloadCommandCatalog = useCallback(
     async ({ requestedSpeakerId = "AUTO" } = {}) => {
@@ -580,10 +621,18 @@ export default function useStoryRoomChat(roomId) {
   const reloadStatusSurfaces = useCallback(async () => {
     if (!roomId) return null;
 
+    const requestSequence = ++statusSurfaceRequestSequenceRef.current;
     setStatusSurfaceError("");
 
     try {
       const projection = await fetchStoryRoomStatusSurfaces(roomId);
+
+      // Status surfaces are persistent presentation state. A slower refresh
+      // from an earlier turn must never overwrite a newer projection.
+      if (requestSequence !== statusSurfaceRequestSequenceRef.current) {
+        return projection || null;
+      }
+
       setStatusSurfaces(
         projection || {
           version: "story_status_surface_projection_v1",
@@ -593,11 +642,13 @@ export default function useStoryRoomChat(roomId) {
       );
       return projection || null;
     } catch (surfaceError) {
-      setStatusSurfaces({
-        version: "story_status_surface_projection_v1",
-        status: "EMPTY",
-        surfaces: [],
-      });
+      if (requestSequence !== statusSurfaceRequestSequenceRef.current) {
+        return null;
+      }
+
+      // Preserve the last known-good HUD on a transient refresh failure.
+      // Clearing it here makes the transcript believe no persistent HUD owns
+      // Stats/Progression and resurrects historical per-message snapshots.
       setStatusSurfaceError(
         surfaceError?.message || "Story status surfaces could not be loaded."
       );
@@ -644,6 +695,18 @@ export default function useStoryRoomChat(roomId) {
   useEffect(() => {
     reload();
   }, [reload]);
+
+  useEffect(() => {
+    // Invalidate any in-flight status request from the previous room and do
+    // not carry a previous room's HUD into the next Story.
+    statusSurfaceRequestSequenceRef.current += 1;
+    setStatusSurfaces({
+      version: "story_status_surface_projection_v1",
+      status: "EMPTY",
+      surfaces: [],
+    });
+    setStatusSurfaceError("");
+  }, [roomId]);
 
   useEffect(() => {
     activeMessageActionRequestsRef.current.clear();
@@ -1195,6 +1258,10 @@ const sendMessage = useCallback(
   const cast = useMemo(() => buildCastViewModel(snapshot), [snapshot]);
   const messages = useMemo(() => normalizeMessages(snapshot), [snapshot]);
   const speakerOptions = useMemo(() => buildSpeakerOptions(snapshot), [snapshot]);
+  const participantMentionOptions = useMemo(
+    () => buildParticipantMentionOptions(snapshot),
+    [snapshot]
+  );
   const locationMentionOptions = useMemo(
     () => buildLocationMentionOptions(snapshot),
     [snapshot]
@@ -1206,6 +1273,7 @@ const sendMessage = useCallback(
     messages,
     snapshot,
     speakerOptions,
+    participantMentionOptions,
     locationMentionOptions,
     loading,
     sending,

@@ -76,6 +76,7 @@ function normalizeMentions(mentions = []) {
   return (Array.isArray(mentions) ? mentions : [])
     .map((mention) => ({
       participantId: String(mention?.participantId || "").trim(),
+      targetKind: String(mention?.targetKind || "").trim() || null,
       displayName: String(mention?.displayName || "").trim(),
       mentionText: String(mention?.mentionText || "").trim(),
     }))
@@ -96,6 +97,7 @@ function normalizeLocationMentions(mentions = []) {
       registryEntryId: String(mention?.registryEntryId || "").trim(),
       linkedLocationCreationId:
         String(mention?.linkedLocationCreationId || "").trim() || null,
+      targetKind: String(mention?.targetKind || "").trim() || null,
       displayName: String(mention?.displayName || "").trim(),
       mentionText: String(mention?.mentionText || "").trim(),
     }))
@@ -126,6 +128,7 @@ function normalizeLocationOptions(options = []) {
         ? option.adjacentRuntimeEntryIds.filter(Boolean)
         : [],
       isCurrent: Boolean(option?.isCurrent),
+      targetKind: String(option?.targetKind || "").trim() || null,
     }))
     .filter((option) => option.runtimeEntryId && option.label);
 }
@@ -155,6 +158,7 @@ function normalizeMentionOptions(options = []) {
       id: String(option?.id || "").trim(),
       label: String(option?.label || "").trim(),
       avatarUrl: String(option?.avatarUrl || "").trim(),
+      targetKind: String(option?.targetKind || "").trim() || null,
       mentionAlias: `@${normalizeMentionSearch(option?.label).split(" ")[0] || "character"}`,
     }))
     .filter((option) => option.id && option.label);
@@ -361,6 +365,7 @@ export function useStoryRoomComposerViewModel({
       ),
       {
         participantId: option.id,
+        targetKind: option.targetKind || null,
         displayName: option.label,
         mentionText,
       },
@@ -462,6 +467,7 @@ export function useStoryRoomComposerViewModel({
         registryCreationId: option.registryCreationId,
         registryEntryId: option.registryEntryId,
         linkedLocationCreationId: option.linkedLocationCreationId,
+        targetKind: option.targetKind || null,
         displayName: option.label,
         mentionText,
       },

@@ -56,6 +56,12 @@ assert.equal(commands.filter((command) => command.name === "help").length, 1);
 assert.equal(commands.some((command) => command.name === "commands"), true);
 assert.equal(commands.some((command) => command.name === "format"), true);
 assert.equal(commands.some((command) => command.name === "inventory"), true);
+assert.equal(commands.some((command) => command.name === "save"), true);
+assert.equal(commands.some((command) => command.name === "like"), true);
+assert.equal(commands.some((command) => command.name === "mark"), true);
+assert.equal(commands.find((command) => command.name === "save")?.requiresArguments, true);
+assert.equal(commands.find((command) => command.name === "like")?.requiresArguments, true);
+assert.equal(commands.find((command) => command.name === "mark")?.requiresArguments, true);
 assert.equal(commands.some((command) => command.name === "stats"), true);
 assert.equal(commands.some((command) => command.name === "cast"), true);
 assert.equal(commands.some((command) => command.name === "legacy phrase"), false);
@@ -66,6 +72,9 @@ assert.equal(cast.requiresArguments, true);
 assert.deepEqual(cast.aliases, ["spell"]);
 assert.equal(cast.sourceLabel, "Test Mechanics");
 assert.equal(resolveLocalStoryRoomCommand("/inventory"), null);
+assert.equal(resolveLocalStoryRoomCommand("/save person @Mira"), null);
+assert.equal(resolveLocalStoryRoomCommand("/like @Mira"), null);
+assert.equal(resolveLocalStoryRoomCommand("/mark #Citadel"), null);
 assert.equal(resolveLocalStoryRoomCommand("/commands")?.panel, "COMMANDS");
 assert.equal(resolveLocalStoryRoomCommand("/format")?.panel, "FORMAT");
 assert.equal(resolveLocalStoryRoomCommand("say /format"), null);
@@ -117,6 +126,10 @@ assert.match(shellView, /Private Thought/);
 assert.match(shellView, /Written \/ Digital Message/);
 assert.match(shellView, /Telepathy/);
 assert.match(chatHook, /fetchStoryRoomCommandCatalog/);
+assert.match(chatHook, /composerContext\?\.utilityTargets/);
+assert.match(chatHook, /buildParticipantMentionOptions/);
+assert.match(composerVm, /targetKind:\s*option\.targetKind \|\| null/);
+assert.match(shellVm, /chatParticipantMentionOptions/);
 assert.match(chatHook, /reloadCommandCatalog/);
 assert.match(chatHook, /requestedSpeakerId:\s*requestedSpeakerId \|\| "AUTO"/);
 assert.match(client, /command-catalog/);
@@ -132,6 +145,10 @@ console.log(
       platformUtilitiesPreserved: true,
       formatUtilityProjected: true,
       inventoryUtilityProjected: true,
+      storySaveUtilityProjected: true,
+      storyLikeUtilityProjected: true,
+      storyBookmarkUtilityProjected: true,
+      runtimeStoryTargetsReuseMentionUi: true,
       creatorMechanicsCommandsProjected: true,
       platformCommandCollisionsRejected: true,
       conflictingAliasesFiltered: true,

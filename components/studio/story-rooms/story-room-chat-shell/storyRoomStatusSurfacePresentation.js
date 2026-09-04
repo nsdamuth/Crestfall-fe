@@ -15,7 +15,9 @@ export function getPersistentStatusSurfaceDomains(surfaces = []) {
     ...new Set(
       normalizeArray(surfaces)
         .flatMap((surface) => normalizeArray(surface?.readouts))
-        .filter((readout) => readout?.status === "RESOLVED")
+        // Persistent domain ownership is structural, not dependent on one
+        // refresh resolving every value. Otherwise a transient UNAVAILABLE
+        // readout resurrects the old per-message Stats/Progression snapshots.
         .map((readout) => normalizeUpper(readout?.source?.domain))
         .filter(Boolean)
     ),

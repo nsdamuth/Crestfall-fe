@@ -31,6 +31,31 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     usage: "/inventory",
     handling: "SERVER_COMMAND",
   }),
+  Object.freeze({
+    name: "save",
+    aliases: Object.freeze([]),
+    description:
+      "Save a scene-generated person or location as a private Vault draft.",
+    usage: "/save person @Name · /save location #Name",
+    handling: "SERVER_COMMAND",
+    requiresArguments: true,
+  }),
+  Object.freeze({
+    name: "like",
+    aliases: Object.freeze([]),
+    description: "Like a first-class Character or Location Creation in this Story.",
+    usage: "/like @Character · /like #Location",
+    handling: "SERVER_COMMAND",
+    requiresArguments: true,
+  }),
+  Object.freeze({
+    name: "mark",
+    aliases: Object.freeze([]),
+    description: "Bookmark a first-class Character or Location Creation in this Story.",
+    usage: "/mark @Character · /mark #Location",
+    handling: "SERVER_COMMAND",
+    requiresArguments: true,
+  }),
 ]);
 
 function normalizeCommandToken(value) {

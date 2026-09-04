@@ -72,6 +72,7 @@ export function useStoryRoomChatShellViewModel({
     cast = [],
     messages = [],
     speakerOptions = [],
+    participantMentionOptions: chatParticipantMentionOptions = [],
     locationMentionOptions = [],
     loading = false,
     sending = false,
@@ -159,13 +160,15 @@ export function useStoryRoomChatShellViewModel({
     void reloadCommandCatalog?.({ requestedSpeakerId: nextSpeaker });
   }, [nextSpeaker, reloadCommandCatalog]);
 
-  const participantMentionOptions = useMemo(
-    () =>
-      safeSpeakerOptions.filter(
-        (option) => option?.participantType === "CHARACTER"
-      ),
-    [safeSpeakerOptions]
-  );
+  const participantMentionOptions = useMemo(() => {
+    if (Array.isArray(chatParticipantMentionOptions) && chatParticipantMentionOptions.length) {
+      return chatParticipantMentionOptions;
+    }
+
+    return safeSpeakerOptions.filter(
+      (option) => option?.participantType === "CHARACTER"
+    );
+  }, [chatParticipantMentionOptions, safeSpeakerOptions]);
 
   useEffect(() => {
     if (nextSpeaker === "AUTO" || nextSpeaker === "RANDOM") {
