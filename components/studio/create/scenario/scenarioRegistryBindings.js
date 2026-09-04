@@ -1,3 +1,5 @@
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
+
 export const SCENARIO_REGISTRY_BINDINGS = Object.freeze({
   faction: Object.freeze({
     idField: "factionRegistryIds",
@@ -92,7 +94,11 @@ export function buildScenarioRegistryBindingLink(reference, binding) {
   };
 }
 
-export function getScenarioRegistrySelection(data, binding) {
+export function getScenarioRegistrySelection(
+  data,
+  binding,
+  summariesById = null
+) {
   const source = normalizeObject(data);
   const boundRegistries = normalizeObject(source.boundRegistries);
   const boundRegistryLinks = normalizeObject(source.boundRegistryLinks);
@@ -116,8 +122,9 @@ export function getScenarioRegistrySelection(data, binding) {
   return ids.map((creationId) => {
     const link = linksByCreationId.get(creationId) || {};
 
-    return {
+    const reference = {
       id: creationId,
+      creationId,
       type: normalizeString(link.type) || binding.expectedType,
       title: normalizeString(link.title) || "Untitled Registry",
       subtitle: normalizeString(
@@ -131,6 +138,18 @@ export function getScenarioRegistrySelection(data, binding) {
         normalizeString(
           link.imageUrl || link.image_url
         ) || null,
+    };
+    const hydrated = hydrateCreationReference(reference, summariesById, {
+      fallbackType: binding.expectedType,
+    });
+
+    return {
+      ...reference,
+      ...hydrated,
+      id: creationId,
+      subtitle: normalizeString(
+        hydrated?.subtitle || hydrated?.description || reference.subtitle
+      ),
     };
   });
 }

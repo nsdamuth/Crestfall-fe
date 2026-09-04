@@ -8,6 +8,7 @@ import {
   getScenarioRegistrySelection,
 } from "@/components/studio/create/scenario/scenarioRegistryBindings";
 import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
+import { indexCreationSummaries } from "@/lib/shared/creations/creationReferenceHydration";
 
 const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Scenario Editor",
@@ -196,6 +197,11 @@ export function useScenarioCastRequirementsSectionViewModel({
     return filterReferenceOptions(referenceOptions, referencePicker.allowedTypes);
   }, [referenceOptions, referencePicker]);
 
+  const referenceIndex = useMemo(
+    () => indexCreationSummaries(referenceOptions),
+    [referenceOptions]
+  );
+
   const fields = [
     buildViewField({
       id: "required-characters",
@@ -293,7 +299,8 @@ export function useScenarioCastRequirementsSectionViewModel({
         "Authoritative faction context inherited by Stories using this Scenario.",
       selected: getScenarioRegistrySelection(
         data,
-        SCENARIO_REGISTRY_BINDINGS.faction
+        SCENARIO_REGISTRY_BINDINGS.faction,
+        referenceIndex
       ),
       multiple: true,
       onOpen: () =>
@@ -319,7 +326,8 @@ export function useScenarioCastRequirementsSectionViewModel({
         "Authoritative organization context inherited by Stories using this Scenario.",
       selected: getScenarioRegistrySelection(
         data,
-        SCENARIO_REGISTRY_BINDINGS.organization
+        SCENARIO_REGISTRY_BINDINGS.organization,
+        referenceIndex
       ),
       multiple: true,
       onOpen: () =>
@@ -341,7 +349,11 @@ export function useScenarioCastRequirementsSectionViewModel({
   ];
 
   const selectedReference = referencePicker?.registryBinding
-    ? getScenarioRegistrySelection(data, referencePicker.registryBinding)
+    ? getScenarioRegistrySelection(
+        data,
+        referencePicker.registryBinding,
+        referenceIndex
+      )
     : referencePicker
       ? data[referencePicker.field]
       : null;

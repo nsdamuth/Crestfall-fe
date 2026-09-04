@@ -223,6 +223,131 @@ function normalizeReference(reference) {
   };
 }
 
+
+const STORY_OPENING_LOCATION_CONTRACT_VERSION = "story_opening_location_v0";
+
+const STORY_OPENING_LOCATION_MODES = Object.freeze({
+  FIXED: "FIXED",
+  PLAYER_SELECT: "PLAYER_SELECT",
+});
+
+function normalizeStoryOpeningLocationMode(value) {
+  const normalized = String(value || "").trim().toUpperCase();
+  return normalized === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT
+    ? STORY_OPENING_LOCATION_MODES.PLAYER_SELECT
+    : STORY_OPENING_LOCATION_MODES.FIXED;
+}
+
+function normalizeUniqueIds(values = []) {
+  return [
+    ...new Set(
+      (Array.isArray(values) ? values : [])
+        .map((value) => String(value || "").trim())
+        .filter(Boolean)
+    ),
+  ];
+}
+
+function getRoomTemplateOpeningLocationAuthoring(
+  data = {},
+  locationOptions = []
+) {
+  const source = normalizeObject(data);
+  const authored = normalizeObject(
+    source.opening_location || source.openingLocation
+  );
+  const mode = normalizeStoryOpeningLocationMode(authored.mode);
+  const fixedLocationId = String(
+    authored.fixedLocationId ||
+      authored.fixed_location_id ||
+      source.location_id ||
+      source.locationId ||
+      source.selected_location?.id ||
+      ""
+  ).trim();
+  const authoredAllowedIds = normalizeUniqueIds(
+    authored.allowedLocationIds || authored.allowed_location_ids
+  );
+  const authoredAllowedReferences = Array.isArray(authored.allowedLocations)
+    ? authored.allowedLocations
+    : Array.isArray(authored.allowed_locations)
+      ? authored.allowed_locations
+      : [];
+  const authoredReferencesById = new Map(
+    authoredAllowedReferences
+      .filter((item) => item?.id)
+      .map((item) => [item.id, item])
+  );
+  const optionsById = new Map(
+    (Array.isArray(locationOptions) ? locationOptions : [])
+      .filter((item) => item?.id)
+      .map((item) => [item.id, item])
+  );
+  const fixedLocation = fixedLocationId
+    ? optionsById.get(fixedLocationId) ||
+      (source.selected_location?.id === fixedLocationId
+        ? source.selected_location
+        : null) ||
+      authored.fixedLocation ||
+      authored.fixed_location ||
+      { id: fixedLocationId, type: "LOCATION", title: fixedLocationId }
+    : null;
+  const allowedLocationIds =
+    mode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT
+      ? authoredAllowedIds
+      : fixedLocationId
+        ? [fixedLocationId]
+        : [];
+  const allowedLocations = allowedLocationIds.map((id) =>
+    optionsById.get(id) ||
+    authoredReferencesById.get(id) ||
+    { id, type: "LOCATION", title: id }
+  );
+
+  return {
+    version: STORY_OPENING_LOCATION_CONTRACT_VERSION,
+    mode,
+    fixedLocation,
+    fixedLocationId: fixedLocationId || null,
+    allowedLocationIds,
+    allowedLocations,
+  };
+}
+
+function buildRoomTemplateOpeningLocationData({
+  mode,
+  fixedLocation = null,
+  allowedLocations = [],
+} = {}) {
+  const normalizedMode = normalizeStoryOpeningLocationMode(mode);
+  const normalizedFixed = normalizeReference(fixedLocation);
+  const normalizedAllowed = normalizeReferenceArray(allowedLocations)
+    .map(normalizeReference)
+    .filter(Boolean);
+
+  if (normalizedMode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT) {
+    return {
+      version: STORY_OPENING_LOCATION_CONTRACT_VERSION,
+      mode: STORY_OPENING_LOCATION_MODES.PLAYER_SELECT,
+      fixedLocationId: null,
+      fixedLocation: null,
+      allowedLocationIds: normalizeUniqueIds(
+        normalizedAllowed.map((item) => item.id)
+      ),
+      allowedLocations: normalizedAllowed,
+    };
+  }
+
+  return {
+    version: STORY_OPENING_LOCATION_CONTRACT_VERSION,
+    mode: STORY_OPENING_LOCATION_MODES.FIXED,
+    fixedLocationId: normalizedFixed?.id || null,
+    fixedLocation: normalizedFixed,
+    allowedLocationIds: normalizedFixed?.id ? [normalizedFixed.id] : [],
+    allowedLocations: normalizedFixed ? [normalizedFixed] : [],
+  };
+}
+
 function normalizeOpeningMessages(messages) {
   if (!Array.isArray(messages)) return [];
 
@@ -330,6 +455,10 @@ export {
     mergeScenarioNpcRegistryRecommendations,
     parseTags,
     normalizeReference,
+    STORY_OPENING_LOCATION_CONTRACT_VERSION,
+    STORY_OPENING_LOCATION_MODES,
+    getRoomTemplateOpeningLocationAuthoring,
+    buildRoomTemplateOpeningLocationData,
     normalizeOpeningMessages,
     buildRoomTemplateDescription,
     normalizeInvitedPlayers,

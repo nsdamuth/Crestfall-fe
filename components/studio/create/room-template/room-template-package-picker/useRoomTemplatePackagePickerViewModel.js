@@ -22,7 +22,12 @@ const PICKER_CONFIGS = {
     emptyMessage: "No narrators found.",
   },
   location: {
-    title: "Select Location / Scene",
+    title: "Select Fixed Opening Location",
+    iconName: "location",
+    emptyMessage: "No locations found.",
+  },
+  openingLocations: {
+    title: "Select Allowed Opening Locations",
     iconName: "location",
     emptyMessage: "No locations found.",
   },
@@ -53,7 +58,9 @@ function getOptionsForPicker({
   if (picker === "characters") return normalizeArray(characterOptions);
   if (picker === "scenario") return normalizeArray(scenarioOptions);
   if (picker === "narrator") return normalizeArray(narratorOptions);
-  if (picker === "location") return normalizeArray(locationOptions);
+  if (picker === "location" || picker === "openingLocations") {
+    return normalizeArray(locationOptions);
+  }
   if (picker === "players") return normalizeArray(mutualPlayers);
 
   return [];
@@ -65,6 +72,7 @@ function getSelectedIds({
   selectedScenario,
   selectedNarrator,
   selectedLocation,
+  selectedOpeningLocations,
   invitedPlayers,
 }) {
   if (picker === "characters") {
@@ -89,6 +97,12 @@ function getSelectedIds({
 
   if (picker === "location") {
     return selectedLocation?.id ? [selectedLocation.id] : [];
+  }
+
+  if (picker === "openingLocations") {
+    return normalizeArray(selectedOpeningLocations)
+      .map((location) => location?.id)
+      .filter(Boolean);
   }
 
   return [];
@@ -137,6 +151,7 @@ export function useRoomTemplatePackagePickerViewModel({
   selectedScenario = null,
   selectedNarrator = null,
   selectedLocation = null,
+  selectedOpeningLocations = [],
   characterOptions = [],
   scenarioOptions = [],
   narratorOptions = [],
@@ -150,6 +165,7 @@ export function useRoomTemplatePackagePickerViewModel({
   onSelectScenario,
   onSelectNarrator,
   onSelectLocation,
+  onToggleOpeningLocation,
 }) {
   const normalizedPicker = PICKER_CONFIGS[picker] ? picker : "characters";
   const config = PICKER_CONFIGS[normalizedPicker];
@@ -202,6 +218,7 @@ export function useRoomTemplatePackagePickerViewModel({
         selectedScenario,
         selectedNarrator,
         selectedLocation,
+        selectedOpeningLocations,
         invitedPlayers,
       }),
     [
@@ -209,6 +226,7 @@ export function useRoomTemplatePackagePickerViewModel({
       normalizedPicker,
       selectedCharacters,
       selectedLocation,
+      selectedOpeningLocations,
       selectedNarrator,
       selectedScenario,
     ]
@@ -251,6 +269,11 @@ export function useRoomTemplatePackagePickerViewModel({
 
     if (normalizedPicker === "location") {
       onSelectLocation?.(selectedItem);
+      return;
+    }
+
+    if (normalizedPicker === "openingLocations") {
+      onToggleOpeningLocation?.(selectedItem);
     }
   }
 

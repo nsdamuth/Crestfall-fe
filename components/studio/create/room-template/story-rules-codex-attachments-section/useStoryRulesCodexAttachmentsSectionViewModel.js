@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
+import { useOwnedCreationSummaryIndex } from "@/components/studio/creations/hooks/useOwnedCreationSummaryIndex";
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
 
 const DEFAULT_COPY = Object.freeze({
   eyebrow: "Story Rules",
@@ -101,6 +103,12 @@ export function useStoryRulesCodexAttachmentsSectionViewModel({
 } = {}) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const links = getRulesCodexLinks(data);
+  const { summariesById } = useOwnedCreationSummaryIndex();
+  const displayLinks = links.map((link) =>
+    hydrateCreationReference(link, summariesById, {
+      fallbackType: "RULES_CODEX",
+    })
+  );
 
   const selectedCreationIds = useMemo(
     () => links.map((link) => link.creationId).filter(Boolean),
@@ -160,7 +168,7 @@ export function useStoryRulesCodexAttachmentsSectionViewModel({
       addLabel,
       emptyLabel,
       runtimeNote,
-      attachments: links.map(toViewAttachment),
+      attachments: displayLinks.map(toViewAttachment),
       onOpenPicker: () => setIsPickerOpen(true),
       onRemoveAttachment: handleRemove,
       onChangeAttachmentNotes: handleNotesChange,

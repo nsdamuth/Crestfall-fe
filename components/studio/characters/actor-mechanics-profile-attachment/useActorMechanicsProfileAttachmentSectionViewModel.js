@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
+import { useOwnedCreationSummaryIndex } from "@/components/studio/creations/hooks/useOwnedCreationSummaryIndex";
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
 
 export const ACTOR_MECHANICS_PROFILE_ATTACHMENT_CONTRACT_VERSION =
   "actor_mechanics_profile_attachment_v0";
@@ -328,6 +330,14 @@ export function useActorMechanicsProfileAttachmentSectionViewModel({
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectionError, setSelectionError] = useState("");
   const attachment = getAttachment(data);
+  const { summariesById } = useOwnedCreationSummaryIndex({
+    enabled: Boolean(attachment?.creationId),
+  });
+  const displayAttachment = attachment
+    ? hydrateCreationReference(attachment, summariesById, {
+        fallbackType: "ACTOR_MECHANICS_PROFILE",
+      })
+    : null;
 
   const selectedCreationIds = useMemo(
     () => (attachment?.creationId ? [attachment.creationId] : []),
@@ -401,7 +411,7 @@ export function useActorMechanicsProfileAttachmentSectionViewModel({
       addLabel,
       emptyLabel,
       runtimeNote,
-      attachment: toViewAttachment(attachment),
+      attachment: toViewAttachment(displayAttachment),
       errorMessage: selectionError,
       warningMessage,
       disabled,

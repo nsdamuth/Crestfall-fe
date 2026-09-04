@@ -7,8 +7,11 @@ import { useRoomTemplatePackagePickerViewModel } from "@/components/studio/creat
 import { useScenarioRecommendationsPanelViewModel } from "@/components/studio/room-templates/scenario-recommendations-panel/useScenarioRecommendationsPanelViewModel";
 import { useRoomTemplateReferenceData } from "@/components/studio/room-templates/hooks/useRoomTemplateReferenceData";
 import {
+  STORY_OPENING_LOCATION_MODES,
   addUniqueReferences,
+  buildRoomTemplateOpeningLocationData,
   findOptionById,
+  getRoomTemplateOpeningLocationAuthoring,
   getScenarioRecommendationData,
   mergeScenarioNpcRegistryRecommendations,
 } from "@/components/studio/room-templates/roomTemplateUtils";
@@ -64,6 +67,11 @@ export function useRoomTemplatePackageSectionViewModel({
     data.selected_location ||
     null;
 
+  const openingLocation = getRoomTemplateOpeningLocationAuthoring(
+    data,
+    locationOptions
+  );
+
   const recommendationsDismissed =
     Boolean(selectedScenario?.id) &&
     data.scenario_recommendations_dismissed_for === selectedScenario.id;
@@ -109,10 +117,87 @@ export function useRoomTemplatePackageSectionViewModel({
     setPicker(null);
   }
 
+  function persistOpeningLocation({
+    mode = openingLocation.mode,
+    fixedLocation = openingLocation.fixedLocation,
+    allowedLocations = openingLocation.allowedLocations,
+  } = {}) {
+    const next = buildRoomTemplateOpeningLocationData({
+      mode,
+      fixedLocation,
+      allowedLocations,
+    });
+
+    updateDataField?.("opening_location", next);
+
+    if (next.mode === STORY_OPENING_LOCATION_MODES.FIXED) {
+      updateDataField?.("selected_location", next.fixedLocation || null);
+      updateDataField?.("location_id", next.fixedLocationId || "");
+    } else {
+      updateDataField?.("selected_location", null);
+      updateDataField?.("location_id", "");
+    }
+  }
+
   function selectLocation(item) {
-    updateDataField?.("selected_location", item);
-    updateDataField?.("location_id", item.id);
+    persistOpeningLocation({
+      mode: STORY_OPENING_LOCATION_MODES.FIXED,
+      fixedLocation: item,
+      allowedLocations: item ? [item] : [],
+    });
     setPicker(null);
+  }
+
+  function changeOpeningLocationMode(mode) {
+    if (mode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT) {
+      const startingAllowed = openingLocation.allowedLocations.length
+        ? openingLocation.allowedLocations
+        : openingLocation.fixedLocation
+          ? [openingLocation.fixedLocation]
+          : [];
+      persistOpeningLocation({
+        mode,
+        fixedLocation: null,
+        allowedLocations: startingAllowed,
+      });
+      return;
+    }
+
+    persistOpeningLocation({
+      mode: STORY_OPENING_LOCATION_MODES.FIXED,
+      fixedLocation:
+        openingLocation.fixedLocation || openingLocation.allowedLocations[0] || null,
+      allowedLocations: [],
+    });
+  }
+
+  function toggleOpeningLocation(item) {
+    if (!item?.id) return;
+
+    const exists = openingLocation.allowedLocations.some(
+      (location) => location?.id === item.id
+    );
+    const nextAllowedLocations = exists
+      ? openingLocation.allowedLocations.filter(
+          (location) => location?.id !== item.id
+        )
+      : [...openingLocation.allowedLocations, item];
+
+    persistOpeningLocation({
+      mode: STORY_OPENING_LOCATION_MODES.PLAYER_SELECT,
+      fixedLocation: null,
+      allowedLocations: nextAllowedLocations,
+    });
+  }
+
+  function removeOpeningLocation(locationId) {
+    persistOpeningLocation({
+      mode: STORY_OPENING_LOCATION_MODES.PLAYER_SELECT,
+      fixedLocation: null,
+      allowedLocations: openingLocation.allowedLocations.filter(
+        (location) => location?.id !== locationId
+      ),
+    });
   }
 
   function dismissScenarioRecommendations() {
@@ -130,6 +215,22 @@ export function useRoomTemplatePackageSectionViewModel({
 
   function applyRecommendedLocation(location) {
     if (!location?.id) return;
+
+    if (openingLocation.mode === STORY_OPENING_LOCATION_MODES.PLAYER_SELECT) {
+      if (
+        !openingLocation.allowedLocations.some(
+          (item) => item?.id === location.id
+        )
+      ) {
+        persistOpeningLocation({
+          mode: STORY_OPENING_LOCATION_MODES.PLAYER_SELECT,
+          fixedLocation: null,
+          allowedLocations: [...openingLocation.allowedLocations, location],
+        });
+      }
+      return;
+    }
+
     selectLocation(location);
   }
 
@@ -152,14 +253,7 @@ export function useRoomTemplatePackageSectionViewModel({
     ]);
 
     if (scenarioRecommendations.suggestedLocation?.id) {
-      updateDataField?.(
-        "selected_location",
-        scenarioRecommendations.suggestedLocation
-      );
-      updateDataField?.(
-        "location_id",
-        scenarioRecommendations.suggestedLocation.id
-      );
+      applyRecommendedLocation(scenarioRecommendations.suggestedLocation);
     }
 
     if (scenarioRecommendations.suggestedNarrator?.id) {
@@ -210,6 +304,7 @@ export function useRoomTemplatePackageSectionViewModel({
     selectedScenario,
     selectedNarrator,
     selectedLocation,
+    selectedOpeningLocations: openingLocation.allowedLocations,
     characterOptions,
     scenarioOptions,
     narratorOptions,
@@ -220,6 +315,7 @@ export function useRoomTemplatePackageSectionViewModel({
     onSelectScenario: selectScenario,
     onSelectNarrator: selectNarrator,
     onSelectLocation: selectLocation,
+    onToggleOpeningLocation: toggleOpeningLocation,
   });
 
   return {
@@ -247,15 +343,16 @@ export function useRoomTemplatePackageSectionViewModel({
         placeholder: "Select Narrator",
         onOpen: () => setPicker("narrator"),
       },
-      {
-        id: "location",
-        iconName: "location",
-        label: "Location / Scene",
-        value: toSelectionCardValue(selectedLocation),
-        placeholder: "Optional Location",
-        onOpen: () => setPicker("location"),
-      },
     ],
+    openingLocationProps: {
+      mode: openingLocation.mode,
+      fixedLocation: toSelectionCardValue(openingLocation.fixedLocation),
+      allowedLocations: openingLocation.allowedLocations,
+      onChangeMode: changeOpeningLocationMode,
+      onOpenFixedLocationPicker: () => setPicker("location"),
+      onOpenAllowedLocationsPicker: () => setPicker("openingLocations"),
+      onRemoveAllowedLocation: removeOpeningLocation,
+    },
     referenceLoadError,
     pickerViewProps: picker ? pickerViewProps : null,
   };

@@ -6,7 +6,6 @@ import {
   Plus,
   Save,
   ShieldCheck,
-  Sparkles,
   Theater,
 } from "lucide-react";
 
@@ -22,6 +21,7 @@ import SelectionCardView from "@/components/studio/room-templates/selection-card
 import ScenarioRecommendationsPanelView from "@/components/studio/room-templates/scenario-recommendations-panel/ScenarioRecommendationsPanel.view";
 import InvitedPlayersPanelView from "@/components/studio/room-templates/invited-players-panel/InvitedPlayersPanel.view";
 import OpeningMessageCardView from "@/components/studio/room-templates/opening-message-card/OpeningMessageCard.view";
+import StoryOpeningLocationAuthoringView from "@/components/studio/create/room-template/story-opening-location-authoring/StoryOpeningLocationAuthoring.view";
 
 export default function RoomTemplateBuilderView({
   form = {},
@@ -33,10 +33,10 @@ export default function RoomTemplateBuilderView({
   effectiveTurnBased = false,
   selectedScenario = null,
   selectedNarrator = null,
-  selectedLocation = null,
   showScenarioRecommendations = false,
   summaryProps = {},
   selectedCharactersPanelProps = {},
+  openingLocationProps = {},
   scenarioRecommendationsPanelProps = {},
   invitedPlayersPanelProps = {},
   openingMessageCards = [],
@@ -50,7 +50,6 @@ export default function RoomTemplateBuilderView({
   onToggleTurnBased = null,
   onOpenScenarioPicker = null,
   onOpenNarratorPicker = null,
-  onOpenLocationPicker = null,
   onAddOpeningMessage = null,
   onSelectDisplayMediaSlot = null,
   onSave = null,
@@ -136,7 +135,7 @@ export default function RoomTemplateBuilderView({
               rows={5}
             />
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
               <CrestfallSelect
                 label="Story Mode"
                 value={form.room_mode || ""}
@@ -202,14 +201,9 @@ export default function RoomTemplateBuilderView({
                 onOpen={onOpenNarratorPicker}
               />
 
-              <SelectionCardView
-                label="Location / Scene"
-                icon={Sparkles}
-                value={selectedLocation}
-                placeholder="Optional Location"
-                onOpen={onOpenLocationPicker}
-              />
             </div>
+
+            <StoryOpeningLocationAuthoringView {...openingLocationProps} />
           </div>
         </BuilderSection>
 

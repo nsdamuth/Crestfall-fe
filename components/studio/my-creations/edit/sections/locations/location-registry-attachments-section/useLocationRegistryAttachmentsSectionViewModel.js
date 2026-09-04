@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
+import { useOwnedCreationSummaryIndex } from "@/components/studio/creations/hooks/useOwnedCreationSummaryIndex";
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
 
 export const LOCATION_REGISTRY_GROUPS = Object.freeze([
   Object.freeze({
@@ -185,6 +187,8 @@ export function useLocationRegistryAttachmentsSectionViewModel({
   );
   const activePicker = findRegistryGroup(pickerGroupId);
 
+  const { summariesById } = useOwnedCreationSummaryIndex();
+
   const groups = LOCATION_REGISTRY_GROUPS.map((group) => ({
     id: group.id,
     label: group.label,
@@ -195,7 +199,11 @@ export function useLocationRegistryAttachmentsSectionViewModel({
       group,
       boundRegistries,
       boundRegistryLinks,
-    }),
+    }).map((link) =>
+      hydrateCreationReference(link, summariesById, {
+        fallbackType: group.allowedTypes[0],
+      })
+    ),
   }));
 
   function updateRegistryData(nextBoundRegistries, nextBoundRegistryLinks) {

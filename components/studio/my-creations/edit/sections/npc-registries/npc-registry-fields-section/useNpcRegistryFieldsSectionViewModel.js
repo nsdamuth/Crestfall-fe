@@ -1,6 +1,8 @@
 "use client";
 
 import { useNpcRegistryEditor } from "@/components/studio/registries/hooks/useNpcRegistryEditor";
+import { useOwnedCreationSummaryIndex } from "@/components/studio/creations/hooks/useOwnedCreationSummaryIndex";
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
 import {
   getEntryName,
   getNpcRegistryEntryActorMechanicsProfileAttachment,
@@ -42,10 +44,15 @@ const SECTION_COPY = Object.freeze({
   },
 });
 
-function buildEntryCards(editor) {
+function buildEntryCards(editor, summariesById) {
   return editor.registry.entries.map((entry) => {
-    const attachment =
+    const rawAttachment =
       getNpcRegistryEntryActorMechanicsProfileAttachment(entry);
+    const attachment = rawAttachment
+      ? hydrateCreationReference(rawAttachment, summariesById, {
+          fallbackType: "ACTOR_MECHANICS_PROFILE",
+        })
+      : null;
 
     return {
       id: entry.id,
@@ -105,10 +112,10 @@ function buildAliasCards(editor) {
   }));
 }
 
-function getSectionState(section, editor) {
+function getSectionState(section, editor, summariesById) {
   if (section === "entries") {
     return {
-      cards: buildEntryCards(editor),
+      cards: buildEntryCards(editor, summariesById),
       onPrimaryAction: editor.openNewEntry,
       primaryActionDisabled: false,
       helperMessage: "",
@@ -165,9 +172,19 @@ export function useNpcRegistryFieldsSectionViewModel({
   updateDataField = null,
 } = {}) {
   const editor = useNpcRegistryEditor({ form, updateDataField });
+  const hasProfileAttachments = editor.registry.entries.some((entry) =>
+    Boolean(getNpcRegistryEntryActorMechanicsProfileAttachment(entry)?.creationId)
+  );
+  const { summariesById } = useOwnedCreationSummaryIndex({
+    enabled: hasProfileAttachments,
+  });
   const activeSection = SECTION_COPY[section] ? section : "overview";
   const sectionCopy = SECTION_COPY[activeSection];
-  const sectionState = getSectionState(activeSection, editor);
+  const sectionState = getSectionState(
+    activeSection,
+    editor,
+    summariesById
+  );
   const linkedCreationIds = editor.registry.entries
     .filter((entry) => entry.kind === "CREATION_REF" && entry.creationId)
     .map((entry) => entry.creationId);

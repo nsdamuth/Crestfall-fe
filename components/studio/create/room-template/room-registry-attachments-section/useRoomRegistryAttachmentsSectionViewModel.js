@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { createLinkedCreationLink } from "@/components/studio/registries/structuredRegistryUtils";
+import { useOwnedCreationSummaryIndex } from "@/components/studio/creations/hooks/useOwnedCreationSummaryIndex";
+import { hydrateCreationReference } from "@/lib/shared/creations/creationReferenceHydration";
 
 const REGISTRY_GROUPS = [
   {
@@ -188,7 +190,11 @@ function findGroupLink({
   );
 }
 
-function getDisplayGroups({ boundRegistries, boundRegistryLinks }) {
+function getDisplayGroups({
+  boundRegistries,
+  boundRegistryLinks,
+  summariesById,
+}) {
   return REGISTRY_GROUPS.map((group) => ({
     id: group.id,
     label: group.label,
@@ -199,15 +205,21 @@ function getDisplayGroups({ boundRegistries, boundRegistryLinks }) {
       group,
       boundRegistries,
       boundRegistryLinks,
-    }).map((link, index) => ({
-      id: getAttachmentId(link, index),
-      title: link?.title || "Attached Registry",
-      typeLabel: link?.type || "Registry",
-      description: link?.description || "",
-      imageUrl: link?.imageUrl || "",
-      notes: link?.notes || "",
-      removeAriaLabel: "Remove attached registry",
-    })),
+    }).map((link, index) => {
+      const hydrated = hydrateCreationReference(link, summariesById, {
+        fallbackType: group.allowedTypes[0],
+      });
+
+      return {
+        id: getAttachmentId(hydrated, index),
+        title: hydrated?.title || "Attached Registry",
+        typeLabel: hydrated?.type || group.allowedTypes[0] || "Registry",
+        description: hydrated?.description || "",
+        imageUrl: hydrated?.imageUrl || "",
+        notes: hydrated?.notes || "",
+        removeAriaLabel: "Remove attached registry",
+      };
+    }),
   }));
 }
 
@@ -226,6 +238,8 @@ export function useRoomRegistryAttachmentsSectionViewModel({
     safeData.boundRegistryLinks
   );
   const activePicker = getGroupById(activePickerId);
+
+  const { summariesById } = useOwnedCreationSummaryIndex();
 
   const pickerLinks = useMemo(() => {
     if (!activePicker) return [];
@@ -363,7 +377,11 @@ export function useRoomRegistryAttachmentsSectionViewModel({
       eyebrow,
       title,
       body,
-      groups: getDisplayGroups({ boundRegistries, boundRegistryLinks }),
+      groups: getDisplayGroups({
+        boundRegistries,
+        boundRegistryLinks,
+        summariesById,
+      }),
       onOpenRegistryPicker: (groupId) => setActivePickerId(groupId),
       onRemoveRegistry: removeRegistry,
       onChangeRegistryNotes: changeRegistryNotes,
