@@ -7,6 +7,7 @@ export const VISUAL_REFERENCES_SECTION_VIEW_CONTRACT = Object.freeze({
     "sectionEyebrow",
     "sectionTitle",
     "sectionDescription",
+    "referenceGuidance",
     "refreshLabel",
     "loadStatus",
     "loadErrorMessage",

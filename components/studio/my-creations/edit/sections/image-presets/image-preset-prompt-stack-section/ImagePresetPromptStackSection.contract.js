@@ -24,6 +24,7 @@ export const IMAGE_PRESET_PROMPT_STACK_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} imagePromptLabel
  * @property {string} imagePromptValue
  * @property {string} imagePromptPlaceholder
+ * @property {string} imagePromptHelpText
  * @property {string} negativePromptLabel
  * @property {string} negativePromptValue
  * @property {string} negativePromptPlaceholder

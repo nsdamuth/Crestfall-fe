@@ -21,6 +21,7 @@ export default function ImagePresetPromptStackSectionView({
   imagePromptLabel = "Standalone Image Prompt",
   imagePromptValue = "",
   imagePromptPlaceholder = "",
+  imagePromptHelpText = "",
   negativePromptLabel = "Negative Prompt",
   negativePromptValue = "",
   negativePromptPlaceholder = "",
@@ -71,13 +72,20 @@ export default function ImagePresetPromptStackSectionView({
           maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <TextAreaField
-          label={imagePromptLabel}
-          value={imagePromptValue}
-          onChange={(value) => onChangeImagePrompt?.(value)}
-          placeholder={imagePromptPlaceholder}
-          maxLength={DEEP_LONGFORM_MAX_LENGTH}
-        />
+        <div>
+          <TextAreaField
+            label={imagePromptLabel}
+            value={imagePromptValue}
+            onChange={(value) => onChangeImagePrompt?.(value)}
+            placeholder={imagePromptPlaceholder}
+            maxLength={DEEP_LONGFORM_MAX_LENGTH}
+          />
+          {imagePromptHelpText ? (
+            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+              {imagePromptHelpText}
+            </p>
+          ) : null}
+        </div>
 
         <TextAreaField
           label={negativePromptLabel}

@@ -43,6 +43,7 @@ test("Visual References ViewModel owns library normalization and storage mapping
   assert.match(viewModel, /visual_references/);
   assert.match(viewModel, /anime_image_output_id/);
   assert.match(viewModel, /realistic_image_output_id/);
+  assert.match(viewModel, /square \(1:1\) reference image/i);
   assert.doesNotMatch(viewModel, /<\w+/);
 });
 

@@ -2,7 +2,7 @@ const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Image Preset Editor",
   sectionTitle: "Rendering Notes",
   sectionDescription:
-    "Define lighting, detail level, linework, shading, atmosphere, and composition behavior for this image preset.",
+    "Define lighting, detail level, linework, shading, atmosphere, and composition behavior. These fields contribute to generation when Standalone Image Prompt is empty.",
   lightingStyleLabel: "Lighting Style",
   detailLevelLabel: "Detail Level",
   lineworkLabel: "Linework",

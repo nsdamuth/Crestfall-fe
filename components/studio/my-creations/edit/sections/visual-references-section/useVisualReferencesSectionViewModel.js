@@ -28,6 +28,8 @@ const DEFAULT_COPY = Object.freeze({
   sectionTitle: "Visual References",
   sectionDescription:
     "Assign one anime reference and one realistic reference from this creation's image library. Image Studio can later choose the correct reference automatically based on render family.",
+  referenceGuidance:
+    "Best results: use a square (1:1) reference image. Non-square references may be cropped or resized during reference conditioning and can reduce identity fidelity.",
   refreshLabel: "Refresh Library",
   loadErrorMessage: "Image library could not be loaded.",
 });

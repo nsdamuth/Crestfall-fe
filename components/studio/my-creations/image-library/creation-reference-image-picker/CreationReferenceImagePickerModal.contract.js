@@ -18,6 +18,7 @@ export const CREATION_REFERENCE_IMAGE_PICKER_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} CreationReferenceImagePickerModalViewProps
  * @property {string} referenceLabel
+ * @property {string} referenceGuidance
  * @property {CreationReferenceImagePickerViewItem[]} images
  * @property {boolean} isLoading
  * @property {string} loadErrorMessage

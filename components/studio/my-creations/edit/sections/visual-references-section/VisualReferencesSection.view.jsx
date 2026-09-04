@@ -78,6 +78,8 @@ export default function VisualReferencesSectionView({
   sectionEyebrow = "Visual Consistency",
   sectionTitle = "Visual References",
   sectionDescription = "",
+  referenceGuidance =
+    "Best results: use a square (1:1) reference image. Non-square references may be cropped or resized during reference conditioning and can reduce identity fidelity.",
   refreshLabel = "Refresh library",
   loadStatus = "idle",
   loadErrorMessage = "Image library could not be loaded.",
@@ -106,6 +108,12 @@ export default function VisualReferencesSectionView({
           {refreshLabel}
         </button>
       </div>
+
+      {referenceGuidance ? (
+        <p className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--gold-ornament)]">
+          {referenceGuidance}
+        </p>
+      ) : null}
 
       {loadStatus === "error" ? (
         <p className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--status-danger)]">

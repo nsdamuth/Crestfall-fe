@@ -5,7 +5,7 @@ const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Image Preset Editor",
   sectionTitle: "Prompt Stack",
   sectionDescription:
-    "Edit the reusable prompt language this image preset contributes when selected in Image Studio.",
+    "Edit the reusable prompt language this image preset contributes when selected in Image Studio. If Standalone Image Prompt is empty, Crestfall composes the structured style, quality, and rendering fields instead.",
   promptGuidanceLabel: "Prompt Guidance",
   promptGuidancePlaceholder:
     "Reusable image-generation wording for this style preset.",
@@ -17,7 +17,9 @@ const DEFAULT_COPY = Object.freeze({
     "Optional quality, finish, detail, polish, or consistency guidance.",
   imagePromptLabel: "Standalone Image Prompt",
   imagePromptPlaceholder:
-    "Optional standalone prompt for generating preview, catalogue, or reference images for this image preset as its own visual asset. Max 2,000 characters.",
+    "Optional complete positive prompt contribution for this preset. Max 2,000 characters.",
+  imagePromptHelpText:
+    "Precedence: when Standalone Image Prompt is filled, Crestfall uses it as this preset's complete positive prompt contribution. Structured prompt, Style / Medium, and Rendering Notes fields are fallback authoring and are not appended to it.",
   negativePromptLabel: "Negative Prompt",
   negativePromptPlaceholder:
     "Optional negatives this image preset should contribute when selected. Example: photorealistic, 3d render, dull colors, flat lighting. Max 2,000 characters.",

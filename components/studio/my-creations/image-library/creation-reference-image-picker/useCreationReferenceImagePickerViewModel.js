@@ -95,6 +95,8 @@ export function useCreationReferenceImagePickerViewModel({
 
   return {
     referenceLabel,
+    referenceGuidance:
+      "For best identity fidelity, choose a square (1:1) reference image. Non-square images may be cropped or resized during reference conditioning.",
     images,
     isLoading,
     loadErrorMessage:

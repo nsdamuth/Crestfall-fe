@@ -14,6 +14,8 @@ import KitModalFrame from "@/components/kit/KitModalFrame";
 // (`max-w-4xl`, closing the prior max-w-5xl width-tier overshoot).
 export default function CreationReferenceImagePickerModalView({
   referenceLabel = "Reference Image",
+  referenceGuidance =
+    "For best identity fidelity, choose a square (1:1) reference image. Non-square images may be cropped or resized during reference conditioning.",
   images = [],
   isLoading = false,
   loadErrorMessage = "",
@@ -41,6 +43,11 @@ export default function CreationReferenceImagePickerModalView({
               Choose an eligible image from this creation&apos;s image library.
               Hidden, blocked, or missing-output images are not shown.
             </p>
+            {referenceGuidance ? (
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--gold-ornament)]">
+                {referenceGuidance}
+              </p>
+            ) : null}
           </div>
 
           <button

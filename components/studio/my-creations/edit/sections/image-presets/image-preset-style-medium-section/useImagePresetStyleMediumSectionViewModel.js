@@ -2,7 +2,7 @@ const DEFAULT_COPY = Object.freeze({
   sectionEyebrow: "Image Preset Editor",
   sectionTitle: "Style / Medium",
   sectionDescription:
-    "Describe the visual medium, style family, rendering mode, texture, and art direction this preset contributes.",
+    "Describe the visual medium, style family, rendering mode, texture, and art direction. These fields contribute to generation when Standalone Image Prompt is empty.",
   mediumLabel: "Medium",
   artStyleLabel: "Art Style",
   artistInfluenceLabel: "Artist / Era Influence",
