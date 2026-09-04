@@ -11,16 +11,21 @@ import KitCredits from "@/components/kit/KitCredits";
 import LorePublicCreationPage from "@/components/studio/creations/lore/LorePublicCreationPage";
 import MediaLightbox from "@/components/studio/media/MediaLightbox";
 import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActions";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 
 import CreationProfilePageView from "./creation-profile-page/CreationProfilePage.view";
 import { useCreationProfilePageViewModel } from "./creation-profile-page/useCreationProfilePageViewModel";
 
 function StandardCreationProfilePage(props) {
   const router = useRouter();
+  const launchController = useStoryLaunchController();
   const viewModel = useCreationProfilePageViewModel({
     ...props,
     navigate: (href) => router.push(href),
     refreshPage: () => router.refresh(),
+    onStartStory: launchController.launch,
+    storyLaunchError: launchController.launchError,
   });
 
   if (!viewModel.shouldRender) return null;
@@ -43,7 +48,8 @@ function StandardCreationProfilePage(props) {
   );
 
   return (
-    <CreationProfilePageView
+    <>
+      <CreationProfilePageView
       {...viewModel}
       statusBadgesSlot={
         creation ? <CreationStatusBadges creation={creation.raw} /> : null
@@ -99,7 +105,9 @@ function StandardCreationProfilePage(props) {
           />
         ) : null
       }
-    />
+      />
+      <StoryLaunchRequirementsSheet picker={launchController.picker} />
+    </>
   );
 }
 

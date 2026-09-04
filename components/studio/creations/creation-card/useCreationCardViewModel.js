@@ -21,6 +21,8 @@ export function useCreationCardViewModel({
   bookmarked = false,
   onToggleLike,
   onToggleBookmark,
+  onStartStory,
+  storyLaunchError = "",
 } = {}) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewCreation, setPreviewCreation] = useState(null);
@@ -126,6 +128,12 @@ export function useCreationCardViewModel({
     }
 
     setChatError("");
+
+    if (typeof onStartStory === "function") {
+      await onStartStory(creation);
+      return;
+    }
+
     setStartingChat(true);
 
     try {
@@ -222,7 +230,7 @@ export function useCreationCardViewModel({
       creatorHref: creator?.href || null,
       subtitle: creation?.subtitle || "",
       description: creation?.description || "",
-      errorMessage: defaultPcError || chatError || previewError,
+      errorMessage: defaultPcError || storyLaunchError || chatError || previewError,
       statusMessage: defaultPcStatus,
       onOpenPreview: openPreview,
     },

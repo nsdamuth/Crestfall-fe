@@ -226,6 +226,8 @@ export function useCreationPreviewModalViewModel({
   onToggleBookmark,
   onClose,
   navigate,
+  onStartStory,
+  storyLaunchError = "",
 } = {}) {
   const [mediaIndexByCreationId, setMediaIndexByCreationId] = useState({});
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
@@ -246,7 +248,7 @@ export function useCreationPreviewModalViewModel({
     activeMediaIndex,
     descriptionExpanded,
     startingChat,
-    chatError,
+    chatError: storyLaunchError || chatError,
     settingDefaultPc,
     defaultPcStatus,
     defaultPcError,
@@ -291,6 +293,12 @@ export function useCreationPreviewModalViewModel({
     if (!viewProps.supportsChat || startingChat) return;
 
     setChatError("");
+
+    if (typeof onStartStory === "function") {
+      await onStartStory(creation);
+      return;
+    }
+
     setStartingChat(true);
 
     try {

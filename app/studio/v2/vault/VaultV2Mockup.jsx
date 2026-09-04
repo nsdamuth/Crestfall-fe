@@ -28,10 +28,10 @@ import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import { archiveCreation, deleteCreation } from "@/lib/client/studio/creations/creationClient";
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
-import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
 import {
   buildDomainFilterGroups,
@@ -162,6 +162,7 @@ export default function VaultV2Mockup({
   live = false,
 } = {}) {
   const router = useRouter();
+  const launchController = useStoryLaunchController();
   const ownedItems = Array.isArray(items) ? items : FIXTURE_VAULT_ITEMS;
   const savedCandidates = Array.isArray(bookmarkCandidates) ? bookmarkCandidates : [];
   const [fixtureMode, setFixtureMode] = useState("default");
@@ -342,21 +343,7 @@ export default function VaultV2Mockup({
       return;
     }
 
-    try {
-      const payload = await startStoryFromCreation(item.rawCreation || item);
-      const roomId = payload?.room?.id;
-
-      if (!roomId) {
-        throw new Error("Story was created without a room id.");
-      }
-
-      router.push(buildStoryChatHref(roomId));
-    } catch (error) {
-      setActionNotice({
-        label: "Start Story",
-        message: error?.message || "Story could not be started.",
-      });
-    }
+    await launchController.launch(item.rawCreation || item);
   }
 
   function handleEdit(item) {
@@ -719,7 +706,19 @@ export default function VaultV2Mockup({
       );
     })()}
 
-    <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
+    <StoryLaunchRequirementsSheet picker={launchController.picker} />
+    <FixtureActionNotice
+      notice={
+        actionNotice ||
+        (launchController.launchError
+          ? { label: "Start Story", message: launchController.launchError }
+          : null)
+      }
+      onClose={() => {
+        setActionNotice(null);
+        launchController.setLaunchError("");
+      }}
+    />
     </>
   );
 }

@@ -305,6 +305,8 @@ export function useCreationProfilePageViewModel({
   loadError = null,
   navigate,
   refreshPage,
+  onStartStory,
+  storyLaunchError = "",
 } = {}) {
   const normalizedCreation = useMemo(
     () => normalizeCreationProfileCreation(creation),
@@ -518,6 +520,12 @@ export function useCreationProfilePageViewModel({
     if (!normalizedCreation?.supportsChat || startingChat) return;
 
     setChatError("");
+
+    if (typeof onStartStory === "function") {
+      await onStartStory(normalizedCreation.raw);
+      return;
+    }
+
     setStartingChat(true);
     try {
       const data = await startStoryFromCreation(normalizedCreation.raw);
@@ -574,7 +582,7 @@ export function useCreationProfilePageViewModel({
     hasMoreMedia: visibleCount < filteredMedia.length,
     reactionMessage,
     startingChat,
-    chatError,
+    chatError: storyLaunchError || chatError,
     onSelectTab: selectTab,
     onQueryChange: changeQuery,
     onLoadMore: () =>

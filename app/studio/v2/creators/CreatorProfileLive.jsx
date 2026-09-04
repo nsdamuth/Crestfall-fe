@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import CreatorProfileView from "./creator-profile/CreatorProfile.view";
 import { projectLiveCreatorProfile } from "@/lib/shared/presentation/creatorProfilePresentation";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import {
   fetchProfileReactions,
   setProfileBookmark,
@@ -14,9 +16,7 @@ import {
 } from "@/lib/client/studio/engagement/profileReactionClient";
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
 import { donateProfileCoins } from "@/lib/client/studio/profile/creatorDonationClient";
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
-import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import PublicProfileActivityFeedView from "@/components/studio/profile/public-profile-activity-feed/PublicProfileActivityFeed.view";
 import { buildPublicProfileActivityFeedViewProps } from "@/components/studio/profile/public-profile-activity-feed/usePublicProfileActivityFeedViewModel";
 import PublicProfileBadgesView from "@/components/studio/profile/public-profile-badges/PublicProfileBadges.view";
@@ -32,6 +32,7 @@ function canonBadges(item) {
 
 export default function CreatorProfileLive({ pageData = {} } = {}) {
   const router = useRouter();
+  const launchController = useStoryLaunchController();
   const projected = useMemo(() => projectLiveCreatorProfile(pageData), [pageData]);
   const { profile, stats, followState, works, badges } = projected;
   const engagementState = useCreationEngagementState(pageData.creations || []);
@@ -158,14 +159,7 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
       return;
     }
 
-    try {
-      const payload = await startStoryFromCreation(item.rawCreation || item);
-      const roomId = payload?.room?.id;
-      if (!roomId) throw new Error("Story was created without a room id.");
-      router.push(buildStoryChatHref(roomId));
-    } catch (error) {
-      openNotice("Start Story", error?.message || "Story could not be started.");
-    }
+    await launchController.launch(item.rawCreation || item);
   }
 
   const visibleWorks = works.slice(0, visibleWorksCount);
@@ -211,7 +205,8 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
   const partialLoadNotice = pageData.loadError || pageData.donationLoadError || null;
 
   return (
-    <CreatorProfileView
+    <>
+      <CreatorProfileView
       displayName={profile.displayName}
       handle={profile.handle}
       bio={profile.bio}
@@ -287,15 +282,23 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
         imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Crash Santosa.png"),
         onCtaClick: () => router.push("/studio/v2/lore"),
       }}
-      notice={notice || (partialLoadNotice
-        ? { label: "Profile data", message: partialLoadNotice }
-        : engagementState.engagementMessage
-          ? { label: "Creation engagement", message: engagementState.engagementMessage }
-          : null)}
+      notice={
+        notice ||
+        (launchController.launchError
+          ? { label: "Start Story", message: launchController.launchError }
+          : partialLoadNotice
+            ? { label: "Profile data", message: partialLoadNotice }
+            : engagementState.engagementMessage
+              ? { label: "Creation engagement", message: engagementState.engagementMessage }
+              : null)
+      }
       onCloseNotice={() => {
         setNotice(null);
+        launchController.setLaunchError("");
         engagementState.setEngagementMessage("");
       }}
-    />
+      />
+      <StoryLaunchRequirementsSheet picker={launchController.picker} />
+    </>
   );
 }

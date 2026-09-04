@@ -28,9 +28,9 @@ import {
 } from "../catalog/creationCatalogFilterTaxonomy.js";
 import FixtureActionNotice from "../FixtureActionNotice";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
-import { startStoryFromCreation } from "@/lib/client/studio/story-rooms/storyRoomClient";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
-import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -184,6 +184,7 @@ export default function CommunityV2Mockup({
   live = false,
 } = {}) {
   const router = useRouter();
+  const launchController = useStoryLaunchController();
   const sourceCreations = Array.isArray(creations) ? creations : FIXTURE_CREATIONS;
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -374,21 +375,7 @@ export default function CommunityV2Mockup({
       return;
     }
 
-    try {
-      const payload = await startStoryFromCreation(creation.rawCreation || creation);
-      const roomId = payload?.room?.id;
-
-      if (!roomId) {
-        throw new Error("Story was created without a room id.");
-      }
-
-      router.push(buildStoryChatHref(roomId));
-    } catch (error) {
-      setActionNotice({
-        label: "Start Story",
-        message: error?.message || "Story could not be started.",
-      });
-    }
+    await launchController.launch(creation.rawCreation || creation);
   }
 
   async function handleShare(creation) {
@@ -663,7 +650,19 @@ export default function CommunityV2Mockup({
         );
       })()}
 
-      <FixtureActionNotice notice={actionNotice} onClose={() => setActionNotice(null)} />
+      <StoryLaunchRequirementsSheet picker={launchController.picker} />
+      <FixtureActionNotice
+        notice={
+          actionNotice ||
+          (launchController.launchError
+            ? { label: "Start Story", message: launchController.launchError }
+            : null)
+        }
+        onClose={() => {
+          setActionNotice(null);
+          launchController.setLaunchError("");
+        }}
+      />
     </>
   );
 }
