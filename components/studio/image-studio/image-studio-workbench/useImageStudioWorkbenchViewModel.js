@@ -44,12 +44,14 @@ export const LEGACY_RENDERING_STYLE_BY_PROFILE = Object.freeze({
   crestfall_realistic: "realistic",
   crestfall_anime_anime: "anime",
   crestfall_fantasy_realistic: "realistic",
+  crestfall_fantasy_realism: "realistic",
   crestfall_realistic_fantasy: "realistic",
 });
 
 export const REALISTIC_PROFILE_KEYS = new Set([
   "crestfall_realistic",
   "crestfall_fantasy_realistic",
+  "crestfall_fantasy_realism",
   "crestfall_realistic_fantasy",
 ]);
 

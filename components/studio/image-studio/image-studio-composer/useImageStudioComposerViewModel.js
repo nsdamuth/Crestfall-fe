@@ -137,7 +137,7 @@ export function getImageStudioComposerViewProps({
     value: activeRenderStyle.value,
     activeLabel: activeRenderStyle.mappedLabel,
     helperText:
-      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint.",
+      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint, and the middle options blend them in different ways.",
     options: RENDER_STYLE_RAIL_STOPS.map((entry, index) => ({
       ...entry,
       index,

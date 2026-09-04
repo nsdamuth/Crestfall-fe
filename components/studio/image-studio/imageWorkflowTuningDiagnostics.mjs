@@ -18,13 +18,14 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../../..");
 const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 
-test("render style rail has five fixed stops from Fantasy to Realistic", () => {
+test("render style rail has six fixed stops from Fantasy to Realistic", () => {
   assert.deepEqual(
     RENDER_STYLE_RAIL_STOPS.map((entry) => entry.value),
     [
       "crestfall_fantasy",
       "crestfall_anime_anime",
       "crestfall_fantasy_realistic",
+      "crestfall_fantasy_realism",
       "crestfall_realistic_fantasy",
       "crestfall_realistic",
     ]
@@ -37,11 +38,11 @@ test("render style rail has five fixed stops from Fantasy to Realistic", () => {
   assert.equal(normalizeRenderStyleRailSelection("auto"), "crestfall_fantasy");
   assert.equal(
     getRenderStyleRailStop("crestfall_realistic_fantasy").shortLabel,
-    "Real → Fantasy"
+    "Cinematic"
   );
 });
 
-test("all five rail workflows expose bounded semantic tuning definitions", () => {
+test("all six rail workflows expose bounded semantic tuning definitions", () => {
   for (const entry of RENDER_STYLE_RAIL_STOPS) {
     const definition = getImageWorkflowTuningDefinition(entry.value);
     assert.ok(definition, `${entry.value} should have tuning`);
@@ -78,6 +79,9 @@ test("hybrid workflows preserve curated semantic tuning controls", () => {
   const fantasyRealistic = getImageWorkflowTuningDefinition(
     "crestfall_fantasy_realistic"
   );
+  const fantasyRealism = getImageWorkflowTuningDefinition(
+    "crestfall_fantasy_realism"
+  );
   const realisticFantasy = getImageWorkflowTuningDefinition(
     "crestfall_realistic_fantasy"
   );
@@ -87,8 +91,23 @@ test("hybrid workflows preserve curated semantic tuning controls", () => {
     ["referenceInfluence", "styleBalance", "foundationDetail", "polishDetail"]
   );
   assert.deepEqual(
+    fantasyRealism.controls.map((entry) => entry.id),
+    ["referenceInfluence", "styleBalance", "foundationDetail", "polishDetail"]
+  );
+  assert.deepEqual(
     realisticFantasy.controls.map((entry) => entry.id),
     ["referenceInfluence", "styleBalance", "foundationDetail", "polishDetail"]
+  );
+  assert.deepEqual(
+    Object.fromEntries(
+      fantasyRealism.controls.map((entry) => [entry.id, entry.defaultValue])
+    ),
+    {
+      referenceInfluence: 50,
+      styleBalance: 35,
+      foundationDetail: 55,
+      polishDetail: 40,
+    }
   );
   assert.deepEqual(
     Object.fromEntries(

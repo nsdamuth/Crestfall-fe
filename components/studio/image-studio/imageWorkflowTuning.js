@@ -32,17 +32,22 @@ export const RENDER_STYLE_RAIL_STOPS = Object.freeze([
   Object.freeze({
     value: "crestfall_anime_anime",
     shortLabel: "Anime",
-    mappedLabel: "Crestfall Anime / Anime",
+    mappedLabel: "Crestfall Anime",
   }),
   Object.freeze({
     value: "crestfall_fantasy_realistic",
-    shortLabel: "Fantasy → Real",
-    mappedLabel: "Crestfall Fantasy → Realistic",
+    shortLabel: "Illustrative",
+    mappedLabel: "Crestfall Illustrative",
+  }),
+  Object.freeze({
+    value: "crestfall_fantasy_realism",
+    shortLabel: "Heroic",
+    mappedLabel: "Crestfall Heroic",
   }),
   Object.freeze({
     value: "crestfall_realistic_fantasy",
-    shortLabel: "Real → Fantasy",
-    mappedLabel: "Crestfall Realistic → Fantasy",
+    shortLabel: "Cinematic",
+    mappedLabel: "Crestfall Cinematic",
   }),
   Object.freeze({
     value: "crestfall_realistic",
@@ -99,7 +104,7 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
 
   crestfall_fantasy_realistic: Object.freeze({
     key: "crestfall_fantasy_realistic",
-    label: "Fantasy → Realistic",
+    label: "Illustrative",
     description:
       "Tune the tested Fantasy → Realistic envelope without exposing sampler, CFG, or model internals.",
     controls: Object.freeze([
@@ -141,17 +146,69 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
     handoff: Object.freeze({
       boundaryControlId: "styleBalance",
       boundaryValue: 100,
-      targetProfileKey: "crestfall_realistic_fantasy",
-      targetProfileLabel: "Realistic → Fantasy",
+      targetProfileKey: "crestfall_fantasy_realism",
+      targetProfileLabel: "Heroic",
       message:
-        "This is the validated realism ceiling for Fantasy → Realistic. Move the workflow rail right for a realism-first result.",
-      targetStartingTuning: Object.freeze({ styleBalance: 0 }),
+        "This is the validated realism ceiling for Illustrative. Move the workflow rail right for the balanced Heroic lane.",
+      targetStartingTuning: Object.freeze({ styleBalance: 35 }),
+    }),
+  }),
+
+  crestfall_fantasy_realism: Object.freeze({
+    key: "crestfall_fantasy_realism",
+    label: "Heroic",
+    description:
+      "Tune the balanced fantasy-realism lane that bridges Fantasy → Realistic and Realistic → Fantasy without exposing sampler, CFG, or model internals.",
+    controls: Object.freeze([
+      control({
+        id: "referenceInfluence",
+        label: "Reference Influence",
+        description:
+          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
+        leftLabel: "Looser",
+        rightLabel: "Stronger",
+        defaultValue: 50,
+      }),
+      control({
+        id: "styleBalance",
+        label: "Fantasy Influence",
+        description:
+          "How strongly the fantasy polish may reshape the realism-first foundation while staying in the balanced middle lane.",
+        leftLabel: "Mostly Realistic",
+        rightLabel: "Stronger Fantasy",
+        defaultValue: 35,
+      }),
+      control({
+        id: "foundationDetail",
+        label: "Realistic Foundation Detail",
+        description: "How much of the bounded realism-foundation detail budget is used.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 55,
+      }),
+      control({
+        id: "polishDetail",
+        label: "Fantasy Polish Detail",
+        description: "How much of the bounded fantasy-polish detail budget is used.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+        defaultValue: 40,
+      }),
+    ]),
+    handoff: Object.freeze({
+      boundaryControlId: "styleBalance",
+      boundaryValue: 100,
+      targetProfileKey: "crestfall_realistic_fantasy",
+      targetProfileLabel: "Cinematic",
+      message:
+        "This is the validated fantasy ceiling for Heroic. Move the workflow rail right for the stronger Cinematic lane.",
+      targetStartingTuning: Object.freeze({ styleBalance: 50 }),
     }),
   }),
 
   crestfall_realistic_fantasy: Object.freeze({
     key: "crestfall_realistic_fantasy",
-    label: "Realistic → Fantasy",
+    label: "Cinematic",
     description:
       "Tune the V3 realism-first foundation and restrained fantasy polish without exposing sampler, CFG, or model internals.",
     controls: Object.freeze([
@@ -194,9 +251,9 @@ export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
       boundaryControlId: "styleBalance",
       boundaryValue: 100,
       targetProfileKey: "crestfall_fantasy_realistic",
-      targetProfileLabel: "Fantasy → Realistic",
+      targetProfileLabel: "Illustrative",
       message:
-        "This is the validated fantasy ceiling for Realistic → Fantasy. Move the workflow rail left for a fantasy-first result.",
+        "This is the validated fantasy ceiling for Cinematic. Move the workflow rail left for the more illustrative fantasy-first lane.",
       targetStartingTuning: Object.freeze({ styleBalance: 0 }),
     }),
   }),

@@ -280,21 +280,31 @@ function RenderStyleRail({ rail, idPrefix }) {
           className="mt-[var(--space-2)] w-full cursor-pointer accent-[var(--gold-action)]"
         />
 
-        <div className="mt-[var(--space-2)] grid grid-cols-5 gap-1">
+        <div className="mt-[var(--space-2)] grid grid-cols-6 gap-1 pt-1">
           {rail.options.map((option, index) => (
             <button
               key={option.value}
               type="button"
               aria-pressed={index === activeIndex}
               onClick={() => selectIndex(index)}
-              className={`min-w-0 rounded-[var(--radius-sm)] px-1 py-2 text-center text-[10px] leading-tight transition-colors ${
+              className={`relative h-16 min-w-0 text-[10px] transition-colors ${
                 index === activeIndex
-                  ? "bg-[var(--fill)] text-[var(--gold-bright)]"
-                  : "text-[var(--ink-faint)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink-dim)]"
+                  ? "text-[var(--gold-bright)]"
+                  : "text-[var(--ink-faint)] hover:text-[var(--ink-dim)]"
               }`}
               title={option.mappedLabel}
             >
-              {option.shortLabel}
+              <span
+                className={`absolute left-1/2 top-1/2 whitespace-nowrap rounded-[var(--radius-sm)] px-1.5 py-1 leading-tight ${
+                  index === activeIndex ? "bg-[var(--fill)]" : ""
+                }`}
+                style={{
+                  transform: "translate(-50%, -50%) rotate(-42deg)",
+                  transformOrigin: "center",
+                }}
+              >
+                {option.shortLabel}
+              </span>
             </button>
           ))}
         </div>
@@ -557,6 +567,32 @@ function GenerateBlock({
         />
       </label>
 
+      <button
+        type="button"
+        onClick={() => onGenerate?.()}
+        disabled={!canGenerate}
+        className="cf-btn cf-btn--primary w-full"
+      >
+        {generationStatus === "loading" ? (
+          <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+        ) : (
+          <Wand2 size={15} aria-hidden="true" />
+        )}
+        {generationStatus === "loading" ? "Generate another image" : "Generate image"}
+      </button>
+
+      {generationError ? (
+        <p role="alert" className="rounded-[var(--radius-md)] border border-[var(--status-danger)]/35 bg-[var(--status-danger)]/10 px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+          {generationError}
+        </p>
+      ) : null}
+
+      {generationHelpText && (
+        <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+          {generationHelpText}
+        </p>
+      )}
+
       <OptionsExpander
         isOpen={isOptionsOpen}
         onToggle={() => setIsOptionsOpen((current) => !current)}
@@ -591,32 +627,6 @@ function GenerateBlock({
           </p>
         )}
       </div>
-
-      <button
-        type="button"
-        onClick={() => onGenerate?.()}
-        disabled={!canGenerate}
-        className="cf-btn cf-btn--primary w-full"
-      >
-        {generationStatus === "loading" ? (
-          <Loader2 size={15} className="animate-spin" aria-hidden="true" />
-        ) : (
-          <Wand2 size={15} aria-hidden="true" />
-        )}
-        {generationStatus === "loading" ? "Generate another image" : "Generate image"}
-      </button>
-
-      {generationError ? (
-        <p role="alert" className="rounded-[var(--radius-md)] border border-[var(--status-danger)]/35 bg-[var(--status-danger)]/10 px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
-          {generationError}
-        </p>
-      ) : null}
-
-      {generationHelpText && (
-        <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-          {generationHelpText}
-        </p>
-      )}
     </div>
   );
 }

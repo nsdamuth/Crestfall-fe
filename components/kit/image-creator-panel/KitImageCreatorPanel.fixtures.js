@@ -12,9 +12,10 @@ export const RENDER_STYLE_OPTIONS = [
   { value: "auto", label: "Auto / Character Default" },
   { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
   { value: "crestfall_realistic", label: "Crestfall Realistic" },
-  { value: "crestfall_anime_anime", label: "Crestfall Anime / Anime" },
-  { value: "crestfall_fantasy_realistic", label: "Crestfall Fantasy → Realistic" },
-  { value: "crestfall_realistic_fantasy", label: "Crestfall Realistic → Fantasy" },
+  { value: "crestfall_anime_anime", label: "Crestfall Anime" },
+  { value: "crestfall_fantasy_realistic", label: "Crestfall Illustrative" },
+  { value: "crestfall_fantasy_realism", label: "Crestfall Heroic" },
+  { value: "crestfall_realistic_fantasy", label: "Crestfall Cinematic" },
 ];
 
 export const CAMERA_OPTIONS = [
@@ -99,15 +100,16 @@ function baseOptionFields() {
 function baseRenderStyleRailProps() {
   return {
     value: "crestfall_fantasy_realistic",
-    activeLabel: "Crestfall Fantasy → Realistic",
+    activeLabel: "Crestfall Illustrative",
     helperText:
-      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint.",
+      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint, and the middle options blend them in different ways.",
     options: [
       { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", index: 0, active: false },
-      { value: "crestfall_anime_anime", shortLabel: "Anime", mappedLabel: "Crestfall Anime / Anime", index: 1, active: false },
-      { value: "crestfall_fantasy_realistic", shortLabel: "Fantasy → Real", mappedLabel: "Crestfall Fantasy → Realistic", index: 2, active: true },
-      { value: "crestfall_realistic_fantasy", shortLabel: "Real → Fantasy", mappedLabel: "Crestfall Realistic → Fantasy", index: 3, active: false },
-      { value: "crestfall_realistic", shortLabel: "Realistic", mappedLabel: "Crestfall Realistic", index: 4, active: false },
+      { value: "crestfall_anime_anime", shortLabel: "Anime", mappedLabel: "Crestfall Anime", index: 1, active: false },
+      { value: "crestfall_fantasy_realistic", shortLabel: "Illustrative", mappedLabel: "Crestfall Illustrative", index: 2, active: true },
+      { value: "crestfall_fantasy_realism", shortLabel: "Heroic", mappedLabel: "Crestfall Heroic", index: 3, active: false },
+      { value: "crestfall_realistic_fantasy", shortLabel: "Cinematic", mappedLabel: "Crestfall Cinematic", index: 4, active: false },
+      { value: "crestfall_realistic", shortLabel: "Realistic", mappedLabel: "Crestfall Realistic", index: 5, active: false },
     ],
     onChange: noop,
   };

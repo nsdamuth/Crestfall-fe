@@ -23,9 +23,10 @@ export const RENDERING_STYLE_OPTIONS = [
   { value: "auto", label: "Auto / Character Default" },
   { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
   { value: "crestfall_realistic", label: "Crestfall Realistic" },
-  { value: "crestfall_anime_anime", label: "Crestfall Anime / Anime" },
-  { value: "crestfall_fantasy_realistic", label: "Crestfall Fantasy → Realistic" },
-  { value: "crestfall_realistic_fantasy", label: "Crestfall Realistic → Fantasy" },
+  { value: "crestfall_anime_anime", label: "Crestfall Anime" },
+  { value: "crestfall_fantasy_realistic", label: "Crestfall Illustrative" },
+  { value: "crestfall_fantasy_realism", label: "Crestfall Heroic" },
+  { value: "crestfall_realistic_fantasy", label: "Crestfall Cinematic" },
 ];
 
 export const COLOR_PALETTE_OPTIONS = CHARACTER_COLOR_PALETTES.map(

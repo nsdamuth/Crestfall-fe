@@ -30,14 +30,18 @@ export const CHARACTER_RENDERING_STYLE_OPTIONS = Object.freeze([
   { value: "auto", label: "Auto / Character Default" },
   { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
   { value: "crestfall_realistic", label: "Crestfall Realistic" },
-  { value: "crestfall_anime_anime", label: "Crestfall Anime / Anime" },
+  { value: "crestfall_anime_anime", label: "Crestfall Anime" },
   {
     value: "crestfall_fantasy_realistic",
-    label: "Crestfall Fantasy → Realistic",
+    label: "Crestfall Illustrative",
+  },
+  {
+    value: "crestfall_fantasy_realism",
+    label: "Crestfall Heroic",
   },
   {
     value: "crestfall_realistic_fantasy",
-    label: "Crestfall Realistic → Fantasy",
+    label: "Crestfall Cinematic",
   },
 ]);
 
