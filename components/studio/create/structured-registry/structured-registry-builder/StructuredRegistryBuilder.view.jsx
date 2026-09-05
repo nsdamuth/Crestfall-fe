@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import {
+  STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS,
+} from "@/components/studio/registries/structuredRegistryUtils";
 import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
 import {
   SectionTitle,
@@ -812,6 +815,9 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
   const otherRewards = Array.isArray(entry.otherRewards)
     ? entry.otherRewards
     : [];
+  const progressionRewards = Array.isArray(entry.progressionRewards)
+    ? entry.progressionRewards
+    : [];
 
   return (
     <section className="mt-5 border-t border-white/10 pt-5">
@@ -821,7 +827,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
             Rewards · Optional
           </p>
           <p className="mt-1 max-w-4xl text-xs leading-5 text-[var(--ink-dim)]">
-            Describe what this Quest promises or offers. Rewards are authored Quest facts only; they do not grant currency, items, XP, reputation, or other mechanics state. Automatic fulfillment requires the appropriate Mechanics or Gameflow authority.
+            Describe what this Quest promises or offers. Rewards are authored Quest facts only; they do not grant currency, items, XP, reputation, or other mechanics state. Ordinary narration never fulfills them by itself. Automatic fulfillment requires an explicit Mechanics/Gameflow binding and an authoritative services-side transition.
           </p>
         </div>
 
@@ -1011,6 +1017,113 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
 
           <div className="rounded-xl border border-white/10 bg-black/20 p-4">
             <RewardListHeader
+              title="Progression rewards"
+              description="Use for experience/XP, reputation, renown, advancement points, or other world-specific progression terms. These are promised terms only until an explicit Mechanics/Gameflow binding fulfills them."
+              addLabel="Add progression reward"
+              onAdd={() =>
+                onUpdateEntry(entry.id, {
+                  progressionRewards: [
+                    ...progressionRewards,
+                    { rewardType: "", amount: "", unit: "", condition: "" },
+                  ],
+                })
+              }
+            />
+
+            {progressionRewards.length ? (
+              <div className="mt-3 space-y-3">
+                {progressionRewards.map((reward, index) => (
+                  <div
+                    key={`progression-${index}`}
+                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.65fr)_minmax(0,0.65fr)_minmax(0,1.7fr)_auto]"
+                  >
+                    <Field label="Reward type">
+                      <TextInput
+                        value={reward?.rewardType || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            progressionRewards: replaceRewardRow(
+                              progressionRewards,
+                              index,
+                              { rewardType: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="Experience"
+                        maxLength={120}
+                      />
+                    </Field>
+                    <Field label="Amount">
+                      <TextInput
+                        value={reward?.amount || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            progressionRewards: replaceRewardRow(
+                              progressionRewards,
+                              index,
+                              { amount: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="125"
+                        maxLength={80}
+                      />
+                    </Field>
+                    <Field label="Unit / label">
+                      <TextInput
+                        value={reward?.unit || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            progressionRewards: replaceRewardRow(
+                              progressionRewards,
+                              index,
+                              { unit: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="XP"
+                        maxLength={100}
+                      />
+                    </Field>
+                    <Field label="Condition / notes">
+                      <TextInput
+                        value={reward?.condition || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            progressionRewards: replaceRewardRow(
+                              progressionRewards,
+                              index,
+                              { condition: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="On verified completion"
+                        maxLength={220}
+                      />
+                    </Field>
+                    <div className="flex items-end">
+                      <RewardRemoveButton
+                        label={`Remove progression reward ${index + 1}`}
+                        onClick={() =>
+                          onUpdateEntry(entry.id, {
+                            progressionRewards: removeRewardRow(
+                              progressionRewards,
+                              index
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyRewardList>No progression reward authored.</EmptyRewardList>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <RewardListHeader
               title="Other rewards"
               description="Use for favors, reputation, titles, access, services, training, salvage rights, recognition, or other non-currency terms."
               addLabel="Add other reward"
@@ -1115,7 +1228,8 @@ function PromptTab({ config, promptGuidance, onPromptGuidanceChange }) {
           onChange={(value) =>
             onPromptGuidanceChange("usageNotes", value)
           }
-          maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          maxLength={STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS.usageNotes}
+          helperText="Registry-wide usage guidance supports up to 1,000 characters."
         />
 
         <TextAreaField

@@ -137,11 +137,18 @@ test("Quest rewards are optional, Quest-only, educational, and non-mutating", ()
     currency: "Local currency",
     condition: "On verified completion",
   });
+  assert.deepEqual(missingPerson.progressionRewards[0], {
+    rewardType: "Experience",
+    amount: "100",
+    unit: "XP",
+    condition: "Optional example on verified completion",
+  });
 
   for (const sample of listStructuredRegistrySamples("EVENT_REGISTRY")) {
     assert.equal(Object.hasOwn(sample.entry, "rewardSummary"), false);
     assert.equal(Object.hasOwn(sample.entry, "monetaryRewards"), false);
     assert.equal(Object.hasOwn(sample.entry, "itemRewards"), false);
+    assert.equal(Object.hasOwn(sample.entry, "progressionRewards"), false);
   }
 
   const view = read(
@@ -163,6 +170,7 @@ test("Quest rewards are optional, Quest-only, educational, and non-mutating", ()
     "Monetary rewards",
     "Item rewards",
     "Other rewards",
+    "Progression rewards",
     "Hidden reward notes",
     "do not grant currency, items, XP, reputation",
   ]) {
@@ -173,6 +181,7 @@ test("Quest rewards are optional, Quest-only, educational, and non-mutating", ()
   assert.match(utils, /monetaryRewards/);
   assert.match(utils, /itemRewards/);
   assert.match(utils, /otherRewards/);
+  assert.match(utils, /progressionRewards/);
   assert.match(utils, /hiddenRewardNotes/);
 
   const questBlock = config.slice(config.indexOf("QUEST_REGISTRY:"));
@@ -181,7 +190,30 @@ test("Quest rewards are optional, Quest-only, educational, and non-mutating", ()
 
   assert.match(guide, /Optional Quest reward fields/);
   assert.match(guide, /Reward authority boundary/);
+  assert.match(guide, /Ordinary narrative text is not a gameplay-command lane/);
+  assert.match(guide, /progressionRewards/);
   assert.match(guide, /do not put .*creationId.*inside .*itemRewards/i);
   assert.match(validation, /Quest reward fields are only supported in QUEST_REGISTRY/);
   assert.match(validation, /authority-bearing references inside reward rows/);
+});
+
+
+test("Structured Registry usage notes use a real 1,000-character authoring budget", () => {
+  const view = read(
+    "components/studio/create/structured-registry/structured-registry-builder/StructuredRegistryBuilder.view.jsx"
+  );
+  const utils = read("components/studio/registries/structuredRegistryUtils.js");
+  const validation = read(
+    "components/studio/create/structured-registry/structured-registry-json-editor/structuredRegistryJsonEditor.validation.js"
+  );
+  const guide = read(
+    "components/studio/create/structured-registry/structured-registry-json-editor/structuredRegistryJsonAiAuthoringGuide.js"
+  );
+
+  assert.match(utils, /usageNotes:\s*1000/);
+  assert.match(view, /STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS\.usageNotes/);
+  assert.match(view, /1,000 characters/);
+  assert.match(validation, /STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS/);
+  assert.match(validation, /exceeds the .*Structured Registry authoring limit/);
+  assert.match(guide, /prompt_guidance\.usageNotes/);
 });

@@ -5,6 +5,12 @@ import {
 
 export const STRUCTURED_REGISTRY_VERSION = "1.0";
 
+export const STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS = Object.freeze({
+  summary: 600,
+  usageNotes: 1000,
+  negativePromptNotes: 600,
+});
+
 export const LINKED_CREATION_FIELDS = [
   "linkedCharacters",
   "linkedLocations",
@@ -60,6 +66,10 @@ export function normalizeQuestRewardFields(entry = {}) {
     otherRewards: normalizeRewardList(
       source.otherRewards || source.other_rewards,
       ["description", "condition"]
+    ),
+    progressionRewards: normalizeRewardList(
+      source.progressionRewards || source.progression_rewards,
+      ["rewardType", "amount", "unit", "condition"]
     ),
     hiddenRewardNotes: normalizeString(
       source.hiddenRewardNotes || source.hidden_reward_notes
@@ -233,6 +243,7 @@ export function createEmptyStructuredRegistryEntry(registryType) {
           monetaryRewards: [],
           itemRewards: [],
           otherRewards: [],
+          progressionRewards: [],
           hiddenRewardNotes: "",
         }
       : {}),

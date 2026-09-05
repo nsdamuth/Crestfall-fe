@@ -1,6 +1,7 @@
 import { getStructuredRegistryConfig } from "../../../registries/structuredRegistryConfigs.js";
 import {
   LINKED_CREATION_FIELDS,
+  STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS,
   STRUCTURED_REGISTRY_VERSION,
   normalizeStructuredRegistryData,
 } from "../../../registries/structuredRegistryUtils.js";
@@ -18,6 +19,7 @@ const QUEST_REWARD_FIELDS = Object.freeze([
   "monetaryRewards",
   "itemRewards",
   "otherRewards",
+  "progressionRewards",
   "hiddenRewardNotes",
 ]);
 
@@ -25,6 +27,7 @@ const REWARD_ROW_FIELDS = Object.freeze({
   monetaryRewards: ["amount", "currency", "condition"],
   itemRewards: ["name", "quantity", "condition"],
   otherRewards: ["description", "condition"],
+  progressionRewards: ["rewardType", "amount", "unit", "condition"],
 });
 
 function hasOwn(object, key) {
@@ -171,6 +174,24 @@ export function validateStructuredRegistryJsonText(
 
   if (data.prompt_guidance != null && !isPlainObject(data.prompt_guidance)) {
     errors.push(issue("$.prompt_guidance", "prompt_guidance must be an object."));
+  } else if (isPlainObject(data.prompt_guidance)) {
+    for (const [field, maxLength] of Object.entries(
+      STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS
+    )) {
+      const value = data.prompt_guidance[field];
+      if (value != null && typeof value !== "string") {
+        errors.push(
+          issue(`$.prompt_guidance.${field}`, `${field} must be text.`)
+        );
+      } else if (typeof value === "string" && value.length > maxLength) {
+        errors.push(
+          issue(
+            `$.prompt_guidance.${field}`,
+            `${field} exceeds the ${maxLength}-character Structured Registry authoring limit.`
+          )
+        );
+      }
+    }
   }
 
   if (data.middleware_hints != null && !isPlainObject(data.middleware_hints)) {

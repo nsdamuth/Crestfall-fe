@@ -52,6 +52,9 @@ const QUEST_SAMPLES = Object.freeze([
       ],
       itemRewards: [],
       otherRewards: [],
+      progressionRewards: [
+        { rewardType: "Experience", amount: "100", unit: "XP", condition: "Optional example on verified completion" },
+      ],
       hiddenRewardNotes: "Optional creator-only bonus conditions belong here, not in the public posting.",
       consequences: "Define what completion, failure, delay, or discovery changes in the world.",
       promptGuidance: "Treat this as an investigation seed. Surface clues through play rather than summarizing the answer.",
@@ -81,6 +84,7 @@ const QUEST_SAMPLES = Object.freeze([
         { name: "Useful supply item", quantity: "1", condition: "Optional bonus" },
       ],
       otherRewards: [],
+      progressionRewards: [],
       hiddenRewardNotes: "Do not expose unadvertised bonus terms until their authored condition is met.",
       consequences: "Delivery success can improve trust, unlock follow-up work, or simply close the task.",
     }),
@@ -173,7 +177,10 @@ const QUEST_SAMPLES = Object.freeze([
       monetaryRewards: [],
       itemRewards: [],
       otherRewards: [
-        { description: "Faction favor or reputation", condition: "Successful completion" },
+        { description: "Faction favor", condition: "Successful completion" },
+      ],
+      progressionRewards: [
+        { rewardType: "Reputation", amount: "1", unit: "step", condition: "Successful completion" },
       ],
       hiddenRewardNotes: "Keep any undisclosed political benefit or internal promise creator-only until earned.",
       consequences: "Success or failure can change standing with the linked group.",

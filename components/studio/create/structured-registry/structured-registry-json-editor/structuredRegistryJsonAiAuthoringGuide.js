@@ -1,5 +1,8 @@
 import { getStructuredRegistryConfig } from "../../../registries/structuredRegistryConfigs.js";
-import { STRUCTURED_REGISTRY_VERSION } from "../../../registries/structuredRegistryUtils.js";
+import {
+  STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS,
+  STRUCTURED_REGISTRY_VERSION,
+} from "../../../registries/structuredRegistryUtils.js";
 
 export const STRUCTURED_REGISTRY_JSON_AI_GUIDE_MIME_TYPE = "text/markdown;charset=utf-8";
 
@@ -35,10 +38,13 @@ Rewards are optional. A Quest can be entirely narrative and leave every reward f
 - \`rewardSummary\`: concise player-visible description of the promised reward terms.
 - \`monetaryRewards\`: array of objects shaped exactly as \`{ "amount": "", "currency": "", "condition": "" }\`. Amount stays text so worlds can use unusual currencies, ranges, percentages, shares, or units.
 - \`itemRewards\`: array of objects shaped exactly as \`{ "name": "", "quantity": "", "condition": "" }\`. These are authored descriptive reward terms, not inventory mutations.
-- \`otherRewards\`: array of objects shaped exactly as \`{ "description": "", "condition": "" }\` for favors, reputation, titles, access, training, services, salvage rights, recognition, or similar non-currency rewards.
+- \`otherRewards\`: array of objects shaped exactly as \`{ "description": "", "condition": "" }\` for favors, titles, access, training, services, salvage rights, recognition, or similar non-currency/non-progression rewards.
+- \`progressionRewards\`: array of objects shaped exactly as \`{ "rewardType": "", "amount": "", "unit": "", "condition": "" }\`. Use this for experience/XP, renown, reputation, advancement points, or other world-specific progression terms. Keep values descriptive unless a separate authoritative Mechanics/Gameflow binding exists.
 - \`hiddenRewardNotes\`: creator-only reward notes. Do not copy these into public reward fields unless the creator explicitly asks.
 
-**Reward authority boundary:** these fields describe what the Quest promises/offers. They do not themselves grant currency, items, XP, reputation, access, or other mechanics state. Automatic fulfillment requires the appropriate Crestfall Mechanics/Gameflow authority.
+**Reward authority boundary:** these fields describe what the Quest promises/offers. They do not themselves grant currency, items, XP, reputation, access, or other mechanics state. Ordinary narrative text is not a gameplay-command lane, and the Narrator/AI must never decide to issue a reward command on its own. Automatic fulfillment requires an explicit Crestfall Mechanics/Gameflow binding plus an authoritative services-side transition.
+
+**Advanced fulfillment boundary:** preserve existing \`mechanicsEffectReferences\` and \`gameflowMechanicsTriggers\` exactly when they already exist. Do not invent, add, or rewrite those advanced bindings from this bulk-authoring guide unless the creator separately supplies the exact advanced contract and explicitly asks for that work.
 
 **Item boundary:** do not put \`creationId\`, UUIDs, registry entry IDs, or other asset identifiers inside \`itemRewards\`. If a reward corresponds to a first-class Crestfall Item Registry asset, preserve an already-linked \`linkedItems\` relationship or leave it unlinked and let the creator use Crestfall's visual picker.
 `
@@ -88,6 +94,14 @@ The shared visual builder understands these fields. Existing advanced fields not
 - \`negativePromptNotes\`: optional negative guidance where the builder uses it.
 - \`middlewareHints\`: optional authored hints; preserve existing structure unless specifically instructed.
 ${questRewardGuide}
+## Registry prompt-guidance budgets
+
+- \`prompt_guidance.summary\`: up to ${STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS.summary} characters.
+- \`prompt_guidance.usageNotes\`: up to ${STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS.usageNotes} characters.
+- \`prompt_guidance.negativePromptNotes\`: up to ${STRUCTURED_REGISTRY_PROMPT_GUIDANCE_LIMITS.negativePromptNotes} characters.
+
+Keep these registry-wide. Put Quest-specific rules and reward terms on the relevant entry instead of expanding registry-wide guidance indefinitely.
+
 ## Linked Creation fields
 
 ${relationshipGroups || "This registry currently exposes no visual relationship groups."}
@@ -131,6 +145,8 @@ Before returning JSON, verify:
 - New entries omit IDs unless Crestfall already assigned them.
 - No new/fabricated \`creationId\` values were introduced.
 - Existing advanced fields were preserved unless explicitly changed.
+- Registry prompt-guidance fields stay within their documented character budgets.
+- No instruction tells the Narrator/AI to issue mechanics or reward commands from ordinary prose.
 
 ## Current Registry JSON
 
