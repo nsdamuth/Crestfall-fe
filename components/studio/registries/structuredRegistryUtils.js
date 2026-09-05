@@ -29,6 +29,44 @@ function normalizeObject(value) {
     : {};
 }
 
+function normalizeRewardList(value, fields) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((raw) => {
+      const source = normalizeObject(raw);
+      const normalized = Object.fromEntries(
+        fields.map((field) => [field, normalizeString(source[field])])
+      );
+      return Object.values(normalized).some(Boolean) ? normalized : null;
+    })
+    .filter(Boolean);
+}
+
+export function normalizeQuestRewardFields(entry = {}) {
+  const source = normalizeObject(entry);
+  return {
+    rewardSummary: normalizeString(
+      source.rewardSummary || source.reward_summary
+    ),
+    monetaryRewards: normalizeRewardList(
+      source.monetaryRewards || source.monetary_rewards,
+      ["amount", "currency", "condition"]
+    ),
+    itemRewards: normalizeRewardList(
+      source.itemRewards || source.item_rewards,
+      ["name", "quantity", "condition"]
+    ),
+    otherRewards: normalizeRewardList(
+      source.otherRewards || source.other_rewards,
+      ["description", "condition"]
+    ),
+    hiddenRewardNotes: normalizeString(
+      source.hiddenRewardNotes || source.hidden_reward_notes
+    ),
+  };
+}
+
 export function normalizeListText(value) {
   return String(value || "")
     .split("\n")
@@ -189,6 +227,15 @@ export function createEmptyStructuredRegistryEntry(registryType) {
     accessRules: "",
     knowledgeRules: "",
     consequences: "",
+    ...(String(registryType || "").toUpperCase() === "QUEST_REGISTRY"
+      ? {
+          rewardSummary: "",
+          monetaryRewards: [],
+          itemRewards: [],
+          otherRewards: [],
+          hiddenRewardNotes: "",
+        }
+      : {}),
     promptGuidance: "",
     negativePromptNotes: "",
     middlewareHints: "",
@@ -240,6 +287,10 @@ export function normalizeStructuredRegistryEntry(entry = {}, registryType) {
     linkedItems: normalizeLinkedCreationLinks(merged.linkedItems),
     linkedEvents: normalizeLinkedCreationLinks(merged.linkedEvents),
     linkedQuests: normalizeLinkedCreationLinks(merged.linkedQuests),
+
+    ...(String(registryType || "").toUpperCase() === "QUEST_REGISTRY"
+      ? normalizeQuestRewardFields(merged)
+      : {}),
   };
 }
 

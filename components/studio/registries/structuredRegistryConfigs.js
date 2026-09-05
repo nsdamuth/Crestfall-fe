@@ -224,6 +224,14 @@ export const STRUCTURED_REGISTRY_CONFIGS = {
     allowedTypes: ["ORGANIZATION_REGISTRY", "FACTION_REGISTRY"],
   },
   {
+    id: "linkedItems",
+    label: "Linked Items / Quest Objects",
+    pickerTitle: "Link Items / Quest Objects",
+    emptyLabel: "No items or quest objects linked yet.",
+    addLabel: "Link Item",
+    allowedTypes: ["ITEM_REGISTRY"],
+  },
+  {
     id: "linkedEvents",
     label: "Related Event Registries",
     pickerTitle: "Link Related Event Registries",

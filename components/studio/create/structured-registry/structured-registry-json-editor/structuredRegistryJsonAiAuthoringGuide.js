@@ -26,6 +26,23 @@ export function buildStructuredRegistryJsonAiAuthoringGuide({
   const relationshipGroups = (config.relationshipGroups || [])
     .map((group) => `- \`${group.id}\`: ${group.label}`)
     .join("\n");
+  const questRewardGuide = expectedType === "QUEST_REGISTRY"
+    ? `
+## Optional Quest reward fields
+
+Rewards are optional. A Quest can be entirely narrative and leave every reward field empty. Use these fields only when the creator wants authored compensation or other promised terms.
+
+- \`rewardSummary\`: concise player-visible description of the promised reward terms.
+- \`monetaryRewards\`: array of objects shaped exactly as \`{ "amount": "", "currency": "", "condition": "" }\`. Amount stays text so worlds can use unusual currencies, ranges, percentages, shares, or units.
+- \`itemRewards\`: array of objects shaped exactly as \`{ "name": "", "quantity": "", "condition": "" }\`. These are authored descriptive reward terms, not inventory mutations.
+- \`otherRewards\`: array of objects shaped exactly as \`{ "description": "", "condition": "" }\` for favors, reputation, titles, access, training, services, salvage rights, recognition, or similar non-currency rewards.
+- \`hiddenRewardNotes\`: creator-only reward notes. Do not copy these into public reward fields unless the creator explicitly asks.
+
+**Reward authority boundary:** these fields describe what the Quest promises/offers. They do not themselves grant currency, items, XP, reputation, access, or other mechanics state. Automatic fulfillment requires the appropriate Crestfall Mechanics/Gameflow authority.
+
+**Item boundary:** do not put \`creationId\`, UUIDs, registry entry IDs, or other asset identifiers inside \`itemRewards\`. If a reward corresponds to a first-class Crestfall Item Registry asset, preserve an already-linked \`linkedItems\` relationship or leave it unlinked and let the creator use Crestfall's visual picker.
+`
+    : "";
 
   return `# Crestfall ${noun} Registry JSON AI Authoring Guide
 
@@ -70,7 +87,7 @@ The shared visual builder understands these fields. Existing advanced fields not
 - \`promptGuidance\`: low-authority presentation guidance; it does not establish new facts.
 - \`negativePromptNotes\`: optional negative guidance where the builder uses it.
 - \`middlewareHints\`: optional authored hints; preserve existing structure unless specifically instructed.
-
+${questRewardGuide}
 ## Linked Creation fields
 
 ${relationshipGroups || "This registry currently exposes no visual relationship groups."}
@@ -79,7 +96,7 @@ Important rules:
 
 1. **Never invent a Creation UUID or Creation ID.**
 2. You may preserve a \`creationId\` that already exists in the CURRENT REGISTRY JSON below.
-3. If the creator wants a new Character, Location, Organization, Faction, Event, or Quest relationship and no valid ID is already present, leave that relationship unlinked. The creator should use Crestfall's visual link picker afterward.
+3. If the creator wants a new Character, Location, Item, Organization, Faction, Event, or Quest relationship and no valid ID is already present, leave that relationship unlinked. The creator should use Crestfall's visual link picker afterward.
 4. Do not copy another creator's private data into a registry entry.
 
 ## Authority rules

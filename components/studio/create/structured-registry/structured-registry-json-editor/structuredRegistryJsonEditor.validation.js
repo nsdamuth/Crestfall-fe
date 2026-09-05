@@ -13,6 +13,69 @@ function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+const QUEST_REWARD_FIELDS = Object.freeze([
+  "rewardSummary",
+  "monetaryRewards",
+  "itemRewards",
+  "otherRewards",
+  "hiddenRewardNotes",
+]);
+
+const REWARD_ROW_FIELDS = Object.freeze({
+  monetaryRewards: ["amount", "currency", "condition"],
+  itemRewards: ["name", "quantity", "condition"],
+  otherRewards: ["description", "condition"],
+});
+
+function hasOwn(object, key) {
+  return Object.prototype.hasOwnProperty.call(object, key);
+}
+
+function validateQuestRewardRows({ entry, path, errors }) {
+  for (const field of ["rewardSummary", "hiddenRewardNotes"]) {
+    if (entry[field] != null && typeof entry[field] !== "string") {
+      errors.push(issue(`${path}.${field}`, `${field} must be text.`));
+    }
+  }
+
+  for (const [field, allowedFields] of Object.entries(REWARD_ROW_FIELDS)) {
+    const rows = entry[field];
+    if (rows == null) continue;
+    if (!Array.isArray(rows)) {
+      errors.push(issue(`${path}.${field}`, `${field} must be an array.`));
+      continue;
+    }
+
+    for (const [rowIndex, row] of rows.entries()) {
+      const rowPath = `${path}.${field}[${rowIndex}]`;
+      if (!isPlainObject(row)) {
+        errors.push(issue(rowPath, `${field} entries must be objects.`));
+        continue;
+      }
+
+      const unsupportedFields = Object.keys(row).filter(
+        (key) => !allowedFields.includes(key)
+      );
+      if (unsupportedFields.length) {
+        errors.push(
+          issue(
+            rowPath,
+            `${field} only supports ${allowedFields.join(", ")}. Do not place Creation IDs, registry IDs, mechanics operations, or other authority-bearing references inside reward rows.`
+          )
+        );
+      }
+
+      for (const fieldName of allowedFields) {
+        if (row[fieldName] != null && typeof row[fieldName] !== "string") {
+          errors.push(
+            issue(`${rowPath}.${fieldName}`, `${fieldName} must be text.`)
+          );
+        }
+      }
+    }
+  }
+}
+
 function sourceLinkMap(data = {}) {
   const links = new Map();
   for (const entry of Array.isArray(data?.entries) ? data.entries : []) {
@@ -160,6 +223,22 @@ export function validateStructuredRegistryJsonText(
         errors.push(issue(`${path}.aliases`, "aliases must be an array of strings."));
       } else if (entry.aliases.some((alias) => typeof alias !== "string")) {
         errors.push(issue(`${path}.aliases`, "Every alias must be text."));
+      }
+    }
+
+    if (expectedType === "QUEST_REGISTRY") {
+      validateQuestRewardRows({ entry, path, errors });
+    } else {
+      const questRewardFields = QUEST_REWARD_FIELDS.filter((field) =>
+        hasOwn(entry, field)
+      );
+      if (questRewardFields.length) {
+        errors.push(
+          issue(
+            path,
+            `Quest reward fields are only supported in QUEST_REGISTRY entries: ${questRewardFields.join(", ")}.`
+          )
+        );
       }
     }
 

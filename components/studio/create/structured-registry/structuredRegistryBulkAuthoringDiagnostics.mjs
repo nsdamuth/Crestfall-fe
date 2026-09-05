@@ -125,3 +125,63 @@ test("Shared builder applies samples and JSON through the normal builder state",
   assert.match(shell, /StructuredRegistryDocumentToolsSurfaces/);
   assert.doesNotMatch(shell, /createCreationDraft|fetch\s*\(|supabase/i);
 });
+
+test("Quest rewards are optional, Quest-only, educational, and non-mutating", () => {
+  const missingPerson = createStructuredRegistryEntryFromSample(
+    "QUEST_REGISTRY",
+    "quest.sample.missing_person.v1"
+  );
+  assert.match(missingPerson.rewardSummary, /payment/i);
+  assert.deepEqual(missingPerson.monetaryRewards[0], {
+    amount: "25",
+    currency: "Local currency",
+    condition: "On verified completion",
+  });
+
+  for (const sample of listStructuredRegistrySamples("EVENT_REGISTRY")) {
+    assert.equal(Object.hasOwn(sample.entry, "rewardSummary"), false);
+    assert.equal(Object.hasOwn(sample.entry, "monetaryRewards"), false);
+    assert.equal(Object.hasOwn(sample.entry, "itemRewards"), false);
+  }
+
+  const view = read(
+    "components/studio/create/structured-registry/structured-registry-builder/StructuredRegistryBuilder.view.jsx"
+  );
+  const utils = read("components/studio/registries/structuredRegistryUtils.js");
+  const config = read("components/studio/registries/structuredRegistryConfigs.js");
+  const guide = read(
+    "components/studio/create/structured-registry/structured-registry-json-editor/structuredRegistryJsonAiAuthoringGuide.js"
+  );
+  const validation = read(
+    "components/studio/create/structured-registry/structured-registry-json-editor/structuredRegistryJsonEditor.validation.js"
+  );
+
+  assert.match(view, /config\.futurePayload === "QUEST_REGISTRY"/);
+  for (const text of [
+    "Rewards · Optional",
+    "Reward summary",
+    "Monetary rewards",
+    "Item rewards",
+    "Other rewards",
+    "Hidden reward notes",
+    "do not grant currency, items, XP, reputation",
+  ]) {
+    assert.match(view, new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  }
+
+  assert.match(utils, /normalizeQuestRewardFields/);
+  assert.match(utils, /monetaryRewards/);
+  assert.match(utils, /itemRewards/);
+  assert.match(utils, /otherRewards/);
+  assert.match(utils, /hiddenRewardNotes/);
+
+  const questBlock = config.slice(config.indexOf("QUEST_REGISTRY:"));
+  assert.match(questBlock, /id: "linkedItems"/);
+  assert.match(questBlock, /allowedTypes: \["ITEM_REGISTRY"\]/);
+
+  assert.match(guide, /Optional Quest reward fields/);
+  assert.match(guide, /Reward authority boundary/);
+  assert.match(guide, /do not put .*creationId.*inside .*itemRewards/i);
+  assert.match(validation, /Quest reward fields are only supported in QUEST_REGISTRY/);
+  assert.match(validation, /authority-bearing references inside reward rows/);
+});

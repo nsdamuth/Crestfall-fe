@@ -724,6 +724,13 @@ function RulesTab({ config, entries, onUpdateEntry }) {
                   maxLength={SHORT_LONGFORM_MAX_LENGTH}
                 />
               </div>
+
+              {config.futurePayload === "QUEST_REGISTRY" ? (
+                <QuestRewardsFields
+                  entry={entry}
+                  onUpdateEntry={onUpdateEntry}
+                />
+              ) : null}
             </div>
           ))
         ) : (
@@ -733,6 +740,355 @@ function RulesTab({ config, entries, onUpdateEntry }) {
         )}
       </div>
     </Panel>
+  );
+}
+
+function replaceRewardRow(rows, index, updates) {
+  return (Array.isArray(rows) ? rows : []).map((row, rowIndex) =>
+    rowIndex === index ? { ...row, ...updates } : row
+  );
+}
+
+function removeRewardRow(rows, index) {
+  return (Array.isArray(rows) ? rows : []).filter(
+    (_row, rowIndex) => rowIndex !== index
+  );
+}
+
+function RewardListHeader({ title, description, onAdd, addLabel }) {
+  return (
+    <div className="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+          {title}
+        </p>
+        {description ? (
+          <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
+            {description}
+          </p>
+        ) : null}
+      </div>
+      <button
+        type="button"
+        onClick={onAdd}
+        className="cf-btn cf-btn--secondary cf-btn--sm"
+      >
+        <Plus size={13} />
+        {addLabel}
+      </button>
+    </div>
+  );
+}
+
+function EmptyRewardList({ children }) {
+  return (
+    <p className="mt-3 rounded-xl border border-dashed border-white/10 bg-black/20 p-3 text-xs leading-5 text-[var(--ink-dim)]">
+      {children}
+    </p>
+  );
+}
+
+function RewardRemoveButton({ onClick, label }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="cf-btn cf-btn--danger cf-btn--sm"
+      aria-label={label}
+    >
+      <Trash2 size={13} />
+      Remove
+    </button>
+  );
+}
+
+function QuestRewardsFields({ entry, onUpdateEntry }) {
+  const monetaryRewards = Array.isArray(entry.monetaryRewards)
+    ? entry.monetaryRewards
+    : [];
+  const itemRewards = Array.isArray(entry.itemRewards)
+    ? entry.itemRewards
+    : [];
+  const otherRewards = Array.isArray(entry.otherRewards)
+    ? entry.otherRewards
+    : [];
+
+  return (
+    <section className="mt-5 border-t border-white/10 pt-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+            Rewards · Optional
+          </p>
+          <p className="mt-1 max-w-4xl text-xs leading-5 text-[var(--ink-dim)]">
+            Describe what this Quest promises or offers. Rewards are authored Quest facts only; they do not grant currency, items, XP, reputation, or other mechanics state. Automatic fulfillment requires the appropriate Mechanics or Gameflow authority.
+          </p>
+        </div>
+
+        <div className="mt-4 grid gap-4">
+          <TextAreaField
+            label="Reward summary"
+            value={entry.rewardSummary || ""}
+            onChange={(value) =>
+              onUpdateEntry(entry.id, { rewardSummary: value })
+            }
+            placeholder="Example: 40 SV for verified information; 80 SV if the missing person is found alive."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
+
+          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <RewardListHeader
+              title="Monetary rewards"
+              description="Optional payment terms. Amount and currency stay descriptive until a Mechanics/Gameflow operation performs an actual grant."
+              addLabel="Add monetary reward"
+              onAdd={() =>
+                onUpdateEntry(entry.id, {
+                  monetaryRewards: [
+                    ...monetaryRewards,
+                    { amount: "", currency: "", condition: "" },
+                  ],
+                })
+              }
+            />
+
+            {monetaryRewards.length ? (
+              <div className="mt-3 space-y-3">
+                {monetaryRewards.map((reward, index) => (
+                  <div
+                    key={`monetary-${index}`}
+                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.8fr)_minmax(0,2fr)_auto]"
+                  >
+                    <Field label="Amount">
+                      <TextInput
+                        value={reward?.amount || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            monetaryRewards: replaceRewardRow(
+                              monetaryRewards,
+                              index,
+                              { amount: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="80"
+                        maxLength={80}
+                      />
+                    </Field>
+                    <Field label="Currency / unit">
+                      <TextInput
+                        value={reward?.currency || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            monetaryRewards: replaceRewardRow(
+                              monetaryRewards,
+                              index,
+                              { currency: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="SV"
+                        maxLength={100}
+                      />
+                    </Field>
+                    <Field label="Condition / notes">
+                      <TextInput
+                        value={reward?.condition || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            monetaryRewards: replaceRewardRow(
+                              monetaryRewards,
+                              index,
+                              { condition: event.target.value }
+                            ),
+                          })
+                        }
+                        placeholder="Paid on verified completion"
+                        maxLength={220}
+                      />
+                    </Field>
+                    <div className="flex items-end">
+                      <RewardRemoveButton
+                        label={`Remove monetary reward ${index + 1}`}
+                        onClick={() =>
+                          onUpdateEntry(entry.id, {
+                            monetaryRewards: removeRewardRow(
+                              monetaryRewards,
+                              index
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyRewardList>No monetary reward authored.</EmptyRewardList>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <RewardListHeader
+              title="Item rewards"
+              description="Describe promised items here. If the reward corresponds to a first-class Crestfall Item Registry asset, link that asset under Relationships rather than inventing an ID."
+              addLabel="Add item reward"
+              onAdd={() =>
+                onUpdateEntry(entry.id, {
+                  itemRewards: [
+                    ...itemRewards,
+                    { name: "", quantity: "", condition: "" },
+                  ],
+                })
+              }
+            />
+
+            {itemRewards.length ? (
+              <div className="mt-3 space-y-3">
+                {itemRewards.map((reward, index) => (
+                  <div
+                    key={`item-${index}`}
+                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.55fr)_minmax(0,2fr)_auto]"
+                  >
+                    <Field label="Item / reward name">
+                      <TextInput
+                        value={reward?.name || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            itemRewards: replaceRewardRow(itemRewards, index, {
+                              name: event.target.value,
+                            }),
+                          })
+                        }
+                        placeholder="Healing potion"
+                        maxLength={160}
+                      />
+                    </Field>
+                    <Field label="Quantity">
+                      <TextInput
+                        value={reward?.quantity || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            itemRewards: replaceRewardRow(itemRewards, index, {
+                              quantity: event.target.value,
+                            }),
+                          })
+                        }
+                        placeholder="1"
+                        maxLength={80}
+                      />
+                    </Field>
+                    <Field label="Condition / notes">
+                      <TextInput
+                        value={reward?.condition || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            itemRewards: replaceRewardRow(itemRewards, index, {
+                              condition: event.target.value,
+                            }),
+                          })
+                        }
+                        placeholder="Optional bonus for safe return"
+                        maxLength={220}
+                      />
+                    </Field>
+                    <div className="flex items-end">
+                      <RewardRemoveButton
+                        label={`Remove item reward ${index + 1}`}
+                        onClick={() =>
+                          onUpdateEntry(entry.id, {
+                            itemRewards: removeRewardRow(itemRewards, index),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyRewardList>No item reward authored.</EmptyRewardList>
+            )}
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <RewardListHeader
+              title="Other rewards"
+              description="Use for favors, reputation, titles, access, services, training, salvage rights, recognition, or other non-currency terms."
+              addLabel="Add other reward"
+              onAdd={() =>
+                onUpdateEntry(entry.id, {
+                  otherRewards: [
+                    ...otherRewards,
+                    { description: "", condition: "" },
+                  ],
+                })
+              }
+            />
+
+            {otherRewards.length ? (
+              <div className="mt-3 space-y-3">
+                {otherRewards.map((reward, index) => (
+                  <div
+                    key={`other-${index}`}
+                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_auto]"
+                  >
+                    <Field label="Reward">
+                      <TextInput
+                        value={reward?.description || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            otherRewards: replaceRewardRow(otherRewards, index, {
+                              description: event.target.value,
+                            }),
+                          })
+                        }
+                        placeholder="A favor from the local guild"
+                        maxLength={220}
+                      />
+                    </Field>
+                    <Field label="Condition / notes">
+                      <TextInput
+                        value={reward?.condition || ""}
+                        onChange={(event) =>
+                          onUpdateEntry(entry.id, {
+                            otherRewards: replaceRewardRow(otherRewards, index, {
+                              condition: event.target.value,
+                            }),
+                          })
+                        }
+                        placeholder="Granted after successful completion"
+                        maxLength={220}
+                      />
+                    </Field>
+                    <div className="flex items-end">
+                      <RewardRemoveButton
+                        label={`Remove other reward ${index + 1}`}
+                        onClick={() =>
+                          onUpdateEntry(entry.id, {
+                            otherRewards: removeRewardRow(otherRewards, index),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyRewardList>No other reward authored.</EmptyRewardList>
+            )}
+          </div>
+
+          <TextAreaField
+            label="Hidden reward notes"
+            value={entry.hiddenRewardNotes || ""}
+            onChange={(value) =>
+              onUpdateEntry(entry.id, { hiddenRewardNotes: value })
+            }
+            placeholder="Creator-only reward conditions, withheld bonus terms, or fulfillment notes. Not automatically player-visible."
+            maxLength={SHORT_LONGFORM_MAX_LENGTH}
+          />
+        </div>
+      </div>
+    </section>
   );
 }
 
