@@ -100,6 +100,35 @@ export function useStructuredRegistryBuilder({
     });
   }
 
+  function addEntryFromTemplate(template = {}) {
+    const entry = normalizeStructuredRegistryEntry(template, registryType);
+    const nextData = {
+      ...registryData,
+      entries: [...registryData.entries, entry],
+    };
+
+    commitData(nextData);
+    setActiveEntryId(entry.id);
+    setActiveTab("entries");
+    return entry;
+  }
+
+  function replaceData(nextData) {
+    const normalizedData = normalizeStructuredRegistryData(
+      nextData,
+      registryType
+    );
+
+    commitData(normalizedData);
+    const nextActiveEntryId = normalizedData.entries.some(
+      (entry) => entry.id === activeEntryId
+    )
+      ? activeEntryId
+      : normalizedData.entries[0]?.id || null;
+    setActiveEntryId(nextActiveEntryId);
+    return normalizedData;
+  }
+
   function addEntry() {
     const entry = createEmptyStructuredRegistryEntry(registryType);
     const nextData = {
@@ -206,6 +235,8 @@ export function useStructuredRegistryBuilder({
     updateDataField,
     updatePromptGuidance,
     addEntry,
+    addEntryFromTemplate,
+    replaceData,
     updateEntry,
     deleteEntry,
     handleSave,

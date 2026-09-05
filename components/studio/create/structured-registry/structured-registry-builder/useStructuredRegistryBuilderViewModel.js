@@ -9,6 +9,7 @@ import {
   normalizeListText,
 } from "@/components/studio/registries/structuredRegistryUtils";
 import { buildStructuredRegistryBuilderTabs } from "./StructuredRegistryBuilder.contract";
+import { useStructuredRegistryDocumentToolsViewModel } from "../structured-registry-document-tools/useStructuredRegistryDocumentToolsViewModel";
 
 function toSelectOptions(options = []) {
   return options.map((option) =>
@@ -47,6 +48,12 @@ export function useStructuredRegistryBuilderViewModel({
     onChange,
   });
   const [linkPicker, setLinkPicker] = useState(null);
+  const documentTools = useStructuredRegistryDocumentToolsViewModel({
+    registryType,
+    registryData: registry.data,
+    onAddSample: registry.addEntryFromTemplate,
+    onReplaceData: registry.replaceData,
+  });
 
   const activeTab = controlledActiveTab || registry.activeTab;
   const tabs = useMemo(
@@ -178,6 +185,7 @@ export function useStructuredRegistryBuilderViewModel({
       onPromptGuidanceChange: registry.updatePromptGuidance,
       onSave: registry.handleSave,
     },
+    documentTools,
     linkedCreationPickerProps: linkPicker
       ? {
           title: linkPicker.group?.pickerTitle || "Link Creation",

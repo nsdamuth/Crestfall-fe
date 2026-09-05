@@ -61,6 +61,7 @@ export default function StructuredRegistryBuilderView({
   onLinkedCreationNotesChange,
   onPromptGuidanceChange,
   onSave,
+  documentControls = null,
 }) {
   return (
     <section className="space-y-6">
@@ -73,6 +74,7 @@ export default function StructuredRegistryBuilderView({
           />
 
           <div className="flex flex-wrap gap-2">
+            {documentControls}
             {isEditMode ? (
               <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Use the page Save button to persist changes.

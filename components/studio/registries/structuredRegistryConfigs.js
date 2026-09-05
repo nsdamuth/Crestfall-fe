@@ -182,6 +182,7 @@ export const STRUCTURED_REGISTRY_CONFIGS = {
     categoryLabel: "Quest Type",
     categoryOptions: [
       "Investigation",
+      "Job Posting",
       "Side Quest",
       "Faction Task",
       "Social Objective",
