@@ -390,17 +390,16 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
           scope 1's page-head eyebrow treatment, wrong here); a plain
           full-width divider (the Legacy divider recipe) renders
           beneath the label row instead, in both collapsed and
-          expanded states. Collapsed keeps the label row's height
-          (invisible, not removed), RULED 6 Sep 2026 (sidebar batch
-          1), so the groups space identically in both states. */}
-      <p
-        aria-hidden={collapsed ? "true" : undefined}
-        className={`px-3 pb-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)] ${
-          collapsed ? "invisible" : ""
-        }`}
-      >
-        {group.label}
-      </p>
+          expanded states. Collapsed renders no label row at all,
+          RULED 6 Sep 2026 (sidebar batch 2 fixes, item 1): groups are
+          separated by the divider plus one group gap only, and
+          collapsed aligns with expanded group by group below the
+          header, not row for row. */}
+      {!collapsed ? (
+        <p className="px-3 pb-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          {group.label}
+        </p>
+      ) : null}
       <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
       {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
           6 and 7): dense rows resolve to --control-md with

@@ -56,6 +56,9 @@ export const studioEconomyWidgetLowBalanceFixture = {
   lowBalance: true,
 };
 
+// Collapsed shows only the gold coin button (batch 2 fixes, 6 Sep
+// 2026): the low state has no collapsed presentation, this fixture
+// proves nothing amber leaks into that mode.
 export const studioEconomyWidgetCollapsedLowBalanceFixture = {
   ...baseFixture,
   layoutMode: "collapsed",

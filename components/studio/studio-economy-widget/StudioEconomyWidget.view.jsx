@@ -7,40 +7,52 @@ import KitModalFrame from "@/components/kit/KitModalFrame";
 // the mobile bottom-anchor law. KitModalFrame supplies both, plus
 // the circular close control, so this stays a one-panel primitive.
 function UtilityModal({ title = "", body = "", onClose = null }) {
+  // Inset moved off the panel onto an inner content box, RULED 6 Sep
+  // 2026 (sidebar batch 2 fixes, item 4): the frame's panel recipe
+  // zeroes the panel's bottom padding at desktop widths (and swaps it
+  // for the safe-area inset on mobile), which overrode the panel-level
+  // padding and left the Got it button flush at the edges. The content
+  // box carries --space-6 on all sides, the frame's own confirm-block
+  // inset, so the copy and the button share one equal inset.
   return (
     <KitModalFrame
       onClose={onClose}
       ariaLabelledBy="studio-economy-utility-title"
-      panelClassName="w-full max-w-sm p-[var(--space-5)]"
+      panelClassName="w-full max-w-sm"
     >
-      <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-        Crestfall
-      </p>
-      <h2 id="studio-economy-utility-title" className="mt-2 font-display text-3xl">
-        {title}
-      </h2>
+      <div className="p-[var(--space-6)]">
+        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+          Crestfall
+        </p>
+        <h2 id="studio-economy-utility-title" className="mt-2 font-display text-3xl">
+          {title}
+        </h2>
 
-      <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
+        <p className="mt-4 text-sm leading-7 text-[var(--ink-dim)]">{body}</p>
 
-      <button
-        type="button"
-        onClick={() => onClose?.()}
-        className="cf-btn cf-btn--primary mt-5 w-full"
-      >
-        Got it
-      </button>
+        <button
+          type="button"
+          onClick={() => onClose?.()}
+          className="cf-btn cf-btn--primary mt-5 w-full"
+        >
+          Got it
+        </button>
+      </div>
     </KitModalFrame>
   );
 }
 
-// Upgrade CTA, RULED 6 Sep 2026 (sidebar batch 2, GO corrections):
-// the one gold filled primary button in the rail, label "Upgrade" in
-// every state, opening the existing coin purchase flow for now. Built
-// from the gold primary tokens directly because the shared .cf-btn
-// recipe forces normal case and cannot be overridden from outside.
+// Upgrade CTA, RULED 6 Sep 2026 (sidebar batch 2, GO corrections and
+// the batch 2 fixes): the one gold filled primary button in the rail,
+// label "Upgrade" in every state, opening the existing coin purchase
+// flow for now. Expanded uses the shared .cf-btn--primary recipe as
+// is (its own case and weight, no icon), full block width. Collapsed
+// keeps a token-built gold square because the recipe's horizontal
+// padding (--space-6 each side) is wider than the collapsed rail's
+// inner width.
 const UPGRADE_LABEL = "Upgrade";
-const UPGRADE_BUTTON_CLASS =
-  "inline-flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] bg-no-repeat text-[length:var(--text-label)] font-[var(--weight-bold)] uppercase tracking-[var(--track-label)] text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]";
+const COLLAPSED_UPGRADE_BUTTON_CLASS =
+  "inline-flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] bg-no-repeat text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]";
 
 export default function StudioEconomyWidgetView({
   layoutMode = "expanded",
@@ -106,31 +118,20 @@ export default function StudioEconomyWidgetView({
   // keeps its own bell for its own consumers; onOpenNotificationsInfo
   // / onCloseNotificationsInfo / notificationsInfoOpen stay in the
   // contract for that mode.
-  // Collapsed, RULED 6 Sep 2026 (sidebar batch 2, item 5): the coin
-  // glyph becomes the gold Upgrade button with the balance as a small
-  // badge centered directly above it, so the block keeps the expanded
-  // block's height and the dividers land at the same heights. Low
-  // balance turns the badge number amber (base status token, badge
-  // tier); the gold button is unchanged; tooltip reads "Upgrade".
+  // Collapsed, RULED 6 Sep 2026 (sidebar batch 2 fixes, item 2): only
+  // the gold coin button, tooltip "Upgrade". No balance number or
+  // badge anywhere in this mode; lowBalance has no collapsed
+  // presentation.
   if (layoutMode === "collapsed") {
     return (
       <>
         <div className="flex flex-col items-center py-[var(--space-2)]">
-          <span
-            title={`Coins: ${balanceLabel}`}
-            className={`inline-flex h-[var(--lh-ui)] items-center rounded-[var(--radius-full)] border border-[var(--line-strong)] bg-[var(--surface-3)] px-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] tabular-nums ${
-              lowBalance ? "text-[var(--status-warning)]" : "text-[var(--ink)]"
-            }`}
-          >
-            {balanceLabel}
-          </span>
-
           <button
             type="button"
             onClick={() => onOpenBuyInfo?.()}
             title={UPGRADE_LABEL}
             aria-label={UPGRADE_LABEL}
-            className={`mt-[var(--space-2)] ${UPGRADE_BUTTON_CLASS}`}
+            className={COLLAPSED_UPGRADE_BUTTON_CLASS}
           >
             <Coins size={16} aria-hidden="true" />
           </button>
@@ -168,7 +169,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className={`mt-[var(--space-2)] ${UPGRADE_BUTTON_CLASS}`}
+          className="cf-btn cf-btn--primary mt-[var(--space-2)] w-full"
         >
           {UPGRADE_LABEL}
         </button>
