@@ -32,7 +32,12 @@ shows the balance badge above the gold button; Vault archive glyph
 everywhere, "Storys" fixed, the four icon lint errors cleared. The
 low-balance threshold reads the frontend's image generation cost
 constant (5) until the Chassis serves it. Terms links to the existing
-Terms page on every surface.
+Terms page on every surface. Batch 2 fixes (same day): collapsed rail
+drops the reserved title rows (divider plus one group gap only,
+group-by-group alignment), collapsed coins is the gold button alone
+(tooltip "Upgrade", no badge), expanded Upgrade uses the shared
+primary recipe as is at full block width, and the coins info dialog
+carries an equal inset on all sides so Got it no longer sits flush.
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
