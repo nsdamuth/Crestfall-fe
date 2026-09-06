@@ -10,6 +10,11 @@ exists.
 TRACKER: GitHub Issues.
 Sprint-h anchor for reference: design/sprint-h-final, tip 1236a3dd
 (the 26 Aug entry cited a816172, one commit short of the actual tip).
+FE/TUNING 6 Sep 2026: Home fine-tuning batch 1 landed as 2b271680
+(section lists replace tiles and rails, Home contract 4.0.0) and the
+next-section banner chain as f7a12029, branch fe/tuning. Review-mode
+overlay stays opt-in via CRESTFALL_ENABLE_REVIEW_MODE=true in .env.local
+(off in production).
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
