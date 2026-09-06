@@ -11,9 +11,12 @@ import { IMAGE_GENERATION_COIN_COST } from "@/components/studio/image-studio/ima
 // Chassis serves it.
 export const LOW_BALANCE_THRESHOLD = IMAGE_GENERATION_COIN_COST;
 
+// Amber applies only above zero and below the generation cost, never
+// at zero (RULED 6 Sep 2026, coin balance gold fix): a zero balance
+// reads in the standard gold like any other balance.
 export function isLowBalance(value) {
   const amount = Number.parseInt(value, 10);
-  return Number.isFinite(amount) && amount < LOW_BALANCE_THRESHOLD;
+  return Number.isFinite(amount) && amount > 0 && amount < LOW_BALANCE_THRESHOLD;
 }
 
 // Coin display law, RULED 6 Sep 2026 (sidebar batch 1, item 6): full

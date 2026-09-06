@@ -153,16 +153,15 @@ export default function StudioEconomyWidgetView({
   return (
     <>
       <div className="flex flex-col items-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
+        {/* Glyph and number share the rail's standard ornament gold,
+            RULED 6 Sep 2026 (coin balance gold fix); amber only in
+            the low state, which never fires at zero. */}
         <span
           className={`inline-flex items-center justify-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] tabular-nums ${
-            lowBalance ? "text-[var(--status-warning-text)]" : "text-[var(--ink)]"
+            lowBalance ? "text-[var(--status-warning-text)]" : "text-[var(--gold-ornament)]"
           }`}
         >
-          <Coins
-            size={16}
-            className={lowBalance ? "text-[var(--status-warning-text)]" : "text-[var(--gold-ornament)]"}
-            aria-hidden="true"
-          />
+          <Coins size={16} aria-hidden="true" />
           {balanceLabel}
         </span>
 
