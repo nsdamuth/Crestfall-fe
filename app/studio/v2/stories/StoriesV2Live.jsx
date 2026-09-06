@@ -552,7 +552,11 @@ export default function StoriesV2Live({
                     stats={{ plays: item.plays, hearts: item.hearts, saves: item.saves, followers: null }}
                     liked={engagement.isCreationLiked(item)}
                     bookmarked={engagement.isCreationBookmarked(item)}
-                    onOpenAssetDetail={() => openStartable(item)}
+                    onOpenAssetDetail={() =>
+                      !item.isArchived && item.playableNow
+                        ? startItem(item)
+                        : openStartable(item)
+                    }
                     onLike={() => engagement.toggleCreationLike(item)}
                     onBookmark={() => engagement.toggleCreationBookmark(item)}
                     onPlay={!item.isArchived && item.playableNow ? () => startItem(item) : null}

@@ -174,7 +174,7 @@ export function normalizeCreationProfileMedia(media) {
       ? null
       : getCreationMediaCardUrl(item, displayUrl);
     const thumbnailUrl = isLocked
-      ? null
+      ? lockedPreviewUrl
       : getCreationMediaThumbnailUrl(item, cardUrl || displayUrl);
 
     return {
