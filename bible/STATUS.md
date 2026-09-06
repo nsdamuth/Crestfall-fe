@@ -50,7 +50,11 @@ fine-tuning. Every other section page carries its header; Home uses
 its welcome hero by design. Coins section spacing
 (same day, screenshot): the divider between Feedback & Updates and
 Signed in moved up so the gap below the section matches the gap
-above it, desktop and mobile drawer.
+above it, desktop and mobile drawer. Sticky seam (same day, Brian's
+screenshots): the shared filter bar now tucks 1px under the top bar
+so the sub-pixel seam that opens at browser zooms other than 100% is
+covered on every page; geometry at 100% measured zero gap before and
+after.
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
