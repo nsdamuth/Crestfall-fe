@@ -96,6 +96,17 @@ export default function StudioMobileNavView({
   const supportLinks = isV2Drawer
     ? utilityLinks.filter((link) => link !== accountLink)
     : utilityLinks;
+  // Support heading removed on the v2 drawer, RULED 6 Sep 2026
+  // (sidebar batch 1, mobile parity): Terms becomes quiet footer text
+  // beneath Log out (no icon); the remaining support rows (Feedback &
+  // Updates) sit directly beneath the coins block. Same href split as
+  // StudioSidebar.view.jsx. The legacy drawer keeps its own list.
+  const termsLink = isV2Drawer
+    ? supportLinks.find((link) => /terms/i.test(link?.href || "")) || null
+    : null;
+  const v2SupportRows = isV2Drawer
+    ? supportLinks.filter((link) => link !== termsLink)
+    : [];
 
   return (
     <>
@@ -145,7 +156,10 @@ export default function StudioMobileNavView({
             </div>
 
             {isV2Drawer ? (
-              <div className="mt-5 space-y-[var(--space-4)]">
+              // Group gap opened --space-4 to --space-6, RULED 6 Sep
+              // 2026 (sidebar batch 1, mobile parity), matching the
+              // desktop sidebar's section spacing.
+              <div className="mt-5 space-y-[var(--space-6)]">
                 {v2DrawerGroups.map((group) => (
                   <MobileDrawerGroup
                     key={group.label}
@@ -155,13 +169,6 @@ export default function StudioMobileNavView({
                     onNavigate={onNavigate}
                   />
                 ))}
-
-                <MobileDrawerGroup
-                  label="Support"
-                  links={supportLinks}
-                  InternalLinkComponent={InternalLinkComponent}
-                  onNavigate={onNavigate}
-                />
               </div>
             ) : (
               <>
@@ -218,6 +225,20 @@ export default function StudioMobileNavView({
 
             <MobileDivider />
             {drawerEconomySlot}
+
+            {v2SupportRows.length ? (
+              <nav className="mt-[var(--space-2)] space-y-[2px]">
+                {v2SupportRows.map((link) => (
+                  <MobileDrawerInternalLink
+                    key={link.href}
+                    link={link}
+                    InternalLinkComponent={InternalLinkComponent}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </nav>
+            ) : null}
+
             <MobileDivider />
 
             <MobileAccountSummary
@@ -227,6 +248,7 @@ export default function StudioMobileNavView({
               logoutHref={logoutHref}
               discordLink={discordLink}
               accountLink={accountLink}
+              termsLink={termsLink}
               InternalLinkComponent={InternalLinkComponent}
               onNavigate={onNavigate}
             />
@@ -300,11 +322,15 @@ function MobileAccountSummary({
   logoutHref,
   discordLink,
   accountLink,
+  termsLink = null,
   InternalLinkComponent = "a",
   onNavigate = () => {},
 }) {
+  // Gap opened --space-2 to --space-3, RULED 6 Sep 2026 (sidebar
+  // batch 1, mobile parity): Log out no longer touches the signed-in
+  // row. Terms renders beneath Log out as quiet footer text, no icon.
   return (
-    <div className="space-y-[var(--space-2)] px-1">
+    <div className="space-y-[var(--space-3)] px-1">
       <div className="flex items-center gap-[var(--space-2)]">
         <span
           aria-hidden="true"
@@ -367,6 +393,16 @@ function MobileAccountSummary({
         <LogOut size={13} />
         {logoutLabel}
       </a>
+
+      {termsLink ? (
+        <InternalLinkComponent
+          href={termsLink.href}
+          onClick={onNavigate}
+          className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] transition hover:text-[var(--gold-action)] hover:opacity-100"
+        >
+          {termsLink.label}
+        </InternalLinkComponent>
+      ) : null}
     </div>
   );
 }

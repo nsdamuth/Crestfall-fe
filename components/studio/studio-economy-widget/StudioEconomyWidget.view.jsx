@@ -113,10 +113,16 @@ export default function StudioEconomyWidgetView({
     );
   }
 
+  // Count stacked above a full-width Buy Coins button, RULED 6 Sep
+  // 2026 (sidebar batch 1, item 6): the one-row form could not hold
+  // the widest label (six characters) beside the button at the
+  // expanded sidebar width without wrapping the button label, so the
+  // brief's rule picks the stacked form. Same block in the mobile
+  // drawer, so both match.
   return (
     <>
-      <div className="flex items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
-        <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">
+      <div className="flex flex-col rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
+        <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] tabular-nums text-[var(--ink)]">
           <Coins size={16} className="text-[var(--gold-ornament)]" aria-hidden="true" />
           {balanceLabel}
         </span>
@@ -124,7 +130,7 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="inline-flex h-[var(--control-sm)] touch-manipulation items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)]"
+          className="mt-[var(--space-2)] inline-flex h-[var(--control-sm)] w-full touch-manipulation items-center justify-center gap-[var(--space-1)] whitespace-nowrap rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)]"
         >
           <ShoppingBag size={13} aria-hidden="true" />
           Buy Coins

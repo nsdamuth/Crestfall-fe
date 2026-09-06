@@ -40,7 +40,15 @@ export const studioEconomyWidgetNotificationsInfoFixture = {
   notificationsInfoOpen: true,
 };
 
+// Widest full-number label under the coin display law (6 Sep 2026):
+// five digits plus one separator.
+export const studioEconomyWidgetCeilingBalanceFixture = {
+  ...baseFixture,
+  balanceLabel: "99,999",
+};
+
+// From 100,000 the label is compact (987,654,321 reads 987.7M).
 export const studioEconomyWidgetLargeBalanceFixture = {
   ...baseFixture,
-  balanceLabel: "987,654,321",
+  balanceLabel: "987.7M",
 };

@@ -77,6 +77,17 @@ export default function StudioSidebarView({
   // exists. Change this line, not the markup below, to redirect it.
   const accountLink =
     utilityLinks.find((link) => link.iconKey === "castle") || null;
+  // Support group split, RULED 6 Sep 2026 (sidebar batch 1): the
+  // Support heading and its divider no longer render. Terms becomes
+  // quiet footer text beneath Log out (expanded only, no icon); every
+  // other support item (Feedback & Updates) renders as a normal nav
+  // row directly beneath the coins block in both states. The group
+  // data shape is unchanged; the View splits it by href, the same way
+  // it finds discordLink and accountLink above.
+  const supportItems = previewSupportGroup?.items || [];
+  const termsLink =
+    supportItems.find((item) => /terms/i.test(item?.href || "")) || null;
+  const supportRows = supportItems.filter((item) => item !== termsLink);
 
   return (
     <aside
@@ -85,20 +96,32 @@ export default function StudioSidebarView({
         ${collapsed ? "w-16" : "w-56"}
       `}
     >
-      <div className="flex items-center justify-between gap-2">
-        {!collapsed ? (
-          <InternalLinkComponent
-            href={brandHref}
-            className="flex items-center gap-[var(--space-2)]"
+      {/* Collapsed header stacks the logo icon (Home link) above the
+          collapse control, RULED 6 Sep 2026 (sidebar batch 1). The
+          expanded header keeps its one-row lockup; the shift below
+          the header on toggle was accepted at the same gate. The logo
+          navigates, the control only toggles, in both states. */}
+      <div
+        className={
+          collapsed
+            ? "flex flex-col items-center gap-[var(--space-2)]"
+            : "flex items-center justify-between gap-2"
+        }
+      >
+        <InternalLinkComponent
+          href={brandHref}
+          aria-label={collapsed ? `${brandEyebrow} home` : undefined}
+          className="flex items-center gap-[var(--space-2)]"
+        >
+          <svg
+            viewBox="0 0 64 64"
+            aria-hidden="true"
+            className="h-10 w-10 shrink-0 text-[var(--gold-ornament)]"
           >
-            <svg
-              viewBox="0 0 64 64"
-              aria-hidden="true"
-              className="h-10 w-10 shrink-0 text-[var(--gold-ornament)]"
-            >
-              <use href="/assets/icons/icons-v7.svg#i-59" />
-            </svg>
+            <use href="/assets/icons/icons-v7.svg#i-59" />
+          </svg>
 
+          {!collapsed ? (
             <span>
               <h1 className="font-display text-[length:var(--text-ui)] font-[var(--weight-medium)] uppercase leading-none tracking-[.04em] text-[color:var(--ink)] first-letter:text-[1.45em]">
                 {brandEyebrow}
@@ -108,8 +131,8 @@ export default function StudioSidebarView({
                 {brandTitle}
               </p>
             </span>
-          </InternalLinkComponent>
-        ) : null}
+          ) : null}
+        </InternalLinkComponent>
 
         <button
           type="button"
@@ -143,8 +166,11 @@ export default function StudioSidebarView({
               from preview mode, RULED 23 Aug 2026 (build-0823 pass
               4, sidebar refinement): only the nine-page model plus
               lawful supporting entries render here. Flag-off
-              (production) rendering, below, is untouched. */}
-          <div className="mt-[var(--space-7)] space-y-[var(--space-2)]">
+              (production) rendering, below, is untouched. Group gap
+              opened from --space-2 to --space-6, RULED 6 Sep 2026
+              (sidebar batch 1): Play, Create, Explore read as
+              separate sections. */}
+          <div className="mt-[var(--space-7)] space-y-[var(--space-6)]">
             {previewGroups.map((group) => (
               <PreviewGroup
                 key={group.label}
@@ -154,17 +180,6 @@ export default function StudioSidebarView({
               />
             ))}
           </div>
-
-          {previewSupportGroup ? (
-            <>
-              <SidebarDivider dense />
-              <PreviewGroup
-                group={previewSupportGroup}
-                collapsed={collapsed}
-                InternalLinkComponent={InternalLinkComponent}
-              />
-            </>
-          ) : null}
 
           <SidebarDivider dense />
         </>
@@ -198,15 +213,79 @@ export default function StudioSidebarView({
         </>
       )}
       {economySlot}
+
+      {supportRows.length ? (
+        <nav className="mt-[var(--space-2)] space-y-[var(--space-1)]">
+          {supportRows.map((item) => (
+            <SidebarInternalLink
+              key={item.label}
+              link={item}
+              collapsed={collapsed}
+              InternalLinkComponent={InternalLinkComponent}
+              dense
+            />
+          ))}
+        </nav>
+      ) : null}
+
       <SidebarDivider />
 
-      {!collapsed ? (
+      {collapsed ? (
+        // Collapsed footer mirrors the expanded one, RULED 6 Sep 2026
+        // (sidebar batch 1): Discord, Settings, then Log out as icon
+        // circles in the expanded order. Terms is omitted here (no
+        // icon).
+        <div className="mt-[var(--space-3)] flex flex-col items-center space-y-[var(--space-2)]">
+          {discordLink ? (
+            <a
+              href={discordLink.href}
+              target="_blank"
+              rel="noreferrer"
+              title={discordLink.label}
+              aria-label={discordLink.label}
+              className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <use href="/assets/icons/icons-v7.svg#i-58" />
+              </svg>
+            </a>
+          ) : null}
+
+          {accountLink ? (
+            <InternalLinkComponent
+              href={accountLink.href}
+              title="Settings"
+              aria-label="Settings"
+              className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            >
+              <Settings size={16} aria-hidden="true" />
+            </InternalLinkComponent>
+          ) : null}
+
+          <a
+            href={logoutHref}
+            title={logoutLabel}
+            aria-label={logoutLabel}
+            className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-transparent text-[var(--ink-faint)] transition hover:text-[var(--gold-action)]"
+          >
+            <LogOut size={16} aria-hidden="true" />
+          </a>
+        </div>
+      ) : (
         // Signed-in area streamlined, RULED 23 Aug 2026 (build-0823
         // pass 4, sidebar refinement): Discord and Settings sit
         // inline on the signed-in row itself (no separate icon row);
         // Log out is a quiet row directly beneath. No oversized
-        // blocks.
-        <div className="mt-[var(--space-3)] space-y-[var(--space-1)] px-1">
+        // blocks. Row gap opened --space-1 to --space-3, RULED 6 Sep
+        // 2026 (sidebar batch 1), so Log out no longer touches the
+        // signed-in row.
+        <div className="mt-[var(--space-3)] space-y-[var(--space-3)] px-1">
           <div className="flex items-center gap-[var(--space-2)]">
             <span
               aria-hidden="true"
@@ -270,8 +349,21 @@ export default function StudioSidebarView({
             <LogOut size={14} aria-hidden="true" />
             {logoutLabel}
           </a>
+
+          {termsLink ? (
+            // Terms as footer text, RULED 6 Sep 2026 (sidebar batch
+            // 1): no icon, half-strength muted ink so it reads as a
+            // footer, clearly lighter than the nav rows, still a
+            // link. Hover restores full strength in action gold.
+            <InternalLinkComponent
+              href={termsLink.href}
+              className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] transition hover:text-[var(--gold-action)] hover:opacity-100"
+            >
+              {termsLink.label}
+            </InternalLinkComponent>
+          ) : null}
         </div>
-      ) : null}
+      )}
     </aside>
   );
 }
@@ -287,20 +379,25 @@ function SidebarDivider({ dense = false }) {
 function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
   return (
     <div>
-      {!collapsed ? (
-        // Section labels, two scopes, RULED 10 Aug 2026 (kit polish 3
-        // pass, docs/BUILD-BLUEPRINT.md 2.16(o)). This is scope 2,
-        // sidebar nav group headers: structural, not decorative. The
-        // label keeps its gold uppercase treatment with NO ornament
-        // rule beside it (the short gold rule this pass removes was
-        // scope 1's page-head eyebrow treatment, wrong here); a plain
-        // full-width divider (the Legacy divider recipe) renders
-        // beneath the label row instead, in both collapsed and
-        // expanded states.
-        <p className="px-3 pb-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          {group.label}
-        </p>
-      ) : null}
+      {/* Section labels, two scopes, RULED 10 Aug 2026 (kit polish 3
+          pass, docs/BUILD-BLUEPRINT.md 2.16(o)). This is scope 2,
+          sidebar nav group headers: structural, not decorative. The
+          label keeps its gold uppercase treatment with NO ornament
+          rule beside it (the short gold rule this pass removes was
+          scope 1's page-head eyebrow treatment, wrong here); a plain
+          full-width divider (the Legacy divider recipe) renders
+          beneath the label row instead, in both collapsed and
+          expanded states. Collapsed keeps the label row's height
+          (invisible, not removed), RULED 6 Sep 2026 (sidebar batch
+          1), so the groups space identically in both states. */}
+      <p
+        aria-hidden={collapsed ? "true" : undefined}
+        className={`px-3 pb-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[var(--gold-ornament)] ${
+          collapsed ? "invisible" : ""
+        }`}
+      >
+        {group.label}
+      </p>
       <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
       <nav className="space-y-[var(--space-1)]">
         {group.items.map((item) =>

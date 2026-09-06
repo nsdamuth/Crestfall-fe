@@ -2,7 +2,15 @@
 
 **Status:** Loom-separated
 
-**View contract:** `1.0.0`
+**View contract:** `1.2.0`
+
+Coin display law, RULED 6 Sep 2026 (sidebar batch 1, item 6): the
+balance label shows full numbers with thousands separators below
+100,000 (99,999) and the compact form from 100,000 (100k, 1.2M,
+999.9M), never longer than six characters. The `expanded` mode stacks
+that count above a full-width Buy Coins button, because the one-row
+form wrapped the button label beside a six-character count at the
+sidebar width. The mobile drawer shares the same block.
 
 ## Purpose
 

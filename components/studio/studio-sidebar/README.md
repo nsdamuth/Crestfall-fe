@@ -78,6 +78,26 @@ plain full-width divider (the Legacy divider recipe,
 instead, in both collapsed and expanded states. The label itself
 stays gold uppercase and expanded-only, unchanged.
 
+Sidebar batch 1, RULED 6 Sep 2026 (branch fe/sidebar). Order on the
+new pages, expanded: logo lockup with the collapse control; Play,
+Create, Explore with a `--space-6` gap between groups (was
+`--space-2`); divider; coins block (count stacked above a full-width
+Buy Coins button, see the economy widget contract 1.2.0); Feedback &
+Updates as a normal nav row directly beneath it; divider; signed-in
+row; Log out with a `--space-3` gap above it (was `--space-1`); Terms
+& Policies as quiet footer text (no icon, `--ink-faint` at
+`--state-disabled-opacity`, hover restores full strength in
+`--gold-action`). The Support heading and its divider are gone. The
+group data (`STUDIO_SIDEBAR_PREVIEW_SUPPORT_GROUP`) is unchanged; the
+View splits it by href, the way it already finds the Discord and
+Account links. Collapsed mirrors the same destinations in the same
+order: the logo icon (Home link) stacks above the collapse control,
+group label rows keep their height invisibly so the groups space
+identically, and the footer stacks Discord, Settings, and Log out as
+icon circles. Terms is omitted collapsed. The expanded header keeps
+its one-row lockup; the resulting shift below the header on toggle
+was accepted at the same gate.
+
 ## Diagnostics
 
 ```bash

@@ -57,6 +57,19 @@ icon over label, color-only active state via the existing `.cf-dock-link`
 class, chrome-blur frosted bar, `env(safe-area-inset-bottom)` padding,
 tokens throughout. Tiles, targets, and order are unchanged.
 
+## Sidebar batch 1 parity (6 Sep 2026, branch fe/sidebar)
+
+The v2 drawer mirrors the desktop sidebar's new order: Play, Create,
+Explore with a `--space-6` gap between groups (was `--space-4`); the
+Support heading is gone; the coins block stacks the count above a
+full-width Buy Coins button; Feedback & Updates sits directly beneath
+it as a normal row; the signed-in row gets a `--space-3` gap above Log
+out (was `--space-2`); Terms & Policies renders as quiet footer text
+under Log out (no icon, `--ink-faint` at `--state-disabled-opacity`).
+The View splits the utility list by href, the same way it already
+finds the Account link. The legacy drawer and the five-tile bottom dock
+are unchanged.
+
 ## Diagnostics
 
 ```bash

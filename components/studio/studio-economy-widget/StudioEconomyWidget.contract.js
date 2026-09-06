@@ -1,4 +1,4 @@
-export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * @typedef {"expanded"|"collapsed"|"mobileHeader"} StudioEconomyWidgetLayoutMode
@@ -30,6 +30,15 @@ export const STUDIO_ECONOMY_WIDGET_VIEW_CONTRACT_VERSION = "1.1.0";
  * notificationsInfoOpen / onOpenNotificationsInfo /
  * onCloseNotificationsInfo remain for the "mobileHeader" mode, which
  * is unchanged.
+ *
+ * 1.2.0, 6 Sep 2026 (sidebar batch 1, item 6, RULED): the "expanded"
+ * mode stacks the coin count above a full-width Buy Coins button
+ * (the one-row form wrapped the button label beside a six-character
+ * count at the sidebar width). balanceLabel is display-ready and now
+ * follows the coin display law: full numbers with thousands
+ * separators below 100,000 ("99,999"), compact from 100,000 ("100k",
+ * "1.2M", "999.9M"), never longer than six characters. No prop added
+ * or removed.
  */
 
 export {};
