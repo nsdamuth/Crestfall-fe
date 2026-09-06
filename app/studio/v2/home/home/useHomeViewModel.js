@@ -62,10 +62,12 @@ const TOP_BANNER = Object.freeze({
 
 // Bottom banner: next section in the journey loop is Stories (chain
 // ruling 6 Sep 2026, matching Home PRD R1). Landscape placeholder art
-// shared by every section page's bottom banner.
+// shared by every section page's bottom banner. Copy is the Play copy
+// the Stories page already carries (sidebar batch 1 carry-over, 6 Sep
+// 2026): the banner sells Play, not Create.
 const BOTTOM_BANNER = Object.freeze({
-  eyebrow: "Create",
-  title: "Build the next world.",
+  eyebrow: "Play",
+  title: "Worlds worth committing to.",
   ctaLabel: "Open Stories",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 });

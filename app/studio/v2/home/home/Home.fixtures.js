@@ -30,8 +30,8 @@ const TOP_BANNER = {
 };
 
 const BOTTOM_BANNER = {
-  eyebrow: "Create",
-  title: "Build the next world.",
+  eyebrow: "Play",
+  title: "Worlds worth committing to.",
   ctaLabel: "Open Stories",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
   onCtaClick: noop,
