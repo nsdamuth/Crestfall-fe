@@ -3,6 +3,18 @@
 import { useState } from "react";
 
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import { IMAGE_GENERATION_COIN_COST } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
+
+// Low-balance threshold, RULED 6 Sep 2026 (sidebar batch 2, item 4):
+// the cost of one standard generation, read from the existing image
+// generation cost constant so the value lives in one place until the
+// Chassis serves it.
+export const LOW_BALANCE_THRESHOLD = IMAGE_GENERATION_COIN_COST;
+
+export function isLowBalance(value) {
+  const amount = Number.parseInt(value, 10);
+  return Number.isFinite(amount) && amount < LOW_BALANCE_THRESHOLD;
+}
 
 // Coin display law, RULED 6 Sep 2026 (sidebar batch 1, item 6): full
 // numbers with thousands separators up to 99,999; from 100,000 the
@@ -63,6 +75,7 @@ export function useStudioEconomyWidgetViewModel({
     layoutMode: resolveLayoutMode({ variant, collapsed }),
     balanceLabel:
       accountStatus === "loading" ? "..." : formatCoins(coinBalance),
+    lowBalance: accountStatus !== "loading" && isLowBalance(coinBalance),
     buyInfoOpen,
     notificationsInfoOpen,
     onOpenBuyInfo: () => setBuyInfoOpen(true),

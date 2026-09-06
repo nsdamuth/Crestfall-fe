@@ -2,7 +2,18 @@
 
 **Status:** Loom-separated
 
-**View contract:** `1.2.0`
+**View contract:** `1.3.0`
+
+Upgrade CTA, RULED 6 Sep 2026 (sidebar batch 2, GO corrections): the
+expanded button is the rail's one gold filled primary, full block
+width, labelled "Upgrade" in every state and opening the existing
+purchase flow for now. The balance row centers over it. Below the
+cost of one standard generation (read from
+`IMAGE_GENERATION_COIN_COST`, 5 today; a value for the Chassis to
+serve later) the ViewModel sets `lowBalance`, and the balance row
+switches to `--status-warning-text` while the button stays gold.
+Collapsed renders the balance as a small badge above a gold Upgrade
+button; low balance turns the badge number `--status-warning`.
 
 Coin display law, RULED 6 Sep 2026 (sidebar batch 1, item 6): the
 balance label shows full numbers with thousands separators below

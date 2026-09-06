@@ -70,6 +70,14 @@ The View splits the utility list by href, the same way it already
 finds the Account link. The legacy drawer and the five-tile bottom dock
 are unchanged.
 
+Batch 2 (same day, GO with corrections): drawer rows resolve to
+`--control-md` (replacing the raw 2.35rem), item gap `--space-2`;
+the coins block is the shared Upgrade block (economy widget contract
+1.3.0). Vault uses the `archive` glyph in the v2 drawer and bottom
+dock; `castle` remains only as the Account link's identifier. The
+legacy list's "Storys" reads "Stories". Icons resolve inline so the
+static-components lint rule passes.
+
 ## Diagnostics
 
 ```bash

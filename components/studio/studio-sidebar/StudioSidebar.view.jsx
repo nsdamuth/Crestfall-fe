@@ -38,9 +38,10 @@ const ICONS = Object.freeze({
   users: Users,
 });
 
-function resolveIcon(iconKey) {
-  return ICONS[iconKey] || User;
-}
+// Icons resolve inline (ICONS[key] || User) at each use, not through
+// a helper call: the react-hooks/static-components lint rule reads a
+// call result used as a JSX tag as a component created during render
+// (fixed 6 Sep 2026, sidebar batch 2, item 11).
 
 export default function StudioSidebarView({
   brandEyebrow = "Crestfall",
@@ -181,7 +182,9 @@ export default function StudioSidebarView({
             ))}
           </div>
 
-          <SidebarDivider dense />
+          {/* Same divider spacing above and below the coins block,
+              RULED 6 Sep 2026 (sidebar batch 2, item 1). */}
+          <SidebarDivider />
         </>
       ) : (
         <>
@@ -215,7 +218,7 @@ export default function StudioSidebarView({
       {economySlot}
 
       {supportRows.length ? (
-        <nav className="mt-[var(--space-2)] space-y-[var(--space-1)]">
+        <nav className="mt-[var(--space-2)] space-y-[var(--space-2)]">
           {supportRows.map((item) => (
             <SidebarInternalLink
               key={item.label}
@@ -399,7 +402,11 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
         {group.label}
       </p>
       <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
-      <nav className="space-y-[var(--space-1)]">
+      {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
+          6 and 7): dense rows resolve to --control-md with
+          --text-ui/--lh-ui labels, item gap --space-2; group gap stays
+          --space-6, three times the item gap. Same values collapsed. */}
+      <nav className="space-y-[var(--space-2)]">
         {group.items.map((item) =>
           item.isBuilt ? (
             <SidebarInternalLink
@@ -419,7 +426,7 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
 }
 
 function PreviewQuietRow({ item, collapsed, dense = false }) {
-  const Icon = resolveIcon(item.iconKey);
+  const Icon = ICONS[item.iconKey] || User;
 
   return (
     <span
@@ -427,7 +434,7 @@ function PreviewQuietRow({ item, collapsed, dense = false }) {
       aria-disabled="true"
       className={`flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${
         dense
-          ? "min-h-[var(--control-sm)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+          ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
           : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
       } ${collapsed ? "justify-center px-2" : ""}`}
     >
@@ -450,7 +457,7 @@ function SidebarInternalLink({
   InternalLinkComponent = "a",
   dense = false,
 }) {
-  const Icon = resolveIcon(link.iconKey);
+  const Icon = ICONS[link.iconKey] || User;
 
   return (
     <InternalLinkComponent
@@ -463,7 +470,7 @@ function SidebarInternalLink({
         cf-nav-link flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent font-[var(--weight-regular)] tracking-[var(--track-normal)]
         ${
           dense
-            ? "min-h-[var(--control-sm)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+            ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
             : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
         }
         ${

@@ -3,6 +3,7 @@ const noop = () => {};
 const baseFixture = {
   layoutMode: "expanded",
   balanceLabel: "2,450",
+  lowBalance: false,
   buyInfoOpen: false,
   notificationsInfoOpen: false,
   onOpenBuyInfo: noop,
@@ -45,6 +46,21 @@ export const studioEconomyWidgetNotificationsInfoFixture = {
 export const studioEconomyWidgetCeilingBalanceFixture = {
   ...baseFixture,
   balanceLabel: "99,999",
+};
+
+// Below the cost of one standard generation (5 coins, 6 Sep 2026):
+// the balance row reads amber, the Upgrade button stays gold.
+export const studioEconomyWidgetLowBalanceFixture = {
+  ...baseFixture,
+  balanceLabel: "3",
+  lowBalance: true,
+};
+
+export const studioEconomyWidgetCollapsedLowBalanceFixture = {
+  ...baseFixture,
+  layoutMode: "collapsed",
+  balanceLabel: "3",
+  lowBalance: true,
 };
 
 // From 100,000 the label is compact (987,654,321 reads 987.7M).

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Archive,
   BookOpen,
   Castle,
   ChevronDown,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 const ICONS = Object.freeze({
+  archive: Archive,
   bookOpen: BookOpen,
   castle: Castle,
   compass: Compass,
@@ -35,9 +37,10 @@ const ICONS = Object.freeze({
   users: Users,
 });
 
-function resolveIcon(iconKey) {
-  return ICONS[iconKey] || User;
-}
+// Icons resolve inline (ICONS[key] || User) at each use, not through
+// a helper call: the react-hooks/static-components lint rule reads a
+// call result used as a JSX tag as a component created during render
+// (fixed 6 Sep 2026, sidebar batch 2, item 11).
 
 const V2_DRAWER_GROUP_DEFINITIONS = Object.freeze([
   Object.freeze({ label: "Play", itemLabels: Object.freeze(["Home", "Stories", "Adventures"]) }),
@@ -227,7 +230,7 @@ export default function StudioMobileNavView({
             {drawerEconomySlot}
 
             {v2SupportRows.length ? (
-              <nav className="mt-[var(--space-2)] space-y-[2px]">
+              <nav className="mt-[var(--space-2)] space-y-[var(--space-2)]">
                 {v2SupportRows.map((link) => (
                   <MobileDrawerInternalLink
                     key={link.href}
@@ -262,7 +265,7 @@ export default function StudioMobileNavView({
           className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 gap-[var(--space-1)] border-t border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-2)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] backdrop-blur-[var(--blur-chrome)] lg:hidden"
         >
           {bottomLinks.map((link) => {
-            const Icon = resolveIcon(link.iconKey);
+            const Icon = ICONS[link.iconKey] || User;
 
             return (
               <InternalLinkComponent
@@ -301,7 +304,10 @@ function MobileDrawerGroup({
           className="h-px flex-1 bg-[var(--gold-ornament)]/20"
         />
       </div>
-      <nav className="mt-[var(--space-1)] space-y-[2px]">
+      {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
+          7 and 9): rows at --control-md (replacing the raw 2.35rem),
+          item gap --space-2, mirroring the desktop rail. */}
+      <nav className="mt-[var(--space-1)] space-y-[var(--space-2)]">
         {links.map((link) => (
           <MobileDrawerInternalLink
             key={link.href}
@@ -416,7 +422,7 @@ function MobileDrawerInternalLink({
   InternalLinkComponent = "a",
   onNavigate = () => {},
 }) {
-  const Icon = resolveIcon(link.iconKey);
+  const Icon = ICONS[link.iconKey] || User;
 
   return (
     <InternalLinkComponent
@@ -427,7 +433,7 @@ function MobileDrawerInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex min-h-[2.35rem] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] transition
+        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] transition
         ${
           link.variant === "return"
             ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
@@ -444,7 +450,7 @@ function MobileDrawerInternalLink({
 }
 
 function MobileDrawerExternalLink({ link, onNavigate = () => {} }) {
-  const Icon = resolveIcon(link.iconKey);
+  const Icon = ICONS[link.iconKey] || User;
 
   return (
     <a

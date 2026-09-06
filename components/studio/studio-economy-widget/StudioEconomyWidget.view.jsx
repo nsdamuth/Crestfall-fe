@@ -1,4 +1,4 @@
-import { Bell, Coins, ShoppingBag } from "lucide-react";
+import { Bell, Coins } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
@@ -33,9 +33,19 @@ function UtilityModal({ title = "", body = "", onClose = null }) {
   );
 }
 
+// Upgrade CTA, RULED 6 Sep 2026 (sidebar batch 2, GO corrections):
+// the one gold filled primary button in the rail, label "Upgrade" in
+// every state, opening the existing coin purchase flow for now. Built
+// from the gold primary tokens directly because the shared .cf-btn
+// recipe forces normal case and cannot be overridden from outside.
+const UPGRADE_LABEL = "Upgrade";
+const UPGRADE_BUTTON_CLASS =
+  "inline-flex h-[var(--control-md)] w-full touch-manipulation items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] bg-[var(--gold-action)] bg-[image:var(--grad-gold)] bg-no-repeat text-[length:var(--text-label)] font-[var(--weight-bold)] uppercase tracking-[var(--track-label)] text-[var(--tag-fill-ink)] transition hover:shadow-[var(--glow-hover)]";
+
 export default function StudioEconomyWidgetView({
   layoutMode = "expanded",
   balanceLabel = "0",
+  lowBalance = false,
   buyInfoOpen = false,
   notificationsInfoOpen = false,
   onOpenBuyInfo = null,
@@ -96,44 +106,71 @@ export default function StudioEconomyWidgetView({
   // keeps its own bell for its own consumers; onOpenNotificationsInfo
   // / onCloseNotificationsInfo / notificationsInfoOpen stay in the
   // contract for that mode.
+  // Collapsed, RULED 6 Sep 2026 (sidebar batch 2, item 5): the coin
+  // glyph becomes the gold Upgrade button with the balance as a small
+  // badge centered directly above it, so the block keeps the expanded
+  // block's height and the dividers land at the same heights. Low
+  // balance turns the badge number amber (base status token, badge
+  // tier); the gold button is unchanged; tooltip reads "Upgrade".
   if (layoutMode === "collapsed") {
     return (
       <>
-        <button
-          type="button"
-          onClick={() => onOpenBuyInfo?.()}
-          title={`Coins: ${balanceLabel}`}
-          className="flex w-full items-center justify-center rounded-[var(--radius-md)] px-[var(--space-2)] py-[var(--space-2)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-        >
-          <Coins size={16} aria-hidden="true" />
-        </button>
+        <div className="flex flex-col items-center py-[var(--space-2)]">
+          <span
+            title={`Coins: ${balanceLabel}`}
+            className={`inline-flex h-[var(--lh-ui)] items-center rounded-[var(--radius-full)] border border-[var(--line-strong)] bg-[var(--surface-3)] px-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] tabular-nums ${
+              lowBalance ? "text-[var(--status-warning)]" : "text-[var(--ink)]"
+            }`}
+          >
+            {balanceLabel}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => onOpenBuyInfo?.()}
+            title={UPGRADE_LABEL}
+            aria-label={UPGRADE_LABEL}
+            className={`mt-[var(--space-2)] ${UPGRADE_BUTTON_CLASS}`}
+          >
+            <Coins size={16} aria-hidden="true" />
+          </button>
+        </div>
 
         {modals}
       </>
     );
   }
 
-  // Count stacked above a full-width Buy Coins button, RULED 6 Sep
-  // 2026 (sidebar batch 1, item 6): the one-row form could not hold
-  // the widest label (six characters) beside the button at the
-  // expanded sidebar width without wrapping the button label, so the
-  // brief's rule picks the stacked form. Same block in the mobile
+  // Count stacked above a full-width button, RULED 6 Sep 2026 (sidebar
+  // batch 1, item 6): the one-row form could not hold the widest label
+  // (six characters) beside the button at the expanded sidebar width
+  // without wrapping the button label. Batch 2 (same day, items 1 to
+  // 4): balance row centered over the Upgrade button on one axis; low
+  // balance switches the glyph and number to the warning amber text
+  // token while the button stays gold. Same block in the mobile
   // drawer, so both match.
   return (
     <>
-      <div className="flex flex-col rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
-        <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] tabular-nums text-[var(--ink)]">
-          <Coins size={16} className="text-[var(--gold-ornament)]" aria-hidden="true" />
+      <div className="flex flex-col items-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)]">
+        <span
+          className={`inline-flex items-center justify-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] tabular-nums ${
+            lowBalance ? "text-[var(--status-warning-text)]" : "text-[var(--ink)]"
+          }`}
+        >
+          <Coins
+            size={16}
+            className={lowBalance ? "text-[var(--status-warning-text)]" : "text-[var(--gold-ornament)]"}
+            aria-hidden="true"
+          />
           {balanceLabel}
         </span>
 
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="mt-[var(--space-2)] inline-flex h-[var(--control-sm)] w-full touch-manipulation items-center justify-center gap-[var(--space-1)] whitespace-nowrap rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--ink)] [@media(pointer:coarse)]:h-[var(--control-md)]"
+          className={`mt-[var(--space-2)] ${UPGRADE_BUTTON_CLASS}`}
         >
-          <ShoppingBag size={13} aria-hidden="true" />
-          Buy Coins
+          {UPGRADE_LABEL}
         </button>
       </div>
 

@@ -44,7 +44,9 @@ test("mobile drawer rows adopt desktop compact density and active treatment", ()
     "components/studio/studio-mobile-nav/StudioMobileNav.view.jsx"
   );
 
-  assert.match(view, /min-h-\[2\.35rem\]/);
+  // Row height tokenized to --control-md 6 Sep 2026 (sidebar batch 2).
+  assert.match(view, /min-h-\[var\(--control-md\)\]/);
+  assert.doesNotMatch(view, /min-h-\[2\.35rem\]/);
   assert.match(view, /border-l-2 border-l-\[var\(--gold-action\)\]/);
   assert.match(view, /tracking-\[var\(--track-label\)\] text-\[var\(--gold-action\)\]/);
 });

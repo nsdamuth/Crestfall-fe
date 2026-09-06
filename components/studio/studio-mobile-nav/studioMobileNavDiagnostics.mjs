@@ -85,7 +85,9 @@ test("Studio Mobile Nav preserves routes, labels, and active matching", () => {
   assert.match(viewModel, /href === "\/studio"/);
   assert.match(viewModel, /pathname === "\/studio"/);
   assert.match(viewModel, /pathname\.startsWith\(href\)/);
-  assert.match(viewModel, /"Storys"/);
+  // "Storys" corrected to "Stories" 6 Sep 2026 (sidebar batch 2, item 12).
+  assert.match(viewModel, /"Stories"/);
+  assert.doesNotMatch(viewModel, /"Storys"/);
   assert.match(viewModel, /"Community Links"/);
   assert.match(viewModel, /fixedBottomNavigationCount|STUDIO_MOBILE_NAV_BOTTOM_LINKS/);
 });

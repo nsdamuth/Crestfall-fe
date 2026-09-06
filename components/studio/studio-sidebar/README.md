@@ -98,6 +98,19 @@ icon circles. Terms is omitted collapsed. The expanded header keeps
 its one-row lockup; the resulting shift below the header on toggle
 was accepted at the same gate.
 
+Sidebar batch 2, RULED 6 Sep 2026 (same branch, GO with
+corrections). Rhythm one step up: dense rows resolve to
+`--control-md` with `--text-ui`/`--lh-ui` labels, item gap
+`--space-2`, group gap unchanged at `--space-6`; the rail is taller
+and scrolls inside itself on short viewports. The coins block sits
+between two dividers with equal spacing; the balance row centers over
+the one gold filled primary in the rail, labelled "Upgrade" in every
+state (economy widget contract 1.3.0). Low balance (below the cost of
+one standard generation) turns the balance row amber, never the
+button. Collapsed shows the balance as a small badge above a gold
+Upgrade button, same block height as expanded. Icons resolve inline
+so the static-components lint rule passes.
+
 ## Diagnostics
 
 ```bash
