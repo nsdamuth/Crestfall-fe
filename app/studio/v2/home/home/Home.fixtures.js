@@ -30,8 +30,8 @@ const TOP_BANNER = {
 };
 
 const BOTTOM_BANNER = {
-  eyebrow: "Create",
-  title: "Build the next world.",
+  eyebrow: "Play",
+  title: "Worlds worth committing to.",
   ctaLabel: "Open Stories",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
   onCtaClick: noop,
@@ -47,15 +47,15 @@ const CONTINUE_ITEM = {
 };
 
 const CREATION_SORT_OPTIONS = [
-  { value: "plays", label: "Most plays" },
-  { value: "likes", label: "Most likes" },
-  { value: "saves", label: "Most saved" },
+  { value: "plays", label: "Plays" },
+  { value: "likes", label: "Likes" },
+  { value: "saves", label: "Saves" },
   { value: "newest", label: "Newest" },
 ];
 
 // Creators data carries likes only (creatorPresentation: plays null,
 // no saves, recency 0), so its rail offers the one option that works.
-const CREATOR_SORT_OPTIONS = [{ value: "likes", label: "Most likes" }];
+const CREATOR_SORT_OPTIONS = [{ value: "likes", label: "Likes" }];
 
 function sortControl(options) {
   return options.length

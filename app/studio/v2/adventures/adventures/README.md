@@ -42,9 +42,12 @@ LOOM shape).
 
 ## Composition order, ruled and exhaustive
 
-Top banner (promo-banner `top` treatment) with the build CTA -> the
-sticky filter bar (search plus sort; no type facet, the page is
-Adventures-only) -> the creation-card grid, the public Adventure
+Page header in the Stories pattern (`StudioPageHeaderView`: eyebrow
+Play, title Adventures, one-line description, divider; added 6 Sep
+2026, copy open for Brian's fine-tuning) -> the sticky filter bar
+(search plus sort; no type facet, the page is Adventures-only) -> top
+banner (promo-banner `top` treatment) with the build CTA -> the
+creation-card grid, the public Adventure
 catalog, load-more paginated -> bottom banner (`bottom` treatment)
 routing to Studio. The rehosted builder opens as a `modal-frame`
 overlay from the top banner's CTA, independent of page flow order.

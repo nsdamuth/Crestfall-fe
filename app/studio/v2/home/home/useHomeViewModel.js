@@ -41,10 +41,12 @@ const SECTIONS = Object.freeze([
 // The four ruled sort options. A list offers only the options its data
 // can honor (design authority ruling, 6 Sep 2026: show only the options
 // that work, no disabled entries, never a silent no-op sort).
+// Labels shortened 6 Sep 2026 (Home quick fix): "Most" dropped, the
+// trigger reads "Sort: Plays". Values and behavior unchanged.
 const SORT_OPTIONS = Object.freeze([
-  Object.freeze({ value: "plays", label: "Most plays" }),
-  Object.freeze({ value: "likes", label: "Most likes" }),
-  Object.freeze({ value: "saves", label: "Most saved" }),
+  Object.freeze({ value: "plays", label: "Plays" }),
+  Object.freeze({ value: "likes", label: "Likes" }),
+  Object.freeze({ value: "saves", label: "Saves" }),
   Object.freeze({ value: "newest", label: "Newest" }),
 ]);
 
@@ -62,10 +64,12 @@ const TOP_BANNER = Object.freeze({
 
 // Bottom banner: next section in the journey loop is Stories (chain
 // ruling 6 Sep 2026, matching Home PRD R1). Landscape placeholder art
-// shared by every section page's bottom banner.
+// shared by every section page's bottom banner. Copy is the Play copy
+// the Stories page already carries (sidebar batch 1 carry-over, 6 Sep
+// 2026): the banner sells Play, not Create.
 const BOTTOM_BANNER = Object.freeze({
-  eyebrow: "Create",
-  title: "Build the next world.",
+  eyebrow: "Play",
+  title: "Worlds worth committing to.",
   ctaLabel: "Open Stories",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 });
