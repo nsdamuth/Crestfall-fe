@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
-import KitDestinationTileView from "@/components/kit/destination-tile/KitDestinationTile.view";
 import KitRailView from "@/components/kit/rail/KitRail.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
@@ -20,7 +19,7 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
 
   return (
     <div
-      className="group/home-hero relative rounded-[var(--radius-lg)]"
+      className="group/home-hero relative mt-[var(--space-4)] rounded-[var(--radius-lg)]"
       onMouseEnter={triggerSheen}
       onMouseLeave={triggerSheen}
     >
@@ -28,7 +27,7 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[2] rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--gold-ornament)_78%,transparent)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.24),0_12px_30px_rgba(0,0,0,0.22)]"
+        className="pointer-events-none absolute inset-0 z-[2] rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--gold-ornament)_66%,transparent)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.24),0_12px_30px_rgba(0,0,0,0.22)]"
       />
 
       <div className="pointer-events-none absolute left-[var(--space-5)] top-[var(--space-5)] z-[3] min-[700px]:left-[var(--space-8)] min-[700px]:top-[var(--space-6)]">
@@ -51,22 +50,40 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
 }
 
 function RailCard({ item }) {
-  return item.cardKind === "creator" ? (
-    <KitCreatorCardView {...item} />
+  // sortValues is view-model bookkeeping for the per-list Sort control;
+  // it never reaches the card.
+  const { cardKind, sortValues: _sortValues, ...cardProps } = item;
+  return cardKind === "creator" ? (
+    <KitCreatorCardView {...cardProps} />
   ) : (
-    <KitCreationCardView {...item} />
+    <KitCreationCardView {...cardProps} />
   );
 }
 
-function Rail({ rail, headControlSlot = null }) {
+function SectionRail({ rail }) {
   if (!rail?.items?.length) return null;
+
+  const sortControl = rail.sortControl;
+  const isCreatorRail = rail.items.every((item) => item.cardKind === "creator");
 
   return (
     <KitRailView
       label={rail.label}
       viewAllLabel={rail.viewAllLabel}
       onViewAll={rail.onViewAll}
-      headControlSlot={headControlSlot}
+      cellSize={isCreatorRail ? "creator" : "fluid"}
+      headControlSlot={
+        sortControl?.options?.length ? (
+          <KitDropdownView
+            label="Sort"
+            options={sortControl.options}
+            selectedValues={sortControl.selectedValue ? [sortControl.selectedValue] : []}
+            isMultiSelect={false}
+            isDisabled={false}
+            onToggleOption={(value) => sortControl.onChange?.(value)}
+          />
+        ) : null
+      }
     >
       {rail.items.map((item) => (
         <RailCard key={item.id} item={item} />
@@ -79,12 +96,7 @@ export default function HomeView({
   topBanner,
   continueItem = null,
   welcomeName = "Player",
-  destinationTiles = [],
-  topRatedRail,
-  recentlyAddedRail,
-  fromTheCommunityRail,
-  creatorsToFollowRail,
-  sortControl,
+  sectionRails = [],
   bottomBanner,
   errorMessage = null,
   warningMessage = null,
@@ -98,6 +110,7 @@ export default function HomeView({
       ? coldStartBannerImage
       : null;
   const useHomeWordmarkFallback = !topBannerImageSrc;
+  const visibleRails = sectionRails.filter((rail) => rail?.items?.length);
 
   return (
     <>
@@ -166,37 +179,13 @@ export default function HomeView({
           />
         ) : null}
 
-        <div className="grid grid-cols-2 gap-[var(--space-3)] min-[700px]:grid-cols-3 min-[700px]:gap-[var(--space-4)] min-[1100px]:grid-cols-4">
-          {destinationTiles.map((tile) => (
-            <KitDestinationTileView
-              key={tile.id}
-              label={tile.label}
-              supportingLine={tile.supportingLine}
-              imageSrc={tile.imageSrc ?? null}
-              identityKey={tile.identityKey ?? tile.id}
-              onOpen={() => tile.onOpen?.()}
-            />
-          ))}
-        </div>
-
-        <Rail
-          rail={topRatedRail}
-          headControlSlot={
-            topRatedRail?.items?.length ? (
-              <KitDropdownView
-                label="Sort"
-                options={sortControl?.options ?? []}
-                selectedValues={sortControl?.selectedValue ? [sortControl.selectedValue] : []}
-                isMultiSelect={false}
-                isDisabled={false}
-                onToggleOption={(value) => sortControl?.onChange?.(value)}
-              />
-            ) : null
-          }
-        />
-        <Rail rail={recentlyAddedRail} />
-        <Rail rail={fromTheCommunityRail} />
-        <Rail rail={creatorsToFollowRail} />
+        {visibleRails.length ? (
+          <div className="flex flex-col gap-[var(--space-8)]">
+            {visibleRails.map((rail) => (
+              <SectionRail key={rail.id} rail={rail} />
+            ))}
+          </div>
+        ) : null}
       </KitStudioPageView>
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />
