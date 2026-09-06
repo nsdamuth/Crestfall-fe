@@ -38,6 +38,9 @@ group-by-group alignment), collapsed coins is the gold button alone
 (tooltip "Upgrade", no badge), expanded Upgrade uses the shared
 primary recipe as is at full block width, and the coins info dialog
 carries an equal inset on all sides so Got it no longer sits flush.
+Coin balance gold fix (same day): glyph and number read in the rail's
+ornament gold; the amber low state applies only above zero and below
+the generation cost, never at zero (it had been firing at zero).
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
