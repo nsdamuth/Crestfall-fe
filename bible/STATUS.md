@@ -23,6 +23,16 @@ carry-over as 7018891c (Images bottom banner to Vault, Home bottom
 banner takes the Play copy), branch fe/sidebar off staging. Brian
 reviews in the browser; no render checks in that pass. Expanded header
 keeps its one-row lockup, the shift on toggle accepted at the gate.
+Batch 2 landed the same day (upgrade CTA and rhythm): rows one step
+up to 44 with 8 gaps, labels one type step up, the coins block centered
+between equal dividers over the one gold Upgrade button (label
+"Upgrade" in every state, opening the existing purchase flow for now),
+low balance below 5 coins turns only the balance row amber, collapsed
+shows the balance badge above the gold button; Vault archive glyph
+everywhere, "Storys" fixed, the four icon lint errors cleared. The
+low-balance threshold reads the frontend's image generation cost
+constant (5) until the Chassis serves it. Terms links to the existing
+Terms page on every surface.
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
