@@ -242,7 +242,11 @@ export default function StudioMobileNavView({
               </nav>
             ) : null}
 
-            <MobileDivider />
+            {/* Even spacing around the coins section, mirroring
+                StudioSidebar.view.jsx (6 Sep 2026): the lower
+                divider tightens its top margin when a row sits
+                between it and the coins box. */}
+            <MobileDivider tightTop={v2SupportRows.length > 0} />
 
             <MobileAccountSummary
               signedInLabel={signedInLabel}
@@ -413,8 +417,12 @@ function MobileAccountSummary({
   );
 }
 
-function MobileDivider() {
-  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
+function MobileDivider({ tightTop = false }) {
+  return (
+    <div
+      className={`${tightTop ? "mt-[var(--space-1)] mb-[var(--space-4)]" : "my-4"} border-t border-[var(--gold-ornament)]/15`}
+    />
+  );
 }
 
 function MobileDrawerInternalLink({

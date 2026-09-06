@@ -231,7 +231,13 @@ export default function StudioSidebarView({
         </nav>
       ) : null}
 
-      <SidebarDivider />
+      {/* Even spacing above and below the coins section, RULED 6 Sep
+          2026 (Brian, screenshot): the Feedback row centers its
+          20px label in a 44px row, leaving 12px of slack under the
+          text, so the lower divider's top margin drops to --space-1
+          to read as the same 16px gap the upper divider gives the
+          coins box. Only when a row sits between them. */}
+      <SidebarDivider tightTop={supportRows.length > 0} />
 
       {collapsed ? (
         // Collapsed footer mirrors the expanded one, RULED 6 Sep 2026
@@ -371,12 +377,14 @@ export default function StudioSidebarView({
   );
 }
 
-function SidebarDivider({ dense = false }) {
-  return (
-    <div
-      className={`${dense ? "my-[var(--space-3)]" : "my-[var(--space-4)]"} border-t border-[var(--line-strong)]`}
-    />
-  );
+function SidebarDivider({ dense = false, tightTop = false }) {
+  const spacing = tightTop
+    ? "mt-[var(--space-1)] mb-[var(--space-4)]"
+    : dense
+      ? "my-[var(--space-3)]"
+      : "my-[var(--space-4)]";
+
+  return <div className={`${spacing} border-t border-[var(--line-strong)]`} />;
 }
 
 function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
