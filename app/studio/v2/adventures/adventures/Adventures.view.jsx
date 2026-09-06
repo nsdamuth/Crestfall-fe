@@ -3,8 +3,10 @@
 // Adventures (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md 4.3; docs/SPRINT-G-
 // PLAN.md section 3). Portable View: presentation only, no data
 // access, no routing decisions, no business rules. Composition, top
-// to bottom, exhaustive: top banner (promo-banner top treatment) with
-// the build CTA -> studio-filter-bar (search, sort) -> creation-card
+// to bottom, exhaustive: page header (eyebrow, title, one-line
+// description, divider; added 6 Sep 2026 in the Stories pattern,
+// copy Brian's to fine-tune) -> studio-filter-bar (search, sort) ->
+// top banner (promo-banner top treatment) with the build CTA -> creation-card
 // grid, the public Adventure catalog -> load-more -> bottom banner
 // routing to Studio. The rehosted Adventure builder opens as a
 // modal-frame overlay, unrelated to page flow order.
@@ -15,6 +17,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import StorylineBuilderShell from "@/components/studio/storylines/StorylineBuilderShell";
 
@@ -46,6 +49,13 @@ export default function AdventuresView({
     <>
       <KitStudioPageView
         harnessSlot={harnessSlot}
+        headerSlot={
+          <StudioPageHeaderView
+            eyebrow="Play"
+            title="Adventures"
+            description="Play through published seasons, or build one of your own."
+          />
+        }
         filterBarSlot={
           <KitStudioFilterBarView
             searchValue={filterBar?.searchValue ?? ""}
