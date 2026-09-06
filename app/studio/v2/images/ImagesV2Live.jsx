@@ -42,6 +42,12 @@ function LiveIngredientPicker({ pickerProps, backLabel = null }) {
   return (
     <KitIngredientPicker
       slotLabel={picker.ingredientLabel}
+      sourceMode={picker.sourceMode}
+      sourceOptions={picker.sourceOptions}
+      onSourceModeChange={(nextMode) => {
+        setSearchValue("");
+        picker.onSourceModeChange?.(nextMode);
+      }}
       searchValue={searchValue}
       searchPlaceholder={picker.searchPlaceholder}
       onSearchChange={setSearchValue}

@@ -22,6 +22,7 @@ import { createCreationDraft } from "@/lib/client/studio/creations/creationClien
 import { useImageGenerationHistory } from "@/components/studio/image-studio/hooks/useImageGenerationHistory";
 import { useImageGenerationJob } from "@/components/studio/image-studio/hooks/useImageGenerationJob";
 import { useImageStudioIngredientOptions } from "@/components/studio/image-studio/hooks/useImageStudioIngredientOptions";
+import { isCommunityDiscoverableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 
 export const IMAGE_GENERATION_COIN_COST = 5;
 
@@ -493,6 +494,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [customIngredientPrompts, setCustomIngredientPrompts] = useState({});
   const [pickerSlot, setPickerSlot] = useState(null);
+  const [ingredientSourceBySlot, setIngredientSourceBySlot] = useState({});
   const [savePresetSlot, setSavePresetSlot] = useState(null);
   const [mobileComposerOpen, setMobileComposerOpen] = useState(false);
 
@@ -535,8 +537,11 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     }
   }, [capabilityStatus, mode, videoGenerationAllowed]);
 
+  const pickerSourceMode = pickerSlot
+    ? ingredientSourceBySlot[pickerSlot.id] || "MINE"
+    : "MINE";
   const { ingredientOptionsBySlot, ingredientLoadError } =
-    useImageStudioIngredientOptions();
+    useImageStudioIngredientOptions({ sourceMode: pickerSourceMode });
 
   const {
     generationStatus,
@@ -647,6 +652,26 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     event.stopPropagation();
 
     await handleGenerateImage();
+  }
+
+  function setIngredientSourceMode(slot, nextSourceMode) {
+    if (!slot?.id) return;
+
+    const requestedMode =
+      String(nextSourceMode || "MINE").toUpperCase() === "PUBLIC"
+        ? "PUBLIC"
+        : "MINE";
+    const publicAllowed = (slot.allowedTypes || []).some(
+      isCommunityDiscoverableCreationType
+    );
+    const safeMode = requestedMode === "PUBLIC" && publicAllowed
+      ? "PUBLIC"
+      : "MINE";
+
+    setIngredientSourceBySlot((current) => ({
+      ...current,
+      [slot.id]: safeMode,
+    }));
   }
 
   function setIngredient(slotId, item) {
@@ -862,6 +887,12 @@ export function useImageStudioWorkbenchViewModel({ account }) {
           items: ingredientOptionsBySlot[pickerSlot.id] || [],
           loadError: ingredientLoadError,
           selected: selectedIngredients[pickerSlot.id],
+          sourceMode: pickerSourceMode,
+          showPublicSource: (pickerSlot.allowedTypes || []).some(
+            isCommunityDiscoverableCreationType
+          ),
+          onSourceModeChange: (nextSourceMode) =>
+            setIngredientSourceMode(pickerSlot, nextSourceMode),
           onSelect: (item) => setIngredient(pickerSlot.id, item),
           onUseCustom: startCustomIngredient,
           onCreatePreset: startCreatePreset,

@@ -47,6 +47,9 @@ export function useIngredientPickerViewModel({
   items = [],
   loadError = "",
   selected = null,
+  sourceMode = "MINE",
+  showPublicSource = false,
+  onSourceModeChange = null,
   onSelect = null,
   onUseCustom = null,
   onCreatePreset = null,
@@ -73,17 +76,34 @@ export function useIngredientPickerViewModel({
     onCreatePreset?.(slot);
   }
 
+  const normalizedSourceMode =
+    String(sourceMode || "MINE").toUpperCase() === "PUBLIC"
+      ? "PUBLIC"
+      : "MINE";
+
   return {
     ingredientLabel,
     headerIconName: ICON_NAME_BY_SLOT_ID[slot?.id] || "sparkles",
     items: viewItems,
     selectedItemId: selected?.id ? String(selected.id) : "",
     loadErrorMessage: loadError || "",
-    searchPlaceholder: `Search ${ingredientLabel.toLowerCase()}...`,
-    emptyMessage: `No ${ingredientLabel.toLowerCase()} assets found.`,
+    sourceMode: normalizedSourceMode,
+    sourceOptions: showPublicSource
+      ? [
+          { id: "MINE", label: "Mine" },
+          { id: "PUBLIC", label: "Public" },
+        ]
+      : [{ id: "MINE", label: "Mine" }],
+    searchPlaceholder: `Search ${
+      normalizedSourceMode === "PUBLIC" ? "public " : ""
+    }${ingredientLabel.toLowerCase()}...`,
+    emptyMessage: `No ${
+      normalizedSourceMode === "PUBLIC" ? "public " : ""
+    }${ingredientLabel.toLowerCase()} assets found.`,
     showUseCustomAction: slot?.allowCustom !== false,
     showCreatePresetAction: Boolean(slot?.allowCreatePreset),
     onClose,
+    onSourceModeChange,
     onChooseIngredient: chooseIngredient,
     onUseCustom: useCustom,
     onCreatePreset: createPreset,
