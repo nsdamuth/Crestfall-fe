@@ -403,15 +403,15 @@ export default function CreatorsV2Mockup({
             eyebrow="Explore"
             title="Read the world the community is writing."
             line=""
-            ctaLabel="Read the lore"
-            imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Lilith.png")}
+            ctaLabel="Open Lore"
+            imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png")}
             onCtaClick={() => {
               if (live) {
                 router.push("/studio/v2/lore");
                 return;
               }
               setActionNotice({
-                label: "Read the lore",
+                label: "Open Lore",
                 message:
                   "This banner routes to Lore when the new pages cut over. Nothing was opened in this preview.",
               });

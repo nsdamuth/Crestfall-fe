@@ -30,7 +30,9 @@ const BOTTOM_BANNER = {
   eyebrow: "Create",
   title: "Every Adventure starts in Studio.",
   ctaLabel: "Open Studio",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Enox Nix.png"),
+  // Placeholder art shared by every section page's bottom banner
+  // (next-section chain ruling, 6 Sep 2026).
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 };
 
 function sortItems(items, sortValue) {
