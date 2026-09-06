@@ -15,6 +15,14 @@ FE/TUNING 6 Sep 2026: Home fine-tuning batch 1 landed as 2b271680
 next-section banner chain as f7a12029, branch fe/tuning. Review-mode
 overlay stays opt-in via CRESTFALL_ENABLE_REVIEW_MODE=true in .env.local
 (off in production).
+FE/SIDEBAR 6 Sep 2026: sidebar fine-tuning batch 1 landed as eeb57184
+(group spacing, Support heading gone, Feedback under coins, Terms as
+footer text, coin display law with the stacked Buy Coins block,
+collapsed rail mirrors expanded, mobile drawer parity) and the banner
+carry-over as 7018891c (Images bottom banner to Vault, Home bottom
+banner takes the Play copy), branch fe/sidebar off staging. Brian
+reviews in the browser; no render checks in that pass. Expanded header
+keeps its one-row lockup, the shift on toggle accepted at the gate.
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
