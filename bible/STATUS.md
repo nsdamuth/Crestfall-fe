@@ -46,7 +46,10 @@ Newest and the trigger reads "Sort: <value>"; labels only. Adventures
 page header STOPPED: no description line exists in git history or the
 page fixtures, Brian to supply one (the product model 4.3 journey
 line is the nearest source). Every other section page carries its
-header; Home uses its welcome hero by design.
+header; Home uses its welcome hero by design. Coins section spacing
+(same day, screenshot): the divider between Feedback & Updates and
+Signed in moved up so the gap below the section matches the gap
+above it, desktop and mobile drawer.
 NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
