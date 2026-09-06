@@ -74,8 +74,12 @@ function SectionRail({ rail }) {
       cellSize={isCreatorRail ? "creator" : "fluid"}
       headControlSlot={
         sortControl?.options?.length ? (
+          // Trigger reads "Sort: <value>" (colon, space, current value),
+          // RULED 6 Sep 2026 (Home quick fix). The dropdown renders the
+          // label and the selected value side by side, so the colon
+          // rides on the label; the shared kit is untouched.
           <KitDropdownView
-            label="Sort"
+            label="Sort:"
             options={sortControl.options}
             selectedValues={sortControl.selectedValue ? [sortControl.selectedValue] : []}
             isMultiSelect={false}
