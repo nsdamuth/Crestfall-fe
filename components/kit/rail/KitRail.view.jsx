@@ -22,8 +22,15 @@
 import { Children, useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const CELL_WIDTH_CLASSES =
-  "w-[calc((100%-1*var(--space-3))/1.4)] min-[700px]:w-[calc((100%-3*var(--space-4))/3.4)] min-[1100px]:w-[calc((100%-4*var(--space-5))/4.4)]";
+// Fluid cells: N full cards plus a 0.4 peek per tier. Creator cells
+// (cellSize="creator", Home batch 1, 6 Sep 2026): a fixed width band at
+// every viewport so the creator card's nowrap action row and stat row
+// never overlap or wrap; the rail still scrolls natively.
+const CELL_WIDTH_CLASSES = Object.freeze({
+  fluid:
+    "w-[calc((100%-1*var(--space-3))/1.4)] min-[700px]:w-[calc((100%-3*var(--space-4))/3.4)] min-[1100px]:w-[calc((100%-4*var(--space-5))/4.4)]",
+  creator: "w-[16rem] min-w-[15rem] max-w-[18rem]",
+});
 
 const SCROLL_PADDING_CLASSES =
   "[scroll-padding-inline:var(--space-3)] min-[700px]:[scroll-padding-inline:var(--space-4)] min-[1100px]:[scroll-padding-inline:var(--space-5)]";
@@ -62,8 +69,10 @@ export default function KitRailView({
   viewAllLabel = "View all",
   onViewAll = null,
   headControlSlot = null,
+  cellSize = "fluid",
   children = null,
 }) {
+  const cellWidthClasses = CELL_WIDTH_CLASSES[cellSize] || CELL_WIDTH_CLASSES.fluid;
   const [scrollport, setScrollport] = useState(null);
   const [edges, setEdges] = useState({ atStart: true, atEnd: true });
 
@@ -152,7 +161,7 @@ export default function KitRailView({
           className={`scrollbar-none flex snap-x snap-proximity items-stretch gap-[var(--space-3)] overflow-x-auto py-[var(--space-3)] min-[700px]:gap-[var(--space-4)] min-[1100px]:gap-[var(--space-5)] ${SCROLL_PADDING_CLASSES}`}
         >
           {Children.map(children, (child) => (
-            <div className={`grid flex-none snap-start ${CELL_WIDTH_CLASSES}`}>{child}</div>
+            <div className={`grid flex-none snap-start ${cellWidthClasses}`}>{child}</div>
           ))}
         </div>
 

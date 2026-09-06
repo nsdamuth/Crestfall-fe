@@ -7,93 +7,67 @@ import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileF
 import { projectCommunityCreations } from "@/lib/shared/presentation/communityPresentation";
 import { projectCommunityCreators } from "@/lib/shared/presentation/creatorPresentation";
 import {
+  projectOwnedLoreCreations,
+  projectPublicLoreCreations,
+} from "@/lib/shared/presentation/lorePresentation";
+import {
   projectCreationsToStoryStartables,
   projectStoryRoomToContinueItem,
   resolveStoryContinueImageAnchor,
   resolveStoryContinueImageSrc,
 } from "@/lib/shared/presentation/storiesPresentation";
+import { projectCreationsToVaultItems } from "@/lib/shared/presentation/vaultPresentation";
 import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 
 const RAIL_ITEM_CAP = 12;
+const TITLE_CHARACTER_CAP = 48;
 
-const DESTINATIONS = Object.freeze([
-  Object.freeze({
-    id: "stories",
-    label: "Stories",
-    supportingLine: "Continue a room or begin a new Story.",
-    href: "/studio/v2/stories",
-    identityKey: "DESTINATION_STORIES",
-  }),
-  Object.freeze({
-    id: "adventures",
-    label: "Adventures",
-    supportingLine: "Explore connected Storylines and longer arcs.",
-    href: "/studio/v2/adventures",
-    identityKey: "DESTINATION_ADVENTURES",
-  }),
-  Object.freeze({
-    id: "studio",
-    label: "Studio",
-    supportingLine: "Build characters, worlds, Stories, and mechanics.",
-    href: "/studio",
-    identityKey: "DESTINATION_STUDIO",
-  }),
-  Object.freeze({
-    id: "images",
-    label: "Images",
-    supportingLine: "Generate and manage visual assets.",
-    href: "/studio/v2/images",
-    identityKey: "DESTINATION_IMAGES",
-  }),
-  Object.freeze({
-    id: "vault",
-    label: "Vault",
-    supportingLine: "Find your work and public creations you saved.",
-    href: "/studio/v2/vault",
-    identityKey: "DESTINATION_VAULT",
-  }),
-  Object.freeze({
-    id: "community",
-    label: "Community",
-    supportingLine: "Discover public creations across Crestfall.",
-    href: "/studio/v2/community",
-    identityKey: "DESTINATION_COMMUNITY",
-  }),
-  Object.freeze({
-    id: "creators",
-    label: "Creators",
-    supportingLine: "Follow creators and browse their recent work.",
-    href: "/studio/v2/creators",
-    identityKey: "DESTINATION_CREATORS",
-  }),
-  Object.freeze({
-    id: "lore",
-    label: "Lore",
-    supportingLine: "Read and author persistent world records.",
-    href: "/studio/v2/lore",
-    identityKey: "DESTINATION_LORE",
-  }),
+// Home fine-tuning batch 1 (6 Sep 2026, Brian's brief): one list per
+// sidebar section, in sidebar order. Studio and Images ship no list
+// data anywhere in the app today (Studio is a hub with no list;
+// Images fetches its library client-side only), so their lists have
+// no source and render nothing; both are reported as data gaps.
+const SECTIONS = Object.freeze([
+  Object.freeze({ id: "stories", label: "Stories", href: "/studio/v2/stories" }),
+  Object.freeze({ id: "adventures", label: "Adventures", href: "/studio/v2/adventures" }),
+  Object.freeze({ id: "studio", label: "Studio", href: "/studio" }),
+  Object.freeze({ id: "images", label: "Images", href: "/studio/v2/images" }),
+  Object.freeze({ id: "vault", label: "Vault", href: "/studio/v2/vault" }),
+  Object.freeze({ id: "community", label: "Community", href: "/studio/v2/community" }),
+  Object.freeze({ id: "creators", label: "Creators", href: "/studio/v2/creators" }),
+  Object.freeze({ id: "lore", label: "Lore", href: "/studio/v2/lore" }),
 ]);
 
+// The four ruled sort options. A list offers only the options its data
+// can honor (design authority ruling, 6 Sep 2026: show only the options
+// that work, no disabled entries, never a silent no-op sort).
 const SORT_OPTIONS = Object.freeze([
-  Object.freeze({ value: "recommended", label: "Recommended" }),
-  Object.freeze({ value: "popular", label: "Most played" }),
-  Object.freeze({ value: "recent", label: "Newest" }),
+  Object.freeze({ value: "plays", label: "Most plays" }),
+  Object.freeze({ value: "likes", label: "Most likes" }),
+  Object.freeze({ value: "saves", label: "Most saved" }),
+  Object.freeze({ value: "newest", label: "Newest" }),
 ]);
 
+// Cold-start hero art: the ruled Eden confrontation
+// (docs/CRESTFALL-DESIGN-CONTEXT.md, Home cold-start banner, closed;
+// docs/APP-FUNCTION-MAP.csv Ruling f, 11 Aug 2026), restored here after
+// commit 2906e3f1 had pointed the live view model at cover art.
 const TOP_BANNER = Object.freeze({
   eyebrow: "Crestfall Chronicles",
   title: "Start something worth finishing.",
   ctaLabel: "Browse stories",
   secondaryCtaLabel: "See what others made",
-  imageSrc: "/assets/covers/crestfall-compass-cover.png",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/lilith-lux-eden-confrontation.png"),
 });
 
+// Bottom banner: next section in the journey loop is Stories (chain
+// ruling 6 Sep 2026, matching Home PRD R1). Landscape placeholder art
+// shared by every section page's bottom banner.
 const BOTTOM_BANNER = Object.freeze({
   eyebrow: "Create",
   title: "Build the next world.",
-  ctaLabel: "Open Studio",
-  imageSrc: "/assets/covers/crestfall-drawings-cover.png",
+  ctaLabel: "Open Stories",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 });
 
 function relativeTimeLabel(value) {
@@ -113,35 +87,39 @@ function relativeTimeLabel(value) {
   return "recently";
 }
 
-function creationScore(item = {}) {
-  return (Number(item.hearts) || 0) * 8 + (Number(item.saves) || 0) * 5 + (Number(item.plays) || 0);
+function capTitle(value) {
+  const text = typeof value === "string" ? value.trim() : "";
+  if (text.length <= TITLE_CHARACTER_CAP) return text;
+  return `${text.slice(0, TITLE_CHARACTER_CAP - 1).trimEnd()}…`;
 }
 
-function sortCommunity(items = [], sortValue = "recommended") {
+function toTimestamp(value) {
+  const timestamp = value ? new Date(value).getTime() : 0;
+  return Number.isFinite(timestamp) && timestamp > 0 ? timestamp : 0;
+}
+
+function createdTimestamp(item = {}) {
+  const raw = item.rawCreation || {};
+  return toTimestamp(raw.createdAt || raw.created_at) || (Number(item.recency) || 0);
+}
+
+function numberOrNull(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function sortItems(items = [], sortValue) {
   const copy = [...items];
-  if (sortValue === "recent") {
-    return copy.sort((a, b) => (b.recency || 0) - (a.recency || 0));
-  }
-  if (sortValue === "popular") {
-    return copy.sort((a, b) => (b.plays || 0) - (a.plays || 0) || (b.hearts || 0) - (a.hearts || 0));
-  }
-
-  return copy.sort(
-    (a, b) =>
-      Number(Boolean(b.isFeatured)) - Number(Boolean(a.isFeatured)) ||
-      Number(Boolean(b.isCanon)) - Number(Boolean(a.isCanon)) ||
-      creationScore(b) - creationScore(a) ||
-      (b.recency || 0) - (a.recency || 0)
-  );
+  const read = (item) => item.sortValues?.[sortValue] ?? null;
+  return copy.sort((a, b) => (read(b) || 0) - (read(a) || 0));
 }
 
-function rail(label, items, onViewAll) {
-  return {
-    label,
-    viewAllLabel: "View all",
-    onViewAll,
-    items: items.slice(0, RAIL_ITEM_CAP),
-  };
+function availableSortOptions(items = []) {
+  return SORT_OPTIONS.filter((option) =>
+    items.some((item) => {
+      const value = item.sortValues?.[option.value];
+      return typeof value === "number" && Number.isFinite(value) && (option.value !== "newest" || value > 0);
+    })
+  );
 }
 
 export function useHomeViewModel({
@@ -150,15 +128,18 @@ export function useHomeViewModel({
   communityCreations = [],
   creators = [],
   creatorCreations = [],
+  loreCommunityCreations = [],
+  loreOwnedCreations = [],
   viewerUsername = null,
   viewerDisplayName = null,
   followingUsernames = [],
   storiesLoadError = null,
   communityLoadError = null,
   creatorsLoadError = null,
+  loreLoadError = null,
   onNavigate = null,
 } = {}) {
-  const [sortValue, setSortValue] = useState("recommended");
+  const [sortSelections, setSortSelections] = useState({});
   const [followOverrides, setFollowOverrides] = useState({});
   const [notice, setNotice] = useState(null);
 
@@ -166,16 +147,11 @@ export function useHomeViewModel({
     () => projectCommunityCreations(communityCreations),
     [communityCreations]
   );
-  const engagement = useCreationEngagementState(communityItems);
 
-  const storySourceCreationById = useMemo(() => {
+  const storyStartables = useMemo(() => {
     const byId = new Map();
-    const ownedSources = projectCreationsToStoryStartables(ownedCreations, {
-      isOwn: true,
-    });
-    const communitySources = projectCreationsToStoryStartables(communityCreations, {
-      isOwn: false,
-    });
+    const ownedSources = projectCreationsToStoryStartables(ownedCreations, { isOwn: true });
+    const communitySources = projectCreationsToStoryStartables(communityCreations, { isOwn: false });
 
     [...ownedSources, ...communitySources].forEach((creation) => {
       if (creation?.id && !byId.has(creation.id)) {
@@ -183,8 +159,38 @@ export function useHomeViewModel({
       }
     });
 
-    return byId;
+    return [...byId.values()];
   }, [ownedCreations, communityCreations]);
+
+  const vaultOwnedItems = useMemo(
+    () => projectCreationsToVaultItems(ownedCreations, { isOwn: true }),
+    [ownedCreations]
+  );
+
+  const loreItems = useMemo(() => {
+    const mine = projectOwnedLoreCreations(loreOwnedCreations).map((item) => ({ ...item, isOwn: true }));
+    const community = projectPublicLoreCreations(loreCommunityCreations).map((item) => ({
+      ...item,
+      isOwn: false,
+    }));
+    const mineIds = new Set(mine.map((item) => item.id));
+    return [...mine, ...community.filter((item) => !mineIds.has(item.id))];
+  }, [loreOwnedCreations, loreCommunityCreations]);
+
+  const engagementCandidates = useMemo(() => {
+    const byId = new Map();
+    [...communityItems, ...storyStartables, ...vaultOwnedItems, ...loreItems].forEach((item) => {
+      if (item?.id && !byId.has(item.id)) byId.set(item.id, item);
+    });
+    return [...byId.values()];
+  }, [communityItems, storyStartables, vaultOwnedItems, loreItems]);
+  const engagement = useCreationEngagementState(engagementCandidates);
+
+  const storySourceCreationById = useMemo(() => {
+    const byId = new Map();
+    storyStartables.forEach((creation) => byId.set(creation.id, creation));
+    return byId;
+  }, [storyStartables]);
 
   const creatorItems = useMemo(
     () =>
@@ -222,40 +228,42 @@ export function useHomeViewModel({
     };
   }, [rooms, storySourceCreationById, onNavigate]);
 
-  const destinationTiles = useMemo(
+  const decorateCreation = useMemo(
     () =>
-      DESTINATIONS.map((item) => ({
-        ...item,
-        onOpen: () => onNavigate?.(item.href),
-      })),
-    [onNavigate]
-  );
-
-  const decoratedCommunity = useMemo(
-    () =>
-      communityItems.map((item) => ({
-        cardKind: "creation",
-        id: item.id,
-        assetKind: item.assetKind,
-        creationType: item.type,
-        title: item.title,
-        subtitle: item.subtitle,
-        imageSrc: item.imageSrc,
-        badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
-        stats: {
-          plays: item.plays,
-          hearts: item.hearts,
-          saves: item.saves,
+      (item, { assetKind = item.assetKind, openHref = null } = {}) => {
+        const stats = item.stats || {
+          plays: numberOrNull(item.plays),
+          hearts: numberOrNull(item.hearts),
+          saves: numberOrNull(item.saves),
           followers: null,
-        },
-        liked: engagement.isCreationLiked(item),
-        bookmarked: engagement.isCreationBookmarked(item),
-        onOpenImageOverlay: () => onNavigate?.(`/studio/creations/${encodeURIComponent(item.id)}`),
-        onOpenAssetDetail: () => onNavigate?.(`/studio/creations/${encodeURIComponent(item.id)}`),
-        onLike: () => engagement.toggleCreationLike(item),
-        onBookmark: () => engagement.toggleCreationBookmark(item),
-      })),
-    [communityItems, engagement, onNavigate]
+        };
+        const href = openHref || `/studio/creations/${encodeURIComponent(item.id)}`;
+
+        return {
+          cardKind: "creation",
+          id: item.id,
+          assetKind,
+          creationType: item.type,
+          title: capTitle(item.title),
+          subtitle: item.subtitle,
+          imageSrc: item.imageSrc,
+          badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
+          stats,
+          liked: engagement.isCreationLiked(item),
+          bookmarked: engagement.isCreationBookmarked(item),
+          onOpenImageOverlay: () => onNavigate?.(href),
+          onOpenAssetDetail: () => onNavigate?.(href),
+          onLike: () => engagement.toggleCreationLike(item),
+          onBookmark: () => engagement.toggleCreationBookmark(item),
+          sortValues: {
+            plays: numberOrNull(stats.plays),
+            likes: numberOrNull(stats.hearts),
+            saves: numberOrNull(stats.saves),
+            newest: createdTimestamp(item),
+          },
+        };
+      },
+    [engagement, onNavigate]
   );
 
   const creatorCards = useMemo(
@@ -269,6 +277,7 @@ export function useHomeViewModel({
           return {
             cardKind: "creator",
             ...creator,
+            handle: capTitle(creator.handle),
             stats: {
               followers: creator.followers,
               likes: creator.likes,
@@ -276,6 +285,12 @@ export function useHomeViewModel({
               works: creator.works,
             },
             isFollowing,
+            sortValues: {
+              plays: numberOrNull(creator.plays),
+              likes: numberOrNull(creator.likes),
+              saves: null,
+              newest: Number(creator.recency) || 0,
+            },
             onThumbnailOpen: (thumbnailId) => {
               const thumbnail = creator.thumbnails.find((entry) => entry.id === thumbnailId);
               if (thumbnail?.creationId) {
@@ -307,50 +322,82 @@ export function useHomeViewModel({
     [creatorItems, followOverrides, onNavigate]
   );
 
-  const sorted = useMemo(
-    () => sortCommunity(decoratedCommunity, sortValue),
-    [decoratedCommunity, sortValue]
-  );
-  // This shelf represents newly created work, not most recently edited work.
-  // The community projection's recency value tracks updatedAt, so read the
-  // authoritative createdAt value from the raw creation summaries instead.
-  const createdAtById = useMemo(() => {
-    const byId = new Map();
+  // Section sources, each the same data its section page loads.
+  const sectionItems = useMemo(() => {
+    const community = communityItems.map((item) => decorateCreation(item));
+    const stories = storyStartables
+      .filter((item) => !item.isArchived)
+      .map((item) => decorateCreation(item));
+    const adventures = communityItems
+      .filter((item) => item.type === "STORYLINE")
+      .map((item) => decorateCreation(item));
+    const ownedIds = new Set(vaultOwnedItems.map((item) => item.id));
+    const vault = [
+      ...vaultOwnedItems.map((item) => decorateCreation(item)),
+      ...communityItems
+        .filter((item) => !ownedIds.has(item.id) && engagement.isCreationBookmarked(item))
+        .map((item) => decorateCreation(item)),
+    ];
+    const lore = loreItems.map((item) =>
+      decorateCreation(item, {
+        assetKind: "lore",
+        openHref: item.isOwn
+          ? `/studio/v2/editor/${encodeURIComponent(item.id)}?origin=lore`
+          : null,
+      })
+    );
 
-    (Array.isArray(communityCreations) ? communityCreations : []).forEach((creation) => {
-      if (!creation?.id) return;
-      const created = creation.createdAt || creation.created_at || null;
-      const timestamp = created ? new Date(created).getTime() : 0;
-      byId.set(creation.id, Number.isFinite(timestamp) ? timestamp : 0);
-    });
+    return {
+      stories,
+      adventures,
+      studio: [],
+      images: [],
+      vault,
+      community,
+      creators: creatorCards,
+      lore,
+    };
+  }, [communityItems, storyStartables, vaultOwnedItems, loreItems, creatorCards, decorateCreation, engagement]);
 
-    return byId;
-  }, [communityCreations]);
-
-  const recent = useMemo(
+  const sectionRails = useMemo(
     () =>
-      [...decoratedCommunity].sort(
-        (a, b) => (createdAtById.get(b.id) || 0) - (createdAtById.get(a.id) || 0)
-      ),
-    [decoratedCommunity, createdAtById]
+      SECTIONS.map((section) => {
+        const items = sectionItems[section.id] || [];
+        const options = availableSortOptions(items);
+        const selectedValue =
+          options.some((option) => option.value === sortSelections[section.id])
+            ? sortSelections[section.id]
+            : options[0]?.value ?? null;
+        const sorted = selectedValue ? sortItems(items, selectedValue) : items;
+
+        return {
+          id: section.id,
+          label: section.label,
+          viewAllLabel: "View all",
+          onViewAll: () => onNavigate?.(section.href),
+          items: sorted.slice(0, RAIL_ITEM_CAP),
+          sortControl: options.length
+            ? {
+                options,
+                selectedValue,
+                onChange: (value) =>
+                  setSortSelections((current) => ({ ...current, [section.id]: value })),
+              }
+            : null,
+        };
+      }),
+    [sectionItems, sortSelections, onNavigate]
   );
 
-  const topRatedRail = rail("Popular now", sorted, () => onNavigate?.("/studio/v2/community"));
-  const recentlyAddedRail = rail("Recently added", recent, () => onNavigate?.("/studio/v2/community"));
-  const fromTheCommunityRail = rail(
-    "From the community",
-    decoratedCommunity.filter((item) => !sorted.slice(0, 4).some((top) => top.id === item.id)),
-    () => onNavigate?.("/studio/v2/community")
-  );
-  const creatorsToFollowRail = rail(
-    "Creators to follow",
-    creatorCards,
-    () => onNavigate?.("/studio/v2/creators")
-  );
-
-  const sourceErrors = [storiesLoadError, communityLoadError, creatorsLoadError, engagement.engagementMessage]
-    .filter(Boolean);
-  const hasDiscoverableData = decoratedCommunity.length > 0 || creatorCards.length > 0 || Boolean(continueItem);
+  const sourceErrors = [
+    storiesLoadError,
+    communityLoadError,
+    creatorsLoadError,
+    loreLoadError,
+    engagement.engagementMessage,
+  ].filter(Boolean);
+  const hasDiscoverableData =
+    sectionRails.some((rail) => rail.items.length > 0) || Boolean(continueItem);
   const errorMessage = !hasDiscoverableData && sourceErrors.length ? sourceErrors[0] : null;
   const warningMessage = hasDiscoverableData && sourceErrors.length ? sourceErrors.join(" ") : null;
   const welcomeName =
@@ -366,19 +413,10 @@ export function useHomeViewModel({
       onSecondaryCtaClick: () => onNavigate?.("/studio/v2/community"),
     },
     continueItem,
-    destinationTiles,
-    topRatedRail,
-    recentlyAddedRail,
-    fromTheCommunityRail,
-    creatorsToFollowRail,
-    sortControl: {
-      options: SORT_OPTIONS,
-      selectedValue: sortValue,
-      onChange: setSortValue,
-    },
+    sectionRails,
     bottomBanner: {
       ...BOTTOM_BANNER,
-      onCtaClick: () => onNavigate?.("/studio"),
+      onCtaClick: () => onNavigate?.("/studio/v2/stories"),
     },
     errorMessage,
     warningMessage,

@@ -396,9 +396,8 @@ export default function StoriesV2Live({
             eyebrow="Play"
             title="Worlds worth committing to."
             line=""
-            ctaLabel="Browse Adventures"
-            imageSrc={encodeURI("/tmp-mockup-images/alpha-test-creator-images/vermillion-13.png")}
-            imageAnchor="center 45%"
+            ctaLabel="Open Adventures"
+            imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png")}
             onCtaClick={() => router.push("/studio/v2/adventures")}
           />
         }

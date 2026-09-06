@@ -517,18 +517,16 @@ export default function VaultV2Mockup({
           eyebrow="Explore"
           title="See what the rest of the realm has released."
           line=""
-          ctaLabel="Browse the Community"
-          // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
-          // banner-audit sitting): Jax Riker.png, reassigned off
-          // Lilith.png so Vault does not share a banner with Creators,
-          // Creator Profile, Creator Connections, and Community, all
-          // one click apart (see docs/reviews/BANNER-AUDIT.md).
-          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/Jax Riker.png")}
+          ctaLabel="Open Community"
+          // Placeholder art shared by every section page's bottom banner
+          // (next-section chain ruling, 6 Sep 2026), superseding the
+          // per-page assignment from docs/reviews/BANNER-AUDIT.md.
+          imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png")}
           onCtaClick={() =>
             live
               ? router.push("/studio/v2/community")
               : setActionNotice({
-                  label: "Browse the Community",
+                  label: "Open Community",
                   message:
                     "This banner routes to Community when the new pages cut over. Nothing was opened in this preview.",
                 })

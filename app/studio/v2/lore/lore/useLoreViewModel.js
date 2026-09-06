@@ -49,15 +49,15 @@ const TOP_BANNER = {
   ctaLabel: "Write lore",
 };
 
-// Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
-// banner-audit sitting): Dalethia.png, reassigned off
-// athelgard-ampitheater-profile.png so Lore does not share a banner
-// with Home (one click apart, see docs/reviews/BANNER-AUDIT.md).
+// Next-section chain, RULED 6 Sep 2026: Lore closes the loop back to
+// Stories. Placeholder art shared by every section page's bottom
+// banner (supersedes the per-page assignment from
+// docs/reviews/BANNER-AUDIT.md).
 const BOTTOM_BANNER = {
   eyebrow: "Loop",
-  title: "Back to where every session starts.",
-  ctaLabel: "Return to Studio",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Dalethia.png"),
+  title: "Back to where every Story starts.",
+  ctaLabel: "Open Stories",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 };
 
 function recencyTier(daysAgo) {
@@ -352,7 +352,7 @@ export function useLoreViewModel({
 
   const bottomBanner = {
     ...BOTTOM_BANNER,
-    onCtaClick: () => navigateOrStub("/studio", "Return to Studio"),
+    onCtaClick: () => navigateOrStub("/studio/v2/stories", "Open Stories"),
   };
 
 

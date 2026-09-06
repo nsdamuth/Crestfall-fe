@@ -483,21 +483,18 @@ export default function CommunityV2Mockup({
           eyebrow="Explore"
           title="Follow the creators behind every world you love."
           line=""
-          ctaLabel="Browse creators"
-          // Banner art, RULED 11 Aug 2026 (banner-anchor ruling, CC5
-          // banner-audit sitting): Charlotte Steele.png, reassigned off
-          // Lilith.png so Community does not share a banner with
-          // Creators, Creator Profile, and Creator Connections, all one
-          // click apart (see docs/reviews/BANNER-AUDIT.md for the full
-          // survey and reasoning).
+          ctaLabel="Open Creators"
+          // Placeholder art shared by every section page's bottom banner
+          // (next-section chain ruling, 6 Sep 2026), superseding the
+          // per-page assignment from docs/reviews/BANNER-AUDIT.md.
           imageSrc={encodeURI(
-            "/tmp-mockup-images/canon-character-images/Charlotte Steele.png"
+            "/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"
           )}
           onCtaClick={() =>
             live
               ? router.push("/studio/v2/creators")
               : setActionNotice({
-                  label: "Browse creators",
+                  label: "Open Creators",
                   message:
                     "This banner routes to Creators when the new pages cut over. Nothing was opened in this preview.",
                 })

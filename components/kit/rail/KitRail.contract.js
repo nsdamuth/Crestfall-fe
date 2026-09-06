@@ -1,4 +1,4 @@
-export const KIT_RAIL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_RAIL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the shared horizontally scrolling
@@ -28,7 +28,8 @@ export const KIT_RAIL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} label Head label text, rendered uppercase in gold. Also the rail's accessible name (aria-label on the section root).
  * @property {string} viewAllLabel Display text of the head link.
  * @property {(() => void)|null} onViewAll When null, the View all link does not render.
- * @property {import("react").ReactNode} headControlSlot The head control seat. Home fills it with the sort dropdown on the top rail only; every other rail leaves it null and the head renders correctly without it.
+ * @property {import("react").ReactNode} headControlSlot The head control seat. Home fills it with a per-rail sort dropdown (batch 1, 6 Sep 2026); a rail may leave it null and the head renders correctly without it.
+ * @property {"fluid"|"creator"} cellSize Optional, added 1.1.0 (compatible). "fluid" (default) keeps the tiered N-plus-peek cell widths; "creator" gives every cell a fixed width band (16rem, min 15rem, max 18rem) so creator cards never overlap or wrap.
  * @property {import("react").ReactNode} children The cards, in order. Each direct child is wrapped in one sized item cell. Zero renderable children means the whole rail, head included, renders nothing.
  */
 
