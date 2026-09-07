@@ -144,6 +144,189 @@ Rules:
 - The graphical command-resolution editor does not yet author deterministic calculations/result bands. Preserve and edit this configuration through the Mechanics JSON Editor until a dedicated visual formula builder is shipped.
 `;
 
+
+const DETERMINISTIC_ACTION_VALUE_AI_GUIDE_EXTENSION = `
+
+## Deterministic Action Value Resolution (DAVR)
+
+DAVR is Crestfall's generic logical action-calculation layer. It is **not** a combat ruleset. A creator defines their own stat IDs, pool IDs, skill IDs, formulas, constants, result-band meanings, and typed effects. Crestfall resolves the authoritative runtime values and arithmetic.
+
+Authority rule:
+
+\`\`\`text
+creator authors rules/formulas
+  -> services-api resolves authoritative source/target values
+  -> engine-middleware performs bounded deterministic arithmetic
+  -> Crestfall resolves comparison/result band
+  -> Crestfall materializes and validates typed effects
+  -> existing transaction authority mutates state
+  -> provider/Narrator may portray the verified result
+\`\`\`
+
+An AI assistant must never calculate authoritative runtime damage/check results in prose, invent current actor/target values, or claim that prose mutated a pool.
+
+### Important authoring boundary
+
+\`mechanics_action_definition_v0\` is a trusted Advanced Mechanics action contract. It is not automatically the same thing as a normal \`core.trackers.v1\` command object. Do **not** invent a new container or splice \`actionValueBindings\`, \`actionCalculationSet\`, \`mechanicsEffectReferences\`, or \`outcomeEffectRoutes\` into a Mechanics Module location that Crestfall did not provide.
+
+When the creator supplies a standalone DAVR action-definition object or a Crestfall action-authoring surface, preserve and edit that complete action object. When the creator supplies only a normal Mechanics Module, preserve the module shape and do not fabricate a trusted-action placement. The logical DAVR runtime and player/chat invocation flow are separate concerns.
+
+A plain Mechanics command may preserve \`mechanics_command_resolution_v7\` / \`DETERMINISTIC_COMPARE\` configuration, but deterministic comparison needs named calculation results from the DAVR trusted-action path. Do not assume that adding the mode alone creates authoritative action-value hydration.
+
+### DAVR action value bindings
+
+Contract: \`mechanics_action_value_binding_v0\`.
+
+Supported actor roles:
+
+- \`SOURCE_ACTOR\`
+- \`AUTHORIZED_TARGET\`
+
+Supported v0 value types:
+
+- \`STATS_POOLS_STAT_CURRENT\`
+- \`STATS_POOLS_POOL_CURRENT\`
+- \`STATS_POOLS_POOL_MAXIMUM\`
+- \`SKILLS_RANK\`
+- \`MECHANICS_METER\`
+- \`MECHANICS_COUNTER\`
+- \`TRUSTED_NUMERIC_ARGUMENT\`
+
+Missing policies:
+
+- \`REJECT\`
+- \`USE_DEFAULT\` with a finite \`defaultValue\`
+- \`ZERO\`
+
+Example:
+
+\`\`\`json
+{
+  "bindingVersion": "mechanics_action_value_binding_v0",
+  "id": "source_power",
+  "actorRole": "SOURCE_ACTOR",
+  "valueType": "STATS_POOLS_STAT_CURRENT",
+  "bindingId": "stats",
+  "targetId": "power",
+  "missingPolicy": "REJECT"
+}
+\`\`\`
+
+An \`AUTHORIZED_TARGET\` binding also requires the target \`argumentName\`. Crestfall establishes exact target authority before reading target mechanical state.
+
+Do not duplicate Stats & Pools or Skills into Mechanics trackers just to make them formula inputs.
+
+### DAVR action calculations
+
+Calculation set: \`mechanics_action_calculation_set_v0\`. Calculation definition: \`mechanics_action_calculation_v0\`.
+
+Node types:
+
+- \`CONSTANT\`
+- \`INPUT\`
+- \`CALCULATION\`
+- \`OPERATION\`
+
+Operations:
+
+- \`ADD\`
+- \`SUBTRACT\`
+- \`MULTIPLY\`
+- \`DIVIDE\`
+- \`MIN\`
+- \`MAX\`
+- \`FLOOR\`
+- \`CEIL\`
+- \`ROUND\`
+- \`CLAMP\`
+
+Example:
+
+\`\`\`json
+{
+  "version": "mechanics_action_calculation_set_v0",
+  "calculations": [
+    {
+      "calculationVersion": "mechanics_action_calculation_v0",
+      "id": "attack_total",
+      "expression": {
+        "nodeType": "OPERATION",
+        "operation": "ADD",
+        "operands": [
+          { "nodeType": "INPUT", "inputId": "source_power" },
+          {
+            "nodeType": "OPERATION",
+            "operation": "DIVIDE",
+            "operands": [
+              { "nodeType": "INPUT", "inputId": "source_offense" },
+              { "nodeType": "CONSTANT", "value": 2 }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+\`\`\`
+
+Do not use JavaScript, \`eval\`, string formulas, database queries, or provider-authored numbers.
+
+### Deterministic compare and result bands
+
+Use \`mechanics_command_resolution_v7\` with \`mode: "DETERMINISTIC_COMPARE"\`.
+
+\`NO_ROLL_DETERMINISTIC\` keeps its legacy meaning: automatic success. Do not use it for left-vs-right competency comparison.
+
+Result bands are creator semantic IDs mapped to canonical Crestfall outcomes. They must not overlap. An unmatched runtime margin rejects instead of asking an AI to choose.
+
+### Calculated typed effects
+
+Effect reference: \`mechanics_effect_reference_v0\`. Calculated numeric binding: \`mechanics_calculated_argument_binding_v0\`.
+
+Example:
+
+\`\`\`json
+{
+  "referenceVersion": "mechanics_effect_reference_v0",
+  "id": "target_damage",
+  "domain": "STATS_POOLS",
+  "operation": "MUTATE_POOL",
+  "version": "actor_mechanics_profile.stats_pools.mutate_pool.v0",
+  "targetRole": "AUTHORIZED_TARGET",
+  "arguments": {
+    "bindingId": "stats",
+    "mutationType": "DAMAGE",
+    "poolQuery": "health"
+  },
+  "argumentBindings": {
+    "amount": {
+      "bindingVersion": "mechanics_calculated_argument_binding_v0",
+      "source": "CALCULATION",
+      "calculationId": "final_damage",
+      "rounding": "ROUND",
+      "minimum": 1
+    }
+  }
+}
+\`\`\`
+
+Only executor-declared numeric arguments may be calculation-bound. Do not dynamically bind domains, operations, versions, target roles, IDs, or arbitrary objects.
+
+### Ability & Spell context is deliberately deferred in DAVR v0
+
+The following value types are reserved but are not accepted by generic DAVR v0 until Crestfall has an already-authorized Ability/Spell execution context:
+
+- \`ABILITY_SPELL_COST_AMOUNT\`
+- \`ABILITY_SPELL_CURRENT_MASTERY\`
+- \`ABILITY_SPELL_MAXIMUM_MASTERY\`
+
+Do not work around this by copying, guessing, or provider-calculating the current ability/spell values.
+
+### Death/game-end is not DAVR
+
+Do not author Crestfall-wide death, defeat, incapacitation, game-over, respawn, or story-termination semantics as part of DAVR. A pool reaching its authored minimum remains only numeric state until a separate supported package defines those semantics.
+`;
+
 export function buildMechanicsJsonAiAuthoringGuide() {
-  return `${MECHANICS_JSON_AI_AUTHORING_GUIDE}${STORY_STATUS_SURFACE_AI_GUIDE_EXTENSION}${ACTOR_MECHANICS_REQUIREMENT_AI_GUIDE_EXTENSION}${DETERMINISTIC_COMPARE_AI_GUIDE_EXTENSION}`;
+  return `${MECHANICS_JSON_AI_AUTHORING_GUIDE}${STORY_STATUS_SURFACE_AI_GUIDE_EXTENSION}${ACTOR_MECHANICS_REQUIREMENT_AI_GUIDE_EXTENSION}${DETERMINISTIC_COMPARE_AI_GUIDE_EXTENSION}${DETERMINISTIC_ACTION_VALUE_AI_GUIDE_EXTENSION}`;
 }
