@@ -79,15 +79,14 @@ export default function CustomIngredientEditorView({
           </button>
         ) : null}
 
-        <button
-          type="button"
-          disabled
-          aria-pressed="true"
-          className="cf-btn cf-btn--primary cf-btn--sm"
+        <span
+          role="status"
+          aria-label={`Custom ${ingredientLabel} guidance is active for this request`}
+          className="cf-btn cf-btn--primary cf-btn--sm cursor-default"
         >
           <Check size={14} />
-          Use once
-        </button>
+          Using once
+        </span>
       </div>
     </section>
   );

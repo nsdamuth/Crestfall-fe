@@ -84,6 +84,11 @@ test("availability and ingredient orchestration preserve production rules", () =
   assert.match(viewModel, /delete next\.character/);
   assert.match(viewModel, /slot\.allowCreatePreset/);
   assert.match(viewModel, /setPickerSlot\(null\)/);
+  assert.match(viewModel, /hasCustomOutfitSource/);
+  assert.match(viewModel, /hasCustomLocationSource/);
+  assert.match(viewModel, /selectedIngredients\.outfit\?\.custom/);
+  assert.match(viewModel, /selectedIngredients\.location\?\.custom/);
+  assert.match(viewModel, /mode: "custom"/);
 });
 
 test("custom preset payload preserves Creation fields and location compatibility", () => {

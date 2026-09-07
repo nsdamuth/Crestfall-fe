@@ -41,7 +41,7 @@ picking one clears the other), enforced by whatever state owns
 A slot in custom ("Use Once") mode renders the inline guidance editor
 in place of the picker-opening tile: `Custom Guidance` textarea, `Back
 to presets`, `Save as preset` (only for the four savable slots), a
-disabled `Use once` state indicator, and a clear control. Tapping a
+non-interactive `Using once` active-state indicator, and a clear control. Tapping a
 non-custom tile fires `onSlotActivate`; the caller owns opening the
 ingredient picker (1.2, phase 2).
 
