@@ -152,7 +152,8 @@
     "diagnostics:loom:mechanics-m8": "node --test components/studio/my-creations/edit/sections/mechanics-modules/mechanics-document-orchestration/mechanicsDocumentOrchestrationDiagnostics.mjs",
     "diagnostics:loom:mechanics-m9": "node --test components/studio/my-creations/edit/sections/mechanics-modules/mechanics-module-assembly/mechanicsModuleAssemblyDiagnostics.mjs",
     "diagnostics:loom:mechanics-repository-extraction-closeout": "node --test components/studio/pre-mechanics-closeout/mechanicsRepositoryExtractionDiagnostics.mjs",
-    "diagnostics:priority-triads-editor": "node components/studio/my-creations/edit/priority-triads/priorityTriadEditorDiagnostics.mjs"
+    "diagnostics:priority-triads-editor": "node components/studio/my-creations/edit/priority-triads/priorityTriadEditorDiagnostics.mjs",
+    "diagnostics:davr6-creator-documentation": "node components/studio/my-creations/edit/sections/mechanics-modules/mechanics-json-editor/mechanicsJsonDavrAuthoringGuideDiagnostics.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
