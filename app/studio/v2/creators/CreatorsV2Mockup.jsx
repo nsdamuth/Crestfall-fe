@@ -18,6 +18,7 @@ import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
+import { buildActivityFilterGroup } from "../catalog/creationCatalogFilterTaxonomy";
 import FixtureActionNotice from "../FixtureActionNotice";
 
 function creatorArt(name) {
@@ -44,31 +45,25 @@ const FIXTURE_CREATORS = [
   { id: "cr13", handle: "@verdigris", avatarSrc: canonArt("Dr. Elara Kade"), followers: 1320, plays: 2450, works: 5, recency: 8, thumbnails: [creatorArt("vermillion-4")] },
 ];
 
-// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian): Recently
-// Active, Plays, Likes, Remixes, Newest, offering only what the payload
-// supports. Most followed and Most works are retired. A sort is
-// supported when its field is a finite number on every creator in
-// the list and, for the two timestamp-backed sorts, at least one value
-// is above zero (the live projection emits recency 0 as a placeholder).
-// Live today: Likes only. Recently Active and Newest wait on a
-// last-active and a joined timestamp (CR-064), Plays on CR-040,
-// Remixes on CR-059.
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian), amended by
+// the FE/FILTERS follow-up ruling (6 Sep 2026): Recently Active,
+// Followers, Plays, Likes, Remixes, Newest. Every option renders
+// regardless of what the payload carries; where a field is absent or
+// a placeholder (recency and joinedRecency read 0 live, plays reads
+// null, remixes has no field yet) selecting that sort leaves the list
+// in its current order rather than inventing a value. Most followed
+// and Most works are retired. Followers reads the follower count
+// already on the creator summary. Live today: Followers and Likes.
+// Recently Active and Newest wait on a last-active and a joined
+// timestamp (CR-064), Plays on CR-040, Remixes on CR-059.
 const CREATOR_SORT_OPTIONS = [
-  { value: "recent", label: "Recently Active", field: "recency", needsPositive: true },
+  { value: "recent", label: "Recently Active", field: "recency" },
+  { value: "followers", label: "Followers", field: "followers" },
   { value: "plays", label: "Plays", field: "plays" },
   { value: "hearts", label: "Likes", field: "likes" },
   { value: "remixes", label: "Remixes", field: "remixes" },
-  { value: "newest", label: "Newest", field: "joinedRecency", needsPositive: true },
+  { value: "newest", label: "Newest", field: "joinedRecency" },
 ];
-
-function supportedSortOptions(creators) {
-  if (!creators.length) return [];
-  return CREATOR_SORT_OPTIONS.filter((option) => {
-    const values = creators.map((creator) => creator?.[option.field]);
-    if (!values.every((value) => typeof value === "number" && Number.isFinite(value))) return false;
-    return option.needsPositive ? values.some((value) => value > 0) : true;
-  });
-}
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -216,6 +211,7 @@ export default function CreatorsV2Mockup({
   });
   const [searchValue, setSearchValue] = useState("");
   const [selectedSort, setSelectedSort] = useState("");
+  const [selectedValues, setSelectedValues] = useState({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sourceCreators = live ? creators : FIXTURE_CREATORS;
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
@@ -227,13 +223,34 @@ export default function CreatorsV2Mockup({
   const [savedThumbIds, setSavedThumbIds] = useState([]);
   const [actionNotice, setActionNotice] = useState(null);
 
-  const sortOptions = useMemo(() => supportedSortOptions(sourceCreators), [sourceCreators]);
-  const effectiveSort = sortOptions.some((option) => option.value === selectedSort)
-    ? selectedSort
-    : sortOptions[0]?.value || "";
+  const sortOptions = CREATOR_SORT_OPTIONS;
+  const effectiveSort = selectedSort || sortOptions[0].value;
+
+  // Activity section, RULED 6 Sep 2026 (FE/FILTERS follow-up): first
+  // in the panel here too. Creators carry no per-creator liked or
+  // saved flag yet, so both options render muted at a zero count and
+  // stay selectable (no invented values); selecting one filters to
+  // nothing until the flag is served.
+  const filterGroups = useMemo(
+    () => [buildActivityFilterGroup(effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreators)],
+    [effectiveMode, sourceCreators]
+  );
+  const activeActivityValues = useMemo(() => selectedValues.activity || [], [selectedValues]);
+
+  function toggleFilter(groupId, value) {
+    setSelectedValues((current) => {
+      const currentValues = current[groupId] || [];
+      const nextValues = currentValues.includes(value)
+        ? currentValues.filter((entry) => entry !== value)
+        : [...currentValues, value];
+      return { ...current, [groupId]: nextValues };
+    });
+    setVisibleCount(PAGE_SIZE);
+  }
 
   const filteredCreators = useMemo(() => {
     if (effectiveMode === "empty" || effectiveMode === "error") return [];
+    if (activeActivityValues.length) return [];
 
     const query = searchValue.trim().toLowerCase();
     const filtered = sourceCreators.filter((creator) =>
@@ -243,7 +260,9 @@ export default function CreatorsV2Mockup({
     );
 
     const sorted = [...filtered];
-    if (effectiveSort === "plays") {
+    if (effectiveSort === "followers") {
+      sorted.sort((a, b) => (b.followers || 0) - (a.followers || 0));
+    } else if (effectiveSort === "plays") {
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
     } else if (effectiveSort === "hearts") {
       sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
@@ -255,7 +274,7 @@ export default function CreatorsV2Mockup({
       sorted.sort((a, b) => (b.joinedRecency || 0) - (a.joinedRecency || 0));
     }
     return sorted;
-  }, [effectiveMode, searchValue, effectiveSort, sourceCreators]);
+  }, [effectiveMode, searchValue, effectiveSort, sourceCreators, activeActivityValues]);
 
   const visibleCreators = filteredCreators.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCreators.length;
@@ -397,9 +416,13 @@ export default function CreatorsV2Mockup({
               setSearchValue(value);
               setVisibleCount(PAGE_SIZE);
             }}
-            filterGroups={[]}
-            selectedValues={{}}
-            onFilterToggle={() => {}}
+            filterGroups={filterGroups}
+            selectedValues={selectedValues}
+            onFilterToggle={toggleFilter}
+            onClearFilters={() => {
+              setSelectedValues({});
+              setVisibleCount(PAGE_SIZE);
+            }}
             sortOptions={sortOptions}
             selectedSort={effectiveSort}
             onSortChange={(value) => {

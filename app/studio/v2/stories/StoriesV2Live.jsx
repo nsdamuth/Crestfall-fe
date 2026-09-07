@@ -49,11 +49,17 @@ const VISIBILITY_OPTIONS = Object.freeze([
   { value: "CANON", label: "Canon" },
 ]);
 // Sort, RULED 6 Sep 2026 (FE/FILTERS, Brian): Newest, meaning latest
-// activity on this page; "Title A to Z" retired. Plays, Likes, Remixes
-// are not offered: the startable shelf mixes story rooms with saved
-// creations and carries no comparable play, like, or remix count
-// across the pool (CR-058, CR-059).
-const SORT_OPTIONS = Object.freeze([{ value: "recent", label: "Newest" }]);
+// activity on this page; "Title A to Z" retired. Ruling change
+// (FE/FILTERS follow-up, 6 Sep 2026): Plays, Likes, Remixes, Newest
+// all render here now. Plays and Likes read the same stats the Vault
+// projection already carries; Remixes has no field yet (CR-059) and
+// leaves the shelf in its current order until it does.
+const SORT_OPTIONS = Object.freeze([
+  { value: "plays", label: "Plays" },
+  { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
+  { value: "recent", label: "Newest" },
+]);
 
 function SectionLabel({ children }) {
   return (
@@ -208,9 +214,15 @@ export default function StoriesV2Live({
     });
 
     const sorted = [...filtered];
-    sorted.sort((a, b) => b.recency - a.recency);
+    if (selectedSort === "plays") {
+      sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
+    } else if (selectedSort === "hearts") {
+      sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
+    } else if (selectedSort === "recent") {
+      sorted.sort((a, b) => b.recency - a.recency);
+    }
     return sorted;
-  }, [query, selectedValues, startableItems]);
+  }, [query, selectedValues, startableItems, selectedSort]);
 
   const filterGroups = useMemo(
     () => [

@@ -18,9 +18,14 @@ function creatorArt(name) {
 // Newest ("Top rated" folded into Likes, it sorted by hearts). Remixes
 // is omitted until a remix count exists on the community summary
 // (CR-059). Values are the ruled words; client-side until CR-058.
+// Ruled sort order (FE/FILTERS follow-up, 6 Sep 2026): Plays, Likes,
+// Remixes, Newest. Every option renders whether or not the payload
+// carries the field; where absent (remixes today) the option is
+// shown and selectable and leaves the list in its current order.
 export const ADVENTURES_SORT_OPTIONS = [
   { value: "plays", label: "Plays" },
   { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
   { value: "recent", label: "Newest" },
 ];
 

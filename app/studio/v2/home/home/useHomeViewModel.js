@@ -39,13 +39,13 @@ const SECTIONS = Object.freeze([
 ]);
 
 // The ruled sort options (FE/FILTERS, 6 Sep 2026: Plays, Likes,
-// Remixes, Newest; Saves retired). A list offers only the options its
-// data can honor (design authority ruling, 6 Sep 2026: show only the
-// options that work, no disabled entries, never a silent no-op sort),
-// so Remixes appears once a remix count is served (CR-059) and the
-// lists read Plays, Likes, Newest until then. Labels shortened 6 Sep
-// 2026 (Home quick fix): "Most" dropped, the trigger reads "Sort:
-// Plays". Values and behavior unchanged.
+// Remixes, Newest; Saves retired). Ruling change (FE/FILTERS
+// follow-up, 6 Sep 2026): every ruled sort option renders on every
+// rail regardless of whether the payload carries the field yet; where
+// a field is absent, the option is shown and selectable and leaves
+// the rail in its current order (no invented values). Labels
+// shortened 6 Sep 2026 (Home quick fix): "Most" dropped, the trigger
+// reads "Sort: Plays".
 const SORT_OPTIONS = Object.freeze([
   Object.freeze({ value: "plays", label: "Plays" }),
   Object.freeze({ value: "likes", label: "Likes" }),
@@ -115,18 +115,12 @@ function numberOrNull(value) {
 }
 
 function sortItems(items = [], sortValue) {
+  const hasField = items.some((item) => numberOrNull(item.sortValues?.[sortValue]) !== null);
+  if (!hasField) return items;
+
   const copy = [...items];
   const read = (item) => item.sortValues?.[sortValue] ?? null;
   return copy.sort((a, b) => (read(b) || 0) - (read(a) || 0));
-}
-
-function availableSortOptions(items = []) {
-  return SORT_OPTIONS.filter((option) =>
-    items.some((item) => {
-      const value = item.sortValues?.[option.value];
-      return typeof value === "number" && Number.isFinite(value) && (option.value !== "newest" || value > 0);
-    })
-  );
 }
 
 export function useHomeViewModel({
@@ -370,12 +364,9 @@ export function useHomeViewModel({
     () =>
       SECTIONS.map((section) => {
         const items = sectionItems[section.id] || [];
-        const options = availableSortOptions(items);
-        const selectedValue =
-          options.some((option) => option.value === sortSelections[section.id])
-            ? sortSelections[section.id]
-            : options[0]?.value ?? null;
-        const sorted = selectedValue ? sortItems(items, selectedValue) : items;
+        const options = SORT_OPTIONS;
+        const selectedValue = sortSelections[section.id] || options[0].value;
+        const sorted = sortItems(items, selectedValue);
 
         return {
           id: section.id,
@@ -383,14 +374,12 @@ export function useHomeViewModel({
           viewAllLabel: "View all",
           onViewAll: () => onNavigate?.(section.href),
           items: sorted.slice(0, RAIL_ITEM_CAP),
-          sortControl: options.length
-            ? {
-                options,
-                selectedValue,
-                onChange: (value) =>
-                  setSortSelections((current) => ({ ...current, [section.id]: value })),
-              }
-            : null,
+          sortControl: {
+            options,
+            selectedValue,
+            onChange: (value) =>
+              setSortSelections((current) => ({ ...current, [section.id]: value })),
+          },
         };
       }),
     [sectionItems, sortSelections, onNavigate]

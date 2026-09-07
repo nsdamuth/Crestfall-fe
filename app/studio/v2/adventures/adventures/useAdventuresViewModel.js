@@ -41,6 +41,9 @@ function sortItems(items, sortValue) {
     sorted.sort((a, b) => (b.stats.plays ?? 0) - (a.stats.plays ?? 0));
   } else if (sortValue === "recent") {
     sorted.reverse();
+  } else if (sortValue === "remixes") {
+    // No remixes field served yet; leave the list in its current
+    // order rather than inventing a value (FE/FILTERS follow-up).
   } else {
     sorted.sort((a, b) => (b.stats.hearts ?? 0) - (a.stats.hearts ?? 0));
   }

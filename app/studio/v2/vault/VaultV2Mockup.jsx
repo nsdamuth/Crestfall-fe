@@ -97,12 +97,15 @@ const STATUS_OPTIONS = [
 ];
 
 // Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian): Plays, Likes,
-// Remixes, Newest; Saves retired. The Vault payload carries plays and
-// likes but no remix count (CR-059), so the list reads Plays, Likes,
-// Newest. Values unchanged (client-side until CR-058).
+// Remixes, Newest; Saves retired. Ruling change (FE/FILTERS follow-up,
+// 6 Sep 2026): Remixes renders regardless of data; the Vault payload
+// carries no remix count yet (CR-059), so selecting it leaves the
+// list in its current order. Values unchanged (client-side until
+// CR-058).
 const SORT_OPTIONS = [
   { value: "popular", label: "Plays" },
   { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
   { value: "recent", label: "Newest" },
 ];
 
@@ -274,7 +277,7 @@ export default function VaultV2Mockup({
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
     } else if (selectedSort === "hearts") {
       sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
-    } else {
+    } else if (selectedSort === "recent") {
       sorted.sort((a, b) => b.recency - a.recency);
     }
     return sorted;

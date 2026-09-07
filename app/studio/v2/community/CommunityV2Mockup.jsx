@@ -95,13 +95,16 @@ const CURATION_OPTIONS = [{ value: "canon", label: "Canon" }];
 
 // Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS refine, Brian): Plays,
 // Likes, Remixes, Newest; Saves retired everywhere; "Recommended"
-// retired, default sort Plays. Remixes reads a remix count field; the
-// community payload carries none (CR-059), so this list reads Plays,
-// Likes, Newest. Values unchanged (client-side today; the same words
-// become the server param under CR-058).
+// retired, default sort Plays. Ruling change (FE/FILTERS follow-up,
+// 6 Sep 2026): Remixes renders regardless of data; the community
+// payload carries no remix count yet (CR-059), so selecting it leaves
+// the list in its current order (no invented values). Values
+// unchanged (client-side today; the same words become the server
+// param under CR-058).
 const SORT_OPTIONS = [
   { value: "popular", label: "Plays" },
   { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
   { value: "recent", label: "Newest" },
 ];
 
