@@ -59,3 +59,20 @@ NEXT ACTION: Sol attack round on the Home PRD
 (bible/prds/2026-08-29-home.md; packet
 bible/handoffs/HANDOFF-SOL-2026-08-29.md).
 OWNERS: Brian, design and gates. Nick, Chassis, merge, staging, deploy. Claude, FE drafts and builds. Sol, review only.
+FE/FILTERS 6 Sep 2026: plan ratified, one shared bar with a Filter
+button opening a chip-group panel (popover at 700 and up, sheet below)
+plus "Sort: <value>" and the view toggle, Community first. Kit landed
+(KitFilterPanel 1.0.0, KitStudioFilterBar 2.1.0 with the dropdown
+fallback behind one prop, KitFilterChip 1.1.0, the anchored-panel hook
+shared with KitDropdown), taxonomy display fixes ("Stories &
+Adventures", "Rulebook"), BUILD-BLUEPRINT 2.16(b) amended, CR-058 to
+CR-063 filed. Community wired and STOPPED for Brian's browser review
+(390 emulated then 1440); Vault, Stories, Lore, Creators, Adventures,
+Images, Home follow the Community verdict.
+FE/FILTERS 6 Sep 2026: Community refined (gold, Activity, sections
+trimmed, Title Case, spacing, focus); sort set Plays/Likes/Remixes/
+Newest; remix metric parked to fe/remix-metric.
+FE/FILTERS 6 Sep 2026: shared bar and panel live on all eight pages;
+Rules Codex sitewide; Saves retired; Remixes pending CR-059; em dash
+backlog parked.
+FE/FILTERS 6 Sep 2026: all ruled sort and filter options render regardless of data; Creators adds Followers; ready for PR to staging.

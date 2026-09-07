@@ -83,6 +83,14 @@ the details below carry only what is still actionable.
 | CR-055 | Reassign Asset backend operation | Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final); the code and package READMEs cited this number on landing but the ledger row was never entered, backfilled here 22 Aug 2026 by the G4 pass. No backend operation exists for Reassign Asset on `KitImageOverlay` or `MediaLightbox`; both render the action permanently disabled | open | Brian | non-blocking; presentation-only stub, both consumers already ship this way |
 | CR-056 | Creation card Archive operation | Filed 22 Aug 2026 by the G4 propagation pass. Resolved against current Crestfall source during V2 convergence on 24 Aug 2026: `/api/creations/[id]/archive` and the corresponding client operation now exist, so `KitCreationCard` enables Archive when an allowed caller supplies `onArchive` | done | Nick/Brian | closed 24 Aug 2026; lifecycle/canon policy still determines whether the callback is supplied |
 | CR-057 | Final URL map rename and redirect table | Post-cutover, the nine pages move from `/studio/v2/<page>` to ruled clean top-level paths in one move, with Chassis-owned redirects from every legacy address | open | Nick | non-blocking until cutover; ruling: `bible/decisions/2026-08-29-final-url-map.md` (GO option 1, 29 Aug 2026) |
+| CR-058 | Sort parameter on list endpoints | Extends CR-042 with the ruled sort vocabulary (refined 6 Sep 2026: Saves retired, Remixes added): a `sort` parameter accepting `plays`, `likes`, `remixes`, `newest` on `/v1/community/creations`, `/v1/studio/creations`, `/v1/community/creators`, `/v1/lore/publications`, `/v1/studio/story-rooms`, ordering as the client orders today | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate; every sort is client-side over one unparameterized payload today |
+| CR-059 | Remix count on creation and creator summaries | The ruled Remixes sort reads a remix count (times an asset is credited in another creation); no creation or creator summary carries one, so the option is omitted everywhere until it does | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate, rewritten the same day (Saves retired) |
+| CR-060 | Filter parameters on list endpoints | Extends CR-042: server-side visibility, status, canon or curation, and tags on creations and community; approval state and a since date on `/v1/lore/publications` (100-row cap today); media type, liked, bookmarked, and asset search on image-generation jobs (relates CR-035) | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate; the true scale ceiling under every filter section, same finding as CR-042 |
+| CR-061 | Served option enumerations for the filter panel | Every filter option list except Tags is a frontend literal; request the Chassis serve each enumeration or confirm per list that the frontend mapping stays authoritative (relates CR-014, CR-038) | open | Nick | dev awareness; presentation layer today; the FE/FILTERS build adds no new array |
+| CR-062 | Community type whitelist versus the Rules & Mechanics group | Seven of the eight Rules & Mechanics types the filter offers are outside the community route's `type` whitelist; grow the whitelist or serve those types as unavailable so the panel can render them disabled | open | Nick | non-blocking; filed 6 Sep 2026; client-side filtering hides the mismatch today |
+| CR-064 | Creator summary timestamps for Recently Active and Newest | The creator summary on `/v1/community/creators` carries no last-active timestamp and no joined timestamp, so the ruled Creators sorts Recently Active and Newest still render and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) but leave the list in its current order until both timestamps exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
+| CR-065 | Per-user liked and saved flags on creator summaries | The ruled Activity section (Liked, Saved) on Creators needs per-user liked and saved state for creators; the payload carries following only, so both options render muted at a zero count and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) until the flags exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
+| CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
 
 ## Details
 
@@ -919,6 +927,101 @@ Nothing here blocks front-end work and nothing renames early:
 sequence's go-live step. Routes are Chassis lane (FE-REVIEW-01);
 this CR is the record of the ask, the ruling document is the record
 of the choice.
+
+### CR-058, Sort parameter on list endpoints
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate (Brian, GO on option A).
+The ruled sort vocabulary is Plays, Likes, Remixes, Newest (refined
+6 Sep 2026: Saves retired everywhere, Remixes reads the CR-059 remix
+count), the trigger reads "Sort: <value>", and every page renders
+every ruled sort option regardless of data (ruling change, FE/FILTERS
+follow-up, 6 Sep 2026): where a field is absent the option still
+shows and is selectable, and leaves the list in its current order.
+Today no list endpoint accepts a sort: `/v1/community/
+creations` reads only `type` and `content_rating`, `/v1/studio/
+creations` only `type`, `status`, `view`, `/v1/community/creators`
+nothing, `/v1/lore/publications` only `limit` and `offset`,
+`/v1/studio/story-rooms` nothing. Every page sorts one fully fetched
+array in memory (CR-042). Needed from the backend: a `sort` parameter
+on each of those five endpoints accepting `plays`, `likes`,
+`remixes`, `newest`, ordering descending by the same fields the
+client uses today (plays, hearts or likes, the CR-059 remix count,
+recency). Ruled the same day: Stories "Latest activity" is Newest on
+that page (latest activity), "Title A to Z" retired; Adventures "Top
+rated" folds into Likes; Community "Recommended" retired, default
+sort Plays; Creators sorts read Recently Active, Followers, Plays,
+Likes, Remixes, Newest (follow-up ruling, 6 Sep 2026: Followers added,
+reading the follower count already on the creator summary), where
+Recently Active reads a last-active timestamp, so `/v1/community/
+creators` also needs `recently_active` as a sort value and a
+last-active timestamp on the creator summary (Plays waits on CR-040,
+Remixes on CR-059).
+
+### CR-059, Remix count on creation and creator summaries
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate as a saves-count request;
+rewritten the same day under Brian's refine ruling: Saves is retired
+everywhere and the ruled sort vocabulary is Plays, Likes, Remixes,
+Newest. Remixes reads a remix count, the number of times an asset is
+credited in another creation. No owned creation summary
+(`ownedCreationSummaryService` emits `likes`, `messages`, `images`,
+`videos`), community creation summary, or creator summary carries
+such a field today. Needed: a per-creation remix count on the owned
+and community creation summaries and a per-creator aggregate on
+`/v1/community/creators`. Until it lands, every Sort list still
+renders Remixes (ruling change, FE/FILTERS follow-up, 6 Sep 2026);
+selecting it leaves the list in its current order rather than
+inventing a value. The sitewide remix
+metric (bookmark icon and count replaced by a remix icon and count on
+every creation card) is parked for its own pass on `fe/remix-metric`
+after `fe/filters` merges and depends on this field.
+
+### CR-060, Filter parameters on list endpoints
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate. Extends CR-042 to the
+filter sections the panel carries. Exists today: `type` on community
+and creations, `content_rating` on community only. Needed
+server-side: visibility, status, canon or curation, and tags on
+creations and community; approval state and a since date on
+`/v1/lore/publications`, which also caps at 100 rows so the Lore bar
+filters the first 100 only; media type, liked, bookmarked, and the
+asset search on image-generation jobs, which accept only `limit` and
+`cursor` (relates CR-035).
+
+### CR-061, Served option enumerations for the filter panel
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate. Every option list the
+bar renders is a frontend literal except Tags (built from the fetched
+pool with counts): the five creation domains
+(`creationCatalogFilterTaxonomy.js`), visibility, status, curation,
+rendering, the rating tiers (terminology module), Stories type and
+status, Lore approval and recency, Images media and activity. Request:
+the Chassis serves each enumeration, or confirms per list that the
+frontend mapping stays authoritative (CR-014 for the four-state
+visibility, CR-038 for the domain grouping). Until then the existing
+arrays stay as they are with display fixes only ("Stories &
+Adventures", "Rulebook"); the FE/FILTERS build adds no new array.
+
+### CR-062, Community type whitelist versus the Rules & Mechanics group
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate. The filter taxonomy
+offers eight Rules & Mechanics types; `communityRoute.js`'s `type`
+whitelist contains only `MECHANICS_MODULE` from that group. Client-
+side filtering hides the mismatch today (the seven never match). When
+CR-060 moves filtering server-side, either the whitelist grows or
+those types are served as unavailable so the panel renders them
+disabled ("Soon") rather than counting zero.
+
+### CR-063, Public lore approval-state projection
+
+Filed 6 Sep 2026 by the FE/FILTERS plan gate. `projectPublicLore
+Creation` emits `approvalState` as `canon` or `approved` only, so the
+Draft and Archived options can never match community lore (only
+"Your Lore" produces draft, pending, archived). One state carries
+three names across the stack: backend `IN_REVIEW`, value `pending`,
+label "Reviewing". Needed: confirmation of which states the public
+publications feed serves, and the canonical name for the review
+state.
 
 ## Closed
 

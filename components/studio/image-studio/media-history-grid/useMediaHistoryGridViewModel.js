@@ -22,8 +22,28 @@ export const MEDIA_HISTORY_FILTER_OPTIONS = [
   { value: "IMAGES", label: "Images" },
   { value: "VIDEOS", label: "Videos" },
   { value: "LIKED", label: "Liked" },
-  { value: "BOOKMARKED", label: "Bookmarked" },
+  { value: "BOOKMARKED", label: "Saved" },
 ];
+
+export const MEDIA_FILTER_VALUES = ["ALL", "IMAGES", "VIDEOS"];
+export const ACTIVITY_FILTER_VALUES = ["LIKED", "BOOKMARKED"];
+
+// Two-section filter model (1.4.0, 6 Sep 2026, FE/FILTERS): one media
+// pick (All clears it) combined with any number of activity flags.
+// The legacy single string ("ALL" | "IMAGES" | "VIDEOS" | "LIKED" |
+// "BOOKMARKED") still resolves so the older header keeps working.
+export function normalizeMediaFilterModel(activeFilter) {
+  if (activeFilter && typeof activeFilter === "object") {
+    const media = MEDIA_FILTER_VALUES.includes(activeFilter.media) ? activeFilter.media : "ALL";
+    const activity = Array.isArray(activeFilter.activity)
+      ? activeFilter.activity.filter((value) => ACTIVITY_FILTER_VALUES.includes(value))
+      : [];
+    return { media, activity };
+  }
+  if (ACTIVITY_FILTER_VALUES.includes(activeFilter)) return { media: "ALL", activity: [activeFilter] };
+  if (MEDIA_FILTER_VALUES.includes(activeFilter)) return { media: activeFilter, activity: [] };
+  return { media: "ALL", activity: [] };
+}
 
 function toggleSetItem(setter, id) {
   if (!id) return;
@@ -234,16 +254,20 @@ export function filterMediaHistoryItems(
   searchQuery = "",
   creationSearchLabelsById = {}
 ) {
+  const { media, activity } = normalizeMediaFilterModel(activeFilter);
   let filtered = items;
 
-  if (activeFilter === "IMAGES") {
+  if (media === "IMAGES") {
     filtered = filtered.filter((item) => item.type !== "VIDEO");
-  } else if (activeFilter === "VIDEOS") {
+  } else if (media === "VIDEOS") {
     filtered = filtered.filter((item) => item.type === "VIDEO");
-  } else if (activeFilter === "LIKED") {
-    filtered = filtered.filter((item) => item.liked);
-  } else if (activeFilter === "BOOKMARKED") {
-    filtered = filtered.filter((item) => item.bookmarked);
+  }
+  if (activity.length) {
+    filtered = filtered.filter(
+      (item) =>
+        (activity.includes("LIKED") && item.liked) ||
+        (activity.includes("BOOKMARKED") && item.bookmarked)
+    );
   }
 
   const normalizedQuery = normalizeSearchValue(searchQuery);
@@ -316,7 +340,23 @@ export function useMediaHistoryGridViewModel({
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [compactMobileGrid, setCompactMobileGrid] = useState(true);
   const [activePreviewId, setActivePreviewId] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("ALL");
+  const [mediaFilter, setMediaFilter] = useState("ALL");
+  const [activityFilters, setActivityFilters] = useState([]);
+  // Legacy single value derived from the two-section model: one
+  // activity flag with no media pick reads as that flag, otherwise the
+  // media pick. onSetFilter below keeps the legacy single-select
+  // semantics for the older header.
+  const activeFilter =
+    activityFilters.length === 1 && mediaFilter === "ALL" ? activityFilters[0] : mediaFilter;
+  function setActiveFilter(value) {
+    if (ACTIVITY_FILTER_VALUES.includes(value)) {
+      setMediaFilter("ALL");
+      setActivityFilters([value]);
+      return;
+    }
+    setMediaFilter(MEDIA_FILTER_VALUES.includes(value) ? value : "ALL");
+    setActivityFilters([]);
+  }
   const [searchQuery, setSearchQuery] = useState("");
   const [creationSearchLabelsById, setCreationSearchLabelsById] = useState({});
   const [likedMediaIds, setLikedMediaIds] = useState(() => new Set());
@@ -447,11 +487,11 @@ export function useMediaHistoryGridViewModel({
     () =>
       filterMediaHistoryItems(
         mediaItems,
-        activeFilter,
+        { media: mediaFilter, activity: activityFilters },
         searchQuery,
         creationSearchLabelsById
       ),
-    [mediaItems, activeFilter, searchQuery, creationSearchLabelsById]
+    [mediaItems, mediaFilter, activityFilters, searchQuery, creationSearchLabelsById]
   );
 
   const visibleSelectableImageOutputIds = visibleMediaItems
@@ -704,6 +744,8 @@ export function useMediaHistoryGridViewModel({
   return {
     filterOptions: MEDIA_HISTORY_FILTER_OPTIONS,
     activeFilter,
+    mediaFilter,
+    activityFilters,
     searchQuery,
     filtersOpen,
     compactMobileGrid,
@@ -731,10 +773,18 @@ export function useMediaHistoryGridViewModel({
     masonryRowHeight: MASONRY_ROW_HEIGHT,
     masonryGap: MASONRY_GAP,
     onSetFilter: setActiveFilter,
+    onSetMediaFilter: (value) =>
+      setMediaFilter(MEDIA_FILTER_VALUES.includes(value) ? value : "ALL"),
+    onToggleActivityFilter: (value) => {
+      if (!ACTIVITY_FILTER_VALUES.includes(value)) return;
+      setActivityFilters((current) =>
+        current.includes(value) ? current.filter((entry) => entry !== value) : [...current, value]
+      );
+    },
     onChangeSearchQuery: setSearchQuery,
     onClearFilters: () => {
-      setActiveFilter("ALL");
-      setSearchQuery("");
+      setMediaFilter("ALL");
+      setActivityFilters([]);
     },
     onToggleFilters: () => setFiltersOpen((current) => !current),
     onToggleMobileGrid: () =>

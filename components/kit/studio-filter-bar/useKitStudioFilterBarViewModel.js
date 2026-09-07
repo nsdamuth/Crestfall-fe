@@ -22,6 +22,7 @@ function toGroups(value) {
                   : null,
               description:
                 typeof option.description === "string" ? option.description : undefined,
+              tooltip: typeof option.tooltip === "string" ? option.tooltip : undefined,
               isDisabled: Boolean(option.isDisabled),
             }))
         : [],
@@ -35,6 +36,18 @@ function toSortOptions(value) {
     .map((option) => ({
       value: option.value,
       label: typeof option.label === "string" ? option.label : option.value,
+    }));
+}
+
+function toQuickTabs(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((tab) => tab && typeof tab.value === "string")
+    .map((tab) => ({
+      value: tab.value,
+      label: typeof tab.label === "string" ? tab.label : tab.value,
+      count:
+        typeof tab.count === "number" && Number.isFinite(tab.count) ? tab.count : null,
     }));
 }
 
@@ -55,5 +68,14 @@ export function useKitStudioFilterBarViewModel(props) {
     onSortChange: toCallback(props?.onSortChange),
     isLoadingCounts: Boolean(props?.isLoadingCounts),
     viewModeSlot: props?.viewModeSlot ?? null,
+    quickTabs: toQuickTabs(props?.quickTabs),
+    selectedQuickTab: typeof props?.selectedQuickTab === "string" ? props.selectedQuickTab : "",
+    onQuickTabChange: toCallback(props?.onQuickTabChange),
+    onClearFilters: toCallback(props?.onClearFilters),
+    filterPresentation: props?.filterPresentation === "dropdowns" ? "dropdowns" : "panel",
+    filterButtonLabel:
+      typeof props?.filterButtonLabel === "string" && props.filterButtonLabel
+        ? props.filterButtonLabel
+        : "Filter",
   };
 }

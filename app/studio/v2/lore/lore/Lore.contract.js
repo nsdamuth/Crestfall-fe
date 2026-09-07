@@ -1,4 +1,15 @@
-export const LORE_VIEW_CONTRACT_VERSION = "1.5.0";
+export const LORE_VIEW_CONTRACT_VERSION = "2.0.0";
+
+/**
+ * 2.0.0, 6 Sep 2026 (FE/FILTERS, RULED by Brian): the Your Lore grid
+ * and its props (mineItems, mineError, mineEmptyMessage) are removed;
+ * the page shows Your Timelines and Community Lore. The filter bar
+ * carries search and one Recency section (single-select, nested
+ * buckets, All Time means no filter) inside the shared Filter panel;
+ * Approval state and the fixture-only World or faction facet are
+ * gone. filterBar gains onClearFilters. Everything below this note
+ * describes the 1.x composition and is kept for lineage.
+ */
 
 /**
  * Stable portable UI boundary for the Lore page View

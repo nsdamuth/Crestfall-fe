@@ -8,6 +8,17 @@
 // bar entry): canvas-tinted translucency with chrome frost, full-bleed
 // margin trick, controls-with-their-own-states inside a REST-only bar.
 //
+// FILTER PANEL, RULED 6 Sep 2026 (FE/FILTERS, Brian, supersedes the
+// per-category dropdown row above; docs/BUILD-BLUEPRINT.md 2.16(b)
+// amended the same day): filter categories live in one Filter panel
+// (KitFilterPanel: one trigger with an active-count badge, chip-group
+// sections, search-within, Clear); dedicated dropdowns are the
+// fallback, kept behind `filterPresentation="dropdowns"` so the
+// consumer flips one prop to roll back. Optional quick tabs sit
+// between search and the Filter button where a page has one dominant
+// split (Images). The Sort trigger reads "Sort: <value>", matching
+// Home's rail sort. Semantic callbacks are unchanged from 2.0.0.
+//
 // Sticky stack, RULED 10 Aug 2026 (kit polish 3 pass): this bar docks
 // directly beneath the sticky StudioTopBar, not at the viewport top.
 // `top: var(--topbar-h)` (the top bar's own measured height, minted
@@ -60,97 +71,43 @@
 // steps. Page content no longer carries its own padded column (the
 // `studio-page` kit package owns the one content width); this bar is
 // simply the first consumer of the shared padding.
-import { useEffect, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
-
 import KitDropdownView from "../dropdown/KitDropdown.view";
+import KitFilterPanelView from "../filter-panel/KitFilterPanel.view";
+import KitSearchFieldView from "./KitSearchField.view";
 
-// Search debounce, RULED (Scale Review H, finding D1): every
-// consuming page's filter chain re-runs over its full dataset on
-// each keystroke (B2). One short keystroke buffer here serves every
-// consumer at once rather than fanning the fix out per page. The
-// field itself stays responsive (local state updates immediately);
-// only the upstream onChange call, and the expensive re-filter it
-// triggers, is buffered.
-const SEARCH_DEBOUNCE_MS = 200;
-
-function SearchField({ value, placeholder, onChange }) {
-  // Focus law, RULED 22 Aug 2026 (Fable law review, A3,
-  // docs/BUILD-BLUEPRINT.md 2.16(e) struck), REVERSED by Brian's live
-  // walk (polish item 1): search fields are the one exception to the
-  // inner-input default. The `kit-search-field` wrapper class carries
-  // the ring on `:focus-within` (app/design-system.css, "SEARCH FIELD
-  // FOCUS" section); the inner `.kit-search-input` never shows its
-  // own ring, so exactly one focus treatment renders, on the wrapper.
-  //
-  // Clear control, RULED 10 Aug 2026 (kit polish 3 pass): the native
-  // type=search cancel button renders in the browser's own blue/gray,
-  // outside token law. It is hidden (`.kit-search-input`'s
-  // ::-webkit-search-cancel-button rule) and replaced with a
-  // component-owned icon in the same muted token that colors the
-  // placeholder, `--ink-faint`.
-  const [localValue, setLocalValue] = useState(value);
-  const lastEmittedRef = useRef(value);
-  const debounceRef = useRef(null);
-  const hasValue = Boolean(localValue);
-
-  // Sync from the caller only on a genuine external change (a filter
-  // reset, a cleared query from elsewhere), not the echo of our own
-  // debounced emit landing back through the controlled `value` prop.
-  useEffect(() => {
-    if (value !== lastEmittedRef.current) {
-      lastEmittedRef.current = value;
-      setLocalValue(value);
-    }
-  }, [value]);
-
-  useEffect(() => {
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, []);
-
-  function emitChange(next) {
-    lastEmittedRef.current = next;
-    onChange?.(next);
-  }
-
-  function handleInputChange(next) {
-    setLocalValue(next);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => emitChange(next), SEARCH_DEBOUNCE_MS);
-  }
-
-  function handleClear() {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    setLocalValue("");
-    emitChange("");
-  }
+function QuickTabs({ tabs, selected, onChange, ariaLabel }) {
+  if (!tabs.length) return null;
 
   return (
-    <div
-      className="kit-search-field flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)] min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1"
-    >
-      <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
-      <input
-        type="search"
-        name="kit-studio-filter-bar-search"
-        value={localValue}
-        onChange={(event) => handleInputChange(event.target.value)}
-        placeholder={placeholder}
-        aria-label={placeholder}
-        className="kit-search-input w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none [@media(pointer:coarse)]:text-[length:var(--text-body)]"
-      />
-      {hasValue && (
-        <button
-          type="button"
-          onClick={handleClear}
-          aria-label="Clear search"
-          className="flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
-        >
-          <X size={14} aria-hidden="true" />
-        </button>
-      )}
+    <div role="tablist" aria-label={ariaLabel} className="flex flex-none items-center gap-[var(--space-1)]">
+      {tabs.map((tab) => {
+        const isSelected = tab.value === selected;
+        return (
+          <button
+            key={tab.value}
+            type="button"
+            role="tab"
+            aria-selected={isSelected}
+            onClick={() => onChange?.(tab.value)}
+            className={`inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+              isSelected
+                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+                : "border-transparent text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
+            }`}
+          >
+            <span className="truncate">{tab.label}</span>
+            {tab.count !== null && tab.count !== undefined && (
+              <span
+                className={`tabular-nums text-[length:var(--text-label)] ${
+                  isSelected ? "text-[var(--gold-ornament)]" : "text-[var(--ink-faint)]"
+                }`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -167,7 +124,16 @@ export default function KitStudioFilterBarView({
   onSortChange = null,
   isLoadingCounts = false,
   viewModeSlot = null,
+  quickTabs = [],
+  selectedQuickTab = "",
+  onQuickTabChange = null,
+  onClearFilters = null,
+  filterPresentation = "panel",
+  filterButtonLabel = "Filter",
 }) {
+  const hasGroups = filterGroups.length > 0;
+  const usePanel = filterPresentation !== "dropdowns";
+
   return (
     // Tucked one border width under the top bar, RULED 6 Sep 2026
     // (Brian, screenshots on Adventures and Stories): at browser zooms
@@ -179,31 +145,53 @@ export default function KitStudioFilterBarView({
     // the seam at every other zoom. The 1px is the same border width
     // --topbar-h already carries in its own definition.
     <div className="sticky top-[calc(var(--topbar-h)-1px)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
-      <SearchField
+      <KitSearchFieldView
         value={searchValue}
         placeholder={searchPlaceholder}
         onChange={onSearchChange}
+        name="kit-studio-filter-bar-search"
+        className="min-[700px]:min-w-[9rem] min-[700px]:max-w-[20rem] min-[700px]:flex-1"
       />
 
       <div className="scrollbar-none flex items-center gap-[var(--space-4)] overflow-x-auto min-[700px]:ml-auto min-[700px]:flex-none min-[700px]:flex-wrap min-[700px]:overflow-visible">
         <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">
-          {filterGroups.map((group) => (
-            <KitDropdownView
-              key={group.id}
-              label={group.label}
-              options={(group.options || []).map((option) => ({
-                ...option,
-                count: isLoadingCounts ? null : option.count,
-              }))}
-              selectedValues={selectedValues?.[group.id] || []}
-              isMultiSelect={group.isMultiSelect !== false}
-              onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+          <QuickTabs
+            tabs={quickTabs}
+            selected={selectedQuickTab}
+            onChange={onQuickTabChange}
+            ariaLabel={searchPlaceholder}
+          />
+
+          {hasGroups && usePanel && (
+            <KitFilterPanelView
+              sections={filterGroups}
+              selectedValues={selectedValues}
+              onToggleOption={onFilterToggle}
+              onClearAll={onClearFilters}
+              isLoadingCounts={isLoadingCounts}
+              triggerLabel={filterButtonLabel}
             />
-          ))}
+          )}
+
+          {hasGroups &&
+            !usePanel &&
+            filterGroups.map((group) => (
+              <KitDropdownView
+                key={group.id}
+                label={group.label}
+                options={(group.options || []).map((option) => ({
+                  ...option,
+                  count: isLoadingCounts ? null : option.count,
+                }))}
+                selectedValues={selectedValues?.[group.id] || []}
+                isMultiSelect={group.isMultiSelect !== false}
+                onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+              />
+            ))}
 
           {sortOptions.length > 0 && (
             <KitDropdownView
-              label="Sort"
+              label="Sort:"
               options={sortOptions}
               selectedValues={selectedSort ? [selectedSort] : []}
               isMultiSelect={false}

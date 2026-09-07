@@ -18,13 +18,13 @@ import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
-import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import {
+  buildActivityFilterGroup,
   buildDomainFilterGroups,
-  buildTagFilterOptions,
   getCatalogCreationType,
   getCatalogTags,
   getSelectedCatalogCreationTypes,
+  orderFilterGroups,
 } from "../catalog/creationCatalogFilterTaxonomy.js";
 import FixtureActionNotice from "../FixtureActionNotice";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
@@ -88,42 +88,29 @@ const FIXTURE_CREATIONS = [
 // threshold so the design harness still exercises the state.
 const RECENTLY_UPDATED_THRESHOLD = 12;
 
-const CURATION_OPTIONS = [
-  { value: "featured", label: "Featured" },
-  { value: "canon", label: "Canon" },
-  { value: "recentlyUpdated", label: "Recently Updated" },
-];
+// Curation, RULED 6 Sep 2026 (FE/FILTERS refine): Canon only until
+// CR-033 (updatedAt) and CR-034 (renderStyle) land; Featured and
+// Recently Updated return with real fields.
+const CURATION_OPTIONS = [{ value: "canon", label: "Canon" }];
 
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS refine, Brian): Plays,
+// Likes, Remixes, Newest; Saves retired everywhere; "Recommended"
+// retired, default sort Plays. Ruling change (FE/FILTERS follow-up,
+// 6 Sep 2026): Remixes renders regardless of data; the community
+// payload carries no remix count yet (CR-059), so selecting it leaves
+// the list in its current order (no invented values). Values
+// unchanged (client-side today; the same words become the server
+// param under CR-058).
 const SORT_OPTIONS = [
-  { value: "recommended", label: "Recommended" },
-  { value: "popular", label: "Most played" },
+  { value: "popular", label: "Plays" },
+  { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
   { value: "recent", label: "Newest" },
-  { value: "hearts", label: "Most hearted" },
-  { value: "saved", label: "Most saved" },
 ];
 
-// Rendering filter, RULED 10 Aug 2026 (section 5 of ruling: "restores
-// as-is"). Original values (All Styles / Anime / Realistic / Either /
-// Auto); no per-item renderStyle field exists on the fixture model
-// yet, so it is derived deterministically from id parity below rather
-// than hand-authored per row. CR-034 filed for a real renderStyle
-// field on the creation record.
-const RENDERING_OPTIONS = [
-  { value: "anime", label: "Anime" },
-  { value: "realistic", label: "Realistic" },
-  { value: "either", label: "Either" },
-  { value: "auto", label: "Auto" },
-];
-
-function renderingStyleFor(item) {
-  if (["anime", "realistic", "either", "auto"].includes(item?.renderingStyle)) {
-    return item.renderingStyle;
-  }
-
-  const cycle = ["anime", "realistic", "either", "auto"];
-  const seed = Number.parseInt(String(item?.id || "").replace(/\D/g, ""), 10) || 0;
-  return cycle[seed % cycle.length];
-}
+// Rendering filter removed 6 Sep 2026 (FE/FILTERS refine, Brian),
+// along with Rating and Tags; the restored 10 Aug 2026 Rendering
+// facet had no real renderStyle field (CR-034 still open).
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -190,7 +177,7 @@ export default function CommunityV2Mockup({
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
   const [selectedValues, setSelectedValues] = useState({});
-  const [selectedSort, setSelectedSort] = useState("recommended");
+  const [selectedSort, setSelectedSort] = useState("popular");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [overlayImage, setOverlayImage] = useState(null);
   const [assetDetailId, setAssetDetailId] = useState(null);
@@ -207,7 +194,14 @@ export default function CommunityV2Mockup({
   const filterGroups = useMemo(() => {
     const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreations;
 
-    return [
+    // Ruled section order (FE/FILTERS refine, 6 Sep 2026): Activity,
+    // Characters, Stories, Worlds, Rules, Templates, Curation (Canon
+    // only), Visibility if the payload carries it (the community
+    // projection carries no visibility field, so it is hidden). Rating,
+    // Rendering, Tags removed. Every option renders with its live
+    // count; zero counts render muted and stay selectable.
+    const groups = [
+      buildActivityFilterGroup(pool, { isLiked, isSaved }),
       ...buildDomainFilterGroups(pool),
       {
         id: "curation",
@@ -222,37 +216,21 @@ export default function CommunityV2Mockup({
           }).length,
         })),
       },
-      {
-        id: "rating",
-        label: "Rating",
-        isMultiSelect: true,
-        options: CONTENT_RATING_TIERS.map((tier) => ({
-          value: tier.tier,
-          label: tier.label,
-          tooltip: tier.tooltip,
-          isDisabled: Boolean(tier.isDisabled),
-          count: tier.isDisabled
-            ? null
-            : pool.filter((item) => item.ratingTier === tier.tier).length,
-        })),
-      },
-      {
-        id: "rendering",
-        label: "Rendering",
-        isMultiSelect: true,
-        options: RENDERING_OPTIONS.map((option) => ({
-          ...option,
-          count: pool.filter((item) => renderingStyleFor(item) === option.value).length,
-        })),
-      },
-      {
-        id: "tags",
-        label: "Tags",
-        isMultiSelect: true,
-        options: buildTagFilterOptions(pool),
-      },
     ];
-  }, [effectiveMode, live, sourceCreations]);
+
+    return orderFilterGroups(groups);
+    // isLiked/isSaved read engagementState (live) or the fixture id
+    // sets; their inputs are listed so Activity counts follow them.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    effectiveMode,
+    live,
+    sourceCreations,
+    engagementState.likedCreationIds,
+    engagementState.bookmarkedCreationIds,
+    likedIds,
+    savedIds,
+  ]);
 
   const filteredCreations = useMemo(() => {
     if (effectiveMode === "empty" || effectiveMode === "error") return [];
@@ -260,25 +238,26 @@ export default function CommunityV2Mockup({
     const query = searchValue.trim().toLowerCase();
     const types = getSelectedCatalogCreationTypes(selectedValues);
     const curation = selectedValues.curation || [];
-    const ratings = selectedValues.rating || [];
-    const renderingValues = selectedValues.rendering || [];
-    const selectedTags = selectedValues.tags || [];
+    const activity = selectedValues.activity || [];
 
     const filtered = sourceCreations.filter((item) => {
       const itemType = getCatalogCreationType(item);
       const itemTags = getCatalogTags(item);
-      const normalizedTags = new Set(itemTags.map((tag) => tag.toLowerCase()));
 
+      if (
+        activity.length &&
+        !(
+          (activity.includes("liked") && isLiked(item)) ||
+          (activity.includes("saved") && isSaved(item))
+        )
+      ) return false;
       if (types.length && !types.includes(itemType)) return false;
-      if (ratings.length && !ratings.includes(item.ratingTier)) return false;
-      if (renderingValues.length && !renderingValues.includes(renderingStyleFor(item))) return false;
       if (curation.includes("featured") && !item.isFeatured) return false;
       if (curation.includes("canon") && !item.isCanon) return false;
       if (
         curation.includes("recentlyUpdated") &&
         !(live ? item.recentlyUpdated : item.recency >= RECENTLY_UPDATED_THRESHOLD)
       ) return false;
-      if (selectedTags.length && !selectedTags.some((tag) => normalizedTags.has(tag))) return false;
 
       if (
         query &&
@@ -298,11 +277,21 @@ export default function CommunityV2Mockup({
       sorted.sort((a, b) => b.recency - a.recency);
     } else if (selectedSort === "hearts") {
       sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
-    } else if (selectedSort === "saved") {
-      sorted.sort((a, b) => (b.saves || 0) - (a.saves || 0));
     }
     return sorted;
-  }, [effectiveMode, live, sourceCreations, searchValue, selectedValues, selectedSort]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    effectiveMode,
+    live,
+    sourceCreations,
+    searchValue,
+    selectedValues,
+    selectedSort,
+    engagementState.likedCreationIds,
+    engagementState.bookmarkedCreationIds,
+    likedIds,
+    savedIds,
+  ]);
 
   const visibleCreations = filteredCreations.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCreations.length;
@@ -315,6 +304,11 @@ export default function CommunityV2Mockup({
         : [...currentValues, value];
       return { ...current, [groupId]: nextValues };
     });
+    setVisibleCount(PAGE_SIZE);
+  }
+
+  function clearFilters() {
+    setSelectedValues({});
     setVisibleCount(PAGE_SIZE);
   }
 
@@ -468,7 +462,8 @@ export default function CommunityV2Mockup({
           filterGroups={filterGroups}
           selectedValues={selectedValues}
           onFilterToggle={toggleFilter}
-          sortOptions={live ? SORT_OPTIONS.filter((option) => option.value !== "saved") : SORT_OPTIONS}
+          onClearFilters={clearFilters}
+          sortOptions={SORT_OPTIONS}
           selectedSort={selectedSort}
           onSortChange={setSelectedSort}
           viewModeSlot={

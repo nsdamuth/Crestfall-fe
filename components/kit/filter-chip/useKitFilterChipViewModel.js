@@ -10,6 +10,7 @@ export function useKitFilterChipViewModel(props) {
   const isDisabled = Boolean(props?.isDisabled);
   const variant = VALID_VARIANTS.has(props?.variant) ? props.variant : "default";
   const onToggle = typeof props?.onToggle === "function" ? props.onToggle : null;
+  const tooltip = typeof props?.tooltip === "string" && props.tooltip ? props.tooltip : null;
 
-  return { label, count, isSelected, isDisabled, variant, onToggle };
+  return { label, count, isSelected, isDisabled, variant, onToggle, tooltip };
 }

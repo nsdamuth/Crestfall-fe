@@ -8,12 +8,10 @@
 // 700px-and-up popover is byte-for-byte unchanged. Open/closed is
 // sanctioned presentation-only local state; selection lives with the
 // caller.
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
-
-const PHONE_WIDTH_QUERY = "(max-width: 699.98px)";
+import { useAnchoredPanel } from "./useAnchoredPanel";
 
 // DROPDOWN OVERFLOW (10 Aug 2026 defect ruling): the popover was
 // always left-anchored to its trigger (`left-0`), so the last
@@ -24,8 +22,11 @@ const PHONE_WIDTH_QUERY = "(max-width: 699.98px)";
 // no-fetch-in-effects rule): flip to right-anchored when the
 // left-anchored panel would overflow, and reserve a same-size guard
 // on the far side (--space-4) so a flip never just moves the overflow
-// to the opposite edge on a narrow viewport.
-const EDGE_GUARD_PX = 16;
+// to the opposite edge on a narrow viewport. Since 6 Sep 2026
+// (FE/FILTERS) the open flag, the chassis-select flag, the measured
+// flip, and the popover-only dismissal live in useAnchoredPanel,
+// shared with KitFilterPanel so the two can never drift; behavior
+// here is unchanged.
 
 // Trigger grammar adopted from the legacy control bar (library.css
 // .cbdrop, docs/MOCKUP-DECISIONS.md): category label, then the gold
@@ -120,84 +121,12 @@ export default function KitDropdownView({
   onToggleOption = null,
   ariaLabel = null,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isPhoneWidth, setIsPhoneWidth] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(PHONE_WIDTH_QUERY).matches
-  );
-  const [panelAlign, setPanelAlign] = useState("left");
-  const rootRef = useRef(null);
-  const panelRef = useRef(null);
-
-  // Measured, not assumed: re-checks on open and on resize while open,
-  // so rotating a device or resizing a desktop window with the panel
-  // open never leaves it in a stale, now-wrong alignment.
-  useLayoutEffect(() => {
-    if (!isOpen || isPhoneWidth) return undefined;
-
-    function measure() {
-      const panel = panelRef.current;
-      if (!panel || typeof window === "undefined") return;
-      const rect = panel.getBoundingClientRect();
-      setPanelAlign((current) => {
-        if (current === "left" && rect.right > window.innerWidth - EDGE_GUARD_PX) return "right";
-        if (current === "right" && rect.left < EDGE_GUARD_PX) return "left";
-        return current;
-      });
-    }
-
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [isOpen, isPhoneWidth]);
-
-  // Presentation-only dismissal wiring for the POPOVER only: outside
-  // click and Escape close the panel. No data access; the LOOM
-  // no-useEffect check targets fetching, and this effect touches only
-  // the open flag. Scoped to !isPhoneWidth: the phone sheet
-  // (KitModalFrame variant="sheet") is portaled to document.body, so
-  // it sits outside rootRef's DOM subtree by design, and the frame
-  // already answers its own Escape and backdrop click; without this
-  // scope, this listener would misread every click inside the
-  // portaled sheet as an "outside" click and close it immediately.
-  useEffect(() => {
-    if (!isOpen || isPhoneWidth) return undefined;
-
-    function onPointerDown(event) {
-      if (!rootRef.current?.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-    function onKeyDown(event) {
-      if (event.key === "Escape") setIsOpen(false);
-    }
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [isOpen, isPhoneWidth]);
-
-  // Presentation-only chassis-select flag (Sprint A Phase 4,
-  // docs/SPRINT-A-PLAN.md section 5.2): while open, phone width mounts
-  // the frame sheet, 700px and up renders the popover unchanged. Same
-  // sanctioned local-state class as the open flag; scoped to the open
-  // window like the dismissal effect above.
-  useEffect(() => {
-    if (!isOpen || typeof window === "undefined") return undefined;
-
-    const query = window.matchMedia(PHONE_WIDTH_QUERY);
-
-    function onChange(event) {
-      setIsPhoneWidth(event.matches);
-    }
-
-    query.addEventListener("change", onChange);
-    return () => {
-      query.removeEventListener("change", onChange);
-    };
-  }, [isOpen]);
+  // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
+  // PLAN.md section 5.2), measured flip, and popover-only dismissal:
+  // all presentation-only local state, shared through
+  // useAnchoredPanel (see the note above).
+  const { isOpen, isPhoneWidth, panelAlign, rootRef, panelRef, toggleOpen, close } =
+    useAnchoredPanel();
 
   const selectionCount = selectedValues?.length || 0;
   const selectedLabel = deriveSelectedLabel(options, selectedValues, isMultiSelect);
@@ -205,24 +134,7 @@ export default function KitDropdownView({
 
   function activateOption(value) {
     onToggleOption?.(value);
-    if (!isMultiSelect) setIsOpen(false);
-  }
-
-  function toggleOpen() {
-    const next = !isOpen;
-    // Refresh the chassis-select flag at the moment of opening (not
-    // just at mount): a viewport resize while closed would otherwise
-    // leave it stale until the next matchMedia "change" event, which
-    // this effect only listens for while open.
-    if (next && typeof window !== "undefined") {
-      setIsPhoneWidth(window.matchMedia(PHONE_WIDTH_QUERY).matches);
-      // Always re-measure from the left-anchored baseline: the trigger
-      // may have moved (filter row reflow, window resize) since this
-      // dropdown was last open, so a stale "right" from before could
-      // otherwise persist into a layout where it no longer applies.
-      setPanelAlign("left");
-    }
-    setIsOpen(next);
+    if (!isMultiSelect) close();
   }
 
   return (
@@ -287,7 +199,7 @@ export default function KitDropdownView({
         <KitModalFrame
           variant="sheet"
           ariaLabel={ariaLabel || label}
-          onClose={() => setIsOpen(false)}
+          onClose={close}
         >
           <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
             <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">

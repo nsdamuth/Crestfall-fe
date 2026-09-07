@@ -70,22 +70,20 @@ function projectSlotStates(composerProps) {
 export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   const account = useStudioAccount();
   const workbench = useImageStudioWorkbenchViewModel({ account });
+  const { composerProps } = workbench;
+  const { renderStyle, setRenderStyle } = composerProps;
 
   useEffect(() => {
-    if (workbench.composerProps.renderStyle === "auto") {
-      workbench.composerProps.setRenderStyle?.("crestfall_fantasy");
+    if (renderStyle === "auto") {
+      setRenderStyle?.("crestfall_fantasy");
     }
-  }, [workbench.composerProps.renderStyle]);
+  }, [renderStyle, setRenderStyle]);
 
-  const composer = getImageStudioComposerViewProps(workbench.composerProps);
+  const composer = getImageStudioComposerViewProps(composerProps);
 
-  const slots = useMemo(
-    () => projectSlotStates(workbench.composerProps),
-    [
-      workbench.composerProps.selectedIngredients,
-      workbench.composerProps.customIngredientPrompts,
-    ]
-  );
+  // No manual memo: the React Compiler memoizes this projection itself
+  // (its preserve-manual-memoization rule rejected the hand-written one).
+  const slots = projectSlotStates(composerProps);
 
   const imageOptionFields = composer.imageOptionFields
     .filter(

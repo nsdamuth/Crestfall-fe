@@ -234,6 +234,11 @@ export default function MediaHistoryGridView({
   onClearFilters,
   onToggleFilters,
   onToggleMobileGrid,
+  // showFilterControls (1.4.0, 6 Sep 2026, FE/FILTERS): false when a
+  // page owns the filter bar (the v2 Images page composes the shared
+  // KitStudioFilterBar and panel); the header then keeps only the
+  // eyebrow, summary, mobile primary action, and Select/Done.
+  showFilterControls = true,
   mobilePrimaryActionLabel = "",
   onMobilePrimaryAction,
   onToggleSelectionMode,
@@ -299,29 +304,33 @@ export default function MediaHistoryGridView({
             </button>
           ) : null}
 
-          <button
-            type="button"
-            onClick={onToggleMobileGrid}
-            className="cf-btn cf-btn--secondary cf-btn--sm"
-          >
-            <Grid2X2 size={14} />
-            {compactMobileGrid ? "Large" : "Grid"}
-          </button>
+          {showFilterControls ? (
+            <button
+              type="button"
+              onClick={onToggleMobileGrid}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              <Grid2X2 size={14} />
+              {compactMobileGrid ? "Large" : "Grid"}
+            </button>
+          ) : null}
 
-          <button
-            type="button"
-            onClick={onToggleFilters}
-            aria-expanded={filtersOpen}
-            className={`cf-btn cf-btn--secondary cf-btn--sm ${
-              filtersOpen ? "border-[var(--gold-action)] text-[var(--gold-bright)]" : ""
-            }`}
-          >
-            <SlidersHorizontal size={14} />
-            Filters
-          </button>
+          {showFilterControls ? (
+            <button
+              type="button"
+              onClick={onToggleFilters}
+              aria-expanded={filtersOpen}
+              className={`cf-btn cf-btn--secondary cf-btn--sm ${
+                filtersOpen ? "border-[var(--gold-action)] text-[var(--gold-bright)]" : ""
+              }`}
+            >
+              <SlidersHorizontal size={14} />
+              Filters
+            </button>
+          ) : null}
         </div>
 
-        {filtersOpen ? (
+        {showFilterControls && filtersOpen ? (
           <>
             <div className="absolute right-0 top-full z-40 mt-[var(--space-2)] hidden w-[22rem] rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] shadow-[var(--shadow-modal)] md:block">
               <MediaFilterContents

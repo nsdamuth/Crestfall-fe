@@ -1,6 +1,14 @@
 // V2 catalogue filter taxonomy.
 // Presentation-only: mirrors Full Studio's five authoring domains while
 // leaving Crestfall creation types and backend contracts unchanged.
+//
+// Display fixes, RULED 6 Sep 2026 (FE/FILTERS): retired words leave
+// bar copy, backend names untouched. The second domain reads
+// "Stories & Adventures" (group id renamed to match; backend values
+// unchanged). Every option label
+// is Title Case (refine ruling, same day); "Outfit / Clothing" reads
+// "Outfit". Section order for the shared panel and the Activity
+// section shape are declared below.
 
 export const CATALOG_CREATION_DOMAINS = Object.freeze([
   Object.freeze({
@@ -9,14 +17,14 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
     options: Object.freeze([
       { value: "CHARACTER", label: "Character" },
       { value: "PLAYER_CHARACTER", label: "Player Character" },
-      { value: "OUTFIT", label: "Outfit / Clothing" },
+      { value: "OUTFIT", label: "Outfit" },
       { value: "WARDROBE", label: "Wardrobe" },
       { value: "POSE", label: "Pose" },
     ]),
   }),
   Object.freeze({
-    id: "storiesSessions",
-    label: "Stories & Sessions",
+    id: "storiesAdventures",
+    label: "Stories & Adventures",
     options: Object.freeze([
       { value: "SCENARIO", label: "Scenario" },
       { value: "NARRATOR", label: "Narrator" },
@@ -50,6 +58,10 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
       { value: "WALLET_PROFILE", label: "Wallet Profile" },
       { value: "MECHANICS_MODULE", label: "Mechanics Module" },
       { value: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profile" },
+      // Owner ruling 6 Sep 2026 (FE/FILTERS): "Rules Codex" sitewide,
+      // one name everywhere, allowlisted by that exact string in the
+      // retired-word check; the terminology module carries the same
+      // label.
       { value: "RULES_CODEX", label: "Rules Codex" },
     ]),
   }),
@@ -112,6 +124,81 @@ export function buildDomainFilterGroups(pool = []) {
       count: pool.filter((item) => getCatalogCreationType(item) === option.value).length,
     })),
   }));
+}
+
+// Activity section, RULED 6 Sep 2026 (FE/FILTERS refine, Brian): the
+// first section in the panel on Community, Creators, and Images.
+// Liked and Saved, multi-select, filtering to items the signed-in
+// user liked or saved. A page passes its own per-item predicates;
+// where a payload lacks the per-user flags the page hides the
+// section and files a contract request line.
+export const ACTIVITY_SECTION_ID = "activity";
+
+export function buildActivityFilterGroup(pool = [], { isLiked, isSaved } = {}) {
+  const liked = typeof isLiked === "function" ? isLiked : () => false;
+  const saved = typeof isSaved === "function" ? isSaved : () => false;
+  return {
+    id: ACTIVITY_SECTION_ID,
+    label: "Activity",
+    isMultiSelect: true,
+    options: [
+      { value: "liked", label: "Liked", count: pool.filter((item) => liked(item)).length },
+      { value: "saved", label: "Saved", count: pool.filter((item) => saved(item)).length },
+    ],
+  };
+}
+
+// Filter panel section order, RULED 6 Sep 2026 (FE/FILTERS, Brian;
+// Activity first per the same-day refine): Activity, Characters,
+// Stories, Worlds, then Rules, Templates, Curation, Rating,
+// Rendering, Visibility, Status, Tags. The kit View renders
+// sections in caller order and carries no page vocabulary, so the
+// ruling lives here: every page wraps its groups in
+// orderFilterGroups. Ids not in the list (a page's own groups, e.g.
+// Stories "type", Lore "approval") keep caller order ahead of the
+// ranked ids.
+export const FILTER_SECTION_ORDER = Object.freeze([
+  "activity",
+  "media",
+  "charactersVisuals",
+  "storiesAdventures",
+  "worldsContinuity",
+  "rulesMechanics",
+  "templatesGeneration",
+  "curation",
+  "rating",
+  "rendering",
+  "visibility",
+  "status",
+  "tags",
+]);
+
+export function orderFilterGroups(groups = []) {
+  const rank = new Map(FILTER_SECTION_ORDER.map((id, index) => [id, index]));
+  return groups
+    .map((group, index) => ({ group, index }))
+    .sort((a, b) => {
+      const rankA = rank.has(a.group?.id) ? rank.get(a.group.id) : -1;
+      const rankB = rank.has(b.group?.id) ? rank.get(b.group.id) : -1;
+      if (rankA !== rankB) return rankA - rankB;
+      return a.index - b.index;
+    })
+    .map(({ group }) => group);
+}
+
+// SUPERSEDED 6 Sep 2026 (FE/FILTERS refine, Brian): every remaining
+// option renders with its live count, zero count muted and still
+// selectable (KitFilterChip). Kept for a page that must drop a
+// section its payload cannot answer at all; no page calls it today.
+export function pruneUnsupportedFilterGroups(groups = []) {
+  return groups
+    .map((group) => ({
+      ...group,
+      options: (group?.options || []).filter(
+        (option) => option?.isDisabled || option?.count === null || option?.count === undefined || option.count > 0
+      ),
+    }))
+    .filter((group) => group.options.length > 0);
 }
 
 export function getSelectedCatalogCreationTypes(selectedValues = {}) {
