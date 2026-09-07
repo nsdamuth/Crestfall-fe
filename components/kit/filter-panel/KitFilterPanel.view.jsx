@@ -18,10 +18,11 @@
 // counts keep their own --ink-faint on the chip's --surface-1 bed,
 // where it is legal.
 import { useState } from "react";
-import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
 
 import KitFilterChipView from "../filter-chip/KitFilterChip.view";
 import KitModalFrame from "../KitModalFrame";
+import KitSearchFieldView from "../studio-filter-bar/KitSearchField.view";
 import { useAnchoredPanel } from "../dropdown/useAnchoredPanel";
 
 function countActive(sections, selectedValues) {
@@ -66,31 +67,21 @@ function PanelBody({
   }
 
   return (
-    <div className="flex flex-col gap-[var(--space-4)]">
-      <div className="kit-search-field flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
-        <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
-        <input
-          type="search"
-          name="kit-filter-panel-search"
-          value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label={searchPlaceholder}
-          className="kit-search-input w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none [@media(pointer:coarse)]:text-[length:var(--text-body)]"
-        />
-        {query && (
-          <button
-            type="button"
-            onClick={() => onQueryChange("")}
-            aria-label="Clear filter search"
-            className="flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
-          >
-            <X size={14} aria-hidden="true" />
-          </button>
-        )}
-      </div>
+    // Spacing, RULED 6 Sep 2026 (FE/FILTERS refine): one step up the
+    // theme spacing scale from the first build. Section margins
+    // --space-5 (was 4), chip gaps --space-3 (was 2), divider padding
+    // --space-3 (was 2).
+    <div className="flex flex-col gap-[var(--space-5)]">
+      <KitSearchFieldView
+        value={query}
+        placeholder={searchPlaceholder}
+        onChange={onQueryChange}
+        debounceMs={0}
+        name="kit-filter-panel-search"
+        clearLabel="Clear filter search"
+      />
 
-      <div className="flex flex-col gap-[var(--space-4)]">
+      <div className="flex flex-col gap-[var(--space-5)]">
         <p className="text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[var(--ink)]">
           Filter by
         </p>
@@ -98,8 +89,12 @@ function PanelBody({
         {visibleSections.map((section, index) => {
           const selected = selectedValues?.[section.id] || [];
           return (
-            <div key={section.id} className="flex flex-col gap-[var(--space-2)]">
-              {index > 0 && <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />}
+            <div key={section.id} className="flex flex-col gap-[var(--space-3)]">
+              {index > 0 && (
+                <div aria-hidden="true" className="py-[var(--space-3)]">
+                  <div className="h-px bg-[image:var(--line-fade)]" />
+                </div>
+              )}
               <p
                 id={`kit-filter-panel-section-${section.id}`}
                 className="text-[length:var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]"
@@ -109,7 +104,7 @@ function PanelBody({
               <div
                 role="group"
                 aria-labelledby={`kit-filter-panel-section-${section.id}`}
-                className="flex flex-wrap gap-[var(--space-2)]"
+                className="flex flex-wrap gap-[var(--space-3)]"
               >
                 {section.options.map((option) => (
                   <KitFilterChipView
@@ -232,7 +227,7 @@ export default function KitFilterPanelView({
           ref={panelRef}
           role="group"
           aria-label={ariaLabel}
-          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-[min(28rem,calc(100vw-var(--space-8)))] max-h-[min(32rem,calc(100dvh-var(--topbar-h)-var(--space-16)))] overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)] ${
+          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-[min(28rem,calc(100vw-var(--space-8)))] max-h-[min(32rem,calc(100dvh-var(--topbar-h)-var(--space-16)))] overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-5)] backdrop-blur-[var(--blur-panel)] ${
             panelAlign === "right" ? "right-0" : "left-0"
           }`}
         >
@@ -242,7 +237,7 @@ export default function KitFilterPanelView({
 
       {isOpen && isPhoneWidth && (
         <KitModalFrame variant="sheet" ariaLabel={ariaLabel} sheetGrabber onClose={handleClose}>
-          <div className="max-h-[70dvh] overflow-y-auto p-[var(--space-4)]">{body}</div>
+          <div className="max-h-[70dvh] overflow-y-auto p-[var(--space-5)]">{body}</div>
         </KitModalFrame>
       )}
     </div>

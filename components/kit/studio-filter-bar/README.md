@@ -63,3 +63,13 @@ the per-element ring. Ruled 9 Aug 2026.
   the live `/studio/v2/*` pages)
 
 Fixture-only; no list, query, or persisted filter state is connected.
+
+## Shared search field, 6 Sep 2026 (FE/FILTERS refine)
+
+`KitSearchField.view.jsx` in this folder is the one kit search field:
+the bar's search and the Filter panel's search-within both render it.
+The focus ring sits outside the field on the `kit-search-field`
+wrapper (app/design-system.css), and any input inside the wrapper
+drops its own ring, so the treatment is fixed once. `debounceMs`
+defaults to 200 for the bar's full-dataset consumers; the panel passes
+0. Contract 2.1.0 is unchanged by the extraction.

@@ -368,6 +368,7 @@ export default function StoriesV2Live({
         }
         filterBarSlot={
           <KitStudioFilterBarView
+            filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
             searchValue={searchValue}
             searchPlaceholder="Search your stories"
             onSearchChange={(value) => {

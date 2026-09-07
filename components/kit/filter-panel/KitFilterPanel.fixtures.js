@@ -16,7 +16,7 @@ const charactersSection = {
 };
 
 const storiesSection = {
-  id: "storiesSessions",
+  id: "storiesAdventures",
   label: "Stories & Adventures",
   isMultiSelect: true,
   options: [
@@ -50,8 +50,18 @@ const tagsSection = {
   ),
 };
 
+const activitySection = {
+  id: "activity",
+  label: "Activity",
+  isMultiSelect: true,
+  options: [
+    { value: "liked", label: "Liked", count: 9 },
+    { value: "saved", label: "Saved", count: 0 },
+  ],
+};
+
 export const kitFilterPanelDefaultFixture = {
-  sections: [charactersSection, storiesSection, ratingSection, tagsSection],
+  sections: [activitySection, charactersSection, storiesSection, ratingSection],
   selectedValues: { charactersVisuals: ["CHARACTER"] },
   onToggleOption: noop,
   onClearAll: noop,
@@ -71,6 +81,7 @@ export const kitFilterPanelEmptyFixture = {
 export const kitFilterPanelManySectionsFixture = {
   ...kitFilterPanelDefaultFixture,
   sections: [
+    activitySection,
     charactersSection,
     storiesSection,
     {
@@ -118,7 +129,7 @@ export const kitFilterPanelManySectionsFixture = {
     },
     tagsSection,
   ],
-  selectedValues: { storiesSessions: ["ROOM_TEMPLATE", "STORYLINE"], rating: ["EVERYONE"], tags: ["romance"] },
+  selectedValues: { storiesAdventures: ["ROOM_TEMPLATE", "STORYLINE"], rating: ["EVERYONE"], tags: ["romance"] },
 };
 
 export const kitFilterPanelLongestLabelsFixture = {

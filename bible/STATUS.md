@@ -69,3 +69,6 @@ Adventures", "Rulebook"), BUILD-BLUEPRINT 2.16(b) amended, CR-058 to
 CR-063 filed. Community wired and STOPPED for Brian's browser review
 (390 emulated then 1440); Vault, Stories, Lore, Creators, Adventures,
 Images, Home follow the Community verdict.
+FE/FILTERS 6 Sep 2026: Community refined (gold, Activity, sections
+trimmed, Title Case, spacing, focus); sort set Plays/Likes/Remixes/
+Newest; remix metric parked to fe/remix-metric.

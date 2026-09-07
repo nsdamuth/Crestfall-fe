@@ -32,9 +32,9 @@ const defaultFilterGroups = [
 ];
 
 const defaultSortOptions = [
-  { value: "recent", label: "Most recent" },
-  { value: "popular", label: "Most played" },
-  { value: "hearts", label: "Most hearted" },
+  { value: "recent", label: "Most Recent" },
+  { value: "popular", label: "Most Played" },
+  { value: "hearts", label: "Most Hearted" },
 ];
 
 export const kitStudioFilterBarDefaultFixture = {

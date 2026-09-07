@@ -490,6 +490,7 @@ export default function VaultV2Mockup({
       }
       filterBarSlot={
         <KitStudioFilterBarView
+          filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
           searchValue={searchValue}
           searchPlaceholder="Search your vault"
           onSearchChange={(value) => {

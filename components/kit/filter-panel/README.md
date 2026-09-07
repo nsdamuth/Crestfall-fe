@@ -63,3 +63,12 @@ the chip's own `--surface-1` bed.
   the live `/studio/v2/*` pages per the 29 Aug 2026 standing order)
 
 Fixture-only; no list, query, or persisted filter state is connected.
+
+## Refine, 6 Sep 2026 (Brian)
+
+Spacing one step up the scale (sections `--space-5`, chip gaps and
+divider padding `--space-3`). Search-within renders the shared
+`KitSearchField` (studio-filter-bar package) with no debounce. Chips
+with a zero count render muted (`--ink-faint`) and stay selectable.
+Selected states are the gold family only. Every option label is Title
+Case; section labels are the caller's copy.

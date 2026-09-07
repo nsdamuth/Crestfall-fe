@@ -3,11 +3,12 @@
 // leaving Crestfall creation types and backend contracts unchanged.
 //
 // Display fixes, RULED 6 Sep 2026 (FE/FILTERS): retired words leave
-// bar copy, backend names untouched. "Stories & Sessions" displays as
-// "Stories & Adventures" (id and values unchanged); the RULES_CODEX
-// row reads its ruled display name, "Rulebook", from the terminology
-// module (ruled 26 Aug 2026) instead of carrying its own literal.
-import { getCreationTypeDisplayName } from "@/lib/shared/presentation/terminology";
+// bar copy, backend names untouched. The second domain reads
+// "Stories & Adventures" (group id renamed to match; backend values
+// unchanged). Every option label
+// is Title Case (refine ruling, same day); "Outfit / Clothing" reads
+// "Outfit". Section order for the shared panel and the Activity
+// section shape are declared below.
 
 export const CATALOG_CREATION_DOMAINS = Object.freeze([
   Object.freeze({
@@ -16,13 +17,13 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
     options: Object.freeze([
       { value: "CHARACTER", label: "Character" },
       { value: "PLAYER_CHARACTER", label: "Player Character" },
-      { value: "OUTFIT", label: "Outfit / Clothing" },
+      { value: "OUTFIT", label: "Outfit" },
       { value: "WARDROBE", label: "Wardrobe" },
       { value: "POSE", label: "Pose" },
     ]),
   }),
   Object.freeze({
-    id: "storiesSessions",
+    id: "storiesAdventures",
     label: "Stories & Adventures",
     options: Object.freeze([
       { value: "SCENARIO", label: "Scenario" },
@@ -57,7 +58,11 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
       { value: "WALLET_PROFILE", label: "Wallet Profile" },
       { value: "MECHANICS_MODULE", label: "Mechanics Module" },
       { value: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profile" },
-      { value: "RULES_CODEX", label: getCreationTypeDisplayName("RULES_CODEX") },
+      // Owner ruling 6 Sep 2026 (FE/FILTERS refine): the filter row
+      // reads "Rules Codex", allowlisted by that exact string in the
+      // retired-word check. The terminology module's "Rulebook" (26
+      // Aug 2026) still governs other surfaces until Brian rules it.
+      { value: "RULES_CODEX", label: "Rules Codex" },
     ]),
   }),
   Object.freeze({
@@ -121,17 +126,41 @@ export function buildDomainFilterGroups(pool = []) {
   }));
 }
 
-// Filter panel section order, RULED 6 Sep 2026 (FE/FILTERS, Brian):
-// Characters, Stories, Worlds, then Rules, Templates, Curation,
-// Rating, Rendering, Visibility, Status, Tags. The kit View renders
+// Activity section, RULED 6 Sep 2026 (FE/FILTERS refine, Brian): the
+// first section in the panel on Community, Creators, and Images.
+// Liked and Saved, multi-select, filtering to items the signed-in
+// user liked or saved. A page passes its own per-item predicates;
+// where a payload lacks the per-user flags the page hides the
+// section and files a contract request line.
+export const ACTIVITY_SECTION_ID = "activity";
+
+export function buildActivityFilterGroup(pool = [], { isLiked, isSaved } = {}) {
+  const liked = typeof isLiked === "function" ? isLiked : () => false;
+  const saved = typeof isSaved === "function" ? isSaved : () => false;
+  return {
+    id: ACTIVITY_SECTION_ID,
+    label: "Activity",
+    isMultiSelect: true,
+    options: [
+      { value: "liked", label: "Liked", count: pool.filter((item) => liked(item)).length },
+      { value: "saved", label: "Saved", count: pool.filter((item) => saved(item)).length },
+    ],
+  };
+}
+
+// Filter panel section order, RULED 6 Sep 2026 (FE/FILTERS, Brian;
+// Activity first per the same-day refine): Activity, Characters,
+// Stories, Worlds, then Rules, Templates, Curation, Rating,
+// Rendering, Visibility, Status, Tags. The kit View renders
 // sections in caller order and carries no page vocabulary, so the
 // ruling lives here: every page wraps its groups in
 // orderFilterGroups. Ids not in the list (a page's own groups, e.g.
 // Stories "type", Lore "approval") keep caller order ahead of the
 // ranked ids.
 export const FILTER_SECTION_ORDER = Object.freeze([
+  "activity",
   "charactersVisuals",
-  "storiesSessions",
+  "storiesAdventures",
   "worldsContinuity",
   "rulesMechanics",
   "templatesGeneration",
@@ -156,12 +185,10 @@ export function orderFilterGroups(groups = []) {
     .map(({ group }) => group);
 }
 
-// A page passes only the sections its live data supports (ruled the
-// same day): an option whose pool count is zero is dropped, and a
-// section left with no options is dropped with it. Counts are taken
-// over the whole pool, never the filtered list, so a selection can
-// never make its own section vanish. Fixture pools skip this so the
-// harness still exercises every section.
+// SUPERSEDED 6 Sep 2026 (FE/FILTERS refine, Brian): every remaining
+// option renders with its live count, zero count muted and still
+// selectable (KitFilterChip). Kept for a page that must drop a
+// section its payload cannot answer at all; no page calls it today.
 export function pruneUnsupportedFilterGroups(groups = []) {
   return groups
     .map((group) => ({

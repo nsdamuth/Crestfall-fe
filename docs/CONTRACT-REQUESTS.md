@@ -83,8 +83,8 @@ the details below carry only what is still actionable.
 | CR-055 | Reassign Asset backend operation | Filed 22 Aug 2026 by the G3 propagation pass (B7 viewer final); the code and package READMEs cited this number on landing but the ledger row was never entered, backfilled here 22 Aug 2026 by the G4 pass. No backend operation exists for Reassign Asset on `KitImageOverlay` or `MediaLightbox`; both render the action permanently disabled | open | Brian | non-blocking; presentation-only stub, both consumers already ship this way |
 | CR-056 | Creation card Archive operation | Filed 22 Aug 2026 by the G4 propagation pass. Resolved against current Crestfall source during V2 convergence on 24 Aug 2026: `/api/creations/[id]/archive` and the corresponding client operation now exist, so `KitCreationCard` enables Archive when an allowed caller supplies `onArchive` | done | Nick/Brian | closed 24 Aug 2026; lifecycle/canon policy still determines whether the callback is supplied |
 | CR-057 | Final URL map rename and redirect table | Post-cutover, the nine pages move from `/studio/v2/<page>` to ruled clean top-level paths in one move, with Chassis-owned redirects from every legacy address | open | Nick | non-blocking until cutover; ruling: `bible/decisions/2026-08-29-final-url-map.md` (GO option 1, 29 Aug 2026) |
-| CR-058 | Sort parameter on list endpoints | Extends CR-042 with the ruled sort vocabulary: a `sort` parameter accepting `plays`, `likes`, `saves`, `newest` on `/v1/community/creations`, `/v1/studio/creations`, `/v1/community/creators`, `/v1/lore/publications`, `/v1/studio/story-rooms`, ordering as the client orders today | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate; every sort is client-side over one unparameterized payload today |
-| CR-059 | Saves count on creation summaries | Owned creation summaries emit likes, messages, images, videos only; no saves or bookmarks count exists per creation, so the ruled Saves sort stays off the Vault and Community sort lists until it does | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate |
+| CR-058 | Sort parameter on list endpoints | Extends CR-042 with the ruled sort vocabulary (refined 6 Sep 2026: Saves retired, Remixes added): a `sort` parameter accepting `plays`, `likes`, `remixes`, `newest` on `/v1/community/creations`, `/v1/studio/creations`, `/v1/community/creators`, `/v1/lore/publications`, `/v1/studio/story-rooms`, ordering as the client orders today | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate; every sort is client-side over one unparameterized payload today |
+| CR-059 | Remix count on creation and creator summaries | The ruled Remixes sort reads a remix count (times an asset is credited in another creation); no creation or creator summary carries one, so the option is omitted everywhere until it does | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate, rewritten the same day (Saves retired) |
 | CR-060 | Filter parameters on list endpoints | Extends CR-042: server-side visibility, status, canon or curation, and tags on creations and community; approval state and a since date on `/v1/lore/publications` (100-row cap today); media type, liked, bookmarked, and asset search on image-generation jobs (relates CR-035) | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS plan gate; the true scale ceiling under every filter section, same finding as CR-042 |
 | CR-061 | Served option enumerations for the filter panel | Every filter option list except Tags is a frontend literal; request the Chassis serve each enumeration or confirm per list that the frontend mapping stays authoritative (relates CR-014, CR-038) | open | Nick | dev awareness; presentation layer today; the FE/FILTERS build adds no new array |
 | CR-062 | Community type whitelist versus the Rules & Mechanics group | Seven of the eight Rules & Mechanics types the filter offers are outside the community route's `type` whitelist; grow the whitelist or serve those types as unavailable so the panel can render them disabled | open | Nick | non-blocking; filed 6 Sep 2026; client-side filtering hides the mismatch today |
@@ -929,34 +929,44 @@ of the choice.
 ### CR-058, Sort parameter on list endpoints
 
 Filed 6 Sep 2026 by the FE/FILTERS plan gate (Brian, GO on option A).
-The ruled sort vocabulary is Plays, Likes, Saves, Newest, the trigger
-reads "Sort: <value>", and each page offers only the sorts its data
-supports. Today no list endpoint accepts a sort: `/v1/community/
+The ruled sort vocabulary is Plays, Likes, Remixes, Newest (refined
+6 Sep 2026: Saves retired everywhere, Remixes reads the CR-059 remix
+count), the trigger reads "Sort: <value>", and each page offers only
+the sorts its data supports. Today no list endpoint accepts a sort: `/v1/community/
 creations` reads only `type` and `content_rating`, `/v1/studio/
 creations` only `type`, `status`, `view`, `/v1/community/creators`
 nothing, `/v1/lore/publications` only `limit` and `offset`,
 `/v1/studio/story-rooms` nothing. Every page sorts one fully fetched
 array in memory (CR-042). Needed from the backend: a `sort` parameter
-on each of those five endpoints accepting `plays`, `likes`, `saves`,
-`newest`, ordering descending by the same fields the client uses
-today (plays, hearts or likes, saves, recency). Ruled the same day:
-Stories "Latest activity" is Newest on that page (latest activity),
-"Title A to Z" retired; Adventures "Top rated" folds into Likes;
-Community "Recommended" retired, default sort Plays; Creators sorts
-read Followers, Likes, Works (Plays omitted while null in live), so
-`/v1/community/creators` also needs `followers` and `works` as sort
-values.
+on each of those five endpoints accepting `plays`, `likes`,
+`remixes`, `newest`, ordering descending by the same fields the
+client uses today (plays, hearts or likes, the CR-059 remix count,
+recency). Ruled the same day: Stories "Latest activity" is Newest on
+that page (latest activity), "Title A to Z" retired; Adventures "Top
+rated" folds into Likes; Community "Recommended" retired, default
+sort Plays; Creators sorts read Recently Active, Plays, Likes,
+Remixes, Newest (refine ruling), where Recently Active reads a
+last-active timestamp, so `/v1/community/creators` also needs
+`recently_active` as a sort value and a last-active timestamp on the
+creator summary (Plays waits on CR-040, Remixes on CR-059).
 
-### CR-059, Saves count on creation summaries
+### CR-059, Remix count on creation and creator summaries
 
-Filed 6 Sep 2026 by the FE/FILTERS plan gate. `ownedCreationSummary
-Service` emits `likes`, `messages`, `images`, `videos` only; the Vault
-projection reads `stats.bookmarks ?? stats.saves`, which is never
-present, so Vault's "Most saved" sorted a field that was always zero
-and Community already stripped the option in live. Needed: a per-
-creation saves or bookmarks count on the owned and community creation
-summaries. Until it lands, Saves stays off both pages' Sort lists
-(the fixture harness keeps it).
+Filed 6 Sep 2026 by the FE/FILTERS plan gate as a saves-count request;
+rewritten the same day under Brian's refine ruling: Saves is retired
+everywhere and the ruled sort vocabulary is Plays, Likes, Remixes,
+Newest. Remixes reads a remix count, the number of times an asset is
+credited in another creation. No owned creation summary
+(`ownedCreationSummaryService` emits `likes`, `messages`, `images`,
+`videos`), community creation summary, or creator summary carries
+such a field today. Needed: a per-creation remix count on the owned
+and community creation summaries and a per-creator aggregate on
+`/v1/community/creators`. Until it lands, every Sort list omits
+Remixes and reads Plays, Likes, Newest (Creators: Recently Active,
+Likes, Newest, with Plays waiting on CR-040). The sitewide remix
+metric (bookmark icon and count replaced by a remix icon and count on
+every creation card) is parked for its own pass on `fe/remix-metric`
+after `fe/filters` merges and depends on this field.
 
 ### CR-060, Filter parameters on list endpoints
 

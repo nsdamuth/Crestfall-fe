@@ -131,6 +131,7 @@ export default function LoreView({
         }
         filterBarSlot={
           <KitStudioFilterBarView
+            filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
             searchValue={filterBar?.searchValue ?? ""}
             searchPlaceholder={filterBar?.searchPlaceholder}
             onSearchChange={filterBar?.onSearchChange}
