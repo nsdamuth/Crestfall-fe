@@ -103,7 +103,7 @@ export const kitFilterPanelManySectionsFixture = {
       id: "rulesMechanics",
       label: "Rules & Mechanics",
       isMultiSelect: true,
-      options: ["Stats & Pools Profile", "Progression Profile", "Rulebook"].map((label, index) => ({
+      options: ["Stats & Pools Profile", "Progression Profile", "Rules Codex"].map((label, index) => ({
         value: label.toUpperCase().replace(/[^A-Z]+/g, "_"),
         label,
         count: index + 1,

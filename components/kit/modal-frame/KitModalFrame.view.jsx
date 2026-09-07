@@ -83,11 +83,15 @@ function SheetGrabber() {
   );
 }
 
-function SheetHeaderRow({ onClose = null, showGrabber = false }) {
+// headerSlot (1.4.0, 6 Sep 2026, FE/FILTERS): optional caller content
+// rendered in the sheet header row, beside the close control, so a
+// sheet can carry one header action (the filter panel's Clear).
+function SheetHeaderRow({ onClose = null, showGrabber = false, headerSlot = null }) {
   return (
     <div className="flex min-h-[calc(var(--control-md)+var(--space-3)*2)] flex-col justify-end px-[var(--space-3)]">
       {showGrabber ? <SheetGrabber /> : null}
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-[var(--space-2)]">
+        {headerSlot}
         <CircularCloseButton onClose={onClose} />
       </div>
       <FadeDivider />
@@ -146,6 +150,7 @@ export default function KitModalFrameView({
   onKeepEditing = null,
   onConfirmDiscard = null,
   sheetGrabber = false,
+  headerSlot = null,
 }) {
   if (typeof document === "undefined") return null;
 
@@ -173,7 +178,7 @@ export default function KitModalFrameView({
       )}
       {isSheet ? (
         <>
-          <SheetHeaderRow onClose={onClose} showGrabber={sheetGrabber} />
+          <SheetHeaderRow onClose={onClose} showGrabber={sheetGrabber} headerSlot={headerSlot} />
           {body}
         </>
       ) : (

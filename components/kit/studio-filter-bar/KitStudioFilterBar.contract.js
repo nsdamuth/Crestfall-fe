@@ -5,7 +5,7 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.1.0";
  * piece (docs/BUILD-BLUEPRINT.md sections 2.1 and 2.16). One sticky
  * line: search left; then, anchored right, optional quick tabs, one
  * Filter button opening the shared filter panel (KitFilterPanel:
- * active-count badge, search-within, chip-group sections, Clear all),
+ * active-count badge, search-within, chip-group sections, Clear in the header),
  * sort as a single-select dropdown whose trigger reads "Sort: <value>",
  * and a slot for the view-mode toggle. At 390 the search field takes
  * its own row inside the sticky block.
@@ -76,7 +76,7 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {((value: string) => void)|null} [onQuickTabChange] added
  *   2.1.0
  * @property {(() => void)|null} [onClearFilters] added 2.1.0. Fires
- *   once from the panel's Clear all. Null: the panel clears by
+ *   once from the panel's Clear. Null: the panel clears by
  *   emitting onFilterToggle once per selected value instead
  * @property {"panel"|"dropdowns"} [filterPresentation] added 2.1.0,
  *   default "panel". "dropdowns" renders the 2.0.0 per-group row

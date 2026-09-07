@@ -15,7 +15,7 @@ export const KIT_FILTER_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * KitDropdown follows, shared through useAnchoredPanel); inside the
  * panel, a search-within-filters field at the top, a "Filter by"
  * heading, then every section as a labelled chip group in the order
- * the caller passes, and Clear all at the bottom.
+ * the caller passes, and Clear at the top right of the header (shown only while a filter is selected).
  *
  * The View owns only the open/closed flag and the search-within
  * text (sanctioned presentation-only local state; the text resets on
@@ -47,7 +47,7 @@ export const KIT_FILTER_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  *   given; a section with no options is not rendered
  * @property {Record<string, string[]>} selectedValues
  * @property {((sectionId: string, value: string) => void)|null} onToggleOption
- * @property {(() => void)|null} onClearAll when null, Clear all emits
+ * @property {(() => void)|null} onClearAll when null, Clear emits
  *   onToggleOption once per currently selected value instead, so a
  *   consumer that has not adopted onClearAll still clears correctly
  * @property {boolean} isLoadingCounts counts render blank while true

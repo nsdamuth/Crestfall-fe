@@ -84,7 +84,7 @@ export default function KitStudioFilterBarPreviewClient() {
           }}
           onClearFilters={() => {
             setLocalProps((current) => ({ ...current, selectedValues: {} }));
-            setLastAction("Clear all fired once (local preview only).");
+            setLastAction("Clear fired once (local preview only).");
           }}
         />
         <div className="h-[var(--space-20)] bg-[var(--surface-2)] px-[var(--space-5)] py-[var(--space-4)] text-[length:var(--text-label)] text-[var(--ink-faint)]">

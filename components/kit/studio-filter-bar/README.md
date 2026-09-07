@@ -7,7 +7,7 @@
 The sticky filter line. RULED 6 Sep 2026 (FE/FILTERS, Brian): search
 left; anchored right, optional quick tabs, one Filter button opening
 the shared `KitFilterPanel` (active-count badge, search-within,
-chip-group sections in caller order, Clear all), a Sort dropdown whose
+chip-group sections in caller order, Clear), a Sort dropdown whose
 trigger reads "Sort: <value>", and the view-mode slot. This supersedes
 the 9 Aug 2026 filter-line law's per-category dropdown row
 (`docs/BUILD-BLUEPRINT.md` 2.16(b), amended the same day: filter
@@ -32,7 +32,7 @@ KitStudioFilterBar.jsx
 - Semantic callbacks are unchanged since v1 (contract law):
   `onFilterToggle(groupId, value)`, `onSortChange(value)`,
   `onSearchChange(value)`. 2.1.0 adds `onClearFilters` (fires once
-  from Clear all) and `onQuickTabChange(value)`.
+  from Clear) and `onQuickTabChange(value)`.
 - An empty `filterGroups` hides the Filter button (Creators,
   Adventures); an empty `sortOptions` hides Sort (Lore, Images).
 - The view-mode toggle slots in through `viewModeSlot` unchanged.

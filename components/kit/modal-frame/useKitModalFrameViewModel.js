@@ -92,6 +92,7 @@ export function useKitModalFrameViewModel({
   panelClassName = "",
   hasUnsavedChanges = false,
   sheetGrabber = false,
+  headerSlot = null,
   ariaLabelledBy,
   ariaDescribedBy,
   ariaLabel,
@@ -148,6 +149,7 @@ export function useKitModalFrameViewModel({
     generatedLabelId: needsGeneratedLabel ? generatedLabelId : null,
     ariaLabel: needsGeneratedLabel ? ariaLabel : null,
     sheetGrabber,
+    headerSlot: headerSlot ?? null,
     isConfirmingDismiss,
     onKeepEditing: () => setIsConfirmingDismiss(false),
     onConfirmDiscard: () => {

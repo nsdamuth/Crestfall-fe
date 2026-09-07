@@ -8,7 +8,7 @@ The one Filter control on the shared sticky bar, RULED 6 Sep 2026
 (FE/FILTERS, Brian): one trigger reading "Filter" with a live
 active-count badge, opening a panel whose structure matches the
 OurDream reference (search-within at the top, "Filter by", labelled
-chip groups, Clear all at the bottom) with every value drawn from
+chip groups, Clear at the top right of the header (shown only while a filter is selected)) with every value drawn from
 `app/theme.css`. It supersedes the per-category dropdown row of the
 9 Aug 2026 filter-line law; `docs/BUILD-BLUEPRINT.md` 2.16(b) is
 amended the same day ("filter categories live in one Filter panel;
@@ -33,7 +33,7 @@ KitFilterPanel.jsx
   (`FILTER_SECTION_ORDER`, `orderFilterGroups`).
 - A section with no options is not rendered; a page passes only the
   sections its data supports.
-- Clear all fires `onClearAll` once. With no `onClearAll`, it emits
+- Clear fires `onClearAll` once. With no `onClearAll`, it emits
   `onToggleOption` once per selected value so older consumers still
   clear correctly.
 - The caller owns what a value means, how the list is queried, and

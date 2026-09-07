@@ -12,7 +12,7 @@
 // per-category dropdown row above; docs/BUILD-BLUEPRINT.md 2.16(b)
 // amended the same day): filter categories live in one Filter panel
 // (KitFilterPanel: one trigger with an active-count badge, chip-group
-// sections, search-within, Clear all); dedicated dropdowns are the
+// sections, search-within, Clear); dedicated dropdowns are the
 // fallback, kept behind `filterPresentation="dropdowns"` so the
 // consumer flips one prop to roll back. Optional quick tabs sit
 // between search and the Filter button where a page has one dominant

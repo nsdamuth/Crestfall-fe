@@ -58,10 +58,10 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
       { value: "WALLET_PROFILE", label: "Wallet Profile" },
       { value: "MECHANICS_MODULE", label: "Mechanics Module" },
       { value: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profile" },
-      // Owner ruling 6 Sep 2026 (FE/FILTERS refine): the filter row
-      // reads "Rules Codex", allowlisted by that exact string in the
-      // retired-word check. The terminology module's "Rulebook" (26
-      // Aug 2026) still governs other surfaces until Brian rules it.
+      // Owner ruling 6 Sep 2026 (FE/FILTERS): "Rules Codex" sitewide,
+      // one name everywhere, allowlisted by that exact string in the
+      // retired-word check; the terminology module carries the same
+      // label.
       { value: "RULES_CODEX", label: "Rules Codex" },
     ]),
   }),

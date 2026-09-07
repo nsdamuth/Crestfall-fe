@@ -4,8 +4,9 @@
 // matched for structure only; every value resolves through
 // app/theme.css). One "Filter" trigger with a live active-count badge
 // opens a panel: search-within-filters at the top, a "Filter by"
-// heading, every section as a labelled chip group in caller order,
-// Clear all at the bottom. Popover at 700px and up, bottom sheet under
+// heading with Clear at its right end (shown only while a filter is
+// selected), every section as a labelled chip group in caller order.
+// Popover at 700px and up, bottom sheet under
 // 700px, through the same useAnchoredPanel mechanics KitDropdown uses
 // (open flag, chassis select, measured left/right flip, popover-only
 // outside-click and Escape). Chips inside a panel are lawful under the
@@ -34,16 +35,34 @@ function matchesQuery(option, query) {
   return String(option?.label || "").toLowerCase().includes(query);
 }
 
+// Clear, RULED 6 Sep 2026 (Brian, panel header): one text button at the
+// top right of the panel header, shown only while at least one filter
+// is selected; one press reports through onClearAll. Same behavior at
+// 390 (beside the sheet's close control, through KitModalFrame's
+// headerSlot) and at 1440 (the right end of the popover's header row).
+// It replaces the former bottom "Clear all".
+function ClearButton({ activeCount, onClear }) {
+  if (activeCount === 0) return null;
+  return (
+    <button
+      type="button"
+      onClick={onClear}
+      className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-bright)] transition-colors hover:bg-[var(--state-hover-fill)] active:bg-[var(--state-pressed-fill)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+    >
+      Clear
+    </button>
+  );
+}
+
 function PanelBody({
   sections,
   selectedValues,
   onToggleOption,
-  onClearAll,
   isLoadingCounts,
   searchPlaceholder,
   query,
   onQueryChange,
-  activeCount,
+  headerAction = null,
 }) {
   const normalizedQuery = query.trim().toLowerCase();
   const visibleSections = sections
@@ -52,19 +71,6 @@ function PanelBody({
       options: section.options.filter((option) => matchesQuery(option, normalizedQuery)),
     }))
     .filter((section) => section.options.length > 0);
-
-  function clearAll() {
-    if (onClearAll) {
-      onClearAll();
-      return;
-    }
-    // Compatibility path (contract 1.0.0): a consumer that has not
-    // adopted onClearAll still clears correctly, one toggle per
-    // currently selected value.
-    sections.forEach((section) => {
-      (selectedValues?.[section.id] || []).forEach((value) => onToggleOption?.(section.id, value));
-    });
-  }
 
   return (
     // Spacing, RULED 6 Sep 2026 (FE/FILTERS refine): one step up the
@@ -82,9 +88,12 @@ function PanelBody({
       />
 
       <div className="flex flex-col gap-[var(--space-5)]">
-        <p className="text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[var(--ink)]">
-          Filter by
-        </p>
+        <div className="flex min-h-[var(--control-sm)] items-center justify-between gap-[var(--space-2)]">
+          <p className="text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[var(--ink)]">
+            Filter by
+          </p>
+          {headerAction}
+        </div>
 
         {visibleSections.map((section, index) => {
           const selected = selectedValues?.[section.id] || [];
@@ -129,16 +138,6 @@ function PanelBody({
         )}
       </div>
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          disabled={activeCount === 0}
-          onClick={clearAll}
-          className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
-        >
-          Clear all
-        </button>
-      </div>
     </div>
   );
 }
@@ -175,19 +174,35 @@ export default function KitFilterPanelView({
     close();
   }
 
-  const body = (
-    <PanelBody
-      sections={renderableSections}
-      selectedValues={selectedValues}
-      onToggleOption={onToggleOption}
-      onClearAll={onClearAll}
-      isLoadingCounts={isLoadingCounts}
-      searchPlaceholder={searchPlaceholder}
-      query={query}
-      onQueryChange={setQuery}
-      activeCount={activeCount}
-    />
-  );
+  function clearAll() {
+    if (onClearAll) {
+      onClearAll();
+      return;
+    }
+    // Compatibility path (contract 1.0.0): a consumer that has not
+    // adopted onClearAll still clears correctly, one toggle per
+    // currently selected value.
+    renderableSections.forEach((section) => {
+      (selectedValues?.[section.id] || []).forEach((value) => onToggleOption?.(section.id, value));
+    });
+  }
+
+  const clearButton = <ClearButton activeCount={activeCount} onClear={clearAll} />;
+
+  function renderBody(headerAction) {
+    return (
+      <PanelBody
+        sections={renderableSections}
+        selectedValues={selectedValues}
+        onToggleOption={onToggleOption}
+        isLoadingCounts={isLoadingCounts}
+        searchPlaceholder={searchPlaceholder}
+        query={query}
+        onQueryChange={setQuery}
+        headerAction={headerAction}
+      />
+    );
+  }
 
   return (
     <div ref={rootRef} className="relative inline-flex flex-none">
@@ -231,13 +246,19 @@ export default function KitFilterPanelView({
             panelAlign === "right" ? "right-0" : "left-0"
           }`}
         >
-          {body}
+          {renderBody(clearButton)}
         </div>
       )}
 
       {isOpen && isPhoneWidth && (
-        <KitModalFrame variant="sheet" ariaLabel={ariaLabel} sheetGrabber onClose={handleClose}>
-          <div className="max-h-[70dvh] overflow-y-auto p-[var(--space-5)]">{body}</div>
+        <KitModalFrame
+          variant="sheet"
+          ariaLabel={ariaLabel}
+          sheetGrabber
+          headerSlot={clearButton}
+          onClose={handleClose}
+        >
+          <div className="max-h-[70dvh] overflow-y-auto p-[var(--space-5)]">{renderBody(null)}</div>
         </KitModalFrame>
       )}
     </div>
