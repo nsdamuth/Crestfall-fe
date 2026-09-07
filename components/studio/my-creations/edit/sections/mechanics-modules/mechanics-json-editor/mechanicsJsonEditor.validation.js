@@ -1161,6 +1161,11 @@ function validateResolution(
       `${path}.comparison`,
       errors
     );
+    addIssue(
+      warnings,
+      `${path}.mode`,
+      "DETERMINISTIC_COMPARE requires DAVR named calculation results from a trusted Action Resolution context; the mode alone does not hydrate authoritative action values in a plain Mechanics command."
+    );
     return;
   }
 
