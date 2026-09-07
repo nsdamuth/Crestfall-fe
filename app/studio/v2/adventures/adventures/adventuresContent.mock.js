@@ -14,10 +14,14 @@ function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
 
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian): Plays, Likes,
+// Newest ("Top rated" folded into Likes, it sorted by hearts). Remixes
+// is omitted until a remix count exists on the community summary
+// (CR-059). Values are the ruled words; client-side until CR-058.
 export const ADVENTURES_SORT_OPTIONS = [
-  { value: "top-rated", label: "Top rated" },
-  { value: "recently-added", label: "Recently added" },
-  { value: "most-played", label: "Most played" },
+  { value: "plays", label: "Plays" },
+  { value: "hearts", label: "Likes" },
+  { value: "recent", label: "Newest" },
 ];
 
 export const ADVENTURES_CATALOG_ITEMS = [
