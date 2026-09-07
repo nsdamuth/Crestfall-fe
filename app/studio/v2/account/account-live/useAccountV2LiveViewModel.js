@@ -205,12 +205,23 @@ export function useAccountV2LiveViewModel() {
   }, [loadMetrics]);
 
   useEffect(() => {
-    loadAccount().catch((error) => {
-      setLoadErrorMessage(
-        error?.message || "Studio account could not be loaded."
-      );
-      setIsLoading(false);
+    // The load starts on the next microtask so the effect body itself
+    // sets no state synchronously (react-hooks/set-state-in-effect);
+    // behavior is unchanged, the account still loads on mount.
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      loadAccount().catch((error) => {
+        if (cancelled) return;
+        setLoadErrorMessage(
+          error?.message || "Studio account could not be loaded."
+        );
+        setIsLoading(false);
+      });
     });
+    return () => {
+      cancelled = true;
+    };
   }, [loadAccount]);
 
   const hasUnsavedChanges = useMemo(

@@ -208,11 +208,21 @@ function GuidedChapter({
   onOpenPlayerCharacterCreator,
 }) {
   const [open, setOpen] = useState(Boolean(chapter.current));
-
-  useEffect(() => {
+  // Derived-state adjustment during render (the React-recommended
+  // replacement for a setState-in-effect sync): when the chapter's
+  // current or complete flags change, the disclosure follows them.
+  const [seenFlags, setSeenFlags] = useState({
+    current: Boolean(chapter.current),
+    complete: Boolean(chapter.complete),
+  });
+  if (
+    seenFlags.current !== Boolean(chapter.current) ||
+    seenFlags.complete !== Boolean(chapter.complete)
+  ) {
+    setSeenFlags({ current: Boolean(chapter.current), complete: Boolean(chapter.complete) });
     if (chapter.current) setOpen(true);
     else if (chapter.complete) setOpen(false);
-  }, [chapter.complete, chapter.current]);
+  }
 
   return (
     <details
@@ -465,11 +475,18 @@ export function StudioFullModeView({
   const requestedSlug = requestedSection ? activeSectionSlug : "";
   const [displaySlug, setDisplaySlug] = useState(requestedSlug);
   const [visible, setVisible] = useState(true);
+  // The hide step of the section transition is a derived-state
+  // adjustment during render (no synchronous setState in the effect);
+  // the effect below only schedules the swap and the fade-in.
+  const [transitionTarget, setTransitionTarget] = useState(requestedSlug);
+  if (requestedSlug !== transitionTarget) {
+    setTransitionTarget(requestedSlug);
+    if (requestedSlug !== displaySlug) setVisible(false);
+  }
 
   useEffect(() => {
     if (requestedSlug === displaySlug) return undefined;
 
-    setVisible(false);
     const timer = window.setTimeout(() => {
       setDisplaySlug(requestedSlug);
       window.requestAnimationFrame(() => setVisible(true));

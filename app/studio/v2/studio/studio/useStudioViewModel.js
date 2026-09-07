@@ -47,6 +47,19 @@ export function useStudioViewModel({
   const [activeMode, setActiveMode] = useState(CREATION_STUDIO_MODES.QUICK);
 
   useEffect(() => {
+    // Deferred to the next microtask so the effect body itself sets no
+    // state synchronously (react-hooks/set-state-in-effect); the mode
+    // still resolves from the URL or storage on mount.
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      resolveInitialMode();
+    });
+    return () => {
+      cancelled = true;
+    };
+
+    function resolveInitialMode() {
     try {
       const params = new URLSearchParams(window.location.search);
       const requestedMode = String(params.get("mode") || "").trim().toLowerCase();
@@ -68,6 +81,7 @@ export function useStudioViewModel({
       }
     } catch {
       // Quick Start remains the product default when URL/storage state is unavailable.
+    }
     }
   }, []);
 
