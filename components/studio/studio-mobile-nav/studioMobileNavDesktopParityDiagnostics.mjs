@@ -18,7 +18,13 @@ test("V2 mobile drawer mirrors desktop Play Create Explore taxonomy", () => {
   assert.match(view, /label: "Play"[\s\S]*"Home", "Stories", "Adventures"/);
   assert.match(view, /label: "Create"[\s\S]*"Studio", "Images", "Vault"/);
   assert.match(view, /label: "Explore"[\s\S]*"Community", "Creators", "Lore"/);
-  assert.match(view, /<MobileDrawerGroup[\s\S]*label="Support"/);
+  // Support heading removed 6 Sep 2026 (sidebar batch 1): Feedback
+  // renders beneath the coins block, Terms as footer text under Log out.
+  assert.doesNotMatch(view, /label="Support"/);
+  assert.match(view, /termsLink=\{termsLink\}/);
+  const economyIndex = view.indexOf("{drawerEconomySlot}");
+  const supportRowsIndex = view.indexOf("v2SupportRows.map");
+  assert.ok(economyIndex >= 0 && supportRowsIndex > economyIndex);
 });
 
 test("V2 mobile drawer removes redundant Account and Community Links rows", () => {
@@ -38,7 +44,9 @@ test("mobile drawer rows adopt desktop compact density and active treatment", ()
     "components/studio/studio-mobile-nav/StudioMobileNav.view.jsx"
   );
 
-  assert.match(view, /min-h-\[2\.35rem\]/);
+  // Row height tokenized to --control-md 6 Sep 2026 (sidebar batch 2).
+  assert.match(view, /min-h-\[var\(--control-md\)\]/);
+  assert.doesNotMatch(view, /min-h-\[2\.35rem\]/);
   assert.match(view, /border-l-2 border-l-\[var\(--gold-action\)\]/);
   assert.match(view, /tracking-\[var\(--track-label\)\] text-\[var\(--gold-action\)\]/);
 });

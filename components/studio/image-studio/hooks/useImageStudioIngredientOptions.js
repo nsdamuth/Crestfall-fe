@@ -8,7 +8,7 @@ import {
   getImageStudioOptionsForSlot,
 } from "@/components/studio/image-studio/imageStudioUtils";
 
-export function useImageStudioIngredientOptions() {
+export function useImageStudioIngredientOptions({ sourceMode = "MINE" } = {}) {
   const [creations, setCreations] = useState([]);
   const [ingredientLoadError, setIngredientLoadError] = useState("");
   const [ingredientLoadStatus, setIngredientLoadStatus] = useState("idle");
@@ -24,10 +24,13 @@ export function useImageStudioIngredientOptions() {
     async function loadIngredientCreations() {
       setIngredientLoadStatus("loading");
       setIngredientLoadError("");
+      setCreations([]);
 
       try {
         const nextCreations =
-          await fetchImageStudioIngredientCreations(allowedTypes);
+          await fetchImageStudioIngredientCreations(allowedTypes, {
+            sourceMode,
+          });
 
         if (!cancelled) {
           setCreations(nextCreations);
@@ -49,16 +52,16 @@ export function useImageStudioIngredientOptions() {
     return () => {
       cancelled = true;
     };
-  }, [allowedTypes]);
+  }, [allowedTypes, sourceMode]);
 
   const ingredientOptionsBySlot = useMemo(() => {
     return Object.fromEntries(
       ingredientSlots.map((slot) => [
         slot.id,
-        getImageStudioOptionsForSlot(creations, slot),
+        getImageStudioOptionsForSlot(creations, slot, { sourceMode }),
       ])
     );
-  }, [creations]);
+  }, [creations, sourceMode]);
 
   return {
     ingredientOptionsBySlot,

@@ -1,15 +1,13 @@
 // Local, deterministic View-shaped fixtures (docs/FRONTEND-SOP.md
-// section 1, LOOM item 5): the three states named by
-// docs/SPRINT-G-PLAN.md's Home brief. Built directly from
-// useHomeViewModel's shape rather than re-deriving from
-// homeContent.mock.js, so these exercise the View in isolation
-// (preview route, section 1 item 6) without mounting the hook.
+// section 1, LOOM item 5). Built directly from useHomeViewModel's shape
+// rather than re-deriving from homeContent.mock.js, so these exercise
+// the View in isolation without mounting the hook. Reshaped 6 Sep 2026
+// (Home fine-tuning batch 1, contract 4.0.0): section rails replace the
+// destination tiles and the four named rails.
 import {
   HOME_CREATORS_TO_FOLLOW_ITEMS,
-  HOME_DESTINATION_TILES,
   HOME_FROM_THE_COMMUNITY_ITEMS,
   HOME_RECENTLY_ADDED_ITEMS,
-  HOME_SORT_OPTIONS,
   HOME_TOP_RATED_ITEMS,
 } from "./homeContent.mock";
 
@@ -34,7 +32,7 @@ const TOP_BANNER = {
 const BOTTOM_BANNER = {
   eyebrow: "Play",
   title: "Worlds worth committing to.",
-  ctaLabel: "Browse Stories",
+  ctaLabel: "Open Stories",
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
   onCtaClick: noop,
 };
@@ -48,17 +46,46 @@ const CONTINUE_ITEM = {
   onContinue: noop,
 };
 
-function rail(label, items) {
-  return { label, viewAllLabel: "View all", onViewAll: noop, items: items.map(decorate) };
+const CREATION_SORT_OPTIONS = [
+  { value: "plays", label: "Plays" },
+  { value: "likes", label: "Likes" },
+  { value: "saves", label: "Saves" },
+  { value: "newest", label: "Newest" },
+];
+
+// Creators data carries likes only (creatorPresentation: plays null,
+// no saves, recency 0), so its rail offers the one option that works.
+const CREATOR_SORT_OPTIONS = [{ value: "likes", label: "Likes" }];
+
+function sortControl(options) {
+  return options.length
+    ? { options, selectedValue: options[0].value, onChange: noop }
+    : null;
 }
 
-const SORT_CONTROL = {
-  options: HOME_SORT_OPTIONS,
-  selectedValue: HOME_SORT_OPTIONS[0].value,
-  onChange: noop,
-};
+function sectionRail(id, label, items, options = CREATION_SORT_OPTIONS) {
+  return {
+    id,
+    label,
+    viewAllLabel: "View all",
+    onViewAll: noop,
+    items: items.map(decorate),
+    sortControl: sortControl(options),
+  };
+}
 
-const DESTINATION_TILES = HOME_DESTINATION_TILES.map((tile) => ({ ...tile, onOpen: noop }));
+const SECTION_RAILS = [
+  sectionRail("stories", "Stories", HOME_TOP_RATED_ITEMS),
+  sectionRail("adventures", "Adventures", HOME_RECENTLY_ADDED_ITEMS),
+  // Studio and Images have no list data source anywhere in the app
+  // (reported data gaps); their rails are empty and render nothing.
+  sectionRail("studio", "Studio", [], []),
+  sectionRail("images", "Images", [], []),
+  sectionRail("vault", "Vault", HOME_FROM_THE_COMMUNITY_ITEMS),
+  sectionRail("community", "Community", HOME_TOP_RATED_ITEMS),
+  sectionRail("creators", "Creators", HOME_CREATORS_TO_FOLLOW_ITEMS, CREATOR_SORT_OPTIONS),
+  sectionRail("lore", "Lore", HOME_RECENTLY_ADDED_ITEMS, CREATION_SORT_OPTIONS.slice(1)),
+];
 
 // Full page: every section populated, the ruled default state. With
 // continueItem present, the one top banner shows the continue-state
@@ -66,14 +93,11 @@ const DESTINATION_TILES = HOME_DESTINATION_TILES.map((tile) => ({ ...tile, onOpe
 export const homeFullPageFixture = {
   topBanner: TOP_BANNER,
   continueItem: CONTINUE_ITEM,
-  destinationTiles: DESTINATION_TILES,
-  topRatedRail: rail("Top rated", HOME_TOP_RATED_ITEMS),
-  recentlyAddedRail: rail("Recently added", HOME_RECENTLY_ADDED_ITEMS),
-  fromTheCommunityRail: rail("From the community", HOME_FROM_THE_COMMUNITY_ITEMS),
-  creatorsToFollowRail: rail("Creators to follow", HOME_CREATORS_TO_FOLLOW_ITEMS),
-  sortControl: SORT_CONTROL,
+  welcomeName: "Player",
+  sectionRails: SECTION_RAILS,
   bottomBanner: BOTTOM_BANNER,
   errorMessage: null,
+  warningMessage: null,
   notice: null,
   onCloseNotice: noop,
 };
@@ -91,27 +115,18 @@ export const homeEmptyContinueFixture = {
 // Empty rails: every rail has zero cards. Ruled (empty-rail law,
 // docs/BUILD-BLUEPRINT.md 2.18): a rail with nothing in it renders
 // nothing at all, head included. Continue is also empty here (the top
-// banner falls back to the general hero), leaving only the top
-// banner, the destination tiles, and the bottom banner.
+// banner falls back to the general hero), leaving only the top banner
+// and the bottom banner.
 export const homeEmptyRailsFixture = {
   ...homeFullPageFixture,
   continueItem: null,
-  topRatedRail: rail("Top rated", []),
-  recentlyAddedRail: rail("Recently added", []),
-  fromTheCommunityRail: rail("From the community", []),
-  creatorsToFollowRail: rail("Creators to follow", []),
+  sectionRails: SECTION_RAILS.map((rail) => ({ ...rail, items: [], sortControl: null })),
 };
 
 // Error: load failed (10 Aug 2026 parity audit, section 2 fix). A
-// KitAlertStrip danger banner replaces the destination tiles and
-// rails; no page had this state before this pass.
+// KitAlertStrip danger banner replaces the rails; no page had this
+// state before this pass.
 export const homeErrorFixture = {
-  ...homeFullPageFixture,
-  continueItem: null,
-  destinationTiles: [],
-  topRatedRail: rail("Top rated", []),
-  recentlyAddedRail: rail("Recently added", []),
-  fromTheCommunityRail: rail("From the community", []),
-  creatorsToFollowRail: rail("Creators to follow", []),
+  ...homeEmptyRailsFixture,
   errorMessage: "Home could not be loaded.",
 };

@@ -16,8 +16,11 @@ LoreEditor.jsx
 ```
 
 - The Binding Shell injects the application-owned Lore JSON Editor modal.
-- The ViewModel owns normalization, legacy compatibility, reference loading,
-  mutations, validation, image-library selection, and semantic callbacks.
+- The ViewModel owns normalization, legacy compatibility, owner-authorized reference
+  loading, mutations, validation, image-library selection, and semantic callbacks.
+- Lore reference selection has no liked/public lane. Character and Location relationship
+  authoring is limited to creations the actor can edit; the Services API re-validates this
+  authority on persistence so JSON import cannot bypass the picker.
 - The portable View owns authoring presentation and local presentation-only
   controls such as block-picker visibility.
 

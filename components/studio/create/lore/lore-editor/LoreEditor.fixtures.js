@@ -202,31 +202,11 @@ export const loreDocumentFixture = {
 export const loreEditorFixture = {
   document: loreDocumentFixture,
   ownedCharacters: loreDocumentFixture.characterRefs,
-  likedCharacters: [
-    {
-      id: "33333333-3333-4333-8333-333333333333",
-      type: "CHARACTER",
-      title: "Mara of the Glass Road",
-      imageUrl: "",
-    },
-  ],
   ownedCharacterLoadStatus: "loaded",
-  likedCharacterLoadStatus: "loaded",
   ownedCharacterLoadMessage: "",
-  likedCharacterLoadMessage: "",
   ownedLocations: loreDocumentFixture.locationRefs,
-  likedLocations: [
-    {
-      id: "44444444-4444-4444-8444-444444444444",
-      type: "LOCATION",
-      title: "The Ashen Causeway",
-      imageUrl: "",
-    },
-  ],
   ownedLocationLoadStatus: "loaded",
-  likedLocationLoadStatus: "loaded",
   ownedLocationLoadMessage: "",
-  likedLocationLoadMessage: "",
   expandedChapterId: "chapter-first-light",
   expandedSectionId: "section-brass-doors",
   blockTypes: LORE_BLOCK_TYPES,

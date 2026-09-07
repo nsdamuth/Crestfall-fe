@@ -101,6 +101,19 @@ test("contract, fixtures, and development preview are explicit", () => {
   assert.match(preview, /Last action/);
 });
 
+
+test("locked Library Pass thumbnails reuse only lockedPreview and fail closed", () => {
+  const viewModel = read(
+    "components/studio/media/media-lightbox/useMediaLightboxViewModel.js"
+  );
+
+  assert.match(viewModel, /Protected media may render only the destructive lockedPreview derivative/);
+  assert.match(viewModel, /isLocked[\s\S]*?return lockedPreviewUrl/);
+  assert.match(viewModel, /Never fall back to the clear thumbnail proxy/);
+  assert.match(viewModel, /allowDownload: Boolean\(allowDownload && !activeMedia\?\.isLocked\)/);
+  assert.match(viewModel, /showStudioActions: Boolean\(showStudioActions && !activeMedia\?\.isLocked\)/);
+});
+
 test("documentation and diagnostic command remain discoverable", () => {
   const readme = read("components/studio/media/media-lightbox/README.md");
   const packageJson = read("package.json");

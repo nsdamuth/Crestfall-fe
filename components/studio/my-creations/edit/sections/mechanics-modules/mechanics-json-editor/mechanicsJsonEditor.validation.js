@@ -1,5 +1,6 @@
 import {
   MECHANICS_COMMAND_RESOLUTION_VERSION,
+  MECHANICS_COMMAND_RESOLUTION_VERSION_V7,
   normalizeMechanicsCommandResolutionBuilder,
 } from "../mechanicsCommandResolutionBuilder.js";
 import {
@@ -57,6 +58,7 @@ export const MECHANICS_COMPOSITION_VERSION =
 
 const RESOLUTION_MODES = new Set([
   "NO_ROLL_DETERMINISTIC",
+  "DETERMINISTIC_COMPARE",
   "THRESHOLD_DIE",
   "OPPOSED_DIE",
 ]);
@@ -143,6 +145,14 @@ const REQUIREMENT_TYPES = new Set([
   "PROGRESSION_REQUIRED_TIER",
   "PROGRESSION_FORBIDDEN_TIER",
   "PROGRESSION_AT_MAXIMUM_LEVEL",
+  "STATS_POOLS_STAT_CURRENT",
+  "STATS_POOLS_POOL_CURRENT",
+  "STATS_POOLS_POOL_MAXIMUM",
+  "STATS_POOLS_CONDITION_ACTIVE",
+  "STATS_POOLS_CONDITION_INACTIVE",
+  "STATS_POOLS_MODIFIER_ACTIVE",
+  "STATS_POOLS_MODIFIER_INACTIVE",
+  "SKILLS_RANK",
 ]);
 
 const PROGRESSION_REQUIREMENT_TYPES = new Set([
@@ -151,6 +161,31 @@ const PROGRESSION_REQUIREMENT_TYPES = new Set([
   "PROGRESSION_REQUIRED_TIER",
   "PROGRESSION_FORBIDDEN_TIER",
   "PROGRESSION_AT_MAXIMUM_LEVEL",
+]);
+
+const ACTOR_MECHANICS_REQUIREMENT_TYPES = new Set([
+  "STATS_POOLS_STAT_CURRENT",
+  "STATS_POOLS_POOL_CURRENT",
+  "STATS_POOLS_POOL_MAXIMUM",
+  "STATS_POOLS_CONDITION_ACTIVE",
+  "STATS_POOLS_CONDITION_INACTIVE",
+  "STATS_POOLS_MODIFIER_ACTIVE",
+  "STATS_POOLS_MODIFIER_INACTIVE",
+  "SKILLS_RANK",
+]);
+
+const NUMERIC_ACTOR_MECHANICS_REQUIREMENT_TYPES = new Set([
+  "STATS_POOLS_STAT_CURRENT",
+  "STATS_POOLS_POOL_CURRENT",
+  "STATS_POOLS_POOL_MAXIMUM",
+  "SKILLS_RANK",
+]);
+
+const BOOLEAN_ACTOR_MECHANICS_REQUIREMENT_TYPES = new Set([
+  "STATS_POOLS_CONDITION_ACTIVE",
+  "STATS_POOLS_CONDITION_INACTIVE",
+  "STATS_POOLS_MODIFIER_ACTIVE",
+  "STATS_POOLS_MODIFIER_INACTIVE",
 ]);
 
 const REQUIREMENT_OPERATORS = new Set([
@@ -877,6 +912,188 @@ function validateDie(die, path, errors) {
   }
 }
 
+const DETERMINISTIC_COMPARISON_VERSION =
+  "mechanics_deterministic_comparison_v0";
+const DETERMINISTIC_RESULT_BAND_VERSION =
+  "mechanics_result_band_v0";
+const MAX_DETERMINISTIC_RESULT_BANDS = 32;
+
+function validateDeterministicComparison(comparison, path, errors) {
+  if (!validatePlainObject(comparison, path, errors)) return;
+
+  const comparisonVersion = normalizeString(
+    comparison.comparisonVersion || comparison.version
+  );
+  if (
+    comparisonVersion &&
+    comparisonVersion !== DETERMINISTIC_COMPARISON_VERSION
+  ) {
+    addIssue(
+      errors,
+      `${path}.comparisonVersion`,
+      `Deterministic comparison version must be ${DETERMINISTIC_COMPARISON_VERSION}.`
+    );
+  }
+
+  const leftCalculationId = normalizeIdentifier(
+    comparison.leftCalculationId ||
+      comparison.left ||
+      comparison.actorCalculationId
+  );
+  const rightCalculationId = normalizeIdentifier(
+    comparison.rightCalculationId ||
+      comparison.right ||
+      comparison.targetCalculationId
+  );
+
+  if (!leftCalculationId) {
+    addIssue(
+      errors,
+      `${path}.leftCalculationId`,
+      "Deterministic comparison requires a left calculation ID."
+    );
+  }
+  if (!rightCalculationId) {
+    addIssue(
+      errors,
+      `${path}.rightCalculationId`,
+      "Deterministic comparison requires a right calculation ID."
+    );
+  }
+
+  const marginMode = normalizeUpper(
+    comparison.marginMode || "LEFT_MINUS_RIGHT"
+  );
+  if (marginMode !== "LEFT_MINUS_RIGHT") {
+    addIssue(
+      errors,
+      `${path}.marginMode`,
+      'Deterministic comparison marginMode must be "LEFT_MINUS_RIGHT".'
+    );
+  }
+
+  const bands = asArray(comparison.resultBands || comparison.bands);
+  if (!bands.length) {
+    addIssue(
+      errors,
+      `${path}.resultBands`,
+      "Deterministic comparison requires at least one result band."
+    );
+    return;
+  }
+  if (bands.length > MAX_DETERMINISTIC_RESULT_BANDS) {
+    addIssue(
+      errors,
+      `${path}.resultBands`,
+      `Deterministic comparison supports at most ${MAX_DETERMINISTIC_RESULT_BANDS} result bands.`
+    );
+  }
+
+  const seenIds = new Set();
+  const normalizedBands = [];
+  bands.slice(0, MAX_DETERMINISTIC_RESULT_BANDS).forEach((band, index) => {
+    const bandPath = `${path}.resultBands[${index}]`;
+    if (!validatePlainObject(band, bandPath, errors)) return;
+
+    const bandVersion = normalizeString(band.bandVersion || band.version);
+    if (bandVersion && bandVersion !== DETERMINISTIC_RESULT_BAND_VERSION) {
+      addIssue(
+        errors,
+        `${bandPath}.bandVersion`,
+        `Result-band version must be ${DETERMINISTIC_RESULT_BAND_VERSION}.`
+      );
+    }
+
+    const id = normalizeIdentifier(band.id);
+    if (!id) {
+      addIssue(errors, `${bandPath}.id`, "Result band requires a stable ID.");
+    } else if (seenIds.has(id)) {
+      addIssue(errors, `${bandPath}.id`, `Duplicate result-band ID "${id}".`);
+    } else {
+      seenIds.add(id);
+    }
+
+    const canonicalOutcome = normalizeUpper(
+      band.canonicalOutcome || band.outcome
+    );
+    if (!OUTCOMES.has(canonicalOutcome)) {
+      addIssue(
+        errors,
+        `${bandPath}.canonicalOutcome`,
+        `Unsupported canonical outcome "${canonicalOutcome || "(missing)"}".`
+      );
+    }
+
+    const rawMinimum = band.minimumMargin ?? band.minMargin ?? band.minimum;
+    const rawMaximum = band.maximumMargin ?? band.maxMargin ?? band.maximum;
+    const minimum =
+      rawMinimum === null || rawMinimum === undefined || rawMinimum === ""
+        ? null
+        : Number(rawMinimum);
+    const maximum =
+      rawMaximum === null || rawMaximum === undefined || rawMaximum === ""
+        ? null
+        : Number(rawMaximum);
+
+    if (minimum !== null && !Number.isFinite(minimum)) {
+      addIssue(
+        errors,
+        `${bandPath}.minimumMargin`,
+        "Result-band minimumMargin must be a finite number or null."
+      );
+    }
+    if (maximum !== null && !Number.isFinite(maximum)) {
+      addIssue(
+        errors,
+        `${bandPath}.maximumMargin`,
+        "Result-band maximumMargin must be a finite number or null."
+      );
+    }
+    if (
+      Number.isFinite(minimum) &&
+      Number.isFinite(maximum) &&
+      minimum > maximum
+    ) {
+      addIssue(
+        errors,
+        bandPath,
+        "Result-band minimumMargin cannot exceed maximumMargin."
+      );
+    }
+
+    if (
+      id &&
+      (minimum === null || Number.isFinite(minimum)) &&
+      (maximum === null || Number.isFinite(maximum))
+    ) {
+      normalizedBands.push({ id, minimum, maximum });
+    }
+  });
+
+  for (let leftIndex = 0; leftIndex < normalizedBands.length; leftIndex += 1) {
+    for (
+      let rightIndex = leftIndex + 1;
+      rightIndex < normalizedBands.length;
+      rightIndex += 1
+    ) {
+      const left = normalizedBands[leftIndex];
+      const right = normalizedBands[rightIndex];
+      const leftMin = left.minimum === null ? -Infinity : left.minimum;
+      const leftMax = left.maximum === null ? Infinity : left.maximum;
+      const rightMin = right.minimum === null ? -Infinity : right.minimum;
+      const rightMax = right.maximum === null ? Infinity : right.maximum;
+
+      if (Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax)) {
+        addIssue(
+          errors,
+          `${path}.resultBands`,
+          `Result bands "${left.id}" and "${right.id}" overlap.`
+        );
+      }
+    }
+  }
+}
+
 function validateResolution(
   resolution,
   path,
@@ -890,12 +1107,15 @@ function validateResolution(
 
   if (
     version &&
-    version !== MECHANICS_COMMAND_RESOLUTION_VERSION
+    ![
+      MECHANICS_COMMAND_RESOLUTION_VERSION,
+      MECHANICS_COMMAND_RESOLUTION_VERSION_V7,
+    ].includes(version)
   ) {
     addIssue(
       errors,
       `${path}.version`,
-      `Resolution version must be ${MECHANICS_COMMAND_RESOLUTION_VERSION}.`
+      `Resolution version must be ${MECHANICS_COMMAND_RESOLUTION_VERSION} or ${MECHANICS_COMMAND_RESOLUTION_VERSION_V7}.`
     );
   }
 
@@ -925,6 +1145,24 @@ function validateResolution(
   }
 
   if (mode === "NO_ROLL_DETERMINISTIC") return;
+
+  if (mode === "DETERMINISTIC_COMPARE") {
+    if (version && version !== MECHANICS_COMMAND_RESOLUTION_VERSION_V7) {
+      addIssue(
+        errors,
+        `${path}.version`,
+        `DETERMINISTIC_COMPARE requires ${MECHANICS_COMMAND_RESOLUTION_VERSION_V7}.`
+      );
+    }
+    validateDeterministicComparison(
+      resolution.comparison ||
+        resolution.deterministicComparison ||
+        resolution.deterministic_comparison,
+      `${path}.comparison`,
+      errors
+    );
+    return;
+  }
 
   validateDie(
     resolution.die ||
@@ -2010,7 +2248,9 @@ function validateCommand(
           `${requirementPath}.targetId`,
           PROGRESSION_REQUIREMENT_TYPES.has(type)
             ? "Progression requirement requires an Actor Mechanics Profile progression binding ID."
-            : "Mechanics requirement requires a Mechanics State ID."
+            : ACTOR_MECHANICS_REQUIREMENT_TYPES.has(type)
+              ? "Actor Mechanics requirement requires an authoritative Stat/Pool/Condition/Modifier/Skill target ID."
+              : "Mechanics requirement requires a Mechanics State ID."
         );
       }
 
@@ -2053,6 +2293,34 @@ function validateCommand(
             "Progression tier requirement must include at least one tier ID."
           );
         }
+      }
+
+      if (NUMERIC_ACTOR_MECHANICS_REQUIREMENT_TYPES.has(type)) {
+        const numericValue = Number(
+          requirement.value ??
+            requirement.expectedValue ??
+            requirement.threshold
+        );
+
+        if (!Number.isFinite(numericValue)) {
+          addIssue(
+            errors,
+            `${requirementPath}.value`,
+            "Numeric Actor Mechanics requirements must use a finite number."
+          );
+        }
+      }
+
+      if (
+        BOOLEAN_ACTOR_MECHANICS_REQUIREMENT_TYPES.has(type) &&
+        requirement.value !== undefined &&
+        typeof requirement.value !== "boolean"
+      ) {
+        addIssue(
+          errors,
+          `${requirementPath}.value`,
+          "Condition/modifier Actor Mechanics requirements must use a boolean value when value is supplied."
+        );
       }
 
       if (

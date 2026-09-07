@@ -1,4 +1,4 @@
-export const KIT_INGREDIENT_PICKER_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_INGREDIENT_PICKER_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the ingredient picker kit piece
@@ -10,6 +10,9 @@ export const KIT_INGREDIENT_PICKER_VIEW_CONTRACT_VERSION = "1.1.0";
  * the caller's responsibility (matching the studio-filter-bar
  * convention): this View receives already-filtered, display-ready
  * items and reports search-text intent through onSearchChange.
+ *
+ * 1.1.0 to 1.2.0, additive: sourceMode/sourceOptions/onSourceModeChange
+ * expose Mine/Public discovery without moving catalogue loading into the View.
  *
  * 1.0.0 to 1.1.0, additive: backLabel. NESTED MODAL LAW (the R1
  * credits pattern, generalized 10 Aug 2026): when this picker opens
@@ -28,6 +31,9 @@ export const KIT_INGREDIENT_PICKER_VIEW_CONTRACT_VERSION = "1.1.0";
  *
  * @typedef {Object} KitIngredientPickerViewProps
  * @property {string} slotLabel the ingredient slot's live label
+ * @property {"MINE"|"PUBLIC"} [sourceMode]
+ * @property {{id:"MINE"|"PUBLIC",label:string}[]} [sourceOptions]
+ * @property {((sourceMode:"MINE"|"PUBLIC") => void)|null} [onSourceModeChange]
  *   (Character, Player Character, Pose, Clothing Source,
  *   Location / Scene, Rendering Preset)
  * @property {string} searchValue

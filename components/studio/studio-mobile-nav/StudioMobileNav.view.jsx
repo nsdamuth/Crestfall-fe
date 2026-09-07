@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Archive,
   BookOpen,
   Castle,
   ChevronDown,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 const ICONS = Object.freeze({
+  archive: Archive,
   bookOpen: BookOpen,
   castle: Castle,
   compass: Compass,
@@ -35,9 +37,10 @@ const ICONS = Object.freeze({
   users: Users,
 });
 
-function resolveIcon(iconKey) {
-  return ICONS[iconKey] || User;
-}
+// Icons resolve inline (ICONS[key] || User) at each use, not through
+// a helper call: the react-hooks/static-components lint rule reads a
+// call result used as a JSX tag as a component created during render
+// (fixed 6 Sep 2026, sidebar batch 2, item 11).
 
 const V2_DRAWER_GROUP_DEFINITIONS = Object.freeze([
   Object.freeze({ label: "Play", itemLabels: Object.freeze(["Home", "Stories", "Adventures"]) }),
@@ -96,6 +99,17 @@ export default function StudioMobileNavView({
   const supportLinks = isV2Drawer
     ? utilityLinks.filter((link) => link !== accountLink)
     : utilityLinks;
+  // Support heading removed on the v2 drawer, RULED 6 Sep 2026
+  // (sidebar batch 1, mobile parity): Terms becomes quiet footer text
+  // beneath Log out (no icon); the remaining support rows (Feedback &
+  // Updates) sit directly beneath the coins block. Same href split as
+  // StudioSidebar.view.jsx. The legacy drawer keeps its own list.
+  const termsLink = isV2Drawer
+    ? supportLinks.find((link) => /terms/i.test(link?.href || "")) || null
+    : null;
+  const v2SupportRows = isV2Drawer
+    ? supportLinks.filter((link) => link !== termsLink)
+    : [];
 
   return (
     <>
@@ -145,7 +159,10 @@ export default function StudioMobileNavView({
             </div>
 
             {isV2Drawer ? (
-              <div className="mt-5 space-y-[var(--space-4)]">
+              // Group gap opened --space-4 to --space-6, RULED 6 Sep
+              // 2026 (sidebar batch 1, mobile parity), matching the
+              // desktop sidebar's section spacing.
+              <div className="mt-5 space-y-[var(--space-6)]">
                 {v2DrawerGroups.map((group) => (
                   <MobileDrawerGroup
                     key={group.label}
@@ -155,13 +172,6 @@ export default function StudioMobileNavView({
                     onNavigate={onNavigate}
                   />
                 ))}
-
-                <MobileDrawerGroup
-                  label="Support"
-                  links={supportLinks}
-                  InternalLinkComponent={InternalLinkComponent}
-                  onNavigate={onNavigate}
-                />
               </div>
             ) : (
               <>
@@ -218,7 +228,25 @@ export default function StudioMobileNavView({
 
             <MobileDivider />
             {drawerEconomySlot}
-            <MobileDivider />
+
+            {v2SupportRows.length ? (
+              <nav className="mt-[var(--space-2)] space-y-[var(--space-2)]">
+                {v2SupportRows.map((link) => (
+                  <MobileDrawerInternalLink
+                    key={link.href}
+                    link={link}
+                    InternalLinkComponent={InternalLinkComponent}
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </nav>
+            ) : null}
+
+            {/* Even spacing around the coins section, mirroring
+                StudioSidebar.view.jsx (6 Sep 2026): the lower
+                divider tightens its top margin when a row sits
+                between it and the coins box. */}
+            <MobileDivider tightTop={v2SupportRows.length > 0} />
 
             <MobileAccountSummary
               signedInLabel={signedInLabel}
@@ -227,6 +255,7 @@ export default function StudioMobileNavView({
               logoutHref={logoutHref}
               discordLink={discordLink}
               accountLink={accountLink}
+              termsLink={termsLink}
               InternalLinkComponent={InternalLinkComponent}
               onNavigate={onNavigate}
             />
@@ -240,7 +269,7 @@ export default function StudioMobileNavView({
           className="fixed bottom-0 left-0 right-0 z-50 grid grid-cols-5 gap-[var(--space-1)] border-t border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-2)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] backdrop-blur-[var(--blur-chrome)] lg:hidden"
         >
           {bottomLinks.map((link) => {
-            const Icon = resolveIcon(link.iconKey);
+            const Icon = ICONS[link.iconKey] || User;
 
             return (
               <InternalLinkComponent
@@ -279,7 +308,10 @@ function MobileDrawerGroup({
           className="h-px flex-1 bg-[var(--gold-ornament)]/20"
         />
       </div>
-      <nav className="mt-[var(--space-1)] space-y-[2px]">
+      {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
+          7 and 9): rows at --control-md (replacing the raw 2.35rem),
+          item gap --space-2, mirroring the desktop rail. */}
+      <nav className="mt-[var(--space-1)] space-y-[var(--space-2)]">
         {links.map((link) => (
           <MobileDrawerInternalLink
             key={link.href}
@@ -300,11 +332,15 @@ function MobileAccountSummary({
   logoutHref,
   discordLink,
   accountLink,
+  termsLink = null,
   InternalLinkComponent = "a",
   onNavigate = () => {},
 }) {
+  // Gap opened --space-2 to --space-3, RULED 6 Sep 2026 (sidebar
+  // batch 1, mobile parity): Log out no longer touches the signed-in
+  // row. Terms renders beneath Log out as quiet footer text, no icon.
   return (
-    <div className="space-y-[var(--space-2)] px-1">
+    <div className="space-y-[var(--space-3)] px-1">
       <div className="flex items-center gap-[var(--space-2)]">
         <span
           aria-hidden="true"
@@ -367,12 +403,26 @@ function MobileAccountSummary({
         <LogOut size={13} />
         {logoutLabel}
       </a>
+
+      {termsLink ? (
+        <InternalLinkComponent
+          href={termsLink.href}
+          onClick={onNavigate}
+          className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] transition hover:text-[var(--gold-action)] hover:opacity-100"
+        >
+          {termsLink.label}
+        </InternalLinkComponent>
+      ) : null}
     </div>
   );
 }
 
-function MobileDivider() {
-  return <div className="my-4 border-t border-[var(--gold-ornament)]/15" />;
+function MobileDivider({ tightTop = false }) {
+  return (
+    <div
+      className={`${tightTop ? "mt-[var(--space-1)] mb-[var(--space-4)]" : "my-4"} border-t border-[var(--gold-ornament)]/15`}
+    />
+  );
 }
 
 function MobileDrawerInternalLink({
@@ -380,7 +430,7 @@ function MobileDrawerInternalLink({
   InternalLinkComponent = "a",
   onNavigate = () => {},
 }) {
-  const Icon = resolveIcon(link.iconKey);
+  const Icon = ICONS[link.iconKey] || User;
 
   return (
     <InternalLinkComponent
@@ -391,7 +441,7 @@ function MobileDrawerInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex min-h-[2.35rem] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] transition
+        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] transition
         ${
           link.variant === "return"
             ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
@@ -408,7 +458,7 @@ function MobileDrawerInternalLink({
 }
 
 function MobileDrawerExternalLink({ link, onNavigate = () => {} }) {
-  const Icon = resolveIcon(link.iconKey);
+  const Icon = ICONS[link.iconKey] || User;
 
   return (
     <a

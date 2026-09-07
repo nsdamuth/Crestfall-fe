@@ -48,7 +48,7 @@ test("locked profile media uses only the destructive locked preview", () => {
   assert.match(vm, /imageUrl: isLocked \? lockedPreviewUrl : displayUrl/);
   assert.match(vm, /const displayUrl = isLocked[\s\S]*?\? null/);
   assert.match(vm, /const cardUrl = isLocked[\s\S]*?\? null/);
-  assert.match(vm, /const thumbnailUrl = isLocked[\s\S]*?\? null/);
+  assert.match(vm, /const thumbnailUrl = isLocked[\s\S]*?\? lockedPreviewUrl/);
   assert.match(vm, /\.filter\(\(item\) => !item\.isLocked\)/);
 });
 

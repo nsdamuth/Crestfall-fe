@@ -14,7 +14,7 @@ export function getImageStudioAllowedTypes(slots = []) {
   ];
 }
 
-export function normalizeImageStudioIngredientOption(creation) {
+export function normalizeImageStudioIngredientOption(creation, { sourceMode = "MINE" } = {}) {
   const featuredMedia = buildFeaturedMedia({
     row: creation,
     data: creation.data,
@@ -52,15 +52,23 @@ export function normalizeImageStudioIngredientOption(creation) {
     contentRating: creation.contentRating || creation.content_rating || "SFW",
     visibility: creation.visibility || "PRIVATE",
     status: creation.status || "DRAFT",
-    source: "MY_ASSET",
+    source: String(sourceMode || "MINE").toUpperCase() === "PUBLIC"
+      ? "PUBLIC_ASSET"
+      : "MY_ASSET",
     rawCreation: creation,
   };
 }
 
-export function getImageStudioOptionsForSlot(creations = [], slot) {
+export function getImageStudioOptionsForSlot(
+  creations = [],
+  slot,
+  { sourceMode = "MINE" } = {}
+) {
   const allowedTypes = new Set(slot?.allowedTypes || []);
 
   return creations
     .filter((creation) => allowedTypes.has(creation.type))
-    .map(normalizeImageStudioIngredientOption);
+    .map((creation) =>
+      normalizeImageStudioIngredientOption(creation, { sourceMode })
+    );
 }

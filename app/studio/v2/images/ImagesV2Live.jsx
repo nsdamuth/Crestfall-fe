@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sparkles } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import MediaHistoryGrid from "@/components/studio/image-studio/MediaHistoryGrid";
@@ -42,6 +44,12 @@ function LiveIngredientPicker({ pickerProps, backLabel = null }) {
   return (
     <KitIngredientPicker
       slotLabel={picker.ingredientLabel}
+      sourceMode={picker.sourceMode}
+      sourceOptions={picker.sourceOptions}
+      onSourceModeChange={(nextMode) => {
+        setSearchValue("");
+        picker.onSourceModeChange?.(nextMode);
+      }}
       searchValue={searchValue}
       searchPlaceholder={picker.searchPlaceholder}
       onSearchChange={setSearchValue}
@@ -88,6 +96,7 @@ function LiveSavePreset({ saveProps, backLabel = null }) {
 }
 
 export default function ImagesV2Live() {
+  const router = useRouter();
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
@@ -113,6 +122,22 @@ export default function ImagesV2Live() {
               eyebrow="Images"
               title="Image Studio"
               description="Create images from your Crestfall assets, then manage and reuse the results from one live workspace."
+            />
+          }
+          bannerSlot={
+            // Next-section chain (ruled 6 Sep 2026): Images sells
+            // Vault. Same placeholder landscape as every other
+            // section page's bottom banner; the title is the one
+            // already written for Images in ImagesV2Mockup.jsx.
+            <KitPromoBannerView
+              treatment="bottom"
+              bottomVariant="uniform"
+              eyebrow="Create"
+              title="Everything you keep lives in the Vault."
+              line=""
+              ctaLabel="Open Vault"
+              imageSrc={encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png")}
+              onCtaClick={() => router.push("/studio/v2/vault")}
             />
           }
         >

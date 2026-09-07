@@ -53,9 +53,9 @@ const TOP_BANNER = {
 
 const BOTTOM_BANNER = {
   eyebrow: "Loop",
-  title: "Back to where every session starts.",
-  ctaLabel: "Return to Home",
-  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Dalethia.png"),
+  title: "Back to where every Story starts.",
+  ctaLabel: "Open Stories",
+  imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
   onCtaClick: noop,
 };
 

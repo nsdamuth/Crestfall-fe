@@ -3,8 +3,20 @@ export const MECHANICS_COMMAND_RESOLUTION_BUILDER_VERSION =
 
 export const MECHANICS_COMMAND_RESOLUTION_VERSION =
   "mechanics_command_resolution_v6";
+export const MECHANICS_COMMAND_RESOLUTION_VERSION_V7 =
+  "mechanics_command_resolution_v7";
 
 export const COMMAND_RESOLUTION_MODES = [
+  "NO_ROLL_DETERMINISTIC",
+  "DETERMINISTIC_COMPARE",
+  "THRESHOLD_DIE",
+  "OPPOSED_DIE",
+];
+
+// DAVR3 preserves the current graphical dice/automatic builder surface.
+// Deterministic comparison is authorable through JSON until the later visual
+// formula/result-band builder is deliberately designed.
+export const COMMAND_RESOLUTION_VISUAL_MODES = [
   "NO_ROLL_DETERMINISTIC",
   "THRESHOLD_DIE",
   "OPPOSED_DIE",
@@ -523,6 +535,53 @@ function normalizeOpposed(value = {}, fallbackDie = {}) {
   };
 }
 
+function normalizeNullableFiniteNumber(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function normalizeDeterministicResultBand(value = {}, index = 0) {
+  const source = normalizeObject(value);
+  return {
+    ...source,
+    bandVersion:
+      normalizeString(source.bandVersion || source.version) ||
+      "mechanics_result_band_v0",
+    id: normalizeIdentifier(source.id, `result_band_${index + 1}`),
+    label: normalizeString(source.label || source.title),
+    minimumMargin: normalizeNullableFiniteNumber(
+      source.minimumMargin ?? source.minMargin ?? source.minimum
+    ),
+    maximumMargin: normalizeNullableFiniteNumber(
+      source.maximumMargin ?? source.maxMargin ?? source.maximum
+    ),
+    canonicalOutcome: normalizeString(
+      source.canonicalOutcome || source.outcome
+    ).toUpperCase(),
+  };
+}
+
+function normalizeDeterministicComparison(value = {}) {
+  const source = normalizeObject(value);
+  return {
+    ...source,
+    comparisonVersion:
+      normalizeString(source.comparisonVersion || source.version) ||
+      "mechanics_deterministic_comparison_v0",
+    leftCalculationId: normalizeIdentifier(
+      source.leftCalculationId || source.left || source.actorCalculationId
+    ),
+    rightCalculationId: normalizeIdentifier(
+      source.rightCalculationId || source.right || source.targetCalculationId
+    ),
+    marginMode: "LEFT_MINUS_RIGHT",
+    resultBands: normalizeArray(source.resultBands || source.bands)
+      .slice(0, 32)
+      .map(normalizeDeterministicResultBand),
+  };
+}
+
 export function normalizeMechanicsCommandResolutionBuilder(value = {}) {
   const source = normalizeObject(value);
   const mode = normalizeResolutionMode(
@@ -549,9 +608,21 @@ export function normalizeMechanicsCommandResolutionBuilder(value = {}) {
     source.marginBands ||
     source.degreesOfSuccess ||
     {};
+  const comparisonSource =
+    source.comparison ||
+    source.deterministicComparison ||
+    source.deterministic_comparison ||
+    {};
+  const requestedVersion = normalizeString(source.version);
 
   return {
-    version: MECHANICS_COMMAND_RESOLUTION_VERSION,
+    ...source,
+    version:
+      mode === "DETERMINISTIC_COMPARE"
+        ? MECHANICS_COMMAND_RESOLUTION_VERSION_V7
+        : requestedVersion === MECHANICS_COMMAND_RESOLUTION_VERSION_V7
+          ? MECHANICS_COMMAND_RESOLUTION_VERSION_V7
+          : MECHANICS_COMMAND_RESOLUTION_VERSION,
     mode,
     rollMode: normalizeRollMode(
       source.rollMode || source.advantageMode || source.keepMode,
@@ -574,6 +645,10 @@ export function normalizeMechanicsCommandResolutionBuilder(value = {}) {
     opposed:
       mode === "OPPOSED_DIE"
         ? normalizeOpposed(opposedSource, die)
+        : null,
+    comparison:
+      mode === "DETERMINISTIC_COMPARE"
+        ? normalizeDeterministicComparison(comparisonSource)
         : null,
     degreeOfSuccess: normalizeDegreeOfSuccess(degreeSource, mode),
     criticalOnNaturalMax: normalizeBoolean(
@@ -684,6 +759,12 @@ export function formatMechanicsCommandResolutionBuilderSummary(value = {}) {
 
   if (resolution.mode === "NO_ROLL_DETERMINISTIC") {
     return "No roll";
+  }
+
+  if (resolution.mode === "DETERMINISTIC_COMPARE") {
+    const left = resolution.comparison?.leftCalculationId || "left";
+    const right = resolution.comparison?.rightCalculationId || "right";
+    return `${left} vs ${right} (deterministic)`;
   }
 
   const actor = `${resolution.die.count}d${resolution.die.sides}`;

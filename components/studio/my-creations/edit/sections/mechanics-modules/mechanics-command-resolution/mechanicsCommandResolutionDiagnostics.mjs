@@ -10,6 +10,7 @@ import {
 } from "./mechanicsCommandResolution.fixtures.js";
 import {
   COMMAND_RESOLUTION_MODES,
+  COMMAND_RESOLUTION_VISUAL_MODES,
   buildMechanicsCommandResolutionReference,
   formatMechanicsCommandResolutionSummary,
   normalizeMechanicsCommandResolution,
@@ -41,9 +42,19 @@ test("M6 contract freezes command resolution ownership", () => {
   );
   assert.deepEqual(COMMAND_RESOLUTION_MODES, [
     "NO_ROLL_DETERMINISTIC",
+    "DETERMINISTIC_COMPARE",
     "THRESHOLD_DIE",
     "OPPOSED_DIE",
   ]);
+  assert.deepEqual(COMMAND_RESOLUTION_VISUAL_MODES, [
+    "NO_ROLL_DETERMINISTIC",
+    "THRESHOLD_DIE",
+    "OPPOSED_DIE",
+  ]);
+  assert.equal(
+    MECHANICS_COMMAND_RESOLUTION_LOOM_CONTRACT.deterministicCompareVersion,
+    "mechanics_command_resolution_v7"
+  );
 });
 
 test("fixture inventory covers automatic, threshold, opposed, legacy, and recovery", () => {
@@ -59,6 +70,34 @@ test("resolution normalization is idempotent", () => {
     const twice = normalizeMechanicsCommandResolution(once);
     assert.deepEqual(twice, once, item.id);
   }
+});
+
+test("deterministic comparison normalizes to v7 without becoming a graphical dice mode", () => {
+  const resolution = normalizeMechanicsCommandResolution({
+    version: "mechanics_command_resolution_v7",
+    mode: "DETERMINISTIC_COMPARE",
+    futureRootMetadata: { retained: true },
+    comparison: {
+      leftCalculationId: "attack_total",
+      rightCalculationId: "guard_total",
+      resultBands: [
+        { id: "full", minimumMargin: 15, canonicalOutcome: "SUCCESS" },
+        { id: "partial", minimumMargin: -14, maximumMargin: 14, canonicalOutcome: "SUCCESS" },
+        { id: "failure", maximumMargin: -15, canonicalOutcome: "FAILURE" },
+      ],
+    },
+  });
+  assert.equal(resolution.version, "mechanics_command_resolution_v7");
+  assert.equal(resolution.mode, "DETERMINISTIC_COMPARE");
+  assert.equal(resolution.comparison.leftCalculationId, "attack_total");
+  assert.equal(resolution.comparison.rightCalculationId, "guard_total");
+  assert.equal(resolution.comparison.resultBands.length, 3);
+  assert.deepEqual(resolution.futureRootMetadata, { retained: true });
+  assert.equal(
+    formatMechanicsCommandResolutionSummary(resolution),
+    "attack_total vs guard_total (deterministic)"
+  );
+  assert.equal(COMMAND_RESOLUTION_VISUAL_MODES.includes("DETERMINISTIC_COMPARE"), false);
 });
 
 test("legacy aliases project into canonical opposed resolution", () => {

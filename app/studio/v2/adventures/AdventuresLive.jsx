@@ -129,7 +129,7 @@ export default function AdventuresLive({ creations = [], loadError = null } = {}
         eyebrow: "Create",
         title: "Every Adventure starts in Studio.",
         ctaLabel: "Open Studio",
-        imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/Enox Nix.png"),
+        imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
         onCtaClick: () => router.push("/studio"),
       }}
       notice={null}

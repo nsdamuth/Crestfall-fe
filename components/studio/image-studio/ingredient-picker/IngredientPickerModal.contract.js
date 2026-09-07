@@ -1,4 +1,4 @@
-export const INGREDIENT_PICKER_MODAL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const INGREDIENT_PICKER_MODAL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * @typedef {Object} IngredientPickerViewItem
@@ -21,6 +21,8 @@ export const INGREDIENT_PICKER_MODAL_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} IngredientPickerModalViewProps
  * @property {string} ingredientLabel
+ * @property {"MINE"|"PUBLIC"} sourceMode
+ * @property {{id:"MINE"|"PUBLIC",label:string}[]} sourceOptions
  * @property {"users"|"user"|"theater"|"shirt"|"map-pin"|"sparkles"} headerIconName
  * @property {IngredientPickerViewItem[]} items
  * @property {string} selectedItemId
@@ -30,6 +32,7 @@ export const INGREDIENT_PICKER_MODAL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {boolean} showUseCustomAction
  * @property {boolean} showCreatePresetAction
  * @property {(() => void)|null} onClose
+ * @property {((sourceMode:"MINE"|"PUBLIC") => void)|null} onSourceModeChange
  * @property {((itemId: string) => void)|null} onChooseIngredient
  * @property {(() => void)|null} onUseCustom
  * @property {(() => void)|null} onCreatePreset

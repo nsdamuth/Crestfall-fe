@@ -169,7 +169,16 @@ export default function KitStudioFilterBarView({
   viewModeSlot = null,
 }) {
   return (
-    <div className="sticky top-[var(--topbar-h)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
+    // Tucked one border width under the top bar, RULED 6 Sep 2026
+    // (Brian, screenshots on Adventures and Stories): at browser zooms
+    // other than 100% the header's rendered height and this bar's
+    // sticky offset snap to different sub-pixel fractions (measured
+    // 0.1px to 0.4px at 90%, 110%, 125%), which reads as a visible
+    // seam between two frosted bars. The header (z-40) paints above
+    // this bar (z-10), so a 1px overlap is invisible at 100% and covers
+    // the seam at every other zoom. The 1px is the same border width
+    // --topbar-h already carries in its own definition.
+    <div className="sticky top-[calc(var(--topbar-h)-1px)] z-10 mx-[calc(var(--space-5)*-1)] flex flex-col gap-[var(--space-2)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-[var(--space-5)] py-[var(--space-3)] backdrop-blur-[var(--blur-chrome)] sm:mx-[calc(var(--space-8)*-1)] lg:mx-[calc(var(--space-10)*-1)] min-[700px]:flex-row min-[700px]:flex-wrap min-[700px]:items-center min-[700px]:gap-[var(--space-2)] sm:px-[var(--space-8)] lg:px-[var(--space-10)]">
       <SearchField
         value={searchValue}
         placeholder={searchPlaceholder}

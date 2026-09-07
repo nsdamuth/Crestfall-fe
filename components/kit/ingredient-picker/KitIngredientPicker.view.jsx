@@ -87,8 +87,43 @@ function ActionCard({ icon: Icon, eyebrow, title, body, onClick }) {
   );
 }
 
+function SourceSelector({ sourceMode, sourceOptions = [], onChange }) {
+  if (!Array.isArray(sourceOptions) || sourceOptions.length < 2) return null;
+
+  return (
+    <div
+      role="tablist"
+      aria-label="Ingredient source"
+      className="inline-flex w-fit rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-1"
+    >
+      {sourceOptions.map((option) => {
+        const active = option.id === sourceMode;
+        return (
+          <button
+            key={option.id}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            onClick={() => onChange?.(option.id)}
+            className={`rounded-[calc(var(--radius-md)-0.2rem)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors ${
+              active
+                ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
+            }`}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function KitIngredientPickerView({
   slotLabel = "Ingredient",
+  sourceMode = "MINE",
+  sourceOptions = [],
+  onSourceModeChange = null,
   searchValue = "",
   searchPlaceholder = "Search ingredients...",
   onSearchChange = null,
@@ -141,6 +176,12 @@ export default function KitIngredientPickerView({
             {introParts.join("")}
           </p>
         </div>
+
+        <SourceSelector
+          sourceMode={sourceMode}
+          sourceOptions={sourceOptions}
+          onChange={onSourceModeChange}
+        />
 
         <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
 

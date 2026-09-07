@@ -10,7 +10,7 @@
 ## ViewModels / chassis
 
 - `lore-builder/useLoreBuilderViewModel.js` owns draft identity, validation, save orchestration, and routing.
-- `lore-editor/useLoreEditorViewModel.js` owns the structured document, compact owned/liked Character and Location autocomplete sources, chapter/section/block mutations, sourcebook layout-block mutations, and eligible owned-Character image-library selection.
+- `lore-editor/useLoreEditorViewModel.js` owns the structured document, owner-authorized Character and Location autocomplete sources, chapter/section/block mutations, sourcebook layout-block mutations, and eligible owned-Character image-library selection.
 - `lore-document-renderer/useLoreDocumentRendererViewModel.js` normalizes document data for rendering.
 - `lore-json-editor/useLoreJsonEditorViewModel.js` owns JSON draft, copy, format, reset, AI-guide download, validation, and atomic apply behavior.
 
@@ -40,10 +40,10 @@ It is intentionally separate from the free-form `displayDate`: Timeline assets
 may sort by the numeric key without parsing or rewriting creator-facing date text.
 
 Sections are stable, addressable units with their own metadata, Character tags,
-and Location tags. Each Asset, chapter, or section scope accepts up to five
-Characters and five Locations through compact autocomplete controls that switch
-between owned creations and public creations the creator has liked. Existing v0
-chapter-level blocks are normalized
+and Location tags. Asset scope accepts up to six Characters and five Locations;
+chapter and section scopes accept up to five of each. Relationship autocomplete
+shows only creations the actor can edit. Public visibility or a Like never grants
+Lore relationship-authoring authority. Existing v0 chapter-level blocks are normalized
 into a stable legacy section and are persisted using the current contract on the
 next save.
 
@@ -65,8 +65,9 @@ Markdown guide includes the current document JSON, supported block contracts,
 limits, and instructions for an AI to return one complete replacement object.
 Validate & Apply changes only the open visual editor state; the normal page Save
 action remains the persistence boundary. Character, Location, and image
-identifiers cannot be invented through the JSON flow: new references must first
-be selected through the visual editor.
+identifiers cannot gain authority through the JSON flow: the Services API
+canonicalizes references and rejects Character or Location IDs the current actor is
+not authorized to edit.
 
 The current feature supports authoring, editing, owner preview, immutable security-validation
 snapshots, and explicit publication of a passed revision. Character images remain limited to tagged Characters owned by

@@ -24,6 +24,8 @@ const ICON_BY_NAME = Object.freeze({
 export default function IngredientPickerModalView({
   ingredientLabel = "Ingredient",
   headerIconName = "sparkles",
+  sourceMode = "MINE",
+  sourceOptions = [],
   items = [],
   selectedItemId = "",
   loadErrorMessage = "",
@@ -32,6 +34,7 @@ export default function IngredientPickerModalView({
   showUseCustomAction = true,
   showCreatePresetAction = false,
   onClose = null,
+  onSourceModeChange = null,
   onChooseIngredient = null,
   onUseCustom = null,
   onCreatePreset = null,
@@ -60,6 +63,34 @@ export default function IngredientPickerModalView({
       </div>
 
       <div className="p-5">
+        {sourceOptions.length > 1 ? (
+          <div
+            role="tablist"
+            aria-label="Ingredient source"
+            className="mb-4 inline-flex rounded-xl border border-white/10 bg-black/25 p-1"
+          >
+            {sourceOptions.map((option) => {
+              const active = option.id === sourceMode;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => onSourceModeChange?.(option.id)}
+                  className={`rounded-lg px-4 py-2 text-xs uppercase tracking-[0.18em] transition ${
+                    active
+                      ? "bg-[var(--gold-ornament)]/15 text-[var(--gold-bright)]"
+                      : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+
         {loadErrorMessage ? (
           <p className="mb-4 rounded-xl border border-red-300/20 bg-red-500/10 px-4 py-3 text-sm text-red-100">
             {loadErrorMessage}

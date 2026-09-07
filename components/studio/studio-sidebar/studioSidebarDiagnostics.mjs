@@ -99,6 +99,23 @@ test("V2 Studio Sidebar restores Support links without duplicating Account", () 
   assert.doesNotMatch(supportBlock, /label: "Account"/);
 });
 
+test("V2 Studio Sidebar splits Support into a coins-adjacent row and a Terms footer", () => {
+  // RULED 6 Sep 2026 (sidebar batch 1): no Support heading, Feedback
+  // beneath the coins block, Terms as footer text under Log out
+  // (expanded only), collapsed header carries the logo Home link.
+  const view = read("components/studio/studio-sidebar/StudioSidebar.view.jsx");
+  assert.match(view, /const termsLink =/);
+  assert.match(view, /supportRows\.map/);
+  assert.doesNotMatch(view, /group=\{previewSupportGroup\}/);
+  const economyIndex = view.indexOf("{economySlot}");
+  const supportRowsIndex = view.indexOf("supportRows.map");
+  const logoutIndex = view.indexOf("{logoutLabel}");
+  const termsIndex = view.indexOf("{termsLink.label}");
+  assert.ok(economyIndex >= 0 && supportRowsIndex > economyIndex);
+  assert.ok(logoutIndex >= 0 && termsIndex > logoutIndex);
+  assert.match(view, /collapsed \? `\$\{brandEyebrow\} home` : undefined/);
+});
+
 test("Studio Sidebar contract and fixtures cover visible states", () => {
   const contract = read("components/studio/studio-sidebar/StudioSidebar.contract.js");
   const fixtures = read("components/studio/studio-sidebar/StudioSidebar.fixtures.js");

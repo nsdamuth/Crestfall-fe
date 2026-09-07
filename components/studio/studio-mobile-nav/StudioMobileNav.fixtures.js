@@ -3,7 +3,7 @@ const primaryLinks = Object.freeze([
   Object.freeze({ label: "Studio Home", href: "/studio", iconKey: "home", isActive: false }),
   Object.freeze({ label: "Create", href: "/studio/create", iconKey: "user", isActive: false }),
   Object.freeze({ label: "Games", href: "/studio/games", iconKey: "sparkles", isActive: false }),
-  Object.freeze({ label: "Storys", href: "/studio/story-rooms", iconKey: "messagesSquare", isActive: false }),
+  Object.freeze({ label: "Stories", href: "/studio/story-rooms", iconKey: "messagesSquare", isActive: false }),
   Object.freeze({ label: "Image Studio", href: "/studio/image-studio", iconKey: "image", isActive: false }),
   Object.freeze({ label: "Official Characters", href: "/studio/official-characters", iconKey: "users", isActive: false }),
   Object.freeze({ label: "Storylines", href: "/studio/storylines", iconKey: "scrollText", isActive: false }),

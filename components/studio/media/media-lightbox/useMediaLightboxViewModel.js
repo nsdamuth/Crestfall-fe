@@ -32,6 +32,16 @@ function isUuid(value) {
 }
 
 export function getMediaImageUrl(item) {
+  const accessState = String(
+    item?.accessState || item?.access_state || ""
+  ).toUpperCase();
+  const isLocked = item?.isLocked === true || accessState === "LOCKED";
+
+  if (isLocked) {
+    // Protected media may render only the destructive lockedPreview derivative.
+    return item?.lockedPreviewUrl || item?.locked_preview_url || null;
+  }
+
   return (
     item?.imageUrl ||
     item?.displayImageUrl ||
@@ -104,6 +114,19 @@ export function getMediaId(item) {
 }
 
 export function getMediaThumbnailUrl(item) {
+  const accessState = String(
+    item?.accessState || item?.access_state || ""
+  ).toUpperCase();
+  const isLocked = item?.isLocked === true || accessState === "LOCKED";
+  const lockedPreviewUrl =
+    item?.lockedPreviewUrl || item?.locked_preview_url || null;
+
+  if (isLocked) {
+    // Fail closed: a protected library thumbnail may reuse only the destructive
+    // lockedPreview derivative. Never fall back to the clear thumbnail proxy.
+    return lockedPreviewUrl;
+  }
+
   const directThumbnailUrl =
     item?.thumbnailImageUrl ||
     item?.thumbnailUrl ||
@@ -127,11 +150,19 @@ export function normalizeMediaLightboxItem(item) {
   if (!item) return null;
 
   const id = getMediaId(item);
+  const accessState = String(
+    item?.accessState || item?.access_state || ""
+  ).toUpperCase();
+  const isLocked = item?.isLocked === true || accessState === "LOCKED";
   return {
     id,
     title: getMediaTitle(item),
     imageUrl: getMediaImageUrl(item),
     thumbnailUrl: getMediaThumbnailUrl(item),
+    lockedPreviewUrl:
+      item?.lockedPreviewUrl || item?.locked_preview_url || null,
+    accessState,
+    isLocked,
     imageOutputId: getMediaImageOutputId(item),
     sourceCreationId: getMediaSourceCreationId(item),
     canReassign: item?.canReassign === true,
@@ -539,10 +570,13 @@ export function useMediaLightboxViewModel({
     activeId,
     modeLabel,
     imageStudioHref,
-    allowDownload: Boolean(allowDownload),
-    showStudioActions: Boolean(showStudioActions),
-    showDeleteAction: typeof onDeleteItem === "function",
-    showRenameAction: Boolean(allowRename && activeMedia?.imageOutputId),
+    allowDownload: Boolean(allowDownload && !activeMedia?.isLocked),
+    showStudioActions: Boolean(showStudioActions && !activeMedia?.isLocked),
+    showDeleteAction:
+      !activeMedia?.isLocked && typeof onDeleteItem === "function",
+    showRenameAction: Boolean(
+      !activeMedia?.isLocked && allowRename && activeMedia?.imageOutputId
+    ),
     renameDialog: {
       open: renameOpen,
       value: renameValue,
@@ -553,6 +587,7 @@ export function useMediaLightboxViewModel({
     isBookmarked,
     shareMessage,
     showReassignAction:
+      activeMedia?.isLocked !== true &&
       activeMedia?.canReassign === true &&
       Boolean(activeMedia?.imageOutputId) &&
       Boolean(reassignSourceOverride || activeMedia?.sourceCreationId),
