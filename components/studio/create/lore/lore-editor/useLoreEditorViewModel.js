@@ -2,13 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  fetchCommunityCreations,
   fetchCreationImageLibrary,
   fetchOwnedCreations,
 } from "@/lib/client/studio/creations/creationClient";
-import {
-  fetchCreationReactions,
-} from "@/lib/client/studio/engagement/creationReactionClient";
 import {
   LORE_BLOCK_TYPES,
   LORE_COLUMN_BLOCK_TYPES,
@@ -693,17 +689,6 @@ export function validateLoreDocument(value) {
   return issues;
 }
 
-async function fetchCreationReactionsInBatches(creationIds, batchSize = 100) {
-  const ids = [...new Set(normalizeArray(creationIds).filter(Boolean))];
-  const reactions = [];
-
-  for (let index = 0; index < ids.length; index += batchSize) {
-    const batch = ids.slice(index, index + batchSize);
-    reactions.push(...(await fetchCreationReactions(batch)));
-  }
-
-  return reactions;
-}
 
 function normalizeCreationReference(creation, type) {
   const data = normalizeObject(creation?.data);
@@ -835,17 +820,11 @@ function countLoreBlocks(blocks) {
 export function useLoreEditorViewModel({ value, onChange, contentRating = "SFW" } = {}) {
   const document = useMemo(() => normalizeLoreDocument(value), [value]);
   const [ownedCharacters, setOwnedCharacters] = useState([]);
-  const [likedCharacters, setLikedCharacters] = useState([]);
   const [ownedCharacterLoadStatus, setOwnedCharacterLoadStatus] = useState("idle");
-  const [likedCharacterLoadStatus, setLikedCharacterLoadStatus] = useState("idle");
   const [ownedCharacterLoadMessage, setOwnedCharacterLoadMessage] = useState("");
-  const [likedCharacterLoadMessage, setLikedCharacterLoadMessage] = useState("");
   const [ownedLocations, setOwnedLocations] = useState([]);
-  const [likedLocations, setLikedLocations] = useState([]);
   const [ownedLocationLoadStatus, setOwnedLocationLoadStatus] = useState("idle");
-  const [likedLocationLoadStatus, setLikedLocationLoadStatus] = useState("idle");
   const [ownedLocationLoadMessage, setOwnedLocationLoadMessage] = useState("");
-  const [likedLocationLoadMessage, setLikedLocationLoadMessage] = useState("");
   const [expandedChapterId, setExpandedChapterId] = useState(
     () => document.chapters[0]?.id || ""
   );
@@ -904,39 +883,6 @@ export function useLoreEditorViewModel({ value, onChange, contentRating = "SFW" 
         );
       });
 
-    setLikedCharacterLoadStatus("loading");
-    setLikedCharacterLoadMessage("");
-    fetchCommunityCreations({ type: "CHARACTER" })
-      .then(async (creations) => {
-        const publicCharacters = normalizeArray(creations);
-        const reactions = await fetchCreationReactionsInBatches(
-          publicCharacters.map((creation) => creation?.id).filter(Boolean)
-        );
-        const likedIds = new Set(
-          normalizeArray(reactions)
-            .filter((reaction) => reaction?.reactionType === "LIKE")
-            .map((reaction) => reaction?.creationId)
-            .filter(Boolean)
-        );
-
-        if (!active) return;
-        setLikedCharacters(
-          publicCharacters
-            .filter((creation) => likedIds.has(creation?.id))
-            .map((creation) => normalizeCreationReference(creation, "CHARACTER"))
-            .filter(Boolean)
-        );
-        setLikedCharacterLoadStatus("loaded");
-      })
-      .catch((error) => {
-        if (!active) return;
-        setLikedCharacters([]);
-        setLikedCharacterLoadStatus("error");
-        setLikedCharacterLoadMessage(
-          error?.message || "Liked Characters could not be loaded."
-        );
-      });
-
     setOwnedLocationLoadStatus("loading");
     setOwnedLocationLoadMessage("");
     fetchOwnedCreations({ type: "LOCATION" })
@@ -955,39 +901,6 @@ export function useLoreEditorViewModel({ value, onChange, contentRating = "SFW" 
         setOwnedLocationLoadStatus("error");
         setOwnedLocationLoadMessage(
           error?.message || "Owned Locations could not be loaded."
-        );
-      });
-
-    setLikedLocationLoadStatus("loading");
-    setLikedLocationLoadMessage("");
-    fetchCommunityCreations({ type: "LOCATION" })
-      .then(async (creations) => {
-        const publicLocations = normalizeArray(creations);
-        const reactions = await fetchCreationReactionsInBatches(
-          publicLocations.map((creation) => creation?.id).filter(Boolean)
-        );
-        const likedIds = new Set(
-          normalizeArray(reactions)
-            .filter((reaction) => reaction?.reactionType === "LIKE")
-            .map((reaction) => reaction?.creationId)
-            .filter(Boolean)
-        );
-
-        if (!active) return;
-        setLikedLocations(
-          publicLocations
-            .filter((creation) => likedIds.has(creation?.id))
-            .map((creation) => normalizeCreationReference(creation, "LOCATION"))
-            .filter(Boolean)
-        );
-        setLikedLocationLoadStatus("loaded");
-      })
-      .catch((error) => {
-        if (!active) return;
-        setLikedLocations([]);
-        setLikedLocationLoadStatus("error");
-        setLikedLocationLoadMessage(
-          error?.message || "Liked Locations could not be loaded."
         );
       });
 
@@ -1554,17 +1467,11 @@ export function useLoreEditorViewModel({ value, onChange, contentRating = "SFW" 
   return {
     document,
     ownedCharacters,
-    likedCharacters,
     ownedCharacterLoadStatus,
-    likedCharacterLoadStatus,
     ownedCharacterLoadMessage,
-    likedCharacterLoadMessage,
     ownedLocations,
-    likedLocations,
     ownedLocationLoadStatus,
-    likedLocationLoadStatus,
     ownedLocationLoadMessage,
-    likedLocationLoadMessage,
     expandedChapterId,
     expandedSectionId,
     blockTypes: LORE_BLOCK_TYPES,

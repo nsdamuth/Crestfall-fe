@@ -2,13 +2,16 @@ export const MECHANICS_COMMAND_RESOLUTION_LOOM_CONTRACT = Object.freeze({
   id: "crestfall.loom.mechanics-command-resolution.v1",
   storagePath: "instanceData.commands[].resolution",
   canonicalVersion: "mechanics_command_resolution_v6",
+  deterministicCompareVersion: "mechanics_command_resolution_v7",
   modes: Object.freeze([
     "NO_ROLL_DETERMINISTIC",
+    "DETERMINISTIC_COMPARE",
     "THRESHOLD_DIE",
     "OPPOSED_DIE",
   ]),
   ownedDomains: Object.freeze([
     "resolution mode",
+    "deterministic calculated comparison and creator result bands",
     "actor die and roll policy",
     "target number",
     "actor fixed modifiers",
