@@ -5,14 +5,15 @@
 // View: presentation only, no data access, no routing decisions, no
 // business rules. Composition, top to bottom, exhaustive: top banner
 // (promo-banner top treatment) with the write-lore CTA, item 39
-// RULED 10 Aug 2026 -> the sticky filter bar (search plus approval
-// state, world or faction, and recency facets, no separate sort) ->
-// left-aligned editorial labels, the standard design-system section-
-// label treatment (LORE HEADER, RULING CHANGED, 10 Aug 2026 defect
-// ruling: Lore no longer centers, matching the other eight pages) ->
-// two creation-card grids, Community Lore then Your Lore -> load-more
-// on the community grid -> bottom banner routing to Home, the loop's
-// closing banner. The write-lore CTA opens the creation modal
+// RULED 10 Aug 2026 -> the sticky filter bar (search plus the shared
+// Filter panel carrying Recency only, no separate sort; FE/FILTERS,
+// RULED 6 Sep 2026: Approval state removed) -> left-aligned editorial
+// labels, the standard design-system section-label treatment (LORE
+// HEADER, RULING CHANGED, 10 Aug 2026 defect ruling: Lore no longer
+// centers, matching the other eight pages) -> Your Timelines, then
+// the Community Lore creation-card grid with load-more (the Your Lore
+// grid removed 6 Sep 2026, owned lore opens from the Vault) -> bottom
+// banner closing the loop. The write-lore CTA opens the creation modal
 // (modal-frame plus KitFormField fields and KitAlertStrip approval
 // notice, item 39 RULED 10 Aug 2026), unrelated to page flow order.
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
@@ -29,9 +30,9 @@ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 // Standard section-label treatment (StudioPageHeaderView's eyebrow
 // recipe, LORE HEADER RULING): gold uppercase, one short gold rule to
 // its right via the after: pseudo-element, never a line on the left,
-// no arrow or caret. Reused here for the two grid section labels
-// (Community Lore, Your Lore), which are page-local labels, not the
-// page eyebrow itself (that's StudioPageHeaderView, below).
+// no arrow or caret. Reused here for the grid section labels
+// (Your Timelines, Community Lore), which are page-local labels, not
+// the page eyebrow itself (that's StudioPageHeaderView, below).
 function SectionLabel({ children }) {
   return (
     <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -109,9 +110,6 @@ export default function LoreView({
   communityError = null,
   communityEmptyMessage = null,
   communityLoadMore,
-  mineItems = [],
-  mineError = null,
-  mineEmptyMessage = null,
   errorMessage = null,
   bottomBanner,
   notice = null,
@@ -131,13 +129,13 @@ export default function LoreView({
         }
         filterBarSlot={
           <KitStudioFilterBarView
-            filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
             searchValue={filterBar?.searchValue ?? ""}
             searchPlaceholder={filterBar?.searchPlaceholder}
             onSearchChange={filterBar?.onSearchChange}
             filterGroups={filterBar?.filterGroups ?? []}
             selectedValues={filterBar?.selectedValues ?? {}}
             onFilterToggle={filterBar?.onFilterToggle}
+            onClearFilters={filterBar?.onClearFilters}
             sortOptions={[]}
           />
         }
@@ -213,21 +211,6 @@ export default function LoreView({
                     onLoadMore={() => communityLoadMore?.onLoadMore?.()}
                   />
                 </>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-[var(--space-4)]">
-              <SectionLabel>Your Lore</SectionLabel>
-              {mineError ? (
-                <KitAlertStripView
-                  tone="danger"
-                  title="Your Lore could not be loaded."
-                  body={mineError}
-                />
-              ) : mineEmptyMessage ? (
-                <EmptySection message={mineEmptyMessage} />
-              ) : (
-                <CardGrid items={mineItems} />
               )}
             </div>
           </>
