@@ -159,6 +159,7 @@ export function buildActivityFilterGroup(pool = [], { isLiked, isSaved } = {}) {
 // ranked ids.
 export const FILTER_SECTION_ORDER = Object.freeze([
   "activity",
+  "media",
   "charactersVisuals",
   "storiesAdventures",
   "worldsContinuity",

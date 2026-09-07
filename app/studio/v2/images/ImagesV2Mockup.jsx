@@ -545,7 +545,6 @@ export default function ImagesV2Mockup() {
         }
         filterBarSlot={
           <KitStudioFilterBarView
-            filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
             searchValue={searchValue}
             searchPlaceholder="Search your images"
             onSearchChange={(value) => {
