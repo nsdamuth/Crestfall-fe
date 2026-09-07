@@ -98,6 +98,7 @@ const tabs = [
   { id: "DRAFT", label: "Drafts" },
   { id: "IN_REVIEW", label: "In Review" },
   { id: "MECHANICS_MODULE", label: "Mechanics Modules" },
+  { id: "MECHANICS_ACTION", label: "Mechanics Actions" },
   { id: "RULES_CODEX", label: "Rules Codices" },
   { id: "LORE", label: "Lore Assets" },
   { id: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profiles" },
@@ -182,6 +183,10 @@ const typeMeta = {
   },
   MECHANICS_MODULE: {
     label: "Mechanics Module",
+    icon: Activity,
+  },
+  MECHANICS_ACTION: {
+    label: "Mechanics Action",
     icon: Activity,
   },
   RULES_CODEX: {
@@ -332,6 +337,13 @@ const LOCATION_REGISTRY_EDIT_SECTIONS = [
 const MECHANICS_MODULE_EDIT_SECTIONS = [
   { id: "overview", label: "Overview", icon: Eye },
   { id: "fields", label: "Mechanics Fields", icon: Activity },
+  { id: "publishing", label: "Publishing", icon: ShieldCheck },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle },
+];
+
+const MECHANICS_ACTION_EDIT_SECTIONS = [
+  { id: "overview", label: "Overview", icon: Eye },
+  { id: "action", label: "Action Definition", icon: Activity },
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
@@ -495,6 +507,11 @@ const MECHANICS_MODULE_SECTION_GROUPS = [
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
+const MECHANICS_ACTION_SECTION_GROUPS = [
+  { id: "content", label: "Action", sectionIds: ["overview", "action"] },
+  { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+];
+
 const RULES_CODEX_SECTION_GROUPS = [
   { id: "content", label: "Content", sectionIds: ["overview", "codex"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
@@ -562,6 +579,7 @@ const CREATION_TYPE_SECTION_GROUPS = {
   STORYLINE: STORYLINE_SECTION_GROUPS,
   CHARACTER_TEMPLATE: CHARACTER_TEMPLATE_SECTION_GROUPS,
   MECHANICS_MODULE: MECHANICS_MODULE_SECTION_GROUPS,
+  MECHANICS_ACTION: MECHANICS_ACTION_SECTION_GROUPS,
   RULES_CODEX: RULES_CODEX_SECTION_GROUPS,
   LORE: LORE_SECTION_GROUPS,
   ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_SECTION_GROUPS,
@@ -588,6 +606,7 @@ const CREATION_TYPE_SECTIONS = {
   LORE: LORE_EDIT_SECTIONS,
   RULES_CODEX: RULES_CODEX_EDIT_SECTIONS,
   MECHANICS_MODULE: MECHANICS_MODULE_EDIT_SECTIONS,
+  MECHANICS_ACTION: MECHANICS_ACTION_EDIT_SECTIONS,
   LOCATION_REGISTRY: LOCATION_REGISTRY_EDIT_SECTIONS,
   FACTION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
   ORGANIZATION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
@@ -714,6 +733,10 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
     { id: "systems", label: "Systems", sectionIds: ["fields"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
+  MECHANICS_ACTION: [
+    { id: "action", label: "Action", sectionIds: ["overview", "action"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
   RULES_CODEX: [
     { id: "codex", label: "Codex", sectionIds: ["overview", "codex"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
@@ -794,6 +817,7 @@ export {
   LOCATION_REGISTRY_EDIT_SECTIONS,
   WARDROBE_EDIT_SECTIONS,
   MECHANICS_MODULE_EDIT_SECTIONS,
+  MECHANICS_ACTION_EDIT_SECTIONS,
   RULES_CODEX_EDIT_SECTIONS,
   LORE_EDIT_SECTIONS,
   ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,

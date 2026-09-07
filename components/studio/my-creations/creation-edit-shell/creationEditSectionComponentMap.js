@@ -71,6 +71,7 @@ import VisualReferencesSection from "@/components/studio/my-creations/edit/secti
 import WardrobeFieldsSection from "@/components/studio/my-creations/edit/sections/wardrobes/WardrobeFieldsSection";
 import StructuredRegistryFieldsSection from "@/components/studio/my-creations/edit/sections/structured-registries/StructuredRegistryFieldsSection";
 import MechanicsModuleFieldsSection from "@/components/studio/my-creations/edit/sections/mechanics-modules/MechanicsModuleFieldsSection";
+import MechanicsActionFieldsSection from "@/components/studio/my-creations/edit/sections/mechanics-actions/MechanicsActionFieldsSection";
 import RuntimeMechanicsModulesSection from "@/components/studio/my-creations/edit/sections/mechanics-modules/RuntimeMechanicsModulesSection";
 import ActorMechanicsProfileAttachmentSection from "@/components/studio/characters/ActorMechanicsProfileAttachmentSection";
 
@@ -274,6 +275,20 @@ export const SECTION_COMPONENT_REGISTRY = {
         form: ctx.form,
         updateDataField: ctx.updateDataField,
         replaceData: (nextData) => ctx.updateField("data", nextData),
+      }),
+    },
+  },
+
+  MECHANICS_ACTION: {
+    action: {
+      Component: MechanicsActionFieldsSection,
+      buildProps: (ctx) => ({
+        value:
+          ctx.form.data?.mechanics_action ||
+          ctx.form.data?.mechanicsAction ||
+          ctx.form.data?.action ||
+          {},
+        onChange: (nextAction) => ctx.updateDataField("mechanics_action", nextAction),
       }),
     },
   },

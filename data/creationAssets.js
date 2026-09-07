@@ -105,6 +105,14 @@ const creationAssets = [
   image: "/images/placeholder-card.jpg",
 },
   {
+    title: "Mechanics Action",
+    eyebrow: "Executable Rule",
+    description:
+      "Create reusable actor-agnostic actions with value bindings, calculations, deterministic or dice resolution, targets, and typed effects.",
+    href: "/studio/create/mechanics-action",
+    image: "/assets/covers/crestfall-drawings-cover.png",
+  },
+  {
     title: "Rules Codex",
     eyebrow: "Interpretation Layer",
     description:
