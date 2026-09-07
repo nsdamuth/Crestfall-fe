@@ -72,3 +72,6 @@ Images, Home follow the Community verdict.
 FE/FILTERS 6 Sep 2026: Community refined (gold, Activity, sections
 trimmed, Title Case, spacing, focus); sort set Plays/Likes/Remixes/
 Newest; remix metric parked to fe/remix-metric.
+FE/FILTERS 6 Sep 2026: shared bar and panel live on all eight pages;
+Rules Codex sitewide; Saves retired; Remixes pending CR-059; em dash
+backlog parked.

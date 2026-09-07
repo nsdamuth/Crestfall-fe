@@ -38,15 +38,18 @@ const SECTIONS = Object.freeze([
   Object.freeze({ id: "lore", label: "Lore", href: "/studio/v2/lore" }),
 ]);
 
-// The four ruled sort options. A list offers only the options its data
-// can honor (design authority ruling, 6 Sep 2026: show only the options
-// that work, no disabled entries, never a silent no-op sort).
-// Labels shortened 6 Sep 2026 (Home quick fix): "Most" dropped, the
-// trigger reads "Sort: Plays". Values and behavior unchanged.
+// The ruled sort options (FE/FILTERS, 6 Sep 2026: Plays, Likes,
+// Remixes, Newest; Saves retired). A list offers only the options its
+// data can honor (design authority ruling, 6 Sep 2026: show only the
+// options that work, no disabled entries, never a silent no-op sort),
+// so Remixes appears once a remix count is served (CR-059) and the
+// lists read Plays, Likes, Newest until then. Labels shortened 6 Sep
+// 2026 (Home quick fix): "Most" dropped, the trigger reads "Sort:
+// Plays". Values and behavior unchanged.
 const SORT_OPTIONS = Object.freeze([
   Object.freeze({ value: "plays", label: "Plays" }),
   Object.freeze({ value: "likes", label: "Likes" }),
-  Object.freeze({ value: "saves", label: "Saves" }),
+  Object.freeze({ value: "remixes", label: "Remixes" }),
   Object.freeze({ value: "newest", label: "Newest" }),
 ]);
 
@@ -262,7 +265,7 @@ export function useHomeViewModel({
           sortValues: {
             plays: numberOrNull(stats.plays),
             likes: numberOrNull(stats.hearts),
-            saves: numberOrNull(stats.saves),
+            remixes: numberOrNull(stats.remixes),
             newest: createdTimestamp(item),
           },
         };
@@ -292,7 +295,7 @@ export function useHomeViewModel({
             sortValues: {
               plays: numberOrNull(creator.plays),
               likes: numberOrNull(creator.likes),
-              saves: null,
+              remixes: null,
               newest: Number(creator.recency) || 0,
             },
             onThumbnailOpen: (thumbnailId) => {
