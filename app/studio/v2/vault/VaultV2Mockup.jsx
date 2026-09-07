@@ -35,10 +35,10 @@ import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePo
 import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
 import {
   buildDomainFilterGroups,
-  buildTagFilterOptions,
   getCatalogCreationType,
   getCatalogTags,
   getSelectedCatalogCreationTypes,
+  orderFilterGroups,
 } from "../catalog/creationCatalogFilterTaxonomy.js";
 
 function canonArt(name) {
@@ -96,10 +96,14 @@ const STATUS_OPTIONS = [
   { value: "REJECTED", label: "Rejected" },
 ];
 
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian): Plays, Likes,
+// Remixes, Newest; Saves retired. The Vault payload carries plays and
+// likes but no remix count (CR-059), so the list reads Plays, Likes,
+// Newest. Values unchanged (client-side until CR-058).
 const SORT_OPTIONS = [
+  { value: "popular", label: "Plays" },
+  { value: "hearts", label: "Likes" },
   { value: "recent", label: "Newest" },
-  { value: "popular", label: "Most played" },
-  { value: "saved", label: "Most saved" },
 ];
 
 const FIXTURE_MODES = {
@@ -164,7 +168,10 @@ export default function VaultV2Mockup({
   const router = useRouter();
   const launchController = useStoryLaunchController();
   const ownedItems = Array.isArray(items) ? items : FIXTURE_VAULT_ITEMS;
-  const savedCandidates = Array.isArray(bookmarkCandidates) ? bookmarkCandidates : [];
+  const savedCandidates = useMemo(
+    () => (Array.isArray(bookmarkCandidates) ? bookmarkCandidates : []),
+    [bookmarkCandidates]
+  );
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
@@ -202,7 +209,7 @@ export default function VaultV2Mockup({
     );
 
     return [...ownedItems, ...saved];
-  }, [live, ownedItems, savedCandidates, engagementState.bookmarkedCreationIds]);
+  }, [live, ownedItems, savedCandidates, engagementState]);
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
 
   const activeVisibilityValues = selectedValues.visibility || [];
@@ -210,7 +217,10 @@ export default function VaultV2Mockup({
   const filterGroups = useMemo(() => {
     const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceItems;
 
-    return [
+    // Ruled section order (FE/FILTERS, 6 Sep 2026): five domains,
+    // Visibility, Status; no Tags. Every option renders with its live
+    // count, zero muted and selectable. No Activity section on Vault.
+    return orderFilterGroups([
       ...buildDomainFilterGroups(pool),
       {
         id: "visibility",
@@ -232,13 +242,7 @@ export default function VaultV2Mockup({
           ).length,
         })),
       },
-      {
-        id: "tags",
-        label: "Tags",
-        isMultiSelect: true,
-        options: buildTagFilterOptions(pool),
-      },
-    ];
+    ]);
   }, [effectiveMode, sourceItems]);
 
   const filteredItems = useMemo(() => {
@@ -248,18 +252,15 @@ export default function VaultV2Mockup({
     const types = getSelectedCatalogCreationTypes(selectedValues);
     const visibilities = selectedValues.visibility || [];
     const statuses = selectedValues.status || [];
-    const selectedTags = selectedValues.tags || [];
 
     const filtered = sourceItems.filter((item) => {
       const itemType = getCatalogCreationType(item);
       const itemStatus = String(item.status || "").trim().toUpperCase();
       const itemTags = getCatalogTags(item);
-      const normalizedTags = new Set(itemTags.map((tag) => tag.toLowerCase()));
 
       if (types.length && !types.includes(itemType)) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
       if (statuses.length && (!item.isOwn || !statuses.includes(itemStatus))) return false;
-      if (selectedTags.length && !selectedTags.some((tag) => normalizedTags.has(tag))) return false;
 
       const haystack = `${item.title} ${item.subtitle} ${item.description || ""} ${
         VISIBILITY_LABELS[item.visibility] || ""
@@ -271,8 +272,8 @@ export default function VaultV2Mockup({
     const sorted = [...filtered];
     if (selectedSort === "popular") {
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
-    } else if (selectedSort === "saved") {
-      sorted.sort((a, b) => (b.saves || 0) - (a.saves || 0));
+    } else if (selectedSort === "hearts") {
+      sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
     } else {
       sorted.sort((a, b) => b.recency - a.recency);
     }
@@ -490,7 +491,6 @@ export default function VaultV2Mockup({
       }
       filterBarSlot={
         <KitStudioFilterBarView
-          filterPresentation="dropdowns" // held on the fallback until this page's FE/FILTERS GO
           searchValue={searchValue}
           searchPlaceholder="Search your vault"
           onSearchChange={(value) => {
@@ -500,6 +500,10 @@ export default function VaultV2Mockup({
           filterGroups={filterGroups}
           selectedValues={selectedValues}
           onFilterToggle={toggleFilter}
+          onClearFilters={() => {
+            setSelectedValues({});
+            setVisibleCount(PAGE_SIZE);
+          }}
           sortOptions={SORT_OPTIONS}
           selectedSort={selectedSort}
           onSortChange={(value) => {
