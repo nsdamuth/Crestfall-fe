@@ -22,12 +22,22 @@ test("portable Lore Editor View receives an injected JSON slot", () => {
   assert.doesNotMatch(view, /LoreJsonEditorModal|@\/lib\/client|next\/navigation|next\/link/);
 });
 
-test("Lore Editor ViewModel retains normalization validation and reference ownership", () => {
+test("Lore Editor ViewModel retains normalization validation and owner-authorized reference loading", () => {
   const viewModel = read("components/studio/create/lore/lore-editor/useLoreEditorViewModel.js");
-  for (const token of ["normalizeLoreDocument", "validateLoreDocument", "fetchOwnedCreations", "fetchCommunityCreations", "fetchCreationImageLibrary"]) {
+  for (const token of ["normalizeLoreDocument", "validateLoreDocument", "fetchOwnedCreations", "fetchCreationImageLibrary"]) {
     assert.match(viewModel, new RegExp(token));
   }
+  assert.doesNotMatch(viewModel, /fetchCommunityCreations|fetchCreationReactions|likedCharacters|likedLocations/);
   assert.match(viewModel, /lore_document_contract_v4|LORE_DOCUMENT_CONTRACT_VERSION/);
+});
+
+test("Lore reference pickers expose no liked/public authoring lane and asset Characters allow six", () => {
+  const view = read("components/studio/create/lore/lore-editor/LoreEditor.view.jsx");
+  const contract = read("components/studio/create/lore/lore-editor/LoreEditor.contract.js");
+  assert.doesNotMatch(view, /Liked|likedItems|likedStatus|likedMessage|source === "LIKED"/);
+  assert.match(view, /Only Characters you can edit may be/);
+  assert.match(view, /Only Locations you can edit may be/);
+  assert.match(contract, /maxDocumentCharacterRefs:\s*6/);
 });
 
 test("fixtures README and protected preview exist", () => {
@@ -45,4 +55,12 @@ test("fixtures README and protected preview exist", () => {
 
 test("package script is registered", () => {
   assert.match(read("package.json"), /diagnostics:loom:lore-editor/);
+});
+
+
+test("Lore asset-level Character tags allow six while nested scopes remain bounded at five", () => {
+  const contract = read("components/studio/create/lore/lore-editor/LoreEditor.contract.js");
+  assert.match(contract, /maxDocumentCharacterRefs:\s*6/);
+  assert.match(contract, /maxChapterCharacterRefs:\s*5/);
+  assert.match(contract, /maxSectionCharacterRefs:\s*5/);
 });

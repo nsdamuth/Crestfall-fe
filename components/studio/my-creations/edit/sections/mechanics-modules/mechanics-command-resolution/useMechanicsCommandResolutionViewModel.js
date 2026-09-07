@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import {
   COMMAND_OPPOSED_TIE_POLICIES,
-  COMMAND_RESOLUTION_MODES,
+  COMMAND_RESOLUTION_VISUAL_MODES,
   COMMAND_RESOLUTION_MODIFIER_BUCKETS,
   COMMAND_RESOLUTION_MODIFIER_MISSING_POLICIES,
   COMMAND_RESOLUTION_MODIFIER_ROUNDING,
@@ -120,7 +120,7 @@ export default function useMechanicsCommandResolutionViewModel({
     argumentOptions: Array.isArray(argumentOptions) ? argumentOptions : [],
     referenceId,
     referenceConfigurations: COMMAND_RESOLUTION_REFERENCE_CONFIGURATIONS,
-    resolutionModes: COMMAND_RESOLUTION_MODES,
+    resolutionModes: COMMAND_RESOLUTION_VISUAL_MODES,
     rollModes: COMMAND_RESOLUTION_ROLL_MODES,
     tiePolicies: COMMAND_OPPOSED_TIE_POLICIES,
     modifierSourceTypes: COMMAND_RESOLUTION_MODIFIER_SOURCE_TYPES,

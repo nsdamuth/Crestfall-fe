@@ -96,7 +96,7 @@ export const LORE_EDITOR_LIMITS = Object.freeze({
   maxStatItems: 32,
   maxTotalSections: 4096,
   maxTotalBlocks: 4096,
-  maxDocumentCharacterRefs: 5,
+  maxDocumentCharacterRefs: 6,
   maxChapterCharacterRefs: 5,
   maxSectionCharacterRefs: 5,
   maxDocumentLocationRefs: 5,

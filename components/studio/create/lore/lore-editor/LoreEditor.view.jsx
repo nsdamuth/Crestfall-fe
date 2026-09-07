@@ -15,7 +15,6 @@ import {
   Braces,
   ChevronDown,
   ChevronRight,
-  Heart,
   Image as ImageIcon,
   MapPin,
   Plus,
@@ -52,20 +51,16 @@ const inputClass =
   "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function ReferenceSelector({
-  ownedItems = [],
-  likedItems = [],
+  items = [],
   selectedRefs = [],
   onToggle,
-  ownedStatus = "idle",
-  likedStatus = "idle",
-  ownedMessage = "",
-  likedMessage = "",
+  status = "idle",
+  message = "",
   maxSelections = 5,
   singularLabel = "Character",
   pluralLabel = "Characters",
   Icon = Users,
 }) {
-  const [source, setSource] = React.useState("OWNED");
   const [query, setQuery] = React.useState("");
   const [focused, setFocused] = React.useState(false);
 
@@ -73,12 +68,9 @@ function ReferenceSelector({
     () => new Set(selectedRefs.map((ref) => ref.id)),
     [selectedRefs]
   );
-  const activeItems = source === "LIKED" ? likedItems : ownedItems;
-  const activeStatus = source === "LIKED" ? likedStatus : ownedStatus;
-  const activeMessage = source === "LIKED" ? likedMessage : ownedMessage;
   const normalizedQuery = query.trim().toLowerCase();
   const filteredItems = React.useMemo(() => {
-    return activeItems
+    return items
       .filter((item) => !selectedIds.has(item.id))
       .filter((item) => {
         if (!normalizedQuery) return true;
@@ -97,7 +89,7 @@ function ReferenceSelector({
         return leftTitle.localeCompare(rightTitle);
       })
       .slice(0, 8);
-  }, [activeItems, normalizedQuery, selectedIds]);
+  }, [items, normalizedQuery, selectedIds]);
 
   const atLimit = selectedRefs.length >= maxSelections;
   const showResults = focused && !atLimit;
@@ -110,37 +102,7 @@ function ReferenceSelector({
 
   return (
     <div className="mt-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex rounded-lg border border-white/10 bg-black/35 p-1">
-          <button
-            type="button"
-            onClick={() => {
-              setSource("OWNED");
-              setQuery("");
-            }}
-            className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs uppercase tracking-[0.13em] transition ${
-              source === "OWNED"
-                ? "bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
-                : "text-[var(--ink-dim)] hover:text-white"
-            }`}
-          >
-            <Icon size={13} /> Owned
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setSource("LIKED");
-              setQuery("");
-            }}
-            className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs uppercase tracking-[0.13em] transition ${
-              source === "LIKED"
-                ? "bg-[var(--gold-ornament)]/15 text-[var(--gold-ornament)]"
-                : "text-[var(--ink-dim)] hover:text-white"
-            }`}
-          >
-            <Heart size={13} /> Liked
-          </button>
-        </div>
+      <div className="flex justify-end">
         <p className="text-xs text-[var(--ink-dim)]">
           {selectedRefs.length} / {maxSelections} selected
         </p>
@@ -202,7 +164,7 @@ function ReferenceSelector({
             placeholder={
               atLimit
                 ? `Maximum of ${maxSelections} ${pluralLabel} selected`
-                : `Search ${source === "LIKED" ? "liked" : "owned"} ${pluralLabel}…`
+                : `Search your ${pluralLabel}…`
             }
             autoComplete="off"
           />
@@ -210,21 +172,19 @@ function ReferenceSelector({
 
         {showResults ? (
           <div className="mt-2 max-h-80 w-full overflow-y-auto rounded-xl border border-white/10 bg-[#090806] p-2 shadow-2xl">
-            {activeStatus === "loading" ? (
+            {status === "loading" ? (
               <p className="px-3 py-3 text-sm text-[var(--ink-dim)]">
-                Loading {source === "LIKED" ? "liked" : "owned"} {pluralLabel}…
+                Loading your {pluralLabel}…
               </p>
             ) : null}
-            {activeMessage ? (
-              <p className="px-3 py-3 text-sm text-red-200">{activeMessage}</p>
+            {message ? (
+              <p className="px-3 py-3 text-sm text-red-200">{message}</p>
             ) : null}
-            {activeStatus !== "loading" && !activeMessage && !filteredItems.length ? (
+            {status !== "loading" && !message && !filteredItems.length ? (
               <p className="px-3 py-3 text-sm leading-6 text-[var(--ink-dim)]">
                 {normalizedQuery
                   ? `No matching ${pluralLabel} found.`
-                  : source === "LIKED"
-                    ? `No liked public ${pluralLabel} are available.`
-                    : `No owned ${pluralLabel} are available.`}
+                  : `No ${pluralLabel} you can edit are available.`}
               </p>
             ) : null}
             {filteredItems.map((item) => (
@@ -1142,17 +1102,11 @@ function ImagePickerModal({
 export default function LoreEditorView({
   document,
   ownedCharacters = [],
-  likedCharacters = [],
   ownedCharacterLoadStatus = "idle",
-  likedCharacterLoadStatus = "idle",
   ownedCharacterLoadMessage = "",
-  likedCharacterLoadMessage = "",
   ownedLocations = [],
-  likedLocations = [],
   ownedLocationLoadStatus = "idle",
-  likedLocationLoadStatus = "idle",
   ownedLocationLoadMessage = "",
-  likedLocationLoadMessage = "",
   expandedChapterId = "",
   expandedSectionId = "",
   blockTypes = [],
@@ -1366,18 +1320,16 @@ export default function LoreEditorView({
           </p>
         </div>
         <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-          These Characters appear as related links. Owned tagged Characters also
-          make their eligible image libraries available to every chapter and section.
+          These Characters appear as related links. Only Characters you can edit may be
+          tagged. Tagged Characters also make their eligible image libraries available
+          to every chapter and section.
         </p>
         <ReferenceSelector
-          ownedItems={ownedCharacters}
-          likedItems={likedCharacters}
+          items={ownedCharacters}
           selectedRefs={document.characterRefs}
           onToggle={onToggleDocumentCharacter}
-          ownedStatus={ownedCharacterLoadStatus}
-          likedStatus={likedCharacterLoadStatus}
-          ownedMessage={ownedCharacterLoadMessage}
-          likedMessage={likedCharacterLoadMessage}
+          status={ownedCharacterLoadStatus}
+          message={ownedCharacterLoadMessage}
           maxSelections={limits.maxDocumentCharacterRefs}
           singularLabel="Character"
           pluralLabel="Characters"
@@ -1393,17 +1345,14 @@ export default function LoreEditorView({
           </div>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
             These Locations are associated with the entire Lore Asset and appear as
-            related links in the reader.
+            related links in the reader. Only Locations you can edit may be tagged.
           </p>
           <ReferenceSelector
-            ownedItems={ownedLocations}
-            likedItems={likedLocations}
+            items={ownedLocations}
             selectedRefs={document.locationRefs}
             onToggle={onToggleDocumentLocation}
-            ownedStatus={ownedLocationLoadStatus}
-            likedStatus={likedLocationLoadStatus}
-            ownedMessage={ownedLocationLoadMessage}
-            likedMessage={likedLocationLoadMessage}
+            status={ownedLocationLoadStatus}
+            message={ownedLocationLoadMessage}
             maxSelections={limits.maxDocumentLocationRefs}
             singularLabel="Location"
             pluralLabel="Locations"
@@ -1580,20 +1529,18 @@ export default function LoreEditorView({
                     </p>
                     <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                       These tags apply to every section in this chapter unless a
-                      section adds more specific Character tags. Owned tags can also
-                      supply Character-library images.
+                      section adds more specific Character tags. Only Characters you
+                      can edit may be tagged, and tagged Characters can supply
+                      Character-library images.
                     </p>
                     <ReferenceSelector
-                      ownedItems={ownedCharacters}
-                      likedItems={likedCharacters}
+                      items={ownedCharacters}
                       selectedRefs={chapter.characterRefs}
                       onToggle={(character) =>
                         onToggleChapterCharacter?.(chapter.id, character)
                       }
-                      ownedStatus={ownedCharacterLoadStatus}
-                      likedStatus={likedCharacterLoadStatus}
-                      ownedMessage={ownedCharacterLoadMessage}
-                      likedMessage={likedCharacterLoadMessage}
+                      status={ownedCharacterLoadStatus}
+                      message={ownedCharacterLoadMessage}
                       maxSelections={limits.maxChapterCharacterRefs}
                       singularLabel="Character"
                       pluralLabel="Characters"
@@ -1610,19 +1557,17 @@ export default function LoreEditorView({
                     </div>
                     <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
                       These Locations apply to this chapter. Sections can add more
-                      specific Location relationships.
+                      specific Location relationships. Only Locations you can edit may
+                      be tagged.
                     </p>
                     <ReferenceSelector
-                      ownedItems={ownedLocations}
-                      likedItems={likedLocations}
+                      items={ownedLocations}
                       selectedRefs={chapter.locationRefs}
                       onToggle={(location) =>
                         onToggleChapterLocation?.(chapter.id, location)
                       }
-                      ownedStatus={ownedLocationLoadStatus}
-                      likedStatus={likedLocationLoadStatus}
-                      ownedMessage={ownedLocationLoadMessage}
-                      likedMessage={likedLocationLoadMessage}
+                      status={ownedLocationLoadStatus}
+                      message={ownedLocationLoadMessage}
                       maxSelections={limits.maxChapterLocationRefs}
                       singularLabel="Location"
                       pluralLabel="Locations"
@@ -1820,12 +1765,12 @@ export default function LoreEditorView({
                                   Section-only Character Tags
                                 </p>
                                 <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-                                  These tags apply only to this section. Owned tags can
-                                  also supply Character-library images here.
+                                  These tags apply only to this section. Only Characters
+                                  you can edit may be tagged, and tagged Characters can
+                                  supply Character-library images here.
                                 </p>
                                 <ReferenceSelector
-                                  ownedItems={ownedCharacters}
-                                  likedItems={likedCharacters}
+                                  items={ownedCharacters}
                                   selectedRefs={section.characterRefs}
                                   onToggle={(character) =>
                                     onToggleSectionCharacter?.(
@@ -1834,10 +1779,8 @@ export default function LoreEditorView({
                                       character
                                     )
                                   }
-                                  ownedStatus={ownedCharacterLoadStatus}
-                                  likedStatus={likedCharacterLoadStatus}
-                                  ownedMessage={ownedCharacterLoadMessage}
-                                  likedMessage={likedCharacterLoadMessage}
+                                  status={ownedCharacterLoadStatus}
+                                  message={ownedCharacterLoadMessage}
                                   maxSelections={limits.maxSectionCharacterRefs}
                                   singularLabel="Character"
                                   pluralLabel="Characters"
@@ -1853,11 +1796,11 @@ export default function LoreEditorView({
                                   </p>
                                 </div>
                                 <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-                                  These Locations apply only to this section.
+                                  These Locations apply only to this section. Only
+                                  Locations you can edit may be tagged.
                                 </p>
                                 <ReferenceSelector
-                                  ownedItems={ownedLocations}
-                                  likedItems={likedLocations}
+                                  items={ownedLocations}
                                   selectedRefs={section.locationRefs}
                                   onToggle={(location) =>
                                     onToggleSectionLocation?.(
@@ -1866,10 +1809,8 @@ export default function LoreEditorView({
                                       location
                                     )
                                   }
-                                  ownedStatus={ownedLocationLoadStatus}
-                                  likedStatus={likedLocationLoadStatus}
-                                  ownedMessage={ownedLocationLoadMessage}
-                                  likedMessage={likedLocationLoadMessage}
+                                  status={ownedLocationLoadStatus}
+                                  message={ownedLocationLoadMessage}
                                   maxSelections={limits.maxSectionLocationRefs}
                                   singularLabel="Location"
                                   pluralLabel="Locations"

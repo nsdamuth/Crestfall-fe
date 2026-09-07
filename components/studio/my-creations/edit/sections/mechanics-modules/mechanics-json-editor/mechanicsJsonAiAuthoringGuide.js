@@ -36,6 +36,114 @@ Rules:
 - Story Status Surfaces are read-only and never grant mutation or provider authority.
 `;
 
+const ACTOR_MECHANICS_REQUIREMENT_AI_GUIDE_EXTENSION = `
+
+## Authoritative Actor Mechanics command requirements
+
+This section extends the earlier **Requirements** list. The following requirement types are also supported and are authoritative command gates backed by Actor Mechanics state:
+
+- \`STATS_POOLS_STAT_CURRENT\`
+- \`STATS_POOLS_POOL_CURRENT\`
+- \`STATS_POOLS_POOL_MAXIMUM\`
+- \`STATS_POOLS_CONDITION_ACTIVE\`
+- \`STATS_POOLS_CONDITION_INACTIVE\`
+- \`STATS_POOLS_MODIFIER_ACTIVE\`
+- \`STATS_POOLS_MODIFIER_INACTIVE\`
+- \`SKILLS_RANK\`
+
+Use \`targetId\` for the creator-authored Stat, Pool, Condition, Modifier, or Skill ID. Use \`bindingId\` when the Actor Mechanics Profile binding must be explicit; the canonical defaults are \`stats\` for Stats & Pools and \`skills\` for Skills. Crestfall reads these values from authoritative Actor Mechanics state. Do not duplicate authoritative Stats & Pools or Skills values into Mechanics trackers just to gate a command, and do not ask an AI provider to invent or calculate the runtime value.
+
+Stats/Pool/Skill value requirements use finite numeric values. Condition/modifier active/inactive requirements use authoritative active state and normally compare with \`EQ\` and boolean \`true\`. If required Actor Mechanics evidence is unavailable, the command gate fails closed.
+
+Stats & Pools example:
+
+\`\`\`json
+{
+  "id": "requires_stamina",
+  "type": "STATS_POOLS_POOL_CURRENT",
+  "bindingId": "stats",
+  "targetId": "stamina",
+  "operator": "GTE",
+  "value": 4,
+  "message": "Stamina must be at least 4."
+}
+\`\`\`
+
+Skills example:
+
+\`\`\`json
+{
+  "id": "requires_blades_rank",
+  "type": "SKILLS_RANK",
+  "bindingId": "skills",
+  "targetId": "blades",
+  "operator": "GTE",
+  "value": 2,
+  "message": "Blades rank 2 is required."
+}
+\`\`\`
+
+These requirement checks are deterministic and read-only. Provider prose does not supply the checked runtime number and does not mutate Actor Mechanics state.
+`;
+
+const DETERMINISTIC_COMPARE_AI_GUIDE_EXTENSION = `
+
+## Deterministic Compare resolution (DAVR3)
+
+Crestfall supports a no-dice deterministic comparison resolution using the \`mechanics_command_resolution_v7\` contract and \`mode: "DETERMINISTIC_COMPARE"\`. This mode compares two named deterministic Action Calculation results produced by Crestfall's authoritative mechanics pipeline. The AI assistant authors the rule; it does **not** calculate or invent the runtime actor values or final result in prose.
+
+Example resolution shape:
+
+\`\`\`json
+{
+  "version": "mechanics_command_resolution_v7",
+  "mode": "DETERMINISTIC_COMPARE",
+  "comparison": {
+    "comparisonVersion": "mechanics_deterministic_comparison_v0",
+    "leftCalculationId": "attack_total",
+    "rightCalculationId": "guard_total",
+    "marginMode": "LEFT_MINUS_RIGHT",
+    "resultBands": [
+      {
+        "bandVersion": "mechanics_result_band_v0",
+        "id": "full",
+        "minimumMargin": 15,
+        "maximumMargin": null,
+        "canonicalOutcome": "SUCCESS"
+      },
+      {
+        "bandVersion": "mechanics_result_band_v0",
+        "id": "partial",
+        "minimumMargin": -14,
+        "maximumMargin": 14,
+        "canonicalOutcome": "SUCCESS"
+      },
+      {
+        "bandVersion": "mechanics_result_band_v0",
+        "id": "failure",
+        "minimumMargin": null,
+        "maximumMargin": -15,
+        "canonicalOutcome": "FAILURE"
+      }
+    ]
+  }
+}
+\`\`\`
+
+Rules:
+
+- \`DETERMINISTIC_COMPARE\` requires \`mechanics_command_resolution_v7\`.
+- Legacy \`mechanics_command_resolution_v6\` modes remain valid and unchanged.
+- Do not add dice fields to deterministic compare merely to make it resemble a roll.
+- \`leftCalculationId\` and \`rightCalculationId\` reference named deterministic calculation outputs; do not replace them with hard-coded current actor numbers.
+- The margin is always left minus right in v0.
+- Result-band IDs are creator-authored semantic labels. Each band maps to one canonical Crestfall outcome: \`CRITICAL_SUCCESS\`, \`SUCCESS\`, \`FAILURE\`, or \`FUMBLE\`.
+- Result bands may have an unbounded edge represented by \`null\`.
+- Result bands must not overlap. Crestfall rejects an unmatched runtime margin instead of asking the AI to decide the outcome.
+- Authoritative arithmetic, comparison, and state mutation remain Crestfall responsibilities. Provider prose is not mechanical authority.
+- The graphical command-resolution editor does not yet author deterministic calculations/result bands. Preserve and edit this configuration through the Mechanics JSON Editor until a dedicated visual formula builder is shipped.
+`;
+
 export function buildMechanicsJsonAiAuthoringGuide() {
-  return `${MECHANICS_JSON_AI_AUTHORING_GUIDE}${STORY_STATUS_SURFACE_AI_GUIDE_EXTENSION}`;
+  return `${MECHANICS_JSON_AI_AUTHORING_GUIDE}${STORY_STATUS_SURFACE_AI_GUIDE_EXTENSION}${ACTOR_MECHANICS_REQUIREMENT_AI_GUIDE_EXTENSION}${DETERMINISTIC_COMPARE_AI_GUIDE_EXTENSION}`;
 }
