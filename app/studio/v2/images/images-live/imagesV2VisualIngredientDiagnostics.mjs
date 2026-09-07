@@ -42,3 +42,15 @@ test("fixture coverage includes visual Character and Location selections", () =>
   assert.match(fixtures, /Vesper Ash[\s\S]{0,160}imageSrc:/);
   assert.match(fixtures, /Harborfront at Dusk[\s\S]{0,180}imageSrc:/);
 });
+
+
+test("custom use-once mode is presented as active state instead of a disabled fake action", () => {
+  const customStart = view.indexOf("function CustomSlotEditor");
+  const customEnd = view.indexOf("function RenderStyleRail");
+  const customSource = view.slice(customStart, customEnd);
+
+  assert.match(customSource, /role="status"/);
+  assert.match(customSource, /Using once/);
+  assert.match(customSource, /custom guidance is active for this request/);
+  assert.doesNotMatch(customSource, /<button[^>]*disabled[^>]*>[\s\S]{0,160}Use once/);
+});

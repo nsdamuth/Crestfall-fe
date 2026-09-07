@@ -222,10 +222,14 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
             Save as preset
           </button>
         )}
-        <button type="button" disabled aria-pressed="true" className="cf-btn cf-btn--primary cf-btn--sm">
+        <span
+          role="status"
+          aria-label={`${def.label} custom guidance is active for this request`}
+          className="cf-btn cf-btn--primary cf-btn--sm cursor-default"
+        >
           <Check size={14} aria-hidden="true" />
-          Use once
-        </button>
+          Using once
+        </span>
       </div>
     </div>
   );
