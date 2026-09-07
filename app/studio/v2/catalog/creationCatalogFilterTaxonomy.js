@@ -1,6 +1,13 @@
 // V2 catalogue filter taxonomy.
 // Presentation-only: mirrors Full Studio's five authoring domains while
 // leaving Crestfall creation types and backend contracts unchanged.
+//
+// Display fixes, RULED 6 Sep 2026 (FE/FILTERS): retired words leave
+// bar copy, backend names untouched. "Stories & Sessions" displays as
+// "Stories & Adventures" (id and values unchanged); the RULES_CODEX
+// row reads its ruled display name, "Rulebook", from the terminology
+// module (ruled 26 Aug 2026) instead of carrying its own literal.
+import { getCreationTypeDisplayName } from "@/lib/shared/presentation/terminology";
 
 export const CATALOG_CREATION_DOMAINS = Object.freeze([
   Object.freeze({
@@ -16,7 +23,7 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
   }),
   Object.freeze({
     id: "storiesSessions",
-    label: "Stories & Sessions",
+    label: "Stories & Adventures",
     options: Object.freeze([
       { value: "SCENARIO", label: "Scenario" },
       { value: "NARRATOR", label: "Narrator" },
@@ -50,7 +57,7 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
       { value: "WALLET_PROFILE", label: "Wallet Profile" },
       { value: "MECHANICS_MODULE", label: "Mechanics Module" },
       { value: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profile" },
-      { value: "RULES_CODEX", label: "Rules Codex" },
+      { value: "RULES_CODEX", label: getCreationTypeDisplayName("RULES_CODEX") },
     ]),
   }),
   Object.freeze({
@@ -112,6 +119,58 @@ export function buildDomainFilterGroups(pool = []) {
       count: pool.filter((item) => getCatalogCreationType(item) === option.value).length,
     })),
   }));
+}
+
+// Filter panel section order, RULED 6 Sep 2026 (FE/FILTERS, Brian):
+// Characters, Stories, Worlds, then Rules, Templates, Curation,
+// Rating, Rendering, Visibility, Status, Tags. The kit View renders
+// sections in caller order and carries no page vocabulary, so the
+// ruling lives here: every page wraps its groups in
+// orderFilterGroups. Ids not in the list (a page's own groups, e.g.
+// Stories "type", Lore "approval") keep caller order ahead of the
+// ranked ids.
+export const FILTER_SECTION_ORDER = Object.freeze([
+  "charactersVisuals",
+  "storiesSessions",
+  "worldsContinuity",
+  "rulesMechanics",
+  "templatesGeneration",
+  "curation",
+  "rating",
+  "rendering",
+  "visibility",
+  "status",
+  "tags",
+]);
+
+export function orderFilterGroups(groups = []) {
+  const rank = new Map(FILTER_SECTION_ORDER.map((id, index) => [id, index]));
+  return groups
+    .map((group, index) => ({ group, index }))
+    .sort((a, b) => {
+      const rankA = rank.has(a.group?.id) ? rank.get(a.group.id) : -1;
+      const rankB = rank.has(b.group?.id) ? rank.get(b.group.id) : -1;
+      if (rankA !== rankB) return rankA - rankB;
+      return a.index - b.index;
+    })
+    .map(({ group }) => group);
+}
+
+// A page passes only the sections its live data supports (ruled the
+// same day): an option whose pool count is zero is dropped, and a
+// section left with no options is dropped with it. Counts are taken
+// over the whole pool, never the filtered list, so a selection can
+// never make its own section vanish. Fixture pools skip this so the
+// harness still exercises every section.
+export function pruneUnsupportedFilterGroups(groups = []) {
+  return groups
+    .map((group) => ({
+      ...group,
+      options: (group?.options || []).filter(
+        (option) => option?.isDisabled || option?.count === null || option?.count === undefined || option.count > 0
+      ),
+    }))
+    .filter((group) => group.options.length > 0);
 }
 
 export function getSelectedCatalogCreationTypes(selectedValues = {}) {

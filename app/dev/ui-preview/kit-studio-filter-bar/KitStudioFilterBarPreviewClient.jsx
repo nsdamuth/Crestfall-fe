@@ -5,10 +5,13 @@ import { useState } from "react";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import {
   kitStudioFilterBarDefaultFixture,
+  kitStudioFilterBarDropdownsPresentationFixture,
   kitStudioFilterBarEmptyGroupsFixture,
   kitStudioFilterBarLoadingCountsFixture,
   kitStudioFilterBarLongestLabelsFixture,
   kitStudioFilterBarManyOptionsFixture,
+  kitStudioFilterBarPanelActiveFixture,
+  kitStudioFilterBarQuickTabsFixture,
 } from "@/components/kit/studio-filter-bar/KitStudioFilterBar.fixtures";
 import KitPreviewShell from "../kit-batch-1/KitPreviewShell";
 
@@ -18,6 +21,9 @@ const STATES = {
   longest: { label: "Longest labels", props: kitStudioFilterBarLongestLabelsFixture },
   many: { label: "Many options", props: kitStudioFilterBarManyOptionsFixture },
   loading: { label: "Loading counts", props: kitStudioFilterBarLoadingCountsFixture },
+  quickTabs: { label: "Quick tabs", props: kitStudioFilterBarQuickTabsFixture },
+  panelActive: { label: "Panel active", props: kitStudioFilterBarPanelActiveFixture },
+  dropdowns: { label: "Dropdowns fallback", props: kitStudioFilterBarDropdownsPresentationFixture },
 };
 
 export default function KitStudioFilterBarPreviewClient() {
@@ -60,7 +66,7 @@ export default function KitStudioFilterBarPreviewClient() {
       onSelectState={openState}
       note={lastAction}
     >
-      <div className="relative -m-[var(--space-6)] overflow-hidden rounded-[var(--radius-lg)]">
+      <div className="relative -m-[var(--space-6)] rounded-[var(--radius-lg)]">
         <KitStudioFilterBarView
           {...localProps}
           onSearchChange={(value) => {
@@ -71,6 +77,14 @@ export default function KitStudioFilterBarPreviewClient() {
           onSortChange={(value) => {
             setLocalProps((current) => ({ ...current, selectedSort: value }));
             setLastAction(`Sort changed to "${value}" (local preview only).`);
+          }}
+          onQuickTabChange={(value) => {
+            setLocalProps((current) => ({ ...current, selectedQuickTab: value }));
+            setLastAction(`Quick tab changed to "${value}" (local preview only).`);
+          }}
+          onClearFilters={() => {
+            setLocalProps((current) => ({ ...current, selectedValues: {} }));
+            setLastAction("Clear all fired once (local preview only).");
           }}
         />
         <div className="h-[var(--space-20)] bg-[var(--surface-2)] px-[var(--space-5)] py-[var(--space-4)] text-[length:var(--text-label)] text-[var(--ink-faint)]">

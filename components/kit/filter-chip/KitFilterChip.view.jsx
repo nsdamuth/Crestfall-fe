@@ -24,12 +24,14 @@ export default function KitFilterChipView({
   variant = "default",
   isDisabled = false,
   onToggle = null,
+  tooltip = null,
 }) {
   return (
     <button
       type="button"
       disabled={isDisabled}
       aria-pressed={isSelected}
+      title={tooltip || undefined}
       onClick={() => onToggle?.()}
       className={`${BASE_CLASSES} ${getVariantClasses(variant, isSelected)}`}
     >

@@ -1,0 +1,250 @@
+"use client";
+
+// Filter panel, RULED 6 Sep 2026 (FE/FILTERS, Brian, OurDream reference
+// matched for structure only; every value resolves through
+// app/theme.css). One "Filter" trigger with a live active-count badge
+// opens a panel: search-within-filters at the top, a "Filter by"
+// heading, every section as a labelled chip group in caller order,
+// Clear all at the bottom. Popover at 700px and up, bottom sheet under
+// 700px, through the same useAnchoredPanel mechanics KitDropdown uses
+// (open flag, chassis select, measured left/right flip, popover-only
+// outside-click and Escape). Chips inside a panel are lawful under the
+// 9 Aug 2026 filter-line law (loose chip ROWS on the bar stay
+// retired); each chip is the existing KitFilterChip recipe.
+//
+// Contrast law (docs/DESIGN-TOKENS.md): the popover surface is the
+// menu/popover glass, so no normal-size meaningful text here uses
+// --ink-faint; section labels and helper lines use --ink-dim. Chip
+// counts keep their own --ink-faint on the chip's --surface-1 bed,
+// where it is legal.
+import { useState } from "react";
+import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+
+import KitFilterChipView from "../filter-chip/KitFilterChip.view";
+import KitModalFrame from "../KitModalFrame";
+import { useAnchoredPanel } from "../dropdown/useAnchoredPanel";
+
+function countActive(sections, selectedValues) {
+  return sections.reduce((total, section) => total + (selectedValues?.[section.id]?.length || 0), 0);
+}
+
+function matchesQuery(option, query) {
+  if (!query) return true;
+  return String(option?.label || "").toLowerCase().includes(query);
+}
+
+function PanelBody({
+  sections,
+  selectedValues,
+  onToggleOption,
+  onClearAll,
+  isLoadingCounts,
+  searchPlaceholder,
+  query,
+  onQueryChange,
+  activeCount,
+}) {
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleSections = sections
+    .map((section) => ({
+      ...section,
+      options: section.options.filter((option) => matchesQuery(option, normalizedQuery)),
+    }))
+    .filter((section) => section.options.length > 0);
+
+  function clearAll() {
+    if (onClearAll) {
+      onClearAll();
+      return;
+    }
+    // Compatibility path (contract 1.0.0): a consumer that has not
+    // adopted onClearAll still clears correctly, one toggle per
+    // currently selected value.
+    sections.forEach((section) => {
+      (selectedValues?.[section.id] || []).forEach((value) => onToggleOption?.(section.id, value));
+    });
+  }
+
+  return (
+    <div className="flex flex-col gap-[var(--space-4)]">
+      <div className="kit-search-field flex min-h-[var(--control-filter)] w-full items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] transition-colors hover:border-[var(--line)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
+        <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
+        <input
+          type="search"
+          name="kit-filter-panel-search"
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder={searchPlaceholder}
+          aria-label={searchPlaceholder}
+          className="kit-search-input w-full min-w-0 bg-transparent text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none [@media(pointer:coarse)]:text-[length:var(--text-body)]"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => onQueryChange("")}
+            aria-label="Clear filter search"
+            className="flex flex-none items-center justify-center text-[var(--ink-faint)] transition-colors hover:text-[var(--ink-dim)]"
+          >
+            <X size={14} aria-hidden="true" />
+          </button>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-[var(--space-4)]">
+        <p className="text-[length:var(--text-ui)] font-[var(--weight-medium)] leading-[var(--lh-ui)] text-[var(--ink)]">
+          Filter by
+        </p>
+
+        {visibleSections.map((section, index) => {
+          const selected = selectedValues?.[section.id] || [];
+          return (
+            <div key={section.id} className="flex flex-col gap-[var(--space-2)]">
+              {index > 0 && <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />}
+              <p
+                id={`kit-filter-panel-section-${section.id}`}
+                className="text-[length:var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]"
+              >
+                {section.label}
+              </p>
+              <div
+                role="group"
+                aria-labelledby={`kit-filter-panel-section-${section.id}`}
+                className="flex flex-wrap gap-[var(--space-2)]"
+              >
+                {section.options.map((option) => (
+                  <KitFilterChipView
+                    key={option.value}
+                    label={option.label}
+                    count={isLoadingCounts ? null : option.count}
+                    tooltip={option.tooltip}
+                    isSelected={selected.includes(option.value)}
+                    isDisabled={option.isDisabled}
+                    onToggle={() => onToggleOption?.(section.id, option.value)}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
+        {!visibleSections.length && (
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {normalizedQuery ? "No matching filters" : "No filters"}
+          </p>
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          disabled={activeCount === 0}
+          onClick={clearAll}
+          className="min-h-[var(--control-sm)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+        >
+          Clear all
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function KitFilterPanelView({
+  sections = [],
+  selectedValues = {},
+  onToggleOption = null,
+  onClearAll = null,
+  isLoadingCounts = false,
+  triggerLabel = "Filter",
+  searchPlaceholder = "Search filters",
+  ariaLabel = "Filters",
+  isDisabled = false,
+}) {
+  const { isOpen, isPhoneWidth, panelAlign, rootRef, panelRef, toggleOpen, close } =
+    useAnchoredPanel();
+  // Search-within-filters text is presentation-only local state; it
+  // resets whenever the panel closes so a stale query never hides
+  // sections on the next open.
+  const [query, setQuery] = useState("");
+
+  const renderableSections = sections.filter((section) => section.options?.length > 0);
+  const activeCount = countActive(renderableSections, selectedValues);
+  const isMarked = activeCount > 0 || isOpen;
+
+  function handleToggleOpen() {
+    if (isOpen) setQuery("");
+    toggleOpen();
+  }
+
+  function handleClose() {
+    setQuery("");
+    close();
+  }
+
+  const body = (
+    <PanelBody
+      sections={renderableSections}
+      selectedValues={selectedValues}
+      onToggleOption={onToggleOption}
+      onClearAll={onClearAll}
+      isLoadingCounts={isLoadingCounts}
+      searchPlaceholder={searchPlaceholder}
+      query={query}
+      onQueryChange={setQuery}
+      activeCount={activeCount}
+    />
+  );
+
+  return (
+    <div ref={rootRef} className="relative inline-flex flex-none">
+      <button
+        type="button"
+        disabled={isDisabled}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-label={activeCount > 0 ? `${ariaLabel}, ${activeCount} active` : ariaLabel}
+        onClick={handleToggleOpen}
+        className={`inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+          isMarked
+            ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+            : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
+        }`}
+      >
+        <SlidersHorizontal size={14} aria-hidden="true" className="flex-none" />
+        <span className="truncate">{triggerLabel}</span>
+        {activeCount > 0 && (
+          <span className="tabular-nums text-[length:var(--text-label)] text-[var(--gold-bright)]">
+            {activeCount}
+          </span>
+        )}
+        <ChevronDown
+          size={14}
+          aria-hidden="true"
+          className={`flex-none transition-transform duration-[var(--dur-fast)] ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {isOpen && !isPhoneWidth && (
+        // Popover, 700px and up: anchored below the trigger, flipped to
+        // right-anchored when left-anchoring would overflow (measured
+        // in useAnchoredPanel). Floating surface: --radius-lg, the
+        // ratified UI glass at --blur-panel (GO 2B, 22 Aug 2026).
+        <div
+          ref={panelRef}
+          role="group"
+          aria-label={ariaLabel}
+          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-[min(28rem,calc(100vw-var(--space-8)))] max-h-[min(32rem,calc(100dvh-var(--topbar-h)-var(--space-16)))] overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)] ${
+            panelAlign === "right" ? "right-0" : "left-0"
+          }`}
+        >
+          {body}
+        </div>
+      )}
+
+      {isOpen && isPhoneWidth && (
+        <KitModalFrame variant="sheet" ariaLabel={ariaLabel} sheetGrabber onClose={handleClose}>
+          <div className="max-h-[70dvh] overflow-y-auto p-[var(--space-4)]">{body}</div>
+        </KitModalFrame>
+      )}
+    </div>
+  );
+}

@@ -25,6 +25,8 @@ import {
   getCatalogCreationType,
   getCatalogTags,
   getSelectedCatalogCreationTypes,
+  orderFilterGroups,
+  pruneUnsupportedFilterGroups,
 } from "../catalog/creationCatalogFilterTaxonomy.js";
 import FixtureActionNotice from "../FixtureActionNotice";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
@@ -94,12 +96,16 @@ const CURATION_OPTIONS = [
   { value: "recentlyUpdated", label: "Recently Updated" },
 ];
 
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian): Plays, Likes,
+// Saves, Newest; "Recommended" retired, default sort Plays. Values are
+// unchanged (client-side today; the same words become the server
+// param under CR-058). Saves stays off the live list until a saves
+// count exists on the summaries (CR-059); the fixture harness keeps it.
 const SORT_OPTIONS = [
-  { value: "recommended", label: "Recommended" },
-  { value: "popular", label: "Most played" },
+  { value: "popular", label: "Plays" },
+  { value: "hearts", label: "Likes" },
+  { value: "saved", label: "Saves" },
   { value: "recent", label: "Newest" },
-  { value: "hearts", label: "Most hearted" },
-  { value: "saved", label: "Most saved" },
 ];
 
 // Rendering filter, RULED 10 Aug 2026 (section 5 of ruling: "restores
@@ -190,7 +196,7 @@ export default function CommunityV2Mockup({
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
   const [selectedValues, setSelectedValues] = useState({});
-  const [selectedSort, setSelectedSort] = useState("recommended");
+  const [selectedSort, setSelectedSort] = useState("popular");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [overlayImage, setOverlayImage] = useState(null);
   const [assetDetailId, setAssetDetailId] = useState(null);
@@ -207,7 +213,12 @@ export default function CommunityV2Mockup({
   const filterGroups = useMemo(() => {
     const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreations;
 
-    return [
+    // Ruled section order (Characters, Stories, Worlds, Rules,
+    // Templates, Curation, Rating, Rendering, Tags), and in live mode
+    // only the sections this page's data supports: Featured, Recently
+    // Updated (CR-033) and every Rendering value the backend never
+    // sets (CR-034) count zero today and are dropped until those land.
+    const groups = [
       ...buildDomainFilterGroups(pool),
       {
         id: "curation",
@@ -252,6 +263,9 @@ export default function CommunityV2Mockup({
         options: buildTagFilterOptions(pool),
       },
     ];
+
+    const ordered = orderFilterGroups(groups);
+    return live ? pruneUnsupportedFilterGroups(ordered) : ordered;
   }, [effectiveMode, live, sourceCreations]);
 
   const filteredCreations = useMemo(() => {
@@ -315,6 +329,11 @@ export default function CommunityV2Mockup({
         : [...currentValues, value];
       return { ...current, [groupId]: nextValues };
     });
+    setVisibleCount(PAGE_SIZE);
+  }
+
+  function clearFilters() {
+    setSelectedValues({});
     setVisibleCount(PAGE_SIZE);
   }
 
@@ -468,6 +487,7 @@ export default function CommunityV2Mockup({
           filterGroups={filterGroups}
           selectedValues={selectedValues}
           onFilterToggle={toggleFilter}
+          onClearFilters={clearFilters}
           sortOptions={live ? SORT_OPTIONS.filter((option) => option.value !== "saved") : SORT_OPTIONS}
           selectedSort={selectedSort}
           onSortChange={setSelectedSort}

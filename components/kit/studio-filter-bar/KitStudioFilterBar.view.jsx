@@ -8,6 +8,17 @@
 // bar entry): canvas-tinted translucency with chrome frost, full-bleed
 // margin trick, controls-with-their-own-states inside a REST-only bar.
 //
+// FILTER PANEL, RULED 6 Sep 2026 (FE/FILTERS, Brian, supersedes the
+// per-category dropdown row above; docs/BUILD-BLUEPRINT.md 2.16(b)
+// amended the same day): filter categories live in one Filter panel
+// (KitFilterPanel: one trigger with an active-count badge, chip-group
+// sections, search-within, Clear all); dedicated dropdowns are the
+// fallback, kept behind `filterPresentation="dropdowns"` so the
+// consumer flips one prop to roll back. Optional quick tabs sit
+// between search and the Filter button where a page has one dominant
+// split (Images). The Sort trigger reads "Sort: <value>", matching
+// Home's rail sort. Semantic callbacks are unchanged from 2.0.0.
+//
 // Sticky stack, RULED 10 Aug 2026 (kit polish 3 pass): this bar docks
 // directly beneath the sticky StudioTopBar, not at the viewport top.
 // `top: var(--topbar-h)` (the top bar's own measured height, minted
@@ -64,6 +75,44 @@ import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import KitDropdownView from "../dropdown/KitDropdown.view";
+import KitFilterPanelView from "../filter-panel/KitFilterPanel.view";
+
+function QuickTabs({ tabs, selected, onChange, ariaLabel }) {
+  if (!tabs.length) return null;
+
+  return (
+    <div role="tablist" aria-label={ariaLabel} className="flex flex-none items-center gap-[var(--space-1)]">
+      {tabs.map((tab) => {
+        const isSelected = tab.value === selected;
+        return (
+          <button
+            key={tab.value}
+            type="button"
+            role="tab"
+            aria-selected={isSelected}
+            onClick={() => onChange?.(tab.value)}
+            className={`inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+              isSelected
+                ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
+                : "border-transparent text-[var(--ink-dim)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
+            }`}
+          >
+            <span className="truncate">{tab.label}</span>
+            {tab.count !== null && tab.count !== undefined && (
+              <span
+                className={`tabular-nums text-[length:var(--text-label)] ${
+                  isSelected ? "text-[var(--gold-ornament)]" : "text-[var(--ink-faint)]"
+                }`}
+              >
+                {tab.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 // Search debounce, RULED (Scale Review H, finding D1): every
 // consuming page's filter chain re-runs over its full dataset on
@@ -167,7 +216,16 @@ export default function KitStudioFilterBarView({
   onSortChange = null,
   isLoadingCounts = false,
   viewModeSlot = null,
+  quickTabs = [],
+  selectedQuickTab = "",
+  onQuickTabChange = null,
+  onClearFilters = null,
+  filterPresentation = "panel",
+  filterButtonLabel = "Filter",
 }) {
+  const hasGroups = filterGroups.length > 0;
+  const usePanel = filterPresentation !== "dropdowns";
+
   return (
     // Tucked one border width under the top bar, RULED 6 Sep 2026
     // (Brian, screenshots on Adventures and Stories): at browser zooms
@@ -187,23 +245,43 @@ export default function KitStudioFilterBarView({
 
       <div className="scrollbar-none flex items-center gap-[var(--space-4)] overflow-x-auto min-[700px]:ml-auto min-[700px]:flex-none min-[700px]:flex-wrap min-[700px]:overflow-visible">
         <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">
-          {filterGroups.map((group) => (
-            <KitDropdownView
-              key={group.id}
-              label={group.label}
-              options={(group.options || []).map((option) => ({
-                ...option,
-                count: isLoadingCounts ? null : option.count,
-              }))}
-              selectedValues={selectedValues?.[group.id] || []}
-              isMultiSelect={group.isMultiSelect !== false}
-              onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+          <QuickTabs
+            tabs={quickTabs}
+            selected={selectedQuickTab}
+            onChange={onQuickTabChange}
+            ariaLabel={searchPlaceholder}
+          />
+
+          {hasGroups && usePanel && (
+            <KitFilterPanelView
+              sections={filterGroups}
+              selectedValues={selectedValues}
+              onToggleOption={onFilterToggle}
+              onClearAll={onClearFilters}
+              isLoadingCounts={isLoadingCounts}
+              triggerLabel={filterButtonLabel}
             />
-          ))}
+          )}
+
+          {hasGroups &&
+            !usePanel &&
+            filterGroups.map((group) => (
+              <KitDropdownView
+                key={group.id}
+                label={group.label}
+                options={(group.options || []).map((option) => ({
+                  ...option,
+                  count: isLoadingCounts ? null : option.count,
+                }))}
+                selectedValues={selectedValues?.[group.id] || []}
+                isMultiSelect={group.isMultiSelect !== false}
+                onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+              />
+            ))}
 
           {sortOptions.length > 0 && (
             <KitDropdownView
-              label="Sort"
+              label="Sort:"
               options={sortOptions}
               selectedValues={selectedSort ? [selectedSort] : []}
               isMultiSelect={false}

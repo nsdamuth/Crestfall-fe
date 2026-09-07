@@ -1,4 +1,4 @@
-export const KIT_FILTER_CHIP_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_FILTER_CHIP_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the shared filter chip kit piece
@@ -17,6 +17,12 @@ export const KIT_FILTER_CHIP_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {"default"|"sort"|"toggle"|"dropdown"} variant
  * @property {boolean} isDisabled
  * @property {(() => void)|null} onToggle
+ * @property {string|null} [tooltip] added 1.1.0, 6 Sep 2026
+ *   (FE/FILTERS): system tooltip text for the chip, rendered via the
+ *   native title attribute as an interim pending the CR-047 tooltip
+ *   component, so rating-tier chips inside KitFilterPanel keep the
+ *   film anchor they carried as dropdown rows (CR-027). Omitted:
+ *   behavior identical to 1.0.0.
  */
 
 export {};
