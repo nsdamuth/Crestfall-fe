@@ -16,7 +16,6 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { deleteStoryRoom } from "@/lib/client/studio/story-rooms/storyRoomClient";
-import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import { buildStoryChatHref } from "@/lib/shared/story-rooms/storyRoomRouteAuthority";
 import {
   projectCreationsToStoryStartables,
@@ -43,20 +42,23 @@ const TYPE_OPTIONS = Object.freeze([
   { value: "story", label: "Stories" },
   { value: "adventure", label: "Adventures" },
 ]);
-const STATUS_OPTIONS = Object.freeze([
-  { value: "startable", label: "Startable" },
-  { value: "templates", label: "Story Templates" },
-  { value: "archived", label: "Archived" },
-]);
 const VISIBILITY_OPTIONS = Object.freeze([
   { value: "PRIVATE", label: "Private" },
   { value: "INTERNAL", label: "Internal" },
   { value: "PUBLIC", label: "Public" },
   { value: "CANON", label: "Canon" },
 ]);
+// Sort, RULED 6 Sep 2026 (FE/FILTERS, Brian): Newest, meaning latest
+// activity on this page; "Title A to Z" retired. Ruling change
+// (FE/FILTERS follow-up, 6 Sep 2026): Plays, Likes, Remixes, Newest
+// all render here now. Plays and Likes read the same stats the Vault
+// projection already carries; Remixes has no field yet (CR-059) and
+// leaves the shelf in its current order until it does.
 const SORT_OPTIONS = Object.freeze([
-  { value: "recent", label: "Latest activity" },
-  { value: "title", label: "Title A to Z" },
+  { value: "plays", label: "Plays" },
+  { value: "hearts", label: "Likes" },
+  { value: "remixes", label: "Remixes" },
+  { value: "recent", label: "Newest" },
 ]);
 
 function SectionLabel({ children }) {
@@ -180,7 +182,7 @@ export default function StoriesV2Live({
       (item) => !ownedIds.has(item.id) && engagement.isCreationBookmarked(item)
     );
     return [...ownedStartables, ...savedPublic];
-  }, [ownedStartables, publicCandidates, engagement.bookmarkedCreationIds]);
+  }, [ownedStartables, publicCandidates, engagement]);
   const creationById = useMemo(
     () => new Map(engagementCandidates.map((item) => [item.id, item])),
     [engagementCandidates]
@@ -196,44 +198,31 @@ export default function StoriesV2Live({
     [continueItems, query]
   );
 
-  const statusValues = selectedValues.status || [];
-  const typeValues = selectedValues.type || [];
-  const visibilityValues = selectedValues.visibility || [];
-  const ratingValues = selectedValues.rating || [];
-
+  // Sections, RULED 6 Sep 2026 (FE/FILTERS): Type and Visibility only;
+  // Status and Rating removed (the "Startable" option filtered
+  // nothing on its own). Archived items stay out of the shelf.
   const filteredStartables = useMemo(() => {
-    let pool = startableItems;
-
-    if (statusValues.includes("archived")) {
-      pool = pool.filter((item) => item.isArchived);
-    } else {
-      pool = pool.filter((item) => !item.isArchived);
-      if (statusValues.includes("templates")) {
-        pool = pool.filter((item) => item.type === "ROOM_TEMPLATE");
-      }
-    }
+    const typeValues = selectedValues.type || [];
+    const visibilityValues = selectedValues.visibility || [];
+    const pool = startableItems.filter((item) => !item.isArchived);
 
     const filtered = pool.filter((item) => {
       if (typeValues.length && !typeValues.includes(item.kind)) return false;
       if (visibilityValues.length && !visibilityValues.includes(item.visibility)) return false;
-      if (ratingValues.length && !ratingValues.includes(item.ratingTier)) return false;
       if (query && !normalizeSearchText(item).includes(query)) return false;
       return true;
     });
 
     const sorted = [...filtered];
-    if (selectedSort === "title") sorted.sort((a, b) => a.title.localeCompare(b.title));
-    else sorted.sort((a, b) => b.recency - a.recency);
+    if (selectedSort === "plays") {
+      sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
+    } else if (selectedSort === "hearts") {
+      sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
+    } else if (selectedSort === "recent") {
+      sorted.sort((a, b) => b.recency - a.recency);
+    }
     return sorted;
-  }, [
-    query,
-    ratingValues,
-    selectedSort,
-    startableItems,
-    statusValues,
-    typeValues,
-    visibilityValues,
-  ]);
+  }, [query, selectedValues, startableItems, selectedSort]);
 
   const filterGroups = useMemo(
     () => [
@@ -247,37 +236,12 @@ export default function StoriesV2Live({
         })),
       },
       {
-        id: "status",
-        label: "Status",
-        isMultiSelect: true,
-        options: STATUS_OPTIONS.map((option) => ({
-          ...option,
-          count:
-            option.value === "templates"
-              ? startableItems.filter((item) => item.type === "ROOM_TEMPLATE" && !item.isArchived).length
-              : option.value === "archived"
-                ? startableItems.filter((item) => item.isArchived).length
-                : startableItems.filter((item) => !item.isArchived).length,
-        })),
-      },
-      {
         id: "visibility",
         label: "Visibility",
         isMultiSelect: true,
         options: VISIBILITY_OPTIONS.map((option) => ({
           ...option,
           count: startableItems.filter((item) => item.visibility === option.value).length,
-        })),
-      },
-      {
-        id: "rating",
-        label: "Rating",
-        isMultiSelect: true,
-        options: CONTENT_RATING_TIERS.map((tier) => ({
-          value: tier.tier,
-          label: tier.label,
-          tooltip: tier.tooltip,
-          count: startableItems.filter((item) => item.ratingTier === tier.tier).length,
         })),
       },
     ],
@@ -378,6 +342,10 @@ export default function StoriesV2Live({
             filterGroups={filterGroups}
             selectedValues={selectedValues}
             onFilterToggle={toggleFilter}
+            onClearFilters={() => {
+              setSelectedValues({});
+              setVisibleCount(PAGE_SIZE);
+            }}
             sortOptions={SORT_OPTIONS}
             selectedSort={selectedSort}
             onSortChange={(value) => {

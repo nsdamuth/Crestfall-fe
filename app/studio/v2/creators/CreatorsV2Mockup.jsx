@@ -4,7 +4,7 @@
 // /studio/v2/creators injects live Crestfall creator summaries and canonical
 // follow state. Presentation filtering remains local so fixture and live modes
 // exercise the same V2 Skin.
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
@@ -15,8 +15,10 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
+import { buildActivityFilterGroup } from "../catalog/creationCatalogFilterTaxonomy";
 import FixtureActionNotice from "../FixtureActionNotice";
 
 function creatorArt(name) {
@@ -43,17 +45,24 @@ const FIXTURE_CREATORS = [
   { id: "cr13", handle: "@verdigris", avatarSrc: canonArt("Dr. Elara Kade"), followers: 1320, plays: 2450, works: 5, recency: 8, thumbnails: [creatorArt("vermillion-4")] },
 ];
 
-const FIXTURE_SORT_OPTIONS = [
-  { value: "followers", label: "Most followed" },
-  { value: "plays", label: "Most played" },
-  { value: "hearts", label: "Most hearted" },
-  { value: "recent", label: "Recently active" },
-];
-
-const LIVE_SORT_OPTIONS = [
-  { value: "followers", label: "Most followed" },
-  { value: "hearts", label: "Most hearted" },
-  { value: "works", label: "Most works" },
+// Sort vocabulary, RULED 6 Sep 2026 (FE/FILTERS, Brian), amended by
+// the FE/FILTERS follow-up ruling (6 Sep 2026): Recently Active,
+// Followers, Plays, Likes, Remixes, Newest. Every option renders
+// regardless of what the payload carries; where a field is absent or
+// a placeholder (recency and joinedRecency read 0 live, plays reads
+// null, remixes has no field yet) selecting that sort leaves the list
+// in its current order rather than inventing a value. Most followed
+// and Most works are retired. Followers reads the follower count
+// already on the creator summary. Live today: Followers and Likes.
+// Recently Active and Newest wait on a last-active and a joined
+// timestamp (CR-064), Plays on CR-040, Remixes on CR-059.
+const CREATOR_SORT_OPTIONS = [
+  { value: "recent", label: "Recently Active", field: "recency" },
+  { value: "followers", label: "Followers", field: "followers" },
+  { value: "plays", label: "Plays", field: "plays" },
+  { value: "hearts", label: "Likes", field: "likes" },
+  { value: "remixes", label: "Remixes", field: "remixes" },
+  { value: "newest", label: "Newest", field: "joinedRecency" },
 ];
 
 const FIXTURE_MODES = {
@@ -192,9 +201,17 @@ export default function CreatorsV2Mockup({
 } = {}) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
-  const [layout, setLayout] = useState("grid");
+  // Shared persistent view mode, replacing the read-on-mount effect
+  // that set state synchronously (desktop and mobile both default to
+  // grid, as before).
+  const [layout, changeLayout] = usePersistentViewMode({
+    storageKey: VIEW_MODE_STORAGE_KEY,
+    desktopDefault: "grid",
+    mobileDefault: "grid",
+  });
   const [searchValue, setSearchValue] = useState("");
-  const [selectedSort, setSelectedSort] = useState("followers");
+  const [selectedSort, setSelectedSort] = useState("");
+  const [selectedValues, setSelectedValues] = useState({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sourceCreators = live ? creators : FIXTURE_CREATORS;
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
@@ -206,23 +223,34 @@ export default function CreatorsV2Mockup({
   const [savedThumbIds, setSavedThumbIds] = useState([]);
   const [actionNotice, setActionNotice] = useState(null);
 
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(VIEW_MODE_STORAGE_KEY);
-      if (stored === "grid" || stored === "list") setLayout(stored);
-    } catch {}
-  }, []);
+  const sortOptions = CREATOR_SORT_OPTIONS;
+  const effectiveSort = selectedSort || sortOptions[0].value;
 
-  function changeLayout(nextLayout) {
-    if (nextLayout !== "grid" && nextLayout !== "list") return;
-    setLayout(nextLayout);
-    try {
-      window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, nextLayout);
-    } catch {}
+  // Activity section, RULED 6 Sep 2026 (FE/FILTERS follow-up): first
+  // in the panel here too. Creators carry no per-creator liked or
+  // saved flag yet, so both options render muted at a zero count and
+  // stay selectable (no invented values); selecting one filters to
+  // nothing until the flag is served.
+  const filterGroups = useMemo(
+    () => [buildActivityFilterGroup(effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreators)],
+    [effectiveMode, sourceCreators]
+  );
+  const activeActivityValues = useMemo(() => selectedValues.activity || [], [selectedValues]);
+
+  function toggleFilter(groupId, value) {
+    setSelectedValues((current) => {
+      const currentValues = current[groupId] || [];
+      const nextValues = currentValues.includes(value)
+        ? currentValues.filter((entry) => entry !== value)
+        : [...currentValues, value];
+      return { ...current, [groupId]: nextValues };
+    });
+    setVisibleCount(PAGE_SIZE);
   }
 
   const filteredCreators = useMemo(() => {
     if (effectiveMode === "empty" || effectiveMode === "error") return [];
+    if (activeActivityValues.length) return [];
 
     const query = searchValue.trim().toLowerCase();
     const filtered = sourceCreators.filter((creator) =>
@@ -232,19 +260,21 @@ export default function CreatorsV2Mockup({
     );
 
     const sorted = [...filtered];
-    if (selectedSort === "plays") {
-      sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
-    } else if (selectedSort === "hearts") {
-      sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-    } else if (selectedSort === "works") {
-      sorted.sort((a, b) => (b.works || 0) - (a.works || 0));
-    } else if (selectedSort === "recent") {
-      sorted.sort((a, b) => (b.recency || 0) - (a.recency || 0));
-    } else {
+    if (effectiveSort === "followers") {
       sorted.sort((a, b) => (b.followers || 0) - (a.followers || 0));
+    } else if (effectiveSort === "plays") {
+      sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
+    } else if (effectiveSort === "hearts") {
+      sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    } else if (effectiveSort === "remixes") {
+      sorted.sort((a, b) => (b.remixes || 0) - (a.remixes || 0));
+    } else if (effectiveSort === "recent") {
+      sorted.sort((a, b) => (b.recency || 0) - (a.recency || 0));
+    } else if (effectiveSort === "newest") {
+      sorted.sort((a, b) => (b.joinedRecency || 0) - (a.joinedRecency || 0));
     }
     return sorted;
-  }, [effectiveMode, searchValue, selectedSort, sourceCreators]);
+  }, [effectiveMode, searchValue, effectiveSort, sourceCreators, activeActivityValues]);
 
   const visibleCreators = filteredCreators.slice(0, visibleCount);
   const hasMore = visibleCount < filteredCreators.length;
@@ -338,6 +368,10 @@ export default function CreatorsV2Mockup({
       });
     }
     return map;
+    // toggleFollowing is a component function reading followingIds,
+    // which is listed; naming the function itself would rebuild the
+    // map every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [live, router, sourceCreators, followingIds]);
 
   return (
@@ -382,11 +416,15 @@ export default function CreatorsV2Mockup({
               setSearchValue(value);
               setVisibleCount(PAGE_SIZE);
             }}
-            filterGroups={[]}
-            selectedValues={{}}
-            onFilterToggle={() => {}}
-            sortOptions={live ? LIVE_SORT_OPTIONS : FIXTURE_SORT_OPTIONS}
-            selectedSort={selectedSort}
+            filterGroups={filterGroups}
+            selectedValues={selectedValues}
+            onFilterToggle={toggleFilter}
+            onClearFilters={() => {
+              setSelectedValues({});
+              setVisibleCount(PAGE_SIZE);
+            }}
+            sortOptions={sortOptions}
+            selectedSort={effectiveSort}
             onSortChange={(value) => {
               setSelectedSort(value);
               setVisibleCount(PAGE_SIZE);

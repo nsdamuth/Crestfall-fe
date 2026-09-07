@@ -42,3 +42,11 @@ this is a documented, ruled exception, not a drift.
 
 The preview is fixture-only; toggling a chip only updates local
 preview state.
+
+## 1.1.0, 6 Sep 2026 (FE/FILTERS)
+
+Optional `tooltip` prop, rendered through the native `title`
+attribute as the CR-047 interim, so rating-tier chips inside
+`KitFilterPanel` keep the film anchor they carried as dropdown rows.
+Chips are lawful inside a panel; loose chip rows on the bar stay
+retired.

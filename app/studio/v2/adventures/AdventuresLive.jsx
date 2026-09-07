@@ -69,9 +69,9 @@ export default function AdventuresLive({ creations = [], loadError = null } = {}
       : adventures;
     const sorted = [...scoped];
 
-    if (sortValue === "most-played") {
+    if (sortValue === "plays") {
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
-    } else if (sortValue === "recently-added") {
+    } else if (sortValue === "recent") {
       sorted.sort((a, b) => (b.recency || 0) - (a.recency || 0));
     } else {
       sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));

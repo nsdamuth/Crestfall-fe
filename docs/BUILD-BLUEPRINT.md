@@ -1059,15 +1059,24 @@ KitCreationCard contract moves to v3.0.0: `onShare`, `onDownload`,
 destination surfaces. v3.1.0 (10 Aug 2026) removes `actionPlacement`
 now that placement is ruled rather than a per-instance choice.
 
-**(b) Filter line law, amends 2.1.** Search, sort, and every filter
-share ONE sticky line. Filters and multi-selects are branded
-dropdowns (the new `dropdown` package below) opening below their
-trigger, with live selection counts on multi-select triggers and the
-gold selected value on single-select triggers (legacy trigger
-grammar, register: filter line). Loose tag rows are retired from
-filter surfaces; chips survive only as rows inside dropdown panels.
-The legacy control bar ruled this same shape ("every category is a
-dropdown on one line"); this ruling re-lands it on current tokens.
+**(b) Filter line law, amends 2.1. AMENDED 6 Sep 2026 (FE/FILTERS,
+Brian).** Search, sort, and every filter share ONE sticky line.
+Filter categories live in one Filter panel; dedicated dropdowns are
+the fallback. The panel (`KitFilterPanel`, composed by
+`KitStudioFilterBar` 2.1.0) is one trigger reading "Filter" with a
+live active-count badge, opening a popover at 700px and up and a
+bottom sheet below it, carrying a search-within-filters field, every
+section as a labelled chip group in the ruled order (Characters,
+Stories, Worlds, then Rules, Templates, Curation, Rating, Rendering,
+Visibility, Status, Tags; only the sections the page's data
+supports), and Clear all. Sort stays a single-select dropdown whose
+trigger reads "Sort: <value>" with the gold selected value. Optional
+quick tabs sit beside the Filter button where a page has one dominant
+split (Images). The fallback, one branded dropdown per category
+opening below its trigger with live selection counts (the 9 Aug 2026
+shape, "every category is a dropdown on one line"), survives behind
+the bar's `filterPresentation="dropdowns"` prop. Loose tag rows stay
+retired from filter surfaces; chips survive only inside the panel.
 
 **(c) Tag economy.** A card badge appears only when it informs:
 Canon always; visibility badges only in own-work contexts; never a
@@ -1191,7 +1200,7 @@ SUPERSEDED 23 Aug 2026 by the container law in
 is kept for lineage; the "no max-width cap" rule it states is no
 longer in force.
 
-**REINSTATED / AMENDED 24 Aug 2026 — V2 convergence W1.** The product
+**REINSTATED / AMENDED 24 Aug 2026, V2 convergence W1.** The product
 direction now requires a fluid Studio application workspace. The shell itself
 has no global max-width cap; local content regions may still constrain their
 own readable measure where appropriate. This newer ruling supersedes the

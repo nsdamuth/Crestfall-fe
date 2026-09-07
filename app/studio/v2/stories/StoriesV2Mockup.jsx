@@ -6,7 +6,7 @@
 // section 3 (W3): the hub only, chat room [id] excluded by the
 // standing sweep-scope ruling (blueprint 3.1 row 4). No live data, no
 // API calls, no real navigation.
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
@@ -19,6 +19,7 @@ import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import { CheckSquare, Square } from "lucide-react";
+import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { CONTENT_RATING_TIERS } from "@/lib/shared/presentation/terminology";
 import FixtureActionNotice from "../FixtureActionNotice";
@@ -110,13 +111,6 @@ const TYPE_OPTIONS = [
   { value: "adventure", label: "Adventure" },
 ];
 
-const STATUS_OPTIONS = [
-  { value: "inProgress", label: "In progress" },
-  { value: "startable", label: "Startable" },
-  { value: "templates", label: "Templates" },
-  { value: "archived", label: "Archived" },
-];
-
 const VISIBILITY_OPTIONS = [
   { value: "PRIVATE", label: "Private" },
   { value: "INTERNAL", label: "Internal" },
@@ -124,10 +118,8 @@ const VISIBILITY_OPTIONS = [
   { value: "CANON", label: "Canon" },
 ];
 
-const SORT_OPTIONS = [
-  { value: "recent", label: "Latest activity" },
-  { value: "title", label: "Title A to Z" },
-];
+// Sort, RULED 6 Sep 2026 (FE/FILTERS): Newest only on Stories.
+const SORT_OPTIONS = [{ value: "recent", label: "Newest" }];
 
 const FIXTURE_MODES = {
   default: "Default",
@@ -175,21 +167,6 @@ const PAGE_SIZE = 12;
 // docs/CONTRACT-REQUESTS.md). Original device default: mobile lists,
 // desktop grids; read once on mount, written on every change.
 const VIEW_MODE_STORAGE_KEY = "cf.stories.viewMode";
-
-function readStoredViewMode() {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = window.localStorage.getItem(VIEW_MODE_STORAGE_KEY);
-    return stored === "grid" || stored === "list" ? stored : null;
-  } catch {
-    return null;
-  }
-}
-
-function defaultViewModeForDevice() {
-  if (typeof window === "undefined" || !window.matchMedia) return "grid";
-  return window.matchMedia("(pointer: coarse)").matches ? "list" : "grid";
-}
 
 function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }) {
   return (
@@ -294,22 +271,13 @@ function DeleteSelectedConfirmSheet({ count = 0, onConfirm, onCancel }) {
 export default function StoriesV2Mockup() {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
-  const [layout, setLayoutState] = useState("grid");
-
-  useEffect(() => {
-    setLayoutState(readStoredViewMode() || defaultViewModeForDevice());
-  }, []);
-
-  function setLayout(nextLayout) {
-    setLayoutState(nextLayout);
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, nextLayout);
-    } catch {
-      // Storage unavailable (private mode, quota); the session still
-      // works, it just does not persist across reloads.
-    }
-  }
+  // Shared persistent view mode (same hook as the live page), replacing
+  // the read-on-mount effect that set state synchronously.
+  const [layout, setLayout] = usePersistentViewMode({
+    storageKey: VIEW_MODE_STORAGE_KEY,
+    desktopDefault: "grid",
+    mobileDefault: "list",
+  });
   const [searchValue, setSearchValue] = useState("");
   const [selectedValues, setSelectedValues] = useState({});
   const [selectedSort, setSelectedSort] = useState("recent");
@@ -360,27 +328,9 @@ export default function StoriesV2Mockup() {
     [fixtureMode, deletedIds]
   );
 
-  const templatesPool = useMemo(
-    () =>
-      fixtureMode === "empty" || fixtureMode === "error"
-        ? []
-        : FIXTURE_STORIES.filter((item) => item.isTemplate && !deletedIds.includes(item.id)),
-    [fixtureMode, deletedIds]
-  );
-
-  const archivedPool = useMemo(
-    () =>
-      fixtureMode === "empty" || fixtureMode === "error"
-        ? []
-        : FIXTURE_STORIES.filter((item) => item.isArchived && !deletedIds.includes(item.id)),
-    [fixtureMode, deletedIds]
-  );
-
+  // Sections, RULED 6 Sep 2026 (FE/FILTERS): Type and Visibility only;
+  // Status and Rating removed with their template and archived pools.
   const filterGroups = useMemo(() => {
-    const inProgressCount =
-      fixtureMode === "empty" || fixtureMode === "error"
-        ? 0
-        : FIXTURE_STORIES.filter((item) => item.isContinue).length;
     return [
       {
         id: "type",
@@ -392,17 +342,6 @@ export default function StoriesV2Mockup() {
         })),
       },
       {
-        id: "status",
-        label: "Status",
-        isMultiSelect: true,
-        options: STATUS_OPTIONS.map((option) => {
-          if (option.value === "inProgress") return { ...option, count: inProgressCount };
-          if (option.value === "templates") return { ...option, count: templatesPool.length };
-          if (option.value === "archived") return { ...option, count: archivedPool.length };
-          return { ...option, count: startablePool.length };
-        }),
-      },
-      {
         id: "visibility",
         label: "Visibility",
         isMultiSelect: true,
@@ -411,58 +350,25 @@ export default function StoriesV2Mockup() {
           count: startablePool.filter((item) => item.visibility === option.value).length,
         })),
       },
-      {
-        id: "rating",
-        label: "Rating",
-        isMultiSelect: true,
-        options: CONTENT_RATING_TIERS.map((tier) => ({
-          value: tier.tier,
-          label: tier.label,
-          tooltip: tier.tooltip,
-          count: startablePool.filter((item) => item.ratingTier === tier.tier).length,
-        })),
-      },
     ];
-  }, [fixtureMode, startablePool, templatesPool, archivedPool]);
+  }, [startablePool]);
 
   const filteredStartable = useMemo(() => {
     const query = searchValue.trim().toLowerCase();
     const typeValues = selectedValues.type || [];
-    const statusValues = selectedValues.status || [];
     const visibilities = selectedValues.visibility || [];
-    const ratings = selectedValues.rating || [];
 
-    // Templates and Archived are exclusive buckets, same as the
-    // original single-select pills (RESTORED 10 Aug 2026, ruling 5):
-    // selecting either swaps the shelf pool entirely rather than
-    // filtering within the startable shelf.
-    let pool = startablePool;
-    if (statusValues.includes("templates")) pool = templatesPool;
-    else if (statusValues.includes("archived")) pool = archivedPool;
-    // Status is otherwise a shelf-scoped facet (plan 3.2: filters
-    // apply to the startable shelf, the Continue group ignores them):
-    // the shelf pool contains only startable items by construction, so
-    // selecting "In progress" here correctly yields an empty shelf
-    // result rather than reaching into the Continue group above it.
-    // Logged as a built default, not a resolved ruling.
-    else if (statusValues.length && !statusValues.includes("startable")) return [];
-
-    const filtered = pool.filter((item) => {
+    const filtered = startablePool.filter((item) => {
       if (typeValues.length && !typeValues.includes(item.kind)) return false;
       if (visibilities.length && !visibilities.includes(item.visibility)) return false;
-      if (ratings.length && !ratings.includes(item.ratingTier)) return false;
       if (query && !searchableText(item).includes(query)) return false;
       return true;
     });
 
     const sorted = [...filtered];
-    if (selectedSort === "title") {
-      sorted.sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-      sorted.sort((a, b) => b.recency - a.recency);
-    }
+    sorted.sort((a, b) => b.recency - a.recency);
     return sorted;
-  }, [searchValue, selectedValues, selectedSort, startablePool, templatesPool, archivedPool]);
+  }, [searchValue, selectedValues, startablePool]);
 
   const visibleItems = filteredStartable.slice(0, visibleCount);
   const hasMore = visibleCount < filteredStartable.length;
@@ -579,6 +485,10 @@ export default function StoriesV2Mockup() {
             filterGroups={filterGroups}
             selectedValues={selectedValues}
             onFilterToggle={toggleFilter}
+            onClearFilters={() => {
+              setSelectedValues({});
+              setVisibleCount(PAGE_SIZE);
+            }}
             sortOptions={SORT_OPTIONS}
             selectedSort={selectedSort}
             onSortChange={(value) => {

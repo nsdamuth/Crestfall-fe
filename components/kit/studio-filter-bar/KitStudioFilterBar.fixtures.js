@@ -32,9 +32,9 @@ const defaultFilterGroups = [
 ];
 
 const defaultSortOptions = [
-  { value: "recent", label: "Most recent" },
-  { value: "popular", label: "Most played" },
-  { value: "hearts", label: "Most hearted" },
+  { value: "recent", label: "Most Recent" },
+  { value: "popular", label: "Most Played" },
+  { value: "hearts", label: "Most Hearted" },
 ];
 
 export const kitStudioFilterBarDefaultFixture = {
@@ -96,4 +96,42 @@ export const kitStudioFilterBarManyOptionsFixture = {
 export const kitStudioFilterBarLoadingCountsFixture = {
   ...kitStudioFilterBarDefaultFixture,
   isLoadingCounts: true,
+};
+
+// 2.1.0 fixtures (6 Sep 2026, FE/FILTERS): quick tabs beside the
+// Filter button, an active panel with selections in three sections,
+// and the ruled dropdown fallback presentation.
+export const kitStudioFilterBarQuickTabsFixture = {
+  ...kitStudioFilterBarDefaultFixture,
+  searchPlaceholder: "Search your images",
+  quickTabs: [
+    { value: "ALL", label: "All", count: 128 },
+    { value: "IMAGES", label: "Images", count: 116 },
+    { value: "VIDEOS", label: "Videos", count: 12 },
+    { value: "LIKED", label: "Liked", count: 9 },
+  ],
+  selectedQuickTab: "ALL",
+  onQuickTabChange: noop,
+  filterGroups: [
+    {
+      id: "activity",
+      label: "Activity",
+      isMultiSelect: false,
+      options: [{ value: "BOOKMARKED", label: "Bookmarked", count: 14 }],
+    },
+  ],
+  selectedValues: {},
+  sortOptions: [],
+  selectedSort: "",
+};
+
+export const kitStudioFilterBarPanelActiveFixture = {
+  ...kitStudioFilterBarManyOptionsFixture,
+  selectedValues: { realm: ["realm-3", "realm-9"], type: ["character", "story"], rating: ["EVERYONE"] },
+  onClearFilters: noop,
+};
+
+export const kitStudioFilterBarDropdownsPresentationFixture = {
+  ...kitStudioFilterBarDefaultFixture,
+  filterPresentation: "dropdowns",
 };

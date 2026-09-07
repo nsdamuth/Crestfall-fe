@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.3.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -60,6 +60,13 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.3.0";
  *   "sheet", renders a small decorative grabber bar above the sheet
  *   header row (aria-hidden, no drag behavior). With the default
  *   false, sheet rendering is unchanged.
+ * @property {import("react").ReactNode|null} [headerSlot] added 1.4.0,
+ *   6 Sep 2026 (FE/FILTERS, Brian's panel-header ruling). Default
+ *   null. When variant is "sheet", rendered inside the sheet header
+ *   row immediately before the close control, for one caller-owned
+ *   header action (the filter panel's Clear). Ignored by the modal
+ *   and viewer variants. With the default null, sheet rendering is
+ *   unchanged.
  * @property {string} [ariaLabelledBy] forwarded to the dialog, same
  *   as ModalShell
  * @property {string} [ariaDescribedBy] forwarded to the dialog

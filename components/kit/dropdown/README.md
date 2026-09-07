@@ -96,3 +96,11 @@ counts), pressed, disabled.
 - `/dev/ui-preview/kit-dropdown`
 
 Fixture-only; no query, persistence, or navigation is wired.
+
+## Shared mechanics, 6 Sep 2026 (FE/FILTERS)
+
+The open flag, the phone-width chassis select, the measured left/right
+flip, and the popover-only outside-click and Escape dismissal moved,
+verbatim, into `useAnchoredPanel.js` in this folder, consumed by this
+View and by `KitFilterPanel`. No prop or behavior change; the seven
+fixtures render as before.

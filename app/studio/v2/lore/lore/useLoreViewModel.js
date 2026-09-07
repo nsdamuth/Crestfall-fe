@@ -20,27 +20,22 @@ import {
   getFirstAssignedCreationImageUrl,
   isLegacyDefaultCreationImageSrc,
 } from "@/lib/shared/creations/creationMedia";
-import {
-  projectOwnedLoreCreations,
-  projectPublicLoreCreations,
-} from "@/lib/shared/presentation/lorePresentation";
+import { projectPublicLoreCreations } from "@/lib/shared/presentation/lorePresentation";
 
-import {
-  LORE_APPROVAL_OPTIONS,
-  LORE_WORLD_OPTIONS,
-  LORE_RECENCY_OPTIONS,
-  LORE_COMMUNITY_ITEMS,
-  LORE_MINE_ITEMS,
-} from "./loreContent.mock";
+import { LORE_COMMUNITY_ITEMS } from "./loreContent.mock";
 
 const PAGE_SIZE = 4;
 
-const LIVE_APPROVAL_OPTIONS = [
-  { value: "draft", label: "Draft" },
-  { value: "pending", label: "Reviewing" },
-  { value: "approved", label: "Approved" },
-  { value: "archived", label: "Archived" },
-  { value: "canon", label: "Canon" },
+// Filter sections, RULED 6 Sep 2026 (FE/FILTERS, Brian): search and
+// Recency only. Approval state removed (the public projection emits
+// canon or approved only, CR-063); the fixture-only World or faction
+// facet retired with it. Recency is single-select over NESTED buckets
+// (this week is inside this month is inside all time); All Time means
+// no filter. Labels Title Case.
+const RECENCY_OPTIONS = [
+  { value: "week", label: "New This Week" },
+  { value: "month", label: "New This Month" },
+  { value: "all", label: "All Time" },
 ];
 
 const TOP_BANNER = {
@@ -60,17 +55,21 @@ const BOTTOM_BANNER = {
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),
 };
 
-function recencyTier(daysAgo) {
-  if (daysAgo <= 7) return "week";
-  if (daysAgo <= 30) return "month";
-  return "all";
+function withinRecency(daysAgo, selectedTier) {
+  if (!selectedTier || selectedTier === "all") return true;
+  if (selectedTier === "week") return daysAgo <= 7;
+  if (selectedTier === "month") return daysAgo <= 30;
+  return true;
 }
 
-function withinRecency(daysAgo, selectedTiers) {
-  if (!selectedTiers.length) return true;
-  const tier = recencyTier(daysAgo);
-  if (selectedTiers.includes("all")) return true;
-  return selectedTiers.includes(tier);
+function matchesLoreFilters(item, { query, recency }) {
+  if (
+    query &&
+    !`${item.title || ""} ${item.subtitle || ""} ${item.description || ""}`
+      .toLowerCase()
+      .includes(query)
+  ) return false;
+  return withinRecency(item.daysAgo, recency);
 }
 
 export function useLoreViewModel({
@@ -78,8 +77,6 @@ export function useLoreViewModel({
   live = false,
   communityCreations = [],
   communityLoadError = null,
-  ownedCreations = [],
-  ownedLoadError = null,
   ownedTimelines = [],
   ownedTimelinesLoadError = null,
   onNavigate = null,
@@ -115,29 +112,15 @@ export function useLoreViewModel({
     () => projectPublicLoreCreations(communityCreations),
     [communityCreations]
   );
-  const liveMineSource = useMemo(
-    () => projectOwnedLoreCreations(ownedCreations),
-    [ownedCreations]
-  );
-
-  const communitySource = live
-    ? liveCommunitySource
-    : fixtureMode === "empty" || fixtureMode === "error"
-      ? []
-      : fixtureMode === "pendingApproval"
-        ? []
-        : LORE_COMMUNITY_ITEMS;
-  const mineSource = live
-    ? liveMineSource
-    : fixtureMode === "empty" || fixtureMode === "error"
-      ? []
-      : fixtureMode === "pendingApproval"
-        ? LORE_MINE_ITEMS.filter((item) => item.approvalState === "pending")
-        : LORE_MINE_ITEMS;
-
-  const engagementState = useCreationEngagementState(
-    live ? [...communitySource, ...mineSource] : []
-  );
+  const communitySource = useMemo(() => {
+    if (live) return liveCommunitySource;
+    if (fixtureMode === "empty" || fixtureMode === "error" || fixtureMode === "pendingApproval") return [];
+    return LORE_COMMUNITY_ITEMS;
+  }, [live, liveCommunitySource, fixtureMode]);
+  // The Your Lore grid is removed (RULED 6 Sep 2026, FE/FILTERS): the
+  // page shows Community Lore and Timelines. Owned lore still opens
+  // from the Vault.
+  const engagementState = useCreationEngagementState(live ? communitySource : []);
 
   const timelineItems = useMemo(() => {
     if (!live) return [];
@@ -176,64 +159,28 @@ export function useLoreViewModel({
       });
   }, [live, ownedTimelines, onNavigate]);
 
-  const filterGroups = useMemo(() => {
-    const approvalOptions = live ? LIVE_APPROVAL_OPTIONS : LORE_APPROVAL_OPTIONS;
-    const groups = [
+  const filterGroups = useMemo(
+    () => [
       {
-        id: "approval",
-        label: "Approval state",
-        isMultiSelect: true,
-        options: approvalOptions.map((option) => ({ ...option, count: null })),
+        id: "recency",
+        label: "Recency",
+        isMultiSelect: false,
+        options: RECENCY_OPTIONS.map((option) => ({
+          ...option,
+          count: communitySource.filter((item) => withinRecency(item.daysAgo, option.value)).length,
+        })),
       },
-    ];
-
-    // The current public Community summary contract does not expose a
-    // normalized Lore world/faction facet. Keep the authored fixture filter
-    // for design QA, but do not invent classifications on the live archive.
-    if (!live) {
-      groups.push({
-        id: "world",
-        label: "World or faction",
-        isMultiSelect: true,
-        options: LORE_WORLD_OPTIONS.map((option) => ({ ...option, count: null })),
-      });
-    }
-
-    groups.push({
-      id: "recency",
-      label: "Recency",
-      isMultiSelect: true,
-      options: LORE_RECENCY_OPTIONS.map((option) => ({ ...option, count: null })),
-    });
-
-    return groups;
-  }, [live]);
-
-  function matchesFilters(item) {
-    const approvalValues = selectedValues.approval || [];
-    const worldValues = selectedValues.world || [];
-    const recencyValues = selectedValues.recency || [];
-    const query = searchValue.trim().toLowerCase();
-    if (
-      query &&
-      !`${item.title || ""} ${item.subtitle || ""} ${item.description || ""}`
-        .toLowerCase()
-        .includes(query)
-    ) return false;
-    if (approvalValues.length && !approvalValues.includes(item.approvalState)) return false;
-    if (!live && worldValues.length && !worldValues.includes(item.world)) return false;
-    if (!withinRecency(item.daysAgo, recencyValues)) return false;
-    return true;
-  }
-
-  const filteredCommunity = useMemo(
-    () => communitySource.filter(matchesFilters),
-    [communitySource, selectedValues, searchValue]
+    ],
+    [communitySource]
   );
-  const filteredMine = useMemo(
-    () => mineSource.filter(matchesFilters),
-    [mineSource, selectedValues, searchValue]
-  );
+
+  const filteredCommunity = useMemo(() => {
+    const criteria = {
+      query: searchValue.trim().toLowerCase(),
+      recency: selectedValues.recency?.[0] || null,
+    };
+    return communitySource.filter((item) => matchesLoreFilters(item, criteria));
+  }, [communitySource, selectedValues, searchValue]);
 
   // Lore edit door, RULED 10 Aug 2026 (h-restore ruling 4): the "Your
   // Lore" grid is the only edit door; its cards open the advanced lore
@@ -246,14 +193,10 @@ export function useLoreViewModel({
   // reopen-in-place gap already carried for Vault. Community Lore
   // cards stay read-only (no advanced-editor path, no community/browse
   // list surface per ruling 4).
-  function decorate(item, { showApprovalBadge, isMine }) {
+  function decorate(item, { isMine }) {
     const badges = [];
     if (item.approvalState === "canon") {
       badges.push({ label: "Canon", variant: "canon" });
-    } else if (showApprovalBadge) {
-      const approvalOptions = live ? LIVE_APPROVAL_OPTIONS : LORE_APPROVAL_OPTIONS;
-      const label = approvalOptions.find((option) => option.value === item.approvalState)?.label ?? "Draft";
-      badges.push({ label, variant: "status" });
     }
 
     return {
@@ -287,10 +230,7 @@ export function useLoreViewModel({
   }
 
   const visibleCommunityItems = filteredCommunity.slice(0, visibleCommunityCount);
-  const communityItems = visibleCommunityItems.map((item) =>
-    decorate(item, { showApprovalBadge: false, isMine: false })
-  );
-  const mineItems = filteredMine.map((item) => decorate(item, { showApprovalBadge: true, isMine: true }));
+  const communityItems = visibleCommunityItems.map((item) => decorate(item, { isMine: false }));
 
   const communityHasMore = visibleCommunityCount < filteredCommunity.length;
   const communityRemainingCount = communityHasMore ? filteredCommunity.length - visibleCommunityCount : null;
@@ -299,11 +239,6 @@ export function useLoreViewModel({
     ? null
     : filteredCommunity.length === 0 && (live || fixtureMode !== "error")
       ? "No published Lore matches these filters yet."
-      : null;
-  const mineEmptyMessage = ownedLoadError
-    ? null
-    : filteredMine.length === 0 && (live || fixtureMode !== "error")
-      ? "Nothing of yours matches these filters yet."
       : null;
 
   // Error state (10 Aug 2026 parity audit, section 2): no v2 page had
@@ -322,12 +257,22 @@ export function useLoreViewModel({
     selectedValues,
     onFilterToggle: (groupId, value) => {
       setSelectedValues((current) => {
+        if (groupId === "recency") {
+          // Single-select; "all" means no filter, so it clears.
+          const currentTier = current.recency?.[0] || null;
+          const nextTier = value === "all" || currentTier === value ? [] : [value];
+          return { ...current, recency: nextTier };
+        }
         const currentValues = current[groupId] || [];
         const nextValues = currentValues.includes(value)
           ? currentValues.filter((entry) => entry !== value)
           : [...currentValues, value];
         return { ...current, [groupId]: nextValues };
       });
+      setVisibleCommunityCount(PAGE_SIZE);
+    },
+    onClearFilters: () => {
+      setSelectedValues({});
       setVisibleCommunityCount(PAGE_SIZE);
     },
   };
@@ -371,9 +316,6 @@ export function useLoreViewModel({
     communityError: communityLoadError,
     communityEmptyMessage,
     communityLoadMore,
-    mineItems,
-    mineError: ownedLoadError,
-    mineEmptyMessage,
     errorMessage,
     bottomBanner,
     notice,

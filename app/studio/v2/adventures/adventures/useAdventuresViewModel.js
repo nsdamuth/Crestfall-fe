@@ -8,7 +8,7 @@
 // onNavigate (real Next.js navigation for built destinations) and
 // this hook decides, per control, whether to call it or open the
 // honest stub notice instead.
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { ADVENTURES_CATALOG_ITEMS, ADVENTURES_SORT_OPTIONS } from "./adventuresContent.mock";
 
@@ -37,10 +37,13 @@ const BOTTOM_BANNER = {
 
 function sortItems(items, sortValue) {
   const sorted = [...items];
-  if (sortValue === "most-played") {
+  if (sortValue === "plays") {
     sorted.sort((a, b) => (b.stats.plays ?? 0) - (a.stats.plays ?? 0));
-  } else if (sortValue === "recently-added") {
+  } else if (sortValue === "recent") {
     sorted.reverse();
+  } else if (sortValue === "remixes") {
+    // No remixes field served yet; leave the list in its current
+    // order rather than inventing a value (FE/FILTERS follow-up).
   } else {
     sorted.sort((a, b) => (b.stats.hearts ?? 0) - (a.stats.hearts ?? 0));
   }
@@ -56,13 +59,20 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   const [notice, setNotice] = useState(null);
 
-  function toggleId(setter) {
-    return (id) =>
-      setter((current) => (current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]));
-  }
-
-  const toggleLiked = toggleId(setLikedIds);
-  const toggleSaved = toggleId(setSavedIds);
+  const toggleLiked = useCallback(
+    (id) =>
+      setLikedIds((current) =>
+        current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]
+      ),
+    []
+  );
+  const toggleSaved = useCallback(
+    (id) =>
+      setSavedIds((current) =>
+        current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]
+      ),
+    []
+  );
 
   function openNotice(label, message) {
     setNotice({ label, message });
@@ -76,8 +86,10 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
     openNotice(label, `${label} opens once this section is built. Nothing was opened in this preview.`);
   }
 
-  const sourceItems =
-    fixtureMode === "emptyCatalog" || fixtureMode === "error" ? [] : ADVENTURES_CATALOG_ITEMS;
+  const sourceItems = useMemo(
+    () => (fixtureMode === "emptyCatalog" || fixtureMode === "error" ? [] : ADVENTURES_CATALOG_ITEMS),
+    [fixtureMode]
+  );
 
   const filteredItems = useMemo(() => {
     const query = searchValue.trim().toLowerCase();
@@ -106,7 +118,7 @@ export function useAdventuresViewModel({ fixtureMode = "full", onNavigate = null
         onPlay: () =>
           openNotice("Start Chat", `Starting "${item.title}" begins its session when live wiring lands. Nothing was started in this preview.`),
       })),
-    [visibleItems, likedIds, savedIds]
+    [visibleItems, likedIds, savedIds, toggleLiked, toggleSaved]
   );
 
   const hasMore = visibleCount < filteredItems.length;

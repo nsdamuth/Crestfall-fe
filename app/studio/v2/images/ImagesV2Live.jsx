@@ -9,14 +9,43 @@ import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
+import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
-import MediaHistoryGrid from "@/components/studio/image-studio/MediaHistoryGrid";
+import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
+import { useMediaHistoryGridViewModel } from "@/components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel";
+import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { useIngredientPickerViewModel } from "@/components/studio/image-studio/ingredient-picker/useIngredientPickerViewModel";
 import { useSaveIngredientPresetViewModel } from "@/components/studio/image-studio/save-ingredient-preset/useSaveIngredientPresetViewModel";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
+import { orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
+
+// Filter sections, RULED 6 Sep 2026 (FE/FILTERS, Brian): Activity
+// (Liked, Saved) first, then Media (All, Images, Videos); multi-select
+// across sections, one media pick, All clears the media pick. No Sort
+// on Images (the jobs feed has no sort, CR-058). Labels Title Case.
+const MEDIA_OPTIONS = [
+  { value: "ALL", label: "All" },
+  { value: "IMAGES", label: "Images" },
+  { value: "VIDEOS", label: "Videos" },
+];
+const ACTIVITY_OPTIONS = [
+  { value: "LIKED", label: "Liked" },
+  { value: "BOOKMARKED", label: "Saved" },
+];
+
+function countMedia(items, value) {
+  if (value === "IMAGES") return items.filter((item) => item.type !== "VIDEO").length;
+  if (value === "VIDEOS") return items.filter((item) => item.type === "VIDEO").length;
+  return items.length;
+}
+
+function countActivity(items, value) {
+  if (value === "LIKED") return items.filter((item) => item.liked).length;
+  return items.filter((item) => item.bookmarked).length;
+}
 
 function LiveIngredientPicker({ pickerProps, backLabel = null }) {
   const [searchValue, setSearchValue] = useState("");
@@ -104,6 +133,44 @@ export default function ImagesV2Live() {
   const live = useImagesV2LiveViewModel({
     onOpenCameraPresetPicker: openCameraPresetPicker,
   });
+  // The page owns the shared filter bar (RULED 6 Sep 2026), so it calls
+  // the grid ViewModel itself and renders the grid skin with the
+  // header's own filter controls off.
+  const grid = useMediaHistoryGridViewModel({
+    ...live.mediaHistoryProps,
+    imageStudioHref: "/studio/v2/images",
+  });
+  const filterGroups = useMemo(
+    () =>
+      orderFilterGroups([
+        {
+          id: "activity",
+          label: "Activity",
+          isMultiSelect: true,
+          options: ACTIVITY_OPTIONS.map((option) => ({
+            ...option,
+            count: countActivity(grid.mediaItems, option.value),
+          })),
+        },
+        {
+          id: "media",
+          label: "Media",
+          isMultiSelect: false,
+          options: MEDIA_OPTIONS.map((option) => ({
+            ...option,
+            count: countMedia(grid.mediaItems, option.value),
+          })),
+        },
+      ]),
+    [grid.mediaItems]
+  );
+  const selectedFilterValues = useMemo(
+    () => ({
+      activity: grid.activityFilters,
+      media: grid.mediaFilter === "ALL" ? [] : [grid.mediaFilter],
+    }),
+    [grid.activityFilters, grid.mediaFilter]
+  );
   const nestedBackLabel = mobileCreatorOpen ? "Back to Image Editor" : null;
   const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
   const generationPending = ["loading", "pending", "submitting"].includes(generationStatus);
@@ -122,6 +189,33 @@ export default function ImagesV2Live() {
               eyebrow="Images"
               title="Image Studio"
               description="Create images from your Crestfall assets, then manage and reuse the results from one live workspace."
+            />
+          }
+          filterBarSlot={
+            <KitStudioFilterBarView
+              searchValue={grid.searchQuery}
+              searchPlaceholder="Search your images"
+              onSearchChange={grid.onChangeSearchQuery}
+              filterGroups={filterGroups}
+              selectedValues={selectedFilterValues}
+              onFilterToggle={(groupId, value) => {
+                if (groupId === "media") grid.onSetMediaFilter?.(value);
+                else grid.onToggleActivityFilter?.(value);
+              }}
+              onClearFilters={grid.onClearFilters}
+              sortOptions={[]}
+              viewModeSlot={
+                // Density, RULED 6 Sep 2026: the shared toggle slot
+                // carries the Large/Grid density flip through the
+                // unchanged onToggleMobileGrid (grid = compact).
+                <ViewModeToggleView
+                  value={grid.compactMobileGrid ? "grid" : "list"}
+                  label="Library density"
+                  onChange={(next) => {
+                    if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
+                  }}
+                />
+              }
             />
           }
           bannerSlot={
@@ -143,9 +237,9 @@ export default function ImagesV2Live() {
         >
           <div className="flex items-start gap-[var(--space-6)]">
             <div className="min-w-0 flex-1">
-              <MediaHistoryGrid
-                {...live.mediaHistoryProps}
-                imageStudioHref="/studio/v2/images"
+              <MediaHistoryGridSkin
+                {...grid}
+                showFilterControls={false}
                 mobilePrimaryActionLabel="Image Editor"
                 onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
               />

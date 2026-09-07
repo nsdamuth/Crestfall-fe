@@ -1,4 +1,18 @@
-export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.3.0";
+export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.4.0";
+
+/**
+ * 1.4.0 (6 Sep 2026, FE/FILTERS, RULED by Brian), additive:
+ * - showFilterControls (default true): false hides the header's
+ *   Filters and Large/Grid buttons and the Filter library surfaces so
+ *   a page can own the shared filter bar and panel instead.
+ * - mediaFilter ("ALL" | "IMAGES" | "VIDEOS") and activityFilters
+ *   (string[] of "LIKED" | "BOOKMARKED"), with onSetMediaFilter(value)
+ *   and onToggleActivityFilter(value): the two-section filter model
+ *   (one media pick, All clears it; Liked and Saved multi-select,
+ *   combined with the media pick). activeFilter and onSetFilter stay
+ *   for the legacy header and report the same single value they did.
+ * - the Activity option label reads "Saved" (Title Case ruling).
+ */
 
 /**
  * Portable presentation contract for Image Studio's generated-media history.
