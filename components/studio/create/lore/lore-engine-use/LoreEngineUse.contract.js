@@ -1,6 +1,9 @@
 export const LORE_ENGINE_USE_CONTRACT_VERSION =
   "lore_engine_use_contract_v2";
 
+export const LORE_ENGINE_USE_AUTHORING_JSON_CONTRACT_VERSION =
+  "lore_engine_use_authoring_v1";
+
 export const LORE_ENGINE_USE_KNOWLEDGE_MODES = Object.freeze([
   {
     value: "PERSONAL_PARTICIPANT",
