@@ -72,6 +72,8 @@ import WardrobeFieldsSection from "@/components/studio/my-creations/edit/section
 import StructuredRegistryFieldsSection from "@/components/studio/my-creations/edit/sections/structured-registries/StructuredRegistryFieldsSection";
 import MechanicsModuleFieldsSection from "@/components/studio/my-creations/edit/sections/mechanics-modules/MechanicsModuleFieldsSection";
 import MechanicsActionFieldsSection from "@/components/studio/my-creations/edit/sections/mechanics-actions/MechanicsActionFieldsSection";
+import MechanicsActionSetFieldsSection from "@/components/studio/my-creations/edit/sections/mechanics-actions/MechanicsActionSetFieldsSection";
+import MechanicsActionAvailabilitySection from "@/components/studio/my-creations/edit/sections/mechanics-actions/MechanicsActionAvailabilitySection";
 import RuntimeMechanicsModulesSection from "@/components/studio/my-creations/edit/sections/mechanics-modules/RuntimeMechanicsModulesSection";
 import ActorMechanicsProfileAttachmentSection from "@/components/studio/characters/ActorMechanicsProfileAttachmentSection";
 
@@ -226,6 +228,10 @@ export const SECTION_COMPONENT_REGISTRY = {
       defaultInheritanceMode: "LOCAL_ONLY",
       defaultMechanicsScopeMode: "STORY_ROOM",
     }),
+    availableActions: {
+      Component: MechanicsActionAvailabilitySection,
+      buildProps: (ctx) => ({ form: ctx.form, updateDataField: ctx.updateDataField, ownerLabel: "this scenario" }),
+    },
   },
 
   NARRATOR: {
@@ -251,6 +257,10 @@ export const SECTION_COMPONENT_REGISTRY = {
       defaultInheritanceMode: "INHERITABLE",
       defaultMechanicsScopeMode: "STORY_ROOM",
     }),
+    availableActions: {
+      Component: MechanicsActionAvailabilitySection,
+      buildProps: (ctx) => ({ form: ctx.form, updateDataField: ctx.updateDataField, ownerLabel: "this Story" }),
+    },
   },
 
   STORYLINE: {
@@ -293,6 +303,19 @@ export const SECTION_COMPONENT_REGISTRY = {
     },
   },
 
+  MECHANICS_ACTION_SET: {
+    actionSet: {
+      Component: MechanicsActionSetFieldsSection,
+      buildProps: (ctx) => ({
+        value:
+          ctx.form.data?.mechanics_action_set ||
+          ctx.form.data?.mechanicsActionSet ||
+          {},
+        onChange: (nextSet) => ctx.updateDataField("mechanics_action_set", nextSet),
+      }),
+    },
+  },
+
   RULES_CODEX: {
     codex: {
       Component: RulesCodexEditor,
@@ -329,6 +352,10 @@ export const SECTION_COMPONENT_REGISTRY = {
           {},
         onChange: (nextProfile) => ctx.updateDataField("actor_mechanics_profile", nextProfile),
       }),
+    },
+    availableActions: {
+      Component: MechanicsActionAvailabilitySection,
+      buildProps: (ctx) => ({ form: ctx.form, updateDataField: ctx.updateDataField, ownerLabel: "this Actor Mechanics Profile" }),
     },
   },
 

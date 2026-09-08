@@ -99,6 +99,7 @@ const tabs = [
   { id: "IN_REVIEW", label: "In Review" },
   { id: "MECHANICS_MODULE", label: "Mechanics Modules" },
   { id: "MECHANICS_ACTION", label: "Mechanics Actions" },
+  { id: "MECHANICS_ACTION_SET", label: "Mechanics Action Sets" },
   { id: "RULES_CODEX", label: "Rules Codices" },
   { id: "LORE", label: "Lore Assets" },
   { id: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profiles" },
@@ -187,6 +188,10 @@ const typeMeta = {
   },
   MECHANICS_ACTION: {
     label: "Mechanics Action",
+    icon: Activity,
+  },
+  MECHANICS_ACTION_SET: {
+    label: "Mechanics Action Set",
     icon: Activity,
   },
   RULES_CODEX: {
@@ -278,6 +283,7 @@ const SCENARIO_EDIT_SECTIONS = [
   { id: "middleware", label: "Middleware", icon: ShieldCheck },
   { id: "runtime", label: "Opening & Runtime", icon: MessageSquare },
   { id: "runtimeModules", label: "Runtime Modules", icon: Activity },
+  { id: "availableActions", label: "Available Actions", icon: Activity },
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
@@ -301,6 +307,7 @@ const ROOM_TEMPLATE_EDIT_SECTIONS = [
   { id: "runtime", label: "Runtime Guidance", icon: BookOpen },
   { id: "narrative", label: "Narrative Runtime", icon: GitBranch },
   { id: "runtimeModules", label: "Runtime Modules", icon: Activity },
+  { id: "availableActions", label: "Available Actions", icon: Activity },
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
@@ -348,6 +355,13 @@ const MECHANICS_ACTION_EDIT_SECTIONS = [
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
 
+const MECHANICS_ACTION_SET_EDIT_SECTIONS = [
+  { id: "overview", label: "Overview", icon: Eye },
+  { id: "actionSet", label: "Action Set", icon: Activity },
+  { id: "publishing", label: "Publishing", icon: ShieldCheck },
+  { id: "danger", label: "Danger Zone", icon: AlertTriangle },
+];
+
 const RULES_CODEX_EDIT_SECTIONS = [
   { id: "overview", label: "Overview", icon: Eye },
   { id: "codex", label: "Rules & Interpretation", icon: BookOpen },
@@ -366,6 +380,7 @@ const LORE_EDIT_SECTIONS = [
 const ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS = [
   { id: "overview", label: "Overview", icon: Eye },
   { id: "profile", label: "Actor Mechanics Profile", icon: Activity },
+  { id: "availableActions", label: "Available Actions", icon: Activity },
   { id: "publishing", label: "Publishing", icon: ShieldCheck },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ];
@@ -425,7 +440,7 @@ const CHARACTER_SECTION_GROUPS = [
 const ROOM_TEMPLATE_SECTION_GROUPS = [
   { id: "story", label: "Story", sectionIds: ["overview", "room", "opening"] },
   { id: "castWorld", label: "Cast & World", sectionIds: ["package", "multiplayer"] },
-  { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules"] },
+  { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules", "availableActions"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
@@ -481,7 +496,7 @@ const IMAGE_PRESET_SECTION_GROUPS = [
 
 const SCENARIO_SECTION_GROUPS = [
   { id: "content", label: "Content", sectionIds: ["overview", "scenario", "storyCircle", "cast", "middleware", "runtime"] },
-  { id: "systems", label: "Systems", sectionIds: ["runtimeModules"] },
+  { id: "systems", label: "Systems", sectionIds: ["runtimeModules", "availableActions"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
@@ -524,7 +539,7 @@ const LORE_SECTION_GROUPS = [
 
 const ACTOR_MECHANICS_PROFILE_SECTION_GROUPS = [
   { id: "content", label: "Content", sectionIds: ["overview"] },
-  { id: "systems", label: "Systems", sectionIds: ["profile"] },
+  { id: "systems", label: "Systems", sectionIds: ["profile", "availableActions"] },
   { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
 ];
 
@@ -580,6 +595,10 @@ const CREATION_TYPE_SECTION_GROUPS = {
   CHARACTER_TEMPLATE: CHARACTER_TEMPLATE_SECTION_GROUPS,
   MECHANICS_MODULE: MECHANICS_MODULE_SECTION_GROUPS,
   MECHANICS_ACTION: MECHANICS_ACTION_SECTION_GROUPS,
+  MECHANICS_ACTION_SET: [
+    { id: "set", label: "Action Set", sectionIds: ["overview", "actionSet"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
   RULES_CODEX: RULES_CODEX_SECTION_GROUPS,
   LORE: LORE_SECTION_GROUPS,
   ACTOR_MECHANICS_PROFILE: ACTOR_MECHANICS_PROFILE_SECTION_GROUPS,
@@ -607,6 +626,7 @@ const CREATION_TYPE_SECTIONS = {
   RULES_CODEX: RULES_CODEX_EDIT_SECTIONS,
   MECHANICS_MODULE: MECHANICS_MODULE_EDIT_SECTIONS,
   MECHANICS_ACTION: MECHANICS_ACTION_EDIT_SECTIONS,
+  MECHANICS_ACTION_SET: MECHANICS_ACTION_SET_EDIT_SECTIONS,
   LOCATION_REGISTRY: LOCATION_REGISTRY_EDIT_SECTIONS,
   FACTION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
   ORGANIZATION_REGISTRY: STRUCTURED_REGISTRY_EDIT_SECTIONS,
@@ -650,7 +670,7 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
   ROOM_TEMPLATE: [
     { id: "story", label: "Story", sectionIds: ["overview", "room", "opening"] },
     { id: "castWorld", label: "Cast & World", sectionIds: ["package", "multiplayer"] },
-    { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules"] },
+    { id: "runtime", label: "Runtime", sectionIds: ["runtime", "narrative", "runtimeModules", "availableActions"] },
     { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
@@ -706,7 +726,7 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
   ],
   SCENARIO: [
     { id: "scenario", label: "Scenario", sectionIds: ["overview", "scenario", "storyCircle"] },
-    { id: "castRuntime", label: "Cast & Runtime", sectionIds: ["cast", "middleware", "runtime", "runtimeModules"] },
+    { id: "castRuntime", label: "Cast & Runtime", sectionIds: ["cast", "middleware", "runtime", "runtimeModules", "availableActions"] },
     { id: "media", label: "Artwork & Media", sectionIds: [], hostsMedia: true },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
@@ -737,6 +757,10 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
     { id: "action", label: "Action", sectionIds: ["overview", "action"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
+  MECHANICS_ACTION_SET: [
+    { id: "set", label: "Action Set", sectionIds: ["overview", "actionSet"] },
+    { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
+  ],
   RULES_CODEX: [
     { id: "codex", label: "Codex", sectionIds: ["overview", "codex"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
@@ -749,7 +773,7 @@ const CREATION_TYPE_EDITOR_PAGE_GROUPS = {
   ],
   ACTOR_MECHANICS_PROFILE: [
     { id: "profile", label: "Profile", sectionIds: ["overview"] },
-    { id: "systems", label: "Systems", sectionIds: ["profile"] },
+    { id: "systems", label: "Systems", sectionIds: ["profile", "availableActions"] },
     { id: "publishing", label: "Publishing", sectionIds: ["publishing", "danger"] },
   ],
   STATS_POOLS_PROFILE: [
@@ -818,6 +842,7 @@ export {
   WARDROBE_EDIT_SECTIONS,
   MECHANICS_MODULE_EDIT_SECTIONS,
   MECHANICS_ACTION_EDIT_SECTIONS,
+  MECHANICS_ACTION_SET_EDIT_SECTIONS,
   RULES_CODEX_EDIT_SECTIONS,
   LORE_EDIT_SECTIONS,
   ACTOR_MECHANICS_PROFILE_EDIT_SECTIONS,

@@ -57,6 +57,8 @@ export const CATALOG_CREATION_DOMAINS = Object.freeze([
       { value: "ABILITY_SPELL_PROFILE", label: "Ability & Spell Profile" },
       { value: "WALLET_PROFILE", label: "Wallet Profile" },
       { value: "MECHANICS_MODULE", label: "Mechanics Module" },
+      { value: "MECHANICS_ACTION", label: "Mechanics Action" },
+      { value: "MECHANICS_ACTION_SET", label: "Mechanics Action Set" },
       { value: "ACTOR_MECHANICS_PROFILE", label: "Actor Mechanics Profile" },
       // Owner ruling 6 Sep 2026 (FE/FILTERS): "Rules Codex" sitewide,
       // one name everywhere, allowlisted by that exact string in the

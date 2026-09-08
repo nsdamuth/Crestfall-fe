@@ -113,6 +113,14 @@ const creationAssets = [
     image: "/assets/covers/crestfall-drawings-cover.png",
   },
   {
+    title: "Mechanics Action Set",
+    eyebrow: "Reusable Action Library",
+    description:
+      "Group first-class Mechanics Actions into reusable libraries that can be made available to Stories or actor mechanics packages.",
+    href: "/studio/create/mechanics-action-set",
+    image: "/assets/covers/crestfall-drawings-cover.png",
+  },
+  {
     title: "Rules Codex",
     eyebrow: "Interpretation Layer",
     description:

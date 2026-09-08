@@ -523,6 +523,7 @@ export const FULL_STUDIO_SECTION_DEFINITIONS = Object.freeze([
       "Wallet Profile",
       "Mechanics Module",
       "Mechanics Action",
+      "Mechanics Action Set",
       "Actor Mechanics Profile",
       "Rules Codex",
     ],
