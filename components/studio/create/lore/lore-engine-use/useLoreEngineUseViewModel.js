@@ -14,6 +14,10 @@ import {
   LORE_ENGINE_USE_CONTRACT_VERSION,
   LORE_ENGINE_USE_KNOWLEDGE_MODES,
 } from "./LoreEngineUse.contract";
+import {
+  buildLoreEngineUseAuthoringConfiguration,
+  projectLoreEngineUseConfigurationToAuthoringState,
+} from "./loreEngineUseJsonEditor.validation";
 
 const ACTIVE_STATUSES = new Set([
   "QUEUED",
@@ -141,6 +145,7 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   });
   const [storyContextLoadStatus, setStoryContextLoadStatus] = useState("IDLE");
   const [storyContextLoadMessage, setStoryContextLoadMessage] = useState("");
+  const [jsonEditorOpen, setJsonEditorOpen] = useState(false);
 
   const source = state.source || {};
   const submissions = Array.isArray(state.submissions)
@@ -225,6 +230,7 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     setSelectedLocationIds([]);
     setKnowledgeModes({});
     setCharacterAccess({});
+    setJsonEditorOpen(false);
     setActionStatus("IDLE");
     setActionMessage("");
   }, [configuredReleaseId, sourceReleaseId]);
@@ -481,6 +487,40 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     [characterAccess, includedChapterIds, includedSectionIds]
   );
 
+  const authoringConfiguration = useMemo(
+    () =>
+      buildLoreEngineUseAuthoringConfiguration({
+        scopeMode,
+        selectedSectionIds,
+        selectedCharacterIds,
+        selectedLocationIds,
+        knowledgeModes,
+        characterAccess,
+      }),
+    [
+      characterAccess,
+      knowledgeModes,
+      scopeMode,
+      selectedCharacterIds,
+      selectedLocationIds,
+      selectedSectionIds,
+    ]
+  );
+
+  const applyImportedEngineUseConfiguration = useCallback((configuration) => {
+    const projected = projectLoreEngineUseConfigurationToAuthoringState(configuration);
+    setScopeModeState(projected.scopeMode);
+    setSelectedSectionIds(projected.selectedSectionIds);
+    setSelectedCharacterIds(projected.selectedCharacterIds);
+    setSelectedLocationIds(projected.selectedLocationIds);
+    setKnowledgeModes(projected.knowledgeModes);
+    setCharacterAccess(projected.characterAccess);
+    setActionStatus("SUCCESS");
+    setActionMessage(
+      "Engine Use JSON applied to the current authoring form. Review it before submitting."
+    );
+  }, []);
+
   const canSubmit =
     Boolean(creationId && sourceReleaseId) &&
     !isActive &&
@@ -644,6 +684,8 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     storyContextOptions,
     storyContextLoadStatus,
     storyContextLoadMessage,
+    jsonEditorOpen,
+    authoringConfiguration,
     canSubmit,
     canCancel:
       ["QUEUED", "PREPARING"].includes(latestStatus) &&
@@ -663,6 +705,9 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     setCharacterAvailabilityMode,
     setCharacterKnowledgeTimeField,
     toggleCharacterContextAllowlist,
+    openJsonEditor: () => setJsonEditorOpen(true),
+    closeJsonEditor: () => setJsonEditorOpen(false),
+    applyImportedEngineUseConfiguration,
     submit,
     cancel,
     withdraw,

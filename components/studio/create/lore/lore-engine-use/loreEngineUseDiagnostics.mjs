@@ -20,6 +20,8 @@ test("Lore Engine Use shell follows LOOM boundaries", () => {
 
   assert.match(shell, /useLoreEngineUseViewModel/);
   assert.match(shell, /LoreEngineUseView/);
+  assert.match(shell, /LoreEngineUseJsonEditorModal/);
+  assert.match(shell, /jsonEditorSlot/);
   assert.match(viewModel, /fetchLoreEngineUseState/);
   assert.match(viewModel, /submitLoreForEngineUse/);
   assert.match(viewModel, /cancelLoreEngineUseSubmission/);
@@ -32,7 +34,12 @@ test("Lore Engine Use shell follows LOOM boundaries", () => {
   assert.match(viewModel, /allowedScenarioIds/);
   assert.match(viewModel, /allowedRoomTemplateIds/);
   assert.match(viewModel, /fetchOwnedCreations/);
+  assert.match(viewModel, /buildLoreEngineUseAuthoringConfiguration/);
+  assert.match(viewModel, /projectLoreEngineUseConfigurationToAuthoringState/);
+  assert.match(viewModel, /jsonEditorOpen/);
+  assert.match(viewModel, /applyImportedEngineUseConfiguration/);
   assert.match(view, /Submit for Engine Use/);
+  assert.match(view, /Engine Use JSON/);
   assert.match(view, /Character knowledge/);
   assert.match(view, /Knowledge scope/);
   assert.match(view, /Explicit exclusions/);
@@ -63,6 +70,35 @@ test("engine-use routes preserve the Crestfall service boundary", () => {
   assert.match(route, /submitLoreForEngineUse/);
   assert.match(repository, /postgraphileRequest/);
   assert.match(repository, /createLoreEngineUseSubmissionV3JsonAsActor/);
+});
+
+
+test("Engine Use JSON editor is form-only, contract checked, and revision aware", () => {
+  const validation = read(
+    "components/studio/create/lore/lore-engine-use/loreEngineUseJsonEditor.validation.js"
+  );
+  const modalViewModel = read(
+    "components/studio/create/lore/lore-engine-use/useLoreEngineUseJsonEditorViewModel.js"
+  );
+  const modalView = read(
+    "components/studio/create/lore/lore-engine-use/LoreEngineUseJsonEditorModal.view.jsx"
+  );
+  const contract = read(
+    "components/studio/create/lore/lore-engine-use/LoreEngineUse.contract.js"
+  );
+
+  assert.match(contract, /lore_engine_use_authoring_v1/);
+  assert.match(validation, /Character is not tagged in the active public Lore revision/);
+  assert.match(validation, /Location is not tagged in the active public Lore revision/);
+  assert.match(validation, /Excluded block is outside this Character knowledge scope/);
+  assert.match(validation, /knowledgeAvailableFrom must not be later/);
+  assert.match(validation, /Legacy abbreviated configuration accepted/);
+  assert.match(modalViewModel, /validateLoreEngineUseJsonText/);
+  assert.match(modalViewModel, /Engine Use JSON downloaded/);
+  assert.match(modalView, /Validate & apply/);
+  assert.match(modalView, /publicReleaseId is intentionally omitted/);
+  assert.match(modalView, /does not publish, submit, index, verify, activate, cancel, or withdraw/);
+  assert.doesNotMatch(modalView, /@\/lib\/client|Supabase|PostGraphile/);
 });
 
 console.log("Lore engine-use LOOM diagnostics passed.");

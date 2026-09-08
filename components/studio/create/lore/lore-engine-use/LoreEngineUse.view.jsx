@@ -3,6 +3,7 @@
 import {
   AlertTriangle,
   BookOpenCheck,
+  Braces,
   CheckCircle2,
   Clock3,
   LoaderCircle,
@@ -685,6 +686,7 @@ export default function LoreEngineUseView({
   storyContextOptions = { scenarios: [], roomTemplates: [] },
   storyContextLoadStatus = "IDLE",
   storyContextLoadMessage = "",
+  jsonEditorSlot = null,
   canSubmit = false,
   canCancel = false,
   canWithdraw = false,
@@ -700,6 +702,7 @@ export default function LoreEngineUseView({
   setCharacterAvailabilityMode,
   setCharacterKnowledgeTimeField,
   toggleCharacterContextAllowlist,
+  openJsonEditor,
   submit,
   cancel,
   withdraw,
@@ -727,18 +730,30 @@ export default function LoreEngineUseView({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={refresh}
-          disabled={loadStatus === "LOADING"}
-          className="cf-btn cf-btn--secondary cf-btn--sm"
-        >
-          <RefreshCw
-            size={13}
-            className={loadStatus === "LOADING" ? "animate-spin" : ""}
-          />
-          Refresh
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {hasPublicRelease && !isActive && !hasAuthoritativeConfiguration ? (
+            <button
+              type="button"
+              onClick={openJsonEditor}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              <Braces size={13} />
+              Engine Use JSON
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={refresh}
+            disabled={loadStatus === "LOADING"}
+            className="cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            <RefreshCw
+              size={13}
+              className={loadStatus === "LOADING" ? "animate-spin" : ""}
+            />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {loadMessage ? (
@@ -858,6 +873,9 @@ export default function LoreEngineUseView({
 
           {!isActive && !hasAuthoritativeConfiguration ? (
             <div className="mt-5 grid gap-5">
+              <div className="rounded-xl border border-violet-300/20 bg-violet-300/5 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
+                Use <span className="text-[var(--ink)]">Engine Use JSON</span> to import or export this complete unsent configuration. Applying JSON only populates the form; the normal submit action remains authoritative.
+              </div>
               <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">
                   <BookOpenCheck size={19} className="text-violet-200" />
@@ -1092,6 +1110,7 @@ export default function LoreEngineUseView({
           <SubmissionHistory submissions={submissions} />
         </>
       )}
+      {jsonEditorSlot}
     </div>
   );
 }
