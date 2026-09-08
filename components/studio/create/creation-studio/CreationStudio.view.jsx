@@ -162,6 +162,7 @@ const GUIDED_MILESTONE_DEFAULT_ART = Object.freeze({
   "Progression Profile": "/assets/covers/crestfall-sundial-cover.png",
   "Mechanics Module": "/assets/covers/crestfall-drawings-cover.png",
   "Mechanics Action": "/assets/covers/crestfall-drawings-cover.png",
+  "Mechanics Action Set": "/assets/covers/crestfall-drawings-cover.png",
   "Actor Mechanics Profile": "/assets/covers/crestfall-compass-cover.png",
   "Rules Codex": "/assets/covers/crestfall-book-cover.png",
   "Character Template": "/assets/characters/aethelgard/alyera/profile.png",

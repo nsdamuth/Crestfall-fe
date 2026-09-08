@@ -337,6 +337,8 @@ test("Rules and mechanics remain isolated from story assets", () => {
     "Ability & Spell Profile",
     "Wallet Profile",
     "Mechanics Module",
+    "Mechanics Action",
+    "Mechanics Action Set",
     "Actor Mechanics Profile",
     "Rules Codex",
   ]);

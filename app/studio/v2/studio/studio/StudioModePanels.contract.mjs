@@ -47,6 +47,8 @@ const STUDIO_ASSET_IDENTITY_BY_TITLE = Object.freeze({
   "Ability & Spell Profile": "ABILITY_SPELL_PROFILE",
   "Wallet Profile": "WALLET_PROFILE",
   "Mechanics Module": "MECHANICS_MODULE",
+  "Mechanics Action": "MECHANICS_ACTION",
+  "Mechanics Action Set": "MECHANICS_ACTION_SET",
   "Actor Mechanics Profile": "ACTOR_MECHANICS_PROFILE",
   "Rules Codex": "RULES_CODEX",
   "Character Template": "CHARACTER_TEMPLATE",

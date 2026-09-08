@@ -50,6 +50,7 @@ export function buildCreationEditTypeFlags({ form = {}, creationId = "" } = {}) 
     isLocationRegistry: creationType === "LOCATION_REGISTRY",
     isMechanicsModule: creationType === "MECHANICS_MODULE",
     isMechanicsAction: creationType === "MECHANICS_ACTION",
+    isMechanicsActionSet: creationType === "MECHANICS_ACTION_SET",
     isRulesCodex: creationType === "RULES_CODEX",
     isLore: creationType === "LORE",
     isActorMechanicsProfile: creationType === "ACTOR_MECHANICS_PROFILE",
