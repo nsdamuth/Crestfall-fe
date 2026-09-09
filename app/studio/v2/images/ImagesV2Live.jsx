@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { Coins, Loader2 } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
@@ -128,10 +128,16 @@ export default function ImagesV2Live() {
   const router = useRouter();
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
+  // Stage tab (Generate, Remix): page-local presentation state. The
+  // Remix body is a later session (note 5); today it reads "Not
+  // available yet".
+  const [composerStage, setComposerStage] = useState("GENERATE");
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const live = useImagesV2LiveViewModel({
     onOpenCameraPresetPicker: openCameraPresetPicker,
+    stage: composerStage,
+    onChangeStage: setComposerStage,
   });
   // The page owns the shared filter bar (RULED 6 Sep 2026), so it calls
   // the grid ViewModel itself and renders the grid skin with the
@@ -171,12 +177,19 @@ export default function ImagesV2Live() {
     }),
     [grid.activityFilters, grid.mediaFilter]
   );
-  const nestedBackLabel = mobileCreatorOpen ? "Back to Image Editor" : null;
+  const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
   const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
   const generationPending = ["loading", "pending", "submitting"].includes(generationStatus);
   const canGenerate =
+    composerStage === "GENERATE" &&
     Boolean(live.panelProps?.canGenerate) &&
     typeof live.panelProps?.onGenerate === "function";
+  const mobileGenerateReason =
+    composerStage !== "GENERATE"
+      ? "Not available yet"
+      : !canGenerate
+        ? String(live.panelProps?.generationHelpText || "")
+        : "";
 
   return (
     <>
@@ -186,9 +199,9 @@ export default function ImagesV2Live() {
           headerSlot={
             <StudioPageHeaderView
               compactMobile
-              eyebrow="Images"
-              title="Image Studio"
-              description="Create images from your Crestfall assets, then manage and reuse the results from one live workspace."
+              eyebrow="Create"
+              title="Media Studio"
+              description="Turn your characters, outfits, and locations into finished images. Manage, reuse, and share them all from one workspace."
             />
           }
           filterBarSlot={
@@ -240,13 +253,17 @@ export default function ImagesV2Live() {
               <MediaHistoryGridSkin
                 {...grid}
                 showFilterControls={false}
-                mobilePrimaryActionLabel="Image Editor"
+                mobilePrimaryActionLabel="Compose"
                 onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
               />
             </div>
 
+            {/* The composer's Generate row is a sticky footer inside
+                this scroll box; the panel pads itself out by
+                --space-4 on every side, so the aside keeps exactly
+                that padding (KitImageCreatorPanel README). */}
             <aside
-              className="sticky hidden w-[24rem] flex-none overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] min-[1100px]:block"
+              className="sticky hidden w-[24rem] flex-none flex-col overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] min-[1100px]:flex"
               style={{
                 top: "calc(var(--topbar-h) + var(--space-4))",
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
@@ -264,15 +281,17 @@ export default function ImagesV2Live() {
             type="button"
             onClick={() => live.panelProps?.onGenerate?.()}
             disabled={!canGenerate}
-            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-50"
-            aria-label="Generate image"
+            title={mobileGenerateReason || undefined}
+            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
           >
-            <Sparkles size={17} />
-            <span>{generationPending ? "Generate another" : "Generate"}</span>
-            {live.panelProps?.coinCostLabel ? (
-              <span className="text-[length:var(--text-label)] opacity-80">
-                {live.panelProps.coinCostLabel}
-              </span>
+            <span>Generate</span>
+            {composerStage !== "GENERATE" ? null : generationPending ? (
+              <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+            ) : (
+              <Coins size={15} aria-hidden="true" />
+            )}
+            {composerStage === "GENERATE" && live.panelProps?.generateCostLabel ? (
+              <span className="tabular-nums">{live.panelProps.generateCostLabel}</span>
             ) : null}
           </button>
         </div>
@@ -283,9 +302,12 @@ export default function ImagesV2Live() {
           variant="modal"
           panelClassName="w-full max-w-2xl"
           onClose={() => setMobileCreatorOpen(false)}
-          ariaLabel="Image Editor"
+          ariaLabel="Media Studio composer"
         >
-          <div className="p-[var(--space-4)] pt-[var(--space-5)] sm:p-[var(--space-6)] sm:pt-[var(--space-8)]">
+          {/* Exactly --space-4 on every side so the composer's sticky
+              footer reaches the modal edges (KitImageCreatorPanel
+              README); the top gets extra room for the close control. */}
+          <div className="flex min-h-full flex-col p-[var(--space-4)] pt-[var(--space-8)]">
             <KitImageCreatorPanel {...live.panelProps} />
           </div>
         </KitModalFrame>

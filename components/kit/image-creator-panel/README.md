@@ -1,17 +1,51 @@
-# Kit Image Creator Panel LOOM package
+# Kit Image Creator Panel LOOM package (the Media Studio composer)
 
-**Contract:** `KitImageCreatorPanel.contract.js` (`1.0.0`)
+**Contract:** `KitImageCreatorPanel.contract.js` (`2.0.0`, 9 Sep 2026)
 
 ## Purpose
 
-Fixture-driven mirror of the live image composer's FUNCTION
-(`docs/SPRINT-E-PLAN.md` section 1.1, R6), never its code. The live
-flow (`components/studio/image-studio/`) is READ ONLY reference and
-is never imported here. Mode toggle, the six live ingredient slots,
-the inline custom-guidance editor, prompt and Options block, the
-generate block, and the video block. Generation and persistence stay
-honest stubs until live wiring (SOP HIDE/STUB law); this package never
-fakes a pending job or a saved preset.
+The composer sidebar of the Media Studio page (`/studio/v2/images`),
+rebuilt 9 Sep 2026 from Brian's notes 1 and 2
+(`docs/references/media-studio/NOTES.md`). The live flow
+(`components/studio/image-studio/`) is READ ONLY reference and is
+never imported here; the page adapter
+(`app/studio/v2/images/images-live/useImagesV2LiveViewModel.js`)
+projects the workbench ViewModel onto this contract. Anything the
+backend cannot do yet renders disabled with the words "Not available
+yet" and never fakes a result, spends coins, or invents a number.
+
+## Anatomy, top to bottom
+
+1. Mode toggle: Image / Video with icons, one outlined track around
+   both options and the active option filled inside it (rounded
+   square, not a pill; ruled 9 Sep 2026, no law change). Video carries
+   the `Soon` label and stays non-interactive while `videoDisabled`.
+2. Stage tabs: Generate and Remix. The Remix stage body is a later
+   session (note 5); today it renders the one line "Not available yet"
+   and the footer button disabled.
+3. Five asset tiles, fixed anatomy: `character` (required, spans the
+   row, quiet gold glow), then `pose`, `outfit`, `location`, `preset`
+   two by two. Empty: icon centered, title centered at the bottom with
+   `required` or `optional` under it, no eyebrow chip. Selected: the
+   image fills the tile with the name centered at the bottom. The
+   Player slot is gone (Character covers it). The caller supplies only
+   each slot's STATE through `slots`, keyed by id.
+4. Custom prompt (optional): one row that grows with the text.
+5. Inline options, no Options dropdown: Render style (slider plus six
+   diagonal step names, each with a hover or tap tooltip carrying its
+   definition, one short context line above the slider), Camera /
+   Framing (the catalogue picker trigger), Wardrobe theme and Aspect
+   ratio (KitDropdown single-selects), Advanced (disclosure, unchanged
+   inside), the scenery-only checkbox when relevant, Negative prompt.
+6. Sticky footer: the Count dropdown (2, 4, 8, 16, 32, 64, 128, 256;
+   values above the backend's 4 render disabled with the tooltip) and
+   one Generate button reading `Generate`, a coin glyph, and the cost
+   (`generateCostLabel`, count times the per-image cost, computed by
+   the caller). Block reasons are the disabled button's tooltip and
+   accessible description, never helper copy on the panel. Errors
+   render as an alert line above the footer.
+
+No coins block: the balance lives in the left sidebar.
 
 ## Boundary
 
@@ -19,76 +53,33 @@ fakes a pending job or a saved preset.
 KitImageCreatorPanel.jsx
   -> useKitImageCreatorPanelViewModel.js
   -> KitImageCreatorPanel.view.jsx
-     -> native snapping render-style rail for the five validated image workflows
-     -> KitDropdownView (../dropdown/KitDropdown.view) for the remaining
-        Options dropdowns and the three video dropdowns
+     -> native snapping render-style rail with inline step tooltips
+     -> KitDropdownView (../dropdown/KitDropdown.view) for Wardrobe
+        theme, Aspect ratio, Count, and the three video dropdowns
 ```
 
-## The six slots are fixed anatomy
-
-Id, label, icon, and savable-as-preset are owned by this package,
-mirroring `components/studio/image-studio/imageStudioData.js`
-`ingredientSlots` verbatim: `character` (Character, required, not
-savable), `playerCharacter` (Player Character, not savable), `pose`
-(Pose, savable), `outfit` (Clothing Source, savable), `location`
-(Location / Scene, savable), `preset` (Rendering Preset, savable). The
-caller supplies only each slot's live STATE through the `slots` prop,
-keyed by the same six ids; character and player character mutual
-exclusivity is the caller's responsibility (matching the live rule:
-picking one clears the other), enforced by whatever state owns
-`slots`, not by this View.
-
-A slot in custom ("Use Once") mode renders the inline guidance editor
-in place of the picker-opening tile: `Custom Guidance` textarea, `Back
-to presets`, `Save as preset` (only for the four savable slots), a
-non-interactive `Using once` active-state indicator, and a clear control. Tapping a
-non-custom tile fires `onSlotActivate`; the caller owns opening the
-ingredient picker (1.2, phase 2).
-
-## Options expander
-
-One control, not two (the live composer's duplicate sliders-icon
-button collapses into this single expander, a presentation change the
-contract permits per FRONTEND-SOP section 13). In V2 Image Studio, Render
-Style is a five-stop snapping rail from Crestfall Fantasy at the left endpoint
-to Crestfall Realistic at the right endpoint. Camera / Framing uses its
-dedicated catalogue picker; Wardrobe Theme, Aspect Ratio, and Output Count
-remain KitDropdown single-selects. Bounded Advanced Workflow Tuning renders
-only semantic controls supplied by the application layer; raw CFG, sampler,
-scheduler, and model selection remain outside the View. The negative prompt
-textarea remains in the same expander.
-
-## Generate block
-
-Coin balance and per-generation cost render from caller-supplied
-labels; `canGenerate` and `generationHelpText` are pre-computed by the
-caller (fixture logic, never business logic in this View), matching
-the live block-reason grammar: insufficient coins beats no-renderable-
-source beats the non-blocking no-clothing help line. `Generate image`
-fires `onGenerate`, which opens the R4 fixture-action notice in every
-fixture-mode consumer; the real job pipeline is live wiring.
+Sticky footer note: the footer uses negative horizontal margins equal
+to `--space-4`, so the consuming wrapper (the desktop `aside` and the
+mobile modal body on the Media Studio page) pads the panel by exactly
+`--space-4` on every side.
 
 ## Video mode
 
-Replaces the prompt/Options/generate block with Duration, Video
-Aspect, and Motion Style dropdowns, a Video Direction textarea, and
-the honest disabled `Generate video soon` stub (no handler, matching
-the live flow).
+Unreachable while `videoDisabled` (alpha). The video block (Duration,
+Video aspect, Motion style, Video direction) is kept for the fixture;
+note 7 replaces it in a later session.
 
 ## Fixture states
 
-`default`, `emptySlots`, `insufficientCoins`, `customIngredient`
-(exercises both the savable and non-savable custom-editor variants in
-one fixture), `videoMode`, `longestContent`.
+`default`, `emptySlots`, `insufficientCoins` (disabled Generate with
+the cost tooltip), `customIngredient`, `remixStage`, `videoMode`,
+`longestContent`.
 
 ## Package assets
 
 - `KitImageCreatorPanel.contract.js`
 - `KitImageCreatorPanel.fixtures.js`
 - `useKitImageCreatorPanelViewModel.js`
-- `/dev/ui-preview/kit-image-creator-panel`
 
-Fixture-only; no query, persistence, or navigation is wired. The
-ingredient picker (1.2) and save-preset (1.3) modals ship as their own
-packages in phase 2 and are wired from a consuming page, not composed
-inside this package.
+Review happens on the live page, signed in, never on a preview route
+(standing order, 29 Aug 2026).

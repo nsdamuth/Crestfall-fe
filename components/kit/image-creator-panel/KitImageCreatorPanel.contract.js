@@ -1,30 +1,29 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.3.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
- * Stable portable UI boundary for the image creator panel kit piece
- * (docs/SPRINT-E-PLAN.md section 1.1, R6). Fixture-driven mirror of
- * the live image composer's function (`components/studio/image-studio/`,
- * READ ONLY reference, never imported): mode toggle, the six live
- * ingredient slots, the custom-guidance inline editor, the prompt and
- * Options block, and the generate/video blocks. No fetch anywhere;
- * the caller supplies display-ready values and receives intent
- * through named callbacks. Generation and persistence stay honest
- * stubs until live wiring (SOP HIDE/STUB law); the panel never fakes
- * a pending job or a saved preset.
+ * Stable portable UI boundary for the Media Studio composer (kit
+ * image creator panel). 2.0.0, 9 Sep 2026 (FE/MEDIA-STUDIO, Brian's
+ * notes 1 and 2, docs/references/media-studio/NOTES.md): the Player
+ * slot is gone (five fixed slots), the Options expander is gone
+ * (options render inline), the coins block is gone (the balance lives
+ * in the left sidebar), output count moved beside the Generate
+ * button, stage tabs (Generate, Remix) sit under the mode toggle, and
+ * the Generate row is a sticky footer. No fetch anywhere; the caller
+ * supplies display-ready values and receives intent through named
+ * callbacks. Anything the backend cannot do yet renders disabled with
+ * the words "Not available yet" and never fakes a result.
  *
- * The six ingredient slots are FIXED anatomy, not caller-supplied
- * data: id, label, icon, and savable-as-preset are owned by this
+ * The five slots are FIXED anatomy, not caller-supplied data: id,
+ * label, icon, requirement, and savable-as-preset are owned by this
  * package (mirroring components/studio/image-studio/imageStudioData.js
- * ingredientSlots verbatim, including the live labels Character,
- * Player Character, Pose, Clothing Source, Location / Scene,
- * Rendering Preset). The caller supplies only each slot's live STATE
- * through the `slots` map, keyed by the same six ids.
+ * ingredientSlots minus playerCharacter). The caller supplies only
+ * each slot's live STATE through the `slots` map, keyed by id.
  *
- * @typedef {"character"|"playerCharacter"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
+ * @typedef {"character"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
  *
  * @typedef {Object} KitImageCreatorSlotState
  * @property {{title: string, subtitle?: string, imageSrc?: string}|null} selection the
- *   chosen ingredient, including its display-ready featured image when available,
+ *   chosen asset, including its display-ready featured image when available,
  *   or null for an empty slot
  * @property {boolean} isCustomMode true renders the inline custom
  *   guidance editor in place of the picker-opening tile
@@ -33,64 +32,91 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.3.0";
  *
  * @typedef {Object} KitImageCreatorOptionField
  * @property {string} id
- * @property {string} label
+ * @property {string} label display label, sentence case
  * @property {string} value
  * @property {{value: string, label: string}[]} options
+ *
+ * @typedef {Object} KitImageCreatorCountOption
+ * @property {string} value
+ * @property {string} label
+ * @property {boolean} [isDisabled] true for counts the backend cannot
+ *   serve yet; the row renders disabled
+ * @property {string} [tooltip] the disabled reason, "Not available yet"
+ *
+ * @typedef {Object} KitImageCreatorRailStop
+ * @property {string} value
+ * @property {string} shortLabel the diagonal step name
+ * @property {string} mappedLabel the full workflow name
+ * @property {string} [definition] one-line definition shown in the
+ *   step's hover or tap tooltip
+ * @property {boolean} [active]
  *
  * @typedef {Object} KitImageCreatorPanelViewProps
  * @property {"IMAGE"|"VIDEO"} mode
  * @property {((mode: "IMAGE"|"VIDEO") => void)|null} onChangeMode
+ * @property {boolean} videoDisabled true keeps the Video option
+ *   non-interactive with the Soon label (alpha default)
+ * @property {string} videoSoonLabel
+ * @property {"GENERATE"|"REMIX"} stage which stage tab is active;
+ *   the caller owns the value (page-local presentation state)
+ * @property {((stage: "GENERATE"|"REMIX") => void)|null} onChangeStage
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
- *   keyed by the six fixed slot ids; an id absent from the map renders
+ *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate
  *   fires when a non-custom slot tile is tapped; the caller owns
- *   opening the ingredient picker (1.2)
+ *   opening the asset picker
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotClear
  *   fires from the clear control on a filled or custom slot
  * @property {((slotId: KitImageCreatorSlotId, text: string) => void)|null} onCustomChangeText
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onCustomBackToPresets
- *   re-opens the picker for that slot (1.2)
+ *   re-opens the picker for that slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onCustomSavePreset
- *   opens the save-preset modal (1.3); only reachable for the four
- *   savable slots (pose, outfit, location, preset)
- * @property {string} promptValue
+ *   opens the save-preset modal; only reachable for the four savable
+ *   slots (pose, outfit, location, preset)
+ * @property {string} promptValue the custom prompt (optional field)
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue
  * @property {((value: string) => void)|null} onChangeNegativePrompt
- * @property {Object|null} renderStyleRailProps optional five-stop snapping
- *   workflow rail. Presentation is owned here; profile values and callbacks are
- *   supplied by the caller.
- * @property {KitImageCreatorOptionField[]} optionFields the remaining inline
- *   Options-expander dropdowns (Wardrobe Theme, Aspect Ratio, Output Count),
- *   single-select. Camera / Framing uses the dedicated modal launcher below so
- *   the larger camera catalogue is not collapsed into a standard dropdown.
+ * @property {{value: string, activeLabel: string, options: KitImageCreatorRailStop[], onChange: Function}|null} renderStyleRailProps
+ *   the six-stop snapping render style rail; presentation is owned
+ *   here, profile values and callbacks are supplied by the caller
+ * @property {KitImageCreatorOptionField[]} optionFields the inline
+ *   single-select dropdowns after Camera / Framing (Wardrobe theme,
+ *   Aspect ratio). Output count is NOT in this list; see countOptions.
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
  * @property {Object|null} advancedTuningProps optional display-ready bounded
- *   workflow tuning projection. The kit renders only semantic sliders supplied
- *   by the caller; workflow limits and payload authority stay outside the View.
- * @property {string} coinBalanceLabel
- * @property {string} coinCostLabel
- * @property {boolean} showInsufficientCoins
+ *   workflow tuning projection, rendered inside the Advanced disclosure
+ * @property {KitImageCreatorCountOption[]} countOptions the output count
+ *   list beside the Generate button (2, 4, 8, 16, 32, 64, 128, 256; values
+ *   the backend cannot serve carry isDisabled and the tooltip)
+ * @property {string} countValue the selected count value
+ * @property {((value: string) => void)|null} onChangeCount reports the
+ *   same selection to the same handler the former Output Count select
+ *   used (contract law, FRONTEND-SOP section 13)
+ * @property {string} generateCostLabel the coin cost shown on the
+ *   Generate button (count times the per-image cost), pre-computed by
+ *   the caller; prices come from the backend or the caller's one
+ *   constant table, never from this View
  * @property {boolean} canGenerate honest disabled-state gate,
- *   pre-computed by the caller (fixture logic, never the View)
- * @property {string} generationHelpText the block-reason or
- *   non-blocking help line, pre-computed by the caller; rendered
- *   whenever non-empty
- * @property {string} generationStatus live generation state; "loading"
- *   renders in-flight feedback while Generate remains available for another independent request
- * @property {string} generationError live submission error text
+ *   pre-computed by the caller
+ * @property {string} generationHelpText the block reason, pre-computed
+ *   by the caller; rendered as the disabled button's tooltip and its
+ *   accessible description, never as helper copy on the panel
+ * @property {string} generationStatus "loading" renders the spinner in
+ *   place of the coin glyph while Generate stays available
+ * @property {string} generationError live submission error text,
+ *   rendered as an alert line above the footer
  * @property {string} cameraPresetLabel selected camera/framing preset label
  * @property {string} cameraPresetDescription selected preset helper copy
  * @property {(() => void)|null} onOpenCameraPresetPicker opens the
- *   camera/framing picker when the live catalog is too large for inline tiles
+ *   camera/framing picker (the catalog is too large for inline tiles)
  * @property {boolean} showSceneryOnlyHelper true for location-only requests
  * @property {boolean} sceneryOnlyHelperEnabled whether scenery optimization is active
  * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
- * @property {(() => void)|null} onGenerate fires the R4 fixture-action
- *   notice in fixture mode; the real job pipeline is live wiring
+ * @property {(() => void)|null} onGenerate fires the real job pipeline
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
- *   Video Aspect, Motion Style
+ *   Video Aspect, Motion Style (video mode, unreachable while videoDisabled)
  * @property {((fieldId: string, value: string) => void)|null} onChangeVideoOption
  * @property {string} videoDirectionValue
  * @property {((value: string) => void)|null} onChangeVideoDirection

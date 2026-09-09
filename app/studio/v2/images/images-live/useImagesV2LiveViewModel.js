@@ -1,20 +1,34 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
 import { useImageStudioWorkbenchViewModel } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import {
+  IMAGE_COUNT_BACKEND_MAX,
   cameraPresetCatalog,
   cameraPresetGroups,
   getCameraPresetDefinition,
+  imageCountOptions,
   ingredientSlots,
   videoAspectRatioOptions,
   videoDurationOptions,
   videoMotionStyleOptions,
 } from "@/components/studio/image-studio/imageStudioData";
+
+// Any action the backend cannot do yet renders disabled with these
+// words and never fakes a result (Media Studio brief, 9 Sep 2026;
+// gaps listed in docs/handoffs/MEDIA-STUDIO-BACKEND.md).
+const NOT_AVAILABLE_LABEL = "Not available yet";
+
+// Sentence-case display labels for the inline option dropdowns
+// (Brian's note 2). Ids and handlers are unchanged (contract law).
+const INLINE_OPTION_LABELS = Object.freeze({
+  "wardrobe-theme": "Wardrobe theme",
+  "aspect-ratio": "Aspect ratio",
+});
 
 function normalizeOptions(options = []) {
   return options.map((option) => ({
@@ -67,7 +81,11 @@ function projectSlotStates(composerProps) {
   );
 }
 
-export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
+export function useImagesV2LiveViewModel({
+  onOpenCameraPresetPicker,
+  stage = "GENERATE",
+  onChangeStage = null,
+} = {}) {
   const account = useStudioAccount();
   const workbench = useImageStudioWorkbenchViewModel({ account });
   const { composerProps } = workbench;
@@ -86,12 +104,10 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   const slots = projectSlotStates(composerProps);
 
   const imageOptionFields = composer.imageOptionFields
-    .filter(
-      (field) => field.id !== "camera-preset" && field.id !== "render-style"
-    )
+    .filter((field) => Boolean(INLINE_OPTION_LABELS[field.id]))
     .map((field) => ({
       id: field.id,
-      label: field.label,
+      label: INLINE_OPTION_LABELS[field.id],
       value: field.value,
       options: field.options,
     }));
@@ -99,6 +115,26 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
   const imageOptionById = new Map(
     composer.imageOptionFields.map((field) => [field.id, field])
   );
+
+  // Output count beside the Generate button. Counts the backend
+  // cannot serve render disabled; the selection still reports to the
+  // same handler the former Output Count select used.
+  const countOptions = imageCountOptions.map((option) => {
+    const count = Number.parseInt(option.value, 10) || 0;
+    const isDisabled = count > IMAGE_COUNT_BACKEND_MAX;
+    return {
+      value: String(option.value),
+      label: String(option.label),
+      ...(isDisabled ? { isDisabled: true, tooltip: NOT_AVAILABLE_LABEL } : {}),
+    };
+  });
+  const countValue = String(composerProps.imageCount || "");
+  const requestedCount = Math.max(1, Number.parseInt(countValue, 10) || 1);
+  const perImageCoinCost = Number(composerProps.coinCost ?? 0) || 0;
+  const generateCostLabel = String(requestedCount * perImageCoinCost);
+
+  const videoModeOption = composer.modeOptions.find((option) => option.id === "VIDEO");
+  const videoDisabled = Boolean(videoModeOption?.disabled ?? true);
 
   const videoOptionFields = [
     {
@@ -109,13 +145,13 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
     },
     {
       id: "video-aspect",
-      label: "Video Aspect",
+      label: "Video aspect",
       value: String(workbench.composerProps.videoAspectRatio || "PORTRAIT"),
       options: normalizeOptions(videoAspectRatioOptions),
     },
     {
       id: "video-motion",
-      label: "Motion Style",
+      label: "Motion style",
       value: String(workbench.composerProps.videoMotionStyle || "SUBTLE"),
       options: normalizeOptions(videoMotionStyleOptions),
     },
@@ -169,6 +205,10 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
     panelProps: {
       mode: composer.mode,
       onChangeMode: composer.onChangeMode,
+      videoDisabled,
+      videoSoonLabel: "Soon",
+      stage,
+      onChangeStage,
       slots,
       onSlotActivate: activateSlot,
       onSlotClear: workbench.composerProps.onClearIngredient,
@@ -184,9 +224,10 @@ export function useImagesV2LiveViewModel({ onOpenCameraPresetPicker } = {}) {
       onChangeOption: (fieldId, value) =>
         imageOptionById.get(fieldId)?.onChange?.(value),
       advancedTuningProps: composer.advancedTuningProps,
-      coinBalanceLabel: composer.coinBalanceLabel,
-      coinCostLabel: composer.coinCostLabel,
-      showInsufficientCoins: composer.showInsufficientCoins,
+      countOptions,
+      countValue,
+      onChangeCount: (value) => imageOptionById.get("image-count")?.onChange?.(value),
+      generateCostLabel,
       canGenerate: composer.canGenerateImage,
       generationHelpText: composer.generationHelpText,
       generationStatus: workbench.composerProps.generationStatus,
