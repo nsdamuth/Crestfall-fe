@@ -301,8 +301,12 @@ copy.
 
 ## 8. Verification law
 
-Every change is checked on a rendered page, at 390 width then 1440
-width. A production build finishes with exit code 0. Any doc touched
+Render checks run only when the brief asks for one. The default
+review is Brian in the browser after push (RULED 9 Sep 2026; this
+replaces the former rule that every change is checked on a rendered
+page at 390 then 1440). When a brief asks for a render, it is checked
+at 390 width then 1440 width by the method below. A production build
+finishes with exit code 0. Any doc touched
 in a pass is re-counted to zero em dashes before the pass is reported
 done. Every finished-task report echoes the brief's manifest, part by
 part, each marked DONE or STOPPED.
