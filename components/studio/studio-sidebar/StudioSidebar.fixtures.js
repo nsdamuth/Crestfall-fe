@@ -108,7 +108,7 @@ const previewGroups = Object.freeze([
     label: "Create",
     items: Object.freeze([
       Object.freeze({ label: "Studio", href: "/studio/v2/studio", iconKey: "user", isBuilt: true, isActive: false }),
-      Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image", isBuilt: true, isActive: false }),
+      Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image", isBuilt: true, isActive: false }),
       Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true, isActive: false }),
     ]),
   }),

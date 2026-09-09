@@ -44,7 +44,7 @@ const ICONS = Object.freeze({
 
 const V2_DRAWER_GROUP_DEFINITIONS = Object.freeze([
   Object.freeze({ label: "Play", itemLabels: Object.freeze(["Home", "Stories", "Adventures"]) }),
-  Object.freeze({ label: "Create", itemLabels: Object.freeze(["Studio", "Images", "Vault"]) }),
+  Object.freeze({ label: "Create", itemLabels: Object.freeze(["Studio", "Media", "Vault"]) }),
   Object.freeze({ label: "Explore", itemLabels: Object.freeze(["Community", "Creators", "Lore"]) }),
 ]);
 

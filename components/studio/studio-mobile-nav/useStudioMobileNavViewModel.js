@@ -35,7 +35,7 @@ export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
   Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
   Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
-  Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image" }),
+  Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image" }),
   Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive" }),
   Object.freeze({ label: "Community", href: "/studio/v2/community", iconKey: "compass" }),
   Object.freeze({ label: "Creators", href: "/studio/v2/creators", iconKey: "users" }),
@@ -46,7 +46,7 @@ export const STUDIO_MOBILE_NAV_V2_BOTTOM_LINKS = Object.freeze([
   Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
   Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
-  Object.freeze({ label: "Images", href: "/studio/v2/images", iconKey: "image" }),
+  Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image" }),
   Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive" }),
 ]);
 
