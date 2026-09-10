@@ -9,6 +9,12 @@ const STAT_ORDER = ["followers", "likes", "plays", "works"];
 // fill from the front, remaining slots render the same ratified
 // geometric placeholder (icons-v7.svg#i-59). The strip no longer
 // hides at zero thumbnails.
+//
+// Slot bed, RULED 10 Sep 2026 (FE/CREATOR-PAGE session 1, Brian's
+// screenshot): every slot sits on the inset-well surface (--surface-1,
+// one step darker than the card's --surface-2) so the three sections
+// read as tiles whether or not a thumbnail fills them. Before this the
+// empty tile used the card's own surface and disappeared into it.
 const THUMBNAIL_SLOT_COUNT = 3;
 
 function ThumbnailSlotTile({ thumbnail, onThumbnailOpen }) {
@@ -18,7 +24,7 @@ function ThumbnailSlotTile({ thumbnail, onThumbnailOpen }) {
         type="button"
         onClick={() => onThumbnailOpen?.(thumbnail.id)}
         aria-label={`Open ${thumbnail.alt || "recent work"}`}
-        className="aspect-square w-full overflow-hidden rounded-[var(--radius-md)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
+        className="aspect-square w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-1)] transition-opacity hover:opacity-90 focus-visible:opacity-90"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -36,7 +42,7 @@ function ThumbnailSlotTile({ thumbnail, onThumbnailOpen }) {
   return (
     <div
       aria-hidden="true"
-      className="flex aspect-square w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)] text-[var(--ink-faint)]"
+      className="flex aspect-square w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-1)] text-[var(--ink-faint)]"
     >
       <svg viewBox="0 0 64 64" className="h-[var(--space-8)] w-[var(--space-8)]">
         <use href="/assets/icons/icons-v7.svg#i-59" />
