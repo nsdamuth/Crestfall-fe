@@ -135,6 +135,9 @@ export function getImageStudioComposerViewProps({
   );
   const renderStyleRailProps = {
     value: activeRenderStyle.value,
+    // The leftmost stop is the untouched default; the panel dims the
+    // active step name while the rail still sits on it (round 3 item 2).
+    defaultValue: RENDER_STYLE_RAIL_STOPS[0].value,
     activeLabel: activeRenderStyle.mappedLabel,
     helperText:
       "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint, and the middle options blend them in different ways.",

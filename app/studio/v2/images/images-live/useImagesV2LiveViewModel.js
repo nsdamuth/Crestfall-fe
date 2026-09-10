@@ -30,6 +30,17 @@ const INLINE_OPTION_LABELS = Object.freeze({
   "aspect-ratio": "Aspect ratio",
 });
 
+// The composer's untouched starting values, mirroring the workbench
+// ViewModel's initial state. The panel reads these to decide whether
+// a control still sits at its default (dim ink) or the user changed
+// it (gold), RULED at browser review round 3 item 2.
+const INLINE_OPTION_DEFAULTS = Object.freeze({
+  "wardrobe-theme": "AUTO",
+  "aspect-ratio": "PORTRAIT_4_5",
+});
+
+const DEFAULT_CAMERA_PRESET_VALUE = "AUTO";
+
 function normalizeOptions(options = []) {
   return options.map((option) => ({
     value: String(option?.value || ""),
@@ -109,6 +120,7 @@ export function useImagesV2LiveViewModel({
       id: field.id,
       label: INLINE_OPTION_LABELS[field.id],
       value: field.value,
+      defaultValue: INLINE_OPTION_DEFAULTS[field.id],
       options: field.options,
     }));
 
@@ -234,6 +246,7 @@ export function useImagesV2LiveViewModel({
       generationError: workbench.composerProps.generationError,
       cameraPresetLabel: normalizedCameraPreset.label,
       cameraPresetDescription: normalizedCameraPreset.description,
+      cameraPresetChanged: normalizedCameraPreset.value !== DEFAULT_CAMERA_PRESET_VALUE,
       onOpenCameraPresetPicker: openCameraPresetPicker,
       showSceneryOnlyHelper: workbench.composerProps.showSceneryOnlyHelper,
       sceneryOnlyHelperEnabled: workbench.composerProps.sceneryOnlyHelperEnabled,

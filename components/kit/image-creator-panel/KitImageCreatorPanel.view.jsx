@@ -66,10 +66,17 @@ function growTextarea(element) {
   element.style.height = `${Math.min(element.scrollHeight, TEXTAREA_MAX_HEIGHT_PX)}px`;
 }
 
-function FieldCaption({ children, note = "" }) {
+// Type hierarchy inside the composer, RULED at browser review round 3
+// item 4. Three steps, no more: SECTION titles (Custom prompt, Render
+// style, Advanced, Negative prompt) are the gold eyebrow at --text-ui;
+// CONTROL titles (Camera / Framing, Wardrobe theme, Aspect ratio, and
+// every Advanced slider) are the quieter, smaller eyebrow at
+// --text-label; VALUES are body text. --text-label is the bottom of
+// the scale, so the size step runs upward from it rather than below.
+function SectionTitle({ children, note = "" }) {
   return (
     <span className="inline-flex items-baseline gap-[var(--space-2)]">
-      <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+      <span className="text-[length:var(--text-ui)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {children}
       </span>
       {note ? (
@@ -78,6 +85,181 @@ function FieldCaption({ children, note = "" }) {
         </span>
       ) : null}
     </span>
+  );
+}
+
+function ControlTitle({ children, trailingSlot = null }) {
+  return (
+    <span className="flex items-center justify-between gap-[var(--space-2)]">
+      <span className="min-w-0 truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        {children}
+      </span>
+      {trailingSlot}
+    </span>
+  );
+}
+
+// State law, RULED at browser review round 3 item 2: a control still
+// at its default reads in the dim ink; a control the user changed
+// reads gold. One helper so the selects, the render style step names,
+// and the Advanced sliders can never drift apart.
+function stateInkClass(isChanged) {
+  return isChanged ? "text-[var(--gold-bright)]" : "text-[var(--ink-dim)]";
+}
+
+// ONE menu look for everything opened out of this panel (round 3 item
+// 3): the surface, radius, padding, and hover state of the footer
+// count menu, shared by construction rather than by copy.
+const MENU_PANEL_RECIPE =
+  "absolute z-50 max-h-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)]";
+
+// Enough of the panel to clear before we commit to opening downward.
+// Measured at click time against the scroll region's bottom edge,
+// which is exactly where the Generate footer starts.
+const MENU_CLEARANCE_PX = 220;
+
+function menuOpensUpward(node) {
+  if (!node || typeof window === "undefined") return false;
+  const triggerRect = node.getBoundingClientRect();
+  const scrollRegion = node.closest("[data-composer-scroll]");
+  const bottomLimit = scrollRegion
+    ? scrollRegion.getBoundingClientRect().bottom
+    : window.innerHeight;
+  return triggerRect.bottom + MENU_CLEARANCE_PX > bottomLimit;
+}
+
+function MenuRow({ label, isSelected, disabled = false, tooltip = "", onSelect }) {
+  return (
+    <button
+      type="button"
+      role="option"
+      aria-selected={isSelected}
+      disabled={disabled}
+      title={tooltip || undefined}
+      onClick={() => onSelect?.()}
+      className={`flex min-h-[var(--control-sm)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+        disabled
+          ? "cursor-not-allowed text-[var(--ink-dim)] opacity-[var(--state-disabled-opacity)]"
+          : isSelected
+            ? "text-[var(--gold-bright)] hover:bg-[var(--state-hover-fill)]"
+            : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+      }`}
+    >
+      <span className="min-w-0 truncate">{label}</span>
+      {disabled && tooltip ? (
+        <span className="flex-none text-[length:var(--text-label)] text-[var(--ink-faint)]">{tooltip}</span>
+      ) : isSelected ? (
+        <Check size={14} aria-hidden="true" className="flex-none" />
+      ) : null}
+    </button>
+  );
+}
+
+// THE shared select for Image settings (round 3 item 1). Control
+// title on its own line, then a full-width trigger underneath showing
+// ONLY the current value and a chevron. Never a label-plus-value pill.
+// The value truncates at the trigger width; it cannot wrap or
+// overflow. Two call shapes, one look: pass `options` and the control
+// owns its menu, or pass `onOpenPicker` and the trigger opens the
+// caller's dialog instead.
+function SettingSelect({
+  fieldId,
+  title,
+  valueLabel,
+  isChanged = false,
+  description = "",
+  options = null,
+  value = "",
+  onChange = null,
+  onOpenPicker = null,
+  idPrefix,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [opensUpward, setOpensUpward] = useState(false);
+  const rootRef = useRef(null);
+
+  const ownsMenu = Array.isArray(options) && options.length > 0;
+  const canOpenPicker = typeof onOpenPicker === "function";
+  const isDisabled = !ownsMenu && !canOpenPicker;
+  const listId = `${idPrefix}-setting-${fieldId}`;
+
+  function handleTriggerClick() {
+    if (isDisabled) return;
+    if (canOpenPicker && !ownsMenu) {
+      onOpenPicker();
+      return;
+    }
+    setOpensUpward(menuOpensUpward(rootRef.current));
+    setIsOpen((current) => !current);
+  }
+
+  return (
+    <div
+      ref={rootRef}
+      className="min-w-0"
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget)) setIsOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setIsOpen(false);
+      }}
+    >
+      <ControlTitle>{title}</ControlTitle>
+
+      <div className="relative mt-[var(--space-2)]">
+        <button
+          type="button"
+          disabled={isDisabled}
+          aria-haspopup={ownsMenu ? "listbox" : "dialog"}
+          aria-expanded={ownsMenu ? isOpen : undefined}
+          aria-controls={ownsMenu && isOpen ? listId : undefined}
+          aria-label={`${title}: ${valueLabel}`}
+          title={description || undefined}
+          onClick={handleTriggerClick}
+          className={`flex min-h-[var(--control-md)] w-full min-w-0 items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-left text-[length:var(--text-body)] leading-[var(--lh-body)] transition-colors duration-[var(--dur-hover)] ${
+            isDisabled
+              ? "cursor-not-allowed border-[var(--line-whisper)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
+              : `border-[var(--line-whisper)] hover:border-[var(--line)] active:bg-[var(--state-pressed-fill)] ${stateInkClass(isChanged)}`
+          }`}
+        >
+          <span className="min-w-0 flex-1 truncate">{valueLabel}</span>
+          <ChevronDown
+            size={16}
+            aria-hidden="true"
+            className={`flex-none text-[var(--gold-ornament)] transition-transform duration-[var(--dur-fast)] ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {ownsMenu && isOpen ? (
+          <div
+            id={listId}
+            role="listbox"
+            aria-label={title}
+            className={`${MENU_PANEL_RECIPE} left-0 right-0 ${
+              opensUpward
+                ? "bottom-[calc(100%+var(--space-1))]"
+                : "top-[calc(100%+var(--space-1))]"
+            }`}
+          >
+            {options.map((option) => (
+              <MenuRow
+                key={option.value}
+                label={option.label}
+                isSelected={option.value === value}
+                disabled={Boolean(option.isDisabled)}
+                tooltip={option.tooltip || ""}
+                onSelect={() => {
+                  onChange?.(option.value);
+                  setIsOpen(false);
+                }}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
   );
 }
 
@@ -314,7 +496,7 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
       </div>
 
       <label className="mt-[var(--space-3)] block">
-        <FieldCaption>Custom guidance</FieldCaption>
+        <SectionTitle>Custom guidance</SectionTitle>
         <textarea
           ref={growTextarea}
           name={`${idPrefix}-custom-guidance-${def.id}`}
@@ -374,6 +556,11 @@ function RenderStyleRail({ rail, idPrefix }) {
     rail.options.findIndex((option) => option.active || option.value === rail.value)
   );
   const maxIndex = Math.max(rail.options.length - 1, 0);
+  // Same state law as the selects: still on the default profile reads
+  // dim, moved off it reads gold. The caller supplies defaultValue;
+  // when it does not, the first stop is the default by definition.
+  const defaultValue = rail.defaultValue || rail.options[0]?.value;
+  const isChanged = rail.value !== defaultValue;
 
   function selectIndex(nextIndex) {
     const boundedIndex = Math.min(Math.max(Number(nextIndex) || 0, 0), maxIndex);
@@ -383,7 +570,7 @@ function RenderStyleRail({ rail, idPrefix }) {
 
   return (
     <section className="min-w-0">
-      <FieldCaption>Render style</FieldCaption>
+      <SectionTitle>Render style</SectionTitle>
 
       <input
         id={`${idPrefix}-render-style-rail`}
@@ -422,7 +609,7 @@ function RenderStyleRail({ rail, idPrefix }) {
                 }}
                 className={`relative h-16 w-full min-w-0 overflow-hidden text-[length:var(--text-label)] transition-colors ${
                   isActive
-                    ? "text-[var(--gold-bright)]"
+                    ? stateInkClass(isChanged)
                     : "text-[var(--ink-faint)] hover:text-[var(--ink-dim)]"
                 }`}
               >
@@ -473,12 +660,7 @@ function AdvancedTuning({ tuning, idPrefix }) {
         onClick={() => setIsOpen((current) => !current)}
         className="flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
       >
-        <span className="inline-flex items-center gap-[var(--space-2)]">
-          Advanced
-          <span className="text-[length:var(--text-label)] text-[var(--ink-dim)]">
-            {tuning.modified ? "custom" : "defaults"}
-          </span>
-        </span>
+        <SectionTitle note={tuning.modified ? "custom" : "defaults"}>Advanced</SectionTitle>
         {isOpen ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
       </button>
 
@@ -486,16 +668,26 @@ function AdvancedTuning({ tuning, idPrefix }) {
         <div className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
           {(tuning.controls || []).map((control) => {
             const inputId = `${idPrefix}-advanced-${control.id}`;
+            // Slider state reads the same way as every select: at the
+            // definition's defaultValue it is dim, moved off it is gold.
+            const isChanged =
+              control.defaultValue !== undefined &&
+              Number(control.value) !== Number(control.defaultValue);
             return (
               <div key={control.id} className="min-w-0">
                 <div className="flex items-center justify-between gap-[var(--space-2)]">
                   <span className="inline-flex min-w-0 items-center gap-[var(--space-1)]">
-                    <label htmlFor={inputId} className="truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
+                    <label
+                      htmlFor={inputId}
+                      className="min-w-0 truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
+                    >
                       {control.label}
                     </label>
                     <InfoTip label={`About ${control.label}`} text={control.description} />
                   </span>
-                  <span className="shrink-0 rounded-[var(--radius-xs)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums text-[var(--gold-ornament)]">
+                  <span
+                    className={`shrink-0 rounded-[var(--radius-xs)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums ${stateInkClass(isChanged)}`}
+                  >
                     {control.valueLabel}
                   </span>
                 </div>
@@ -547,34 +739,6 @@ function AdvancedTuning({ tuning, idPrefix }) {
   );
 }
 
-function CameraPresetTrigger({
-  selectedLabel = "Auto / No Camera Filter",
-  description = "",
-  onOpen = null,
-}) {
-  const isDisabled = typeof onOpen !== "function";
-
-  return (
-    <button
-      type="button"
-      disabled={isDisabled}
-      aria-haspopup="dialog"
-      aria-label={`Camera / Framing: ${selectedLabel}`}
-      title={description || undefined}
-      onClick={() => onOpen?.()}
-      className={`inline-flex min-h-[var(--control-filter)] max-w-full items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
-        isDisabled
-          ? "cursor-not-allowed border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
-          : "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
-      }`}
-    >
-      <span className="truncate">Camera / Framing</span>
-      <span className="truncate text-[var(--gold-bright)]">{selectedLabel}</span>
-      <ChevronDown size={14} className="flex-none text-[var(--gold-ornament)]" aria-hidden="true" />
-    </button>
-  );
-}
-
 // One disclosure, closed by default (browser review round 1, item 4):
 // Render style, Camera / Framing, Wardrobe theme, Aspect ratio,
 // Advanced, Negative prompt. Full width, outlined, chevron; quiet
@@ -588,6 +752,7 @@ function ImageSettings({
   onChangeNegativePrompt,
   cameraPresetLabel,
   cameraPresetDescription,
+  cameraPresetChanged,
   onOpenCameraPresetPicker,
   showSceneryOnlyHelper,
   sceneryOnlyHelperEnabled,
@@ -618,27 +783,42 @@ function ImageSettings({
       </button>
 
       {isOpen ? (
-        <div id={bodyId} className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-5)] pt-[var(--space-4)]">
+        <div id={bodyId} className="flex flex-col gap-[var(--space-6)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-6)] pt-[var(--space-5)]">
           <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
 
-          <div className="flex flex-wrap gap-[var(--space-2)]">
-            <CameraPresetTrigger
-              selectedLabel={cameraPresetLabel}
-              description={cameraPresetDescription}
-              onOpen={onOpenCameraPresetPicker}
+          {/* Call site 1 of the shared SettingSelect: opens the camera
+              catalog picker instead of owning a menu, because the
+              catalog is too large for a menu. */}
+          <SettingSelect
+            fieldId="camera-preset"
+            title="Camera / Framing"
+            valueLabel={cameraPresetLabel}
+            isChanged={cameraPresetChanged}
+            description={cameraPresetDescription}
+            onOpenPicker={onOpenCameraPresetPicker}
+            idPrefix={idPrefix}
+          />
+
+          {/* Call sites 2 and 3: Wardrobe theme and Aspect ratio, each
+              owning its own menu through the same component. */}
+          {optionFields.map((field) => (
+            <SettingSelect
+              key={field.id}
+              fieldId={field.id}
+              title={field.label}
+              valueLabel={
+                field.options?.find((option) => option.value === field.value)?.label ||
+                field.value
+              }
+              isChanged={
+                field.defaultValue !== undefined && field.value !== field.defaultValue
+              }
+              options={field.options}
+              value={field.value}
+              onChange={(value) => onChangeOption?.(field.id, value)}
+              idPrefix={idPrefix}
             />
-            {optionFields.map((field) => (
-              <KitDropdownView
-                key={field.id}
-                label={field.label}
-                ariaLabel={field.label}
-                options={field.options}
-                selectedValues={field.value ? [field.value] : []}
-                isMultiSelect={false}
-                onToggleOption={(value) => onChangeOption?.(field.id, value)}
-              />
-            ))}
-          </div>
+          ))}
 
           <AdvancedTuning tuning={advancedTuningProps} idPrefix={idPrefix} />
 
@@ -660,7 +840,7 @@ function ImageSettings({
           ) : null}
 
           <label className="block">
-            <FieldCaption>Negative prompt</FieldCaption>
+            <SectionTitle note="(optional)">Negative prompt</SectionTitle>
             <textarea
               ref={growTextarea}
               name={`${idPrefix}-negative-prompt`}
@@ -731,40 +911,21 @@ function CountMenu({ options, value, onChange, idPrefix }) {
           id={listId}
           role="listbox"
           aria-label="Output count"
-          className="absolute bottom-[calc(100%+var(--space-1))] left-0 z-50 min-w-[12rem] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)]"
+          className={`${MENU_PANEL_RECIPE} bottom-[calc(100%+var(--space-1))] left-0 min-w-[12rem]`}
         >
-          {options.map((option) => {
-            const isSelected = option.value === value;
-            const disabled = Boolean(option.isDisabled);
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                disabled={disabled}
-                title={option.tooltip || undefined}
-                onClick={() => {
-                  onChange?.(option.value);
-                  setIsOpen(false);
-                }}
-                className={`flex min-h-[var(--control-sm)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
-                  disabled
-                    ? "cursor-not-allowed text-[var(--ink-dim)] opacity-[var(--state-disabled-opacity)]"
-                    : isSelected
-                      ? "text-[var(--gold-bright)] hover:bg-[var(--state-hover-fill)]"
-                      : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
-                }`}
-              >
-                <span className="tabular-nums">{option.label}</span>
-                {disabled && option.tooltip ? (
-                  <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">{option.tooltip}</span>
-                ) : isSelected ? (
-                  <Check size={14} aria-hidden="true" />
-                ) : null}
-              </button>
-            );
-          })}
+          {options.map((option) => (
+            <MenuRow
+              key={option.value}
+              label={option.label}
+              isSelected={option.value === value}
+              disabled={Boolean(option.isDisabled)}
+              tooltip={option.tooltip || ""}
+              onSelect={() => {
+                onChange?.(option.value);
+                setIsOpen(false);
+              }}
+            />
+          ))}
         </div>
       ) : null}
     </div>
@@ -858,7 +1019,7 @@ function VideoBlock({
       </div>
 
       <label className="block">
-        <FieldCaption>Video direction</FieldCaption>
+        <SectionTitle>Video direction</SectionTitle>
         <textarea
           ref={growTextarea}
           name={`${idPrefix}-video-direction`}
@@ -908,6 +1069,7 @@ export default function KitImageCreatorPanelView({
   generationError = "",
   cameraPresetLabel = "Auto / No Camera Filter",
   cameraPresetDescription = "",
+  cameraPresetChanged = false,
   onOpenCameraPresetPicker = null,
   showSceneryOnlyHelper = false,
   sceneryOnlyHelperEnabled = true,
@@ -979,7 +1141,7 @@ export default function KitImageCreatorPanelView({
           ) : isRemixStage ? null : (
             <>
               <label className="block">
-                <FieldCaption note="(optional)">Custom prompt</FieldCaption>
+                <SectionTitle note="(optional)">Custom prompt</SectionTitle>
                 <textarea
                   ref={growTextarea}
                   name={`${idPrefix}-prompt`}
@@ -1004,6 +1166,7 @@ export default function KitImageCreatorPanelView({
                 onChangeNegativePrompt={onChangeNegativePrompt}
                 cameraPresetLabel={cameraPresetLabel}
                 cameraPresetDescription={cameraPresetDescription}
+                cameraPresetChanged={cameraPresetChanged}
                 onOpenCameraPresetPicker={onOpenCameraPresetPicker}
                 showSceneryOnlyHelper={showSceneryOnlyHelper}
                 sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}

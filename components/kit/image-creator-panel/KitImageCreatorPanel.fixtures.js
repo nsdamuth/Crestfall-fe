@@ -107,14 +107,15 @@ export function insufficientCoinsHelpText(coinCost, count = 1) {
 
 function baseOptionFields() {
   return [
-    { id: "wardrobe-theme", label: "Wardrobe theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
-    { id: "aspect-ratio", label: "Aspect ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+    { id: "wardrobe-theme", label: "Wardrobe theme", value: "AUTO", defaultValue: "AUTO", options: WARDROBE_THEME_OPTIONS },
+    { id: "aspect-ratio", label: "Aspect ratio", value: "PORTRAIT_4_5", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
   ];
 }
 
 function baseRenderStyleRailProps() {
   return {
     value: "crestfall_fantasy_realistic",
+    defaultValue: "crestfall_fantasy",
     activeLabel: "Crestfall Illustrative",
     options: [
       { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", definition: "Painterly fantasy illustration with soft light and rich color.", index: 0, active: false },

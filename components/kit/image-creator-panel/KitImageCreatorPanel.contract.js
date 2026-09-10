@@ -32,8 +32,13 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  *
  * @typedef {Object} KitImageCreatorOptionField
  * @property {string} id
- * @property {string} label display label, sentence case
+ * @property {string} label display label, sentence case; rendered as
+ *   the control title above the shared SettingSelect trigger
  * @property {string} value
+ * @property {string} [defaultValue] the untouched starting value. When
+ *   value matches it the trigger reads in the dim ink; when it differs
+ *   the trigger reads gold (state law, browser review round 3 item 2).
+ *   Omitted means the control never reads as changed.
  * @property {{value: string, label: string}[]} options
  *
  * @typedef {Object} KitImageCreatorCountOption
@@ -78,9 +83,11 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue
  * @property {((value: string) => void)|null} onChangeNegativePrompt
- * @property {{value: string, activeLabel: string, options: KitImageCreatorRailStop[], onChange: Function}|null} renderStyleRailProps
+ * @property {{value: string, defaultValue?: string, activeLabel: string, options: KitImageCreatorRailStop[], onChange: Function}|null} renderStyleRailProps
  *   the six-stop snapping render style rail; presentation is owned
- *   here, profile values and callbacks are supplied by the caller
+ *   here, profile values and callbacks are supplied by the caller.
+ *   defaultValue is the untouched profile: while value matches it the
+ *   active step name reads dim, otherwise gold (round 3 item 2)
  * @property {KitImageCreatorOptionField[]} optionFields the inline
  *   single-select dropdowns after Camera / Framing (Wardrobe theme,
  *   Aspect ratio). Output count is NOT in this list; see countOptions.
@@ -109,6 +116,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  *   rendered as an alert line above the footer
  * @property {string} cameraPresetLabel selected camera/framing preset label
  * @property {string} cameraPresetDescription selected preset helper copy
+ * @property {boolean} cameraPresetChanged true once the viewer picks a
+ *   preset other than the Auto default; drives the same dim-or-gold
+ *   state law as every other control in Image settings
  * @property {(() => void)|null} onOpenCameraPresetPicker opens the
  *   camera/framing picker (the catalog is too large for inline tiles)
  * @property {boolean} showSceneryOnlyHelper true for location-only requests
