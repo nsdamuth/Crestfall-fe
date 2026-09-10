@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit
@@ -25,6 +25,13 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
  * gate). Null keeps the session 1 stub ("Not available yet"). Limits
  * and the cost are the caller's: this View writes no number; the
  * "Up to N characters" line and the cost label arrive pre-computed.
+ *
+ * 2.1.0 to 2.2.0, ADDITIVE (Brian's browser review of Remix, round 2,
+ * 10 Sep 2026): `remix` gains its own optional count control
+ * (`countOptions`, `countValue`, `onChangeCount`). Remix's list
+ * starts at 1 image while Generate's starts at 2, so the two stages
+ * keep separate values and floors; a remix without `countOptions`
+ * falls back to the shared footer count as in 2.1.0.
  *
  * @typedef {Object} KitImageCreatorRemixReference
  * @property {string} slotId the Remix character slot this reference
@@ -65,6 +72,11 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {KitImageCreatorRemixMentionOption[]} mentionOptions the
  *   filled references plus the location when filled
+ * @property {{value: string, label: string, isDisabled?: boolean, tooltip?: string}[]} [countOptions]
+ *   Remix's own count list (2.2.0), starting at 1 image; when absent
+ *   the footer keeps the shared count control
+ * @property {string} [countValue] the selected Remix count (2.2.0)
+ * @property {((value: string) => void)|null} [onChangeCount] (2.2.0)
  * @property {string} generateCostLabel count times the Remix cost,
  *   pre-computed by the caller
  * @property {boolean} canGenerate honest gate (coins, at least one

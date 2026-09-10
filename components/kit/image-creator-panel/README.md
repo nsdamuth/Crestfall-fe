@@ -1,6 +1,6 @@
 # Kit Image Creator Panel LOOM package (the Media Studio composer)
 
-**Contract:** `KitImageCreatorPanel.contract.js` (`2.1.0`, 10 Sep 2026; Remix additive over 2.0.0 of 9 Sep 2026)
+**Contract:** `KitImageCreatorPanel.contract.js` (`2.2.0`, 10 Sep 2026; Remix count additive over 2.1.0 of the same day, Remix additive over 2.0.0 of 9 Sep 2026)
 
 ## Purpose
 
@@ -76,8 +76,9 @@ package) and passes them pre-computed; this View writes no number.
    overlay clear button top-right; tapping the art re-opens the
    picker for that slot), then ONE "Add character" tile (dashed,
    plus glyph, `(required)` while nothing is chosen, `(optional)`
-   after), then dark placeholder tiles (the darker bed, a geometric
-   glyph, nothing to press, hidden from assistive technology) to the
+   after), then dark placeholder tiles (the darker bed, the Crestfall
+   rosette from the primary logo drawn inline in the faint ink,
+   nothing to press, hidden from assistive technology) to the
    end of the row, so the grid always reads as even rows of three
    (Brian's browser note, 10 Sep 2026). A new row appears when the
    Add tile moves into it. At the limit the Add tile leaves and the
@@ -91,9 +92,15 @@ package) and passes them pre-computed; this View writes no number.
    by the letters after the `@`); choosing a row inserts `@imgN ` or
    `@location ` at the caret. Escape, blur, or moving the caret off
    the `@` closes it. The prompt carries the handles as plain text.
-4. Footer, shared with Generate: the same Count control and state,
-   the Remix cost label (count times the Remix cost), the Remix gate
-   (coins, at least one character, a prompt). While `remix.available`
+   The mention list opens ABOVE the field (round 2): the prompt sits
+   at the bottom of the scroll region, so a list below it would need
+   a scroll to read.
+4. Footer, shared with Generate: the same Count control, but Remix's
+   own list and value when the caller passes `remix.countOptions`
+   (2.2.0): Remix starts at 1 image, Generate at 2, both end at 128,
+   and the two stages keep separate values. Then the Remix cost label
+   (count times the Remix cost) and the Remix gate (coins, at least
+   one character, a prompt). While `remix.available`
    is false (the Chassis carries no Remix job,
    `docs/handoffs/MEDIA-STUDIO-BACKEND.md` gap 13) the button renders
    disabled with the coin glyph, the cost, the Soon chip, and the

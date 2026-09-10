@@ -27,7 +27,6 @@ import {
   MapPin,
   Plus,
   Save,
-  Shapes,
   Shirt,
   SlidersHorizontal,
   Sparkles,
@@ -1076,17 +1075,49 @@ function AddCharacterTile({ canAdd, limitLabel, isRequired, onAdd }) {
 // with placeholders so the rows stay even.
 const REMIX_GRID_COLUMNS = 3;
 
+// The Crestfall rosette, the primary logo's mark (the Flower of Life
+// sigil in public/tmp-creator-tiles/logo-mark.svg), drawn inline in
+// currentColor so it takes the tile's ink token. Strokes are heavier
+// than the standalone file's because this renders at 28px.
+function CrestfallRosette({ size = 28 }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <g strokeWidth="1.25">
+        <circle cx="32" cy="32" r="10" />
+        <circle cx="42" cy="32" r="10" />
+        <circle cx="37" cy="40.66" r="10" />
+        <circle cx="27" cy="40.66" r="10" />
+        <circle cx="22" cy="32" r="10" />
+        <circle cx="27" cy="23.34" r="10" />
+        <circle cx="37" cy="23.34" r="10" />
+      </g>
+      <circle cx="32" cy="32" r="20" strokeWidth="1.25" />
+      <circle cx="32" cy="32" r="23" strokeWidth="1.75" />
+    </svg>
+  );
+}
+
 // A slot not yet reachable this row: the darker bed, a solid whisper
-// line, one geometric glyph, nothing to press. Decoration only, so
-// it is hidden from assistive technology; the Add tile is the one
-// control (Brian's browser note, 10 Sep 2026).
+// line, the Crestfall rosette (Brian's browser note, 10 Sep 2026,
+// round 2: the primary logo's mark, not a generic glyph), nothing to
+// press. Decoration only, so it is hidden from assistive technology;
+// the Add tile is the one control.
 function RemixPlaceholderTile() {
   return (
     <div
       aria-hidden="true"
       className="flex aspect-square min-w-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)]"
     >
-      <Shapes size={20} />
+      <CrestfallRosette />
     </div>
   );
 }
@@ -1190,7 +1221,10 @@ function RemixPrompt({ value, onChange, mentionOptions, idPrefix }) {
           id={listId}
           role="listbox"
           aria-label="Mention a reference"
-          className={`${MENU_PANEL_RECIPE} left-0 right-0 top-[calc(100%+var(--space-1))]`}
+          // Opens above the field (Brian's browser note, 10 Sep 2026,
+          // round 2): the prompt sits at the bottom of the scroll
+          // region, so a list below it would need a scroll to read.
+          className={`${MENU_PANEL_RECIPE} bottom-[calc(100%+var(--space-1))] left-0 right-0`}
         >
           {visibleOptions.map((option) => (
             <MenuRow
@@ -1474,9 +1508,16 @@ export default function KitImageCreatorPanelView({
       </div>
 
       <GenerateFooter
-        countOptions={isVideoMode ? [] : countOptions}
-        countValue={countValue}
-        onChangeCount={onChangeCount}
+        // Remix carries its own count (2.2.0): its list starts at 1
+        // image while Generate's starts at 2, so the two stages keep
+        // separate values and floors (Brian's browser note, 10 Sep
+        // 2026, round 2). A remix without a list falls back to the
+        // shared control.
+        countOptions={
+          isVideoMode ? [] : remixActive && remix.countOptions ? remix.countOptions : countOptions
+        }
+        countValue={remixActive && remix.countOptions ? remix.countValue || "" : countValue}
+        onChangeCount={remixActive && remix.countOptions ? remix.onChangeCount : onChangeCount}
         generateCostLabel={remixActive ? remix.generateCostLabel : generateCostLabel}
         canGenerate={
           isVideoMode

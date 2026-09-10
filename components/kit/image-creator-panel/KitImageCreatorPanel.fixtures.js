@@ -63,8 +63,9 @@ export const ASPECT_RATIO_OPTIONS = [
 
 // Count list RULED 9 Sep 2026: 2, 4, 8, 16, 32, 64, 128, 256, default
 // 2. The backend serves up to 4; the rest render disabled.
+// Generate's list starts at 2 images; Remix's (below) at 1. Both end
+// at 128 (Brian's browser review of Remix, round 2, 10 Sep 2026).
 export const COUNT_OPTIONS = [
-  { value: "1", label: "1 image" },
   { value: "2", label: "2 images" },
   { value: "4", label: "4 images" },
   { value: "8", label: "8 images", isDisabled: true, tooltip: "Soon" },
@@ -73,6 +74,8 @@ export const COUNT_OPTIONS = [
   { value: "64", label: "64 images", isDisabled: true, tooltip: "Soon" },
   { value: "128", label: "128 images", isDisabled: true, tooltip: "Soon" },
 ];
+
+export const REMIX_COUNT_OPTIONS = [{ value: "1", label: "1 image" }, ...COUNT_OPTIONS];
 
 export const VIDEO_DURATION_OPTIONS = [
   { value: "4", label: "4 seconds" },
@@ -287,7 +290,10 @@ function baseRemixProps(overrides = {}) {
         ? [{ mention: location.mention, title: location.selection.title, imageSrc: location.selection.imageSrc }]
         : []),
     ],
-    generateCostLabel: "40",
+    countOptions: REMIX_COUNT_OPTIONS,
+    countValue: "1",
+    onChangeCount: noop,
+    generateCostLabel: "20",
     canGenerate: true,
     generationHelpText: "",
     available: false,

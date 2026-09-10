@@ -158,7 +158,15 @@ function getRemixMention(slot) {
   return slot.remixKind === "location" ? "@location" : `@img${slot.remixPosition}`;
 }
 
-function projectRemix({ composerProps, remixPrompt, setRemixPrompt, requestedCount }) {
+function projectRemix({
+  composerProps,
+  remixPrompt,
+  setRemixPrompt,
+  requestedCount,
+  countOptions,
+  countValue,
+  onChangeCount,
+}) {
   const selected = composerProps?.selectedIngredients || {};
   const customPrompts = composerProps?.customIngredientPrompts || {};
   const remixCoinCost = Number(composerProps?.remixCoinCost ?? 0) || 0;
@@ -222,6 +230,9 @@ function projectRemix({ composerProps, remixPrompt, setRemixPrompt, requestedCou
     onClearLocation: () => composerProps.onClearIngredient?.(locationSlot.id),
     promptValue: remixPrompt,
     onChangePrompt: setRemixPrompt,
+    countOptions,
+    countValue,
+    onChangeCount,
     mentionOptions: [
       ...references.map((reference) => ({
         mention: reference.mention,
@@ -257,14 +268,16 @@ export function useImagesV2LiveViewModel({
   onChangeStage = null,
 } = {}) {
   const account = useStudioAccount();
-  // One image by default (Brian's browser note, 10 Sep 2026): the
-  // footer starts at one image's cost, 5 on Generate, 20 on Remix.
-  const workbench = useImageStudioWorkbenchViewModel({ account, initialImageCount: "1" });
+  const workbench = useImageStudioWorkbenchViewModel({ account });
   const { composerProps } = workbench;
   const { renderStyle, setRenderStyle } = composerProps;
   // The Remix prompt is page state: the rail and the sheet both read
   // this one panelProps, so it survives the width change.
   const [remixPrompt, setRemixPrompt] = useState("");
+  // Remix owns its count (Brian's browser review of Remix, round 2,
+  // 10 Sep 2026): its floor is 1 image while Generate's stays 2, so
+  // the two stages keep separate values. Page state like the prompt.
+  const [remixCount, setRemixCount] = useState("1");
 
   useEffect(() => {
     if (renderStyle === "auto") {
@@ -294,15 +307,14 @@ export function useImagesV2LiveViewModel({
 
   // Output count beside the Generate button. Counts the backend
   // cannot serve render disabled; the selection still reports to the
-  // same handler the former Output Count select used. This page's list
-  // (Brian's browser note, 10 Sep 2026, superseding the 9 Sep plan
-  // gate list) starts at 1 image and ends at 128; the shared
-  // imageCountOptions the Location and Asset builders read is
-  // untouched.
-  const countOptions = [
-    { value: "1", label: "1 image" },
-    ...imageCountOptions.filter((option) => String(option.value) !== "256"),
-  ].map((option) => {
+  // same handler the former Output Count select used. This page's
+  // Generate list (Brian's browser review of Remix, rounds 1 and 2,
+  // 10 Sep 2026, superseding the 9 Sep plan gate list) runs 2 to 128;
+  // Remix's list below adds 1 in front. The shared imageCountOptions
+  // the Location and Asset builders read is untouched.
+  const countOptions = imageCountOptions
+    .filter((option) => String(option.value) !== "256")
+    .map((option) => {
     const count = Number.parseInt(option.value, 10) || 0;
     const isDisabled = count > IMAGE_COUNT_BACKEND_MAX;
     return {
@@ -316,7 +328,17 @@ export function useImagesV2LiveViewModel({
   const perImageCoinCost = Number(composerProps.coinCost ?? 0) || 0;
   const generateCostLabel = String(requestedCount * perImageCoinCost);
 
-  const remix = projectRemix({ composerProps, remixPrompt, setRemixPrompt, requestedCount });
+  const remixCountOptions = [{ value: "1", label: "1 image" }, ...countOptions];
+  const remixRequestedCount = Math.max(1, Number.parseInt(remixCount, 10) || 1);
+  const remix = projectRemix({
+    composerProps,
+    remixPrompt,
+    setRemixPrompt,
+    requestedCount: remixRequestedCount,
+    countOptions: remixCountOptions,
+    countValue: remixCount,
+    onChangeCount: setRemixCount,
+  });
 
   const videoModeOption = composer.modeOptions.find((option) => option.id === "VIDEO");
   const videoDisabled = Boolean(videoModeOption?.disabled ?? true);
