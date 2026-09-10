@@ -4,7 +4,12 @@
 // piece is fixture-fed and owns no data. Generation availability,
 // the coin cost, and every option list are computed by the caller
 // (fixture logic, or the Media Studio page's adapter); this hook only
-// normalizes display-ready props. Contract 2.0.0 (9 Sep 2026).
+// normalizes display-ready props. Contract 2.1.0 (10 Sep 2026): the
+// nested `remix` object passes through untouched; the View treats a
+// null `remix` as the session 1 stub, so dropping it here is the
+// regression the live adapter diagnostics guard against. Contract
+// 2.3.0 (10 Sep 2026): the nested `video` object passes through the
+// same way; null keeps the 2.2.0 video block.
 export function useKitImageCreatorPanelViewModel({
   mode = "IMAGE",
   onChangeMode = null,
@@ -12,6 +17,8 @@ export function useKitImageCreatorPanelViewModel({
   videoSoonLabel = "Soon",
   stage = "GENERATE",
   onChangeStage = null,
+  remix = null,
+  video = null,
   slots = {},
   onSlotActivate = null,
   onSlotClear = null,
@@ -36,6 +43,7 @@ export function useKitImageCreatorPanelViewModel({
   generationError = "",
   cameraPresetLabel = "Auto / No Camera Filter",
   cameraPresetDescription = "",
+  cameraPresetChanged = false,
   onOpenCameraPresetPicker = null,
   showSceneryOnlyHelper = false,
   sceneryOnlyHelperEnabled = true,
@@ -53,6 +61,8 @@ export function useKitImageCreatorPanelViewModel({
     videoSoonLabel: String(videoSoonLabel ?? "Soon"),
     stage: stage === "REMIX" ? "REMIX" : "GENERATE",
     onChangeStage,
+    remix: remix && typeof remix === "object" ? remix : null,
+    video: video && typeof video === "object" ? video : null,
     slots: slots && typeof slots === "object" ? slots : {},
     onSlotActivate,
     onSlotClear,
@@ -83,6 +93,7 @@ export function useKitImageCreatorPanelViewModel({
     generationError: generationError || "",
     cameraPresetLabel: cameraPresetLabel || "Auto / No Camera Filter",
     cameraPresetDescription: cameraPresetDescription || "",
+    cameraPresetChanged: Boolean(cameraPresetChanged),
     onOpenCameraPresetPicker,
     showSceneryOnlyHelper: Boolean(showSceneryOnlyHelper),
     sceneryOnlyHelperEnabled: Boolean(sceneryOnlyHelperEnabled),

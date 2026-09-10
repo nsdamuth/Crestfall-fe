@@ -224,7 +224,6 @@ export default function MediaHistoryGridView({
   hasSelectableMedia = false,
   hasVisibleSelectableMedia = false,
   allVisibleSelectableItemsSelected = false,
-  summaryText = "No library items yet",
   lightboxProps = null,
   eagerImageCount = 4,
   masonryRowHeight = 8,
@@ -272,14 +271,13 @@ export default function MediaHistoryGridView({
         </div>
       ) : null}
 
-      <section className="relative flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-3 sm:pb-4">
-        <div>
-          <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-            Image Library
-          </p>
-          <p className="mt-1 text-xs text-[var(--ink-dim)]">{summaryText}</p>
-        </div>
-
+      {/* No library title, summary line, or divider (review round 2,
+          10 Sep 2026): the page header already names the page and the
+          empty-state block says the rest, so the grid starts level with
+          the top of the composer rail. The action row renders only when
+          it has a control to show (Select, the mobile Compose, filters). */}
+      {(mobilePrimaryActionLabel && onMobilePrimaryAction) || hasSelectableMedia || showFilterControls ? (
+      <section className="relative flex flex-wrap items-center justify-end gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {mobilePrimaryActionLabel && onMobilePrimaryAction ? (
             <button
@@ -370,11 +368,12 @@ export default function MediaHistoryGridView({
           </>
         ) : null}
       </section>
+      ) : null}
 
       {selectionMode ? (
         <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
           <div>
-            <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+            <p className="text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {selectedCount} selected
             </p>
             <p className="mt-1 text-xs text-[var(--ink-dim)]">
@@ -437,11 +436,14 @@ export default function MediaHistoryGridView({
       {historyStatus !== "loading" && !mediaItems.length ? (
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-10 text-center">
           <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={30} />
-          <p className="mt-4 text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+          {/* Eyebrow size, not body: the bare var() read as a color
+              utility, so the title inherited the body size (Brian's
+              browser note, 10 Sep 2026). */}
+          <p className="mt-4 text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             No generated media yet
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
-            Choose your ingredients and generate an image to start your library.
+            Choose your assets and generate an image or video to start your gallery.
           </p>
         </div>
       ) : null}

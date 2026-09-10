@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.4.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.5.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -44,9 +44,21 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.4.0";
  *   2026) so backdrop clicks reach the veil and dismiss; viewer
  *   content re-enables pointer events on each interactive box
  *   (presentation behavior, not a prop change).
- * @property {string} panelClassName per-surface WIDTH and HEIGHT caps
- *   only (e.g. `max-w-lg`); never surface, border, radius, shadow, or
- *   dismissal overrides
+ * @property {string} panelClassName per-surface HEIGHT caps and
+ *   legacy max-w-* caps only; never surface, border, radius, shadow,
+ *   or dismissal overrides. Since 1.5.0 a WIDTH utility (w-*) here
+ *   competes with the recipe's own fixed width and loses by source
+ *   order in this build; new callers use panelWidth. A legacy max-w-*
+ *   class still caps the fixed width down and keeps working
+ * @property {string} [panelWidth] added 1.5.0, 10 Sep 2026 (RULED,
+ *   Brian: every modal is a fixed width, never growing with the
+ *   browser). A CSS length such as "56rem" for the modal variant at
+ *   700px and up, applied as the panel's --panel-width custom
+ *   property; the recipe caps it to the viewport minus the veil
+ *   gutter. Default 64rem when absent (the largest cap any existing
+ *   caller used, so legacy max-w-* classes cap it down). Under 700px
+ *   the panel stays full width and bottom-anchored. Ignored by the
+ *   sheet and viewer variants
  * @property {boolean} [hasUnsavedChanges] added 1.2.0, 22 Aug 2026
  *   (mobile modal law, checkable condition 3). Default false. The
  *   frame owns no form state of its own; when the caller reports

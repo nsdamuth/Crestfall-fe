@@ -136,7 +136,6 @@ const SLOT_LABELS = {
   location: "Location / Scene",
   preset: "Rendering Preset",
 };
-const SAVABLE_SLOTS = ["pose", "outfit", "location", "preset"];
 const EMPTY_SLOT = { selection: null, isCustomMode: false, customText: "" };
 
 // Small per-slot ingredient pools for the picker (fixture-only, this
@@ -171,9 +170,7 @@ const ITEM_POOLS = {
 };
 
 const SAVE_PRESET_INTRO_TEXT =
-  "Save this custom guidance as a private reusable draft. You can return to it later from My Creations or select it again from the Image Studio picker.";
-const SAVE_PRESET_HELPER_TEXT =
-  "Saving creates a private SFW draft and selects it for the current Image Studio request. Using it once does not create a saved asset.";
+  "Describe the asset in your own words. Use it once, or save it as a preset to reuse later.";
 
 function GeometricMark({ className = "h-[var(--space-10)] w-[var(--space-10)]" }) {
   return (
@@ -446,13 +443,6 @@ export default function ImagesV2Mockup() {
     setActivePickerSlotId(null);
   }
 
-  function handlePickerCreatePreset() {
-    const slotId = activePickerSlotId;
-    applySlotChange(slotId, { selection: null, isCustomMode: true, customText: "" });
-    setActivePickerSlotId(null);
-    openSavePreset(slotId);
-  }
-
   const activePickerPool = activePickerSlotId ? ITEM_POOLS[activePickerSlotId] || [] : [];
   const pickerItems = activePickerPool
     .filter((item) => item.title.toLowerCase().includes(pickerSearchValue.trim().toLowerCase()))
@@ -462,7 +452,7 @@ export default function ImagesV2Mockup() {
 
   const optionFields = [
     { id: "renderStyle", label: "Render Style", value: optionValues.renderStyle, options: RENDER_STYLE_OPTIONS },
-    { id: "camera", label: "Camera / Framing", value: optionValues.camera, options: CAMERA_OPTIONS },
+    { id: "camera", label: "Camera framing", value: optionValues.camera, options: CAMERA_OPTIONS },
     { id: "wardrobe", label: "Wardrobe Theme", value: optionValues.wardrobe, options: WARDROBE_THEME_OPTIONS },
     { id: "aspectRatio", label: "Aspect Ratio", value: optionValues.aspectRatio, options: ASPECT_RATIO_OPTIONS },
     { id: "outputCount", label: "Output Count", value: optionValues.outputCount, options: OUTPUT_COUNT_OPTIONS },
@@ -699,8 +689,6 @@ export default function ImagesV2Mockup() {
           onChooseIngredient={handlePickerChooseIngredient}
           showUseCustomAction
           onUseCustom={handlePickerUseCustom}
-          showCreatePresetAction={SAVABLE_SLOTS.includes(activePickerSlotId)}
-          onCreatePreset={handlePickerCreatePreset}
           backLabel={isMobileCreatorOpen ? "Back to Image Creator" : null}
           onClose={() => setActivePickerSlotId(null)}
         />
@@ -708,9 +696,8 @@ export default function ImagesV2Mockup() {
 
       {savePresetSlotId && (
         <KitSaveIngredientPreset
-          presetTypeLabel={SLOT_LABELS[savePresetSlotId]}
+          assetLabel={SLOT_LABELS[savePresetSlotId]}
           introText={SAVE_PRESET_INTRO_TEXT}
-          helperText={SAVE_PRESET_HELPER_TEXT}
           nameValue={savePresetForm.name}
           onChangeName={(value) => setSavePresetForm((current) => ({ ...current, name: value }))}
           descriptionValue={savePresetForm.description}

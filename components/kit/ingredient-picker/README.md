@@ -1,14 +1,14 @@
 # Kit Ingredient Picker LOOM package
 
-**Contract:** `KitIngredientPicker.contract.js` (`1.1.0`)
+**Contract:** `KitIngredientPicker.contract.js` (`2.0.0`)
 
 ## Purpose
 
-Fixture-driven mirror of the live ingredient picker's function
-(docs/SPRINT-E-PLAN.md section 1.2, R6), never its code
-(`components/studio/image-studio/ingredient-picker/`, READ ONLY
-reference, never imported). Opened from the KitImageCreatorPanel
-(1.1) when a non-custom slot tile is tapped.
+THE asset picker for Media Studio (FE/MEDIA-STUDIO session 2, Brian's
+note 3, 9 Sep 2026): one layout and one component for every asset
+type. Opened from the composer's five asset tiles (Character, Pose,
+Outfit, Location, Preset) and from the Camera framing control in
+Image settings. The page composes it; the picker never fetches.
 
 ## Boundary
 
@@ -16,46 +16,66 @@ reference, never imported). Opened from the KitImageCreatorPanel
 KitIngredientPicker.jsx
   -> useKitIngredientPickerViewModel.js
   -> KitIngredientPicker.view.jsx
-     -> KitModalFrame (variant="modal", full-screen at 390 per R4)
+     -> KitModalFrame (variant="sheet" with grabber under 700px,
+        the same sheet the composer uses; variant="modal" at 700px
+        and up, through usePhoneWidth)
+     -> KitDropdown.view (the one filter dropdown)
 ```
 
-## Search is the caller's responsibility
+## Search and filtering are the caller's responsibility
 
 Matching the `studio-filter-bar` convention: this View receives an
-already-filtered `items` array and reports search-text intent through
-`onSearchChange`. It never filters, sorts, or fetches.
+already-filtered `items` array and reports search text through
+`onSearchChange` and the filter choice through `filter.onChange`. It
+never filters, sorts, or fetches. The filter dropdown holds only
+filters that already exist for the asset type: Mine / Public for the
+five asset slots, the catalog groups for camera framing. Nothing is
+invented; the OD reference's gender, style, and age filters have no
+Crestfall data behind them.
 
 ## Anatomy
 
-Header (eyebrow, slot label as title, an intro sentence assembled from
-which actions are shown), search field (`kit-search-input` recipe),
-an optional load-error banner (`--status-danger` triad), the item grid
-(or the empty-state message when `items` is empty), and the action row
-(`Use Once`, shown by `showUseCustomAction`; `New Preset`, shown by
-`showCreatePresetAction`, only true for the four savable slots per the
-live rule: pose, outfit, location, preset).
+Header (eyebrow "Select asset", the asset word as the title, one
+sentence), the short search field on the left with the filter dropdown
+pinned to the modal's right edge (Brian, session 3 review round 2, 10
+Sep 2026; the filter's menu opens right-aligned so it stays inside the
+panel), both on the filter-line height (`--control-filter` on fine
+pointers and `--control-md` on coarse), an optional load-error banner
+(`--status-danger` triad), then the grid.
 
-Selected cards follow the selection-state law
+Cards layout (the five asset slots): Custom is the first card, the
+same shape as an asset card, with the pen mark where an asset carries
+its art. It reads selected while the slot holds a once-only custom
+description (`customIsSelected`). Tapping it opens the custom asset
+modal (`KitSaveIngredientPreset`), never an inline text mode (note 4).
+
+Rows layout (camera framing, ruled at the session 2 plan gate, option
+A): text options with a one-line description, the option's group as a
+quiet label, and a check mark when selected. No Custom card.
+
+Selected cards and rows follow the selection-state law
 (`docs/BUILD-BLUEPRINT.md` 2.16(i)): `--fill` wash plus `--gold-bright`
 title text, never a bold border change.
 
 ## Nested modal back label
 
-`backLabel` (`string|null`, added 1.1.0, additive): NESTED MODAL LAW
-(the R1 pattern, this picker opened from another modal under 700px).
-When non-null, the caller passes a labeled back affordance so the
-return path reads correctly instead of a bare close.
+`backLabel` (`string|null`): NESTED MODAL LAW, this picker opened from
+the mobile composer sheet. When non-null, the caller passes a labeled
+back affordance so the return path reads correctly instead of a bare
+close.
 
 ## Fixture states
 
-`default` (Character, non-savable), `savableSlot` (Pose, exercises the
-New Preset card), `emptyResults`, `loadError`.
+`default` (Character, cards, source filter), `camera` (rows, group
+filter, no Custom), `emptyResults` (Custom first and selected),
+`loadError`.
 
 ## Package assets
 
 - `KitIngredientPicker.contract.js`
 - `KitIngredientPicker.fixtures.js`
 - `useKitIngredientPickerViewModel.js`
-- `/dev/ui-preview/kit-ingredient-picker`
+- `/dev/ui-preview/kit-ingredient-picker` (harness only, never a
+  review surface; Brian reviews on the live page)
 
 Fixture-only; no query, persistence, or navigation is wired.

@@ -8,14 +8,21 @@ import {
   getImageStudioOptionsForSlot,
 } from "@/components/studio/image-studio/imageStudioUtils";
 
-export function useImageStudioIngredientOptions({ sourceMode = "MINE" } = {}) {
+// `slots` is additive (FE/MEDIA-STUDIO session 4): the Media Studio
+// workbench passes the five composer slots plus the Remix slots so
+// each gets its own option list; the default keeps the legacy page
+// exactly as it was.
+export function useImageStudioIngredientOptions({
+  sourceMode = "MINE",
+  slots = ingredientSlots,
+} = {}) {
   const [creations, setCreations] = useState([]);
   const [ingredientLoadError, setIngredientLoadError] = useState("");
   const [ingredientLoadStatus, setIngredientLoadStatus] = useState("idle");
 
   const allowedTypes = useMemo(
-    () => getImageStudioAllowedTypes(ingredientSlots),
-    []
+    () => getImageStudioAllowedTypes(slots),
+    [slots]
   );
 
   useEffect(() => {
@@ -56,12 +63,12 @@ export function useImageStudioIngredientOptions({ sourceMode = "MINE" } = {}) {
 
   const ingredientOptionsBySlot = useMemo(() => {
     return Object.fromEntries(
-      ingredientSlots.map((slot) => [
+      slots.map((slot) => [
         slot.id,
         getImageStudioOptionsForSlot(creations, slot, { sourceMode }),
       ])
     );
-  }, [creations, sourceMode]);
+  }, [creations, sourceMode, slots]);
 
   return {
     ingredientOptionsBySlot,

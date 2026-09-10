@@ -2,9 +2,10 @@
 
 // Thin pass-through ViewModel: fixture-fed, owns no data.
 export function useKitSaveIngredientPresetViewModel({
-  presetTypeLabel = "Ingredient Preset",
+  assetLabel = "Asset",
   introText = "",
-  helperText = "",
+  message = "",
+  messageTone = "info",
   nameValue = "",
   onChangeName = null,
   descriptionValue = "",
@@ -15,14 +16,19 @@ export function useKitSaveIngredientPresetViewModel({
   onChangeTags = null,
   isSaving = false,
   canSave = false,
+  canUseOnce = true,
+  saveAvailable = true,
+  hasUnsavedChanges = false,
   onSavePreset = null,
   onUseOnce = null,
+  backLabel = null,
   onClose = null,
 } = {}) {
   return {
-    presetTypeLabel: presetTypeLabel || "Ingredient Preset",
+    assetLabel: assetLabel || "Asset",
     introText: introText || "",
-    helperText: helperText || "",
+    message: message || "",
+    messageTone: messageTone === "error" ? "error" : "info",
     nameValue: nameValue || "",
     onChangeName,
     descriptionValue: descriptionValue || "",
@@ -33,8 +39,12 @@ export function useKitSaveIngredientPresetViewModel({
     onChangeTags,
     isSaving: Boolean(isSaving),
     canSave: Boolean(canSave),
+    canUseOnce: Boolean(canUseOnce),
+    saveAvailable: Boolean(saveAvailable),
+    hasUnsavedChanges: Boolean(hasUnsavedChanges),
     onSavePreset,
     onUseOnce,
+    backLabel: backLabel || null,
     onClose,
   };
 }

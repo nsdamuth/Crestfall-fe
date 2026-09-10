@@ -7,10 +7,16 @@
 // property is not a reliable override in this build (see the R4
 // veil-padding fix, kit polish 3 pass, phase 1). ModalShell contract
 // 1.0.0 to 1.1.0: additive, presentation-only.
+// panelStyle (1.2.0, 10 Sep 2026, fixed modal width): an optional
+// inline style object for the dialog panel, used by KitModalFrame to
+// hand the panel its width as a custom property so no two width
+// utilities ever compete. Absent by default; every prior caller is
+// unchanged.
 export default function ModalShellView({
   children = null,
   className = "",
   panelClassName = "",
+  panelStyle,
   veilClassName = "bg-[var(--scrim-strong)] backdrop-blur-[var(--blur-panel)]",
   ariaLabelledBy,
   ariaDescribedBy,
@@ -27,6 +33,7 @@ export default function ModalShellView({
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
         className={panelClassName}
+        style={panelStyle}
       >
         {children}
       </div>

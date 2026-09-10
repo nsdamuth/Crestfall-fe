@@ -1,6 +1,8 @@
-// Fixture states, contract 2.0.0 (9 Sep 2026, FE/MEDIA-STUDIO):
-// default, emptySlots, insufficientCoins, customIngredient,
-// remixStage, videoMode, longestContent. Option lists mirror
+// Fixture states, contract 2.3.0 (9 Sep 2026, FE/MEDIA-STUDIO; Remix
+// and Video 10 Sep 2026): default, emptySlots, insufficientCoins,
+// customIngredient, remixStage, remixFull, videoMode, videoText,
+// videoImage, longestContent.
+// Option lists mirror
 // components/studio/image-studio/imageStudioData.js verbatim (READ
 // ONLY reference, values copied not imported, since that package
 // belongs to the live composer and this kit piece never imports live
@@ -62,16 +64,19 @@ export const ASPECT_RATIO_OPTIONS = [
 
 // Count list RULED 9 Sep 2026: 2, 4, 8, 16, 32, 64, 128, 256, default
 // 2. The backend serves up to 4; the rest render disabled.
+// Generate's list starts at 2 images; Remix's (below) at 1. Both end
+// at 128 (Brian's browser review of Remix, round 2, 10 Sep 2026).
 export const COUNT_OPTIONS = [
   { value: "2", label: "2 images" },
   { value: "4", label: "4 images" },
-  { value: "8", label: "8 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "16", label: "16 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "32", label: "32 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "64", label: "64 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "128", label: "128 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "256", label: "256 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "8", label: "8 images", isDisabled: true, tooltip: "Soon" },
+  { value: "16", label: "16 images", isDisabled: true, tooltip: "Soon" },
+  { value: "32", label: "32 images", isDisabled: true, tooltip: "Soon" },
+  { value: "64", label: "64 images", isDisabled: true, tooltip: "Soon" },
+  { value: "128", label: "128 images", isDisabled: true, tooltip: "Soon" },
 ];
+
+export const REMIX_COUNT_OPTIONS = [{ value: "1", label: "1 image" }, ...COUNT_OPTIONS];
 
 export const VIDEO_DURATION_OPTIONS = [
   { value: "4", label: "4 seconds" },
@@ -107,14 +112,15 @@ export function insufficientCoinsHelpText(coinCost, count = 1) {
 
 function baseOptionFields() {
   return [
-    { id: "wardrobe-theme", label: "Wardrobe theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
-    { id: "aspect-ratio", label: "Aspect ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+    { id: "wardrobe-theme", label: "Wardrobe theme", value: "AUTO", defaultValue: "AUTO", options: WARDROBE_THEME_OPTIONS },
+    { id: "aspect-ratio", label: "Aspect ratio", value: "PORTRAIT_4_5", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
   ];
 }
 
 function baseRenderStyleRailProps() {
   return {
     value: "crestfall_fantasy_realistic",
+    defaultValue: "crestfall_fantasy",
     activeLabel: "Crestfall Illustrative",
     options: [
       { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", definition: "Painterly fantasy illustration with soft light and rich color.", index: 0, active: false },
@@ -243,6 +249,60 @@ const customIngredientFixture = {
   },
 };
 
+// Remix fixtures (contract 2.1.0, session 4). Mention handles bind to
+// slot position; the limit line and the cost label are pre-computed
+// by the caller (here: a six-character limit and a count of 2 at the
+// proposed per-image cost).
+const REMIX_REFERENCES = [
+  { slotId: "remixCharacter1", position: 1, mention: "@img1", selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" } },
+  { slotId: "remixCharacter2", position: 2, mention: "@img2", selection: { title: "Ilse of the Reeds", subtitle: "Character", imageSrc: "/assets/covers/crestfall-painting-cover.png" } },
+  { slotId: "remixCharacter3", position: 3, mention: "@img3", selection: { title: "Custom", subtitle: "A tall knight in white plate with a braided crest", imageSrc: "" } },
+];
+
+const REMIX_LOCATION = {
+  slotId: "remixLocation1",
+  mention: "@location",
+  selection: { title: "Throne Chamber", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" },
+};
+
+function baseRemixProps(overrides = {}) {
+  const references = overrides.references || REMIX_REFERENCES;
+  const location = overrides.location === undefined ? REMIX_LOCATION : overrides.location;
+  return {
+    references,
+    canAddCharacter: references.length < 6,
+    addLimitLabel: "Up to 6 characters",
+    location,
+    onAddCharacter: noop,
+    onChangeCharacter: noop,
+    onRemoveCharacter: noop,
+    onSelectLocation: noop,
+    onClearLocation: noop,
+    promptValue:
+      "@img1 relaxes on the throne while @img2 stands guard at her side and @img3 waits on the steps of @location, all looking to the viewer.",
+    onChangePrompt: noop,
+    mentionOptions: [
+      ...references.map((reference) => ({
+        mention: reference.mention,
+        title: reference.selection.title,
+        imageSrc: reference.selection.imageSrc,
+      })),
+      ...(location?.selection
+        ? [{ mention: location.mention, title: location.selection.title, imageSrc: location.selection.imageSrc }]
+        : []),
+    ],
+    countOptions: REMIX_COUNT_OPTIONS,
+    countValue: "1",
+    onChangeCount: noop,
+    generateCostLabel: "20",
+    canGenerate: true,
+    generationHelpText: "",
+    available: false,
+    onGenerate: null,
+    ...overrides,
+  };
+}
+
 const remixStageFixture = {
   id: "remixStage",
   label: "Remix stage",
@@ -254,6 +314,34 @@ const remixStageFixture = {
     promptValue: "",
     canGenerate: false,
     generationHelpText: "",
+    remix: baseRemixProps(),
+  },
+};
+
+const remixFullFixture = {
+  id: "remixFull",
+  label: "Remix at the limit",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    stage: "REMIX",
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    remix: baseRemixProps({
+      references: Array.from({ length: 6 }, (_, index) => ({
+        slotId: `remixCharacter${index + 1}`,
+        position: index + 1,
+        mention: `@img${index + 1}`,
+        selection: {
+          title: REMIX_REFERENCES[index % 2].selection.title,
+          subtitle: "Character",
+          imageSrc: REMIX_REFERENCES[index % 2].selection.imageSrc,
+        },
+      })),
+      location: { ...REMIX_LOCATION, selection: null },
+    }),
   },
 };
 
@@ -273,6 +361,141 @@ const videoModeFixture = {
     canGenerate: false,
     generationHelpText: "",
     videoDirectionValue: "Slow push toward the harbor as lamps flicker on, one by one.",
+  },
+};
+
+// Video fixtures (contract 2.3.0, session 5, note 7). The segment
+// length, the ceiling, the count list, and the cost are the caller's;
+// here: 5-second segments up to 30, and a cost of 50 per segment at
+// 720p, three times that at 1080p, times the count.
+export const VIDEO_COUNT_OPTIONS = [
+  { value: "1", label: "1 video" },
+  { value: "2", label: "2 videos" },
+  { value: "4", label: "4 videos" },
+  { value: "8", label: "8 videos" },
+  { value: "16", label: "16 videos" },
+  { value: "32", label: "32 videos" },
+];
+
+export const VIDEO_QUALITY_OPTIONS = [
+  { value: "720p", label: "720p" },
+  { value: "1080p", label: "1080p" },
+];
+
+function directorRows(durationSeconds, prompts = []) {
+  const rowCount = Math.max(1, Math.round(durationSeconds / 5));
+  return Array.from({ length: rowCount }, (_, index) => ({
+    index,
+    fromSecond: index * 5,
+    toSecond: (index + 1) * 5,
+    prompt: prompts[index] || "",
+  }));
+}
+
+function baseVideoProps(overrides = {}) {
+  const durationSeconds = overrides.durationSeconds ?? 10;
+  return {
+    stage: "TEXT",
+    onChangeStage: noop,
+    slots: {},
+    onSlotActivate: noop,
+    onSlotClear: noop,
+    sourceImage: null,
+    onSelectSourceImage: noop,
+    onClearSourceImage: noop,
+    promptValue: "",
+    onChangePrompt: noop,
+    aspectRatio: { value: "PORTRAIT_4_5", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+    onChangeAspectRatio: noop,
+    durationSeconds,
+    durationMin: 5,
+    durationMax: 30,
+    durationStep: 5,
+    onChangeDuration: noop,
+    quality: { value: "720p", options: VIDEO_QUALITY_OPTIONS },
+    onChangeQuality: noop,
+    director: {
+      open: false,
+      onToggle: noop,
+      rows: directorRows(durationSeconds),
+      onChangeRowPrompt: noop,
+      canAddRow: durationSeconds < 30,
+      addLimitLabel: "Up to 30 seconds",
+      onAddRow: noop,
+    },
+    countOptions: VIDEO_COUNT_OPTIONS,
+    countValue: "1",
+    onChangeCount: noop,
+    generateCostLabel: "100",
+    canGenerate: true,
+    generationHelpText: "",
+    available: false,
+    onGenerate: null,
+    ...overrides,
+  };
+}
+
+const videoTextFixture = {
+  id: "videoText",
+  label: "Video, text to video",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    mode: "VIDEO",
+    videoDisabled: false,
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    video: baseVideoProps({
+      slots: {
+        character: { selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" }, isCustomMode: false, customText: "" },
+        location: { selection: { title: "Harborfront at Dusk", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
+      },
+      promptValue: "Slow push toward the harbor as lamps flicker on, one by one.",
+      durationSeconds: 10,
+      director: {
+        open: true,
+        onToggle: noop,
+        rows: directorRows(10, [
+          "She turns from the rail as the first lamp lights behind her.",
+          "The wind lifts her cloak; the last lamp flickers on.",
+        ]),
+        onChangeRowPrompt: noop,
+        canAddRow: true,
+        addLimitLabel: "Up to 30 seconds",
+        onAddRow: noop,
+      },
+      countValue: "2",
+      generateCostLabel: "200",
+    }),
+  },
+};
+
+const videoImageFixture = {
+  id: "videoImage",
+  label: "Video, image to video",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    mode: "VIDEO",
+    videoDisabled: false,
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    video: baseVideoProps({
+      stage: "IMAGE",
+      sourceImage: { title: "Vesper at the harbor rail", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" },
+      promptValue: "",
+      durationSeconds: 5,
+      quality: { value: "1080p", options: VIDEO_QUALITY_OPTIONS },
+      aspectRatio: { value: "LANDSCAPE_16_9", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+      countValue: "1",
+      generateCostLabel: "150",
+      canGenerate: false,
+      generationHelpText: "Describe the motion before generating.",
+    }),
   },
 };
 
@@ -332,6 +555,9 @@ export const kitImageCreatorPanelFixtures = [
   insufficientCoinsFixture,
   customIngredientFixture,
   remixStageFixture,
+  remixFullFixture,
   videoModeFixture,
+  videoTextFixture,
+  videoImageFixture,
   longestContentFixture,
 ];

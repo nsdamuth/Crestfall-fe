@@ -80,7 +80,7 @@ export default function StoryLaunchRequirementsSheet({ picker }) {
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-3xl"
+      panelWidth="48rem"
       onClose={picker.onCancel}
       ariaLabel={`Start ${picker.creationTitle || "Story"}`}
     >

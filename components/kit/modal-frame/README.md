@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.2.0`)
+**Contract:** `KitModalFrame.contract.js` (`1.5.0`)
 
 ## Purpose
 
@@ -60,8 +60,21 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
   re-enable pointer events (`pointer-events-auto`) on each interactive
   box and leave everything else transparent; the frame's own close
   control already does.
-- Width and height stay per-surface via `panelClassName` (caps only,
-  never surface/border/radius/shadow/dismissal overrides).
+- Height caps stay per-surface via `panelClassName` (never
+  surface/border/radius/shadow/dismissal overrides).
+- Width, RULED 10 Sep 2026 (Brian, FE/MEDIA-STUDIO session 3 browser
+  review: every modal is a fixed width, never growing with the
+  browser). The modal variant's panel is ONE width utility at 700px
+  and up, `w-[min(var(--panel-width),calc(100vw-var(--space-8)))]`,
+  never `w-auto`. Callers pass `panelWidth` (a CSS length, e.g.
+  `"56rem"`), which the frame applies as the panel's `--panel-width`
+  inline custom property, so no second width utility ever competes
+  with the recipe by source order (the collision that let the asset
+  picker grow with the window). The default is 64rem, the largest
+  cap any existing caller used, so a legacy `max-w-*` class in
+  `panelClassName` still caps the fixed width down and keeps
+  working; a `w-*` class in `panelClassName` is retired. Under 700px
+  the panel stays full width, bottom-anchored (mobile modal law).
 - Close control: circular recipe, `absolute` top-right inside the
   panel for `modal`; static flow content inside the sheet's header row
   for `sheet` (R7), never overlapping content. For `viewer`, NEW LAW D

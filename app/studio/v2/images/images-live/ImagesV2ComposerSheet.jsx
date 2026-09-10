@@ -9,7 +9,10 @@
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
-export default function ImagesV2ComposerSheet({ panelProps = {}, onClose = null }) {
+// `remix` mirrors the desktop rail's explicit pass: the sheet is the
+// second surface of the same composer, so the Remix stage reaches the
+// panel here by name as well (guarded by the live adapter diagnostics).
+export default function ImagesV2ComposerSheet({ panelProps = {}, remix = null, onClose = null }) {
   return (
     <KitModalFrame
       variant="sheet"
@@ -18,7 +21,7 @@ export default function ImagesV2ComposerSheet({ panelProps = {}, onClose = null 
       onClose={onClose}
     >
       <div className="flex h-[78dvh] min-h-0 w-full flex-col">
-        <KitImageCreatorPanel {...panelProps} />
+        <KitImageCreatorPanel {...panelProps} remix={remix ?? panelProps.remix ?? null} />
       </div>
     </KitModalFrame>
   );

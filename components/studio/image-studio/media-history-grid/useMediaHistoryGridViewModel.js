@@ -334,6 +334,10 @@ export function useMediaHistoryGridViewModel({
   onCoinBalanceChange,
   onImageReassigned,
   onImageRenamed,
+  // Passed straight through to the viewer (FE/MEDIA-STUDIO session
+  // 3): the workbench owns the two constants, the grid only carries
+  // them, the viewer renders them. Absent on the legacy page.
+  viewerCoinCosts = null,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -735,7 +739,7 @@ export function useMediaHistoryGridViewModel({
     ? `Showing ${visibleMediaItems.length} of ${mediaItems.length} library items`
     : historyStatus === "loading"
       ? "Loading image library..."
-      : "No library items yet";
+      : "";
 
   const lightboxProps = activePreviewItem
     ? {
@@ -747,6 +751,7 @@ export function useMediaHistoryGridViewModel({
         imageStudioHref,
         allowDownload: true,
         showStudioActions: true,
+        viewerCoinCosts,
         isItemLiked: (item) =>
           likedMediaIds.has(getMediaHistoryImageOutputId(item)),
         isItemBookmarked: (item) =>

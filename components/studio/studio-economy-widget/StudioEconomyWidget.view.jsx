@@ -33,7 +33,7 @@ function UtilityModal({ title = "", body = "", onClose = null }) {
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="cf-btn cf-btn--primary mt-5 w-full"
+          className="cf-btn cf-btn--primary cf-btn--sm mt-5 w-full"
         >
           Got it
         </button>
@@ -168,7 +168,14 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="cf-btn cf-btn--primary mt-[var(--space-2)] w-full"
+          // Smaller than the stock primary, RULED 10 Sep 2026 (browser
+          // review rounds 6 and 7, screenshots): the recipe's own small
+          // step, .cf-btn--sm (--control-sm height, --text-label label).
+          // Utility overrides cannot do this: design-system.css imports
+          // after the Tailwind layer, so .cf-btn's height and font-size
+          // win over same-specificity h-/text- utilities. Gold recipe,
+          // full block width, and the label are unchanged.
+          className="cf-btn cf-btn--primary cf-btn--sm mt-[var(--space-2)] w-full"
         >
           {UPGRADE_LABEL}
         </button>

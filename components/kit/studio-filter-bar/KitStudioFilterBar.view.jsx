@@ -185,6 +185,7 @@ export default function KitStudioFilterBarView({
                 }))}
                 selectedValues={selectedValues?.[group.id] || []}
                 isMultiSelect={group.isMultiSelect !== false}
+                restingValue={group.restingValue ?? null}
                 onToggleOption={(value) => onFilterToggle?.(group.id, value)}
               />
             ))}

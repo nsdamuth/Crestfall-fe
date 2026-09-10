@@ -448,6 +448,149 @@ export const imageCountOptions = buildImageStudioOutputCountValues().map(
     label: `${count} ${count === 1 ? "image" : "images"}`,
   })
 );
+// Count list RULED 9 Sep 2026 (Media Studio plan gate): 2, 4, 8, 16,
+// 32, 64, 128, 256, default 2. The backend serves 1 to 4 today;
+// IMAGE_COUNT_BACKEND_MAX marks where the Media Studio composer
+// renders the rest disabled ("Not available yet",
+// docs/handoffs/MEDIA-STUDIO-BACKEND.md).
+export const IMAGE_COUNT_BACKEND_MAX = 4;
+
+// Remix limits, RULED 10 Sep 2026 (FE/MEDIA-STUDIO session 4, note 5):
+// up to six characters (character or player character assets) plus
+// one location. Defined once here beside the count limit; every
+// consumer imports them. The Remix slots are ordinary ingredient slots
+// with their own ids, so the shared picker, the custom asset modal,
+// and every selection handler in the workbench ViewModel serve them
+// unchanged. Slot ids carry a 1-based position so a prompt's @img
+// mention stays bound to its slot when another slot is cleared.
+export const REMIX_MAX_CHARACTERS = 6;
+export const REMIX_MAX_LOCATIONS = 1;
+export const REMIX_CHARACTER_SLOT_PREFIX = "remixCharacter";
+export const REMIX_LOCATION_SLOT_PREFIX = "remixLocation";
+
+export const remixCharacterSlots = Array.from(
+  { length: REMIX_MAX_CHARACTERS },
+  (_, index) => ({
+    id: `${REMIX_CHARACTER_SLOT_PREFIX}${index + 1}`,
+    label: "Character",
+    required: index === 0,
+    icon: Users,
+    allowedTypes: ["CHARACTER", "PLAYER_CHARACTER"],
+    allowCustom: true,
+    allowCreatePreset: false,
+    remixKind: "character",
+    remixPosition: index + 1,
+  })
+);
+
+export const remixLocationSlots = Array.from(
+  { length: REMIX_MAX_LOCATIONS },
+  (_, index) => ({
+    id: `${REMIX_LOCATION_SLOT_PREFIX}${index + 1}`,
+    label: "Location",
+    required: false,
+    icon: MapPin,
+    allowedTypes: ["LOCATION"],
+    allowCustom: true,
+    allowCreatePreset: true,
+    remixKind: "location",
+    remixPosition: index + 1,
+  })
+);
+
+export const remixIngredientSlots = [
+  ...remixCharacterSlots,
+  ...remixLocationSlots,
+];
+
+// Video limits and lists (FE/MEDIA-STUDIO session 5, Brian's note 7,
+// 10 Sep 2026). Duration moves in steps of the segment length the
+// workbench ViewModel defines beside its cost constants; the ceiling
+// lives here beside the other limits. The Video slots are ordinary
+// ingredient slots with their own ids (the Remix pattern), so the
+// shared picker, the custom asset modal, and every selection handler
+// serve them unchanged and switching modes never changes Generate's
+// choices. `tileId` names the composer tile each slot fills.
+export const VIDEO_MAX_DURATION_SECONDS = 30;
+export const VIDEO_SLOT_PREFIX = "video";
+
+export const videoCountOptions = [
+  { value: "1", label: "1 video" },
+  { value: "2", label: "2 videos" },
+  { value: "4", label: "4 videos" },
+  { value: "8", label: "8 videos" },
+  { value: "16", label: "16 videos" },
+  { value: "32", label: "32 videos" },
+];
+
+export const videoQualityOptions = [
+  { value: "720p", label: "720p" },
+  { value: "1080p", label: "1080p" },
+];
+
+export const videoIngredientSlots = [
+  {
+    id: "videoCharacter",
+    tileId: "character",
+    label: "Character",
+    required: true,
+    icon: Users,
+    allowedTypes: ["CHARACTER", "PLAYER_CHARACTER"],
+    allowCustom: true,
+    allowCreatePreset: false,
+  },
+  {
+    id: "videoPose",
+    tileId: "pose",
+    label: "Pose",
+    required: false,
+    icon: Theater,
+    allowedTypes: ["POSE"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoOutfit",
+    tileId: "outfit",
+    label: "Clothing Source",
+    required: false,
+    icon: Shirt,
+    allowedTypes: ["OUTFIT", "WARDROBE"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoLocation",
+    tileId: "location",
+    label: "Location / Scene",
+    required: false,
+    icon: MapPin,
+    allowedTypes: ["LOCATION"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoPreset",
+    tileId: "preset",
+    label: "Rendering Preset",
+    required: false,
+    icon: Sparkles,
+    allowedTypes: ["IMAGE_PRESET"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+];
+
+export const imageCountOptions = [
+  { value: "2", label: "2 images" },
+  { value: "4", label: "4 images" },
+  { value: "8", label: "8 images" },
+  { value: "16", label: "16 images" },
+  { value: "32", label: "32 images" },
+  { value: "64", label: "64 images" },
+  { value: "128", label: "128 images" },
+  { value: "256", label: "256 images" },
+];
 
 export const videoDurationOptions = [
   { value: "4", label: "4 seconds" },

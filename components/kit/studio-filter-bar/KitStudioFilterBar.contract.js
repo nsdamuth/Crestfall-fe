@@ -1,4 +1,4 @@
-export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.1.0";
+export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable portable UI boundary for the shared sticky filter bar kit
@@ -43,6 +43,10 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {string} label
  * @property {KitStudioFilterBarOption[]} options
  * @property {boolean} [isMultiSelect] defaults true
+ * @property {string} [restingValue] (added 2.2.0, 10 Sep 2026) the
+ *   group's "no filter" value, passed through to KitDropdown 1.2.0's
+ *   restingValue in the dropdowns presentation only; the panel
+ *   presentation ignores it. Images uses "ALL".
  *
  * @typedef {Object} KitStudioFilterBarSortOption
  * @property {string} value

@@ -139,6 +139,7 @@ export default function KitModalFrameView({
   onClose = null,
   className = "",
   panelClassName = "",
+  panelStyle,
   veilClassName,
   variant = "modal",
   ariaLabelledBy,
@@ -166,6 +167,7 @@ export default function KitModalFrameView({
     <ModalShellView
       className={className}
       panelClassName={panelClassName}
+      panelStyle={panelStyle}
       veilClassName={veilClassName}
       ariaLabelledBy={ariaLabelledBy}
       ariaDescribedBy={ariaDescribedBy}
