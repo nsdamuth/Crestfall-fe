@@ -23,7 +23,9 @@ test("Studio Top Bar Shell stays thin and uses the live notification ViewModel",
 
 test("Studio Top Bar View is portable, semantic, and owns no state", () => {
   const view = read("components/studio/studio-top-bar/StudioTopBar.view.jsx");
-  assert.match(view, /searchValue/);
+  assert.match(view, /globalSearch/);
+  assert.match(view, /from "@\/components\/kit\/KitGlobalSearch"/);
+  assert.doesNotMatch(view, /searchValue|onSearchChange|type="search"/);
   assert.match(view, /notificationsStatus/);
   assert.match(view, /notificationsLoadError/);
   assert.match(view, /notificationsView/);
@@ -79,12 +81,35 @@ test("Studio Top Bar ViewModel owns on-demand feed loading and panel state", () 
   assert.match(viewModel, /setNotificationsView\("compact"\)/);
   assert.doesNotMatch(viewModel, /onOpenNotificationCenter|clearAll|dismissNotification/);
   assert.doesNotMatch(viewModel, /<\w+/);
+  assert.match(viewModel, /useGlobalSearchAdapter\(\{ navigate \}\)/);
+  assert.doesNotMatch(viewModel, /searchValue|setSearchValue/);
+});
+
+test("the one global search adapter fetches on request and names only real routes", () => {
+  const adapter = read("components/studio/studio-top-bar/useGlobalSearchAdapter.js");
+  assert.match(adapter, /fetchOwnedCreations/);
+  assert.match(adapter, /fetchStoryRooms/);
+  assert.match(adapter, /fetchImageGenerationHistory/);
+  assert.match(adapter, /fetchCommunityCreations/);
+  assert.match(adapter, /fetchCommunityCreators/);
+  assert.match(adapter, /\/studio\/v2\/editor\//);
+  assert.match(adapter, /\/studio\/v2\/lore\/timelines\//);
+  assert.match(adapter, /\/studio\/v2\/stories\//);
+  assert.match(adapter, /\/studio\/creations\//);
+  assert.match(adapter, /\/studio\/v2\/creators\//);
+  assert.doesNotMatch(adapter, /\/api\/search|useEffect|<\w+/);
+  const shell = read("components/studio/StudioTopBar.jsx");
+  assert.match(shell, /useRouter/);
+  assert.match(shell, /navigate: \(href\) => router\.push\(href\)/);
 });
 
 test("Studio Top Bar contract and fixtures cover quiet feed states", () => {
   const contract = read("components/studio/studio-top-bar/StudioTopBar.contract.js");
   const fixtures = read("components/studio/studio-top-bar/StudioTopBar.fixtures.js");
-  assert.match(contract, /studio-top-bar\.view\.v7/);
+  assert.match(contract, /studio-top-bar\.view\.v8/);
+  assert.match(contract, /"globalSearch"/);
+  assert.doesNotMatch(contract, /"searchValue"|"onSearchChange"/);
+  assert.match(fixtures, /globalSearch:/);
   assert.match(contract, /quietBell/);
   assert.match(contract, /followed-creator publication events and Coins received/);
   assert.match(contract, /no clear-all, dismiss-per-row, unread state/);

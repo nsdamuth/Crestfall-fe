@@ -1,7 +1,21 @@
+import {
+  kitGlobalSearchFixtureCommunityItems,
+  kitGlobalSearchFixtureOwnItems,
+} from "@/components/kit/global-search/KitGlobalSearch.fixtures";
+
+// The global search prop bag the top bar adapter produces at runtime;
+// fixture items stand in for the fetched lists (v8, FE/GLOBAL-SEARCH).
+const globalSearchFixture = Object.freeze({
+  own: Object.freeze({ items: kitGlobalSearchFixtureOwnItems, status: "ready", errorMessage: "" }),
+  community: Object.freeze({
+    items: kitGlobalSearchFixtureCommunityItems,
+    status: "ready",
+    errorMessage: "",
+  }),
+});
+
 const baseFixture = Object.freeze({
-  searchValue: "",
-  searchPlaceholder: "Search characters, stories, and adventures",
-  searchAutoFocus: false,
+  globalSearch: globalSearchFixture,
   notifications: [],
   notificationsStatus: "idle",
   notificationsLoadError: "",
@@ -19,8 +33,7 @@ export const studioTopBarMobileBarIdleFixture = baseFixture;
 
 export const studioTopBarSearchFocusedFixture = Object.freeze({
   ...baseFixture,
-  searchValue: "image studio",
-  searchAutoFocus: true,
+  globalSearch: Object.freeze({ ...globalSearchFixture, initialValue: "lilith" }),
 });
 
 const sampleNotifications = Object.freeze([
@@ -28,7 +41,7 @@ const sampleNotifications = Object.freeze([
     id: "release-1",
     type: "FOLLOWED_CREATOR_PUBLISHED",
     title: "@lyra published “The Hollow Court”.",
-    body: "Storyline is now public.",
+    body: "Adventure is now public.",
     supportingLine: "12m ago",
     href: "/studio/creations/11111111-1111-4111-8111-111111111111",
   }),
