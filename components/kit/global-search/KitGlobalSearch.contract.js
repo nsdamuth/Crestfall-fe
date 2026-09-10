@@ -30,13 +30,17 @@ export const KIT_GLOBAL_SEARCH_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * @typedef {Object} KitGlobalSearchViewProps
  * @property {string} value the typed query
- * @property {string} placeholder field placeholder
+ * @property {string} placeholder field placeholder, "Search..." at
+ *   every width (RULED, follow-up 1, 10 Sep 2026)
  * @property {string} ariaLabel accessible name of the field and the
- *   phone sheet
+ *   phone sheet, "Search"
  * @property {boolean} isOpen whether the panel or sheet is showing
- * @property {boolean} isPhoneWidth under 700px the panel is a
- *   full-height sheet with the input pinned at the top; 700 and up it
- *   is a popover directly below the field
+ * @property {boolean} isPhoneWidth under 700px the panel is a sheet
+ *   at about 80 percent of the viewport with the input pinned at the
+ *   top; 700 and up it is a popover directly below the field whose
+ *   list caps at about five rows plus a section title (follow-up 1,
+ *   10 Sep 2026). Both caps are defined once in
+ *   kitGlobalSearchLayout.js; the View carries no height literal.
  * @property {import("react").RefObject|null} rootRef outside-click
  *   boundary, ViewModel-owned
  * @property {import("react").RefObject|null} inputRef the field,

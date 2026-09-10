@@ -19,9 +19,14 @@ rulings recorded in `docs/references/global-search/NOTES.md`.
   suggestion rows. The grammar lives in `kitGlobalSearchQuery.js`.
 - Keyboard: arrows move, Enter opens, Escape closes; Cmd+K (Mac) or
   Ctrl+K opens the search from anywhere on the page.
-- Under 700px the field opens a full-height sheet (`KitModalFrame`
-  variant sheet) with the input pinned at the top and the results
-  scrolling below; every row is 44px or taller.
+- Under 700px the field opens a sheet at about 80 percent of the
+  viewport (`KitModalFrame` variant sheet) with the input pinned at
+  the top and the results scrolling below; every row is 44px or
+  taller. At 700px and up only the results list scrolls, capped at
+  about five rows plus a section title, with the section titles
+  sticky and the keyboard hint fixed below. Both caps are defined
+  once in `kitGlobalSearchLayout.js` (follow-up 1, 10 Sep 2026); the
+  View carries no height literal.
 - Honest data: a section a route cannot serve carries status "soon"
   and renders disabled with the Soon chip and the title "Not available
   yet"; a row with no destination renders the same way.
@@ -56,8 +61,9 @@ scoped ("my lilith"), prefixed ("character: lilith"), suggestions
 
 ## Copy
 
-Sentence case, American English, no em dashes. Placeholder "Search
-everything". Section titles "Your items" and "Community". Empty:
+Sentence case, American English, no em dashes. Placeholder "Search..."
+at every width, accessible name "Search" (RULED, follow-up 1). Section
+titles "Your items" and "Community". Empty:
 "Nothing matches yet. Try fewer words, or narrow with my, community, or
 a type like character:". Error: "Search could not load. Try again in a
 moment." Loading: "Loading your items and the community". Soon:

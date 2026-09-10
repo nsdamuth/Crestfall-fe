@@ -23,8 +23,8 @@ import {
 } from "./kitGlobalSearchQuery";
 
 export const KIT_GLOBAL_SEARCH_COPY = Object.freeze({
-  placeholder: "Search everything",
-  ariaLabel: "Search everything",
+  placeholder: "Search...",
+  ariaLabel: "Search",
   ownTitle: "Your items",
   communityTitle: "Community",
   soonSectionTitle: "Not available yet",

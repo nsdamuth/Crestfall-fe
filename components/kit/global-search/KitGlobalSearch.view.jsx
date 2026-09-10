@@ -3,9 +3,10 @@
 // Portable Skin for the top bar global search (FE/GLOBAL-SEARCH
 // session 1, 10 Sep 2026, docs/references/global-search/NOTES.md).
 // One field; results in a popover directly below it at 700px and up,
-// or a full-height sheet with the input pinned at the top under 700px
-// (KitModalFrame variant="sheet", the same frame the dropdown and the
-// filter panel already use). Two sections, the user's own items first,
+// or a sheet at about 80 percent of the viewport with the input
+// pinned at the top under 700px (KitModalFrame variant="sheet", the
+// same frame the dropdown and the filter panel already use). Both
+// height caps come from kitGlobalSearchLayout.js (follow-up 1). Two sections, the user's own items first,
 // then community. Row grammar (RULED, option 1 at the plan gate):
 // icon, title, then "Type · Page" right-aligned in quiet ink at 700px
 // and up, dropping to a second line under the title on phones.
@@ -30,6 +31,7 @@ import {
 
 import KitModalFrame from "../KitModalFrame";
 import { SoonChip } from "../form-field/SoonChip";
+import { KIT_GLOBAL_SEARCH_PANEL_CAP, KIT_GLOBAL_SEARCH_SHEET_CAP } from "./kitGlobalSearchLayout";
 
 const ICONS = Object.freeze({
   character: User,
@@ -159,11 +161,14 @@ function PanelMessage({ children = null }) {
   );
 }
 
+// Section titles stay fixed while the rows scroll under them (R1,
+// follow-up 1): sticky to the top of the scrolling list, on the
+// panel's own surface so rows never show through.
 function SectionTitle({ id = "", children = null }) {
   return (
     <h3
       id={id}
-      className="px-[var(--space-3)] pb-[var(--space-1)] pt-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]"
+      className="sticky top-0 z-[1] bg-[var(--panel-ui-glass)] px-[var(--space-3)] pb-[var(--space-1)] pt-[var(--space-2)] text-[length:var(--text-label)] uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--ink-dim)]"
     >
       {children}
     </h3>
@@ -297,8 +302,8 @@ function SearchFieldBox({
 
 export default function KitGlobalSearchView({
   value = "",
-  placeholder = "Search everything",
-  ariaLabel = "Search everything",
+  placeholder = "Search...",
+  ariaLabel = "Search",
   isOpen = false,
   isPhoneWidth = false,
   rootRef = null,
@@ -353,15 +358,21 @@ export default function KitGlobalSearchView({
 
       {isOpen && !isPhoneWidth ? (
         // Popover, 700px and up: the width of the field, never wider
-        // than the viewport, capped so it always clears the bottom
-        // edge below the sticky top bar; rows scroll inside.
+        // than the viewport. Only the results list scrolls, capped at
+        // the package's one desktop cap (R1, follow-up 1); the
+        // keyboard hint stays fixed below it.
         <div
-          id={listboxId}
-          role="listbox"
-          aria-label={ariaLabel}
-          className={`absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-50 max-h-[min(28rem,calc(100dvh-var(--topbar-h)-var(--space-6)))] overflow-y-auto p-[var(--space-2)] ${PANEL_SURFACE}`}
+          className={`absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-50 flex flex-col p-[var(--space-2)] ${PANEL_SURFACE}`}
         >
-          <PanelBody {...bodyProps} />
+          <div
+            id={listboxId}
+            role="listbox"
+            aria-label={ariaLabel}
+            style={{ maxHeight: KIT_GLOBAL_SEARCH_PANEL_CAP }}
+            className="min-h-0 overflow-y-auto"
+          >
+            <PanelBody {...bodyProps} />
+          </div>
           {copy?.keyboardHint ? (
             <p className="mt-[var(--space-1)] border-t border-[var(--line-whisper)] px-[var(--space-3)] pb-[var(--space-1)] pt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
               {copy.keyboardHint}
@@ -371,18 +382,22 @@ export default function KitGlobalSearchView({
       ) : null}
 
       {isOpen && isPhoneWidth ? (
-        // Phone, under 700px: a full-height sheet (min-height wins over
-        // the frame's own height cap) with the input pinned at the top
-        // and the results scrolling below it; the frame's header row
-        // keeps the close control reachable at every scroll position.
+        // Phone, under 700px: the sheet opens at the package's one
+        // sheet cap, about 80 percent of the viewport (R2, follow-up
+        // 1), and holds there: the body reads the cap as both its
+        // ceiling and its floor. The input stays the sticky first
+        // child, the results scroll below it, and the frame's header
+        // row keeps the grabber and the close control where they are.
         <KitModalFrame
           variant="sheet"
           sheetGrabber
           ariaLabel={copy?.sheetTitle || ariaLabel}
-          panelClassName="min-h-[100dvh]"
           onClose={onClose}
         >
-          <div className="flex h-[calc(100dvh-var(--control-md)-var(--space-3)*2-1px-env(safe-area-inset-bottom))] flex-col">
+          <div
+            style={{ maxHeight: KIT_GLOBAL_SEARCH_SHEET_CAP, minHeight: KIT_GLOBAL_SEARCH_SHEET_CAP }}
+            className="flex flex-col"
+          >
             <div className="px-[var(--space-4)] pb-[var(--space-3)] pt-[var(--space-3)]">
               <SearchFieldBox {...fieldProps} autoFocus />
             </div>

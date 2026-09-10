@@ -82,6 +82,19 @@ searchable by its prompt text, but no page can open with one output
 selected, so media rows render Soon with "Not available yet" this
 session.
 
+## Browser review round 1 (10 Sep 2026, three rulings)
+
+- R1. Desktop results list capped at about half its first height: six
+  control heights, about five rows of Your items plus its title, then
+  the list scrolls; section titles sticky, field and keyboard hint
+  fixed. Defined once in `kitGlobalSearchLayout.js`.
+- R2. Phone sheet opens at about 80 percent of the viewport and holds
+  there; input pinned, grabber and close unchanged, list scrolls
+  inside. Nothing in the design system names a viewport fraction, so
+  the ruled fraction lives once in the same layout file.
+- R3. Placeholder "Search..." at every width; the desktop shortcut
+  hint stays.
+
 ## Premises verified in the repo and the Chassis (10 Sep 2026)
 
 - No search route exists anywhere in the Chassis: no `/v1/search`, no
@@ -165,8 +178,10 @@ The gap file is `docs/handoffs/GLOBAL-SEARCH-BACKEND.md`.
 
 ## Copy
 
-Placeholder "Search everything". Section titles "Your items" and
-"Community". Hint (empty query): "Type to search everything. Narrow
+Placeholder "Search..." at every width, accessible name "Search"
+(browser review round 1, 10 Sep 2026, R3; the desktop shortcut hint
+stays). Section titles "Your items" and "Community". Hint (empty
+query): "Type to search everything. Narrow
 with my or community, or a type like character:". Empty: "Nothing
 matches yet. Try fewer words, or narrow with my, community, or a type
 like character:". Error: "Search could not load. Try again in a

@@ -182,9 +182,13 @@ const readyCommunity = Object.freeze({
   errorMessage: "",
 });
 
+// Placeholder "Search..." at every width (RULED, follow-up 1).
+export const kitGlobalSearchPlaceholder = "Search...";
+
 export const kitGlobalSearchDefaultFixture = Object.freeze({
   own: readyOwn,
   community: readyCommunity,
+  placeholder: kitGlobalSearchPlaceholder,
   initialValue: "lilith",
 });
 
