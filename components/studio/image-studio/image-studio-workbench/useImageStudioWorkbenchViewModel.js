@@ -26,6 +26,14 @@ import { isCommunityDiscoverableCreationType } from "@/lib/shared/creations/crea
 
 export const IMAGE_GENERATION_COIN_COST = 5;
 
+// Image viewer costs (FE/MEDIA-STUDIO session 3, notes 6 and 6a,
+// RULED 10 Sep 2026): the only other price constants on the frontend,
+// read by the viewer the way the composer reads the generation cost
+// (through props, never imported by a View) until the Chassis serves
+// prices (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 2).
+export const UPSCALE_COIN_COST = 10;
+export const EDIT_RUN_COIN_COST = 20;
+
 export const ASPECT_RATIO_BY_COMPOSER_VALUE = Object.freeze({
   PORTRAIT_4_5: "4:5",
   LANDSCAPE_5_4: "5:4",
@@ -857,6 +865,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       onCoinBalanceChange: setCoinBalanceFromServer,
       onImageReassigned: applyImageReassignment,
       onImageRenamed: applyImageRename,
+      viewerCoinCosts: {
+        upscale: UPSCALE_COIN_COST,
+        editRun: EDIT_RUN_COIN_COST,
+      },
     },
     composerProps: {
       mode,

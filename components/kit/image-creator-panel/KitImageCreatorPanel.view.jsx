@@ -21,7 +21,6 @@ import {
   Coins,
   Footprints,
   Image as ImageIcon,
-  Info,
   Layers,
   Library,
   Loader2,
@@ -37,6 +36,8 @@ import {
 
 import KitDropdownView from "../dropdown/KitDropdown.view";
 import { growTextarea } from "../form-field/growTextarea";
+import { InfoTip, TOOLTIP_RECIPE } from "../form-field/InfoTip";
+import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
 
 const SLOT_DEFS = [
   { id: "character", label: "Character", icon: Users, requirement: "required", savable: false, spanRow: true },
@@ -53,8 +54,11 @@ const NOT_AVAILABLE_LABEL = "Not available yet";
 const FIELD_RECIPE =
   "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
 
-const TOOLTIP_RECIPE =
-  "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
+// The tooltip recipe and the InfoTip live in ../form-field/InfoTip.jsx
+// since FE/MEDIA-STUDIO session 3 (shared with the image viewer's
+// size note); the menu recipe and MenuRow in
+// ../form-field/menuRecipe.jsx (shared with the viewer's download
+// size menu). Same recipes, imported back here.
 
 // Field growth (one row, then grows with the text) lives in
 // ../form-field/growTextarea.js, shared with the custom asset modal.
@@ -107,12 +111,6 @@ function stateInkClass(isChanged) {
   return isChanged ? "text-[var(--gold-bright)]" : "text-[var(--ink-dim)]";
 }
 
-// ONE menu look for everything opened out of this panel (round 3 item
-// 3): the surface, radius, padding, and hover state of the footer
-// count menu, shared by construction rather than by copy.
-const MENU_PANEL_RECIPE =
-  "absolute z-50 max-h-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)]";
-
 // Enough of the panel to clear before we commit to opening downward.
 // Measured at click time against the scroll region's bottom edge,
 // which is exactly where the Generate footer starts.
@@ -126,37 +124,6 @@ function menuOpensUpward(node) {
     ? scrollRegion.getBoundingClientRect().bottom
     : window.innerHeight;
   return triggerRect.bottom + MENU_CLEARANCE_PX > bottomLimit;
-}
-
-function MenuRow({ label, isSelected, disabled = false, tooltip = "", onSelect }) {
-  return (
-    <button
-      type="button"
-      role="option"
-      aria-selected={isSelected}
-      disabled={disabled}
-      title={tooltip || undefined}
-      onClick={() => onSelect?.()}
-      className={`flex min-h-[var(--control-sm)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
-        disabled
-          ? "cursor-not-allowed text-[var(--ink-dim)] opacity-[var(--state-disabled-opacity)]"
-          : isSelected
-            ? "text-[var(--gold-bright)] hover:bg-[var(--state-hover-fill)]"
-            : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
-      }`}
-    >
-      <span className="min-w-0 truncate">{label}</span>
-      {disabled && tooltip ? (
-        // Same treatment as the Video toggle's Soon chip: one "Soon"
-        // look across the composer (round 6, 10 Sep 2026).
-        <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-          {tooltip}
-        </span>
-      ) : isSelected ? (
-        <Check size={14} aria-hidden="true" className="flex-none" />
-      ) : null}
-    </button>
-  );
 }
 
 // THE shared select for Image settings (round 3 item 1). Control
@@ -267,50 +234,6 @@ function SettingSelect({
   );
 }
 
-// "i" circle with a hover or tap tooltip (the InfoTip recipe from the
-// character creator, inline; the shared tooltip component is CR-047,
-// still open). Tap toggles, blur or Escape hides; no effects.
-//
-// Anchoring, RULED 10 Sep 2026 (browser review round 6, screenshot):
-// the wrapper is deliberately NOT positioned, so the tooltip anchors
-// to the nearest positioned ancestor, the full-width slider row. It
-// opens directly above that row, right-aligned to the row's edge, so
-// it sits above and to the right of the "i" and stays inside the
-// panel instead of running off the left edge as it did when anchored
-// to the icon itself.
-function InfoTip({ label, text }) {
-  const [open, setOpen] = useState(false);
-  if (!text) return null;
-
-  return (
-    <span className="group/tip inline-flex">
-      <button
-        type="button"
-        aria-label={label}
-        aria-expanded={open}
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setOpen((current) => !current);
-        }}
-        onBlur={() => setOpen(false)}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") setOpen(false);
-        }}
-        className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] text-[var(--gold-ornament)] hover:text-[var(--gold-bright)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
-      >
-        <Info size={14} aria-hidden="true" />
-      </button>
-      <span
-        role="tooltip"
-        className={`${TOOLTIP_RECIPE} right-0 group-hover/tip:opacity-100 ${open ? "opacity-100" : "opacity-0"}`}
-      >
-        {text}
-      </span>
-    </span>
-  );
-}
-
 // Outlined track around both options, the active option filled inside
 // it. Crestfall rounded square (radius-md), not a pill: ruled at the
 // 9 Sep 2026 plan gate, no law change.
@@ -408,8 +331,11 @@ function ClearButton({ label, onClick, overlay = false }) {
         onClick?.();
       }}
       className={`flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border transition-colors [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] ${
+        // Over artwork: the tag-over-art recipe (--tag-bed-art bed,
+        // 1px --line, over-art ink), FE/MEDIA-STUDIO session 3,
+        // replacing the raw white and black literals.
         overlay
-          ? "border-white/25 bg-black/75 text-white shadow-md backdrop-blur-sm hover:bg-black/90 hover:text-white"
+          ? "border-[var(--line)] bg-[var(--tag-bed-art)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:border-[var(--line-strong)] hover:text-[var(--art-ink)]"
           : "border-[var(--line-whisper)] text-[var(--ink-faint)] hover:text-[var(--ink)]"
       }`}
     >

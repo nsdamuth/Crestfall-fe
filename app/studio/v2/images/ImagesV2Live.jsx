@@ -19,6 +19,7 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
+import ImagesV2ImageViewer from "./images-live/ImagesV2ImageViewer";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
 
 // Library filter, RULED 10 Sep 2026 (browser review round 4, item 5),
@@ -274,6 +275,10 @@ export default function ImagesV2Live() {
                 showFilterControls={false}
                 mobilePrimaryActionLabel="Compose"
                 onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
+                // The image viewer (session 3, notes 6 and 6a): the
+                // Kit viewer with the brush editor inside it, the
+                // page's own adapter keeping every lightbox handler.
+                renderLightbox={(lightboxProps) => <ImagesV2ImageViewer {...lightboxProps} />}
               />
             </div>
 

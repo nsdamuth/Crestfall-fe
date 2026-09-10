@@ -512,3 +512,22 @@ coin cost in a sticky footer. The Options expander and Coins readout
 rows are removed; the sidebar label reads Media. Backend gaps live in
 `docs/handoffs/MEDIA-STUDIO-BACKEND.md`. The unquoted comma on the
 density-toggle row (line 884) is fixed in the same commit.
+
+## Media Studio image viewer rows (FE/MEDIA-STUDIO session 3, 10 Sep 2026)
+
+The four `/studio/v2/images` image viewer rows written against the
+mockup overlay (Love toggle, Save toggle, Share, Close) are replaced
+by the live set: an image viewer block (Delete, Report, Details,
+Download size menu with the Extra Large row stubbed, Save toggle,
+Upscale stubbed, Edit, Assign, Share, Thumbnail strip, Close) and an
+image editor block (tools, brush size, paint surface, crop box, crop
+pixel entry, Undo and Redo, Close editor, Prompt, Generate stubbed).
+The viewer is `components/kit/image-viewer` on the shared hairline
+frame, injected through `MediaHistoryGridSkin`'s `renderLightbox` by
+the page adapter `app/studio/v2/images/images-live/ImagesV2ImageViewer.jsx`,
+which keeps calling the lightbox ViewModel so delete, details, report,
+share, and assign report to the same handlers. The OPEN item 28
+viewer-reconciliation hold is lifted for this page by Brian's note 6;
+the legacy Images page and the creation image library keep
+`MediaLightbox` and their rows are unchanged. Backend gaps 8 to 12
+live in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.

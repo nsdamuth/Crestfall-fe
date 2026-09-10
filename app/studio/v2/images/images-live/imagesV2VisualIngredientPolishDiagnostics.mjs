@@ -40,7 +40,13 @@ test("selected artwork gets stronger title contrast at the bottom of each card",
 
 test("selected-card remove control is explicitly treated as a high-contrast image overlay", () => {
   assert.match(view, /function ClearButton\(\{ label, onClick, overlay = false \}\)/);
-  assert.match(view, /border-white\/25 bg-black\/75 text-white shadow-md backdrop-blur-sm/);
+  // Token recipe since FE/MEDIA-STUDIO session 3 (10 Sep 2026): the
+  // tag-over-art bed and over-art ink, no raw white or black literal.
+  assert.match(
+    view,
+    /border-\[var\(--line\)\] bg-\[var\(--tag-bed-art\)\] text-\[var\(--art-ink\)\] backdrop-blur-\[var\(--blur-panel\)\]/
+  );
+  assert.doesNotMatch(view, /(bg|border|text)-(black|white)\b/);
   assert.match(view, /<ClearButton overlay label=\{`Clear \$\{def\.label\}`\}/);
 });
 

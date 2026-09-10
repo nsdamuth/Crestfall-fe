@@ -11,13 +11,19 @@ import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActio
 
 import MediaHistoryGridView from "./media-history-grid/MediaHistoryGrid.view";
 
-export default function MediaHistoryGridSkin(props) {
+// renderLightbox is overridable (FE/MEDIA-STUDIO session 3, 10 Sep
+// 2026): the live Media Studio page supplies its own viewer adapter
+// (app/studio/v2/images/images-live/ImagesV2ImageViewer.jsx); every
+// other consumer keeps MediaLightbox by default.
+export default function MediaHistoryGridSkin({ renderLightbox = null, ...props }) {
   return (
     <MediaHistoryGridView
       {...props}
       FilterPillComponent={FilterPill}
       renderQuickActions={(quickActionProps) => <MediaTileQuickActions {...quickActionProps} />}
-      renderLightbox={(lightboxProps) => <MediaLightbox {...lightboxProps} />}
+      renderLightbox={
+        renderLightbox || ((lightboxProps) => <MediaLightbox {...lightboxProps} />)
+      }
     />
   );
 }

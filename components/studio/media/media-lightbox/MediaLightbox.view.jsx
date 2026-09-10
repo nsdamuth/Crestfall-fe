@@ -398,7 +398,10 @@ function ViewerBottomBar({
 // B5 danger-confirm recipe. Current media deletion is permanent; CR-054
 // recovery-window product work remains separate and must not be implied here.
 // Replaces the browser's native confirm() dialog.
-function DeleteConfirmPanel({ onCancelDelete, onConfirmDelete }) {
+// Named export (FE/MEDIA-STUDIO session 3, 10 Sep 2026): the live
+// Media Studio viewer adapter renders this panel and the three dialogs
+// below over the Kit image viewer, so the operations keep one home.
+export function DeleteConfirmPanel({ onCancelDelete, onConfirmDelete }) {
   return (
     <div className="pointer-events-auto w-full max-w-[26rem] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] p-[var(--space-6)] backdrop-blur-[var(--blur-panel)]">
       <h2 className="font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
@@ -537,7 +540,8 @@ function RenameDialog({
   );
 }
 
-function ReassignDialog({
+export function ReassignDialog({
+  eyebrow = "Reassign Asset",
   status = "idle",
   message = "",
   coinCost = 1,
@@ -557,7 +561,7 @@ function ReassignDialog({
         <div className="flex items-start justify-between gap-[var(--space-4)]">
           <div>
             <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Reassign Asset
+              {eyebrow}
             </p>
             <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
               Move this image
@@ -643,7 +647,7 @@ function ReassignDialog({
   );
 }
 
-function DetailsDialog({
+export function DetailsDialog({
   status = "idle",
   message = "",
   publicRows = [],
@@ -737,7 +741,7 @@ function DetailRows({ rows = [] }) {
   );
 }
 
-function ReportDialog({
+export function ReportDialog({
   title = "Image",
   reasonKey = "sexual_content",
   reasonText = "",
