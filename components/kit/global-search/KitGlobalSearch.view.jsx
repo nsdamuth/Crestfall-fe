@@ -176,7 +176,7 @@ function SectionTitle({ id = "", children = null }) {
 }
 
 function PanelBody({
-  panelState = "hint",
+  panelState = "empty",
   suggestions = [],
   sections = [],
   activeRowId = null,
@@ -202,7 +202,6 @@ function PanelBody({
     );
   }
 
-  if (panelState === "hint") return <PanelMessage>{copy?.hint}</PanelMessage>;
   if (panelState === "loading") return <PanelMessage>{copy?.loading}</PanelMessage>;
   if (panelState === "empty") return <PanelMessage>{copy?.empty}</PanelMessage>;
 
@@ -247,7 +246,6 @@ function SearchFieldBox({
   isOpen = false,
   listboxId = "",
   activeRowId = null,
-  shortcutHint = "",
   clearLabel = "",
   inputRef = null,
   autoFocus = false,
@@ -288,13 +286,6 @@ function SearchFieldBox({
         >
           <X size={14} aria-hidden="true" />
         </button>
-      ) : shortcutHint ? (
-        <kbd
-          aria-hidden="true"
-          className="hidden flex-none rounded-[var(--radius-xs)] border border-[var(--line-whisper)] px-[var(--space-1)] font-sans text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] min-[700px]:inline"
-        >
-          {shortcutHint}
-        </kbd>
       ) : null}
     </div>
   );
@@ -312,8 +303,7 @@ export default function KitGlobalSearchView({
   activeRowId = null,
   suggestions = [],
   sections = [],
-  panelState = "hint",
-  shortcutHint = "",
+  panelState = "empty",
   copy = {},
   className = "",
   onChange = null,
@@ -332,7 +322,6 @@ export default function KitGlobalSearchView({
     isOpen,
     listboxId,
     activeRowId,
-    shortcutHint,
     clearLabel: copy?.clearLabel,
     onChange,
     onOpen,
@@ -359,8 +348,8 @@ export default function KitGlobalSearchView({
       {isOpen && !isPhoneWidth ? (
         // Popover, 700px and up: the width of the field, never wider
         // than the viewport. Only the results list scrolls, capped at
-        // the package's one desktop cap (R1, follow-up 1); the
-        // keyboard hint stays fixed below it.
+        // the package's one desktop cap (R1, follow-up 1). Nothing
+        // sits below the list (browser review round 2, R2).
         <div
           className={`absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-50 flex flex-col p-[var(--space-2)] ${PANEL_SURFACE}`}
         >
@@ -373,11 +362,6 @@ export default function KitGlobalSearchView({
           >
             <PanelBody {...bodyProps} />
           </div>
-          {copy?.keyboardHint ? (
-            <p className="mt-[var(--space-1)] border-t border-[var(--line-whisper)] px-[var(--space-3)] pb-[var(--space-1)] pt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-              {copy.keyboardHint}
-            </p>
-          ) : null}
         </div>
       ) : null}
 

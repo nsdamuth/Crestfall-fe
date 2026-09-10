@@ -24,13 +24,16 @@ on), one line per image added here as they arrive.
   own; "global lilith" or "community lilith" shows only community.
   Typed type prefixes narrow to one type, Discord style, presented as
   suggestions when the user types a colon.
-- Keyboard: arrows move, Enter opens, Escape closes; a shortcut opens
-  the search from anywhere.
+- Keyboard: arrows move, Enter opens, Escape closes. (The brief also
+  asked for an open shortcut; removed at browser review round 2, R1,
+  nothing replaces it.)
 - Choosing a row navigates to that item's page with that item selected
   or filtered in place, using the page's existing filter or route
   parameter. Never a guessed URL.
-- Empty and error states: calm copy, no shame, a hint of the scope
-  words and prefixes.
+- Empty and error states: calm copy, no shame. (The brief also asked
+  for a mention of the scope words and prefixes in those states;
+  removed at browser review round 2, R2: no instruction text in the
+  panel, the no-results copy is exactly "Nothing matches yet.")
 - Mobile and every width: on phones the field opens a full-height sheet
   with the input pinned at the top and the results scrolling below;
   44px targets; no overflow; no clipped panel at any width; the results
@@ -63,10 +66,12 @@ on), one line per image added here as they arrive.
    (double the vocabulary, a mistyped alias silently becomes search
    text); a chip row instead of typed prefixes (Brian ruled typed
    prefixes, and chips would compete with the filter bar grammar).
-3. Open shortcut, option 1: Cmd+K on Mac, Ctrl+K elsewhere, hinted
-   quietly inside the field at 700px and up. Rejected: slash (the chat
-   composer already uses slash for commands); both keys (two shortcuts
-   to hint and document for one field).
+3. Open shortcut, option 1: the modifier chord used by the Discord and
+   Raycast references, hinted quietly inside the field at 700px and
+   up. Rejected: slash (the chat composer already uses slash for
+   commands); both keys (two to hint and document for one field).
+   SUPERSEDED at browser review round 2 (R1): the shortcut and its
+   hint are removed entirely and nothing replaces them.
 4. Data approach, option 1: fetch once on first open, filter in the
    browser. The top bar adapter loads the own lists and the community
    lists in parallel when the panel first opens, holds them for the
@@ -86,14 +91,27 @@ session.
 
 - R1. Desktop results list capped at about half its first height: six
   control heights, about five rows of Your items plus its title, then
-  the list scrolls; section titles sticky, field and keyboard hint
-  fixed. Defined once in `kitGlobalSearchLayout.js`.
+  the list scrolls; section titles sticky, field fixed. Defined once
+  in `kitGlobalSearchLayout.js`. (The footer this ruling kept fixed
+  was removed at round 2, R2.)
 - R2. Phone sheet opens at about 80 percent of the viewport and holds
   there; input pinned, grabber and close unchanged, list scrolls
   inside. Nothing in the design system names a viewport fraction, so
   the ruled fraction lives once in the same layout file.
-- R3. Placeholder "Search..." at every width; the desktop shortcut
-  hint stays.
+- R3. Placeholder "Search..." at every width. (The hint inside the
+  field that this ruling kept was removed at round 2, R1.)
+
+## Browser review round 2 (10 Sep 2026, two rulings)
+
+- R1. The open shortcut is removed entirely: the listener, the hint
+  inside the field, and every line describing it. Escape still closes
+  the panel. Nothing replaces the shortcut.
+- R2. No instruction text. The empty field opens no panel; the panel
+  appears only once the field has text (the rule is
+  `shouldShowGlobalSearchPanel` in `kitGlobalSearchQuery.js`). The
+  helper block and the footer are gone at every width. The no-results
+  copy is exactly "Nothing matches yet." The colon prefix suggestion
+  list stays; the error and loading copy stay.
 
 ## Premises verified in the repo and the Chassis (10 Sep 2026)
 
@@ -179,12 +197,9 @@ The gap file is `docs/handoffs/GLOBAL-SEARCH-BACKEND.md`.
 ## Copy
 
 Placeholder "Search..." at every width, accessible name "Search"
-(browser review round 1, 10 Sep 2026, R3; the desktop shortcut hint
-stays). Section titles "Your items" and "Community". Hint (empty
-query): "Type to search everything. Narrow
-with my or community, or a type like character:". Empty: "Nothing
-matches yet. Try fewer words, or narrow with my, community, or a type
-like character:". Error: "Search could not load. Try again in a
-moment." Loading: "Loading your items and the community". Soon: "Not
-available yet" with the Soon chip. Keyboard hint: "Up and down to move,
-Enter to open, Esc to close".
+(browser review round 1, 10 Sep 2026, R3). Section titles "Your items"
+and "Community". Empty: exactly "Nothing matches yet." (round 2, R2).
+Error: "Search could not load. Try again in a moment." Loading:
+"Loading your items and the community". Soon: "Not available yet" with
+the Soon chip. No helper block and no footer anywhere in the panel
+(round 2, R2).

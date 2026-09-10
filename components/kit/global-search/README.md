@@ -17,14 +17,18 @@ rulings recorded in `docs/references/global-search/NOTES.md`.
   "global lilith"). Typed prefixes narrow to one type, Discord style
   ("character: lilith"); typing a colon shows the prefixes as
   suggestion rows. The grammar lives in `kitGlobalSearchQuery.js`.
-- Keyboard: arrows move, Enter opens, Escape closes; Cmd+K (Mac) or
-  Ctrl+K opens the search from anywhere on the page.
+- Keyboard: arrows move, Enter opens, Escape closes. No shortcut opens
+  the search (browser review round 2, R1).
+- The panel shows only once the field has text; an empty field opens
+  nothing at any width. The panel carries no instruction text: no
+  helper block, no footer; the no-results copy is exactly "Nothing
+  matches yet." (browser review round 2, R2).
 - Under 700px the field opens a sheet at about 80 percent of the
   viewport (`KitModalFrame` variant sheet) with the input pinned at
   the top and the results scrolling below; every row is 44px or
   taller. At 700px and up only the results list scrolls, capped at
   about five rows plus a section title, with the section titles
-  sticky and the keyboard hint fixed below. Both caps are defined
+  sticky. Both caps are defined
   once in `kitGlobalSearchLayout.js` (follow-up 1, 10 Sep 2026); the
   View carries no height literal.
 - Honest data: a section a route cannot serve carries status "soon"
@@ -37,9 +41,9 @@ rulings recorded in `docs/references/global-search/NOTES.md`.
 StudioTopBar.view.jsx
   -> KitGlobalSearch (Binding Shell, components/kit/KitGlobalSearch.jsx)
        -> useKitGlobalSearchViewModel (value, open flag, active row,
-          grammar, keyboard, shortcut, dismissal)
+          grammar, keyboard, dismissal)
        -> KitGlobalSearch.view.jsx (field, popover, sheet, sections,
-          rows, suggestion rows, hint, loading, empty, error, soon)
+          rows, suggestion rows, loading, empty, error, soon)
             -> ../KitModalFrame (phone sheet)
             -> ../form-field/SoonChip
             -> ../dropdown/useAnchoredPanel (PHONE_WIDTH_QUERY only)
@@ -55,19 +59,19 @@ imports next/navigation.
 
 ## States (fixtures)
 
-`KitGlobalSearch.fixtures.js`: default, empty, loading, error, soon,
-scoped ("my lilith"), prefixed ("character: lilith"), suggestions
-(":"), longest.
+`KitGlobalSearch.fixtures.js`: default, empty, closed (empty field, no
+panel), loading, error, soon, scoped ("my lilith"), prefixed
+("character: lilith"), suggestions (":"), longest.
 
 ## Copy
 
 Sentence case, American English, no em dashes. Placeholder "Search..."
 at every width, accessible name "Search" (RULED, follow-up 1). Section
-titles "Your items" and "Community". Empty:
-"Nothing matches yet. Try fewer words, or narrow with my, community, or
-a type like character:". Error: "Search could not load. Try again in a
-moment." Loading: "Loading your items and the community". Soon:
-"Not available yet" with the Soon chip.
+titles "Your items" and "Community". Empty: exactly "Nothing matches
+yet." (RULED, browser review round 2). Error: "Search could not load.
+Try again in a moment." Loading: "Loading your items and the
+community". Soon: "Not available yet" with the Soon chip. No helper
+block and no footer anywhere in the panel.
 
 ## Diagnostics
 

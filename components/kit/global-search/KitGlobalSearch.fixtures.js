@@ -192,10 +192,22 @@ export const kitGlobalSearchDefaultFixture = Object.freeze({
   initialValue: "lilith",
 });
 
+// The no-results copy is exactly this (RULED, browser review round 2).
+export const kitGlobalSearchEmptyCopy = "Nothing matches yet.";
+
 export const kitGlobalSearchEmptyFixture = Object.freeze({
   own: Object.freeze({ items: [], status: "ready", errorMessage: "" }),
   community: Object.freeze({ items: [], status: "ready", errorMessage: "" }),
+  copy: Object.freeze({ empty: kitGlobalSearchEmptyCopy }),
   initialValue: "nothing here",
+});
+
+// An empty field opens no panel at any width (RULED, browser review
+// round 2); this fixture renders the field alone.
+export const kitGlobalSearchClosedFixture = Object.freeze({
+  own: readyOwn,
+  community: readyCommunity,
+  initialValue: "",
 });
 
 export const kitGlobalSearchLoadingFixture = Object.freeze({

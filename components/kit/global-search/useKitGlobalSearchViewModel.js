@@ -3,14 +3,14 @@
 // Chassis for the top bar global search (FE/GLOBAL-SEARCH session 1,
 // 10 Sep 2026). Owns the typed value, the open flag, the active row,
 // the query grammar (kitGlobalSearchQuery.js), the keyboard (arrows
-// move, Enter opens, Escape closes), the open shortcut (Cmd+K on Mac,
-// Ctrl+K elsewhere, RULED at the plan gate), outside-click dismissal
-// for the desktop popover, and the phone-width chassis select read at
-// the moment of opening (never at render, so server and first client
-// render agree). Data arrives from the caller as two source groups;
-// nothing here fetches, and choosing a row only calls back with its
-// href.
-import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
+// move, Enter opens, Escape closes), outside-click dismissal for the
+// desktop popover, and the phone-width chassis select read at the
+// moment of opening (never at render, so server and first client
+// render agree). The panel shows only once the field has text
+// (browser review round 2, R2); there is no open shortcut (round 2,
+// R1). Data arrives from the caller as two source groups; nothing
+// here fetches, and choosing a row only calls back with its href.
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { PHONE_WIDTH_QUERY } from "../dropdown/useAnchoredPanel";
 import {
@@ -20,6 +20,7 @@ import {
   applyGlobalSearchPrefix,
   filterGlobalSearchRows,
   parseGlobalSearchQuery,
+  shouldShowGlobalSearchPanel,
 } from "./kitGlobalSearchQuery";
 
 export const KIT_GLOBAL_SEARCH_COPY = Object.freeze({
@@ -29,11 +30,9 @@ export const KIT_GLOBAL_SEARCH_COPY = Object.freeze({
   communityTitle: "Community",
   soonSectionTitle: "Not available yet",
   soonTitle: "Not available yet",
-  hint: "Type to search everything. Narrow with my or community, or a type like character:",
   loading: "Loading your items and the community",
-  empty: "Nothing matches yet. Try fewer words, or narrow with my, community, or a type like character:",
+  empty: "Nothing matches yet.",
   errorFallback: "Search could not load. Try again in a moment.",
-  keyboardHint: "Up and down to move, Enter to open, Esc to close",
   clearLabel: "Clear search",
   sheetTitle: "Search",
 });
@@ -45,39 +44,22 @@ function readIsPhoneWidth() {
   return typeof window !== "undefined" && window.matchMedia(PHONE_WIDTH_QUERY).matches;
 }
 
-// The shortcut hint depends on the platform, which the server cannot
-// know: the server snapshot is empty and the client snapshot fills in
-// after hydration, with no setState inside an effect body.
-function subscribeToNothing() {
-  return () => {};
-}
-
-function readShortcutHint() {
-  if (typeof navigator === "undefined") return "";
-  const platform = `${navigator.platform || ""} ${navigator.userAgent || ""}`;
-  return /Mac|iPhone|iPad|iPod/i.test(platform) ? "⌘ K" : "Ctrl K";
-}
-
-function readServerShortcutHint() {
-  return "";
-}
-
-function isShortcutEvent(event) {
-  return (event.metaKey || event.ctrlKey) && !event.altKey && String(event.key || "").toLowerCase() === "k";
-}
-
 export function useKitGlobalSearchViewModel({
   own = EMPTY_SOURCE,
   community = EMPTY_SOURCE,
   placeholder = KIT_GLOBAL_SEARCH_COPY.placeholder,
   ariaLabel = KIT_GLOBAL_SEARCH_COPY.ariaLabel,
   initialValue = "",
+  copy: copyOverrides = null,
   onRequestData = null,
   onNavigate = null,
   className = "",
 } = {}) {
   const [value, setValue] = useState(String(initialValue ?? ""));
-  const [isOpen, setIsOpen] = useState(false);
+  // The user's own open request: true from the first keystroke or
+  // focus, false after Escape, an outside click, or choosing a row.
+  // The panel renders only when this is true AND the field has text.
+  const [isRequested, setIsRequested] = useState(false);
   const [isPhoneWidth, setIsPhoneWidth] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const rootRef = useRef(null);
@@ -85,13 +67,13 @@ export function useKitGlobalSearchViewModel({
   const baseId = useId();
   const listboxId = `${baseId}-listbox`;
 
-  const shortcutHint = useSyncExternalStore(
-    subscribeToNothing,
-    readShortcutHint,
-    readServerShortcutHint
+  const copy = useMemo(
+    () => ({ ...KIT_GLOBAL_SEARCH_COPY, ...(copyOverrides || {}) }),
+    [copyOverrides]
   );
 
   const parsed = useMemo(() => parseGlobalSearchQuery(value), [value]);
+  const isOpen = shouldShowGlobalSearchPanel(value, isRequested);
 
   const suggestions = useMemo(
     () =>
@@ -109,10 +91,10 @@ export function useKitGlobalSearchViewModel({
   const sections = useMemo(() => {
     const groups = [];
     if (parsed.scope !== GLOBAL_SEARCH_SCOPE_COMMUNITY) {
-      groups.push({ id: "own", title: KIT_GLOBAL_SEARCH_COPY.ownTitle, source: own });
+      groups.push({ id: "own", title: copy.ownTitle, source: own });
     }
     if (parsed.scope !== GLOBAL_SEARCH_SCOPE_OWN) {
-      groups.push({ id: "community", title: KIT_GLOBAL_SEARCH_COPY.communityTitle, source: community });
+      groups.push({ id: "community", title: copy.communityTitle, source: community });
     }
 
     return groups.map((group) => {
@@ -137,17 +119,17 @@ export function useKitGlobalSearchViewModel({
 
       return {
         id: group.id,
-        title: isSoon ? KIT_GLOBAL_SEARCH_COPY.soonSectionTitle : group.title,
+        title: isSoon ? copy.soonSectionTitle : group.title,
         status,
         errorMessage:
           status === "error"
-            ? group.source?.errorMessage || KIT_GLOBAL_SEARCH_COPY.errorFallback
+            ? group.source?.errorMessage || copy.errorFallback
             : group.source?.errorMessage || "",
         isSoon,
         rows,
       };
     });
-  }, [parsed, own, community, baseId]);
+  }, [parsed, own, community, baseId, copy]);
 
   const visibleSections = useMemo(
     () =>
@@ -164,10 +146,8 @@ export function useKitGlobalSearchViewModel({
   let panelState = "results";
   if (suggestions.length) {
     panelState = "suggestions";
-  } else if (!parsed.hasQuery) {
-    panelState = "hint";
   } else if (!visibleSections.length) {
-    panelState = anyLoading ? "loading" : "empty";
+    panelState = parsed.hasQuery && anyLoading ? "loading" : "empty";
   }
 
   const navigableIds = useMemo(() => {
@@ -182,12 +162,12 @@ export function useKitGlobalSearchViewModel({
 
   const open = useCallback(() => {
     setIsPhoneWidth(readIsPhoneWidth());
-    setIsOpen(true);
+    setIsRequested(true);
     onRequestData?.();
   }, [onRequestData]);
 
   const close = useCallback(() => {
-    setIsOpen(false);
+    setIsRequested(false);
     setActiveIndex(-1);
   }, []);
 
@@ -225,7 +205,7 @@ export function useKitGlobalSearchViewModel({
   function onChange(next) {
     setValue(String(next ?? ""));
     setActiveIndex(-1);
-    if (!isOpen) open();
+    open();
   }
 
   function onClear() {
@@ -244,7 +224,7 @@ export function useKitGlobalSearchViewModel({
 
     if (key === "ArrowDown") {
       event.preventDefault();
-      if (!isOpen) open();
+      if (!isRequested) open();
       setActiveIndex((current) =>
         navigableIds.length ? (current + 1) % navigableIds.length : -1
       );
@@ -253,7 +233,7 @@ export function useKitGlobalSearchViewModel({
 
     if (key === "ArrowUp") {
       event.preventDefault();
-      if (!isOpen) open();
+      if (!isRequested) open();
       setActiveIndex((current) =>
         navigableIds.length ? (current <= 0 ? navigableIds.length - 1 : current - 1) : -1
       );
@@ -261,6 +241,7 @@ export function useKitGlobalSearchViewModel({
     }
 
     if (key === "Enter") {
+      if (!isOpen) return;
       const id = activeRowId || navigableIds[0] || null;
       if (!id) return;
       event.preventDefault();
@@ -316,20 +297,6 @@ export function useKitGlobalSearchViewModel({
     return () => query.removeEventListener("change", onMediaChange);
   }, [isOpen]);
 
-  // Open shortcut from anywhere on the page: Cmd+K on Mac, Ctrl+K
-  // elsewhere. Every major browser lets the page take this chord.
-  useEffect(() => {
-    function onKeyDown(event) {
-      if (!isShortcutEvent(event)) return;
-      event.preventDefault();
-      open();
-      inputRef.current?.focus();
-    }
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open]);
-
   // Keep the keyboard-active row in view inside the scrolling panel.
   useEffect(() => {
     if (!activeRowId || typeof document === "undefined") return;
@@ -349,8 +316,7 @@ export function useKitGlobalSearchViewModel({
     suggestions,
     sections: visibleSections,
     panelState,
-    shortcutHint,
-    copy: KIT_GLOBAL_SEARCH_COPY,
+    copy,
     className,
     onChange,
     onOpen: open,

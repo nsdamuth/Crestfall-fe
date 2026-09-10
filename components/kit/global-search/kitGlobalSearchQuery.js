@@ -140,6 +140,15 @@ export function applyGlobalSearchPrefix(rawValue = "", typeKey = "") {
   return `${words.join(" ")} `;
 }
 
+// The panel shows only once the field has text (RULED, browser review
+// round 2, 10 Sep 2026, R2): an empty or whitespace-only field opens
+// nothing, at every width. `isRequested` is the ViewModel's own flag
+// (false after Escape or an outside click, true again on the next
+// keystroke or focus).
+export function shouldShowGlobalSearchPanel(rawValue = "", isRequested = true) {
+  return Boolean(isRequested) && !parseGlobalSearchQuery(rawValue).isEmpty;
+}
+
 function rankRow(row, terms) {
   const title = normalizeGlobalSearchText(row?.title);
   if (!terms.length) return 2;

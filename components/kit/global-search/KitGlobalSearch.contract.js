@@ -9,8 +9,15 @@ export const KIT_GLOBAL_SEARCH_VIEW_CONTRACT_VERSION = "1.0.0";
  * community), each row reading icon, title, then type and page.
  *
  * Boundary: the View renders; the ViewModel owns the typed value,
- * open state, the active row, the query grammar, the keyboard, the
- * open shortcut, and outside-click dismissal. Data arrives already
+ * open state, the active row, the query grammar, the keyboard, and
+ * outside-click dismissal. The panel shows only once the field has
+ * text: an empty field opens nothing at any width, and no shortcut
+ * opens the search (browser review round 2, 10 Sep 2026, R1 and R2;
+ * the rule is shouldShowGlobalSearchPanel in kitGlobalSearchQuery.js).
+ * The panel carries no instruction text: no helper block, no keyboard
+ * footer; the no-results copy is exactly "Nothing matches yet.", the
+ * error and loading copy stay, the colon prefix suggestions stay.
+ * Data arrives already
  * fetched from the caller (the top bar adapter) as two source groups;
  * the View never fetches and never navigates on its own (choosing a
  * row calls back with the row's href).
@@ -44,7 +51,7 @@ export const KIT_GLOBAL_SEARCH_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {import("react").RefObject|null} rootRef outside-click
  *   boundary, ViewModel-owned
  * @property {import("react").RefObject|null} inputRef the field,
- *   focused by the open shortcut
+ *   refocused after Clear
  * @property {string} listboxId id of the results listbox, referenced
  *   by the field's aria-controls
  * @property {string|null} activeRowId id of the keyboard-active row
@@ -54,13 +61,14 @@ export const KIT_GLOBAL_SEARCH_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {Array<{id: string, title: string, status: string, errorMessage: string, isSoon: boolean, rows: Array<Object>}>} sections
  *   the result sections in order; each row is
  *   { id, key, title, subtitle, typeLabel, pageLabel, iconKey, imageSrc, isSoon }
- * @property {"hint"|"loading"|"empty"|"results"} panelState what the
- *   panel body shows when no suggestion rows are showing
- * @property {string} shortcutHint the open shortcut as text ("⌘ K" or
- *   "Ctrl K"), empty until the platform is known; hidden under 700px
- * @property {Object} copy sentence-case copy: hint, loading, empty,
- *   errorFallback, soonTitle, soonSectionTitle, keyboardHint,
- *   clearLabel, sheetTitle
+ * @property {"suggestions"|"loading"|"empty"|"results"} panelState
+ *   what the panel body shows; "empty" renders copy.empty, which is
+ *   "Nothing matches yet." by default
+ * @property {Object} copy sentence-case copy: placeholder, ariaLabel,
+ *   ownTitle, communityTitle, loading, empty, errorFallback,
+ *   soonTitle, soonSectionTitle, clearLabel, sheetTitle. The caller
+ *   may pass a partial `copy` object to the ViewModel; it merges over
+ *   the defaults
  * @property {(value: string) => void} onChange
  * @property {() => void} onOpen focus or tap opens the panel
  * @property {() => void} onClose

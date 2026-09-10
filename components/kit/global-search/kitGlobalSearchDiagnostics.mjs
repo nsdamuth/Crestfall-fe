@@ -10,6 +10,7 @@ import {
   filterGlobalSearchRows,
   normalizeGlobalSearchText,
   parseGlobalSearchQuery,
+  shouldShowGlobalSearchPanel,
 } from "./kitGlobalSearchQuery.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -131,15 +132,44 @@ test("the View is portable and owns no state, data, or navigation", () => {
   assert.doesNotMatch(view, OUT_OF_CONTRACT_VALUES);
 });
 
-test("the ViewModel owns the keyboard, the shortcut, and dismissal", () => {
+test("the ViewModel owns the keyboard and dismissal, and no open shortcut exists", () => {
   const viewModel = read("components/kit/global-search/useKitGlobalSearchViewModel.js");
+  const view = read("components/kit/global-search/KitGlobalSearch.view.jsx");
   assert.match(viewModel, /ArrowDown/);
   assert.match(viewModel, /ArrowUp/);
   assert.match(viewModel, /"Enter"/);
   assert.match(viewModel, /"Escape"/);
-  assert.match(viewModel, /metaKey \|\| event\.ctrlKey/);
   assert.match(viewModel, /pointerdown/);
   assert.doesNotMatch(viewModel, /fetch\(|next\/navigation|<\w+/);
+  // Patterns assembled from fragments so this file never carries the
+  // removed shortcut's own words (browser review round 2, R1).
+  const shortcutTraces = new RegExp(
+    [["meta", "Key"].join(""), ["ctrl", "Key"].join(""), ["short", "cutHint"].join(""), "<kbd"].join("|")
+  );
+  assert.doesNotMatch(viewModel, shortcutTraces);
+  assert.doesNotMatch(view, shortcutTraces);
+});
+
+test("the panel is closed when the query is empty and open once it has text", () => {
+  assert.equal(shouldShowGlobalSearchPanel(""), false);
+  assert.equal(shouldShowGlobalSearchPanel("   "), false);
+  assert.equal(shouldShowGlobalSearchPanel("lilith"), true);
+  assert.equal(shouldShowGlobalSearchPanel(":"), true);
+  assert.equal(shouldShowGlobalSearchPanel("lilith", false), false);
+  const viewModel = read("components/kit/global-search/useKitGlobalSearchViewModel.js");
+  assert.match(viewModel, /const isOpen = shouldShowGlobalSearchPanel\(value, isRequested\)/);
+});
+
+test("the panel carries no instruction text and the no-results copy is exact", () => {
+  const viewModel = read("components/kit/global-search/useKitGlobalSearchViewModel.js");
+  const view = read("components/kit/global-search/KitGlobalSearch.view.jsx");
+  assert.match(viewModel, /empty: "Nothing matches yet\."/);
+  const instructionTraces = new RegExp(
+    [["Type to", " search"].join(""), ["Up and down", " to move"].join(""), ["Try fewer", " words"].join(""), ["keyboard", "Hint"].join("")].join("|")
+  );
+  assert.doesNotMatch(viewModel, instructionTraces);
+  assert.doesNotMatch(view, instructionTraces);
+  assert.doesNotMatch(view, /panelState === "hint"/);
 });
 
 test("the binding shell is thin and the package is registered", () => {

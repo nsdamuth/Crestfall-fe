@@ -32,6 +32,6 @@ One line per gap, in the shape: what the FE calls, the inputs, the response the 
 9. Item page for generated media. Call: none (frontend only). Inputs: none. Response: none. Unverified: nothing; listed so nobody looks for a backend piece. The Images page needs an output parameter that opens the viewer on one item (docs/references/global-search/NOTES.md, frontend follow-ups); until then media rows render Soon.
 
 LOCAL REVIEW ENVIRONMENT
-- localhost:3001 signed in (docs/FRONTEND-SOP.md section 7 port model). The search field sits in the top bar on every studio page; Cmd+K (Mac) or Ctrl+K opens it from anywhere.
+- localhost:3001 signed in (docs/FRONTEND-SOP.md section 7 port model). The search field sits in the top bar on every studio page; the panel opens once the field has text (no shortcut, browser review round 2).
 - On first open the adapter calls the five routes above. A 401 from the local auth session or a 500 from services-api on 4000 shows as one quiet line under the affected section ("Some of your items could not be loaded." or "Some community items could not be loaded."); when every route in a section fails the section reads "Search could not load. Try again in a moment." Nothing else changes.
 - A seeded account with a few characters, one story in progress, and a handful of public community creations makes both sections reviewable; media rows appear only when the account has generated images and render Soon by design.
