@@ -445,8 +445,8 @@ function PreviewQuietRow({ item, collapsed, dense = false }) {
       aria-disabled="true"
       className={`flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${
         dense
-          ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)]"
-          : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)]"
+          ? "min-h-[var(--control-filter)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+          : "min-h-[var(--control-filter)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
       } ${collapsed ? "justify-center px-2" : ""}`}
     >
       <Icon size={16} className="shrink-0" />
@@ -481,8 +481,8 @@ function SidebarInternalLink({
         cf-nav-link flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent font-[var(--weight-regular)] tracking-[var(--track-normal)]
         ${
           dense
-            ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)]"
-            : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)]"
+            ? "min-h-[var(--control-filter)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+            : "min-h-[var(--control-filter)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
         }
         ${
           link.variant === "return"

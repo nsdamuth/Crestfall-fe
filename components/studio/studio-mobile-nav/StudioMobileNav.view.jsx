@@ -444,7 +444,7 @@ function MobileDrawerInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-label)] font-[var(--weight-regular)] leading-[var(--lh-label)] tracking-[var(--track-normal)] transition
+        cf-nav-link flex min-h-[var(--control-filter)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-label)] font-[var(--weight-regular)] leading-[var(--lh-label)] tracking-[var(--track-normal)] transition [@media(pointer:coarse)]:min-h-[var(--control-md)]
         ${
           link.variant === "return"
             ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"

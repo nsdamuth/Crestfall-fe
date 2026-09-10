@@ -1,4 +1,4 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the branded dropdown kit piece
@@ -48,6 +48,12 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {((value: string) => void)|null} onToggleOption
  *   fires per option activation; single-select closes after firing,
  *   multi-select stays open for further toggles
+ * @property {string|null} [restingValue] (added 1.2.0, 10 Sep 2026,
+ *   Media Studio browser review round 5) the one value that means
+ *   "no filter", e.g. "All". While it is the only selection the
+ *   trigger reads as untouched: no selection count, dim ink, the row
+ *   still checked. A default is not a choice the user made. Omitted
+ *   on every existing consumer, pixel-stable.
  * @property {string|null} [ariaLabel] (added 1.1.0, 10 Aug 2026
  *   review gate, D-3) the control's purpose for assistive tech when
  *   the visible label carries a VALUE rather than the group name

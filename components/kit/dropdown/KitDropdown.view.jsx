@@ -120,6 +120,7 @@ export default function KitDropdownView({
   isDisabled = false,
   onToggleOption = null,
   ariaLabel = null,
+  restingValue = null,
 }) {
   // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
   // PLAN.md section 5.2), measured flip, and popover-only dismissal:
@@ -130,7 +131,15 @@ export default function KitDropdownView({
 
   const selectionCount = selectedValues?.length || 0;
   const selectedLabel = deriveSelectedLabel(options, selectedValues, isMultiSelect);
-  const isMarked = selectionCount > 0 || isOpen;
+  // Resting value (1.2.0, RULED 10 Sep 2026, Media Studio round 5): a
+  // caller may name the one value that means "no filter". While it is
+  // the only selection the trigger reads as untouched (no count, dim
+  // ink) even though its row still shows the check, because a default
+  // is not a choice the user made. Omitted on every other consumer,
+  // pixel-stable.
+  const isResting =
+    restingValue !== null && selectionCount === 1 && selectedValues[0] === restingValue;
+  const isMarked = (selectionCount > 0 && !isResting) || isOpen;
 
   function activateOption(value) {
     onToggleOption?.(value);
@@ -156,7 +165,7 @@ export default function KitDropdownView({
         {selectedLabel && (
           <span className="truncate text-[var(--gold-bright)]">{selectedLabel}</span>
         )}
-        {isMultiSelect && selectionCount > 0 && (
+        {isMultiSelect && selectionCount > 0 && !isResting && (
           <span className="tabular-nums text-[length:var(--text-label)] text-[var(--gold-bright)]">
             {selectionCount}
           </span>

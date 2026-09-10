@@ -31,11 +31,14 @@ import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel
 // filter model is unchanged (contract law): Saved is its BOOKMARKED
 // activity filter, Images and Videos are its single media pick. No
 // Sort on Images (the jobs feed has no sort, CR-058).
+// Order re-ruled 10 Sep 2026 (round 5, screenshot): All first, Saved
+// last. All is the resting value: the trigger reads plain "Filter"
+// with no count while it is the only selection (KitDropdown 1.2.0).
 const LIBRARY_OPTIONS = [
-  { value: "BOOKMARKED", label: "Saved" },
   { value: "ALL", label: "All" },
   { value: "IMAGES", label: "Images" },
   { value: "VIDEOS", label: "Videos" },
+  { value: "BOOKMARKED", label: "Saved" },
 ];
 
 function countLibrary(items, value) {
@@ -150,6 +153,7 @@ export default function ImagesV2Live() {
         id: "library",
         label: "Filter",
         isMultiSelect: true,
+        restingValue: "ALL",
         options: LIBRARY_OPTIONS.map((option) => ({
           ...option,
           count: countLibrary(grid.mediaItems, option.value),

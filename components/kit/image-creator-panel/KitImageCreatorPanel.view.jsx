@@ -25,11 +25,11 @@ import {
   Library,
   Loader2,
   MapPin,
+  PersonStanding,
   Save,
   Shirt,
   SlidersHorizontal,
   Sparkles,
-  Theater,
   Users,
   Video,
   X,
@@ -39,7 +39,7 @@ import KitDropdownView from "../dropdown/KitDropdown.view";
 
 const SLOT_DEFS = [
   { id: "character", label: "Character", icon: Users, requirement: "required", savable: false, spanRow: true },
-  { id: "pose", label: "Pose", icon: Theater, requirement: "optional", savable: true, spanRow: false },
+  { id: "pose", label: "Pose", icon: PersonStanding, requirement: "optional", savable: true, spanRow: false },
   { id: "outfit", label: "Outfit", icon: Shirt, requirement: "optional", savable: true, spanRow: false },
   { id: "location", label: "Location", icon: MapPin, requirement: "optional", savable: true, spanRow: false },
   { id: "preset", label: "Preset", icon: Sparkles, requirement: "optional", savable: true, spanRow: false },
@@ -51,7 +51,7 @@ const NOT_AVAILABLE_LABEL = "Not available yet";
 const TEXTAREA_MAX_HEIGHT_PX = 320;
 
 const FIELD_RECIPE =
-  "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
+  "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
 
 const TOOLTIP_RECIPE =
   "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
@@ -334,7 +334,7 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
             onClick={() => {
               if (!option.disabled) onChangeMode?.(option.id);
             }}
-            className={`flex min-h-[var(--control-md)] min-w-0 items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors ${
+            className={`flex min-h-[var(--control-filter)] min-w-0 items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
               isActive
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : option.disabled
@@ -373,7 +373,7 @@ function StageTabs({ stage, onChangeStage }) {
             role="tab"
             aria-selected={isActive}
             onClick={() => onChangeStage?.(tab.id)}
-            className={`flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors ${
+            className={`flex min-h-[var(--control-filter)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
               isActive
                 ? "border-[var(--line)] bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
                 : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -421,7 +421,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
   return (
     <div
       className={`group relative min-w-0 overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors ${
-        def.spanRow ? "col-span-2 aspect-[2/1]" : "aspect-[5/4]"
+        def.spanRow ? "col-span-2 aspect-[5/2]" : "aspect-[5/4]"
       } ${
         isRequired
           ? "border-[var(--gold-ornament)]/40 shadow-[var(--glow-hover)]"
