@@ -9,7 +9,7 @@ export default function LoreEngineUse(props) {
   const jsonEditorSlot = viewProps.jsonEditorOpen ? (
     <LoreEngineUseJsonEditorModal
       configuration={viewProps.authoringConfiguration}
-      source={viewProps.source}
+      source={viewProps.authoringSource}
       storyContextOptions={viewProps.storyContextOptions}
       storyContextLoadStatus={viewProps.storyContextLoadStatus}
       onApply={viewProps.applyImportedEngineUseConfiguration}

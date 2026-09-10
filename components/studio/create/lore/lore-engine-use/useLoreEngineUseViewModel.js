@@ -16,6 +16,7 @@ import {
 } from "./LoreEngineUse.contract";
 import {
   buildLoreEngineUseAuthoringConfiguration,
+  buildLoreEngineUseDraftSource,
   projectLoreEngineUseConfigurationToAuthoringState,
 } from "./loreEngineUseJsonEditor.validation";
 
@@ -122,7 +123,11 @@ function compareKnowledgeTimePoints(left, right) {
   return left.minutes - right.minutes;
 }
 
-export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
+export function useLoreEngineUseViewModel({
+  creationId = "",
+  draftDocument = {},
+  draftTitle = "",
+} = {}) {
   const [state, setState] = useState({
     source: {},
     submissions: [],
@@ -147,14 +152,26 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   const [storyContextLoadMessage, setStoryContextLoadMessage] = useState("");
   const [jsonEditorOpen, setJsonEditorOpen] = useState(false);
 
-  const source = state.source || {};
+  const publishedSource = state.source || {};
   const submissions = Array.isArray(state.submissions)
     ? state.submissions
     : [];
   const latest = state.latest || null;
   const latestStatus = normalizeStatus(latest?.status);
   const isActive = ACTIVE_STATUSES.has(latestStatus);
-  const sourceReleaseId = normalizeString(source.publicReleaseId);
+  const sourceReleaseId = normalizeString(publishedSource.publicReleaseId);
+  const draftSource = useMemo(
+    () =>
+      buildLoreEngineUseDraftSource({
+        document: draftDocument,
+        title: draftTitle,
+      }),
+    [draftDocument, draftTitle]
+  );
+  const source = sourceReleaseId ? publishedSource : draftSource;
+  const hasDraftAuthoringSource =
+    !sourceReleaseId &&
+    (source.chapters.length > 0 || source.characterRefs.length > 0);
 
   const loadState = useCallback(
     async ({ quiet = false } = {}) => {
@@ -223,6 +240,18 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   useEffect(() => {
     if (!sourceReleaseId || sourceReleaseId === configuredReleaseId) return;
 
+    if (!configuredReleaseId) {
+      setConfiguredReleaseId(sourceReleaseId);
+      setJsonEditorOpen(false);
+      if (selectedCharacterIds.length) {
+        setActionStatus("SUCCESS");
+        setActionMessage(
+          "The first public Lore revision is available. The staged Engine Use configuration was preserved; review it against the published source before submitting."
+        );
+      }
+      return;
+    }
+
     setConfiguredReleaseId(sourceReleaseId);
     setScopeModeState("ENTIRE_ASSET");
     setSelectedSectionIds([]);
@@ -233,7 +262,7 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
     setJsonEditorOpen(false);
     setActionStatus("IDLE");
     setActionMessage("");
-  }, [configuredReleaseId, sourceReleaseId]);
+  }, [configuredReleaseId, selectedCharacterIds.length, sourceReleaseId]);
 
   useEffect(() => {
     if (!isActive || !creationId) return undefined;
@@ -658,6 +687,8 @@ export function useLoreEngineUseViewModel({ creationId = "" } = {}) {
   return {
     contractVersion: LORE_ENGINE_USE_CONTRACT_VERSION,
     source,
+    authoringSource: source,
+    hasDraftAuthoringSource,
     submissions,
     latest,
     latestStatus,
