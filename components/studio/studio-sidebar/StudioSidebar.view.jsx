@@ -138,7 +138,10 @@ export default function StudioSidebarView({
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          // Bare icon, no circle (Brian, 10 Sep 2026, session 2 review):
+          // the ringed button fought the ringed logo mark beside it.
+          // Same 44px target; hover and active read as the gold icon.
+          className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]"
           aria-label={collapseAriaLabel}
         >
           <svg
