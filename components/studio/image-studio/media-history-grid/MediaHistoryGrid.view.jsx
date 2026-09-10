@@ -224,7 +224,6 @@ export default function MediaHistoryGridView({
   hasSelectableMedia = false,
   hasVisibleSelectableMedia = false,
   allVisibleSelectableItemsSelected = false,
-  summaryText = "",
   lightboxProps = null,
   eagerImageCount = 4,
   masonryRowHeight = 8,
@@ -272,18 +271,13 @@ export default function MediaHistoryGridView({
         </div>
       ) : null}
 
-      <section className="relative flex flex-wrap items-center justify-between gap-3 border-b border-[var(--gold-ornament)]/15 pb-3 sm:pb-4">
-        <div>
-          <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-            Image Library
-          </p>
-          {summaryText ? (
-            // Empty library: no summary line, the empty-state block
-            // below already says it (review round 2, 10 Sep 2026).
-            <p className="mt-1 text-xs text-[var(--ink-dim)]">{summaryText}</p>
-          ) : null}
-        </div>
-
+      {/* No library title, summary line, or divider (review round 2,
+          10 Sep 2026): the page header already names the page and the
+          empty-state block says the rest, so the grid starts level with
+          the top of the composer rail. The action row renders only when
+          it has a control to show (Select, the mobile Compose, filters). */}
+      {(mobilePrimaryActionLabel && onMobilePrimaryAction) || hasSelectableMedia || showFilterControls ? (
+      <section className="relative flex flex-wrap items-center justify-end gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {mobilePrimaryActionLabel && onMobilePrimaryAction ? (
             <button
@@ -374,6 +368,7 @@ export default function MediaHistoryGridView({
           </>
         ) : null}
       </section>
+      ) : null}
 
       {selectionMode ? (
         <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
