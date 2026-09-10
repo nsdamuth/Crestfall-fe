@@ -2,11 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
-import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
@@ -19,6 +18,7 @@ import { useSaveIngredientPresetViewModel } from "@/components/studio/image-stud
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
+import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
 import { orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
 
@@ -128,10 +128,16 @@ export default function ImagesV2Live() {
   const router = useRouter();
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
+  // Stage tab (Generate, Remix): page-local presentation state. The
+  // Remix body is a later session (note 5); today it reads "Not
+  // available yet".
+  const [composerStage, setComposerStage] = useState("GENERATE");
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const live = useImagesV2LiveViewModel({
     onOpenCameraPresetPicker: openCameraPresetPicker,
+    stage: composerStage,
+    onChangeStage: setComposerStage,
   });
   // The page owns the shared filter bar (RULED 6 Sep 2026), so it calls
   // the grid ViewModel itself and renders the grid skin with the
@@ -171,12 +177,7 @@ export default function ImagesV2Live() {
     }),
     [grid.activityFilters, grid.mediaFilter]
   );
-  const nestedBackLabel = mobileCreatorOpen ? "Back to Image Editor" : null;
-  const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
-  const generationPending = ["loading", "pending", "submitting"].includes(generationStatus);
-  const canGenerate =
-    Boolean(live.panelProps?.canGenerate) &&
-    typeof live.panelProps?.onGenerate === "function";
+  const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
 
   return (
     <>
@@ -186,9 +187,9 @@ export default function ImagesV2Live() {
           headerSlot={
             <StudioPageHeaderView
               compactMobile
-              eyebrow="Images"
-              title="Image Studio"
-              description="Create images from your Crestfall assets, then manage and reuse the results from one live workspace."
+              eyebrow="Create"
+              title="Media Studio"
+              description="Generate images and video from your assets. Manage, reuse, and share them all in one place."
             />
           }
           filterBarSlot={
@@ -240,13 +241,18 @@ export default function ImagesV2Live() {
               <MediaHistoryGridSkin
                 {...grid}
                 showFilterControls={false}
-                mobilePrimaryActionLabel="Image Editor"
+                mobilePrimaryActionLabel="Compose"
                 onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
               />
             </div>
 
+            {/* The composer owns its scrolling: its scroll region and
+                its fixed footer are siblings inside this bounded box,
+                so the aside itself never scrolls (browser review
+                9 Sep 2026, items 6 and 7). No padding here; the
+                composer pads its own regions. */}
             <aside
-              className="sticky hidden w-[24rem] flex-none overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] min-[1100px]:block"
+              className="sticky hidden w-[24rem] flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex"
               style={{
                 top: "calc(var(--topbar-h) + var(--space-4))",
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
@@ -260,35 +266,25 @@ export default function ImagesV2Live() {
 
       <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 px-[var(--space-4)] min-[1100px]:hidden">
         <div className="mx-auto flex max-w-xl items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/35 bg-[color-mix(in_srgb,var(--canvas)_92%,transparent)] p-[var(--space-2)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-chrome)]">
+          {/* Compose opens the composer sheet (browser review 9 Sep
+              2026, item 9); Generate lives inside the sheet's fixed
+              footer, never on this bar. */}
           <button
             type="button"
-            onClick={() => live.panelProps?.onGenerate?.()}
-            disabled={!canGenerate}
-            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-50"
-            aria-label="Generate image"
+            onClick={() => setMobileCreatorOpen(true)}
+            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)]"
           >
-            <Sparkles size={17} />
-            <span>{generationPending ? "Generate another" : "Generate"}</span>
-            {live.panelProps?.coinCostLabel ? (
-              <span className="text-[length:var(--text-label)] opacity-80">
-                {live.panelProps.coinCostLabel}
-              </span>
-            ) : null}
+            <ImagePlus size={17} aria-hidden="true" />
+            <span>Compose</span>
           </button>
         </div>
       </div>
 
       {mobileCreatorOpen ? (
-        <KitModalFrame
-          variant="modal"
-          panelClassName="w-full max-w-2xl"
+        <ImagesV2ComposerSheet
+          panelProps={live.panelProps}
           onClose={() => setMobileCreatorOpen(false)}
-          ariaLabel="Image Editor"
-        >
-          <div className="p-[var(--space-4)] pt-[var(--space-5)] sm:p-[var(--space-6)] sm:pt-[var(--space-8)]">
-            <KitImageCreatorPanel {...live.panelProps} />
-          </div>
-        </KitModalFrame>
+        />
       ) : null}
 
       {live.pickerModalProps ? (

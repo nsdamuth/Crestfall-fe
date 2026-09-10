@@ -77,7 +77,10 @@ test("availability and ingredient orchestration preserve production rules", () =
   );
 
   assert.match(viewModel, /IMAGE_GENERATION_COIN_COST = 5/);
-  assert.match(viewModel, /coinBalance >= IMAGE_GENERATION_COIN_COST/);
+  // Coin gate by total cost, count times the per-image cost (RULED
+  // 9 Sep 2026, Media Studio plan gate).
+  assert.match(viewModel, /IMAGE_GENERATION_COIN_COST \* requestedCount/);
+  assert.match(viewModel, /coinBalance >= requestCoinCost/);
   assert.match(viewModel, /Select a character, clothing source, wardrobe, or location before generating\./);
   assert.match(viewModel, /default clothing when available/);
   assert.match(viewModel, /delete next\.playerCharacter/);

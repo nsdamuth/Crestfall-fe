@@ -23,36 +23,45 @@ function control({
   });
 }
 
+// `definition` is the one-line tooltip on each diagonal step of the
+// Media Studio render style rail (Brian's note 2, 9 Sep 2026). Copy
+// drafted at the plan gate, open for fine-tuning.
 export const RENDER_STYLE_RAIL_STOPS = Object.freeze([
   Object.freeze({
     value: "crestfall_fantasy",
     shortLabel: "Fantasy",
     mappedLabel: "Crestfall Fantasy",
+    definition: "Painterly fantasy illustration with soft light and rich color.",
   }),
   Object.freeze({
     value: "crestfall_anime_anime",
     shortLabel: "Anime",
     mappedLabel: "Crestfall Anime",
+    definition: "Clean line work and flat shading in an anime style.",
   }),
   Object.freeze({
     value: "crestfall_fantasy_realistic",
     shortLabel: "Illustrative",
     mappedLabel: "Crestfall Illustrative",
+    definition: "Fantasy illustration with realistic proportions and detail.",
   }),
   Object.freeze({
     value: "crestfall_fantasy_realism",
     shortLabel: "Heroic",
     mappedLabel: "Crestfall Heroic",
+    definition: "Dramatic, polished fantasy realism built for hero shots.",
   }),
   Object.freeze({
     value: "crestfall_realistic_fantasy",
     shortLabel: "Cinematic",
     mappedLabel: "Crestfall Cinematic",
+    definition: "Photographic realism with fantasy lighting and mood.",
   }),
   Object.freeze({
     value: "crestfall_realistic",
     shortLabel: "Realistic",
     mappedLabel: "Crestfall Realistic",
+    definition: "Photographic realism with natural light and texture.",
   }),
 ]);
 

@@ -499,3 +499,16 @@ against the CSV.
   the Sprint E creator-panel spec takes field caps and defaults from
   the source files, not the CSV.
 - Rollup not regenerated, script not in repo.
+
+## Media Studio composer rows (FE/MEDIA-STUDIO, 9 Sep 2026)
+
+The `/studio/v2/images` composer rows now describe the live Media
+Studio composer (contract 2.0.0): mode toggle with Video on Soon,
+Generate and Remix stage tabs, five asset tiles (no Player slot),
+Custom prompt, inline options (render style rail with step
+definitions, Camera / Framing, Wardrobe theme, Aspect ratio, Advanced,
+Negative prompt), the Count dropdown and the Generate button with the
+coin cost in a sticky footer. The Options expander and Coins readout
+rows are removed; the sidebar label reads Media. Backend gaps live in
+`docs/handoffs/MEDIA-STUDIO-BACKEND.md`. The unquoted comma on the
+density-toggle row (line 884) is fixed in the same commit.

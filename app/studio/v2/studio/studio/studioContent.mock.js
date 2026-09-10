@@ -93,8 +93,8 @@ export const STUDIO_HUB_EXPLAINER = {
 export const STUDIO_BOTTOM_BANNER = {
   eyebrow: "Give them a face",
   title: "See your characters in full color.",
-  line: "The Image Studio turns any character, outfit, or scene into finished art in moments.",
-  ctaLabel: "Open Images",
+  line: "Media Studio turns any character, outfit, or scene into finished art in moments.",
+  ctaLabel: "Open Media",
   // Placeholder art shared by every section page's bottom banner
   // (next-section chain ruling, 6 Sep 2026).
   imageSrc: encodeURI("/tmp-mockup-images/canon-character-images/athelgard-ampitheater-profile.png"),

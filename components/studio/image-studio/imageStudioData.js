@@ -429,10 +429,21 @@ export const aspectRatioOptions = [
   { value: "SQUARE_1_1", label: "1:1" },
 ];
 
+// Count list RULED 9 Sep 2026 (Media Studio plan gate): 2, 4, 8, 16,
+// 32, 64, 128, 256, default 2. The backend serves 1 to 4 today;
+// IMAGE_COUNT_BACKEND_MAX marks where the Media Studio composer
+// renders the rest disabled ("Not available yet",
+// docs/handoffs/MEDIA-STUDIO-BACKEND.md).
+export const IMAGE_COUNT_BACKEND_MAX = 4;
 export const imageCountOptions = [
-  { value: "1", label: "1 image" },
   { value: "2", label: "2 images" },
   { value: "4", label: "4 images" },
+  { value: "8", label: "8 images" },
+  { value: "16", label: "16 images" },
+  { value: "32", label: "32 images" },
+  { value: "64", label: "64 images" },
+  { value: "128", label: "128 images" },
+  { value: "256", label: "256 images" },
 ];
 
 export const videoDurationOptions = [

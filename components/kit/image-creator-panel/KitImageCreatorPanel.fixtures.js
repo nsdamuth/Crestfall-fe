@@ -1,13 +1,17 @@
-// Fixture states per docs/SPRINT-E-PLAN.md section 4: default,
-// emptySlots, insufficientCoins, customIngredient, videoMode,
-// longestContent. Option lists mirror
+// Fixture states, contract 2.0.0 (9 Sep 2026, FE/MEDIA-STUDIO):
+// default, emptySlots, insufficientCoins, customIngredient,
+// remixStage, videoMode, longestContent. Option lists mirror
 // components/studio/image-studio/imageStudioData.js verbatim (READ
 // ONLY reference, values copied not imported, since that package
 // belongs to the live composer and this kit piece never imports live
-// product code). Exported so phase 3's Images page integration
-// consumes the same lists rather than re-declaring them.
+// product code).
 const noop = () => {};
 
+export const NOT_AVAILABLE_LABEL = "Not available yet";
+
+// Legacy lists kept only for the unrouted fixture-era mockup
+// (app/studio/v2/images/ImagesV2Mockup.jsx); the 2.0.0 composer does
+// not read them. Delete with that file.
 export const RENDER_STYLE_OPTIONS = [
   { value: "auto", label: "Auto / Character Default" },
   { value: "crestfall_fantasy", label: "Crestfall Fantasy" },
@@ -26,6 +30,11 @@ export const CAMERA_OPTIONS = [
   { value: "WAIST_UP", label: "Waist-Up" },
   { value: "THREE_QUARTER", label: "Three-Quarter Body" },
   { value: "FULL_BODY", label: "Full Body" },
+];
+
+export const OUTPUT_COUNT_OPTIONS = [
+  { value: "2", label: "2 images" },
+  { value: "4", label: "4 images" },
 ];
 
 export const WARDROBE_THEME_OPTIONS = [
@@ -51,10 +60,17 @@ export const ASPECT_RATIO_OPTIONS = [
   { value: "SQUARE_1_1", label: "1:1" },
 ];
 
-export const OUTPUT_COUNT_OPTIONS = [
-  { value: "1", label: "1 image" },
+// Count list RULED 9 Sep 2026: 2, 4, 8, 16, 32, 64, 128, 256, default
+// 2. The backend serves up to 4; the rest render disabled.
+export const COUNT_OPTIONS = [
   { value: "2", label: "2 images" },
   { value: "4", label: "4 images" },
+  { value: "8", label: "8 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "16", label: "16 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "32", label: "32 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "64", label: "64 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "128", label: "128 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "256", label: "256 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
 ];
 
 export const VIDEO_DURATION_OPTIONS = [
@@ -76,40 +92,37 @@ export const VIDEO_MOTION_STYLE_OPTIONS = [
   { value: "EMOTIVE", label: "Emotive motion" },
 ];
 
-// Live block-reason / help-text grammar, copied verbatim from
-// getImageGenerationAvailability (useImageStudioWorkbenchViewModel.js).
+// Live block-reason grammar, copied from getImageGenerationAvailability
+// (useImageStudioWorkbenchViewModel.js). Block reasons render as the
+// disabled Generate button's tooltip, never as helper copy.
 export const NO_SOURCE_HELP_TEXT =
   "Select a character, clothing source, wardrobe, or location before generating.";
 export const NO_CLOTHING_HELP_TEXT =
   "No clothing source selected. Crestfall will use the character's default clothing when available, otherwise simple generic SFW clothing.";
 export const CUSTOM_SUBJECT_HELP_TEXT =
   "The custom Character guidance will be used as the complete SFW visual subject for this request.";
-export function insufficientCoinsHelpText(coinCost) {
-  return `You need at least ${coinCost} coins to generate an image.`;
+export function insufficientCoinsHelpText(coinCost, count = 1) {
+  return `You need at least ${coinCost} coins to generate ${count === 1 ? "an image" : `${count} images`}.`;
 }
 
 function baseOptionFields() {
   return [
-    { id: "wardrobe", label: "Wardrobe Theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
-    { id: "aspectRatio", label: "Aspect Ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
-    { id: "outputCount", label: "Output Count", value: "1", options: OUTPUT_COUNT_OPTIONS },
+    { id: "wardrobe-theme", label: "Wardrobe theme", value: "AUTO", options: WARDROBE_THEME_OPTIONS },
+    { id: "aspect-ratio", label: "Aspect ratio", value: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
   ];
 }
-
 
 function baseRenderStyleRailProps() {
   return {
     value: "crestfall_fantasy_realistic",
     activeLabel: "Crestfall Illustrative",
-    helperText:
-      "Choose the validated Crestfall workflow family. Fantasy is the left endpoint; Realistic is the right endpoint, and the middle options blend them in different ways.",
     options: [
-      { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", index: 0, active: false },
-      { value: "crestfall_anime_anime", shortLabel: "Anime", mappedLabel: "Crestfall Anime", index: 1, active: false },
-      { value: "crestfall_fantasy_realistic", shortLabel: "Illustrative", mappedLabel: "Crestfall Illustrative", index: 2, active: true },
-      { value: "crestfall_fantasy_realism", shortLabel: "Heroic", mappedLabel: "Crestfall Heroic", index: 3, active: false },
-      { value: "crestfall_realistic_fantasy", shortLabel: "Cinematic", mappedLabel: "Crestfall Cinematic", index: 4, active: false },
-      { value: "crestfall_realistic", shortLabel: "Realistic", mappedLabel: "Crestfall Realistic", index: 5, active: false },
+      { value: "crestfall_fantasy", shortLabel: "Fantasy", mappedLabel: "Crestfall Fantasy", definition: "Painterly fantasy illustration with soft light and rich color.", index: 0, active: false },
+      { value: "crestfall_anime_anime", shortLabel: "Anime", mappedLabel: "Crestfall Anime", definition: "Clean line work and flat shading in an anime style.", index: 1, active: false },
+      { value: "crestfall_fantasy_realistic", shortLabel: "Illustrative", mappedLabel: "Crestfall Illustrative", definition: "Fantasy illustration with realistic proportions and detail.", index: 2, active: true },
+      { value: "crestfall_fantasy_realism", shortLabel: "Heroic", mappedLabel: "Crestfall Heroic", definition: "Dramatic, polished fantasy realism built for hero shots.", index: 3, active: false },
+      { value: "crestfall_realistic_fantasy", shortLabel: "Cinematic", mappedLabel: "Crestfall Cinematic", definition: "Photographic realism with fantasy lighting and mood.", index: 4, active: false },
+      { value: "crestfall_realistic", shortLabel: "Realistic", mappedLabel: "Crestfall Realistic", definition: "Photographic realism with natural light and texture.", index: 5, active: false },
     ],
     onChange: noop,
   };
@@ -118,13 +131,14 @@ function baseRenderStyleRailProps() {
 function baseVideoOptionFields() {
   return [
     { id: "duration", label: "Duration", value: "4", options: VIDEO_DURATION_OPTIONS },
-    { id: "videoAspect", label: "Video Aspect", value: "PORTRAIT", options: VIDEO_ASPECT_OPTIONS },
-    { id: "motionStyle", label: "Motion Style", value: "SUBTLE", options: VIDEO_MOTION_STYLE_OPTIONS },
+    { id: "videoAspect", label: "Video aspect", value: "PORTRAIT", options: VIDEO_ASPECT_OPTIONS },
+    { id: "motionStyle", label: "Motion style", value: "SUBTLE", options: VIDEO_MOTION_STYLE_OPTIONS },
   ];
 }
 
 const sharedCallbacks = {
   onChangeMode: noop,
+  onChangeStage: noop,
   onSlotActivate: noop,
   onSlotClear: noop,
   onCustomChangeText: noop,
@@ -133,10 +147,28 @@ const sharedCallbacks = {
   onChangePrompt: noop,
   onChangeNegativePrompt: noop,
   onChangeOption: noop,
+  onChangeCount: noop,
   onOpenCameraPresetPicker: noop,
   onGenerate: noop,
   onChangeVideoOption: noop,
   onChangeVideoDirection: noop,
+};
+
+const sharedShape = {
+  mode: "IMAGE",
+  videoDisabled: true,
+  videoSoonLabel: "Soon",
+  stage: "GENERATE",
+  negativePromptValue: "",
+  renderStyleRailProps: baseRenderStyleRailProps(),
+  optionFields: baseOptionFields(),
+  countOptions: COUNT_OPTIONS,
+  countValue: "2",
+  generateCostLabel: "10",
+  generationStatus: "idle",
+  generationError: "",
+  videoOptionFields: baseVideoOptionFields(),
+  videoDirectionValue: "",
 };
 
 const defaultFixture = {
@@ -144,23 +176,15 @@ const defaultFixture = {
   label: "Default",
   props: {
     ...sharedCallbacks,
-    mode: "IMAGE",
+    ...sharedShape,
     slots: {
       character: { selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" }, isCustomMode: false, customText: "" },
       pose: { selection: { title: "Half-Turn, Cloak Drawn Back", subtitle: "Pose" }, isCustomMode: false, customText: "" },
-      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location / Scene", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
+      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location" }, isCustomMode: false, customText: "" },
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
-    negativePromptValue: "",
-    renderStyleRailProps: baseRenderStyleRailProps(),
-    optionFields: baseOptionFields(),
-    coinBalanceLabel: "40",
-    coinCostLabel: "5",
-    showInsufficientCoins: false,
     canGenerate: true,
     generationHelpText: NO_CLOTHING_HELP_TEXT,
-    videoOptionFields: baseVideoOptionFields(),
-    videoDirectionValue: "",
   },
 };
 
@@ -169,19 +193,11 @@ const emptySlotsFixture = {
   label: "Empty slots",
   props: {
     ...sharedCallbacks,
-    mode: "IMAGE",
+    ...sharedShape,
     slots: {},
     promptValue: "",
-    negativePromptValue: "",
-    renderStyleRailProps: baseRenderStyleRailProps(),
-    optionFields: baseOptionFields(),
-    coinBalanceLabel: "40",
-    coinCostLabel: "5",
-    showInsufficientCoins: false,
     canGenerate: false,
     generationHelpText: NO_SOURCE_HELP_TEXT,
-    videoOptionFields: baseVideoOptionFields(),
-    videoDirectionValue: "",
   },
 };
 
@@ -190,21 +206,15 @@ const insufficientCoinsFixture = {
   label: "Insufficient coins",
   props: {
     ...sharedCallbacks,
-    mode: "IMAGE",
+    ...sharedShape,
     slots: {
       character: { selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" }, isCustomMode: false, customText: "" },
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
-    negativePromptValue: "",
-    renderStyleRailProps: baseRenderStyleRailProps(),
-    optionFields: baseOptionFields(),
-    coinBalanceLabel: "2",
-    coinCostLabel: "5",
-    showInsufficientCoins: true,
+    countValue: "4",
+    generateCostLabel: "20",
     canGenerate: false,
-    generationHelpText: insufficientCoinsHelpText("5"),
-    videoOptionFields: baseVideoOptionFields(),
-    videoDirectionValue: "",
+    generationHelpText: insufficientCoinsHelpText("20", 4),
   },
 };
 
@@ -213,7 +223,7 @@ const customIngredientFixture = {
   label: "Custom ingredient",
   props: {
     ...sharedCallbacks,
-    mode: "IMAGE",
+    ...sharedShape,
     slots: {
       character: {
         selection: null,
@@ -225,19 +235,25 @@ const customIngredientFixture = {
         isCustomMode: true,
         customText: "Leaning against a piling, watching the tide come in.",
       },
-      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location / Scene", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
+      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
-    negativePromptValue: "",
-    renderStyleRailProps: baseRenderStyleRailProps(),
-    optionFields: baseOptionFields(),
-    coinBalanceLabel: "40",
-    coinCostLabel: "5",
-    showInsufficientCoins: false,
     canGenerate: true,
     generationHelpText: CUSTOM_SUBJECT_HELP_TEXT,
-    videoOptionFields: baseVideoOptionFields(),
-    videoDirectionValue: "",
+  },
+};
+
+const remixStageFixture = {
+  id: "remixStage",
+  label: "Remix stage",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    stage: "REMIX",
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
   },
 };
 
@@ -246,21 +262,16 @@ const videoModeFixture = {
   label: "Video mode",
   props: {
     ...sharedCallbacks,
+    ...sharedShape,
     mode: "VIDEO",
+    videoDisabled: false,
     slots: {
       character: { selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" }, isCustomMode: false, customText: "" },
-      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location / Scene", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
+      location: { selection: { title: "Harborfront at Dusk", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
     },
     promptValue: "A quiet moment before the storm breaks over the harbor.",
-    negativePromptValue: "",
-    renderStyleRailProps: baseRenderStyleRailProps(),
-    optionFields: baseOptionFields(),
-    coinBalanceLabel: "40",
-    coinCostLabel: "5",
-    showInsufficientCoins: false,
     canGenerate: false,
     generationHelpText: "",
-    videoOptionFields: baseVideoOptionFields(),
     videoDirectionValue: "Slow push toward the harbor as lamps flicker on, one by one.",
   },
 };
@@ -270,7 +281,7 @@ const longestContentFixture = {
   label: "Longest content",
   props: {
     ...sharedCallbacks,
-    mode: "IMAGE",
+    ...sharedShape,
     slots: {
       character: {
         selection: {
@@ -280,7 +291,6 @@ const longestContentFixture = {
         isCustomMode: false,
         customText: "",
       },
-      playerCharacter: { selection: null, isCustomMode: false, customText: "" },
       pose: {
         selection: null,
         isCustomMode: true,
@@ -290,17 +300,17 @@ const longestContentFixture = {
       outfit: {
         selection: {
           title: "The Long Coat of the Coldwater Vigil, Weathered Third Edition",
-          subtitle: "Clothing Source",
+          subtitle: "Outfit",
         },
         isCustomMode: false,
         customText: "",
       },
       location: {
-        selection: { title: "Harbor at Dusk, an Unassigned Reference Kept for Later Palette Matching", subtitle: "Location / Scene" },
+        selection: { title: "Harbor at Dusk, an Unassigned Reference Kept for Later Palette Matching", subtitle: "Location" },
         isCustomMode: false,
         customText: "",
       },
-      preset: { selection: { title: "Crestfall Realistic, High Detail", subtitle: "Rendering Preset" }, isCustomMode: false, customText: "" },
+      preset: { selection: { title: "Crestfall Realistic, High Detail", subtitle: "Preset" }, isCustomMode: false, customText: "" },
     },
     promptValue:
       "A deliberately long prompt written to stress the field's wrapping behavior across many lines, describing a quiet harbor moment before a storm breaks, lanterns swaying, gulls scattering ahead of the first gust, and a figure standing perfectly still at the edge of the dock, right up against the field's practical limits so the layout is exercised honestly rather than guessed at from a short fixture.",
@@ -309,13 +319,10 @@ const longestContentFixture = {
       ...field,
       value: field.options[field.options.length - 1].value,
     })),
-    coinBalanceLabel: "128400",
-    coinCostLabel: "5",
-    showInsufficientCoins: false,
+    countValue: "4",
+    generateCostLabel: "20",
     canGenerate: true,
     generationHelpText: "",
-    videoOptionFields: baseVideoOptionFields(),
-    videoDirectionValue: "",
   },
 };
 
@@ -324,6 +331,7 @@ export const kitImageCreatorPanelFixtures = [
   emptySlotsFixture,
   insufficientCoinsFixture,
   customIngredientFixture,
+  remixStageFixture,
   videoModeFixture,
   longestContentFixture,
 ];

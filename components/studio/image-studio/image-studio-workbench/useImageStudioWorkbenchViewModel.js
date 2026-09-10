@@ -316,8 +316,13 @@ export function getImageGenerationAvailability({
   selectedIngredients,
   customIngredientPrompts,
   imageGenerationAllowed = true,
+  imageCount = "1",
 }) {
-  const hasEnoughCoins = coinBalance >= IMAGE_GENERATION_COIN_COST;
+  // Gate on the displayed cost, count times the per-image cost
+  // (RULED 9 Sep 2026, Media Studio plan gate).
+  const requestedCount = Math.max(1, Number.parseInt(imageCount, 10) || 1);
+  const requestCoinCost = IMAGE_GENERATION_COIN_COST * requestedCount;
+  const hasEnoughCoins = coinBalance >= requestCoinCost;
   const selectedCharacterId = getSelectedCreationId(selectedIngredients.character);
   const selectedPlayerCharacterId = getSelectedCreationId(
     selectedIngredients.playerCharacter
@@ -372,7 +377,7 @@ export function getImageGenerationAvailability({
   const imageGenerationBlockReason = !imageGenerationAllowed
     ? "Image generation is not available for this account."
     : !hasEnoughCoins
-      ? `You need at least ${IMAGE_GENERATION_COIN_COST} coins to generate an image.`
+      ? `You need at least ${requestCoinCost} coins to generate ${requestedCount === 1 ? "an image" : `${requestedCount} images`}.`
       : !hasRenderableImageSource
         ? "Select a character, clothing source, wardrobe, or location before generating."
         : "";
@@ -508,7 +513,9 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [cameraPreset, setCameraPreset] = useState("AUTO");
   const [wardrobeTheme, setWardrobeTheme] = useState("AUTO");
   const [aspectRatio, setAspectRatio] = useState("PORTRAIT_4_5");
-  const [imageCount, setImageCount] = useState("1");
+  // Default 2 (RULED 9 Sep 2026, Media Studio plan gate: the count
+  // list is 2, 4, 8, 16, 32, 64, 128, 256).
+  const [imageCount, setImageCount] = useState("2");
 
   const [videoDuration, setVideoDuration] = useState("4");
   const [videoAspectRatio, setVideoAspectRatio] = useState("PORTRAIT");
@@ -573,6 +580,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     selectedIngredients,
     customIngredientPrompts,
     imageGenerationAllowed,
+    imageCount,
   });
 
   function handleRenderStyleChange(nextProfileKey) {

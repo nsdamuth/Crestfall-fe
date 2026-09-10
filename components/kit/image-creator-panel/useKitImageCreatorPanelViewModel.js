@@ -2,12 +2,16 @@
 
 // Thin pass-through ViewModel, matching kit-batch practice: the kit
 // piece is fixture-fed and owns no data. Generation availability,
-// coin state, and every option list are computed by the caller
-// (fixture logic in phase 1, the Images page mockup from phase 3);
-// this hook only normalizes display-ready props.
+// the coin cost, and every option list are computed by the caller
+// (fixture logic, or the Media Studio page's adapter); this hook only
+// normalizes display-ready props. Contract 2.0.0 (9 Sep 2026).
 export function useKitImageCreatorPanelViewModel({
   mode = "IMAGE",
   onChangeMode = null,
+  videoDisabled = true,
+  videoSoonLabel = "Soon",
+  stage = "GENERATE",
+  onChangeStage = null,
   slots = {},
   onSlotActivate = null,
   onSlotClear = null,
@@ -22,9 +26,10 @@ export function useKitImageCreatorPanelViewModel({
   optionFields = [],
   onChangeOption = null,
   advancedTuningProps = null,
-  coinBalanceLabel = "0",
-  coinCostLabel = "5",
-  showInsufficientCoins = false,
+  countOptions = [],
+  countValue = "",
+  onChangeCount = null,
+  generateCostLabel = "",
   canGenerate = false,
   generationHelpText = "",
   generationStatus = "idle",
@@ -44,6 +49,10 @@ export function useKitImageCreatorPanelViewModel({
   return {
     mode: mode === "VIDEO" ? "VIDEO" : "IMAGE",
     onChangeMode,
+    videoDisabled: Boolean(videoDisabled),
+    videoSoonLabel: String(videoSoonLabel ?? "Soon"),
+    stage: stage === "REMIX" ? "REMIX" : "GENERATE",
+    onChangeStage,
     slots: slots && typeof slots === "object" ? slots : {},
     onSlotActivate,
     onSlotClear,
@@ -64,9 +73,10 @@ export function useKitImageCreatorPanelViewModel({
       advancedTuningProps && typeof advancedTuningProps === "object"
         ? advancedTuningProps
         : null,
-    coinBalanceLabel: String(coinBalanceLabel ?? "0"),
-    coinCostLabel: String(coinCostLabel ?? "5"),
-    showInsufficientCoins: Boolean(showInsufficientCoins),
+    countOptions: Array.isArray(countOptions) ? countOptions : [],
+    countValue: String(countValue ?? ""),
+    onChangeCount,
+    generateCostLabel: String(generateCostLabel ?? ""),
     canGenerate: Boolean(canGenerate),
     generationHelpText: generationHelpText || "",
     generationStatus: String(generationStatus || "idle"),
