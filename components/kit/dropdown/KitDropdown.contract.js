@@ -1,6 +1,13 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.2.1";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
+ * 1.2.1 to 1.3.0 (FE/MEDIA-STUDIO session 3 review round 2, 10 Sep
+ * 2026), additive: `align` sets the popover's baseline anchor, "left"
+ * (the default, every existing consumer unchanged) or "right" for a
+ * trigger pinned to the right edge of a bounded surface such as the
+ * asset picker modal, whose left-anchored menu would otherwise run
+ * past the panel. The measured flip still applies in both directions.
+ *
  * 1.2.0 to 1.2.1 (FE/MEDIA-STUDIO session 2 review, 10 Sep 2026),
  * presentation only, no prop change: while a single-select sits on
  * its restingValue the trigger hides the value word as well as the
@@ -67,6 +74,11 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.2.1";
  *   selected tier as its label). Trigger announces
  *   "{ariaLabel}: {label}"; the listbox and sheet take ariaLabel
  *   alone. Omitted: behavior identical to 1.0.0.
+ * @property {"left"|"right"} [align] (added 1.3.0, 10 Sep 2026) the
+ *   popover's baseline anchor at 700px and up. Default "left".
+ *   "right" anchors the menu to the trigger's right edge, for a
+ *   trigger pinned to the right edge of a modal. The phone sheet is
+ *   unaffected.
  */
 
 export {};

@@ -36,9 +36,11 @@ Crestfall data behind them.
 ## Anatomy
 
 Header (eyebrow "Select asset", the asset word as the title, one
-sentence), the search field with the filter dropdown to its right
-(both on the filter-line height, `--control-filter` on fine pointers
-and `--control-md` on coarse), an optional load-error banner
+sentence), the short search field on the left with the filter dropdown
+pinned to the modal's right edge (Brian, session 3 review round 2, 10
+Sep 2026; the filter's menu opens right-aligned so it stays inside the
+panel), both on the filter-line height (`--control-filter` on fine
+pointers and `--control-md` on coarse), an optional load-error banner
 (`--status-danger` triad), then the grid.
 
 Cards layout (the five asset slots): Custom is the first card, the

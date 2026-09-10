@@ -121,13 +121,16 @@ export default function KitDropdownView({
   onToggleOption = null,
   ariaLabel = null,
   restingValue = null,
+  align = "left",
 }) {
   // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
   // PLAN.md section 5.2), measured flip, and popover-only dismissal:
   // all presentation-only local state, shared through
-  // useAnchoredPanel (see the note above).
+  // useAnchoredPanel (see the note above). `align` (1.3.0) sets the
+  // baseline the popover measures from; "right" for a trigger pinned
+  // to the right edge of a bounded surface.
   const { isOpen, isPhoneWidth, panelAlign, rootRef, panelRef, toggleOpen, close } =
-    useAnchoredPanel();
+    useAnchoredPanel({ preferredAlign: align });
 
   const selectionCount = selectedValues?.length || 0;
   // Resting value (1.2.0, RULED 10 Sep 2026, Media Studio round 5): a

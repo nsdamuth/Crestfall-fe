@@ -15,12 +15,19 @@ export const PHONE_WIDTH_QUERY = "(max-width: 699.98px)";
 // moves the overflow to the opposite edge on a narrow viewport.
 const EDGE_GUARD_PX = 16;
 
-export function useAnchoredPanel() {
+// preferredAlign (10 Sep 2026, FE/MEDIA-STUDIO session 3 review round
+// 2): the baseline the popover measures from. "left" is the standing
+// default; "right" is for a trigger pinned to the right edge of a
+// bounded surface (the asset picker's filter at the modal's edge),
+// whose left-anchored menu would otherwise run past the panel. The
+// measured flip still applies in both directions.
+export function useAnchoredPanel({ preferredAlign = "left" } = {}) {
+  const baseline = preferredAlign === "right" ? "right" : "left";
   const [isOpen, setIsOpen] = useState(false);
   const [isPhoneWidth, setIsPhoneWidth] = useState(
     () => typeof window !== "undefined" && window.matchMedia(PHONE_WIDTH_QUERY).matches
   );
-  const [panelAlign, setPanelAlign] = useState("left");
+  const [panelAlign, setPanelAlign] = useState(baseline);
   const rootRef = useRef(null);
   const panelRef = useRef(null);
 
@@ -100,9 +107,9 @@ export function useAnchoredPanel() {
     // leave it stale until the next matchMedia "change" event.
     if (next && typeof window !== "undefined") {
       setIsPhoneWidth(window.matchMedia(PHONE_WIDTH_QUERY).matches);
-      // Always re-measure from the left-anchored baseline: the trigger
+      // Always re-measure from the preferred baseline: the trigger
       // may have moved since this panel was last open.
-      setPanelAlign("left");
+      setPanelAlign(baseline);
     }
     setIsOpen(next);
   }

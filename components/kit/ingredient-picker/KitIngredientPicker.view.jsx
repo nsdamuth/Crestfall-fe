@@ -260,7 +260,11 @@ export default function KitIngredientPickerView({
           </p>
         </div>
 
-        <div className="flex items-center gap-[var(--space-2)]">
+        {/* Search on the left at its own short width, the filter
+            pinned to the modal's right edge (Brian, session 3 review
+            round 2); the filter's menu opens right-aligned so it
+            stays inside the panel. */}
+        <div className="flex items-center justify-between gap-[var(--space-2)]">
           <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
           {hasFilter ? (
             <KitDropdownView
@@ -271,6 +275,7 @@ export default function KitIngredientPickerView({
               restingValue={filter.restingValue ?? null}
               onToggleOption={(value) => filter.onChange?.(value)}
               ariaLabel={`Filter ${lowerLabel}`}
+              align="right"
             />
           ) : null}
         </div>

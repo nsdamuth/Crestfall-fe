@@ -12,6 +12,8 @@ export function useKitDropdownViewModel({
   isDisabled = false,
   onToggleOption = null,
   ariaLabel = null,
+  restingValue = null,
+  align = "left",
 } = {}) {
   return {
     label,
@@ -21,5 +23,7 @@ export function useKitDropdownViewModel({
     isDisabled: Boolean(isDisabled),
     onToggleOption,
     ariaLabel: ariaLabel || null,
+    restingValue: restingValue ?? null,
+    align: align === "right" ? "right" : "left",
   };
 }
