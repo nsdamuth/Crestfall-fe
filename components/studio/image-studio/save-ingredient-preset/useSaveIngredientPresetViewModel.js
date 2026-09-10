@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+// Legacy per-slot titles, used only when the caller passes no
+// assetLabel (the /studio/image-studio page). Media Studio passes the
+// tile word (Pose, Outfit, Location, Preset, Character).
 const PRESET_TYPE_LABEL_BY_SLOT_ID = Object.freeze({
   pose: "Pose",
   outfit: "Outfit Preset",
@@ -11,33 +14,56 @@ const PRESET_TYPE_LABEL_BY_SLOT_ID = Object.freeze({
   playerCharacter: "Player Character Ingredient",
 });
 
-function getPresetTypeLabel(slot) {
+function getPresetTypeLabel(slot, assetLabel) {
+  if (assetLabel) return assetLabel;
   return (
     PRESET_TYPE_LABEL_BY_SLOT_ID[slot?.id] ||
     `${slot?.label || "Ingredient"} Preset`
   );
 }
 
-function getInitialName(slot) {
-  return slot ? `Custom ${slot.label}` : "Custom Preset";
+function getInitialName(label) {
+  return label ? `Custom ${label}` : "Custom Preset";
+}
+
+function getIntroText(label, saveAvailable) {
+  const lower = String(label || "asset").toLowerCase();
+  return saveAvailable
+    ? `Describe the ${lower} in your own words. Use it once, or save it as a preset to reuse later.`
+    : `Describe the ${lower} in your own words and use it once.`;
 }
 
 export function useSaveIngredientPresetViewModel({
   slot = null,
+  assetLabel = "",
+  saveAvailable = true,
   promptValue = "",
   onPromptChange = null,
   onSave = null,
+  onUseOnce = null,
   onClose = null,
 } = {}) {
-  const [name, setName] = useState(() => getInitialName(slot));
+  const label = getPresetTypeLabel(slot, assetLabel);
+  const initialName = getInitialName(label);
+  const [name, setName] = useState(initialName);
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
+  // The prompt the modal opened with; typing past it is what makes
+  // the form dirty, the prefilled name alone never does.
+  const [initialPrompt] = useState(() => String(promptValue || ""));
   const [saveStatus, setSaveStatus] = useState("idle");
   const [saveMessage, setSaveMessage] = useState("");
 
   const normalizedPromptValue = String(promptValue || "");
   const isSaving = saveStatus === "saving";
-  const canSave = Boolean(name.trim() && normalizedPromptValue.trim());
+  const canUseOnce = Boolean(normalizedPromptValue.trim());
+  const canSave = Boolean(name.trim() && canUseOnce);
+  const hasUnsavedChanges = Boolean(
+    name !== initialName ||
+      description ||
+      tags ||
+      normalizedPromptValue !== initialPrompt
+  );
 
   function closeModal() {
     if (isSaving) return;
@@ -45,7 +71,8 @@ export function useSaveIngredientPresetViewModel({
   }
 
   function useOnce() {
-    if (isSaving) return;
+    if (isSaving || !canUseOnce) return;
+    onUseOnce?.(slot);
     onClose?.();
   }
 
@@ -54,7 +81,9 @@ export function useSaveIngredientPresetViewModel({
   }
 
   async function savePreset() {
-    if (isSaving || !canSave || typeof onSave !== "function") return;
+    if (isSaving || !canSave || !saveAvailable || typeof onSave !== "function") {
+      return;
+    }
 
     setSaveStatus("saving");
     setSaveMessage("");
@@ -76,17 +105,18 @@ export function useSaveIngredientPresetViewModel({
 
   return {
     open: Boolean(slot),
-    presetTypeLabel: getPresetTypeLabel(slot),
-    introText:
-      "Save this custom guidance as a private reusable draft. You can return to it later from My Creations or select it again from the Image Studio picker.",
-    helperText:
-      "Saving creates a private SFW draft and selects it for the current Image Studio request. Using it once does not create a saved asset.",
+    presetTypeLabel: label,
+    assetLabel: label,
+    introText: getIntroText(label, saveAvailable),
+    saveAvailable: Boolean(saveAvailable),
     nameValue: name,
     descriptionValue: description,
     promptValue: normalizedPromptValue,
     tagsValue: tags,
     isSaving,
     canSave,
+    canUseOnce,
+    hasUnsavedChanges,
     saveMessage,
     saveMessageTone: saveStatus === "error" ? "error" : "info",
     onChangeName: setName,

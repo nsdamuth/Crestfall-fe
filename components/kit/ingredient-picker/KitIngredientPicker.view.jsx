@@ -1,23 +1,44 @@
 "use client";
 
-// Fixture-driven mirror of the live ingredient picker's function
-// (docs/SPRINT-E-PLAN.md section 1.2, R6), never its code
-// (components/studio/image-studio/ingredient-picker/, READ ONLY
-// reference). Standing on KitModalFrame variant="modal" (bottom-
-// anchored at content height under 700px per A4). Tokens only; no
-// fetch anywhere.
-import { BookOpen, ChevronLeft, Plus, Search } from "lucide-react";
+// THE asset picker for Media Studio (FE/MEDIA-STUDIO session 2,
+// Brian's note 3, 9 Sep 2026): one layout and one component for every
+// asset type, Character, Pose, Outfit, Location, Preset, and Camera
+// framing. Eyebrow "Select asset", the asset word as the title, one
+// sentence, then the search field with one filter dropdown to its
+// right, then the grid with Custom as the first card. Camera framing
+// uses the rows layout (text options with a one-line description, no
+// art), ruled at the session 2 plan gate (option A). Under 700px the
+// picker opens as the same bottom sheet the composer uses. Tokens
+// only; no fetch anywhere; search and filtering are the caller's job.
+import { Check, ChevronLeft, PenLine, Search } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
+import KitDropdownView from "../dropdown/KitDropdown.view";
+import { usePhoneWidth } from "../modal-frame/usePhoneWidth";
 
+// Card recipe shared by the asset cards and the Custom card so the
+// grid reads as one set. Selection law (docs/BUILD-BLUEPRINT.md
+// 2.16(i)): --fill wash plus --gold-bright title, never a bold border.
+const CARD_RECIPE =
+  "overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors";
+
+function cardStateClass(isSelected) {
+  return isSelected
+    ? "border-[var(--line-whisper)] bg-[var(--fill)]"
+    : "border-[var(--line)] hover:border-[var(--line-strong)]";
+}
+
+// Sits on the same line as the filter dropdown, so it shares the
+// dropdown's filter-line height (--control-filter on fine pointers,
+// --control-md on coarse) and the two controls align.
 function SearchField({ value, placeholder, onChange }) {
   return (
-    <div className="kit-search-field flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)]">
+    <div className="kit-search-field flex min-h-[var(--control-filter)] min-w-0 flex-1 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"
-        name="ingredient-picker-search"
+        name="asset-picker-search"
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
@@ -36,11 +57,7 @@ function IngredientCard({ item, onChoose }) {
       type="button"
       onClick={() => onChoose?.(item.id)}
       aria-pressed={Boolean(item.isSelected)}
-      className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors ${
-        item.isSelected
-          ? "border-[var(--line-whisper)] bg-[var(--fill)]"
-          : "border-[var(--line)] hover:border-[var(--line-strong)]"
-      }`}
+      className={`${CARD_RECIPE} ${cardStateClass(item.isSelected)}`}
     >
       {hasImage ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -66,94 +83,127 @@ function IngredientCard({ item, onChoose }) {
   );
 }
 
-function ActionCard({ icon: Icon, eyebrow, title, body, onClick }) {
+// Custom is the first card of the grid, the same shape as an asset
+// card (note 3: "like OD"). It carries the pen mark where an asset
+// carries its art, and reads as selected while the slot holds a
+// once-only custom description.
+function CustomCard({ isSelected, onClick }) {
   return (
     <button
       type="button"
       onClick={() => onClick?.()}
-      className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-4)] text-left transition-colors hover:border-[var(--line)]"
+      aria-pressed={Boolean(isSelected)}
+      className={`${CARD_RECIPE} ${cardStateClass(isSelected)}`}
     >
-      <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-        <Icon size={14} aria-hidden="true" />
-        {eyebrow}
-      </p>
-      <p className="mt-[var(--space-2)] font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
-        {title}
-      </p>
-      <p className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-        {body}
-      </p>
+      <div className="flex aspect-[4/3] w-full items-center justify-center bg-[var(--fill-whisper)]">
+        <span className="flex h-[var(--control-lg)] w-[var(--control-lg)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--gold-ornament)]">
+          <PenLine size={20} aria-hidden="true" />
+        </span>
+      </div>
+      <div className="p-[var(--space-3)]">
+        <p
+          className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${isSelected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}
+        >
+          Custom
+        </p>
+        <p className="mt-[var(--space-1)] truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+          Write your own
+        </p>
+      </div>
     </button>
   );
 }
 
-function SourceSelector({ sourceMode, sourceOptions = [], onChange }) {
-  if (!Array.isArray(sourceOptions) || sourceOptions.length < 2) return null;
-
+// Rows layout: a text option with a one-line description and a check
+// mark, for catalogs that have no art (camera framing). The optional
+// subtitle carries the option's group so a flat "All" list keeps its
+// context.
+function OptionRow({ item, onChoose }) {
   return (
-    <div
-      role="tablist"
-      aria-label="Ingredient source"
-      className="inline-flex w-fit rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-1"
+    <button
+      type="button"
+      onClick={() => onChoose?.(item.id)}
+      aria-pressed={Boolean(item.isSelected)}
+      className={`group flex min-h-[var(--control-lg)] w-full items-start justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-left transition-colors duration-[var(--dur-hover)] ${
+        item.isSelected
+          ? "border-[var(--line-whisper)] bg-[var(--fill)]"
+          : "border-[var(--line-whisper)] bg-[var(--surface-1)] hover:border-[var(--line)] hover:bg-[var(--state-hover-fill)] active:bg-[var(--state-pressed-fill)]"
+      }`}
     >
-      {sourceOptions.map((option) => {
-        const active = option.id === sourceMode;
-        return (
-          <button
-            key={option.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange?.(option.id)}
-            className={`rounded-[calc(var(--radius-md)-0.2rem)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors ${
-              active
-                ? "bg-[var(--fill)] text-[var(--gold-bright)]"
-                : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
-            }`}
-          >
-            {option.label}
-          </button>
-        );
-      })}
-    </div>
+      <span className="min-w-0 flex-1">
+        <span
+          className={`block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${item.isSelected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}
+        >
+          {item.title}
+        </span>
+        {item.description ? (
+          <span className="mt-[var(--space-1)] block line-clamp-2 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            {item.description}
+          </span>
+        ) : null}
+        {item.subtitle ? (
+          <span className="mt-[var(--space-1)] block truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+            {item.subtitle}
+          </span>
+        ) : null}
+      </span>
+      <span
+        aria-hidden="true"
+        className={`mt-0.5 flex h-[var(--control-sm)] w-[var(--control-sm)] flex-none items-center justify-center rounded-[var(--radius-full)] border ${
+          item.isSelected
+            ? "border-[var(--gold-ornament)] bg-[var(--gold-ornament)] text-[var(--tag-fill-ink)]"
+            : "border-[var(--line-whisper)] text-transparent group-hover:border-[var(--line)]"
+        }`}
+      >
+        <Check size={14} />
+      </span>
+    </button>
   );
 }
 
 export default function KitIngredientPickerView({
-  slotLabel = "Ingredient",
-  sourceMode = "MINE",
-  sourceOptions = [],
-  onSourceModeChange = null,
+  slotLabel = "Asset",
+  description = "",
   searchValue = "",
-  searchPlaceholder = "Search ingredients...",
+  searchPlaceholder = "Search assets...",
   onSearchChange = null,
+  filter = null,
   items = [],
-  emptyMessage = "No ingredient assets found.",
+  itemLayout = "cards",
+  emptyMessage = "No assets found.",
   loadErrorMessage = "",
   onChooseIngredient = null,
   showUseCustomAction = true,
+  customIsSelected = false,
   onUseCustom = null,
-  showCreatePresetAction = false,
-  onCreatePreset = null,
   backLabel = null,
   onClose = null,
 }) {
-  const introParts = ["Choose a reusable Crestfall creation"];
-  if (showUseCustomAction) introParts.push(", or use a custom prompt once");
-  introParts.push(
-    showCreatePresetAction
-      ? ", or start a future reusable preset without leaving Image Studio."
-      : "."
-  );
+  const isPhoneWidth = usePhoneWidth();
+  const isRows = itemLayout === "rows";
+  const lowerLabel = String(slotLabel || "asset").toLowerCase();
+  const intro =
+    description ||
+    (showUseCustomAction
+      ? `Choose a saved ${lowerLabel}, or write your own.`
+      : `Choose a saved ${lowerLabel}.`);
+  const hasFilter = Boolean(filter && Array.isArray(filter.options) && filter.options.length > 0);
+  const showCustom = Boolean(showUseCustomAction && !isRows);
+  const isEmpty = items.length === 0;
 
   return (
     <KitModalFrame
-      variant="modal"
+      variant={isPhoneWidth ? "sheet" : "modal"}
+      sheetGrabber={isPhoneWidth}
       panelClassName="w-full max-w-4xl"
       onClose={onClose}
       ariaLabel={`Select ${slotLabel}`}
     >
-      <div className="flex flex-col gap-[var(--space-5)] p-[var(--space-6)] pt-[var(--space-8)]">
+      <div
+        className={`flex flex-col gap-[var(--space-4)] ${
+          isPhoneWidth ? "p-[var(--space-5)] pt-[var(--space-4)]" : "p-[var(--space-6)] pt-[var(--space-8)]"
+        }`}
+      >
         {backLabel && (
           <button
             type="button"
@@ -165,25 +215,32 @@ export default function KitIngredientPickerView({
           </button>
         )}
 
-        <div>
+        <div className={isPhoneWidth ? "" : "pr-[var(--space-10)]"}>
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            Select Ingredient
+            Select asset
           </p>
-          <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+          <h2 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
             {slotLabel}
           </h2>
-          <p className="mt-[var(--space-2)] max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-            {introParts.join("")}
+          <p className="mt-[var(--space-1)] max-w-[var(--measure)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {intro}
           </p>
         </div>
 
-        <SourceSelector
-          sourceMode={sourceMode}
-          sourceOptions={sourceOptions}
-          onChange={onSourceModeChange}
-        />
-
-        <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
+        <div className="flex items-center gap-[var(--space-2)]">
+          <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
+          {hasFilter ? (
+            <KitDropdownView
+              label={filter.label || "Filter"}
+              options={filter.options}
+              selectedValues={filter.value ? [filter.value] : []}
+              isMultiSelect={false}
+              restingValue={filter.restingValue ?? null}
+              onToggleOption={(value) => filter.onChange?.(value)}
+              ariaLabel={`Filter ${lowerLabel}`}
+            />
+          ) : null}
+        </div>
 
         {loadErrorMessage && (
           <p className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)]">
@@ -191,42 +248,28 @@ export default function KitIngredientPickerView({
           </p>
         )}
 
-        {items.length === 0 ? (
-          <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-            {emptyMessage}
-          </p>
+        {isRows ? (
+          <div className="grid max-h-[56vh] gap-[var(--space-2)] overflow-y-auto pr-[var(--space-1)] min-[760px]:grid-cols-2">
+            {items.map((item) => (
+              <OptionRow key={item.id} item={item} onChoose={onChooseIngredient} />
+            ))}
+            {isEmpty ? (
+              <p className="col-span-full rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {emptyMessage}
+              </p>
+            ) : null}
+          </div>
         ) : (
-          <div className="grid max-h-[48vh] grid-cols-2 gap-[var(--space-4)] overflow-y-auto min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4">
+          <div className="grid max-h-[48vh] grid-cols-2 gap-[var(--space-3)] overflow-y-auto pr-[var(--space-1)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4">
+            {showCustom ? <CustomCard isSelected={customIsSelected} onClick={onUseCustom} /> : null}
             {items.map((item) => (
               <IngredientCard key={item.id} item={item} onChoose={onChooseIngredient} />
             ))}
-          </div>
-        )}
-
-        {(showUseCustomAction || showCreatePresetAction) && (
-          <div
-            className={`grid gap-[var(--space-3)] ${
-              showUseCustomAction && showCreatePresetAction ? "min-[700px]:grid-cols-2" : "min-[700px]:grid-cols-1"
-            }`}
-          >
-            {showUseCustomAction && (
-              <ActionCard
-                icon={BookOpen}
-                eyebrow="Custom"
-                title="Use Once"
-                body="Switch this slot into custom text mode and write guidance in the composer panel."
-                onClick={onUseCustom}
-              />
-            )}
-            {showCreatePresetAction && (
-              <ActionCard
-                icon={Plus}
-                eyebrow="Create"
-                title="New Preset"
-                body="Start a custom preset save flow for this ingredient type. Save remains stubbed until persistence exists."
-                onClick={onCreatePreset}
-              />
-            )}
+            {isEmpty ? (
+              <p className="col-span-full rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {emptyMessage}
+              </p>
+            ) : null}
           </div>
         )}
       </div>

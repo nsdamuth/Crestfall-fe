@@ -495,7 +495,7 @@ export function buildImageGenerationPayload({
 }
 
 export function useImageStudioWorkbenchViewModel({ account }) {
-  const [mode, setMode] = useState("IMAGE");
+  const [requestedMode, setMode] = useState("IMAGE");
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [customIngredientPrompts, setCustomIngredientPrompts] = useState({});
   const [pickerSlot, setPickerSlot] = useState(null);
@@ -534,15 +534,16 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const imageGenerationAllowed = capabilities?.imageGeneration !== false;
   const videoGenerationAllowed = capabilities?.videoGeneration === true;
 
-  useEffect(() => {
-    if (
-      mode === "VIDEO" &&
-      capabilityStatus === "loaded" &&
-      !videoGenerationAllowed
-    ) {
-      setMode("IMAGE");
-    }
-  }, [capabilityStatus, mode, videoGenerationAllowed]);
+  // Derived, never synced back into state (react-hooks/
+  // set-state-in-effect, the same shape useStudioViewModel and the
+  // account ViewModel use): a VIDEO request resolves to IMAGE while
+  // the loaded capabilities say video is off. Behavior unchanged.
+  const mode =
+    requestedMode === "VIDEO" &&
+    capabilityStatus === "loaded" &&
+    !videoGenerationAllowed
+      ? "IMAGE"
+      : requestedMode;
 
   const pickerSourceMode = pickerSlot
     ? ingredientSourceBySlot[pickerSlot.id] || "MINE"
@@ -773,6 +774,23 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     setSavePresetSlot(slot);
   }
 
+  // Media Studio custom flow (FE/MEDIA-STUDIO session 2, note 4):
+  // Custom in the picker opens the custom asset modal for the slot
+  // without touching the selection. "Use once" in that modal is what
+  // applies the typed prompt as a once-only ingredient (the same
+  // custom selection startCustomIngredient has always made). The
+  // legacy inline path above stays for /studio/image-studio.
+  function startCustomEntry(slot) {
+    if (!slot?.id) return;
+    setPickerSlot(null);
+    setSavePresetSlot(slot);
+  }
+
+  function useCustomOnce(slot) {
+    if (!slot?.id) return;
+    startCustomIngredient(slot);
+  }
+
   function updateCustomIngredientPrompt(slotId, value) {
     setCustomIngredientPrompts((current) => ({
       ...current,
@@ -849,6 +867,8 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       customIngredientPrompts,
       onUpdateCustomIngredientPrompt: updateCustomIngredientPrompt,
       onSaveCustomIngredient: openSavePreset,
+      onStartCustomEntry: startCustomEntry,
+      onUseCustomOnce: useCustomOnce,
       prompt,
       setPrompt,
       showSceneryOnlyHelper: isLocationOnlyImageComposition(selectedIngredients),

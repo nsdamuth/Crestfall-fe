@@ -48,9 +48,21 @@ function countLibrary(items, value) {
   return items.length;
 }
 
+// The one filter that exists on an asset picker today: Mine / Public
+// (session 2, note 3). Mine is the resting value, so the trigger reads
+// plain "Filter" until Public is chosen, matching the Library filter.
+const SOURCE_FILTER_OPTIONS = [
+  { value: "MINE", label: "Mine" },
+  { value: "PUBLIC", label: "Public" },
+];
+
 function LiveIngredientPicker({ pickerProps, backLabel = null }) {
   const [searchValue, setSearchValue] = useState("");
   const picker = useIngredientPickerViewModel(pickerProps);
+  const label = pickerProps.displayLabel || picker.ingredientLabel;
+  const lowerLabel = label.toLowerCase();
+  const scope = picker.sourceMode === "PUBLIC" ? "public " : "";
+  const hasPublicSource = picker.sourceOptions.length > 1;
   const normalizedSearch = searchValue.trim().toLowerCase();
   const items = useMemo(
     () =>
@@ -71,26 +83,34 @@ function LiveIngredientPicker({ pickerProps, backLabel = null }) {
     [picker.items, picker.selectedItemId, normalizedSearch]
   );
 
+  const filter = hasPublicSource
+    ? {
+        label: "Filter",
+        options: SOURCE_FILTER_OPTIONS,
+        value: picker.sourceMode,
+        restingValue: "MINE",
+        onChange: (nextMode) => {
+          setSearchValue("");
+          picker.onSourceModeChange?.(nextMode);
+        },
+      }
+    : null;
+
   return (
     <KitIngredientPicker
-      slotLabel={picker.ingredientLabel}
-      sourceMode={picker.sourceMode}
-      sourceOptions={picker.sourceOptions}
-      onSourceModeChange={(nextMode) => {
-        setSearchValue("");
-        picker.onSourceModeChange?.(nextMode);
-      }}
+      slotLabel={label}
       searchValue={searchValue}
-      searchPlaceholder={picker.searchPlaceholder}
+      searchPlaceholder={`Search ${scope}${lowerLabel}...`}
       onSearchChange={setSearchValue}
+      filter={filter}
       items={items}
-      emptyMessage={picker.emptyMessage}
+      itemLayout="cards"
+      emptyMessage={`No ${scope}${lowerLabel} assets found.`}
       loadErrorMessage={picker.loadErrorMessage}
       onChooseIngredient={picker.onChooseIngredient}
       showUseCustomAction={picker.showUseCustomAction}
+      customIsSelected={Boolean(pickerProps.selected?.custom)}
       onUseCustom={picker.onUseCustom}
-      showCreatePresetAction={picker.showCreatePresetAction}
-      onCreatePreset={picker.onCreatePreset}
       backLabel={backLabel}
       onClose={picker.onClose}
     />
@@ -102,9 +122,8 @@ function LiveSavePreset({ saveProps, backLabel = null }) {
 
   return (
     <KitSaveIngredientPreset
-      presetTypeLabel={save.presetTypeLabel}
+      assetLabel={save.assetLabel}
       introText={save.introText}
-      helperText={save.helperText}
       message={save.saveMessage}
       messageTone={save.saveMessageTone}
       nameValue={save.nameValue}
@@ -117,6 +136,9 @@ function LiveSavePreset({ saveProps, backLabel = null }) {
       onChangeTags={save.onChangeTags}
       isSaving={save.isSaving}
       canSave={save.canSave}
+      canUseOnce={save.canUseOnce}
+      saveAvailable={save.saveAvailable}
+      hasUnsavedChanges={save.hasUnsavedChanges}
       onSavePreset={save.onSavePreset}
       onUseOnce={save.onUseOnce}
       backLabel={backLabel}

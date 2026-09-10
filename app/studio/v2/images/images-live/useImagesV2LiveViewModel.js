@@ -4,7 +4,10 @@ import { useEffect } from "react";
 
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
-import { useImageStudioWorkbenchViewModel } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
+import {
+  getPresetCreationType,
+  useImageStudioWorkbenchViewModel,
+} from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import {
   IMAGE_COUNT_BACKEND_MAX,
@@ -46,6 +49,30 @@ const INLINE_OPTION_DEFAULTS = Object.freeze({
 
 const DEFAULT_CAMERA_PRESET_VALUE = "AUTO";
 
+// The asset word every picker and custom asset modal shows as its
+// title: the tile titles ruled at browser review round 6, not the
+// data labels in imageStudioData.js (Clothing Source, Location /
+// Scene, Rendering Preset), which feed payloads and the legacy page.
+const SLOT_DISPLAY_LABELS = Object.freeze({
+  character: "Character",
+  playerCharacter: "Character",
+  pose: "Pose",
+  outfit: "Outfit",
+  location: "Location",
+  preset: "Preset",
+});
+
+function getSlotDisplayLabel(slot) {
+  return SLOT_DISPLAY_LABELS[slot?.id] || slot?.label || "Asset";
+}
+
+// Camera groups arrive title-cased from the catalog; the picker shows
+// sentence case (Media Studio copy law).
+function sentenceCase(label) {
+  const text = String(label || "");
+  return text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : "";
+}
+
 function normalizeOptions(options = []) {
   return options.map((option) => ({
     value: String(option?.value || ""),
@@ -64,11 +91,23 @@ function projectSlotStates(composerProps) {
   return Object.fromEntries(
     ingredientSlots.map((slot) => {
       const value = selected[slot.id] || null;
+      const customText = String(customPrompts[slot.id] || "");
 
+      // A once-only custom description is a normal selection on the
+      // tile, titled Custom (note 4: no inline text mode). Tapping the
+      // tile reopens the picker, where the Custom card reads selected
+      // and reopens the modal with this text.
       return [
         slot.id,
         {
-          selection: value
+          selection: value?.custom
+            ? {
+                id: String(value.id || `custom-${slot.id}`),
+                title: "Custom",
+                subtitle: customText,
+                imageSrc: "",
+              }
+            : value
             ? {
                 id: String(value.id || ""),
                 title: String(value.title || slot.label),
@@ -89,8 +128,8 @@ function projectSlotStates(composerProps) {
                 ),
               }
             : null,
-          isCustomMode: Boolean(value?.custom),
-          customText: String(customPrompts[slot.id] || ""),
+          isCustomMode: false,
+          customText,
         },
       ];
     })
@@ -197,25 +236,53 @@ export function useImagesV2LiveViewModel({
   const normalizedCameraPreset = getCameraPresetDefinition(
     workbench.composerProps.cameraPreset
   );
+  // Camera framing rides the shared asset picker in its rows layout
+  // (session 2 plan gate, option A): every catalog entry is an item,
+  // its group is the item's quiet label, and the groups are the one
+  // filter dropdown. Selection still reports through setCameraPreset.
+  const cameraGroupLabelById = new Map(
+    cameraPresetGroups.map((group) => [group.id, sentenceCase(group.label)])
+  );
+  const cameraPickerItems = cameraPresetCatalog.map((preset) => ({
+    id: preset.value,
+    title: preset.label,
+    description: preset.description,
+    subtitle: cameraGroupLabelById.get(preset.groupId) || "Automatic",
+    groupId: preset.groupId,
+    isSelected: preset.value === normalizedCameraPreset.value,
+  }));
   const cameraPickerGroups = cameraPresetGroups.map((group) => ({
     id: group.id,
-    label: group.label,
-    options: cameraPresetCatalog
-      .filter((preset) => preset.groupId === group.id)
-      .map((preset) => ({
-        value: preset.value,
-        label: preset.label,
-        description: preset.description,
-        selected: preset.value === normalizedCameraPreset.value,
-      })),
+    label: cameraGroupLabelById.get(group.id) || group.label,
   }));
-  const autoCameraPreset = cameraPresetCatalog.find(
-    (preset) => preset.value === "AUTO"
-  );
   const openCameraPresetPicker =
     typeof onOpenCameraPresetPicker === "function"
       ? onOpenCameraPresetPicker
       : null;
+
+  // Custom flow (note 4): the picker's Custom card opens the custom
+  // asset modal through the workbench's onStartCustomEntry; the
+  // modal's "Use once" applies the text through onUseCustomOnce.
+  // Both derive from workbench.pickerModalProps and
+  // workbench.savePresetModalProps; only the presentation keys are
+  // added here (display label, save availability).
+  const pickerSlot = workbench.pickerModalProps?.slot || null;
+  const pickerModalProps = workbench.pickerModalProps
+    ? {
+        ...workbench.pickerModalProps,
+        displayLabel: getSlotDisplayLabel(pickerSlot),
+        onUseCustom: workbench.composerProps.onStartCustomEntry,
+      }
+    : null;
+  const savePresetSlot = workbench.savePresetModalProps?.slot || null;
+  const savePresetModalProps = workbench.savePresetModalProps
+    ? {
+        ...workbench.savePresetModalProps,
+        assetLabel: getSlotDisplayLabel(savePresetSlot),
+        saveAvailable: Boolean(getPresetCreationType(savePresetSlot)),
+        onUseOnce: workbench.composerProps.onUseCustomOnce,
+      }
+    : null;
 
   return {
     mediaHistoryProps: workbench.mediaHistoryProps,
@@ -263,17 +330,10 @@ export function useImagesV2LiveViewModel({
       videoDirectionValue: composer.promptValue,
       onChangeVideoDirection: composer.onChangePrompt,
     },
-    pickerModalProps: workbench.pickerModalProps,
-    savePresetModalProps: workbench.savePresetModalProps,
+    pickerModalProps,
+    savePresetModalProps,
     cameraPickerProps: {
-      autoOption: autoCameraPreset
-        ? {
-            value: autoCameraPreset.value,
-            label: autoCameraPreset.label,
-            description: autoCameraPreset.description,
-            selected: normalizedCameraPreset.value === "AUTO",
-          }
-        : null,
+      items: cameraPickerItems,
       groups: cameraPickerGroups,
       onSelect: workbench.composerProps.setCameraPreset,
     },

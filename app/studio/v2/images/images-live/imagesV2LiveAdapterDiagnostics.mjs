@@ -32,8 +32,13 @@ test("V2 Images adapter reuses application-owned workbench state", () => {
   assert.match(adapter, /onGenerate: composer\.onGenerateImage/);
   assert.match(adapter, /renderStyleRailProps: composer\.renderStyleRailProps/);
   assert.match(adapter, /advancedTuningProps: composer\.advancedTuningProps/);
-  assert.match(adapter, /pickerModalProps: workbench\.pickerModalProps/);
-  assert.match(adapter, /savePresetModalProps: workbench\.savePresetModalProps/);
+  // Session 2 (notes 3 and 4): both modal prop sets still derive from
+  // the workbench, with only presentation keys (display label, save
+  // availability, the Custom handlers) added in the adapter.
+  assert.match(adapter, /\.\.\.workbench\.pickerModalProps/);
+  assert.match(adapter, /\.\.\.workbench\.savePresetModalProps/);
+  assert.match(adapter, /onUseCustom: workbench\.composerProps\.onStartCustomEntry/);
+  assert.match(adapter, /onUseOnce: workbench\.composerProps\.onUseCustomOnce/);
 });
 
 test("V2 Images Views do not own transport or database access", () => {

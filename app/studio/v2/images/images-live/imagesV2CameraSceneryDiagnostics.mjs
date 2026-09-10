@@ -132,13 +132,20 @@ test("V2 camera picker uses current Kit modal vocabulary rather than the legacy 
   assert.match(live, /onOpenCameraPresetPicker: openCameraPresetPicker/);
   assert.match(live, /onClose=\{closeCameraPresetPicker\}/);
   assert.doesNotMatch(live, /CameraPresetPickerModal/);
-  assert.match(picker, /KitModalFrame/);
+  // Session 2 (10 Sep 2026, plan gate option A): the camera picker is
+  // an adapter over the shared asset picker in its rows layout; the
+  // frame, grid, and empty state live in KitIngredientPicker.
+  const kitPicker = read("components/kit/ingredient-picker/KitIngredientPicker.view.jsx");
+  const adapter = read("app/studio/v2/images/images-live/useImagesV2LiveViewModel.js");
+  assert.match(picker, /KitIngredientPicker/);
+  assert.match(picker, /itemLayout="rows"/);
   assert.match(picker, /Search camera presets/);
-  assert.match(picker, /Automatic/);
-  assert.match(picker, /min-\[760px\]:grid-cols-2/);
+  assert.match(picker, /No camera presets match this search/);
+  assert.match(adapter, /"Automatic"/);
+  assert.match(kitPicker, /KitModalFrame/);
+  assert.match(kitPicker, /min-\[760px\]:grid-cols-2/);
   assert.doesNotMatch(picker, /min-h-\[7rem\]/);
   assert.doesNotMatch(picker, /grid-cols-3/);
-  assert.match(picker, /No camera presets match this search/);
   assert.doesNotMatch(picker, /ModalShell/);
   assert.doesNotMatch(picker, /fetch\s*\(/);
 });

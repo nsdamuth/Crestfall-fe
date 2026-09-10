@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 
 import KitDropdownView from "../dropdown/KitDropdown.view";
+import { growTextarea } from "../form-field/growTextarea";
 
 const SLOT_DEFS = [
   { id: "character", label: "Character", icon: Users, requirement: "required", savable: false, spanRow: true },
@@ -48,7 +49,6 @@ const SLOT_DEFS = [
 const EMPTY_SLOT_STATE = { selection: null, isCustomMode: false, customText: "" };
 
 const NOT_AVAILABLE_LABEL = "Not available yet";
-const TEXTAREA_MAX_HEIGHT_PX = 320;
 
 const FIELD_RECIPE =
   "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
@@ -56,15 +56,8 @@ const FIELD_RECIPE =
 const TOOLTIP_RECIPE =
   "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
 
-// One row until content needs more, then it grows with the text
-// (the chat composer pattern). A callback ref runs on every commit,
-// so a fixture that mounts with long content sizes correctly too;
-// no effect, no fetch, presentation only.
-function growTextarea(element) {
-  if (!element) return;
-  element.style.height = "auto";
-  element.style.height = `${Math.min(element.scrollHeight, TEXTAREA_MAX_HEIGHT_PX)}px`;
-}
+// Field growth (one row, then grows with the text) lives in
+// ../form-field/growTextarea.js, shared with the custom asset modal.
 
 // Type hierarchy inside the composer, RULED at browser review round 3
 // item 4. Three steps, no more: SECTION titles (Custom prompt, Render

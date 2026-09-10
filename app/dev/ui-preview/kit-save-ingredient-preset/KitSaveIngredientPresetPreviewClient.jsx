@@ -13,9 +13,9 @@ export default function KitSaveIngredientPresetPreviewClient() {
   const activeFixture = kitSaveIngredientPresetFixtures.find((fixture) => fixture.id === openId);
 
   const overrides = {
-    onSavePreset: () => setNote("Save as preset pressed. In a consuming page this opens the R4 fixture-action notice."),
+    onSavePreset: () => setNote("Save and use preset pressed. On the live page this runs the existing save path."),
     onUseOnce: () => {
-      setNote("Use once pressed; closed without persisting.");
+      setNote("Use once pressed; the live page applies the prompt to the slot without saving.");
       setOpenId(null);
     },
     onClose:
@@ -30,7 +30,7 @@ export default function KitSaveIngredientPresetPreviewClient() {
   return (
     <KitPreviewShell
       title="Kit Save Ingredient Preset"
-      description="Fixture-driven mirror of the live save-preset modal: Preset Name, Description, Prompt / Guidance, Tags, Save as preset, and Use once."
+      description="Fixture-driven mirror of the live custom asset modal: Preset name, Description, Prompt, Tags, Use once, and Save and use preset."
       states={kitSaveIngredientPresetFixtures.map((fixture) => ({ key: fixture.id, label: fixture.label }))}
       activeKey={openId}
       onSelectState={(id) => {
