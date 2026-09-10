@@ -27,6 +27,7 @@ import {
   MapPin,
   Plus,
   Save,
+  Shapes,
   Shirt,
   SlidersHorizontal,
   Sparkles,
@@ -1030,8 +1031,10 @@ function RemixReferenceTile({ reference, onChange, onRemove }) {
   );
 }
 
-// The one add control. Past the limit it renders disabled reading the
-// caller's limit line ("Up to 6 characters"), RULED 10 Sep 2026.
+// The one add control. It leaves the grid at the limit (Brian's
+// browser note, 10 Sep 2026: the six-tile grid is simply full); the
+// disabled reading of the caller's limit line is kept for a caller
+// that still passes canAdd false with room in the row.
 function AddCharacterTile({ canAdd, limitLabel, isRequired, onAdd }) {
   return (
     <button
@@ -1066,6 +1069,25 @@ function AddCharacterTile({ canAdd, limitLabel, isRequired, onAdd }) {
         ) : null}
       </span>
     </button>
+  );
+}
+
+// The reference grid is three across; RemixStage fills the last row
+// with placeholders so the rows stay even.
+const REMIX_GRID_COLUMNS = 3;
+
+// A slot not yet reachable this row: the darker bed, a solid whisper
+// line, one geometric glyph, nothing to press. Decoration only, so
+// it is hidden from assistive technology; the Add tile is the one
+// control (Brian's browser note, 10 Sep 2026).
+function RemixPlaceholderTile() {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex aspect-square min-w-0 items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)]"
+    >
+      <Shapes size={20} />
+    </div>
   );
 }
 
@@ -1158,7 +1180,7 @@ function RemixPrompt({ value, onChange, mentionOptions, idPrefix }) {
         onKeyDown={(event) => {
           if (event.key === "Escape") setActiveMention(null);
         }}
-        placeholder="Describe the scene. Type @ to mention a reference..."
+        placeholder="Describe the scene, type @ to reference asset..."
         rows={1}
         className={FIELD_RECIPE}
       />
@@ -1199,6 +1221,15 @@ function RemixStage({ remix, idPrefix }) {
 
   const references = remix.references || [];
   const locationState = { ...EMPTY_SLOT_STATE, selection: remix.location?.selection || null };
+  // Even rows (Brian's browser note, 10 Sep 2026): the filled tiles
+  // and the one Add tile are followed by dark placeholder tiles up to
+  // the end of the row, so the grid always reads as complete rows of
+  // three. At the caller's limit the Add tile leaves and the last row
+  // is filled tiles only, so the grid never grows past the limit.
+  const showAddTile = Boolean(remix.canAddCharacter);
+  const tileCount = references.length + (showAddTile ? 1 : 0);
+  const placeholderCount =
+    (REMIX_GRID_COLUMNS - (tileCount % REMIX_GRID_COLUMNS)) % REMIX_GRID_COLUMNS;
 
   return (
     <>
@@ -1215,12 +1246,17 @@ function RemixStage({ remix, idPrefix }) {
               onRemove={remix.onRemoveCharacter}
             />
           ))}
-          <AddCharacterTile
-            canAdd={Boolean(remix.canAddCharacter)}
-            limitLabel={remix.addLimitLabel || ""}
-            isRequired={references.length === 0}
-            onAdd={remix.onAddCharacter}
-          />
+          {showAddTile ? (
+            <AddCharacterTile
+              canAdd
+              limitLabel={remix.addLimitLabel || ""}
+              isRequired={references.length === 0}
+              onAdd={remix.onAddCharacter}
+            />
+          ) : null}
+          {Array.from({ length: placeholderCount }, (_, index) => (
+            <RemixPlaceholderTile key={`placeholder-${index}`} />
+          ))}
         </div>
       </section>
 

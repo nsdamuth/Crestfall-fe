@@ -524,7 +524,7 @@ export function buildImageGenerationPayload({
   };
 }
 
-export function useImageStudioWorkbenchViewModel({ account }) {
+export function useImageStudioWorkbenchViewModel({ account, initialImageCount = "2" }) {
   const [requestedMode, setMode] = useState("IMAGE");
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [customIngredientPrompts, setCustomIngredientPrompts] = useState({});
@@ -544,8 +544,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [wardrobeTheme, setWardrobeTheme] = useState("AUTO");
   const [aspectRatio, setAspectRatio] = useState("PORTRAIT_4_5");
   // Default 2 (RULED 9 Sep 2026, Media Studio plan gate: the count
-  // list is 2, 4, 8, 16, 32, 64, 128, 256).
-  const [imageCount, setImageCount] = useState("2");
+  // list is 2, 4, 8, 16, 32, 64, 128, 256). The Media Studio page
+  // passes initialImageCount "1" (Brian's browser note, 10 Sep 2026);
+  // the legacy workbench keeps 2.
+  const [imageCount, setImageCount] = useState(initialImageCount);
 
   const [videoDuration, setVideoDuration] = useState("4");
   const [videoAspectRatio, setVideoAspectRatio] = useState("PORTRAIT");

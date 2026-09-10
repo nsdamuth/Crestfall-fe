@@ -75,11 +75,15 @@ package) and passes them pre-computed; this View writes no number.
    `@img1` to `@img6` handle top-left on the tag-over-art bed, the
    overlay clear button top-right; tapping the art re-opens the
    picker for that slot), then ONE "Add character" tile (dashed,
-   plus glyph, `(required)` while nothing is chosen). Past the limit
-   the Add tile renders disabled reading the caller's line "Up to 6
-   characters" and that title. Handles bind to slot position and never
-   renumber: clearing slot 2 leaves a gap the next Add fills, so a
-   prompt's `@img3` keeps pointing at its character.
+   plus glyph, `(required)` while nothing is chosen, `(optional)`
+   after), then dark placeholder tiles (the darker bed, a geometric
+   glyph, nothing to press, hidden from assistive technology) to the
+   end of the row, so the grid always reads as even rows of three
+   (Brian's browser note, 10 Sep 2026). A new row appears when the
+   Add tile moves into it. At the limit the Add tile leaves and the
+   grid is exactly the six filled tiles. Handles bind to slot position
+   and never renumber: clearing slot 2 leaves a gap the next Add
+   fills, so a prompt's `@img3` keeps pointing at its character.
 2. Location: the Generate Character tile's shape spanning the row,
    optional, opens the same shared picker.
 3. Custom prompt (required): one row that grows. Typing `@` opens the

@@ -45,7 +45,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {KitImageCreatorRemixReference[]} references filled
  *   character slots in slot order
  * @property {boolean} canAddCharacter false past the limit; the Add
- *   tile renders disabled reading addLimitLabel
+ *   tile then leaves the grid, which reads as full rows of three
+ *   (placeholder tiles fill the last row while there is room; Brian's
+ *   browser note, 10 Sep 2026, no prop change)
  * @property {string} addLimitLabel "Up to 6 characters", computed by
  *   the caller from its one limit constant
  * @property {{slotId: string, mention: string, selection: {title: string, subtitle?: string, imageSrc?: string}|null}} location

@@ -257,7 +257,9 @@ export function useImagesV2LiveViewModel({
   onChangeStage = null,
 } = {}) {
   const account = useStudioAccount();
-  const workbench = useImageStudioWorkbenchViewModel({ account });
+  // One image by default (Brian's browser note, 10 Sep 2026): the
+  // footer starts at one image's cost, 5 on Generate, 20 on Remix.
+  const workbench = useImageStudioWorkbenchViewModel({ account, initialImageCount: "1" });
   const { composerProps } = workbench;
   const { renderStyle, setRenderStyle } = composerProps;
   // The Remix prompt is page state: the rail and the sheet both read
@@ -292,8 +294,15 @@ export function useImagesV2LiveViewModel({
 
   // Output count beside the Generate button. Counts the backend
   // cannot serve render disabled; the selection still reports to the
-  // same handler the former Output Count select used.
-  const countOptions = imageCountOptions.map((option) => {
+  // same handler the former Output Count select used. This page's list
+  // (Brian's browser note, 10 Sep 2026, superseding the 9 Sep plan
+  // gate list) starts at 1 image and ends at 128; the shared
+  // imageCountOptions the Location and Asset builders read is
+  // untouched.
+  const countOptions = [
+    { value: "1", label: "1 image" },
+    ...imageCountOptions.filter((option) => String(option.value) !== "256"),
+  ].map((option) => {
     const count = Number.parseInt(option.value, 10) || 0;
     const isDisabled = count > IMAGE_COUNT_BACKEND_MAX;
     return {
