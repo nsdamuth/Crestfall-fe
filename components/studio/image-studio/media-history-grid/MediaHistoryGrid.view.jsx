@@ -224,7 +224,7 @@ export default function MediaHistoryGridView({
   hasSelectableMedia = false,
   hasVisibleSelectableMedia = false,
   allVisibleSelectableItemsSelected = false,
-  summaryText = "No library items yet",
+  summaryText = "",
   lightboxProps = null,
   eagerImageCount = 4,
   masonryRowHeight = 8,
@@ -277,7 +277,11 @@ export default function MediaHistoryGridView({
           <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Image Library
           </p>
-          <p className="mt-1 text-xs text-[var(--ink-dim)]">{summaryText}</p>
+          {summaryText ? (
+            // Empty library: no summary line, the empty-state block
+            // below already says it (review round 2, 10 Sep 2026).
+            <p className="mt-1 text-xs text-[var(--ink-dim)]">{summaryText}</p>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
