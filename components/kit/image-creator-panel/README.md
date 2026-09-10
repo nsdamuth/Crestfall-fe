@@ -14,6 +14,21 @@ projects the workbench ViewModel onto this contract. Anything the
 backend cannot do yet renders disabled with the words "Not available
 yet" and never fakes a result, spends coins, or invents a number.
 
+## Browser review round 1 (9 Sep 2026), applied
+
+The root is two siblings: a scroll region (toggle, tabs, tiles, custom
+prompt, the closed "Image settings" disclosure holding Render style,
+Camera / Framing, Wardrobe theme, Aspect ratio, Advanced, Negative
+prompt) and a footer that never scrolls (the count control on its own
+row, layers glyph plus the number, menu opening upward; then Generate
+on its own line). The consumer gives the root a bounded height: the
+desktop rail (`overflow-hidden`, no padding) and the mobile sheet
+(`ImagesV2ComposerSheet`, KitModalFrame variant sheet, 78dvh). Tiles
+read (required) or (optional). Advanced keeps every slider the
+workflow definition supplies; copy is the label plus an "i" tooltip.
+Nothing inside the scroll region may be wider than it
+(`overflow-x-hidden`, `min-w-0` on every flex child).
+
 ## Anatomy, top to bottom
 
 1. Mode toggle: Image / Video with icons, one outlined track around

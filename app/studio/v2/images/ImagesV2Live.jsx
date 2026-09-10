@@ -2,11 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Coins, Loader2 } from "lucide-react";
+import { ImagePlus } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
-import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
@@ -19,6 +18,7 @@ import { useSaveIngredientPresetViewModel } from "@/components/studio/image-stud
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
+import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
 import { orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
 
@@ -178,18 +178,6 @@ export default function ImagesV2Live() {
     [grid.activityFilters, grid.mediaFilter]
   );
   const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
-  const generationStatus = String(live.panelProps?.generationStatus || "").toLowerCase();
-  const generationPending = ["loading", "pending", "submitting"].includes(generationStatus);
-  const canGenerate =
-    composerStage === "GENERATE" &&
-    Boolean(live.panelProps?.canGenerate) &&
-    typeof live.panelProps?.onGenerate === "function";
-  const mobileGenerateReason =
-    composerStage !== "GENERATE"
-      ? "Not available yet"
-      : !canGenerate
-        ? String(live.panelProps?.generationHelpText || "")
-        : "";
 
   return (
     <>
@@ -201,7 +189,7 @@ export default function ImagesV2Live() {
               compactMobile
               eyebrow="Create"
               title="Media Studio"
-              description="Turn your characters, outfits, and locations into finished images. Manage, reuse, and share them all from one workspace."
+              description="Generate images and video from your assets. Manage, reuse, and share them all in one place."
             />
           }
           filterBarSlot={
@@ -258,12 +246,13 @@ export default function ImagesV2Live() {
               />
             </div>
 
-            {/* The composer's Generate row is a sticky footer inside
-                this scroll box; the panel pads itself out by
-                --space-4 on every side, so the aside keeps exactly
-                that padding (KitImageCreatorPanel README). */}
+            {/* The composer owns its scrolling: its scroll region and
+                its fixed footer are siblings inside this bounded box,
+                so the aside itself never scrolls (browser review
+                9 Sep 2026, items 6 and 7). No padding here; the
+                composer pads its own regions. */}
             <aside
-              className="sticky hidden w-[24rem] flex-none flex-col overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)] min-[1100px]:flex"
+              className="sticky hidden w-[24rem] flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex"
               style={{
                 top: "calc(var(--topbar-h) + var(--space-4))",
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
@@ -277,40 +266,25 @@ export default function ImagesV2Live() {
 
       <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 px-[var(--space-4)] min-[1100px]:hidden">
         <div className="mx-auto flex max-w-xl items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/35 bg-[color-mix(in_srgb,var(--canvas)_92%,transparent)] p-[var(--space-2)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-chrome)]">
+          {/* Compose opens the composer sheet (browser review 9 Sep
+              2026, item 9); Generate lives inside the sheet's fixed
+              footer, never on this bar. */}
           <button
             type="button"
-            onClick={() => live.panelProps?.onGenerate?.()}
-            disabled={!canGenerate}
-            title={mobileGenerateReason || undefined}
-            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+            onClick={() => setMobileCreatorOpen(true)}
+            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)]"
           >
-            <span>Generate</span>
-            {composerStage !== "GENERATE" ? null : generationPending ? (
-              <Loader2 size={15} className="animate-spin" aria-hidden="true" />
-            ) : (
-              <Coins size={15} aria-hidden="true" />
-            )}
-            {composerStage === "GENERATE" && live.panelProps?.generateCostLabel ? (
-              <span className="tabular-nums">{live.panelProps.generateCostLabel}</span>
-            ) : null}
+            <ImagePlus size={17} aria-hidden="true" />
+            <span>Compose</span>
           </button>
         </div>
       </div>
 
       {mobileCreatorOpen ? (
-        <KitModalFrame
-          variant="modal"
-          panelClassName="w-full max-w-2xl"
+        <ImagesV2ComposerSheet
+          panelProps={live.panelProps}
           onClose={() => setMobileCreatorOpen(false)}
-          ariaLabel="Media Studio composer"
-        >
-          {/* Exactly --space-4 on every side so the composer's sticky
-              footer reaches the modal edges (KitImageCreatorPanel
-              README); the top gets extra room for the close control. */}
-          <div className="flex min-h-full flex-col p-[var(--space-4)] pt-[var(--space-8)]">
-            <KitImageCreatorPanel {...live.panelProps} />
-          </div>
-        </KitModalFrame>
+        />
       ) : null}
 
       {live.pickerModalProps ? (

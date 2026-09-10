@@ -1,12 +1,18 @@
 "use client";
 
-// Media Studio composer, rebuilt 9 Sep 2026 (FE/MEDIA-STUDIO, Brian's
-// note 1 and note 2, docs/references/media-studio/NOTES.md). Five
-// asset tiles are fixed anatomy owned by this package, mirroring
+// Media Studio composer (FE/MEDIA-STUDIO, Brian's notes 1 and 2 plus
+// the 9 Sep 2026 browser review round 1). Five asset tiles are fixed
+// anatomy owned by this package, mirroring
 // components/studio/image-studio/imageStudioData.js minus its second
-// character slot (Character covers it, ruled 9 Sep 2026). Tokens only; every
-// control on kit or cf-* recipes; no fetch anywhere. Contract 2.0.0.
-import { useId, useState } from "react";
+// character slot (Character covers it, ruled 9 Sep 2026). Tokens only;
+// every control on kit or cf-* recipes; no fetch anywhere.
+//
+// Shape: one scroll region (toggle, tabs, tiles, prompt, the closed
+// "Image settings" disclosure) and, as its SIBLING, a footer that
+// never scrolls: the count control on its own row, then the Generate
+// button on its own line. The consumer gives the root a bounded
+// height (the desktop rail, the mobile sheet); the root fills it.
+import { useId, useRef, useState } from "react";
 import {
   BookOpen,
   Check,
@@ -14,11 +20,14 @@ import {
   ChevronUp,
   Coins,
   Image as ImageIcon,
+  Info,
+  Layers,
   Library,
   Loader2,
   MapPin,
   Save,
   Shirt,
+  SlidersHorizontal,
   Sparkles,
   Theater,
   Users,
@@ -39,11 +48,13 @@ const SLOT_DEFS = [
 const EMPTY_SLOT_STATE = { selection: null, isCustomMode: false, customText: "" };
 
 const NOT_AVAILABLE_LABEL = "Not available yet";
-const RENDER_STYLE_CONTEXT_LINE = "Fantasy on the left, realistic on the right.";
 const TEXTAREA_MAX_HEIGHT_PX = 320;
 
 const FIELD_RECIPE =
   "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
+
+const TOOLTIP_RECIPE =
+  "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
 
 // One row until content needs more, then it grows with the text
 // (the chat composer pattern). A callback ref runs on every commit,
@@ -66,6 +77,42 @@ function FieldCaption({ children, note = "" }) {
           {note}
         </span>
       ) : null}
+    </span>
+  );
+}
+
+// "i" circle with a hover or tap tooltip (the InfoTip recipe from the
+// character creator, inline; the shared tooltip component is CR-047,
+// still open). Tap toggles, blur or Escape hides; no effects.
+function InfoTip({ label, text }) {
+  const [open, setOpen] = useState(false);
+  if (!text) return null;
+
+  return (
+    <span className="group/tip relative inline-flex">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen((current) => !current);
+        }}
+        onBlur={() => setOpen(false)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+        }}
+        className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] text-[var(--gold-ornament)] hover:text-[var(--gold-bright)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
+      >
+        <Info size={14} aria-hidden="true" />
+      </button>
+      <span
+        role="tooltip"
+        className={`${TOOLTIP_RECIPE} right-0 group-hover/tip:opacity-100 ${open ? "opacity-100" : "opacity-0"}`}
+      >
+        {text}
+      </span>
     </span>
   );
 }
@@ -98,7 +145,7 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
             onClick={() => {
               if (!option.disabled) onChangeMode?.(option.id);
             }}
-            className={`flex min-h-[var(--control-md)] items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors ${
+            className={`flex min-h-[var(--control-md)] min-w-0 items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors ${
               isActive
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : option.disabled
@@ -106,10 +153,10 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
                   : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
             }`}
           >
-            <Icon size={16} aria-hidden="true" />
-            <span>{option.label}</span>
+            <Icon size={16} aria-hidden="true" className="flex-none" />
+            <span className="truncate">{option.label}</span>
             {option.disabled && videoSoonLabel ? (
-              <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+              <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
                 {videoSoonLabel}
               </span>
             ) : null}
@@ -171,9 +218,9 @@ function ClearButton({ label, onClick, overlay = false }) {
   );
 }
 
-// Empty: icon centered, title centered at the bottom with required or
-// optional under it, no eyebrow chip. Selected: the image fills the
-// tile and its name sits centered at the bottom. The required
+// Empty: icon centered, title centered at the bottom with (required)
+// or (optional) under it, no eyebrow chip. Selected: the image fills
+// the tile and its name sits centered at the bottom. The required
 // Character tile carries a quiet gold glow.
 function SlotTile({ def, state, onActivate, onClear }) {
   const Icon = def.icon;
@@ -184,7 +231,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors ${
+      className={`group relative min-w-0 overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors ${
         def.spanRow ? "col-span-2 aspect-[2/1]" : "aspect-[5/4]"
       } ${
         isRequired
@@ -240,7 +287,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
           </span>
           {!hasSelection ? (
             <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-              {def.requirement}
+              ({def.requirement})
             </span>
           ) : null}
         </span>
@@ -257,7 +304,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
 
 function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePreset, onClear, idPrefix }) {
   return (
-    <div className="col-span-2 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill-whisper)] p-[var(--space-4)]">
+    <div className="col-span-2 min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill-whisper)] p-[var(--space-4)]">
       <div className="flex items-start justify-between gap-[var(--space-3)]">
         <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           <BookOpen size={14} aria-hidden="true" />
@@ -316,9 +363,8 @@ function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePre
 }
 
 // Slider plus the six diagonal step names. Each step carries a hover
-// or tap tooltip with its definition (the InfoTip recipe, inline; the
-// shared tooltip component is CR-047, still open). Tap selects the
-// step and shows its tooltip; blur or Escape hides it.
+// or tap tooltip with its definition. Tap selects the step and shows
+// its tooltip; blur or Escape hides it.
 function RenderStyleRail({ rail, idPrefix }) {
   const [openIndex, setOpenIndex] = useState(-1);
   if (!rail?.options?.length) return null;
@@ -336,13 +382,8 @@ function RenderStyleRail({ rail, idPrefix }) {
   }
 
   return (
-    <section>
-      <div className="flex items-baseline justify-between gap-[var(--space-3)]">
-        <FieldCaption>Render style</FieldCaption>
-        <span className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-          {RENDER_STYLE_CONTEXT_LINE}
-        </span>
-      </div>
+    <section className="min-w-0">
+      <FieldCaption>Render style</FieldCaption>
 
       <input
         id={`${idPrefix}-render-style-rail`}
@@ -366,7 +407,7 @@ function RenderStyleRail({ rail, idPrefix }) {
           const anchorClass =
             index === 0 ? "left-0" : index === maxIndex ? "right-0" : "left-1/2 -translate-x-1/2";
           return (
-            <span key={option.value} className="group/step relative block">
+            <span key={option.value} className="group/step relative block min-w-0">
               <button
                 type="button"
                 aria-pressed={isActive}
@@ -379,7 +420,7 @@ function RenderStyleRail({ rail, idPrefix }) {
                 onKeyDown={(event) => {
                   if (event.key === "Escape") setOpenIndex(-1);
                 }}
-                className={`relative h-16 w-full min-w-0 text-[length:var(--text-label)] transition-colors ${
+                className={`relative h-16 w-full min-w-0 overflow-hidden text-[length:var(--text-label)] transition-colors ${
                   isActive
                     ? "text-[var(--gold-bright)]"
                     : "text-[var(--ink-faint)] hover:text-[var(--ink-dim)]"
@@ -401,7 +442,7 @@ function RenderStyleRail({ rail, idPrefix }) {
                 <span
                   id={tipId}
                   role="tooltip"
-                  className={`pointer-events-none absolute bottom-full z-10 mb-[var(--space-1)] w-52 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150 group-hover/step:opacity-100 ${
+                  className={`${TOOLTIP_RECIPE} group-hover/step:opacity-100 ${
                     isOpen ? "opacity-100" : "opacity-0"
                   } ${anchorClass}`}
                 >
@@ -417,87 +458,85 @@ function RenderStyleRail({ rail, idPrefix }) {
   );
 }
 
+// Every slider the workflow definition supplies renders (none were
+// removed). Copy is cut to the label plus an "i" tooltip per slider;
+// no paragraphs.
 function AdvancedTuning({ tuning, idPrefix }) {
   const [isOpen, setIsOpen] = useState(false);
   if (!tuning?.enabled) return null;
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--fill-whisper)]">
+    <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)]">
       <button
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((current) => !current)}
-        className="flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-2)] text-left"
+        className="flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]"
       >
-        <span>
-          <span className="block text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">Advanced</span>
-          <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">Curated workflow controls</span>
+        <span className="inline-flex items-center gap-[var(--space-2)]">
+          Advanced
+          <span className="text-[length:var(--text-label)] text-[var(--ink-dim)]">
+            {tuning.modified ? "custom" : "defaults"}
+          </span>
         </span>
         {isOpen ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
       </button>
 
       {isOpen ? (
-        <div className="border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
-          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-            {tuning.description}
-          </p>
-          <p className="mt-[var(--space-2)] rounded-[var(--radius-sm)] border border-[var(--gold-ornament)]/15 bg-[var(--gold-ornament)]/5 px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-            {tuning.safetyNote}
-          </p>
-
-          <div className="mt-[var(--space-4)] grid gap-[var(--space-5)]">
-            {(tuning.controls || []).map((control) => (
-              <label key={control.id} htmlFor={`${idPrefix}-advanced-${control.id}`} className="block">
-                <div className="flex items-start justify-between gap-[var(--space-3)]">
-                  <span className="min-w-0">
-                    <span className="block text-[length:var(--text-ui)] text-[var(--ink)]">{control.label}</span>
-                    <span className="mt-[var(--space-1)] block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{control.description}</span>
+        <div className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
+          {(tuning.controls || []).map((control) => {
+            const inputId = `${idPrefix}-advanced-${control.id}`;
+            return (
+              <div key={control.id} className="min-w-0">
+                <div className="flex items-center justify-between gap-[var(--space-2)]">
+                  <span className="inline-flex min-w-0 items-center gap-[var(--space-1)]">
+                    <label htmlFor={inputId} className="truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
+                      {control.label}
+                    </label>
+                    <InfoTip label={`About ${control.label}`} text={control.description} />
                   </span>
-                  <span className="shrink-0 rounded-full border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums text-[var(--gold-ornament)]">
+                  <span className="shrink-0 rounded-[var(--radius-xs)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums text-[var(--gold-ornament)]">
                     {control.valueLabel}
                   </span>
                 </div>
                 <input
-                  id={`${idPrefix}-advanced-${control.id}`}
+                  id={inputId}
                   type="range"
                   min={control.min}
                   max={control.max}
                   step={control.step}
                   value={control.value}
+                  aria-label={control.label}
                   onChange={(event) => control.onChange?.(Number(event.target.value))}
-                  className="mt-[var(--space-3)] w-full cursor-pointer accent-[var(--gold-action)]"
+                  className="mt-[var(--space-2)] w-full cursor-pointer accent-[var(--gold-action)]"
                 />
                 <div className="mt-[var(--space-1)] flex justify-between gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[0.1em] text-[var(--ink-faint)]">
                   <span>{control.leftLabel}</span>
-                  <span>Default {control.defaultValue}%</span>
                   <span className="text-right">{control.rightLabel}</span>
                 </div>
-              </label>
-            ))}
-          </div>
+              </div>
+            );
+          })}
 
           {tuning.handoff ? (
-            <div className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 p-[var(--space-3)]">
-              <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{tuning.handoff.message}</p>
+            <div className="flex flex-wrap items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)]">
+              <span className="min-w-0 text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">{tuning.handoff.message}</span>
               <button
                 type="button"
                 onClick={() => tuning.handoff.onSwitch?.()}
-                className="mt-[var(--space-2)] text-[length:var(--text-label)] font-medium text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4"
+                className="text-[length:var(--text-label)] font-medium text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4"
               >
                 Switch to {tuning.handoff.targetProfileLabel}
               </button>
             </div>
           ) : null}
 
-          <div className="mt-[var(--space-4)] flex items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
-            <span className="text-[length:var(--text-label)] text-[var(--ink-dim)]">
-              {tuning.modified ? "Custom tuning applies to this generation." : "Using validated workflow defaults."}
-            </span>
+          <div className="flex justify-end">
             <button
               type="button"
               onClick={() => tuning.onReset?.()}
               disabled={!tuning.modified}
-              className="shrink-0 text-[length:var(--text-label)] text-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-35"
+              className="cf-btn cf-btn--secondary cf-btn--sm disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
             >
               Reset defaults
             </button>
@@ -536,11 +575,11 @@ function CameraPresetTrigger({
   );
 }
 
-// Inline options (note 2): no Options dropdown. Render style, Camera /
-// Framing, Wardrobe theme, Aspect ratio show inline; Advanced stays a
-// disclosure; Negative prompt stays. Output count lives beside the
-// Generate button.
-function InlineOptions({
+// One disclosure, closed by default (browser review round 1, item 4):
+// Render style, Camera / Framing, Wardrobe theme, Aspect ratio,
+// Advanced, Negative prompt. Full width, outlined, chevron; quiet
+// enough not to compete with Generate.
+function ImageSettings({
   renderStyleRailProps,
   optionFields,
   onChangeOption,
@@ -555,71 +594,187 @@ function InlineOptions({
   onChangeSceneryOnlyHelper,
   idPrefix,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const bodyId = `${idPrefix}-image-settings`;
+
   return (
-    <div className="flex flex-col gap-[var(--space-4)]">
-      <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
-
-      <div className="flex flex-wrap gap-[var(--space-2)]">
-        <CameraPresetTrigger
-          selectedLabel={cameraPresetLabel}
-          description={cameraPresetDescription}
-          onOpen={onOpenCameraPresetPicker}
+    <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={bodyId}
+        onClick={() => setIsOpen((current) => !current)}
+        className="flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition-colors hover:bg-[var(--state-hover-fill)]"
+      >
+        <span className="inline-flex items-center gap-[var(--space-2)]">
+          <SlidersHorizontal size={16} aria-hidden="true" className="text-[var(--gold-ornament)]" />
+          Image settings
+        </span>
+        <ChevronDown
+          size={16}
+          aria-hidden="true"
+          className={`flex-none text-[var(--gold-ornament)] transition-transform duration-[var(--dur-fast)] ${isOpen ? "rotate-180" : ""}`}
         />
-        {optionFields.map((field) => (
-          <KitDropdownView
-            key={field.id}
-            label={field.label}
-            ariaLabel={field.label}
-            options={field.options}
-            selectedValues={field.value ? [field.value] : []}
-            isMultiSelect={false}
-            onToggleOption={(value) => onChangeOption?.(field.id, value)}
-          />
-        ))}
-      </div>
+      </button>
 
-      <AdvancedTuning tuning={advancedTuningProps} idPrefix={idPrefix} />
+      {isOpen ? (
+        <div id={bodyId} className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-5)] pt-[var(--space-4)]">
+          <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
 
-      {showSceneryOnlyHelper ? (
-        <label
-          title="Adds bounded scenery guidance only when Location is the sole visual source."
-          className="flex min-h-[var(--control-md)] cursor-pointer items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-2)]"
-        >
-          <input
-            type="checkbox"
-            checked={sceneryOnlyHelperEnabled}
-            onChange={(event) => onChangeSceneryOnlyHelper?.(event.target.checked)}
-            className="h-4 w-4 accent-[var(--gold-bright)]"
-          />
-          <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            Optimize for scenery-only image
-          </span>
-        </label>
+          <div className="flex flex-wrap gap-[var(--space-2)]">
+            <CameraPresetTrigger
+              selectedLabel={cameraPresetLabel}
+              description={cameraPresetDescription}
+              onOpen={onOpenCameraPresetPicker}
+            />
+            {optionFields.map((field) => (
+              <KitDropdownView
+                key={field.id}
+                label={field.label}
+                ariaLabel={field.label}
+                options={field.options}
+                selectedValues={field.value ? [field.value] : []}
+                isMultiSelect={false}
+                onToggleOption={(value) => onChangeOption?.(field.id, value)}
+              />
+            ))}
+          </div>
+
+          <AdvancedTuning tuning={advancedTuningProps} idPrefix={idPrefix} />
+
+          {showSceneryOnlyHelper ? (
+            <label
+              title="Adds bounded scenery guidance only when Location is the sole visual source."
+              className="flex min-h-[var(--control-md)] cursor-pointer items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] py-[var(--space-2)]"
+            >
+              <input
+                type="checkbox"
+                checked={sceneryOnlyHelperEnabled}
+                onChange={(event) => onChangeSceneryOnlyHelper?.(event.target.checked)}
+                className="h-4 w-4 accent-[var(--gold-bright)]"
+              />
+              <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                Optimize for scenery-only image
+              </span>
+            </label>
+          ) : null}
+
+          <label className="block">
+            <FieldCaption>Negative prompt</FieldCaption>
+            <textarea
+              ref={growTextarea}
+              name={`${idPrefix}-negative-prompt`}
+              id={`${idPrefix}-negative-prompt`}
+              value={negativePromptValue}
+              onChange={(event) => {
+                growTextarea(event.target);
+                onChangeNegativePrompt?.(event.target.value);
+              }}
+              placeholder="Optional: describe what to avoid..."
+              rows={1}
+              className={FIELD_RECIPE}
+            />
+          </label>
+        </div>
       ) : null}
+    </section>
+  );
+}
 
-      <label className="block">
-        <FieldCaption>Negative prompt</FieldCaption>
-        <textarea
-          ref={growTextarea}
-          name={`${idPrefix}-negative-prompt`}
-          id={`${idPrefix}-negative-prompt`}
-          value={negativePromptValue}
-          onChange={(event) => {
-            growTextarea(event.target);
-            onChangeNegativePrompt?.(event.target.value);
-          }}
-          placeholder="Optional: describe what to avoid..."
-          rows={1}
-          className={FIELD_RECIPE}
+// Count control like OD: layers glyph plus the number. The menu
+// opens UPWARD over the content so it never covers the Generate
+// button below it. Rows the backend cannot serve stay disabled with
+// their tooltip. Open state is presentation-only; blur (focus leaving
+// the control) or Escape closes it, no document listeners.
+function CountMenu({ options, value, onChange, idPrefix }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef(null);
+  if (!options?.length) return null;
+  const selected = options.find((option) => option.value === value) || null;
+  const listId = `${idPrefix}-count-menu`;
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative inline-flex"
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget)) setIsOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setIsOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? listId : undefined}
+        aria-label={`Output count: ${selected?.label || value}`}
+        onClick={() => setIsOpen((current) => !current)}
+        className={`inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors ${
+          isOpen
+            ? "border-[var(--line)] text-[var(--ink)]"
+            : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+        }`}
+      >
+        <Layers size={16} aria-hidden="true" className="flex-none text-[var(--gold-ornament)]" />
+        <span className="tabular-nums text-[var(--gold-bright)]">{value}</span>
+        <ChevronUp
+          size={14}
+          aria-hidden="true"
+          className={`flex-none transition-transform duration-[var(--dur-fast)] ${isOpen ? "rotate-180" : ""}`}
         />
-      </label>
+      </button>
+
+      {isOpen ? (
+        <div
+          id={listId}
+          role="listbox"
+          aria-label="Output count"
+          className="absolute bottom-[calc(100%+var(--space-1))] left-0 z-50 min-w-[12rem] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)]"
+        >
+          {options.map((option) => {
+            const isSelected = option.value === value;
+            const disabled = Boolean(option.isDisabled);
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                disabled={disabled}
+                title={option.tooltip || undefined}
+                onClick={() => {
+                  onChange?.(option.value);
+                  setIsOpen(false);
+                }}
+                className={`flex min-h-[var(--control-sm)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+                  disabled
+                    ? "cursor-not-allowed text-[var(--ink-dim)] opacity-[var(--state-disabled-opacity)]"
+                    : isSelected
+                      ? "text-[var(--gold-bright)] hover:bg-[var(--state-hover-fill)]"
+                      : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+                }`}
+              >
+                <span className="tabular-nums">{option.label}</span>
+                {disabled && option.tooltip ? (
+                  <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">{option.tooltip}</span>
+                ) : isSelected ? (
+                  <Check size={14} aria-hidden="true" />
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }
 
-// Sticky footer: the count dropdown beside one Generate button that
-// reads "Generate", a coin glyph, and the cost. Block reasons are a
-// tooltip on the disabled button, never a helper paragraph.
+// Footer: a SIBLING of the scroll region, never inside it. The count
+// control on its own row, then Generate on its own line, reading
+// "Generate", a coin glyph, and the cost. Block reasons are the
+// disabled button's tooltip, never helper copy.
 function GenerateFooter({
   countOptions,
   countValue,
@@ -638,37 +793,30 @@ function GenerateFooter({
   const reasonId = `${idPrefix}-generate-reason`;
 
   return (
-    <div className="sticky bottom-0 z-10 -mx-[var(--space-4)] -mb-[var(--space-4)] mt-auto border-t border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
-      <div className="flex items-stretch gap-[var(--space-2)]">
-        {countOptions?.length ? (
-          <KitDropdownView
-            label="Count"
-            ariaLabel="Output count"
-            options={countOptions}
-            selectedValues={countValue ? [countValue] : []}
-            isMultiSelect={false}
-            onToggleOption={(value) => onChangeCount?.(value)}
-          />
-        ) : null}
-        <button
-          type="button"
-          onClick={() => onGenerate?.()}
-          disabled={isDisabled}
-          title={reason || undefined}
-          aria-describedby={reason ? reasonId : undefined}
-          className="cf-btn cf-btn--primary min-h-[var(--control-md)] flex-1 disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
-        >
-          <span>Generate</span>
-          {disabledReason ? null : isLoading ? (
-            <Loader2 size={15} className="animate-spin" aria-hidden="true" />
-          ) : (
-            <Coins size={15} aria-hidden="true" />
-          )}
-          {disabledReason || !generateCostLabel ? null : (
-            <span className="tabular-nums">{generateCostLabel}</span>
-          )}
-        </button>
-      </div>
+    <div className="flex flex-none flex-col gap-[var(--space-3)] border-t border-[var(--line-whisper)] px-[var(--space-5)] py-[var(--space-4)]">
+      {countOptions?.length ? (
+        <div className="flex">
+          <CountMenu options={countOptions} value={countValue} onChange={onChangeCount} idPrefix={idPrefix} />
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={() => onGenerate?.()}
+        disabled={isDisabled}
+        title={reason || undefined}
+        aria-describedby={reason ? reasonId : undefined}
+        className="cf-btn cf-btn--primary min-h-[var(--control-md)] w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+      >
+        <span>Generate</span>
+        {disabledReason ? null : isLoading ? (
+          <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+        ) : (
+          <Coins size={15} aria-hidden="true" />
+        )}
+        {disabledReason || !generateCostLabel ? null : (
+          <span className="tabular-nums">{generateCostLabel}</span>
+        )}
+      </button>
       {reason ? (
         <span id={reasonId} className="sr-only">
           {reason}
@@ -694,7 +842,7 @@ function VideoBlock({
   idPrefix,
 }) {
   return (
-    <div className="flex flex-col gap-[var(--space-4)]">
+    <div className="flex flex-col gap-[var(--space-5)]">
       <div className="flex flex-wrap gap-[var(--space-2)]">
         {videoOptionFields.map((field) => (
           <KitDropdownView
@@ -773,101 +921,105 @@ export default function KitImageCreatorPanelView({
   const isVideoMode = mode === "VIDEO";
   const isRemixStage = stage === "REMIX";
   // Unique per mounted instance: the Media Studio page composes the
-  // rail (desktop, CSS-hidden below 1100px) and the mobile modal
+  // rail (desktop, CSS-hidden below 1100px) and the mobile sheet
   // simultaneously, so static ids would collide in the DOM.
   const idPrefix = useId();
 
   return (
-    <div className="flex min-h-full flex-col gap-[var(--space-4)]">
-      <ModeToggle
-        mode={mode}
-        onChangeMode={onChangeMode}
-        videoDisabled={videoDisabled}
-        videoSoonLabel={videoSoonLabel}
-      />
+    <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-5)]">
+        <div className="flex min-w-0 flex-col gap-[var(--space-6)]">
+          <ModeToggle
+            mode={mode}
+            onChangeMode={onChangeMode}
+            videoDisabled={videoDisabled}
+            videoSoonLabel={videoSoonLabel}
+          />
 
-      {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
+          {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
 
-      {isRemixStage && !isVideoMode ? (
-        <RemixStage />
-      ) : (
-        <div className="grid grid-cols-2 gap-[var(--space-3)]">
-          {SLOT_DEFS.map((def) => {
-            const state = slots?.[def.id] || EMPTY_SLOT_STATE;
-            return state.isCustomMode ? (
-              <CustomSlotEditor
-                key={def.id}
-                def={def}
-                state={state}
-                onChangeText={onCustomChangeText}
-                onBackToPresets={onCustomBackToPresets}
-                onSavePreset={onCustomSavePreset}
-                onClear={onSlotClear}
+          {isRemixStage && !isVideoMode ? (
+            <RemixStage />
+          ) : (
+            <div className="grid grid-cols-2 gap-[var(--space-3)]">
+              {SLOT_DEFS.map((def) => {
+                const state = slots?.[def.id] || EMPTY_SLOT_STATE;
+                return state.isCustomMode ? (
+                  <CustomSlotEditor
+                    key={def.id}
+                    def={def}
+                    state={state}
+                    onChangeText={onCustomChangeText}
+                    onBackToPresets={onCustomBackToPresets}
+                    onSavePreset={onCustomSavePreset}
+                    onClear={onSlotClear}
+                    idPrefix={idPrefix}
+                  />
+                ) : (
+                  <SlotTile
+                    key={def.id}
+                    def={def}
+                    state={state}
+                    onActivate={onSlotActivate}
+                    onClear={onSlotClear}
+                  />
+                );
+              })}
+            </div>
+          )}
+
+          {isVideoMode ? (
+            <VideoBlock
+              videoOptionFields={videoOptionFields}
+              onChangeVideoOption={onChangeVideoOption}
+              videoDirectionValue={videoDirectionValue}
+              onChangeVideoDirection={onChangeVideoDirection}
+              idPrefix={idPrefix}
+            />
+          ) : isRemixStage ? null : (
+            <>
+              <label className="block">
+                <FieldCaption note="(optional)">Custom prompt</FieldCaption>
+                <textarea
+                  ref={growTextarea}
+                  name={`${idPrefix}-prompt`}
+                  id={`${idPrefix}-prompt`}
+                  value={promptValue}
+                  onChange={(event) => {
+                    growTextarea(event.target);
+                    onChangePrompt?.(event.target.value);
+                  }}
+                  placeholder="Enter a custom prompt..."
+                  rows={1}
+                  className={FIELD_RECIPE}
+                />
+              </label>
+
+              <ImageSettings
+                renderStyleRailProps={renderStyleRailProps}
+                optionFields={optionFields}
+                onChangeOption={onChangeOption}
+                advancedTuningProps={advancedTuningProps}
+                negativePromptValue={negativePromptValue}
+                onChangeNegativePrompt={onChangeNegativePrompt}
+                cameraPresetLabel={cameraPresetLabel}
+                cameraPresetDescription={cameraPresetDescription}
+                onOpenCameraPresetPicker={onOpenCameraPresetPicker}
+                showSceneryOnlyHelper={showSceneryOnlyHelper}
+                sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
+                onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
                 idPrefix={idPrefix}
               />
-            ) : (
-              <SlotTile
-                key={def.id}
-                def={def}
-                state={state}
-                onActivate={onSlotActivate}
-                onClear={onSlotClear}
-              />
-            );
-          })}
+            </>
+          )}
+
+          {generationError ? (
+            <p role="alert" className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
+              {generationError}
+            </p>
+          ) : null}
         </div>
-      )}
-
-      {isVideoMode ? (
-        <VideoBlock
-          videoOptionFields={videoOptionFields}
-          onChangeVideoOption={onChangeVideoOption}
-          videoDirectionValue={videoDirectionValue}
-          onChangeVideoDirection={onChangeVideoDirection}
-          idPrefix={idPrefix}
-        />
-      ) : isRemixStage ? null : (
-        <>
-          <label className="block">
-            <FieldCaption note="(optional)">Custom prompt</FieldCaption>
-            <textarea
-              ref={growTextarea}
-              name={`${idPrefix}-prompt`}
-              id={`${idPrefix}-prompt`}
-              value={promptValue}
-              onChange={(event) => {
-                growTextarea(event.target);
-                onChangePrompt?.(event.target.value);
-              }}
-              placeholder="Enter a custom prompt..."
-              rows={1}
-              className={FIELD_RECIPE}
-            />
-          </label>
-
-          <InlineOptions
-            renderStyleRailProps={renderStyleRailProps}
-            optionFields={optionFields}
-            onChangeOption={onChangeOption}
-            advancedTuningProps={advancedTuningProps}
-            negativePromptValue={negativePromptValue}
-            onChangeNegativePrompt={onChangeNegativePrompt}
-            cameraPresetLabel={cameraPresetLabel}
-            cameraPresetDescription={cameraPresetDescription}
-            onOpenCameraPresetPicker={onOpenCameraPresetPicker}
-            showSceneryOnlyHelper={showSceneryOnlyHelper}
-            sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
-            onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
-            idPrefix={idPrefix}
-          />
-        </>
-      )}
-
-      {generationError ? (
-        <p role="alert" className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
-          {generationError}
-        </p>
-      ) : null}
+      </div>
 
       <GenerateFooter
         countOptions={isVideoMode ? [] : countOptions}
