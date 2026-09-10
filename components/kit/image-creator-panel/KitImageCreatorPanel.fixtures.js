@@ -65,12 +65,12 @@ export const ASPECT_RATIO_OPTIONS = [
 export const COUNT_OPTIONS = [
   { value: "2", label: "2 images" },
   { value: "4", label: "4 images" },
-  { value: "8", label: "8 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "16", label: "16 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "32", label: "32 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "64", label: "64 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "128", label: "128 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
-  { value: "256", label: "256 images", isDisabled: true, tooltip: NOT_AVAILABLE_LABEL },
+  { value: "8", label: "8 images", isDisabled: true, tooltip: "Soon" },
+  { value: "16", label: "16 images", isDisabled: true, tooltip: "Soon" },
+  { value: "32", label: "32 images", isDisabled: true, tooltip: "Soon" },
+  { value: "64", label: "64 images", isDisabled: true, tooltip: "Soon" },
+  { value: "128", label: "128 images", isDisabled: true, tooltip: "Soon" },
+  { value: "256", label: "256 images", isDisabled: true, tooltip: "Soon" },
 ];
 
 export const VIDEO_DURATION_OPTIONS = [

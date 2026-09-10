@@ -23,6 +23,11 @@ import {
 // gaps listed in docs/handoffs/MEDIA-STUDIO-BACKEND.md).
 const NOT_AVAILABLE_LABEL = "Not available yet";
 
+// Output-count rows the backend cannot serve read "Soon", RULED
+// 10 Sep 2026 (browser review round 6, screenshot): the short chip
+// leaves the count label room, matching the Video toggle's Soon.
+const COUNT_SOON_LABEL = "Soon";
+
 // Sentence-case display labels for the inline option dropdowns
 // (Brian's note 2). Ids and handlers are unchanged (contract law).
 const INLINE_OPTION_LABELS = Object.freeze({
@@ -137,7 +142,7 @@ export function useImagesV2LiveViewModel({
     return {
       value: String(option.value),
       label: String(option.label),
-      ...(isDisabled ? { isDisabled: true, tooltip: NOT_AVAILABLE_LABEL } : {}),
+      ...(isDisabled ? { isDisabled: true, tooltip: COUNT_SOON_LABEL } : {}),
     };
   });
   const countValue = String(composerProps.imageCount || "");

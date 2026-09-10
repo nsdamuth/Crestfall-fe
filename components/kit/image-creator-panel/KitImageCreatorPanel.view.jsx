@@ -19,13 +19,13 @@ import {
   ChevronDown,
   ChevronUp,
   Coins,
+  Footprints,
   Image as ImageIcon,
   Info,
   Layers,
   Library,
   Loader2,
   MapPin,
-  PersonStanding,
   Save,
   Shirt,
   SlidersHorizontal,
@@ -39,7 +39,7 @@ import KitDropdownView from "../dropdown/KitDropdown.view";
 
 const SLOT_DEFS = [
   { id: "character", label: "Character", icon: Users, requirement: "required", savable: false, spanRow: true },
-  { id: "pose", label: "Pose", icon: PersonStanding, requirement: "optional", savable: true, spanRow: false },
+  { id: "pose", label: "Pose", icon: Footprints, requirement: "optional", savable: true, spanRow: false },
   { id: "outfit", label: "Outfit", icon: Shirt, requirement: "optional", savable: true, spanRow: false },
   { id: "location", label: "Location", icon: MapPin, requirement: "optional", savable: true, spanRow: false },
   { id: "preset", label: "Preset", icon: Sparkles, requirement: "optional", savable: true, spanRow: false },
@@ -154,7 +154,11 @@ function MenuRow({ label, isSelected, disabled = false, tooltip = "", onSelect }
     >
       <span className="min-w-0 truncate">{label}</span>
       {disabled && tooltip ? (
-        <span className="flex-none text-[length:var(--text-label)] text-[var(--ink-faint)]">{tooltip}</span>
+        // Same treatment as the Video toggle's Soon chip: one "Soon"
+        // look across the composer (round 6, 10 Sep 2026).
+        <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          {tooltip}
+        </span>
       ) : isSelected ? (
         <Check size={14} aria-hidden="true" className="flex-none" />
       ) : null}
@@ -273,12 +277,20 @@ function SettingSelect({
 // "i" circle with a hover or tap tooltip (the InfoTip recipe from the
 // character creator, inline; the shared tooltip component is CR-047,
 // still open). Tap toggles, blur or Escape hides; no effects.
+//
+// Anchoring, RULED 10 Sep 2026 (browser review round 6, screenshot):
+// the wrapper is deliberately NOT positioned, so the tooltip anchors
+// to the nearest positioned ancestor, the full-width slider row. It
+// opens directly above that row, right-aligned to the row's edge, so
+// it sits above and to the right of the "i" and stays inside the
+// panel instead of running off the left edge as it did when anchored
+// to the icon itself.
 function InfoTip({ label, text }) {
   const [open, setOpen] = useState(false);
   if (!text) return null;
 
   return (
-    <span className="group/tip relative inline-flex">
+    <span className="group/tip inline-flex">
       <button
         type="button"
         aria-label={label}
@@ -468,14 +480,14 @@ function SlotTile({ def, state, onActivate, onClear }) {
 
         <span className="absolute inset-x-[var(--space-2)] bottom-[var(--space-2)] min-w-0 text-center">
           <span
-            className={`block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] ${
+            className={`block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] ${
               imageSrc ? "text-[var(--art-ink)]" : "text-[var(--ink)]"
             }`}
           >
             {title}
           </span>
           {!hasSelection ? (
-            <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
               ({def.requirement})
             </span>
           ) : null}
@@ -681,7 +693,8 @@ function AdvancedTuning({ tuning, idPrefix }) {
               control.defaultValue !== undefined &&
               Number(control.value) !== Number(control.defaultValue);
             return (
-              <div key={control.id} className="min-w-0">
+              // `relative` is the InfoTip tooltip's anchor (see InfoTip).
+              <div key={control.id} className="relative min-w-0">
                 <div className="flex items-center justify-between gap-[var(--space-2)]">
                   <span className="inline-flex min-w-0 items-center gap-[var(--space-1)]">
                     <label

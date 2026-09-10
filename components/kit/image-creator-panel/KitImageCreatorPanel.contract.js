@@ -46,7 +46,8 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {string} label
  * @property {boolean} [isDisabled] true for counts the backend cannot
  *   serve yet; the row renders disabled
- * @property {string} [tooltip] the disabled reason, "Not available yet"
+ * @property {string} [tooltip] the disabled reason, rendered as the
+ *   row's trailing chip; "Soon" for counts (RULED 10 Sep 2026, round 6)
  *
  * @typedef {Object} KitImageCreatorRailStop
  * @property {string} value

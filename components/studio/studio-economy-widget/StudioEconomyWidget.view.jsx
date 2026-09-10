@@ -33,7 +33,7 @@ function UtilityModal({ title = "", body = "", onClose = null }) {
         <button
           type="button"
           onClick={() => onClose?.()}
-          className="cf-btn cf-btn--primary mt-5 w-full"
+          className="cf-btn cf-btn--primary mt-5 h-[var(--control-filter)] w-full text-[length:var(--text-ui)]"
         >
           Got it
         </button>
@@ -168,7 +168,11 @@ export default function StudioEconomyWidgetView({
         <button
           type="button"
           onClick={() => onOpenBuyInfo?.()}
-          className="cf-btn cf-btn--primary mt-[var(--space-2)] w-full"
+          // Slightly smaller than the stock primary, RULED 10 Sep 2026
+          // (browser review round 6, screenshot): height one step down to
+          // --control-filter and the label at --text-ui, both tokens; the
+          // gold recipe, full block width, and label are unchanged.
+          className="cf-btn cf-btn--primary mt-[var(--space-2)] h-[var(--control-filter)] w-full text-[length:var(--text-ui)]"
         >
           {UPGRADE_LABEL}
         </button>
