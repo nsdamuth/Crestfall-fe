@@ -10,6 +10,8 @@
 // menu the composer opens. Additive: `href` renders a row as a
 // download anchor instead of a button, `detail` renders a quiet
 // right-hand note (the measured pixel size on the Large row).
+// Session 4: `imageSrc` renders a small square thumbnail before the
+// label (the @ mention list inside the composer's second-stage prompt).
 import { Check } from "lucide-react";
 
 export const MENU_PANEL_RECIPE =
@@ -28,10 +30,20 @@ function rowInkClass({ disabled, isSelected }) {
   return "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]";
 }
 
-function MenuRowContent({ label, detail, isSelected, disabled, tooltip }) {
+function MenuRowContent({ label, detail, imageSrc, isSelected, disabled, tooltip }) {
   return (
     <>
-      <span className="min-w-0 truncate">{label}</span>
+      <span className="flex min-w-0 items-center gap-[var(--space-2)]">
+        {imageSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageSrc}
+            alt=""
+            className="h-6 w-6 flex-none rounded-[var(--radius-xs)] border border-[var(--line-whisper)] object-cover"
+          />
+        ) : null}
+        <span className="min-w-0 truncate">{label}</span>
+      </span>
       {disabled && tooltip ? (
         // Same treatment as the Video toggle's Soon chip: one "Soon"
         // look across the composer (round 6, 10 Sep 2026).
@@ -55,6 +67,7 @@ export function MenuRow({
   disabled = false,
   tooltip = "",
   detail = "",
+  imageSrc = "",
   href = "",
   downloadName = "",
   onSelect,
@@ -64,6 +77,7 @@ export function MenuRow({
     <MenuRowContent
       label={label}
       detail={detail}
+      imageSrc={imageSrc}
       isSelected={isSelected}
       disabled={disabled}
       tooltip={tooltip}

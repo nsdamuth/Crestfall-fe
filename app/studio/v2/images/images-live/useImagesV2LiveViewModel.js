@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
@@ -11,11 +11,15 @@ import {
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import {
   IMAGE_COUNT_BACKEND_MAX,
+  REMIX_MAX_CHARACTERS,
   cameraPresetCatalog,
   cameraPresetGroups,
   getCameraPresetDefinition,
   imageCountOptions,
   ingredientSlots,
+  remixCharacterSlots,
+  remixIngredientSlots,
+  remixLocationSlots,
   videoAspectRatioOptions,
   videoDurationOptions,
   videoMotionStyleOptions,
@@ -80,8 +84,45 @@ function normalizeOptions(options = []) {
   }));
 }
 
+// The composer's five slots plus the Remix slots (session 4) are all
+// ordinary ingredient slots in the workbench; the picker and the
+// custom modal key on the slot object either way.
+const ALL_SLOTS = [...ingredientSlots, ...remixIngredientSlots];
+
 function getSlot(slotId) {
-  return ingredientSlots.find((slot) => slot.id === slotId) || null;
+  return ALL_SLOTS.find((slot) => slot.id === slotId) || null;
+}
+
+// A once-only custom description is a normal selection on the tile,
+// titled Custom (note 4: no inline text mode). Tapping the tile
+// reopens the picker, where the Custom card reads selected and
+// reopens the modal with this text.
+function projectSelection(value, slot, customText) {
+  if (!value) return null;
+  if (value.custom) {
+    return {
+      id: String(value.id || `custom-${slot.id}`),
+      title: "Custom",
+      subtitle: customText,
+      imageSrc: "",
+    };
+  }
+  return {
+    id: String(value.id || ""),
+    title: String(value.title || slot.label),
+    subtitle: String(value.subtitle || value.type || ""),
+    imageSrc: String(
+      getFirstCreationMediaUrl(value.featuredMedia || value.featured_media || [], {
+        variant: "thumbnail",
+        fallback:
+          value.thumbnailUrl ||
+          value.thumbnail_url ||
+          value.imageUrl ||
+          value.image_url ||
+          "",
+      }) || ""
+    ),
+  };
 }
 
 function projectSlotStates(composerProps) {
@@ -93,47 +134,121 @@ function projectSlotStates(composerProps) {
       const value = selected[slot.id] || null;
       const customText = String(customPrompts[slot.id] || "");
 
-      // A once-only custom description is a normal selection on the
-      // tile, titled Custom (note 4: no inline text mode). Tapping the
-      // tile reopens the picker, where the Custom card reads selected
-      // and reopens the modal with this text.
       return [
         slot.id,
         {
-          selection: value?.custom
-            ? {
-                id: String(value.id || `custom-${slot.id}`),
-                title: "Custom",
-                subtitle: customText,
-                imageSrc: "",
-              }
-            : value
-            ? {
-                id: String(value.id || ""),
-                title: String(value.title || slot.label),
-                subtitle: String(value.subtitle || value.type || ""),
-                imageSrc: String(
-                  getFirstCreationMediaUrl(
-                    value.featuredMedia || value.featured_media || [],
-                    {
-                      variant: "thumbnail",
-                      fallback:
-                        value.thumbnailUrl ||
-                        value.thumbnail_url ||
-                        value.imageUrl ||
-                        value.image_url ||
-                        "",
-                    }
-                  ) || ""
-                ),
-              }
-            : null,
+          selection: projectSelection(value, slot, customText),
           isCustomMode: false,
           customText,
         },
       ];
     })
   );
+}
+
+// Remix (session 4, notes 5, 5a, 5b; RULED A and A of three at the
+// plan gate): its own slots, independent of Generate's, sharing only
+// the picker, the custom modal, the count, and the footer. Mention
+// handles bind to slot position (@img1 is slot 1 for the life of the
+// selection); the location is @location. The limit line is the one
+// place the number is written, computed from the constant.
+const REMIX_ADD_LIMIT_LABEL = `Up to ${REMIX_MAX_CHARACTERS} characters`;
+
+function getRemixMention(slot) {
+  return slot.remixKind === "location" ? "@location" : `@img${slot.remixPosition}`;
+}
+
+function projectRemix({ composerProps, remixPrompt, setRemixPrompt, requestedCount }) {
+  const selected = composerProps?.selectedIngredients || {};
+  const customPrompts = composerProps?.customIngredientPrompts || {};
+  const remixCoinCost = Number(composerProps?.remixCoinCost ?? 0) || 0;
+  const coinBalance = Number(composerProps?.coinBalance ?? 0) || 0;
+
+  const references = remixCharacterSlots
+    .map((slot) => {
+      const selection = projectSelection(
+        selected[slot.id] || null,
+        slot,
+        String(customPrompts[slot.id] || "")
+      );
+      return selection
+        ? { slotId: slot.id, position: slot.remixPosition, mention: getRemixMention(slot), selection }
+        : null;
+    })
+    .filter(Boolean);
+
+  const locationSlot = remixLocationSlots[0];
+  const location = {
+    slotId: locationSlot.id,
+    mention: getRemixMention(locationSlot),
+    selection: projectSelection(
+      selected[locationSlot.id] || null,
+      locationSlot,
+      String(customPrompts[locationSlot.id] || "")
+    ),
+  };
+
+  const firstEmptyCharacterSlot =
+    remixCharacterSlots.find((slot) => !selected[slot.id]) || null;
+  const requestCoinCost = remixCoinCost * requestedCount;
+  const hasEnoughCoins = coinBalance >= requestCoinCost;
+  const hasPrompt = String(remixPrompt || "").trim().length > 0;
+
+  // Block reasons in Generate's order and voice: coins, then inputs.
+  const blockReason = !hasEnoughCoins
+    ? `You need at least ${requestCoinCost} coins to remix ${
+        requestedCount === 1 ? "an image" : `${requestedCount} images`
+      }.`
+    : references.length === 0
+      ? "Add at least one character before generating."
+      : !hasPrompt
+        ? "Describe the scene before generating."
+        : "";
+
+  return {
+    references,
+    canAddCharacter: Boolean(firstEmptyCharacterSlot),
+    addLimitLabel: REMIX_ADD_LIMIT_LABEL,
+    location,
+    onAddCharacter: () => {
+      if (firstEmptyCharacterSlot) composerProps.onOpenIngredient?.(firstEmptyCharacterSlot);
+    },
+    onChangeCharacter: (slotId) => {
+      const slot = getSlot(slotId);
+      if (slot) composerProps.onOpenIngredient?.(slot);
+    },
+    onRemoveCharacter: (slotId) => composerProps.onClearIngredient?.(slotId),
+    onSelectLocation: () => composerProps.onOpenIngredient?.(locationSlot),
+    onClearLocation: () => composerProps.onClearIngredient?.(locationSlot.id),
+    promptValue: remixPrompt,
+    onChangePrompt: setRemixPrompt,
+    mentionOptions: [
+      ...references.map((reference) => ({
+        mention: reference.mention,
+        title: reference.selection.title,
+        imageSrc: reference.selection.imageSrc || "",
+      })),
+      ...(location.selection
+        ? [
+            {
+              mention: location.mention,
+              title: location.selection.title,
+              imageSrc: location.selection.imageSrc || "",
+            },
+          ]
+        : []),
+    ],
+    generateCostLabel: String(requestCoinCost),
+    canGenerate: !blockReason,
+    generationHelpText: blockReason,
+    // The Chassis generation job holds one character and rejects a
+    // second (IMAGE_GENERATION_MULTIPLE_VISUAL_SUBJECTS_NOT_SUPPORTED)
+    // and reads no reference list; Remix Generate renders Soon until
+    // the job in docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 13 lands.
+    // Nothing fakes a result or spends coins.
+    available: false,
+    onGenerate: null,
+  };
 }
 
 export function useImagesV2LiveViewModel({
@@ -145,6 +260,9 @@ export function useImagesV2LiveViewModel({
   const workbench = useImageStudioWorkbenchViewModel({ account });
   const { composerProps } = workbench;
   const { renderStyle, setRenderStyle } = composerProps;
+  // The Remix prompt is page state: the rail and the sheet both read
+  // this one panelProps, so it survives the width change.
+  const [remixPrompt, setRemixPrompt] = useState("");
 
   useEffect(() => {
     if (renderStyle === "auto") {
@@ -188,6 +306,8 @@ export function useImagesV2LiveViewModel({
   const requestedCount = Math.max(1, Number.parseInt(countValue, 10) || 1);
   const perImageCoinCost = Number(composerProps.coinCost ?? 0) || 0;
   const generateCostLabel = String(requestedCount * perImageCoinCost);
+
+  const remix = projectRemix({ composerProps, remixPrompt, setRemixPrompt, requestedCount });
 
   const videoModeOption = composer.modeOptions.find((option) => option.id === "VIDEO");
   const videoDisabled = Boolean(videoModeOption?.disabled ?? true);
@@ -293,6 +413,7 @@ export function useImagesV2LiveViewModel({
       videoSoonLabel: "Soon",
       stage,
       onChangeStage,
+      remix,
       slots,
       onSlotActivate: activateSlot,
       onSlotClear: workbench.composerProps.onClearIngredient,

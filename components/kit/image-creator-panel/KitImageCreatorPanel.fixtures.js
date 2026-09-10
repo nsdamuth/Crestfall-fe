@@ -1,6 +1,7 @@
-// Fixture states, contract 2.0.0 (9 Sep 2026, FE/MEDIA-STUDIO):
-// default, emptySlots, insufficientCoins, customIngredient,
-// remixStage, videoMode, longestContent. Option lists mirror
+// Fixture states, contract 2.1.0 (9 Sep 2026, FE/MEDIA-STUDIO; Remix
+// 10 Sep 2026): default, emptySlots, insufficientCoins,
+// customIngredient, remixStage, remixFull, videoMode, longestContent.
+// Option lists mirror
 // components/studio/image-studio/imageStudioData.js verbatim (READ
 // ONLY reference, values copied not imported, since that package
 // belongs to the live composer and this kit piece never imports live
@@ -244,6 +245,57 @@ const customIngredientFixture = {
   },
 };
 
+// Remix fixtures (contract 2.1.0, session 4). Mention handles bind to
+// slot position; the limit line and the cost label are pre-computed
+// by the caller (here: a six-character limit and a count of 2 at the
+// proposed per-image cost).
+const REMIX_REFERENCES = [
+  { slotId: "remixCharacter1", position: 1, mention: "@img1", selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" } },
+  { slotId: "remixCharacter2", position: 2, mention: "@img2", selection: { title: "Ilse of the Reeds", subtitle: "Character", imageSrc: "/assets/covers/crestfall-painting-cover.png" } },
+  { slotId: "remixCharacter3", position: 3, mention: "@img3", selection: { title: "Custom", subtitle: "A tall knight in white plate with a braided crest", imageSrc: "" } },
+];
+
+const REMIX_LOCATION = {
+  slotId: "remixLocation1",
+  mention: "@location",
+  selection: { title: "Throne Chamber", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" },
+};
+
+function baseRemixProps(overrides = {}) {
+  const references = overrides.references || REMIX_REFERENCES;
+  const location = overrides.location === undefined ? REMIX_LOCATION : overrides.location;
+  return {
+    references,
+    canAddCharacter: references.length < 6,
+    addLimitLabel: "Up to 6 characters",
+    location,
+    onAddCharacter: noop,
+    onChangeCharacter: noop,
+    onRemoveCharacter: noop,
+    onSelectLocation: noop,
+    onClearLocation: noop,
+    promptValue:
+      "@img1 relaxes on the throne while @img2 stands guard at her side and @img3 waits on the steps of @location, all looking to the viewer.",
+    onChangePrompt: noop,
+    mentionOptions: [
+      ...references.map((reference) => ({
+        mention: reference.mention,
+        title: reference.selection.title,
+        imageSrc: reference.selection.imageSrc,
+      })),
+      ...(location?.selection
+        ? [{ mention: location.mention, title: location.selection.title, imageSrc: location.selection.imageSrc }]
+        : []),
+    ],
+    generateCostLabel: "40",
+    canGenerate: true,
+    generationHelpText: "",
+    available: false,
+    onGenerate: null,
+    ...overrides,
+  };
+}
+
 const remixStageFixture = {
   id: "remixStage",
   label: "Remix stage",
@@ -255,6 +307,34 @@ const remixStageFixture = {
     promptValue: "",
     canGenerate: false,
     generationHelpText: "",
+    remix: baseRemixProps(),
+  },
+};
+
+const remixFullFixture = {
+  id: "remixFull",
+  label: "Remix at the limit",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    stage: "REMIX",
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    remix: baseRemixProps({
+      references: Array.from({ length: 6 }, (_, index) => ({
+        slotId: `remixCharacter${index + 1}`,
+        position: index + 1,
+        mention: `@img${index + 1}`,
+        selection: {
+          title: REMIX_REFERENCES[index % 2].selection.title,
+          subtitle: "Character",
+          imageSrc: REMIX_REFERENCES[index % 2].selection.imageSrc,
+        },
+      })),
+      location: { ...REMIX_LOCATION, selection: null },
+    }),
   },
 };
 
@@ -333,6 +413,7 @@ export const kitImageCreatorPanelFixtures = [
   insufficientCoinsFixture,
   customIngredientFixture,
   remixStageFixture,
+  remixFullFixture,
   videoModeFixture,
   longestContentFixture,
 ];

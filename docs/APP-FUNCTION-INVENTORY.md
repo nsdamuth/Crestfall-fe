@@ -531,3 +531,22 @@ viewer-reconciliation hold is lifted for this page by Brian's note 6;
 the legacy Images page and the creation image library keep
 `MediaLightbox` and their rows are unchanged. Backend gaps 8 to 12
 live in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
+
+## Media Studio Remix rows (FE/MEDIA-STUDIO session 4, 10 Sep 2026)
+
+The `/studio/v2/images` stage tabs row moves from stubbed to working
+and six Remix rows join the composer block: the reference tile
+(`@img1` to `@img6`), Add character (disabled at six with the line
+"Up to 6 characters"), Remove reference, the Location tile, the
+Custom prompt with its @ mention list, and Remix Generate (stubbed:
+Soon chip, coin glyph and count times 20, no handler). Remix slots
+are ordinary ingredient slots (`remixCharacter1` to `remixCharacter6`,
+`remixLocation1`, `components/studio/image-studio/imageStudioData.js`)
+living in the workbench's selection map beside Generate's five, so
+the shared asset picker, the custom asset modal, and every selection
+handler serve them unchanged (RULED A and A of three at the plan
+gate: filled-first three-across grid; Remix owns its own slots). The
+limits (6 and 1) and the cost (20) are one constant each; no View
+writes a number. The Remix job the frontend wants, and the per-image
+versus per-job cost question the session surfaced, are gaps 13 and 14
+in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.

@@ -26,9 +26,9 @@ import KitImageEditor from "../KitImageEditor";
 import { ImageFrame } from "../image-overlay/ImageFrame";
 import { InfoTip } from "../form-field/InfoTip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
+import { SoonChip } from "../form-field/SoonChip";
 
 const NOT_AVAILABLE_LABEL = "Not available yet";
-const SOON_LABEL = "Soon";
 
 const UPSCALE_TIP =
   "Makes a larger version for fine edits, banners, print, and use off site. The size it produces comes from the server.";
@@ -41,13 +41,8 @@ const VIEWER_IMAGE_CLASSES =
 const GLASS_BAR =
   "pointer-events-auto flex w-full self-stretch rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] backdrop-blur-[var(--blur-panel)]";
 
-function SoonChip() {
-  return (
-    <span className="ml-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-      {SOON_LABEL}
-    </span>
-  );
-}
+// The Soon chip lives in ../form-field/SoonChip.jsx since session 4,
+// shared with the composer.
 
 // Quiet-ink icon button, the header row (B7 family).
 function ViewerIconButton({ label, active = false, danger = false, expanded, onClick, children }) {

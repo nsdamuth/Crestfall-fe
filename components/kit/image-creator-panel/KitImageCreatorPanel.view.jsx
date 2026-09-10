@@ -25,6 +25,7 @@ import {
   Library,
   Loader2,
   MapPin,
+  Plus,
   Save,
   Shirt,
   SlidersHorizontal,
@@ -38,6 +39,7 @@ import KitDropdownView from "../dropdown/KitDropdown.view";
 import { growTextarea } from "../form-field/growTextarea";
 import { InfoTip, TOOLTIP_RECIPE } from "../form-field/InfoTip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
+import { SoonChip } from "../form-field/SoonChip";
 
 const SLOT_DEFS = [
   { id: "character", label: "Character", icon: Users, requirement: "required", savable: false, spanRow: true },
@@ -50,6 +52,14 @@ const SLOT_DEFS = [
 const EMPTY_SLOT_STATE = { selection: null, isCustomMode: false, customText: "" };
 
 const NOT_AVAILABLE_LABEL = "Not available yet";
+
+// The Remix location tile is the Generate Character tile's shape
+// (spans the row) with the Location glyph; optional, never glowing.
+const REMIX_LOCATION_DEF = { id: "remixLocation", label: "Location", icon: MapPin, requirement: "optional", savable: true, spanRow: true };
+
+// A mention starts at "@" after a space or the start of the text and
+// runs to the caret (letters, digits, underscore).
+const ACTIVE_MENTION_PATTERN = /(^|\s)@(\w*)$/;
 
 const FIELD_RECIPE =
   "mt-[var(--space-2)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-faint)]";
@@ -895,11 +905,18 @@ function GenerateFooter({
   generationStatus,
   onGenerate,
   disabledReason,
+  soon = false,
   idPrefix,
 }) {
   const isLoading = generationStatus === "loading";
   const isDisabled = !canGenerate;
-  const reason = disabledReason || (isDisabled ? generationHelpText : "");
+  // Soon (Remix until the Chassis carries the job): the button keeps
+  // its coin glyph and cost, gains the Soon chip, and its title reads
+  // "Not available yet" ahead of any coin or input reason.
+  const reason =
+    disabledReason ||
+    (soon ? NOT_AVAILABLE_LABEL : "") ||
+    (isDisabled ? generationHelpText : "");
   const reasonId = `${idPrefix}-generate-reason`;
 
   return (
@@ -926,6 +943,7 @@ function GenerateFooter({
         {disabledReason || !generateCostLabel ? null : (
           <span className="tabular-nums">{generateCostLabel}</span>
         )}
+        {soon ? <SoonChip /> : null}
       </button>
       {reason ? (
         <span id={reasonId} className="sr-only">
@@ -936,11 +954,292 @@ function GenerateFooter({
   );
 }
 
-function RemixStage() {
+// A filled Remix reference: the art fills a square tile, the name sits
+// at the bottom, the @img handle sits top-left on the tag-over-art
+// recipe (the same bed the overlay clear button uses), the clear
+// button top-right. Tapping the art re-opens the picker for that
+// slot. Same surface rule as SlotTile (--surface-1 under 1100px).
+function RemixReferenceTile({ reference, onChange, onRemove }) {
+  const imageSrc = String(reference.selection?.imageSrc || "").trim();
+  const title = reference.selection?.title || "Character";
+
   return (
-    <div className="flex min-h-[8rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-      {NOT_AVAILABLE_LABEL}
+    <div className="group relative aspect-square min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] transition-colors max-[1099.98px]:bg-[var(--surface-1)]">
+      <button
+        type="button"
+        onClick={() => onChange?.(reference.slotId)}
+        aria-label={`Change ${reference.mention}: ${title}`}
+        className="absolute inset-0 w-full"
+      >
+        {imageSrc ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageSrc}
+              alt=""
+              className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02]"
+            />
+            <span
+              className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/95 via-black/70 to-transparent"
+              aria-hidden="true"
+            />
+          </>
+        ) : (
+          <>
+            <span
+              className="absolute inset-0 bg-[var(--fill-whisper)] transition-colors group-hover:bg-[var(--fill)]"
+              aria-hidden="true"
+            />
+            <span
+              className="absolute inset-0 flex items-center justify-center pb-[var(--space-6)]"
+              aria-hidden="true"
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] transition-colors group-hover:text-[var(--gold-ornament)]">
+                <Users size={18} />
+              </span>
+            </span>
+          </>
+        )}
+
+        <span className="absolute inset-x-[var(--space-2)] bottom-[var(--space-2)] min-w-0 text-center">
+          <span
+            className={`block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] font-[var(--weight-medium)] ${
+              imageSrc ? "text-[var(--art-ink)]" : "text-[var(--ink)]"
+            }`}
+          >
+            {title}
+          </span>
+        </span>
+      </button>
+
+      <span
+        aria-hidden="true"
+        className="absolute left-[var(--space-2)] top-[var(--space-2)] z-10 rounded-[var(--radius-xs)] border border-[var(--line)] bg-[var(--tag-bed-art)] px-[var(--space-2)] py-[2px] text-[length:var(--text-label)] leading-[var(--lh-label)] tabular-nums text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)]"
+      >
+        {reference.mention}
+      </span>
+
+      <div className="absolute right-[var(--space-2)] top-[var(--space-2)] z-10">
+        <ClearButton
+          overlay
+          label={`Remove ${reference.mention}: ${title}`}
+          onClick={() => onRemove?.(reference.slotId)}
+        />
+      </div>
     </div>
+  );
+}
+
+// The one add control. Past the limit it renders disabled reading the
+// caller's limit line ("Up to 6 characters"), RULED 10 Sep 2026.
+function AddCharacterTile({ canAdd, limitLabel, isRequired, onAdd }) {
+  return (
+    <button
+      type="button"
+      disabled={!canAdd}
+      title={canAdd ? undefined : limitLabel}
+      aria-label={canAdd ? "Add character" : limitLabel}
+      onClick={() => {
+        if (canAdd) onAdd?.();
+      }}
+      className={`group relative flex aspect-square min-w-0 flex-col items-center justify-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-dashed px-[var(--space-2)] text-center transition-colors max-[1099.98px]:bg-[var(--surface-1)] ${
+        canAdd
+          ? `bg-[var(--fill-whisper)] hover:border-[var(--line)] hover:bg-[var(--fill)] ${
+              isRequired
+                ? "border-[var(--gold-ornament)]/40 shadow-[var(--glow-hover)]"
+                : "border-[var(--line-whisper)]"
+            }`
+          : "cursor-not-allowed border-[var(--line-whisper)] bg-[var(--fill-whisper)] opacity-[var(--state-disabled-opacity)]"
+      }`}
+    >
+      <span className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] transition-colors group-hover:text-[var(--gold-ornament)]">
+        <Plus size={18} aria-hidden="true" />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] font-[var(--weight-medium)] text-[var(--ink)]">
+          {canAdd ? "Add character" : limitLabel}
+        </span>
+        {canAdd ? (
+          <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+            ({isRequired ? "required" : "optional"})
+          </span>
+        ) : null}
+      </span>
+    </button>
+  );
+}
+
+// The Remix prompt (note 5a): typing "@" opens the mention list
+// (the shared menu recipe with a thumbnail per row) filtered by the
+// letters after the "@"; choosing a row replaces them with the
+// mention and a space at the caret. Escape, blur, or a caret away
+// from an "@" closes it. Presentation only: the prompt text carries
+// the "@img1" handles and the caller sends it as typed.
+function RemixPrompt({ value, onChange, mentionOptions, idPrefix }) {
+  const [activeMention, setActiveMention] = useState(null);
+  const rootRef = useRef(null);
+  const textareaRef = useRef(null);
+  const listId = `${idPrefix}-remix-mention-list`;
+  const inputId = `${idPrefix}-remix-prompt`;
+
+  function readActiveMention(node) {
+    if (!node || !mentionOptions?.length) return null;
+    const caret = node.selectionStart ?? node.value.length;
+    const match = ACTIVE_MENTION_PATTERN.exec(node.value.slice(0, caret));
+    if (!match) return null;
+    return { start: caret - match[2].length - 1, end: caret, query: match[2].toLowerCase() };
+  }
+
+  function syncMention(node) {
+    setActiveMention(readActiveMention(node));
+  }
+
+  function chooseMention(option) {
+    const node = textareaRef.current;
+    if (!node || !activeMention) return;
+    const insertion = `${option.mention} `;
+    const nextValue =
+      node.value.slice(0, activeMention.start) +
+      insertion +
+      node.value.slice(activeMention.end);
+    const nextCaret = activeMention.start + insertion.length;
+    onChange?.(nextValue);
+    setActiveMention(null);
+    // Restore the caret after React re-renders the controlled value.
+    requestAnimationFrame(() => {
+      const current = textareaRef.current;
+      if (!current) return;
+      current.focus();
+      current.setSelectionRange(nextCaret, nextCaret);
+      growTextarea(current);
+    });
+  }
+
+  const visibleOptions = activeMention
+    ? (mentionOptions || []).filter((option) => {
+        if (!activeMention.query) return true;
+        return `${option.mention} ${option.title}`
+          .toLowerCase()
+          .includes(activeMention.query);
+      })
+    : [];
+  const isOpen = Boolean(activeMention) && visibleOptions.length > 0;
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget)) setActiveMention(null);
+      }}
+    >
+      <label htmlFor={inputId} className="block">
+        <SectionTitle note="(required)">Custom prompt</SectionTitle>
+      </label>
+      <textarea
+        ref={(node) => {
+          textareaRef.current = node;
+          growTextarea(node);
+        }}
+        name={inputId}
+        id={inputId}
+        value={value}
+        aria-autocomplete="list"
+        aria-controls={isOpen ? listId : undefined}
+        onChange={(event) => {
+          growTextarea(event.target);
+          onChange?.(event.target.value);
+          syncMention(event.target);
+        }}
+        onClick={(event) => syncMention(event.target)}
+        onKeyUp={(event) => {
+          if (event.key === "ArrowLeft" || event.key === "ArrowRight") syncMention(event.target);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setActiveMention(null);
+        }}
+        placeholder="Describe the scene. Type @ to mention a reference..."
+        rows={1}
+        className={FIELD_RECIPE}
+      />
+
+      {isOpen ? (
+        <div
+          id={listId}
+          role="listbox"
+          aria-label="Mention a reference"
+          className={`${MENU_PANEL_RECIPE} left-0 right-0 top-[calc(100%+var(--space-1))]`}
+        >
+          {visibleOptions.map((option) => (
+            <MenuRow
+              key={option.mention}
+              label={`${option.mention}  ${option.title}`}
+              imageSrc={option.imageSrc || ""}
+              onSelect={() => chooseMention(option)}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+// The Remix body (notes 5, 5a): a three-across reference grid, filled
+// slots first then the one Add tile, the Location tile under it, and
+// the prompt with the mention list. Null `remix` keeps the session 1
+// stub so the fixture-era consumers render as before.
+function RemixStage({ remix, idPrefix }) {
+  if (!remix) {
+    return (
+      <div className="flex min-h-[8rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--fill-whisper)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        {NOT_AVAILABLE_LABEL}
+      </div>
+    );
+  }
+
+  const references = remix.references || [];
+  const locationState = { ...EMPTY_SLOT_STATE, selection: remix.location?.selection || null };
+
+  return (
+    <>
+      <section className="min-w-0">
+        <SectionTitle note={remix.addLimitLabel ? `(${remix.addLimitLabel.toLowerCase()})` : ""}>
+          References
+        </SectionTitle>
+        <div className="mt-[var(--space-3)] grid grid-cols-3 gap-[var(--space-3)]">
+          {references.map((reference) => (
+            <RemixReferenceTile
+              key={reference.slotId}
+              reference={reference}
+              onChange={remix.onChangeCharacter}
+              onRemove={remix.onRemoveCharacter}
+            />
+          ))}
+          <AddCharacterTile
+            canAdd={Boolean(remix.canAddCharacter)}
+            limitLabel={remix.addLimitLabel || ""}
+            isRequired={references.length === 0}
+            onAdd={remix.onAddCharacter}
+          />
+        </div>
+      </section>
+
+      <div className="grid grid-cols-2 gap-[var(--space-3)]">
+        <SlotTile
+          def={REMIX_LOCATION_DEF}
+          state={locationState}
+          onActivate={() => remix.onSelectLocation?.()}
+          onClear={() => remix.onClearLocation?.()}
+        />
+      </div>
+
+      <RemixPrompt
+        value={remix.promptValue || ""}
+        onChange={remix.onChangePrompt}
+        mentionOptions={remix.mentionOptions || []}
+        idPrefix={idPrefix}
+      />
+    </>
   );
 }
 
@@ -994,6 +1293,7 @@ export default function KitImageCreatorPanelView({
   videoSoonLabel = "Soon",
   stage = "GENERATE",
   onChangeStage = null,
+  remix = null,
   slots = {},
   onSlotActivate = null,
   onSlotClear = null,
@@ -1031,6 +1331,10 @@ export default function KitImageCreatorPanelView({
 }) {
   const isVideoMode = mode === "VIDEO";
   const isRemixStage = stage === "REMIX";
+  // The live Remix stage (session 4) shares the footer with Generate:
+  // same count control, the Remix cost label, its own gate, and the
+  // Soon chip while the Chassis cannot run the job.
+  const remixActive = isRemixStage && !isVideoMode && Boolean(remix);
   // Unique per mounted instance: the Media Studio page composes the
   // rail (desktop, CSS-hidden below 1100px) and the mobile sheet
   // simultaneously, so static ids would collide in the DOM.
@@ -1050,7 +1354,7 @@ export default function KitImageCreatorPanelView({
           {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
 
           {isRemixStage && !isVideoMode ? (
-            <RemixStage />
+            <RemixStage remix={remix} idPrefix={idPrefix} />
           ) : (
             <div className="grid grid-cols-2 gap-[var(--space-3)]">
               {SLOT_DEFS.map((def) => {
@@ -1137,12 +1441,21 @@ export default function KitImageCreatorPanelView({
         countOptions={isVideoMode ? [] : countOptions}
         countValue={countValue}
         onChangeCount={onChangeCount}
-        generateCostLabel={generateCostLabel}
-        canGenerate={isVideoMode || isRemixStage ? false : canGenerate}
-        generationHelpText={generationHelpText}
+        generateCostLabel={remixActive ? remix.generateCostLabel : generateCostLabel}
+        canGenerate={
+          isVideoMode
+            ? false
+            : remixActive
+              ? Boolean(remix.available && remix.canGenerate)
+              : isRemixStage
+                ? false
+                : canGenerate
+        }
+        generationHelpText={remixActive ? remix.generationHelpText : generationHelpText}
         generationStatus={generationStatus}
-        onGenerate={onGenerate}
-        disabledReason={isVideoMode || isRemixStage ? NOT_AVAILABLE_LABEL : ""}
+        onGenerate={remixActive ? remix.onGenerate : onGenerate}
+        disabledReason={isVideoMode || (isRemixStage && !remixActive) ? NOT_AVAILABLE_LABEL : ""}
+        soon={remixActive && !remix.available}
         idPrefix={idPrefix}
       />
     </div>

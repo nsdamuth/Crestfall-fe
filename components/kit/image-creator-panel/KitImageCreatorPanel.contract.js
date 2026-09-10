@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit
@@ -18,6 +18,61 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * package (mirroring components/studio/image-studio/imageStudioData.js
  * ingredientSlots minus playerCharacter). The caller supplies only
  * each slot's live STATE through the `slots` map, keyed by id.
+ *
+ * 2.0.0 to 2.1.0, ADDITIVE (FE/MEDIA-STUDIO session 4, 10 Sep 2026,
+ * Brian's notes 5, 5a, 5b): one nested `remix` prop carries the whole
+ * Remix stage (references, location, prompt with @ mentions, cost,
+ * gate). Null keeps the session 1 stub ("Not available yet"). Limits
+ * and the cost are the caller's: this View writes no number; the
+ * "Up to N characters" line and the cost label arrive pre-computed.
+ *
+ * @typedef {Object} KitImageCreatorRemixReference
+ * @property {string} slotId the Remix character slot this reference
+ *   fills; reported back through onChangeCharacter / onRemoveCharacter
+ * @property {number} position 1-based slot position, stable for the
+ *   life of the selection (a cleared slot leaves a gap the next Add
+ *   fills, so a prompt's @img mention keeps pointing at its character)
+ * @property {string} mention the prompt handle, "@img1" to "@img6"
+ * @property {{title: string, subtitle?: string, imageSrc?: string}} selection
+ *   display-ready; imageSrc empty for a once-only custom character
+ *
+ * @typedef {Object} KitImageCreatorRemixMentionOption
+ * @property {string} mention "@img1" or "@location"
+ * @property {string} title the asset's name
+ * @property {string} [imageSrc]
+ *
+ * @typedef {Object} KitImageCreatorRemixProps
+ * @property {KitImageCreatorRemixReference[]} references filled
+ *   character slots in slot order
+ * @property {boolean} canAddCharacter false past the limit; the Add
+ *   tile renders disabled reading addLimitLabel
+ * @property {string} addLimitLabel "Up to 6 characters", computed by
+ *   the caller from its one limit constant
+ * @property {{slotId: string, mention: string, selection: {title: string, subtitle?: string, imageSrc?: string}|null}} location
+ *   the one location slot (mention "@location")
+ * @property {(() => void)|null} onAddCharacter opens the shared asset
+ *   picker for the first empty character slot
+ * @property {((slotId: string) => void)|null} onChangeCharacter
+ *   re-opens the picker for a filled slot
+ * @property {((slotId: string) => void)|null} onRemoveCharacter
+ * @property {(() => void)|null} onSelectLocation opens the picker for
+ *   the location slot
+ * @property {(() => void)|null} onClearLocation
+ * @property {string} promptValue the Remix prompt (required); "@" opens
+ *   the mention list, choosing a row inserts its mention at the caret
+ * @property {((value: string) => void)|null} onChangePrompt
+ * @property {KitImageCreatorRemixMentionOption[]} mentionOptions the
+ *   filled references plus the location when filled
+ * @property {string} generateCostLabel count times the Remix cost,
+ *   pre-computed by the caller
+ * @property {boolean} canGenerate honest gate (coins, at least one
+ *   character, a prompt), pre-computed by the caller
+ * @property {string} generationHelpText the block reason, the disabled
+ *   button's tooltip and accessible description
+ * @property {boolean} available false renders the Soon treatment on
+ *   the footer button (disabled, coin glyph and cost, Soon chip, title
+ *   "Not available yet") until the Chassis carries the Remix job
+ * @property {(() => void)|null} onGenerate
  *
  * @typedef {"character"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
  *
@@ -66,6 +121,8 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {"GENERATE"|"REMIX"} stage which stage tab is active;
  *   the caller owns the value (page-local presentation state)
  * @property {((stage: "GENERATE"|"REMIX") => void)|null} onChangeStage
+ * @property {KitImageCreatorRemixProps|null} [remix] the Remix stage
+ *   body and footer values (2.1.0); null renders the stub
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
  *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot

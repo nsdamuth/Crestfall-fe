@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import {
   getCameraPresetPrompt,
   getLegacyCameraPresetValue,
+  ingredientSlots,
   normalizeCameraPresetValue,
+  remixIngredientSlots,
+  remixLocationSlots,
 } from "../imageStudioData.js";
 import {
   LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT,
@@ -33,6 +36,21 @@ export const IMAGE_GENERATION_COIN_COST = 5;
 // prices (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 2).
 export const UPSCALE_COIN_COST = 10;
 export const EDIT_RUN_COIN_COST = 20;
+
+// Remix cost per image (FE/MEDIA-STUDIO session 4, note 5), proposed,
+// pending Nick's cost table (docs/handoffs/MEDIA-STUDIO-BACKEND.md
+// gap 13); the number lives here only. Read by the page adapter through
+// composerProps.remixCoinCost the way the composer reads coinCost;
+// the coin gate follows count times this number exactly as Generate.
+export const REMIX_COIN_COST = 20;
+
+// The Media Studio workbench serves the five composer slots plus the
+// Remix slots (session 4); each Remix slot is an ordinary ingredient
+// slot with its own id, so every handler below works for it unchanged.
+const WORKBENCH_INGREDIENT_SLOTS = Object.freeze([
+  ...ingredientSlots,
+  ...remixIngredientSlots,
+]);
 
 export const ASPECT_RATIO_BY_COMPOSER_VALUE = Object.freeze({
   PORTRAIT_4_5: "4:5",
@@ -69,6 +87,10 @@ export const PRESET_CREATION_TYPE_BY_SLOT_ID = Object.freeze({
   outfit: "OUTFIT",
   location: "LOCATION",
   preset: "IMAGE_PRESET",
+  // The Remix location's Custom modal saves a Location preset exactly
+  // like Generate's (session 4); Remix characters have no preset type,
+  // same as Character.
+  ...Object.fromEntries(remixLocationSlots.map((slot) => [slot.id, "LOCATION"])),
 });
 
 export function getLegacyRenderingStyle(renderProfileKey) {
@@ -557,7 +579,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     ? ingredientSourceBySlot[pickerSlot.id] || "MINE"
     : "MINE";
   const { ingredientOptionsBySlot, ingredientLoadError } =
-    useImageStudioIngredientOptions({ sourceMode: pickerSourceMode });
+    useImageStudioIngredientOptions({
+      sourceMode: pickerSourceMode,
+      slots: WORKBENCH_INGREDIENT_SLOTS,
+    });
 
   const {
     generationStatus,
@@ -917,6 +942,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       generationHelpText: imageGenerationHelpText,
       coinBalance,
       coinCost: IMAGE_GENERATION_COIN_COST,
+      remixCoinCost: REMIX_COIN_COST,
       coinStatus,
       coinError,
       hasEnoughCoins,

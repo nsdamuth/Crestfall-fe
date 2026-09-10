@@ -1,6 +1,6 @@
 # Kit Image Creator Panel LOOM package (the Media Studio composer)
 
-**Contract:** `KitImageCreatorPanel.contract.js` (`2.0.0`, 9 Sep 2026)
+**Contract:** `KitImageCreatorPanel.contract.js` (`2.1.0`, 10 Sep 2026; Remix additive over 2.0.0 of 9 Sep 2026)
 
 ## Purpose
 
@@ -35,9 +35,10 @@ Nothing inside the scroll region may be wider than it
    both options and the active option filled inside it (rounded
    square, not a pill; ruled 9 Sep 2026, no law change). Video carries
    the `Soon` label and stays non-interactive while `videoDisabled`.
-2. Stage tabs: Generate and Remix. The Remix stage body is a later
-   session (note 5); today it renders the one line "Not available yet"
-   and the footer button disabled.
+2. Stage tabs: Generate and Remix. The Remix stage (session 4, notes
+   5, 5a, 5b, 10 Sep 2026) renders when the caller passes `remix`;
+   without it the session 1 stub ("Not available yet") stays. See
+   "Remix stage" below.
 3. Five asset tiles, fixed anatomy: `character` (required, spans the
    row, quiet gold glow), then `pose`, `outfit`, `location`, `preset`
    two by two. Empty: icon centered, title centered at the bottom with
@@ -62,6 +63,43 @@ Nothing inside the scroll region may be wider than it
 
 No coins block: the balance lives in the left sidebar.
 
+## Remix stage (session 4, RULED A and A of three at the plan gate)
+
+Up to six characters plus one location, each contributing its
+featured image and prompt details to one scene. The caller owns the
+limits and the cost (one constant each, defined once outside this
+package) and passes them pre-computed; this View writes no number.
+
+1. References: a three-across grid, filled character slots first in
+   slot order (art fills a square tile, the name at the bottom, the
+   `@img1` to `@img6` handle top-left on the tag-over-art bed, the
+   overlay clear button top-right; tapping the art re-opens the
+   picker for that slot), then ONE "Add character" tile (dashed,
+   plus glyph, `(required)` while nothing is chosen). Past the limit
+   the Add tile renders disabled reading the caller's line "Up to 6
+   characters" and that title. Handles bind to slot position and never
+   renumber: clearing slot 2 leaves a gap the next Add fills, so a
+   prompt's `@img3` keeps pointing at its character.
+2. Location: the Generate Character tile's shape spanning the row,
+   optional, opens the same shared picker.
+3. Custom prompt (required): one row that grows. Typing `@` opens the
+   mention list (the shared menu recipe, a thumbnail per row, filtered
+   by the letters after the `@`); choosing a row inserts `@imgN ` or
+   `@location ` at the caret. Escape, blur, or moving the caret off
+   the `@` closes it. The prompt carries the handles as plain text.
+4. Footer, shared with Generate: the same Count control and state,
+   the Remix cost label (count times the Remix cost), the Remix gate
+   (coins, at least one character, a prompt). While `remix.available`
+   is false (the Chassis carries no Remix job,
+   `docs/handoffs/MEDIA-STUDIO-BACKEND.md` gap 13) the button renders
+   disabled with the coin glyph, the cost, the Soon chip, and the
+   title "Not available yet".
+
+Rejected at the gate: six fixed empty tiles (pushes the prompt off
+screen on the rail and the sheet), OD's sideways thumbnail strip
+(the scroll region may not scroll sideways), and sharing Generate's
+Character as Remix slot 1 (a data-flow change to the one-subject rule).
+
 ## Boundary
 
 ```text
@@ -71,6 +109,8 @@ KitImageCreatorPanel.jsx
      -> native snapping render-style rail with inline step tooltips
      -> KitDropdownView (../dropdown/KitDropdown.view) for Wardrobe
         theme, Aspect ratio, Count, and the three video dropdowns
+     -> ../form-field/{growTextarea, InfoTip, menuRecipe, SoonChip}
+        shared with the custom asset modal and the image viewer
 ```
 
 Sticky footer note: the footer uses negative horizontal margins equal
@@ -87,7 +127,9 @@ note 7 replaces it in a later session.
 ## Fixture states
 
 `default`, `emptySlots`, `insufficientCoins` (disabled Generate with
-the cost tooltip), `customIngredient`, `remixStage`, `videoMode`,
+the cost tooltip), `customIngredient`, `remixStage` (three references,
+one custom, a location, a prompt with mentions), `remixFull` (six
+references, Add disabled with the limit line), `videoMode`,
 `longestContent`.
 
 ## Package assets

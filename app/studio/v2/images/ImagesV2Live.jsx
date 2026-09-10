@@ -157,8 +157,9 @@ export default function ImagesV2Live() {
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
   // Stage tab (Generate, Remix): page-local presentation state. The
-  // Remix body is a later session (note 5); today it reads "Not
-  // available yet".
+  // Remix body (session 4, notes 5, 5a, 5b) is projected by the live
+  // ViewModel; its Generate stays Soon until the Chassis carries the
+  // job (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 13).
   const [composerStage, setComposerStage] = useState("GENERATE");
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
