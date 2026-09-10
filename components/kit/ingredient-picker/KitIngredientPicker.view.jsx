@@ -228,7 +228,7 @@ export default function KitIngredientPickerView({
     <KitModalFrame
       variant={isPhoneWidth ? "sheet" : "modal"}
       sheetGrabber={isPhoneWidth}
-      panelClassName="w-full min-[700px]:w-[min(56rem,calc(100vw-2rem))]"
+      panelWidth="56rem"
       onClose={onClose}
       ariaLabel={`Select ${slotLabel}`}
     >

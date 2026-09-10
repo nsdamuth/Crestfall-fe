@@ -37,9 +37,22 @@ const VARIANT_ALIGNMENT = {
 // at 92dvh with internal scroll, never forced to h-[100dvh]; that cap
 // is the same content-height treatment the sheet variant already
 // used, not a full-screen maximize.
+//
+// Fixed modal width, RULED 10 Sep 2026 (Brian, session 3 browser
+// review: "all modals need fixed width, they're expanding endlessly
+// with the browser"). At 700px and up the modal panel is ONE width
+// utility reading the --panel-width variable, capped to the viewport
+// minus the veil gutter, never w-auto. Callers set the width through
+// the panelWidth prop, which lands as an inline custom property, so
+// no second width utility ever competes with the recipe (the
+// source-order problem above). The default is 64rem, the largest cap
+// any existing caller used, so every legacy max-w-* class in a
+// panelClassName still caps the fixed width down (max-width is a
+// different property and never collides). Under 700px the panel
+// stays full width, bottom-anchored (mobile modal law).
 const PANEL_RECIPE = {
   modal:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] min-[700px]:max-h-[92dvh] min-[700px]:w-auto min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
     "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
@@ -90,6 +103,7 @@ export function useKitModalFrameViewModel({
   closeOnEscape = true,
   variant = "modal",
   panelClassName = "",
+  panelWidth = "",
   hasUnsavedChanges = false,
   sheetGrabber = false,
   headerSlot = null,
@@ -140,6 +154,13 @@ export function useKitModalFrameViewModel({
     panelClassName: [PANEL_RECIPE[resolvedVariant], panelClassName]
       .filter(Boolean)
       .join(" "),
+    // The modal variant's fixed width (1.5.0): a CSS length such as
+    // "56rem". Ignored by the sheet and viewer variants by
+    // construction (their recipes never read the variable).
+    panelStyle:
+      resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
+        ? { "--panel-width": panelWidth.trim() }
+        : undefined,
     ariaLabelledBy: hasOwnLabelledBy
       ? ariaLabelledBy
       : needsGeneratedLabel

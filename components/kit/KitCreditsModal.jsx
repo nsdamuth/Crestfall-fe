@@ -14,7 +14,7 @@ export default function KitCreditsModal({ credits = [], onClose = null }) {
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-xl"
+      panelWidth="36rem"
       onClose={onClose}
       ariaLabel="Credits"
     >

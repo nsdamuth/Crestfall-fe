@@ -72,7 +72,7 @@ export default function KitSaveIngredientPresetView({
     <KitModalFrame
       variant={isPhoneWidth ? "sheet" : "modal"}
       sheetGrabber={isPhoneWidth}
-      panelClassName="w-full min-[700px]:w-[min(42rem,calc(100vw-2rem))]"
+      panelWidth="42rem"
       onClose={onClose}
       ariaLabel={`Custom ${assetLabel}`}
       hasUnsavedChanges={hasUnsavedChanges}
