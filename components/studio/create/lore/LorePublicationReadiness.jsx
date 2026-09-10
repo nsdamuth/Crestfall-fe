@@ -12,7 +12,17 @@ export default function LorePublicationReadiness(props) {
     <LorePublicationReadinessView
       {...viewProps}
       LinkComponent={Link}
-      engineUsePanel={<LoreEngineUse creationId={props.creationId} />}
+      engineUsePanel={
+        <LoreEngineUse
+          creationId={props.creationId}
+          draftDocument={
+            props.form?.data?.lore_document ||
+            props.form?.data?.loreDocument ||
+            {}
+          }
+          draftTitle={props.form?.title || ""}
+        />
+      }
     />
   );
 }

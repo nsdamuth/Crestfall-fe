@@ -226,6 +226,10 @@ export function useCreationEditViewModel({ creationId, creation }) {
     // the dedicated slot API. Mirror that authoritative result into local form
     // state without manufacturing an unrelated draft-save requirement.
     const imageUrl = getSelectedImageUrl(selectedImage);
+    const thumbnailUrl =
+      selectedImage?.thumbnailImageUrl ||
+      selectedImage?.thumbnailUrl ||
+      imageUrl;
     const isStockMedia = Boolean(
       selectedImage?.isStockMedia || selectedImage?.stockMediaId
     );
@@ -258,8 +262,17 @@ export function useCreationEditViewModel({ creationId, creation }) {
           currentSlot.label ||
           FEATURED_SLOT_LABELS[normalizedSlotKey] ||
           `Slot ${slotIndex + 1}`,
+        // The hydrated slot can already carry stale display/thumbnail aliases.
+        // Override every URL alias the V2 hero may prefer; otherwise the old
+        // displayImageUrl/displayUrl wins over the newly selected imageUrl until
+        // a full page reload rehydrates the slot from the server.
+        displayImageUrl: imageUrl,
+        displayUrl: imageUrl,
+        thumbnailImageUrl: thumbnailUrl,
+        thumbnailUrl,
         imageUrl,
         url: imageUrl,
+        assetUrl: selectedImage?.assetUrl || imageUrl,
         title: selectedImage?.title || current.title || currentSlot.title,
         libraryEntryId: isStockMedia
           ? null

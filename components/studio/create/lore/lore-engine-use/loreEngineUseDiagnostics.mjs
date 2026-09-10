@@ -38,8 +38,12 @@ test("Lore Engine Use shell follows LOOM boundaries", () => {
   assert.match(viewModel, /projectLoreEngineUseConfigurationToAuthoringState/);
   assert.match(viewModel, /jsonEditorOpen/);
   assert.match(viewModel, /applyImportedEngineUseConfiguration/);
+  assert.match(viewModel, /buildLoreEngineUseDraftSource/);
+  assert.match(viewModel, /staged Engine Use configuration was preserved/);
   assert.match(view, /Submit for Engine Use/);
   assert.match(view, /Engine Use JSON/);
+  assert.match(view, /Engine Use can be authored against the current Lore draft now/);
+  assert.match(view, /publish a validated revision later before submitting/);
   assert.match(view, /Character knowledge/);
   assert.match(view, /Knowledge scope/);
   assert.match(view, /Explicit exclusions/);
@@ -88,8 +92,9 @@ test("Engine Use JSON editor is form-only, contract checked, and revision aware"
   );
 
   assert.match(contract, /lore_engine_use_authoring_v1/);
-  assert.match(validation, /Character is not tagged in the active public Lore revision/);
-  assert.match(validation, /Location is not tagged in the active public Lore revision/);
+  assert.match(validation, /buildLoreEngineUseDraftSource/);
+  assert.match(validation, /Character is not tagged in the current Lore authoring source/);
+  assert.match(validation, /Location is not tagged in the current Lore authoring source/);
   assert.match(validation, /Excluded block is outside this Character knowledge scope/);
   assert.match(validation, /knowledgeAvailableFrom must not be later/);
   assert.match(validation, /Legacy abbreviated configuration accepted/);

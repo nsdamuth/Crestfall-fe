@@ -29,6 +29,125 @@ function createIssue(path, message) {
   return { path, message };
 }
 
+function collectDraftReferences(document, field) {
+  const refs = [];
+  const append = (value) => {
+    (Array.isArray(value) ? value : []).forEach((candidate) => {
+      const ref = candidate && typeof candidate === "object" ? candidate : {};
+      const id = normalizeString(ref.id);
+      if (!id) return;
+      refs.push({
+        id,
+        type: normalizeUpper(ref.type),
+        title: normalizeString(ref.title) || "Untitled",
+        imageUrl: normalizeString(ref.imageUrl || ref.image_url),
+      });
+    });
+  };
+
+  append(document?.[field]);
+  (Array.isArray(document?.chapters) ? document.chapters : []).forEach((chapter) => {
+    append(chapter?.[field]);
+    (Array.isArray(chapter?.sections) ? chapter.sections : []).forEach((section) => {
+      append(section?.[field]);
+    });
+  });
+
+  return [...new Map(refs.map((ref) => [ref.id, ref])).values()];
+}
+
+function collectDraftSectionBlocks(blocks, context) {
+  const sources = [];
+
+  const visit = (values, { parentBlockId = null, columnIndex = null } = {}) => {
+    (Array.isArray(values) ? values : []).forEach((candidate, blockIndex) => {
+      const block = candidate && typeof candidate === "object" ? candidate : {};
+      const id = normalizeString(block.id);
+      const type = normalizeString(block.type).toLowerCase();
+
+      if (type === "two-column") {
+        (Array.isArray(block.columns) ? block.columns : []).forEach(
+          (column, nestedColumnIndex) => {
+            visit(column?.blocks, {
+              parentBlockId: id || null,
+              columnIndex: nestedColumnIndex,
+            });
+          }
+        );
+        return;
+      }
+
+      if (!id || type === "divider") return;
+
+      sources.push({
+        id,
+        type: type || "block",
+        title:
+          normalizeString(block.title) ||
+          normalizeString(block.text).slice(0, 120) ||
+          `${type || "Lore"} block`,
+        chapterId: context.chapterId,
+        chapterTitle: context.chapterTitle,
+        sectionId: context.sectionId,
+        sectionTitle: context.sectionTitle,
+        parentBlockId,
+        columnIndex,
+        blockIndex,
+      });
+    });
+  };
+
+  visit(blocks);
+  return sources;
+}
+
+export function buildLoreEngineUseDraftSource({ document = {}, title = "" } = {}) {
+  const chapters = (Array.isArray(document?.chapters) ? document.chapters : []).map(
+    (chapter) => {
+      const chapterId = normalizeString(chapter?.id);
+      const chapterTitle = normalizeString(chapter?.title) || "Untitled Chapter";
+      return {
+        id: chapterId,
+        title: chapterTitle,
+        sections: (Array.isArray(chapter?.sections) ? chapter.sections : []).map(
+          (section) => {
+            const sectionId = normalizeString(section?.id);
+            const sectionTitle =
+              normalizeString(section?.title) || "Untitled Section";
+            return {
+              id: sectionId,
+              title: sectionTitle,
+              blocks: collectDraftSectionBlocks(section?.blocks, {
+                chapterId,
+                chapterTitle,
+                sectionId,
+                sectionTitle,
+              }),
+            };
+          }
+        ),
+      };
+    }
+  );
+
+  return {
+    publicReleaseId: "",
+    revisionNumber: 0,
+    validationSubmissionId: "",
+    snapshotHash: "",
+    publishedAt: null,
+    title: normalizeString(title) || "Untitled Lore",
+    chapters,
+    characterRefs: collectDraftReferences(document, "characterRefs").filter(
+      (ref) => ref.type === "CHARACTER"
+    ),
+    locationRefs: collectDraftReferences(document, "locationRefs").filter(
+      (ref) => ref.type === "LOCATION"
+    ),
+    authoringSourceKind: "DRAFT",
+  };
+}
+
 function normalizeTimePoint(value, path, errors) {
   if (value == null) return null;
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -249,7 +368,7 @@ export function validateLoreEngineUseJsonText(
       errors.push(
         createIssue(
           `$.selectedSectionIds[${index}]`,
-          "Section is not part of the active public Lore revision."
+          "Section is not part of the current Lore authoring source."
         )
       );
     }
@@ -306,7 +425,7 @@ export function validateLoreEngineUseJsonText(
       errors.push(
         createIssue(
           `${path}.subjectId`,
-          "Character is not tagged in the active public Lore revision."
+          "Character is not tagged in the current Lore authoring source."
         )
       );
     } else if (seenCharacterIds.has(subjectId)) {
@@ -537,7 +656,7 @@ export function validateLoreEngineUseJsonText(
       errors.push(
         createIssue(
           `${path}.subjectId`,
-          "Location is not tagged in the active public Lore revision."
+          "Location is not tagged in the current Lore authoring source."
         )
       );
     } else if (seenLocationIds.has(subjectId)) {
