@@ -687,6 +687,7 @@ export default function LoreEngineUseView({
   storyContextLoadStatus = "IDLE",
   storyContextLoadMessage = "",
   jsonEditorSlot = null,
+  hasDraftAuthoringSource = false,
   canSubmit = false,
   canCancel = false,
   canWithdraw = false,
@@ -731,7 +732,9 @@ export default function LoreEngineUseView({
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {hasPublicRelease && !isActive && !hasAuthoritativeConfiguration ? (
+          {(hasPublicRelease || hasDraftAuthoringSource) &&
+          !isActive &&
+          !hasAuthoritativeConfiguration ? (
             <button
               type="button"
               onClick={openJsonEditor}
@@ -762,11 +765,20 @@ export default function LoreEngineUseView({
         </div>
       ) : null}
 
-      {!hasPublicRelease ? (
+      {!hasPublicRelease && hasDraftAuthoringSource ? (
         <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-300/5 p-4">
           <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-200" />
           <p className="text-sm leading-6 text-amber-50">
-            Publish a validated Lore revision before configuring engine use.
+            Engine Use can be authored against the current Lore draft now. Nothing can be submitted until a validated revision is published; publication remains a separate later step.
+          </p>
+        </div>
+      ) : null}
+
+      {!hasPublicRelease && !hasDraftAuthoringSource ? (
+        <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-300/20 bg-amber-300/5 p-4">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-200" />
+          <p className="text-sm leading-6 text-amber-50">
+            Save or author the Lore document before configuring Engine Use.
           </p>
         </div>
       ) : (
@@ -777,7 +789,9 @@ export default function LoreEngineUseView({
                 Source revision
               </p>
               <p className="mt-1 text-sm text-[var(--ink)]">
-                Public revision {source.revisionNumber || "·"}
+                {hasPublicRelease
+                  ? `Public revision ${source.revisionNumber || "·"}`
+                  : "Current Lore draft"}
               </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
@@ -900,7 +914,7 @@ export default function LoreEngineUseView({
                     }`}
                   >
                     <span className="block text-sm text-[var(--ink)]">
-                      Entire public revision
+                      {hasPublicRelease ? "Entire public revision" : "Entire current draft"}
                     </span>
                     <span className="mt-1 block text-xs text-[var(--ink-dim)]">
                       Include every chapter and section.
@@ -1059,7 +1073,7 @@ export default function LoreEngineUseView({
                   </div>
                 ) : (
                   <div className="mt-4 rounded-xl border border-dashed border-white/15 px-4 py-4 text-sm text-[var(--ink-dim)]">
-                    This public Lore revision has no tagged Locations.
+                    This Lore authoring source has no tagged Locations.
                   </div>
                 )}
               </div>
@@ -1079,7 +1093,11 @@ export default function LoreEngineUseView({
                   Submit for engine use
                 </button>
 
-                {!selectedCharacterIds.length ? (
+                {!hasPublicRelease ? (
+                  <p className="text-xs text-amber-100">
+                    Configuration may be completed now; publish a validated revision later before submitting it for Engine Use.
+                  </p>
+                ) : !selectedCharacterIds.length ? (
                   <p className="text-xs text-amber-100">
                     Select at least one tagged Character.
                   </p>
