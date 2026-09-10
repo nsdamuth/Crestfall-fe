@@ -106,4 +106,36 @@ test("Engine Use JSON editor is form-only, contract checked, and revision aware"
   assert.doesNotMatch(modalView, /@\/lib\/client|Supabase|PostGraphile/);
 });
 
+test("draft Engine Use metadata hydrates UI and writes back through the Lore edit form", () => {
+  const editSection = read(
+    "components/studio/my-creations/creation-edit-shell/CreationEditSectionContent.jsx"
+  );
+  const publicationShell = read(
+    "components/studio/create/lore/LorePublicationReadiness.jsx"
+  );
+  const viewModel = read(
+    "components/studio/create/lore/lore-engine-use/useLoreEngineUseViewModel.js"
+  );
+  const view = read(
+    "components/studio/create/lore/lore-engine-use/LoreEngineUse.view.jsx"
+  );
+  const validation = read(
+    "components/studio/create/lore/lore-engine-use/loreEngineUseJsonEditor.validation.js"
+  );
+
+  assert.match(editSection, /updateDataField=\{updateDataField\}/);
+  assert.match(publicationShell, /mergeLoreEngineUseAuthoringIntoDraftDocument/);
+  assert.match(publicationShell, /onDraftEngineUseChange=\{handleDraftEngineUseChange\}/);
+  assert.match(publicationShell, /updateDataField\(\s*["']lore_document["']/);
+  assert.match(validation, /engineUseAuthoring: configuration/);
+  assert.match(viewModel, /draftDocument\?\.metadata/);
+  assert.match(viewModel, /metadata\.engineUseAuthoring/);
+  assert.match(viewModel, /validateLoreEngineUseJsonText/);
+  assert.match(viewModel, /projectLoreEngineUseConfigurationToAuthoringState/);
+  assert.match(viewModel, /onDraftEngineUseChange\(authoringConfiguration\)/);
+  assert.match(viewModel, /Draft Engine Use configuration updated/);
+  assert.match(view, /Staged Engine Use configuration loaded from Lore JSON/);
+  assert.match(view, /metadata\.engineUseAuthoring/);
+});
+
 console.log("Lore engine-use LOOM diagnostics passed.");

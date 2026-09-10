@@ -688,6 +688,7 @@ export default function LoreEngineUseView({
   storyContextLoadMessage = "",
   jsonEditorSlot = null,
   hasDraftAuthoringSource = false,
+  hasStoredDraftAuthoringConfiguration = false,
   canSubmit = false,
   canCancel = false,
   canWithdraw = false,
@@ -724,7 +725,7 @@ export default function LoreEngineUseView({
           </p>
           <h3 className="mt-2 font-display text-3xl">Submit for Engine Use</h3>
           <p className="mt-3 leading-7 text-[var(--ink-dim)]">
-            Choose which parts of the active public Lore revision may be prepared for approved Characters, and identify the Locations that should provide contextual relevance.
+            Choose which parts of {hasPublicRelease ? "the active public Lore revision" : "the current Lore draft"} may be prepared for approved Characters, and identify the Locations that should provide contextual relevance.
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
             This is separate from publication. The editable draft and public page are not changed by this submission.
@@ -771,6 +772,20 @@ export default function LoreEngineUseView({
           <p className="text-sm leading-6 text-amber-50">
             Engine Use can be authored against the current Lore draft now. Nothing can be submitted until a validated revision is published; publication remains a separate later step.
           </p>
+        </div>
+      ) : null}
+
+      {!hasPublicRelease && hasStoredDraftAuthoringConfiguration ? (
+        <div className="mt-3 flex items-start gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/5 p-4">
+          <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-200" />
+          <div>
+            <p className="text-sm font-medium text-emerald-50">
+              Staged Engine Use configuration loaded from Lore JSON.
+            </p>
+            <p className="mt-1 text-xs leading-5 text-emerald-100/80">
+              The controls below reflect <span className="font-mono">metadata.engineUseAuthoring</span>. Changes here update that draft metadata; use the page Save action to persist them.
+            </p>
+          </div>
         </div>
       ) : null}
 
@@ -888,7 +903,7 @@ export default function LoreEngineUseView({
           {!isActive && !hasAuthoritativeConfiguration ? (
             <div className="mt-5 grid gap-5">
               <div className="rounded-xl border border-violet-300/20 bg-violet-300/5 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
-                Use <span className="text-[var(--ink)]">Engine Use JSON</span> to import or export this complete unsent configuration. Applying JSON only populates the form; the normal submit action remains authoritative.
+                Use <span className="text-[var(--ink)]">Engine Use JSON</span> to import or export this complete unsent configuration. On a draft, applying JSON updates the staged <span className="font-mono text-[var(--ink)]">metadata.engineUseAuthoring</span> data shown by these controls; use the page Save action to persist it. Submission remains a separate later action.
               </div>
               <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
                 <div className="flex items-center gap-3">

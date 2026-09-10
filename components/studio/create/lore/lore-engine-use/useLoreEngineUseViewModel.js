@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   cancelLoreEngineUseSubmission,
   fetchLoreEngineUseState,
@@ -18,6 +18,7 @@ import {
   buildLoreEngineUseAuthoringConfiguration,
   buildLoreEngineUseDraftSource,
   projectLoreEngineUseConfigurationToAuthoringState,
+  validateLoreEngineUseJsonText,
 } from "./loreEngineUseJsonEditor.validation";
 
 const ACTIVE_STATUSES = new Set([
@@ -127,6 +128,7 @@ export function useLoreEngineUseViewModel({
   creationId = "",
   draftDocument = {},
   draftTitle = "",
+  onDraftEngineUseChange = null,
 } = {}) {
   const [state, setState] = useState({
     source: {},
@@ -151,6 +153,10 @@ export function useLoreEngineUseViewModel({
   const [storyContextLoadStatus, setStoryContextLoadStatus] = useState("IDLE");
   const [storyContextLoadMessage, setStoryContextLoadMessage] = useState("");
   const [jsonEditorOpen, setJsonEditorOpen] = useState(false);
+  const draftHydrationReadyRef = useRef(false);
+  const draftAuthoringDirtyRef = useRef(false);
+  const lastHydratedDraftFingerprintRef = useRef("");
+  const lastWrittenDraftFingerprintRef = useRef("");
 
   const publishedSource = state.source || {};
   const submissions = Array.isArray(state.submissions)
@@ -172,6 +178,27 @@ export function useLoreEngineUseViewModel({
   const hasDraftAuthoringSource =
     !sourceReleaseId &&
     (source.chapters.length > 0 || source.characterRefs.length > 0);
+  const draftEngineUseConfiguration = useMemo(() => {
+    const metadata =
+      draftDocument?.metadata &&
+      typeof draftDocument.metadata === "object" &&
+      !Array.isArray(draftDocument.metadata)
+        ? draftDocument.metadata
+        : {};
+    const configuration = metadata.engineUseAuthoring;
+    return configuration &&
+      typeof configuration === "object" &&
+      !Array.isArray(configuration)
+      ? configuration
+      : null;
+  }, [draftDocument]);
+  const draftEngineUseFingerprint = useMemo(
+    () => JSON.stringify(draftEngineUseConfiguration || null),
+    [draftEngineUseConfiguration]
+  );
+  const hasStoredDraftAuthoringConfiguration = Boolean(
+    !sourceReleaseId && draftEngineUseConfiguration
+  );
 
   const loadState = useCallback(
     async ({ quiet = false } = {}) => {
@@ -236,6 +263,77 @@ export function useLoreEngineUseViewModel({
   useEffect(() => {
     void loadStoryContextOptions();
   }, [loadStoryContextOptions]);
+
+  useEffect(() => {
+    draftHydrationReadyRef.current = false;
+    draftAuthoringDirtyRef.current = false;
+    lastHydratedDraftFingerprintRef.current = "";
+    lastWrittenDraftFingerprintRef.current = "";
+  }, [creationId]);
+
+  useEffect(() => {
+    if (sourceReleaseId) {
+      draftHydrationReadyRef.current = false;
+      return;
+    }
+
+    if (!draftEngineUseConfiguration) {
+      draftHydrationReadyRef.current = true;
+      lastHydratedDraftFingerprintRef.current = "";
+      return;
+    }
+
+    if (
+      draftEngineUseFingerprint === lastHydratedDraftFingerprintRef.current ||
+      draftEngineUseFingerprint === lastWrittenDraftFingerprintRef.current
+    ) {
+      draftHydrationReadyRef.current = true;
+      return;
+    }
+
+    const validation = validateLoreEngineUseJsonText(
+      JSON.stringify(draftEngineUseConfiguration),
+      {
+        source: draftSource,
+        storyContextOptions,
+        storyContextLoadStatus,
+      }
+    );
+
+    lastHydratedDraftFingerprintRef.current = draftEngineUseFingerprint;
+    draftHydrationReadyRef.current = true;
+
+    if (!validation.valid || !validation.data) {
+      setActionStatus("ERROR");
+      setActionMessage(
+        `Stored draft Engine Use configuration could not be loaded: ${
+          validation.errors[0]?.message || "invalid configuration"
+        }`
+      );
+      return;
+    }
+
+    const projected = projectLoreEngineUseConfigurationToAuthoringState(
+      validation.data
+    );
+    setScopeModeState(projected.scopeMode);
+    setSelectedSectionIds(projected.selectedSectionIds);
+    setSelectedCharacterIds(projected.selectedCharacterIds);
+    setSelectedLocationIds(projected.selectedLocationIds);
+    setKnowledgeModes(projected.knowledgeModes);
+    setCharacterAccess(projected.characterAccess);
+    setActionStatus("SUCCESS");
+    setActionMessage(
+      "Staged Engine Use configuration loaded from the current Lore draft."
+    );
+  }, [
+    draftEngineUseConfiguration,
+    draftEngineUseFingerprint,
+    draftSource,
+    sourceReleaseId,
+    storyContextLoadStatus,
+    storyContextOptions,
+  ]);
 
   useEffect(() => {
     if (!sourceReleaseId || sourceReleaseId === configuredReleaseId) return;
@@ -339,7 +437,14 @@ export function useLoreEngineUseViewModel({
     ? source.locationRefs
     : [];
 
+  const markDraftAuthoringDirty = useCallback(() => {
+    if (!sourceReleaseId) {
+      draftAuthoringDirtyRef.current = true;
+    }
+  }, [sourceReleaseId]);
+
   const setScopeMode = useCallback((nextMode) => {
+    markDraftAuthoringDirty();
     setScopeModeState(nextMode);
     setSelectedSectionIds([]);
     setCharacterAccess((current) =>
@@ -350,13 +455,15 @@ export function useLoreEngineUseViewModel({
         ])
       )
     );
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const toggleSection = useCallback((sectionId) => {
+    markDraftAuthoringDirty();
     setSelectedSectionIds((current) => toggleId(current, sectionId));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const toggleCharacter = useCallback((characterId) => {
+    markDraftAuthoringDirty();
     setSelectedCharacterIds((current) => toggleId(current, characterId));
     setKnowledgeModes((current) => ({
       ...current,
@@ -366,20 +473,23 @@ export function useLoreEngineUseViewModel({
       ...current,
       [characterId]: normalizeCharacterAccess(current[characterId]),
     }));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const toggleLocation = useCallback((locationId) => {
+    markDraftAuthoringDirty();
     setSelectedLocationIds((current) => toggleId(current, locationId));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterKnowledgeMode = useCallback((characterId, mode) => {
+    markDraftAuthoringDirty();
     setKnowledgeModes((current) => ({
       ...current,
       [characterId]: mode,
     }));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterScopeType = useCallback((characterId, scopeType) => {
+    markDraftAuthoringDirty();
     setCharacterAccess((current) => ({
       ...current,
       [characterId]: {
@@ -392,9 +502,10 @@ export function useLoreEngineUseViewModel({
         excludedBlockIds: [],
       },
     }));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterScopeChapter = useCallback((characterId, chapterId) => {
+    markDraftAuthoringDirty();
     setCharacterAccess((current) => ({
       ...current,
       [characterId]: {
@@ -406,9 +517,10 @@ export function useLoreEngineUseViewModel({
         excludedBlockIds: [],
       },
     }));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterScopeSection = useCallback((characterId, sectionId) => {
+    markDraftAuthoringDirty();
     setCharacterAccess((current) => ({
       ...current,
       [characterId]: {
@@ -419,9 +531,10 @@ export function useLoreEngineUseViewModel({
         excludedBlockIds: [],
       },
     }));
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const toggleCharacterExclusion = useCallback((characterId, field, id) => {
+    markDraftAuthoringDirty();
     setCharacterAccess((current) => {
       const access = normalizeCharacterAccess(current[characterId]);
       return {
@@ -432,9 +545,10 @@ export function useLoreEngineUseViewModel({
         },
       };
     });
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterAvailabilityMode = useCallback((characterId, mode) => {
+    markDraftAuthoringDirty();
     setCharacterAccess((current) => {
       const access = normalizeCharacterAccess(current[characterId]);
       const next = { ...access, availabilityMode: mode };
@@ -448,10 +562,11 @@ export function useLoreEngineUseViewModel({
       }
       return { ...current, [characterId]: next };
     });
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const setCharacterKnowledgeTimeField = useCallback(
     (characterId, boundary, field, value) => {
+      markDraftAuthoringDirty();
       setCharacterAccess((current) => {
         const access = normalizeCharacterAccess(current[characterId]);
         const point = normalizeKnowledgeTimePoint(access[boundary]);
@@ -464,11 +579,12 @@ export function useLoreEngineUseViewModel({
         };
       });
     },
-    []
+    [markDraftAuthoringDirty]
   );
 
   const toggleCharacterContextAllowlist = useCallback(
     (characterId, field, id) => {
+      markDraftAuthoringDirty();
       setCharacterAccess((current) => {
         const access = normalizeCharacterAccess(current[characterId]);
         return {
@@ -480,7 +596,7 @@ export function useLoreEngineUseViewModel({
         };
       });
     },
-    []
+    [markDraftAuthoringDirty]
   );
 
   const isCharacterAccessValid = useCallback(
@@ -536,7 +652,38 @@ export function useLoreEngineUseViewModel({
     ]
   );
 
+  useEffect(() => {
+    if (
+      sourceReleaseId ||
+      !draftHydrationReadyRef.current ||
+      !draftAuthoringDirtyRef.current ||
+      typeof onDraftEngineUseChange !== "function"
+    ) {
+      return;
+    }
+
+    const nextFingerprint = JSON.stringify(authoringConfiguration);
+    if (nextFingerprint === draftEngineUseFingerprint) {
+      draftAuthoringDirtyRef.current = false;
+      return;
+    }
+
+    draftAuthoringDirtyRef.current = false;
+    lastWrittenDraftFingerprintRef.current = nextFingerprint;
+    onDraftEngineUseChange(authoringConfiguration);
+    setActionStatus("SUCCESS");
+    setActionMessage(
+      "Draft Engine Use configuration updated. Use the page Save action to persist it."
+    );
+  }, [
+    authoringConfiguration,
+    draftEngineUseFingerprint,
+    onDraftEngineUseChange,
+    sourceReleaseId,
+  ]);
+
   const applyImportedEngineUseConfiguration = useCallback((configuration) => {
+    markDraftAuthoringDirty();
     const projected = projectLoreEngineUseConfigurationToAuthoringState(configuration);
     setScopeModeState(projected.scopeMode);
     setSelectedSectionIds(projected.selectedSectionIds);
@@ -548,7 +695,7 @@ export function useLoreEngineUseViewModel({
     setActionMessage(
       "Engine Use JSON applied to the current authoring form. Review it before submitting."
     );
-  }, []);
+  }, [markDraftAuthoringDirty]);
 
   const canSubmit =
     Boolean(creationId && sourceReleaseId) &&
@@ -689,6 +836,7 @@ export function useLoreEngineUseViewModel({
     source,
     authoringSource: source,
     hasDraftAuthoringSource,
+    hasStoredDraftAuthoringConfiguration,
     submissions,
     latest,
     latestStatus,

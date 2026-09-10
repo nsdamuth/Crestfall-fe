@@ -23,6 +23,10 @@ import { useImageGenerationHistory } from "@/components/studio/image-studio/hook
 import { useImageGenerationJob } from "@/components/studio/image-studio/hooks/useImageGenerationJob";
 import { useImageStudioIngredientOptions } from "@/components/studio/image-studio/hooks/useImageStudioIngredientOptions";
 import { isCommunityDiscoverableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import {
+  IMAGE_STUDIO_MIN_OUTPUT_COUNT,
+  clampImageStudioOutputCount,
+} from "../imageStudioOutputCountPolicy.js";
 
 export const IMAGE_GENERATION_COIN_COST = 5;
 
@@ -320,7 +324,7 @@ export function getImageGenerationAvailability({
 }) {
   // Gate on the displayed cost, count times the per-image cost
   // (RULED 9 Sep 2026, Media Studio plan gate).
-  const requestedCount = Math.max(1, Number.parseInt(imageCount, 10) || 1);
+  const requestedCount = clampImageStudioOutputCount(imageCount);
   const requestCoinCost = IMAGE_GENERATION_COIN_COST * requestedCount;
   const hasEnoughCoins = coinBalance >= requestCoinCost;
   const selectedCharacterId = getSelectedCreationId(selectedIngredients.character);
@@ -483,7 +487,7 @@ export function buildImageGenerationPayload({
       renderingStyle: getLegacyRenderingStyle(renderStyle),
       renderProfileKey: renderStyle,
       aspectRatio: ASPECT_RATIO_BY_COMPOSER_VALUE[aspectRatio] || "3:4",
-      outputCount: Number.parseInt(imageCount, 10) || 1,
+      outputCount: clampImageStudioOutputCount(imageCount),
       quality: "standard",
       seed: null,
       ...(resolvedWorkflowTuning
@@ -513,9 +517,11 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [cameraPreset, setCameraPreset] = useState("AUTO");
   const [wardrobeTheme, setWardrobeTheme] = useState("AUTO");
   const [aspectRatio, setAspectRatio] = useState("PORTRAIT_4_5");
-  // Default 2 (RULED 9 Sep 2026, Media Studio plan gate: the count
-  // list is 2, 4, 8, 16, 32, 64, 128, 256).
-  const [imageCount, setImageCount] = useState("2");
+  // Deployment policy: live defaults to 2; alpha/dev can opt into 1 via
+  // NEXT_PUBLIC_CRESTFALL_IMAGE_STUDIO_MIN_OUTPUT_COUNT without changing code.
+  const [imageCount, setImageCount] = useState(
+    String(IMAGE_STUDIO_MIN_OUTPUT_COUNT)
+  );
 
   const [videoDuration, setVideoDuration] = useState("4");
   const [videoAspectRatio, setVideoAspectRatio] = useState("PORTRAIT");
