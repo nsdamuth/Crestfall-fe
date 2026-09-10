@@ -7,7 +7,9 @@
 // normalizes display-ready props. Contract 2.1.0 (10 Sep 2026): the
 // nested `remix` object passes through untouched; the View treats a
 // null `remix` as the session 1 stub, so dropping it here is the
-// regression the live adapter diagnostics guard against.
+// regression the live adapter diagnostics guard against. Contract
+// 2.3.0 (10 Sep 2026): the nested `video` object passes through the
+// same way; null keeps the 2.2.0 video block.
 export function useKitImageCreatorPanelViewModel({
   mode = "IMAGE",
   onChangeMode = null,
@@ -16,6 +18,7 @@ export function useKitImageCreatorPanelViewModel({
   stage = "GENERATE",
   onChangeStage = null,
   remix = null,
+  video = null,
   slots = {},
   onSlotActivate = null,
   onSlotClear = null,
@@ -59,6 +62,7 @@ export function useKitImageCreatorPanelViewModel({
     stage: stage === "REMIX" ? "REMIX" : "GENERATE",
     onChangeStage,
     remix: remix && typeof remix === "object" ? remix : null,
+    video: video && typeof video === "object" ? video : null,
     slots: slots && typeof slots === "object" ? slots : {},
     onSlotActivate,
     onSlotClear,

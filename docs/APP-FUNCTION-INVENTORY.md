@@ -550,3 +550,31 @@ limits (6 and 1) and the cost (20) are one constant each; no View
 writes a number. The Remix job the frontend wants, and the per-image
 versus per-job cost question the session surfaced, are gaps 13 and 14
 in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
+
+## Media Studio Video rows (FE/MEDIA-STUDIO session 5, 10 Sep 2026)
+
+The `/studio/v2/images` Image / Video mode toggle row is rewritten:
+the Video option is live and opens the Video composer (page-local
+mode state; the workbench's own mode stays IMAGE), keeping its Soon
+tag while the Chassis has no video job. Twelve Video rows join the
+composer block: the Video stage tabs (Text to video, Image to video),
+the five asset tiles reading the Video mode's own slots
+(`videoCharacter` to `videoPreset`,
+`components/studio/image-studio/imageStudioData.js`, ordinary
+ingredient slots served by the shared picker, the custom asset
+modal, and every selection handler unchanged), the Image tile (a
+second instance of the shared picker fed with the library's images,
+never a second picker component), the Custom prompt (optional on
+Text, required on Image), Custom director, the director row prompt,
+Add the next row (adds 5 seconds and updates the cost, disabled at
+30), Aspect ratio, the Duration slider, the Quality toggle, Video's
+own Count (1 to 32 videos), and Video Generate (stubbed: Soon chip,
+coin glyph and the computed cost, no handler). The cost rule's three
+numbers (50 per 5-second segment at 720p, times 3 at 1080p, times the
+count) are one constant each in the workbench ViewModel, read through
+`composerProps.videoCoinCosts`; the ceiling (30 seconds) is one
+constant in `imageStudioData.js`; no View writes a number. RULED A,
+A, A, A of four at the plan gate: a live toggle with Generate on Soon;
+the stage tab row relabeled; Video owns its slots; the source image
+through the shared picker. The video job the frontend wants is gap 15
+in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.

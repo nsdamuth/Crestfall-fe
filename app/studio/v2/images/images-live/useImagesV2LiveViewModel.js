@@ -12,6 +12,8 @@ import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import {
   IMAGE_COUNT_BACKEND_MAX,
   REMIX_MAX_CHARACTERS,
+  VIDEO_MAX_DURATION_SECONDS,
+  aspectRatioOptions,
   cameraPresetCatalog,
   cameraPresetGroups,
   getCameraPresetDefinition,
@@ -21,8 +23,11 @@ import {
   remixIngredientSlots,
   remixLocationSlots,
   videoAspectRatioOptions,
+  videoCountOptions,
   videoDurationOptions,
+  videoIngredientSlots,
   videoMotionStyleOptions,
+  videoQualityOptions,
 } from "@/components/studio/image-studio/imageStudioData";
 
 // Any action the backend cannot do yet renders disabled with these
@@ -66,8 +71,15 @@ const SLOT_DISPLAY_LABELS = Object.freeze({
   preset: "Preset",
 });
 
+// A Video slot (session 5) shows the word of the Generate tile it
+// mirrors; the Remix slots already carry their own display labels.
 function getSlotDisplayLabel(slot) {
-  return SLOT_DISPLAY_LABELS[slot?.id] || slot?.label || "Asset";
+  return (
+    SLOT_DISPLAY_LABELS[slot?.id] ||
+    SLOT_DISPLAY_LABELS[slot?.tileId] ||
+    slot?.label ||
+    "Asset"
+  );
 }
 
 // Camera groups arrive title-cased from the catalog; the picker shows
@@ -84,10 +96,11 @@ function normalizeOptions(options = []) {
   }));
 }
 
-// The composer's five slots plus the Remix slots (session 4) are all
-// ordinary ingredient slots in the workbench; the picker and the
-// custom modal key on the slot object either way.
-const ALL_SLOTS = [...ingredientSlots, ...remixIngredientSlots];
+// The composer's five slots plus the Remix slots (session 4) and the
+// Video slots (session 5) are all ordinary ingredient slots in the
+// workbench; the picker and the custom modal key on the slot object
+// either way.
+const ALL_SLOTS = [...ingredientSlots, ...remixIngredientSlots, ...videoIngredientSlots];
 
 function getSlot(slotId) {
   return ALL_SLOTS.find((slot) => slot.id === slotId) || null;
@@ -262,10 +275,181 @@ function projectRemix({
   };
 }
 
+// Video (session 5, notes 7 and 7a; RULED A, A, A, A of four at the
+// plan gate): the Video mode owns its slots (ordinary ingredient slots
+// keyed to the Generate tile they mirror), its prompt, its source
+// image, its settings, and its count, all page state, sharing only the
+// picker, the custom modal, and the footer. Duration moves in segment
+// steps; the Custom director has one row per segment, and adding a
+// row adds a segment. The cost rule reads the workbench's three
+// constants through composerProps.videoCoinCosts; nothing here writes
+// a number.
+const VIDEO_ASPECT_DEFAULT = "PORTRAIT_4_5";
+const VIDEO_QUALITY_DEFAULT = "720p";
+const VIDEO_DURATION_LIMIT_LABEL = `Up to ${VIDEO_MAX_DURATION_SECONDS} seconds`;
+
+function projectVideo({
+  composerProps,
+  stage,
+  onChangeStage,
+  prompt,
+  setPrompt,
+  sourceImage,
+  onOpenSourceImagePicker,
+  onClearSourceImage,
+  aspectRatio,
+  setAspectRatio,
+  durationSeconds,
+  setDurationSeconds,
+  quality,
+  setQuality,
+  directorOpen,
+  setDirectorOpen,
+  directorPrompts,
+  setDirectorPrompts,
+  count,
+  setCount,
+}) {
+  const selected = composerProps?.selectedIngredients || {};
+  const customPrompts = composerProps?.customIngredientPrompts || {};
+  const costs = composerProps?.videoCoinCosts || {};
+  const perSegment = Number(costs.perSegment ?? 0) || 0;
+  const segmentSeconds = Math.max(1, Number(costs.segmentSeconds ?? 0) || 1);
+  const multiplier1080p = Number(costs.multiplier1080p ?? 1) || 1;
+  const coinBalance = Number(composerProps?.coinBalance ?? 0) || 0;
+
+  const slots = Object.fromEntries(
+    videoIngredientSlots.map((slot) => [
+      slot.tileId,
+      {
+        selection: projectSelection(
+          selected[slot.id] || null,
+          slot,
+          String(customPrompts[slot.id] || "")
+        ),
+        isCustomMode: false,
+        customText: String(customPrompts[slot.id] || ""),
+      },
+    ])
+  );
+  const slotByTileId = new Map(videoIngredientSlots.map((slot) => [slot.tileId, slot]));
+
+  const requestedCount = Math.max(1, Number.parseInt(count, 10) || 1);
+  const segments = Math.max(1, Math.round(durationSeconds / segmentSeconds));
+  const qualityMultiplier = quality === "1080p" ? multiplier1080p : 1;
+  const requestCoinCost = perSegment * segments * qualityMultiplier * requestedCount;
+  const hasEnoughCoins = coinBalance >= requestCoinCost;
+  const hasPrompt = String(prompt || "").trim().length > 0;
+  const isImageStage = stage === "IMAGE";
+
+  // Block reasons in Generate's order and voice: coins, then inputs.
+  const blockReason = !hasEnoughCoins
+    ? `You need at least ${requestCoinCost} coins to generate ${
+        requestedCount === 1 ? "a video" : `${requestedCount} videos`
+      }.`
+    : isImageStage
+      ? !sourceImage
+        ? "Add an image before generating."
+        : !hasPrompt
+          ? "Describe the motion before generating."
+          : ""
+      : !slots.character?.selection
+        ? "Select a character before generating."
+        : "";
+
+  const rows = [];
+  for (let index = 0; index < segments; index += 1) {
+    rows.push({
+      index,
+      fromSecond: index * segmentSeconds,
+      toSecond: (index + 1) * segmentSeconds,
+      prompt: String(directorPrompts[index] || ""),
+    });
+  }
+  const canAddRow = durationSeconds + segmentSeconds <= VIDEO_MAX_DURATION_SECONDS;
+
+  function changeDuration(nextSeconds) {
+    const clamped = Math.min(
+      VIDEO_MAX_DURATION_SECONDS,
+      Math.max(segmentSeconds, Math.round(nextSeconds / segmentSeconds) * segmentSeconds)
+    );
+    setDurationSeconds(clamped);
+    // Rows past the new duration leave with it.
+    const nextRowCount = Math.max(1, Math.round(clamped / segmentSeconds));
+    setDirectorPrompts((current) => current.slice(0, nextRowCount));
+  }
+
+  return {
+    stage,
+    onChangeStage,
+    slots,
+    onSlotActivate: (tileId) => {
+      const slot = slotByTileId.get(tileId);
+      if (slot) composerProps.onOpenIngredient?.(slot);
+    },
+    onSlotClear: (tileId) => {
+      const slot = slotByTileId.get(tileId);
+      if (slot) composerProps.onClearIngredient?.(slot.id);
+    },
+    sourceImage: sourceImage
+      ? { title: sourceImage.title, imageSrc: sourceImage.imageSrc || "" }
+      : null,
+    onSelectSourceImage: onOpenSourceImagePicker,
+    onClearSourceImage,
+    promptValue: prompt,
+    onChangePrompt: setPrompt,
+    aspectRatio: {
+      value: aspectRatio,
+      defaultValue: VIDEO_ASPECT_DEFAULT,
+      options: normalizeOptions(aspectRatioOptions),
+    },
+    onChangeAspectRatio: setAspectRatio,
+    durationSeconds,
+    durationMin: segmentSeconds,
+    durationMax: VIDEO_MAX_DURATION_SECONDS,
+    durationStep: segmentSeconds,
+    onChangeDuration: changeDuration,
+    quality: { value: quality, options: normalizeOptions(videoQualityOptions) },
+    onChangeQuality: setQuality,
+    director: {
+      open: directorOpen,
+      onToggle: () => setDirectorOpen((current) => !current),
+      rows,
+      onChangeRowPrompt: (index, text) =>
+        setDirectorPrompts((current) => {
+          const next = current.slice(0, segments);
+          while (next.length < segments) next.push("");
+          next[index] = text;
+          return next;
+        }),
+      canAddRow,
+      addLimitLabel: VIDEO_DURATION_LIMIT_LABEL,
+      onAddRow: () => {
+        if (canAddRow) changeDuration(durationSeconds + segmentSeconds);
+      },
+    },
+    countOptions: normalizeOptions(videoCountOptions),
+    countValue: count,
+    onChangeCount: setCount,
+    generateCostLabel: String(requestCoinCost),
+    canGenerate: !blockReason,
+    generationHelpText: blockReason,
+    // The Chassis has no video job: createImageGenerationJob.js
+    // returns 501 on a video mode, every provider declares video
+    // false, and no video route or cost policy exists. Generate
+    // renders Soon until the job in docs/handoffs/MEDIA-STUDIO-
+    // BACKEND.md gap 15 lands. Nothing fakes a result or spends coins.
+    available: false,
+    onGenerate: null,
+  };
+}
+
 export function useImagesV2LiveViewModel({
   onOpenCameraPresetPicker,
   stage = "GENERATE",
   onChangeStage = null,
+  mode = "IMAGE",
+  onChangeMode = null,
 } = {}) {
   const account = useStudioAccount();
   const workbench = useImageStudioWorkbenchViewModel({ account });
@@ -278,6 +462,23 @@ export function useImagesV2LiveViewModel({
   // 10 Sep 2026): its floor is 1 image while Generate's stays 2, so
   // the two stages keep separate values. Page state like the prompt.
   const [remixCount, setRemixCount] = useState("1");
+  // Video mode state (session 5): page state like the Remix prompt,
+  // so the rail and the sheet share it and switching modes never
+  // changes another mode's values. The duration starts at one segment.
+  const videoSegmentSeconds = Math.max(
+    1,
+    Number(composerProps?.videoCoinCosts?.segmentSeconds ?? 0) || 1
+  );
+  const [videoStage, setVideoStage] = useState("TEXT");
+  const [videoPrompt, setVideoPrompt] = useState("");
+  const [videoSourceImage, setVideoSourceImage] = useState(null);
+  const [videoImagePickerOpen, setVideoImagePickerOpen] = useState(false);
+  const [videoAspectRatio, setVideoAspectRatio] = useState(VIDEO_ASPECT_DEFAULT);
+  const [videoDurationSeconds, setVideoDurationSeconds] = useState(videoSegmentSeconds);
+  const [videoQuality, setVideoQuality] = useState(VIDEO_QUALITY_DEFAULT);
+  const [videoDirectorOpen, setVideoDirectorOpen] = useState(false);
+  const [videoDirectorPrompts, setVideoDirectorPrompts] = useState([]);
+  const [videoCount, setVideoCount] = useState("1");
 
   useEffect(() => {
     if (renderStyle === "auto") {
@@ -340,9 +541,37 @@ export function useImagesV2LiveViewModel({
     onChangeCount: setRemixCount,
   });
 
-  const videoModeOption = composer.modeOptions.find((option) => option.id === "VIDEO");
-  const videoDisabled = Boolean(videoModeOption?.disabled ?? true);
+  // The Video option is live on this page (session 5, RULED A of three
+  // at the plan gate): the page holds the mode, the workbench's own
+  // mode stays IMAGE so the image pipeline is untouched, and the Soon
+  // tag on the option follows video.available. The capability flag
+  // the workbench reads no longer gates the toggle here.
+  const videoDisabled = false;
+  const video = projectVideo({
+    composerProps,
+    stage: videoStage,
+    onChangeStage: setVideoStage,
+    prompt: videoPrompt,
+    setPrompt: setVideoPrompt,
+    sourceImage: videoSourceImage,
+    onOpenSourceImagePicker: () => setVideoImagePickerOpen(true),
+    onClearSourceImage: () => setVideoSourceImage(null),
+    aspectRatio: videoAspectRatio,
+    setAspectRatio: setVideoAspectRatio,
+    durationSeconds: videoDurationSeconds,
+    setDurationSeconds: setVideoDurationSeconds,
+    quality: videoQuality,
+    setQuality: setVideoQuality,
+    directorOpen: videoDirectorOpen,
+    setDirectorOpen: setVideoDirectorOpen,
+    directorPrompts: videoDirectorPrompts,
+    setDirectorPrompts: setVideoDirectorPrompts,
+    count: videoCount,
+    setCount: setVideoCount,
+  });
 
+  // The 2.2.0 video block's props stay projected for the contract;
+  // the View prefers `video` and never renders them while it is set.
   const videoOptionFields = [
     {
       id: "video-duration",
@@ -438,13 +667,14 @@ export function useImagesV2LiveViewModel({
   return {
     mediaHistoryProps: workbench.mediaHistoryProps,
     panelProps: {
-      mode: composer.mode,
-      onChangeMode: composer.onChangeMode,
+      mode: mode === "VIDEO" ? "VIDEO" : "IMAGE",
+      onChangeMode,
       videoDisabled,
       videoSoonLabel: "Soon",
       stage,
       onChangeStage,
       remix,
+      video,
       slots,
       onSlotActivate: activateSlot,
       onSlotClear: workbench.composerProps.onClearIngredient,
@@ -484,6 +714,24 @@ export function useImagesV2LiveViewModel({
     },
     pickerModalProps,
     savePresetModalProps,
+    // Image to video's source (session 5, RULED A of three): the page
+    // renders the shared picker fed with the library's images and
+    // reports the choice here as display-ready data.
+    videoImagePickerProps: {
+      isOpen: videoImagePickerOpen,
+      selectedId: videoSourceImage?.id || null,
+      onChoose: (item) => {
+        if (item) {
+          setVideoSourceImage({
+            id: String(item.id || ""),
+            title: String(item.title || "Image"),
+            imageSrc: String(item.imageSrc || ""),
+          });
+        }
+        setVideoImagePickerOpen(false);
+      },
+      onClose: () => setVideoImagePickerOpen(false),
+    },
     cameraPickerProps: {
       items: cameraPickerItems,
       groups: cameraPickerGroups,

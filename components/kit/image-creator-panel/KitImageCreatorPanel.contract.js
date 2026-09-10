@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit
@@ -32,6 +32,73 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
  * starts at 1 image while Generate's starts at 2, so the two stages
  * keep separate values and floors; a remix without `countOptions`
  * falls back to the shared footer count as in 2.1.0.
+ *
+ * 2.2.0 to 2.3.0, ADDITIVE (FE/MEDIA-STUDIO session 5, 10 Sep 2026,
+ * Brian's notes 7 and 7a): one nested `video` prop carries the whole
+ * Video mode (Text to video and Image to video stages, the five asset
+ * tiles or the one Image tile, the custom prompt, the Custom director
+ * rows, aspect ratio, duration, quality, its own count, cost, gate).
+ * Null keeps the 2.2.0 video block. The mode toggle's Video option is
+ * live while `videoDisabled` is false and keeps its Soon tag while
+ * `video.available` is false; the footer renders the Soon treatment
+ * (disabled, coin glyph and cost, Soon chip, title "Not available
+ * yet") for the same reason. Limits, the segment length, and the cost
+ * are the caller's: this View writes no number.
+ *
+ * @typedef {Object} KitImageCreatorVideoDirectorRow
+ * @property {number} index 0-based row position
+ * @property {number} fromSecond the row's start, "0" for the first
+ * @property {number} toSecond the row's end, fromSecond plus the
+ *   segment length
+ * @property {string} prompt what happens in that stretch
+ *
+ * @typedef {Object} KitImageCreatorVideoProps
+ * @property {"TEXT"|"IMAGE"} stage Text to video (asset tiles, prompt
+ *   optional) or Image to video (one Image tile required, prompt
+ *   required); the caller owns the value
+ * @property {((stage: "TEXT"|"IMAGE") => void)|null} onChangeStage
+ * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
+ *   the Video mode's own five tiles, keyed by the same fixed ids as
+ *   Generate's; the caller maps them onto its own Video slots
+ * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate
+ * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotClear
+ * @property {{title: string, imageSrc?: string}|null} sourceImage the
+ *   Image to video source, display-ready, null while empty
+ * @property {(() => void)|null} onSelectSourceImage opens the shared
+ *   picker fed with the library's images
+ * @property {(() => void)|null} onClearSourceImage
+ * @property {string} promptValue
+ * @property {((value: string) => void)|null} onChangePrompt
+ * @property {{value: string, defaultValue?: string, options: {value: string, label: string}[]}} aspectRatio
+ *   4:5, 5:4, 9:16, 16:9, 1:1; rendered through the shared
+ *   SettingSelect with the dim-or-gold state law
+ * @property {((value: string) => void)|null} onChangeAspectRatio
+ * @property {number} durationSeconds
+ * @property {number} durationMin the segment length (5)
+ * @property {number} durationMax the ceiling (30)
+ * @property {number} durationStep the segment length (5)
+ * @property {((seconds: number) => void)|null} onChangeDuration
+ * @property {{value: string, options: {value: string, label: string}[]}} quality
+ *   720p or 1080p, a two-option segmented control
+ * @property {((value: string) => void)|null} onChangeQuality
+ * @property {{open: boolean, onToggle: (() => void)|null, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((index: number, text: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null}} director
+ *   the Custom director: one row per segment of the current duration;
+ *   the plus adds a row and a segment to the duration until the
+ *   ceiling, where it renders disabled with addLimitLabel
+ * @property {{value: string, label: string}[]} countOptions Video's
+ *   own count list (1, 2, 4, 8, 16, 32 videos)
+ * @property {string} countValue
+ * @property {((value: string) => void)|null} onChangeCount
+ * @property {string} generateCostLabel segments times the segment cost,
+ *   times the quality multiplier, times the count, pre-computed by the
+ *   caller
+ * @property {boolean} canGenerate honest gate (coins, then a character
+ *   on Text to video, an image and a prompt on Image to video)
+ * @property {string} generationHelpText the block reason
+ * @property {boolean} available false renders the Soon treatment on
+ *   the footer button and the Soon tag on the mode toggle until the
+ *   Chassis carries a video job
+ * @property {(() => void)|null} onGenerate
  *
  * @typedef {Object} KitImageCreatorRemixReference
  * @property {string} slotId the Remix character slot this reference
@@ -130,13 +197,16 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
  * @property {"IMAGE"|"VIDEO"} mode
  * @property {((mode: "IMAGE"|"VIDEO") => void)|null} onChangeMode
  * @property {boolean} videoDisabled true keeps the Video option
- *   non-interactive with the Soon label (alpha default)
+ *   non-interactive with the Soon label (alpha default); false makes
+ *   it live (2.3.0), the Soon tag then following `video.available`
  * @property {string} videoSoonLabel
  * @property {"GENERATE"|"REMIX"} stage which stage tab is active;
  *   the caller owns the value (page-local presentation state)
  * @property {((stage: "GENERATE"|"REMIX") => void)|null} onChangeStage
  * @property {KitImageCreatorRemixProps|null} [remix] the Remix stage
  *   body and footer values (2.1.0); null renders the stub
+ * @property {KitImageCreatorVideoProps|null} [video] the Video mode
+ *   body and footer values (2.3.0); null keeps the 2.2.0 video block
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
  *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot
@@ -198,7 +268,8 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
  * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
  * @property {(() => void)|null} onGenerate fires the real job pipeline
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
- *   Video Aspect, Motion Style (video mode, unreachable while videoDisabled)
+ *   Video Aspect, Motion Style (the 2.2.0 video block, rendered only
+ *   while `video` is null)
  * @property {((fieldId: string, value: string) => void)|null} onChangeVideoOption
  * @property {string} videoDirectionValue
  * @property {((value: string) => void)|null} onChangeVideoDirection

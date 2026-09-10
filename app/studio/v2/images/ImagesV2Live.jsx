@@ -122,6 +122,54 @@ function LiveIngredientPicker({ pickerProps, backLabel = null }) {
   );
 }
 
+// Image to video's source picker (session 5, RULED A of three at the
+// plan gate): the SAME shared picker component, cards layout, no
+// Custom card, no filter, fed with the library's images the page has
+// already loaded. Never a second picker component.
+function LiveSourceImagePicker({ pickerProps, mediaItems = [], backLabel = null }) {
+  const [searchValue, setSearchValue] = useState("");
+  const normalizedSearch = searchValue.trim().toLowerCase();
+  const items = useMemo(
+    () =>
+      mediaItems
+        .filter((item) => item.type !== "VIDEO" && (item.thumbnailUrl || item.imageUrl))
+        .filter((item) => {
+          if (!normalizedSearch) return true;
+          return String(item.title || "").toLowerCase().includes(normalizedSearch);
+        })
+        .map((item) => ({
+          id: item.id,
+          title: item.title || "Image",
+          subtitle: "Image",
+          imageSrc: item.thumbnailUrl || item.imageUrl || null,
+          isSelected: item.id === pickerProps.selectedId,
+        })),
+    [mediaItems, normalizedSearch, pickerProps.selectedId]
+  );
+
+  return (
+    <KitIngredientPicker
+      slotLabel="Image"
+      description="Choose an image from your library to bring to life."
+      searchValue={searchValue}
+      searchPlaceholder="Search your images..."
+      onSearchChange={setSearchValue}
+      filter={null}
+      items={items}
+      itemLayout="cards"
+      emptyMessage="No images in your library yet."
+      loadErrorMessage=""
+      onChooseIngredient={(itemId) =>
+        pickerProps.onChoose?.(items.find((item) => item.id === itemId) || null)
+      }
+      showUseCustomAction={false}
+      onUseCustom={null}
+      backLabel={backLabel}
+      onClose={pickerProps.onClose}
+    />
+  );
+}
+
 function LiveSavePreset({ saveProps, backLabel = null }) {
   const save = useSaveIngredientPresetViewModel(saveProps);
 
@@ -161,12 +209,19 @@ export default function ImagesV2Live() {
   // ViewModel; its Generate stays Soon until the Chassis carries the
   // job (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 13).
   const [composerStage, setComposerStage] = useState("GENERATE");
+  // Mode toggle (Image, Video): page-local presentation state since
+  // session 5 (notes 7 and 7a). The Video composer is reviewable;
+  // its Generate stays Soon until the Chassis carries a video job
+  // (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 15).
+  const [composerMode, setComposerMode] = useState("IMAGE");
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const live = useImagesV2LiveViewModel({
     onOpenCameraPresetPicker: openCameraPresetPicker,
     stage: composerStage,
     onChangeStage: setComposerStage,
+    mode: composerMode,
+    onChangeMode: setComposerMode,
   });
   // The page owns the shared filter bar (RULED 6 Sep 2026), so it calls
   // the grid ViewModel itself and renders the grid skin with the
@@ -340,6 +395,14 @@ export default function ImagesV2Live() {
         <LiveSavePreset
           key={live.savePresetModalProps.slot?.id || "save-preset"}
           saveProps={live.savePresetModalProps}
+          backLabel={nestedBackLabel}
+        />
+      ) : null}
+
+      {live.videoImagePickerProps?.isOpen ? (
+        <LiveSourceImagePicker
+          pickerProps={live.videoImagePickerProps}
+          mediaItems={grid.mediaItems}
           backLabel={nestedBackLabel}
         />
       ) : null}

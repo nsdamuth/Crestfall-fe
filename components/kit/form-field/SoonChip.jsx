@@ -7,16 +7,19 @@
 // the way InfoTip and MenuRow were lifted in session 3, so the chip is
 // shared by construction rather than by copy. The disabled control
 // itself carries title "Not available yet"; this chip is the label.
+// The composer's mode toggle (session 5) renders the same chip on its
+// Video option through the optional `label`, which defaults to the
+// one word every other consumer shows.
 export const SOON_LABEL = "Soon";
 
-export function SoonChip({ inline = false }) {
+export function SoonChip({ inline = false, label = SOON_LABEL }) {
   return (
     <span
       className={`flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)] ${
         inline ? "" : "ml-[var(--space-2)]"
       }`}
     >
-      {SOON_LABEL}
+      {label || SOON_LABEL}
     </span>
   );
 }

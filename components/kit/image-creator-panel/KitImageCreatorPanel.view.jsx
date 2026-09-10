@@ -18,9 +18,11 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Clapperboard,
   Coins,
   Footprints,
   Image as ImageIcon,
+  ImagePlus,
   Layers,
   Library,
   Loader2,
@@ -247,10 +249,14 @@ function SettingSelect({
 // Outlined track around both options, the active option filled inside
 // it. Crestfall rounded square (radius-md), not a pill: ruled at the
 // 9 Sep 2026 plan gate, no law change.
-function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
+// Video (session 5, note 7): the option is live while the caller
+// passes `video` and keeps its Soon tag while the job is not
+// available, so the tag warns before the tap and Generate repeats it
+// at the point of action. Disabled keeps the 2.2.0 treatment.
+function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoon, videoSoonLabel }) {
   const options = [
-    { id: "IMAGE", label: "Image", icon: ImageIcon, disabled: false },
-    { id: "VIDEO", label: "Video", icon: Video, disabled: videoDisabled },
+    { id: "IMAGE", label: "Image", icon: ImageIcon, disabled: false, soon: false },
+    { id: "VIDEO", label: "Video", icon: Video, disabled: videoDisabled, soon: videoSoon },
   ];
 
   return (
@@ -282,10 +288,8 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
           >
             <Icon size={16} aria-hidden="true" className="flex-none" />
             <span className="truncate">{option.label}</span>
-            {option.disabled && videoSoonLabel ? (
-              <span className="flex-none text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-                {videoSoonLabel}
-              </span>
+            {(option.disabled || option.soon) && videoSoonLabel ? (
+              <SoonChip inline label={videoSoonLabel} />
             ) : null}
           </button>
         );
@@ -294,14 +298,23 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoonLabel }) {
   );
 }
 
-function StageTabs({ stage, onChangeStage }) {
-  const tabs = [
-    { id: "GENERATE", label: "Generate" },
-    { id: "REMIX", label: "Remix" },
-  ];
+const IMAGE_STAGE_TABS = [
+  { id: "GENERATE", label: "Generate" },
+  { id: "REMIX", label: "Remix" },
+];
 
+// Video mode (session 5, RULED A of three at the plan gate): the same
+// tab row carries Text to video and Image to video, with its own
+// state, so switching Image and Video never moves the Generate and
+// Remix tab.
+const VIDEO_STAGE_TABS = [
+  { id: "TEXT", label: "Text to video" },
+  { id: "IMAGE", label: "Image to video" },
+];
+
+function StageTabs({ stage, onChangeStage, tabs = IMAGE_STAGE_TABS, ariaLabel = "Stage" }) {
   return (
-    <div role="tablist" aria-label="Stage" className="grid grid-cols-2 gap-[var(--space-2)]">
+    <div role="tablist" aria-label={ariaLabel} className="grid grid-cols-2 gap-[var(--space-2)]">
       {tabs.map((tab) => {
         const isActive = stage === tab.id;
         return (
@@ -1313,6 +1326,237 @@ function RemixStage({ remix, idPrefix }) {
   );
 }
 
+// The Image to video source tile: the Generate Character tile's shape
+// (spans the row) with the add-image glyph, required, never glowing.
+const VIDEO_SOURCE_DEF = { id: "sourceImage", label: "Image", icon: ImagePlus, requirement: "required", savable: false, spanRow: true };
+
+// Quality: 720p or 1080p, the mode toggle's recipe (one outlined track,
+// the active option filled inside it). Two options and nothing else:
+// no model, extend, audio, or 4k (note 7).
+function QualityToggle({ quality, onChange }) {
+  const options = quality?.options || [];
+  return (
+    <div className="min-w-0">
+      <ControlTitle>Quality</ControlTitle>
+      <div
+        role="group"
+        aria-label="Quality"
+        className="mt-[var(--space-2)] grid grid-cols-2 gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]"
+      >
+        {options.map((option) => {
+          const isActive = option.value === quality?.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onChange?.(option.value)}
+              className={`flex min-h-[var(--control-filter)] min-w-0 items-center justify-center rounded-[var(--radius-md)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] tabular-nums transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+                isActive
+                  ? "bg-[var(--fill)] text-[var(--gold-bright)]"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+              }`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Duration: the Advanced slider's recipe (control title, the value
+// chip on the right in the dim-or-gold state ink, the range input,
+// the two end labels). Moves in segment steps from the caller.
+function DurationSlider({ video, idPrefix }) {
+  const inputId = `${idPrefix}-video-duration`;
+  const min = Number(video.durationMin) || 0;
+  const max = Number(video.durationMax) || min;
+  const step = Number(video.durationStep) || 1;
+  const value = Number(video.durationSeconds) || min;
+  return (
+    <div className="min-w-0">
+      <div className="flex items-center justify-between gap-[var(--space-2)]">
+        <label
+          htmlFor={inputId}
+          className="min-w-0 truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]"
+        >
+          Duration
+        </label>
+        <span
+          className={`shrink-0 rounded-[var(--radius-xs)] bg-[var(--surface-1)] px-[var(--space-2)] py-1 text-[length:var(--text-label)] tabular-nums ${stateInkClass(value !== min)}`}
+        >
+          {value}s
+        </span>
+      </div>
+      <input
+        id={inputId}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        aria-label="Duration in seconds"
+        aria-valuetext={`${value} seconds`}
+        onChange={(event) => video.onChangeDuration?.(Number(event.target.value))}
+        className="mt-[var(--space-2)] w-full cursor-pointer accent-[var(--gold-action)]"
+      />
+      <div className="mt-[var(--space-1)] flex justify-between gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+        <span>{min}s</span>
+        <span className="text-right">{max}s</span>
+      </div>
+    </div>
+  );
+}
+
+// Custom director (notes 7 and 7a): one row per segment of the current
+// duration, the seconds on the left and what happens in that stretch
+// on the right; the plus adds the next row and a segment to the
+// duration until the caller's ceiling.
+function DirectorRows({ director, idPrefix }) {
+  const rows = director?.rows || [];
+  return (
+    <div className="flex flex-col gap-[var(--space-3)]">
+      {rows.map((row) => {
+        const fieldId = `${idPrefix}-director-${row.index}`;
+        return (
+          <div key={row.index} className="grid min-w-0 grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-[var(--space-2)]">
+            <label
+              htmlFor={fieldId}
+              className="mt-[var(--space-2)] min-h-[var(--control-md)] py-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] tabular-nums text-[var(--ink-faint)]"
+            >
+              {row.fromSecond} to {row.toSecond}s
+            </label>
+            <textarea
+              ref={growTextarea}
+              id={fieldId}
+              name={fieldId}
+              value={row.prompt || ""}
+              onChange={(event) => {
+                growTextarea(event.target);
+                director.onChangeRowPrompt?.(row.index, event.target.value);
+              }}
+              placeholder="What happens in this stretch..."
+              rows={1}
+              className={FIELD_RECIPE}
+            />
+          </div>
+        );
+      })}
+      <div className="flex justify-end">
+        <button
+          type="button"
+          aria-label="Add the next row"
+          title={director?.canAddRow ? undefined : director?.addLimitLabel || undefined}
+          disabled={!director?.canAddRow}
+          onClick={() => director?.onAddRow?.()}
+          className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] transition-colors hover:border-[var(--line)] hover:text-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] disabled:hover:border-[var(--line-whisper)] disabled:hover:text-[var(--ink-dim)]"
+        >
+          <Plus size={16} aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// The Video mode body (session 5, note 7): Text to video keeps the
+// five asset tiles, Image to video takes one Image tile; then the
+// custom prompt (optional on Text, required on Image), the Custom
+// director, and Video settings (Aspect ratio, Duration, Quality). The
+// footer is shared and carries Video's own count, cost, gate, and the
+// Soon treatment while the Chassis has no video job.
+function VideoStage({ video, idPrefix }) {
+  const isImageStage = video.stage === "IMAGE";
+  const sourceState = { ...EMPTY_SLOT_STATE, selection: video.sourceImage || null };
+  const aspect = video.aspectRatio || { value: "", options: [] };
+  const directorOpen = Boolean(video.director?.open);
+  const promptId = `${idPrefix}-video-prompt`;
+
+  return (
+    <>
+      <StageTabs
+        stage={video.stage}
+        onChangeStage={video.onChangeStage}
+        tabs={VIDEO_STAGE_TABS}
+        ariaLabel="Video mode"
+      />
+
+      <div className="grid grid-cols-2 gap-[var(--space-3)]">
+        {isImageStage ? (
+          <SlotTile
+            def={VIDEO_SOURCE_DEF}
+            state={sourceState}
+            onActivate={() => video.onSelectSourceImage?.()}
+            onClear={() => video.onClearSourceImage?.()}
+          />
+        ) : (
+          SLOT_DEFS.map((def) => (
+            <SlotTile
+              key={def.id}
+              def={def}
+              state={video.slots?.[def.id] || EMPTY_SLOT_STATE}
+              onActivate={video.onSlotActivate}
+              onClear={video.onSlotClear}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="flex flex-col gap-[var(--space-3)]">
+        <label htmlFor={promptId} className="block">
+          <SectionTitle note={isImageStage ? "(required)" : "(optional)"}>Custom prompt</SectionTitle>
+          <textarea
+            ref={growTextarea}
+            name={promptId}
+            id={promptId}
+            value={video.promptValue || ""}
+            onChange={(event) => {
+              growTextarea(event.target);
+              video.onChangePrompt?.(event.target.value);
+            }}
+            placeholder="Describe the motion, scene beat, or moment..."
+            rows={1}
+            className={FIELD_RECIPE}
+          />
+        </label>
+
+        <div className="flex">
+          <button
+            type="button"
+            aria-expanded={directorOpen}
+            onClick={() => video.director?.onToggle?.()}
+            className="cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            <Clapperboard size={14} aria-hidden="true" />
+            Custom director
+          </button>
+        </div>
+
+        {directorOpen ? <DirectorRows director={video.director} idPrefix={idPrefix} /> : null}
+      </div>
+
+      <section className="flex min-w-0 flex-col gap-[var(--space-5)]">
+        <SectionTitle>Video settings</SectionTitle>
+        <SettingSelect
+          fieldId="video-aspect-ratio"
+          title="Aspect ratio"
+          valueLabel={
+            aspect.options?.find((option) => option.value === aspect.value)?.label || aspect.value
+          }
+          isChanged={aspect.defaultValue !== undefined && aspect.value !== aspect.defaultValue}
+          options={aspect.options}
+          value={aspect.value}
+          onChange={(value) => video.onChangeAspectRatio?.(value)}
+          idPrefix={idPrefix}
+        />
+        <DurationSlider video={video} idPrefix={idPrefix} />
+        <QualityToggle quality={video.quality} onChange={video.onChangeQuality} />
+      </section>
+    </>
+  );
+}
+
 function VideoBlock({
   videoOptionFields,
   onChangeVideoOption,
@@ -1364,6 +1608,7 @@ export default function KitImageCreatorPanelView({
   stage = "GENERATE",
   onChangeStage = null,
   remix = null,
+  video = null,
   slots = {},
   onSlotActivate = null,
   onSlotClear = null,
@@ -1405,6 +1650,10 @@ export default function KitImageCreatorPanelView({
   // same count control, the Remix cost label, its own gate, and the
   // Soon chip while the Chassis cannot run the job.
   const remixActive = isRemixStage && !isVideoMode && Boolean(remix);
+  // The live Video mode (session 5) shares the footer the same way:
+  // its own count, its cost label, its gate, and the Soon chip while
+  // the Chassis has no video job. A null `video` keeps the 2.2.0 block.
+  const videoActive = isVideoMode && Boolean(video);
   // Unique per mounted instance: the Media Studio page composes the
   // rail (desktop, CSS-hidden below 1100px) and the mobile sheet
   // simultaneously, so static ids would collide in the DOM.
@@ -1418,12 +1667,15 @@ export default function KitImageCreatorPanelView({
             mode={mode}
             onChangeMode={onChangeMode}
             videoDisabled={videoDisabled}
+            videoSoon={Boolean(video) && !video.available}
             videoSoonLabel={videoSoonLabel}
           />
 
           {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
 
-          {isRemixStage && !isVideoMode ? (
+          {videoActive ? (
+            <VideoStage video={video} idPrefix={idPrefix} />
+          ) : isRemixStage && !isVideoMode ? (
             <RemixStage remix={remix} idPrefix={idPrefix} />
           ) : (
             <div className="grid grid-cols-2 gap-[var(--space-3)]">
@@ -1453,7 +1705,7 @@ export default function KitImageCreatorPanelView({
             </div>
           )}
 
-          {isVideoMode ? (
+          {videoActive ? null : isVideoMode ? (
             <VideoBlock
               videoOptionFields={videoOptionFields}
               onChangeVideoOption={onChangeVideoOption}
@@ -1513,26 +1765,64 @@ export default function KitImageCreatorPanelView({
         // separate values and floors (Brian's browser note, 10 Sep
         // 2026, round 2). A remix without a list falls back to the
         // shared control.
+        // Video (2.3.0) carries its own count the same way; without
+        // `video` the mode has no count control.
         countOptions={
-          isVideoMode ? [] : remixActive && remix.countOptions ? remix.countOptions : countOptions
+          videoActive
+            ? video.countOptions || []
+            : isVideoMode
+              ? []
+              : remixActive && remix.countOptions
+                ? remix.countOptions
+                : countOptions
         }
-        countValue={remixActive && remix.countOptions ? remix.countValue || "" : countValue}
-        onChangeCount={remixActive && remix.countOptions ? remix.onChangeCount : onChangeCount}
-        generateCostLabel={remixActive ? remix.generateCostLabel : generateCostLabel}
-        canGenerate={
-          isVideoMode
-            ? false
+        countValue={
+          videoActive
+            ? video.countValue || ""
+            : remixActive && remix.countOptions
+              ? remix.countValue || ""
+              : countValue
+        }
+        onChangeCount={
+          videoActive
+            ? video.onChangeCount
+            : remixActive && remix.countOptions
+              ? remix.onChangeCount
+              : onChangeCount
+        }
+        generateCostLabel={
+          videoActive
+            ? video.generateCostLabel
             : remixActive
-              ? Boolean(remix.available && remix.canGenerate)
-              : isRemixStage
-                ? false
-                : canGenerate
+              ? remix.generateCostLabel
+              : generateCostLabel
         }
-        generationHelpText={remixActive ? remix.generationHelpText : generationHelpText}
+        canGenerate={
+          videoActive
+            ? Boolean(video.available && video.canGenerate)
+            : isVideoMode
+              ? false
+              : remixActive
+                ? Boolean(remix.available && remix.canGenerate)
+                : isRemixStage
+                  ? false
+                  : canGenerate
+        }
+        generationHelpText={
+          videoActive
+            ? video.generationHelpText
+            : remixActive
+              ? remix.generationHelpText
+              : generationHelpText
+        }
         generationStatus={generationStatus}
-        onGenerate={remixActive ? remix.onGenerate : onGenerate}
-        disabledReason={isVideoMode || (isRemixStage && !remixActive) ? NOT_AVAILABLE_LABEL : ""}
-        soon={remixActive && !remix.available}
+        onGenerate={videoActive ? video.onGenerate : remixActive ? remix.onGenerate : onGenerate}
+        disabledReason={
+          (isVideoMode && !videoActive) || (!isVideoMode && isRemixStage && !remixActive)
+            ? NOT_AVAILABLE_LABEL
+            : ""
+        }
+        soon={(remixActive && !remix.available) || (videoActive && !video.available)}
         idPrefix={idPrefix}
       />
     </div>

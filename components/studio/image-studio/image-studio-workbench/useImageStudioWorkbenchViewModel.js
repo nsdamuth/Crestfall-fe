@@ -8,6 +8,7 @@ import {
   normalizeCameraPresetValue,
   remixIngredientSlots,
   remixLocationSlots,
+  videoIngredientSlots,
 } from "../imageStudioData.js";
 import {
   LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT,
@@ -44,12 +45,26 @@ export const EDIT_RUN_COIN_COST = 20;
 // the coin gate follows count times this number exactly as Generate.
 export const REMIX_COIN_COST = 20;
 
+// Video cost rule (FE/MEDIA-STUDIO session 5, note 7, 10 Sep 2026),
+// proposed, pending Nick's cost table (docs/handoffs/MEDIA-STUDIO-
+// BACKEND.md gap 15); the three numbers live here only. One segment
+// of VIDEO_SEGMENT_SECONDS at 720p costs VIDEO_SEGMENT_COIN_COST;
+// 1080p multiplies that by VIDEO_1080P_COST_MULTIPLIER; the count
+// multiplies the total. Read by the page adapter through
+// composerProps.videoCoinCosts the way it reads remixCoinCost; no
+// View imports them and no copy writes the numbers.
+export const VIDEO_SEGMENT_COIN_COST = 50;
+export const VIDEO_SEGMENT_SECONDS = 5;
+export const VIDEO_1080P_COST_MULTIPLIER = 3;
+
 // The Media Studio workbench serves the five composer slots plus the
-// Remix slots (session 4); each Remix slot is an ordinary ingredient
-// slot with its own id, so every handler below works for it unchanged.
+// Remix slots (session 4) and the Video slots (session 5); each is an
+// ordinary ingredient slot with its own id, so every handler below
+// works for it unchanged.
 const WORKBENCH_INGREDIENT_SLOTS = Object.freeze([
   ...ingredientSlots,
   ...remixIngredientSlots,
+  ...videoIngredientSlots,
 ]);
 
 export const ASPECT_RATIO_BY_COMPOSER_VALUE = Object.freeze({
@@ -91,6 +106,13 @@ export const PRESET_CREATION_TYPE_BY_SLOT_ID = Object.freeze({
   // like Generate's (session 4); Remix characters have no preset type,
   // same as Character.
   ...Object.fromEntries(remixLocationSlots.map((slot) => [slot.id, "LOCATION"])),
+  // The Video slots (session 5) save the same preset types as the
+  // Generate tile they mirror; the Video character has none.
+  ...Object.fromEntries(
+    videoIngredientSlots
+      .filter((slot) => slot.allowCreatePreset)
+      .map((slot) => [slot.id, { pose: "POSE", outfit: "OUTFIT", location: "LOCATION", preset: "IMAGE_PRESET" }[slot.tileId]])
+  ),
 });
 
 export function getLegacyRenderingStyle(renderProfileKey) {
@@ -943,6 +965,11 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       coinBalance,
       coinCost: IMAGE_GENERATION_COIN_COST,
       remixCoinCost: REMIX_COIN_COST,
+      videoCoinCosts: {
+        perSegment: VIDEO_SEGMENT_COIN_COST,
+        segmentSeconds: VIDEO_SEGMENT_SECONDS,
+        multiplier1080p: VIDEO_1080P_COST_MULTIPLIER,
+      },
       coinStatus,
       coinError,
       hasEnoughCoins,

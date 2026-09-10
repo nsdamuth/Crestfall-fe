@@ -1,6 +1,7 @@
-// Fixture states, contract 2.1.0 (9 Sep 2026, FE/MEDIA-STUDIO; Remix
-// 10 Sep 2026): default, emptySlots, insufficientCoins,
-// customIngredient, remixStage, remixFull, videoMode, longestContent.
+// Fixture states, contract 2.3.0 (9 Sep 2026, FE/MEDIA-STUDIO; Remix
+// and Video 10 Sep 2026): default, emptySlots, insufficientCoins,
+// customIngredient, remixStage, remixFull, videoMode, videoText,
+// videoImage, longestContent.
 // Option lists mirror
 // components/studio/image-studio/imageStudioData.js verbatim (READ
 // ONLY reference, values copied not imported, since that package
@@ -363,6 +364,141 @@ const videoModeFixture = {
   },
 };
 
+// Video fixtures (contract 2.3.0, session 5, note 7). The segment
+// length, the ceiling, the count list, and the cost are the caller's;
+// here: 5-second segments up to 30, and a cost of 50 per segment at
+// 720p, three times that at 1080p, times the count.
+export const VIDEO_COUNT_OPTIONS = [
+  { value: "1", label: "1 video" },
+  { value: "2", label: "2 videos" },
+  { value: "4", label: "4 videos" },
+  { value: "8", label: "8 videos" },
+  { value: "16", label: "16 videos" },
+  { value: "32", label: "32 videos" },
+];
+
+export const VIDEO_QUALITY_OPTIONS = [
+  { value: "720p", label: "720p" },
+  { value: "1080p", label: "1080p" },
+];
+
+function directorRows(durationSeconds, prompts = []) {
+  const rowCount = Math.max(1, Math.round(durationSeconds / 5));
+  return Array.from({ length: rowCount }, (_, index) => ({
+    index,
+    fromSecond: index * 5,
+    toSecond: (index + 1) * 5,
+    prompt: prompts[index] || "",
+  }));
+}
+
+function baseVideoProps(overrides = {}) {
+  const durationSeconds = overrides.durationSeconds ?? 10;
+  return {
+    stage: "TEXT",
+    onChangeStage: noop,
+    slots: {},
+    onSlotActivate: noop,
+    onSlotClear: noop,
+    sourceImage: null,
+    onSelectSourceImage: noop,
+    onClearSourceImage: noop,
+    promptValue: "",
+    onChangePrompt: noop,
+    aspectRatio: { value: "PORTRAIT_4_5", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+    onChangeAspectRatio: noop,
+    durationSeconds,
+    durationMin: 5,
+    durationMax: 30,
+    durationStep: 5,
+    onChangeDuration: noop,
+    quality: { value: "720p", options: VIDEO_QUALITY_OPTIONS },
+    onChangeQuality: noop,
+    director: {
+      open: false,
+      onToggle: noop,
+      rows: directorRows(durationSeconds),
+      onChangeRowPrompt: noop,
+      canAddRow: durationSeconds < 30,
+      addLimitLabel: "Up to 30 seconds",
+      onAddRow: noop,
+    },
+    countOptions: VIDEO_COUNT_OPTIONS,
+    countValue: "1",
+    onChangeCount: noop,
+    generateCostLabel: "100",
+    canGenerate: true,
+    generationHelpText: "",
+    available: false,
+    onGenerate: null,
+    ...overrides,
+  };
+}
+
+const videoTextFixture = {
+  id: "videoText",
+  label: "Video, text to video",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    mode: "VIDEO",
+    videoDisabled: false,
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    video: baseVideoProps({
+      slots: {
+        character: { selection: { title: "Vesper Ash", subtitle: "Character", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" }, isCustomMode: false, customText: "" },
+        location: { selection: { title: "Harborfront at Dusk", subtitle: "Location", imageSrc: "/assets/covers/crestfall-painting-cover.png" }, isCustomMode: false, customText: "" },
+      },
+      promptValue: "Slow push toward the harbor as lamps flicker on, one by one.",
+      durationSeconds: 10,
+      director: {
+        open: true,
+        onToggle: noop,
+        rows: directorRows(10, [
+          "She turns from the rail as the first lamp lights behind her.",
+          "The wind lifts her cloak; the last lamp flickers on.",
+        ]),
+        onChangeRowPrompt: noop,
+        canAddRow: true,
+        addLimitLabel: "Up to 30 seconds",
+        onAddRow: noop,
+      },
+      countValue: "2",
+      generateCostLabel: "200",
+    }),
+  },
+};
+
+const videoImageFixture = {
+  id: "videoImage",
+  label: "Video, image to video",
+  props: {
+    ...sharedCallbacks,
+    ...sharedShape,
+    mode: "VIDEO",
+    videoDisabled: false,
+    slots: {},
+    promptValue: "",
+    canGenerate: false,
+    generationHelpText: "",
+    video: baseVideoProps({
+      stage: "IMAGE",
+      sourceImage: { title: "Vesper at the harbor rail", imageSrc: "/assets/covers/crestfall-ballerina-cover.png" },
+      promptValue: "",
+      durationSeconds: 5,
+      quality: { value: "1080p", options: VIDEO_QUALITY_OPTIONS },
+      aspectRatio: { value: "LANDSCAPE_16_9", defaultValue: "PORTRAIT_4_5", options: ASPECT_RATIO_OPTIONS },
+      countValue: "1",
+      generateCostLabel: "150",
+      canGenerate: false,
+      generationHelpText: "Describe the motion before generating.",
+    }),
+  },
+};
+
 const longestContentFixture = {
   id: "longestContent",
   label: "Longest content",
@@ -421,5 +557,7 @@ export const kitImageCreatorPanelFixtures = [
   remixStageFixture,
   remixFullFixture,
   videoModeFixture,
+  videoTextFixture,
+  videoImageFixture,
   longestContentFixture,
 ];
