@@ -33,10 +33,30 @@ const NOT_AVAILABLE_LABEL = "Not available yet";
 const UPSCALE_TIP =
   "Makes a larger version for fine edits, banners, print, and use off site. The size it produces comes from the server.";
 
-// View-mode image caps: header (three rows), bottom bar, and the
-// thumbnail strip are fixed; the image takes what is left.
+// View-mode sizing. Mobile keeps the chrome-aware cap. Desktop must
+// actively SCALE the image into the available viewer envelope, not only
+// cap its intrinsic dimensions. The prior h-auto/w-auto + max-* recipe
+// never enlarged an 832x1040 source, which is why the new Kit viewer
+// appeared much smaller than the legacy full-screen MediaLightbox.
+// --viewer-expanded-width is derived from the measured image aspect
+// ratio so portrait and landscape images both grow until they meet
+// either the 78dvh height envelope or the 88vw/76rem width envelope.
 const VIEWER_IMAGE_CLASSES =
-  "block h-auto w-auto max-w-full select-none max-h-[calc(100dvh-20rem)] min-[700px]:max-h-[60dvh] min-[700px]:max-w-[min(88vw,76rem)]";
+  "block h-auto w-auto max-w-full select-none max-h-[calc(100dvh-20rem)] min-[700px]:w-[var(--viewer-expanded-width)] min-[700px]:max-h-[78dvh] min-[700px]:max-w-[min(88vw,76rem)]";
+
+function getViewerExpandedImageStyle(pixelSize) {
+  const width = Number(pixelSize?.width);
+  const height = Number(pixelSize?.height);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+    return undefined;
+  }
+
+  const aspectRatio = width / height;
+  const heightBoundWidthDvh = 78 * aspectRatio;
+  return {
+    "--viewer-expanded-width": `min(88vw, 76rem, ${heightBoundWidthDvh.toFixed(4)}dvh)`,
+  };
+}
 
 const GLASS_BAR =
   "pointer-events-auto flex w-full self-stretch rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] backdrop-blur-[var(--blur-panel)]";
@@ -295,6 +315,8 @@ export default function KitImageViewerView({
   onExitEdit = null,
   onFocusUpscale = null,
 }) {
+  const viewerExpandedImageStyle = getViewerExpandedImageStyle(pixelSize);
+
   if (overlayReplacesBody) {
     return (
       <div className="pointer-events-none flex h-full w-full items-center justify-center px-[var(--space-4)]">
@@ -309,7 +331,10 @@ export default function KitImageViewerView({
     // rows, and the strip re-enable pointer events, so a click
     // anywhere else falls through to the veil and dismisses. w-fit so
     // the header and bars snap to the image's own width (R5).
-    <div className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:max-h-full min-[700px]:px-0">
+    <div
+      style={viewerExpandedImageStyle}
+      className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:max-h-full min-[700px]:px-0"
+    >
       <ViewerHeader
         title={title}
         pixelSizeLabel={pixelSizeLabel}

@@ -1,5 +1,5 @@
-// Fixture states, contract 2.3.0 (9 Sep 2026, FE/MEDIA-STUDIO; Remix
-// and Video 10 Sep 2026): default, emptySlots, insufficientCoins,
+// Fixture states, contract 2.4.0 (9-10 Sep 2026, FE/MEDIA-STUDIO; Remix,
+// Video, and Director fidelity follow-up): default, emptySlots, insufficientCoins,
 // customIngredient, remixStage, remixFull, videoMode, videoText,
 // videoImage, longestContent.
 // Option lists mirror
@@ -364,10 +364,10 @@ const videoModeFixture = {
   },
 };
 
-// Video fixtures (contract 2.3.0, session 5, note 7). The segment
-// length, the ceiling, the count list, and the cost are the caller's;
-// here: 5-second segments up to 30, and a cost of 50 per segment at
-// 720p, three times that at 1080p, times the count.
+// Video fixtures (contract 2.4.0). Provider/billing duration still uses
+// 5-second segments up to 30; Director cue timing is independent and
+// may use tenths of a second. Cost remains 50 per segment at 720p,
+// three times that at 1080p, times the count.
 export const VIDEO_COUNT_OPTIONS = [
   { value: "1", label: "1 video" },
   { value: "2", label: "2 videos" },
@@ -382,13 +382,21 @@ export const VIDEO_QUALITY_OPTIONS = [
   { value: "1080p", label: "1080p" },
 ];
 
-function directorRows(durationSeconds, prompts = []) {
-  const rowCount = Math.max(1, Math.round(durationSeconds / 5));
-  return Array.from({ length: rowCount }, (_, index) => ({
+function directorRows(durationSeconds, prompts = [], ranges = null) {
+  const cueRanges = Array.isArray(ranges) && ranges.length
+    ? ranges
+    : prompts.length
+      ? prompts.map((_, index) => [index, Math.min(index + 1, durationSeconds)])
+      : [[0, Math.min(1, durationSeconds)]];
+
+  return cueRanges.map(([fromSecond, toSecond], index) => ({
+    id: `cue-${index + 1}`,
     index,
-    fromSecond: index * 5,
-    toSecond: (index + 1) * 5,
+    fromSecond,
+    toSecond,
     prompt: prompts[index] || "",
+    isInvalid: false,
+    errorText: "",
   }));
 }
 
@@ -417,10 +425,14 @@ function baseVideoProps(overrides = {}) {
     director: {
       open: false,
       onToggle: noop,
+      durationSeconds,
+      timeStepSeconds: 0.1,
       rows: directorRows(durationSeconds),
       onChangeRowPrompt: noop,
-      canAddRow: durationSeconds < 30,
-      addLimitLabel: "Up to 30 seconds",
+      onChangeRowTime: noop,
+      onRemoveRow: noop,
+      canAddRow: durationSeconds > 1,
+      addLimitLabel: "No open time remains in this video",
       onAddRow: noop,
     },
     countOptions: VIDEO_COUNT_OPTIONS,
@@ -457,13 +469,22 @@ const videoTextFixture = {
       director: {
         open: true,
         onToggle: noop,
-        rows: directorRows(10, [
-          "She turns from the rail as the first lamp lights behind her.",
-          "The wind lifts her cloak; the last lamp flickers on.",
-        ]),
+        durationSeconds: 10,
+        timeStepSeconds: 0.1,
+        rows: directorRows(
+          10,
+          [
+            "She turns from the rail as the first lamp lights behind her.",
+            "Her gaze follows the camera as the wind lifts her cloak.",
+            "The last lamp flickers on behind her.",
+          ],
+          [[0, 1], [1, 2], [3, 5]]
+        ),
         onChangeRowPrompt: noop,
+        onChangeRowTime: noop,
+        onRemoveRow: noop,
         canAddRow: true,
-        addLimitLabel: "Up to 30 seconds",
+        addLimitLabel: "No open time remains in this video",
         onAddRow: noop,
       },
       countValue: "2",

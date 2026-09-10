@@ -448,13 +448,6 @@ export const imageCountOptions = buildImageStudioOutputCountValues().map(
     label: `${count} ${count === 1 ? "image" : "images"}`,
   })
 );
-// Count list RULED 9 Sep 2026 (Media Studio plan gate): 2, 4, 8, 16,
-// 32, 64, 128, 256, default 2. The backend serves 1 to 4 today;
-// IMAGE_COUNT_BACKEND_MAX marks where the Media Studio composer
-// renders the rest disabled ("Not available yet",
-// docs/handoffs/MEDIA-STUDIO-BACKEND.md).
-export const IMAGE_COUNT_BACKEND_MAX = 4;
-
 // Remix limits, RULED 10 Sep 2026 (FE/MEDIA-STUDIO session 4, note 5):
 // up to six characters (character or player character assets) plus
 // one location. Defined once here beside the count limit; every
@@ -579,17 +572,6 @@ export const videoIngredientSlots = [
     allowCustom: true,
     allowCreatePreset: true,
   },
-];
-
-export const imageCountOptions = [
-  { value: "2", label: "2 images" },
-  { value: "4", label: "4 images" },
-  { value: "8", label: "8 images" },
-  { value: "16", label: "16 images" },
-  { value: "32", label: "32 images" },
-  { value: "64", label: "64 images" },
-  { value: "128", label: "128 images" },
-  { value: "256", label: "256 images" },
 ];
 
 export const videoDurationOptions = [

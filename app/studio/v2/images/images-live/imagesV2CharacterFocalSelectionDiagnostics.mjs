@@ -55,8 +55,28 @@ test("portable Kit panel consumes caller-projected object-position without brows
     "app/studio/v2/images/images-live/imageStudioFocalSelection.js"
   );
 
+  const projectSelectionSource = String(
+    adapter.split("function projectSelection", 2)[1] || ""
+  ).split("\nfunction projectSlotStates", 1)[0];
+  const projectSlotStatesSource = String(
+    adapter.split("function projectSlotStates", 2)[1] || ""
+  ).split("\n// Remix", 1)[0];
+
   assert.match(focalProjection, /resolveImageFocalObjectPosition/);
-  assert.match(adapter, /imagePosition:\s*getIngredientSelectionImagePosition/);
+  assert.match(
+    projectSelectionSource,
+    /imagePosition:\s*getIngredientSelectionImagePosition/,
+    "The shared selection projector must carry focal object-position; a dead duplicate selection object is not sufficient."
+  );
+  assert.equal(
+    (projectSlotStatesSource.match(/\bselection:/g) || []).length,
+    1,
+    "Generate slot state must contain exactly one selection projection after merge resolution."
+  );
+  assert.match(
+    projectSlotStatesSource,
+    /selection:\s*projectSelection\(value, slot, customText\)/
+  );
   assert.match(panel, /objectPosition:\s*imagePosition/);
   assert.doesNotMatch(panel, /focalAnalysis|FACE_DETECTION|blazeface/i);
 });

@@ -1,6 +1,6 @@
 # Kit Image Creator Panel LOOM package (the Media Studio composer)
 
-**Contract:** `KitImageCreatorPanel.contract.js` (`2.3.0`, 10 Sep 2026; Video additive over 2.2.0 of the same day, Remix count additive over 2.1.0, Remix additive over 2.0.0 of 9 Sep 2026)
+**Contract:** `KitImageCreatorPanel.contract.js` (`2.4.0`, 10 Sep 2026; Director fidelity additive/semantic over Video 2.3.0, Video additive over 2.2.0, Remix count additive over 2.1.0, Remix additive over 2.0.0)
 
 ## Purpose
 
@@ -134,7 +134,7 @@ mobile modal body on the Media Studio page) pads the panel by exactly
 
 ## Video mode (session 5, notes 7 and 7a, RULED A, A, A, A of four at the plan gate)
 
-Rendered when the caller passes `video` (2.3.0); a null `video` keeps
+Rendered when the caller passes `video` (2.3.0+; Director timing is 2.4.0); a null `video` keeps
 the 2.2.0 video block (Duration, Video aspect, Motion style, Video
 direction) for the `videoMode` fixture. Video is Soon for alpha: the
 whole composer is reviewable, and Generate carries the Soon treatment
@@ -154,12 +154,13 @@ View writes no number.
    second picker.
 3. Custom prompt: `(optional)` on Text to video, `(required)` on Image
    to video, one row that grows.
-4. Custom director: a secondary button under the prompt opens one row
-   per segment of the current duration, the seconds on the left
-   ("0 to 5s", "5 to 10s") and a growing prompt field on the right; a
-   plus button adds the next row, which adds a segment to the duration
-   and to the cost, and renders disabled at the ceiling with the
-   caller's limit line.
+4. Custom director: a secondary button under the prompt opens a compact
+   temporal cue sheet. Each row has editable start/end seconds on the
+   left (0.1-second precision) and a growing prompt field on the right.
+   Gaps are allowed, overlapping/reversed ranges surface inline
+   validation, rows can be removed, and the plus adds the next open cue
+   without changing video duration or cost. Provider/billing segments
+   remain a separate concern owned by the caller.
 5. Video settings, open (no disclosure): Aspect ratio through the
    shared SettingSelect (4:5, 5:4, 9:16, 16:9, 1:1), Duration as the
    Advanced slider's recipe moving in segment steps with the value
@@ -187,7 +188,8 @@ the cost tooltip), `customIngredient`, `remixStage` (three references,
 one custom, a location, a prompt with mentions), `remixFull` (six
 references, Add disabled with the limit line), `videoMode` (the 2.2.0
 block, null `video`), `videoText` (Text to video, two tiles filled,
-the director open with two rows at 10 seconds, two videos at 720p),
+the director open with 0-1s, 1-2s, and 3-5s cue ranges inside a
+10-second video, two videos at 720p),
 `videoImage` (Image to video, the source filled, no prompt so the
 gate reads its block reason, 5 seconds at 1080p), `longestContent`.
 

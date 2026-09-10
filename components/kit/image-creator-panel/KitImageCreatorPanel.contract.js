@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.4.0";
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit
@@ -45,12 +45,22 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
  * yet") for the same reason. Limits, the segment length, and the cost
  * are the caller's: this View writes no number.
  *
+ * 2.3.0 to 2.4.0, ADDITIVE/SEMANTIC (Director fidelity follow-up,
+ * 10 Sep 2026): Video duration/billing segments stay unchanged, while
+ * `video.director` becomes an arbitrary temporal cue sheet with
+ * editable start/end seconds, 0.1-second precision, gaps, overlap
+ * validation, cue removal, and cue addition that does not alter the
+ * video's duration or price.
+ *
  * @typedef {Object} KitImageCreatorVideoDirectorRow
- * @property {number} index 0-based row position
- * @property {number} fromSecond the row's start, "0" for the first
- * @property {number} toSecond the row's end, fromSecond plus the
- *   segment length
+ * @property {string} id stable cue id
+ * @property {number} index 0-based display position
+ * @property {number} fromSecond editable cue start in seconds
+ * @property {number} toSecond editable cue end in seconds
  * @property {string} prompt what happens in that stretch
+ * @property {boolean} isInvalid true when the range is out of bounds,
+ *   reversed, or overlaps another cue
+ * @property {string} errorText compact caller-projected validation copy
  *
  * @typedef {Object} KitImageCreatorVideoProps
  * @property {"TEXT"|"IMAGE"} stage Text to video (asset tiles, prompt
@@ -74,17 +84,18 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
  *   SettingSelect with the dim-or-gold state law
  * @property {((value: string) => void)|null} onChangeAspectRatio
  * @property {number} durationSeconds
- * @property {number} durationMin the segment length (5)
+ * @property {number} durationMin the provider/billing duration floor
  * @property {number} durationMax the ceiling (30)
- * @property {number} durationStep the segment length (5)
+ * @property {number} durationStep the provider/billing duration step
  * @property {((seconds: number) => void)|null} onChangeDuration
  * @property {{value: string, options: {value: string, label: string}[]}} quality
  *   720p or 1080p, a two-option segmented control
  * @property {((value: string) => void)|null} onChangeQuality
- * @property {{open: boolean, onToggle: (() => void)|null, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((index: number, text: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null}} director
- *   the Custom director: one row per segment of the current duration;
- *   the plus adds a row and a segment to the duration until the
- *   ceiling, where it renders disabled with addLimitLabel
+ * @property {{open: boolean, onToggle: (() => void)|null, durationSeconds: number, timeStepSeconds: number, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((cueId: string, text: string) => void)|null, onChangeRowTime: ((cueId: string, field: "fromSecond"|"toSecond", seconds: number) => void)|null, onRemoveRow: ((cueId: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null}} director
+ *   the Custom director: compact arbitrary temporal cues inside the
+ *   current duration. Tenths of a second are supported, gaps are
+ *   allowed, overlaps are invalid, and adding/removing cues never
+ *   changes duration or billing.
  * @property {{value: string, label: string}[]} countOptions Video's
  *   own count list (1, 2, 4, 8, 16, 32 videos)
  * @property {string} countValue
@@ -93,7 +104,8 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
  *   times the quality multiplier, times the count, pre-computed by the
  *   caller
  * @property {boolean} canGenerate honest gate (coins, then a character
- *   on Text to video, an image and a prompt on Image to video)
+ *   on Text to video, an image and a prompt on Image to video, then
+ *   valid non-overlapping Director cue timing when cues are present)
  * @property {string} generationHelpText the block reason
  * @property {boolean} available false renders the Soon treatment on
  *   the footer button and the Soon tag on the mode toggle until the

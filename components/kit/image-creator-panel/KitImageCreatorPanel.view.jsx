@@ -1412,45 +1412,115 @@ function DurationSlider({ video, idPrefix }) {
   );
 }
 
-// Custom director (notes 7 and 7a): one row per segment of the current
-// duration, the seconds on the left and what happens in that stretch
-// on the right; the plus adds the next row and a segment to the
-// duration until the caller's ceiling.
+// Custom director: compact, editable temporal cues independent of the
+// provider/billing segment length. Start/end fields accept tenths of a
+// second, gaps are valid, and the caller flags overlaps or invalid ranges.
+// Adding/removing a cue never changes the video's duration.
 function DirectorRows({ director, idPrefix }) {
   const rows = director?.rows || [];
+  const durationSeconds = Number(director?.durationSeconds) || 0;
+  const timeStepSeconds = Number(director?.timeStepSeconds) || 0.1;
+
   return (
     <div className="flex flex-col gap-[var(--space-3)]">
+      <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)]">
+        Set precise cue ranges. Gaps are allowed.
+      </p>
       {rows.map((row) => {
-        const fieldId = `${idPrefix}-director-${row.index}`;
+        const fieldId = `${idPrefix}-director-${row.id}`;
+        const startId = `${fieldId}-start`;
+        const endId = `${fieldId}-end`;
+        const invalidTimeClass = row.isInvalid
+          ? "border-[var(--status-danger-border)] text-[var(--status-danger)]"
+          : "border-[var(--line-whisper)] text-[var(--ink-dim)] focus:border-[var(--gold-ornament)] focus:text-[var(--gold-bright)]";
+
         return (
-          <div key={row.index} className="grid min-w-0 grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-[var(--space-2)]">
-            <label
-              htmlFor={fieldId}
-              className="mt-[var(--space-2)] min-h-[var(--control-md)] py-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] tabular-nums text-[var(--ink-faint)]"
-            >
-              {row.fromSecond} to {row.toSecond}s
-            </label>
-            <textarea
-              ref={growTextarea}
-              id={fieldId}
-              name={fieldId}
-              value={row.prompt || ""}
-              onChange={(event) => {
-                growTextarea(event.target);
-                director.onChangeRowPrompt?.(row.index, event.target.value);
-              }}
-              placeholder="What happens in this stretch..."
-              rows={1}
-              className={FIELD_RECIPE}
-            />
+          <div key={row.id} className="min-w-0">
+            <div className="grid min-w-0 grid-cols-[8.25rem_minmax(0,1fr)] items-start gap-[var(--space-2)]">
+              <div className="mt-[var(--space-2)] flex min-h-[var(--control-md)] items-center gap-1">
+                <input
+                  id={startId}
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  max={durationSeconds}
+                  step={timeStepSeconds}
+                  value={row.fromSecond}
+                  aria-label={`Cue ${row.index + 1} start time in seconds`}
+                  aria-invalid={row.isInvalid || undefined}
+                  onChange={(event) =>
+                    director.onChangeRowTime?.(
+                      row.id,
+                      "fromSecond",
+                      Number(event.target.value)
+                    )
+                  }
+                  className={`h-8 w-[2.65rem] rounded-[var(--radius-xs)] border bg-[var(--surface-1)] px-1 text-center text-[length:var(--text-label)] tabular-nums outline-none transition ${invalidTimeClass}`}
+                />
+                <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">–</span>
+                <input
+                  id={endId}
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  max={durationSeconds}
+                  step={timeStepSeconds}
+                  value={row.toSecond}
+                  aria-label={`Cue ${row.index + 1} end time in seconds`}
+                  aria-invalid={row.isInvalid || undefined}
+                  onChange={(event) =>
+                    director.onChangeRowTime?.(
+                      row.id,
+                      "toSecond",
+                      Number(event.target.value)
+                    )
+                  }
+                  className={`h-8 w-[2.65rem] rounded-[var(--radius-xs)] border bg-[var(--surface-1)] px-1 text-center text-[length:var(--text-label)] tabular-nums outline-none transition ${invalidTimeClass}`}
+                />
+                <span className="text-[length:var(--text-label)] text-[var(--ink-faint)]">s</span>
+                <button
+                  type="button"
+                  aria-label={`Remove cue ${row.index + 1}`}
+                  title="Remove cue"
+                  onClick={() => director.onRemoveRow?.(row.id)}
+                  className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-faint)] transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--ink-dim)]"
+                >
+                  <X size={12} aria-hidden="true" />
+                </button>
+              </div>
+              <label htmlFor={fieldId} className="sr-only">
+                Cue {row.index + 1} direction
+              </label>
+              <textarea
+                ref={growTextarea}
+                id={fieldId}
+                name={fieldId}
+                value={row.prompt || ""}
+                onChange={(event) => {
+                  growTextarea(event.target);
+                  director.onChangeRowPrompt?.(row.id, event.target.value);
+                }}
+                placeholder="What happens in this stretch..."
+                rows={1}
+                className={FIELD_RECIPE}
+              />
+            </div>
+            {row.errorText ? (
+              <p
+                role="alert"
+                className="mt-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]"
+              >
+                {row.errorText}
+              </p>
+            ) : null}
           </div>
         );
       })}
       <div className="flex justify-end">
         <button
           type="button"
-          aria-label="Add the next row"
-          title={director?.canAddRow ? undefined : director?.addLimitLabel || undefined}
+          aria-label="Add director cue"
+          title={director?.canAddRow ? "Add director cue" : director?.addLimitLabel || undefined}
           disabled={!director?.canAddRow}
           onClick={() => director?.onAddRow?.()}
           className="flex h-[var(--control-md)] w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] transition-colors hover:border-[var(--line)] hover:text-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] disabled:hover:border-[var(--line-whisper)] disabled:hover:text-[var(--ink-dim)]"

@@ -9,7 +9,8 @@
 // null `remix` as the session 1 stub, so dropping it here is the
 // regression the live adapter diagnostics guard against. Contract
 // 2.3.0 (10 Sep 2026): the nested `video` object passes through the
-// same way; null keeps the 2.2.0 video block.
+// same way; null keeps the 2.2.0 video block. Contract 2.4.0 keeps
+// Director cue timing inside that same nested object unchanged here.
 export function useKitImageCreatorPanelViewModel({
   mode = "IMAGE",
   onChangeMode = null,

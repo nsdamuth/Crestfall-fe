@@ -39,6 +39,20 @@ const preview = read(
 assert.match(workbench, /IMAGE_STUDIO_MIN_OUTPUT_COUNT/);
 assert.match(workbench, /clampImageStudioOutputCount\(imageCount\)/);
 assert.match(data, /buildImageStudioOutputCountValues/);
+assert.equal(
+  (data.match(/export const IMAGE_COUNT_BACKEND_MAX/g) || []).length,
+  1,
+  "Media Studio data must export one backend count ceiling after merge resolution."
+);
+assert.equal(
+  (data.match(/export const imageCountOptions/g) || []).length,
+  1,
+  "Media Studio data must export one env-driven image count option list after merge resolution."
+);
+assert.match(
+  data,
+  /export const IMAGE_COUNT_BACKEND_MAX = IMAGE_STUDIO_OUTPUT_COUNT_BACKEND_MAX/
+);
 assert.match(
   preview,
   /outputCount:\s*1/,

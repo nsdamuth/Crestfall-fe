@@ -11,6 +11,16 @@ import {
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import { getIngredientSelectionImagePosition } from "./imageStudioFocalSelection.js";
 import {
+  VIDEO_DIRECTOR_TIME_STEP_SECONDS,
+  addVideoDirectorCue,
+  clipVideoDirectorCuesToDuration,
+  createInitialVideoDirectorCues,
+  getNextVideoDirectorCueRange,
+  projectVideoDirectorRows,
+  removeVideoDirectorCue,
+  updateVideoDirectorCue,
+} from "./videoDirectorTimeline.js";
+import {
   IMAGE_COUNT_BACKEND_MAX,
   REMIX_MAX_CHARACTERS,
   VIDEO_MAX_DURATION_SECONDS,
@@ -136,6 +146,7 @@ function projectSelection(value, slot, customText) {
           "",
       }) || ""
     ),
+    imagePosition: getIngredientSelectionImagePosition(slot.id, value),
   };
 }
 
@@ -151,30 +162,6 @@ function projectSlotStates(composerProps) {
       return [
         slot.id,
         {
-          selection: value
-            ? {
-                id: String(value.id || ""),
-                title: String(value.title || slot.label),
-                subtitle: String(value.subtitle || value.type || ""),
-                imageSrc: String(
-                  getFirstCreationMediaUrl(
-                    value.featuredMedia || value.featured_media || [],
-                    {
-                      variant: "thumbnail",
-                      fallback:
-                        value.thumbnailUrl ||
-                        value.thumbnail_url ||
-                        value.imageUrl ||
-                        value.image_url ||
-                        "",
-                    }
-                  ) || ""
-                ),
-                imagePosition: getIngredientSelectionImagePosition(slot.id, value),
-              }
-            : null,
-          isCustomMode: Boolean(value?.custom),
-          customText: String(customPrompts[slot.id] || ""),
           selection: projectSelection(value, slot, customText),
           isCustomMode: false,
           customText,
@@ -300,18 +287,16 @@ function projectRemix({
   };
 }
 
-// Video (session 5, notes 7 and 7a; RULED A, A, A, A of four at the
-// plan gate): the Video mode owns its slots (ordinary ingredient slots
-// keyed to the Generate tile they mirror), its prompt, its source
-// image, its settings, and its count, all page state, sharing only the
-// picker, the custom modal, and the footer. Duration moves in segment
-// steps; the Custom director has one row per segment, and adding a
-// row adds a segment. The cost rule reads the workbench's three
-// constants through composerProps.videoCoinCosts; nothing here writes
-// a number.
+// Video (session 5, notes 7 and 7a; director fidelity follow-up,
+// 10 Sep 2026): Video duration and billing stay on provider-sized
+// segment steps, but the Custom director is a separate temporal cue
+// sheet. Cues may use sub-5-second ranges (tenths are supported), gaps
+// are allowed, and overlapping ranges are surfaced as invalid. Adding
+// a cue never changes video duration or billing. The cost rule still
+// reads the workbench's constants through composerProps.videoCoinCosts.
 const VIDEO_ASPECT_DEFAULT = "PORTRAIT_4_5";
 const VIDEO_QUALITY_DEFAULT = "720p";
-const VIDEO_DURATION_LIMIT_LABEL = `Up to ${VIDEO_MAX_DURATION_SECONDS} seconds`;
+const VIDEO_DIRECTOR_FULL_LABEL = "No open time remains in this video";
 
 function projectVideo({
   composerProps,
@@ -330,8 +315,8 @@ function projectVideo({
   setQuality,
   directorOpen,
   setDirectorOpen,
-  directorPrompts,
-  setDirectorPrompts,
+  directorCues,
+  setDirectorCues,
   count,
   setCount,
 }) {
@@ -360,14 +345,20 @@ function projectVideo({
   const slotByTileId = new Map(videoIngredientSlots.map((slot) => [slot.tileId, slot]));
 
   const requestedCount = Math.max(1, Number.parseInt(count, 10) || 1);
-  const segments = Math.max(1, Math.round(durationSeconds / segmentSeconds));
+  // Billing segments are independent of Director cue ranges. Duration
+  // currently moves in exact segment steps, so ceil preserves today's
+  // cost while remaining correct if finer duration controls arrive.
+  const segments = Math.max(1, Math.ceil(durationSeconds / segmentSeconds));
   const qualityMultiplier = quality === "1080p" ? multiplier1080p : 1;
   const requestCoinCost = perSegment * segments * qualityMultiplier * requestedCount;
   const hasEnoughCoins = coinBalance >= requestCoinCost;
   const hasPrompt = String(prompt || "").trim().length > 0;
   const isImageStage = stage === "IMAGE";
+  const rows = projectVideoDirectorRows(directorCues, durationSeconds);
+  const directorError = rows.find((row) => row.isInvalid)?.errorText || "";
 
-  // Block reasons in Generate's order and voice: coins, then inputs.
+  // Block reasons in Generate's order and voice: coins, required inputs,
+  // then invalid Director timing. Blank Director cues are allowed.
   const blockReason = !hasEnoughCoins
     ? `You need at least ${requestCoinCost} coins to generate ${
         requestedCount === 1 ? "a video" : `${requestedCount} videos`
@@ -377,21 +368,14 @@ function projectVideo({
         ? "Add an image before generating."
         : !hasPrompt
           ? "Describe the motion before generating."
-          : ""
+          : directorError
       : !slots.character?.selection
         ? "Select a character before generating."
-        : "";
+        : directorError;
 
-  const rows = [];
-  for (let index = 0; index < segments; index += 1) {
-    rows.push({
-      index,
-      fromSecond: index * segmentSeconds,
-      toSecond: (index + 1) * segmentSeconds,
-      prompt: String(directorPrompts[index] || ""),
-    });
-  }
-  const canAddRow = durationSeconds + segmentSeconds <= VIDEO_MAX_DURATION_SECONDS;
+  const canAddRow = Boolean(
+    getNextVideoDirectorCueRange(directorCues, durationSeconds)
+  );
 
   function changeDuration(nextSeconds) {
     const clamped = Math.min(
@@ -399,9 +383,11 @@ function projectVideo({
       Math.max(segmentSeconds, Math.round(nextSeconds / segmentSeconds) * segmentSeconds)
     );
     setDurationSeconds(clamped);
-    // Rows past the new duration leave with it.
-    const nextRowCount = Math.max(1, Math.round(clamped / segmentSeconds));
-    setDirectorPrompts((current) => current.slice(0, nextRowCount));
+    // Director cues are independent of billing. Shortening a video clips
+    // or removes only cues that fall beyond the new end time.
+    setDirectorCues((current) =>
+      clipVideoDirectorCuesToDuration(current, clamped)
+    );
   }
 
   return {
@@ -439,19 +425,35 @@ function projectVideo({
     director: {
       open: directorOpen,
       onToggle: () => setDirectorOpen((current) => !current),
+      durationSeconds,
+      timeStepSeconds: VIDEO_DIRECTOR_TIME_STEP_SECONDS,
       rows,
-      onChangeRowPrompt: (index, text) =>
-        setDirectorPrompts((current) => {
-          const next = current.slice(0, segments);
-          while (next.length < segments) next.push("");
-          next[index] = text;
-          return next;
-        }),
+      onChangeRowPrompt: (cueId, text) =>
+        setDirectorCues((current) =>
+          updateVideoDirectorCue(
+            current,
+            cueId,
+            { prompt: text },
+            { durationSeconds }
+          )
+        ),
+      onChangeRowTime: (cueId, field, value) =>
+        setDirectorCues((current) =>
+          updateVideoDirectorCue(
+            current,
+            cueId,
+            { [field]: value },
+            { durationSeconds }
+          )
+        ),
+      onRemoveRow: (cueId) =>
+        setDirectorCues((current) => removeVideoDirectorCue(current, cueId)),
       canAddRow,
-      addLimitLabel: VIDEO_DURATION_LIMIT_LABEL,
-      onAddRow: () => {
-        if (canAddRow) changeDuration(durationSeconds + segmentSeconds);
-      },
+      addLimitLabel: VIDEO_DIRECTOR_FULL_LABEL,
+      onAddRow: () =>
+        setDirectorCues((current) =>
+          addVideoDirectorCue(current, durationSeconds)
+        ),
     },
     countOptions: normalizeOptions(videoCountOptions),
     countValue: count,
@@ -489,7 +491,8 @@ export function useImagesV2LiveViewModel({
   const [remixCount, setRemixCount] = useState("1");
   // Video mode state (session 5): page state like the Remix prompt,
   // so the rail and the sheet share it and switching modes never
-  // changes another mode's values. The duration starts at one segment.
+  // changes another mode's values. Duration starts at one billing
+  // segment; Director cues use their own sub-second-capable timeline.
   const videoSegmentSeconds = Math.max(
     1,
     Number(composerProps?.videoCoinCosts?.segmentSeconds ?? 0) || 1
@@ -502,7 +505,9 @@ export function useImagesV2LiveViewModel({
   const [videoDurationSeconds, setVideoDurationSeconds] = useState(videoSegmentSeconds);
   const [videoQuality, setVideoQuality] = useState(VIDEO_QUALITY_DEFAULT);
   const [videoDirectorOpen, setVideoDirectorOpen] = useState(false);
-  const [videoDirectorPrompts, setVideoDirectorPrompts] = useState([]);
+  const [videoDirectorCues, setVideoDirectorCues] = useState(() =>
+    createInitialVideoDirectorCues(videoSegmentSeconds)
+  );
   const [videoCount, setVideoCount] = useState("1");
 
   useEffect(() => {
@@ -589,8 +594,8 @@ export function useImagesV2LiveViewModel({
     setQuality: setVideoQuality,
     directorOpen: videoDirectorOpen,
     setDirectorOpen: setVideoDirectorOpen,
-    directorPrompts: videoDirectorPrompts,
-    setDirectorPrompts: setVideoDirectorPrompts,
+    directorCues: videoDirectorCues,
+    setDirectorCues: setVideoDirectorCues,
     count: videoCount,
     setCount: setVideoCount,
   });
