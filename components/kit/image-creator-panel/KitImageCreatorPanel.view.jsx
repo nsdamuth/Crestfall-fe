@@ -379,13 +379,15 @@ function StageTabs({ stage, onChangeStage }) {
             aria-selected={isActive}
             onClick={() => onChangeStage?.(tab.id)}
             className={`flex min-h-[var(--control-filter)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
-              // Same mobile step as the tiles (review round 1, session
-              // 2): the resting tab sits on --surface-1 and the active
-              // one on --fill under 1100px so the pair reads apart from
-              // the sheet behind it.
+              // Review round 2 (10 Sep 2026): the resting tab sits on
+              // --surface-1 with a --line border and the active one on
+              // --fill with a --line-strong border, at every width (the
+              // mobile treatment from round 1, now desktop too), so the
+              // pair reads apart from the panel behind it and the
+              // resting tab is one step more pronounced.
               isActive
-                ? "border-[var(--line)] bg-[var(--fill-whisper)] text-[var(--gold-bright)] max-[1099.98px]:bg-[var(--fill)]"
-                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] max-[1099.98px]:bg-[var(--surface-1)]"
+                ? "border-[var(--line-strong)] bg-[var(--fill)] text-[var(--gold-bright)]"
+                : "border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]"
             }`}
           >
             {tab.label}
