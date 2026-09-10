@@ -269,13 +269,13 @@ export default function ImagesV2Live() {
               compactMobile
               eyebrow="Create"
               title="Media Studio"
-              description="Generate images and video from your assets. Manage, reuse, and share them all in one place."
+              description="Generate images and videos from your assets. Manage, reuse, and share them all in one place."
             />
           }
           filterBarSlot={
             <KitStudioFilterBarView
               searchValue={grid.searchQuery}
-              searchPlaceholder="Search your images"
+              searchPlaceholder="Search your media..."
               onSearchChange={grid.onChangeSearchQuery}
               filterPresentation="dropdowns"
               filterGroups={filterGroups}

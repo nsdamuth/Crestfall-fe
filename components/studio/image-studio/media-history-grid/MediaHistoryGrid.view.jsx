@@ -436,7 +436,10 @@ export default function MediaHistoryGridView({
       {historyStatus !== "loading" && !mediaItems.length ? (
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-10 text-center">
           <ImageIcon className="mx-auto text-[var(--gold-ornament)]" size={30} />
-          <p className="mt-4 text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+          {/* Eyebrow size, not body: the bare var() read as a color
+              utility, so the title inherited the body size (Brian's
+              browser note, 10 Sep 2026). */}
+          <p className="mt-4 text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             No generated media yet
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
