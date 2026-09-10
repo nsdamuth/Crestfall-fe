@@ -373,7 +373,7 @@ export default function MediaHistoryGridView({
       {selectionMode ? (
         <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
           <div>
-            <p className="text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
+            <p className="text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               {selectedCount} selected
             </p>
             <p className="mt-1 text-xs text-[var(--ink-dim)]">
