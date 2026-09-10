@@ -441,7 +441,7 @@ export default function MediaHistoryGridView({
             No generated media yet
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
-            Choose your ingredients and generate an image to start your library.
+            Choose your assets and generate an image or video to start your gallery.
           </p>
         </div>
       ) : null}

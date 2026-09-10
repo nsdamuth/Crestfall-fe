@@ -11,7 +11,7 @@ function creatorArt(name) {
 const SOURCE_FILTER = {
   label: "Filter",
   options: [
-    { value: "MINE", label: "Mine" },
+    { value: "MINE", label: "Your assets" },
     { value: "PUBLIC", label: "Public" },
   ],
   value: "MINE",

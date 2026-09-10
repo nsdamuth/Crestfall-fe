@@ -48,11 +48,15 @@ function countLibrary(items, value) {
   return items.length;
 }
 
-// The one filter that exists on an asset picker today: Mine / Public
-// (session 2, note 3). Mine is the resting value, so the trigger reads
-// plain "Filter" until Public is chosen, matching the Library filter.
+// The one filter that exists on an asset picker today: the creator's
+// own assets or the public catalog (session 2, note 3; "Mine" reworded
+// at review round 1). The own-assets source is the resting value, so
+// the trigger reads plain "Filter" until Public is chosen, matching
+// the Library filter. A true "All" (both sources at once) needs the
+// ingredient loader to fetch both, a data-flow change held for a
+// ruling (STATUS, 10 Sep 2026).
 const SOURCE_FILTER_OPTIONS = [
-  { value: "MINE", label: "Mine" },
+  { value: "MINE", label: "Your assets" },
   { value: "PUBLIC", label: "Public" },
 ];
 

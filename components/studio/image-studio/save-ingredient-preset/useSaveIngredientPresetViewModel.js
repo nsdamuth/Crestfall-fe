@@ -22,10 +22,6 @@ function getPresetTypeLabel(slot, assetLabel) {
   );
 }
 
-function getInitialName(label) {
-  return label ? `Custom ${label}` : "Custom Preset";
-}
-
 function getIntroText(label, saveAvailable) {
   const lower = String(label || "asset").toLowerCase();
   return saveAvailable
@@ -44,7 +40,9 @@ export function useSaveIngredientPresetViewModel({
   onClose = null,
 } = {}) {
   const label = getPresetTypeLabel(slot, assetLabel);
-  const initialName = getInitialName(label);
+  // The name starts empty behind a "Name your pose..." placeholder
+  // (review round 1, session 2), never prefilled.
+  const initialName = "";
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");

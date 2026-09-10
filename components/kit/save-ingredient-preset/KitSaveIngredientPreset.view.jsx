@@ -72,7 +72,7 @@ export default function KitSaveIngredientPresetView({
     <KitModalFrame
       variant={isPhoneWidth ? "sheet" : "modal"}
       sheetGrabber={isPhoneWidth}
-      panelClassName="w-full max-w-2xl"
+      panelClassName="w-full min-[700px]:w-[min(42rem,calc(100vw-2rem))]"
       onClose={onClose}
       ariaLabel={`Custom ${assetLabel}`}
       hasUnsavedChanges={hasUnsavedChanges}
@@ -115,7 +115,7 @@ export default function KitSaveIngredientPresetView({
             id="custom-asset-name"
             value={nameValue}
             onChange={(event) => onChangeName?.(event.target.value)}
-            placeholder="Name this preset..."
+            placeholder={`Name your ${lowerLabel}...`}
             className={FIELD_RECIPE}
           />
         </label>

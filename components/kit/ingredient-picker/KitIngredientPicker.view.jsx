@@ -4,12 +4,15 @@
 // Brian's note 3, 9 Sep 2026): one layout and one component for every
 // asset type, Character, Pose, Outfit, Location, Preset, and Camera
 // framing. Eyebrow "Select asset", the asset word as the title, one
-// sentence, then the search field with one filter dropdown to its
-// right, then the grid with Custom as the first card. Camera framing
-// uses the rows layout (text options with a one-line description, no
-// art), ruled at the session 2 plan gate (option A). Under 700px the
-// picker opens as the same bottom sheet the composer uses. Tokens
-// only; no fetch anywhere; search and filtering are the caller's job.
+// sentence, then a short search field with one filter dropdown beside
+// it, then the grid with Custom as the first card. Camera framing
+// uses the rows layout (text options under their group's section
+// title, no art), ruled at the session 2 plan gate (option A). Under
+// 700px the picker opens as the same bottom sheet the composer uses.
+// Review round 1 (10 Sep 2026): one fixed panel width and one fixed
+// grid height for every picker, so the modals match; every card the
+// same size; the empty state sits inline beside Custom. Tokens only;
+// no fetch anywhere; search and filtering are the caller's job.
 import { Check, ChevronLeft, PenLine, Search } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
@@ -17,11 +20,18 @@ import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
 import KitDropdownView from "../dropdown/KitDropdown.view";
 import { usePhoneWidth } from "../modal-frame/usePhoneWidth";
 
-// Card recipe shared by the asset cards and the Custom card so the
-// grid reads as one set. Selection law (docs/BUILD-BLUEPRINT.md
-// 2.16(i)): --fill wash plus --gold-bright title, never a bold border.
+// Card recipe shared by the asset cards, the Custom card, and the
+// inline empty cell, so the grid reads as one set of equal tiles: the
+// art area is a fixed 4/3, the text block always reserves a title and
+// a subtitle line. Selection law (docs/BUILD-BLUEPRINT.md 2.16(i)):
+// --fill wash plus --gold-bright title, never a bold border.
 const CARD_RECIPE =
-  "overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors";
+  "flex flex-col overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition-colors";
+
+// The grid region is one height on every picker (700px and up) so the
+// modals match from asset type to asset type; under 700px the sheet
+// stays content-height with the same cap.
+const GRID_HEIGHT = "max-h-[50vh] min-[700px]:h-[50vh]";
 
 function cardStateClass(isSelected) {
   return isSelected
@@ -29,12 +39,27 @@ function cardStateClass(isSelected) {
     : "border-[var(--line)] hover:border-[var(--line-strong)]";
 }
 
-// Sits on the same line as the filter dropdown, so it shares the
+function CardText({ title, subtitle, isSelected, centered = false }) {
+  return (
+    <div className={`p-[var(--space-4)] ${centered ? "text-center" : ""}`}>
+      <p
+        className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${isSelected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}
+      >
+        {title}
+      </p>
+      <p className="mt-[var(--space-1)] min-h-[var(--lh-label)] truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+        {subtitle || ""}
+      </p>
+    </div>
+  );
+}
+
+// Short and beside the filter dropdown (review round 1), on the
 // dropdown's filter-line height (--control-filter on fine pointers,
-// --control-md on coarse) and the two controls align.
+// --control-md on coarse) so the two controls align.
 function SearchField({ value, placeholder, onChange }) {
   return (
-    <div className="kit-search-field flex min-h-[var(--control-filter)] min-w-0 flex-1 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
+    <div className="kit-search-field flex min-h-[var(--control-filter)] w-full min-w-0 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] min-[700px]:max-w-[24rem] [@media(pointer:coarse)]:min-h-[var(--control-md)]">
       <Search size={16} className="flex-none text-[var(--ink-faint)]" aria-hidden="true" />
       <input
         type="search"
@@ -67,26 +92,15 @@ function IngredientCard({ item, onChoose }) {
           <KitArtPlaceholderView size="md" />
         </div>
       )}
-      <div className="p-[var(--space-3)]">
-        <p
-          className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${item.isSelected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}
-        >
-          {item.title}
-        </p>
-        {item.subtitle && (
-          <p className="mt-[var(--space-1)] truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-            {item.subtitle}
-          </p>
-        )}
-      </div>
+      <CardText title={item.title} subtitle={item.subtitle} isSelected={item.isSelected} />
     </button>
   );
 }
 
-// Custom is the first card of the grid, the same shape as an asset
-// card (note 3: "like OD"). It carries the pen mark where an asset
-// carries its art, and reads as selected while the slot holds a
-// once-only custom description.
+// Custom is the first card of the grid, the same size as an asset
+// card (note 3: "like OD"), its copy centered. It carries the pen mark
+// where an asset carries its art, and reads as selected while the
+// slot holds a once-only custom description.
 function CustomCard({ isSelected, onClick }) {
   return (
     <button
@@ -100,24 +114,30 @@ function CustomCard({ isSelected, onClick }) {
           <PenLine size={20} aria-hidden="true" />
         </span>
       </div>
-      <div className="p-[var(--space-3)]">
-        <p
-          className={`truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] ${isSelected ? "text-[var(--gold-bright)]" : "text-[var(--ink)]"}`}
-        >
-          Custom
-        </p>
-        <p className="mt-[var(--space-1)] truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-          Write your own
-        </p>
-      </div>
+      <CardText title="Custom" subtitle="Write your own" isSelected={isSelected} centered />
     </button>
   );
 }
 
+// The empty state sits on the Custom card's row, filling the rest of
+// it at the same height (review round 1), never a full-width block
+// under the grid.
+function EmptyCell({ message, spanAll = false }) {
+  return (
+    <p
+      className={`flex items-center justify-center rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-4)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] ${
+        spanAll ? "col-span-full min-h-[var(--space-24)]" : "min-[700px]:col-span-2 min-[1100px]:col-span-3"
+      }`}
+    >
+      {message}
+    </p>
+  );
+}
+
 // Rows layout: a text option with a one-line description and a check
-// mark, for catalogs that have no art (camera framing). The optional
-// subtitle carries the option's group so a flat "All" list keeps its
-// context.
+// mark, for catalogs that have no art (camera framing). Options sit
+// under their group's section title (review round 1), never with the
+// group repeated on every row.
 function OptionRow({ item, onChoose }) {
   return (
     <button
@@ -141,11 +161,6 @@ function OptionRow({ item, onChoose }) {
             {item.description}
           </span>
         ) : null}
-        {item.subtitle ? (
-          <span className="mt-[var(--space-1)] block truncate text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-            {item.subtitle}
-          </span>
-        ) : null}
       </span>
       <span
         aria-hidden="true"
@@ -159,6 +174,23 @@ function OptionRow({ item, onChoose }) {
       </span>
     </button>
   );
+}
+
+// Groups rows by their subtitle in first-seen order; items with no
+// subtitle form one untitled section.
+function groupRows(items) {
+  const sections = [];
+  const byTitle = new Map();
+  items.forEach((item) => {
+    const key = item.subtitle || "";
+    if (!byTitle.has(key)) {
+      const section = { title: key, items: [] };
+      byTitle.set(key, section);
+      sections.push(section);
+    }
+    byTitle.get(key).items.push(item);
+  });
+  return sections;
 }
 
 export default function KitIngredientPickerView({
@@ -190,12 +222,13 @@ export default function KitIngredientPickerView({
   const hasFilter = Boolean(filter && Array.isArray(filter.options) && filter.options.length > 0);
   const showCustom = Boolean(showUseCustomAction && !isRows);
   const isEmpty = items.length === 0;
+  const sections = isRows ? groupRows(items) : [];
 
   return (
     <KitModalFrame
       variant={isPhoneWidth ? "sheet" : "modal"}
       sheetGrabber={isPhoneWidth}
-      panelClassName="w-full max-w-4xl"
+      panelClassName="w-full min-[700px]:w-[min(56rem,calc(100vw-2rem))]"
       onClose={onClose}
       ariaLabel={`Select ${slotLabel}`}
     >
@@ -249,27 +282,36 @@ export default function KitIngredientPickerView({
         )}
 
         {isRows ? (
-          <div className="grid max-h-[56vh] gap-[var(--space-2)] overflow-y-auto pr-[var(--space-1)] min-[760px]:grid-cols-2">
-            {items.map((item) => (
-              <OptionRow key={item.id} item={item} onChoose={onChooseIngredient} />
+          <div className={`${GRID_HEIGHT} overflow-y-auto pr-[var(--space-1)]`}>
+            {sections.map((section) => (
+              <section key={section.title || "untitled"} className="mb-[var(--space-5)] last:mb-0">
+                {section.title ? (
+                  <h3 className="mb-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                    {section.title}
+                  </h3>
+                ) : null}
+                <div className="grid gap-[var(--space-2)] min-[760px]:grid-cols-2">
+                  {section.items.map((item) => (
+                    <OptionRow key={item.id} item={item} onChoose={onChooseIngredient} />
+                  ))}
+                </div>
+              </section>
             ))}
             {isEmpty ? (
-              <p className="col-span-full rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-                {emptyMessage}
-              </p>
+              <div className="grid">
+                <EmptyCell message={emptyMessage} spanAll />
+              </div>
             ) : null}
           </div>
         ) : (
-          <div className="grid max-h-[48vh] grid-cols-2 gap-[var(--space-3)] overflow-y-auto pr-[var(--space-1)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4">
+          <div
+            className={`${GRID_HEIGHT} grid auto-rows-max grid-cols-2 gap-[var(--space-3)] overflow-y-auto pr-[var(--space-1)] min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4`}
+          >
             {showCustom ? <CustomCard isSelected={customIsSelected} onClick={onUseCustom} /> : null}
             {items.map((item) => (
               <IngredientCard key={item.id} item={item} onChoose={onChooseIngredient} />
             ))}
-            {isEmpty ? (
-              <p className="col-span-full rounded-[var(--radius-md)] border border-dashed border-[var(--line-strong)] bg-[var(--surface-2)] p-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-                {emptyMessage}
-              </p>
-            ) : null}
+            {isEmpty ? <EmptyCell message={emptyMessage} spanAll={!showCustom} /> : null}
           </div>
         )}
       </div>

@@ -130,15 +130,19 @@ export default function KitDropdownView({
     useAnchoredPanel();
 
   const selectionCount = selectedValues?.length || 0;
-  const selectedLabel = deriveSelectedLabel(options, selectedValues, isMultiSelect);
   // Resting value (1.2.0, RULED 10 Sep 2026, Media Studio round 5): a
   // caller may name the one value that means "no filter". While it is
   // the only selection the trigger reads as untouched (no count, dim
   // ink) even though its row still shows the check, because a default
   // is not a choice the user made. Omitted on every other consumer,
-  // pixel-stable.
+  // pixel-stable. 1.2.1 (session 2 review, 10 Sep 2026): a resting
+  // single-select hides its value word too, so the trigger reads
+  // plain "Filter" rather than "Filter All".
   const isResting =
     restingValue !== null && selectionCount === 1 && selectedValues[0] === restingValue;
+  const selectedLabel = isResting
+    ? null
+    : deriveSelectedLabel(options, selectedValues, isMultiSelect);
   const isMarked = (selectionCount > 0 && !isResting) || isOpen;
 
   function activateOption(value) {

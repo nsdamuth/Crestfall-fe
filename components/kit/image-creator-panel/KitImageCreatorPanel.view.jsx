@@ -379,9 +379,13 @@ function StageTabs({ stage, onChangeStage }) {
             aria-selected={isActive}
             onClick={() => onChangeStage?.(tab.id)}
             className={`flex min-h-[var(--control-filter)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+              // Same mobile step as the tiles (review round 1, session
+              // 2): the resting tab sits on --surface-1 and the active
+              // one on --fill under 1100px so the pair reads apart from
+              // the sheet behind it.
               isActive
-                ? "border-[var(--line)] bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
-                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+                ? "border-[var(--line)] bg-[var(--fill-whisper)] text-[var(--gold-bright)] max-[1099.98px]:bg-[var(--fill)]"
+                : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] max-[1099.98px]:bg-[var(--surface-1)]"
             }`}
           >
             {tab.label}
@@ -425,7 +429,11 @@ function SlotTile({ def, state, onActivate, onClear }) {
 
   return (
     <div
-      className={`group relative min-w-0 overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors ${
+      // Under 1100px the composer is the sheet on the panel-lift
+      // gradient, where --surface-2 tiles read muddy (review round 1,
+      // session 2): the tiles drop to --surface-1 there for a clearer
+      // step; the desktop rail keeps --surface-2.
+      className={`group relative min-w-0 overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition-colors max-[1099.98px]:bg-[var(--surface-1)] ${
         def.spanRow ? "col-span-2 aspect-[5/2]" : "aspect-[5/4]"
       } ${
         isRequired

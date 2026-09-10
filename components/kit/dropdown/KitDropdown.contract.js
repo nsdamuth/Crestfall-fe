@@ -1,6 +1,12 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.2.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.2.1";
 
 /**
+ * 1.2.0 to 1.2.1 (FE/MEDIA-STUDIO session 2 review, 10 Sep 2026),
+ * presentation only, no prop change: while a single-select sits on
+ * its restingValue the trigger hides the value word as well as the
+ * count, reading plain "Filter" instead of "Filter All". Consumers
+ * without restingValue are pixel-stable.
+ *
  * Stable portable UI boundary for the branded dropdown kit piece
  * (docs/BUILD-BLUEPRINT.md sections 2.9 menu-popover recipe and 2.16
  * filter-line law, ruled 9 Aug 2026). One trigger chip opening one
