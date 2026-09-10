@@ -28,3 +28,4 @@ GAPS, SESSION 4 (Remix, notes 5, 5a, 5b, 10 Sep 2026)
 
 LOCAL REVIEW ENVIRONMENT
 - Request (session 4, 10 Sep 2026): a test account on the local stack, seeded with a set of generated images in its history and a coin balance, so the image viewer, the brush editor, and Remix can be reviewed in the browser signed in (the DevTools browser could not sign in with a magic link or Google in session 3, so those reviews ran from code and screenshots).
+- Finding (10 Sep 2026, Brian's browser on localhost:3001/studio/v2/images): the local API on port 4000 returns 404 on GET /api/studio/image-generation/jobs for Brian's account while creations return 200, so the page shows "Image generation history could not be loaded." Nick to confirm the route is mounted on the local stack and that the account has a history to return.

@@ -295,7 +295,10 @@ export default function ImagesV2Live() {
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
               }}
             >
-              <KitImageCreatorPanel {...live.panelProps} />
+              {/* remix is already inside panelProps; it is named here
+                  so the Remix wiring on this surface is greppable and
+                  guarded by imagesV2LiveAdapterDiagnostics.mjs. */}
+              <KitImageCreatorPanel {...live.panelProps} remix={live.panelProps.remix} />
             </aside>
           </div>
         </KitStudioPageView>
@@ -320,6 +323,7 @@ export default function ImagesV2Live() {
       {mobileCreatorOpen ? (
         <ImagesV2ComposerSheet
           panelProps={live.panelProps}
+          remix={live.panelProps.remix}
           onClose={() => setMobileCreatorOpen(false)}
         />
       ) : null}
