@@ -226,6 +226,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
   const Icon = def.icon;
   const hasSelection = Boolean(state.selection);
   const imageSrc = String(state.selection?.imageSrc || "").trim();
+  const imagePosition = String(state.selection?.imagePosition || "").trim();
   const isRequired = def.requirement === "required";
   const title = hasSelection ? state.selection.title : def.label;
 
@@ -254,6 +255,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
               src={imageSrc}
               alt=""
               className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02]"
+              style={imagePosition ? { objectPosition: imagePosition } : undefined}
             />
             <span
               className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/95 via-black/70 to-transparent"

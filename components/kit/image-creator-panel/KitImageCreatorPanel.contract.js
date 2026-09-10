@@ -22,8 +22,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * @typedef {"character"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
  *
  * @typedef {Object} KitImageCreatorSlotState
- * @property {{title: string, subtitle?: string, imageSrc?: string}|null} selection the
- *   chosen asset, including its display-ready featured image when available,
+ * @property {{title: string, subtitle?: string, imageSrc?: string, imagePosition?: string}|null} selection the
+ *   chosen asset, including its display-ready featured image and optional face-aware
+ *   CSS object-position when available,
  *   or null for an empty slot
  * @property {boolean} isCustomMode true renders the inline custom
  *   guidance editor in place of the picker-opening tile
@@ -88,8 +89,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {Object|null} advancedTuningProps optional display-ready bounded
  *   workflow tuning projection, rendered inside the Advanced disclosure
  * @property {KitImageCreatorCountOption[]} countOptions the output count
- *   list beside the Generate button (2, 4, 8, 16, 32, 64, 128, 256; values
- *   the backend cannot serve carry isDisabled and the tooltip)
+ *   list beside the Generate button. Its minimum is deployment-configurable
+ *   (alpha may expose 1; live defaults to 2); values the backend cannot serve
+ *   carry isDisabled and the tooltip.
  * @property {string} countValue the selected count value
  * @property {((value: string) => void)|null} onChangeCount reports the
  *   same selection to the same handler the former Output Count select

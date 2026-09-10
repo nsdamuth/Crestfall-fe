@@ -7,6 +7,12 @@ import {
   Users,
 } from "lucide-react";
 
+import {
+  IMAGE_STUDIO_MIN_OUTPUT_COUNT,
+  IMAGE_STUDIO_OUTPUT_COUNT_BACKEND_MAX,
+  buildImageStudioOutputCountValues,
+} from "./imageStudioOutputCountPolicy.js";
+
 export const ingredientSlots = [
   {
     id: "character",
@@ -429,22 +435,19 @@ export const aspectRatioOptions = [
   { value: "SQUARE_1_1", label: "1:1" },
 ];
 
-// Count list RULED 9 Sep 2026 (Media Studio plan gate): 2, 4, 8, 16,
-// 32, 64, 128, 256, default 2. The backend serves 1 to 4 today;
-// IMAGE_COUNT_BACKEND_MAX marks where the Media Studio composer
-// renders the rest disabled ("Not available yet",
-// docs/handoffs/MEDIA-STUDIO-BACKEND.md).
-export const IMAGE_COUNT_BACKEND_MAX = 4;
-export const imageCountOptions = [
-  { value: "2", label: "2 images" },
-  { value: "4", label: "4 images" },
-  { value: "8", label: "8 images" },
-  { value: "16", label: "16 images" },
-  { value: "32", label: "32 images" },
-  { value: "64", label: "64 images" },
-  { value: "128", label: "128 images" },
-  { value: "256", label: "256 images" },
-];
+// Media Studio count policy. Production can keep the ruled minimum of 2,
+// while alpha/dev can expose 1 without changing source by setting
+// NEXT_PUBLIC_CRESTFALL_IMAGE_STUDIO_MIN_OUTPUT_COUNT=1. The backend
+// currently serves at most 4 images per request; larger future counts remain
+// visible but disabled in the V2 composer.
+export const IMAGE_COUNT_BACKEND_MAX = IMAGE_STUDIO_OUTPUT_COUNT_BACKEND_MAX;
+export const IMAGE_COUNT_MINIMUM = IMAGE_STUDIO_MIN_OUTPUT_COUNT;
+export const imageCountOptions = buildImageStudioOutputCountValues().map(
+  (count) => ({
+    value: String(count),
+    label: `${count} ${count === 1 ? "image" : "images"}`,
+  })
+);
 
 export const videoDurationOptions = [
   { value: "4", label: "4 seconds" },

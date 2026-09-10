@@ -250,10 +250,26 @@ export function useMediaLightboxViewModel({
       ? Boolean(isItemBookmarked(activeOriginalItem))
       : bookmarkedIds.has(activeId);
 
-  const shareUrl = useMemo(
-    () => (typeof window === "undefined" ? "" : window.location.href),
-    []
-  );
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+
+    const activeImageOutputId =
+      activeMedia?.imageOutputId || getMediaImageOutputId(activeOriginalItem);
+
+    try {
+      const shareTarget = new URL(imageStudioHref, window.location.origin);
+      if (activeImageOutputId) {
+        shareTarget.searchParams.set("image", activeImageOutputId);
+      }
+      return shareTarget.toString();
+    } catch {
+      const fallback = new URL(window.location.href);
+      if (activeImageOutputId) {
+        fallback.searchParams.set("image", activeImageOutputId);
+      }
+      return fallback.toString();
+    }
+  }, [activeMedia?.imageOutputId, activeOriginalItem, imageStudioHref]);
 
   useEffect(() => {
     setShareMessage("");

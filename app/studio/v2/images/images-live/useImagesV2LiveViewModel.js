@@ -6,6 +6,7 @@ import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { getImageStudioComposerViewProps } from "@/components/studio/image-studio/image-studio-composer/useImageStudioComposerViewModel";
 import { useImageStudioWorkbenchViewModel } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
+import { getIngredientSelectionImagePosition } from "./imageStudioFocalSelection.js";
 import {
   IMAGE_COUNT_BACKEND_MAX,
   cameraPresetCatalog,
@@ -71,6 +72,7 @@ function projectSlotStates(composerProps) {
                     }
                   ) || ""
                 ),
+                imagePosition: getIngredientSelectionImagePosition(slot.id, value),
               }
             : null,
           isCustomMode: Boolean(value?.custom),

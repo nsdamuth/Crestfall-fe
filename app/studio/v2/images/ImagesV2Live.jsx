@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ImagePlus } from "lucide-react";
 
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
@@ -126,6 +126,8 @@ function LiveSavePreset({ saveProps, backLabel = null }) {
 
 export default function ImagesV2Live() {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [mobileCreatorOpen, setMobileCreatorOpen] = useState(false);
   const [cameraPickerOpen, setCameraPickerOpen] = useState(false);
   // Stage tab (Generate, Remix): page-local presentation state. The
@@ -134,6 +136,25 @@ export default function ImagesV2Live() {
   const [composerStage, setComposerStage] = useState("GENERATE");
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
+  const sharedImageOutputId = String(searchParams?.get("image") || "").trim();
+  const syncLightboxShareLink = useCallback(
+    (imageOutputId) => {
+      const currentQuery = searchParams?.toString() || "";
+      const params = new URLSearchParams(currentQuery);
+
+      if (imageOutputId) params.set("image", imageOutputId);
+      else params.delete("image");
+
+      const nextQuery = params.toString();
+      if (nextQuery === currentQuery) return;
+
+      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams]
+  );
+
   const live = useImagesV2LiveViewModel({
     onOpenCameraPresetPicker: openCameraPresetPicker,
     stage: composerStage,
@@ -145,6 +166,8 @@ export default function ImagesV2Live() {
   const grid = useMediaHistoryGridViewModel({
     ...live.mediaHistoryProps,
     imageStudioHref: "/studio/v2/images",
+    initialActivePreviewId: sharedImageOutputId || null,
+    onActivePreviewChange: syncLightboxShareLink,
   });
   const filterGroups = useMemo(
     () =>
