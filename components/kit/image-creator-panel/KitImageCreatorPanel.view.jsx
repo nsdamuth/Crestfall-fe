@@ -69,10 +69,17 @@ function growTextarea(element) {
 // Type hierarchy inside the composer, RULED at browser review round 3
 // item 4. Three steps, no more: SECTION titles (Custom prompt, Render
 // style, Advanced, Negative prompt) are the gold eyebrow at --text-ui;
-// CONTROL titles (Camera / Framing, Wardrobe theme, Aspect ratio, and
+// CONTROL titles (Camera framing, Wardrobe theme, Aspect ratio, and
 // every Advanced slider) are the quieter, smaller eyebrow at
-// --text-label; VALUES are body text. --text-label is the bottom of
+// --text-label; VALUES sit at --text-ui. --text-label is the bottom of
 // the scale, so the size step runs upward from it rather than below.
+//
+// Round 4 (10 Sep 2026) took the whole composer one type step down:
+// tile titles and the stage tab labels to --text-label, values from
+// --text-body to --text-ui, section gaps and tile padding one step
+// tighter. Control titles were already at --text-label, the floor of
+// the scale, and stay there. Every touch target keeps --control-md
+// (44px) and the Generate button is untouched.
 function SectionTitle({ children, note = "" }) {
   return (
     <span className="inline-flex items-baseline gap-[var(--space-2)]">
@@ -216,7 +223,7 @@ function SettingSelect({
           aria-label={`${title}: ${valueLabel}`}
           title={description || undefined}
           onClick={handleTriggerClick}
-          className={`flex min-h-[var(--control-md)] w-full min-w-0 items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-left text-[length:var(--text-body)] leading-[var(--lh-body)] transition-colors duration-[var(--dur-hover)] ${
+          className={`flex min-h-[var(--control-md)] w-full min-w-0 items-center justify-between gap-[var(--space-2)] rounded-[var(--radius-md)] border bg-[var(--surface-2)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] ${
             isDisabled
               ? "cursor-not-allowed border-[var(--line-whisper)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)]"
               : `border-[var(--line-whisper)] hover:border-[var(--line)] active:bg-[var(--state-pressed-fill)] ${stateInkClass(isChanged)}`
@@ -366,7 +373,7 @@ function StageTabs({ stage, onChangeStage }) {
             role="tab"
             aria-selected={isActive}
             onClick={() => onChangeStage?.(tab.id)}
-            className={`flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors ${
+            className={`flex min-h-[var(--control-md)] items-center justify-center rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition-colors ${
               isActive
                 ? "border-[var(--line)] bg-[var(--fill-whisper)] text-[var(--gold-bright)]"
                 : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -449,7 +456,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
               aria-hidden="true"
             />
             <span
-              className="absolute inset-0 flex items-center justify-center pb-[var(--space-8)]"
+              className="absolute inset-0 flex items-center justify-center pb-[var(--space-6)]"
               aria-hidden="true"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-faint)] transition-colors group-hover:text-[var(--gold-ornament)]">
@@ -459,9 +466,9 @@ function SlotTile({ def, state, onActivate, onClear }) {
           </>
         )}
 
-        <span className="absolute inset-x-[var(--space-3)] bottom-[var(--space-3)] min-w-0 text-center">
+        <span className="absolute inset-x-[var(--space-2)] bottom-[var(--space-2)] min-w-0 text-center">
           <span
-            className={`block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] ${
+            className={`block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] ${
               imageSrc ? "text-[var(--art-ink)]" : "text-[var(--ink)]"
             }`}
           >
@@ -486,7 +493,7 @@ function SlotTile({ def, state, onActivate, onClear }) {
 
 function CustomSlotEditor({ def, state, onChangeText, onBackToPresets, onSavePreset, onClear, idPrefix }) {
   return (
-    <div className="col-span-2 min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill-whisper)] p-[var(--space-4)]">
+    <div className="col-span-2 min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--fill-whisper)] p-[var(--space-3)]">
       <div className="flex items-start justify-between gap-[var(--space-3)]">
         <span className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           <BookOpen size={14} aria-hidden="true" />
@@ -665,7 +672,7 @@ function AdvancedTuning({ tuning, idPrefix }) {
       </button>
 
       {isOpen ? (
-        <div className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
+        <div className="flex flex-col gap-[var(--space-4)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-4)] pt-[var(--space-4)]">
           {(tuning.controls || []).map((control) => {
             const inputId = `${idPrefix}-advanced-${control.id}`;
             // Slider state reads the same way as every select: at the
@@ -740,7 +747,7 @@ function AdvancedTuning({ tuning, idPrefix }) {
 }
 
 // One disclosure, closed by default (browser review round 1, item 4):
-// Render style, Camera / Framing, Wardrobe theme, Aspect ratio,
+// Render style, Camera framing, Wardrobe theme, Aspect ratio,
 // Advanced, Negative prompt. Full width, outlined, chevron; quiet
 // enough not to compete with Generate.
 function ImageSettings({
@@ -783,7 +790,7 @@ function ImageSettings({
       </button>
 
       {isOpen ? (
-        <div id={bodyId} className="flex flex-col gap-[var(--space-6)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-6)] pt-[var(--space-5)]">
+        <div id={bodyId} className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-5)] pt-[var(--space-4)]">
           <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
 
           {/* Call site 1 of the shared SettingSelect: opens the camera
@@ -791,7 +798,7 @@ function ImageSettings({
               catalog is too large for a menu. */}
           <SettingSelect
             fieldId="camera-preset"
-            title="Camera / Framing"
+            title="Camera framing"
             valueLabel={cameraPresetLabel}
             isChanged={cameraPresetChanged}
             description={cameraPresetDescription}
@@ -850,7 +857,7 @@ function ImageSettings({
                 growTextarea(event.target);
                 onChangeNegativePrompt?.(event.target.value);
               }}
-              placeholder="Optional: describe what to avoid..."
+              placeholder="Describe what to avoid..."
               rows={1}
               className={FIELD_RECIPE}
             />
@@ -1090,7 +1097,7 @@ export default function KitImageCreatorPanelView({
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-5)]">
-        <div className="flex min-w-0 flex-col gap-[var(--space-6)]">
+        <div className="flex min-w-0 flex-col gap-[var(--space-5)]">
           <ModeToggle
             mode={mode}
             onChangeMode={onChangeMode}

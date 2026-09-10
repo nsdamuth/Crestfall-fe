@@ -16,7 +16,10 @@ test("V2 mobile drawer mirrors desktop Play Create Explore taxonomy", () => {
 
   assert.match(view, /V2_DRAWER_GROUP_DEFINITIONS/);
   assert.match(view, /label: "Play"[\s\S]*"Home", "Stories", "Adventures"/);
-  assert.match(view, /label: "Create"[\s\S]*"Studio", "Images", "Vault"/);
+  // "Images" became "Media" in the FE/MEDIA-STUDIO rename (9e90a572,
+  // 9 Sep 2026); this expectation was left behind and failed on HEAD
+  // until browser review round 4 (10 Sep 2026) caught it.
+  assert.match(view, /label: "Create"[\s\S]*"Studio", "Media", "Vault"/);
   assert.match(view, /label: "Explore"[\s\S]*"Community", "Creators", "Lore"/);
   // Support heading removed 6 Sep 2026 (sidebar batch 1): Feedback
   // renders beneath the coins block, Terms as footer text under Log out.

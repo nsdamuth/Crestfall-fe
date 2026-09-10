@@ -88,7 +88,7 @@ export default function ImagesV2CameraPresetPicker({
       <div className="p-[var(--space-5)] pt-[var(--space-8)] min-[700px]:p-[var(--space-6)]">
         <div className="pr-[var(--space-10)]">
           <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-            <Camera size={15} aria-hidden="true" /> Camera / Framing
+            <Camera size={15} aria-hidden="true" /> Camera framing
           </p>
           <h2 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
             Choose camera treatment

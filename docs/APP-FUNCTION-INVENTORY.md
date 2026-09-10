@@ -506,7 +506,7 @@ The `/studio/v2/images` composer rows now describe the live Media
 Studio composer (contract 2.0.0): mode toggle with Video on Soon,
 Generate and Remix stage tabs, five asset tiles (no Player slot),
 Custom prompt, inline options (render style rail with step
-definitions, Camera / Framing, Wardrobe theme, Aspect ratio, Advanced,
+definitions, Camera framing, Wardrobe theme, Aspect ratio, Advanced,
 Negative prompt), the Count dropdown and the Generate button with the
 coin cost in a sticky footer. The Options expander and Coins readout
 rows are removed; the sidebar label reads Media. Backend gaps live in

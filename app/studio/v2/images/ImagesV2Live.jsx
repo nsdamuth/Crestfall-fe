@@ -20,31 +20,29 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
-import { orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
 
-// Filter sections, RULED 6 Sep 2026 (FE/FILTERS, Brian): Activity
-// (Liked, Saved) first, then Media (All, Images, Videos); multi-select
-// across sections, one media pick, All clears the media pick. No Sort
-// on Images (the jobs feed has no sort, CR-058). Labels Title Case.
-const MEDIA_OPTIONS = [
+// Library filter, RULED 10 Sep 2026 (browser review round 4, item 5),
+// superseding the 6 Sep two-section panel on this page only: one
+// plain multi-select dropdown holding exactly Saved, All, Images,
+// Videos, in that order. No search-within; the former activity
+// section's other option is gone and Saved is the only one kept. All
+// is the "no filter" state and is derived, never stored: choosing it clears
+// the others, and choosing any other clears it. The grid ViewModel's
+// filter model is unchanged (contract law): Saved is its BOOKMARKED
+// activity filter, Images and Videos are its single media pick. No
+// Sort on Images (the jobs feed has no sort, CR-058).
+const LIBRARY_OPTIONS = [
+  { value: "BOOKMARKED", label: "Saved" },
   { value: "ALL", label: "All" },
   { value: "IMAGES", label: "Images" },
   { value: "VIDEOS", label: "Videos" },
 ];
-const ACTIVITY_OPTIONS = [
-  { value: "LIKED", label: "Liked" },
-  { value: "BOOKMARKED", label: "Saved" },
-];
 
-function countMedia(items, value) {
+function countLibrary(items, value) {
+  if (value === "BOOKMARKED") return items.filter((item) => item.bookmarked).length;
   if (value === "IMAGES") return items.filter((item) => item.type !== "VIDEO").length;
   if (value === "VIDEOS") return items.filter((item) => item.type === "VIDEO").length;
   return items.length;
-}
-
-function countActivity(items, value) {
-  if (value === "LIKED") return items.filter((item) => item.liked).length;
-  return items.filter((item) => item.bookmarked).length;
 }
 
 function LiveIngredientPicker({ pickerProps, backLabel = null }) {
@@ -147,35 +145,30 @@ export default function ImagesV2Live() {
     imageStudioHref: "/studio/v2/images",
   });
   const filterGroups = useMemo(
-    () =>
-      orderFilterGroups([
-        {
-          id: "activity",
-          label: "Activity",
-          isMultiSelect: true,
-          options: ACTIVITY_OPTIONS.map((option) => ({
-            ...option,
-            count: countActivity(grid.mediaItems, option.value),
-          })),
-        },
-        {
-          id: "media",
-          label: "Media",
-          isMultiSelect: false,
-          options: MEDIA_OPTIONS.map((option) => ({
-            ...option,
-            count: countMedia(grid.mediaItems, option.value),
-          })),
-        },
-      ]),
+    () => [
+      {
+        id: "library",
+        label: "Filter",
+        isMultiSelect: true,
+        options: LIBRARY_OPTIONS.map((option) => ({
+          ...option,
+          count: countLibrary(grid.mediaItems, option.value),
+        })),
+      },
+    ],
     [grid.mediaItems]
   );
+  const isSavedOn = grid.activityFilters.includes("BOOKMARKED");
+  const hasMediaPick = grid.mediaFilter !== "ALL";
   const selectedFilterValues = useMemo(
     () => ({
-      activity: grid.activityFilters,
-      media: grid.mediaFilter === "ALL" ? [] : [grid.mediaFilter],
+      library: [
+        ...(isSavedOn ? ["BOOKMARKED"] : []),
+        ...(hasMediaPick ? [grid.mediaFilter] : []),
+        ...(!isSavedOn && !hasMediaPick ? ["ALL"] : []),
+      ],
     }),
-    [grid.activityFilters, grid.mediaFilter]
+    [isSavedOn, hasMediaPick, grid.mediaFilter]
   );
   const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
 
@@ -197,11 +190,19 @@ export default function ImagesV2Live() {
               searchValue={grid.searchQuery}
               searchPlaceholder="Search your images"
               onSearchChange={grid.onChangeSearchQuery}
+              filterPresentation="dropdowns"
               filterGroups={filterGroups}
               selectedValues={selectedFilterValues}
               onFilterToggle={(groupId, value) => {
-                if (groupId === "media") grid.onSetMediaFilter?.(value);
-                else grid.onToggleActivityFilter?.(value);
+                if (value === "ALL") {
+                  grid.onClearFilters?.();
+                  return;
+                }
+                if (value === "BOOKMARKED") {
+                  grid.onToggleActivityFilter?.("BOOKMARKED");
+                  return;
+                }
+                grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
               }}
               onClearFilters={grid.onClearFilters}
               sortOptions={[]}

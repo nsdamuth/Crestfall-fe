@@ -26,9 +26,16 @@ export default function StudioPageHeaderView({
     description || (childrenAreTextOnly ? childList.join(" ") : "");
   const actions = childrenAreTextOnly ? null : children;
 
+  // Top margin above the eyebrow, RULED 10 Sep 2026 (browser review
+  // round 4, item 7): one token, --space-6, applied here and nowhere
+  // else, so no page carries its own override. StudioShell's content
+  // column starts at pt-0 and every v2 page header renders through
+  // this view, so this is the single place the page stops sitting
+  // flush under the top bar. Home is untouched: it has no header slot
+  // and opens on its hero.
   return (
     <header
-      className={`flex flex-col border-b border-[var(--gold-ornament)]/15 lg:flex-row lg:items-center lg:justify-between ${
+      className={`flex flex-col border-b border-[var(--gold-ornament)]/15 pt-[var(--space-6)] lg:flex-row lg:items-center lg:justify-between ${
         compactMobile ? "gap-3 pb-4 sm:gap-6 sm:pb-8" : "gap-6 pb-8"
       }`}
     >

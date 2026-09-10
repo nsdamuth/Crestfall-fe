@@ -89,7 +89,7 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  *   defaultValue is the untouched profile: while value matches it the
  *   active step name reads dim, otherwise gold (round 3 item 2)
  * @property {KitImageCreatorOptionField[]} optionFields the inline
- *   single-select dropdowns after Camera / Framing (Wardrobe theme,
+ *   single-select dropdowns after Camera framing (Wardrobe theme,
  *   Aspect ratio). Output count is NOT in this list; see countOptions.
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
  * @property {Object|null} advancedTuningProps optional display-ready bounded

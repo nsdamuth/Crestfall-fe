@@ -225,7 +225,7 @@ export function getImageStudioComposerViewProps({
       },
       {
         id: "camera-preset",
-        label: "Camera / Framing",
+        label: "Camera framing",
         value: String(cameraPreset || ""),
         options: CAMERA_PRESET_OPTIONS,
         onChange: (nextValue) => setCameraPreset?.(nextValue),

@@ -18,7 +18,7 @@ yet" and never fakes a result, spends coins, or invents a number.
 
 The root is two siblings: a scroll region (toggle, tabs, tiles, custom
 prompt, the closed "Image settings" disclosure holding Render style,
-Camera / Framing, Wardrobe theme, Aspect ratio, Advanced, Negative
+Camera framing, Wardrobe theme, Aspect ratio, Advanced, Negative
 prompt) and a footer that never scrolls (the count control on its own
 row, layers glyph plus the number, menu opening upward; then Generate
 on its own line). The consumer gives the root a bounded height: the

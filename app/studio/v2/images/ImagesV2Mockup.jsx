@@ -462,7 +462,7 @@ export default function ImagesV2Mockup() {
 
   const optionFields = [
     { id: "renderStyle", label: "Render Style", value: optionValues.renderStyle, options: RENDER_STYLE_OPTIONS },
-    { id: "camera", label: "Camera / Framing", value: optionValues.camera, options: CAMERA_OPTIONS },
+    { id: "camera", label: "Camera framing", value: optionValues.camera, options: CAMERA_OPTIONS },
     { id: "wardrobe", label: "Wardrobe Theme", value: optionValues.wardrobe, options: WARDROBE_THEME_OPTIONS },
     { id: "aspectRatio", label: "Aspect Ratio", value: optionValues.aspectRatio, options: ASPECT_RATIO_OPTIONS },
     { id: "outputCount", label: "Output Count", value: optionValues.outputCount, options: OUTPUT_COUNT_OPTIONS },
