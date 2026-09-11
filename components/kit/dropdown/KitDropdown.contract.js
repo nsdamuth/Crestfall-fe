@@ -1,6 +1,19 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
+ * 1.2.1 to 1.3.0 (FE/MEDIA-STUDIO session 3 review round 2, 10 Sep
+ * 2026), additive: `align` sets the popover's baseline anchor, "left"
+ * (the default, every existing consumer unchanged) or "right" for a
+ * trigger pinned to the right edge of a bounded surface such as the
+ * asset picker modal, whose left-anchored menu would otherwise run
+ * past the panel. The measured flip still applies in both directions.
+ *
+ * 1.2.0 to 1.2.1 (FE/MEDIA-STUDIO session 2 review, 10 Sep 2026),
+ * presentation only, no prop change: while a single-select sits on
+ * its restingValue the trigger hides the value word as well as the
+ * count, reading plain "Filter" instead of "Filter All". Consumers
+ * without restingValue are pixel-stable.
+ *
  * Stable portable UI boundary for the branded dropdown kit piece
  * (docs/BUILD-BLUEPRINT.md sections 2.9 menu-popover recipe and 2.16
  * filter-line law, ruled 9 Aug 2026). One trigger chip opening one
@@ -48,6 +61,12 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {((value: string) => void)|null} onToggleOption
  *   fires per option activation; single-select closes after firing,
  *   multi-select stays open for further toggles
+ * @property {string|null} [restingValue] (added 1.2.0, 10 Sep 2026,
+ *   Media Studio browser review round 5) the one value that means
+ *   "no filter", e.g. "All". While it is the only selection the
+ *   trigger reads as untouched: no selection count, dim ink, the row
+ *   still checked. A default is not a choice the user made. Omitted
+ *   on every existing consumer, pixel-stable.
  * @property {string|null} [ariaLabel] (added 1.1.0, 10 Aug 2026
  *   review gate, D-3) the control's purpose for assistive tech when
  *   the visible label carries a VALUE rather than the group name
@@ -55,6 +74,11 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.1.0";
  *   selected tier as its label). Trigger announces
  *   "{ariaLabel}: {label}"; the listbox and sheet take ariaLabel
  *   alone. Omitted: behavior identical to 1.0.0.
+ * @property {"left"|"right"} [align] (added 1.3.0, 10 Sep 2026) the
+ *   popover's baseline anchor at 700px and up. Default "left".
+ *   "right" anchors the menu to the trigger's right edge, for a
+ *   trigger pinned to the right edge of a modal. The phone sheet is
+ *   unaffected.
  */
 
 export {};

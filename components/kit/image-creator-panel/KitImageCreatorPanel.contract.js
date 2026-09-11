@@ -1,30 +1,185 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.3.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
 
 /**
- * Stable portable UI boundary for the image creator panel kit piece
- * (docs/SPRINT-E-PLAN.md section 1.1, R6). Fixture-driven mirror of
- * the live image composer's function (`components/studio/image-studio/`,
- * READ ONLY reference, never imported): mode toggle, the six live
- * ingredient slots, the custom-guidance inline editor, the prompt and
- * Options block, and the generate/video blocks. No fetch anywhere;
- * the caller supplies display-ready values and receives intent
- * through named callbacks. Generation and persistence stay honest
- * stubs until live wiring (SOP HIDE/STUB law); the panel never fakes
- * a pending job or a saved preset.
+ * Stable portable UI boundary for the Media Studio composer (kit
+ * image creator panel). 2.0.0, 9 Sep 2026 (FE/MEDIA-STUDIO, Brian's
+ * notes 1 and 2, docs/references/media-studio/NOTES.md): the Player
+ * slot is gone (five fixed slots), the Options expander is gone
+ * (options render inline), the coins block is gone (the balance lives
+ * in the left sidebar), output count moved beside the Generate
+ * button, stage tabs (Generate, Remix) sit under the mode toggle, and
+ * the Generate row is a sticky footer. No fetch anywhere; the caller
+ * supplies display-ready values and receives intent through named
+ * callbacks. Anything the backend cannot do yet renders disabled with
+ * the words "Not available yet" and never fakes a result.
  *
- * The six ingredient slots are FIXED anatomy, not caller-supplied
- * data: id, label, icon, and savable-as-preset are owned by this
+ * The five slots are FIXED anatomy, not caller-supplied data: id,
+ * label, icon, requirement, and savable-as-preset are owned by this
  * package (mirroring components/studio/image-studio/imageStudioData.js
- * ingredientSlots verbatim, including the live labels Character,
- * Player Character, Pose, Clothing Source, Location / Scene,
- * Rendering Preset). The caller supplies only each slot's live STATE
- * through the `slots` map, keyed by the same six ids.
+ * ingredientSlots minus playerCharacter). The caller supplies only
+ * each slot's live STATE through the `slots` map, keyed by id.
  *
- * @typedef {"character"|"playerCharacter"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
+ * 2.0.0 to 2.1.0, ADDITIVE (FE/MEDIA-STUDIO session 4, 10 Sep 2026,
+ * Brian's notes 5, 5a, 5b): one nested `remix` prop carries the whole
+ * Remix stage (references, location, prompt with @ mentions, cost,
+ * gate). Null keeps the session 1 stub ("Not available yet"). Limits
+ * and the cost are the caller's: this View writes no number; the
+ * "Up to N characters" line and the cost label arrive pre-computed.
+ *
+ * 2.1.0 to 2.2.0, ADDITIVE (Brian's browser review of Remix, round 2,
+ * 10 Sep 2026): `remix` gains its own optional count control
+ * (`countOptions`, `countValue`, `onChangeCount`). Remix's list
+ * starts at 1 image while Generate's starts at 2, so the two stages
+ * keep separate values and floors; a remix without `countOptions`
+ * falls back to the shared footer count as in 2.1.0.
+ *
+ * 2.2.0 to 2.3.0, ADDITIVE (FE/MEDIA-STUDIO session 5, 10 Sep 2026,
+ * Brian's notes 7 and 7a): one nested `video` prop carries the whole
+ * Video mode (Text to video and Image to video stages, the five asset
+ * tiles or the one Image tile, the custom prompt, the Custom director
+ * rows, aspect ratio, duration, quality, its own count, cost, gate).
+ * Null keeps the 2.2.0 video block. The mode toggle's Video option is
+ * live while `videoDisabled` is false and keeps its Soon tag while
+ * `video.available` is false; the footer renders the Soon treatment
+ * (disabled, coin glyph and cost, Soon chip, title "Not available
+ * yet") for the same reason. Limits, the segment length, and the cost
+ * are the caller's: this View writes no number.
+ *
+ * 2.3.0 to 2.4.0, ADDITIVE/SEMANTIC (Director fidelity follow-up,
+ * 10 Sep 2026): Video duration/billing segments stay unchanged, while
+ * `video.director` becomes an arbitrary temporal cue sheet with
+ * editable start/end seconds, 0.1-second precision, gaps, overlap
+ * validation, cue removal, and cue addition that does not alter the
+ * video's duration or price.
+ *
+ * 2.4.0 to 2.5.0, ADDITIVE (Director JSON authoring, 10 Sep 2026):
+ * `video.director.jsonEditor` opens a frontend-only LOOM-style JSON
+ * editor over the prompt, cue sheet, duration, aspect ratio, and quality.
+ * Character, source Image, Pose, Outfit, Location, and Image Preset
+ * selections stay outside the JSON contract and remain manually selected.
+ *
+ * @typedef {Object} KitImageCreatorVideoDirectorRow
+ * @property {string} id stable cue id
+ * @property {number} index 0-based display position
+ * @property {number} fromSecond editable cue start in seconds
+ * @property {number} toSecond editable cue end in seconds
+ * @property {string} prompt what happens in that stretch
+ * @property {boolean} isInvalid true when the range is out of bounds,
+ *   reversed, or overlaps another cue
+ * @property {string} errorText compact caller-projected validation copy
+ *
+ * @typedef {Object} KitImageCreatorVideoProps
+ * @property {"TEXT"|"IMAGE"} stage Text to video (asset tiles, prompt
+ *   optional) or Image to video (one Image tile required, prompt
+ *   required); the caller owns the value
+ * @property {((stage: "TEXT"|"IMAGE") => void)|null} onChangeStage
+ * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
+ *   the Video mode's own five tiles, keyed by the same fixed ids as
+ *   Generate's; the caller maps them onto its own Video slots
+ * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate
+ * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotClear
+ * @property {{title: string, imageSrc?: string}|null} sourceImage the
+ *   Image to video source, display-ready, null while empty
+ * @property {(() => void)|null} onSelectSourceImage opens the shared
+ *   picker fed with the library's images
+ * @property {(() => void)|null} onClearSourceImage
+ * @property {string} promptValue
+ * @property {((value: string) => void)|null} onChangePrompt
+ * @property {{value: string, defaultValue?: string, options: {value: string, label: string}[]}} aspectRatio
+ *   4:5, 5:4, 9:16, 16:9, 1:1; rendered through the shared
+ *   SettingSelect with the dim-or-gold state law
+ * @property {((value: string) => void)|null} onChangeAspectRatio
+ * @property {number} durationSeconds
+ * @property {number} durationMin the provider/billing duration floor
+ * @property {number} durationMax the ceiling (30)
+ * @property {number} durationStep the provider/billing duration step
+ * @property {((seconds: number) => void)|null} onChangeDuration
+ * @property {{value: string, options: {value: string, label: string}[]}} quality
+ *   720p or 1080p, a two-option segmented control
+ * @property {((value: string) => void)|null} onChangeQuality
+ * @property {{open: boolean, onToggle: (() => void)|null, durationSeconds: number, timeStepSeconds: number, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((cueId: string, text: string) => void)|null, onChangeRowTime: ((cueId: string, field: "fromSecond"|"toSecond", seconds: number) => void)|null, onRemoveRow: ((cueId: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null, jsonEditor?: {isOpen: boolean, onOpen: (() => void)|null, modalProps: Object}}} director
+ *   the Custom director: compact arbitrary temporal cues inside the
+ *   current duration. Tenths of a second are supported, gaps are
+ *   allowed, overlaps are invalid, and adding/removing cues never
+ *   changes duration or billing. Its optional JSON editor authors only
+ *   prompt/timing/settings state; it never owns asset selections.
+ * @property {{value: string, label: string}[]} countOptions Video's
+ *   own count list (1, 2, 4, 8, 16, 32 videos)
+ * @property {string} countValue
+ * @property {((value: string) => void)|null} onChangeCount
+ * @property {string} generateCostLabel segments times the segment cost,
+ *   times the quality multiplier, times the count, pre-computed by the
+ *   caller
+ * @property {boolean} canGenerate honest gate (coins, then a character
+ *   on Text to video, an image and a prompt on Image to video, then
+ *   valid non-overlapping Director cue timing when cues are present)
+ * @property {string} generationHelpText the block reason
+ * @property {boolean} available false renders the Soon treatment on
+ *   the footer button and the Soon tag on the mode toggle until the
+ *   Chassis carries a video job
+ * @property {(() => void)|null} onGenerate
+ *
+ * @typedef {Object} KitImageCreatorRemixReference
+ * @property {string} slotId the Remix character slot this reference
+ *   fills; reported back through onChangeCharacter / onRemoveCharacter
+ * @property {number} position 1-based slot position, stable for the
+ *   life of the selection (a cleared slot leaves a gap the next Add
+ *   fills, so a prompt's @img mention keeps pointing at its character)
+ * @property {string} mention the prompt handle, "@img1" to "@img6"
+ * @property {{title: string, subtitle?: string, imageSrc?: string}} selection
+ *   display-ready; imageSrc empty for a once-only custom character
+ *
+ * @typedef {Object} KitImageCreatorRemixMentionOption
+ * @property {string} mention "@img1" or "@location"
+ * @property {string} title the asset's name
+ * @property {string} [imageSrc]
+ *
+ * @typedef {Object} KitImageCreatorRemixProps
+ * @property {KitImageCreatorRemixReference[]} references filled
+ *   character slots in slot order
+ * @property {boolean} canAddCharacter false past the limit; the Add
+ *   tile then leaves the grid, which reads as full rows of three
+ *   (placeholder tiles fill the last row while there is room; Brian's
+ *   browser note, 10 Sep 2026, no prop change)
+ * @property {string} addLimitLabel "Up to 6 characters", computed by
+ *   the caller from its one limit constant
+ * @property {{slotId: string, mention: string, selection: {title: string, subtitle?: string, imageSrc?: string}|null}} location
+ *   the one location slot (mention "@location")
+ * @property {(() => void)|null} onAddCharacter opens the shared asset
+ *   picker for the first empty character slot
+ * @property {((slotId: string) => void)|null} onChangeCharacter
+ *   re-opens the picker for a filled slot
+ * @property {((slotId: string) => void)|null} onRemoveCharacter
+ * @property {(() => void)|null} onSelectLocation opens the picker for
+ *   the location slot
+ * @property {(() => void)|null} onClearLocation
+ * @property {string} promptValue the Remix prompt (required); "@" opens
+ *   the mention list, choosing a row inserts its mention at the caret
+ * @property {((value: string) => void)|null} onChangePrompt
+ * @property {KitImageCreatorRemixMentionOption[]} mentionOptions the
+ *   filled references plus the location when filled
+ * @property {{value: string, label: string, isDisabled?: boolean, tooltip?: string}[]} [countOptions]
+ *   Remix's own count list (2.2.0), starting at 1 image; when absent
+ *   the footer keeps the shared count control
+ * @property {string} [countValue] the selected Remix count (2.2.0)
+ * @property {((value: string) => void)|null} [onChangeCount] (2.2.0)
+ * @property {string} generateCostLabel count times the Remix cost,
+ *   pre-computed by the caller
+ * @property {boolean} canGenerate honest gate (coins, at least one
+ *   character, a prompt), pre-computed by the caller
+ * @property {string} generationHelpText the block reason, the disabled
+ *   button's tooltip and accessible description
+ * @property {boolean} available false renders the Soon treatment on
+ *   the footer button (disabled, coin glyph and cost, Soon chip, title
+ *   "Not available yet") until the Chassis carries the Remix job
+ * @property {(() => void)|null} onGenerate
+ *
+ * @typedef {"character"|"pose"|"outfit"|"location"|"preset"} KitImageCreatorSlotId
  *
  * @typedef {Object} KitImageCreatorSlotState
- * @property {{title: string, subtitle?: string, imageSrc?: string}|null} selection the
- *   chosen ingredient, including its display-ready featured image when available,
+ * @property {{title: string, subtitle?: string, imageSrc?: string, imagePosition?: string}|null} selection the
+ *   chosen asset, including its display-ready featured image and optional face-aware
+ *   CSS object-position when available,
  *   or null for an empty slot
  * @property {boolean} isCustomMode true renders the inline custom
  *   guidance editor in place of the picker-opening tile
@@ -33,64 +188,109 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "1.3.0";
  *
  * @typedef {Object} KitImageCreatorOptionField
  * @property {string} id
- * @property {string} label
+ * @property {string} label display label, sentence case; rendered as
+ *   the control title above the shared SettingSelect trigger
  * @property {string} value
+ * @property {string} [defaultValue] the untouched starting value. When
+ *   value matches it the trigger reads in the dim ink; when it differs
+ *   the trigger reads gold (state law, browser review round 3 item 2).
+ *   Omitted means the control never reads as changed.
  * @property {{value: string, label: string}[]} options
+ *
+ * @typedef {Object} KitImageCreatorCountOption
+ * @property {string} value
+ * @property {string} label
+ * @property {boolean} [isDisabled] true for counts the backend cannot
+ *   serve yet; the row renders disabled
+ * @property {string} [tooltip] the disabled reason, rendered as the
+ *   row's trailing chip; "Soon" for counts (RULED 10 Sep 2026, round 6)
+ *
+ * @typedef {Object} KitImageCreatorRailStop
+ * @property {string} value
+ * @property {string} shortLabel the diagonal step name
+ * @property {string} mappedLabel the full workflow name
+ * @property {string} [definition] one-line definition shown in the
+ *   step's hover or tap tooltip
+ * @property {boolean} [active]
  *
  * @typedef {Object} KitImageCreatorPanelViewProps
  * @property {"IMAGE"|"VIDEO"} mode
  * @property {((mode: "IMAGE"|"VIDEO") => void)|null} onChangeMode
+ * @property {boolean} videoDisabled true keeps the Video option
+ *   non-interactive with the Soon label (alpha default); false makes
+ *   it live (2.3.0), the Soon tag then following `video.available`
+ * @property {string} videoSoonLabel
+ * @property {"GENERATE"|"REMIX"} stage which stage tab is active;
+ *   the caller owns the value (page-local presentation state)
+ * @property {((stage: "GENERATE"|"REMIX") => void)|null} onChangeStage
+ * @property {KitImageCreatorRemixProps|null} [remix] the Remix stage
+ *   body and footer values (2.1.0); null renders the stub
+ * @property {KitImageCreatorVideoProps|null} [video] the Video mode
+ *   body and footer values (2.3.0); null keeps the 2.2.0 video block
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
- *   keyed by the six fixed slot ids; an id absent from the map renders
+ *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate
  *   fires when a non-custom slot tile is tapped; the caller owns
- *   opening the ingredient picker (1.2)
+ *   opening the asset picker
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotClear
  *   fires from the clear control on a filled or custom slot
  * @property {((slotId: KitImageCreatorSlotId, text: string) => void)|null} onCustomChangeText
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onCustomBackToPresets
- *   re-opens the picker for that slot (1.2)
+ *   re-opens the picker for that slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onCustomSavePreset
- *   opens the save-preset modal (1.3); only reachable for the four
- *   savable slots (pose, outfit, location, preset)
- * @property {string} promptValue
+ *   opens the save-preset modal; only reachable for the four savable
+ *   slots (pose, outfit, location, preset)
+ * @property {string} promptValue the custom prompt (optional field)
  * @property {((value: string) => void)|null} onChangePrompt
  * @property {string} negativePromptValue
  * @property {((value: string) => void)|null} onChangeNegativePrompt
- * @property {Object|null} renderStyleRailProps optional five-stop snapping
- *   workflow rail. Presentation is owned here; profile values and callbacks are
- *   supplied by the caller.
- * @property {KitImageCreatorOptionField[]} optionFields the remaining inline
- *   Options-expander dropdowns (Wardrobe Theme, Aspect Ratio, Output Count),
- *   single-select. Camera / Framing uses the dedicated modal launcher below so
- *   the larger camera catalogue is not collapsed into a standard dropdown.
+ * @property {{value: string, defaultValue?: string, activeLabel: string, options: KitImageCreatorRailStop[], onChange: Function}|null} renderStyleRailProps
+ *   the six-stop snapping render style rail; presentation is owned
+ *   here, profile values and callbacks are supplied by the caller.
+ *   defaultValue is the untouched profile: while value matches it the
+ *   active step name reads dim, otherwise gold (round 3 item 2)
+ * @property {KitImageCreatorOptionField[]} optionFields the inline
+ *   single-select dropdowns after Camera framing (Wardrobe theme,
+ *   Aspect ratio). Output count is NOT in this list; see countOptions.
  * @property {((fieldId: string, value: string) => void)|null} onChangeOption
  * @property {Object|null} advancedTuningProps optional display-ready bounded
- *   workflow tuning projection. The kit renders only semantic sliders supplied
- *   by the caller; workflow limits and payload authority stay outside the View.
- * @property {string} coinBalanceLabel
- * @property {string} coinCostLabel
- * @property {boolean} showInsufficientCoins
+ *   workflow tuning projection, rendered inside the Advanced disclosure
+ * @property {KitImageCreatorCountOption[]} countOptions the output count
+ *   list beside the Generate button. Its minimum is deployment-configurable
+ *   (alpha may expose 1; live defaults to 2); values the backend cannot serve
+ *   carry isDisabled and the tooltip.
+ * @property {string} countValue the selected count value
+ * @property {((value: string) => void)|null} onChangeCount reports the
+ *   same selection to the same handler the former Output Count select
+ *   used (contract law, FRONTEND-SOP section 13)
+ * @property {string} generateCostLabel the coin cost shown on the
+ *   Generate button (count times the per-image cost), pre-computed by
+ *   the caller; prices come from the backend or the caller's one
+ *   constant table, never from this View
  * @property {boolean} canGenerate honest disabled-state gate,
- *   pre-computed by the caller (fixture logic, never the View)
- * @property {string} generationHelpText the block-reason or
- *   non-blocking help line, pre-computed by the caller; rendered
- *   whenever non-empty
- * @property {string} generationStatus live generation state; "loading"
- *   renders in-flight feedback while Generate remains available for another independent request
- * @property {string} generationError live submission error text
+ *   pre-computed by the caller
+ * @property {string} generationHelpText the block reason, pre-computed
+ *   by the caller; rendered as the disabled button's tooltip and its
+ *   accessible description, never as helper copy on the panel
+ * @property {string} generationStatus "loading" renders the spinner in
+ *   place of the coin glyph while Generate stays available
+ * @property {string} generationError live submission error text,
+ *   rendered as an alert line above the footer
  * @property {string} cameraPresetLabel selected camera/framing preset label
  * @property {string} cameraPresetDescription selected preset helper copy
+ * @property {boolean} cameraPresetChanged true once the viewer picks a
+ *   preset other than the Auto default; drives the same dim-or-gold
+ *   state law as every other control in Image settings
  * @property {(() => void)|null} onOpenCameraPresetPicker opens the
- *   camera/framing picker when the live catalog is too large for inline tiles
+ *   camera/framing picker (the catalog is too large for inline tiles)
  * @property {boolean} showSceneryOnlyHelper true for location-only requests
  * @property {boolean} sceneryOnlyHelperEnabled whether scenery optimization is active
  * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
- * @property {(() => void)|null} onGenerate fires the R4 fixture-action
- *   notice in fixture mode; the real job pipeline is live wiring
+ * @property {(() => void)|null} onGenerate fires the real job pipeline
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
- *   Video Aspect, Motion Style
+ *   Video Aspect, Motion Style (the 2.2.0 video block, rendered only
+ *   while `video` is null)
  * @property {((fieldId: string, value: string) => void)|null} onChangeVideoOption
  * @property {string} videoDirectionValue
  * @property {((value: string) => void)|null} onChangeVideoDirection

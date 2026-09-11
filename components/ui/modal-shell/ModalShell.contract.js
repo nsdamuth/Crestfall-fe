@@ -1,4 +1,4 @@
-export const MODAL_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const MODAL_SHELL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable UI boundary for the shared floating-modal frame used across the
@@ -22,6 +22,10 @@ export const MODAL_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} [veilClassName] full substitution for the veil's
  *   background/blur classes; omit for the default scrim-plus-blur
  * @property {string} panelClassName
+ * @property {import("react").CSSProperties} [panelStyle] added 1.2.0,
+ *   10 Sep 2026: optional inline style for the dialog panel (KitModalFrame
+ *   hands the panel its fixed width as a custom property). Absent by
+ *   default; every prior caller unchanged
  * @property {string} [ariaLabelledBy]
  * @property {string} [ariaDescribedBy]
  * @property {(event: import("react").MouseEvent) => void} onBackdropMouseDown

@@ -136,6 +136,7 @@ function EditorInner({
     previewLoadingOverride,
     previewLoadErrorOverride,
     previewDirtyOverride,
+    postDeleteHref: backHref,
   });
 
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);

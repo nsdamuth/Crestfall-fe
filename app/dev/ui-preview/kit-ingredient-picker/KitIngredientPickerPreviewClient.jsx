@@ -18,11 +18,7 @@ export default function KitIngredientPickerPreviewClient() {
       setOpenId(null);
     },
     onUseCustom: () => {
-      setNote("Use Once pressed. In the panel this enters custom mode for the slot.");
-      setOpenId(null);
-    },
-    onCreatePreset: () => {
-      setNote("New Preset pressed. In a consuming page this opens the save-preset modal (1.3).");
+      setNote("Custom pressed. On the live page this opens the custom asset modal for the slot.");
       setOpenId(null);
     },
     onClose: () => {
@@ -34,7 +30,7 @@ export default function KitIngredientPickerPreviewClient() {
   return (
     <KitPreviewShell
       title="Kit Ingredient Picker"
-      description="Fixture-driven mirror of the live ingredient picker: search, the ingredient card grid, Use Once, and New Preset."
+      description="Fixture-driven mirror of the live asset picker: search, the filter dropdown, Custom as the first card, the asset grid, and the rows layout for camera framing."
       states={kitIngredientPickerFixtures.map((fixture) => ({ key: fixture.id, label: fixture.label }))}
       activeKey={openId}
       onSelectState={(id) => {

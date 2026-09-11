@@ -105,11 +105,36 @@ underneath) is demonstrated anywhere, so it was built as the more
 conservative reading: one `notificationsView` mode swap, not two stacked
 dialogs.
 
+## Global search (FE/GLOBAL-SEARCH session 1, 10 Sep 2026, contract v8)
+
+The bare search input is gone. The View renders `KitGlobalSearch`
+(`components/kit/global-search`) in its place and spreads the
+`globalSearch` prop bag onto it; the View owns no search state.
+
+`useGlobalSearchAdapter.js` is the one top bar adapter: on the panel's
+first open it fetches, in parallel, the list routes that exist (owned
+creations summary, stories in progress, the first 60 generated media
+outputs, community creations, community creators), normalizes every
+item to the Kit's item shape, holds the lists for the session, and
+refreshes on the next open after five minutes. No search route exists
+in the Chassis; the gap file is `docs/handoffs/GLOBAL-SEARCH-BACKEND.md`
+and the rulings are in `docs/references/global-search/NOTES.md`.
+
+Destinations, every one a route in the app router: owned creations open
+`/studio/v2/editor/[id]` (timelines `/studio/v2/lore/timelines/[id]`),
+stories in progress open `/studio/v2/stories/[id]`, community creations
+open `/studio/creations/[id]`, creators open `/studio/v2/creators/[handle]`.
+Generated media rows render Soon because no page can open with one
+output selected yet. Navigation goes through `navigate`, threaded in by
+`StudioTopBar.jsx` from the app router; nothing in this package or the
+Kit imports next/navigation except that Shell.
+
 ## Contract gaps (Phase 2 / 2.1, 8 Aug 2026)
 
-- **Search.** No search callback existed in the prior contract. `onSearchChange`
-  is exposed with a safe no-op default. Wiring live search is a CR against
-  services-api; see `docs/CONTRACT-REQUESTS.md` (CR-012).
+- **Search.** Superseded 10 Sep 2026 by the global search above. The
+  backend still has no search route (CR-012 stays open, pointing at
+  `docs/handoffs/GLOBAL-SEARCH-BACKEND.md`); the frontend searches the
+  lists it can already fetch.
 - **Notifications.** No notification data source exists anywhere in the app.
   `notifications` still defaults to `[]` in the ViewModel; `onDismissNotification`
   and `onClearAllNotifications` remain presentation-only no-ops with nothing

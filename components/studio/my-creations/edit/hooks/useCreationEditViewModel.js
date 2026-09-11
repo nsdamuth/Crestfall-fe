@@ -103,7 +103,11 @@ function mergeLifecycleTransitionIntoForm(current, savedCreation) {
   };
 }
 
-export function useCreationEditViewModel({ creationId, creation }) {
+export function useCreationEditViewModel({
+  creationId,
+  creation,
+  postDeleteHref = "/studio/my-creations",
+}) {
   const [activeSection, setActiveSection] = useState("overview");
   const [activeMediaSlot, setActiveMediaSlot] = useState(0);
   const [deleteStatus, setDeleteStatus] = useState("idle");
@@ -469,7 +473,7 @@ export function useCreationEditViewModel({ creationId, creation }) {
       setDeleteStatus("deleted");
       setDeleteMessage("Deleted.");
 
-      window.location.assign("/studio/my-creations");
+      window.location.assign(postDeleteHref || "/studio/my-creations");
     } catch (error) {
       setDeleteStatus("error");
       setDeleteMessage("Creation could not be deleted.");

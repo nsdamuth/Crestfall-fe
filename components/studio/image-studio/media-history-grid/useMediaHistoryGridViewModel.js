@@ -329,9 +329,15 @@ export function useMediaHistoryGridViewModel({
   isLoadingMoreHistory = false,
   onLoadMoreHistory,
   imageStudioHref = "/studio/image-studio",
+  initialActivePreviewId = null,
+  onActivePreviewChange = null,
   onCoinBalanceChange,
   onImageReassigned,
   onImageRenamed,
+  // Passed straight through to the viewer (FE/MEDIA-STUDIO session
+  // 3): the workbench owns the two constants, the grid only carries
+  // them, the viewer renders them. Absent on the legacy page.
+  viewerCoinCosts = null,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -339,7 +345,9 @@ export function useMediaHistoryGridViewModel({
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [compactMobileGrid, setCompactMobileGrid] = useState(true);
-  const [activePreviewId, setActivePreviewId] = useState(null);
+  const [activePreviewId, setActivePreviewId] = useState(
+    initialActivePreviewId || null
+  );
   const [mediaFilter, setMediaFilter] = useState("ALL");
   const [activityFilters, setActivityFilters] = useState([]);
   // Legacy single value derived from the two-section model: one
@@ -458,6 +466,11 @@ export function useMediaHistoryGridViewModel({
     };
   }, [safeGeneratedMedia]);
 
+  useEffect(() => {
+    if (!isMediaHistoryUuid(initialActivePreviewId)) return;
+    setActivePreviewId((current) => current || initialActivePreviewId);
+  }, [initialActivePreviewId]);
+
   const mediaItems = useMemo(
     () =>
       safeGeneratedMedia
@@ -494,6 +507,30 @@ export function useMediaHistoryGridViewModel({
     [mediaItems, mediaFilter, activityFilters, searchQuery, creationSearchLabelsById]
   );
 
+  useEffect(() => {
+    if (!activePreviewId) return;
+    if (
+      mediaItems.some(
+        (item) => item.id === activePreviewId || item.imageOutputId === activePreviewId
+      )
+    ) {
+      return;
+    }
+    setActivePreviewId(null);
+  }, [activePreviewId, mediaItems]);
+
+  useEffect(() => {
+    if (typeof onActivePreviewChange !== "function") return;
+
+    const activeItem = activePreviewId
+      ? mediaItems.find(
+          (item) => item.id === activePreviewId || item.imageOutputId === activePreviewId
+        ) || null
+      : null;
+
+    onActivePreviewChange(activeItem?.imageOutputId || activePreviewId || null);
+  }, [activePreviewId, mediaItems, onActivePreviewChange]);
+
   const visibleSelectableImageOutputIds = visibleMediaItems
     .filter((item) => item.selectable)
     .map((item) => item.imageOutputId);
@@ -505,7 +542,9 @@ export function useMediaHistoryGridViewModel({
     );
   const isBulkDeleting = bulkDeleteStatus === "deleting";
   const activePreviewItem = activePreviewId
-    ? mediaItems.find((item) => item.id === activePreviewId) || null
+    ? mediaItems.find(
+        (item) => item.id === activePreviewId || item.imageOutputId === activePreviewId
+      ) || null
     : null;
 
   async function toggleLikedMedia(item) {
@@ -700,7 +739,7 @@ export function useMediaHistoryGridViewModel({
     ? `Showing ${visibleMediaItems.length} of ${mediaItems.length} library items`
     : historyStatus === "loading"
       ? "Loading image library..."
-      : "No library items yet";
+      : "";
 
   const lightboxProps = activePreviewItem
     ? {
@@ -712,6 +751,7 @@ export function useMediaHistoryGridViewModel({
         imageStudioHref,
         allowDownload: true,
         showStudioActions: true,
+        viewerCoinCosts,
         isItemLiked: (item) =>
           likedMediaIds.has(getMediaHistoryImageOutputId(item)),
         isItemBookmarked: (item) =>

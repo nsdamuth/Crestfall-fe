@@ -31,7 +31,7 @@ const SECTIONS = Object.freeze([
   Object.freeze({ id: "stories", label: "Stories", href: "/studio/v2/stories" }),
   Object.freeze({ id: "adventures", label: "Adventures", href: "/studio/v2/adventures" }),
   Object.freeze({ id: "studio", label: "Studio", href: "/studio" }),
-  Object.freeze({ id: "images", label: "Images", href: "/studio/v2/images" }),
+  Object.freeze({ id: "images", label: "Media", href: "/studio/v2/images" }),
   Object.freeze({ id: "vault", label: "Vault", href: "/studio/v2/vault" }),
   Object.freeze({ id: "community", label: "Community", href: "/studio/v2/community" }),
   Object.freeze({ id: "creators", label: "Creators", href: "/studio/v2/creators" }),

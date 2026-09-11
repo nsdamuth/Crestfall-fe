@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import {
   getCameraPresetPrompt,
   getLegacyCameraPresetValue,
+  ingredientSlots,
   normalizeCameraPresetValue,
+  remixIngredientSlots,
+  remixLocationSlots,
+  videoIngredientSlots,
 } from "../imageStudioData.js";
 import {
   LOCATION_ONLY_SCENERY_PROMPT_FRAGMENT,
@@ -23,8 +27,49 @@ import { useImageGenerationHistory } from "@/components/studio/image-studio/hook
 import { useImageGenerationJob } from "@/components/studio/image-studio/hooks/useImageGenerationJob";
 import { useImageStudioIngredientOptions } from "@/components/studio/image-studio/hooks/useImageStudioIngredientOptions";
 import { isCommunityDiscoverableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import {
+  IMAGE_STUDIO_MIN_OUTPUT_COUNT,
+  clampImageStudioOutputCount,
+} from "../imageStudioOutputCountPolicy.js";
 
 export const IMAGE_GENERATION_COIN_COST = 5;
+
+// Image viewer costs (FE/MEDIA-STUDIO session 3, notes 6 and 6a,
+// RULED 10 Sep 2026): the only other price constants on the frontend,
+// read by the viewer the way the composer reads the generation cost
+// (through props, never imported by a View) until the Chassis serves
+// prices (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 2).
+export const UPSCALE_COIN_COST = 10;
+export const EDIT_RUN_COIN_COST = 20;
+
+// Remix cost per image (FE/MEDIA-STUDIO session 4, note 5), proposed,
+// pending Nick's cost table (docs/handoffs/MEDIA-STUDIO-BACKEND.md
+// gap 13); the number lives here only. Read by the page adapter through
+// composerProps.remixCoinCost the way the composer reads coinCost;
+// the coin gate follows count times this number exactly as Generate.
+export const REMIX_COIN_COST = 20;
+
+// Video cost rule (FE/MEDIA-STUDIO session 5, note 7, 10 Sep 2026),
+// proposed, pending Nick's cost table (docs/handoffs/MEDIA-STUDIO-
+// BACKEND.md gap 15); the three numbers live here only. One segment
+// of VIDEO_SEGMENT_SECONDS at 720p costs VIDEO_SEGMENT_COIN_COST;
+// 1080p multiplies that by VIDEO_1080P_COST_MULTIPLIER; the count
+// multiplies the total. Read by the page adapter through
+// composerProps.videoCoinCosts the way it reads remixCoinCost; no
+// View imports them and no copy writes the numbers.
+export const VIDEO_SEGMENT_COIN_COST = 50;
+export const VIDEO_SEGMENT_SECONDS = 5;
+export const VIDEO_1080P_COST_MULTIPLIER = 3;
+
+// The Media Studio workbench serves the five composer slots plus the
+// Remix slots (session 4) and the Video slots (session 5); each is an
+// ordinary ingredient slot with its own id, so every handler below
+// works for it unchanged.
+const WORKBENCH_INGREDIENT_SLOTS = Object.freeze([
+  ...ingredientSlots,
+  ...remixIngredientSlots,
+  ...videoIngredientSlots,
+]);
 
 export const ASPECT_RATIO_BY_COMPOSER_VALUE = Object.freeze({
   PORTRAIT_4_5: "4:5",
@@ -61,6 +106,17 @@ export const PRESET_CREATION_TYPE_BY_SLOT_ID = Object.freeze({
   outfit: "OUTFIT",
   location: "LOCATION",
   preset: "IMAGE_PRESET",
+  // The Remix location's Custom modal saves a Location preset exactly
+  // like Generate's (session 4); Remix characters have no preset type,
+  // same as Character.
+  ...Object.fromEntries(remixLocationSlots.map((slot) => [slot.id, "LOCATION"])),
+  // The Video slots (session 5) save the same preset types as the
+  // Generate tile they mirror; the Video character has none.
+  ...Object.fromEntries(
+    videoIngredientSlots
+      .filter((slot) => slot.allowCreatePreset)
+      .map((slot) => [slot.id, { pose: "POSE", outfit: "OUTFIT", location: "LOCATION", preset: "IMAGE_PRESET" }[slot.tileId]])
+  ),
 });
 
 export function getLegacyRenderingStyle(renderProfileKey) {
@@ -316,8 +372,13 @@ export function getImageGenerationAvailability({
   selectedIngredients,
   customIngredientPrompts,
   imageGenerationAllowed = true,
+  imageCount = "1",
 }) {
-  const hasEnoughCoins = coinBalance >= IMAGE_GENERATION_COIN_COST;
+  // Gate on the displayed cost, count times the per-image cost
+  // (RULED 9 Sep 2026, Media Studio plan gate).
+  const requestedCount = clampImageStudioOutputCount(imageCount);
+  const requestCoinCost = IMAGE_GENERATION_COIN_COST * requestedCount;
+  const hasEnoughCoins = coinBalance >= requestCoinCost;
   const selectedCharacterId = getSelectedCreationId(selectedIngredients.character);
   const selectedPlayerCharacterId = getSelectedCreationId(
     selectedIngredients.playerCharacter
@@ -372,7 +433,7 @@ export function getImageGenerationAvailability({
   const imageGenerationBlockReason = !imageGenerationAllowed
     ? "Image generation is not available for this account."
     : !hasEnoughCoins
-      ? `You need at least ${IMAGE_GENERATION_COIN_COST} coins to generate an image.`
+      ? `You need at least ${requestCoinCost} coins to generate ${requestedCount === 1 ? "an image" : `${requestedCount} images`}.`
       : !hasRenderableImageSource
         ? "Select a character, clothing source, wardrobe, or location before generating."
         : "";
@@ -478,7 +539,7 @@ export function buildImageGenerationPayload({
       renderingStyle: getLegacyRenderingStyle(renderStyle),
       renderProfileKey: renderStyle,
       aspectRatio: ASPECT_RATIO_BY_COMPOSER_VALUE[aspectRatio] || "3:4",
-      outputCount: Number.parseInt(imageCount, 10) || 1,
+      outputCount: clampImageStudioOutputCount(imageCount),
       quality: "standard",
       seed: null,
       ...(resolvedWorkflowTuning
@@ -490,7 +551,7 @@ export function buildImageGenerationPayload({
 }
 
 export function useImageStudioWorkbenchViewModel({ account }) {
-  const [mode, setMode] = useState("IMAGE");
+  const [requestedMode, setMode] = useState("IMAGE");
   const [selectedIngredients, setSelectedIngredients] = useState({});
   const [customIngredientPrompts, setCustomIngredientPrompts] = useState({});
   const [pickerSlot, setPickerSlot] = useState(null);
@@ -508,7 +569,11 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [cameraPreset, setCameraPreset] = useState("AUTO");
   const [wardrobeTheme, setWardrobeTheme] = useState("AUTO");
   const [aspectRatio, setAspectRatio] = useState("PORTRAIT_4_5");
-  const [imageCount, setImageCount] = useState("1");
+  // Deployment policy: live defaults to 2; alpha/dev can opt into 1 via
+  // NEXT_PUBLIC_CRESTFALL_IMAGE_STUDIO_MIN_OUTPUT_COUNT without changing code.
+  const [imageCount, setImageCount] = useState(
+    String(IMAGE_STUDIO_MIN_OUTPUT_COUNT)
+  );
 
   const [videoDuration, setVideoDuration] = useState("4");
   const [videoAspectRatio, setVideoAspectRatio] = useState("PORTRAIT");
@@ -527,21 +592,25 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const imageGenerationAllowed = capabilities?.imageGeneration !== false;
   const videoGenerationAllowed = capabilities?.videoGeneration === true;
 
-  useEffect(() => {
-    if (
-      mode === "VIDEO" &&
-      capabilityStatus === "loaded" &&
-      !videoGenerationAllowed
-    ) {
-      setMode("IMAGE");
-    }
-  }, [capabilityStatus, mode, videoGenerationAllowed]);
+  // Derived, never synced back into state (react-hooks/
+  // set-state-in-effect, the same shape useStudioViewModel and the
+  // account ViewModel use): a VIDEO request resolves to IMAGE while
+  // the loaded capabilities say video is off. Behavior unchanged.
+  const mode =
+    requestedMode === "VIDEO" &&
+    capabilityStatus === "loaded" &&
+    !videoGenerationAllowed
+      ? "IMAGE"
+      : requestedMode;
 
   const pickerSourceMode = pickerSlot
     ? ingredientSourceBySlot[pickerSlot.id] || "MINE"
     : "MINE";
   const { ingredientOptionsBySlot, ingredientLoadError } =
-    useImageStudioIngredientOptions({ sourceMode: pickerSourceMode });
+    useImageStudioIngredientOptions({
+      sourceMode: pickerSourceMode,
+      slots: WORKBENCH_INGREDIENT_SLOTS,
+    });
 
   const {
     generationStatus,
@@ -573,6 +642,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     selectedIngredients,
     customIngredientPrompts,
     imageGenerationAllowed,
+    imageCount,
   });
 
   function handleRenderStyleChange(nextProfileKey) {
@@ -765,6 +835,23 @@ export function useImageStudioWorkbenchViewModel({ account }) {
     setSavePresetSlot(slot);
   }
 
+  // Media Studio custom flow (FE/MEDIA-STUDIO session 2, note 4):
+  // Custom in the picker opens the custom asset modal for the slot
+  // without touching the selection. "Use once" in that modal is what
+  // applies the typed prompt as a once-only ingredient (the same
+  // custom selection startCustomIngredient has always made). The
+  // legacy inline path above stays for /studio/image-studio.
+  function startCustomEntry(slot) {
+    if (!slot?.id) return;
+    setPickerSlot(null);
+    setSavePresetSlot(slot);
+  }
+
+  function useCustomOnce(slot) {
+    if (!slot?.id) return;
+    startCustomIngredient(slot);
+  }
+
   function updateCustomIngredientPrompt(slotId, value) {
     setCustomIngredientPrompts((current) => ({
       ...current,
@@ -831,6 +918,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       onCoinBalanceChange: setCoinBalanceFromServer,
       onImageReassigned: applyImageReassignment,
       onImageRenamed: applyImageRename,
+      viewerCoinCosts: {
+        upscale: UPSCALE_COIN_COST,
+        editRun: EDIT_RUN_COIN_COST,
+      },
     },
     composerProps: {
       mode,
@@ -841,6 +932,8 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       customIngredientPrompts,
       onUpdateCustomIngredientPrompt: updateCustomIngredientPrompt,
       onSaveCustomIngredient: openSavePreset,
+      onStartCustomEntry: startCustomEntry,
+      onUseCustomOnce: useCustomOnce,
       prompt,
       setPrompt,
       showSceneryOnlyHelper: isLocationOnlyImageComposition(selectedIngredients),
@@ -877,6 +970,12 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       generationHelpText: imageGenerationHelpText,
       coinBalance,
       coinCost: IMAGE_GENERATION_COIN_COST,
+      remixCoinCost: REMIX_COIN_COST,
+      videoCoinCosts: {
+        perSegment: VIDEO_SEGMENT_COIN_COST,
+        segmentSeconds: VIDEO_SEGMENT_SECONDS,
+        multiplier1080p: VIDEO_1080P_COST_MULTIPLIER,
+      },
       coinStatus,
       coinError,
       hasEnoughCoins,

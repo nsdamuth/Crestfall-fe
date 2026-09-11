@@ -19,7 +19,7 @@ export default function KitAssetDetailPopup(props) {
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-xl"
+      panelWidth="36rem"
       onClose={viewProps.onClose}
       ariaLabelledBy={KIT_ASSET_DETAIL_POPUP_TITLE_ID}
     >

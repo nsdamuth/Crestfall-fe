@@ -7,9 +7,9 @@ import { fetchStudioNotifications } from "@/lib/client/studio/notifications/stud
 import {
   projectStudioNotification,
 } from "./studioTopBarNotificationPresentation";
+import { useGlobalSearchAdapter } from "./useGlobalSearchAdapter";
 
 export const STUDIO_TOP_BAR_COPY = Object.freeze({
-  searchPlaceholder: "Search characters, stories, and adventures",
   notificationsLabel: "Notifications",
   openMenuAriaLabel: "Open menu",
   eggshellThemeLabel: "Switch to Eggshell theme",
@@ -45,9 +45,13 @@ export function useStudioTopBarViewModel({
   themeMode = "dark",
   onToggleTheme = () => {},
   onOpenMenu = () => {},
+  navigate = null,
   loadNotifications = fetchStudioNotifications,
 } = {}) {
-  const [searchValue, setSearchValue] = useState("");
+  // Global search (FE/GLOBAL-SEARCH, 10 Sep 2026): the adapter fetches
+  // the list routes that exist on first open and hands KitGlobalSearch
+  // its two source groups; navigation goes through the Shell's router.
+  const globalSearch = useGlobalSearchAdapter({ navigate });
   const [notificationsView, setNotificationsView] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [notificationsStatus, setNotificationsStatus] = useState("idle");
@@ -82,9 +86,7 @@ export function useStudioTopBarViewModel({
   }
 
   return {
-    searchValue,
-    searchPlaceholder: STUDIO_TOP_BAR_COPY.searchPlaceholder,
-    onSearchChange: setSearchValue,
+    globalSearch,
     notifications,
     notificationsStatus,
     notificationsLoadError,

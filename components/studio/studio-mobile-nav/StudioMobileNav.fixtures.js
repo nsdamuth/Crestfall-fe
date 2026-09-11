@@ -29,7 +29,7 @@ const bottomLinks = Object.freeze([
   Object.freeze({ label: "Home", href: "/studio", iconKey: "home", isActive: false }),
   Object.freeze({ label: "Games", href: "/studio/games", iconKey: "sparkles", isActive: false }),
   Object.freeze({ label: "Rooms", href: "/studio/story-rooms", iconKey: "messagesSquare", isActive: false }),
-  Object.freeze({ label: "Images", href: "/studio/image-studio", iconKey: "image", isActive: false }),
+  Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image", isActive: false }),
   Object.freeze({ label: "Characters", href: "/studio/official-characters", iconKey: "users", isActive: false }),
 ]);
 

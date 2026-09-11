@@ -2,12 +2,11 @@
 
 import { Bell, Menu, Moon, Sun } from "lucide-react";
 
+import KitGlobalSearch from "@/components/kit/KitGlobalSearch";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
 export default function StudioTopBarView({
-  searchValue = "",
-  searchPlaceholder = "Search characters, stories, and adventures",
-  searchAutoFocus = false,
+  globalSearch = null,
   notifications = [],
   notificationsStatus = "idle",
   notificationsLoadError = "",
@@ -21,7 +20,6 @@ export default function StudioTopBarView({
   accountInitial = "?",
   accountLinkSlot = null,
   openMenuAriaLabel = "Open menu",
-  onSearchChange = () => {},
   onOpenNotifications = () => {},
   onToggleTheme = () => {},
   onCloseNotifications = () => {},
@@ -44,14 +42,13 @@ export default function StudioTopBarView({
           <Menu size={20} />
         </button>
 
-        <input
-          type="search"
-          value={searchValue}
-          onChange={(event) => onSearchChange?.(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label="Search"
-          autoFocus={searchAutoFocus}
-          className="ml-auto h-[var(--control-md)] w-full max-w-[26rem] touch-manipulation rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] font-sans text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[color:var(--ink)] placeholder:text-[length:var(--text-label)] placeholder:font-[var(--weight-regular)] placeholder:text-[color:var(--ink-faint)] focus-visible:border-[var(--gold-action)]"
+        {/* Global search (FE/GLOBAL-SEARCH, 10 Sep 2026): one field
+            searches everything; the results panel opens directly below
+            it (a full-height sheet under 700px). The adapter's prop bag
+            arrives as `globalSearch`; the View owns no search state. */}
+        <KitGlobalSearch
+          {...(globalSearch || {})}
+          className="ml-auto w-full max-w-[26rem]"
         />
 
         <button

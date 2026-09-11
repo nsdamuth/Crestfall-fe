@@ -17,7 +17,7 @@ export default function FixtureActionNotice({ notice = null, onClose = null }) {
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-md"
+      panelWidth="28rem"
       onClose={onClose}
       ariaLabel={notice.label || "Preview action"}
     >

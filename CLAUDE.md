@@ -55,10 +55,11 @@ Not law, kept current as living reference material:
 
 ## Verification
 
-`docs/FRONTEND-SOP.md` section 8 is the verification law: rendered at
-390 then 1440, production build exit 0, zero em dashes in any doc
-touched, every finished-task report echoes the brief's manifest part
-by part as DONE or STOPPED.
+`docs/FRONTEND-SOP.md` section 8 is the verification law: render
+checks run only when the brief asks for one, the default review is
+Brian in the browser after push (RULED 9 Sep 2026), production build
+exit 0, zero em dashes in any doc touched, every finished-task report
+echoes the brief's manifest part by part as DONE or STOPPED.
 
 ## Standing rule, FE-REVIEW-01
 

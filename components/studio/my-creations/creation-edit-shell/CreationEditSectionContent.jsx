@@ -28,6 +28,7 @@ export default function CreationEditSectionContent(ctx) {
     form,
     hasUnsavedChanges = false,
     updateField,
+    updateDataField,
     isTemplate,
     isLore,
     reviewStatus,
@@ -48,6 +49,7 @@ export default function CreationEditSectionContent(ctx) {
         form={form}
         creationId={creationId}
         hasUnsavedChanges={hasUnsavedChanges}
+        updateDataField={updateDataField}
       />
     ) : (
       <PublishingSection

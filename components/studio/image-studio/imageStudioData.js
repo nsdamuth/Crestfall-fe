@@ -7,6 +7,12 @@ import {
   Users,
 } from "lucide-react";
 
+import {
+  IMAGE_STUDIO_MIN_OUTPUT_COUNT,
+  IMAGE_STUDIO_OUTPUT_COUNT_BACKEND_MAX,
+  buildImageStudioOutputCountValues,
+} from "./imageStudioOutputCountPolicy.js";
+
 export const ingredientSlots = [
   {
     id: "character",
@@ -429,10 +435,143 @@ export const aspectRatioOptions = [
   { value: "SQUARE_1_1", label: "1:1" },
 ];
 
-export const imageCountOptions = [
-  { value: "1", label: "1 image" },
-  { value: "2", label: "2 images" },
-  { value: "4", label: "4 images" },
+// Media Studio count policy. Production can keep the ruled minimum of 2,
+// while alpha/dev can expose 1 without changing source by setting
+// NEXT_PUBLIC_CRESTFALL_IMAGE_STUDIO_MIN_OUTPUT_COUNT=1. The backend
+// currently serves at most 4 images per request; larger future counts remain
+// visible but disabled in the V2 composer.
+export const IMAGE_COUNT_BACKEND_MAX = IMAGE_STUDIO_OUTPUT_COUNT_BACKEND_MAX;
+export const IMAGE_COUNT_MINIMUM = IMAGE_STUDIO_MIN_OUTPUT_COUNT;
+export const imageCountOptions = buildImageStudioOutputCountValues().map(
+  (count) => ({
+    value: String(count),
+    label: `${count} ${count === 1 ? "image" : "images"}`,
+  })
+);
+// Remix limits, RULED 10 Sep 2026 (FE/MEDIA-STUDIO session 4, note 5):
+// up to six characters (character or player character assets) plus
+// one location. Defined once here beside the count limit; every
+// consumer imports them. The Remix slots are ordinary ingredient slots
+// with their own ids, so the shared picker, the custom asset modal,
+// and every selection handler in the workbench ViewModel serve them
+// unchanged. Slot ids carry a 1-based position so a prompt's @img
+// mention stays bound to its slot when another slot is cleared.
+export const REMIX_MAX_CHARACTERS = 6;
+export const REMIX_MAX_LOCATIONS = 1;
+export const REMIX_CHARACTER_SLOT_PREFIX = "remixCharacter";
+export const REMIX_LOCATION_SLOT_PREFIX = "remixLocation";
+
+export const remixCharacterSlots = Array.from(
+  { length: REMIX_MAX_CHARACTERS },
+  (_, index) => ({
+    id: `${REMIX_CHARACTER_SLOT_PREFIX}${index + 1}`,
+    label: "Character",
+    required: index === 0,
+    icon: Users,
+    allowedTypes: ["CHARACTER", "PLAYER_CHARACTER"],
+    allowCustom: true,
+    allowCreatePreset: false,
+    remixKind: "character",
+    remixPosition: index + 1,
+  })
+);
+
+export const remixLocationSlots = Array.from(
+  { length: REMIX_MAX_LOCATIONS },
+  (_, index) => ({
+    id: `${REMIX_LOCATION_SLOT_PREFIX}${index + 1}`,
+    label: "Location",
+    required: false,
+    icon: MapPin,
+    allowedTypes: ["LOCATION"],
+    allowCustom: true,
+    allowCreatePreset: true,
+    remixKind: "location",
+    remixPosition: index + 1,
+  })
+);
+
+export const remixIngredientSlots = [
+  ...remixCharacterSlots,
+  ...remixLocationSlots,
+];
+
+// Video limits and lists (FE/MEDIA-STUDIO session 5, Brian's note 7,
+// 10 Sep 2026). Duration moves in steps of the segment length the
+// workbench ViewModel defines beside its cost constants; the ceiling
+// lives here beside the other limits. The Video slots are ordinary
+// ingredient slots with their own ids (the Remix pattern), so the
+// shared picker, the custom asset modal, and every selection handler
+// serve them unchanged and switching modes never changes Generate's
+// choices. `tileId` names the composer tile each slot fills.
+export const VIDEO_MAX_DURATION_SECONDS = 30;
+export const VIDEO_SLOT_PREFIX = "video";
+
+export const videoCountOptions = [
+  { value: "1", label: "1 video" },
+  { value: "2", label: "2 videos" },
+  { value: "4", label: "4 videos" },
+  { value: "8", label: "8 videos" },
+  { value: "16", label: "16 videos" },
+  { value: "32", label: "32 videos" },
+];
+
+export const videoQualityOptions = [
+  { value: "720p", label: "720p" },
+  { value: "1080p", label: "1080p" },
+];
+
+export const videoIngredientSlots = [
+  {
+    id: "videoCharacter",
+    tileId: "character",
+    label: "Character",
+    required: true,
+    icon: Users,
+    allowedTypes: ["CHARACTER", "PLAYER_CHARACTER"],
+    allowCustom: true,
+    allowCreatePreset: false,
+  },
+  {
+    id: "videoPose",
+    tileId: "pose",
+    label: "Pose",
+    required: false,
+    icon: Theater,
+    allowedTypes: ["POSE"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoOutfit",
+    tileId: "outfit",
+    label: "Clothing Source",
+    required: false,
+    icon: Shirt,
+    allowedTypes: ["OUTFIT", "WARDROBE"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoLocation",
+    tileId: "location",
+    label: "Location / Scene",
+    required: false,
+    icon: MapPin,
+    allowedTypes: ["LOCATION"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
+  {
+    id: "videoPreset",
+    tileId: "preset",
+    label: "Rendering Preset",
+    required: false,
+    icon: Sparkles,
+    allowedTypes: ["IMAGE_PRESET"],
+    allowCustom: true,
+    allowCreatePreset: true,
+  },
 ];
 
 export const videoDurationOptions = [

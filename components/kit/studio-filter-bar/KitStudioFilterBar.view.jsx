@@ -185,6 +185,7 @@ export default function KitStudioFilterBarView({
                 }))}
                 selectedValues={selectedValues?.[group.id] || []}
                 isMultiSelect={group.isMultiSelect !== false}
+                restingValue={group.restingValue ?? null}
                 onToggleOption={(value) => onFilterToggle?.(group.id, value)}
               />
             ))}
@@ -200,7 +201,11 @@ export default function KitStudioFilterBarView({
           )}
         </div>
 
-        <div className="flex flex-none items-center">{viewModeSlot}</div>
+        {/* Right edge at every width (browser review 9 Sep 2026,
+            item 10): under 700px the row is a horizontal scroller, so
+            ml-auto pushes the toggle to the far edge and balances the
+            bar; at 700 and up the parent already sits at the right. */}
+        <div className="ml-auto flex flex-none items-center">{viewModeSlot}</div>
       </div>
     </div>
   );

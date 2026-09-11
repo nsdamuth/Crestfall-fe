@@ -80,7 +80,7 @@ const SECTION_RAILS = [
   // Studio and Images have no list data source anywhere in the app
   // (reported data gaps); their rails are empty and render nothing.
   sectionRail("studio", "Studio", [], []),
-  sectionRail("images", "Images", [], []),
+  sectionRail("images", "Media", [], []),
   sectionRail("vault", "Vault", HOME_FROM_THE_COMMUNITY_ITEMS),
   sectionRail("community", "Community", HOME_TOP_RATED_ITEMS),
   sectionRail("creators", "Creators", HOME_CREATORS_TO_FOLLOW_ITEMS, CREATOR_SORT_OPTIONS),

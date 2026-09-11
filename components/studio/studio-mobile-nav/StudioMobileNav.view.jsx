@@ -44,7 +44,7 @@ const ICONS = Object.freeze({
 
 const V2_DRAWER_GROUP_DEFINITIONS = Object.freeze([
   Object.freeze({ label: "Play", itemLabels: Object.freeze(["Home", "Stories", "Adventures"]) }),
-  Object.freeze({ label: "Create", itemLabels: Object.freeze(["Studio", "Images", "Vault"]) }),
+  Object.freeze({ label: "Create", itemLabels: Object.freeze(["Studio", "Media", "Vault"]) }),
   Object.freeze({ label: "Explore", itemLabels: Object.freeze(["Community", "Creators", "Lore"]) }),
 ]);
 
@@ -230,7 +230,7 @@ export default function StudioMobileNavView({
             {drawerEconomySlot}
 
             {v2SupportRows.length ? (
-              <nav className="mt-[var(--space-2)] space-y-[var(--space-2)]">
+              <nav className="mt-[var(--space-2)] space-y-[var(--space-1)]">
                 {v2SupportRows.map((link) => (
                   <MobileDrawerInternalLink
                     key={link.href}
@@ -310,8 +310,11 @@ function MobileDrawerGroup({
       </div>
       {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
           7 and 9): rows at --control-md (replacing the raw 2.35rem),
-          item gap --space-2, mirroring the desktop rail. */}
-      <nav className="mt-[var(--space-1)] space-y-[var(--space-2)]">
+          mirroring the desktop rail. SUPERSEDED in part 10 Sep 2026
+          (browser review round 4, item 4): labels at
+          --text-label/--lh-label and item gap --space-1, still
+          mirroring the rail; rows stay --control-md (44px). */}
+      <nav className="mt-[var(--space-1)] space-y-[var(--space-1)]">
         {links.map((link) => (
           <MobileDrawerInternalLink
             key={link.href}
@@ -441,7 +444,7 @@ function MobileDrawerInternalLink({
         link.variant !== "return" && link.isActive ? "page" : undefined
       }
       className={`
-        cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-ui)] font-[var(--weight-regular)] leading-[var(--lh-ui)] tracking-[var(--track-normal)] transition
+        cf-nav-link flex min-h-[var(--control-filter)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-label)] font-[var(--weight-regular)] leading-[var(--lh-label)] tracking-[var(--track-normal)] transition [@media(pointer:coarse)]:min-h-[var(--control-md)]
         ${
           link.variant === "return"
             ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"

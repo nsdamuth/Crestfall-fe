@@ -253,6 +253,30 @@ export function buildLoreEngineUseAuthoringConfiguration({
   };
 }
 
+export function mergeLoreEngineUseAuthoringIntoDraftDocument(
+  document = {},
+  configuration = {}
+) {
+  const source =
+    document && typeof document === "object" && !Array.isArray(document)
+      ? document
+      : {};
+  const metadata =
+    source.metadata &&
+    typeof source.metadata === "object" &&
+    !Array.isArray(source.metadata)
+      ? source.metadata
+      : {};
+
+  return {
+    ...source,
+    metadata: {
+      ...metadata,
+      engineUseAuthoring: configuration,
+    },
+  };
+}
+
 export function formatLoreEngineUseJsonData(value) {
   return `${JSON.stringify(value || {}, null, 2)}\n`;
 }

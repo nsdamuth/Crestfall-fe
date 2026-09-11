@@ -499,3 +499,82 @@ against the CSV.
   the Sprint E creator-panel spec takes field caps and defaults from
   the source files, not the CSV.
 - Rollup not regenerated, script not in repo.
+
+## Media Studio composer rows (FE/MEDIA-STUDIO, 9 Sep 2026)
+
+The `/studio/v2/images` composer rows now describe the live Media
+Studio composer (contract 2.0.0): mode toggle with Video on Soon,
+Generate and Remix stage tabs, five asset tiles (no Player slot),
+Custom prompt, inline options (render style rail with step
+definitions, Camera framing, Wardrobe theme, Aspect ratio, Advanced,
+Negative prompt), the Count dropdown and the Generate button with the
+coin cost in a sticky footer. The Options expander and Coins readout
+rows are removed; the sidebar label reads Media. Backend gaps live in
+`docs/handoffs/MEDIA-STUDIO-BACKEND.md`. The unquoted comma on the
+density-toggle row (line 884) is fixed in the same commit.
+
+## Media Studio image viewer rows (FE/MEDIA-STUDIO session 3, 10 Sep 2026)
+
+The four `/studio/v2/images` image viewer rows written against the
+mockup overlay (Love toggle, Save toggle, Share, Close) are replaced
+by the live set: an image viewer block (Delete, Report, Details,
+Download size menu with the Extra Large row stubbed, Save toggle,
+Upscale stubbed, Edit, Assign, Share, Thumbnail strip, Close) and an
+image editor block (tools, brush size, paint surface, crop box, crop
+pixel entry, Undo and Redo, Close editor, Prompt, Generate stubbed).
+The viewer is `components/kit/image-viewer` on the shared hairline
+frame, injected through `MediaHistoryGridSkin`'s `renderLightbox` by
+the page adapter `app/studio/v2/images/images-live/ImagesV2ImageViewer.jsx`,
+which keeps calling the lightbox ViewModel so delete, details, report,
+share, and assign report to the same handlers. The OPEN item 28
+viewer-reconciliation hold is lifted for this page by Brian's note 6;
+the legacy Images page and the creation image library keep
+`MediaLightbox` and their rows are unchanged. Backend gaps 8 to 12
+live in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
+
+## Media Studio Remix rows (FE/MEDIA-STUDIO session 4, 10 Sep 2026)
+
+The `/studio/v2/images` stage tabs row moves from stubbed to working
+and six Remix rows join the composer block: the reference tile
+(`@img1` to `@img6`), Add character (disabled at six with the line
+"Up to 6 characters"), Remove reference, the Location tile, the
+Custom prompt with its @ mention list, and Remix Generate (stubbed:
+Soon chip, coin glyph and count times 20, no handler). Remix slots
+are ordinary ingredient slots (`remixCharacter1` to `remixCharacter6`,
+`remixLocation1`, `components/studio/image-studio/imageStudioData.js`)
+living in the workbench's selection map beside Generate's five, so
+the shared asset picker, the custom asset modal, and every selection
+handler serve them unchanged (RULED A and A of three at the plan
+gate: filled-first three-across grid; Remix owns its own slots). The
+limits (6 and 1) and the cost (20) are one constant each; no View
+writes a number. The Remix job the frontend wants, and the per-image
+versus per-job cost question the session surfaced, are gaps 13 and 14
+in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
+
+## Media Studio Video rows (FE/MEDIA-STUDIO session 5, 10 Sep 2026)
+
+The `/studio/v2/images` Image / Video mode toggle row is rewritten:
+the Video option is live and opens the Video composer (page-local
+mode state; the workbench's own mode stays IMAGE), keeping its Soon
+tag while the Chassis has no video job. Twelve Video rows join the
+composer block: the Video stage tabs (Text to video, Image to video),
+the five asset tiles reading the Video mode's own slots
+(`videoCharacter` to `videoPreset`,
+`components/studio/image-studio/imageStudioData.js`, ordinary
+ingredient slots served by the shared picker, the custom asset
+modal, and every selection handler unchanged), the Image tile (a
+second instance of the shared picker fed with the library's images,
+never a second picker component), the Custom prompt (optional on
+Text, required on Image), Custom director, the director row prompt,
+Add the next row (adds 5 seconds and updates the cost, disabled at
+30), Aspect ratio, the Duration slider, the Quality toggle, Video's
+own Count (1 to 32 videos), and Video Generate (stubbed: Soon chip,
+coin glyph and the computed cost, no handler). The cost rule's three
+numbers (50 per 5-second segment at 720p, times 3 at 1080p, times the
+count) are one constant each in the workbench ViewModel, read through
+`composerProps.videoCoinCosts`; the ceiling (30 seconds) is one
+constant in `imageStudioData.js`; no View writes a number. RULED A,
+A, A, A of four at the plan gate: a live toggle with Generate on Soon;
+the stage tab row relabeled; Video owns its slots; the source image
+through the shared picker. The video job the frontend wants is gap 15
+in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.

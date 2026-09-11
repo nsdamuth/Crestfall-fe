@@ -138,7 +138,10 @@ export default function StudioSidebarView({
         <button
           type="button"
           onClick={onToggleCollapsed}
-          className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+          // Bare icon, no circle (Brian, 10 Sep 2026, session 2 review):
+          // the ringed button fought the ringed logo mark beside it.
+          // Same 44px target; hover and active read as the gold icon.
+          className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]"
           aria-label={collapseAriaLabel}
         >
           <svg
@@ -218,7 +221,7 @@ export default function StudioSidebarView({
       {economySlot}
 
       {supportRows.length ? (
-        <nav className="mt-[var(--space-2)] space-y-[var(--space-2)]">
+        <nav className="mt-[var(--space-2)] space-y-[var(--space-1)]">
           {supportRows.map((item) => (
             <SidebarInternalLink
               key={item.label}
@@ -410,10 +413,14 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
       ) : null}
       <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
       {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
-          6 and 7): dense rows resolve to --control-md with
-          --text-ui/--lh-ui labels, item gap --space-2; group gap stays
-          --space-6, three times the item gap. Same values collapsed. */}
-      <nav className="space-y-[var(--space-2)]">
+          6 and 7): dense rows resolve to --control-md, group gap stays
+          --space-6. SUPERSEDED in part 10 Sep 2026 (browser review
+          round 4, item 4): labels one type step down to
+          --text-label/--lh-label and the item gap one step tighter to
+          --space-1; the row height stays --control-md (44px) so the
+          touch target does not move. Same values collapsed and in the
+          mobile drawer. */}
+      <nav className="space-y-[var(--space-1)]">
         {group.items.map((item) =>
           item.isBuilt ? (
             <SidebarInternalLink
@@ -441,8 +448,8 @@ function PreviewQuietRow({ item, collapsed, dense = false }) {
       aria-disabled="true"
       className={`flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent tracking-[var(--track-normal)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] ${
         dense
-          ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
-          : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
+          ? "min-h-[var(--control-filter)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+          : "min-h-[var(--control-filter)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
       } ${collapsed ? "justify-center px-2" : ""}`}
     >
       <Icon size={16} className="shrink-0" />
@@ -477,8 +484,8 @@ function SidebarInternalLink({
         cf-nav-link flex items-center gap-3 rounded-[var(--radius-sm)] border border-transparent font-[var(--weight-regular)] tracking-[var(--track-normal)]
         ${
           dense
-            ? "min-h-[var(--control-md)] px-3 py-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
-            : "min-h-[var(--control-md)] px-3 py-2.5 text-[length:var(--text-ui)] leading-[var(--lh-ui)]"
+            ? "min-h-[var(--control-filter)] px-3 py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+            : "min-h-[var(--control-filter)] px-3 py-2.5 text-[length:var(--text-label)] leading-[var(--lh-label)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
         }
         ${
           link.variant === "return"

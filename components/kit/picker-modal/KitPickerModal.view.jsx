@@ -201,7 +201,7 @@ export default function KitPickerModalView({
   return (
     <KitModalFrame
       variant="modal"
-      panelClassName="w-full max-w-2xl"
+      panelWidth="42rem"
       onClose={onClose}
       ariaLabel={title}
     >

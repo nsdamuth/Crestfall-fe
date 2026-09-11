@@ -37,7 +37,7 @@ const imageOptionFields = [
   },
   {
     id: "camera-preset",
-    label: "Camera / Framing",
+    label: "Camera framing",
     value: "THREE_QUARTER",
     options: [
       { value: "AUTO", label: "Auto / No Camera Filter" },

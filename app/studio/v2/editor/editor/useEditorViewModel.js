@@ -52,6 +52,7 @@ export function useEditorViewModel({
   previewLoadingOverride = false,
   previewLoadErrorOverride = null,
   previewDirtyOverride = false,
+  postDeleteHref = "/studio/v2/vault",
 } = {}) {
   const mockCreation = useMemo(
     () => resolveMockSavedCreation(creationId),
@@ -65,6 +66,7 @@ export function useEditorViewModel({
     // legacy editor, so featured image slots render before the client
     // shell mounts instead of falling back to the creation-only GET.
     creation: mockCreation || creation || undefined,
+    postDeleteHref,
   });
 
   const isMockMode = Boolean(mockCreation);
