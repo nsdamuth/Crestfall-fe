@@ -1,7 +1,7 @@
 export default function SidebarBlock({ title = "Field Note", body, items = [] }) {
   return (
     <aside className="sourcebook-sidebar">
-      <h3 className="font-display text-xs uppercase tracking-[0.35em] text-[#7b5525]">
+      <h3 className="font-display text-xs uppercase tracking-[0.35em] text-[var(--gold-deep)]">
         {title}
       </h3>
 

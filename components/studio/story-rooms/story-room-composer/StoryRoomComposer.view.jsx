@@ -726,7 +726,7 @@ function ParticipantMentionTextarea({
               className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedCommandIndex
                   ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
               }`}
             >
               <span className="min-w-0">
@@ -774,7 +774,7 @@ function ParticipantMentionTextarea({
               className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedLocationIndex
                   ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
               }`}
             >
               <span className="min-w-0">
@@ -817,7 +817,7 @@ function ParticipantMentionTextarea({
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
                 index === highlightedMentionIndex
                   ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-white/5 hover:text-[var(--ink)]"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
               }`}
             >
               {option.avatarUrl ? (

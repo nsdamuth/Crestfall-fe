@@ -5,7 +5,7 @@ export default function RelatedRecords({ records = [] }) {
 
   return (
     <section className="mt-14 border-t border-[rgba(120,85,40,0.28)] pt-8">
-      <h2 className="font-display text-sm uppercase tracking-[0.35em] text-[#7b5525]">
+      <h2 className="font-display text-sm uppercase tracking-[0.35em] text-[var(--gold-deep)]">
         Related Records
       </h2>
 
@@ -14,7 +14,7 @@ export default function RelatedRecords({ records = [] }) {
           <Link
             key={record.href}
             href={record.href}
-            className="border border-[rgba(120,85,40,0.24)] bg-[rgba(255,255,255,0.18)] px-5 py-4 font-serif text-lg text-[#2a2118] transition hover:border-[#7b5525]"
+            className="border border-[rgba(120,85,40,0.24)] bg-[rgba(255,255,255,0.18)] px-5 py-4 font-serif text-lg text-[#2a2118] transition hover:border-[var(--gold-deep)]"
           >
             {record.title}
           </Link>

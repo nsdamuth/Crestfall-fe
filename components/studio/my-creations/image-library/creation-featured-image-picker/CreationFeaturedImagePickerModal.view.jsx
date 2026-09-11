@@ -218,7 +218,7 @@ export default function CreationFeaturedImagePickerModalView({
                   >
                     <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
                       {selected ? (
-                        <span className="absolute right-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-[var(--gold-ornament)]/55 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] shadow-lg backdrop-blur-sm">
+                        <span className="absolute right-2 top-2 z-10 inline-flex items-center gap-1 rounded-full border border-[var(--line)] bg-[var(--tag-bed-art)] px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)] shadow-lg backdrop-blur-sm">
                           <Check size={11} aria-hidden="true" />
                           Selected
                         </span>

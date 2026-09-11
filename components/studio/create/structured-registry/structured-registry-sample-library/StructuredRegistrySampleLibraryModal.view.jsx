@@ -113,7 +113,7 @@ export default function StructuredRegistrySampleLibraryModalView({
                 <h3 className="font-display text-3xl text-[var(--ink)]">
                   {selectedSample.label}
                 </h3>
-                <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+                <span className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                   {selectedSample.category}
                 </span>
               </div>

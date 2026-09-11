@@ -63,7 +63,7 @@ function CreationActivityRow({ event, LinkComponent }) {
 
           <LinkComponent
             href={event.href || "#"}
-            className="mt-3 flex gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3 transition hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10"
+            className="mt-3 flex gap-3 rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3 transition hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10"
           >
             <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/45">
               {event.imageUrl ? (
@@ -122,7 +122,7 @@ function DonationActivityRow({ event }) {
           </p>
 
           {event.message ? (
-            <p className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm italic leading-6 text-[var(--ink-dim)]">
+            <p className="mt-3 rounded-xl border border-white/10 bg-[var(--fill-whisper)] px-3 py-2 text-sm italic leading-6 text-[var(--ink-dim)]">
               “{event.message}”
             </p>
           ) : null}

@@ -43,7 +43,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
                 {pointBudget ? (
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {(configuration.statValues || []).map((stat) => (
-                      <label key={stat.definitionId} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                      <label key={stat.definitionId} className="rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3">
                         <span className="text-sm font-medium text-[var(--foreground)]">{stat.title}</span>
                         <span className="mt-1 block text-xs text-[var(--muted)]">
                           Starts at {stat.defaultValue}
@@ -135,7 +135,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
                 {slotsMode ? (
                   <div className="mt-4 grid gap-3 md:grid-cols-2">
                     {(configuration.slots || []).map((slot) => (
-                      <label key={slot.id} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                      <label key={slot.id} className="rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3">
                         <span className="text-sm font-medium text-[var(--foreground)]">
                           {slot.title}
                         </span>
@@ -400,7 +400,7 @@ function RoomLocalAbilitySpellAuthoring({
                   );
                   const canRemove = definitions.length > Number(group.minimumDefinitions || 0);
                   return (
-                    <div key={definition.draftId} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                    <div key={definition.draftId} className="rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-4">
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-xs uppercase tracking-[0.14em] text-[var(--muted-gold)]">
                           Definition {definitionIndex + 1}
@@ -631,7 +631,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
                 {groupsMode ? (
                   <div className="mt-4 space-y-4">
                     {(configuration.groups || []).map((group) => (
-                      <div key={group.id} className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                      <div key={group.id} className="rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3">
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div>
                             <p className="text-sm font-medium text-[var(--foreground)]">

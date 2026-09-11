@@ -45,7 +45,7 @@ const STATUS_PRESENTATION = {
   },
   CANCELLED: {
     label: "Cancelled",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   },
 };
 
@@ -75,7 +75,7 @@ function ValidationStatusBadge({ status }) {
   const normalized = normalizeStatus(status);
   const presentation = STATUS_PRESENTATION[normalized] || {
     label: normalized || "Not submitted",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   };
 
   return (
@@ -172,7 +172,7 @@ function ValidationProgress({ submission }) {
         </span>
         <span>{percentage}%</span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--fill-whisper)]">
         <div
           className="h-full rounded-full bg-[var(--gold-ornament)] transition-[width] duration-300"
           style={{ width: `${percentage}%` }}
@@ -339,7 +339,7 @@ function SecurityValidationPanel({
           ) : null}
 
           {latestStatus === "CANCELLED" ? (
-            <div className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="mt-4 flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-4">
               <Clock3 size={18} className="mt-0.5 shrink-0 text-[var(--ink-dim)]" />
               <p className="text-sm text-[var(--ink-dim)]">
                 This validation submission was cancelled. The saved Lore draft can be submitted again.

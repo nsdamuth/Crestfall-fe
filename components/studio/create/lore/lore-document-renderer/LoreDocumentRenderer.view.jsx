@@ -48,7 +48,7 @@ function CharacterLinks({ characterRefs = [], LinkComponent }) {
         <LinkComponent
           key={character.id}
           href={`/studio/creations/${encodeURIComponent(character.id)}`}
-          className="rounded-full border border-[#7b5525]/30 bg-[#7b5525]/5 px-3 py-1 font-display text-[10px] uppercase tracking-[0.18em] text-[#6a481f] transition hover:bg-[#7b5525]/10"
+          className="rounded-full border border-[var(--gold-deep)]/30 bg-[var(--gold-deep)]/5 px-3 py-1 font-display text-[10px] uppercase tracking-[0.18em] text-[var(--gold-deep)] transition hover:bg-[var(--gold-deep)]/10"
         >
           {character.title || "Character"}
         </LinkComponent>
@@ -106,12 +106,12 @@ function SectionHeader({
         </h2>
       ) : null}
       {section.subtitle ? (
-        <p className="mx-auto mt-4 max-w-3xl font-serif text-lg italic leading-8 text-[#5a4732]">
+        <p className="mx-auto mt-4 max-w-3xl font-serif text-lg italic leading-8 text-[var(--line-strong)]">
           {section.subtitle}
         </p>
       ) : null}
       {section.displayDate || section.era ? (
-        <p className="mt-4 font-display text-[10px] uppercase tracking-[0.25em] text-[#7b5525]">
+        <p className="mt-4 font-display text-[10px] uppercase tracking-[0.25em] text-[var(--gold-deep)]">
           {[section.displayDate, section.era].filter(Boolean).join(" · ")}
         </p>
       ) : null}
@@ -194,24 +194,24 @@ export default function LoreDocumentRendererView({
             {title || "Untitled Lore Asset"}
           </h1>
           {document.subtitle ? (
-            <p className="mx-auto mt-5 max-w-3xl font-serif text-xl italic leading-8 text-[#5a4732]">
+            <p className="mx-auto mt-5 max-w-3xl font-serif text-xl italic leading-8 text-[var(--line-strong)]">
               {document.subtitle}
             </p>
           ) : null}
           {document.displayDate || document.era || document.realm ? (
-            <p className="mt-5 font-display text-[10px] uppercase tracking-[0.28em] text-[#7b5525]">
+            <p className="mt-5 font-display text-[10px] uppercase tracking-[0.28em] text-[var(--gold-deep)]">
               {[document.displayDate, document.era, document.realm]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
           ) : null}
           {description ? (
-            <p className="mx-auto mt-7 max-w-3xl font-serif text-lg leading-8 text-[#3b3024]">
+            <p className="mx-auto mt-7 max-w-3xl font-serif text-lg leading-8 text-[var(--line)]">
               {description}
             </p>
           ) : null}
           {creator?.displayName ? (
-            <p className="mt-5 font-display text-[10px] uppercase tracking-[0.24em] text-[#7b5525]">
+            <p className="mt-5 font-display text-[10px] uppercase tracking-[0.24em] text-[var(--gold-deep)]">
               By {creator.displayName}
             </p>
           ) : null}
@@ -307,12 +307,12 @@ export default function LoreDocumentRendererView({
               {chapter.title || "Untitled Chapter"}
             </h1>
             {chapter.subtitle ? (
-              <p className="mx-auto mt-5 max-w-3xl font-serif text-xl italic leading-8 text-[#5a4732]">
+              <p className="mx-auto mt-5 max-w-3xl font-serif text-xl italic leading-8 text-[var(--line-strong)]">
                 {chapter.subtitle}
               </p>
             ) : null}
             {chapter.displayDate || chapter.era ? (
-              <p className="mt-5 font-display text-[10px] uppercase tracking-[0.28em] text-[#7b5525]">
+              <p className="mt-5 font-display text-[10px] uppercase tracking-[0.28em] text-[var(--gold-deep)]">
                 {[chapter.displayDate, chapter.era].filter(Boolean).join(" · ")}
               </p>
             ) : null}
@@ -348,7 +348,7 @@ export default function LoreDocumentRendererView({
               className={`scroll-mt-24 ${
                 sectionIndex === 0
                   ? "mt-12"
-                  : "lore-section-divider mt-14 border-t border-[#7b5525]/20 pt-14"
+                  : "lore-section-divider mt-14 border-t border-[var(--gold-deep)]/20 pt-14"
               }`}
             >
               <SectionHeader
@@ -363,16 +363,16 @@ export default function LoreDocumentRendererView({
           ))}
 
           {!chapter.sections.length ? (
-            <div className="mt-10 rounded-xl border border-dashed border-[#7b5525]/30 p-6 text-center font-serif text-sm text-[#5a4732]">
+            <div className="mt-10 rounded-xl border border-dashed border-[var(--gold-deep)]/30 p-6 text-center font-serif text-sm text-[var(--line-strong)]">
               This chapter has no sections yet.
             </div>
           ) : null}
 
           {showContents ? (
-            <div className="mt-12 flex justify-center border-t border-[#7b5525]/20 pt-8">
+            <div className="mt-12 flex justify-center border-t border-[var(--gold-deep)]/20 pt-8">
               <a
                 href={`#${CONTENTS_ANCHOR_ID}`}
-                className="lore-reader-return inline-flex items-center gap-2 rounded-full border border-[#7b5525]/20 bg-white/15 px-4 py-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#6a481f] transition hover:border-[#7b5525]/40 hover:bg-white/25 hover:text-[#3b3024]"
+                className="lore-reader-return inline-flex items-center gap-2 rounded-full border border-[var(--gold-deep)]/20 bg-white/15 px-4 py-2 font-display text-[10px] uppercase tracking-[0.2em] text-[var(--gold-deep)] transition hover:border-[var(--gold-deep)]/40 hover:bg-white/25 hover:text-[var(--line)]"
               >
                 <ArrowUp size={13} />
                 Back to contents

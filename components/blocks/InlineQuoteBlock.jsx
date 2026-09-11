@@ -6,7 +6,7 @@ export default function InlineQuoteBlock({ text, attribution }) {
       <p className="text-xl leading-8">“{text}”</p>
 
       {attribution && (
-        <footer className="mt-3 font-display text-xs uppercase tracking-[0.25em] text-[#7b5525]">
+        <footer className="mt-3 font-display text-xs uppercase tracking-[0.25em] text-[var(--gold-deep)]">
           · {attribution}
         </footer>
       )}

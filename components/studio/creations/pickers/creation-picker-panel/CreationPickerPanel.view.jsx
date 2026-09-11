@@ -136,13 +136,13 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           {item.type ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+            <span className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {item.type}
             </span>
           ) : null}
 
           {item.contentRating ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+            <span className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               {item.contentRating}
             </span>
           ) : null}
@@ -158,7 +158,7 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
           ) : null}
 
           {disabled ? (
-            <span className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+            <span className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-2 py-0.5 text-[8px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
               Already added
             </span>
           ) : null}

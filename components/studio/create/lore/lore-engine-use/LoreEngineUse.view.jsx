@@ -49,7 +49,7 @@ const STATUS_PRESENTATION = {
   },
   CANCELLED: {
     label: "Cancelled",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   },
   FAILED: {
     label: "Failed",
@@ -57,11 +57,11 @@ const STATUS_PRESENTATION = {
   },
   WITHDRAWN: {
     label: "Withdrawn",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   },
   SUPERSEDED: {
     label: "Superseded",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   },
 };
 
@@ -76,7 +76,7 @@ function EngineUseStatusBadge({ status }) {
   const normalized = String(status || "").trim().toUpperCase();
   const presentation = STATUS_PRESENTATION[normalized] || {
     label: normalized || "Not submitted",
-    className: "border-white/15 bg-white/5 text-[var(--ink-dim)]",
+    className: "border-white/15 bg-[var(--fill-whisper)] text-[var(--ink-dim)]",
   };
 
   return (
@@ -202,7 +202,7 @@ function ActiveEngineConfiguration({ latest, source }) {
                       </div>
                     </div>
                     {approvalStatus ? (
-                      <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                      <span className="rounded-full border border-white/10 bg-[var(--fill-whisper)] px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                         {approvalStatus}
                       </span>
                     ) : null}
@@ -257,7 +257,7 @@ function ReferenceChoice({
       className={`rounded-xl border p-4 transition ${
         selected
           ? "border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10"
-          : "border-white/10 bg-black/20"
+          : "border-white/10 bg-[var(--fill-option-rest)]"
       }`}
     >
       <label className="flex cursor-pointer items-start gap-3">
@@ -475,7 +475,7 @@ function CharacterAccessControls({
                     {group.items.map((item) => (
                       <label
                         key={`${characterId}:${group.field}:${item.id}`}
-                        className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                        className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-[var(--fill-option-rest)] px-3 py-2"
                       >
                         <input
                           type="checkbox"
@@ -569,7 +569,7 @@ function CharacterAccessControls({
               {availableScenarios.map((item) => (
                 <label
                   key={`${characterId}:scenario:${item.id}`}
-                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-[var(--fill-option-rest)] px-3 py-2"
                 >
                   <input
                     type="checkbox"
@@ -595,7 +595,7 @@ function CharacterAccessControls({
               {availableRoomTemplates.map((item) => (
                 <label
                   key={`${characterId}:room-template:${item.id}`}
-                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                  className="flex cursor-pointer items-start gap-2 rounded-lg border border-white/10 bg-[var(--fill-option-rest)] px-3 py-2"
                 >
                   <input
                     type="checkbox"
@@ -925,7 +925,7 @@ export default function LoreEngineUseView({
                     className={`rounded-xl border px-4 py-3 text-left transition ${
                       scopeMode === "ENTIRE_ASSET"
                         ? "border-violet-300/40 bg-violet-300/10"
-                        : "border-white/10 bg-black/20"
+                        : "border-white/10 bg-[var(--fill-option-rest)]"
                     }`}
                   >
                     <span className="block text-sm text-[var(--ink)]">
@@ -942,7 +942,7 @@ export default function LoreEngineUseView({
                     className={`rounded-xl border px-4 py-3 text-left transition ${
                       scopeMode === "SELECTED_SECTIONS"
                         ? "border-violet-300/40 bg-violet-300/10"
-                        : "border-white/10 bg-black/20"
+                        : "border-white/10 bg-[var(--fill-option-rest)]"
                     }`}
                   >
                     <span className="block text-sm text-[var(--ink)]">
