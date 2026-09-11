@@ -1,13 +1,11 @@
-export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v7";
+export const STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION = "studio-top-bar.view.v8";
 
 export const studioTopBarViewContract = Object.freeze({
   version: STUDIO_TOP_BAR_VIEW_CONTRACT_VERSION,
   purpose:
-    "Render the Studio global search field, a quiet notifications button and single recent-activity modal, account utilities, and the Eggshell/Night presentation toggle at every breakpoint, without owning search state, notification retrieval, modal state, account context, theme persistence, or shared mobile-drawer state.",
+    "Render the Studio global search (KitGlobalSearch, fed by the top bar adapter), a quiet notifications button and single recent-activity modal, account utilities, and the Eggshell/Night presentation toggle at every breakpoint, without owning search data, notification retrieval, modal state, account context, theme persistence, or shared mobile-drawer state.",
   inputs: Object.freeze([
-    "searchValue",
-    "searchPlaceholder",
-    "searchAutoFocus",
+    "globalSearch",
     "notifications",
     "notificationsStatus",
     "notificationsLoadError",
@@ -23,7 +21,6 @@ export const studioTopBarViewContract = Object.freeze({
     "openMenuAriaLabel",
   ]),
   callbacks: Object.freeze([
-    "onSearchChange",
     "onOpenNotifications",
     "onCloseNotifications",
     "onToggleTheme",
@@ -31,6 +28,8 @@ export const studioTopBarViewContract = Object.freeze({
   ]),
   applicationOwnedDependencies: Object.freeze([]),
   behavior: Object.freeze({
+    globalSearch:
+      "v8 (FE/GLOBAL-SEARCH, 10 Sep 2026): the bare search input is replaced by KitGlobalSearch. `globalSearch` is the prop bag the top bar adapter (useGlobalSearchAdapter) produces: { own, community, onRequestData, onNavigate }, plus any KitGlobalSearch prop. The View spreads it onto the Kit and owns no search state; searchValue, searchPlaceholder, searchAutoFocus, and onSearchChange (v7) are retired.",
     quietBell:
       "The bell never displays an unread count, red badge, pulse, or content-dependent emphasis. It is a stable button that opens the feed on demand.",
     notificationScope:

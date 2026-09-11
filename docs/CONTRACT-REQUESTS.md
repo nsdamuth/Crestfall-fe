@@ -38,7 +38,7 @@ the details below carry only what is still actionable.
 | CR-009 | one creation system: wizard and visual picker | Confirm the live Player Character creator adopts the same wizard/picker system as the draft | open | Nick | no shared picker component exists yet |
 | CR-010 | top bar composes the economy widget | `StudioTopBar` duplicated `StudioEconomyWidget` | done | Brian | resolved by removal, not composition, 8 Aug 2026 |
 | CR-011 | bottom dock label "Rooms" vs "Stories" | Confirm "Rooms" was not a deliberate distinct label | open | Nick | verify with Nick: "Rooms" still present in mobile nav, profile hero, and community hub as of 9 Aug 2026, contradicting this CR's own "now agree on Stories" note |
-| CR-012 | search enters on the top bar contract | `searchValue`/`onSearchChange` exist on the top bar contract; no search operation exists to wire to | open | Nick | contract landed, endpoint still undecided |
+| CR-012 | search enters on the top bar contract | The top bar runs KitGlobalSearch over the list routes that exist (FE/GLOBAL-SEARCH, 10 Sep 2026); no search route exists in the Chassis | open | Nick | frontend live, client-side; the route the FE wants is docs/handoffs/GLOBAL-SEARCH-BACKEND.md gap 1 |
 | CR-013 | duplicate drawer nav tree retirement | `StudioMobileNav` and `StudioSidebar` still render separate nav-tree copies | open | Nick | one-element merge agreed in shape, not landed |
 | CR-014 | visibility four-state enum data-model shape | Ruled `private \| internal \| public \| canon` shape not yet in the live data model | open | Nick | migration path and publish-field question still open |
 | CR-015 | lore pipeline confirmation | Confirms an already-ruled pipeline (visual builder authoritative, JSON import validate-and-apply, scanning gate before publish) | open | Nick | verify with Nick: a `lore-validation` API route now exists in this repo that did not when this CR was filed |
@@ -208,12 +208,21 @@ and `useCommunityHubViewModel.js`. Needs Nick's confirmation of whether
 
 ### CR-012, search enters on the top bar contract
 
-`searchValue`/`onSearchChange` exist on `StudioTopBar.contract.js`,
-ViewModel-owned as ruled (confirmed 9 Aug 2026). `onSearchChange` is
-still a safe no-op; no search operation, endpoint, or index exists to
-wire it to. Separately, the `/studio` dashboard's own search input
-(row 49, `docs/APP-FUNCTION-MAP.csv`) has no `onChange` at all and is
-not part of this contract.
+Updated 10 Sep 2026 (FE/GLOBAL-SEARCH session 1): the top bar contract
+moved to v8 and the bare input is gone. `StudioTopBar.view.jsx` renders
+`KitGlobalSearch` (`components/kit/global-search`), fed by the one
+adapter `useGlobalSearchAdapter.js`, which fetches the list routes that
+exist once on first open (owned creations summary, stories in
+progress, the first 60 generated media outputs, community creations,
+community creators) and filters in the browser. No search route,
+endpoint, or index exists in the Chassis (verified in crestfall-main
+the same day); the route the frontend wants, with query, scope, type,
+paging, and the fields per result, is gap 1 of
+`docs/handoffs/GLOBAL-SEARCH-BACKEND.md`, and the per-route gaps
+(query and paging on each list) are gaps 2 to 7 there. This CR stays
+open until that route lands. Separately, the `/studio` dashboard's own
+search input (row 49, `docs/APP-FUNCTION-MAP.csv`) has no `onChange`
+at all and is not part of this contract.
 
 ### CR-013, duplicate drawer nav tree retirement
 
