@@ -54,3 +54,22 @@ test("unlisting a public creation preserves pending local editor fields for the 
     /setForm\(\(current\) =>\s*mergeLifecycleTransitionIntoForm\(current, savedCreation\)/s
   );
 });
+
+
+test("V2 editor returns to the V2 origin after creator Delete instead of the legacy My Creations route", () => {
+  const editor = read("app/studio/v2/editor/Editor.jsx");
+  const v2ViewModel = read("app/studio/v2/editor/editor/useEditorViewModel.js");
+  const shellViewModel = read(
+    "components/studio/my-creations/creation-edit-shell/useCreationEditShellViewModel.js"
+  );
+  const editViewModel = read(
+    "components/studio/my-creations/edit/hooks/useCreationEditViewModel.js"
+  );
+
+  assert.match(editor, /postDeleteHref:\s*backHref/);
+  assert.match(v2ViewModel, /postDeleteHref = "\/studio\/v2\/vault"/);
+  assert.match(v2ViewModel, /postDeleteHref,/);
+  assert.match(shellViewModel, /postDeleteHref = "\/studio\/my-creations"/);
+  assert.match(shellViewModel, /postDeleteHref,/);
+  assert.match(editViewModel, /window\.location\.assign\(postDeleteHref \|\| "\/studio\/my-creations"\)/);
+});
