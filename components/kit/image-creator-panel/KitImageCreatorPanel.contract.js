@@ -1,4 +1,4 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.4.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit
@@ -52,6 +52,12 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.4.0";
  * validation, cue removal, and cue addition that does not alter the
  * video's duration or price.
  *
+ * 2.4.0 to 2.5.0, ADDITIVE (Director JSON authoring, 10 Sep 2026):
+ * `video.director.jsonEditor` opens a frontend-only LOOM-style JSON
+ * editor over the prompt, cue sheet, duration, aspect ratio, and quality.
+ * Character, source Image, Pose, Outfit, Location, and Image Preset
+ * selections stay outside the JSON contract and remain manually selected.
+ *
  * @typedef {Object} KitImageCreatorVideoDirectorRow
  * @property {string} id stable cue id
  * @property {number} index 0-based display position
@@ -91,11 +97,12 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.4.0";
  * @property {{value: string, options: {value: string, label: string}[]}} quality
  *   720p or 1080p, a two-option segmented control
  * @property {((value: string) => void)|null} onChangeQuality
- * @property {{open: boolean, onToggle: (() => void)|null, durationSeconds: number, timeStepSeconds: number, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((cueId: string, text: string) => void)|null, onChangeRowTime: ((cueId: string, field: "fromSecond"|"toSecond", seconds: number) => void)|null, onRemoveRow: ((cueId: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null}} director
+ * @property {{open: boolean, onToggle: (() => void)|null, durationSeconds: number, timeStepSeconds: number, rows: KitImageCreatorVideoDirectorRow[], onChangeRowPrompt: ((cueId: string, text: string) => void)|null, onChangeRowTime: ((cueId: string, field: "fromSecond"|"toSecond", seconds: number) => void)|null, onRemoveRow: ((cueId: string) => void)|null, canAddRow: boolean, addLimitLabel: string, onAddRow: (() => void)|null, jsonEditor?: {isOpen: boolean, onOpen: (() => void)|null, modalProps: Object}}} director
  *   the Custom director: compact arbitrary temporal cues inside the
  *   current duration. Tenths of a second are supported, gaps are
  *   allowed, overlaps are invalid, and adding/removing cues never
- *   changes duration or billing.
+ *   changes duration or billing. Its optional JSON editor authors only
+ *   prompt/timing/settings state; it never owns asset selections.
  * @property {{value: string, label: string}[]} countOptions Video's
  *   own count list (1, 2, 4, 8, 16, 32 videos)
  * @property {string} countValue

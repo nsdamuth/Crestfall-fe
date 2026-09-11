@@ -1,3 +1,11 @@
+import { useCallback, useState } from "react";
+
+import { convertOutfitNormalPromptToAdvanced } from "@/lib/client/studio/outfits/outfitAuthoringClient";
+import {
+  applyOutfitAdvancedPromptConversion,
+  hasAuthoredAdvancedClothing,
+} from "./outfitAdvancedPromptConversionProjection.js";
+
 const ASSET_IMAGE_PROMPT_MAX_LENGTH = 2000;
 const ASSET_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
@@ -242,5 +250,76 @@ export function getOutfitPromptGuidanceSectionViewProps({
 }
 
 export function useOutfitPromptGuidanceSectionViewModel(props = {}) {
-  return getOutfitPromptGuidanceSectionViewProps(props);
+  const { form = {}, updateDataField = null } = props;
+  const [conversionStatus, setConversionStatus] = useState("idle");
+  const [conversionError, setConversionError] = useState("");
+  const [conversionNotice, setConversionNotice] = useState("");
+  const [conversionConfirmationRequired, setConversionConfirmationRequired] =
+    useState(false);
+
+  const baseProps = getOutfitPromptGuidanceSectionViewProps(props);
+
+  const runConversion = useCallback(async () => {
+    const current = getOutfitPromptGuidanceSectionViewProps({
+      form,
+      updateDataField,
+    });
+    const normalPrompt = normalizeText(current.normalClothingPrompt).trim();
+
+    if (!normalPrompt) {
+      setConversionError(
+        "Add a Normal Clothing Prompt before converting to Advanced mode."
+      );
+      return;
+    }
+
+    setConversionConfirmationRequired(false);
+    setConversionStatus("loading");
+    setConversionError("");
+    setConversionNotice("");
+
+    try {
+      const conversion = await convertOutfitNormalPromptToAdvanced(normalPrompt);
+      if (!applyOutfitAdvancedPromptConversion({ conversion, updateDataField })) {
+        throw new Error("The authoring assistant returned no Advanced Clothing data.");
+      }
+      setConversionStatus("success");
+      setConversionNotice(
+        "Converted from the Normal prompt. Review the Advanced sections before saving."
+      );
+    } catch (error) {
+      setConversionStatus("error");
+      setConversionError(
+        error?.message || "The Normal Clothing Prompt could not be converted."
+      );
+    }
+  }, [form, updateDataField]);
+
+  const requestConversion = useCallback(() => {
+    setConversionError("");
+    setConversionNotice("");
+
+    if (hasAuthoredAdvancedClothing(form)) {
+      setConversionConfirmationRequired(true);
+      return;
+    }
+
+    void runConversion();
+  }, [form, runConversion]);
+
+  return {
+    ...baseProps,
+    convertToAdvancedLabel: "Convert to Advanced",
+    canConvertToAdvanced:
+      Boolean(normalizeText(baseProps.normalClothingPrompt).trim()) &&
+      conversionStatus !== "loading",
+    conversionStatus,
+    conversionError,
+    conversionNotice,
+    conversionConfirmationRequired,
+    onConvertToAdvanced: requestConversion,
+    onConfirmConvertToAdvanced: runConversion,
+    onCancelConvertToAdvanced: () =>
+      setConversionConfirmationRequired(false),
+  };
 }

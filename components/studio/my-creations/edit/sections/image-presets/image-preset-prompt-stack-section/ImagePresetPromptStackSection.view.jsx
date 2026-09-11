@@ -40,14 +40,14 @@ export default function ImagePresetPromptStackSectionView({
   onChangeCompatibilityNotes = null,
 }) {
   return (
-    <div>
+    <div className="min-w-0 w-full max-w-full">
       <SectionTitle
         eyebrow={sectionEyebrow}
         title={sectionTitle}
         body={sectionDescription}
       />
 
-      <div className="mt-[var(--space-6)] grid gap-[var(--space-4)]">
+      <div className="mt-[var(--space-6)] grid min-w-0 w-full max-w-full gap-[var(--space-4)]">
         <TextAreaField
           label={promptGuidanceLabel}
           value={promptGuidanceValue}
@@ -72,7 +72,7 @@ export default function ImagePresetPromptStackSectionView({
           maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
 
-        <div>
+        <div className="min-w-0 max-w-full">
           <TextAreaField
             label={imagePromptLabel}
             value={imagePromptValue}
@@ -81,7 +81,7 @@ export default function ImagePresetPromptStackSectionView({
             maxLength={DEEP_LONGFORM_MAX_LENGTH}
           />
           {imagePromptHelpText ? (
-            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            <p className="mt-[var(--space-2)] max-w-full break-words text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
               {imagePromptHelpText}
             </p>
           ) : null}
