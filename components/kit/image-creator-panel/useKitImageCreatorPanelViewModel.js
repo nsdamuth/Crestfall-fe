@@ -11,6 +11,8 @@
 // 2.3.0 (10 Sep 2026): the nested `video` object passes through the
 // same way; null keeps the 2.2.0 video block. Contract 2.4.0 keeps
 // Director cue timing inside that same nested object unchanged here.
+// Contract 2.5.0 also passes through the optional frontend-only Director
+// JSON editor props without acquiring any JSON or asset authority here.
 export function useKitImageCreatorPanelViewModel({
   mode = "IMAGE",
   onChangeMode = null,

@@ -1,3 +1,5 @@
+import { Loader2, WandSparkles } from "lucide-react";
+
 import {
   SectionTitle,
   TextAreaField,
@@ -15,6 +17,12 @@ export default function OutfitPromptGuidanceSectionView({
   normalPromptLabel = "Normal Clothing Prompt",
   normalClothingPrompt = "",
   normalPromptPlaceholder = "",
+  convertToAdvancedLabel = "Convert to Advanced",
+  canConvertToAdvanced = false,
+  conversionStatus = "idle",
+  conversionError = "",
+  conversionNotice = "",
+  conversionConfirmationRequired = false,
   signatureClothingLabel = "Signature / Always-Include Clothing",
   signatureClothing = "",
   signatureClothingPlaceholder = "",
@@ -51,6 +59,9 @@ export default function OutfitPromptGuidanceSectionView({
   compatibilityNotesPlaceholder = "",
   onClothingModeChange = null,
   onNormalClothingPromptChange = null,
+  onConvertToAdvanced = null,
+  onConfirmConvertToAdvanced = null,
+  onCancelConvertToAdvanced = null,
   onSignatureClothingChange = null,
   onClothingSectionChange = null,
   onStandaloneImagePromptChange = null,
@@ -109,17 +120,79 @@ export default function OutfitPromptGuidanceSectionView({
         </div>
 
         {clothingMode === "NORMAL" ? (
-          <TextAreaField
-            label={normalPromptLabel}
-            value={normalClothingPrompt}
-            onChange={(value) => onNormalClothingPromptChange?.(value)}
-            placeholder={normalPromptPlaceholder}
-            maxLength={DEEP_LONGFORM_MAX_LENGTH}
-          />
+          <div className="grid gap-[var(--space-3)]">
+            <TextAreaField
+              label={normalPromptLabel}
+              value={normalClothingPrompt}
+              onChange={(value) => onNormalClothingPromptChange?.(value)}
+              placeholder={normalPromptPlaceholder}
+              maxLength={DEEP_LONGFORM_MAX_LENGTH}
+            />
+
+            <div className="flex flex-wrap items-center gap-[var(--space-3)]">
+              <button
+                type="button"
+                onClick={() => onConvertToAdvanced?.()}
+                disabled={!canConvertToAdvanced}
+                className="cf-btn cf-btn--secondary cf-btn--sm"
+              >
+                {conversionStatus === "loading" ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <WandSparkles size={13} />
+                )}
+                {conversionStatus === "loading"
+                  ? "Converting…"
+                  : convertToAdvancedLabel}
+              </button>
+
+              <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                Uses your Normal prompt to draft the camera-aware Advanced sections.
+              </p>
+            </div>
+
+            {conversionConfirmationRequired ? (
+              <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5 px-[var(--space-4)] py-[var(--space-3)]">
+                <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                  Advanced clothing already contains details. Replace them with a new conversion?
+                </p>
+                <div className="flex gap-[var(--space-2)]">
+                  <button
+                    type="button"
+                    onClick={() => onCancelConvertToAdvanced?.()}
+                    className="cf-btn cf-btn--secondary cf-btn--sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onConfirmConvertToAdvanced?.()}
+                    className="cf-btn cf-btn--primary cf-btn--sm"
+                  >
+                    Replace
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {conversionError ? (
+              <p
+                role="alert"
+                className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger-text)]"
+              >
+                {conversionError}
+              </p>
+            ) : null}
+          </div>
         ) : null}
 
         {clothingMode === "ADVANCED" ? (
           <div className="grid gap-[var(--space-5)]">
+            {conversionNotice ? (
+              <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/5 px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {conversionNotice}
+              </div>
+            ) : null}
             <TextAreaField
               label={signatureClothingLabel}
               value={signatureClothing}

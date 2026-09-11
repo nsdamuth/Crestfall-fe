@@ -15,6 +15,7 @@
 import { useId, useRef, useState } from "react";
 import {
   BookOpen,
+  Braces,
   Check,
   ChevronDown,
   ChevronUp,
@@ -38,6 +39,7 @@ import {
 } from "lucide-react";
 
 import KitDropdownView from "../dropdown/KitDropdown.view";
+import VideoDirectorJsonEditorModalView from "./VideoDirectorJsonEditorModal.view";
 import { growTextarea } from "../form-field/growTextarea";
 import { InfoTip, TOOLTIP_RECIPE } from "../form-field/InfoTip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
@@ -1593,7 +1595,7 @@ function VideoStage({ video, idPrefix }) {
           />
         </label>
 
-        <div className="flex">
+        <div className="flex flex-wrap gap-[var(--space-2)]">
           <button
             type="button"
             aria-expanded={directorOpen}
@@ -1603,9 +1605,25 @@ function VideoStage({ video, idPrefix }) {
             <Clapperboard size={14} aria-hidden="true" />
             Custom director
           </button>
+          {video.director?.jsonEditor?.onOpen ? (
+            <button
+              type="button"
+              onClick={() => video.director.jsonEditor.onOpen()}
+              className="cf-btn cf-btn--secondary cf-btn--sm"
+            >
+              <Braces size={14} aria-hidden="true" />
+              JSON editor
+            </button>
+          ) : null}
         </div>
 
         {directorOpen ? <DirectorRows director={video.director} idPrefix={idPrefix} /> : null}
+
+        {video.director?.jsonEditor?.isOpen ? (
+          <VideoDirectorJsonEditorModalView
+            {...video.director.jsonEditor.modalProps}
+          />
+        ) : null}
       </div>
 
       <section className="flex min-w-0 flex-col gap-[var(--space-5)]">

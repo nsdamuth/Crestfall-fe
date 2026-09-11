@@ -10,6 +10,7 @@ import {
 } from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
 import { getFirstCreationMediaUrl } from "@/lib/shared/creations/creationMedia";
 import { getIngredientSelectionImagePosition } from "./imageStudioFocalSelection.js";
+import { useVideoDirectorJsonEditorViewModel } from "./useVideoDirectorJsonEditorViewModel.js";
 import {
   VIDEO_DIRECTOR_TIME_STEP_SECONDS,
   addVideoDirectorCue,
@@ -317,6 +318,7 @@ function projectVideo({
   setDirectorOpen,
   directorCues,
   setDirectorCues,
+  jsonEditor,
   count,
   setCount,
 }) {
@@ -454,6 +456,7 @@ function projectVideo({
         setDirectorCues((current) =>
           addVideoDirectorCue(current, durationSeconds)
         ),
+      jsonEditor,
     },
     countOptions: normalizeOptions(videoCountOptions),
     countValue: count,
@@ -509,6 +512,35 @@ export function useImagesV2LiveViewModel({
     createInitialVideoDirectorCues(videoSegmentSeconds)
   );
   const [videoCount, setVideoCount] = useState("1");
+
+  // Frontend-only Director JSON authoring. The document intentionally
+  // excludes every asset/media selection; applying it only updates the
+  // prompt, temporal cues, duration, aspect ratio, and quality state
+  // already owned by this page. No video backend exists or is called.
+  const videoDirectorJsonEditor = useVideoDirectorJsonEditorViewModel({
+    customPrompt: videoPrompt,
+    cues: videoDirectorCues,
+    durationSeconds: videoDurationSeconds,
+    aspectRatio: videoAspectRatio,
+    quality: videoQuality,
+    durationMin: videoSegmentSeconds,
+    durationMax: VIDEO_MAX_DURATION_SECONDS,
+    durationStep: videoSegmentSeconds,
+    allowedAspectRatios: normalizeOptions(aspectRatioOptions).map(
+      (option) => option.value
+    ),
+    allowedQualities: normalizeOptions(videoQualityOptions).map(
+      (option) => option.value
+    ),
+    onApply: (document) => {
+      setVideoPrompt(document.customPrompt);
+      setVideoDurationSeconds(document.settings.durationSeconds);
+      setVideoAspectRatio(document.settings.aspectRatio);
+      setVideoQuality(document.settings.quality);
+      setVideoDirectorCues(document.cues);
+      setVideoDirectorOpen(true);
+    },
+  });
 
   useEffect(() => {
     if (renderStyle === "auto") {
@@ -596,6 +628,7 @@ export function useImagesV2LiveViewModel({
     setDirectorOpen: setVideoDirectorOpen,
     directorCues: videoDirectorCues,
     setDirectorCues: setVideoDirectorCues,
+    jsonEditor: videoDirectorJsonEditor,
     count: videoCount,
     setCount: setVideoCount,
   });

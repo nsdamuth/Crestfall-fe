@@ -201,3 +201,14 @@ gate reads its block reason, 5 seconds at 1080p), `longestContent`.
 
 Review happens on the live page, signed in, never on a preview route
 (standing order, 29 Aug 2026).
+
+
+## Video Director JSON authoring (contract 2.5.0)
+
+Video mode also exposes a compact `JSON editor` beside `Custom director`. It is
+frontend-only and edits the same page-owned Video state: overall custom prompt,
+0.1-second Director cue ranges, duration, aspect ratio, and quality. Validate &
+Apply never calls a backend and never persists anything. Character, source Image,
+Pose, Outfit, Location, and Image Preset selections are deliberately excluded
+from the JSON contract because those remain authoritative manual Crestfall asset
+selections. The downloadable AI guide repeats that UUID/media-id boundary.

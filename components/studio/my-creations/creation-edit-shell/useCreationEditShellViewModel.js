@@ -89,10 +89,15 @@ function groupIdForSection(groups, sectionId) {
   return match ? match.id : groups[0]?.id || null;
 }
 
-export function useCreationEditShellViewModel({ creationId, creation } = {}) {
+export function useCreationEditShellViewModel({
+  creationId,
+  creation,
+  postDeleteHref = "/studio/my-creations",
+} = {}) {
   const edit = useCreationEditViewModel({
     creationId,
     creation,
+    postDeleteHref,
   });
   const [activeSlotPickerKey, setActiveSlotPickerKey] = useState(null);
   const [defaultPcStatus, setDefaultPcStatus] = useState("");

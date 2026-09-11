@@ -1,4 +1,4 @@
-export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
+export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable UI boundary for the portable Outfit prompt-guidance View.
@@ -18,6 +18,12 @@ export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} normalPromptLabel
  * @property {string} normalClothingPrompt
  * @property {string} normalPromptPlaceholder
+ * @property {string} convertToAdvancedLabel
+ * @property {boolean} canConvertToAdvanced
+ * @property {"idle"|"loading"|"success"|"error"} conversionStatus
+ * @property {string} conversionError
+ * @property {string} conversionNotice
+ * @property {boolean} conversionConfirmationRequired
  * @property {string} signatureClothingLabel
  * @property {string} signatureClothing
  * @property {string} signatureClothingPlaceholder
@@ -53,6 +59,9 @@ export const OUTFIT_PROMPT_GUIDANCE_SECTION_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} compatibilityNotesPlaceholder
  * @property {((mode: string) => void)|null} onClothingModeChange
  * @property {((value: string) => void)|null} onNormalClothingPromptChange
+ * @property {(() => void)|null} onConvertToAdvanced
+ * @property {(() => void)|null} onConfirmConvertToAdvanced
+ * @property {(() => void)|null} onCancelConvertToAdvanced
  * @property {((value: string) => void)|null} onSignatureClothingChange
  * @property {((sectionId: string, value: string) => void)|null} onClothingSectionChange
  * @property {((value: string) => void)|null} onStandaloneImagePromptChange
