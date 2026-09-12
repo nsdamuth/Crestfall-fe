@@ -10,8 +10,9 @@ const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath)
 
 test("Vault shares authenticated UNLISTED links without making them public", () => {
   const vault = read("app/studio/v2/vault/VaultV2Mockup.jsx");
-  assert.match(vault, /\["UNLISTED", "PUBLIC", "CANON"\]\.includes\(item\.visibility\)/);
-  assert.match(vault, /item\.visibility === "UNLISTED"/);
+  assert.match(vault, /item\.rawCreation\?\.visibility/);
+  assert.match(vault, /sourceVisibility === "UNLISTED"/);
+  assert.match(vault, /!isUnlisted && !\["PUBLIC", "CANON"\]\.includes\(item\.visibility\)/);
   assert.match(vault, /Recipients must sign in to Crestfall/);
   assert.match(vault, /will not appear in search or public discovery/);
   assert.match(vault, /item\.visibility === "PRIVATE"/);
