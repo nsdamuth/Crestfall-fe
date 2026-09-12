@@ -13,6 +13,7 @@ import {
   LOCATION_IMAGE_PROMPT_MAX_LENGTH,
   LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
 } from "./LocationBuilder.contract";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 export default function LocationBuilderView({
   form,
@@ -44,7 +45,12 @@ export default function LocationBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Location Builder
         </p>
@@ -148,7 +154,7 @@ export default function LocationBuilderView({
         ) : null}
       </aside>
 
-      <div className="grid gap-6">
+      <div className="min-w-0 grid gap-6">
         <EditorCard eyebrow="Location Profile" title="Identity">
           <div className="grid gap-5">
             <TextField
@@ -442,6 +448,14 @@ export default function LocationBuilderView({
       </div>
 
       {parentPickerContent}
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
