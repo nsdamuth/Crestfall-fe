@@ -10,6 +10,7 @@ import {
   Save,
   Sparkles,
 } from "lucide-react";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const STEP_ICONS = {
   template: BookOpen,
@@ -44,6 +45,13 @@ export default function CharacterTemplateBuilderView({
 } = {}) {
   return (
     <section className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children, the summary through
+          a wrapper because it is a component. Without it the implicit base
+          column below xl is sized by min-width:auto and any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: summary then editor, in
+          DOM order, each full width minus the page gutter. */}
+      <div className="min-w-0">
       <CharacterTemplateSummary
         templateTitle={templateTitle}
         templateCategory={templateCategory}
@@ -53,8 +61,9 @@ export default function CharacterTemplateBuilderView({
         filledFieldCount={filledFieldCount}
         onReset={onReset}
       />
+      </div>
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
+      <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -96,7 +105,7 @@ export default function CharacterTemplateBuilderView({
             </button>
           </div>
 
-          <div className="mt-5 grid gap-2 sm:grid-cols-3 xl:grid-cols-6">
+          <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
             {stepItems.map((step) => {
               const Icon = STEP_ICONS[step.iconKey] || CheckCircle2;
 
@@ -135,12 +144,12 @@ export default function CharacterTemplateBuilderView({
 
         <div className="mt-6">{editorContent}</div>
 
-        <div className="mt-8 flex items-center justify-between gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
             onClick={() => onBack?.()}
             disabled={activeIndex === 0}
-            className="cf-btn cf-btn--secondary"
+            className="cf-btn cf-btn--secondary w-full md:w-auto"
           >
             Back
           </button>
@@ -150,7 +159,7 @@ export default function CharacterTemplateBuilderView({
               type="button"
               onClick={() => onSave?.()}
               disabled={saveDisabled}
-              className="cf-btn cf-btn--primary"
+              className="cf-btn cf-btn--primary w-full md:w-auto"
             >
               {saveStatus === "saving" ? "Saving..." : "Save template"}
             </button>
@@ -158,13 +167,22 @@ export default function CharacterTemplateBuilderView({
             <button
               type="button"
               onClick={() => onNext?.()}
-              className="cf-btn cf-btn--primary"
+              className="cf-btn cf-btn--primary w-full md:w-auto"
             >
               Next
             </button>
           )}
         </div>
       </div>
+
+      {/* MOBILE-SHELLS: the header row's Save template is a full scroll away
+          on a phone, so the same action docks to the bottom edge below md.
+          The header button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save template"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
