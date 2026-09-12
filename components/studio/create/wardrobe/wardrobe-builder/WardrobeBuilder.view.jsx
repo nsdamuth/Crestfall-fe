@@ -460,7 +460,7 @@ function WardrobeEntryEditor({
           type="checkbox"
           checked={entry.enabled !== false}
           onChange={(event) => onChange?.({ enabled: event.target.checked })}
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
         />
         <span className="text-sm leading-6 text-[var(--ink-dim)]">
           This outfit entry is enabled for future default wardrobe selection.
@@ -516,7 +516,7 @@ function RulesTab({
             onChange={(event) =>
               onSelectionRuleChange?.("allowRandom", event.target.checked)
             }
-            className="mt-1"
+            className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
           />
           <span className="text-sm leading-6 text-[var(--ink-dim)]">
             Allow random selection among matching enabled outfits later.

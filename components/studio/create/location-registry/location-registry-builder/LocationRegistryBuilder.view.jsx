@@ -1574,6 +1574,7 @@ function OptionMultiSelect({
               type="checkbox"
               checked={selected.has(option)}
               onChange={() => toggleOption(option)}
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(option)}
@@ -1622,6 +1623,7 @@ function RouteTypeMultiSelect({
               type="checkbox"
               checked={selected.has(routeType)}
               onChange={() => toggleRouteType(routeType)}
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(routeType)}
@@ -1640,6 +1642,7 @@ function CheckboxInput({ label, checked, onChange }) {
         type="checkbox"
         checked={Boolean(checked)}
         onChange={(event) => onChange(event.target.checked)}
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
         {label}

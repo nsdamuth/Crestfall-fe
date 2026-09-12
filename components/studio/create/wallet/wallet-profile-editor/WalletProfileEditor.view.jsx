@@ -130,6 +130,7 @@ export default function WalletProfileEditorView({
                 onChange={(event) =>
                   onUpdateProfileField?.("enabled", event.target.checked)
                 }
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Profile enabled
             </label>
@@ -244,6 +245,7 @@ export default function WalletProfileEditorView({
                           event.target.checked
                         )
                       }
+                      className="h-4 w-4 accent-[var(--gold-ornament)]"
                     />
                     Currency enabled
                   </label>

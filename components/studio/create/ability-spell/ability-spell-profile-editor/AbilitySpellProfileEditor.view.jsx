@@ -160,7 +160,7 @@ export default function AbilitySpellProfileEditorView({
           <div><Label>Tags</Label><TextInput value={(profile.tags || []).join(", ")} placeholder="abilities, magic, fantasy" onChange={(value) => onUpdateProfileField?.("tags", value)} /></div>
           <div className="lg:col-span-2"><Label>Description</Label><TextArea value={profile.description} onChange={(value) => onUpdateProfileField?.("description", value)} /></div>
         </div>
-        <label className="mt-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={profile.enabled !== false} onChange={(event) => onUpdateProfileField?.("enabled", event.target.checked)} /> Profile enabled</label>
+        <label className="mt-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={profile.enabled !== false} onChange={(event) => onUpdateProfileField?.("enabled", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Profile enabled</label>
       </section>
 
       <ValidationPanel errors={errors} warnings={warnings} />
@@ -206,6 +206,7 @@ export default function AbilitySpellProfileEditorView({
               onChange={(event) =>
                 onUpdateDefinitionSelectionUnique?.(event.target.checked)
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             A definition can satisfy only one starting group
           </label>
@@ -238,7 +239,7 @@ export default function AbilitySpellProfileEditorView({
                   <div><Label>Allowed types</Label><TextInput value={(group.allowedTypes || []).join(", ")} placeholder="ABILITY, TECHNIQUE" onChange={(value) => onUpdateDefinitionSelectionGroupField?.(groupIndex, "allowedTypes", value)} /></div>
                   <div><Label>Allowed schools</Label><TextInput value={(group.allowedSchools || []).join(", ")} placeholder="FIRE, WATER" onChange={(value) => onUpdateDefinitionSelectionGroupField?.(groupIndex, "allowedSchools", value)} /></div>
                   <div><Label>Allowed categories</Label><TextInput value={(group.allowedCategories || []).join(", ")} placeholder="OFFENSE, UTILITY" onChange={(value) => onUpdateDefinitionSelectionGroupField?.(groupIndex, "allowedCategories", value)} /></div>
-                  <label className="flex items-end gap-3 pb-3 text-sm"><input type="checkbox" checked={group.requireSameSchool === true} onChange={(event) => onUpdateDefinitionSelectionGroupField?.(groupIndex, "requireSameSchool", event.target.checked)} /> Selected definitions must share a school</label>
+                  <label className="flex items-end gap-3 pb-3 text-sm"><input type="checkbox" checked={group.requireSameSchool === true} onChange={(event) => onUpdateDefinitionSelectionGroupField?.(groupIndex, "requireSameSchool", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Selected definitions must share a school</label>
                 </div>
               </div>
             ))}
@@ -291,6 +292,7 @@ export default function AbilitySpellProfileEditorView({
               onChange={(event) =>
                 onUpdateRoomLocalDefinitionAuthoringUniqueTitles?.(event.target.checked)
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             Player-authored definition titles must be unique
           </label>
@@ -332,6 +334,7 @@ export default function AbilitySpellProfileEditorView({
                           <input
                             type="checkbox"
                             checked={(group.visibleFields || []).includes(field)}
+                            className="h-4 w-4 accent-[var(--gold-ornament)]"
                             onChange={(event) =>
                               onToggleRoomLocalDefinitionAuthoringGroupListValue?.(
                                 groupIndex,
@@ -355,6 +358,7 @@ export default function AbilitySpellProfileEditorView({
                             type="checkbox"
                             checked={(group.requiredFields || []).includes(field)}
                             disabled={!(group.visibleFields || []).includes(field)}
+                            className="h-4 w-4 accent-[var(--gold-ornament)]"
                             onChange={(event) =>
                               onToggleRoomLocalDefinitionAuthoringGroupListValue?.(
                                 groupIndex,
@@ -369,7 +373,7 @@ export default function AbilitySpellProfileEditorView({
                       ))}
                     </div>
                   </div>
-                  <label className="flex items-end gap-3 pb-3 text-sm"><input type="checkbox" checked={group.requireSameSchool === true} disabled={!(group.visibleFields || []).includes("SCHOOL")} onChange={(event) => onUpdateRoomLocalDefinitionAuthoringGroupField?.(groupIndex, "requireSameSchool", event.target.checked)} /> Authored definitions must share a school</label>
+                  <label className="flex items-end gap-3 pb-3 text-sm"><input type="checkbox" checked={group.requireSameSchool === true} disabled={!(group.visibleFields || []).includes("SCHOOL")} onChange={(event) => onUpdateRoomLocalDefinitionAuthoringGroupField?.(groupIndex, "requireSameSchool", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Authored definitions must share a school</label>
                   <div className="flex items-end"><div className="rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--muted)]">Descriptive only — does not create or execute game mechanics</div></div>
                 </div>
 
@@ -391,7 +395,7 @@ export default function AbilitySpellProfileEditorView({
                         <div className="xl:col-span-2"><Label>Helper text</Label><TextInput value={field.helperText || ""} onChange={(value) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "helperText", value)} /></div>
                         <div><Label>Max length</Label><TextInput type="number" min={1} value={field.maxLength} onChange={(value) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "maxLength", value)} /></div>
                         <div className="flex items-end gap-3 pb-2 xl:col-span-8">
-                          <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={field.required === true} onChange={(event) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "required", event.target.checked)} /> Required</label>
+                          <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={field.required === true} onChange={(event) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "required", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Required</label>
                           <button type="button" onClick={() => onRemoveRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex)} className="rounded-lg border border-rose-300/20 p-2 text-rose-100"><Trash2 size={13} /></button>
                         </div>
                       </div>
@@ -435,7 +439,7 @@ export default function AbilitySpellProfileEditorView({
                 <div className="md:col-span-2"><Label>Mechanical description</Label><TextArea value={definition.description} onChange={(value) => onUpdateDefinitionField?.(definitionIndex, "description", value)} /></div>
                 <div className="md:col-span-2"><Label>Narrative description</Label><TextArea value={definition.narrativeDescription} onChange={(value) => onUpdateDefinitionField?.(definitionIndex, "narrativeDescription", value)} /></div>
               </div>
-              <label className="mt-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.enabled !== false} onChange={(event) => onUpdateDefinitionField?.(definitionIndex, "enabled", event.target.checked)} /> Definition enabled</label>
+              <label className="mt-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.enabled !== false} onChange={(event) => onUpdateDefinitionField?.(definitionIndex, "enabled", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Definition enabled</label>
 
               <div className="mt-5 grid gap-4 lg:grid-cols-2">
                 <section>
@@ -456,7 +460,7 @@ export default function AbilitySpellProfileEditorView({
                     <div><Label>Minimum targets</Label><TextInput type="number" min={0} value={definition.targetModel.minimumTargets} onChange={(value) => onUpdateTargetField?.(definitionIndex, "minimumTargets", value)} /></div>
                     <div><Label>Maximum targets</Label><TextInput type="number" min={0} value={definition.targetModel.maximumTargets} onChange={(value) => onUpdateTargetField?.(definitionIndex, "maximumTargets", value)} /></div>
                   </div>
-                  <label className="mt-3 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.targetModel.requiresLineOfSight === true} onChange={(event) => onUpdateTargetField?.(definitionIndex, "requiresLineOfSight", event.target.checked)} /> Requires line of sight</label>
+                  <label className="mt-3 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.targetModel.requiresLineOfSight === true} onChange={(event) => onUpdateTargetField?.(definitionIndex, "requiresLineOfSight", event.target.checked)} className="h-4 w-4 accent-[var(--gold-ornament)]" /> Requires line of sight</label>
                 </section>
 
                 <section className="lg:col-span-2">

@@ -272,6 +272,7 @@ export default function SkillsProfileEditorView({
             onChange={(event) =>
               onUpdateProfileField?.("enabled", event.target.checked)
             }
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Profile enabled
         </label>
@@ -323,6 +324,7 @@ export default function SkillsProfileEditorView({
               onChange={(event) =>
                 onUpdateStarterSelectionUnique?.(event.target.checked)
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             Each starter slot must use a different Skill
           </label>
@@ -376,6 +378,7 @@ export default function SkillsProfileEditorView({
                         event.target.checked
                       )
                     }
+                    className="h-4 w-4 accent-[var(--gold-ornament)]"
                   />
                   Required
                 </label>
@@ -528,6 +531,7 @@ export default function SkillsProfileEditorView({
                       event.target.checked
                     )
                   }
+                  className="h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 Skill enabled
               </label>

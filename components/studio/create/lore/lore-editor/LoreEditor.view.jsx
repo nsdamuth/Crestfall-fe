@@ -403,6 +403,7 @@ function BlockFields({
                   event.target.checked
                 )
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             Drop cap
           </label>
@@ -419,6 +420,7 @@ function BlockFields({
                   event.target.checked
                 )
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             Paragraph indent
           </label>

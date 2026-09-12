@@ -325,7 +325,7 @@ function ReadoutCard({
             onChange={(event) =>
               patchReadout(surfaceIndex, readoutIndex, { enabled: event.target.checked })
             }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Readout enabled
         </label>
@@ -465,7 +465,7 @@ function SurfaceCard({
                 onChange={(event) =>
                   patchSurface(surfaceIndex, { enabled: event.target.checked })
                 }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Surface enabled
             </label>

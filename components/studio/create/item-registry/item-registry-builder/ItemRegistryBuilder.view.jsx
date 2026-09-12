@@ -651,7 +651,7 @@ function TrackingTab({
                       doNotHallucinateAvailability: event.target.checked,
                     })
                   }
-                  className="mt-1"
+                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 <span className="text-sm leading-6 text-[var(--ink-dim)]">
                   Runtime systems should not assume this item is available

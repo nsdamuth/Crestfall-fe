@@ -686,7 +686,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
                                       event.target.checked
                                     )
                                   }
-                                  className="mt-1"
+                                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                                 />
                                 <span>
                                   <span className="block font-medium text-[var(--foreground)]">

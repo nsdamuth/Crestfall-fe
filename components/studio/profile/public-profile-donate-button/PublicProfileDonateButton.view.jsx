@@ -120,7 +120,7 @@ export default function PublicProfileDonateButtonView({
                   onChange={(event) =>
                     onChangeAnonymous?.(event.target.checked)
                   }
-                  className="mt-1"
+                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 <span className="text-sm leading-6 text-[var(--ink-dim)]">
                   Donate anonymously. You will appear as Mystery Donor publicly.

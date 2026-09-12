@@ -268,6 +268,7 @@ export default function ProgressionProfileEditorView({
             onChange={(event) =>
               onUpdateProfileField?.("enabled", event.target.checked)
             }
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Profile enabled
         </label>
@@ -714,6 +715,7 @@ export default function ProgressionProfileEditorView({
                   onChange={(event) =>
                     onUpdateTier?.(index, "enabled", event.target.checked)
                   }
+                  className="h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 Tier enabled
               </label>
