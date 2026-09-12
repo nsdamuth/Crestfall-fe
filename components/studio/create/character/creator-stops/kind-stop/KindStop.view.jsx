@@ -101,12 +101,11 @@ export default function KindStopView({
   onChangeGenderPresentation = null,
   onChangeCustomGenderPresentation = null,
   onChangeShortConcept = null,
-  // Quick create hides Gender presentation (and its custom field) and Role
-  // archetype. Personality frameworks live with Behavior, matching the
-  // canonical Character authoring model. Species stays in both scopes.
+  // Identity essentials stay visible in both Quick and Full creation.
+  // fieldScope remains part of the shared creator contract because later
+  // stops still use it to trim advanced authoring controls.
   fieldScope = "full",
 } = {}) {
-  const isQuick = fieldScope === "quick";
 
   return (
     <>
@@ -141,31 +140,29 @@ export default function KindStopView({
         ) : null}
       </div>
 
-      {!isQuick ? (
-        <div className="mt-6">
-          <FieldPair>
-            <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
+      <div className="mt-6" data-field-scope={fieldScope}>
+        <FieldPair>
+          <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
 
-            <div>
-              <InlineDropdown
-                label="Gender presentation"
-                options={GENDER_PRESENTATION_OPTIONS}
-                value={genderPresentation}
-                onChange={onChangeGenderPresentation}
+          <div>
+            <InlineDropdown
+              label="Gender presentation"
+              options={GENDER_PRESENTATION_OPTIONS}
+              value={genderPresentation}
+              onChange={onChangeGenderPresentation}
+            />
+            {genderPresentation === "CUSTOM" ? (
+              <CustomValueField
+                label="Custom Gender Presentation"
+                value={customGenderPresentation}
+                onChange={onChangeCustomGenderPresentation}
+                placeholder="Describe the character's gender presentation"
+                maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
               />
-              {genderPresentation === "CUSTOM" ? (
-                <CustomValueField
-                  label="Custom Gender Presentation"
-                  value={customGenderPresentation}
-                  onChange={onChangeCustomGenderPresentation}
-                  placeholder="Describe the character's gender presentation"
-                  maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
-                />
-              ) : null}
-            </div>
-          </FieldPair>
-        </div>
-      ) : null}
+            ) : null}
+          </div>
+        </FieldPair>
+      </div>
 
     </>
   );
