@@ -8,7 +8,7 @@ export default function QuoteBlock({ text, attribution }) {
       </p>
 
       {attribution && (
-        <footer className="mt-4 text-center font-display text-xs uppercase tracking-[0.35em] text-[#7b5525]">
+        <footer className="mt-4 text-center font-display text-xs uppercase tracking-[0.35em] text-[var(--gold-deep)]">
           {attribution}
         </footer>
       )}

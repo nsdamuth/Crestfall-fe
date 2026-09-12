@@ -53,7 +53,7 @@ export default function StoryRoomMobileDrawerView({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex bg-black/75 xl:hidden ${
+      className={`fixed inset-0 z-50 flex bg-[var(--scrim-strong)] xl:hidden ${
         normalizedSide === "right" ? "justify-end" : "justify-start"
       }`}
     >

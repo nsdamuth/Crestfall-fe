@@ -132,7 +132,7 @@ function PresetFolder({
         type="button"
         onClick={() => setExpanded((current) => !current)}
         aria-expanded={expanded}
-        className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left transition hover:bg-white/[0.025]"
+        className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left transition hover:bg-[var(--fill-whisper)]"
       >
         <span className="flex min-w-0 items-center gap-3">
           <FolderIcon

@@ -235,7 +235,7 @@ function ManageCastModal({
         tabIndex={-1}
         aria-label="Close Manage Cast"
         onClick={() => onClose?.()}
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-sm"
       />
 
       <section
@@ -378,13 +378,13 @@ function CastCard({ member, onSelect }) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/10 to-black/90" />
 
-      <div className="absolute left-2.5 top-2.5 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-full border border-white/10 bg-black/60 px-2.5 py-1 text-[10px] uppercase tracking-[0.15em] text-white/75 backdrop-blur-sm">
+      <div className="absolute left-2.5 top-2.5 inline-flex max-w-[calc(100%-3.5rem)] items-center rounded-full border border-white/10 bg-[var(--tag-bed-art)] px-2.5 py-1 text-[10px] uppercase tracking-[0.15em] text-white/75 backdrop-blur-sm">
         {safeMember.typeLabel || "Character"}
       </div>
 
       {safeMember.selected ? (
         <span
-          className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-[var(--gold-bright)]/55 bg-black/75 text-[var(--gold-bright)] shadow-sm backdrop-blur-sm"
+          className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-[var(--gold-bright)]/55 bg-[var(--tag-bed-art)] text-[var(--gold-bright)] shadow-sm backdrop-blur-sm"
           aria-hidden="true"
         >
           <Check size={14} strokeWidth={2.2} />
@@ -397,7 +397,7 @@ function CastCard({ member, onSelect }) {
         </p>
 
         {safeMember.displayState ? (
-          <span className="shrink-0 rounded-full border border-white/10 bg-black/55 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-white/65 backdrop-blur-sm">
+          <span className="shrink-0 rounded-full border border-white/10 bg-[var(--tag-bed-art)] px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-white/65 backdrop-blur-sm">
             {safeMember.displayState}
           </span>
         ) : null}

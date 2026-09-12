@@ -376,7 +376,7 @@ export default function AbilitySpellProfileEditorView({
                   <div className="flex items-end"><div className="rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--muted)]">Descriptive only — does not create or execute game mechanics</div></div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3">
+                <div className="mt-4 rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium">Custom player fields</p>

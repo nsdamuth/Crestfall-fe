@@ -470,7 +470,7 @@ function RoomCard({
                 className={`mx-auto flex h-10 w-10 items-center justify-center rounded-full border ${
                   room.selected
                     ? "border-red-300 bg-red-300 text-black"
-                    : "border-red-300/70 bg-black/20 text-red-200"
+                    : "border-red-300/70 bg-[var(--scrim)] text-red-200"
                 }`}
               >
                 {room.selected ? "✓" : ""}

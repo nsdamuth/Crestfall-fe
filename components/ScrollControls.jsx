@@ -31,7 +31,7 @@ export default function ScrollControls() {
         bg-black/55
         text-[var(--muted-gold)]
 
-        shadow-[0_0_20px_rgba(0,0,0,0.45)]
+        shadow-[var(--shadow-popover)]
 
         transition-all duration-300 ease-out
 
@@ -59,7 +59,7 @@ export default function ScrollControls() {
         bg-black/55
         text-[var(--muted-gold)]
 
-        shadow-[0_0_20px_rgba(0,0,0,0.45)]
+        shadow-[var(--shadow-popover)]
 
         transition-all duration-300 ease-out
 

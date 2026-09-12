@@ -128,7 +128,7 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-white/10 bg-black/20">
       <table className="w-full min-w-[560px] table-fixed border-collapse text-sm">
-        <thead className="bg-white/[0.04] text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
+        <thead className="bg-[var(--fill-whisper)] text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           <tr>
             <th className="w-20 px-3 py-2 text-left font-medium">Level</th>
             <th className="w-36 px-3 py-2 text-right font-medium">
@@ -147,7 +147,7 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
                 <tr>
                   <td
                     colSpan={4}
-                    className="bg-white/[0.02] px-3 py-2 text-center text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]"
+                    className="bg-[var(--fill-whisper)] px-3 py-2 text-center text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]"
                   >
                     {omittedCount.toLocaleString("en-US")} levels omitted
                   </td>
@@ -540,7 +540,7 @@ export default function ProgressionProfileEditorView({
 
         {curve.mode === "EXPLICIT_TABLE" ? (
           <div className="mt-6 overflow-hidden rounded-xl border border-white/10">
-            <div className="grid gap-1 bg-white/[0.04] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] sm:grid-cols-[0.35fr_1fr] sm:gap-0">
+            <div className="grid gap-1 bg-[var(--fill-whisper)] px-4 py-3 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] sm:grid-cols-[0.35fr_1fr] sm:gap-0">
               <span>Level</span>
               <span>Cumulative experience</span>
             </div>
