@@ -586,10 +586,10 @@ export default function VaultV2Mockup({
                   subtitle={item.subtitle}
                   imageSrc={item.imageSrc}
                   badges={badgesFor(item)}
+                  metrics={item.metrics}
                   stats={{
                     plays: item.plays,
                     hearts: item.hearts,
-                    saves: item.saves,
                     followers: null,
                   }}
                   liked={isLiked(item)}
@@ -664,10 +664,11 @@ export default function VaultV2Mockup({
           subtitle={item.subtitle}
           media={media}
           badges={badgesFor(item)}
+          creationType={item.type}
+          metrics={item.metrics}
           stats={{
             plays: item.plays,
             hearts: item.hearts,
-            saves: item.saves,
             followers: null,
           }}
           description={item.description}

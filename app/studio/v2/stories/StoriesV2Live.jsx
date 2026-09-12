@@ -447,7 +447,7 @@ export default function StoriesV2Live({
                       subtitle={item.subtitle || KIND_LABELS[item.kind]}
                       imageSrc={resolveStoryContinueImageSrc(item, sourceCreation)}
                       badges={badgesFor(item)}
-                      stats={{ plays: item.rawRoom?.messages ?? 0, hearts: null, saves: null, followers: null }}
+                      stats={{ plays: item.rawRoom?.messages ?? 0, hearts: null, followers: null }}
                       liked={sourceCreation ? engagement.isCreationLiked(sourceCreation) : false}
                       bookmarked={sourceCreation ? engagement.isCreationBookmarked(sourceCreation) : false}
                       onOpenAssetDetail={() => (manageRooms ? toggleRoomSelection(item.id) : continueRoom(item))}
@@ -517,7 +517,8 @@ export default function StoriesV2Live({
                     subtitle={item.subtitle || KIND_LABELS[item.kind]}
                     imageSrc={item.imageSrc}
                     badges={badgesFor(item)}
-                    stats={{ plays: item.plays, hearts: item.hearts, saves: item.saves, followers: null }}
+                    metrics={item.metrics}
+                    stats={{ plays: item.plays, hearts: item.hearts, followers: null }}
                     liked={engagement.isCreationLiked(item)}
                     bookmarked={engagement.isCreationBookmarked(item)}
                     onOpenAssetDetail={() =>

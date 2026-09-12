@@ -1,4 +1,4 @@
-export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
+export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.5.0";
 
 /**
  * Stable portable UI boundary for the asset detail popup kit piece
@@ -38,12 +38,13 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
  * additive, defaulting to [] and null, pixel-stable for every
  * existing consumer (Vault, Stories) that does not pass them.
  *
- * Presentation recomposed 24 Aug 2026: resolved credits now live in a
- * conditional `Credits` tab alongside the popup's Images / Videos /
- * Liked / Bookmarked tabs. The tab is omitted entirely when
- * `credits.length === 0`; selecting it hides media-only search/sort
- * controls and renders the full attribution list. The public `credits`
- * prop and its item shape are unchanged.
+ * v2.5.0, RULED 12 Sep 2026: the popup is reduced back to a quick
+ * consumer decision surface. Semantic metrics move into the identity
+ * header, creator attribution is rendered once, the body media library
+ * is removed, View Full Catalogue becomes a button beneath the
+ * description/tags, credits move to a conditional disclosure below that
+ * button, and optional `moreFromCreator` + `onOpenMoreFromCreator` are
+ * added for compact creator discovery. The hero carousel remains.
  *
  * @typedef {Object} KitAssetDetailPopupBadge
  * @property {string} label
@@ -62,16 +63,28 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
  * @property {string} [displaySrc] display-sized carousel URL
  * @property {string} [thumbnailSrc] thumbnail-sized compact-tile URL
  *
+ * @typedef {Object} KitAssetDetailPopupMetric
+ * @property {"interactionCount"|"likeCount"|"imageUseCount"|"storyUseCount"|"externalCreationUseCount"} id
+ * @property {string} label
+ * @property {number} value
+ *
  * @typedef {Object} KitAssetDetailPopupStats
- * @property {number|null} plays
- * @property {number|null} hearts
- * @property {number|null} saves
- * @property {number|null} followers
+ * @property {number|null} plays legacy fallback only
+ * @property {number|null} hearts legacy fallback only
+ * @property {number|null} saves legacy fallback only; aggregate is never displayed
+ * @property {number|null} followers legacy fallback only
  *
  * @typedef {Object} KitAssetDetailPopupCreator
  * @property {string} handle rendered with its leading "@" as given
  * @property {string|null} href profile link; a plain span renders
  *   when absent
+ *
+ * @typedef {Object} KitAssetDetailPopupRelatedItem
+ * @property {string} id
+ * @property {string} title
+ * @property {string} [imageSrc]
+ * @property {KitAssetDetailPopupMetric[]} [metrics]
+ * @property {number} [sortOrder]
  *
  * @typedef {Object} KitAssetDetailPopupViewProps
  * @property {"character"|"story"|"adventure"} assetKind the popup's
@@ -80,20 +93,20 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
  * @property {string} title rendered in the body, not over art (R8)
  * @property {string} subtitle body, under the title
  * @property {KitAssetDetailPopupCreator|null} creator optional (v2.3.0),
- *   default null; renders "by @handle" under the subtitle, matching
- *   the old preview modal's creator-handle link
+ *   default null; renders creator attribution once in the identity line
+ *   and links the handle when `href` is present
  * @property {string[]} tags optional (v2.3.0), default []; renders a
  *   pill row between the description/stats block and credits,
  *   matching the old preview modal's tag treatment
- * @property {KitAssetDetailPopupMediaItem[]} media carousel media,
+ * @property {KitAssetDetailPopupMediaItem[]} media hero-carousel media,
  *   ported from the old preview modal's normalized shape. At most 4
- *   items render (the old modal's own cap) plus the synthetic
- *   catalogue slide. Empty or absent: the standard no-art fallback
+ *   items render plus the synthetic catalogue slide. No body media
+ *   library is rendered. Empty or absent: the standard no-art fallback
  *   renders and NO carousel chrome and NO catalogue slide render.
  * @property {KitAssetDetailPopupBadge[]} badges rendered in the body
  *   above the title, KitBadgeView surface="canvas" (default)
- * @property {KitAssetDetailPopupStats} stats same shape and icon
- *   order as the card stat row
+ * @property {KitAssetDetailPopupMetric[]} [metrics] ordered semantic consumer metrics, max three
+ * @property {KitAssetDetailPopupStats} stats legacy fallback while fixture callers migrate
  * @property {string} description body copy, clamps at three lines
  *   with a See more / See less control
  * @property {boolean} isLiked like toggle state (R3)
@@ -106,8 +119,12 @@ export const KIT_ASSET_DETAIL_POPUP_VIEW_CONTRACT_VERSION = "2.4.0";
  * @property {(() => void)|null} onViewCatalogue the catalogue slide's
  *   CTA intent (R8)
  * @property {KitAssetDetailPopupCreditItem[]} credits optional (R11),
- *   default []; when non-empty, adds a conditional Credits tab to the
- *   shared detail library; zero credits add no tab
+ *   default []; when non-empty, adds a conditional Credits disclosure
+ *   beneath View Full Catalogue; zero credits add no control
+ * @property {KitAssetDetailPopupRelatedItem[]} [moreFromCreator] up to four
+ *   compact Creation recommendations from the same creator
+ * @property {((creationId:string) => void)|null} [onOpenMoreFromCreator]
+ *   opens a related Creation in the same quick-detail flow
  * @property {(() => void)|null} onClose forwarded to the frame; the
  *   popup renders no close control of its own
  * @property {(() => void)|null} [onEdit] ADDED 10 Aug 2026 (v2.1.0 to

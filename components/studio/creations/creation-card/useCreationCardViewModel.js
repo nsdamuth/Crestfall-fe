@@ -185,6 +185,8 @@ export function useCreationCardViewModel({
     compact: true,
   });
   const statsRow = useCreationStatsRowViewModel({
+    creationType: creation?.type,
+    usageMetrics: creation?.usageMetrics || creation?.usage_metrics || null,
     stats: creation?.stats,
     compact: true,
   });

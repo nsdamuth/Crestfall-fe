@@ -15,23 +15,24 @@ function read(relativePath) {
   return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 }
 
-test("generic V2 asset popup adds Credits only for resolved attribution", () => {
+test("generic V2 asset popup exposes Credits only for resolved attribution", () => {
   const view = read("components/kit/asset-detail-popup/KitAssetDetailPopup.view.jsx");
-  assert.match(view, /credits\.length[\s\S]*value: "credits", label: "Credits"/);
-  assert.match(view, /showingCredits = tab === "credits"/);
-  assert.match(view, /<KitCreditsView[\s\S]*showHeading=\{false\}/);
-  assert.match(view, /!showingCredits \? \([\s\S]*Search media/);
+  assert.match(view, /function CreditsDisclosure/);
+  assert.match(view, /if \(!credits\.length\) return null/);
+  assert.match(view, /aria-expanded=\{open\}/);
+  assert.match(view, /<KitCreditsView credits=\{credits\}[\s\S]*showHeading=\{false\}/);
 });
 
-test("asset popup no longer duplicates credits in a collapsed block or stacked modal", () => {
+test("asset popup no longer treats Credits as media or opens a stacked credits modal", () => {
   const view = read("components/kit/asset-detail-popup/KitAssetDetailPopup.view.jsx");
   const shell = read("components/kit/KitAssetDetailPopup.jsx");
+  assert.doesNotMatch(view, /MEDIA_TABS|getDetailTabs|Search media|MediaLibrary/);
   assert.doesNotMatch(view, /CollapsedCreditsBlock|View all credits/);
   assert.doesNotMatch(view, /KitCreditsModal/);
   assert.doesNotMatch(shell, /isCreditsModalOpen|useState|closeOnEscape|closeOnBackdrop/);
 });
 
-test("public creation catalogue restores the same conditional Credits tab", () => {
+test("public creation catalogue keeps its own conditional Credits tab", () => {
   const vm = read("components/studio/creations/creation-profile-page/useCreationProfilePageViewModel.js");
   const view = read("components/studio/creations/creation-profile-page/CreationProfilePage.view.jsx");
   const shell = read("components/studio/creations/CreationProfilePage.jsx");
@@ -42,7 +43,7 @@ test("public creation catalogue restores the same conditional Credits tab", () =
   assert.match(shell, /<KitCredits credits=\{creation\.credits\} showHeading=\{false\} \/>/);
 });
 
-test("zero-credit creations do not receive an empty Credits tab", () => {
+test("zero-credit creations do not receive an empty Credits affordance", () => {
   const vm = read("components/studio/creations/creation-profile-page/useCreationProfilePageViewModel.js");
   assert.match(vm, /credits\.length\s*\?\s*\[\.\.\.CREATION_PROFILE_MEDIA_TABS, CREATION_PROFILE_CREDITS_TAB\]\s*:\s*CREATION_PROFILE_MEDIA_TABS/);
   const kitView = read("components/kit/credits/KitCredits.view.jsx");
@@ -68,14 +69,6 @@ test("live V2 card projections derive credits from the canonical attribution res
   assert.match(community, /getCreationCredits/);
   assert.match(community, /credits: getCreationCredits\(creation\)/);
   assert.match(attribution, /\.filter\(Array\.isArray\)[\s\S]*\.flat\(\)/);
-});
-
-test("compact asset media catalogue keeps source order and has no sort control", () => {
-  const view = read("components/kit/asset-detail-popup/KitAssetDetailPopup.view.jsx");
-
-  assert.doesNotMatch(view, /MEDIA_SORTS|KitDropdownView|label="Sort"|setSort/);
-  assert.match(view, /return items;/);
-  assert.match(view, /placeholder="Search media"/);
 });
 
 test("empty explicit credits do not mask connected-asset provenance", () => {

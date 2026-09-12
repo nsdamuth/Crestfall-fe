@@ -256,6 +256,7 @@ export function normalizeCreationProfileCreation(creation) {
     title,
     titleInitial: title.slice(0, 1).toUpperCase() || "C",
     subtitle: normalizeText(creation.subtitle),
+    type: normalizeText(creation.type).toUpperCase(),
     imageUrl: normalizeText(
       getFirstCreationMediaUrl(
         creation.featuredMedia || creation.featured_media || [],
@@ -275,6 +276,7 @@ export function normalizeCreationProfileCreation(creation) {
     creatorHandle: normalizeText(creation.creatorHandle),
     creatorProfileHref: normalizeText(creation.creatorProfileHref),
     stats: creation.stats,
+    usageMetrics: creation.usageMetrics || creation.usage_metrics || null,
     credits: Array.isArray(creation.credits)
       ? creation.credits
       : getCreationCredits(creation),

@@ -8,6 +8,7 @@ import CreatorProfileView from "./creator-profile/CreatorProfile.view";
 import { projectLiveCreatorProfile } from "@/lib/shared/presentation/creatorProfilePresentation";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
+import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import {
   fetchProfileReactions,
@@ -17,6 +18,7 @@ import {
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
 import { donateProfileCoins } from "@/lib/client/studio/profile/creatorDonationClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { pickRandomCreatorDiscoveryItems } from "@/lib/shared/presentation/creatorDiscoverySelection";
 import PublicProfileActivityFeedView from "@/components/studio/profile/public-profile-activity-feed/PublicProfileActivityFeed.view";
 import { buildPublicProfileActivityFeedViewProps } from "@/components/studio/profile/public-profile-activity-feed/usePublicProfileActivityFeedViewModel";
 import PublicProfileBadgesView from "@/components/studio/profile/public-profile-badges/PublicProfileBadges.view";
@@ -41,6 +43,7 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [visibleWorksCount, setVisibleWorksCount] = useState(PAGE_SIZE);
+  const [assetDetailId, setAssetDetailId] = useState(null);
   const [activeProfileTab, setActiveProfileTab] = useState("creations");
   const [notice, setNotice] = useState(null);
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
@@ -173,16 +176,16 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
     subtitle: item.subtitle,
     imageSrc: item.imageSrc,
     badges: canonBadges(item),
+    metrics: item.metrics,
     stats: {
       plays: item.plays,
       hearts: item.hearts,
-      saves: item.saves,
       followers: null,
     },
     liked: engagementState.isCreationLiked(item),
     bookmarked: engagementState.isCreationBookmarked(item),
-    onOpenAssetDetail: () => router.push(`/studio/creations/${encodeURIComponent(item.id)}`),
-    onOpenImageOverlay: () => router.push(`/studio/creations/${encodeURIComponent(item.id)}`),
+    onOpenAssetDetail: () => setAssetDetailId(item.id),
+    onOpenImageOverlay: () => setAssetDetailId(item.id),
     onLike: () => engagementState.toggleCreationLike(item),
     onBookmark: () => engagementState.toggleCreationBookmark(item),
     onPlay: isChatCapableCreationType(item.type) ? () => playWork(item) : null,
@@ -203,6 +206,18 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
     [pageData.badges]
   );
   const partialLoadNotice = pageData.loadError || pageData.donationLoadError || null;
+  const moreFromCreatorSelection = useMemo(() => {
+    if (!assetDetailId) return [];
+
+    const candidates = works.filter((entry) => entry.id !== assetDetailId);
+    return pickRandomCreatorDiscoveryItems(candidates, 4).map((entry, index) => ({
+      id: entry.id,
+      title: entry.title,
+      imageSrc: entry.imageSrc,
+      metrics: entry.metrics,
+      sortOrder: index,
+    }));
+  }, [assetDetailId, works]);
 
   return (
     <>
@@ -298,6 +313,65 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
         engagementState.setEngagementMessage("");
       }}
       />
+
+      {assetDetailId && (() => {
+        const item = works.find((entry) => entry.id === assetDetailId);
+        if (!item) return null;
+
+        const media = item.detailMedia?.length
+          ? item.detailMedia
+          : [item.imageSrc, ...(item.extraMedia || [])]
+              .filter(Boolean)
+              .map((src, index) => ({
+                id: `${item.id}-media-${index + 1}`,
+                src,
+              }));
+
+        const creatorHandle = profile.handle ? `@${profile.handle}` : null;
+        const creatorHref = profile.handle
+          ? `/studio/v2/creators/${encodeURIComponent(profile.handle)}`
+          : null;
+        return (
+          <KitAssetDetailPopup
+            assetKind={item.assetKind}
+            title={item.title}
+            subtitle={item.subtitle}
+            creator={
+              creatorHandle
+                ? { handle: creatorHandle, href: creatorHref }
+                : item.creator || null
+            }
+            media={media}
+            badges={canonBadges(item)}
+            creationType={item.type}
+            metrics={item.metrics}
+            stats={{
+              plays: item.plays,
+              hearts: item.hearts,
+              followers: null,
+            }}
+            description={item.description}
+            tags={item.tags || []}
+            isLiked={engagementState.isCreationLiked(item)}
+            isSaved={engagementState.isCreationBookmarked(item)}
+            onLike={() => engagementState.toggleCreationLike(item)}
+            onPrimaryAction={() =>
+              isChatCapableCreationType(item.type)
+                ? playWork(item)
+                : router.push(`/studio/creations/${encodeURIComponent(item.id)}`)
+            }
+            onSave={() => engagementState.toggleCreationBookmark(item)}
+            onViewCatalogue={() =>
+              router.push(`/studio/creations/${encodeURIComponent(item.id)}`)
+            }
+            credits={item.credits || []}
+            moreFromCreator={moreFromCreatorSelection}
+            onOpenMoreFromCreator={(creationId) => setAssetDetailId(creationId)}
+            onClose={() => setAssetDetailId(null)}
+          />
+        );
+      })()}
+
       <StoryLaunchRequirementsSheet picker={launchController.picker} />
     </>
   );

@@ -20,10 +20,10 @@ function toAdventureCard(item, engagement, router) {
     subtitle: item.subtitle,
     imageSrc: item.imageSrc,
     badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
+    metrics: item.metrics,
     stats: {
       plays: item.plays,
       hearts: item.hearts,
-      saves: item.saves,
       followers: null,
     },
     liked: engagement.isCreationLiked(item),
