@@ -143,16 +143,16 @@ function CreatorListRow({ creator, cardProps, isFollowing, onFollow, onViewProfi
         <span><span className="tabular-nums text-[var(--ink-dim)]">{cardProps?.stats?.works ?? 0}</span> works</span>
       </div>
 
-      <div className="flex flex-none gap-[var(--space-2)] min-[800px]:ml-auto">
+      <div className="flex w-full flex-wrap gap-[var(--space-2)] min-[800px]:w-auto min-[800px]:flex-none min-[800px]:flex-nowrap min-[800px]:ml-auto">
         <button
           type="button"
           disabled={!creator.canFollow}
           onClick={() => onFollow?.()}
-          className={`cf-btn min-w-[7rem] ${creator.canFollow && isFollowing ? "cf-btn--primary" : "cf-btn--secondary"}`}
+          className={`cf-btn w-full min-[800px]:w-auto min-[800px]:min-w-[7rem] ${creator.canFollow && isFollowing ? "cf-btn--primary" : "cf-btn--secondary"}`}
         >
           {!creator.canFollow ? "You" : isFollowing ? "Following" : "Follow"}
         </button>
-        <button type="button" onClick={() => onViewProfile?.()} className="cf-btn cf-btn--secondary min-w-[7rem]">
+        <button type="button" onClick={() => onViewProfile?.()} className="cf-btn cf-btn--secondary w-full min-[800px]:w-auto min-[800px]:min-w-[7rem]">
           View profile
         </button>
       </div>
