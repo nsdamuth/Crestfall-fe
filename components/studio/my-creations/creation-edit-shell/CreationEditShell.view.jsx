@@ -72,7 +72,7 @@ export default function CreationEditShellView({
                     key={section.id}
                     type="button"
                     onClick={() => onSelectSection?.(section.id)}
-                    className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+                    className={`inline-flex min-h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
                         ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                         : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
