@@ -188,3 +188,30 @@ This is a document-versus-code discrepancy, not a route classification question;
 - G5: no em dashes; commit and push follow this write. DONE
 
 STATUS: Brian's ruling recorded (92 Current routes are the CSS sweep's live route set; 8 Superseded go to Nick as a recommendation; 5 Unknown are excluded pending Nick's classification). The document staleness finding is recorded as an observation for Nick, citing the v2Surface nav switch and all four compatibility shim routes. `docs/reviews/CSS-SWEEP-AUDIT-2026-09-11.md` section 8 is recut against the 92 Current routes with rows and pages dropped stated per session, and every representative review page reverified as a Current route carrying a real row in its class. NEXT ACTION: dead code packet, then Brian rules CSS session 2.
+
+## Correction, 11 Sep 2026 (Brian)
+
+Brian's correction: `/studio/my-creations` is superseded by Vault. This
+audit classified `/studio/my-creations` and its route family (
+`/studio/my-creations/[id]/edit`, `/studio/my-creations/[id]/image-library`,
+`/studio/my-creations/[id]/preview`) as Current on nav evidence (the legacy
+nav Primary list still links `/studio/my-creations` directly, per the
+row above). Brian's correction stands over that nav-evidence
+classification: the my-creations route family needs reclassification
+before any CSS session or deletion decision touches it. Per instruction,
+this pass does not reclassify it; the row above is left as originally
+written (Current, on nav evidence) pending that reclassification.
+
+## Defect, 11 Sep 2026
+
+The fixture mode toggle (Default, Empty, Longest content) renders on
+`/studio/v2/studio` in the live page and should not be there. Traced:
+`app/studio/v2/studio/page.jsx:15` renders `<Studio />` with no props.
+`app/studio/v2/studio/Studio.jsx:112` defaults `showFixtureHarness =
+true` on the `Studio` component, and that default is never overridden
+by the page. `app/studio/v2/studio/Studio.jsx:235-239` renders
+`<FixtureModeHarness>` (defined at lines 81-110, the Default/Empty/
+Longest content buttons) whenever `showFixtureHarness &&
+process.env.NODE_ENV !== "production"`, which is true in local dev, so
+the harness is live on the real route today, not confined to
+`/dev/ui-preview`.
