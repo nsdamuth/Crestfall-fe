@@ -31,7 +31,7 @@ export default function StoryExcerptBlock({
       </div>
 
       {imageCaption && (
-        <figcaption className="text-center font-serif text-sm italic text-[#5a4732]">
+        <figcaption className="text-center font-serif text-sm italic text-[var(--line-strong)]">
           {imageCaption}
         </figcaption>
       )}
@@ -40,7 +40,7 @@ export default function StoryExcerptBlock({
 
   const textMarkup = (
     <div>
-      <p className="font-display text-xs uppercase tracking-[0.35em] text-[#7b5525]">
+      <p className="font-display text-xs uppercase tracking-[0.35em] text-[var(--gold-deep)]">
         {title}
       </p>
 
@@ -60,7 +60,7 @@ export default function StoryExcerptBlock({
       </div>
 
       {attribution && (
-        <footer className="mt-5 font-display text-xs uppercase tracking-[0.3em] text-[#7b5525]">
+        <footer className="mt-5 font-display text-xs uppercase tracking-[0.3em] text-[var(--gold-deep)]">
           · {attribution}
         </footer>
       )}

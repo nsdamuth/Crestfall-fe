@@ -254,7 +254,7 @@ body[data-theme="light"] {
 }
 
 .sourcebook-page .sourcebook-eyebrow {
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 .sourcebook-page p {
@@ -328,7 +328,7 @@ body[data-theme="light"] {
 }
 
 .sourcebook-eyebrow {
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 .sourcebook-flourish {
@@ -410,7 +410,7 @@ body[data-theme="light"] {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 .sourcebook-statblock {
@@ -425,7 +425,7 @@ body[data-theme="light"] {
   font-size: 0.75rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 .sourcebook-statblock dl {
@@ -447,7 +447,7 @@ body[data-theme="light"] {
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 .sourcebook-statblock dd {
@@ -540,7 +540,7 @@ body[data-theme="light"] {
 }
 
 .lore-parchment-page .sourcebook-eyebrow {
-  color: #7b5525;
+  color: var(--gold-deep);
 }
 
 @media (min-width: 768px) {

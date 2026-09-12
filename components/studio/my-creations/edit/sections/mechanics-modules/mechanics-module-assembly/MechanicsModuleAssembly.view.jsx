@@ -58,7 +58,7 @@ export function MechanicsRuntimeFoldSection({
         onClick={() => onToggle?.()}
         aria-expanded={expanded}
         aria-controls={`${id}-content`}
-        className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition hover:bg-white/[0.025]"
+        className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition hover:bg-[var(--fill-whisper)]"
       >
         <div className="min-w-0">
           <p className={EYEBROW_CLASS}>

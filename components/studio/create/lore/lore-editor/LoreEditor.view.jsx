@@ -131,7 +131,7 @@ function ReferenceSelector({
               <button
                 type="button"
                 onClick={() => onToggle?.(item)}
-                className="rounded-full p-0.5 text-[var(--ink-dim)] transition hover:bg-white/10 hover:text-white"
+                className="rounded-full p-0.5 text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-white"
                 aria-label={`Remove ${item.title}`}
               >
                 <X size={12} />
@@ -193,7 +193,7 @@ function ReferenceSelector({
                 key={item.id}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => selectItem(item)}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/5"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-[var(--fill-whisper)]"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/40">
                   {item.imageUrl ? (
@@ -982,7 +982,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
                         key={option.value}
                         type="button"
                         onClick={() => onChooseBlock?.(option.value)}
-                        className="rounded-xl border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--gold-ornament)]/45 hover:bg-[var(--gold-ornament)]/5"
+                        className="rounded-xl border border-white/10 bg-[var(--fill-option-rest)] p-4 text-left transition hover:border-[var(--gold-ornament)]/45 hover:bg-[var(--gold-ornament)]/5"
                       >
                         <span className="flex items-center gap-2 text-sm text-[var(--ink)]">
                           <Plus size={14} className="text-[var(--gold-ornament)]" />
@@ -1020,7 +1020,7 @@ function ImagePickerModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--scrim-strong)] p-4"
       role="dialog"
       aria-modal="true"
     >
@@ -1080,7 +1080,7 @@ function ImagePickerModal({
               key={image.id}
               type="button"
               onClick={() => onChooseImage?.(image)}
-              className="overflow-hidden rounded-xl border border-white/10 bg-black/30 text-left transition hover:border-[var(--gold-ornament)]/45"
+              className="overflow-hidden rounded-xl border border-white/10 bg-[var(--fill-option-rest)] text-left transition hover:border-[var(--gold-ornament)]/45"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

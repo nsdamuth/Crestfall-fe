@@ -51,7 +51,7 @@ export default function FilterableIndexView({
                 onChange={(event) =>
                   onFilterChange?.(filter.key, event.target.value)
                 }
-                className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(20,18,16,0.95)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[#f2ead9] outline-none focus:border-[var(--gold-ornament)]"
+                className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(20,18,16,0.95)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]"
               >
                 <option value="all">{filter.label}</option>
 

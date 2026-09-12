@@ -454,7 +454,7 @@ export default function MechanicsProgressionProfileFieldsView({
         </div>
         <div className="max-h-72 overflow-auto">
           <table className="w-full min-w-[34rem] text-left text-xs">
-            <thead className="sticky top-0 bg-[#0b0a09] text-[var(--gold-ornament)]">
+            <thead className="sticky top-0 bg-[var(--surface-1)] text-[var(--gold-ornament)]">
               <tr>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Rank</th>
                 <th className="px-4 py-3 font-normal uppercase tracking-[0.12em]">Cost to Reach</th>

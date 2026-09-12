@@ -26,7 +26,7 @@ export default function CreatorListRowView({
   const safeStats = Array.isArray(stats) ? stats : [];
 
   return (
-    <article className="border-b border-white/10 px-5 py-4 last:border-b-0 transition hover:bg-white/[0.03]">
+    <article className="border-b border-white/10 px-5 py-4 last:border-b-0 transition hover:bg-[var(--fill-whisper)]">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
           {avatarInitial}

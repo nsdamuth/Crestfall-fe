@@ -255,7 +255,7 @@ function AutoEventMediaMessage({ media }) {
   return (
     <article className="w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-black/25">
       <div
-        className="flex w-full items-center justify-center overflow-hidden bg-black/40"
+        className="flex w-full items-center justify-center overflow-hidden bg-[var(--scrim)]"
         style={{ maxHeight: "26rem" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -367,7 +367,8 @@ export default function StoryRoomMessageView({
   const safeSegments = Array.isArray(semanticSegments) ? semanticSegments : [];
   const safeStatusBlocks = Array.isArray(statusBlocks) ? statusBlocks : [];
   const hasSemanticPresentation =
-    bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC && safeSegments.length > 0;
+    bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC &&
+    (safeSegments.length > 0 || safeStatusBlocks.length > 0);
   const hasPalettePresentation = Boolean(paletteColors);
   const resolvedPaletteColors = paletteColors || DEFAULT_PALETTE_COLORS;
   const allowAutomaticSpacing =
@@ -616,7 +617,7 @@ function MessageActionButton({
       disabled={disabled}
       aria-label={label}
       title={title}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {children}
     </button>

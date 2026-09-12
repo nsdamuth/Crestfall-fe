@@ -125,7 +125,7 @@ export default function CreationProfilePageView({
                 {creation.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+                    className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
                   >
                     {tag}
                   </span>
@@ -259,7 +259,7 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Library Pass
             </p>
-            <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+            <span className="rounded-full border border-white/10 bg-[var(--tag-bed-canvas)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
               {panel.statusLabel}
             </span>
           </div>
@@ -345,8 +345,8 @@ function MediaTile({ item, actionsSlot, onOpen }) {
             <div className="h-full w-full bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10" />
           )}
 
-          <div className="absolute inset-0 flex items-center justify-center bg-black/35">
-            <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-black/70 px-5 py-4 text-center shadow-[var(--shadow-popover)]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[var(--scrim)]">
+            <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--tag-bed-art)] px-5 py-4 text-center shadow-[var(--shadow-popover)]">
               <LockKeyhole className="mx-auto text-[var(--gold-ornament)]" size={24} />
               <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Library Pass

@@ -666,7 +666,7 @@ export default function ActorMechanicsProfileEditorView({
                     type="button"
                     onClick={() => onToggleBinding?.(binding.id)}
                     aria-label={`${binding.expanded ? "Collapse" : "Expand"} ${binding.domainLabel}`}
-                    className="mt-0.5 rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)]"
+                    className="mt-0.5 rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
                   >
                     <ToggleIcon size={16} />
                   </button>
@@ -715,7 +715,7 @@ export default function ActorMechanicsProfileEditorView({
                       onClick={() => onMoveBinding?.(binding.id, "UP")}
                       disabled={index === 0}
                       aria-label={`Move ${binding.domainLabel} up`}
-                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-30"
+                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:opacity-30"
                     >
                       <ArrowUp size={15} />
                     </button>
@@ -724,7 +724,7 @@ export default function ActorMechanicsProfileEditorView({
                       onClick={() => onMoveBinding?.(binding.id, "DOWN")}
                       disabled={index === safeBindings.length - 1}
                       aria-label={`Move ${binding.domainLabel} down`}
-                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-30"
+                      className="rounded-lg p-2 text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:opacity-30"
                     >
                       <ArrowDown size={15} />
                     </button>

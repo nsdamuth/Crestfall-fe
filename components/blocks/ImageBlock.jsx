@@ -118,7 +118,7 @@ export default function ImageBlock({
       </div>
 
       {caption ? (
-        <figcaption className="text-center font-serif text-sm italic text-[#5a4732]">
+        <figcaption className="text-center font-serif text-sm italic text-[var(--line-strong)]">
           {caption}
         </figcaption>
       ) : null}

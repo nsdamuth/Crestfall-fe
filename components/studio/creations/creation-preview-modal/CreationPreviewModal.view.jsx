@@ -261,7 +261,7 @@ export default function CreationPreviewModalView({
                   backgroundSize: "cover",
                 }}
               >
-                <div className="absolute inset-0 bg-black/25" />
+                <div className="absolute inset-0 bg-[var(--scrim)]" />
 
                 <div className="relative z-10 max-w-xs rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-6 text-center shadow-[var(--shadow-popover)]">
                   <Eyebrow showRuleMark={false}>Want to see more?</Eyebrow>

@@ -89,7 +89,7 @@ export default function PublicProfileDonateButtonView({
                 />
               </label>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
+              <div className="rounded-xl border border-white/10 bg-[var(--fill-whisper)] px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
                 <p>Your balance: {balanceLabel} coins</p>
                 <p>Creator receives: {amountNet} coins</p>
                 <p>

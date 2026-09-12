@@ -116,7 +116,7 @@ export default function MechanicsAssetPickerModal({
           {status === "loaded" && items.length ? (
             <div className="grid gap-4 md:grid-cols-2">
               {items.map((item) => (
-                <button key={item.selectionId} type="button" onClick={() => { onSelected?.(item.creation); onClose?.(); }} className="rounded-xl border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/50">
+                <button key={item.selectionId} type="button" onClick={() => { onSelected?.(item.creation); onClose?.(); }} className="rounded-xl border border-white/10 bg-[var(--fill-option-rest)] p-4 text-left transition hover:border-[var(--gold-ornament)]/50">
                   <div className="flex items-start gap-3"><div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]"><Icon size={18} /></div><div className="min-w-0"><p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">{item.sourceLabel}</p><h3 className="mt-1 font-display text-xl">{item.title}</h3></div></div>
                   {item.description ? <p className="mt-3 line-clamp-2 text-sm text-[var(--ink-dim)]">{item.description}</p> : null}
                   <p className="mt-3 break-all text-xs text-[var(--ink-dim)]">{item.stableKey || "No stable key"}</p>

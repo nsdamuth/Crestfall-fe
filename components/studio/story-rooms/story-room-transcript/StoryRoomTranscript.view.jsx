@@ -128,7 +128,7 @@ function MessageReportDialog({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="story-room-report-title"
@@ -159,7 +159,7 @@ function MessageReportDialog({
             onClick={onCancel}
             disabled={pending}
             aria-label="Close report dialog"
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-50"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:opacity-50"
           >
             <X size={16} aria-hidden="true" />
           </button>
@@ -208,7 +208,7 @@ function MessageReportDialog({
             type="button"
             onClick={onCancel}
             disabled={pending}
-            className="rounded-lg border border-white/10 px-4 py-2 text-sm text-[var(--ink-dim)] transition hover:bg-white/5 hover:text-[var(--ink)] disabled:opacity-50"
+            className="rounded-lg border border-white/10 px-4 py-2 text-sm text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:opacity-50"
           >
             Cancel
           </button>
