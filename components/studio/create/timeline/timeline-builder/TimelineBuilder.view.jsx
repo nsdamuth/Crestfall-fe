@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const inputClass =
   "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
@@ -35,7 +36,7 @@ function Field({ label, help = "", children }) {
 
 function ToggleRow({ label, description, checked, onChange }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+    <label className="flex min-h-[var(--control-md)] cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <span className="min-w-0">
         <span className="block text-sm font-medium text-[var(--ink)]">{label}</span>
         <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
@@ -82,7 +83,7 @@ function EntryRow({
           </div>
         </div>
 
-        <div className="grid shrink-0 gap-2 sm:grid-cols-[12rem_10rem_auto]">
+        <div className="grid min-w-0 gap-2 md:shrink-0 md:grid-cols-[12rem_10rem_auto]">
           <label className="block">
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
               Chapter
@@ -160,7 +161,7 @@ function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
             onUpdateChapter?.(chapter.id, "title", event.target.value)
           }
           className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-          placeholder="Arc I — Origins to Bronze Age"
+          placeholder="Arc I, Origins to Bronze Age"
         />
       </label>
       <button
@@ -234,7 +235,12 @@ export default function TimelineBuilderView({
       </div>
 
       <section className="grid gap-6 xl:grid-cols-[0.32fr_1fr]">
-        <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+        {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+            implicit base column is sized by min-width:auto and any nowrap
+            descendant becomes the page's horizontal scroll width. This is
+            the single-column rule for this shell: one column in DOM order
+            below xl, each panel free to shrink to the page gutter. */}
+        <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <ListOrdered size={18} />
             <p className="text-xs uppercase tracking-[0.18em]">
@@ -276,8 +282,8 @@ export default function TimelineBuilderView({
           ) : null}
         </aside>
 
-        <div className="space-y-6">
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
+        <div className="min-w-0 space-y-6">
+          <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
               <Globe2 size={17} />
               <p className="text-xs uppercase tracking-[0.18em]">Timeline Identity</p>
@@ -424,6 +430,21 @@ export default function TimelineBuilderView({
             )}
           </section>
         </div>
+
+        {/* MOBILE-SHELLS: the aside's save is a full scroll away on a phone,
+            so the same action docks to the bottom edge below md. The aside
+            button is untouched and is what renders on desktop. */}
+        <CreateActionBar
+          label={
+            saveStatus === "saving"
+              ? "Saving..."
+              : isEditing
+                ? "Save Timeline"
+                : "Create Timeline"
+          }
+          onAction={onSave}
+          disabled={saveDisabled}
+        />
       </section>
 
       {lorePickerSlot}
