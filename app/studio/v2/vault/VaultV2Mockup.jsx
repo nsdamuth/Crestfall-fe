@@ -367,7 +367,14 @@ export default function VaultV2Mockup({
       return;
     }
 
-    if (item.visibility === "PRIVATE") {
+    const sourceVisibility = String(
+      item.rawCreation?.visibility || item.rawCreation?.data?.visibility || ""
+    )
+      .trim()
+      .toUpperCase();
+    const isUnlisted = sourceVisibility === "UNLISTED";
+
+    if (sourceVisibility === "PRIVATE" || item.visibility === "PRIVATE") {
       setActionNotice({
         label: "Share",
         message: "Private creations are owner-only. Change visibility to Unlisted or Public before sharing a link.",
@@ -375,7 +382,7 @@ export default function VaultV2Mockup({
       return;
     }
 
-    if (!["UNLISTED", "PUBLIC", "CANON"].includes(item.visibility)) {
+    if (!isUnlisted && !["PUBLIC", "CANON"].includes(item.visibility)) {
       setActionNotice({
         label: "Share",
         message: "This creation cannot be shared in its current visibility state.",
@@ -383,7 +390,6 @@ export default function VaultV2Mockup({
       return;
     }
 
-    const isUnlisted = item.visibility === "UNLISTED";
     const href = `/studio/creations/${encodeURIComponent(item.id)}`;
     const absoluteHref = typeof window !== "undefined" ? new URL(href, window.location.origin).toString() : href;
     const successMessage = isUnlisted
