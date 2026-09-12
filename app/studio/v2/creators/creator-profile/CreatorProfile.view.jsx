@@ -133,15 +133,24 @@ function RectAction({ label, icon: Icon, tone = "ghost", isPressed = false, onCl
 // Quiet secondary action, never a filled button: icon plus word, no
 // border, no fill. Used for Mute content (item 36, CR-028, RULED
 // 11 Aug 2026: inline in the engagement row, no other placement).
-function QuietAction({ label, icon: Icon, isPressed = false, onClick = null }) {
+//
+// Selected recipe, RULED 12 Sep 2026 (eight-fix package, FIX 3): when
+// `isSelected` is true (Liked, Saved) the action takes the selected
+// recipe the "You" chip uses on the same row: filled glyph, glyph and
+// label both in ornament gold. Rest and Mute are unchanged.
+function QuietAction({ label, icon: Icon, isPressed = false, isSelected = false, onClick = null }) {
   return (
     <button
       type="button"
       onClick={() => onClick?.()}
       aria-pressed={isPressed}
-      className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-faint)] transition-colors hover:text-[var(--ink)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+      className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] whitespace-nowrap text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+        isSelected
+          ? "text-[var(--gold-ornament)]"
+          : "text-[var(--ink-faint)] hover:text-[var(--ink)]"
+      }`}
     >
-      {Icon && <Icon size={16} aria-hidden="true" />}
+      {Icon && <Icon size={16} aria-hidden="true" fill={isSelected ? "currentColor" : "none"} />}
       {label}
     </button>
   );
@@ -416,16 +425,21 @@ export default function CreatorProfileView({
                     onClick={engagement?.onOpenDonate}
                   />
                 )}
+                {/* Liked and Saved take the selected recipe while active
+                    (FIX 3, 12 Sep 2026); the toggle is optimistic in the
+                    shell, so the recipe flips on tap. */}
                 <QuietAction
                   label={engagement?.isLiked ? "Liked" : "Like"}
                   icon={Heart}
                   isPressed={engagement?.isLiked}
+                  isSelected={Boolean(engagement?.isLiked)}
                   onClick={engagement?.onLike}
                 />
                 <QuietAction
                   label={engagement?.isBookmarked ? "Saved" : "Save"}
                   icon={Bookmark}
                   isPressed={engagement?.isBookmarked}
+                  isSelected={Boolean(engagement?.isBookmarked)}
                   onClick={engagement?.onBookmark}
                 />
                 <QuietAction label="Share" icon={Share2} onClick={engagement?.onShare} />

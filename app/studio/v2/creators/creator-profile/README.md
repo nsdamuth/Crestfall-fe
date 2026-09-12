@@ -69,6 +69,16 @@ distinct from a section's own empty-state message (Creators parity
 row 808-813 note: "the page's own top-level error state is a
 different control").
 
+## Liked and Saved selected recipe, RULED 12 Sep 2026 (eight-fix package, FIX 3)
+
+While active, Like and Save take the selected recipe the "You" chip
+uses on the same row: filled glyph, glyph and label both in ornament
+gold. At rest they stay the quiet action (faint ink, outline glyph).
+The live shell toggles both optimistically on tap and reverts on a
+failed write. The public profile payload does not carry the viewer's
+liked and saved state (CR-064); the shell reads it from the
+profile-reactions endpoint after first paint.
+
 ## Item 36 / CR-028, mute control, RULED 11 Aug 2026, CLOSED
 
 Placement is ruled: Mute content lives inline in the identity block's

@@ -90,6 +90,7 @@ the details below carry only what is still actionable.
 | CR-062 | Community type whitelist versus the Rules & Mechanics group | Seven of the eight Rules & Mechanics types the filter offers are outside the community route's `type` whitelist; grow the whitelist or serve those types as unavailable so the panel can render them disabled | open | Nick | non-blocking; filed 6 Sep 2026; client-side filtering hides the mismatch today |
 | CR-064 | Creator summary timestamps for Recently Active and Newest | The creator summary on `/v1/community/creators` carries no last-active timestamp and no joined timestamp, so the ruled Creators sorts Recently Active and Newest still render and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) but leave the list in its current order until both timestamps exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
 | CR-065 | Per-user liked and saved flags on creator summaries | The ruled Activity section (Liked, Saved) on Creators needs per-user liked and saved state for creators; the payload carries following only, so both options render muted at a zero count and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) until the flags exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
+| CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
 
 ## Details
@@ -1020,6 +1021,10 @@ side filtering hides the mismatch today (the seven never match). When
 CR-060 moves filtering server-side, either the whitelist grows or
 those types are served as unavailable so the panel renders them
 disabled ("Soon") rather than counting zero.
+
+### CR-064, Viewer reaction state on the public profile payload
+
+Filed 12 Sep 2026 (eight-fix package, FIX 3). The public profile payload (`getPublicProfilePageData`, `/api/profiles/[username]/public`) carries no `viewer.isLiked` or `viewer.isBookmarked`; the creator profile page reads them through a second call to `/api/engagement/profile-reactions` after first paint, so Liked and Saved render at rest for one round trip. The optimistic toggle stays. Needed: both booleans on the profile payload for the signed-in viewer.
 
 ### CR-063, Public lore approval-state projection
 
