@@ -115,7 +115,7 @@ function ReferenceSelector({
               key={item.id}
               className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 py-1.5 pl-2 pr-2.5 text-xs text-[var(--ink)]"
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/40">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[var(--surface-2)]">
                 {item.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -195,7 +195,7 @@ function ReferenceSelector({
                 onClick={() => selectItem(item)}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-[var(--fill-whisper)]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/40">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[var(--surface-2)]">
                   {item.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -246,7 +246,7 @@ function ColumnBlockCard({
   onOpenImagePicker,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           {block.type === "image"
@@ -622,7 +622,7 @@ function BlockFields({
           {(block.items || []).map((item, itemIndex) => (
             <div
               key={item.id}
-              className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 md:grid-cols-[0.42fr_1fr_auto]"
+              className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 md:grid-cols-[0.42fr_1fr_auto]"
             >
               <Field label="Label">
                 <input
@@ -727,7 +727,7 @@ function BlockFields({
           {(block.columns || []).map((column, columnIndex) => (
             <section
               key={column.id}
-              className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/20 p-4"
+              className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -1205,7 +1205,7 @@ export default function LoreEditorView({
             ].map(([label, count]) => (
               <div
                 key={label}
-                className="rounded-xl border border-white/10 bg-black/25 px-3 py-3 sm:px-4"
+                className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-3 sm:px-4"
               >
                 <p className="text-[var(--gold-ornament)]">{label}</p>
                 <p className="mt-1 text-lg">{count}</p>
@@ -1336,7 +1336,7 @@ export default function LoreEditorView({
           Icon={Users}
         />
 
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+        <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <MapPin size={16} />
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -1394,7 +1394,7 @@ export default function LoreEditorView({
           return (
             <article
               key={chapter.id}
-              className="overflow-hidden rounded-xl border border-white/10 bg-black/25"
+              className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-2)]"
             >
               <div className="flex items-center gap-2 p-3 sm:p-4">
                 <button
@@ -1523,7 +1523,7 @@ export default function LoreEditorView({
                     />
                   </div>
 
-                  <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+                  <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                       Chapter-only Character Tags
                     </p>
@@ -1548,7 +1548,7 @@ export default function LoreEditorView({
                     />
                   </div>
 
-                  <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                  <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                       <MapPin size={15} />
                       <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -1611,7 +1611,7 @@ export default function LoreEditorView({
                       return (
                         <section
                           key={section.id}
-                          className="overflow-hidden rounded-xl border border-[var(--gold-ornament)]/15 bg-black/30"
+                          className="overflow-hidden rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-2)]"
                         >
                           <div className="flex items-center gap-2 p-3 sm:p-4">
                             <button
@@ -1760,7 +1760,7 @@ export default function LoreEditorView({
                                 />
                               </div>
 
-                              <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+                              <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                                 <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                   Section-only Character Tags
                                 </p>
@@ -1788,7 +1788,7 @@ export default function LoreEditorView({
                                 />
                               </div>
 
-                              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                              <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                                   <MapPin size={15} />
                                   <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -1818,7 +1818,7 @@ export default function LoreEditorView({
                                 />
                               </div>
 
-                              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                                 <div>
                                   <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                                     Section Content
@@ -1841,7 +1841,7 @@ export default function LoreEditorView({
                                 {section.blocks.map((block, blockIndex) => (
                                   <div
                                     key={block.id}
-                                    className="rounded-xl border border-white/10 bg-black/30 p-4"
+                                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
                                   >
                                     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                                       <div className="flex items-center gap-2 text-[var(--gold-ornament)]">

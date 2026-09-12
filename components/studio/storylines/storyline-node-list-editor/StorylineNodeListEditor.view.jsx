@@ -38,7 +38,7 @@ export default function StorylineNodeListEditorView({
 } = {}) {
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {headerEyebrow}
@@ -76,7 +76,7 @@ export default function StorylineNodeListEditorView({
       {nodes.map((node) => (
         <article
           key={node.id}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5"
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-4">
@@ -227,7 +227,7 @@ export default function StorylineNodeListEditorView({
                     {node.triggers.map((trigger) => (
                       <div
                         key={trigger.id}
-                        className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
+                        className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
                       >
                         <select
                           value={trigger.type}

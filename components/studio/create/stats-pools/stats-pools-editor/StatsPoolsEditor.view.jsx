@@ -165,7 +165,7 @@ function DefinitionHeader({
       <button
         type="button"
         onClick={onToggleExpanded}
-        className="rounded-lg border border-white/10 bg-black/25 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
+        className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
         aria-label={expanded ? "Collapse definition" : "Expand definition"}
       >
         {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -1376,7 +1376,7 @@ export default function StatsPoolsEditorView({
   };
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -1415,7 +1415,7 @@ export default function StatsPoolsEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:opacity-50 ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -1569,7 +1569,7 @@ export default function StatsPoolsEditorView({
             className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs uppercase tracking-[0.14em] transition ${
               activePanel === value
                 ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/12 text-[var(--ink)]"
-                : "border-white/10 bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
             }`}
           >
             <Icon size={14} />

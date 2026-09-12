@@ -151,7 +151,7 @@ function ChapterGroup({
     <details
       open={isOpen}
       onToggle={(event) => onToggle?.(group.id, event.currentTarget.open)}
-      className="group/chapter overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 open:border-[var(--gold-ornament)]/45 open:bg-black/40"
+      className="group/chapter overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] open:border-[var(--gold-ornament)]/45 open:bg-[var(--surface-2)]"
     >
       <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-left text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/5 sm:px-6 sm:py-5 [&::-webkit-details-marker]:hidden">
         <ChevronRight

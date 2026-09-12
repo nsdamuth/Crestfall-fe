@@ -71,7 +71,7 @@ function StatusBlockCard({
   }
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -164,7 +164,7 @@ function StatusBlockCard({
             />
           </div>
 
-          <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className={EYEBROW_CLASS}>
                 Rendered Lines
@@ -193,7 +193,7 @@ function StatusBlockCard({
                 {block.lines.map((line, lineIndex) => (
                   <div
                     key={`${lineIndex}-${line}`}
-                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"
                   >
                     <div className="min-w-0 flex-1">
                       <TextAreaField
@@ -219,7 +219,7 @@ function StatusBlockCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
                 No rendered lines yet. Add at least one line for this status block.
               </p>
             )}

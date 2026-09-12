@@ -52,7 +52,7 @@ export default function LoginPage() {
     }
   return (
     <main className="min-h-screen px-6 py-20 text-[var(--foreground)] sm:px-10 lg:px-16">
-      <section className="mx-auto max-w-xl rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/45 p-8 shadow-2xl backdrop-blur-md">
+      <section className="mx-auto max-w-xl rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--surface-2)] p-8 shadow-2xl backdrop-blur-md">
        <div className="flex items-start justify-between">
         <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[var(--muted-gold)]">
@@ -70,7 +70,7 @@ export default function LoginPage() {
             flex h-10 w-10 items-center justify-center
             rounded-full
             border border-[var(--muted-gold)]/20
-            bg-black/40
+            bg-[var(--surface-2)]
             text-[var(--muted-gold)]
             transition-all duration-300
             hover:border-[var(--muted-gold)]/60

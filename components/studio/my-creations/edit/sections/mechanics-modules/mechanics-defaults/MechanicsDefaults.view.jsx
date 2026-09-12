@@ -64,7 +64,7 @@ function DefaultValueField({ bucketKey, entry, onPatch }) {
 
 function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
   return (
-    <article className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <article className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           {bucket.singularLabel} {entryIndex + 1}
@@ -111,7 +111,7 @@ function DefaultCard({ bucket, entry, entryIndex, onPatch, onRemove }) {
 
 function DefaultsBucket({ bucket, entries, onAdd, onPatch, onRemove }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -142,7 +142,7 @@ function DefaultsBucket({ bucket, entries, onAdd, onPatch, onRemove }) {
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
           No defaults defined yet.
         </p>
       )}

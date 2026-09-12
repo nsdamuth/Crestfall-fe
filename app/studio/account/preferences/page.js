@@ -104,7 +104,7 @@ export default function PreferencesPage() {
 
 function PreferenceCard({ setting }) {
   return (
-    <article className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <article className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
         {setting.eyebrow}
       </p>

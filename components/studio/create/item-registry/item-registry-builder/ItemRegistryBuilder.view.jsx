@@ -70,7 +70,7 @@ export default function ItemRegistryBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -209,7 +209,7 @@ export default function ItemRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -338,7 +338,7 @@ function EntriesTab({
                 className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   activeEntryId === entry.id
                     ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                    : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/30"
                 }`}
               >
                 <p className="line-clamp-1 font-display text-xl">
@@ -504,7 +504,7 @@ function AssociationsTab({ entries, onUpdateEntry }) {
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -566,7 +566,7 @@ function TrackingTab({
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -720,7 +720,7 @@ function PromptTab({
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
           >
             <p className="font-display text-2xl">
               {entry.name || "Untitled Object"}
@@ -768,7 +768,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
       body="This is the current structured registry payload that will be saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Summary
           </p>

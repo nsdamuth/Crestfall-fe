@@ -41,7 +41,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
 
       <div className="mt-4 grid gap-3">
         {binding ? (
-          <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">

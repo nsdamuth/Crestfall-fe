@@ -64,7 +64,7 @@ export default function NarratorBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Narrator Builder
         </p>
@@ -78,7 +78,7 @@ export default function NarratorBuilderView({
           inside rooms and scenarios.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
           <BookOpen className="text-[var(--gold-ornament)]" size={28} />
 
           <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
@@ -91,7 +91,7 @@ export default function NarratorBuilderView({
           </p>
         </div>
 
-        <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-3">
+        <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Selected Modules
           </p>
@@ -131,7 +131,7 @@ export default function NarratorBuilderView({
         ) : null}
       </aside>
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Narrator Profile
         </p>
@@ -216,7 +216,7 @@ export default function NarratorBuilderView({
             />
           </div>
 
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
             <div className="flex items-start gap-3">
               <Sparkles className="mt-1 text-[var(--gold-ornament)]" size={18} />
               <div>

@@ -79,7 +79,7 @@ export default function FilterableIndexView({
             onClick={() =>
               tagRailRef.current?.scrollBy({ left: -240, behavior: "smooth" })
             }
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           >
             ←
           </button>
@@ -121,7 +121,7 @@ export default function FilterableIndexView({
             onClick={() =>
               tagRailRef.current?.scrollBy({ left: 240, behavior: "smooth" })
             }
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(10,10,10,0.92)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-2)] px-3 py-2 text-[var(--ink-dim)] transition hover:text-[var(--ink)]"
           >
             →
           </button>

@@ -28,7 +28,7 @@ export default function CreationEditShellView({
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -86,7 +86,7 @@ export default function CreationEditShellView({
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
             {sectionContent}
           </div>
         </div>

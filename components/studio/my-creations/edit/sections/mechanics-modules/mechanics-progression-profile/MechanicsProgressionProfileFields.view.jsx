@@ -87,7 +87,7 @@ function DerivedValueCard({
   onRemove,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex items-center justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Derived Value {index + 1}
@@ -195,7 +195,7 @@ function DerivedValueCard({
 
 function OverrideCard({ override, index, onChange, onRemove }) {
   return (
-    <div className="grid gap-3 rounded-xl border border-white/10 bg-black/35 p-4 md:grid-cols-[0.7fr_1fr_1fr_auto]">
+    <div className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 md:grid-cols-[0.7fr_1fr_1fr_auto]">
       <NumberField
         label="Rank"
         value={override.rank}
@@ -329,7 +329,7 @@ export default function MechanicsProgressionProfileFieldsView({
           can be edited in the JSON Editor. Generated curves are the compact visual path.
         </p>
       ) : (
-        <div className="grid gap-4 rounded-xl border border-white/10 bg-black/25 p-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 md:grid-cols-2 xl:grid-cols-3">
           <SelectField
             label="Requirement Mode"
             value={profile.curve.requirementMode}
@@ -384,7 +384,7 @@ export default function MechanicsProgressionProfileFieldsView({
       )}
 
       {profile.mode === "GENERATED_CURVE_WITH_OVERRIDES" ? (
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className={EYEBROW_CLASS}>Rank Overrides</p>
@@ -414,7 +414,7 @@ export default function MechanicsProgressionProfileFieldsView({
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+      <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className={EYEBROW_CLASS}>Derived Counters</p>
@@ -445,7 +445,7 @@ export default function MechanicsProgressionProfileFieldsView({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+      <div className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-2)]">
         <div className="border-b border-white/10 px-4 py-3">
           <p className={EYEBROW_CLASS}>Generated Threshold Preview</p>
           <p className="mt-2 text-xs text-[var(--ink-dim)]">

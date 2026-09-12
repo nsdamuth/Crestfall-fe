@@ -213,7 +213,7 @@ function ConditionCard({
   onRemoveCondition,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex items-center justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Condition
@@ -439,7 +439,7 @@ function EffectValueField({
   }
 
   return (
-    <div className="grid gap-4 rounded-xl border border-white/10 bg-black/25 p-4 md:col-span-2 xl:col-span-3">
+    <div className="grid gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 md:col-span-2 xl:col-span-3">
       <div className="grid gap-4 md:grid-cols-2">
         <SelectField
           label="Numeric Value Source"
@@ -548,7 +548,7 @@ function EffectCard({
   ProgressionProfileFieldsComponent,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex items-center justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Mechanics Effect
@@ -682,7 +682,7 @@ function MechanicsStepCard({
   ProgressionProfileFieldsComponent,
 }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <article className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -745,7 +745,7 @@ function MechanicsStepCard({
         />
       </div>
 
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <p className={EYEBROW_CLASS}>
           Dependencies
         </p>
@@ -761,7 +761,7 @@ function MechanicsStepCard({
       </div>
 
       {step.phase === "OUTCOME" ? (
-        <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+        <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <p className={EYEBROW_CLASS}>
             Apply On Outcomes
           </p>
@@ -777,7 +777,7 @@ function MechanicsStepCard({
         </div>
       ) : null}
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className={EYEBROW_CLASS}>
@@ -819,7 +819,7 @@ function MechanicsStepCard({
         )}
       </div>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className={EYEBROW_CLASS}>
@@ -1035,7 +1035,7 @@ function DomainStepCard({
   onToggleDomainOutcome,
 }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/25 p-5">
+    <article className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -1089,7 +1089,7 @@ function DomainStepCard({
         />
       </div>
 
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <p className={EYEBROW_CLASS}>
           Dependencies
         </p>
@@ -1104,7 +1104,7 @@ function DomainStepCard({
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <DomainActionFields
           step={step}
           travelOperationOptions={travelOperationOptions}
@@ -1113,7 +1113,7 @@ function DomainStepCard({
       </div>
 
       {step.action.type !== "NONE" ? (
-        <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+        <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <p className={EYEBROW_CLASS}>
             Apply On Outcomes
           </p>
@@ -1179,7 +1179,7 @@ export default function MechanicsCompositionBuilderView({
   );
 
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -1197,13 +1197,13 @@ export default function MechanicsCompositionBuilderView({
         </div>
 
         <div className="grid min-w-[240px] md:grid-cols-2 gap-2 text-center text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-          <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-2">
             <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledMechanicsStepCount ?? 0}
             </span>
             Mechanics Steps
           </div>
-          <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-2">
             <span className="block text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
               {summary.enabledDomainStepCount ?? 0}
             </span>
@@ -1269,7 +1269,7 @@ export default function MechanicsCompositionBuilderView({
         </div>
       ) : null}
 
-      <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-6 rounded-2xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className={EYEBROW_CLASS}>
@@ -1338,7 +1338,7 @@ export default function MechanicsCompositionBuilderView({
         )}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-2xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className={EYEBROW_CLASS}>

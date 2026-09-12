@@ -60,7 +60,7 @@ export default function PublicProfileDonateButtonView({
               <button
                 type="button"
                 onClick={() => onCloseDonation?.()}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 aria-label="Close donation dialog"
               >
                 <X size={17} />
@@ -112,7 +112,7 @@ export default function PublicProfileDonateButtonView({
                 />
               </label>
 
-              <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3">
+              <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
                 <input
                   type="checkbox"
                   checked={isAnonymous}

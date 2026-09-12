@@ -28,7 +28,7 @@ export default function ScrollControls() {
 
         border border-[var(--muted-gold)]/20
 
-        bg-black/55
+        bg-[var(--surface-2)]
         text-[var(--muted-gold)]
 
         shadow-[var(--shadow-popover)]
@@ -56,7 +56,7 @@ export default function ScrollControls() {
 
         border border-[var(--muted-gold)]/20
 
-        bg-black/55
+        bg-[var(--surface-2)]
         text-[var(--muted-gold)]
 
         shadow-[var(--shadow-popover)]

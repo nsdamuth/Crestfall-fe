@@ -189,7 +189,7 @@ export default function MechanicsJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className={EYEBROW_CLASS}>
                 Status
               </p>

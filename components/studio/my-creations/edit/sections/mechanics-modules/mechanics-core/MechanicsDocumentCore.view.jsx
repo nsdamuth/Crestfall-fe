@@ -48,7 +48,7 @@ export default function MechanicsDocumentCoreView({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+              className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
             >
               <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {label}
@@ -75,7 +75,7 @@ export default function MechanicsDocumentCoreView({
                 className={`rounded-xl border px-4 py-3 text-left transition ${
                   selectedFixtureId === fixture.id
                     ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/20 hover:border-white/20"
+                    : "border-white/10 bg-[var(--surface-2)] hover:border-white/20"
                 }`}
               >
                 <p className="text-sm text-[var(--ink)]">
@@ -109,7 +109,7 @@ export default function MechanicsDocumentCoreView({
                 {Object.entries(domainCounts).map(([label, value]) => (
                   <div
                     key={label}
-                    className="rounded-xl border border-white/10 bg-black/20 px-3 py-3"
+                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-3"
                   >
                     <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                       {label}

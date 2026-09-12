@@ -80,7 +80,7 @@ export default function OutfitPickerModalView({
                   type="button"
                   onClick={() => onChooseItem?.(item?.id)}
                   aria-pressed={Boolean(item?.isSelected)}
-                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--gold-ornament)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     item?.isSelected
                       ? "border-[var(--gold-ornament)]/60"
                       : "border-white/10"

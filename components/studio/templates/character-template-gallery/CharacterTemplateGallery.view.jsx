@@ -19,7 +19,7 @@ export default function CharacterTemplateGalleryView({
         {safeTemplates.map((template, index) => (
           <article
             key={template.id || `${template.title || "template"}-${index}`}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5"
           >
             {template.category ? (
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -56,7 +56,7 @@ export default function CharacterTemplateGalleryView({
         ) : null}
       </div>
 
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         {sidebarEyebrow ? (
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {sidebarEyebrow}

@@ -168,7 +168,7 @@ function ActiveEngineConfiguration({ latest, source }) {
         </span>
       </div>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">Lore scope</p>
         <p className="mt-1 text-sm text-[var(--ink)]">{scopeLabel}</p>
       </div>
@@ -184,7 +184,7 @@ function ActiveEngineConfiguration({ latest, source }) {
               return (
                 <div
                   key={binding.id || `${binding.subjectId}:${binding.scopeType}`}
-                  className="rounded-xl border border-emerald-300/20 bg-black/20 px-4 py-3"
+                  className="rounded-xl border border-emerald-300/20 bg-[var(--surface-2)] px-4 py-3"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 items-start gap-3">
@@ -227,7 +227,7 @@ function ActiveEngineConfiguration({ latest, source }) {
             {locationBindings.map((binding) => (
               <div
                 key={binding.id || `${binding.subjectId}:location`}
-                className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+                className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
               >
                 <MapPin size={17} className="mt-0.5 shrink-0 text-violet-200" />
                 <div>
@@ -459,7 +459,7 @@ function CharacterAccessControls({
       {(scopeType === "ASSET" ||
         (scopeType === "CHAPTER" && access.chapterId) ||
         (scopeType === "SECTION" && access.sectionId)) ? (
-        <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+        <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
           <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
             Explicit exclusions
           </p>
@@ -501,7 +501,7 @@ function CharacterAccessControls({
         </div>
       ) : null}
 
-      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+      <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Knowledge availability
         </p>
@@ -549,7 +549,7 @@ function CharacterAccessControls({
         </p>
       </div>
 
-      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+      <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Story context
         </p>
@@ -640,7 +640,7 @@ function SubmissionHistory({ submissions }) {
         {submissions.slice(0, 5).map((submission) => (
           <div
             key={submission.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <div>
               <p className="text-sm text-[var(--ink)]">
@@ -799,7 +799,7 @@ export default function LoreEngineUseView({
       ) : (
         <>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Source revision
               </p>
@@ -809,7 +809,7 @@ export default function LoreEngineUseView({
                   : "Current Lore draft"}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Characters
               </p>
@@ -817,7 +817,7 @@ export default function LoreEngineUseView({
                 {characterRefs.length}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Locations
               </p>
@@ -959,7 +959,7 @@ export default function LoreEngineUseView({
                     {availableSections.map((section) => (
                       <label
                         key={section.id}
-                        className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+                        className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
                       >
                         <input
                           type="checkbox"

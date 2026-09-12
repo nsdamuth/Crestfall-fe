@@ -134,7 +134,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
   const progressionRequirement = isProgressionCommandRequirementType(requirement.type);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Requirement {requirementIndex + 1}

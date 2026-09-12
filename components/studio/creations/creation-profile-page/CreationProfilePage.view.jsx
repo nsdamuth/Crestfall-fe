@@ -66,7 +66,7 @@ export default function CreationProfilePageView({
 
   return (
     <section className="pb-12">
-      <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-start">
           <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-4xl text-[var(--gold-ornament)]">
             {creation.imageUrl ? (
@@ -324,7 +324,7 @@ function FilterButton({ active, onClick, children }) {
 function MediaTile({ item, actionsSlot, onOpen }) {
   if (item.isLocked) {
     return (
-      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 text-left">
+      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] text-left">
         <button
           type="button"
           onClick={onOpen}
@@ -363,7 +363,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
 
   if (!item.imageUrl) {
     return (
-      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
+      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] text-left">
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
           <div className="text-center">
             {item.type === "VIDEO" ? (
@@ -382,7 +382,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
   }
 
   return (
-    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35">
+    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] text-left transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35">
       <button
         type="button"
         onClick={onOpen}

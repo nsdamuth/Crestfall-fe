@@ -46,7 +46,7 @@ function ActorMechanicsVisibilityTab({ surface, onToggleVisibility }) {
     <button
       type="button"
       onClick={() => onToggleVisibility?.()}
-      className="absolute right-0 top-1/2 z-10 flex h-11 w-10 -translate-y-1/2 items-center justify-center rounded-l-lg border border-r-0 border-[var(--gold-ornament)]/30 bg-black/60 text-[var(--gold-ornament)]/80 shadow-lg transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)] sm:h-10 sm:w-7"
+      className="absolute right-0 top-1/2 z-10 flex h-11 w-10 -translate-y-1/2 items-center justify-center rounded-l-lg border border-r-0 border-[var(--gold-ornament)]/30 bg-[var(--surface-2)] text-[var(--gold-ornament)]/80 shadow-lg transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)] sm:h-10 sm:w-7"
       aria-label={`${action} ${surface.actorTitle} mechanics`}
       title={`${action} character mechanics`}
     >

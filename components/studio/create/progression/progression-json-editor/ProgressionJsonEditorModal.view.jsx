@@ -161,7 +161,7 @@ export default function ProgressionJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               AI Guide
             </p>
@@ -173,7 +173,7 @@ export default function ProgressionJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                 Status
               </p>

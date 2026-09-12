@@ -60,7 +60,7 @@ function FoldableTracker({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -101,7 +101,7 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
   const safePhase = normalizeMechanicsTrackerPhase(phase, phaseIndex);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>Phase {phaseIndex + 1}</p>
         <button
@@ -173,7 +173,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>Mutation Hint {hintIndex + 1}</p>
         <button
@@ -248,7 +248,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
 
 function HintList({ title, values, empty, draft, setDraft, add, placeholder, addLabel, remove }) {
   return (
-    <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className={EYEBROW_CLASS}>{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {values.map((value, index) => (
@@ -349,7 +349,7 @@ function TrackerCard({ entry, handlers }) {
           placeholder="100"
         />
       </div>
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className={EYEBROW_CLASS}>Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
@@ -369,12 +369,12 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             No phases yet. Phases give display labels like Guarded, Curious, or Bare.
           </p>
         )}
       </div>
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className={EYEBROW_CLASS}>Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
@@ -398,7 +398,7 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             No mutation hints yet. Hints let the router map detected events into meter changes.
           </p>
         )}

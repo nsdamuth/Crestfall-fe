@@ -24,7 +24,7 @@ export default function MechanicsCompatibilityBaselineView({
         </p>
         <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {[["Contract", contractVersion], ["Status", status], ["Module", identities?.moduleId], ["Instance Contract", identities?.contractVersion]].map(([label, value]) => (
-            <div key={label} className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div key={label} className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">{label}</p>
               <p className="mt-1 break-words font-mono text-xs text-[var(--ink)]">{value}</p>
             </div>
@@ -37,7 +37,7 @@ export default function MechanicsCompatibilityBaselineView({
           <p className={EYEBROW_CLASS}>Frozen fixtures</p>
           <div className="mt-4 grid gap-2">
             {fixtures.map((fixture) => (
-              <button key={fixture.id} type="button" onClick={() => onSelectFixture(fixture.id)} className={`rounded-xl border px-4 py-3 text-left transition ${selectedFixtureId === fixture.id ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/10" : "border-white/10 bg-black/20 hover:border-white/20"}`}>
+              <button key={fixture.id} type="button" onClick={() => onSelectFixture(fixture.id)} className={`rounded-xl border px-4 py-3 text-left transition ${selectedFixtureId === fixture.id ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/10" : "border-white/10 bg-[var(--surface-2)] hover:border-white/20"}`}>
                 <p className="text-sm text-[var(--ink)]">{fixture.label}</p>
                 <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">{fixture.classification}</p>
               </button>
@@ -64,11 +64,11 @@ export default function MechanicsCompatibilityBaselineView({
       <div className="grid gap-5 xl:grid-cols-2">
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>External repositories</p>
-          <div className="mt-4 grid gap-3">{externalRepositories.map((repo) => <div key={repo.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--ink)]">{repo.id}</p><p className="mt-1 font-mono text-xs text-[var(--ink-dim)]">{repo.environmentVariable}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">{repo.statusWhenUnavailable}</p></div>)}</div>
+          <div className="mt-4 grid gap-3">{externalRepositories.map((repo) => <div key={repo.id} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"><p className="text-sm text-[var(--ink)]">{repo.id}</p><p className="mt-1 font-mono text-xs text-[var(--ink-dim)]">{repo.environmentVariable}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">{repo.statusWhenUnavailable}</p></div>)}</div>
         </div>
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>Deferred cross-tier gates</p>
-          <div className="mt-4 grid gap-3">{deferredDiagnostics.map((item) => <div key={item.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--ink)]">{item.id}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">Requires: {item.requires.join(", ")}</p></div>)}</div>
+          <div className="mt-4 grid gap-3">{deferredDiagnostics.map((item) => <div key={item.id} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"><p className="text-sm text-[var(--ink)]">{item.id}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">Requires: {item.requires.join(", ")}</p></div>)}</div>
         </div>
       </div>
     </section>

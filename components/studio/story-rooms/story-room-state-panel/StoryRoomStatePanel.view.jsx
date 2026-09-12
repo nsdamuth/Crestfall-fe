@@ -90,7 +90,7 @@ function StateCard({ section }) {
   const rows = Array.isArray(section?.rows) ? section.rows : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
       <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         <Icon size={14} />
         {section?.title || "State"}

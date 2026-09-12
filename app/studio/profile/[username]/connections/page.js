@@ -110,7 +110,7 @@ function ConnectionCard({ connection }) {
   const username = connection.username;
 
   return (
-    <article className="rounded-2xl border border-white/10 bg-black/35 p-5 transition hover:border-[var(--muted-gold)]/30">
+    <article className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5 transition hover:border-[var(--muted-gold)]/30">
       <div className="flex flex-wrap items-start gap-4">
         <ProfileAvatar
           displayName={username}

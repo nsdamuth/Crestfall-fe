@@ -65,7 +65,7 @@ function CreationActivityRow({ event, LinkComponent }) {
             href={event.href || "#"}
             className="mt-3 flex gap-3 rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3 transition hover:border-[var(--gold-ornament)]/30 hover:bg-[var(--gold-ornament)]/10"
           >
-            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/45">
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-[var(--surface-2)]">
               {event.imageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

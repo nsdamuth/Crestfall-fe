@@ -80,7 +80,7 @@ export default function ItemStartingAssignmentEditorView({
       {usesCreation ? (
         <div className="mt-4">
           {hasSelectedHolder ? (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/30 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <div>
                 <p className="font-display text-2xl">{selectedHolderTitle}</p>
 
@@ -160,7 +160,7 @@ export default function ItemStartingAssignmentEditorView({
                 placementSteps.map((step) => (
                   <div
                     key={step.id}
-                    className="rounded-xl border border-white/10 bg-black/30 p-3"
+                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]">

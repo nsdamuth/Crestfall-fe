@@ -14,7 +14,7 @@ export default function AbilitySpellProfileBuilderView({
 }) {
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">Create Ability & Spell Profile</p>
         <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Create reusable ability and magic definitions. Actor knowledge, current mastery, cooldowns, charges, and resource balances are intentionally not stored here.</p>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">

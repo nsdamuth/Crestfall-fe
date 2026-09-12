@@ -107,7 +107,7 @@ export default function LocationRegistryBuilderView({
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
       <div className="space-y-5">
         {hideTabs ? null : (
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
             <div className="flex flex-wrap gap-2">
               {tabs.map((tab) => {
                 const Icon = TAB_ICON_BY_KEY[tab.iconKey] || BookOpen;
@@ -133,7 +133,7 @@ export default function LocationRegistryBuilderView({
           </div>
         )}
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
           {currentTab === "overview" ? (
             <OverviewTab
               registry={registry}
@@ -193,7 +193,7 @@ export default function LocationRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
           Registry Summary
         </p>
@@ -412,7 +412,7 @@ function EntriesTab({
           entries.map((entry) => (
             <article
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -507,7 +507,7 @@ function ConnectionsTab({
           connections.map((connection) => (
             <article
               key={connection.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -611,7 +611,7 @@ function PresenceTab({
           bindings.map((binding) => (
             <article
               key={binding.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -696,7 +696,7 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
           weatherScopes.map((scope) => (
             <article
               key={scope.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -1683,7 +1683,7 @@ function SmallDangerAction({ onClick }) {
 
 function SummaryPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase [font-weight:var(--weight-medium)] text-[var(--gold-bright)]">
         {label}
       </p>

@@ -28,7 +28,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
         {issues.map((item, index) => (
           <div
             key={`${item?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-lg border border-white/10 bg-[var(--surface-2)] px-3 py-2"
           >
             <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {item?.path || "$"}
@@ -153,7 +153,7 @@ export default function VideoDirectorJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Asset Authority
             </p>
@@ -164,7 +164,7 @@ export default function VideoDirectorJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               AI Guide
             </p>
@@ -176,7 +176,7 @@ export default function VideoDirectorJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
                 Status
               </p>

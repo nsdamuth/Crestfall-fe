@@ -11,7 +11,7 @@ export default function SelectedCharactersPanelView({
   const safeCharacters = Array.isArray(characters) ? characters : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">

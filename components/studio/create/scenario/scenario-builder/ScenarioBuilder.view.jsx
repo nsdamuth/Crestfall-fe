@@ -27,7 +27,7 @@ export default function ScenarioBuilderView({
   return (
     <>
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Scenario Builder
         </p>
@@ -330,7 +330,7 @@ export default function ScenarioBuilderView({
 
 function BuilderSection({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -346,7 +346,7 @@ function BuilderSection({ eyebrow, title, body, children }) {
 
 function StoryCircleCard({ step, value, onChange }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr]">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -460,7 +460,7 @@ function ReferenceSelectorField({
 
 function SelectedReferenceChip({ item, onRemove }) {
   return (
-    <article className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/30 p-3">
+    <article className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
         {item.imageUrl ? (
           <img

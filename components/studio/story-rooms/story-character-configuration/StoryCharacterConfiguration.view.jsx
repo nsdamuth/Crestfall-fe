@@ -21,7 +21,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
             const configuration = profile.configuration || {};
             const pointBudget = String(configuration.mode || "").toUpperCase() === "POINT_BUDGET";
             return (
-              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">{profile.profileTitle || profile.bindingTitle}</p>
@@ -119,7 +119,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
             const configuration = profile.configuration || {};
             const slotsMode = String(configuration.mode || "").toUpperCase() === "SLOTS";
             return (
-              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">
@@ -375,7 +375,7 @@ function RoomLocalAbilitySpellAuthoring({
           const definitions = group.authoredDefinitions || [];
           const canAdd = definitions.length < Number(group.maximumDefinitions || 0);
           return (
-            <div key={group.id} className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <div key={group.id} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-[var(--foreground)]">{group.title}</p>
@@ -611,7 +611,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
             const configuration = profile.configuration || {};
             const groupsMode = String(configuration.mode || "").toUpperCase() === "GROUPS";
             return (
-              <div key={profile.profileId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.profileId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">
@@ -662,7 +662,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
                                 className={`flex cursor-pointer gap-3 rounded-lg border px-3 py-2 text-sm ${
                                   selected
                                     ? "border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10"
-                                    : "border-white/10 bg-black/20"
+                                    : "border-white/10 bg-[var(--surface-2)]"
                                 } ${atMaximum ? "cursor-not-allowed opacity-50" : ""}`}
                               >
                                 <input

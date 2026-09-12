@@ -74,7 +74,7 @@ export default function MechanicsPresetValidationPanelView({
           </div>
 
           {testCommand ? (
-            <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className={EYEBROW_CLASS}>
@@ -100,7 +100,7 @@ export default function MechanicsPresetValidationPanelView({
           ) : null}
 
           {steps.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className={EYEBROW_CLASS_INLINE}>
                 <Route size={14} />
                 Live Validation Steps
@@ -124,7 +124,7 @@ export default function MechanicsPresetValidationPanelView({
 
         <aside className="grid content-start gap-4">
           {checks.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className={EYEBROW_CLASS_INLINE}>
                 <CheckCircle2 size={14} />
                 Expected Checks

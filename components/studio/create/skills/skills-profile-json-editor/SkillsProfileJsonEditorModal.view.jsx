@@ -51,7 +51,7 @@ function ToolbarButton({ icon: Icon, children, onClick, disabled = false }) {
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
     >
       <Icon size={13} />
       {children}
@@ -194,7 +194,7 @@ export default function SkillsProfileJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
               AI Guide
             </p>
@@ -206,7 +206,7 @@ export default function SkillsProfileJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
                 Status
               </p>

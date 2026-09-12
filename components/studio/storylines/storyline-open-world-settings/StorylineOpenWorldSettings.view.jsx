@@ -54,7 +54,7 @@ export default function StorylineOpenWorldSettingsView({
           </p>
         </label>
 
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {continuityEyebrow}
           </p>

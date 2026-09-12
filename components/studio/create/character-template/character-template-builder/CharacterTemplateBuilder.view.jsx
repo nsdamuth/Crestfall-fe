@@ -54,7 +54,7 @@ export default function CharacterTemplateBuilderView({
         onReset={onReset}
       />
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -74,7 +74,7 @@ export default function CharacterTemplateBuilderView({
           {browseTemplatesContent}
         </div>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -109,8 +109,8 @@ export default function CharacterTemplateBuilderView({
                     step.active
                       ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
                       : step.visited
-                        ? "border-[var(--gold-ornament)]/25 bg-black/35 text-[var(--gold-ornament)]"
-                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
+                        ? "border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] text-[var(--gold-ornament)]"
+                        : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
                   }`}
                 >
                   <Icon size={16} />
@@ -179,7 +179,7 @@ function CharacterTemplateSummary({
   onReset,
 }) {
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6 xl:sticky xl:top-24">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6 xl:sticky xl:top-24">
       <div className="aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-gradient-to-br from-black via-black/70 to-[var(--gold-ornament)]/10">
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
@@ -226,7 +226,7 @@ function CharacterTemplateSummary({
 
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>

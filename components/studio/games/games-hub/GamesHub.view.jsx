@@ -143,7 +143,7 @@ export default function GamesHubView({
                     type="button"
                     onClick={() => onGameAction?.(game)}
                     disabled={startingGameId === game.id}
-                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
+                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-3 text-left disabled:cursor-wait disabled:opacity-60"
                   >
                     <p className="font-display text-2xl">{game.title}</p>
                     <p className="mt-1 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -188,7 +188,7 @@ export default function GamesHubView({
       ) : null}
 
       {loading ? (
-        <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-8 text-center md:mt-6">
+        <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-8 text-center md:mt-6">
           <Sparkles className="mx-auto text-[var(--gold-ornament)]" size={28} />
           <p className="mt-4 font-display text-3xl">Loading Games</p>
           <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
@@ -299,7 +299,7 @@ function MobileGamesDrawer({
           </div>
 
           {continueGames.length ? (
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Continue
               </p>
@@ -310,7 +310,7 @@ function MobileGamesDrawer({
                     key={game.id}
                     type="button"
                     onClick={() => onGameAction?.(game)}
-                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/35"
+                    className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-left transition hover:border-[var(--gold-ornament)]/35"
                   >
                     <p className="truncate font-display text-xl">
                       {game.title}
@@ -325,7 +325,7 @@ function MobileGamesDrawer({
           ) : null}
 
           {featuredGames.length ? (
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Featured Starts
               </p>
@@ -337,7 +337,7 @@ function MobileGamesDrawer({
                   type="button"
                   onClick={() => onGameAction?.(game)}
                   disabled={startingGameId === game.id}
-                  className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3 text-left disabled:cursor-wait disabled:opacity-60"
+                  className="block w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-3 text-left disabled:cursor-wait disabled:opacity-60"
                 >
                     <p className="truncate font-display text-xl">
                       {game.title}
@@ -358,7 +358,7 @@ function MobileGamesDrawer({
 
 function GameList({ games, onPlay, startingGameId }) {
   return (
-    <div className="mt-3 overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/30 md:mt-6">
+    <div className="mt-3 overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] md:mt-6">
       {games.map((game, index) => (
         <GameListRow
           key={game.id}
@@ -663,7 +663,7 @@ function PillButton({ active, onClick, children }) {
 
 function EmptyGamesState() {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center xl:col-span-2">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-2)] p-8 text-center xl:col-span-2">
       <Gamepad2 className="mx-auto text-[var(--gold-ornament)]" size={32} />
 
       <p className="mt-4 font-display text-3xl">No games found</p>

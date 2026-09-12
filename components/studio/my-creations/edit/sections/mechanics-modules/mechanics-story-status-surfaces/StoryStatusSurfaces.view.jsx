@@ -92,7 +92,7 @@ function ReadoutCard({
   const dataListId = `story-status-mechanics-${surfaceIndex}-${readoutIndex}`;
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -355,7 +355,7 @@ function SurfaceCard({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -468,7 +468,7 @@ function SurfaceCard({
             </label>
           </div>
 
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -501,7 +501,7 @@ function SurfaceCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--muted)]">
                 No readouts yet. Add a value from this Mechanics Module, Stats & Pools, Progression, or Wallet.
               </p>
             )}
@@ -526,7 +526,7 @@ export default function StoryStatusSurfacesView({
   moveReadout,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">

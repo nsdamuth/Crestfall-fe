@@ -62,7 +62,7 @@ function formatDate(value) {
 
 function StatusPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -96,7 +96,7 @@ function ReadinessCheck({ check }) {
       : "text-[var(--ink-dim)]";
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <Icon size={18} className={`mt-0.5 shrink-0 ${iconClass}`} />
       <div>
         <div className="flex flex-wrap items-center gap-2">
@@ -140,7 +140,7 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
         {issues.map((item, index) => (
           <div
             key={`${item.code}-${item.path}-${index}`}
-            className="rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <p className="text-sm text-[var(--ink)]">{item.message}</p>
             <p className="mt-1 break-all font-mono text-[10px] text-[var(--ink-dim)]">
@@ -194,7 +194,7 @@ function ValidationHistory({ submissions = [] }) {
         {submissions.slice(0, 5).map((submission) => (
           <div
             key={submission.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <div>
               <p className="text-sm text-[var(--ink)]">
@@ -447,7 +447,7 @@ function PublicReleasePanel({
       </div>
 
       {activePublication ? (
-        <div className="mt-5 rounded-xl border border-emerald-300/20 bg-black/20 p-4">
+        <div className="mt-5 rounded-xl border border-emerald-300/20 bg-[var(--surface-2)] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
@@ -469,7 +469,7 @@ function PublicReleasePanel({
       )}
 
       {publishableValidation ? (
-        <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+        <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Ready to publish
           </p>

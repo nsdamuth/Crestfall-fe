@@ -104,7 +104,7 @@ export default function SaveIngredientPresetModalView({
           </label>
 
           {helperText ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-xs leading-5 text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-xs leading-5 text-[var(--ink-dim)]">
               {helperText}
             </div>
           ) : null}

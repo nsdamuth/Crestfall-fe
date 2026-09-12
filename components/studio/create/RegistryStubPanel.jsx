@@ -8,7 +8,7 @@ export default function RegistryStubPanel({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[1fr_360px]">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Builder Planned
         </p>
@@ -23,7 +23,7 @@ export default function RegistryStubPanel({
           {plannedTabs.map((tab) => (
             <article
               key={tab.title}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                 {tab.eyebrow}
@@ -37,7 +37,7 @@ export default function RegistryStubPanel({
         </div>
       </div>
 
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
@@ -72,7 +72,7 @@ export default function RegistryStubPanel({
 
 function SummaryPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>

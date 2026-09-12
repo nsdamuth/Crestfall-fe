@@ -63,7 +63,7 @@ export default function WardrobeBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -116,7 +116,7 @@ export default function WardrobeBuilderView({
                 className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                   tab.active
                     ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                    : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 }`}
               >
                 <Icon size={14} />
@@ -172,7 +172,7 @@ export default function WardrobeBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -303,7 +303,7 @@ function EntriesTab({
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
                       ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                      : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">

@@ -361,7 +361,7 @@ export default function MechanicsPresetApplicationModalView({
             ))}
 
             {!presetFolders.length ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+              <p className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-sm text-[var(--ink-dim)]">
                 No presets match the current filter.
               </p>
             ) : null}
@@ -446,7 +446,7 @@ export default function MechanicsPresetApplicationModalView({
                   />
                 ) : null}
 
-                <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                   <p className={EYEBROW_CLASS}>
                     Application Mode
                   </p>
@@ -521,7 +521,7 @@ export default function MechanicsPresetApplicationModalView({
               </section>
 
               <aside className="grid content-start gap-4">
-                <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                   <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
                     <ShieldCheck size={14} />
                     Atomic Compliance
@@ -532,7 +532,7 @@ export default function MechanicsPresetApplicationModalView({
                 </section>
 
                 {selectedPreset.replacementPaths.length ? (
-                  <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                  <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <p className={EYEBROW_CLASS}>
                       Declared Boundary
                     </p>
@@ -572,7 +572,7 @@ export default function MechanicsPresetApplicationModalView({
                 ) : null}
 
                 {statusMessage ? (
-                  <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                  <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <p className="text-xs leading-5 text-[var(--ink-dim)]">
                       {statusMessage}
                     </p>

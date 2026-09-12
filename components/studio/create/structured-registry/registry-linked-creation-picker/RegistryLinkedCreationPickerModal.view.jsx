@@ -80,7 +80,7 @@ export default function RegistryLinkedCreationPickerModalView({
                   type="button"
                   onClick={() => onChooseCreation?.(creation?.id)}
                   aria-pressed={Boolean(creation?.isSelected)}
-                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--gold-ornament)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     creation?.isSelected
                       ? "border-[var(--gold-ornament)]/60"
                       : "border-white/10"

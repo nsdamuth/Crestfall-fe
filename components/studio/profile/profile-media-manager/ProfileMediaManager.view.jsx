@@ -38,7 +38,7 @@ export default function ProfileMediaManagerView({
       ) : null}
 
       <div className="mt-5 grid gap-4">
-        <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <ProfileAvatarView
             displayName={displayName}
             avatarUrl={avatarUrl}
@@ -63,7 +63,7 @@ export default function ProfileMediaManagerView({
           </button>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <ProfileBannerView
             bannerUrl={bannerUrl}
             title={bannerTitle}

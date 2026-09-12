@@ -108,7 +108,7 @@ export default function StoryOpeningLocationAuthoringView({
               {safeAllowedLocations.map((location) => (
                 <div
                   key={location.id}
-                  className="flex items-start justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-black/20 p-4"
+                  className="flex items-start justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-4"
                 >
                   <div className="min-w-0">
                     <p className="truncate font-display text-xl text-[var(--ink)]">

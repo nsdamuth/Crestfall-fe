@@ -129,7 +129,7 @@ export default function AdvancedPromptingEditorView({
         </div>
       ) : null}
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-xs">
         <div className="flex items-center gap-2">
           <ShieldCheck size={15} className="text-[var(--gold-ornament)]" />
           <span className="uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
@@ -162,7 +162,7 @@ export default function AdvancedPromptingEditorView({
             return (
               <article
                 key={section.id}
-                className="min-w-0 max-w-full rounded-xl border border-white/10 bg-black/25"
+                className="min-w-0 max-w-full rounded-xl border border-white/10 bg-[var(--surface-2)]"
               >
                 <button
                   type="button"

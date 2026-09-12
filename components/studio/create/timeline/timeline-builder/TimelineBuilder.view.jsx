@@ -33,7 +33,7 @@ function Field({ label, help = "", children }) {
 
 function ToggleRow({ label, description, checked, onChange }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-black/25 p-4">
+    <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <span className="min-w-0">
         <span className="block text-sm font-medium text-[var(--ink)]">{label}</span>
         <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
@@ -60,7 +60,7 @@ function EntryRow({
   const chronology = entry.displayDate || entry.era || "Undated / unplaced";
 
   return (
-    <article className="rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
+    <article className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
         <div className="flex min-w-0 flex-1 gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-xs font-semibold text-[var(--gold-bright)]">
@@ -132,7 +132,7 @@ function EntryRow({
 
 function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
   return (
-    <article className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-4 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-end">
+    <article className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-end">
       <label className="block">
         <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
           Order
@@ -206,7 +206,7 @@ export default function TimelineBuilderView({
 }) {
   if (loadStatus === "loading") {
     return (
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-sm text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-8 text-sm text-[var(--ink-dim)]">
         Loading Timeline…
       </div>
     );
@@ -232,7 +232,7 @@ export default function TimelineBuilderView({
       </div>
 
       <section className="grid gap-6 xl:grid-cols-[0.32fr_1fr]">
-        <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <ListOrdered size={18} />
             <p className="text-xs uppercase tracking-[0.18em]">
@@ -275,7 +275,7 @@ export default function TimelineBuilderView({
         </aside>
 
         <div className="space-y-6">
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
               <Globe2 size={17} />
               <p className="text-xs uppercase tracking-[0.18em]">Timeline Identity</p>
@@ -350,7 +350,7 @@ export default function TimelineBuilderView({
             </div>
           </section>
 
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -385,7 +385,7 @@ export default function TimelineBuilderView({
             )}
           </section>
 
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">

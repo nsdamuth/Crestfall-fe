@@ -98,7 +98,7 @@ function CreationPickerCard({ item, selected, disabled, recommended, onSelect })
       className={`overflow-hidden rounded-xl border text-left transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
         selected
           ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
-          : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
+          : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
       }`}
     >
       <div className="aspect-[4/3] bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">

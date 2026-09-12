@@ -31,7 +31,7 @@ export default function SkillsProfileBuilderView({
 }) {
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
           Create Skills Profile
         </p>

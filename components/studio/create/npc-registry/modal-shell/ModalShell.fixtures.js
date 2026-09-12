@@ -24,7 +24,7 @@ const longBody = (
     {Array.from({ length: 10 }, (_, index) => (
       <article
         key={index}
-        className="rounded-xl border border-white/10 bg-black/25 p-4"
+        className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
       >
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
           Registry Section {index + 1}
@@ -54,7 +54,7 @@ export const npcRegistryModalShellFixtures = [
     props: {
       title: "Relationship Rule",
       children: (
-        <div className="rounded-xl border border-white/10 bg-black/25 p-5">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-5">
           <p className="text-sm leading-6 text-[var(--ink-dim)]">
             Define the source NPC, target NPC, relationship type, and private
             notes inside the modal content area.

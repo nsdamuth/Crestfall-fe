@@ -13,7 +13,7 @@ const EYEBROW_CLASS =
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
       <p className={EYEBROW_CLASS}>{eyebrow}</p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
       <div className="mt-6">{children}</div>
@@ -66,7 +66,7 @@ export default function MechanicsModuleBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.38fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className={EYEBROW_CLASS}>Mechanics Module Builder</p>
 
         <h2 className="mt-2 font-display text-4xl">

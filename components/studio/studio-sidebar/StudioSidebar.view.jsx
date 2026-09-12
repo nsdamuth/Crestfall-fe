@@ -489,7 +489,7 @@ function SidebarInternalLink({
         }
         ${
           link.variant === "return"
-            ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
+            ? "border-[color:var(--gold-ornament)]/15 bg-[var(--surface-2)] text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
             : "text-[color:var(--ink-faint)]"
         }
         ${collapsed ? "justify-center px-2" : ""}

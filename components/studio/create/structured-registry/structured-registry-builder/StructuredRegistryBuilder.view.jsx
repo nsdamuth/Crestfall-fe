@@ -68,7 +68,7 @@ export default function StructuredRegistryBuilderView({
 }) {
   return (
     <section className="space-y-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <SectionTitle
             eyebrow={config.eyebrow}
@@ -134,7 +134,7 @@ export default function StructuredRegistryBuilderView({
                   className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                     tab.active
                       ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                      : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                      : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                   }`}
                 >
                   <Icon size={14} />
@@ -213,7 +213,7 @@ export default function StructuredRegistryBuilderView({
 
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
         {eyebrow}
       </p>
@@ -331,7 +331,7 @@ function EntriesTab({
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
                       ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                      : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">
@@ -516,7 +516,7 @@ function EntryRelationshipFields({
   onLinkedCreationNotesChange,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
       <p className="font-display text-2xl">
         {entry.name || `Untitled ${config.entryLabel}`}
       </p>
@@ -560,7 +560,7 @@ function LinkedCreationGroup({
   const links = Array.isArray(entry?.[group.id]) ? entry[group.id] : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -612,8 +612,8 @@ function LinkedCreationGroup({
 
 function LinkedCreationCard({ link, onRemove, onNotesChange }) {
   return (
-    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
-      <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)]">
+      <div className="flex items-center gap-3 border-b border-white/10 bg-[var(--surface-2)] p-3">
         {link.imageUrl ? (
           <div
             className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)] bg-cover bg-center"
@@ -676,7 +676,7 @@ function RulesTab({ config, entries, onUpdateEntry }) {
           entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || `Untitled ${config.entryLabel}`}
@@ -821,7 +821,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
 
   return (
     <section className="mt-5 border-t border-white/10 pt-5">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-4">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Rewards · Optional
@@ -862,7 +862,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
                 {monetaryRewards.map((reward, index) => (
                   <div
                     key={`monetary-${index}`}
-                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.8fr)_minmax(0,2fr)_auto]"
+                    className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.8fr)_minmax(0,2fr)_auto]"
                   >
                     <Field label="Amount">
                       <TextInput
@@ -953,7 +953,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
                 {itemRewards.map((reward, index) => (
                   <div
                     key={`item-${index}`}
-                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.55fr)_minmax(0,2fr)_auto]"
+                    className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.55fr)_minmax(0,2fr)_auto]"
                   >
                     <Field label="Item / reward name">
                       <TextInput
@@ -1035,7 +1035,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
                 {progressionRewards.map((reward, index) => (
                   <div
                     key={`progression-${index}`}
-                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.65fr)_minmax(0,0.65fr)_minmax(0,1.7fr)_auto]"
+                    className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.65fr)_minmax(0,0.65fr)_minmax(0,1.7fr)_auto]"
                   >
                     <Field label="Reward type">
                       <TextInput
@@ -1142,7 +1142,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
                 {otherRewards.map((reward, index) => (
                   <div
                     key={`other-${index}`}
-                    className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_auto]"
+                    className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1.5fr)_auto]"
                   >
                     <Field label="Reward">
                       <TextInput
@@ -1256,7 +1256,7 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
       body="This is the current structured registry payload saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
           <dl className="space-y-3 text-sm">
             <div>
               <dt className="text-[var(--ink-dim)]">Registry</dt>

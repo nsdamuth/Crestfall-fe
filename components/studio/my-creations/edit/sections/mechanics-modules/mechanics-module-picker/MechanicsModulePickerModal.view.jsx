@@ -201,7 +201,7 @@ export default function MechanicsModulePickerModalView({
 
         <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {loadStatus === "loading" ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-5 text-sm text-[var(--ink-dim)]">
               Loading mechanics modules...
             </div>
           ) : null}
@@ -225,7 +225,7 @@ export default function MechanicsModulePickerModalView({
           ) : null}
 
           {loadStatus === "loaded" && !visibleItems.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-5 text-sm leading-6 text-[var(--ink-dim)]">
               {activeSource?.emptyMessage ||
                 "No available mechanics modules found for this tab."}
             </div>

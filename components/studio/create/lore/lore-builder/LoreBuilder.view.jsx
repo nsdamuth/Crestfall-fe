@@ -68,8 +68,8 @@ export default function LoreBuilderView({
         </div>
 
         <div className="mt-5 grid gap-3 text-sm md:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Errors</p><p className="mt-2 text-lg">{errorCount}</p></div>
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Errors</p><p className="mt-2 text-lg">{errorCount}</p></div>
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"><p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p><p className="mt-2 text-lg">{warningCount}</p></div>
         </div>
 
         <button type="button" onClick={() => onSave?.()} disabled={saveDisabled} className="cf-btn cf-btn--primary mt-6 w-full">

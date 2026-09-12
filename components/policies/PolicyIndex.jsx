@@ -23,7 +23,7 @@ export default function PolicyIndex() {
           <Link
             key={policy.slug}
             href={`/terms/${policy.slug}`}
-            className="group rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10"
+            className="group rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/40 hover:bg-[var(--gold-ornament)]/10"
           >
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
               <FileText size={14} />

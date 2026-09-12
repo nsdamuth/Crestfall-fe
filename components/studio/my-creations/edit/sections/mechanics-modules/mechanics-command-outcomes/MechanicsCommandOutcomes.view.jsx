@@ -48,7 +48,7 @@ export default function MechanicsCommandOutcomesView({
           return (
             <div
               key={outcome}
-              className="rounded-xl border border-white/10 bg-black/30 p-4"
+              className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -124,7 +124,7 @@ export default function MechanicsCommandOutcomesView({
                     ) : (
                       <pre
                         key={effect.id || effectIndex}
-                        className="overflow-auto rounded-xl border border-white/10 bg-black/35 p-4 text-xs text-[var(--ink-dim)]"
+                        className="overflow-auto rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-xs text-[var(--ink-dim)]"
                       >
                         {JSON.stringify(effect, null, 2)}
                       </pre>

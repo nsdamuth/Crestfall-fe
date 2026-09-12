@@ -26,7 +26,7 @@ export default function OfficialCharactersGridView({
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/35 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-[var(--surface-2)] p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {searchEyebrow}

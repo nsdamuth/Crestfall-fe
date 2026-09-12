@@ -17,7 +17,7 @@ export default function NarratorModuleSelectorView({
   onSelectModule = null,
 } = {}) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <section className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       {sectionEyebrow ? (
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {sectionEyebrow}
@@ -34,7 +34,7 @@ export default function NarratorModuleSelectorView({
         </p>
       ) : null}
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/35 p-5">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
         {responseEyebrow ? (
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {responseEyebrow}
@@ -82,7 +82,7 @@ export default function NarratorModuleSelectorView({
                       className={`rounded-xl border p-4 text-left transition ${
                         option?.active
                           ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                          : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                          : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                       }`}
                     >
                       <p className="text-sm font-medium">
@@ -128,7 +128,7 @@ export default function NarratorModuleSelectorView({
                   className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
                     option?.active
                       ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                      : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                      : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                   }`}
                 >
                   {option?.title || "Limit"}
@@ -171,7 +171,7 @@ export default function NarratorModuleSelectorView({
                     className={`rounded-xl border p-4 text-left transition ${
                       module?.active
                         ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                        : "border-white/10 bg-black/35 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                        : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                     }`}
                   >
                     <p className="text-sm font-medium">

@@ -149,7 +149,7 @@ export default function RulesCodexEditorView({
     : [];
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -187,7 +187,7 @@ export default function RulesCodexEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Codex Enabled" : "Enable Codex"}
@@ -252,7 +252,7 @@ export default function RulesCodexEditorView({
           />
         </div>
 
-        <aside className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <aside className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
             Selection Budget
           </p>
@@ -506,7 +506,7 @@ export default function RulesCodexEditorView({
                             className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm transition ${
                               section.enabled
                                 ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
-                                : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
                             }`}
                           >
                             {section.enabled ? "Enabled" : "Disabled"}

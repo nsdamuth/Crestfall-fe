@@ -86,7 +86,7 @@ export default function WalletProfileEditorView({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -148,7 +148,7 @@ export default function WalletProfileEditorView({
 
       <ValidationPanel errors={errors} warnings={warnings} />
 
-      <section className="rounded-2xl border border-white/10 bg-black/30 p-5">
+      <section className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">

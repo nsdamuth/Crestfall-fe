@@ -100,7 +100,7 @@ export default function StorylineReferencePickerModalView({
                   type="button"
                   disabled={item.isSelected}
                   onClick={() => onSelectItem?.(item.id)}
-                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--gold-ornament)]/40 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-left transition hover:border-[var(--gold-ornament)]/40 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   <div className="flex items-start gap-3">
                     <BookOpen

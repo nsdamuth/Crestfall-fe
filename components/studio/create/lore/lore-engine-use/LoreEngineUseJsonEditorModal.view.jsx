@@ -27,7 +27,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
         {issues.map((issue, index) => (
           <div
             key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-lg border border-white/10 bg-[var(--surface-2)] px-3 py-2"
           >
             <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {issue?.path || "$"}

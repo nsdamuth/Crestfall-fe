@@ -39,7 +39,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
         </button>
       </div>
 
-      <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-5">
+      <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <BookOpen
             size={18}
@@ -81,7 +81,7 @@ function RulesCodexAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-center gap-3 border-b border-white/10 bg-[var(--surface-1)] p-3">
         {attachment?.imageUrl ? (
           <div

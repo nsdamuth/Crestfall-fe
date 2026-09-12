@@ -204,7 +204,7 @@ export default function RuntimeMechanicsModulesSection({
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-[var(--gold-ornament)]">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 text-[var(--gold-ornament)]">
             <Activity size={18} />
           </div>
         </div>
@@ -255,7 +255,7 @@ export default function RuntimeMechanicsModulesSection({
                 return (
                   <div
                     key={moduleCreationId || binding.moduleInstanceTitle}
-                    className="rounded-xl border border-white/10 bg-black/25 p-4"
+                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
@@ -314,7 +314,7 @@ export default function RuntimeMechanicsModulesSection({
                                 : 65,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition"
+                          className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-[var(--ink)] transition"
                         />
                       </label>
 

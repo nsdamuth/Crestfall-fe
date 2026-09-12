@@ -40,7 +40,7 @@ export default function StorylinesHubView({
       </div>
 
       {showLoading ? (
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm text-[var(--ink-dim)]">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-6 text-sm text-[var(--ink-dim)]">
           {loadingMessage}
         </div>
       ) : null}
@@ -67,7 +67,7 @@ export default function StorylinesHubView({
             <InternalLinkComponent
               key={card.id}
               href={card.href}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--gold-ornament)]/35"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 transition hover:border-[var(--gold-ornament)]/35"
             >
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {card.eyebrow}

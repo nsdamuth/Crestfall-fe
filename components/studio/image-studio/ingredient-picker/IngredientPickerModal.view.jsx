@@ -137,7 +137,7 @@ export default function IngredientPickerModalView({
                   <button
                     type="button"
                     onClick={() => onCreatePreset?.()}
-                    className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
+                    className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-left transition hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
                   >
                     <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                       <Plus size={14} />

@@ -447,7 +447,7 @@ function MobileDrawerInternalLink({
         cf-nav-link flex min-h-[var(--control-filter)] items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-2 text-[length:var(--text-label)] font-[var(--weight-regular)] leading-[var(--lh-label)] tracking-[var(--track-normal)] transition [@media(pointer:coarse)]:min-h-[var(--control-md)]
         ${
           link.variant === "return"
-            ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
+            ? "border-[color:var(--gold-ornament)]/15 bg-[var(--surface-2)] text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
             : link.isActive
               ? "border-[color:var(--gold-ornament)]/25 border-l-2 border-l-[var(--gold-action)] bg-[color-mix(in_srgb,var(--gold-ornament)_8%,transparent)] text-[color:var(--ink)]"
               : "border-transparent text-[color:var(--ink-faint)] hover:bg-[color-mix(in_srgb,var(--gold-ornament)_5%,transparent)] hover:text-[color:var(--ink)]"

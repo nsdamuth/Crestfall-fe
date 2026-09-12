@@ -36,7 +36,7 @@ export default function VideoToolsPanelView({
         {toolCards.map((tool) => (
           <article
             key={tool.id}
-            className="rounded-xl border border-white/10 bg-black/25 p-4"
+            className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
           >
             <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               {tool.eyebrow}

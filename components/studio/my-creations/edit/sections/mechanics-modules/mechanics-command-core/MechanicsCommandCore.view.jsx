@@ -270,7 +270,7 @@ export function MechanicsCommandArgumentsView({ model }) {
       {model.invocation.arguments.map((argument, argumentIndex) => (
         <div
           key={`${argument.name}-${argumentIndex}`}
-          className="rounded-xl border border-white/10 bg-black/35 p-4"
+          className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
         >
           <div className="flex items-center justify-between gap-3">
             <p className={EYEBROW_CLASS}>
@@ -436,7 +436,7 @@ export function MechanicsCommandTriggersView({ model }) {
   }
 
   return (
-    <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className={EYEBROW_CLASS}>
         Triggers
       </p>

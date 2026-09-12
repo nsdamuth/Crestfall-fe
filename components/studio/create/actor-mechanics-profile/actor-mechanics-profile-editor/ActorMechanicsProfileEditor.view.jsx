@@ -224,7 +224,7 @@ export default function ActorMechanicsProfileEditorView({
   const beyondScale = capabilityMode === "BEYOND_SCALE";
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -262,7 +262,7 @@ export default function ActorMechanicsProfileEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -681,7 +681,7 @@ export default function ActorMechanicsProfileEditorView({
                           Required
                         </span>
                       ) : null}
-                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-white/10 bg-black/30 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-white/10 bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                         {humanize(binding.activationMode)}
                       </span>
                     </div>
@@ -703,7 +703,7 @@ export default function ActorMechanicsProfileEditorView({
                     className={`rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition ${
                       binding.enabled
                         ? "border-[var(--status-success-border)] bg-[var(--status-success-bed)] text-[var(--status-success)]"
-                        : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
+                        : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
                     }`}
                   >
                     {binding.enabled ? "Enabled" : "Disabled"}

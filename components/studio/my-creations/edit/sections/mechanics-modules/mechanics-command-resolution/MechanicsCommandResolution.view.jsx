@@ -64,7 +64,7 @@ function ModifierList({
   onRemove,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -86,7 +86,7 @@ function ModifierList({
           {modifiers.map((modifier, modifierIndex) => (
             <div
               key={modifier.id || modifierIndex}
-              className="rounded-xl border border-white/10 bg-black/35 p-4"
+              className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <p className={EYEBROW_CLASS}>
@@ -166,7 +166,7 @@ function ModifierSourceCard({
     targetProperty && isBooleanTargetProperty(source.property);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex items-center justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Authoritative Source {sourceIndex + 1}
@@ -433,7 +433,7 @@ function ModifierSourceList({
   onRemove,
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -570,7 +570,7 @@ export default function MechanicsCommandResolutionView({
 
       {isRolling ? (
         <div className="mt-4 grid gap-4">
-          <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className={EYEBROW_CLASS}>
               Actor Check
             </p>
@@ -781,7 +781,7 @@ export default function MechanicsCommandResolutionView({
             </div>
           ) : null}
 
-          <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <CheckboxField
               label="Enable degree-of-success margin bands"
               checked={resolution.degreeOfSuccess?.enabled === true}

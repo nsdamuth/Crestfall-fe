@@ -31,7 +31,7 @@ export default function StoryRoomNpcParticipantManagerView({
   const safeSections = Array.isArray(sections) ? sections : [];
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)]">
       <button
         type="button"
         onClick={() => onTogglePanel?.()}
@@ -91,7 +91,7 @@ function NpcSection({ section, onActivateNpc }) {
           entries.map((entry) => (
             <article
               key={entry.actionId}
-              className="rounded-lg border border-white/10 bg-black/30 p-3"
+              className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3"
             >
               <div className="flex gap-3">
                 <NpcAvatar entry={entry} />

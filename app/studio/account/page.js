@@ -62,7 +62,7 @@ export default async function AccountPage() {
               <Link
                 key={row.title}
                 href={row.href}
-                className="group rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/25 p-5 transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10"
+                className="group rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5 transition hover:border-[var(--muted-gold)]/55 hover:bg-[var(--muted-gold)]/10"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>

@@ -392,7 +392,7 @@ function MobileComposer({
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold tracking-[0.08em] transition ${
                   selectedResponderIsInOverflow
                     ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
-                    : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                    : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
                 }`}
               >
                 3+
@@ -404,7 +404,7 @@ function MobileComposer({
             <button
               type="button"
               disabled
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/35 text-pink-300 opacity-70"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-2)] text-pink-300 opacity-70"
               title="Generate scene image soon"
               aria-label="Generate scene image soon"
             >
@@ -417,7 +417,7 @@ function MobileComposer({
               className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
                 toolsOpen
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                  : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
               }`}
               title="Open tools"
               aria-label="Open tools"
@@ -512,7 +512,7 @@ function MobileResponderPicker({ options = [], selectedId = "", onSelect, onClos
                     className="h-11 w-11 shrink-0 rounded-full border border-white/10 object-cover"
                   />
                 ) : (
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/40 font-display text-[var(--gold-ornament)]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[var(--surface-2)] font-display text-[var(--gold-ornament)]">
                     {String(option.label || "?").charAt(0).toUpperCase()}
                   </span>
                 )}
@@ -827,7 +827,7 @@ function ParticipantMentionTextarea({
                   className="h-8 w-8 rounded-full border border-white/10 object-cover"
                 />
               ) : (
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/40 text-xs text-[var(--gold-ornament)]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-[var(--surface-2)] text-xs text-[var(--gold-ornament)]">
                   {String(option.label || "?").charAt(0).toUpperCase()}
                 </span>
               )}
@@ -875,8 +875,8 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
           active
             ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
             : desktop
-              ? "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/45 hover:text-[var(--ink)]"
-              : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+              ? "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/45 hover:text-[var(--ink)]"
+              : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
         }`}
       >
         {isParticipant ? (
@@ -887,7 +887,7 @@ function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = fal
               className="h-full w-full object-cover"
             />
           ) : (
-            <span className="flex h-full w-full items-center justify-center bg-black/40 text-sm font-semibold text-[var(--gold-ornament)]">
+            <span className="flex h-full w-full items-center justify-center bg-[var(--surface-2)] text-sm font-semibold text-[var(--gold-ornament)]">
               {String(option.label || "?").charAt(0).toUpperCase()}
             </span>
           )
