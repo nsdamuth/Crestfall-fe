@@ -85,7 +85,7 @@ function SwitcherBlock({ isDirty, onOpenSwitcher }) {
             <button
               type="button"
               onClick={() => setConfirming(false)}
-              className="cf-btn cf-btn--secondary cf-btn--sm"
+              className="cf-btn cf-btn--secondary cf-btn--sm [@media(pointer:coarse)]:h-[var(--control-md)]"
             >
               Keep editing
             </button>
@@ -95,7 +95,7 @@ function SwitcherBlock({ isDirty, onOpenSwitcher }) {
                 setConfirming(false);
                 onOpenSwitcher?.();
               }}
-              className="cf-btn cf-btn--primary cf-btn--sm"
+              className="cf-btn cf-btn--primary cf-btn--sm [@media(pointer:coarse)]:h-[var(--control-md)]"
             >
               Discard and switch
             </button>
