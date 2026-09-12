@@ -34,10 +34,21 @@ function getValidatedPresentation(message, { persistentDomains = [] } = {}) {
       type: segment.type || "",
       emphasis: segment.emphasis || "",
     }));
+  const statusBlocks = normalizeArray(presentation.statusBlocks)
+    .filter(
+      (block) =>
+        typeof block?.renderedText === "string" &&
+        block.renderedText &&
+        !shouldSuppressPersistentSnapshotBlock(block, persistentDomains)
+    )
+    .map((block, index) => ({
+      id: String(block.id || `status-block-${index}`),
+      text: block.renderedText,
+    }));
 
   if (
     presentation.contractVersion !== PRESENTATION_CONTRACT_VERSION ||
-    !segments.length
+    (!segments.length && !statusBlocks.length)
   ) {
     return null;
   }
@@ -45,17 +56,7 @@ function getValidatedPresentation(message, { persistentDomains = [] } = {}) {
   return {
     paletteId: presentation.paletteId,
     segments,
-    statusBlocks: normalizeArray(presentation.statusBlocks)
-      .filter(
-        (block) =>
-          typeof block?.renderedText === "string" &&
-          block.renderedText &&
-          !shouldSuppressPersistentSnapshotBlock(block, persistentDomains)
-      )
-      .map((block, index) => ({
-        id: String(block.id || `status-block-${index}`),
-        text: block.renderedText,
-      })),
+    statusBlocks,
   };
 }
 

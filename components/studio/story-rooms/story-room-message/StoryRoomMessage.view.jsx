@@ -367,7 +367,8 @@ export default function StoryRoomMessageView({
   const safeSegments = Array.isArray(semanticSegments) ? semanticSegments : [];
   const safeStatusBlocks = Array.isArray(statusBlocks) ? statusBlocks : [];
   const hasSemanticPresentation =
-    bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC && safeSegments.length > 0;
+    bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC &&
+    (safeSegments.length > 0 || safeStatusBlocks.length > 0);
   const hasPalettePresentation = Boolean(paletteColors);
   const resolvedPaletteColors = paletteColors || DEFAULT_PALETTE_COLORS;
   const allowAutomaticSpacing =
