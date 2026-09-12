@@ -129,9 +129,19 @@ export function projectCreationProfileLibraryPassPanel({
         : salesEnabled
           ? "Extended library locked"
           : "New pass sales paused",
+    // CTA label rewritten 12 Sep 2026 (FIX 6): no dash, the cost read
+    // from the served price.
     actionLabel: purchaseBusy
       ? "Unlocking..."
-      : `Unlock full library — ${formatCoinAmount(currentPriceCoins)} coins`,
+      : `Unlock full library for ${formatCoinAmount(currentPriceCoins)} coins`,
+    confirmLabel: `Unlock for ${formatCoinAmount(currentPriceCoins)} coins`,
+    unlockSummary: `${protectedImageCount} protected ${
+      protectedImageCount === 1 ? "image unlocks" : "images unlock"
+    } now${
+      state.includesFutureAdditions !== false
+        ? ", plus future eligible additions to this creation"
+        : ""
+    }.`,
   };
 }
 
@@ -303,6 +313,8 @@ export function useCreationProfilePageViewModel({
   media = [],
   libraryPass = null,
   loadError = null,
+  coinBalance = null,
+  accountStatus = "idle",
   navigate,
   refreshPage,
   onStartStory,
@@ -333,6 +345,10 @@ export function useCreationProfilePageViewModel({
     useState("idle");
   const [libraryPassPurchaseMessage, setLibraryPassPurchaseMessage] =
     useState("");
+  // Unlock confirmation (FIX 6, 12 Sep 2026) and the Buy Coins info it
+  // opens when the balance is below the cost.
+  const [isUnlockDialogOpen, setIsUnlockDialogOpen] = useState(false);
+  const [isBuyCoinsInfoOpen, setIsBuyCoinsInfoOpen] = useState(false);
 
   useEffect(() => {
     const imageOutputIds = [
@@ -487,9 +503,32 @@ export function useCreationProfilePageViewModel({
     }
   }
 
-  async function purchaseLibraryPass() {
+  const libraryPassPanel = projectCreationProfileLibraryPassPanel({
+    state: libraryPass,
+    purchaseStatus: libraryPassPurchaseStatus,
+    purchaseMessage: libraryPassPurchaseMessage,
+  });
+
+  // Balance for the unlock confirmation: the studio account context's
+  // served coin balance, known only once the account has loaded. The
+  // cost is the served Library Pass price the panel already carries;
+  // nothing here computes either value.
+  const normalizedCoinBalance = Number.parseInt(coinBalance, 10);
+  const isBalanceKnown =
+    accountStatus === "loaded" && Number.isFinite(normalizedCoinBalance);
+  const canAffordUnlock = Boolean(
+    libraryPassPanel &&
+      isBalanceKnown &&
+      normalizedCoinBalance >= libraryPassPanel.currentPriceCoins
+  );
+
+  // Unlock confirmation primary handler, RULED 12 Sep 2026 (eight-fix
+  // package FIX 6): the CTA and every locked tile only open the dialog;
+  // this is the one place the charge call runs.
+  async function confirmUnlockFullLibrary() {
     if (
       !normalizedCreation?.id ||
+      !canAffordUnlock ||
       libraryPassPurchaseStatus === "purchasing"
     ) {
       return;
@@ -507,6 +546,7 @@ export function useCreationProfilePageViewModel({
       setLibraryPassPurchaseMessage(
         "Library Pass purchased. Unlocking the full library..."
       );
+      setIsUnlockDialogOpen(false);
       refreshPage?.();
     } catch (error) {
       setLibraryPassPurchaseStatus("error");
@@ -580,11 +620,34 @@ export function useCreationProfilePageViewModel({
       activeTab,
     }),
     query,
-    libraryPassPanel: projectCreationProfileLibraryPassPanel({
-      state: libraryPass,
-      purchaseStatus: libraryPassPurchaseStatus,
-      purchaseMessage: libraryPassPurchaseMessage,
-    }),
+    libraryPassPanel,
+    unlockDialog: libraryPassPanel
+      ? {
+          isOpen: isUnlockDialogOpen,
+          title: "Unlock full library?",
+          summary: libraryPassPanel.unlockSummary,
+          costLabel: libraryPassPanel.currentPriceLabel,
+          balanceLabel: isBalanceKnown
+            ? `${formatCoinAmount(normalizedCoinBalance)} coins`
+            : accountStatus === "error"
+              ? "Unavailable"
+              : "...",
+          isBalanceKnown,
+          canAfford: canAffordUnlock,
+          confirmLabel: libraryPassPanel.confirmLabel,
+          isBusy: libraryPassPanel.purchaseBusy,
+          errorMessage:
+            libraryPassPurchaseStatus === "error" ? libraryPassPurchaseMessage : "",
+        }
+      : null,
+    onOpenUnlockDialog: () => {
+      if (!libraryPassPanel?.canPurchase) return;
+      setIsUnlockDialogOpen(true);
+    },
+    onCloseUnlockDialog: () => setIsUnlockDialogOpen(false),
+    isBuyCoinsInfoOpen,
+    onOpenBuyCoinsInfo: () => setIsBuyCoinsInfoOpen(true),
+    onCloseBuyCoinsInfo: () => setIsBuyCoinsInfoOpen(false),
     visibleMedia,
     filteredMedia,
     activePreviewItem,
@@ -600,7 +663,7 @@ export function useCreationProfilePageViewModel({
         (current) => current + CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT
       ),
     onOpenMedia: openMedia,
-    onPurchaseLibraryPass: purchaseLibraryPass,
+    onPurchaseLibraryPass: confirmUnlockFullLibrary,
     onCloseMedia: () => setActivePreviewId(null),
     onSelectPreviewItem: (item) => setActivePreviewId(item?.id || null),
     onToggleLike: toggleLikedMedia,

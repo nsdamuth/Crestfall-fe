@@ -1,4 +1,9 @@
 import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import {
+  BUY_COINS_INFO_BODY,
+  UtilityModal,
+} from "@/components/studio/studio-economy-widget/StudioEconomyWidget.view";
 import {
   Bookmark,
   Camera,
@@ -46,6 +51,12 @@ export default function CreationProfilePageView({
   onLoadMore = null,
   onOpenMedia = null,
   onPurchaseLibraryPass = null,
+  unlockDialog = null,
+  onOpenUnlockDialog = null,
+  onCloseUnlockDialog = null,
+  isBuyCoinsInfoOpen = false,
+  onOpenBuyCoinsInfo = null,
+  onCloseBuyCoinsInfo = null,
   onToggleDescription = null,
   onStartChat = null,
 }) {
@@ -176,7 +187,7 @@ export default function CreationProfilePageView({
       {libraryPassPanel ? (
         <LibraryPassViewerPanel
           panel={libraryPassPanel}
-          onPurchase={onPurchaseLibraryPass}
+          onUnlock={onOpenUnlockDialog}
         />
       ) : null}
 
@@ -250,12 +261,106 @@ export default function CreationProfilePageView({
         )}
       </div>
 
+      {unlockDialog?.isOpen ? (
+        <UnlockFullLibraryDialog
+          dialog={unlockDialog}
+          onConfirm={onPurchaseLibraryPass}
+          onCancel={onCloseUnlockDialog}
+          onOpenBuyCoins={onOpenBuyCoinsInfo}
+        />
+      ) : null}
+
+      {isBuyCoinsInfoOpen ? (
+        <UtilityModal title="Buy Coins" body={BUY_COINS_INFO_BODY} onClose={onCloseBuyCoinsInfo} />
+      ) : null}
+
       {lightboxSlot}
     </section>
   );
 }
 
-function LibraryPassViewerPanel({ panel, onPurchase }) {
+// Unlock confirmation, RULED 12 Sep 2026 (eight-fix package FIX 6),
+// built on the coins info dialog recipe (UtilityModal: KitModalFrame,
+// max-w-sm panel, --space-6 content box, eyebrow, display title, body,
+// full-width buttons). Single column at every width, every button
+// --control-md tall through .cf-btn, and the frame keeps the panel
+// inside the viewport (bottom-anchored under 700px, capped at 92dvh).
+// The charge runs only from the primary's handler; a balance below the
+// cost disables the primary and shows the existing Buy Coins path.
+function UnlockFullLibraryDialog({ dialog, onConfirm, onCancel, onOpenBuyCoins }) {
+  const showBuyCoins = dialog.isBalanceKnown && !dialog.canAfford;
+
+  return (
+    <KitModalFrame
+      onClose={onCancel}
+      ariaLabelledBy="creation-profile-unlock-title"
+      panelClassName="w-full max-w-sm"
+    >
+      <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-6)]">
+        <div>
+          <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Library Pass
+          </p>
+          <h2
+            id="creation-profile-unlock-title"
+            className="mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--ink)]"
+          >
+            {dialog.title}
+          </h2>
+        </div>
+
+        <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          {dialog.summary}
+        </p>
+
+        <dl className="flex flex-col gap-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]">
+          <div className="flex items-center justify-between gap-[var(--space-3)]">
+            <dt className="text-[var(--ink-dim)]">Cost</dt>
+            <dd className="tabular-nums text-[var(--ink)]">{dialog.costLabel}</dd>
+          </div>
+          <div className="flex items-center justify-between gap-[var(--space-3)]">
+            <dt className="text-[var(--ink-dim)]">Your balance</dt>
+            <dd className="tabular-nums text-[var(--ink)]">{dialog.balanceLabel}</dd>
+          </div>
+        </dl>
+
+        {showBuyCoins ? (
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            Your balance is below the cost of this pass.
+          </p>
+        ) : null}
+
+        {dialog.errorMessage ? (
+          <p className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)]">
+            {dialog.errorMessage}
+          </p>
+        ) : null}
+
+        <div className="flex flex-col gap-[var(--space-2)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary w-full">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => onConfirm?.()}
+            disabled={!dialog.canAfford || dialog.isBusy}
+            className="cf-btn cf-btn--primary w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+          >
+            <Coins size={15} aria-hidden="true" />
+            {dialog.isBusy ? "Unlocking..." : dialog.confirmLabel}
+          </button>
+          {showBuyCoins ? (
+            <button type="button" onClick={() => onOpenBuyCoins?.()} className="cf-btn cf-btn--secondary w-full">
+              Buy Coins
+            </button>
+          ) : null}
+        </div>
+      </div>
+    </KitModalFrame>
+  );
+}
+
+function LibraryPassViewerPanel({ panel, onUnlock }) {
   const messageIsError = panel.purchaseStatus === "error";
 
   return (
@@ -285,9 +390,11 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
 
         {!panel.isOwner && !panel.hasActiveEntitlement ? (
           panel.canPurchase ? (
+            // The CTA opens the confirmation (FIX 6, 12 Sep 2026); it
+            // never charges on tap.
             <button
               type="button"
-              onClick={() => onPurchase?.()}
+              onClick={() => onUnlock?.()}
               disabled={panel.purchaseBusy}
               className="cf-btn cf-btn--primary"
             >

@@ -2,11 +2,19 @@ import { Bell, Coins } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
+// The Buy Coins info copy, exported 12 Sep 2026 (eight-fix package
+// FIX 6) so the creation page's unlock dialog reuses the existing Buy
+// Coins path word for word instead of carrying a second copy.
+export const BUY_COINS_INFO_BODY =
+  "Coin purchases are coming later. For private testing, an admin can manually add coins to your account.";
+
 // Migrated onto KitModalFrame, RULED (Brian live walk, polish item
 // 4): the raw fixed-inset dialog lost the panel-lift gradient and
 // the mobile bottom-anchor law. KitModalFrame supplies both, plus
 // the circular close control, so this stays a one-panel primitive.
-function UtilityModal({ title = "", body = "", onClose = null }) {
+// Exported 12 Sep 2026 (FIX 6): the coins info dialog recipe is the
+// base the creation page's unlock confirmation is built on.
+export function UtilityModal({ title = "", body = "", onClose = null }) {
   // Inset moved off the panel onto an inner content box, RULED 6 Sep
   // 2026 (sidebar batch 2 fixes, item 4): the frame's panel recipe
   // zeroes the panel's bottom padding at desktop widths (and swaps it
@@ -70,7 +78,7 @@ export default function StudioEconomyWidgetView({
       {buyInfoOpen ? (
         <UtilityModal
           title="Buy Coins"
-          body="Coin purchases are coming later. For private testing, an admin can manually add coins to your account."
+          body={BUY_COINS_INFO_BODY}
           onClose={onCloseBuyInfo}
         />
       ) : null}

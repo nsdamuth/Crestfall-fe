@@ -13,6 +13,7 @@ import MediaLightbox from "@/components/studio/media/MediaLightbox";
 import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActions";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 
 import CreationProfilePageView from "./creation-profile-page/CreationProfilePage.view";
 import { useCreationProfilePageViewModel } from "./creation-profile-page/useCreationProfilePageViewModel";
@@ -20,8 +21,13 @@ import { useCreationProfilePageViewModel } from "./creation-profile-page/useCrea
 function StandardCreationProfilePage(props) {
   const router = useRouter();
   const launchController = useStoryLaunchController();
+  // Coin balance for the unlock confirmation (FIX 6, 12 Sep 2026):
+  // the same account context the sidebar economy widget reads.
+  const { coinBalance, accountStatus } = useStudioAccount();
   const viewModel = useCreationProfilePageViewModel({
     ...props,
+    coinBalance,
+    accountStatus,
     navigate: (href) => router.push(href),
     refreshPage: () => router.refresh(),
     onStartStory: launchController.launch,

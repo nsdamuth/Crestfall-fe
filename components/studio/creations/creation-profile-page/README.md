@@ -40,7 +40,21 @@ Preview: `/dev/ui-preview/creation-profile-page`
 Mechanics Module field decomposition remains deferred until the final cumulative
 reassessment.
 
-## Conditional Credits tab — 24 Aug 2026
+## Unlock confirmation, RULED 12 Sep 2026 (eight-fix package FIX 6)
+
+The "Unlock full library for <cost> coins" CTA no longer charges on
+tap. It opens a confirmation built on the coins info dialog recipe
+(`UtilityModal` in the studio economy widget, on `KitModalFrame`):
+title "Unlock full library?", one line naming the protected image count
+and future eligible additions from the same served Library Pass state
+the panel reads, the cost from that same state, and the current balance
+from the studio account context. Buttons: secondary "Cancel", primary
+gold "Unlock for <cost> coins". The charge call runs only from the
+primary's handler. A balance below the cost disables the primary and
+shows the existing Buy Coins path. Single column, 44px buttons, inside
+the viewport at 390.
+
+## Conditional Credits tab, 24 Aug 2026
 
 The public creation catalogue now restores attribution as a first-class
 conditional tab. Resolved `creation.credits` adds `Credits` to the media
@@ -48,7 +62,7 @@ tab row; zero resolved credits add no tab. When Credits is active,
 media-only search, media tiles, and pagination are hidden and the
 shared Kit credits renderer shows the full attribution list.
 
-## Per-asset ordering — 24 Aug 2026
+## Per-asset ordering, 24 Aug 2026
 
 An individual Creation catalogue no longer exposes a Sort dropdown. Media
 keeps the authoritative/source order supplied to the page; Search and the
