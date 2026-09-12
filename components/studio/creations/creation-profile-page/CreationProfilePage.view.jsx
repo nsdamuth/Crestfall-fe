@@ -241,6 +241,7 @@ export default function CreationProfilePageView({
                 item={item}
                 actionsSlot={mediaActionSlots[item.id] || null}
                 onOpen={() => onOpenMedia?.(item.id)}
+                onOpenUnlock={onOpenUnlockDialog}
               />
             ))}
           </div>
@@ -438,13 +439,17 @@ function FilterButton({ active, onClick, children }) {
   );
 }
 
-function MediaTile({ item, actionsSlot, onOpen }) {
+// Locked Library Pass tiles, RULED 12 Sep 2026 (eight-fix package
+// FIX 7): the whole tile is the tap target and tapping it opens the
+// same "Unlock full library?" confirmation the CTA opens (FIX 6).
+// Unlocked tiles are unchanged.
+function MediaTile({ item, actionsSlot, onOpen, onOpenUnlock = null }) {
   if (item.isLocked) {
     return (
       <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] text-left">
         <button
           type="button"
-          onClick={onOpen}
+          onClick={() => onOpenUnlock?.()}
           className="relative h-full w-full text-left"
           aria-label={`Library Pass required for ${item.title || "media"}`}
         >

@@ -54,6 +54,10 @@ primary's handler. A balance below the cost disables the primary and
 shows the existing Buy Coins path. Single column, 44px buttons, inside
 the viewport at 390.
 
+Library Pass tiles, RULED 12 Sep 2026 (FIX 7): tapping any locked tile
+opens that same dialog; the whole tile is the tap target, and unlocked
+tiles behave as before.
+
 ## Conditional Credits tab, 24 Aug 2026
 
 The public creation catalogue now restores attribution as a first-class
