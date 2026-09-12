@@ -37,8 +37,15 @@ function deriveSelectedLabel(options, selectedValues, isMultiSelect) {
   return selected?.label || null;
 }
 
-function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
+// isSheet (R11 refine item 3, 12 Sep 2026): inside the mobile sheet
+// every row is at least --control-md (44px) unconditionally, the
+// full row being the tap target; the popover keeps its dense
+// desktop height with the coarse-pointer floor.
+function OptionRow({ option, isSelected, isMultiSelect, onActivate, isSheet = false }) {
   const disabled = Boolean(option?.isDisabled);
+  const rowHeightClass = isSheet
+    ? "min-h-[var(--control-md)] items-center"
+    : "min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-start";
 
   return (
     <button
@@ -48,7 +55,7 @@ function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
       disabled={disabled}
       title={option?.tooltip || undefined}
       onClick={() => onActivate?.(option?.value)}
-      className={`flex w-full items-start gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-transparent px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+      className={`flex w-full gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-transparent px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors ${rowHeightClass} ${
         disabled
           ? "opacity-[var(--state-disabled-opacity)]"
           : isSelected
@@ -91,7 +98,7 @@ function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
   );
 }
 
-function PanelRows({ options, selectedValues, isMultiSelect, onActivate }) {
+function PanelRows({ options, selectedValues, isMultiSelect, onActivate, isSheet = false }) {
   return (
     <>
       {options.map((option) => (
@@ -101,6 +108,7 @@ function PanelRows({ options, selectedValues, isMultiSelect, onActivate }) {
           isSelected={selectedValues?.includes(option?.value)}
           isMultiSelect={isMultiSelect}
           onActivate={onActivate}
+          isSheet={isSheet}
         />
       ))}
       {!options.length && (
@@ -212,16 +220,37 @@ export default function KitDropdownView({
       )}
 
       {isOpen && isPhoneWidth && (
+        // Mobile sheet, RULED 12 Sep 2026 (R11 refine item 3). The
+        // frame's sheet recipe supplies the top-corner --radius-lg,
+        // the --scrim-strong veil at --blur-panel, the header row
+        // with the 44px circular close control on the right, and
+        // bottom docking. The sheet is floating chrome, so it sits on
+        // --surface-3 with the --line-whisper hairline, and it is
+        // inset by the page's mobile gutter (--space-5, StudioShell)
+        // on each side, never edge to edge. Those four go in as
+        // inline custom-property styles because the recipe already
+        // carries a background-image, a border color, and a width
+        // utility, and two arbitrary-value utilities on one property
+        // do not override reliably in this build (see the frame's
+        // own fixed-width note). The label rides in the header slot,
+        // pushed left of the close control.
         <KitModalFrame
           variant="sheet"
           ariaLabel={ariaLabel || label}
           onClose={close}
-        >
-          <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
-            <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          headerSlot={
+            <span className="mr-auto text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
               {label}
             </span>
-          </div>
+          }
+          panelStyle={{
+            backgroundImage: "none",
+            backgroundColor: "var(--surface-3)",
+            borderColor: "var(--line-whisper)",
+            width: "calc(100% - var(--space-5) * 2)",
+            maxWidth: "calc(100% - var(--space-5) * 2)",
+          }}
+        >
           <div
             role="listbox"
             aria-label={ariaLabel || label}
@@ -233,6 +262,7 @@ export default function KitDropdownView({
               selectedValues={selectedValues}
               isMultiSelect={isMultiSelect}
               onActivate={activateOption}
+              isSheet
             />
           </div>
         </KitModalFrame>

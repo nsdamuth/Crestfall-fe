@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.5.0`)
+**Contract:** `KitModalFrame.contract.js` (`1.6.0`; 1.6.0 adds the optional `panelStyle` passthrough, 12 Sep 2026, so the mobile dropdown sheet can set its surface, hairline, and gutter width as tokens)
 
 ## Purpose
 

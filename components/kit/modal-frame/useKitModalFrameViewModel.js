@@ -104,6 +104,7 @@ export function useKitModalFrameViewModel({
   variant = "modal",
   panelClassName = "",
   panelWidth = "",
+  panelStyle: callerPanelStyle = null,
   hasUnsavedChanges = false,
   sheetGrabber = false,
   headerSlot = null,
@@ -157,10 +158,22 @@ export function useKitModalFrameViewModel({
     // The modal variant's fixed width (1.5.0): a CSS length such as
     // "56rem". Ignored by the sheet and viewer variants by
     // construction (their recipes never read the variable).
-    panelStyle:
-      resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
-        ? { "--panel-width": panelWidth.trim() }
-        : undefined,
+    // panelStyle (1.6.0, 12 Sep 2026, R11 refine item 3): a caller's
+    // inline style object for the panel, merged under the width
+    // variable so the fixed-width law still wins on the modal
+    // variant. Lets a sheet consumer (KitDropdown) set its surface,
+    // hairline, and gutter width as var() values without two
+    // arbitrary-value utilities competing on one property.
+    panelStyle: (() => {
+      const widthStyle =
+        resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
+          ? { "--panel-width": panelWidth.trim() }
+          : null;
+      const ownStyle =
+        callerPanelStyle && typeof callerPanelStyle === "object" ? callerPanelStyle : null;
+      if (!widthStyle && !ownStyle) return undefined;
+      return { ...(ownStyle || {}), ...(widthStyle || {}) };
+    })(),
     ariaLabelledBy: hasOwnLabelledBy
       ? ariaLabelledBy
       : needsGeneratedLabel
