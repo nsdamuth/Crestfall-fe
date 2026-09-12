@@ -19,7 +19,7 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
 
   return (
     <div
-      className="group/home-hero relative mt-[var(--space-4)] rounded-[var(--radius-lg)]"
+      className="group/home-hero relative mt-[var(--space-4)] overflow-hidden rounded-[var(--radius-lg)]"
       onMouseEnter={triggerSheen}
       onMouseLeave={triggerSheen}
     >
@@ -30,7 +30,7 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
         className="pointer-events-none absolute inset-0 z-[2] rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--gold-ornament)_66%,transparent)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.24),0_12px_30px_rgba(0,0,0,0.22)]"
       />
 
-      <div className="pointer-events-none absolute left-[var(--space-5)] top-[var(--space-5)] z-[3] min-[700px]:left-[var(--space-8)] min-[700px]:top-[var(--space-6)]">
+      <div className="pointer-events-none absolute left-[var(--space-5)] right-[var(--space-5)] top-[var(--space-5)] z-[3] min-[700px]:left-[var(--space-8)] min-[700px]:right-[var(--space-8)] min-[700px]:top-[var(--space-6)]">
         <p className="cf-art-text-readable font-display text-[clamp(1.55rem,2.35vw,2.65rem)] leading-[1.05] tracking-[-0.015em] text-[var(--art-ink)]">
           Welcome back, {welcomeName}.
         </p>
