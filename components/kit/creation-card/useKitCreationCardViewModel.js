@@ -1,3 +1,8 @@
+import {
+  buildCreationCardMetrics,
+  normalizeCreationCardMetricEntries,
+} from "../../../lib/shared/presentation/creationCardMetrics.js";
+
 const VALID_LAYOUTS = new Set(["grid", "list"]);
 const VALID_ASSET_KINDS = new Set(["image", "character", "story", "adventure"]);
 const VALID_BADGE_VARIANTS = new Set(["canon", "status", "meta"]);
@@ -16,28 +21,35 @@ function toBadges(value) {
     }));
 }
 
-function toStatValue(value) {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-
 export function useKitCreationCardViewModel(props) {
   const layout = VALID_LAYOUTS.has(props?.layout) ? props.layout : "grid";
   const assetKind = VALID_ASSET_KINDS.has(props?.assetKind) ? props.assetKind : "character";
+  const explicitMetrics = normalizeCreationCardMetricEntries(props?.metrics);
+  const creationType =
+    typeof props?.creationType === "string"
+      ? props.creationType
+      : assetKind === "character"
+        ? "CHARACTER"
+        : assetKind === "story"
+          ? "ROOM_TEMPLATE"
+          : assetKind === "adventure"
+            ? "STORYLINE"
+            : null;
 
   return {
     layout,
     assetKind,
-    creationType: typeof props?.creationType === "string" ? props.creationType : null,
+    creationType,
     title: typeof props?.title === "string" ? props.title : "",
     subtitle: typeof props?.subtitle === "string" ? props.subtitle : "",
     imageSrc: typeof props?.imageSrc === "string" ? props.imageSrc : null,
     badges: toBadges(props?.badges),
-    stats: {
-      plays: toStatValue(props?.stats?.plays),
-      hearts: toStatValue(props?.stats?.hearts),
-      saves: toStatValue(props?.stats?.saves),
-      followers: toStatValue(props?.stats?.followers),
-    },
+    metrics: explicitMetrics.length
+      ? explicitMetrics
+      : buildCreationCardMetrics({
+          creationType,
+          fallbackStats: props?.stats,
+        }),
     liked: Boolean(props?.liked),
     bookmarked: Boolean(props?.bookmarked),
     isDisabled: Boolean(props?.isDisabled),

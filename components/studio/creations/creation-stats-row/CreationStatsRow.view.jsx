@@ -1,25 +1,20 @@
 import {
+  BookOpen,
   Heart,
   Image as ImageIcon,
   MessageCircle,
-  Video,
+  Network,
 } from "lucide-react";
 
+import { formatCreationCardMetricCount } from "@/lib/shared/presentation/creationCardMetrics";
+
 const STAT_ICON_BY_ID = {
-  likes: Heart,
-  messages: MessageCircle,
-  images: ImageIcon,
-  videos: Video,
+  interactionCount: MessageCircle,
+  likeCount: Heart,
+  imageUseCount: ImageIcon,
+  storyUseCount: BookOpen,
+  externalCreationUseCount: Network,
 };
-
-function formatNumber(value) {
-  const number = Number(value || 0);
-
-  if (number >= 1000000) return `${(number / 1000000).toFixed(1)}m`;
-  if (number >= 1000) return `${(number / 1000).toFixed(1)}k`;
-
-  return `${number}`;
-}
 
 export default function CreationStatsRowView({
   items = [],
@@ -42,10 +37,18 @@ export default function CreationStatsRowView({
           return null;
         }
 
+        const value = formatCreationCardMetricCount(item.value);
+        const accessibleLabel = `${item.label || "Usage"}: ${value}`;
+
         return (
-          <span key={item.id} className="inline-flex items-center gap-1">
-            <Icon size={compact ? 12 : 14} />
-            {formatNumber(item.value)}
+          <span
+            key={item.id}
+            className="inline-flex items-center gap-1"
+            aria-label={accessibleLabel}
+            title={accessibleLabel}
+          >
+            <Icon size={compact ? 12 : 14} aria-hidden="true" />
+            {value}
           </span>
         );
       })}

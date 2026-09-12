@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  buildCreationCardMetrics,
+  normalizeCreationCardMetricEntries,
+} from "../../../lib/shared/presentation/creationCardMetrics.js";
+
 // Thin pass-through ViewModel, matching kit-batch practice: the kit
 // piece is fixture-fed and owns no data. Primary-action label is
 // derived here (display concern only, not a data transform): R9
@@ -43,18 +48,59 @@ function normalizeCreator(creator) {
   return { handle: creator.handle, href: creator.href || null };
 }
 
+
+function inferCreationType(assetKind) {
+  switch (String(assetKind || "").trim().toLowerCase()) {
+    case "character":
+      return "CHARACTER";
+    case "story":
+    case "adventure":
+      return "ROOM_TEMPLATE";
+    default:
+      return String(assetKind || "").trim().toUpperCase();
+  }
+}
+
 function normalizeTags(tags) {
   if (!Array.isArray(tags)) return [];
   return tags.filter((tag) => typeof tag === "string" && tag);
 }
 
+function normalizeRelatedItems(items) {
+  if (!Array.isArray(items)) return [];
+
+  return items
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null;
+      const id = String(item.id || "").trim();
+      if (!id) return null;
+
+      return {
+        id,
+        title: typeof item.title === "string" ? item.title : "Untitled",
+        imageSrc:
+          (typeof item.imageSrc === "string" && item.imageSrc) ||
+          (typeof item.cardSrc === "string" && item.cardSrc) ||
+          "",
+        metrics: normalizeCreationCardMetricEntries(item.metrics),
+        sortOrder: Number.isFinite(Number(item.sortOrder)) ? Number(item.sortOrder) : index,
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => left.sortOrder - right.sortOrder)
+    .slice(0, 4);
+}
+
 export function useKitAssetDetailPopupViewModel({
   assetKind = "character",
+  creationType = null,
   title = "",
   subtitle = "",
   creator = null,
   media = [],
   badges = [],
+  metrics = null,
+  usageMetrics = null,
   stats = {},
   description = "",
   tags = [],
@@ -66,6 +112,8 @@ export function useKitAssetDetailPopupViewModel({
   onSave = null,
   onViewCatalogue = null,
   credits = [],
+  moreFromCreator = [],
+  onOpenMoreFromCreator = null,
   onClose = null,
   // onEdit, ADDED 10 Aug 2026 (docs/STUDIO-SPEC.md section 5, Studio
   // brief S5). Optional; the View renders the Edit action only when
@@ -80,6 +128,13 @@ export function useKitAssetDetailPopupViewModel({
     creator: normalizeCreator(creator),
     media: normalizeMedia(media),
     badges: Array.isArray(badges) ? badges : [],
+    metrics: Array.isArray(metrics)
+      ? normalizeCreationCardMetricEntries(metrics)
+      : buildCreationCardMetrics({
+          creationType: creationType || inferCreationType(assetKind),
+          usageMetrics,
+          fallbackStats: stats,
+        }),
     stats: stats || {},
     description,
     tags: normalizeTags(tags),
@@ -91,6 +146,8 @@ export function useKitAssetDetailPopupViewModel({
     onSave: toCallback(onSave),
     onViewCatalogue: toCallback(onViewCatalogue),
     credits: Array.isArray(credits) ? credits : [],
+    moreFromCreator: normalizeRelatedItems(moreFromCreator),
+    onOpenMoreFromCreator: toCallback(onOpenMoreFromCreator),
     onClose: toCallback(onClose),
     onEdit: toCallback(onEdit),
   };

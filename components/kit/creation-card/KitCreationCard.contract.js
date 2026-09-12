@@ -1,4 +1,4 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.7.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.8.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
@@ -62,11 +62,16 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.7.0";
  * @property {string} label
  * @property {"canon"|"status"|"meta"} variant
  *
+ * @typedef {Object} KitCreationCardMetric
+ * @property {"interactionCount"|"likeCount"|"imageUseCount"|"storyUseCount"|"externalCreationUseCount"} id
+ * @property {string} label
+ * @property {number} value
+ *
  * @typedef {Object} KitCreationCardStats
- * @property {number|null} plays
- * @property {number|null} hearts
- * @property {number|null} saves
- * @property {number|null} followers
+ * @property {number|null} plays Legacy compatibility input only.
+ * @property {number|null} hearts Legacy compatibility input only.
+ * @property {number|null} saves Legacy compatibility input only; never rendered as an aggregate.
+ * @property {number|null} followers Legacy compatibility input only.
  *
  * @typedef {Object} KitCreationCardViewProps
  * @property {"grid"|"list"} layout
@@ -77,7 +82,8 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.7.0";
  * @property {string} subtitle
  * @property {string|null} imageSrc
  * @property {KitCreationCardBadge[]} badges
- * @property {KitCreationCardStats} stats
+ * @property {KitCreationCardMetric[]|null} [metrics] Ordered semantic consumer metrics, max three.
+ * @property {KitCreationCardStats} stats Legacy fallback while fixture/secondary callers migrate.
  * @property {boolean} liked
  * @property {boolean} bookmarked
  * @property {boolean} isDisabled
@@ -157,6 +163,13 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.7.0";
  * @property {boolean} [promoteOwnerActions] optional (v3.5.0), default
  *   false.
  *
+
+ * v3.8.0 introduces semantic Creation usage metrics. `metrics` is the
+ * authoritative ordered card-footer input and is capped at three entries.
+ * The shared metric formatter abbreviates large counts consistently. Legacy
+ * `stats` remains accepted for fixture/secondary callers, but its bookmark/
+ * save aggregate is intentionally ignored; bookmark state remains the private
+ * overlay action only.
  * v3.6.0 introduced semantic no-art identity input. v3.7.0 clarifies that
  * semantic identity is a background substitution only: the pre-existing full-
  * bleed grid/list geometry, text placement, overlays, and assigned-art behavior

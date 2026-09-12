@@ -1,6 +1,6 @@
 # Kit Asset Detail Popup LOOM package
 
-**Contract:** `KitAssetDetailPopup.contract.js` (`2.3.0`)
+**Contract:** `KitAssetDetailPopup.contract.js` (`2.5.0`)
 
 ## Purpose
 
@@ -39,19 +39,14 @@ links. Rendered between the description/stats block and the footer,
 matching the old modal's own order (credits after description and
 tags, before actions).
 
-## Conditional Credits tab, 24 Aug 2026
+## Quick-detail decision surface, 12 Sep 2026
 
-Credits are provenance and now have a stable home in the shared detail
-library. When `credits.length > 0`, the tab row gains `Credits` after
-Images / Videos / Liked / Bookmarked. Selecting it renders the full
-`KitCreditsView` list and hides media-only Search control.
-When there are no resolved credits, the Credits tab does not render at
-all—there is no empty or disabled attribution state.
-
-This replaces the earlier one-row collapsed credits block/stacked
-credits-modal presentation inside this popup. `KitCreditsModal` remains
-available as a standalone Kit surface for other consumers. The
-`credits` prop and attribution item shape are unchanged.
+The popup is intentionally not a miniature media catalogue. The hero carousel
+remains, but the body media library is removed. Semantic metrics sit beside the
+Creation identity, View Full Catalogue is a real button beneath description/tags,
+Credits render as a conditional disclosure beneath that button, and optional
+`moreFromCreator` recommendations provide compact same-creator discovery after
+the primary action row. Creator attribution renders once in the identity line.
 
 ## Anatomy
 
@@ -156,11 +151,9 @@ as this package's own video/liked/bookmarked media tabs.
 
 Fixture-only; no query, persistence, or navigation is wired.
 
-## Live credit propagation + compact media ordering, 24 Aug 2026
+## Live credit propagation
 
-Live V2 Vault/Community card projections now use the shared
+Live V2 Vault/Community card projections use the shared
 `getCreationCredits()` resolver instead of reading only `data.credits`.
 That preserves attribution derived from connected assets and selected
-Character/Location/Outfit/etc references. The compact per-asset media
-library keeps source ordering and no longer renders a Sort dropdown;
-Search remains available for the small media set.
+Character/Location/Outfit/etc references.
