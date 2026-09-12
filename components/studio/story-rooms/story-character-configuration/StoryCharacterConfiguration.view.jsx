@@ -857,7 +857,7 @@ export default function StoryCharacterConfigurationView({
 
       <LinkComponent
         href={backHref}
-        className="inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]"
+        className="inline-flex min-h-[var(--control-md)] items-center rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]"
       >
         ← Back to Story
       </LinkComponent>
