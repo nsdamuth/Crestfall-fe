@@ -130,6 +130,7 @@ export default function KitDropdownView({
   ariaLabel = null,
   restingValue = null,
   align = "left",
+  labelMode = "prefix",
 }) {
   // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
   // PLAN.md section 5.2), measured flip, and popover-only dismissal:
@@ -154,6 +155,13 @@ export default function KitDropdownView({
   const selectedLabel = isResting
     ? null
     : deriveSelectedLabel(options, selectedValues, isMultiSelect);
+  // Label mode (1.4.0, RULED 12 Sep 2026, eight-fix package FIX 5):
+  // "replace" makes a non-resting single-select value take the
+  // trigger over, so the trigger reads the chosen option's label
+  // alone (and reads `label`, e.g. "Filter", while the value is the
+  // default). "prefix", the default, is the 1.3.0 label-then-value
+  // grammar, pixel-stable on every existing consumer.
+  const triggerLabel = labelMode === "replace" && selectedLabel ? selectedLabel : label;
   const isMarked = (selectionCount > 0 && !isResting) || isOpen;
 
   function activateOption(value) {
@@ -176,8 +184,8 @@ export default function KitDropdownView({
             : "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
         }`}
       >
-        <span className="min-w-0 truncate">{label}</span>
-        {selectedLabel && (
+        <span className="min-w-0 truncate">{triggerLabel}</span>
+        {labelMode !== "replace" && selectedLabel && (
           <span className="min-w-0 truncate text-[var(--gold-bright)]">{selectedLabel}</span>
         )}
         {isMultiSelect && selectionCount > 0 && !isResting && (

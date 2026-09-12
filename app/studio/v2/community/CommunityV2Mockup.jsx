@@ -465,6 +465,7 @@ export default function CommunityV2Mockup({
           onClearFilters={clearFilters}
           sortOptions={SORT_OPTIONS}
           selectedSort={selectedSort}
+          defaultSort="popular"
           onSortChange={setSelectedSort}
           viewModeSlot={
             <ViewModeToggleView value={layout} label="Layout" onChange={setLayout} />

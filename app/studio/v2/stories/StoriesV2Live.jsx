@@ -348,6 +348,7 @@ export default function StoriesV2Live({
             }}
             sortOptions={SORT_OPTIONS}
             selectedSort={selectedSort}
+            defaultSort="recent"
             onSortChange={(value) => {
               setSelectedSort(value);
               setVisibleCount(PAGE_SIZE);

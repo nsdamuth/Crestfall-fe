@@ -8,7 +8,10 @@ The sticky filter line. RULED 6 Sep 2026 (FE/FILTERS, Brian): search
 left; anchored right, optional quick tabs, one Filter button opening
 the shared `KitFilterPanel` (active-count badge, search-within,
 chip-group sections in caller order, Clear), a Sort dropdown whose
-trigger reads "Sort: <value>", and the view-mode slot. This supersedes
+trigger reads "Filter" until the user picks a non-default option and
+then reads that option's label alone (2.3.0, RULED 12 Sep 2026,
+eight-fix package FIX 5, supersedes the 6 Sep sort label), and the
+view-mode slot. This supersedes
 the 9 Aug 2026 filter-line law's per-category dropdown row
 (`docs/BUILD-BLUEPRINT.md` 2.16(b), amended the same day: filter
 categories live in one Filter panel; dedicated dropdowns are the

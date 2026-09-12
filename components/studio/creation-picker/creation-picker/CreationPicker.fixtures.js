@@ -30,7 +30,7 @@ function bucketChips(activeValue) {
       label: bucket.label,
       isSelected: activeValue === bucket.value,
     })),
-    { value: "sort-recency", label: "Sort: Recent", isSelected: false },
+    { value: "sort-recency", label: "Recent", isSelected: false },
   ];
 }
 

@@ -141,7 +141,7 @@ export default function ChatPartyRosterView({
             ))}
           </div>
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
-            Sort: {sortLabel}
+            {sortLabel}
           </p>
         </div>
 

@@ -71,12 +71,17 @@ function SectionRail({ rail }) {
       cellSize={isCreatorRail ? "creator" : "fluid"}
       headControlSlot={
         sortControl?.options?.length ? (
-          // Trigger reads "Sort: <value>" (colon, space, current value),
-          // RULED 6 Sep 2026 (Home quick fix). The dropdown renders the
-          // label and the selected value side by side, so the colon
-          // rides on the label; the shared kit is untouched.
+          // Trigger label, RULED 12 Sep 2026 (eight-fix package FIX 5,
+          // supersedes the 6 Sep sort-prefix ruling): reads
+          // "Filter" while the rail sits on its default sort, and the
+          // chosen option's label alone once the user picks another
+          // (KitDropdown 1.4.0 labelMode "replace" with the default as
+          // restingValue). The menu still marks the default.
           <KitDropdownView
-            label="Sort:"
+            label="Filter"
+            ariaLabel="Sort"
+            labelMode="replace"
+            restingValue={sortControl.defaultValue ?? null}
             options={sortControl.options}
             selectedValues={sortControl.selectedValue ? [sortControl.selectedValue] : []}
             isMultiSelect={false}

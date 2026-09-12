@@ -59,7 +59,7 @@ const CREATOR_SORT_OPTIONS = [{ value: "likes", label: "Likes" }];
 
 function sortControl(options) {
   return options.length
-    ? { options, selectedValue: options[0].value, onChange: noop }
+    ? { options, selectedValue: options[0].value, defaultValue: options[0].value, onChange: noop }
     : null;
 }
 
