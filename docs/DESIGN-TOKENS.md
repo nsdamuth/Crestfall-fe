@@ -46,11 +46,13 @@ Only locked tokens may be written by an execution run.
 | Token | Dark | Light | Role | Legal on | Never on | Status |
 |---|---|---|---|---|---|---|
 | `--canvas` | `#090805` | `#ebe3d0` | Page background, behind all art | The page body, full-bleed backdrops | Panels, cards, controls | locked |
-| `--surface-1` | `#16130f` | `#f0e9d8` | Quiet sections, inset wells, inputs | Wells, input beds, quiet chips | Floating panels | locked |
-| `--surface-2` | `#1d1a15` | `#f4eee0` | Cards, list rows, icon-button fills | In-flow cards and rows, circular chrome controls | Modals | locked |
-| `--surface-3` | `#24211a` | `#f8f3e7` | Topbar, sidebar, sticky chrome | Persistent chrome | Content panels | locked |
-| `--surface-4` | `#2c271e` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
+| `--surface-1` | `#1a1712` | `#f0e9d8` | Card: the first step up from the page (INSET model, RULED 12 Sep 2026); quiet sections, quiet chips | In-flow cards and top-level content panels, quiet chips | Field beds and dropdown triggers (use `--bed-deep`), floating panels | locked |
+| `--surface-2` | `#25211b` | `#f4eee0` | Nested card: a card inside a `--surface-1` card, one step up again (RULED 12 Sep 2026); list rows and icon-button fills inside a card | Cards nested in a card, list rows, circular chrome controls | Top-level cards on the page, field beds, modals | locked |
+| `--surface-3` | `#2f2a22` | `#f8f3e7` | Topbar, sidebar, sticky chrome | Persistent chrome | Content panels | locked |
+| `--surface-4` | `#3a342a` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
 | `--surface-footer` | `#1a120b` | same | Marketing footer only, deliberate ramp exception | The site footer | Anything else | locked |
+
+Elevation model, RULED 12 Sep 2026: INSET. The page is darkest, a card sits one step up, a card nested inside a card sits one step up again, and every field bed and dropdown trigger sits below its container on `--bed-deep` with `--shadow-bed`. Gold is never a resting surface. Every adjacent step is a visible step at 390 by 844; Brian rules the values in the browser after each build. The dark ladder was rewritten in the same ruling from 3.3 L* steps to 4.4 to 5.7 L* steps (`app/theme.css` surface ramp comment); `--surface-3` and `--surface-4` moved only to stay above the nested card.
 
 Surfaces are opaque and flip with the theme. Panels are never built from
 translucent black fills: `bg-black/NN` panel chrome cannot flip themes
@@ -397,7 +399,7 @@ column they sit in. This supersedes `docs/BUILD-BLUEPRINT.md`
 same commit; no new token is minted, `--container` and `--measure`
 were already locked.
 
-**SUPERSEDED FOR PRODUCT LAYOUT 24 Aug 2026 — V2 convergence W1.**
+**SUPERSEDED FOR PRODUCT LAYOUT 24 Aug 2026, V2 convergence W1.**
 The global 1200px shell cap is no longer authoritative. `StudioShell` is a
 fluid application workspace and uses the available viewport width. Individual
 reading, form, modal, or card regions may still apply `--measure`, a local
@@ -478,7 +480,7 @@ repeated here.
 | `--fill-ghost` | `rgba(242,209,148,.05)` | same, interim (F1) | Ghost-button and quiet-interactive-surface bed | `.cf-btn--secondary`, trait chips, quiet interactive surfaces | Whole large surfaces | locked |
 | `--control-editor-md` | `var(--control-filter)` (38) | same | Editor CTA height, desktop only; aliases `--control-filter` rather than re-minting the same literal (CR-053) | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
 | `--control-editor-sm` | `1.75rem` (28) | same | Editor CTA height, desktop only, genuinely new value | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
-| `--bed-deep` | `#0d0b08` | same, interim (F1) | Deepest field-bed fill | Field beds | Any surface already on the `--surface-1..4` ramp | locked |
+| `--bed-deep` | `#0d0b08` | `#e3dbc7` | Field-bed and dropdown-trigger fill, one step below whatever contains it (INSET, RULED 12 Sep 2026); light value minted the same day, one step below the Eggshell canvas | Field beds, dropdown triggers | Any surface already on the `--surface-1..4` ramp | locked |
 | `--shadow-bed` | `inset 0 1px 2px rgba(0,0,0,.25)` | same | Inset field-bed shadow, paired with `--bed-deep` | Field beds | Floating surfaces (use `--shadow-modal` / `--shadow-popover`) | locked |
 | `--line-fade` | `linear-gradient(90deg,transparent,rgba(242,209,148,.13) 12%,rgba(242,209,148,.13) 88%,transparent)` | same | 1px fade-out-ends divider, never edge-to-edge | Sidebar groups, card-header rules, rail progress rules; scope broadened 22 Aug 2026 (B1) to every modal-family divider, with a `.tight` compact-margin variant in dense contexts (picker, sort) | Edge-to-edge dividers | locked |
 | `--weight-light` | `300` | same | Ghost-button and typed-field-value weight | `.cf-btn--secondary` and other ghost-styled buttons/chips, `--ink-typed` field values | Body copy, headings | locked |
@@ -486,9 +488,10 @@ repeated here.
 F1, held for a Brian ruling: every row above marked "interim (F1)"
 declares the same value in both themes today; real light-theme values
 need a render sitting (the panel-lift gradient, creation-card
-gradient, `--fill-option-rest`, `--panel-glass`, `--bed-deep`,
+gradient, `--fill-option-rest`, `--panel-glass`,
 `--grad-card`, `--grad-rail`, `--chrome-wash`, `--ink-typed`,
-`--fill-ghost`).
+`--fill-ghost`). `--bed-deep` left this list 12 Sep 2026 when its
+light value was ruled.
 
 ## Ladder and state primitives, RULED 9 Aug 2026
 

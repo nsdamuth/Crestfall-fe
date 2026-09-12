@@ -30,10 +30,17 @@
      is held near 0.10 so it does not go muddy brown. Residual
      step jitter is 8-bit rounding, not the construction.    */
 
-  --surface-1:     #16130f;   /* quiet sections, inset wells     */
-  --surface-2:     #1d1a15;   /* cards, list rows                */
-  --surface-3:     #24211a;   /* topbar, sidebar, sticky chrome  */
-  --surface-4:     #2c271e;   /* modals, menus, popovers         */
+  /* INSET ladder, RULED 12 Sep 2026: the page is darkest, a card
+     sits one step up (surface-1), a card nested inside a card one
+     step up again (surface-2), and every field bed and dropdown
+     trigger sits below its container on --bed-deep. Steps widened
+     from 3.3 to about 4.5 to 5.7 L* so each adjacent pair reads at
+     390 by 844; chrome and the reserved step move only to keep the
+     ladder monotonic. Brian rules the values in the browser.     */
+  --surface-1:     #1a1712;   /* card, first step up from the page */
+  --surface-2:     #25211b;   /* nested card, list rows, chip fills */
+  --surface-3:     #2f2a22;   /* topbar, sidebar, sticky chrome, tooltips */
+  --surface-4:     #3a342a;   /* reserved, no floating consumer  */
 
   /* --- INK -------------------------------------------------- */
 
@@ -58,13 +65,13 @@
   --tag-fill-ink:  #1c1408;
 
   /* --- STATUS -------------------------------------------------
-     Minted fresh, 3 Aug 2026 — not copied or approximated from
+     Minted fresh, 3 Aug 2026, not copied or approximated from
      any color already in the fe app. Three states only: success,
      warning, danger. Deliberately no info color; neutral and
      informational states read through the existing --ink family,
      not a fourth status hue. Each carries a quiet bed and border
      at the same alpha tier as --fill/--line-strong, for chip use.
-     Full usage law recorded in docs/RESTYLE-RULES.md — state only,
+     Full usage law recorded in docs/RESTYLE-RULES.md: state only,
      never decoration; always paired with a word; warning is
      reserved, kept away from gold; --status-danger is the one
      and only red, including the danger button variant.        */
@@ -133,8 +140,8 @@
      Sprint 3. Artwork and the scrims over it do not flip with
      the theme, so text sitting on art cannot use the flipping
      ink family: on light theme --ink goes dark and vanishes
-     into the scrim. These three are constants — declared once,
-     never overridden by the light block — and are the only
+     into the scrim. These three are constants, declared once,
+     never overridden by the light block, and are the only
      colours allowed for text over artwork.                   */
 
   --art-ink:       #ece7dc;   /* titles on art                   */
@@ -771,7 +778,7 @@
 
   /* Rebuilt as parchment, Sprint 3. The old block held canvas
      at the locked L* 95, which left the ramp under 5 points of
-     headroom and surfaces that topped out at pure white — the
+     headroom and surfaces that topped out at pure white, the
      "grey" Brian saw when the unfinished theme leaked. 1.8
      already sanctioned dropping canvas to roughly L* 92; this
      takes it, so the page reads as warm paper and the ramp gets
@@ -781,10 +788,13 @@
 
   --canvas:        #ece7dc;   /* Eggshell canvas, 30 Aug 2026 proof */
 
-  --surface-1:     #f0e9d8;   /* quiet sections, inset wells    */
-  --surface-2:     #f4eee0;   /* cards, list rows               */
-  --surface-3:     #f8f3e7;   /* topbar, sidebar, sticky chrome */
-  --surface-4:     #fcf8ee;   /* modals, menus, popovers        */
+  /* Roles follow the INSET ladder ruled 12 Sep 2026 (see the dark
+     ramp comment). Light values untouched by that ruling; the
+     parchment ramp needs its own render sitting.              */
+  --surface-1:     #f0e9d8;   /* card, first step up from the page */
+  --surface-2:     #f4eee0;   /* nested card, list rows, chip fills */
+  --surface-3:     #f8f3e7;   /* topbar, sidebar, sticky chrome, tooltips */
+  --surface-4:     #fcf8ee;   /* reserved, no floating consumer  */
 
   /* Ink goes warm near-black, not cool grey. */
   --ink:           #2a2418;
@@ -807,7 +817,7 @@
   --line-strong:   rgba(96, 74, 34, .36);
 
   /* Fills flip to the light line base. Scrims do not flip and
-     are deliberately absent from this block — anything over
+     are deliberately absent from this block; anything over
      artwork uses the --art-* constants instead.              */
 
   --fill-whisper:  rgba(96, 74, 34, .05);
@@ -831,13 +841,15 @@
 
   /* --- ED1F LIGHT VALUES, S02 RENDER SITTING 30 Aug 2026 ---------
      UI-only beds now follow the Eggshell ramp. Art/lightbox glass
-     and chat-only deep beds stay dark because their background role
-     does not change with app theme. */
+     stays dark because its background role does not change with app
+     theme. --bed-deep gained a parchment value 12 Sep 2026 (INSET
+     ladder ruling) once it became the field bed for every /studio
+     field, one step below the Eggshell canvas. */
   --ink-typed:          #d9d3c6;
   --fill-ghost:         rgba(96, 74, 34, .04);
   --grad-card:          linear-gradient(160deg, var(--surface-2), var(--surface-1));
   --grad-rail:          linear-gradient(160deg, var(--surface-3), var(--surface-2));
-  --bed-deep:           #0d0b08;
+  --bed-deep:           #e3dbc7;
   --chrome-wash:        rgba(6, 4, 2, .62);
   --panel-glass:        rgba(36, 32, 25, .85);
   --panel-ui-glass:     rgba(252, 248, 238, .94);
