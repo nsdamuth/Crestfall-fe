@@ -7,7 +7,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import CreationPicker from "@/components/studio/creation-picker/CreationPicker";
+
+// Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): Studio, then
+// Editor, above the centered empty state.
+const EDITOR_INDEX_BREADCRUMBS = [{ label: "Studio", href: "/studio" }, { label: "Editor" }];
 
 export default function EditorIndexClient() {
   const router = useRouter();
@@ -15,6 +20,9 @@ export default function EditorIndexClient() {
 
   return (
     <section className="mx-auto flex w-full max-w-[var(--container)] flex-col items-center gap-[var(--space-4)] px-[var(--space-4)] py-[var(--space-16)] text-center sm:px-[var(--space-6)]">
+      <div className="w-full">
+        <KitBreadcrumbs items={EDITOR_INDEX_BREADCRUMBS} />
+      </div>
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         Editor
       </p>

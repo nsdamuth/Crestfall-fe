@@ -12,6 +12,9 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {boolean} shouldRender
  * @property {string} loadErrorMessage
  * @property {Object|null} creation
+ * @property {Array<{label: string, href?: string}>} [breadcrumbs] added
+ *   12 Sep 2026 (eight-fix package FIX 4), optional and additive:
+ *   Community, then the creation title, rendered above the header card.
  * @property {Object|null} description
  * @property {Array<Object>} mediaTabs
  * @property {string} query

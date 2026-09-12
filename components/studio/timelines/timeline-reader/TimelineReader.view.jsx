@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
+import KitBreadcrumbsView from "@/components/kit/breadcrumbs/KitBreadcrumbs.view";
 import {
   ArrowLeft,
   CalendarDays,
@@ -188,6 +190,7 @@ export default function TimelineReaderView({
   entryCount = 0,
   groups = [],
   showEditAction = true,
+  breadcrumbs = [],
   onBack = null,
   onEdit = null,
   LinkComponent = "a",
@@ -260,6 +263,13 @@ export default function TimelineReaderView({
 
   return (
     <div className="mx-auto w-full max-w-[112rem] pb-16">
+      {/* Breadcrumbs (1.2.0, eight-fix package FIX 4, 12 Sep 2026):
+          Lore, then this timeline, above the action row. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbsView items={breadcrumbs} LinkComponent={LinkComponent} />
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button type="button" onClick={() => onBack?.()} className="cf-btn">
           <ArrowLeft size={14} /> Back to Lore

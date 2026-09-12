@@ -10,6 +10,7 @@
 // every section body arrives pre-composed in `sectionNodes`.
 import { Check, ChevronDown, ChevronsUpDown, List, Loader2, Save } from "lucide-react";
 
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import { useState } from "react";
 
@@ -317,6 +318,7 @@ export default function EditorView({
   sectionSeats = {},
   backLabel = "Back",
   onBack,
+  breadcrumbs = [],
   hero = null,
   featuredImagePicker = null,
   creationPicker = null,
@@ -357,6 +359,10 @@ export default function EditorView({
       ) : (
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)] 2xl:grid-cols-[minmax(0,1fr)_288px]">
           <div className="min-w-0 pb-[var(--space-14)] lg:pb-0">
+            {/* Breadcrumbs (4.1.0, eight-fix package FIX 4, 12 Sep
+                2026): Studio, then the creation being edited, above
+                the origin-aware Back control. */}
+            {breadcrumbs?.length ? <KitBreadcrumbs items={breadcrumbs} /> : null}
             {onBack ? (
               <button
                 type="button"

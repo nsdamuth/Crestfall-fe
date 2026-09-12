@@ -17,7 +17,6 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import KitFormFieldView from "@/components/kit/form-field/KitFormField.view";
-import ProfileBackButton from "@/components/studio/profile/ProfileBackButton";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 
 // Same left-aligned eyebrow-with-trailing-rule recipe as every other
@@ -322,14 +321,18 @@ export default function CreatorProfileView({
       <KitStudioPageView
         harnessSlot={harnessSlot}
         headerSlot={
-          <div className="flex flex-col gap-[var(--space-4)]">
-            <ProfileBackButton fallbackHref="/studio/v2/creators" />
-            <StudioPageHeaderView
-              eyebrow="Creator Profile"
-              title={displayName || "Unknown creator"}
-              description={handle ? `@${handle}` : ""}
-            />
-          </div>
+          // Breadcrumbs replace the floating circular back button,
+          // RULED 12 Sep 2026 (eight-fix package, FIX 4): Creators,
+          // then this creator.
+          <StudioPageHeaderView
+            eyebrow="Creator Profile"
+            title={displayName || "Unknown creator"}
+            description={handle ? `@${handle}` : ""}
+            breadcrumbs={[
+              { label: "Creators", href: "/studio/v2/creators" },
+              { label: displayName || "Unknown creator" },
+            ]}
+          />
         }
         bannerSlot={
           <KitPromoBannerView

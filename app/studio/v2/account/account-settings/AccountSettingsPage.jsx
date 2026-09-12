@@ -29,10 +29,16 @@ export default function AccountSettingsPage({ settingsId }) {
   return (
     <KitStudioPageView
       headerSlot={
+        // Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): Account,
+        // then this settings page.
         <StudioPageHeaderView
           eyebrow={config.eyebrow}
           title={config.title}
           description={config.description}
+          breadcrumbs={[
+            { label: "Account", href: "/studio/v2/account" },
+            { label: config.title },
+          ]}
         />
       }
     >

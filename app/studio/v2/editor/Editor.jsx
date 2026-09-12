@@ -202,6 +202,10 @@ function EditorInner({
       onDiscard={onDiscard}
       backLabel="Back"
       onBack={() => router.push(backHref)}
+      breadcrumbs={[
+        { label: "Studio", href: "/studio" },
+        { label: heroProps?.title || "Untitled Creation" },
+      ]}
       hero={
         <EditorHeader
           {...heroProps}

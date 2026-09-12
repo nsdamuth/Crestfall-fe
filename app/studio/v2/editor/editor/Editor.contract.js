@@ -1,4 +1,10 @@
-export const EDITOR_VIEW_CONTRACT_VERSION = "4.0.0";
+export const EDITOR_VIEW_CONTRACT_VERSION = "4.1.0";
+
+// Version note, 4.0.0 -> 4.1.0 (additive, eight-fix package FIX 4,
+// 12 Sep 2026): optional `breadcrumbs` items (Studio, then the
+// creation title) render the shared KitBreadcrumbs row above the
+// origin-aware Back control. Absent, the 4.0.0 document is
+// unchanged.
 
 // Version note, 3.0.0 -> 4.0.0 (BREAKING, ED1C,
 // docs/plans/ED1B-EDITOR-PAGE-SPEC.md, Brian's 13 Aug direction):

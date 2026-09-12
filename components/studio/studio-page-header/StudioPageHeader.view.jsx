@@ -1,5 +1,7 @@
 import { Children } from "react";
 
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
+
 // Page heading law hardening (R7, 10 Aug 2026 review gate): the
 // children slot is documented as page-level ACTIONS, but many live
 // pages pass the page description as bare text children, which
@@ -15,6 +17,7 @@ export default function StudioPageHeaderView({
   description = "",
   children = null,
   compactMobile = false,
+  breadcrumbs = [],
 }) {
   const childList = Children.toArray(children);
   const childrenAreTextOnly =
@@ -54,6 +57,15 @@ export default function StudioPageHeaderView({
           <p className="max-w-[44rem] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {resolvedDescription}
           </p>
+        ) : null}
+
+        {/* Breadcrumbs (1.3.0, RULED 12 Sep 2026, FIX 4): between the
+            description line and the header divider, on every page
+            deeper than a primary sidebar page. Empty: nothing renders. */}
+        {breadcrumbs?.length ? (
+          <div className="mt-[var(--space-2)]">
+            <KitBreadcrumbs items={breadcrumbs} />
+          </div>
         ) : null}
       </div>
 

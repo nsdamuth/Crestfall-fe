@@ -1,3 +1,4 @@
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import {
   Bookmark,
   Camera,
@@ -23,6 +24,7 @@ export default function CreationProfilePageView({
   shouldRender = false,
   loadErrorMessage = "",
   creation = null,
+  breadcrumbs = [],
   description = null,
   mediaTabs = [],
   query = "",
@@ -66,6 +68,14 @@ export default function CreationProfilePageView({
 
   return (
     <section className="pb-12">
+      {/* Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): this page
+          carries its own header card rather than StudioPageHeader, so
+          the row sits directly above it. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbs items={breadcrumbs} />
+        </div>
+      ) : null}
       <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-start">
           <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-4xl text-[var(--gold-ornament)]">

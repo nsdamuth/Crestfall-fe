@@ -559,6 +559,16 @@ export function useCreationProfilePageViewModel({
       ? `Creation catalogue could not be loaded: ${loadError}`
       : "",
     creation: normalizedCreation,
+    // Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): the public
+    // creation detail sits under Community, the public catalogue, then
+    // the creation title. Section-by-type (a Story detail under
+    // Stories) is not ruled; one section keeps the row honest.
+    breadcrumbs: normalizedCreation
+      ? [
+          { label: "Community", href: "/studio/v2/community" },
+          { label: normalizedCreation.title },
+        ]
+      : [],
     description: getCreationProfileDescription(
       normalizedCreation?.description,
       descriptionExpanded

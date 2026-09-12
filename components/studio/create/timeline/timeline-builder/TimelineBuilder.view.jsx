@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitBreadcrumbsView from "@/components/kit/breadcrumbs/KitBreadcrumbs.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
@@ -206,6 +207,8 @@ export default function TimelineBuilderView({
   onRemoveChapter = null,
   onSave = null,
   onBackToLore = null,
+  breadcrumbs = [],
+  LinkComponent = "a",
 }) {
   if (loadStatus === "loading") {
     return (
@@ -228,6 +231,14 @@ export default function TimelineBuilderView({
 
   return (
     <>
+      {/* Breadcrumbs (1.2.0, eight-fix package FIX 4, 12 Sep 2026):
+          the origin section, then this timeline, above the Back
+          control. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbsView items={breadcrumbs} LinkComponent={LinkComponent} />
+        </div>
+      ) : null}
       <div className="mb-5">
         <button type="button" onClick={() => onBackToLore?.()} className="cf-btn">
           <ArrowLeft size={14} /> Back to Lore

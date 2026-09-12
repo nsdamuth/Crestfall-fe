@@ -2,10 +2,10 @@
 
 // Binding Shell (docs/CRESTFALL-DESIGN-CONTEXT.md LOOM shape): owns
 // Crestfall-specific integration only. Next.js navigation (useRouter)
-// is the one piece of application wiring this page needs beyond the
-// back button, which is self-contained (components/studio/profile/
-// ProfileBackButton owns its own router hook internally, composed
-// directly by CreatorProfile.view.jsx). The fixture-mode harness
+// is the one piece of application wiring this page needs; the header
+// breadcrumb row (KitBreadcrumbs through StudioPageHeader 1.3.0,
+// FIX 4, 12 Sep 2026) links through next/link inside the kit shell,
+// composed directly by CreatorProfile.view.jsx. The fixture-mode harness
 // (default / empty / loading / error / muted / longest content) is
 // dev-only QA scaffolding, never product, per docs/FRONTEND-SOP.md
 // section 2. Mute placement is ruled (item 36, CR-028, 11 Aug 2026):
