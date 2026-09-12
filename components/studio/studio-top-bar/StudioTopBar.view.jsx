@@ -48,7 +48,7 @@ export default function StudioTopBarView({
             arrives as `globalSearch`; the View owns no search state. */}
         <KitGlobalSearch
           {...(globalSearch || {})}
-          className="ml-auto w-full max-w-[26rem]"
+          className="ml-auto w-full min-w-0 max-w-[26rem]"
         />
 
         <button
