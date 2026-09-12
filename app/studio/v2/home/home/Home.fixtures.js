@@ -93,7 +93,6 @@ const SECTION_RAILS = [
 export const homeFullPageFixture = {
   topBanner: TOP_BANNER,
   continueItem: CONTINUE_ITEM,
-  welcomeName: "Player",
   sectionRails: SECTION_RAILS,
   bottomBanner: BOTTOM_BANNER,
   errorMessage: null,

@@ -132,7 +132,6 @@ export function useHomeViewModel({
   loreCommunityCreations = [],
   loreOwnedCreations = [],
   viewerUsername = null,
-  viewerDisplayName = null,
   followingUsernames = [],
   storiesLoadError = null,
   communityLoadError = null,
@@ -396,13 +395,7 @@ export function useHomeViewModel({
     sectionRails.some((rail) => rail.items.length > 0) || Boolean(continueItem);
   const errorMessage = !hasDiscoverableData && sourceErrors.length ? sourceErrors[0] : null;
   const warningMessage = hasDiscoverableData && sourceErrors.length ? sourceErrors.join(" ") : null;
-  const welcomeName =
-    (typeof viewerDisplayName === "string" && viewerDisplayName.trim()) ||
-    (typeof viewerUsername === "string" && viewerUsername.trim()) ||
-    "Player";
-
   return {
-    welcomeName,
     topBanner: {
       ...TOP_BANNER,
       onCtaClick: () => onNavigate?.("/studio/v2/stories"),
