@@ -147,7 +147,7 @@ export default function KitFormFieldView({
     );
   }
 
-  const inputBedClass = `min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${monoClass} ${
+  const inputBedClass = `min-h-[var(--control-md)] w-full rounded-[var(--radius-md)] border bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] ${monoClass} ${
     hasError
       ? "border-[var(--status-danger-border)] bg-[var(--status-danger-bed)]"
       : hasSuccess

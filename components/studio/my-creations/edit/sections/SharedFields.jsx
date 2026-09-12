@@ -62,7 +62,7 @@ const LABEL_CLASS =
 // focus treatment on every focusable element app-wide, this field
 // bed included.
 const FIELD_BED_CLASS =
-  "min-w-0 max-w-full w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
+  "min-w-0 max-w-full w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -290,7 +290,7 @@ export function TextAreaField({
     setIsFocused(false);
   }
 
-  const bedClass = `min-w-0 max-w-full w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+  const bedClass = `min-w-0 max-w-full w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
     mono ? " font-mono" : ""
   }`;
 

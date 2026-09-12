@@ -10,7 +10,7 @@ import {
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function Field({ label, children }) {
   return (
