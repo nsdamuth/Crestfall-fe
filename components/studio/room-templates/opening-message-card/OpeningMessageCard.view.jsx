@@ -1,5 +1,5 @@
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
-import { TextAreaField } from "@/components/studio/create/room-template/RoomTemplateFields";
+import { TextAreaField } from "@/components/studio/room-templates/RoomTemplateFields";
 
 export default function OpeningMessageCardView({
   messageLabel = "Opening Message",
