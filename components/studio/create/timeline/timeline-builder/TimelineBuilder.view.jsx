@@ -12,6 +12,8 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 const inputClass =
   "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
@@ -85,20 +87,20 @@ function EntryRow({
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
               Chapter
             </span>
-            <select
-              value={entry.chapterId || ""}
-              onChange={(event) =>
-                onUpdateEntryChapter?.(entry.id, event.target.value)
-              }
-              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-            >
-              <option value="">Unassigned</option>
-              {chapters.map((chapter) => (
-                <option key={chapter.id} value={chapter.id}>
-                  {chapter.title}
-                </option>
-              ))}
-            </select>
+            <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={[
+                  { value: "", label: "Unassigned" },
+                  ...chapters.map((chapter) => ({
+                    value: chapter.id,
+                    label: chapter.title,
+                  })),
+                ]}
+                selectedValues={[entry.chapterId || ""]}
+                isMultiSelect={false}
+                onToggleOption={(nextValue) => onUpdateEntryChapter?.(entry.id, nextValue)}
+              />
+            </div>
           </label>
           <label className="block">
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
@@ -305,39 +307,36 @@ export default function TimelineBuilderView({
 
               <div className="grid gap-4 md:grid-cols-3">
                 <Field label="Workspace visibility" help="Controls owner/internal access to the Timeline asset itself.">
-                  <select
-                    className={inputClass}
-                    value={visibility}
-                    onChange={(event) => onUpdateField?.("visibility", event.target.value)}
-                  >
-                    {visibilityOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={visibilityOptions}
+                      selectedValues={visibility ? [visibility] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("visibility", nextValue)}
+                    />
+                  </div>
                 </Field>
 
                 <Field label="Chronology direction">
-                  <select
-                    className={inputClass}
-                    value={sortDirection}
-                    onChange={(event) => onUpdateField?.("sortDirection", event.target.value)}
-                  >
-                    {sortOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={sortOptions}
+                      selectedValues={sortDirection ? [sortDirection] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("sortDirection", nextValue)}
+                    />
+                  </div>
                 </Field>
 
                 <Field label="Viewer grouping" help="Chapters are authored by this Timeline; Lore eras remain owned by Lore.">
-                  <select
-                    className={inputClass}
-                    value={groupingMode}
-                    onChange={(event) => onUpdateField?.("groupingMode", event.target.value)}
-                  >
-                    {groupingOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={groupingOptions}
+                      selectedValues={groupingMode ? [groupingMode] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("groupingMode", nextValue)}
+                    />
+                  </div>
                 </Field>
               </div>
 

@@ -2,6 +2,8 @@
 
 import { BookOpenCheck, Braces, Plus, Trash2 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 function Label({ children }) {
   return (
     <label className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
@@ -304,19 +306,14 @@ export default function SkillsProfileEditorView({
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div>
             <Label>Starter selection mode</Label>
-            <select
-              value={starterSelection.mode || "NONE"}
-              onChange={(event) =>
-                onUpdateStarterSelectionMode?.(event.target.value)
-              }
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
-            >
-              {starterSelectionModeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={starterSelectionModeOptions}
+                selectedValues={[starterSelection.mode || "NONE"]}
+                isMultiSelect={false}
+                onToggleOption={(nextValue) => onUpdateStarterSelectionMode?.(nextValue)}
+              />
+            </div>
           </div>
           <label className="flex items-end gap-3 pb-3 text-sm text-[var(--foreground)]">
             <input

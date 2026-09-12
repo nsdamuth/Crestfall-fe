@@ -1,5 +1,7 @@
 "use client";
 
+import { SelectField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+
 function Field({ label, children }) {
   return (
     <div>
@@ -42,19 +44,11 @@ export default function SkillsProfileBuilderView({
           <Field label="Creation title">
             <input className={inputClass} value={title} onChange={(event) => onUpdateIdentity?.("title", event.target.value)} />
           </Field>
-          <Field label="Visibility">
-            <select className={inputClass} value={visibility} onChange={(event) => onUpdateIdentity?.("visibility", event.target.value)}>
-              {visibilityOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </Field>
+          <SelectField label="Visibility" value={visibility} onChange={(value) => onUpdateIdentity?.("visibility", value)} options={visibilityOptions} />
           <Field label="Description">
             <textarea rows={3} className={inputClass} value={description} onChange={(event) => onUpdateIdentity?.("description", event.target.value)} />
           </Field>
-          <Field label="Content rating">
-            <select className={inputClass} value={contentRating} onChange={(event) => onUpdateIdentity?.("contentRating", event.target.value)}>
-              {contentRatingOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </Field>
+          <SelectField label="Content rating" value={contentRating} onChange={(value) => onUpdateIdentity?.("contentRating", value)} options={contentRatingOptions} />
         </div>
       </section>
 

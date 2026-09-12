@@ -6,6 +6,8 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function StorylineNodeListEditorView({
   headerEyebrow = "Narrative Sequence",
   headerDescription = "",
@@ -153,23 +155,17 @@ export default function StorylineNodeListEditorView({
                   <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Transition After Completion
                   </span>
-                  <select
-                    value={node.transitionPolicy}
-                    disabled={node.isLast}
-                    onChange={(event) =>
-                      onChangeTransitionPolicy?.(
-                        node.index,
-                        event.target.value
-                      )
-                    }
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {node.transitionOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={node.transitionOptions}
+                      selectedValues={node.transitionPolicy ? [node.transitionPolicy] : []}
+                      isMultiSelect={false}
+                      isDisabled={node.isLast}
+                      onToggleOption={(nextValue) =>
+                        onChangeTransitionPolicy?.(node.index, nextValue)
+                      }
+                    />
+                  </div>
                   <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                     {node.transitionDescription}
                   </p>
@@ -197,22 +193,16 @@ export default function StorylineNodeListEditorView({
                     </div>
 
                     <div className="flex gap-2">
-                      <select
-                        value={node.triggerMode}
-                        onChange={(event) =>
-                          onChangeTriggerMode?.(
-                            node.index,
-                            event.target.value
-                          )
-                        }
-                        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs outline-none"
-                      >
-                        {node.triggerModeOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="[&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                        <KitDropdownView
+                          options={node.triggerModeOptions}
+                          selectedValues={node.triggerMode ? [node.triggerMode] : []}
+                          isMultiSelect={false}
+                          onToggleOption={(nextValue) =>
+                            onChangeTriggerMode?.(node.index, nextValue)
+                          }
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => onAddTrigger?.(node.index)}
@@ -229,23 +219,16 @@ export default function StorylineNodeListEditorView({
                         key={trigger.id}
                         className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
                       >
-                        <select
-                          value={trigger.type}
-                          onChange={(event) =>
-                            onChangeTriggerType?.(
-                              node.index,
-                              trigger.index,
-                              event.target.value
-                            )
-                          }
-                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs outline-none"
-                        >
-                          {node.triggerTypeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="[&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                          <KitDropdownView
+                            options={node.triggerTypeOptions}
+                            selectedValues={trigger.type ? [trigger.type] : []}
+                            isMultiSelect={false}
+                            onToggleOption={(nextValue) =>
+                              onChangeTriggerType?.(node.index, trigger.index, nextValue)
+                            }
+                          />
+                        </div>
                         <input
                           value={trigger.label}
                           onChange={(event) =>

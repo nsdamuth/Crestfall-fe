@@ -1,5 +1,7 @@
 import { Globe2 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function StorylineOpenWorldSettingsView({
   title = "Open-World Interludes",
   description = "",
@@ -36,19 +38,14 @@ export default function StorylineOpenWorldSettingsView({
           <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             {defaultTransitionLabel}
           </span>
-          <select
-            value={defaultTransitionValue}
-            onChange={(event) =>
-              onChangeDefaultTransition?.(event.target.value)
-            }
-            className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
-          >
-            {defaultTransitionOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={defaultTransitionOptions}
+              selectedValues={defaultTransitionValue ? [defaultTransitionValue] : []}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onChangeDefaultTransition?.(nextValue)}
+            />
+          </div>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
             {defaultTransitionHelp}
           </p>

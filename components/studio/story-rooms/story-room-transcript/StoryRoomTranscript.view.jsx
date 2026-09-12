@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronUp, Flag, Loader2, Sparkles, UserRound, X } from "lucide-react";
 
 import StoryRoomMessageView from "../story-room-message/StoryRoomMessage.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 const DEFAULT_VISIBLE_MESSAGES = 12;
 const LOAD_EARLIER_BATCH_SIZE = 10;
@@ -167,18 +168,15 @@ function MessageReportDialog({
 
         <label className="mt-5 block text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)]">
           Reason
-          <select
-            value={reasonCode}
-            onChange={(event) => onReasonCodeChange?.(event.target.value)}
-            disabled={pending}
-            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-3 py-2.5 text-sm normal-case tracking-normal text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-          >
-            {reasonOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={reasonOptions}
+              selectedValues={reasonCode ? [reasonCode] : []}
+              isMultiSelect={false}
+              isDisabled={pending}
+              onToggleOption={(nextValue) => onReasonCodeChange?.(nextValue)}
+            />
+          </div>
         </label>
 
         <label className="mt-4 block text-xs uppercase tracking-[0.15em] text-[var(--ink-dim)]">

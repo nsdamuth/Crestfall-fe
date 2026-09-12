@@ -16,6 +16,7 @@ import {
   STORY_STATUS_SURFACE_SOURCE_DOMAINS,
   STORY_STATUS_SURFACE_STATS_KINDS,
 } from "./StoryStatusSurfaces.contract.js";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function Field({ label, value, onChange, placeholder = "", help = "", list }) {
   return (
@@ -34,20 +35,22 @@ function Field({ label, value, onChange, placeholder = "", help = "", list }) {
 }
 
 function SelectField({ label, value, onChange, options, help = "" }) {
+  const normalizedOptions = options.map((option) => ({
+    value: option?.value ?? option,
+    label: option?.label ?? option,
+  }));
+
   return (
     <label className="grid gap-2 text-sm text-[var(--muted)]">
       <span>{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-      >
-        {options.map((option) => (
-          <option key={option.value ?? option} value={option.value ?? option}>
-            {option.label ?? option}
-          </option>
-        ))}
-      </select>
+      <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+        <KitDropdownView
+          options={normalizedOptions}
+          selectedValues={value !== undefined && value !== null ? [value] : []}
+          isMultiSelect={false}
+          onToggleOption={(nextValue) => onChange?.(nextValue)}
+        />
+      </div>
       {help ? <span className="text-[11px] leading-5 text-[var(--muted)]">{help}</span> : null}
     </label>
   );

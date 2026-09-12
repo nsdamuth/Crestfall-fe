@@ -3,6 +3,7 @@
 import { Activity, Save, ShieldCheck } from "lucide-react";
 
 import StatsPoolsEditorView from "@/components/studio/create/stats-pools/stats-pools-editor/StatsPoolsEditor.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -29,17 +30,14 @@ function TextInput({ value, onChange, placeholder }) {
 
 function SelectInput({ value, options, onChange }) {
   return (
-    <select
-      value={value}
-      onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        onToggleOption={(nextValue) => onChange?.(nextValue)}
+      />
+    </div>
   );
 }
 

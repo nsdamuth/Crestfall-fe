@@ -2,6 +2,8 @@
 
 import { Save } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function StorylineBuilderShellView({
   eyebrow = "Adventure Builder",
   displayTitle = "Untitled Adventure",
@@ -72,34 +74,28 @@ export default function StorylineBuilderShellView({
               <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {visibilityLabel}
               </span>
-              <select
-                value={visibilityValue}
-                onChange={(event) => onChangeVisibility(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
-              >
-                {visibilityOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                <KitDropdownView
+                  options={visibilityOptions}
+                  selectedValues={visibilityValue ? [visibilityValue] : []}
+                  isMultiSelect={false}
+                  onToggleOption={(nextValue) => onChangeVisibility(nextValue)}
+                />
+              </div>
             </label>
 
             <label className="block">
               <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {contentRatingLabel}
               </span>
-              <select
-                value={contentRatingValue}
-                onChange={(event) => onChangeContentRating(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
-              >
-                {contentRatingOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                <KitDropdownView
+                  options={contentRatingOptions}
+                  selectedValues={contentRatingValue ? [contentRatingValue] : []}
+                  isMultiSelect={false}
+                  onToggleOption={(nextValue) => onChangeContentRating(nextValue)}
+                />
+              </div>
             </label>
           </div>
 

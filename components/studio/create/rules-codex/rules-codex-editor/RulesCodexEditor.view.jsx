@@ -17,6 +17,7 @@ import {
 
 import RulesCodexJsonEditorModal from "../rules-codex-json-editor/RulesCodexJsonEditorModal";
 import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function Counter({ value = 0, limit = 0 }) {
   const safeValue = Number.isFinite(Number(value)) ? Number(value) : 0;
@@ -97,15 +98,16 @@ function NumberInput({ value, onChange, min, max, step = 1 }) {
   );
 }
 
-function SelectInput({ value, onChange, children }) {
+function SelectInput({ value, onChange, options = [] }) {
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 
@@ -450,11 +452,12 @@ export default function RulesCodexEditorView({
                                 event.target.value
                               )
                             }
-                          >
-                            <option value="ALWAYS">Always</option>
-                            <option value="CONTEXTUAL">Contextual</option>
-                            <option value="EXPLICIT_ONLY">Explicit only</option>
-                          </SelectInput>
+                            options={[
+                              { value: "ALWAYS", label: "Always" },
+                              { value: "CONTEXTUAL", label: "Contextual" },
+                              { value: "EXPLICIT_ONLY", label: "Explicit only" },
+                            ]}
+                          />
                         </div>
 
                         <div>
@@ -468,10 +471,11 @@ export default function RulesCodexEditorView({
                                 event.target.value
                               )
                             }
-                          >
-                            <option value="ANY">Any signal</option>
-                            <option value="ALL">All populated groups</option>
-                          </SelectInput>
+                            options={[
+                              { value: "ANY", label: "Any signal" },
+                              { value: "ALL", label: "All populated groups" },
+                            ]}
+                          />
                         </div>
 
                         <div>

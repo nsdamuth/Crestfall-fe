@@ -23,6 +23,7 @@ import {
 import ActorMechanicsProfileJsonEditorModal from "../actor-mechanics-profile-json-editor/ActorMechanicsProfileJsonEditorModal";
 import { ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS } from "./ActorMechanicsProfileEditor.contract";
 import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function humanize(value) {
   return String(value || "")
@@ -102,16 +103,17 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
   );
 }
 
-function SelectInput({ value, onChange, children, disabled = false }) {
+function SelectInput({ value, onChange, options = [], disabled = false }) {
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--canvas)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        isDisabled={disabled}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 
@@ -329,13 +331,11 @@ export default function ActorMechanicsProfileEditorView({
             <SelectInput
               value={pendingPresetId}
               onChange={(event) => onSelectPreset?.(event.target.value)}
-            >
-              {safePresetOptions.map((preset) => (
-                <option key={preset.presetId} value={preset.presetId}>
-                  {preset.title}
-                </option>
-              ))}
-            </SelectInput>
+              options={safePresetOptions.map((preset) => ({
+                value: preset.presetId,
+                label: preset.title,
+              }))}
+            />
             {selectedPreset ? (
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 {selectedPreset.summary}
@@ -417,13 +417,11 @@ export default function ActorMechanicsProfileEditorView({
               onChange={(event) =>
                 onUpdateOwner?.("bindingMode", event.target.value)
               }
-            >
-              {ownerBindingModes.map((mode) => (
-                <option key={mode} value={mode}>
-                  {humanize(mode)}
-                </option>
-              ))}
-            </SelectInput>
+              options={ownerBindingModes.map((mode) => ({
+                value: mode,
+                label: humanize(mode),
+              }))}
+            />
           </div>
 
           <div>
@@ -432,13 +430,11 @@ export default function ActorMechanicsProfileEditorView({
               value={ownerType}
               disabled={ownerLocked}
               onChange={(event) => onUpdateOwner?.("ownerType", event.target.value)}
-            >
-              {ownerTypes.map((type) => (
-                <option key={type} value={type}>
-                  {humanize(type)}
-                </option>
-              ))}
-            </SelectInput>
+              options={ownerTypes.map((type) => ({
+                value: type,
+                label: humanize(type),
+              }))}
+            />
           </div>
 
           <div>
@@ -521,13 +517,11 @@ export default function ActorMechanicsProfileEditorView({
               onChange={(event) =>
                 onUpdateCapabilityPolicy?.("mode", event.target.value)
               }
-            >
-              {capabilityModes.map((mode) => (
-                <option key={mode} value={mode}>
-                  {humanize(mode)}
-                </option>
-              ))}
-            </SelectInput>
+              options={capabilityModes.map((mode) => ({
+                value: mode,
+                label: humanize(mode),
+              }))}
+            />
           </div>
 
           <div>
@@ -540,13 +534,11 @@ export default function ActorMechanicsProfileEditorView({
                   event.target.value
                 )
               }
-            >
-              {opposedResolutionPolicies.map((policy) => (
-                <option key={policy} value={policy}>
-                  {humanize(policy)}
-                </option>
-              ))}
-            </SelectInput>
+              options={opposedResolutionPolicies.map((policy) => ({
+                value: policy,
+                label: humanize(policy),
+              }))}
+            />
           </div>
         </div>
 
@@ -771,13 +763,8 @@ export default function ActorMechanicsProfileEditorView({
                               event.target.value
                             )
                           }
-                        >
-                          {domainOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </SelectInput>
+                          options={domainOptions}
+                        />
                       </div>
 
                       <div>
@@ -806,13 +793,8 @@ export default function ActorMechanicsProfileEditorView({
                               event.target.value
                             )
                           }
-                        >
-                          {activationModeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </SelectInput>
+                          options={activationModeOptions}
+                        />
                       </div>
                     </div>
 
@@ -996,16 +978,8 @@ export default function ActorMechanicsProfileEditorView({
                                           event.target.value
                                         )
                                       }
-                                    >
-                                      {referenceTypeOptions.map((option) => (
-                                        <option
-                                          key={option.value}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </option>
-                                      ))}
-                                    </SelectInput>
+                                      options={referenceTypeOptions}
+                                    />
                                   </div>
 
                                   <div>

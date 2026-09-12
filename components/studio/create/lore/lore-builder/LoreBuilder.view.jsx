@@ -4,6 +4,7 @@ import { BookOpenText, Eye, Pencil, Save, ShieldCheck } from "lucide-react";
 import LoreEditorView from "@/components/studio/create/lore/lore-editor/LoreEditor.view";
 import LoreDocumentRendererView from "@/components/studio/create/lore/lore-document-renderer/LoreDocumentRenderer.view";
 import {
+  SelectField,
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
@@ -92,8 +93,8 @@ export default function LoreBuilderView({
               maxLength={SHORT_LONGFORM_MAX_LENGTH}
             />
             <div className="grid gap-4 md:grid-cols-2">
-              <Field label="Draft visibility"><select className={inputClass} value={visibility} onChange={(event) => onUpdateIdentity?.("visibility", event.target.value)}>{visibilityOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></Field>
-              <Field label="Content rating"><select className={inputClass} value={contentRating} onChange={(event) => onUpdateIdentity?.("contentRating", event.target.value)}>{contentRatingOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></Field>
+              <SelectField label="Draft visibility" value={visibility} onChange={(value) => onUpdateIdentity?.("visibility", value)} options={visibilityOptions} />
+              <SelectField label="Content rating" value={contentRating} onChange={(value) => onUpdateIdentity?.("contentRating", value)} options={contentRatingOptions} />
             </div>
           </div>
         </section>

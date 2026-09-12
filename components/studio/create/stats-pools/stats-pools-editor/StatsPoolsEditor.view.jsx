@@ -1,5 +1,6 @@
 "use client";
 
+import { Children, isValidElement } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -22,6 +23,7 @@ import {
 
 import StatsPoolsJsonEditorModal from "../stats-pools-json-editor/StatsPoolsJsonEditorModal";
 import { STATS_POOLS_EDITOR_LIMITS } from "./StatsPoolsEditor.contract";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -63,15 +65,20 @@ function TextInput({ value = "", onChange, placeholder = "", disabled = false, t
 }
 
 function SelectInput({ value, onChange, children, disabled = false }) {
+  const options = Children.toArray(children)
+    .filter(isValidElement)
+    .map((child) => ({ value: child.props.value, label: child.props.children }));
+
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        isDisabled={disabled}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 

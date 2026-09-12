@@ -14,6 +14,8 @@ import {
   X,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 // B7 viewer final (22 Aug 2026, Fable law review, ED1F propagation
 // plan group G3), superseding the prior sidebar-plus-actions-panel
 // layout. This surface does not compose KitModalFrame (it predates
@@ -600,17 +602,22 @@ export function ReassignDialog({
               <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Destination asset
               </span>
-              <select
-                value={destinationCreationId}
-                onChange={(event) => onDestinationChange?.(event.target.value)}
-                disabled={isBusy || !targets.length}
-                className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink)] outline-none transition-colors hover:border-[var(--gold-ornament)] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {!targets.length ? <option value="">No eligible destinations</option> : null}
-                {targets.map((target) => (
-                  <option key={target.id} value={target.id}>{target.title || target.name || "Untitled asset"}</option>
-                ))}
-              </select>
+              <div className="mt-[var(--space-2)] w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                <KitDropdownView
+                  options={
+                    !targets.length
+                      ? [{ value: "", label: "No eligible destinations" }]
+                      : targets.map((target) => ({
+                          value: target.id,
+                          label: target.title || target.name || "Untitled asset",
+                        }))
+                  }
+                  selectedValues={destinationCreationId ? [destinationCreationId] : []}
+                  isMultiSelect={false}
+                  isDisabled={isBusy || !targets.length}
+                  onToggleOption={(nextValue) => onDestinationChange?.(nextValue)}
+                />
+              </div>
             </label>
           ) : null}
 
@@ -787,17 +794,14 @@ export function ReportDialog({
             <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Reason
             </span>
-            <select
-              value={reasonKey}
-              onChange={(event) => onReasonKeyChange?.(event.target.value)}
-              className="mt-[var(--space-2)] w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink)] outline-none transition-colors hover:border-[var(--gold-ornament)]"
-            >
-              {reasonOptions.map((reason) => (
-                <option key={reason.value} value={reason.value}>
-                  {reason.label}
-                </option>
-              ))}
-            </select>
+            <div className="mt-[var(--space-2)] w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={reasonOptions}
+                selectedValues={reasonKey ? [reasonKey] : []}
+                isMultiSelect={false}
+                onToggleOption={(nextValue) => onReasonKeyChange?.(nextValue)}
+              />
+            </div>
           </label>
 
           <label className="block">

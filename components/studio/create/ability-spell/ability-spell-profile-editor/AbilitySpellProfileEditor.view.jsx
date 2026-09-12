@@ -2,6 +2,7 @@
 
 import { Braces, Plus, Trash2 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   ABILITY_SPELL_CHARGE_MODES,
   ABILITY_SPELL_CHARGE_RESET_POLICIES,
@@ -29,10 +30,18 @@ function TextArea({ value, onChange, rows = 3, placeholder = "" }) {
 }
 
 function Select({ value, options = [], onChange }) {
+  const normalizedOptions = options.map((option) =>
+    typeof option === "object" && option !== null ? option : { value: option, label: option }
+  );
   return (
-    <select value={value ?? ""} onChange={(event) => onChange?.(event.target.value)} className={inputClass}>
-      {options.map((option) => <option key={option} value={option}>{option}</option>)}
-    </select>
+    <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={normalizedOptions}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        onToggleOption={(nextValue) => onChange?.(nextValue)}
+      />
+    </div>
   );
 }
 
@@ -183,19 +192,11 @@ export default function AbilitySpellProfileEditorView({
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div>
             <Label>Starting selection mode</Label>
-            <select
+            <Select
               value={definitionSelection.mode || "NONE"}
-              onChange={(event) =>
-                onUpdateDefinitionSelectionMode?.(event.target.value)
-              }
-              className={inputClass}
-            >
-              {definitionSelectionModeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              onChange={(nextValue) => onUpdateDefinitionSelectionMode?.(nextValue)}
+              options={definitionSelectionModeOptions}
+            />
           </div>
           <label className="flex items-end gap-3 pb-3 text-sm">
             <input
@@ -276,15 +277,11 @@ export default function AbilitySpellProfileEditorView({
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div>
             <Label>Room-local authoring mode</Label>
-            <select
+            <Select
               value={roomLocalDefinitionAuthoring.mode || "NONE"}
-              onChange={(event) => onUpdateRoomLocalDefinitionAuthoringMode?.(event.target.value)}
-              className={inputClass}
-            >
-              {roomLocalDefinitionAuthoringModeOptions.map((option) => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
+              onChange={(nextValue) => onUpdateRoomLocalDefinitionAuthoringMode?.(nextValue)}
+              options={roomLocalDefinitionAuthoringModeOptions}
+            />
           </div>
           <label className="flex items-end gap-3 pb-3 text-sm">
             <input

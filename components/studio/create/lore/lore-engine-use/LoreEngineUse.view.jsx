@@ -14,6 +14,8 @@ import {
   XCircle,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 const STATUS_PRESENTATION = {
   QUEUED: {
     label: "Queued",
@@ -392,67 +394,65 @@ function CharacterAccessControls({
     <div className="grid gap-3">
       <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
         Knowledge relationship
-        <select
-          value={knowledgeMode || "SECONDHAND"}
-          onChange={(event) => onKnowledgeModeChange(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-        >
-          {knowledgeModeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={knowledgeModeOptions}
+            selectedValues={knowledgeMode ? [knowledgeMode] : ["SECONDHAND"]}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onKnowledgeModeChange(nextValue)}
+          />
+        </div>
       </label>
 
       <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
         Knowledge scope
-        <select
-          value={scopeType}
-          onChange={(event) => onScopeTypeChange(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-        >
-          {characterScopeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={characterScopeOptions}
+            selectedValues={scopeType ? [scopeType] : []}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onScopeTypeChange(nextValue)}
+          />
+        </div>
       </label>
 
       {scopeType === "CHAPTER" ? (
         <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Chapter
-          <select
-            value={access.chapterId || ""}
-            onChange={(event) => onChapterChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            <option value="">Select a chapter</option>
-            {chapterOptions.map((chapter) => (
-              <option key={chapter.id} value={chapter.id}>
-                {chapter.title}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={[
+                { value: "", label: "Select a chapter" },
+                ...chapterOptions.map((chapter) => ({
+                  value: chapter.id,
+                  label: chapter.title,
+                })),
+              ]}
+              selectedValues={[access.chapterId || ""]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onChapterChange(nextValue)}
+            />
+          </div>
         </label>
       ) : null}
 
       {scopeType === "SECTION" ? (
         <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Section
-          <select
-            value={access.sectionId || ""}
-            onChange={(event) => onSectionChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            <option value="">Select a section</option>
-            {includedSections.map((section) => (
-              <option key={section.id} value={section.id}>
-                {section.chapterTitle} · {section.title}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={[
+                { value: "", label: "Select a section" },
+                ...includedSections.map((section) => ({
+                  value: section.id,
+                  label: `${section.chapterTitle} · ${section.title}`,
+                })),
+              ]}
+              selectedValues={[access.sectionId || ""]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onSectionChange(nextValue)}
+            />
+          </div>
         </label>
       ) : null}
 
@@ -510,17 +510,14 @@ function CharacterAccessControls({
         </p>
         <label className="mt-3 block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Availability window
-          <select
-            value={access.availabilityMode || "ALWAYS"}
-            onChange={(event) => onAvailabilityModeChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            {availabilityModeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={availabilityModeOptions}
+              selectedValues={[access.availabilityMode || "ALWAYS"]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onAvailabilityModeChange(nextValue)}
+            />
+          </div>
         </label>
         {(["FROM", "BETWEEN"].includes(access.availabilityMode || "ALWAYS")) ? (
           <div className="mt-3">

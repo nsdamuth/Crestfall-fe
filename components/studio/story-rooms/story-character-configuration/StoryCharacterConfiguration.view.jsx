@@ -1,5 +1,7 @@
 "use client";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 function StatsPoolsConfiguration({ statsConfiguration }) {
   if (!statsConfiguration) return null;
   const profiles = Array.isArray(statsConfiguration.profiles)
@@ -142,26 +144,29 @@ function SkillsConfiguration({ skillsConfiguration }) {
                         <span className="mt-1 block text-xs text-[var(--muted)]">
                           Target rank {slot.targetRank} · {slot.required ? "required" : "optional"}
                         </span>
-                        <select
-                          value={slot.selectedSkillId || ""}
-                          onChange={(event) =>
-                            skillsConfiguration.onSelectSkill?.(
-                              profile.bindingId,
-                              slot.id,
-                              event.target.value
-                            )
-                          }
-                          className="mt-3 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
-                        >
-                          <option value="">
-                            {slot.required ? "Choose a Skill" : "No Skill selected"}
-                          </option>
-                          {(slot.eligibleSkills || []).map((skill) => (
-                            <option key={skill.id} value={skill.id}>
-                              {skill.title} · max {skill.maximumRank}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="mt-3 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                          <KitDropdownView
+                            options={[
+                              {
+                                value: "",
+                                label: slot.required ? "Choose a Skill" : "No Skill selected",
+                              },
+                              ...(slot.eligibleSkills || []).map((skill) => ({
+                                value: skill.id,
+                                label: `${skill.title} · max ${skill.maximumRank}`,
+                              })),
+                            ]}
+                            selectedValues={[slot.selectedSkillId || ""]}
+                            isMultiSelect={false}
+                            onToggleOption={(nextValue) =>
+                              skillsConfiguration.onSelectSkill?.(
+                                profile.bindingId,
+                                slot.id,
+                                nextValue
+                              )
+                            }
+                          />
+                        </div>
                         {slot.source === "EXISTING_PROFICIENCY" && slot.satisfied ? (
                           <span className="mt-2 block text-xs text-emerald-200">
                             Already satisfied by this player actor.
@@ -221,15 +226,14 @@ function RoomLocalChoiceField({
     return (
       <label className="text-xs text-[var(--muted)]">
         {label}
-        <select
-          value={normalizedValue}
-          onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
-        >
-          {normalizedOptions.map((option) => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
+        <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={normalizedOptions.map((option) => ({ value: option, label: option }))}
+            selectedValues={normalizedValue ? [normalizedValue] : []}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onChange?.(nextValue)}
+          />
+        </div>
       </label>
     );
   }
@@ -298,14 +302,17 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
     return (
       <label className="text-xs text-[var(--muted)] md:col-span-2">
         {label}
-        <select
-          value={value}
-          onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
-        >
-          <option value="">Choose…</option>
-          {options.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
+        <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={[
+              { value: "", label: "Choose…" },
+              ...options.map((option) => ({ value: option, label: option })),
+            ]}
+            selectedValues={[value || ""]}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onChange?.(nextValue)}
+          />
+        </div>
       </label>
     );
   }
@@ -440,22 +447,24 @@ function RoomLocalAbilitySpellAuthoring({
 
                         <label className="text-xs text-[var(--muted)]">
                           Type
-                          <select
-                            value={definition.type || "ABILITY"}
-                            onChange={(event) =>
-                              abilitySpellConfiguration.onChangeAuthoredDefinition?.(
-                                profile.profileId,
-                                definition.draftId,
-                                "type",
-                                event.target.value
-                              )
-                            }
-                            className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
-                          >
-                            {(group.typeOptions || []).map((option) => (
-                              <option key={option} value={option}>{String(option).replaceAll("_", " ")}</option>
-                            ))}
-                          </select>
+                          <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                            <KitDropdownView
+                              options={(group.typeOptions || []).map((option) => ({
+                                value: option,
+                                label: String(option).replaceAll("_", " "),
+                              }))}
+                              selectedValues={[definition.type || "ABILITY"]}
+                              isMultiSelect={false}
+                              onToggleOption={(nextValue) =>
+                                abilitySpellConfiguration.onChangeAuthoredDefinition?.(
+                                  profile.profileId,
+                                  definition.draftId,
+                                  "type",
+                                  nextValue
+                                )
+                              }
+                            />
+                          </div>
                         </label>
 
                         {group.showSchool !== false ? (
