@@ -367,23 +367,41 @@ export default function VaultV2Mockup({
       return;
     }
 
-    if (!["PUBLIC", "CANON"].includes(item.visibility)) {
+    if (item.visibility === "PRIVATE") {
       setActionNotice({
         label: "Share",
-        message: "This creation is not public yet. Publish it before sharing a public catalogue link.",
+        message: "Private creations are owner-only. Change visibility to Unlisted or Public before sharing a link.",
       });
       return;
     }
 
+    if (!["UNLISTED", "PUBLIC", "CANON"].includes(item.visibility)) {
+      setActionNotice({
+        label: "Share",
+        message: "This creation cannot be shared in its current visibility state.",
+      });
+      return;
+    }
+
+    const isUnlisted = item.visibility === "UNLISTED";
     const href = `/studio/creations/${encodeURIComponent(item.id)}`;
     const absoluteHref = typeof window !== "undefined" ? new URL(href, window.location.origin).toString() : href;
+    const successMessage = isUnlisted
+      ? "Authenticated link copied. Recipients must sign in to Crestfall; this Creation will not appear in search or public discovery."
+      : "Public catalogue link copied.";
 
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({ title: item.title, url: absoluteHref });
+        setActionNotice({
+          label: "Share",
+          message: isUnlisted
+            ? "Authenticated Crestfall link shared. Recipients must sign in; this Creation remains undiscoverable."
+            : "Public catalogue link shared.",
+        });
       } else if (typeof navigator !== "undefined" && navigator.clipboard) {
         await navigator.clipboard.writeText(absoluteHref);
-        setActionNotice({ label: "Share", message: "Public catalogue link copied." });
+        setActionNotice({ label: "Share", message: successMessage });
       }
     } catch (error) {
       if (error?.name !== "AbortError") {

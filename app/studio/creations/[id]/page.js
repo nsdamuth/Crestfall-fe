@@ -11,6 +11,16 @@ function isLoreCreation(creation) {
   return String(creation?.type || "").trim().toUpperCase() === "LORE";
 }
 
+function isPublishedCreation(creation) {
+  const visibility = String(creation?.visibility || "").trim().toUpperCase();
+  const canonStatus = String(creation?.canonStatus || creation?.canon_status || "")
+    .trim()
+    .toUpperCase();
+  const status = String(creation?.status || "").trim().toUpperCase();
+
+  return status === "APPROVED" && (visibility === "PUBLIC" || canonStatus === "CANON");
+}
+
 export default async function StudioCreationProfileRoute({ params }) {
   const { id } = await params;
 
@@ -19,7 +29,9 @@ export default async function StudioCreationProfileRoute({ params }) {
 
   if (
     !cataloguePageData.loadError &&
-    (!cataloguePageData.creation || isLoreCreation(cataloguePageData.creation))
+    (!cataloguePageData.creation ||
+      (isLoreCreation(cataloguePageData.creation) &&
+        isPublishedCreation(cataloguePageData.creation)))
   ) {
     pageData = await getPublicLorePublicationPageData(id);
   }
