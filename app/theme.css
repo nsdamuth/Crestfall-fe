@@ -32,15 +32,32 @@
 
   /* INSET ladder, RULED 12 Sep 2026: the page is darkest, a card
      sits one step up (surface-1), a card nested inside a card one
-     step up again (surface-2), and every field bed and dropdown
-     trigger sits below its container on --bed-deep. Steps widened
-     from 3.3 to about 4.5 to 5.7 L* so each adjacent pair reads at
-     390 by 844; chrome and the reserved step move only to keep the
-     ladder monotonic. Brian rules the values in the browser.     */
+     step up again (surface-2). A control you tap rises one step
+     above its container; a control you type into sinks one step
+     below it, onto --bed-deep (refine after browser review, same
+     day, reversing the trigger half of the first ruling). Steps
+     widened from 3.3 to about 4.5 to 5.7 L* so each adjacent pair
+     reads at 390 by 844; chrome and the reserved step move only to
+     keep the ladder monotonic. Brian rules the values in the
+     browser.                                                     */
   --surface-1:     #1a1712;   /* card, first step up from the page */
   --surface-2:     #25211b;   /* nested card, list rows, chip fills */
   --surface-3:     #2f2a22;   /* topbar, sidebar, sticky chrome, tooltips */
   --surface-4:     #3a342a;   /* reserved, no floating consumer  */
+
+  /* Tier steps, RULED 12 Sep 2026 (refine, item 2). Every surface
+     tier publishes the step above it and the step below it as two
+     variables; a tap control (dropdown trigger) consumes
+     --step-above, a type control (field bed) resolves to
+     --step-below. These :root values are the page tier: the step
+     above the canvas is surface-1, the step below any container is
+     the field bed. Each tier's container class republishes both in
+     app/design-system.css ("TIER STEPS"), so a trigger on a
+     surface-1 card renders surface-2 and the same trigger on a
+     surface-2 nested card renders surface-3 with zero per-instance
+     overrides. Aliases, not new values.                          */
+  --step-above:    var(--surface-1);
+  --step-below:    var(--bed-deep);
 
   /* --- INK -------------------------------------------------- */
 

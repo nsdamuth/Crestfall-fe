@@ -46,13 +46,22 @@ Only locked tokens may be written by an execution run.
 | Token | Dark | Light | Role | Legal on | Never on | Status |
 |---|---|---|---|---|---|---|
 | `--canvas` | `#090805` | `#ebe3d0` | Page background, behind all art | The page body, full-bleed backdrops | Panels, cards, controls | locked |
-| `--surface-1` | `#1a1712` | `#f0e9d8` | Card: the first step up from the page (INSET model, RULED 12 Sep 2026); quiet sections, quiet chips | In-flow cards and top-level content panels, quiet chips | Field beds and dropdown triggers (use `--bed-deep`), floating panels | locked |
+| `--surface-1` | `#1a1712` | `#f0e9d8` | Card: the first step up from the page (INSET model, RULED 12 Sep 2026); quiet sections, quiet chips | In-flow cards and top-level content panels, quiet chips | Field beds (use `--bed-deep`), dropdown triggers (use `--step-above`), floating panels | locked |
 | `--surface-2` | `#25211b` | `#f4eee0` | Nested card: a card inside a `--surface-1` card, one step up again (RULED 12 Sep 2026); list rows and icon-button fills inside a card | Cards nested in a card, list rows, circular chrome controls | Top-level cards on the page, field beds, modals | locked |
 | `--surface-3` | `#2f2a22` | `#f8f3e7` | Topbar, sidebar, sticky chrome; tooltip panels (RULED 12 Sep 2026: both InfoTip tooltips sit on the chrome tier, not interim, not waiting on CR-047) | Persistent chrome, tooltip panels | Content panels | locked |
 | `--surface-4` | `#3a342a` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
 | `--surface-footer` | `#1a120b` | same | Marketing footer only, deliberate ramp exception | The site footer | Anything else | locked |
 
-Elevation model, RULED 12 Sep 2026: INSET. The page is darkest, a card sits one step up, a card nested inside a card sits one step up again, and every field bed and dropdown trigger sits below its container on `--bed-deep` with `--shadow-bed`. Gold is never a resting surface. Every adjacent step is a visible step at 390 by 844; Brian rules the values in the browser after each build. The dark ladder was rewritten in the same ruling from 3.3 L* steps to 4.4 to 5.7 L* steps (`app/theme.css` surface ramp comment); `--surface-3` and `--surface-4` moved only to stay above the nested card.
+Elevation model, RULED 12 Sep 2026: INSET. The page is darkest, a card sits one step up, a card nested inside a card sits one step up again, and every field bed sits below its container on `--bed-deep` with `--shadow-bed`. Gold is never a resting surface. Every adjacent step is a visible step at 390 by 844; Brian rules the values in the browser after each build. The dark ladder was rewritten in the same ruling from 3.3 L* steps to 4.4 to 5.7 L* steps (`app/theme.css` surface ramp comment); `--surface-3` and `--surface-4` moved only to stay above the nested card. (The first landing of this line also sank dropdown triggers onto `--bed-deep`; the refine the same day, after browser review, reversed that half. The next line is the rule.)
+
+A control you tap rises one step above its container. A control you type into sinks one step below it.
+
+Mechanism, RULED 12 Sep 2026 (refine, item 2), mandatory: every surface tier publishes its step above and its step below as two CSS variables, `--step-above` and `--step-below`, set on the tier's container class (`app/design-system.css`, "TIER STEPS"; page-tier defaults on `:root` in `app/theme.css`). A dropdown trigger is written once as `bg-[var(--step-above)]` with the `--line-whisper` hairline and the chevron: on a `--surface-1` card it renders `--surface-2`, on a `--surface-2` nested card it renders `--surface-3`, on chrome or a modal panel it renders `--surface-4`. A field bed resolves to `--step-below`, which is `--bed-deep` under every tier. Zero per-instance overrides; a fixed trigger surface is illegal because it disappears on a nested card.
+
+| Token | Dark | Light | Role | Legal on | Never on | Status |
+|---|---|---|---|---|---|---|
+| `--step-above` | alias, per tier | follows referent | The surface one step above the current container; page tier `var(--surface-1)` | Tap controls: dropdown triggers, and any future tap control the law names | Type controls, cards, chrome | locked |
+| `--step-below` | alias, per tier | follows referent | The surface one step below the current container; `var(--bed-deep)` under every tier | Type controls: text inputs, textareas | Tap controls, cards, chrome | locked |
 
 Surfaces are opaque and flip with the theme. Panels are never built from
 translucent black fills: `bg-black/NN` panel chrome cannot flip themes

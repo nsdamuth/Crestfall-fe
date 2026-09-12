@@ -326,7 +326,7 @@ export function InlineDropdown({ label, options, value, onChange, placeholder = 
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className={`flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] py-[var(--space-2)] text-left text-sm transition ${
+        className={`flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border bg-[var(--step-above)] px-[var(--space-4)] py-[var(--space-2)] text-left text-sm transition ${
           open
             ? "border-[var(--gold-action)]"
             : "border-[var(--line-whisper)] hover:border-[var(--line)]"

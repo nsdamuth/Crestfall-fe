@@ -494,6 +494,36 @@
   overflow-y: auto;
 }
 
+/* --- TIER STEPS, RULED 12 Sep 2026 (INSET refine, item 2) -----
+   A control you tap rises one step above its container. A control
+   you type into sinks one step below it. Each surface tier's
+   container class republishes --step-above and --step-below (the
+   page-tier defaults live on :root in app/theme.css), so a trigger
+   written once as bg-[var(--step-above)] renders surface-2 on a
+   surface-1 card and surface-3 on a surface-2 nested card, and a
+   field bed resolves to --bed-deep under every tier. The selectors
+   are the Tailwind v4 class names every card already carries
+   (escaped: the attribute value is bg-[var(--surface-1)]), so no
+   card needs a second class and no trigger needs an override. A
+   modal panel on the panel-lift gradient counts as the chrome
+   tier: its tap controls rise to surface-4, the reserved step. */
+
+.bg-\[var\(--surface-1\)\] {
+  --step-above: var(--surface-2);
+  --step-below: var(--bed-deep);
+}
+
+.bg-\[var\(--surface-2\)\] {
+  --step-above: var(--surface-3);
+  --step-below: var(--bed-deep);
+}
+
+.bg-\[var\(--surface-3\)\],
+.bg-\[image\:var\(--grad-panel-lift\)\] {
+  --step-above: var(--surface-4);
+  --step-below: var(--bed-deep);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
