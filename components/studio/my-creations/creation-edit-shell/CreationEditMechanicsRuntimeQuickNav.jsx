@@ -153,7 +153,7 @@ export default function CreationEditMechanicsRuntimeQuickNav({ form }) {
         <List size={16} className="flex-none text-[var(--gold-ornament)]" aria-hidden="true" />
 
         <div className="min-w-0">
-          <p className="flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Runtime Fields
           </p>
           <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">

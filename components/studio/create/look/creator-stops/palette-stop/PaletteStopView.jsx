@@ -9,7 +9,7 @@ export default function PaletteStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The palette</Eyebrow>
+      <Eyebrow showRuleMark={false}>The palette</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What colors and materials carry it?
       </h2>

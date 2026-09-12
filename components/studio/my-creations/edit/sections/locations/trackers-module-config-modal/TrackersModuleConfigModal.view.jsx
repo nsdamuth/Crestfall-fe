@@ -732,7 +732,7 @@ function ConditionRow({ condition, targetOptions, onUpdate, onRemove }) {
 function Group({ title, children }) {
   return (
     <section className="border-t border-[var(--line-whisper)] pt-[var(--space-4)] first:border-t-0 first:pt-0">
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {title}
       </p>
       <div className="mt-[var(--space-4)]">{children}</div>

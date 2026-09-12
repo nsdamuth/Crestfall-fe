@@ -9,7 +9,7 @@ export default function ToneStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The tone</Eyebrow>
+      <Eyebrow showRuleMark={false}>The tone</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What does it feel like to be here?
       </h2>

@@ -129,7 +129,6 @@ function StaticGroup({ group, startIndex = 0, LinkComponent = "a" }) {
         <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           {group.label}
         </span>
-        <span className="h-px min-w-8 flex-1 bg-[image:var(--grad-rule)] opacity-70" />
       </div>
       <ChronologyEntries
         entries={group.entries}

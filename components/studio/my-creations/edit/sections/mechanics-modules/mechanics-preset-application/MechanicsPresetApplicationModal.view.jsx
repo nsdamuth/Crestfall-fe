@@ -40,9 +40,7 @@ const PRESET_FOLDER_DEFINITIONS = Object.freeze([
 ]);
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
-const EYEBROW_RULE_AFTER =
-  "after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function IssueList({ title, issues = [], tone = "error" }) {
   if (!issues.length) return null;
@@ -183,7 +181,7 @@ function PresetFolder({
                     <p className="truncate text-sm text-[var(--ink)]">
                       {preset.label}
                     </p>
-                    <p className={`mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+                    <p className="mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       {preset.eyebrow}
                     </p>
                   </div>
@@ -282,7 +280,7 @@ export default function MechanicsPresetApplicationModalView({
   return (
     <PresetLibraryModalFrame onClose={onClose}>
       <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
-        <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+        <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           <LibraryBig size={15} />
           Loom Preset Workflow
         </p>
@@ -522,7 +520,7 @@ export default function MechanicsPresetApplicationModalView({
 
               <aside className="grid content-start gap-4">
                 <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
-                  <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+                  <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     <ShieldCheck size={14} />
                     Atomic Compliance
                   </p>

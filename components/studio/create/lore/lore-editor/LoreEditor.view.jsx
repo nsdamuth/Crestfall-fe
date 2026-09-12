@@ -248,7 +248,7 @@ function ColumnBlockCard({
   return (
     <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           {block.type === "image"
             ? "Character Image"
             : block.type === "inline-quote"
@@ -730,7 +730,7 @@ function BlockFields({
               className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
-                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                   Column {columnIndex + 1}
                 </p>
                 <span className="text-xs text-[var(--ink-dim)]">
@@ -926,7 +926,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Lore Block Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Add content block</h3>
@@ -971,7 +971,7 @@ function BlockPickerModal({ picker, blockTypes = [], onClose, onChooseBlock }) {
                     aria-hidden="true"
                   />
                 ) : null}
-                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                   {category}
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -1027,7 +1027,7 @@ function ImagePickerModal({
       <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/30 bg-[#100d09] p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Character Image Library
             </p>
             <h3 className="mt-2 font-display text-3xl">Select lore image</h3>
@@ -1182,7 +1182,7 @@ export default function LoreEditorView({
           <div>
             <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
               <BookOpenText size={18} />
-              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Lore Document
               </p>
             </div>
@@ -1315,7 +1315,7 @@ export default function LoreEditorView({
       <div className="mt-6">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <Users size={17} />
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Asset-level Character Tags
           </p>
         </div>
@@ -1339,7 +1339,7 @@ export default function LoreEditorView({
         <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <MapPin size={16} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Asset-level Location Tags
             </p>
           </div>
@@ -1364,7 +1364,7 @@ export default function LoreEditorView({
       <div className="mt-8 border-t border-white/10" aria-hidden="true" />
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Chapters
           </p>
           <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -1524,7 +1524,7 @@ export default function LoreEditorView({
                   </div>
 
                   <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
-                    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       Chapter-only Character Tags
                     </p>
                     <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1551,7 +1551,7 @@ export default function LoreEditorView({
                   <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                       <MapPin size={15} />
-                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                         Chapter-only Location Tags
                       </p>
                     </div>
@@ -1581,7 +1581,7 @@ export default function LoreEditorView({
                   />
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                         Sections
                       </p>
                       <p className="mt-2 text-sm text-[var(--ink-dim)]">
@@ -1761,7 +1761,7 @@ export default function LoreEditorView({
                               </div>
 
                               <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
-                                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                   Section-only Character Tags
                                 </p>
                                 <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1791,7 +1791,7 @@ export default function LoreEditorView({
                               <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                                   <MapPin size={15} />
-                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                     Section-only Location Tags
                                   </p>
                                 </div>
@@ -1820,7 +1820,7 @@ export default function LoreEditorView({
 
                               <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                                 <div>
-                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                     Section Content
                                   </p>
                                   <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1850,7 +1850,7 @@ export default function LoreEditorView({
                                         ) : (
                                           <BookOpenText size={15} />
                                         )}
-                                        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                                        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                           {blockTypes.find(
                                             (option) => option.value === block.type
                                           )?.label || block.type}

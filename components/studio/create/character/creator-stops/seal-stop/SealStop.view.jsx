@@ -44,7 +44,7 @@ export default function SealStopView({
 
   return (
     <>
-      <Eyebrow>Set the seal</Eyebrow>
+      <Eyebrow showRuleMark={false}>Set the seal</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Who may meet them?
       </h2>

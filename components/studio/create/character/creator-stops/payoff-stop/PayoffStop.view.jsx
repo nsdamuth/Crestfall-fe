@@ -34,7 +34,7 @@ export default function PayoffStopView({
 
   return (
     <>
-      <Eyebrow>The soul, forged</Eyebrow>
+      <Eyebrow showRuleMark={false}>The soul, forged</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every choice, brought together.
       </h2>

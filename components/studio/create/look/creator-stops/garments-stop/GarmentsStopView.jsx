@@ -11,7 +11,7 @@ export default function GarmentsStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The garments</Eyebrow>
+      <Eyebrow showRuleMark={false}>The garments</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What is actually being worn?
       </h2>

@@ -9,7 +9,7 @@ export default function VibeStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The vibe</Eyebrow>
+      <Eyebrow showRuleMark={false}>The vibe</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What does this look say before it says anything?
       </h2>

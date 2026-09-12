@@ -24,7 +24,7 @@ const FIELD_LABEL_CLASS =
 export function SectionLabel({ children }) {
   return (
     <div className="mb-[var(--space-1)]">
-      <GlobalEyebrow>{children}</GlobalEyebrow>
+      <GlobalEyebrow showRuleMark={false}>{children}</GlobalEyebrow>
     </div>
   );
 }

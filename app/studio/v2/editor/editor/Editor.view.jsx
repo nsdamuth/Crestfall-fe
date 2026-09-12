@@ -208,7 +208,7 @@ function TocList({ groups, openSectionId, sectionMarks, onSelect }) {
         <div key={group.id}>
           {/* Tier 4 group label (section 3): gold-ornament with the
               trailing grad-rule mark, distinct from tier 6 item rows. */}
-          <p className="flex items-center gap-[var(--space-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {group.label}
           </p>
           <div className="mt-[var(--space-1)] flex flex-col">
@@ -374,7 +374,7 @@ export default function EditorView({
                 <div key={group.id}>
                   {/* Tier 4 group label (section 3), same recipe as
                       the rail's own group labels. */}
-                  <p className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
+                  <p className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                     {group.label}
                   </p>
                   <div className="flex flex-col gap-[var(--space-3)]">

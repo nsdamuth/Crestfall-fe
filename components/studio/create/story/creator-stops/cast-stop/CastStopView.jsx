@@ -18,7 +18,7 @@ export default function CastStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The cast</Eyebrow>
+      <Eyebrow showRuleMark={false}>The cast</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Who is in this story?
       </h2>
