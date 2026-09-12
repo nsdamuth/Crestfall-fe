@@ -3,6 +3,7 @@
 import { Save } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 export default function StorylineBuilderShellView({
   eyebrow = "Adventure Builder",
@@ -36,7 +37,12 @@ export default function StorylineBuilderShellView({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
           {eyebrow}
         </p>
@@ -69,7 +75,7 @@ export default function StorylineBuilderShellView({
             />
           </label>
 
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1">
             <label className="block">
               <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {visibilityLabel}
@@ -134,15 +140,24 @@ export default function StorylineBuilderShellView({
         ) : null}
       </aside>
 
-      <div className="space-y-6">
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
+      <div className="min-w-0 space-y-6">
+        <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
           {nodeEditorSlot}
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
+        <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
           {openWorldSettingsSlot}
         </div>
       </div>
+
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveButtonLabel}
+        onAction={onSaveDraft}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }

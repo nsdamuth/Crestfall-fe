@@ -192,8 +192,15 @@ export default function StorylineNodeListEditorView({
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
-                      <div className="[&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    {/* MOBILE-SHELLS: this row is the measured cause of the
+                        storyline right-edge clip at 390. It paired a dropdown
+                        wrapper that never claimed its width with a cf-btn that
+                        is white-space: nowrap, so its min-content set the page
+                        scroll width. It wraps now, and the wrapper claims
+                        w-full and min-w-0 the way the same wrapper already does
+                        in StorylineBuilderShell.view.jsx. */}
+                    <div className="flex flex-wrap gap-2">
+                      <div className="w-full min-w-0 [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
                         <KitDropdownView
                           options={node.triggerModeOptions}
                           selectedValues={node.triggerMode ? [node.triggerMode] : []}
@@ -206,7 +213,7 @@ export default function StorylineNodeListEditorView({
                       <button
                         type="button"
                         onClick={() => onAddTrigger?.(node.index)}
-                        className="cf-btn cf-btn--secondary cf-btn--sm"
+                        className="cf-btn cf-btn--secondary cf-btn--sm min-h-[var(--control-md)] w-full [@media(min-width:48rem)]:w-auto"
                       >
                         Add trigger
                       </button>
@@ -217,9 +224,9 @@ export default function StorylineNodeListEditorView({
                     {node.triggers.map((trigger) => (
                       <div
                         key={trigger.id}
-                        className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
+                        className="grid min-w-0 gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
                       >
-                        <div className="[&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                        <div className="min-w-0 [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
                           <KitDropdownView
                             options={node.triggerTypeOptions}
                             selectedValues={trigger.type ? [trigger.type] : []}
@@ -239,7 +246,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="Trigger label"
-                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
+                          className="min-w-0 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <input
                           value={trigger.description}
@@ -251,7 +258,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="What must occur or be confirmed?"
-                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
+                          className="min-w-0 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <button
                           type="button"
