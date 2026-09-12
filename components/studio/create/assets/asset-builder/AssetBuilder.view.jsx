@@ -104,7 +104,7 @@ export default function AssetBuilderView({
               />
 
               {isOutfit ? (
-                <div className="grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+                <div className="grid gap-4 border-t border-[var(--line-whisper)] pt-4">
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                       Lane-Specific Image Guidance
@@ -186,7 +186,7 @@ export default function AssetBuilderView({
           ) : null}
 
           {isLocation ? (
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+            <div className="border-t border-[var(--line-whisper)] pt-4">
               <div className="flex items-start gap-3">
                 <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
                   <CloudSun size={18} />
@@ -211,7 +211,7 @@ export default function AssetBuilderView({
               ) : null}
 
               {locationRegistryContent ? (
-                <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+                <div className="mt-4 border-t border-[var(--line-whisper)] pt-4">
                   {locationRegistryContent}
                 </div>
               ) : null}
@@ -350,7 +350,7 @@ export default function AssetBuilderView({
           })}
         </div>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
           <div className="flex items-start gap-3">
             <Tag className="mt-1 text-[var(--gold-ornament)]" size={18} />
             <div>
@@ -378,7 +378,7 @@ function LocationParentPanel({
   onClearParentLocation,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+    <div className="border-t border-[var(--line-whisper)] pt-4">
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Parent Location
       </span>
@@ -468,7 +468,7 @@ function RuntimeInheritancePanel({ inheritance = {}, onUpdateInheritance }) {
   }
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+    <div className="border-t border-[var(--line-whisper)] pt-4">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Runtime Inheritance
       </p>

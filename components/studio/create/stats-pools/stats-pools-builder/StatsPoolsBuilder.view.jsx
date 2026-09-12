@@ -86,12 +86,12 @@ export default function StatsPoolsBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 text-sm md:grid-cols-2 md:divide-x md:divide-[var(--line-whisper)]">
+          <div className="md:pr-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Errors</p>
             <p className="mt-2 text-lg">{errorCount}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+          <div className="md:pl-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Warnings</p>
             <p className="mt-2 text-lg">{warningCount}</p>
           </div>

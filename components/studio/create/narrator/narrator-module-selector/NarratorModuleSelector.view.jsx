@@ -17,7 +17,7 @@ export default function NarratorModuleSelectorView({
   onSelectModule = null,
 } = {}) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
+    <section className="border-t border-[var(--line-whisper)] pt-5">
       {sectionEyebrow ? (
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {sectionEyebrow}
@@ -34,7 +34,7 @@ export default function NarratorModuleSelectorView({
         </p>
       ) : null}
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
+      <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
         {responseEyebrow ? (
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
             {responseEyebrow}

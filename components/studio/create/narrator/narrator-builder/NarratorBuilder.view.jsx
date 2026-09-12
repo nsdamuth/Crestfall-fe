@@ -78,7 +78,7 @@ export default function NarratorBuilderView({
           inside rooms and scenarios.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
           <BookOpen className="text-[var(--gold-ornament)]" size={28} />
 
           <p className="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
@@ -91,7 +91,7 @@ export default function NarratorBuilderView({
           </p>
         </div>
 
-        <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
+        <div className="mt-4 border-t border-[var(--line-whisper)] pt-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Selected Modules
           </p>
@@ -216,7 +216,7 @@ export default function NarratorBuilderView({
             />
           </div>
 
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
+          <div className="border-t border-[var(--line-whisper)] pt-5">
             <div className="flex items-start gap-3">
               <Sparkles className="mt-1 text-[var(--gold-ornament)]" size={18} />
               <div>

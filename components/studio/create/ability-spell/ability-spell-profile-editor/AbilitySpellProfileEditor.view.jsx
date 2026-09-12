@@ -59,14 +59,14 @@ function ValidationPanel({ errors = [], warnings = [] }) {
 
 function CostRows({ definition, definitionIndex, onAddCost, onUpdateCostField, onRemoveCost }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+    <section className="border-t border-[var(--line-whisper)] pt-4">
       <div className="flex items-center justify-between gap-3">
         <div><p className="text-sm font-semibold">Costs</p><p className="mt-1 text-xs text-[var(--muted)]">Definition-time references only. Resource mutation is not implemented by this profile.</p></div>
         <button type="button" onClick={() => onAddCost?.(definitionIndex)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs"><Plus size={13} /> Add Cost</button>
       </div>
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 divide-y divide-[var(--line-whisper)]">
         {definition.costs.map((cost, costIndex) => (
-          <div key={`${cost.id}-${costIndex}`} className="grid gap-3 rounded-xl border border-white/10 p-3 md:grid-cols-5">
+          <div key={`${cost.id}-${costIndex}`} className="grid gap-3 py-3 first:pt-0 md:grid-cols-5">
             <div><Label>Cost ID</Label><TextInput value={cost.id} onChange={(value) => onUpdateCostField?.(definitionIndex, costIndex, "id", value)} /></div>
             <div><Label>Resource type</Label><Select value={cost.resourceType} options={ABILITY_SPELL_COST_RESOURCE_TYPES} onChange={(value) => onUpdateCostField?.(definitionIndex, costIndex, "resourceType", value)} /></div>
             <div><Label>Resource ID</Label><TextInput value={cost.resourceId || ""} placeholder="pool.mana" onChange={(value) => onUpdateCostField?.(definitionIndex, costIndex, "resourceId", value)} /></div>
@@ -82,14 +82,14 @@ function CostRows({ definition, definitionIndex, onAddCost, onUpdateCostField, o
 
 function OperationRows({ definition, definitionIndex, onAddOperationReference, onUpdateOperationReferenceField, onRemoveOperationReference }) {
   return (
-    <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+    <section className="border-t border-[var(--line-whisper)] pt-4">
       <div className="flex items-center justify-between gap-3">
         <div><p className="text-sm font-semibold">Mechanical Operation References</p><p className="mt-1 text-xs text-[var(--muted)]">Legacy v0 references remain declarative. Executable v1 references can be authored through JSON and run only after the trusted Ability/Spell use boundary.</p></div>
         <button type="button" onClick={() => onAddOperationReference?.(definitionIndex)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs"><Plus size={13} /> Add Reference</button>
       </div>
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 divide-y divide-[var(--line-whisper)]">
         {definition.operationReferences.map((reference, referenceIndex) => (
-          <div key={`${reference.id}-${referenceIndex}`} className="grid gap-3 rounded-xl border border-white/10 p-3 md:grid-cols-4">
+          <div key={`${reference.id}-${referenceIndex}`} className="grid gap-3 py-3 first:pt-0 md:grid-cols-4">
             <div><Label>Reference ID</Label><TextInput value={reference.id} onChange={(value) => onUpdateOperationReferenceField?.(definitionIndex, referenceIndex, "id", value)} /></div>
             <div><Label>Domain</Label><TextInput value={reference.domain} placeholder="STATS_POOLS" onChange={(value) => onUpdateOperationReferenceField?.(definitionIndex, referenceIndex, "domain", value)} /></div>
             <div><Label>Operation</Label><TextInput value={reference.operation} placeholder="MUTATE_POOL" onChange={(value) => onUpdateOperationReferenceField?.(definitionIndex, referenceIndex, "operation", value)} /></div>
@@ -212,11 +212,11 @@ export default function AbilitySpellProfileEditorView({
         </div>
 
         {definitionSelection.mode === "GROUPS" ? (
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 divide-y divide-[var(--line-whisper)]">
             {selectionGroups.map((group, groupIndex) => (
               <div
                 key={`${group.id}-${groupIndex}`}
-                className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4"
+                className="py-4 first:pt-0"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm font-semibold">
@@ -297,9 +297,9 @@ export default function AbilitySpellProfileEditorView({
         </div>
 
         {roomLocalDefinitionAuthoring.mode === "GROUPS" ? (
-          <div className="mt-5 space-y-4">
+          <div className="mt-5 divide-y divide-[var(--line-whisper)]">
             {roomLocalAuthoringGroups.map((group, groupIndex) => (
-              <div key={`${group.id}-${groupIndex}`} className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
+              <div key={`${group.id}-${groupIndex}`} className="py-4 first:pt-0">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold">{group.title || group.id || `Authoring Group ${groupIndex + 1}`}</p>
@@ -373,7 +373,7 @@ export default function AbilitySpellProfileEditorView({
                   <div className="flex items-end"><div className="rounded-lg border border-white/10 px-3 py-2 text-xs text-[var(--muted)]">Descriptive only — does not create or execute game mechanics</div></div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-white/10 bg-[var(--fill-whisper)] p-3">
+                <div className="mt-4 border-t border-[var(--line-whisper)] pt-4">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium">Custom player fields</p>
@@ -381,9 +381,9 @@ export default function AbilitySpellProfileEditorView({
                     </div>
                     <button type="button" onClick={() => onAddRoomLocalDefinitionCustomTextField?.(groupIndex)} className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs"><Plus size={13} /> Add Field</button>
                   </div>
-                  <div className="mt-3 space-y-3">
+                  <div className="mt-3 divide-y divide-[var(--line-whisper)]">
                     {(group.customTextFields || []).map((field, fieldIndex) => (
-                      <div key={`${field.id}-${fieldIndex}`} className="grid gap-3 rounded-lg border border-white/10 p-3 md:grid-cols-2 xl:grid-cols-8">
+                      <div key={`${field.id}-${fieldIndex}`} className="grid gap-3 py-3 first:pt-0 md:grid-cols-2 xl:grid-cols-8">
                         <div><Label>Field ID</Label><TextInput value={field.id} onChange={(value) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "id", value)} /></div>
                         <div><Label>Field title</Label><TextInput value={field.title} onChange={(value) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "title", value)} /></div>
                         <div><Label>Input type</Label><Select value={field.inputMode || "LONG_TEXT"} options={roomLocalCustomFieldInputModes} onChange={(value) => onUpdateRoomLocalDefinitionCustomTextField?.(groupIndex, fieldIndex, "inputMode", value)} /></div>
@@ -416,9 +416,9 @@ export default function AbilitySpellProfileEditorView({
           <button type="button" onClick={() => onAddDefinition?.()} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-xs uppercase tracking-[0.14em]"><Plus size={15} /> Add Definition</button>
         </div>
 
-        <div className="mt-5 space-y-5">
+        <div className="mt-5 divide-y divide-[var(--line-whisper)]">
           {definitions.map((definition, definitionIndex) => (
-            <article key={`${definition.id}-${definitionIndex}`} className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
+            <article key={`${definition.id}-${definitionIndex}`} className="py-5 first:pt-0">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div><p className="text-base font-semibold">{definition.title || definition.id || `Definition ${definitionIndex + 1}`}</p><p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">{definition.id} · {definition.type}</p></div>
                 <button type="button" onClick={() => onRemoveDefinition?.(definitionIndex)} className="inline-flex items-center gap-2 rounded-xl border border-rose-300/20 px-3 py-2 text-xs text-rose-100"><Trash2 size={14} /> Remove</button>
@@ -438,7 +438,7 @@ export default function AbilitySpellProfileEditorView({
               <label className="mt-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.enabled !== false} onChange={(event) => onUpdateDefinitionField?.(definitionIndex, "enabled", event.target.checked)} /> Definition enabled</label>
 
               <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                <section>
                   <p className="text-sm font-semibold">Prerequisites</p>
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div><Label>Minimum level</Label><TextInput type="number" min={0} value={definition.prerequisites.minimumLevel} onChange={(value) => onUpdatePrerequisiteField?.(definitionIndex, "minimumLevel", value)} /></div>
@@ -448,7 +448,7 @@ export default function AbilitySpellProfileEditorView({
                   <p className="mt-3 text-xs text-[var(--muted)]">Unlock references can be authored through the JSON editor in v0.</p>
                 </section>
 
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                <section>
                   <p className="text-sm font-semibold">Target Model</p>
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div><Label>Mode</Label><Select value={definition.targetModel.mode} options={ABILITY_SPELL_TARGET_MODES} onChange={(value) => onUpdateTargetField?.(definitionIndex, "mode", value)} /></div>
@@ -459,7 +459,7 @@ export default function AbilitySpellProfileEditorView({
                   <label className="mt-3 flex items-center gap-3 text-sm"><input type="checkbox" checked={definition.targetModel.requiresLineOfSight === true} onChange={(event) => onUpdateTargetField?.(definitionIndex, "requiresLineOfSight", event.target.checked)} /> Requires line of sight</label>
                 </section>
 
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 lg:col-span-2">
+                <section className="lg:col-span-2">
                   <p className="text-sm font-semibold">Restrictions</p>
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div><Label>Required tags</Label><TextInput value={(definition.restrictions.requiredTags || []).join(", ")} onChange={(value) => onUpdateRestrictionField?.(definitionIndex, "requiredTags", value)} /></div>
@@ -470,15 +470,15 @@ export default function AbilitySpellProfileEditorView({
               </div>
 
               <div className="mt-4 grid gap-4 xl:grid-cols-3">
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                <section>
                   <p className="text-sm font-semibold">Cooldown Policy</p>
                   <div className="mt-3 space-y-3"><div><Label>Mode</Label><Select value={definition.cooldownPolicy.mode} options={ABILITY_SPELL_COOLDOWN_MODES} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "cooldownPolicy", "mode", value)} /></div><div className="grid grid-cols-2 gap-3"><div><Label>Amount</Label><TextInput type="number" min={0} value={definition.cooldownPolicy.amount} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "cooldownPolicy", "amount", value)} /></div><div><Label>Unit</Label><Select value={definition.cooldownPolicy.unit} options={ABILITY_SPELL_COOLDOWN_UNITS} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "cooldownPolicy", "unit", value)} /></div></div></div>
                 </section>
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                <section>
                   <p className="text-sm font-semibold">Charge Policy</p>
                   <div className="mt-3 space-y-3"><div><Label>Mode</Label><Select value={definition.chargePolicy.mode} options={ABILITY_SPELL_CHARGE_MODES} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "chargePolicy", "mode", value)} /></div><div className="grid grid-cols-2 gap-3"><div><Label>Maximum charges</Label><TextInput type="number" min={0} value={definition.chargePolicy.maximumCharges} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "chargePolicy", "maximumCharges", value)} /></div><div><Label>Reset</Label><Select value={definition.chargePolicy.resetPolicy} options={ABILITY_SPELL_CHARGE_RESET_POLICIES} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "chargePolicy", "resetPolicy", value)} /></div></div></div>
                 </section>
-                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                <section>
                   <p className="text-sm font-semibold">Mastery Policy</p>
                   <div className="mt-3 space-y-3"><div><Label>Mode</Label><Select value={definition.masteryPolicy.mode} options={ABILITY_SPELL_MASTERY_MODES} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "masteryPolicy", "mode", value)} /></div><div><Label>Maximum mastery</Label><TextInput type="number" min={0} value={definition.masteryPolicy.maximumMastery} onChange={(value) => onUpdatePolicyField?.(definitionIndex, "masteryPolicy", "maximumMastery", value)} /></div></div>
                 </section>

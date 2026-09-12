@@ -250,12 +250,12 @@ export default function TimelineBuilderView({
             ordering.
           </p>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+          <div className="mt-5 grid grid-cols-2 gap-3 text-sm divide-x divide-[var(--line-whisper)]">
+            <div className="pr-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Lore</p>
               <p className="mt-2 text-lg">{entryCount}</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+            <div className="pl-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Unplaced</p>
               <p className="mt-2 text-lg">{unplacedCount}</p>
             </div>

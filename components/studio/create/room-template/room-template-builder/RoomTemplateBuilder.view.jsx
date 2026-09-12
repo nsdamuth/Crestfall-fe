@@ -75,7 +75,7 @@ export default function RoomTemplateBuilderView({
           rules into a reusable playable setup.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>

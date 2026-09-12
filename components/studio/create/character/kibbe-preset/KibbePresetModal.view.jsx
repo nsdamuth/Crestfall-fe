@@ -116,11 +116,11 @@ export default function KibbePresetModalView({
                       {pendingPreset?.description || ""}
                     </p>
 
-                    <div className="mt-[var(--space-4)] grid gap-[var(--space-2)]">
+                    <div className="mt-[var(--space-4)] divide-y divide-[var(--line-whisper)]">
                       {suggestionRows.map((row) => (
                         <div
                           key={row?.label || row?.value}
-                          className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]"
+                          className="py-[var(--space-3)] first:pt-0"
                         >
                           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                             {row?.label || "Trait"}

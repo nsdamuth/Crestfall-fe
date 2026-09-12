@@ -172,11 +172,11 @@ export default function WalletProfileEditorView({
           </button>
         </div>
 
-        <div className="mt-5 space-y-5">
+        <div className="mt-5 divide-y divide-[var(--line-whisper)]">
           {currencies.map((currency, currencyIndex) => (
             <article
               key={`${currency.id}-${currencyIndex}`}
-              className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5"
+              className="py-5 first:pt-0"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>

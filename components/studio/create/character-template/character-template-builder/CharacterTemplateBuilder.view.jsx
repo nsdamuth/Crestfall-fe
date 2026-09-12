@@ -74,7 +74,7 @@ export default function CharacterTemplateBuilderView({
           {browseTemplatesContent}
         </div>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">

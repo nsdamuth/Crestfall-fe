@@ -140,7 +140,7 @@ function CheckboxRow({ checked, onChange, label, description }) {
 
 function StatCard({ label, value, detail = "" }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+    <div>
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -312,7 +312,7 @@ export default function ActorMechanicsProfileEditorView({
         </div>
       ) : null}
 
-      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <div className="mt-7 border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
         <div className="flex items-start gap-3">
           <RefreshCcw size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div className="min-w-0 flex-1">
@@ -618,7 +618,7 @@ export default function ActorMechanicsProfileEditorView({
       </div>
 
       {safeBindings.length ? (
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 divide-y divide-[var(--line-whisper)]">
           {safeBindings.map((binding, index) => {
             const ToggleIcon = binding.expanded ? ChevronDown : ChevronRight;
             const managedDefinition =
@@ -651,7 +651,7 @@ export default function ActorMechanicsProfileEditorView({
             return (
               <article
                 key={`${binding.id}-${binding.order}-${index}`}
-                className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]"
+                className="overflow-hidden py-4 first:pt-0"
               >
                 <div className="flex items-start gap-2 px-3 py-3 sm:px-4">
                   <button
@@ -838,7 +838,7 @@ export default function ActorMechanicsProfileEditorView({
                       />
                     </div>
 
-                    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+                    <div className="mt-6 border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -876,13 +876,13 @@ export default function ActorMechanicsProfileEditorView({
                       </div>
 
                       {binding.references.length ? (
-                        <div className="mt-4 space-y-3">
+                        <div className="mt-4 divide-y divide-[var(--line-whisper)]">
                           {binding.references.map((reference) =>
                             managedDefinition &&
                             reference.referenceType === "CREATION" ? (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-[var(--space-3)]"
+                                className="py-3 first:pt-0"
                               >
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                   <div className="min-w-0">
@@ -923,7 +923,7 @@ export default function ActorMechanicsProfileEditorView({
                                   </div>
                                 ) : null}
 
-                                <div className="mt-3 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2">
+                                <div className="mt-3 border-t border-[var(--line-whisper)] pt-2">
                                   <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
                                     Creation Reference
                                   </p>
@@ -935,7 +935,7 @@ export default function ActorMechanicsProfileEditorView({
                             ) : (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
+                                className="py-3 first:pt-0"
                               >
                                 <div className="flex items-center justify-between gap-3">
                                   <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">

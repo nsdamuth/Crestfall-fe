@@ -24,17 +24,17 @@ export default function AssetBuilderShell(props) {
       {...viewProps}
       poseEditorContent={
         poseEditorProps ? (
-          <div className="grid gap-6">
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
+          <div className="divide-y divide-[var(--line-whisper)]">
+            <div className="pb-6">
               <PoseIdentitySection {...poseEditorProps} />
             </div>
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
+            <div className="py-6">
               <PoseBodyPositionSection {...poseEditorProps} />
             </div>
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
+            <div className="py-6">
               <PoseMotionStagingSection {...poseEditorProps} />
             </div>
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-5">
+            <div className="pt-6">
               <PosePromptGuidanceSection {...poseEditorProps} />
             </div>
           </div>

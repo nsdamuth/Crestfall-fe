@@ -85,14 +85,14 @@ export default function ActorMechanicsProfileBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2 sm:divide-x sm:divide-[var(--line-whisper)]">
+          <div className="sm:pr-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
             </p>
             <p className="mt-2 text-lg">{errorCount}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
+          <div className="sm:pl-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Warnings
             </p>
