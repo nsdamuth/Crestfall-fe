@@ -62,7 +62,7 @@ function TimelineGrid({ items = [] }) {
           onClick={() => item.onOpen?.()}
           className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/40"
         >
-          <div className="grid min-h-36 grid-cols-[7rem_1fr]">
+          <div className="grid min-h-36 grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[7rem_minmax(0,1fr)]">
             <div className="overflow-hidden border-r border-[var(--line)]" aria-hidden="true">
               {item.imageSrc ? (
                 <div
