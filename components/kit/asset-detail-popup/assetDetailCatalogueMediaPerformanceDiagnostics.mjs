@@ -28,7 +28,7 @@ test("featured-media hydration preserves display, card, thumbnail, and locked-pr
   assert.match(media, /displayImageUrl: imageUrl/);
 });
 
-test("asset detail popup uses display media for hero and thumbnails for compact tiles", () => {
+test("asset detail popup keeps display media for the hero while removing the body media library", () => {
   const contract = read("components/kit/asset-detail-popup/KitAssetDetailPopup.contract.js");
   const viewModel = read("components/kit/asset-detail-popup/useKitAssetDetailPopupViewModel.js");
   const view = read("components/kit/asset-detail-popup/KitAssetDetailPopup.view.jsx");
@@ -37,8 +37,8 @@ test("asset detail popup uses display media for hero and thumbnails for compact 
   assert.match(viewModel, /displaySrc/);
   assert.match(viewModel, /thumbnailSrc/);
   assert.match(view, /getMediaDisplaySrc/);
-  assert.match(view, /getMediaThumbnailSrc/);
-  assert.match(view, /View full catalogue →/);
+  assert.match(view, /View Full Catalogue/);
+  assert.doesNotMatch(view, /MediaLibrary|Search media|MEDIA_TABS/);
 });
 
 test("live Community and Vault pass derivative-aware detail media into the popup", () => {

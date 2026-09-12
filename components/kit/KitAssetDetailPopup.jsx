@@ -4,8 +4,8 @@
 // The shell owns the composition of KitModalFrame (veil, panel,
 // close control) wrapping the popup's own content view.
 //
-// Credits are rendered in the popup's conditional Credits tab. The
-// shell therefore has no stacked attribution-modal state to own.
+// Credits render inside the popup's conditional disclosure. The shell
+// therefore has no stacked attribution-modal state to own.
 import Link from "next/link";
 
 import KitModalFrame from "./KitModalFrame";

@@ -235,7 +235,6 @@ export function useHomeViewModel({
         const stats = item.stats || {
           plays: numberOrNull(item.plays),
           hearts: numberOrNull(item.hearts),
-          saves: numberOrNull(item.saves),
           followers: null,
         };
         const href = openHref || `/studio/creations/${encodeURIComponent(item.id)}`;
@@ -249,6 +248,7 @@ export function useHomeViewModel({
           subtitle: item.subtitle,
           imageSrc: item.imageSrc,
           badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
+          metrics: item.metrics,
           stats,
           liked: engagement.isCreationLiked(item),
           bookmarked: engagement.isCreationBookmarked(item),

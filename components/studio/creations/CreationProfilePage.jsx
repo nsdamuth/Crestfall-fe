@@ -54,7 +54,15 @@ function StandardCreationProfilePage(props) {
       statusBadgesSlot={
         creation ? <CreationStatusBadges creation={creation.raw} /> : null
       }
-      statsSlot={creation ? <CreationStatsRow stats={creation.stats} /> : null}
+      statsSlot={
+        creation ? (
+          <CreationStatsRow
+            creationType={creation.type}
+            usageMetrics={creation.usageMetrics}
+            stats={creation.stats}
+          />
+        ) : null
+      }
       creatorLinkSlot={
         creation?.creatorProfileHref ? (
           <Link

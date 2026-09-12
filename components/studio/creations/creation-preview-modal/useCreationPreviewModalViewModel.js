@@ -183,7 +183,11 @@ export function getCreationPreviewViewProps({
     catalogueHref,
     editHref: normalizeText(creation.editHref),
     statusBadgesProps: { creation },
-    statsRowProps: { stats: creation.stats },
+    statsRowProps: {
+      creationType: creation.type,
+      usageMetrics: creation.usageMetrics || creation.usage_metrics || null,
+      stats: creation.stats,
+    },
     moreSlideBackgroundImage: getDefaultCreationImageForType(creation.type),
     featuredMedia,
     hasFeaturedMedia,

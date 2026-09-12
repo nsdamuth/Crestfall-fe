@@ -31,24 +31,36 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   Archive,
+  BookOpen,
   Bookmark,
   Heart,
   Image as ImageIcon,
   Maximize2,
+  MessageCircle,
   MoreVertical,
+  Network,
   Pencil,
   Play,
   Share2,
   Trash2,
-  Users,
   Wand2,
 } from "lucide-react";
 
 import KitBadgeView from "../badge/KitBadge.view";
 import KitArtPlaceholderView from "../art-placeholder/KitArtPlaceholder.view";
+import {
+  buildCreationCardMetrics,
+  formatCreationCardMetricCount,
+  normalizeCreationCardMetricEntries,
+} from "../../../lib/shared/presentation/creationCardMetrics.js";
 
-const STAT_ICONS = { plays: Play, hearts: Heart, saves: Bookmark, followers: Users };
-const STAT_ORDER = ["plays", "hearts", "saves", "followers"];
+const METRIC_ICONS = Object.freeze({
+  interactionCount: MessageCircle,
+  likeCount: Heart,
+  imageUseCount: ImageIcon,
+  storyUseCount: BookOpen,
+  externalCreationUseCount: Network,
+});
 
 function stopAndRun(event, handler) {
   event.preventDefault();
@@ -240,21 +252,29 @@ function KebabMenu({
   );
 }
 
-function StatRow({ stats }) {
-  const entries = STAT_ORDER.map((key) => [key, stats?.[key]]).filter(
-    ([, value]) => value !== null && value !== undefined
-  );
+function StatRow({ metrics }) {
+  const entries = normalizeCreationCardMetricEntries(metrics);
 
   if (!entries.length) return null;
 
   return (
     <div className="flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--art-ink-dim)]">
-      {entries.map(([key, value]) => {
-        const Icon = STAT_ICONS[key];
+      {entries.map((metric) => {
+        const Icon = METRIC_ICONS[metric.id];
+        if (!Icon) return null;
+
+        const formattedValue = formatCreationCardMetricCount(metric.value);
+        const accessibleLabel = `${metric.label}: ${formattedValue}`;
+
         return (
-          <span key={key} className="inline-flex items-center gap-[var(--space-1)] opacity-[.85]">
+          <span
+            key={metric.id}
+            className="inline-flex items-center gap-[var(--space-1)] opacity-[.85]"
+            aria-label={accessibleLabel}
+            title={accessibleLabel}
+          >
             <Icon size={16} aria-hidden="true" />
-            <span className="tabular-nums">{value}</span>
+            <span className="tabular-nums">{formattedValue}</span>
           </span>
         );
       })}
@@ -322,7 +342,7 @@ function GridCard({
   creationType,
   assetKind,
   badges,
-  stats,
+  metrics,
   liked,
   bookmarked,
   onOpen,
@@ -421,7 +441,7 @@ function GridCard({
                 {subtitle}
               </p>
             )}
-            <StatRow stats={stats} />
+            <StatRow metrics={metrics} />
           </div>
         </div>
       </div>
@@ -436,7 +456,7 @@ function ListCard({
   creationType,
   assetKind,
   badges,
-  stats,
+  metrics,
   liked,
   bookmarked,
   onOpen,
@@ -504,7 +524,7 @@ function ListCard({
               {subtitle}
             </p>
           )}
-          <StatRow stats={stats} />
+          <StatRow metrics={metrics} />
         </div>
 
         <div
@@ -551,6 +571,7 @@ export default function KitCreationCardView({
   subtitle = "",
   imageSrc = null,
   badges = [],
+  metrics = null,
   stats = {},
   liked = false,
   bookmarked = false,
@@ -573,6 +594,23 @@ export default function KitCreationCardView({
   const isList = layout === "list";
   const onOpen = resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail);
   const contextualAction = resolveContextualAction({ assetKind, onPlay, onGenerate, onOpen, onContinue });
+
+  const explicitMetrics = normalizeCreationCardMetricEntries(metrics);
+  const fallbackCreationType =
+    creationType ||
+    (assetKind === "character"
+      ? "CHARACTER"
+      : assetKind === "story"
+        ? "ROOM_TEMPLATE"
+        : assetKind === "adventure"
+          ? "STORYLINE"
+          : null);
+  const resolvedMetrics = explicitMetrics.length
+    ? explicitMetrics
+    : buildCreationCardMetrics({
+        creationType: fallbackCreationType,
+        fallbackStats: stats,
+      });
 
   const disabledClasses = isDisabled
     ? "pointer-events-none opacity-[var(--state-disabled-opacity)]"
@@ -609,7 +647,7 @@ export default function KitCreationCardView({
           creationType={creationType}
           assetKind={assetKind}
           badges={badges}
-          stats={stats}
+          metrics={resolvedMetrics}
           liked={liked}
           bookmarked={bookmarked}
           onOpen={onOpen}
@@ -626,7 +664,7 @@ export default function KitCreationCardView({
           creationType={creationType}
           assetKind={assetKind}
           badges={badges}
-          stats={stats}
+          metrics={resolvedMetrics}
           liked={liked}
           bookmarked={bookmarked}
           onOpen={onOpen}

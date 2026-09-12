@@ -31,6 +31,7 @@ import { useCreationEngagementState } from "@/components/studio/engagement/hooks
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
+import { pickRandomCreatorDiscoveryItems } from "@/lib/shared/presentation/creatorDiscoverySelection";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -190,6 +191,31 @@ export default function CommunityV2Mockup({
   const [lovedOverlayIds, setLovedOverlayIds] = useState([]);
   const engagementState = useCreationEngagementState(live ? sourceCreations : []);
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
+
+  const moreFromCreatorSelection = useMemo(() => {
+    if (!assetDetailId) return [];
+
+    const creation = sourceCreations.find((item) => item.id === assetDetailId);
+    if (!creation) return [];
+
+    const detailCreator = creation.creator || creatorFromSubtitle(creation.subtitle);
+    const creatorKey = String(detailCreator?.handle || "").trim().toLowerCase();
+    if (!creatorKey) return [];
+
+    const candidates = sourceCreations.filter((item) => {
+      if (item.id === creation.id) return false;
+      const itemCreator = item.creator || creatorFromSubtitle(item.subtitle);
+      return String(itemCreator?.handle || "").trim().toLowerCase() === creatorKey;
+    });
+
+    return pickRandomCreatorDiscoveryItems(candidates, 4).map((item, index) => ({
+      id: item.id,
+      title: item.title,
+      imageSrc: item.imageSrc,
+      metrics: item.metrics,
+      sortOrder: index,
+    }));
+  }, [assetDetailId, sourceCreations]);
 
   const filterGroups = useMemo(() => {
     const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceCreations;
@@ -543,10 +569,10 @@ export default function CommunityV2Mockup({
                   // badge restating an active filter.
                   creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []
                 }
+                metrics={creation.metrics}
                 stats={{
                   plays: creation.plays,
                   hearts: creation.hearts,
-                  saves: creation.saves,
                   followers: null,
                 }}
                 liked={isLiked(creation)}
@@ -607,19 +633,21 @@ export default function CommunityV2Mockup({
           : [creation.imageSrc, ...(creation.extraMedia || [])]
               .filter(Boolean)
               .map((src, index) => ({ id: `${creation.id}-media-${index + 1}`, src }));
+        const detailCreator = creation.creator || creatorFromSubtitle(creation.subtitle);
 
         return (
           <KitAssetDetailPopup
             assetKind={creation.assetKind}
             title={creation.title}
             subtitle={creation.subtitle}
-            creator={creation.creator || creatorFromSubtitle(creation.subtitle)}
+            creator={detailCreator}
             media={media}
             badges={creation.isCanon ? [{ label: "Canon", variant: "canon" }] : []}
+            creationType={creation.type}
+            metrics={creation.metrics}
             stats={{
               plays: creation.plays,
               hearts: creation.hearts,
-              saves: creation.saves,
               followers: null,
             }}
             description={creation.description}
@@ -637,6 +665,8 @@ export default function CommunityV2Mockup({
             onSave={() => toggleSaved(creation)}
             onViewCatalogue={() => handleViewCatalogue(creation)}
             credits={creation.credits || []}
+            moreFromCreator={moreFromCreatorSelection}
+            onOpenMoreFromCreator={(creationId) => setAssetDetailId(creationId)}
             onClose={() => setAssetDetailId(null)}
           />
         );
