@@ -1,6 +1,7 @@
 "use client";
 
 import { SelectField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 function Field({ label, children }) {
   return (
@@ -83,7 +84,7 @@ export default function WalletProfileBuilderView({
 
       {editor}
 
-      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[var(--surface-3)] p-4 shadow-2xl backdrop-blur">
+      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[var(--surface-3)] p-4 shadow-2xl backdrop-blur max-[47.99rem]:hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="text-sm text-[var(--muted)]">
             {errorCount} errors · {warningCount} warnings
@@ -100,6 +101,19 @@ export default function WalletProfileBuilderView({
           </button>
         </div>
       </section>
+
+      {/* MOBILE-SHELLS: this shell already docked its primary action, but as
+          an in-flow sticky panel that scrolls away at the end of the page
+          and whose control carried no height floor. Below md that panel is
+          hidden and the same action renders in the bottom-docked bar, full
+          width minus the page gutter with the 44px floor. At md and up the
+          panel renders exactly where it does today and the bar is
+          display:none. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save Draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </div>
   );
 }
