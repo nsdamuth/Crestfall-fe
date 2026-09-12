@@ -110,3 +110,66 @@ FE/CSS 12 Sep 2026, INSET elevation ladder, branch fe/css, executes the 12 Sep a
 FE/CSS 12 Sep 2026, INSET ladder commit 4 (dropdown triggers): the three shared dropdown triggers (KitDropdown, CrestfallSelect, the character creator-stops InlineDropdown) sit on --bed-deep with --shadow-bed, below their container. This supersedes the R10 refine dropdown ruling of 2c7759c1 (raised --surface-2 trigger fill); the --line-whisper border that commit added stays. The KitFormField select variant delegates to KitDropdownView and carries no trigger of its own, so the census line that named it as a fourth trigger was a fold-group header, left alone.
 FE/CSS 12 Sep 2026, INSET ladder series landed on fe/css, eight commits, production build exit 0: efb820a0 ladder values and law rows; bfbea70b opening-message leak import fixed; f5aa8bba shared field beds and the three reference pages onto --bed-deep (19 declarations, 12 files); 8d2bbc48 three shared dropdown triggers onto --bed-deep; 4b3feb91 --surface-4 off four floating surfaces; 6148c1a7 both InfoTip tooltips onto --surface-3; 414c8969 actor-mechanics cards onto --surface-1; 8d5bc805 --panel-ui-glass into the token law. Gates: bed-deep class occurrences 23 (was 1), surface-4 product hits at the audit's scope 0 (was 12), stale RoomTemplateFields importers outside the dead directory 0 (was 1), em dashes in theme.css, DESIGN-TOKENS.md, STATUS.md 0 each, panel-ui-glass grep unchanged at 9 lines. NEXT ACTION: Brian in the browser at 390 by 844 first on /studio/create/storyline, /studio/create/lore, /studio/create/actor-mechanics-profile, one open dropdown, one Eggshell field; he tunes the four ramp values and the light --bed-deep there. Then the field-bed long tail (about 126 files, 30 of them wrapper-bed transparent inputs) as a piloted workflow, ten files then stop. Logged, not touched: CrestfallSelect's bg-black shadow-2xl panel, both InfoTips' --shadow-modal on a small float, four surface-4 hits outside the audit scope, the parchment ramp's 1.7 L* steps, the 390 storyline clip, R5 duplicate families.
 FE/CSS 12 Sep 2026, INSET ladder REFINE after Brian's browser review, branch fe/css, three commits, no render step. The law, added to docs/DESIGN-TOKENS.md beneath the INSET line: "A control you tap rises one step above its container. A control you type into sinks one step below it." Item 1, 422a1cc5: --bed-deep lifted so it clears the 4.4 L* floor from --canvas in both themes (dark #0d0b08 to #181510, 0.90 to 4.74 L* above canvas; light #e3dbc7 to #ded6c3, 2.85 to 4.61 L* below the Eggshell canvas); --canvas unchanged; the dark bed now sits 0.97 L* under --surface-1, so a field separates from its card by --shadow-bed, the hairline, and the label rather than by fill, flagged for the next walk. Item 2, 45550c13, reverses 8d2bbc48: every surface tier publishes --step-above and --step-below (page tier on :root in app/theme.css, per-tier on the Tailwind card classes in app/design-system.css TIER STEPS), the three shared triggers (KitDropdown, CrestfallSelect, character creator-stops InlineDropdown) consume --step-above with the --line-whisper hairline and the chevron, so a trigger on a surface-1 card renders surface-2 and on a surface-2 nested card renders surface-3 with zero per-instance overrides; fields stay on --bed-deep. Item 3, 6f2c07cd: the KitDropdown mobile sheet at 390 sits on --surface-3 with the --line-whisper hairline, the frame's --radius-lg top corners and --scrim-strong veil, inset by the --space-5 page gutter each side, 44px row floor with the full row as tap target, label in the header row beside the 44px close control on the right; KitModalFrame 1.5.0 to 1.6.0 adds an optional panelStyle passthrough so the sheet's tokens reach the panel without two utilities competing. Proposal for lore levels three and four (both still --surface-2), Brian rules in the browser next walk: A alternate (level three back to surface-1, four to surface-2; zero L* cost, one file two lines, but a nested card that sinks contradicts the inset law and a field inside it sits 1.0 L* under its card), B cap (three and four stay surface-2, separated by the --line border and spacing only; zero L* cost, one file two lines, lawful under the in-flow-surfaces-separate-by-border rule), C sub-step (a tier between surface-2 and surface-3 needs 4.4 L* each side, so chrome and the reserved step move up 2.2 L* more toward mid-tone, a new token both themes, four files, and it re-opens the one-new-tier ruling). Starred: B. Out of scope and untouched: the 390 clipping on storyline (left) and actor mechanics (right), light theme beyond --bed-deep, seeded default field text, R5 duplicates. Fields still carry a resting --line-whisper hairline; the refine's rule says no resting border on type controls, but item 2's file list was triggers only, so that is logged for the next brief.
+
+FE/CSS 12 Sep 2026, package MOBILE-SHELLS landed on fe/css, 53 commits, production build exit 0. Every page shell under /studio renders single column at 390 by 844 with zero horizontal overflow. Breakpoint is md, 48rem, the Tailwind v4 default; no --breakpoint override exists in app/globals.css. Gutter is --space-5 per side, and its one authority for signed-in routes stays components/studio/studio-shell/StudioShell.view.jsx:24. No render step this pass; Brian reviews in the browser after push, per the 9 Sep 2026 ruling.
+
+Part 1, the read-only inventory, is committed as docs/MOBILE-SHELLS-INVENTORY.md at f9c06dce and carries the route to shell map, the offending-declaration table by file and line, the redirects that carry no shell, and the Kit overflow candidates this package logged and left. Both known failures are attributed there and fixed here. Storyline clipped from StorylineNodeListEditor.view.jsx:195, a nowrap flex row whose dropdown wrapper never claimed its width, measured floor 352px against 350px available. Actor mechanics profile clipped from SharedFields.jsx:328, a truncate span whose whitespace-nowrap makes its min-content the whole value, measured 819px per instance and a 895px page floor. Both root causes sit outside the shell files. The enabling declaration in both cases was the same one, a root grid whose children carried no min-w-0, and that omission was the single systemic defect across 22 create shells.
+
+Two new rules live in app/design-system.css. The mobile shell law, scoped by the new data-studio-shell attribute on StudioShell's root, wraps headings with overflow-wrap anywhere, wraps prose, caps media at 100%, and makes a table or a pre scroll inside itself, under the breakpoint only. The .cf-create-action-bar recipe docks a create page's primary action to the bottom edge below md, full width minus the gutter, --control-md floor, --surface-3 with a --line-whisper hairline, above the bottom dock, display:none at md and up so desktop is unchanged. A third rule gives .cf-btn--sm the --control-md height on a coarse pointer, the same pairing DESIGN-TOKENS already requires of --control-filter.
+
+Gates. G1 inventory before the first edit, DONE. G2 zero offending declarations remaining across all seven types, DONE. G3 breakpoint echoed and the single-column rule located per shell, DONE. G4 sticky action bar on every create-page shell, DONE. G5 zero controls at the 32px tier without a 44px lift, eight logged exceptions that never render below the breakpoint, DONE. G6 build exit 0, one commit per shell, all pushed, DONE.
+
+Commit hashes in order:
+  f9c06dce docs: MOBILE-SHELLS Part 1 inventory, gate G1
+  56569d6c fe/css: studio shell carries the mobile shell law, MOBILE-SHELLS
+  df4d345d fe/css: storyline create shell clears its right-edge clip, MOBILE-SHELLS
+  97f28a42 fe/css: actor mechanics profile shell clears its right-edge clip
+  559f8964 fe/css: RoomTemplateBuilder.view.jsx single column below md, MOBILE-SHELLS
+  055a45d7 fe/css: ScenarioBuilder.view.jsx single column below md, MOBILE-SHELLS
+  d552d59a fe/css: AssetBuilder.view.jsx single column below md, MOBILE-SHELLS
+  71a6eef0 fe/css: LocationBuilder.view.jsx single column below md, MOBILE-SHELLS
+  628155a6 fe/css: LoreBuilder.view.jsx single column below md, MOBILE-SHELLS
+  9032756a fe/css: RulesCodexBuilder.view.jsx single column below md, MOBILE-SHELLS
+  436f5371 fe/css: ProgressionProfileBuilder.view.jsx single column below md, MOBILE-SHELLS
+  29d6ac32 fe/css: StatsPoolsBuilder.view.jsx single column below md, MOBILE-SHELLS
+  151bb661 fe/css: MechanicsModuleBuilder.view.jsx single column below md, MOBILE-SHELLS
+  0147db9c fe/css: NarratorBuilder.view.jsx single column below md, MOBILE-SHELLS
+  c9e965cf fe/css: MechanicsActionSetBuilderShell single column below md
+  3e0793bc fe/css: MechanicsActionBuilderShell single column below md
+  d5761964 fe/css: StructuredRegistryBuilder.view.jsx single column below md, MOBILE-SHELLS
+  f92e374a fe/css: ItemRegistryBuilder.view.jsx single column below md, MOBILE-SHELLS
+  4ee96e16 fe/css: WardrobeBuilder.view.jsx single column below md, MOBILE-SHELLS
+  1eaea6c8 fe/css: NpcRegistryBuilder.view.jsx single column below md, MOBILE-SHELLS
+  2c2f5fbe fe/css: LocationRegistryBuilder.view.jsx single column below md
+  6e93849e fe/css: CharacterCreator.view.jsx single column below md, MOBILE-SHELLS
+  56b5748e fe/css: CharacterTemplateBuilder.view.jsx single column below md
+  00172151 fe/css: TimelineBuilder.view.jsx single column below md, MOBILE-SHELLS
+  d4670930 fe/css: AbilitySpellProfileBuilder.view.jsx docks its action below md, MOBILE-SHELLS
+  7e6a7d1a fe/css: SkillsProfileBuilder.view.jsx docks its action below md, MOBILE-SHELLS
+  99fb5ec6 fe/css: WalletProfileBuilder.view.jsx docks its action below md, MOBILE-SHELLS
+  495040cc fe/css: studio top bar search slot can shrink, MOBILE-SHELLS
+  aaba18fa fe/css: studio sidebar rail width is scoped to the width that paints it
+  78f4acc1 fe/css: mobile nav dock and drawer meet the 44px floor, MOBILE-SHELLS
+  e1c14f43 fe/css: studio page header title and actions fit 390, MOBILE-SHELLS
+  ec4720a8 fe/css: public profile tabs wrap and meet the 44px floor, MOBILE-SHELLS
+  e8defce1 fe/css: connections tabs wrap and meet the 44px floor, MOBILE-SHELLS
+  cc29a44c fe/css: community hub filter pills keep 44px on touch, MOBILE-SHELLS
+  8bf8d048 fe/css: my creations hub section tabs meet the 44px floor, MOBILE-SHELLS
+  8d10767a fe/css: creation profile tabs meet the 44px floor, MOBILE-SHELLS
+  3851c254 fe/css: creation edit shell section tabs meet the 44px floor
+  a1f6b904 fe/css: creation edit action bar controls keep 44px on touch
+  bd5092b4 fe/css: image library controls keep 44px on touch, MOBILE-SHELLS
+  082df2f8 fe/css: story rooms hub pills keep 44px on touch, MOBILE-SHELLS
+  e8ae4118 fe/css: games hub controls meet the 44px floor, MOBILE-SHELLS
+  541c0f61 fe/css: character configuration back link meets the 44px floor
+  dd9c3f35 fe/css: lore card art track fits 390, MOBILE-SHELLS
+  6658b709 fe/css: home hero welcome line is bounded and clipped, MOBILE-SHELLS
+  356e037d fe/css: studio mode panels progress meter can shrink, MOBILE-SHELLS
+  2db098b1 fe/css: editor dirty-state buttons keep 44px on touch, MOBILE-SHELLS
+  59badab7 fe/css: stories manage-select control keeps 44px on touch, MOBILE-SHELLS
+  d7b76ccf fe/css: creators list action pair wraps below 800, MOBILE-SHELLS
+  dffc59dc fe/css: creator profile tabs and donate checkbox meet the floor
+  1589616b fe/css: connections tablist wraps below md, MOBILE-SHELLS
+  d3dd8768 fe/css: account inline message action keeps 44px on touch
+  1ed7a815 fe/css: account settings back link keeps 44px on touch, MOBILE-SHELLS
+  097bf7c5 fe/css: small buttons keep the 44px floor on touch, MOBILE-SHELLS
