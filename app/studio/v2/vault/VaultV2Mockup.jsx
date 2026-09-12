@@ -58,8 +58,8 @@ const VISIBILITY_LABELS = {
   PUBLIC: "Public",
 };
 
-// Sixteen or more fixture items (plan section 7.3): owned work across
-// all four visibilities plus several saved-from-others public items.
+// Fixture items are owner-created work only. The Vault is an ownership
+// surface, not a bookmark collection; saving Community work never imports it here.
 const FIXTURE_VAULT_ITEMS = [
   { id: "v1", assetKind: "character", title: "Ashwynn Vale", subtitle: "Character", imageSrc: canonArt("Alyera Valecourt"), isOwn: true, visibility: "PRIVATE", plays: 40, hearts: 3, saves: 1, recency: 20, description: "A private draft, not yet shared." },
   { id: "v2", assetKind: "story", title: "The Hollow Road", subtitle: "Story", imageSrc: creatorArt("vermillion-2"), extraMedia: [creatorArt("vermillion-6"), creatorArt("vermillion-7")], isOwn: true, visibility: "PRIVATE", plays: 12, hearts: 1, saves: 0, recency: 19, description: "An unfinished story, private while drafting.", credits: [{ id: "v2-credit-narrator", kindLabel: "Narrator", creatorHandle: "@vermillion", creatorHref: "/studio/profile/vermillion", assetTitle: null }] },
@@ -74,11 +74,6 @@ const FIXTURE_VAULT_ITEMS = [
   { id: "v11", assetKind: "image", title: "Harbor at Dusk", subtitle: "Image", imageSrc: creatorArt("vermillion-11"), isOwn: true, visibility: "PUBLIC", plays: null, hearts: 210, saves: 80, recency: 10 },
   { id: "v12", assetKind: "character", title: "Lilith", subtitle: "Character", imageSrc: canonArt("Lilith"), isOwn: true, visibility: "CANON", isCanon: true, plays: 10880, hearts: 2210, saves: 960, recency: 9, description: "A canon character woven into the founding myth of the realm." },
   { id: "v13", assetKind: "story", title: "The First Exile", subtitle: "Story", imageSrc: creatorArt("vermillion-3"), isOwn: true, visibility: "CANON", isCanon: true, plays: 9800, hearts: 1240, saves: 510, recency: 8, description: "A canon story arc, released community-wide." },
-  { id: "v14", assetKind: "character", title: "Kaela Veynskald", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Kaela Veynskald"), isOwn: false, visibility: "PUBLIC", plays: 5120, hearts: 880, saves: 190, recency: 7, description: "Saved from the Community, not your own work." },
-  { id: "v15", assetKind: "story", title: "The Wandering Blade", subtitle: "Story · by @whiteviolin", imageSrc: creatorArt("whiteviolin"), isOwn: false, isRemix: true, visibility: "PUBLIC", plays: 2700, hearts: 324, saves: 81, recency: 6, description: "Saved from the Community, not your own work." },
-  { id: "v16", assetKind: "image", title: "Vesper Ash Render", subtitle: "Image · by @vermillion", imageSrc: creatorArt("vermillion-8"), isOwn: false, visibility: "PUBLIC", plays: null, hearts: 410, saves: 120, recency: 5 },
-  { id: "v17", assetKind: "adventure", title: "Neon Harbor Cycle", subtitle: "Adventure · by @vermillion", imageSrc: creatorArt("vermillion-12"), isOwn: false, visibility: "PUBLIC", plays: 512, hearts: 88, saves: 19, recency: 4, description: "Saved from the Community, not your own work." },
-  { id: "v18", assetKind: "character", title: "Maya Chen", subtitle: "Character · by @Crestfall", imageSrc: canonArt("Maya Chen"), isOwn: false, visibility: "PUBLIC", plays: 3300, hearts: 410, saves: 140, recency: 3, description: "Saved from the Community, not your own work." },
 ];
 
 const VISIBILITY_OPTIONS = [
@@ -163,18 +158,12 @@ function EmptyState({ onStartCreating, body = "Create something, or save work yo
 
 export default function VaultV2Mockup({
   items = null,
-  bookmarkCandidates = [],
   loadError = null,
-  savedSourceError = null,
   live = false,
 } = {}) {
   const router = useRouter();
   const launchController = useStoryLaunchController();
   const ownedItems = Array.isArray(items) ? items : FIXTURE_VAULT_ITEMS;
-  const savedCandidates = useMemo(
-    () => (Array.isArray(bookmarkCandidates) ? bookmarkCandidates : []),
-    [bookmarkCandidates]
-  );
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
   const [searchValue, setSearchValue] = useState("");
@@ -190,29 +179,8 @@ export default function VaultV2Mockup({
   // on live wiring open a non-persisting notice instead of doing
   // nothing.
   const [actionNotice, setActionNotice] = useState(null);
-  const engagementCandidates = useMemo(() => {
-    if (!live) return [];
-
-    const byId = new Map();
-    [...ownedItems, ...savedCandidates].forEach((item) => {
-      if (item?.id && !byId.has(item.id)) byId.set(item.id, item);
-    });
-    return [...byId.values()];
-  }, [live, ownedItems, savedCandidates]);
-  const engagementState = useCreationEngagementState(engagementCandidates);
-  const sourceItems = useMemo(() => {
-    if (!live) return ownedItems;
-
-    const ownedIds = new Set(ownedItems.map((item) => item?.id).filter(Boolean));
-    const saved = savedCandidates.filter(
-      (item) =>
-        item?.id &&
-        !ownedIds.has(item.id) &&
-        engagementState.isCreationBookmarked(item)
-    );
-
-    return [...ownedItems, ...saved];
-  }, [live, ownedItems, savedCandidates, engagementState]);
+  const engagementState = useCreationEngagementState(live ? ownedItems : []);
+  const sourceItems = ownedItems;
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
 
   const activeVisibilityValues = selectedValues.visibility || [];
@@ -511,8 +479,8 @@ export default function VaultV2Mockup({
           title="Vault"
           description={
             live
-              ? "Everything you create, plus public work you save from Community, stays findable here."
-              : "Everything yours, and everything you have claimed, always findable."
+              ? "Everything you create stays findable here."
+              : "Everything you create, always findable."
           }
         />
       }
@@ -576,14 +544,6 @@ export default function VaultV2Mockup({
 
         {effectiveMode === "loading" && <LoadingGrid />}
 
-        {live && savedSourceError && !loadError && (
-          <KitAlertStripView
-            tone="warning"
-            title="Saved community work could not be loaded."
-            body={`${savedSourceError} Your own creations are still available.`}
-          />
-        )}
-
         {live && engagementState.engagementMessage && (
           <KitAlertStripView
             tone="danger"
@@ -594,7 +554,7 @@ export default function VaultV2Mockup({
 
         {effectiveMode !== "loading" && effectiveMode !== "error" && filteredItems.length === 0 && (
           <EmptyState
-            body={live ? "Create something in Studio, or save public work from Community." : undefined}
+            body={live ? "Create something in Studio and it will appear here." : undefined}
             onStartCreating={() =>
               live
                 ? router.push("/studio")

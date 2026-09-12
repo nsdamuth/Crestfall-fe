@@ -8,7 +8,7 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../../../..");
 const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
 
-test("Vault promotes owner actions without changing saved-from-others cards", () => {
+test("Vault promotes owner actions on its owner-only creation cards", () => {
   const vault = read("app/studio/v2/vault/VaultV2Mockup.jsx");
   assert.match(vault, /promoteOwnerActions=\{Boolean\(live && item\.isOwn\)\}/);
   assert.match(vault, /onEdit=\{live && item\.isOwn/);
