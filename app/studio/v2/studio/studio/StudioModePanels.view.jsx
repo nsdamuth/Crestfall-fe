@@ -35,7 +35,7 @@ function ProgressMeter({ completed = 0, total = 0 }) {
   const width = `${Math.round((safeCompleted / safeTotal) * 100)}%`;
 
   return (
-    <div className="min-w-[14rem] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)]">
+    <div className="w-full rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-3)] lg:w-auto lg:min-w-[14rem]">
       <div className="flex items-center justify-between gap-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)]">
         <span className="text-[var(--ink-faint)]">Progress</span>
         <span className="text-[var(--gold-action)]">{safeCompleted} / {Number(total || 0)}</span>
@@ -437,7 +437,7 @@ function FullStudioCategoryDetail({
       <button
         type="button"
         onClick={() => onBack?.()}
-        className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] font-medium text-[var(--ink)] shadow-[0_8px_24px_color-mix(in_srgb,var(--canvas)_55%,transparent)] transition-[border-color,background-color,box-shadow,color,transform] duration-[var(--dur-hover)] hover:-translate-y-px hover:border-[var(--gold-action)] hover:bg-[color-mix(in_srgb,var(--gold-action)_7%,var(--surface-1))] hover:text-[var(--gold-bright)] hover:shadow-[var(--glow-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-action)]/70"
+        className="inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] font-medium text-[var(--ink)] shadow-[0_8px_24px_color-mix(in_srgb,var(--canvas)_55%,transparent)] transition-[border-color,background-color,box-shadow,color,transform] duration-[var(--dur-hover)] hover:-translate-y-px hover:border-[var(--gold-action)] hover:bg-[color-mix(in_srgb,var(--gold-action)_7%,var(--surface-1))] hover:text-[var(--gold-bright)] hover:shadow-[var(--glow-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-action)]/70"
         aria-label="Back to Full Studio categories"
       >
         <span aria-hidden="true" className="text-[var(--gold-action)]">←</span>
