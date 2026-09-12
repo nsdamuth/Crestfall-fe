@@ -30,7 +30,7 @@ semantic callbacks, and rendered slots.
 - Images, Videos, Liked, Bookmarked, and All filters
 - Search, four eager images, 12-item pagination, and Load More
 - Like/bookmark optimistic updates with rollback on persistence failure
-- Creation header, attribution, statistics, tags, 420-character description
+- Creation header, attribution, statistics, tags, four-line description clamp with Show more
 - Chat-capable Creation Story Room start
 - Generate, Share, and public Media Lightbox actions
 - Load-error, no-creation, no-media, and missing-preview fallbacks
@@ -57,6 +57,14 @@ the viewport at 390.
 Library Pass tiles, RULED 12 Sep 2026 (FIX 7): tapping any locked tile
 opens that same dialog; the whole tile is the tap target, and unlocked
 tiles behave as before.
+
+Description clamp, RULED 12 Sep 2026 (FIX 8): the description shows at
+most four rendered lines at rest with a gold "Show more" link that
+expands it in place; expanded, the link reads "Show less". The clamp is
+by line count (a ResizeObserver in the view model measures the
+paragraph against four line heights), never by character count, so a
+description of four lines or fewer shows no link. The 420-character
+preview limit is retired.
 
 ## Conditional Credits tab, 24 Aug 2026
 

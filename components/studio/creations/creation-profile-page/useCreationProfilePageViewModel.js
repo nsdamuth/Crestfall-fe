@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { getCreationCredits } from "@/lib/shared/creations/creationAttribution";
 import {
@@ -26,7 +26,11 @@ import {
 export const CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12;
 export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
 export const CREATION_PROFILE_EAGER_MEDIA_COUNT = 4;
-export const CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420;
+// Description clamp, RULED 12 Sep 2026 (eight-fix package FIX 8): the
+// description shows at most this many rendered lines at rest, measured
+// by line count, never by character count. The former 420-character
+// preview limit is retired.
+export const CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4;
 
 
 export const CREATION_PROFILE_MEDIA_TABS = [
@@ -236,21 +240,22 @@ export function filterCreationProfileMedia({
   return filtered;
 }
 
-export function getCreationProfileDescription(description, expanded = false) {
+// `overflows` is the measured fact that the text runs past the clamp
+// (see the measure ref in the hook); the toggle renders only then, so
+// a description of four lines or fewer shows no link.
+export function getCreationProfileDescription(
+  description,
+  expanded = false,
+  overflows = false
+) {
   const text = normalizeText(description, "No description has been added yet.");
-  const hasLongDescription =
-    text.length > CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT;
+  const isExpanded = Boolean(expanded);
 
   return {
     text,
-    hasLongDescription,
-    visibleText:
-      hasLongDescription && !expanded
-        ? `${text
-            .slice(0, CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT)
-            .trimEnd()}…`
-        : text,
-    toggleLabel: expanded ? "Show less" : "Show more",
+    isExpanded,
+    showToggle: Boolean(overflows) || isExpanded,
+    toggleLabel: isExpanded ? "Show less" : "Show more",
   };
 }
 
@@ -339,6 +344,33 @@ export function useCreationProfilePageViewModel({
   const [bookmarkedMediaIds, setBookmarkedMediaIds] = useState(() => new Set());
   const [reactionMessage, setReactionMessage] = useState("");
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  // Line-count clamp measurement (FIX 8, 12 Sep 2026): the View hands
+  // its description paragraph to this callback ref; a ResizeObserver
+  // compares the paragraph's full content height with four line
+  // heights on mount and on every resize, so the Show more link
+  // appears only when the text really overflows the clamp.
+  const [descriptionOverflows, setDescriptionOverflows] = useState(false);
+  const descriptionObserverRef = useRef(null);
+  const descriptionMeasureRef = useCallback((node) => {
+    descriptionObserverRef.current?.disconnect();
+    descriptionObserverRef.current = null;
+
+    if (!node || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      const lineHeight = Number.parseFloat(
+        window.getComputedStyle(node).lineHeight
+      );
+      if (!Number.isFinite(lineHeight) || lineHeight <= 0) return;
+
+      const clampedHeight =
+        lineHeight * CREATION_PROFILE_DESCRIPTION_CLAMP_LINES;
+      setDescriptionOverflows(node.scrollHeight > clampedHeight + 1);
+    });
+
+    observer.observe(node);
+    descriptionObserverRef.current = observer;
+  }, []);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
   const [libraryPassPurchaseStatus, setLibraryPassPurchaseStatus] =
@@ -609,10 +641,14 @@ export function useCreationProfilePageViewModel({
           { label: normalizedCreation.title },
         ]
       : [],
-    description: getCreationProfileDescription(
-      normalizedCreation?.description,
-      descriptionExpanded
-    ),
+    description: {
+      ...getCreationProfileDescription(
+        normalizedCreation?.description,
+        descriptionExpanded,
+        descriptionOverflows
+      ),
+      measureRef: descriptionMeasureRef,
+    },
     activeTab,
     credits: normalizedCreation?.credits || [],
     mediaTabs: buildCreationProfileTabs({

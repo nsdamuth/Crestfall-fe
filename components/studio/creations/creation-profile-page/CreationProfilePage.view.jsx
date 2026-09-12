@@ -125,21 +125,30 @@ export default function CreationProfilePageView({
               {statsSlot}
             </div>
 
-            <p className="mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)]">
-              {description?.visibleText}
-              {description?.hasLongDescription ? (
-                <>
-                  {" "}
-                  <button
-                    type="button"
-                    onClick={() => onToggleDescription?.()}
-                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
-                  >
-                    {description.toggleLabel}
-                  </button>
-                </>
-              ) : null}
+            {/* Description clamp, RULED 12 Sep 2026 (eight-fix package
+                FIX 8): at rest at most four rendered lines (a line
+                clamp, never a character count). The gold Show more link
+                expands in place and reads Show less when open; it
+                renders only when the text overflows four lines, which
+                the view model measures through measureRef. */}
+            <p
+              ref={description?.measureRef}
+              className={`mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)] ${
+                description?.isExpanded ? "" : "line-clamp-4"
+              }`}
+            >
+              {description?.text}
             </p>
+            {description?.showToggle ? (
+              <button
+                type="button"
+                onClick={() => onToggleDescription?.()}
+                aria-expanded={Boolean(description?.isExpanded)}
+                className="cf-btn cf-btn--tertiary mt-[var(--space-2)] inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+              >
+                {description.toggleLabel}
+              </button>
+            ) : null}
 
             {creation.tags.length ? (
               <div className="mt-5 flex flex-wrap gap-2">

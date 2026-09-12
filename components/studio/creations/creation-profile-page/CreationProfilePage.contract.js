@@ -15,7 +15,7 @@ export const CREATION_PROFILE_PAGE_VIEW_CONTRACT_VERSION =
  * @property {Array<{label: string, href?: string}>} [breadcrumbs] added
  *   12 Sep 2026 (eight-fix package FIX 4), optional and additive:
  *   Community, then the creation title, rendered above the header card.
- * @property {Object|null} description
+ * @property {Object|null} description Since 12 Sep 2026 (eight-fix package FIX 8): text, isExpanded, showToggle, toggleLabel, and measureRef (a callback ref the View attaches to the paragraph so the ViewModel can measure the four-line clamp). The former visibleText and hasLongDescription (420-character preview) are retired.
  * @property {Array<Object>} mediaTabs
  * @property {string} query
  * @property {Object|null} libraryPassPanel Server-projected Library Pass state and purchase presentation.
