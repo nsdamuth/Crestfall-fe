@@ -41,7 +41,7 @@ function ProfileContentTabs({ value = "creations", onChange = null }) {
             type="button"
             aria-pressed={active}
             onClick={() => onChange?.(tab.id)}
-            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors ${
+            className={`min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition-colors ${
               active
                 ? "bg-[var(--fill)] text-[var(--gold-bright)]"
                 : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
@@ -237,7 +237,7 @@ function DonateModal({
           />
         </div>
 
-        <label className="flex items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+        <label className="flex min-h-[var(--control-md)] items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           <input
             type="checkbox"
             checked={isAnonymous}
