@@ -7,7 +7,7 @@ function PillButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick || undefined}
-      className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
+      className={`min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
         active
           ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
           : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -268,7 +268,7 @@ export default function CommunityHubView({
         )}
       </FilterPanelComponent>
 
-      {/* SKIPPED: engagementMessage is a semantic error/warning banner —
+      {/* SKIPPED: engagementMessage is a semantic error/warning banner,
           the red here is unmapped by any of the eight rulings (danger
           red was proposed for buttons only and isn't applied anywhere
           in this pass), so it's left as raw Tailwind red rather than
