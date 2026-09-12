@@ -23,6 +23,7 @@ import {
   SHORT_LONGFORM_MAX_LENGTH,
   DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const TAB_ICONS = {
   overview: ListChecks,
@@ -207,13 +208,25 @@ export default function StructuredRegistryBuilderView({
           reviewPayloadText={reviewPayloadText}
         />
       ) : null}
+      {/* MOBILE-SHELLS: the header row's Save is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          header button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={["saving", "saved"].includes(saveStatus)}
+      />
     </section>
   );
 }
 
+/* MOBILE-SHELLS: min-w-0 on Panel's root is what lets the two-pane
+   region at xl collapse to one column below it without either pane
+   being floored at its subtree min-content and pushing the page
+   sideways. Both panes render through this one component. */
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
+    <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -303,7 +316,7 @@ function EntriesTab({
   onDeleteEntry,
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[0.42fr_1fr]">
+    <div className="grid min-w-0 gap-5 xl:grid-cols-[0.42fr_1fr]">
       <Panel
         eyebrow="Entries"
         title={config.entryPluralLabel}
