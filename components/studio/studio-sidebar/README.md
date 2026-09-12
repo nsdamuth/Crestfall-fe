@@ -58,6 +58,11 @@ viewport heights without internal scroll. Flag-off (production)
 density is untouched. Vault's iconKey reverted `castle` to `archive`
 in the same pass (the repo's standing archive/vault glyph).
 
+Studio glyph, RULED 12 Sep 2026 (eight-fix package, FIX 2): Home and
+Studio no longer share the `home` glyph. Studio carries `hammer`, the
+workshop glyph from the same lucide set, which no other sidebar row
+uses.
+
 The signed-in area's Discord and Settings icons now sit inline on the
 signed-in row itself (avatar, label, public username, then the two icons); Log
 out is a quiet row directly beneath. No separate icon row remains.
