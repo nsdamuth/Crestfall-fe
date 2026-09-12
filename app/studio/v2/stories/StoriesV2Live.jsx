@@ -430,7 +430,7 @@ export default function StoriesV2Live({
                         aria-pressed={selectedRoomIds.includes(item.id)}
                         aria-label={selectedRoomIds.includes(item.id) ? "Deselect Story" : "Select Story"}
                         onClick={() => toggleRoomSelection(item.id)}
-                        className="absolute left-[var(--space-2)] top-[var(--space-2)] z-[4] flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-bright)]"
+                        className="absolute left-[var(--space-2)] top-[var(--space-2)] z-[4] flex h-[var(--control-sm)] w-[var(--control-sm)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)] items-center justify-center rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--gold-bright)]"
                       >
                         {selectedRoomIds.includes(item.id) ? (
                           <CheckSquare size={16} aria-hidden="true" />
