@@ -60,7 +60,7 @@ export default function SkillsProfileBuilderView({
 
       {editor}
 
-      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[#100f0d]/95 p-4 shadow-2xl backdrop-blur">
+      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[var(--surface-3)] p-4 shadow-2xl backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="text-sm text-[var(--muted)]">
             {errorCount} errors · {warningCount} warnings

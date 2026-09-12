@@ -25,7 +25,7 @@ export default function AbilitySpellProfileBuilderView({
         </div>
       </section>
       {editor}
-      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[#100f0d]/95 p-4 shadow-2xl backdrop-blur">
+      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[var(--surface-3)] p-4 shadow-2xl backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="text-sm text-[var(--muted)]">{errorCount} errors · {warningCount} warnings{saveMessage ? <span className="ml-3">{saveMessage}</span> : null}</div>
           <button type="button" disabled={saveDisabled} onClick={() => onSave?.()} className="rounded-xl border border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/15 px-6 py-3 text-sm font-semibold text-[var(--muted-gold)] disabled:cursor-not-allowed disabled:opacity-40">{saveStatus === "saving" ? "Saving…" : "Save Draft"}</button>

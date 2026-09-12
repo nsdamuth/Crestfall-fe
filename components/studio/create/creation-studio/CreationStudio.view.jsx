@@ -64,7 +64,7 @@ export default function CreationStudioView({
 
 function ModeSelector({ mode, onModeChange }) {
   return (
-    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/90 p-2 shadow-2xl backdrop-blur-xl">
+    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-3)] p-2 shadow-2xl backdrop-blur-xl">
       <div className="grid gap-2 md:grid-cols-3">
         {CREATION_STUDIO_MODE_OPTIONS.map((option) => {
           const active = option.id === mode;
