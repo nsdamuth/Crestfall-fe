@@ -13,7 +13,7 @@ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
 
 
-// The "Welcome back, <name>." overlay is retired, RULED 12 Sep 2026
+// The by-name greeting overlay is retired, RULED 12 Sep 2026
 // (eight-fix package, FIX 1): the hero keeps its eyebrow, continue
 // block, and buttons, with no replacement copy.
 function HomeHeroBanner({ children }) {
