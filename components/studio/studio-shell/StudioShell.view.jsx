@@ -10,9 +10,16 @@ export default function StudioShellView({
 }) {
   return (
     <main
+      data-studio-shell=""
       data-theme={themeMode === "light" ? "light" : undefined}
       className="min-h-screen bg-[var(--canvas)] text-[var(--ink)]"
     >
+      {/* Package MOBILE-SHELLS: data-studio-shell is the scope hook
+          for the mobile shell law in app/design-system.css (heading
+          and prose wrapping, media capped at the column, tables and
+          pre scrolling inside themselves). It reaches every route
+          under /studio through this one element and nothing outside
+          it. */}
       <div className="flex min-h-screen">
         {sidebarSlot}
 

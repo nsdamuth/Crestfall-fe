@@ -531,3 +531,100 @@
     transition-duration: .01ms !important;
   }
 }
+
+/* --- MOBILE SHELL LAW, package MOBILE-SHELLS -----------------
+   Every page shell under /studio renders single column at 390 by
+   844 with zero horizontal overflow. Three of that package's
+   rules are the same rule in every shell, so they are written
+   once here rather than twenty times in markup: headings and
+   prose wrap, long unbroken tokens break on headings, media
+   never exceeds its column, and a table or a pre scrolls inside
+   itself rather than scrolling the page.
+
+   Scope is the shell root only. StudioShell.view.jsx stamps
+   data-studio-shell on its <main>, so these rules reach every
+   route under /studio and nothing outside it. The breakpoint is
+   the md value from the Tailwind config, 48rem, expressed here
+   as the largest width below it.                              */
+
+@media (max-width: 47.99rem) {
+  [data-studio-shell] h1,
+  [data-studio-shell] h2,
+  [data-studio-shell] h3,
+  [data-studio-shell] h4,
+  [data-studio-shell] h5,
+  [data-studio-shell] h6 {
+    overflow-wrap: anywhere;
+  }
+
+  [data-studio-shell] p,
+  [data-studio-shell] li,
+  [data-studio-shell] dd,
+  [data-studio-shell] blockquote {
+    overflow-wrap: break-word;
+  }
+
+  [data-studio-shell] img,
+  [data-studio-shell] video,
+  [data-studio-shell] canvas,
+  [data-studio-shell] iframe {
+    max-width: 100%;
+  }
+
+  [data-studio-shell] table,
+  [data-studio-shell] pre {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* --- CREATE ACTION BAR, package MOBILE-SHELLS ----------------
+   The create pages carry their primary action (Save Draft) in a
+   side panel or a page header row. Below the breakpoint that
+   action can sit a full scroll away from the field the author is
+   filling, so it docks to the bottom of the viewport instead.
+
+   Full width minus the page gutter on each side, the 44px
+   control floor, the floating chrome surface with the whisper
+   hairline on top. It rides above the bottom dock by the same
+   offset the v2 editor's mobile bar already uses
+   (app/studio/v2/editor/editor/Editor.view.jsx:434), so the two
+   floating bars agree on where the dock ends, and it sits below
+   the dock in z order so any future bottom navigation stays
+   reachable. At md and up it is display:none and the page's own
+   in-place action renders exactly where it does today.         */
+
+.cf-create-action-bar {
+  display: none;
+}
+
+.cf-create-action-bar-spacer {
+  display: none;
+}
+
+@media (max-width: 47.99rem) {
+  .cf-create-action-bar {
+    position: fixed;
+    z-index: 40;
+    left: var(--space-5);
+    right: var(--space-5);
+    bottom: calc(var(--control-md) + var(--space-4) + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--control-md);
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-3);
+    border-top: 1px solid var(--line-whisper);
+  }
+
+  .cf-create-action-bar > * {
+    min-height: var(--control-md);
+  }
+
+  .cf-create-action-bar-spacer {
+    display: block;
+    height: calc(var(--control-md) + var(--space-8));
+  }
+}
