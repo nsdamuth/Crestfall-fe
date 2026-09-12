@@ -1,5 +1,5 @@
 import { createContext, useContext, useLayoutEffect, useRef, useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
+import { Check } from "lucide-react";
 
 import KitFormField from "@/components/kit/KitFormField";
 
@@ -329,11 +329,6 @@ export function TextAreaField({
           >
             {value || placeholder || " "}
           </span>
-          <ChevronDown
-            size={16}
-            aria-hidden="true"
-            className="flex-none text-[var(--ink-faint)]"
-          />
         </button>
       )}
       {helperText ? (
