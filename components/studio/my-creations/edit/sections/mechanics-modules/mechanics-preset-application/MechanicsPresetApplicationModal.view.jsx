@@ -279,7 +279,7 @@ export default function MechanicsPresetApplicationModalView({
 
   return (
     <PresetLibraryModalFrame onClose={onClose}>
-      <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
+      <div className="sticky top-0 z-[1] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
         <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           <LibraryBig size={15} />
           Loom Preset Workflow
@@ -294,6 +294,7 @@ export default function MechanicsPresetApplicationModalView({
           {description}
         </p>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="min-w-0">
         <div className="grid min-w-0 gap-4 p-4 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
@@ -596,7 +597,8 @@ export default function MechanicsPresetApplicationModalView({
         </div>
       </div>
 
-      <div className="sticky bottom-0 z-[1] flex flex-wrap items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-4)]">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="sticky bottom-0 z-[1] flex flex-wrap items-center justify-between gap-[var(--space-3)] bg-[image:var(--grad-panel-lift)] p-[var(--space-4)]">
         <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Applying updates the current builder only. Use the normal page Save action to persist the result.
         </p>

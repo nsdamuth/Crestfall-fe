@@ -94,12 +94,13 @@ export default function MechanicsAssetPickerModal({
   return (
     <KitModalFrame onClose={onClose} ariaLabel={title} panelClassName="w-full max-w-4xl">
       <div className="flex max-h-[92dvh] flex-col">
-        <div className="border-b border-white/10 px-6 py-5 pr-16">
+        <div className="px-6 py-5 pr-16">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">{isSet ? "Action Sets" : "Mechanics Actions"}</p>
           <h2 className="mt-2 font-display text-3xl">{title}</h2>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">{description}</p>
         </div>
-        <div className="border-b border-white/10 p-6">
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+        <div className="p-6">
           <div className="flex gap-2">
             {[{id:"mine",label:"Mine"},{id:"public",label:"Public"}].map((source) => (
               <button key={source.id} type="button" onClick={() => { setActiveSource(source.id); setQuery(""); }} className={`cf-btn ${activeSource === source.id ? "cf-btn--primary" : "cf-btn--secondary"}`}>{source.label}</button>
@@ -110,6 +111,7 @@ export default function MechanicsAssetPickerModal({
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={isSet ? "Search Action Sets..." : "Search Mechanics Actions..."} className="w-full bg-transparent outline-none" />
           </label>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
         <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {status === "loading" ? <p className="text-sm text-[var(--ink-dim)]">Loading...</p> : null}
           {status === "error" ? <p className="text-sm text-[var(--status-danger)]">{message}</p> : null}

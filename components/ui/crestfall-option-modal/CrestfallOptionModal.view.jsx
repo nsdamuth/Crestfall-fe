@@ -68,8 +68,9 @@ export default function CrestfallOptionModalView({
                 <X size={18} />
               </button>
             </div>
+            <div aria-hidden="true" className="mt-5 h-px bg-[image:var(--line-fade)]" />
 
-            <div className="mt-5 flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
+            <div className="mt-4 flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
               <Search size={16} className="text-[var(--gold-ornament)]" />
               <input
                 value={searchQuery}

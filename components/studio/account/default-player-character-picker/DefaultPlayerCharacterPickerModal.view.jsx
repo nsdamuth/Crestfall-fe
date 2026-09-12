@@ -15,7 +15,7 @@ export default function DefaultPlayerCharacterPickerModalView({
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]">
       <section className="max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] py-[var(--space-3)] px-[var(--space-4)]">
+        <div className="flex items-start justify-between gap-[var(--space-3)] py-[var(--space-3)] px-[var(--space-4)]">
           <div>
             <p className="text-[var(--text-ui)] leading-[var(--lh-ui)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Account Default
@@ -41,6 +41,7 @@ export default function DefaultPlayerCharacterPickerModalView({
             <X size={18} />
           </button>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="max-h-[72vh] overflow-y-auto p-5">
           <label className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3">

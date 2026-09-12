@@ -32,7 +32,7 @@ export default function StructuredRegistrySampleLibraryModalView({
       ariaLabel={title}
       panelClassName="w-full max-w-4xl"
     >
-      <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)]">
+      <div className="sticky top-0 z-[1] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)]">
         <p className={EYEBROW_CLASS}>
           <LibraryBig size={15} />
           Loom Sample Workflow
@@ -44,6 +44,7 @@ export default function StructuredRegistrySampleLibraryModalView({
           {description}
         </p>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[21rem_minmax(0,1fr)]">
         <aside className="grid content-start gap-3">
@@ -160,7 +161,8 @@ export default function StructuredRegistrySampleLibraryModalView({
         </section>
       </div>
 
-      <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 bg-[image:var(--grad-panel-lift)] p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Loading adds a fresh copy to the open builder only. It does not save, link shared assets, or create runtime authority.
           {statusMessage ? ` ${statusMessage}` : ""}

@@ -28,7 +28,7 @@ export default function LocationParentPickerModalView({
   return (
     <KitModalFrame onClose={onClose} panelClassName="max-w-4xl" ariaLabel={title}>
       <div className="flex max-h-[92dvh] flex-col">
-        <div className="border-b border-[var(--line-fade)] p-[var(--space-5)]">
+        <div className="p-[var(--space-5)]">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
@@ -39,6 +39,7 @@ export default function LocationParentPickerModalView({
             {description}
           </p>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="flex-1 overflow-y-auto p-[var(--space-5)] pb-[var(--space-6)]">
           <label className="flex min-h-[var(--control-md)] items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">

@@ -213,6 +213,7 @@ export default function KitPickerModalView({
           <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
           <FilterRow filters={filters} onToggleFilter={onToggleFilter} />
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="flex-1 overflow-y-auto px-[var(--space-6)]">
           {errorMessage ? (

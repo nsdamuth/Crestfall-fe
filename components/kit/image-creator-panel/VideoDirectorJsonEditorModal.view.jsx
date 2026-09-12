@@ -85,7 +85,7 @@ export default function VideoDirectorJsonEditorModalView({
       hasUnsavedChanges={hasDraftChanges}
       panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             <Braces size={15} aria-hidden="true" />
@@ -97,6 +97,7 @@ export default function VideoDirectorJsonEditorModalView({
           </p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
@@ -215,7 +216,8 @@ export default function VideoDirectorJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying changes only this open Video composer. Asset selections stay
           untouched and no backend request is made.

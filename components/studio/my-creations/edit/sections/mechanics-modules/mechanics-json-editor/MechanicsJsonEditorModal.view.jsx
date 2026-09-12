@@ -97,7 +97,7 @@ export default function MechanicsJsonEditorModalView({
       hasUnsavedChanges={hasDraftChanges}
       panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
           <p className={EYEBROW_CLASS}>
             <Braces size={15} />
@@ -113,6 +113,7 @@ export default function MechanicsJsonEditorModalView({
           </p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
@@ -229,7 +230,8 @@ export default function MechanicsJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open builder. The normal page Save action still
           controls persistence.

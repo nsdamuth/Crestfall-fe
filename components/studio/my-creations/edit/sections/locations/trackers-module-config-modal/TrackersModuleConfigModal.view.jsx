@@ -79,7 +79,7 @@ export default function TrackersModuleConfigModalView({
       ariaLabel={title}
     >
       <div className="flex max-h-[92dvh] flex-col">
-        <div className="border-b border-[var(--line-fade)] p-[var(--space-5)]">
+        <div className="p-[var(--space-5)]">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
@@ -90,6 +90,7 @@ export default function TrackersModuleConfigModalView({
             {description}
           </p>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="flex-1 overflow-y-auto p-[var(--space-5)] pb-[var(--space-6)]">
           {message ? (
@@ -229,7 +230,8 @@ export default function TrackersModuleConfigModalView({
           </div>
         </div>
 
-        <div className="flex flex-col gap-[var(--space-3)] border-t border-[var(--line-fade)] p-[var(--space-5)] sm:flex-row sm:items-center sm:justify-between">
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+        <div className="flex flex-col gap-[var(--space-3)] p-[var(--space-5)] sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             Module changes update the Location form. Save the Location to persist the runtime binding.
           </p>
@@ -268,7 +270,7 @@ function TrackerCard({
 }) {
   return (
     <section className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)]">
-      <div className="flex flex-col gap-[var(--space-4)] border-b border-[var(--line-fade)] p-[var(--space-4)] lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-4)] lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Field #{trackerIndex + 1}
@@ -286,6 +288,7 @@ function TrackerCard({
           Remove
         </button>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-[var(--space-5)] p-[var(--space-4)]">
         <div className="grid gap-[var(--space-4)] md:grid-cols-3">
@@ -573,7 +576,7 @@ function EffectRow({ effect, targetOptions, onUpdate, onRemove }) {
 function GuardCard({ guard, guardIndex, targetOptions, onUpdate, onRemove, onAddCondition, onUpdateCondition, onRemoveCondition }) {
   return (
     <section className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)]">
-      <div className="flex flex-col gap-[var(--space-4)] border-b border-[var(--line-fade)] p-[var(--space-4)] lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-4)] lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Guard #{guardIndex + 1}
@@ -591,6 +594,7 @@ function GuardCard({ guard, guardIndex, targetOptions, onUpdate, onRemove, onAdd
           Remove
         </button>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-[var(--space-5)] p-[var(--space-4)]">
         <div className="grid gap-[var(--space-4)] md:grid-cols-3">

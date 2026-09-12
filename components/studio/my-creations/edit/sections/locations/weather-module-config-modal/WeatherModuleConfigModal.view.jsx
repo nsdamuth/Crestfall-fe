@@ -84,7 +84,7 @@ export default function WeatherModuleConfigModalView({
       ariaLabel={title}
     >
       <div className="flex max-h-[92dvh] flex-col">
-        <div className="border-b border-[var(--line-fade)] p-[var(--space-5)]">
+        <div className="p-[var(--space-5)]">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             {eyebrow}
           </p>
@@ -97,6 +97,7 @@ export default function WeatherModuleConfigModalView({
             </p>
           ) : null}
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="flex-1 overflow-y-auto p-[var(--space-5)] pb-[var(--space-6)]">
           {message ? (
@@ -263,7 +264,8 @@ export default function WeatherModuleConfigModalView({
           </div>
         </div>
 
-        <div className="flex flex-col gap-[var(--space-3)] border-t border-[var(--line-fade)] p-[var(--space-5)] sm:flex-row sm:items-center sm:justify-between">
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+        <div className="flex flex-col gap-[var(--space-3)] p-[var(--space-5)] sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {footerNote}
           </p>

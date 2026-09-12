@@ -149,7 +149,7 @@ export default function MechanicsModulePickerModalView({
       panelClassName="w-full max-w-4xl"
     >
       <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
-        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)] pr-16">
+        <div className="flex items-start justify-between gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] pr-16">
           <div>
             <p className={EYEBROW_CLASS}>
               {eyebrow}
@@ -162,8 +162,9 @@ export default function MechanicsModulePickerModalView({
             </p>
           </div>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
-        <div className="border-b border-white/10 p-6">
+        <div className="p-6">
           <div className="flex flex-wrap gap-2">
             {sources.map((source) => {
               const active = source?.id === activeSource?.id;
@@ -198,6 +199,7 @@ export default function MechanicsModulePickerModalView({
             />
           </label>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {loadStatus === "loading" ? (

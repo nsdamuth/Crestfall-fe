@@ -50,7 +50,7 @@ export default function RoomTemplatePackagePickerModalView({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
       <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--line-whisper)] py-3 px-4">
+        <div className="flex items-start justify-between gap-3 py-3 px-4">
           <div>
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               <Icon size={15} />
@@ -73,6 +73,7 @@ export default function RoomTemplatePackagePickerModalView({
             <X size={18} />
           </button>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="p-5">
           <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-4 py-3">

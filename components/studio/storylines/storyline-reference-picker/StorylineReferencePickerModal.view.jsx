@@ -35,7 +35,7 @@ export default function StorylineReferencePickerModalView({
       ariaLabelledBy={dialogTitleId}
     >
       <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
-        <header className="flex flex-col gap-3 border-b border-[var(--line-whisper)] p-5">
+        <header className="flex flex-col gap-3 p-5">
           <button
             type="button"
             onClick={() => onClose?.()}
@@ -59,8 +59,9 @@ export default function StorylineReferencePickerModalView({
             ) : null}
           </div>
         </header>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
-        <div className="border-b border-[var(--line-whisper)] p-5">
+        <div className="p-5">
           <div className="flex flex-wrap gap-2">
             {tabs.map((tab) => (
               <button
@@ -90,6 +91,7 @@ export default function StorylineReferencePickerModalView({
             />
           </label>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="overflow-y-auto p-5">
           {items.length ? (

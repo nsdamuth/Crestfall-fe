@@ -86,7 +86,7 @@ export default function SkillsProfileJsonEditorModalView({
       closeOnBackdrop={false}
       panelClassName="flex max-h-[calc(100dvh-2rem)] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
     >
-      <div className="flex shrink-0 flex-col gap-4 border-b border-white/10 p-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex shrink-0 flex-col gap-4 p-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             <Braces size={15} />
@@ -134,6 +134,7 @@ export default function SkillsProfileJsonEditorModalView({
           </button>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">

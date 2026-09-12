@@ -43,7 +43,7 @@ export default function IngredientPickerModalView({
 
   return (
     <KitModalFrame onClose={onClose} ariaLabel={ingredientLabel} panelClassName="max-w-4xl">
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             <HeaderIcon size={15} />
@@ -61,6 +61,7 @@ export default function IngredientPickerModalView({
           </p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="p-5">
         {sourceOptions.length > 1 ? (
