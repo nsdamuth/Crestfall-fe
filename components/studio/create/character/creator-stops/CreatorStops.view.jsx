@@ -246,7 +246,7 @@ export default function CreatorStopsView({
         </div>
 
         <div className="relative flex flex-none flex-col gap-[var(--space-2)] px-[var(--space-5)] py-[var(--space-3)] before:absolute before:left-[var(--space-8)] before:right-[var(--space-8)] before:top-0 before:h-px before:bg-[image:var(--line-fade)]">
-          <div className="flex items-center gap-[var(--space-3)]">
+          <div className="flex min-w-0 items-center gap-[var(--space-2)] min-[430px]:gap-[var(--space-3)]">
           {secondaryPanel ? (
             <>
               <button
@@ -332,27 +332,26 @@ export default function CreatorStopsView({
                 {saveError ? (
                   <span role="alert" className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-danger)]" />
-                    <span className="inline">Save unsuccessful</span>
+                    <span className="sr-only min-[430px]:not-sr-only">Save unsuccessful</span>
                   </span>
                 ) : hasUnsavedChanges ? (
-                  // Status word always visible, RULED 23 Aug 2026
-                  // (build-0823 pass 5): the sm:inline gate is
-                  // removed so this word renders at every width, the
-                  // same as "Saved" and "Save unsuccessful" above.
+                  // Real-device mobile parity, 12 Sep 2026: below 430px
+                  // keep the status dot visible and the text accessible
+                  // to assistive tech without allowing the phrase to push
+                  // the primary Next action beyond the viewport.
                   <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--gold-ornament)]" />
-                    <span className="inline">Unsaved changes</span>
+                    <span className="sr-only min-[430px]:not-sr-only">Unsaved changes</span>
                   </span>
                 ) : justSaved ? (
                   // Two-tier save-and-reaccess loop, RULED 11 Aug 2026:
                   // a confirmed save from a non-final stop shows the
                   // Saved confirmation only, the rest of the footer
-                  // (Back, Save, Next) unchanged. Unmissable at 390:
-                  // the word stays visible at every width, not hidden
-                  // behind sm:inline like "Unsaved changes" above.
+                  // (Back, Save, Next) unchanged. On very narrow phones
+                  // the dot remains visible while the word is sr-only.
                   <span className="inline-flex items-center gap-[var(--space-1)] whitespace-nowrap text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--status-success)]">
                     <span className="h-1.5 w-1.5 flex-none rounded-full bg-[var(--status-success)]" />
-                    <span className="inline">Saved</span>
+                    <span className="sr-only min-[430px]:not-sr-only">Saved</span>
                   </span>
                 ) : null}
               </span>

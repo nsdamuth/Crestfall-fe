@@ -79,7 +79,12 @@
 // is a full-height sheet (R4), full-bleed vertically and
 // horizontally with internal thumb scrolling, replacing the prior
 // inset-floating panel at phone width.
-export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v7";
+// v7 to v8 (12 Sep 2026, real-device mobile parity): Quick Character
+// creation keeps Role archetype and Gender presentation visible because both
+// are identity essentials, while later Quick-only reductions remain intact.
+// The phone footer also keeps save status accessible without letting the
+// status phrase compete horizontally with Back / Save / Next below 430px.
+export const CREATOR_STOPS_VIEW_CONTRACT_VERSION = "creator-stops.view.v8";
 
 export const CREATOR_STOPS = Object.freeze([
   Object.freeze({ id: "name", label: "The name", iconKey: "name" }),
