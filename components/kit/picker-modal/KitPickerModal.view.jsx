@@ -145,7 +145,7 @@ function TileItem({ item, isSelected, isMultiSelect, onActivate }) {
         <Thumbnail item={item} />
         <span
           aria-hidden="true"
-          className={`absolute right-[var(--space-2)] top-[var(--space-2)] flex h-6 w-6 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-4)] ${
+          className={`absolute right-[var(--space-2)] top-[var(--space-2)] flex h-6 w-6 items-center justify-center rounded-[var(--radius-full)] bg-[var(--panel-glass)] backdrop-blur-[var(--blur-panel)] ${
             isSelected ? "" : "invisible"
           }`}
         >

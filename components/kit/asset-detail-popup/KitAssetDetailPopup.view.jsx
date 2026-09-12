@@ -208,7 +208,7 @@ function CatalogueSlide({ backgroundSrc, onViewCatalogue }) {
       )}
       <div className="absolute inset-0 bg-[var(--scrim-strong)]" aria-hidden="true" />
       <div className="relative z-[1] flex h-full items-center justify-center p-[var(--space-4)]">
-        <div className="max-w-xs rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-4)] p-[var(--space-6)] text-center shadow-[var(--shadow-popover)]">
+        <div className="max-w-xs rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] p-[var(--space-6)] text-center backdrop-blur-[var(--blur-panel)]">
           <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Want to see more?
           </p>

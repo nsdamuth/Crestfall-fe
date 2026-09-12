@@ -49,7 +49,7 @@ export default function RoomTemplatePackagePickerModalView({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] backdrop-blur-[2px] p-4">
-      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+      <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[image:var(--grad-panel-lift)] shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-3 py-3 px-4">
           <div>
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
