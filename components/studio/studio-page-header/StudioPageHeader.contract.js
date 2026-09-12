@@ -1,4 +1,10 @@
-export const STUDIO_PAGE_HEADER_VIEW_CONTRACT_VERSION = "1.1.0";
+/**
+ * 1.2.0, package MOBILE-SHELLS, additive and prop-free: the page title
+ * takes the mobile type step below md and its desktop size from md up,
+ * and the actions slot can shrink below lg instead of being shrink-0 at
+ * every width. No prop was added, removed, or changed in meaning.
+ */
+export const STUDIO_PAGE_HEADER_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Portable Studio page-header contract.

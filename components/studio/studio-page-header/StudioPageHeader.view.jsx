@@ -46,7 +46,7 @@ export default function StudioPageHeaderView({
           </p>
         ) : null}
 
-        <h1 className="mt-[var(--space-2)] mb-[var(--space-2)] font-[family-name:var(--font-display)] text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]">
+        <h1 className="mt-[var(--space-2)] mb-[var(--space-2)] font-[family-name:var(--font-display)] text-[length:var(--text-title-m)] md:text-[length:var(--text-title)] leading-[var(--lh-title)] font-medium tracking-[var(--track-tight)]">
           {title}
         </h1>
 
@@ -57,7 +57,7 @@ export default function StudioPageHeaderView({
         ) : null}
       </div>
 
-      {actions ? <div className="shrink-0">{actions}</div> : null}
+      {actions ? <div className="min-w-0 lg:shrink-0">{actions}</div> : null}
     </header>
   );
 }
